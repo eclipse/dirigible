@@ -24,13 +24,13 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmType;
 @EdmEntitySet(name = "Products_Above_Average_Prices", container = "NorthwindEntities")
 public class ProductsAboveAveragePrice {
 
-  /** The product name. */
-  @EdmKey
-  @EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 40))
-  private String productName;
+    /** The product name. */
+    @EdmKey
+    @EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 40))
+    private String productName;
 
-  /** The unit price. */
-  @EdmProperty(type = EdmType.DECIMAL, facets = @EdmFacets(precision = 19, scale = 4))
-  private Double unitPrice;
+    /** The unit price. */
+    @EdmProperty(type = EdmType.DECIMAL, facets = @EdmFacets(precision = 19, scale = 4))
+    private Double unitPrice;
 
 }

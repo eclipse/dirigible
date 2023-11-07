@@ -43,222 +43,222 @@ import com.zaxxer.hikari.HikariDataSource;
 @Component
 public class DataSourcesManager implements InitializingBean {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(DataSourcesManager.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(DataSourcesManager.class);
 
-  /** The instance. */
-  private static DataSourcesManager INSTANCE;
+    /** The instance. */
+    private static DataSourcesManager INSTANCE;
 
-  /** The Constant DATASOURCES. */
-  private static final Map<String, javax.sql.DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<>());
+    /** The Constant DATASOURCES. */
+    private static final Map<String, javax.sql.DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<>());
 
-  /** The datasource service. */
-  private DataSourceService datasourceService;
+    /** The datasource service. */
+    private DataSourceService datasourceService;
 
-  /** The custom data sources service. */
-  private CustomDataSourcesService customDataSourcesService;
+    /** The custom data sources service. */
+    private CustomDataSourcesService customDataSourcesService;
 
-  /**
-   * Instantiates a new data sources manager.
-   *
-   * @param datasourceService the datasource service
-   * @param customDataSourcesService the custom data sources service
-   */
-  @Autowired
-  public DataSourcesManager(DataSourceService datasourceService, CustomDataSourcesService customDataSourcesService) {
-    this.datasourceService = datasourceService;
-    this.customDataSourcesService = customDataSourcesService;
-    this.customDataSourcesService.initialize();
-  }
-
-  /**
-   * After properties set.
-   *
-   * @throws Exception the exception
-   */
-  @Override
-  public void afterPropertiesSet() throws Exception {
-    INSTANCE = this;
-  }
-
-  /**
-   * Gets the.
-   *
-   * @return the dirigible O data service factory
-   */
-  public static DataSourcesManager get() {
-    return INSTANCE;
-  }
-
-  /**
-   * Gets the data source.
-   *
-   * @param name the name
-   * @return the data source
-   */
-  public javax.sql.DataSource getDataSource(String name) {
-    javax.sql.DataSource dataSource = DATASOURCES.get(name);
-    if (dataSource != null) {
-      return dataSource;
+    /**
+     * Instantiates a new data sources manager.
+     *
+     * @param datasourceService the datasource service
+     * @param customDataSourcesService the custom data sources service
+     */
+    @Autowired
+    public DataSourcesManager(DataSourceService datasourceService, CustomDataSourcesService customDataSourcesService) {
+        this.datasourceService = datasourceService;
+        this.customDataSourcesService = customDataSourcesService;
+        this.customDataSourcesService.initialize();
     }
-    dataSource = initializeDataSource(name);
-    return dataSource;
-  }
 
-  /**
-   * Gets the default data source.
-   *
-   * @return the default data source
-   */
-  public javax.sql.DataSource getDefaultDataSource() {
-    return getDataSource(getDefaultDataSourceName());
-  }
-
-  /**
-   * Gets the system DB.
-   *
-   * @return the system DB
-   */
-  public javax.sql.DataSource getSystemDataSource() {
-    return getDataSource(getSystemDataSourceName());
-  }
-
-  /**
-   * Initialize data source.
-   *
-   * @param name the name
-   * @return the javax.sql. data source
-   */
-  private javax.sql.DataSource initializeDataSource(String name) {
-    if (logger.isInfoEnabled()) {
-      logger.info("Initializing a datasource with name: " + name);
+    /**
+     * After properties set.
+     *
+     * @throws Exception the exception
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        INSTANCE = this;
     }
-    DataSource datasource;
-    datasource = getDataSourceDefinition(name);
-    if (datasource.getDriver()
-                  .equals("org.h2.Driver")) {
-      try {
-        prepareRootFolder(name);
-      } catch (IOException e) {
-        logger.error("Invalid configuration for the datasource: " + name);
-      }
+
+    /**
+     * Gets the.
+     *
+     * @return the dirigible O data service factory
+     */
+    public static DataSourcesManager get() {
+        return INSTANCE;
     }
-    Properties properties = new Properties();
-    properties.put("driverClassName", datasource.getDriver());
-    properties.put("jdbcUrl", datasource.getUrl());
-    properties.put("dataSource.url", datasource.getUrl());
-    properties.put("dataSource.user", datasource.getUsername());
-    properties.put("dataSource.password", datasource.getPassword());
-    properties.put("dataSource.logWriter", new PrintWriter(System.out));
 
-    Map<String, String> hikariProperties = getHikariProperties(name);
-    hikariProperties.forEach(properties::setProperty);
-
-    HikariConfig config = new HikariConfig(properties);
-    config.setPoolName(name);
-    config.setAutoCommit(true);
-    datasource.getProperties()
-              .forEach(dsp -> config.addDataSourceProperty(dsp.getName(), dsp.getValue()));
-    HikariDataSource hds = new HikariDataSource(config);
-
-    ManagedDataSource managedDataSource = new ManagedDataSource(hds);
-    DATASOURCES.put(name, managedDataSource);
-    if (logger.isInfoEnabled()) {
-      logger.info("Initialized a datasource with name: " + name);
-    }
-    return managedDataSource;
-  }
-
-  /**
-   * Gets the hikari properties.
-   *
-   * @param databaseName the database name
-   * @return the hikari properties
-   */
-  private Map<String, String> getHikariProperties(String databaseName) {
-    Map<String, String> properties = new HashMap<>();
-    String hikariDelimiter = "_HIKARI_";
-    String databaseKeyPrefix = databaseName + hikariDelimiter;
-    int hikariDelimiterLength = hikariDelimiter.length();
-    Arrays.stream(Configuration.getKeys())
-          .filter(key -> key.startsWith(databaseKeyPrefix))//
-          .map(key -> key.substring(key.lastIndexOf(hikariDelimiter) + hikariDelimiterLength))
-          .forEach(key -> properties.put(key, Configuration.get(databaseKeyPrefix + key)));
-
-    return properties;
-  }
-
-  /**
-   * Gets the data source definition.
-   *
-   * @param name the name
-   * @return the data source definition
-   */
-  public DataSource getDataSourceDefinition(String name) {
-    try {
-      return datasourceService.findByName(name);
-    } catch (Exception e) {
-      if (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name)) {
-        if (logger.isErrorEnabled()) {
-          logger.error("DataSource cannot be initialized, hence fail over database is started as a backup - " + name);
+    /**
+     * Gets the data source.
+     *
+     * @param name the name
+     * @return the data source
+     */
+    public javax.sql.DataSource getDataSource(String name) {
+        javax.sql.DataSource dataSource = DATASOURCES.get(name);
+        if (dataSource != null) {
+            return dataSource;
         }
-        return new DataSource(name, name, name, "org.h2.Driver", "jdbc:h2:~/DefaultDBFailOver", "sa", "");
-      }
-      throw e;
+        dataSource = initializeDataSource(name);
+        return dataSource;
     }
-  }
 
-  /**
-   * Gets the default data source name.
-   *
-   * @return the default data source name
-   */
-  public String getDefaultDataSourceName() {
-    return Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT,
-        DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
-  }
-
-  /**
-   * Gets the system data source name.
-   *
-   * @return the system data source name
-   */
-  public String getSystemDataSourceName() {
-    return Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_NAME_SYSTEM,
-        DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM);
-  }
-
-  /**
-   * Prepare root folder.
-   *
-   * @param name the name
-   * @return the string
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  private String prepareRootFolder(String name) throws IOException {
-    String rootFolder = (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name))
-        ? DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
-        : DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
-    String h2Root = Configuration.get(rootFolder, name);
-    File rootFile = new File(h2Root);
-    File parentFile = rootFile.getCanonicalFile()
-                              .getParentFile();
-    if (!parentFile.exists()) {
-      if (!parentFile.mkdirs()) {
-        throw new IOException(format("Creation of the root folder [{0}] of the embedded H2 database failed.", h2Root));
-      }
+    /**
+     * Gets the default data source.
+     *
+     * @return the default data source
+     */
+    public javax.sql.DataSource getDefaultDataSource() {
+        return getDataSource(getDefaultDataSourceName());
     }
-    return h2Root;
-  }
 
-  /**
-   * Adds the data source.
-   *
-   * @param name the name
-   * @param datasource the datasource
-   */
-  public void addDataSource(String name, javax.sql.DataSource datasource) {
-    DATASOURCES.put(name, datasource);
-  }
+    /**
+     * Gets the system DB.
+     *
+     * @return the system DB
+     */
+    public javax.sql.DataSource getSystemDataSource() {
+        return getDataSource(getSystemDataSourceName());
+    }
+
+    /**
+     * Initialize data source.
+     *
+     * @param name the name
+     * @return the javax.sql. data source
+     */
+    private javax.sql.DataSource initializeDataSource(String name) {
+        if (logger.isInfoEnabled()) {
+            logger.info("Initializing a datasource with name: " + name);
+        }
+        DataSource datasource;
+        datasource = getDataSourceDefinition(name);
+        if (datasource.getDriver()
+                      .equals("org.h2.Driver")) {
+            try {
+                prepareRootFolder(name);
+            } catch (IOException e) {
+                logger.error("Invalid configuration for the datasource: " + name);
+            }
+        }
+        Properties properties = new Properties();
+        properties.put("driverClassName", datasource.getDriver());
+        properties.put("jdbcUrl", datasource.getUrl());
+        properties.put("dataSource.url", datasource.getUrl());
+        properties.put("dataSource.user", datasource.getUsername());
+        properties.put("dataSource.password", datasource.getPassword());
+        properties.put("dataSource.logWriter", new PrintWriter(System.out));
+
+        Map<String, String> hikariProperties = getHikariProperties(name);
+        hikariProperties.forEach(properties::setProperty);
+
+        HikariConfig config = new HikariConfig(properties);
+        config.setPoolName(name);
+        config.setAutoCommit(true);
+        datasource.getProperties()
+                  .forEach(dsp -> config.addDataSourceProperty(dsp.getName(), dsp.getValue()));
+        HikariDataSource hds = new HikariDataSource(config);
+
+        ManagedDataSource managedDataSource = new ManagedDataSource(hds);
+        DATASOURCES.put(name, managedDataSource);
+        if (logger.isInfoEnabled()) {
+            logger.info("Initialized a datasource with name: " + name);
+        }
+        return managedDataSource;
+    }
+
+    /**
+     * Gets the hikari properties.
+     *
+     * @param databaseName the database name
+     * @return the hikari properties
+     */
+    private Map<String, String> getHikariProperties(String databaseName) {
+        Map<String, String> properties = new HashMap<>();
+        String hikariDelimiter = "_HIKARI_";
+        String databaseKeyPrefix = databaseName + hikariDelimiter;
+        int hikariDelimiterLength = hikariDelimiter.length();
+        Arrays.stream(Configuration.getKeys())
+              .filter(key -> key.startsWith(databaseKeyPrefix))//
+              .map(key -> key.substring(key.lastIndexOf(hikariDelimiter) + hikariDelimiterLength))
+              .forEach(key -> properties.put(key, Configuration.get(databaseKeyPrefix + key)));
+
+        return properties;
+    }
+
+    /**
+     * Gets the data source definition.
+     *
+     * @param name the name
+     * @return the data source definition
+     */
+    public DataSource getDataSourceDefinition(String name) {
+        try {
+            return datasourceService.findByName(name);
+        } catch (Exception e) {
+            if (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name)) {
+                if (logger.isErrorEnabled()) {
+                    logger.error("DataSource cannot be initialized, hence fail over database is started as a backup - " + name);
+                }
+                return new DataSource(name, name, name, "org.h2.Driver", "jdbc:h2:~/DefaultDBFailOver", "sa", "");
+            }
+            throw e;
+        }
+    }
+
+    /**
+     * Gets the default data source name.
+     *
+     * @return the default data source name
+     */
+    public String getDefaultDataSourceName() {
+        return Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT,
+                DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
+    }
+
+    /**
+     * Gets the system data source name.
+     *
+     * @return the system data source name
+     */
+    public String getSystemDataSourceName() {
+        return Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_NAME_SYSTEM,
+                DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM);
+    }
+
+    /**
+     * Prepare root folder.
+     *
+     * @param name the name
+     * @return the string
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    private String prepareRootFolder(String name) throws IOException {
+        String rootFolder = (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name))
+                ? DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
+                : DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
+        String h2Root = Configuration.get(rootFolder, name);
+        File rootFile = new File(h2Root);
+        File parentFile = rootFile.getCanonicalFile()
+                                  .getParentFile();
+        if (!parentFile.exists()) {
+            if (!parentFile.mkdirs()) {
+                throw new IOException(format("Creation of the root folder [{0}] of the embedded H2 database failed.", h2Root));
+            }
+        }
+        return h2Root;
+    }
+
+    /**
+     * Adds the data source.
+     *
+     * @param name the name
+     * @param datasource the datasource
+     */
+    public void addDataSource(String name, javax.sql.DataSource datasource) {
+        DATASOURCES.put(name, datasource);
+    }
 
 }

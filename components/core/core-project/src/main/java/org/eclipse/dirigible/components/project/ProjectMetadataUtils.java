@@ -17,29 +17,29 @@ import com.google.gson.Gson;
  */
 public class ProjectMetadataUtils {
 
-  /** The gson. */
-  private static Gson gson = new Gson();
+    /** The gson. */
+    private static Gson gson = new Gson();
 
-  /**
-   * Serialize to json.
-   *
-   * @param projectMetadata the project metadata
-   * @return the string
-   */
-  public static String toJson(ProjectMetadata projectMetadata) {
-    String json = gson.toJson(projectMetadata);
-    return json;
-  }
+    /**
+     * Serialize to json.
+     *
+     * @param projectMetadata the project metadata
+     * @return the string
+     */
+    public static String toJson(ProjectMetadata projectMetadata) {
+        String json = gson.toJson(projectMetadata);
+        return json;
+    }
 
-  /**
-   * Load from json.
-   *
-   * @param json the json
-   * @return the project metadata
-   */
-  public static ProjectMetadata fromJson(String json) {
-    ProjectMetadata projectMetadata = gson.fromJson(json, ProjectMetadata.class);
-    return projectMetadata;
-  }
+    /**
+     * Load from json.
+     *
+     * @param json the json
+     * @return the project metadata
+     */
+    public static ProjectMetadata fromJson(String json) {
+        ProjectMetadata projectMetadata = gson.fromJson(json, ProjectMetadata.class);
+        return projectMetadata;
+    }
 
 }

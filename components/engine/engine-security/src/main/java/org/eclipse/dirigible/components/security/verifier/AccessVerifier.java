@@ -28,56 +28,57 @@ import java.util.List;
 @Component
 public class AccessVerifier {
 
-  /**
-   * The Constant logger.
-   */
-  private static final Logger logger = LoggerFactory.getLogger(AccessVerifier.class);
+    /**
+     * The Constant logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(AccessVerifier.class);
 
-  /**
-   * The security access service.
-   */
-  @Autowired
-  private AccessService securityAccessService;
+    /**
+     * The security access service.
+     */
+    @Autowired
+    private AccessService securityAccessService;
 
-  /**
-   * Checks whether the URI is secured via the *.access file or not
-   *
-   * @param scope the scope
-   * @param path the path
-   * @param method the method
-   * @return all the most specific security access entry matching the URI if any
-   */
-  public List<Access> getMatchingSecurityAccesses(String scope, String path, String method) {
-    List<Access> securityAccesses = new ArrayList<>();
-    Access currentSecurityAccess = null;
-    List<Access> existingSecurityAccesses = securityAccessService.getAll();
-    for (Access securityAccess : existingSecurityAccesses) {
-      if (scope.equalsIgnoreCase(securityAccess.getScope()) && path.startsWith(securityAccess.getPath()) && (securityAccess.getMethod()
-                                                                                                                           .equals("*")
-          || method.equals(securityAccess.getMethod()))) {
-        if (logger.isDebugEnabled()) {
-          logger.debug(String.format("URI [%s] with HTTP method [%s] is secured because of definition: %s", path, method,
-              securityAccess.getLocation()));
+    /**
+     * Checks whether the URI is secured via the *.access file or not
+     *
+     * @param scope the scope
+     * @param path the path
+     * @param method the method
+     * @return all the most specific security access entry matching the URI if any
+     */
+    public List<Access> getMatchingSecurityAccesses(String scope, String path, String method) {
+        List<Access> securityAccesses = new ArrayList<>();
+        Access currentSecurityAccess = null;
+        List<Access> existingSecurityAccesses = securityAccessService.getAll();
+        for (Access securityAccess : existingSecurityAccesses) {
+            if (scope.equalsIgnoreCase(securityAccess.getScope()) && path.startsWith(securityAccess.getPath())
+                    && (securityAccess.getMethod()
+                                      .equals("*")
+                            || method.equals(securityAccess.getMethod()))) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("URI [%s] with HTTP method [%s] is secured because of definition: %s", path, method,
+                            securityAccess.getLocation()));
+                }
+                if ((currentSecurityAccess == null) || (securityAccess.getPath()
+                                                                      .length() > currentSecurityAccess.getPath()
+                                                                                                       .length())) {
+                    currentSecurityAccess = securityAccess;
+                    securityAccesses.clear();
+                    securityAccesses.add(securityAccess);
+                } else if (securityAccess.getPath()
+                                         .length() == currentSecurityAccess.getPath()
+                                                                           .length()) {
+                    securityAccesses.add(securityAccess);
+                }
+            }
         }
-        if ((currentSecurityAccess == null) || (securityAccess.getPath()
-                                                              .length() > currentSecurityAccess.getPath()
-                                                                                               .length())) {
-          currentSecurityAccess = securityAccess;
-          securityAccesses.clear();
-          securityAccesses.add(securityAccess);
-        } else if (securityAccess.getPath()
-                                 .length() == currentSecurityAccess.getPath()
-                                                                   .length()) {
-          securityAccesses.add(securityAccess);
+        if (securityAccesses.isEmpty()) {
+            if (logger.isTraceEnabled()) {
+                logger.trace(String.format("URI [%s] with HTTP method [%s] is NOT secured", path, method));
+            }
         }
-      }
+        return securityAccesses;
     }
-    if (securityAccesses.isEmpty()) {
-      if (logger.isTraceEnabled()) {
-        logger.trace(String.format("URI [%s] with HTTP method [%s] is NOT secured", path, method));
-      }
-    }
-    return securityAccesses;
-  }
 
 }

@@ -21,72 +21,72 @@ import com.mongodb.client.MongoCursor;
  */
 public class LocalIteratorMongoCursor implements MongoCursor<String> {
 
-  /** The iterator. */
-  Iterator<String> iterator;
+    /** The iterator. */
+    Iterator<String> iterator;
 
-  /**
-   * Instantiates a new local iterator mongo cursor.
-   *
-   * @param iterator the iterator
-   */
-  LocalIteratorMongoCursor(Iterator<String> iterator) {
-    this.iterator = iterator;
-  }
+    /**
+     * Instantiates a new local iterator mongo cursor.
+     *
+     * @param iterator the iterator
+     */
+    LocalIteratorMongoCursor(Iterator<String> iterator) {
+        this.iterator = iterator;
+    }
 
-  /**
-   * Close.
-   */
-  @Override
-  public void close() {}
+    /**
+     * Close.
+     */
+    @Override
+    public void close() {}
 
-  /**
-   * Checks for next.
-   *
-   * @return true, if successful
-   */
-  @Override
-  public boolean hasNext() {
-    return iterator.hasNext();
-  }
+    /**
+     * Checks for next.
+     *
+     * @return true, if successful
+     */
+    @Override
+    public boolean hasNext() {
+        return iterator.hasNext();
+    }
 
-  /**
-   * Next.
-   *
-   * @return the string
-   */
-  @Override
-  public String next() {
-    return iterator.next();
-  }
+    /**
+     * Next.
+     *
+     * @return the string
+     */
+    @Override
+    public String next() {
+        return iterator.next();
+    }
 
-  /**
-   * Try next.
-   *
-   * @return the string
-   */
-  @Override
-  public String tryNext() {
-    return null;
-  }
+    /**
+     * Try next.
+     *
+     * @return the string
+     */
+    @Override
+    public String tryNext() {
+        return null;
+    }
 
-  /**
-   * Gets the server cursor.
-   *
-   * @return the server cursor
-   */
-  @Override
-  public ServerCursor getServerCursor() {
-    return null;
-  }
+    /**
+     * Gets the server cursor.
+     *
+     * @return the server cursor
+     */
+    @Override
+    public ServerCursor getServerCursor() {
+        return null;
+    }
 
-  /**
-   * Gets the server address.
-   *
-   * @return the server address
-   */
-  @Override
-  public ServerAddress getServerAddress() {
-    return null;
-  }
+    /**
+     * Gets the server address.
+     *
+     * @return the server address
+     */
+    @Override
+    public ServerAddress getServerAddress() {
+        return null;
+    }
 
 }

@@ -39,228 +39,228 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class JobService implements ArtefactService<Job> {
 
-  /** The job repository. */
-  @Autowired
-  private JobRepository jobRepository;
+    /** The job repository. */
+    @Autowired
+    private JobRepository jobRepository;
 
-  /** The job email service. */
-  @Autowired
-  private JobEmailProcessor jobEmailProcessor;
+    /** The job email service. */
+    @Autowired
+    private JobEmailProcessor jobEmailProcessor;
 
-  /** The javascript service. */
-  @Autowired
-  private JavascriptService javascriptService;
+    /** The javascript service. */
+    @Autowired
+    private JavascriptService javascriptService;
 
-  @Autowired
-  private JobsManager jobsManager;
+    @Autowired
+    private JobsManager jobsManager;
 
-  /**
-   * Gets the all.
-   *
-   * @return the all
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public List<Job> getAll() {
-    return jobRepository.findAll();
-  }
-
-  /**
-   * Find all.
-   *
-   * @param pageable the pageable
-   * @return the page
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public Page<Job> getPages(Pageable pageable) {
-    return jobRepository.findAll(pageable);
-  }
-
-  /**
-   * Find by id.
-   *
-   * @param id the id
-   * @return the job
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public Job findById(Long id) {
-    Optional<Job> job = jobRepository.findById(id);
-    if (job.isPresent()) {
-      return job.get();
-    } else {
-      throw new IllegalArgumentException("Job with id does not exist: " + id);
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Job> getAll() {
+        return jobRepository.findAll();
     }
-  }
 
-  /**
-   * Find by name.
-   *
-   * @param name the name
-   * @return the job
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public Job findByName(String name) {
-    Job filter = new Job();
-    if (name != null && name.startsWith("/")) {
-      name = name.substring(1);
+    /**
+     * Find all.
+     *
+     * @param pageable the pageable
+     * @return the page
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Job> getPages(Pageable pageable) {
+        return jobRepository.findAll(pageable);
     }
-    filter.setName(name);
-    filter.setEnabled(null);
-    filter.setStatus(null);
-    Example<Job> example = Example.of(filter);
-    Optional<Job> job = jobRepository.findOne(example);
-    if (job.isPresent()) {
-      return job.get();
-    } else {
-      throw new IllegalArgumentException("Job with name does not exist: " + name);
-    }
-  }
 
-  /**
-   * Find by location.
-   *
-   * @param location the location
-   * @return the list
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public List<Job> findByLocation(String location) {
-    Job filter = new Job();
-    filter.setLocation(location);
-    Example<Job> example = Example.of(filter);
-    List<Job> list = jobRepository.findAll(example);
-    return list;
-  }
-
-  /**
-   * Find by key.
-   *
-   * @param key the key
-   * @return the job
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public Job findByKey(String key) {
-    Job filter = new Job();
-    filter.setKey(key);
-    filter.setEnabled(null);
-    filter.setStatus(null);
-    Example<Job> example = Example.of(filter);
-    Optional<Job> job = jobRepository.findOne(example);
-    if (job.isPresent()) {
-      return job.get();
-    }
-    return null;
-  }
-
-  /**
-   * Save.
-   *
-   * @param job the job
-   * @return the job
-   */
-  @Override
-  public Job save(Job job) {
-    Job existing = null;
-    try {
-      existing = findByName(job.getName());
-    } catch (Exception e) {
-      // ignore if does not exist yet
-    }
-    if (existing != null) {
-      if (existing.isEnabled() && !job.isEnabled()) {
-        String content =
-            jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateDisable, jobEmailProcessor.EMAIL_TEMPLATE_DISABLE);
-        jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectDisable, content);
-      } else if (!existing.isEnabled() && job.isEnabled()) {
-        String content =
-            jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateEnable, jobEmailProcessor.EMAIL_TEMPLATE_ENABLE);
-        jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectEnable, content);
-      }
-    }
-    return jobRepository.saveAndFlush(job);
-  }
-
-  /**
-   * Delete.
-   *
-   * @param job the job
-   */
-  @Override
-  public void delete(Job job) {
-    jobRepository.delete(job);
-  }
-
-  /**
-   * Enable.
-   *
-   * @param name the name
-   * @return the job
-   * @throws Exception
-   */
-  public Job enable(String name) throws Exception {
-    Job job = findByName(name);
-    job.setEnabled(true);
-    jobsManager.scheduleJob(job);
-    return jobRepository.saveAndFlush(job);
-  }
-
-  /**
-   * Disable.
-   *
-   * @param name the name
-   * @return the job
-   * @throws Exception
-   */
-  public Job disable(String name) throws Exception {
-    Job job = findByName(name);
-    job.setEnabled(false);
-    jobsManager.unscheduleJob(job.getName(), job.getGroup());
-    return jobRepository.saveAndFlush(job);
-  }
-
-  /**
-   * Trigger.
-   *
-   * @param name the name
-   * @param parametersMap the parameters map
-   * @return true, if successful
-   * @throws Exception the exception
-   */
-  public boolean trigger(String name, Map<String, String> parametersMap) throws Exception {
-    Job job = findByName(name);
-    if (job != null) {
-      Map<String, String> memento = new HashMap<String, String>();
-      try {
-        for (Map.Entry<String, String> entry : parametersMap.entrySet()) {
-          memento.put(entry.getKey(), Configuration.get(entry.getKey()));
-          Configuration.set(entry.getKey(), entry.getValue());
+    /**
+     * Find by id.
+     *
+     * @param id the id
+     * @return the job
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Job findById(Long id) {
+        Optional<Job> job = jobRepository.findById(id);
+        if (job.isPresent()) {
+            return job.get();
+        } else {
+            throw new IllegalArgumentException("Job with id does not exist: " + id);
         }
+    }
 
-        // String engine = job.getEngine();
-        String handler = job.getHandler();
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the job
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Job findByName(String name) {
+        Job filter = new Job();
+        if (name != null && name.startsWith("/")) {
+            name = name.substring(1);
+        }
+        filter.setName(name);
+        filter.setEnabled(null);
+        filter.setStatus(null);
+        Example<Job> example = Example.of(filter);
+        Optional<Job> job = jobRepository.findOne(example);
+        if (job.isPresent()) {
+            return job.get();
+        } else {
+            throw new IllegalArgumentException("Job with name does not exist: " + name);
+        }
+    }
+
+    /**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Job> findByLocation(String location) {
+        Job filter = new Job();
+        filter.setLocation(location);
+        Example<Job> example = Example.of(filter);
+        List<Job> list = jobRepository.findAll(example);
+        return list;
+    }
+
+    /**
+     * Find by key.
+     *
+     * @param key the key
+     * @return the job
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Job findByKey(String key) {
+        Job filter = new Job();
+        filter.setKey(key);
+        filter.setEnabled(null);
+        filter.setStatus(null);
+        Example<Job> example = Example.of(filter);
+        Optional<Job> job = jobRepository.findOne(example);
+        if (job.isPresent()) {
+            return job.get();
+        }
+        return null;
+    }
+
+    /**
+     * Save.
+     *
+     * @param job the job
+     * @return the job
+     */
+    @Override
+    public Job save(Job job) {
+        Job existing = null;
         try {
-          Map<Object, Object> context = new HashMap<>();
-          context.put("handler", handler);
-          RepositoryPath path = new RepositoryPath(handler);
-          javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+            existing = findByName(job.getName());
         } catch (Exception e) {
-          throw new Exception(e);
+            // ignore if does not exist yet
         }
-      } finally {
-        for (Map.Entry<String, String> entry : memento.entrySet()) {
-          Configuration.set(entry.getKey(), entry.getValue());
+        if (existing != null) {
+            if (existing.isEnabled() && !job.isEnabled()) {
+                String content = jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateDisable,
+                        jobEmailProcessor.EMAIL_TEMPLATE_DISABLE);
+                jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectDisable, content);
+            } else if (!existing.isEnabled() && job.isEnabled()) {
+                String content =
+                        jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateEnable, jobEmailProcessor.EMAIL_TEMPLATE_ENABLE);
+                jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectEnable, content);
+            }
         }
-      }
-    } else {
-      String error = format("Job with name {0} does not exist, hence cannot be triggered", name);
-      throw new Exception(error);
+        return jobRepository.saveAndFlush(job);
     }
 
-    return true;
-  }
+    /**
+     * Delete.
+     *
+     * @param job the job
+     */
+    @Override
+    public void delete(Job job) {
+        jobRepository.delete(job);
+    }
+
+    /**
+     * Enable.
+     *
+     * @param name the name
+     * @return the job
+     * @throws Exception
+     */
+    public Job enable(String name) throws Exception {
+        Job job = findByName(name);
+        job.setEnabled(true);
+        jobsManager.scheduleJob(job);
+        return jobRepository.saveAndFlush(job);
+    }
+
+    /**
+     * Disable.
+     *
+     * @param name the name
+     * @return the job
+     * @throws Exception
+     */
+    public Job disable(String name) throws Exception {
+        Job job = findByName(name);
+        job.setEnabled(false);
+        jobsManager.unscheduleJob(job.getName(), job.getGroup());
+        return jobRepository.saveAndFlush(job);
+    }
+
+    /**
+     * Trigger.
+     *
+     * @param name the name
+     * @param parametersMap the parameters map
+     * @return true, if successful
+     * @throws Exception the exception
+     */
+    public boolean trigger(String name, Map<String, String> parametersMap) throws Exception {
+        Job job = findByName(name);
+        if (job != null) {
+            Map<String, String> memento = new HashMap<String, String>();
+            try {
+                for (Map.Entry<String, String> entry : parametersMap.entrySet()) {
+                    memento.put(entry.getKey(), Configuration.get(entry.getKey()));
+                    Configuration.set(entry.getKey(), entry.getValue());
+                }
+
+                // String engine = job.getEngine();
+                String handler = job.getHandler();
+                try {
+                    Map<Object, Object> context = new HashMap<>();
+                    context.put("handler", handler);
+                    RepositoryPath path = new RepositoryPath(handler);
+                    javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+                } catch (Exception e) {
+                    throw new Exception(e);
+                }
+            } finally {
+                for (Map.Entry<String, String> entry : memento.entrySet()) {
+                    Configuration.set(entry.getKey(), entry.getValue());
+                }
+            }
+        } else {
+            String error = format("Job with name {0} does not exist, hence cannot be triggered", name);
+            throw new Exception(error);
+        }
+
+        return true;
+    }
 
 }

@@ -22,55 +22,55 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
  */
 public interface SynchronizerCallback {
 
-  /**
-   * Adds the error.
-   *
-   * @param error the error
-   */
-  void addError(String error);
+    /**
+     * Adds the error.
+     *
+     * @param error the error
+     */
+    void addError(String error);
 
-  /**
-   * Gets the errors.
-   *
-   * @return the errors
-   */
-  List<String> getErrors();
+    /**
+     * Gets the errors.
+     *
+     * @return the errors
+     */
+    List<String> getErrors();
 
-  /**
-   * Register errors.
-   *
-   * @param remained the remained
-   * @param lifecycle the lifecycle
-   */
-  void registerErrors(List<TopologyWrapper<? extends Artefact>> remained, ArtefactLifecycle lifecycle);
+    /**
+     * Register errors.
+     *
+     * @param remained the remained
+     * @param lifecycle the lifecycle
+     */
+    void registerErrors(List<TopologyWrapper<? extends Artefact>> remained, ArtefactLifecycle lifecycle);
 
-  /**
-   * Register errors.
-   *
-   * @param remained the remained
-   * @param lifecycle the lifecycle
-   */
-  void registerFatals(List<TopologyWrapper<? extends Artefact>> remained, ArtefactLifecycle lifecycle);
+    /**
+     * Register errors.
+     *
+     * @param remained the remained
+     * @param lifecycle the lifecycle
+     */
+    void registerFatals(List<TopologyWrapper<? extends Artefact>> remained, ArtefactLifecycle lifecycle);
 
-  /**
-   * Register errors.
-   *
-   * @param synchronizer the synchronizer
-   * @param wrapper the wrapper
-   * @param lifecycle the lifecycle
-   * @param message the message
-   */
-  void registerState(Synchronizer<? extends Artefact> synchronizer, TopologyWrapper<? extends Artefact> wrapper,
-      ArtefactLifecycle lifecycle, String message);
+    /**
+     * Register errors.
+     *
+     * @param synchronizer the synchronizer
+     * @param wrapper the wrapper
+     * @param lifecycle the lifecycle
+     * @param message the message
+     */
+    void registerState(Synchronizer<? extends Artefact> synchronizer, TopologyWrapper<? extends Artefact> wrapper,
+            ArtefactLifecycle lifecycle, String message);
 
-  /**
-   * Register errors.
-   *
-   * @param synchronizer the synchronizer
-   * @param artefact the artefact
-   * @param lifecycle the lifecycle
-   * @param message the message
-   */
-  void registerState(Synchronizer<? extends Artefact> synchronizer, Artefact artefact, ArtefactLifecycle lifecycle, String message);
+    /**
+     * Register errors.
+     *
+     * @param synchronizer the synchronizer
+     * @param artefact the artefact
+     * @param lifecycle the lifecycle
+     * @param message the message
+     */
+    void registerState(Synchronizer<? extends Artefact> synchronizer, Artefact artefact, ArtefactLifecycle lifecycle, String message);
 
 }

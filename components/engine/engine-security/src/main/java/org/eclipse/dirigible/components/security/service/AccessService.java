@@ -30,126 +30,126 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class AccessService implements ArtefactService<Access> {
 
-  /**
-   * The security access repository.
-   */
-  @Autowired
-  private AccessRepository accessRepository;
+    /**
+     * The security access repository.
+     */
+    @Autowired
+    private AccessRepository accessRepository;
 
-  /**
-   * Gets the all.
-   *
-   * @return the all
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public List<Access> getAll() {
-    return accessRepository.findAll();
-  }
-
-  /**
-   * Find all.
-   *
-   * @param pageable the pageable
-   * @return the page
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public Page<Access> getPages(Pageable pageable) {
-    return accessRepository.findAll(pageable);
-  }
-
-  /**
-   * Find by id.
-   *
-   * @param id the id
-   * @return the security access
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public Access findById(Long id) {
-    Optional<Access> securityAccess = accessRepository.findById(id);
-    if (securityAccess.isPresent()) {
-      return securityAccess.get();
-    } else {
-      throw new IllegalArgumentException("Access with id does not exist: " + id);
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Access> getAll() {
+        return accessRepository.findAll();
     }
-  }
 
-  /**
-   * Find by name.
-   *
-   * @param name the name
-   * @return the security access
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public Access findByName(String name) {
-    Access filter = new Access();
-    filter.setName(name);
-    Example<Access> example = Example.of(filter);
-    Optional<Access> access = accessRepository.findOne(example);
-    if (access.isPresent()) {
-      return access.get();
-    } else {
-      throw new IllegalArgumentException("Access with name does not exist: " + name);
+    /**
+     * Find all.
+     *
+     * @param pageable the pageable
+     * @return the page
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Access> getPages(Pageable pageable) {
+        return accessRepository.findAll(pageable);
     }
-  }
 
-  /**
-   * Find by location.
-   *
-   * @param location the location
-   * @return the list
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public List<Access> findByLocation(String location) {
-    Access filter = new Access();
-    filter.setLocation(location);
-    Example<Access> example = Example.of(filter);
-    List<Access> list = accessRepository.findAll(example);
-    return list;
-  }
-
-  /**
-   * Find by key.
-   *
-   * @param key the key
-   * @return the security access
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public Access findByKey(String key) {
-    Access filter = new Access();
-    filter.setKey(key);
-    Example<Access> example = Example.of(filter);
-    Optional<Access> access = accessRepository.findOne(example);
-    if (access.isPresent()) {
-      return access.get();
+    /**
+     * Find by id.
+     *
+     * @param id the id
+     * @return the security access
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Access findById(Long id) {
+        Optional<Access> securityAccess = accessRepository.findById(id);
+        if (securityAccess.isPresent()) {
+            return securityAccess.get();
+        } else {
+            throw new IllegalArgumentException("Access with id does not exist: " + id);
+        }
     }
-    return null;
-  }
 
-  /**
-   * Save.
-   *
-   * @param securityAccess the security access
-   * @return the security access
-   */
-  @Override
-  public Access save(Access securityAccess) {
-    return accessRepository.saveAndFlush(securityAccess);
-  }
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the security access
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Access findByName(String name) {
+        Access filter = new Access();
+        filter.setName(name);
+        Example<Access> example = Example.of(filter);
+        Optional<Access> access = accessRepository.findOne(example);
+        if (access.isPresent()) {
+            return access.get();
+        } else {
+            throw new IllegalArgumentException("Access with name does not exist: " + name);
+        }
+    }
 
-  /**
-   * Delete.
-   *
-   * @param securityAccess the security access
-   */
-  @Override
-  public void delete(Access securityAccess) {
-    accessRepository.delete(securityAccess);
-  }
+    /**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Access> findByLocation(String location) {
+        Access filter = new Access();
+        filter.setLocation(location);
+        Example<Access> example = Example.of(filter);
+        List<Access> list = accessRepository.findAll(example);
+        return list;
+    }
+
+    /**
+     * Find by key.
+     *
+     * @param key the key
+     * @return the security access
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Access findByKey(String key) {
+        Access filter = new Access();
+        filter.setKey(key);
+        Example<Access> example = Example.of(filter);
+        Optional<Access> access = accessRepository.findOne(example);
+        if (access.isPresent()) {
+            return access.get();
+        }
+        return null;
+    }
+
+    /**
+     * Save.
+     *
+     * @param securityAccess the security access
+     * @return the security access
+     */
+    @Override
+    public Access save(Access securityAccess) {
+        return accessRepository.saveAndFlush(securityAccess);
+    }
+
+    /**
+     * Delete.
+     *
+     * @param securityAccess the security access
+     */
+    @Override
+    public void delete(Access securityAccess) {
+        accessRepository.delete(securityAccess);
+    }
 
 }

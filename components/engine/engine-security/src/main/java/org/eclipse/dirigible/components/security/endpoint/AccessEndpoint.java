@@ -33,24 +33,24 @@ import java.util.List;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_SECURED + "security")
 public class AccessEndpoint extends BaseEndpoint {
 
-  /**
-   * The Constant logger.
-   */
-  private static final Logger logger = LoggerFactory.getLogger(AccessEndpoint.class);
+    /**
+     * The Constant logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(AccessEndpoint.class);
 
-  /**
-   * The security access service.
-   */
-  @Autowired
-  private AccessService accessService;
+    /**
+     * The security access service.
+     */
+    @Autowired
+    private AccessService accessService;
 
-  /**
-   * Gets the security accesses.
-   *
-   * @return the security accesses
-   */
-  @GetMapping("/access")
-  public ResponseEntity<List<Access>> getSecurityAccesses() {
-    return ResponseEntity.ok(accessService.getAll());
-  }
+    /**
+     * Gets the security accesses.
+     *
+     * @return the security accesses
+     */
+    @GetMapping("/access")
+    public ResponseEntity<List<Access>> getSecurityAccesses() {
+        return ResponseEntity.ok(accessService.getAll());
+    }
 }

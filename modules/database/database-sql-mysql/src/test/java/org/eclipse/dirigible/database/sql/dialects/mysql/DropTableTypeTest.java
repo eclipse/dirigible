@@ -18,14 +18,14 @@ import org.junit.Test;
  */
 public class DropTableTypeTest {
 
-  /**
-   * Drop table type MySQL dialect.
-   */
-  @Test(expected = IllegalStateException.class)
-  public void executeDropTableTypeDifferentFromHanaDialect() {
-    SqlFactory.getNative(new MySQLSqlDialect())
-              .drop()
-              .tableType("CUSTOMERS_STRUCTURE")
-              .build();
-  }
+    /**
+     * Drop table type MySQL dialect.
+     */
+    @Test(expected = IllegalStateException.class)
+    public void executeDropTableTypeDifferentFromHanaDialect() {
+        SqlFactory.getNative(new MySQLSqlDialect())
+                  .drop()
+                  .tableType("CUSTOMERS_STRUCTURE")
+                  .build();
+    }
 }

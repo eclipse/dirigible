@@ -31,56 +31,56 @@ import org.springframework.stereotype.Component;
 @Component
 public class HttpUploadFacade {
 
-  /** The Constant NO_VALID_REQUEST. */
-  private static final String NO_VALID_REQUEST = "Trying to use HTTP Upload Facade without a valid Request";
+    /** The Constant NO_VALID_REQUEST. */
+    private static final String NO_VALID_REQUEST = "Trying to use HTTP Upload Facade without a valid Request";
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(HttpUploadFacade.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(HttpUploadFacade.class);
 
-  /**
-   * Checks if the request contains multipart content.
-   *
-   * @return true, if the request contains is multipart content
-   */
-  public static final boolean isMultipartContent() {
+    /**
+     * Checks if the request contains multipart content.
+     *
+     * @return true, if the request contains is multipart content
+     */
+    public static final boolean isMultipartContent() {
 
-    HttpServletRequest request = HttpRequestFacade.getRequest();
-    if (request == null) {
-      return false;
+        HttpServletRequest request = HttpRequestFacade.getRequest();
+        if (request == null) {
+            return false;
+        }
+
+        return ServletFileUpload.isMultipartContent(request);
     }
 
-    return ServletFileUpload.isMultipartContent(request);
-  }
-
-  /**
-   * Parses the request.
-   *
-   * @return A list of FileItem instances parsed from the request, in the order that they were
-   *         transmitted.
-   * @throws FileUploadException if there is a problem parsing the request
-   */
-  public static final List<FileItem> parseRequest() throws FileUploadException {
-    ServletFileUpload servletFileUpload = new ServletFileUpload(new DiskFileItemFactory());
-    HttpServletRequest request = HttpRequestFacade.getRequest();
-    if (request == null) {
-      throw new InvalidStateException(NO_VALID_REQUEST);
+    /**
+     * Parses the request.
+     *
+     * @return A list of FileItem instances parsed from the request, in the order that they were
+     *         transmitted.
+     * @throws FileUploadException if there is a problem parsing the request
+     */
+    public static final List<FileItem> parseRequest() throws FileUploadException {
+        ServletFileUpload servletFileUpload = new ServletFileUpload(new DiskFileItemFactory());
+        HttpServletRequest request = HttpRequestFacade.getRequest();
+        if (request == null) {
+            throw new InvalidStateException(NO_VALID_REQUEST);
+        }
+        List<FileItem> fileItems = servletFileUpload.parseRequest(request);
+        return fileItems;
     }
-    List<FileItem> fileItems = servletFileUpload.parseRequest(request);
-    return fileItems;
-  }
 
-  /**
-   * Converts header names iterator object to list object.
-   *
-   * @param headerNames header names iterator
-   * @return A list of String elements which represent the name of the multipart request headers.
-   */
-  public static final List<String> headerNamesToList(Iterator<String> headerNames) {
-    List<String> headerNamesList = new ArrayList<String>();
-    while (headerNames.hasNext()) {
-      headerNamesList.add(headerNames.next());
+    /**
+     * Converts header names iterator object to list object.
+     *
+     * @param headerNames header names iterator
+     * @return A list of String elements which represent the name of the multipart request headers.
+     */
+    public static final List<String> headerNamesToList(Iterator<String> headerNames) {
+        List<String> headerNamesList = new ArrayList<String>();
+        while (headerNames.hasNext()) {
+            headerNamesList.add(headerNames.next());
+        }
+        return headerNamesList;
     }
-    return headerNamesList;
-  }
 
 }

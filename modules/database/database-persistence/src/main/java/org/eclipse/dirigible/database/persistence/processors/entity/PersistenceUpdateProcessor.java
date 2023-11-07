@@ -32,116 +32,116 @@ import org.slf4j.LoggerFactory;
  */
 public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(PersistenceUpdateProcessor.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(PersistenceUpdateProcessor.class);
 
-  /**
-   * Instantiates a new persistence update processor.
-   *
-   * @param entityManagerInterceptor the entity manager interceptor
-   */
-  public PersistenceUpdateProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
-    super(entityManagerInterceptor);
-  }
-
-  /**
-   * Generate script.
-   *
-   * @param connection the connection
-   * @param tableModel the table model
-   * @return the string
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript
-   * (java.sql. Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
-   */
-  @Override
-  protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-    UpdateBuilder updateBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
-                                            .update()
-                                            .table(tableModel.getTableName());
-
-    for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
-      if (!columnModel.isPrimaryKey()) {
-        updateBuilder.set(columnModel.getName(), ISqlKeywords.QUESTION);
-      }
+    /**
+     * Instantiates a new persistence update processor.
+     *
+     * @param entityManagerInterceptor the entity manager interceptor
+     */
+    public PersistenceUpdateProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
+        super(entityManagerInterceptor);
     }
 
-    updateBuilder.where(new StringBuilder() //
-                                           .append(getPrimaryKey(tableModel)) //
-                                           .append(ISqlKeywords.SPACE) //
-                                           .append(ISqlKeywords.EQUALS) //
-                                           .append(ISqlKeywords.SPACE) //
-                                           .append(ISqlKeywords.QUESTION) //
-                                           .toString());
+    /**
+     * Generate script.
+     *
+     * @param connection the connection
+     * @param tableModel the table model
+     * @return the string
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript
+     * (java.sql. Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+     */
+    @Override
+    protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
+        UpdateBuilder updateBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
+                                                .update()
+                                                .table(tableModel.getTableName());
 
-    String sql = updateBuilder.toString();
-    if (logger.isTraceEnabled()) {
-      logger.trace(sql);
-    }
-    return sql;
-  }
+        for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
+            if (!columnModel.isPrimaryKey()) {
+                updateBuilder.set(columnModel.getName(), ISqlKeywords.QUESTION);
+            }
+        }
 
-  /**
-   * Update.
-   *
-   * @param connection the connection
-   * @param tableModel the table model
-   * @param pojo the pojo
-   * @return the int
-   * @throws PersistenceException the persistence exception
-   */
-  public int update(Connection connection, PersistenceTableModel tableModel, T pojo) throws PersistenceException {
-    if (logger.isTraceEnabled()) {
-      logger.trace("update -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel)
-          + ", pojo: " + Serializer.serializePojo(pojo));
-    }
-    String sql = null;
-    PreparedStatement preparedStatement = null;
-    try {
-      PersistenceTableColumnModel primaryKeyColumnModel = getPrimaryKeyModel(tableModel);
-      Object id = getValueFromPojo(pojo, primaryKeyColumnModel);
-      if (id == null) {
-        throw new PersistenceException("The key for update cannot be null.");
-      }
-      sql = generateScript(connection, tableModel);
-      preparedStatement = openPreparedStatement(connection, sql);
-      setValuesFromPojo(tableModel, pojo, preparedStatement);
-      setValue(preparedStatement, tableModel.getColumns()
-                                            .size(),
-          id);
-      return preparedStatement.executeUpdate();
-    } catch (Exception e) {
-      if (logger.isErrorEnabled()) {
-        logger.error(sql);
-      }
-      if (logger.isErrorEnabled()) {
-        logger.error(e.getMessage(), e);
-      }
-      throw new PersistenceException(sql, e);
-    } finally {
-      closePreparedStatement(preparedStatement);
-    }
-  }
+        updateBuilder.where(new StringBuilder() //
+                                               .append(getPrimaryKey(tableModel)) //
+                                               .append(ISqlKeywords.SPACE) //
+                                               .append(ISqlKeywords.EQUALS) //
+                                               .append(ISqlKeywords.SPACE) //
+                                               .append(ISqlKeywords.QUESTION) //
+                                               .toString());
 
-  /**
-   * Should set column value.
-   *
-   * @param columnModel the column model
-   * @return true, if successful
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#
-   * shouldSetColumnValue(org.
-   * eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel)
-   */
-  @Override
-  protected boolean shouldSetColumnValue(PersistenceTableColumnModel columnModel) {
-    return !columnModel.isPrimaryKey();
-  }
+        String sql = updateBuilder.toString();
+        if (logger.isTraceEnabled()) {
+            logger.trace(sql);
+        }
+        return sql;
+    }
+
+    /**
+     * Update.
+     *
+     * @param connection the connection
+     * @param tableModel the table model
+     * @param pojo the pojo
+     * @return the int
+     * @throws PersistenceException the persistence exception
+     */
+    public int update(Connection connection, PersistenceTableModel tableModel, T pojo) throws PersistenceException {
+        if (logger.isTraceEnabled()) {
+            logger.trace("update -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel)
+                    + ", pojo: " + Serializer.serializePojo(pojo));
+        }
+        String sql = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            PersistenceTableColumnModel primaryKeyColumnModel = getPrimaryKeyModel(tableModel);
+            Object id = getValueFromPojo(pojo, primaryKeyColumnModel);
+            if (id == null) {
+                throw new PersistenceException("The key for update cannot be null.");
+            }
+            sql = generateScript(connection, tableModel);
+            preparedStatement = openPreparedStatement(connection, sql);
+            setValuesFromPojo(tableModel, pojo, preparedStatement);
+            setValue(preparedStatement, tableModel.getColumns()
+                                                  .size(),
+                    id);
+            return preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(sql);
+            }
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
+            throw new PersistenceException(sql, e);
+        } finally {
+            closePreparedStatement(preparedStatement);
+        }
+    }
+
+    /**
+     * Should set column value.
+     *
+     * @param columnModel the column model
+     * @return true, if successful
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#
+     * shouldSetColumnValue(org.
+     * eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel)
+     */
+    @Override
+    protected boolean shouldSetColumnValue(PersistenceTableColumnModel columnModel) {
+        return !columnModel.isPrimaryKey();
+    }
 }

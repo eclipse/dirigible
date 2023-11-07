@@ -17,17 +17,17 @@ import java.util.Properties;
  */
 public interface MailConfigurationProvider {
 
-  /**
-   * Gets the name of the provider.
-   *
-   * @return the name
-   */
-  String getName();
+    /**
+     * Gets the name of the provider.
+     *
+     * @return the name
+     */
+    String getName();
 
-  /**
-   * Get Properties for MailClient Instance.
-   *
-   * @return MailClient instance
-   */
-  Properties getProperties();
+    /**
+     * Get Properties for MailClient Instance.
+     *
+     * @return MailClient instance
+     */
+    Properties getProperties();
 }

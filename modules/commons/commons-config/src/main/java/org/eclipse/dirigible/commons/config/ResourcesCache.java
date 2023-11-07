@@ -20,95 +20,95 @@ import java.util.UUID;
  */
 public class ResourcesCache {
 
-  /** The Constant WEB_CACHE. */
-  private static final Cache WEB_CACHE = new Cache();
+    /** The Constant WEB_CACHE. */
+    private static final Cache WEB_CACHE = new Cache();
 
-  /** The Constant THEME_CACHE. */
-  private static final Cache THEME_CACHE = new Cache();
-
-  /**
-   * Gets the web cache.
-   *
-   * @return the web cache
-   */
-  public static Cache getWebCache() {
-    return WEB_CACHE;
-  }
-
-  /**
-   * Gets the theme cache.
-   *
-   * @return the theme cache
-   */
-  public static Cache getThemeCache() {
-    return THEME_CACHE;
-  }
-
-  /**
-   * Clear.
-   */
-  public static void clear() {
-    WEB_CACHE.clear();
-    THEME_CACHE.clear();
-  }
-
-  /**
-   * Instantiates a new resources cache.
-   */
-  private ResourcesCache() {
-
-  }
-
-  /**
-   * The Class Cache.
-   */
-  public static class Cache {
-
-    /** The Constant CACHE. */
-    private static final Map<String, String> CACHE = Collections.synchronizedMap(new HashMap<String, String>());
+    /** The Constant THEME_CACHE. */
+    private static final Cache THEME_CACHE = new Cache();
 
     /**
-     * Instantiates a new cache.
+     * Gets the web cache.
+     *
+     * @return the web cache
      */
-    private Cache() {
-
+    public static Cache getWebCache() {
+        return WEB_CACHE;
     }
 
     /**
-     * Gets the tag.
+     * Gets the theme cache.
      *
-     * @param id the id
-     * @return the tag
+     * @return the theme cache
      */
-    public String getTag(String id) {
-      return CACHE.get(id);
-    }
-
-    /**
-     * Sets the tag.
-     *
-     * @param id the id
-     * @param tag the tag
-     */
-    public void setTag(String id, String tag) {
-      CACHE.put(id, tag);
-    }
-
-    /**
-     * Generate tag.
-     *
-     * @return the string
-     */
-    public String generateTag() {
-      return UUID.randomUUID()
-                 .toString();
+    public static Cache getThemeCache() {
+        return THEME_CACHE;
     }
 
     /**
      * Clear.
      */
-    public void clear() {
-      CACHE.clear();
+    public static void clear() {
+        WEB_CACHE.clear();
+        THEME_CACHE.clear();
     }
-  }
+
+    /**
+     * Instantiates a new resources cache.
+     */
+    private ResourcesCache() {
+
+    }
+
+    /**
+     * The Class Cache.
+     */
+    public static class Cache {
+
+        /** The Constant CACHE. */
+        private static final Map<String, String> CACHE = Collections.synchronizedMap(new HashMap<String, String>());
+
+        /**
+         * Instantiates a new cache.
+         */
+        private Cache() {
+
+        }
+
+        /**
+         * Gets the tag.
+         *
+         * @param id the id
+         * @return the tag
+         */
+        public String getTag(String id) {
+            return CACHE.get(id);
+        }
+
+        /**
+         * Sets the tag.
+         *
+         * @param id the id
+         * @param tag the tag
+         */
+        public void setTag(String id, String tag) {
+            CACHE.put(id, tag);
+        }
+
+        /**
+         * Generate tag.
+         *
+         * @return the string
+         */
+        public String generateTag() {
+            return UUID.randomUUID()
+                       .toString();
+        }
+
+        /**
+         * Clear.
+         */
+        public void clear() {
+            CACHE.clear();
+        }
+    }
 }

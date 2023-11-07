@@ -24,44 +24,44 @@ import org.junit.Test;
  */
 public class RepositoryGenericDeletePrefixTest {
 
-  /** The repository. */
-  protected IRepository repository;
+    /** The repository. */
+    protected IRepository repository;
 
 
 
-  /**
-   * Test remove collection.
-   */
-  @Test
-  public void testRemoveCollection() {
-    if (repository == null) {
-      return;
+    /**
+     * Test remove collection.
+     */
+    @Test
+    public void testRemoveCollection() {
+        if (repository == null) {
+            return;
+        }
+
+        try {
+            ICollection collectionAbcd = repository.createCollection("/abcd"); //$NON-NLS-1$
+            ICollection collectionAbcdEfgh = repository.createCollection("/abcd/efgh"); //$NON-NLS-1$
+            ICollection collectionAbcd2 = repository.createCollection("/abcd2"); //$NON-NLS-1$
+            ICollection collectionAbcd2Efgh = repository.createCollection("/abcd2/efgh"); //$NON-NLS-1$
+            assertNotNull(collectionAbcd);
+            assertNotNull(collectionAbcd2);
+            repository.removeCollection("/abcd"); //$NON-NLS-1$
+            collectionAbcd = repository.getCollection("/abcd"); //$NON-NLS-1$
+            assertNotNull(collectionAbcd);
+            assertFalse(collectionAbcd.exists());
+            collectionAbcd2 = repository.getCollection("/abcd2"); //$NON-NLS-1$
+            assertNotNull(collectionAbcd2);
+            assertTrue(collectionAbcd2.exists());
+            collectionAbcdEfgh = repository.getCollection("/abcd/efgh"); //$NON-NLS-1$
+            assertNotNull(collectionAbcdEfgh);
+            assertFalse(collectionAbcdEfgh.exists());
+            collectionAbcd2Efgh = repository.getCollection("/abcd2/efgh"); //$NON-NLS-1$
+            assertNotNull(collectionAbcd2Efgh);
+            assertTrue(collectionAbcd2Efgh.exists());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
     }
-
-    try {
-      ICollection collectionAbcd = repository.createCollection("/abcd"); //$NON-NLS-1$
-      ICollection collectionAbcdEfgh = repository.createCollection("/abcd/efgh"); //$NON-NLS-1$
-      ICollection collectionAbcd2 = repository.createCollection("/abcd2"); //$NON-NLS-1$
-      ICollection collectionAbcd2Efgh = repository.createCollection("/abcd2/efgh"); //$NON-NLS-1$
-      assertNotNull(collectionAbcd);
-      assertNotNull(collectionAbcd2);
-      repository.removeCollection("/abcd"); //$NON-NLS-1$
-      collectionAbcd = repository.getCollection("/abcd"); //$NON-NLS-1$
-      assertNotNull(collectionAbcd);
-      assertFalse(collectionAbcd.exists());
-      collectionAbcd2 = repository.getCollection("/abcd2"); //$NON-NLS-1$
-      assertNotNull(collectionAbcd2);
-      assertTrue(collectionAbcd2.exists());
-      collectionAbcdEfgh = repository.getCollection("/abcd/efgh"); //$NON-NLS-1$
-      assertNotNull(collectionAbcdEfgh);
-      assertFalse(collectionAbcdEfgh.exists());
-      collectionAbcd2Efgh = repository.getCollection("/abcd2/efgh"); //$NON-NLS-1$
-      assertNotNull(collectionAbcd2Efgh);
-      assertTrue(collectionAbcd2Efgh.exists());
-    } catch (Exception e) {
-      e.printStackTrace();
-      fail(e.getMessage());
-    }
-  }
 
 }

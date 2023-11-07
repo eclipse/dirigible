@@ -19,46 +19,46 @@ import org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilde
  */
 public class MySQLCreateBranchingBuilder extends CreateBranchingBuilder {
 
-  /**
-   * Instantiates a new mySQL create branching builder.
-   *
-   * @param dialect the dialect
-   */
-  public MySQLCreateBranchingBuilder(ISqlDialect dialect) {
-    super(dialect);
-  }
+    /**
+     * Instantiates a new mySQL create branching builder.
+     *
+     * @param dialect the dialect
+     */
+    public MySQLCreateBranchingBuilder(ISqlDialect dialect) {
+        super(dialect);
+    }
 
-  /**
-   * Sequence.
-   *
-   * @param sequence the sequence
-   * @return the creates the sequence builder
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(java.lang.String)
-   */
-  @Override
-  public CreateSequenceBuilder sequence(String sequence) {
-    return new MySQLCreateSequenceBuilder(this.getDialect(), sequence);
-  }
+    /**
+     * Sequence.
+     *
+     * @param sequence the sequence
+     * @return the creates the sequence builder
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(java.lang.String)
+     */
+    @Override
+    public CreateSequenceBuilder sequence(String sequence) {
+        return new MySQLCreateSequenceBuilder(this.getDialect(), sequence);
+    }
 
-  /**
-   * View.
-   *
-   * @param view the view
-   * @return the my SQL create view builder
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#view(java.lang.String)
-   */
-  @Override
-  public MySQLCreateViewBuilder view(String view) {
-    return new MySQLCreateViewBuilder(this.getDialect(), view);
-  }
+    /**
+     * View.
+     *
+     * @param view the view
+     * @return the my SQL create view builder
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#view(java.lang.String)
+     */
+    @Override
+    public MySQLCreateViewBuilder view(String view) {
+        return new MySQLCreateViewBuilder(this.getDialect(), view);
+    }
 
 }

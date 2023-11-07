@@ -26,65 +26,65 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 @Table(name = "DIRIGIBLE_ENTITIES")
 public class Entity extends Artefact {
 
-  /** The Constant ARTEFACT_TYPE. */
-  public static final String ARTEFACT_TYPE = "entity";
+    /** The Constant ARTEFACT_TYPE. */
+    public static final String ARTEFACT_TYPE = "entity";
 
-  /** The id. */
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "ENTITY_ID", nullable = false)
-  private Long id;
+    /** The id. */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ENTITY_ID", nullable = false)
+    private Long id;
 
-  /** The content. */
-  @Transient
-  private transient byte[] content;
+    /** The content. */
+    @Transient
+    private transient byte[] content;
 
-  /**
-   * Gets the id.
-   *
-   * @return the id
-   */
-  public Long getId() {
-    return id;
-  }
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
 
-  /**
-   * Sets the id.
-   *
-   * @param id the id to set
-   */
-  public void setId(Long id) {
-    this.id = id;
-  }
+    /**
+     * Sets the id.
+     *
+     * @param id the id to set
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  /**
-   * Gets the content.
-   *
-   * @return the content
-   */
-  public byte[] getContent() {
-    return content;
-  }
+    /**
+     * Gets the content.
+     *
+     * @return the content
+     */
+    public byte[] getContent() {
+        return content;
+    }
 
-  /**
-   * Sets the content.
-   *
-   * @param content the content to set
-   */
-  public void setContent(byte[] content) {
-    this.content = content;
-  }
+    /**
+     * Sets the content.
+     *
+     * @param content the content to set
+     */
+    public void setContent(byte[] content) {
+        this.content = content;
+    }
 
-  /**
-   * To string.
-   *
-   * @return the string
-   */
-  @Override
-  public String toString() {
-    return "Entity [id=" + id + ", location=" + location + ", name=" + name + ", type=" + type + ", description=" + description + ", key="
-        + key + ", dependencies=" + dependencies + ", lifecycle=" + lifecycle + ", createdBy=" + createdBy + ", createdAt=" + createdAt
-        + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
-  }
+    /**
+     * To string.
+     *
+     * @return the string
+     */
+    @Override
+    public String toString() {
+        return "Entity [id=" + id + ", location=" + location + ", name=" + name + ", type=" + type + ", description=" + description
+                + ", key=" + key + ", dependencies=" + dependencies + ", lifecycle=" + lifecycle + ", createdBy=" + createdBy
+                + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
+    }
 
 }

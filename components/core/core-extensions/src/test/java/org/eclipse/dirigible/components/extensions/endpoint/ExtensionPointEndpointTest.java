@@ -52,99 +52,99 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 public class ExtensionPointEndpointTest {
 
-  @Autowired
-  private EntityManager entityManager;
+    @Autowired
+    private EntityManager entityManager;
 
-  @Autowired
-  private ExtensionPointService extensionPointService;
+    @Autowired
+    private ExtensionPointService extensionPointService;
 
-  @Autowired
-  private ExtensionPointRepository extensionPointRepository;
+    @Autowired
+    private ExtensionPointRepository extensionPointRepository;
 
-  private ExtensionPoint testExtensionPoint;
+    private ExtensionPoint testExtensionPoint;
 
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Autowired
-  protected WebApplicationContext wac;
+    @Autowired
+    protected WebApplicationContext wac;
 
-  @Autowired
-  private FilterChainProxy springSecurityFilterChain;
+    @Autowired
+    private FilterChainProxy springSecurityFilterChain;
 
-  @BeforeEach
-  public void setup() throws Exception {
+    @BeforeEach
+    public void setup() throws Exception {
 
-    cleanup();
+        cleanup();
 
-    // create test ExtensionPoints
-    extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("/a/b/c/e1.extensionpoint", "e1", "description"));
-    extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("/a/b/c/e2.extensionpoint", "e2", "description"));
-    extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("/a/b/c/e3.extensionpoint", "e3", "description"));
-    extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("/a/b/c/e4.extensionpoint", "e4", "description"));
-    extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("/a/b/c/e5.extensionpoint", "e5", "description"));
+        // create test ExtensionPoints
+        extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("/a/b/c/e1.extensionpoint", "e1", "description"));
+        extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("/a/b/c/e2.extensionpoint", "e2", "description"));
+        extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("/a/b/c/e3.extensionpoint", "e3", "description"));
+        extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("/a/b/c/e4.extensionpoint", "e4", "description"));
+        extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("/a/b/c/e5.extensionpoint", "e5", "description"));
 
-    Page<ExtensionPoint> extensionPoints = extensionPointService.getPages(PageRequest.of(0, BaseEndpoint.DEFAULT_PAGE_SIZE));
-    assertNotNull(extensionPoints);
-    assertEquals(5L, extensionPoints.getTotalElements());
+        Page<ExtensionPoint> extensionPoints = extensionPointService.getPages(PageRequest.of(0, BaseEndpoint.DEFAULT_PAGE_SIZE));
+        assertNotNull(extensionPoints);
+        assertEquals(5L, extensionPoints.getTotalElements());
 
-    testExtensionPoint = extensionPoints.getContent()
-                                        .get(0);
+        testExtensionPoint = extensionPoints.getContent()
+                                            .get(0);
 
-    entityManager.refresh(testExtensionPoint);
+        entityManager.refresh(testExtensionPoint);
 
-  }
+    }
 
-  @AfterEach
-  public void cleanup() throws Exception {
-    extensionPointRepository.deleteAll();
-  }
+    @AfterEach
+    public void cleanup() throws Exception {
+        extensionPointRepository.deleteAll();
+    }
 
-  @Test
-  public void findAllExtensionPoints() {
-    Integer size = 10;
-    Integer page = 0;
-    Pageable pageable = PageRequest.of(page, size);
-    assertNotNull(extensionPointService.getPages(pageable));
-  }
+    @Test
+    public void findAllExtensionPoints() {
+        Integer size = 10;
+        Integer page = 0;
+        Pageable pageable = PageRequest.of(page, size);
+        assertNotNull(extensionPointService.getPages(pageable));
+    }
 
-  @Test
-  public void getExtensionPointById() throws Exception {
-    Long id = testExtensionPoint.getId();
+    @Test
+    public void getExtensionPointById() throws Exception {
+        Long id = testExtensionPoint.getId();
 
-    mockMvc.perform(get("/services/core/extensionpoints/{id}", id))
-           .andDo(print())
-           .andExpect(status().is2xxSuccessful());
-  }
+        mockMvc.perform(get("/services/core/extensionpoints/{id}", id))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+    }
 
-  @Test
-  public void getExtensionPointByName() throws Exception {
-    String name = testExtensionPoint.getName();
+    @Test
+    public void getExtensionPointByName() throws Exception {
+        String name = testExtensionPoint.getName();
 
-    mockMvc.perform(get("/services/core/extensionpoints/search?name={name}", name))
-           .andDo(print())
-           .andExpect(status().is2xxSuccessful());
-  }
+        mockMvc.perform(get("/services/core/extensionpoints/search?name={name}", name))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+    }
 
-  @Test
-  public void getPagesExtensionPoints() throws Exception {
-    String name = testExtensionPoint.getName();
+    @Test
+    public void getPagesExtensionPoints() throws Exception {
+        String name = testExtensionPoint.getName();
 
-    mockMvc.perform(get("/services/core/extensionpoints/pages", name))
-           .andDo(print())
-           .andExpect(status().is2xxSuccessful());
-  }
+        mockMvc.perform(get("/services/core/extensionpoints/pages", name))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+    }
 
-  @Test
-  public void getAllExtensionPoints() throws Exception {
-    String name = testExtensionPoint.getName();
+    @Test
+    public void getAllExtensionPoints() throws Exception {
+        String name = testExtensionPoint.getName();
 
-    mockMvc.perform(get("/services/core/extensionpoints", name))
-           .andDo(print())
-           .andExpect(status().is2xxSuccessful());
-  }
+        mockMvc.perform(get("/services/core/extensionpoints", name))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+    }
 
-  @SpringBootApplication
-  static class TestConfiguration {
-  }
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 }

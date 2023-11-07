@@ -19,19 +19,19 @@ import org.graalvm.polyglot.Context;
  */
 public interface DirigibleJavascriptHooksProvider {
 
-  /**
-   * Gets the on before context created listener.
-   *
-   * @return the on before context created listener
-   */
-  Consumer<Context.Builder> getOnBeforeContextCreatedListener();
+    /**
+     * Gets the on before context created listener.
+     *
+     * @return the on before context created listener
+     */
+    Consumer<Context.Builder> getOnBeforeContextCreatedListener();
 
-  /**
-   * Gets the on after context created listener.
-   *
-   * @return the on after context created listener
-   */
-  Consumer<Context> getOnAfterContextCreatedListener();
+    /**
+     * Gets the on after context created listener.
+     *
+     * @return the on after context created listener
+     */
+    Consumer<Context> getOnAfterContextCreatedListener();
 
 
 }

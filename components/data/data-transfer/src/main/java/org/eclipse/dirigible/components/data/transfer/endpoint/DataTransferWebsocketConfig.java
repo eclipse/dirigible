@@ -27,37 +27,37 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class DataTransferWebsocketConfig implements WebSocketConfigurer {
 
-  /** The data transfer service. */
-  private final DataTransferService dataTransferService;
+    /** The data transfer service. */
+    private final DataTransferService dataTransferService;
 
-  /**
-   * Instantiates a new data transfer websocket config.
-   *
-   * @param dataTransferService the data transfer service
-   */
-  @Autowired
-  public DataTransferWebsocketConfig(DataTransferService dataTransferService) {
-    this.dataTransferService = dataTransferService;
-  }
+    /**
+     * Instantiates a new data transfer websocket config.
+     *
+     * @param dataTransferService the data transfer service
+     */
+    @Autowired
+    public DataTransferWebsocketConfig(DataTransferService dataTransferService) {
+        this.dataTransferService = dataTransferService;
+    }
 
-  /**
-   * Register web socket handlers.
-   *
-   * @param registry the registry
-   */
-  @Override
-  public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-    registry.addHandler(getDataTransferWebsocketHandler(), BaseEndpoint.PREFIX_ENDPOINT_WEBSOCKETS + "/data/transfer");
-  }
+    /**
+     * Register web socket handlers.
+     *
+     * @param registry the registry
+     */
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(getDataTransferWebsocketHandler(), BaseEndpoint.PREFIX_ENDPOINT_WEBSOCKETS + "/data/transfer");
+    }
 
-  /**
-   * Gets the data transfer websocket handler.
-   *
-   * @return the data transfer websocket handler
-   */
-  @Bean
-  public WebSocketHandler getDataTransferWebsocketHandler() {
-    return new DataTransferWebsocketHandler(dataTransferService);
-  }
+    /**
+     * Gets the data transfer websocket handler.
+     *
+     * @return the data transfer websocket handler
+     */
+    @Bean
+    public WebSocketHandler getDataTransferWebsocketHandler() {
+        return new DataTransferWebsocketHandler(dataTransferService);
+    }
 
 }

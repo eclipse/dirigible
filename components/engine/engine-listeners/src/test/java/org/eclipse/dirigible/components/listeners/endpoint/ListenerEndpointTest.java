@@ -41,45 +41,45 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 public class ListenerEndpointTest {
 
-  @Autowired
-  private ListenerService listenerService;
+    @Autowired
+    private ListenerService listenerService;
 
-  @Autowired
-  private ListenerRepository listenerRepository;
+    @Autowired
+    private ListenerRepository listenerRepository;
 
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Autowired
-  protected WebApplicationContext wac;
+    @Autowired
+    protected WebApplicationContext wac;
 
-  @Autowired
-  private FilterChainProxy springSecurityFilterChain;
+    @Autowired
+    private FilterChainProxy springSecurityFilterChain;
 
-  @BeforeEach
-  public void setup() {
+    @BeforeEach
+    public void setup() {
 
-    cleanup();
+        cleanup();
 
-    listenerService.save(new Listener("/a/b/c/l1.listener", "name1", "description", "handler1", 'Q'));
-    listenerService.save(new Listener("/a/b/c/l2.listener", "name2", "description", "handler2", 'Q'));
-    listenerService.save(new Listener("/a/b/c/l3.listener", "name3", "description", "handler3", 'Q'));
-  }
+        listenerService.save(new Listener("/a/b/c/l1.listener", "name1", "description", "handler1", 'Q'));
+        listenerService.save(new Listener("/a/b/c/l2.listener", "name2", "description", "handler2", 'Q'));
+        listenerService.save(new Listener("/a/b/c/l3.listener", "name3", "description", "handler3", 'Q'));
+    }
 
-  @AfterEach
-  public void cleanup() {
-    listenerRepository.deleteAll();
-  }
+    @AfterEach
+    public void cleanup() {
+        listenerRepository.deleteAll();
+    }
 
-  @Test
-  public void findAllExtensionPoints() throws Exception {
-    mockMvc.perform(get("/services/listeners"))
-           .andDo(print())
-           .andExpect(status().is2xxSuccessful());
-    // .andExpect(jsonPath("$.content[0].location").value("/a/b/c/l1.listener"));
-  }
+    @Test
+    public void findAllExtensionPoints() throws Exception {
+        mockMvc.perform(get("/services/listeners"))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+        // .andExpect(jsonPath("$.content[0].location").value("/a/b/c/l1.listener"));
+    }
 
-  @SpringBootApplication
-  static class TestConfiguration {
-  }
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 }

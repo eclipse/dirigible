@@ -18,24 +18,24 @@ import org.eclipse.dirigible.database.sql.ISqlDialectProvider;
  */
 public class HanaSqlDialectProvider implements ISqlDialectProvider {
 
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  @Override
-  public String getName() {
-    return "HDB";
-  }
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    @Override
+    public String getName() {
+        return "HDB";
+    }
 
-  /**
-   * Gets the dialect.
-   *
-   * @return the dialect
-   */
-  @Override
-  public ISqlDialect getDialect() {
-    return new HanaSqlDialect();
-  }
+    /**
+     * Gets the dialect.
+     *
+     * @return the dialect
+     */
+    @Override
+    public ISqlDialect getDialect() {
+        return new HanaSqlDialect();
+    }
 
 }

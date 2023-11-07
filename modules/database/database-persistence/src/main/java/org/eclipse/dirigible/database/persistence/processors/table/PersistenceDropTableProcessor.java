@@ -28,76 +28,76 @@ import org.slf4j.LoggerFactory;
  */
 public class PersistenceDropTableProcessor extends AbstractPersistenceProcessor {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(PersistenceDropTableProcessor.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(PersistenceDropTableProcessor.class);
 
-  /**
-   * Instantiates a new persistence drop table processor.
-   *
-   * @param entityManagerInterceptor the entity manager interceptor
-   */
-  public PersistenceDropTableProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
-    super(entityManagerInterceptor);
-  }
-
-  /**
-   * Generate script.
-   *
-   * @param connection the connection
-   * @param tableModel the table model
-   * @return the string
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript
-   * (java.sql. Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
-   */
-  @Override
-  protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-    DropTableBuilder dropTableBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
-                                                  .drop()
-                                                  .table(tableModel.getTableName());
-
-    String sql = dropTableBuilder.toString();
-    if (logger.isTraceEnabled()) {
-      logger.trace(sql);
+    /**
+     * Instantiates a new persistence drop table processor.
+     *
+     * @param entityManagerInterceptor the entity manager interceptor
+     */
+    public PersistenceDropTableProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
+        super(entityManagerInterceptor);
     }
-    return sql;
-  }
 
-  /**
-   * Drop the table.
-   *
-   * @param connection the connection
-   * @param tableModel the table model
-   * @return the int
-   * @throws PersistenceException the persistence exception
-   */
-  public int drop(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
-    if (logger.isTraceEnabled()) {
-      logger.trace("drop -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
+    /**
+     * Generate script.
+     *
+     * @param connection the connection
+     * @param tableModel the table model
+     * @return the string
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript
+     * (java.sql. Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+     */
+    @Override
+    protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
+        DropTableBuilder dropTableBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
+                                                      .drop()
+                                                      .table(tableModel.getTableName());
+
+        String sql = dropTableBuilder.toString();
+        if (logger.isTraceEnabled()) {
+            logger.trace(sql);
+        }
+        return sql;
     }
-    int result = 0;
-    String sql = null;
-    PreparedStatement preparedStatement = null;
-    try {
-      sql = generateScript(connection, tableModel);
-      preparedStatement = openPreparedStatement(connection, sql);
-      result = preparedStatement.executeUpdate();
-    } catch (Exception e) {
-      if (logger.isErrorEnabled()) {
-        logger.error(sql);
-      }
-      if (logger.isErrorEnabled()) {
-        logger.error(e.getMessage(), e);
-      }
-      throw new PersistenceException(sql, e);
-    } finally {
-      closePreparedStatement(preparedStatement);
+
+    /**
+     * Drop the table.
+     *
+     * @param connection the connection
+     * @param tableModel the table model
+     * @return the int
+     * @throws PersistenceException the persistence exception
+     */
+    public int drop(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
+        if (logger.isTraceEnabled()) {
+            logger.trace("drop -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
+        }
+        int result = 0;
+        String sql = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            sql = generateScript(connection, tableModel);
+            preparedStatement = openPreparedStatement(connection, sql);
+            result = preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(sql);
+            }
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
+            throw new PersistenceException(sql, e);
+        } finally {
+            closePreparedStatement(preparedStatement);
+        }
+        return result;
     }
-    return result;
-  }
 
 }

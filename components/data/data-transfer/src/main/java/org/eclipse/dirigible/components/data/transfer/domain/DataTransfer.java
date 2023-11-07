@@ -15,67 +15,67 @@ package org.eclipse.dirigible.components.data.transfer.domain;
  */
 public class DataTransfer {
 
-  /** The source. */
-  private String source;
+    /** The source. */
+    private String source;
 
-  /** The target. */
-  private String target;
+    /** The target. */
+    private String target;
 
-  /** The configuration. */
-  private DataTransferConfiguration configuration;
+    /** The configuration. */
+    private DataTransferConfiguration configuration;
 
-  /**
-   * Gets the source.
-   *
-   * @return the source
-   */
-  public String getSource() {
-    return source;
-  }
+    /**
+     * Gets the source.
+     *
+     * @return the source
+     */
+    public String getSource() {
+        return source;
+    }
 
-  /**
-   * Sets the source.
-   *
-   * @param source the source to set
-   */
-  public void setSource(String source) {
-    this.source = source;
-  }
+    /**
+     * Sets the source.
+     *
+     * @param source the source to set
+     */
+    public void setSource(String source) {
+        this.source = source;
+    }
 
-  /**
-   * Gets the target.
-   *
-   * @return the target
-   */
-  public String getTarget() {
-    return target;
-  }
+    /**
+     * Gets the target.
+     *
+     * @return the target
+     */
+    public String getTarget() {
+        return target;
+    }
 
-  /**
-   * Sets the target.
-   *
-   * @param target the target to set
-   */
-  public void setTarget(String target) {
-    this.target = target;
-  }
+    /**
+     * Sets the target.
+     *
+     * @param target the target to set
+     */
+    public void setTarget(String target) {
+        this.target = target;
+    }
 
-  /**
-   * Gets the configuration.
-   *
-   * @return the configuration
-   */
-  public DataTransferConfiguration getConfiguration() {
-    return configuration;
-  }
+    /**
+     * Gets the configuration.
+     *
+     * @return the configuration
+     */
+    public DataTransferConfiguration getConfiguration() {
+        return configuration;
+    }
 
-  /**
-   * Sets the configuration.
-   *
-   * @param configuration the configuration to set
-   */
-  public void setConfiguration(DataTransferConfiguration configuration) {
-    this.configuration = configuration;
-  }
+    /**
+     * Sets the configuration.
+     *
+     * @param configuration the configuration to set
+     */
+    public void setConfiguration(DataTransferConfiguration configuration) {
+        this.configuration = configuration;
+    }
 
 }

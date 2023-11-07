@@ -16,14 +16,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class ListenersEngine implements Engine {
 
-  @Override
-  public String getName() {
-    return "Listener (ActiveMQ)";
-  }
+    @Override
+    public String getName() {
+        return "Listener (ActiveMQ)";
+    }
 
-  @Override
-  public String getProvider() {
-    return "Eclipse Dirigible";
-  }
+    @Override
+    public String getProvider() {
+        return "Eclipse Dirigible";
+    }
 
 }

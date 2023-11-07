@@ -18,12 +18,12 @@ import org.eclipse.jgit.lib.Repository;
  */
 public class RemoteUrl extends RemoteSetUrlCommand {
 
-  /**
-   * Instantiates a new remote url.
-   *
-   * @param repo the repo
-   */
-  public RemoteUrl(Repository repo) {
-    super(repo);
-  }
+    /**
+     * Instantiates a new remote url.
+     *
+     * @param repo the repo
+     */
+    public RemoteUrl(Repository repo) {
+        super(repo);
+    }
 }

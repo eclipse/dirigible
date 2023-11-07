@@ -28,114 +28,114 @@ import com.google.gson.annotations.Expose;
 @Table(name = "DIRIGIBLE_EXTENSIONS")
 public class Extension extends Artefact {
 
-  /** The Constant ARTEFACT_TYPE. */
-  public static final String ARTEFACT_TYPE = "extension";
+    /** The Constant ARTEFACT_TYPE. */
+    public static final String ARTEFACT_TYPE = "extension";
 
-  /** The id. */
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "EXTENSION_ID", nullable = false)
-  private Long id;
+    /** The id. */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "EXTENSION_ID", nullable = false)
+    private Long id;
 
-  /** The extension point. */
-  @Column(name = "EXTENSION_EXTENSIONPOINT_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = false)
-  @Expose
-  private String extensionPoint;
+    /** The extension point. */
+    @Column(name = "EXTENSION_EXTENSIONPOINT_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = false)
+    @Expose
+    private String extensionPoint;
 
-  /** The module. */
-  @Column(name = "EXTENSION_MODULE", columnDefinition = "VARCHAR", nullable = false, length = 255)
-  @Expose
-  private String module;
-
-
-  /**
-   * Instantiates a new extension.
-   *
-   * @param location the location
-   * @param name the name
-   * @param description the description
-   * @param extensionPoint the extension point
-   * @param module the module
-   */
-  public Extension(String location, String name, String description, String extensionPoint, String module) {
-    super(location, name, ARTEFACT_TYPE, description, null);
-    this.extensionPoint = extensionPoint;
-    this.module = module;
-  }
-
-  /**
-   * Instantiates a new extension.
-   */
-  public Extension() {
-    super();
-  }
-
-  /**
-   * Gets the id.
-   *
-   * @return the id
-   */
-  public Long getId() {
-    return id;
-  }
-
-  /**
-   * Sets the id.
-   *
-   * @param id the id to set
-   */
-  public void setId(Long id) {
-    this.id = id;
-  }
+    /** The module. */
+    @Column(name = "EXTENSION_MODULE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Expose
+    private String module;
 
 
+    /**
+     * Instantiates a new extension.
+     *
+     * @param location the location
+     * @param name the name
+     * @param description the description
+     * @param extensionPoint the extension point
+     * @param module the module
+     */
+    public Extension(String location, String name, String description, String extensionPoint, String module) {
+        super(location, name, ARTEFACT_TYPE, description, null);
+        this.extensionPoint = extensionPoint;
+        this.module = module;
+    }
 
-  /**
-   * Gets the extension point.
-   *
-   * @return the extensionPoint
-   */
-  public String getExtensionPoint() {
-    return extensionPoint;
-  }
+    /**
+     * Instantiates a new extension.
+     */
+    public Extension() {
+        super();
+    }
 
-  /**
-   * Sets the extension point.
-   *
-   * @param extensionPoint the extensionPoint to set
-   */
-  public void setExtensionPoint(String extensionPoint) {
-    this.extensionPoint = extensionPoint;
-  }
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
 
-  /**
-   * Gets the module.
-   *
-   * @return the module
-   */
-  public String getModule() {
-    return module;
-  }
+    /**
+     * Sets the id.
+     *
+     * @param id the id to set
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  /**
-   * Sets the module.
-   *
-   * @param module the module to set
-   */
-  public void setModule(String module) {
-    this.module = module;
-  }
 
-  /**
-   * To string.
-   *
-   * @return the string
-   */
-  @Override
-  public String toString() {
-    return "Extension [id=" + id + ", extensionPoint=" + extensionPoint + ", module=" + module + ", location=" + location + ", name=" + name
-        + ", description=" + description + ", type=" + type + ", key=" + key + ", dependencies=" + dependencies + ", createdBy=" + createdBy
-        + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
-  }
+
+    /**
+     * Gets the extension point.
+     *
+     * @return the extensionPoint
+     */
+    public String getExtensionPoint() {
+        return extensionPoint;
+    }
+
+    /**
+     * Sets the extension point.
+     *
+     * @param extensionPoint the extensionPoint to set
+     */
+    public void setExtensionPoint(String extensionPoint) {
+        this.extensionPoint = extensionPoint;
+    }
+
+    /**
+     * Gets the module.
+     *
+     * @return the module
+     */
+    public String getModule() {
+        return module;
+    }
+
+    /**
+     * Sets the module.
+     *
+     * @param module the module to set
+     */
+    public void setModule(String module) {
+        this.module = module;
+    }
+
+    /**
+     * To string.
+     *
+     * @return the string
+     */
+    @Override
+    public String toString() {
+        return "Extension [id=" + id + ", extensionPoint=" + extensionPoint + ", module=" + module + ", location=" + location + ", name="
+                + name + ", description=" + description + ", type=" + type + ", key=" + key + ", dependencies=" + dependencies
+                + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
+    }
 
 }

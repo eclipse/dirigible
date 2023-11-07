@@ -17,23 +17,23 @@ import java.io.IOException;
  */
 public interface ProjectStatusProvider {
 
-  /**
-   * Gets the project status.
-   *
-   * @param workspace the workspace
-   * @param project the project
-   * @return the project status
-   */
-  ProjectStatus getProjectStatus(String workspace, String project);
+    /**
+     * Gets the project status.
+     *
+     * @param workspace the workspace
+     * @param project the project
+     * @return the project status
+     */
+    ProjectStatus getProjectStatus(String workspace, String project);
 
-  /**
-   * Gets the project git folder.
-   *
-   * @param workspace the workspace
-   * @param project the project
-   * @return the project git folder
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  String getProjectGitFolder(String workspace, String project) throws IOException;
+    /**
+     * Gets the project git folder.
+     *
+     * @param workspace the workspace
+     * @param project the project
+     * @return the project git folder
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    String getProjectGitFolder(String workspace, String project) throws IOException;
 
 }

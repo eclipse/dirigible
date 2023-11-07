@@ -27,93 +27,93 @@ import org.springframework.stereotype.Service;
 @Service
 public class JavascriptService implements InitializingBean {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(JavascriptService.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(JavascriptService.class);
 
-  /** The dirigible source provider. */
-  private JavascriptSourceProvider sourceProvider;
-  /** The repository. */
-  private IRepository repository;
+    /** The dirigible source provider. */
+    private JavascriptSourceProvider sourceProvider;
+    /** The repository. */
+    private IRepository repository;
 
-  /** The handler. */
-  private JavascriptHandler handler;
+    /** The handler. */
+    private JavascriptHandler handler;
 
-  /** The instance. */
-  private static JavascriptService INSTANCE;
+    /** The instance. */
+    private static JavascriptService INSTANCE;
 
-  /**
-   * Instantiates a new javascript service.
-   *
-   * @param repository the repository
-   */
-  @Autowired
-  public JavascriptService(IRepository repository) {
-    this.repository = repository;
-    this.sourceProvider = new DirigibleSourceProvider();
-    this.handler = new JavascriptHandler(getRepository(), getSourceProvider());
-  }
+    /**
+     * Instantiates a new javascript service.
+     *
+     * @param repository the repository
+     */
+    @Autowired
+    public JavascriptService(IRepository repository) {
+        this.repository = repository;
+        this.sourceProvider = new DirigibleSourceProvider();
+        this.handler = new JavascriptHandler(getRepository(), getSourceProvider());
+    }
 
-  /**
-   * After properties set.
-   *
-   * @throws Exception the exception
-   */
-  @Override
-  public void afterPropertiesSet() throws Exception {
-    INSTANCE = this;
-  }
+    /**
+     * After properties set.
+     *
+     * @throws Exception the exception
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        INSTANCE = this;
+    }
 
-  /**
-   * Gets the.
-   *
-   * @return the javascript service
-   */
-  public static JavascriptService get() {
-    return INSTANCE;
-  }
+    /**
+     * Gets the.
+     *
+     * @return the javascript service
+     */
+    public static JavascriptService get() {
+        return INSTANCE;
+    }
 
-  /**
-   * Gets the reposiotry.
-   *
-   * @return the reposiotry
-   */
-  public IRepository getRepository() {
-    return repository;
-  }
+    /**
+     * Gets the reposiotry.
+     *
+     * @return the reposiotry
+     */
+    public IRepository getRepository() {
+        return repository;
+    }
 
-  /**
-   * Gets the source provider.
-   *
-   * @return the source provider
-   */
-  public JavascriptSourceProvider getSourceProvider() {
-    return sourceProvider;
-  }
+    /**
+     * Gets the source provider.
+     *
+     * @return the source provider
+     */
+    public JavascriptSourceProvider getSourceProvider() {
+        return sourceProvider;
+    }
 
-  /**
-   * Handle request.
-   *
-   * @param projectName the project name
-   * @param projectFilePath the project file path
-   * @param projectFilePathParam the project file path param
-   * @param parameters the parameters
-   * @param debug the debug
-   * @return the object
-   */
-  public Object handleRequest(String projectName, String projectFilePath, String projectFilePathParam, Map<Object, Object> parameters,
-      boolean debug) {
-    return handler.handleRequest(projectName, projectFilePath, projectFilePathParam, parameters, debug);
-  }
+    /**
+     * Handle request.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param projectFilePathParam the project file path param
+     * @param parameters the parameters
+     * @param debug the debug
+     * @return the object
+     */
+    public Object handleRequest(String projectName, String projectFilePath, String projectFilePathParam, Map<Object, Object> parameters,
+            boolean debug) {
+        return handler.handleRequest(projectName, projectFilePath, projectFilePathParam, parameters, debug);
+    }
 
-  /**
-   * Handle callback.
-   *
-   * @param filePath the file path
-   * @param parameters the parameters
-   * @return the object
-   */
-  public Object handleCallback(String filePath, Map<Object, Object> parameters) {
-    return handler.handleCallback(filePath, parameters);
-  }
+    /**
+     * Handle callback.
+     *
+     * @param filePath the file path
+     * @param parameters the parameters
+     * @return the object
+     */
+    public Object handleCallback(String filePath, Map<Object, Object> parameters) {
+        return handler.handleCallback(filePath, parameters);
+    }
 
 }

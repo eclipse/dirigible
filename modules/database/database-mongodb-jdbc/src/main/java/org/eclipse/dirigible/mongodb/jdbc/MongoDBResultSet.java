@@ -51,2459 +51,2459 @@ import com.mongodb.client.MongoCursor;
  */
 public class MongoDBResultSet implements ResultSet {
 
-  /** The Constant RAW_DOCUMENT_INDEX. */
-  public static final int RAW_DOCUMENT_INDEX = -100;
+    /** The Constant RAW_DOCUMENT_INDEX. */
+    public static final int RAW_DOCUMENT_INDEX = -100;
 
-  /** The stmnt. */
-  private Statement stmnt;
+    /** The stmnt. */
+    private Statement stmnt;
 
-  /** The find iterable. */
-  private FindIterable<Document> findIterable;
+    /** The find iterable. */
+    private FindIterable<Document> findIterable;
 
-  /** The find iterator. */
-  private MongoCursor<Document> findIterator;
+    /** The find iterator. */
+    private MongoCursor<Document> findIterator;
 
-  /** The current doc. */
-  private Document currentDoc;
+    /** The current doc. */
+    private Document currentDoc;
 
-  /** The row number. */
-  private int rowNumber = 0;
+    /** The row number. */
+    private int rowNumber = 0;
 
-  /** The is closed. */
-  private boolean isClosed;
+    /** The is closed. */
+    private boolean isClosed;
 
-  /** The warning. */
-  private SQLWarning warning;
+    /** The warning. */
+    private SQLWarning warning;
 
-  /** The rs metadata. */
-  private MongoDBResultSetMetaData metadata;
+    /** The rs metadata. */
+    private MongoDBResultSetMetaData metadata;
 
-  /**
-   * Instantiates a new mongo DB result set.
-   *
-   * @param stmnt the stmnt
-   * @param findIterable the find iterable
-   */
-  public MongoDBResultSet(Statement stmnt, FindIterable<Document> findIterable) {
-    this.stmnt = stmnt;
-    this.findIterable = findIterable;
-    this.findIterator = this.findIterable.iterator();
-    this.isClosed = false;
-  }
-
-  /**
-   * Builds the metadata.
-   *
-   * @throws SQLException the SQL exception
-   */
-  private void buildMetadata() throws SQLException {
-    this.metadata = new MongoDBResultSetMetaData(this.stmnt.getConnection()
-                                                           .unwrap(MongoDBConnection.class)
-                                                           .getCollectionName());
-    this.metadata.setColumnCount(this.currentDoc.size());
-    Set<Entry<String, BsonValue>> docEntries =
-        this.currentDoc.toBsonDocument(this.currentDoc.getClass(), MongoClient.getDefaultCodecRegistry())
-                       .entrySet();
-    for (Entry<String, BsonValue> docEntry : docEntries) {
-      this.metadata.keys()
-                   .put(docEntry.getKey(), docEntry.getValue()
-                                                   .getBsonType());
+    /**
+     * Instantiates a new mongo DB result set.
+     *
+     * @param stmnt the stmnt
+     * @param findIterable the find iterable
+     */
+    public MongoDBResultSet(Statement stmnt, FindIterable<Document> findIterable) {
+        this.stmnt = stmnt;
+        this.findIterable = findIterable;
+        this.findIterator = this.findIterable.iterator();
+        this.isClosed = false;
     }
-  }
 
-  /**
-   * Unwrap.
-   *
-   * @param <T> the generic type
-   * @param iface the iface
-   * @return the t
-   * @throws SQLException the SQL exception
-   */
-  @SuppressWarnings("unchecked")
-  @Override
-  public <T> T unwrap(Class<T> iface) throws SQLException {
-    if (isWrapperFor(iface)) {
-      return (T) this;
+    /**
+     * Builds the metadata.
+     *
+     * @throws SQLException the SQL exception
+     */
+    private void buildMetadata() throws SQLException {
+        this.metadata = new MongoDBResultSetMetaData(this.stmnt.getConnection()
+                                                               .unwrap(MongoDBConnection.class)
+                                                               .getCollectionName());
+        this.metadata.setColumnCount(this.currentDoc.size());
+        Set<Entry<String, BsonValue>> docEntries =
+                this.currentDoc.toBsonDocument(this.currentDoc.getClass(), MongoClient.getDefaultCodecRegistry())
+                               .entrySet();
+        for (Entry<String, BsonValue> docEntry : docEntries) {
+            this.metadata.keys()
+                         .put(docEntry.getKey(), docEntry.getValue()
+                                                         .getBsonType());
+        }
     }
-    throw new SQLException("No wrapper for " + iface);
-  }
 
-  /**
-   * Checks if is wrapper for.
-   *
-   * @param iface the iface
-   * @return true, if is wrapper for
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean isWrapperFor(Class<?> iface) throws SQLException {
-    return iface != null && iface.isAssignableFrom(getClass());
-  }
-
-  /**
-   * Next.
-   *
-   * @return true, if successful
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean next() throws SQLException {
-    boolean hasNext = this.findIterator.hasNext();
-    if (hasNext) {
-      this.currentDoc = this.findIterator.next();
-      this.rowNumber++;
-      this.buildMetadata();
+    /**
+     * Unwrap.
+     *
+     * @param <T> the generic type
+     * @param iface the iface
+     * @return the t
+     * @throws SQLException the SQL exception
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        if (isWrapperFor(iface)) {
+            return (T) this;
+        }
+        throw new SQLException("No wrapper for " + iface);
     }
-    return hasNext;
-  }
 
-  /**
-   * Close.
-   *
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void close() throws SQLException {
-    this.findIterator.close();
-    this.isClosed = true;
-  }
-
-  /**
-   * Was null.
-   *
-   * @return true, if successful
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean wasNull() throws SQLException {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  /**
-   * Gets the string.
-   *
-   * @param columnIndex the column index
-   * @return the string
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public String getString(int columnIndex) throws SQLException {
-    if (columnIndex == RAW_DOCUMENT_INDEX) {
-      return this.currentDoc.toJson();
+    /**
+     * Checks if is wrapper for.
+     *
+     * @param iface the iface
+     * @return true, if is wrapper for
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return iface != null && iface.isAssignableFrom(getClass());
     }
-    String name = this.metadata.getColumnName(columnIndex - 1);
-    Object object = this.currentDoc.get(name);
-    if (object != null) {
-      if (object instanceof String) {
-        return (String) name;
-      } else {
-        return name.toString();
-      }
+
+    /**
+     * Next.
+     *
+     * @return true, if successful
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean next() throws SQLException {
+        boolean hasNext = this.findIterator.hasNext();
+        if (hasNext) {
+            this.currentDoc = this.findIterator.next();
+            this.rowNumber++;
+            this.buildMetadata();
+        }
+        return hasNext;
     }
-    return null;
 
-  }
-
-  /**
-   * Gets the boolean.
-   *
-   * @param columnIndex the column index
-   * @return the boolean
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean getBoolean(int columnIndex) throws SQLException {
-    String name = this.metadata.getColumnName(columnIndex - 1);
-    return this.currentDoc.getBoolean(name);
-  }
-
-  /**
-   * Gets the byte.
-   *
-   * @param columnIndex the column index
-   * @return the byte
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public byte getByte(int columnIndex) throws SQLException {
-    String name = this.metadata.getColumnName(columnIndex - 1);
-    return this.currentDoc.getInteger(name)
-                          .byteValue();
-  }
-
-  /**
-   * Gets the short.
-   *
-   * @param columnIndex the column index
-   * @return the short
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public short getShort(int columnIndex) throws SQLException {
-    String name = this.metadata.getColumnName(columnIndex - 1);
-    return this.currentDoc.getInteger(name)
-                          .shortValue();
-  }
-
-  /**
-   * Gets the int.
-   *
-   * @param columnIndex the column index
-   * @return the int
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public int getInt(int columnIndex) throws SQLException {
-    String name = this.metadata.getColumnName(columnIndex - 1);
-    return this.currentDoc.getInteger(name);
-  }
-
-  /**
-   * Gets the long.
-   *
-   * @param columnIndex the column index
-   * @return the long
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public long getLong(int columnIndex) throws SQLException {
-    String name = this.metadata.getColumnName(columnIndex - 1);
-    return this.currentDoc.getLong(name);
-  }
-
-  /**
-   * Gets the float.
-   *
-   * @param columnIndex the column index
-   * @return the float
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public float getFloat(int columnIndex) throws SQLException {
-    String name = this.metadata.getColumnName(columnIndex - 1);
-    return this.currentDoc.getDouble(name)
-                          .floatValue();
-  }
-
-  /**
-   * Gets the double.
-   *
-   * @param columnIndex the column index
-   * @return the double
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public double getDouble(int columnIndex) throws SQLException {
-    String name = this.metadata.getColumnName(columnIndex - 1);
-    return this.currentDoc.getDouble(name);
-  }
-
-  /**
-   * Gets the big decimal.
-   *
-   * @param columnIndex the column index
-   * @param scale the scale
-   * @return the big decimal
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
-    String name = this.metadata.getColumnName(columnIndex - 1);
-    return new BigDecimal(this.currentDoc.getDouble(name));
-  }
-
-  /**
-   * Gets the bytes.
-   *
-   * @param columnIndex the column index
-   * @return the bytes
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public byte[] getBytes(int columnIndex) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the date.
-   *
-   * @param columnIndex the column index
-   * @return the date
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Date getDate(int columnIndex) throws SQLException {
-    String name = this.metadata.getColumnName(columnIndex - 1);
-    return new Date(this.currentDoc.getDate(name)
-                                   .getTime());
-  }
-
-  /**
-   * Gets the time.
-   *
-   * @param columnIndex the column index
-   * @return the time
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Time getTime(int columnIndex) throws SQLException {
-    String name = this.metadata.getColumnName(columnIndex - 1);
-    return new Time(this.currentDoc.getDate(name)
-                                   .getTime());
-  }
-
-  /**
-   * Gets the timestamp.
-   *
-   * @param columnIndex the column index
-   * @return the timestamp
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Timestamp getTimestamp(int columnIndex) throws SQLException {
-    String name = this.metadata.getColumnName(columnIndex - 1);
-    return new Timestamp(this.currentDoc.getDate(name)
-                                        .getTime());
-  }
-
-  /**
-   * Gets the ascii stream.
-   *
-   * @param columnIndex the column index
-   * @return the ascii stream
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public InputStream getAsciiStream(int columnIndex) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the unicode stream.
-   *
-   * @param columnIndex the column index
-   * @return the unicode stream
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public InputStream getUnicodeStream(int columnIndex) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the binary stream.
-   *
-   * @param columnIndex the column index
-   * @return the binary stream
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public InputStream getBinaryStream(int columnIndex) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the string.
-   *
-   * @param columnLabel the column label
-   * @return the string
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public String getString(String columnLabel) throws SQLException {
-    return String.valueOf(this.currentDoc.get(columnLabel));
-  }
-
-  /**
-   * Gets the boolean.
-   *
-   * @param columnLabel the column label
-   * @return the boolean
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean getBoolean(String columnLabel) throws SQLException {
-    return this.currentDoc.getBoolean(columnLabel);
-  }
-
-  /**
-   * Gets the byte.
-   *
-   * @param columnLabel the column label
-   * @return the byte
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public byte getByte(String columnLabel) throws SQLException {
-    return Byte.parseByte("" + this.currentDoc.get(columnLabel));
-  }
-
-  /**
-   * Gets the short.
-   *
-   * @param columnLabel the column label
-   * @return the short
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public short getShort(String columnLabel) throws SQLException {
-    return Short.parseShort("" + this.currentDoc.get(columnLabel));
-  }
-
-  /**
-   * Gets the int.
-   *
-   * @param columnLabel the column label
-   * @return the int
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public int getInt(String columnLabel) throws SQLException {
-    return this.currentDoc.getInteger(columnLabel);
-  }
-
-  /**
-   * Gets the long.
-   *
-   * @param columnLabel the column label
-   * @return the long
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public long getLong(String columnLabel) throws SQLException {
-    return this.currentDoc.getLong(columnLabel);
-  }
-
-  /**
-   * Gets the float.
-   *
-   * @param columnLabel the column label
-   * @return the float
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public float getFloat(String columnLabel) throws SQLException {
-    return Float.parseFloat("" + this.currentDoc.get(columnLabel));
-  }
-
-  /**
-   * Gets the double.
-   *
-   * @param columnLabel the column label
-   * @return the double
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public double getDouble(String columnLabel) throws SQLException {
-    return this.currentDoc.getDouble(columnLabel);
-  }
-
-  /**
-   * Gets the big decimal.
-   *
-   * @param columnLabel the column label
-   * @param scale the scale
-   * @return the big decimal
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the bytes.
-   *
-   * @param columnLabel the column label
-   * @return the bytes
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public byte[] getBytes(String columnLabel) throws SQLException {
-    return Base64.getDecoder()
-                 .decode(this.currentDoc.getString(columnLabel));
-  }
-
-  /**
-   * Gets the date.
-   *
-   * @param columnLabel the column label
-   * @return the date
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Date getDate(String columnLabel) throws SQLException {
-    return new Date(this.currentDoc.getDate(columnLabel)
-                                   .getTime());
-  }
-
-  /**
-   * Gets the time.
-   *
-   * @param columnLabel the column label
-   * @return the time
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Time getTime(String columnLabel) throws SQLException {
-    return new Time(this.currentDoc.getDate(columnLabel)
-                                   .getTime());
-  }
-
-  /**
-   * Gets the timestamp.
-   *
-   * @param columnLabel the column label
-   * @return the timestamp
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Timestamp getTimestamp(String columnLabel) throws SQLException {
-    return new Timestamp(this.currentDoc.getDate(columnLabel)
-                                        .getTime());
-  }
-
-  /**
-   * Gets the ascii stream.
-   *
-   * @param columnLabel the column label
-   * @return the ascii stream
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public InputStream getAsciiStream(String columnLabel) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the unicode stream.
-   *
-   * @param columnLabel the column label
-   * @return the unicode stream
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public InputStream getUnicodeStream(String columnLabel) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the binary stream.
-   *
-   * @param columnLabel the column label
-   * @return the binary stream
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public InputStream getBinaryStream(String columnLabel) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the warnings.
-   *
-   * @return the warnings
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public SQLWarning getWarnings() throws SQLException {
-    if (this.isClosed())
-      throw new SQLException();
-    return this.warning;
-  }
-
-  /**
-   * Clear warnings.
-   *
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void clearWarnings() throws SQLException {
-    if (this.isClosed())
-      throw new SQLException();
-    this.warning = null;
-  }
-
-  /**
-   * Gets the cursor name.
-   *
-   * @return the cursor name
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public String getCursorName() throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the meta data.
-   *
-   * @return the meta data
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public ResultSetMetaData getMetaData() throws SQLException {
-    return this.metadata;
-  }
-
-  /**
-   * Gets the object.
-   *
-   * @param columnIndex the column index
-   * @return the object
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Object getObject(int columnIndex) throws SQLException {
-    if (columnIndex == RAW_DOCUMENT_INDEX) {
-      return this.currentDoc.toJson();
+    /**
+     * Close.
+     *
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void close() throws SQLException {
+        this.findIterator.close();
+        this.isClosed = true;
     }
-    String name = this.metadata.getColumnName(columnIndex - 1);
-    return this.currentDoc.get(name);
-  }
 
-  /**
-   * Gets the object.
-   *
-   * @param columnLabel the column label
-   * @return the object
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Object getObject(String columnLabel) throws SQLException {
-    return this.currentDoc.get(columnLabel);
-  }
-
-  /**
-   * Find column.
-   *
-   * @param columnLabel the column label
-   * @return the int
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public int findColumn(String columnLabel) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the character stream.
-   *
-   * @param columnIndex the column index
-   * @return the character stream
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Reader getCharacterStream(int columnIndex) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the character stream.
-   *
-   * @param columnLabel the column label
-   * @return the character stream
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Reader getCharacterStream(String columnLabel) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the big decimal.
-   *
-   * @param columnIndex the column index
-   * @return the big decimal
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the big decimal.
-   *
-   * @param columnLabel the column label
-   * @return the big decimal
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
-    DecimalFormat df = new DecimalFormat();
-    df.setParseBigDecimal(true);
-    return (BigDecimal) df.parse(this.currentDoc.getString(columnLabel), new ParsePosition(0));
-  }
-
-  /**
-   * Checks if is before first.
-   *
-   * @return true, if is before first
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean isBeforeFirst() throws SQLException {
-    return this.currentDoc == null;
-  }
-
-  /**
-   * Checks if is after last.
-   *
-   * @return true, if is after last
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean isAfterLast() throws SQLException {
-    // TODO
-    return false;
-  }
-
-  /**
-   * Checks if is first.
-   *
-   * @return true, if is first
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean isFirst() throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Checks if is last.
-   *
-   * @return true, if is last
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean isLast() throws SQLException {
-    return this.findIterator.hasNext();
-  }
-
-  /**
-   * Before first.
-   *
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void beforeFirst() throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * After last.
-   *
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void afterLast() throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * First.
-   *
-   * @return true, if successful
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean first() throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Last.
-   *
-   * @return true, if successful
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean last() throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the row.
-   *
-   * @return the row
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public int getRow() throws SQLException {
-    return this.rowNumber;
-  }
-
-  /**
-   * Absolute.
-   *
-   * @param row the row
-   * @return true, if successful
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean absolute(int row) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Relative.
-   *
-   * @param rows the rows
-   * @return true, if successful
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean relative(int rows) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Previous.
-   *
-   * @return true, if successful
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean previous() throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Sets the fetch direction.
-   *
-   * @param direction the new fetch direction
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void setFetchDirection(int direction) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the fetch direction.
-   *
-   * @return the fetch direction
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public int getFetchDirection() throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Sets the fetch size.
-   *
-   * @param rows the new fetch size
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void setFetchSize(int rows) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the fetch size.
-   *
-   * @return the fetch size
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public int getFetchSize() throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the type.
-   *
-   * @return the type
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public int getType() throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the concurrency.
-   *
-   * @return the concurrency
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public int getConcurrency() throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Row updated.
-   *
-   * @return true, if successful
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean rowUpdated() throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Row inserted.
-   *
-   * @return true, if successful
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean rowInserted() throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Row deleted.
-   *
-   * @return true, if successful
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean rowDeleted() throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update null.
-   *
-   * @param columnIndex the column index
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateNull(int columnIndex) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update boolean.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateBoolean(int columnIndex, boolean x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update byte.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateByte(int columnIndex, byte x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update short.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateShort(int columnIndex, short x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update int.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateInt(int columnIndex, int x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update long.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateLong(int columnIndex, long x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update float.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateFloat(int columnIndex, float x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update double.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateDouble(int columnIndex, double x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update big decimal.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateBigDecimal(int columnIndex, BigDecimal x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update string.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateString(int columnIndex, String x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update bytes.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateBytes(int columnIndex, byte[] x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update date.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateDate(int columnIndex, Date x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update time.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateTime(int columnIndex, Time x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update timestamp.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateTimestamp(int columnIndex, Timestamp x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update ascii stream.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateAsciiStream(int columnIndex, InputStream x, int length) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update binary stream.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateBinaryStream(int columnIndex, InputStream x, int length) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update character stream.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateCharacterStream(int columnIndex, Reader x, int length) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update object.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @param scaleOrLength the scale or length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateObject(int columnIndex, Object x, int scaleOrLength) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update object.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateObject(int columnIndex, Object x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update null.
-   *
-   * @param columnLabel the column label
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateNull(String columnLabel) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update boolean.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateBoolean(String columnLabel, boolean x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update byte.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateByte(String columnLabel, byte x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update short.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateShort(String columnLabel, short x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update int.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateInt(String columnLabel, int x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update long.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateLong(String columnLabel, long x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update float.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateFloat(String columnLabel, float x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update double.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateDouble(String columnLabel, double x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update big decimal.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateBigDecimal(String columnLabel, BigDecimal x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update string.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateString(String columnLabel, String x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update bytes.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateBytes(String columnLabel, byte[] x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update date.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateDate(String columnLabel, Date x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update time.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateTime(String columnLabel, Time x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update timestamp.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateTimestamp(String columnLabel, Timestamp x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update ascii stream.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateAsciiStream(String columnLabel, InputStream x, int length) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update binary stream.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateBinaryStream(String columnLabel, InputStream x, int length) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update character stream.
-   *
-   * @param columnLabel the column label
-   * @param reader the reader
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateCharacterStream(String columnLabel, Reader reader, int length) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update object.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @param scaleOrLength the scale or length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateObject(String columnLabel, Object x, int scaleOrLength) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update object.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateObject(String columnLabel, Object x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Insert row.
-   *
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void insertRow() throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Update row.
-   *
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateRow() throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Delete row.
-   *
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void deleteRow() throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Refresh row.
-   *
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void refreshRow() throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Cancel row updates.
-   *
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void cancelRowUpdates() throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Move to insert row.
-   *
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void moveToInsertRow() throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Move to current row.
-   *
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void moveToCurrentRow() throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the statement.
-   *
-   * @return the statement
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Statement getStatement() throws SQLException {
-    return this.stmnt;
-  }
-
-  /**
-   * Gets the object.
-   *
-   * @param columnIndex the column index
-   * @param map the map
-   * @return the object
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Object getObject(int columnIndex, Map<String, Class<?>> map) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the ref.
-   *
-   * @param columnIndex the column index
-   * @return the ref
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Ref getRef(int columnIndex) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the blob.
-   *
-   * @param columnIndex the column index
-   * @return the blob
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Blob getBlob(int columnIndex) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the clob.
-   *
-   * @param columnIndex the column index
-   * @return the clob
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Clob getClob(int columnIndex) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the array.
-   *
-   * @param columnIndex the column index
-   * @return the array
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Array getArray(int columnIndex) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the object.
-   *
-   * @param columnLabel the column label
-   * @param map the map
-   * @return the object
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Object getObject(String columnLabel, Map<String, Class<?>> map) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the ref.
-   *
-   * @param columnLabel the column label
-   * @return the ref
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Ref getRef(String columnLabel) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the blob.
-   *
-   * @param columnLabel the column label
-   * @return the blob
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Blob getBlob(String columnLabel) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the clob.
-   *
-   * @param columnLabel the column label
-   * @return the clob
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Clob getClob(String columnLabel) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the array.
-   *
-   * @param columnLabel the column label
-   * @return the array
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Array getArray(String columnLabel) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the date.
-   *
-   * @param columnIndex the column index
-   * @param cal the cal
-   * @return the date
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Date getDate(int columnIndex, Calendar cal) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the date.
-   *
-   * @param columnLabel the column label
-   * @param cal the cal
-   * @return the date
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Date getDate(String columnLabel, Calendar cal) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the time.
-   *
-   * @param columnIndex the column index
-   * @param cal the cal
-   * @return the time
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Time getTime(int columnIndex, Calendar cal) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the time.
-   *
-   * @param columnLabel the column label
-   * @param cal the cal
-   * @return the time
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Time getTime(String columnLabel, Calendar cal) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the timestamp.
-   *
-   * @param columnIndex the column index
-   * @param cal the cal
-   * @return the timestamp
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the timestamp.
-   *
-   * @param columnLabel the column label
-   * @param cal the cal
-   * @return the timestamp
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Timestamp getTimestamp(String columnLabel, Calendar cal) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the url.
-   *
-   * @param columnIndex the column index
-   * @return the url
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public URL getURL(int columnIndex) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
-
-  /**
-   * Gets the url.
-   *
-   * @param columnLabel the column label
-   * @return the url
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public URL getURL(String columnLabel) throws SQLException {
-    try {
-      return new URL(this.currentDoc.getString(columnLabel));
-    } catch (MalformedURLException e) {
-      throw new SQLException(e);
+    /**
+     * Was null.
+     *
+     * @return true, if successful
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean wasNull() throws SQLException {
+        // TODO Auto-generated method stub
+        return false;
     }
-  }
 
-  /**
-   * Update ref.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateRef(int columnIndex, Ref x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the string.
+     *
+     * @param columnIndex the column index
+     * @return the string
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public String getString(int columnIndex) throws SQLException {
+        if (columnIndex == RAW_DOCUMENT_INDEX) {
+            return this.currentDoc.toJson();
+        }
+        String name = this.metadata.getColumnName(columnIndex - 1);
+        Object object = this.currentDoc.get(name);
+        if (object != null) {
+            if (object instanceof String) {
+                return (String) name;
+            } else {
+                return name.toString();
+            }
+        }
+        return null;
 
-  /**
-   * Update ref.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateRef(String columnLabel, Ref x) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    }
 
-  /**
-   * Update blob.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateBlob(int columnIndex, Blob x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the boolean.
+     *
+     * @param columnIndex the column index
+     * @return the boolean
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean getBoolean(int columnIndex) throws SQLException {
+        String name = this.metadata.getColumnName(columnIndex - 1);
+        return this.currentDoc.getBoolean(name);
+    }
 
-  /**
-   * Update blob.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateBlob(String columnLabel, Blob x) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the byte.
+     *
+     * @param columnIndex the column index
+     * @return the byte
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public byte getByte(int columnIndex) throws SQLException {
+        String name = this.metadata.getColumnName(columnIndex - 1);
+        return this.currentDoc.getInteger(name)
+                              .byteValue();
+    }
 
-  /**
-   * Update clob.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateClob(int columnIndex, Clob x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the short.
+     *
+     * @param columnIndex the column index
+     * @return the short
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public short getShort(int columnIndex) throws SQLException {
+        String name = this.metadata.getColumnName(columnIndex - 1);
+        return this.currentDoc.getInteger(name)
+                              .shortValue();
+    }
 
-  /**
-   * Update clob.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateClob(String columnLabel, Clob x) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the int.
+     *
+     * @param columnIndex the column index
+     * @return the int
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public int getInt(int columnIndex) throws SQLException {
+        String name = this.metadata.getColumnName(columnIndex - 1);
+        return this.currentDoc.getInteger(name);
+    }
 
-  /**
-   * Update array.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateArray(int columnIndex, Array x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the long.
+     *
+     * @param columnIndex the column index
+     * @return the long
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public long getLong(int columnIndex) throws SQLException {
+        String name = this.metadata.getColumnName(columnIndex - 1);
+        return this.currentDoc.getLong(name);
+    }
 
-  /**
-   * Update array.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateArray(String columnLabel, Array x) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the float.
+     *
+     * @param columnIndex the column index
+     * @return the float
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public float getFloat(int columnIndex) throws SQLException {
+        String name = this.metadata.getColumnName(columnIndex - 1);
+        return this.currentDoc.getDouble(name)
+                              .floatValue();
+    }
 
-  /**
-   * Gets the row id.
-   *
-   * @param columnIndex the column index
-   * @return the row id
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public RowId getRowId(int columnIndex) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the double.
+     *
+     * @param columnIndex the column index
+     * @return the double
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public double getDouble(int columnIndex) throws SQLException {
+        String name = this.metadata.getColumnName(columnIndex - 1);
+        return this.currentDoc.getDouble(name);
+    }
 
-  /**
-   * Gets the row id.
-   *
-   * @param columnLabel the column label
-   * @return the row id
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public RowId getRowId(String columnLabel) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the big decimal.
+     *
+     * @param columnIndex the column index
+     * @param scale the scale
+     * @return the big decimal
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
+        String name = this.metadata.getColumnName(columnIndex - 1);
+        return new BigDecimal(this.currentDoc.getDouble(name));
+    }
 
-  /**
-   * Update row id.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateRowId(int columnIndex, RowId x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the bytes.
+     *
+     * @param columnIndex the column index
+     * @return the bytes
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public byte[] getBytes(int columnIndex) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update row id.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateRowId(String columnLabel, RowId x) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the date.
+     *
+     * @param columnIndex the column index
+     * @return the date
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Date getDate(int columnIndex) throws SQLException {
+        String name = this.metadata.getColumnName(columnIndex - 1);
+        return new Date(this.currentDoc.getDate(name)
+                                       .getTime());
+    }
 
-  /**
-   * Gets the holdability.
-   *
-   * @return the holdability
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public int getHoldability() throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the time.
+     *
+     * @param columnIndex the column index
+     * @return the time
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Time getTime(int columnIndex) throws SQLException {
+        String name = this.metadata.getColumnName(columnIndex - 1);
+        return new Time(this.currentDoc.getDate(name)
+                                       .getTime());
+    }
 
-  /**
-   * Checks if is closed.
-   *
-   * @return true, if is closed
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean isClosed() throws SQLException {
-    return this.isClosed;
-  }
+    /**
+     * Gets the timestamp.
+     *
+     * @param columnIndex the column index
+     * @return the timestamp
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Timestamp getTimestamp(int columnIndex) throws SQLException {
+        String name = this.metadata.getColumnName(columnIndex - 1);
+        return new Timestamp(this.currentDoc.getDate(name)
+                                            .getTime());
+    }
 
-  /**
-   * Update N string.
-   *
-   * @param columnIndex the column index
-   * @param nString the n string
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateNString(int columnIndex, String nString) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the ascii stream.
+     *
+     * @param columnIndex the column index
+     * @return the ascii stream
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public InputStream getAsciiStream(int columnIndex) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update N string.
-   *
-   * @param columnLabel the column label
-   * @param nString the n string
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateNString(String columnLabel, String nString) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the unicode stream.
+     *
+     * @param columnIndex the column index
+     * @return the unicode stream
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public InputStream getUnicodeStream(int columnIndex) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update N clob.
-   *
-   * @param columnIndex the column index
-   * @param nClob the n clob
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateNClob(int columnIndex, NClob nClob) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the binary stream.
+     *
+     * @param columnIndex the column index
+     * @return the binary stream
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public InputStream getBinaryStream(int columnIndex) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update N clob.
-   *
-   * @param columnLabel the column label
-   * @param nClob the n clob
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateNClob(String columnLabel, NClob nClob) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the string.
+     *
+     * @param columnLabel the column label
+     * @return the string
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public String getString(String columnLabel) throws SQLException {
+        return String.valueOf(this.currentDoc.get(columnLabel));
+    }
 
-  /**
-   * Gets the n clob.
-   *
-   * @param columnIndex the column index
-   * @return the n clob
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public NClob getNClob(int columnIndex) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the boolean.
+     *
+     * @param columnLabel the column label
+     * @return the boolean
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean getBoolean(String columnLabel) throws SQLException {
+        return this.currentDoc.getBoolean(columnLabel);
+    }
 
-  /**
-   * Gets the n clob.
-   *
-   * @param columnLabel the column label
-   * @return the n clob
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public NClob getNClob(String columnLabel) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the byte.
+     *
+     * @param columnLabel the column label
+     * @return the byte
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public byte getByte(String columnLabel) throws SQLException {
+        return Byte.parseByte("" + this.currentDoc.get(columnLabel));
+    }
 
-  /**
-   * Gets the sqlxml.
-   *
-   * @param columnIndex the column index
-   * @return the sqlxml
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public SQLXML getSQLXML(int columnIndex) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the short.
+     *
+     * @param columnLabel the column label
+     * @return the short
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public short getShort(String columnLabel) throws SQLException {
+        return Short.parseShort("" + this.currentDoc.get(columnLabel));
+    }
 
-  /**
-   * Gets the sqlxml.
-   *
-   * @param columnLabel the column label
-   * @return the sqlxml
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public SQLXML getSQLXML(String columnLabel) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the int.
+     *
+     * @param columnLabel the column label
+     * @return the int
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public int getInt(String columnLabel) throws SQLException {
+        return this.currentDoc.getInteger(columnLabel);
+    }
 
-  /**
-   * Update SQLXML.
-   *
-   * @param columnIndex the column index
-   * @param xmlObject the xml object
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateSQLXML(int columnIndex, SQLXML xmlObject) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the long.
+     *
+     * @param columnLabel the column label
+     * @return the long
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public long getLong(String columnLabel) throws SQLException {
+        return this.currentDoc.getLong(columnLabel);
+    }
 
-  /**
-   * Update SQLXML.
-   *
-   * @param columnLabel the column label
-   * @param xmlObject the xml object
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateSQLXML(String columnLabel, SQLXML xmlObject) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the float.
+     *
+     * @param columnLabel the column label
+     * @return the float
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public float getFloat(String columnLabel) throws SQLException {
+        return Float.parseFloat("" + this.currentDoc.get(columnLabel));
+    }
 
-  /**
-   * Gets the n string.
-   *
-   * @param columnIndex the column index
-   * @return the n string
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public String getNString(int columnIndex) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the double.
+     *
+     * @param columnLabel the column label
+     * @return the double
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public double getDouble(String columnLabel) throws SQLException {
+        return this.currentDoc.getDouble(columnLabel);
+    }
 
-  /**
-   * Gets the n string.
-   *
-   * @param columnLabel the column label
-   * @return the n string
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public String getNString(String columnLabel) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the big decimal.
+     *
+     * @param columnLabel the column label
+     * @param scale the scale
+     * @return the big decimal
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Gets the n character stream.
-   *
-   * @param columnIndex the column index
-   * @return the n character stream
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Reader getNCharacterStream(int columnIndex) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the bytes.
+     *
+     * @param columnLabel the column label
+     * @return the bytes
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public byte[] getBytes(String columnLabel) throws SQLException {
+        return Base64.getDecoder()
+                     .decode(this.currentDoc.getString(columnLabel));
+    }
 
-  /**
-   * Gets the n character stream.
-   *
-   * @param columnLabel the column label
-   * @return the n character stream
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public Reader getNCharacterStream(String columnLabel) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the date.
+     *
+     * @param columnLabel the column label
+     * @return the date
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Date getDate(String columnLabel) throws SQLException {
+        return new Date(this.currentDoc.getDate(columnLabel)
+                                       .getTime());
+    }
 
-  /**
-   * Update N character stream.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateNCharacterStream(int columnIndex, Reader x, long length) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the time.
+     *
+     * @param columnLabel the column label
+     * @return the time
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Time getTime(String columnLabel) throws SQLException {
+        return new Time(this.currentDoc.getDate(columnLabel)
+                                       .getTime());
+    }
 
-  /**
-   * Update N character stream.
-   *
-   * @param columnLabel the column label
-   * @param reader the reader
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateNCharacterStream(String columnLabel, Reader reader, long length) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the timestamp.
+     *
+     * @param columnLabel the column label
+     * @return the timestamp
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Timestamp getTimestamp(String columnLabel) throws SQLException {
+        return new Timestamp(this.currentDoc.getDate(columnLabel)
+                                            .getTime());
+    }
 
-  /**
-   * Update ascii stream.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateAsciiStream(int columnIndex, InputStream x, long length) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the ascii stream.
+     *
+     * @param columnLabel the column label
+     * @return the ascii stream
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public InputStream getAsciiStream(String columnLabel) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update binary stream.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateBinaryStream(int columnIndex, InputStream x, long length) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the unicode stream.
+     *
+     * @param columnLabel the column label
+     * @return the unicode stream
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public InputStream getUnicodeStream(String columnLabel) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update character stream.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateCharacterStream(int columnIndex, Reader x, long length) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the binary stream.
+     *
+     * @param columnLabel the column label
+     * @return the binary stream
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public InputStream getBinaryStream(String columnLabel) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update ascii stream.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateAsciiStream(String columnLabel, InputStream x, long length) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the warnings.
+     *
+     * @return the warnings
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public SQLWarning getWarnings() throws SQLException {
+        if (this.isClosed())
+            throw new SQLException();
+        return this.warning;
+    }
 
-  /**
-   * Update binary stream.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateBinaryStream(String columnLabel, InputStream x, long length) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Clear warnings.
+     *
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void clearWarnings() throws SQLException {
+        if (this.isClosed())
+            throw new SQLException();
+        this.warning = null;
+    }
 
-  /**
-   * Update character stream.
-   *
-   * @param columnLabel the column label
-   * @param reader the reader
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateCharacterStream(String columnLabel, Reader reader, long length) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the cursor name.
+     *
+     * @return the cursor name
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public String getCursorName() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update blob.
-   *
-   * @param columnIndex the column index
-   * @param inputStream the input stream
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateBlob(int columnIndex, InputStream inputStream, long length) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the meta data.
+     *
+     * @return the meta data
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public ResultSetMetaData getMetaData() throws SQLException {
+        return this.metadata;
+    }
 
-  /**
-   * Update blob.
-   *
-   * @param columnLabel the column label
-   * @param inputStream the input stream
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateBlob(String columnLabel, InputStream inputStream, long length) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the object.
+     *
+     * @param columnIndex the column index
+     * @return the object
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Object getObject(int columnIndex) throws SQLException {
+        if (columnIndex == RAW_DOCUMENT_INDEX) {
+            return this.currentDoc.toJson();
+        }
+        String name = this.metadata.getColumnName(columnIndex - 1);
+        return this.currentDoc.get(name);
+    }
 
-  /**
-   * Update clob.
-   *
-   * @param columnIndex the column index
-   * @param reader the reader
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateClob(int columnIndex, Reader reader, long length) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the object.
+     *
+     * @param columnLabel the column label
+     * @return the object
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Object getObject(String columnLabel) throws SQLException {
+        return this.currentDoc.get(columnLabel);
+    }
 
-  /**
-   * Update clob.
-   *
-   * @param columnLabel the column label
-   * @param reader the reader
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateClob(String columnLabel, Reader reader, long length) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Find column.
+     *
+     * @param columnLabel the column label
+     * @return the int
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public int findColumn(String columnLabel) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update N clob.
-   *
-   * @param columnIndex the column index
-   * @param reader the reader
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateNClob(int columnIndex, Reader reader, long length) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the character stream.
+     *
+     * @param columnIndex the column index
+     * @return the character stream
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Reader getCharacterStream(int columnIndex) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update N clob.
-   *
-   * @param columnLabel the column label
-   * @param reader the reader
-   * @param length the length
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateNClob(String columnLabel, Reader reader, long length) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the character stream.
+     *
+     * @param columnLabel the column label
+     * @return the character stream
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Reader getCharacterStream(String columnLabel) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update N character stream.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateNCharacterStream(int columnIndex, Reader x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the big decimal.
+     *
+     * @param columnIndex the column index
+     * @return the big decimal
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update N character stream.
-   *
-   * @param columnLabel the column label
-   * @param reader the reader
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateNCharacterStream(String columnLabel, Reader reader) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the big decimal.
+     *
+     * @param columnLabel the column label
+     * @return the big decimal
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
+        DecimalFormat df = new DecimalFormat();
+        df.setParseBigDecimal(true);
+        return (BigDecimal) df.parse(this.currentDoc.getString(columnLabel), new ParsePosition(0));
+    }
 
-  /**
-   * Update ascii stream.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateAsciiStream(int columnIndex, InputStream x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Checks if is before first.
+     *
+     * @return true, if is before first
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean isBeforeFirst() throws SQLException {
+        return this.currentDoc == null;
+    }
 
-  /**
-   * Update binary stream.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateBinaryStream(int columnIndex, InputStream x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Checks if is after last.
+     *
+     * @return true, if is after last
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean isAfterLast() throws SQLException {
+        // TODO
+        return false;
+    }
 
-  /**
-   * Update character stream.
-   *
-   * @param columnIndex the column index
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateCharacterStream(int columnIndex, Reader x) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Checks if is first.
+     *
+     * @return true, if is first
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean isFirst() throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update ascii stream.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateAsciiStream(String columnLabel, InputStream x) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Checks if is last.
+     *
+     * @return true, if is last
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean isLast() throws SQLException {
+        return this.findIterator.hasNext();
+    }
 
-  /**
-   * Update binary stream.
-   *
-   * @param columnLabel the column label
-   * @param x the x
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateBinaryStream(String columnLabel, InputStream x) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Before first.
+     *
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void beforeFirst() throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update character stream.
-   *
-   * @param columnLabel the column label
-   * @param reader the reader
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateCharacterStream(String columnLabel, Reader reader) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * After last.
+     *
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void afterLast() throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update blob.
-   *
-   * @param columnIndex the column index
-   * @param inputStream the input stream
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateBlob(int columnIndex, InputStream inputStream) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * First.
+     *
+     * @return true, if successful
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean first() throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update blob.
-   *
-   * @param columnLabel the column label
-   * @param inputStream the input stream
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateBlob(String columnLabel, InputStream inputStream) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Last.
+     *
+     * @return true, if successful
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean last() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update clob.
-   *
-   * @param columnIndex the column index
-   * @param reader the reader
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateClob(int columnIndex, Reader reader) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the row.
+     *
+     * @return the row
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public int getRow() throws SQLException {
+        return this.rowNumber;
+    }
 
-  /**
-   * Update clob.
-   *
-   * @param columnLabel the column label
-   * @param reader the reader
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateClob(String columnLabel, Reader reader) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Absolute.
+     *
+     * @param row the row
+     * @return true, if successful
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean absolute(int row) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update N clob.
-   *
-   * @param columnIndex the column index
-   * @param reader the reader
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateNClob(int columnIndex, Reader reader) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Relative.
+     *
+     * @param rows the rows
+     * @return true, if successful
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean relative(int rows) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Update N clob.
-   *
-   * @param columnLabel the column label
-   * @param reader the reader
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public void updateNClob(String columnLabel, Reader reader) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Previous.
+     *
+     * @return true, if successful
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean previous() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Gets the object.
-   *
-   * @param <T> the generic type
-   * @param columnIndex the column index
-   * @param type the type
-   * @return the object
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Sets the fetch direction.
+     *
+     * @param direction the new fetch direction
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void setFetchDirection(int direction) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Gets the object.
-   *
-   * @param <T> the generic type
-   * @param columnLabel the column label
-   * @param type the type
-   * @return the object
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
-    // TODO
-    throw new SQLFeatureNotSupportedException();
-  }
+    /**
+     * Gets the fetch direction.
+     *
+     * @return the fetch direction
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public int getFetchDirection() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
 
-  /**
-   * Gets the fields.
-   *
-   * @return the fields
-   */
-  public int getFields() {
-    // TODO Auto-generated method stub
-    return 0;
-  }
+    /**
+     * Sets the fetch size.
+     *
+     * @param rows the new fetch size
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void setFetchSize(int rows) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the fetch size.
+     *
+     * @return the fetch size
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public int getFetchSize() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the type.
+     *
+     * @return the type
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public int getType() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the concurrency.
+     *
+     * @return the concurrency
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public int getConcurrency() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Row updated.
+     *
+     * @return true, if successful
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean rowUpdated() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Row inserted.
+     *
+     * @return true, if successful
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean rowInserted() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Row deleted.
+     *
+     * @return true, if successful
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean rowDeleted() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update null.
+     *
+     * @param columnIndex the column index
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateNull(int columnIndex) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update boolean.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateBoolean(int columnIndex, boolean x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update byte.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateByte(int columnIndex, byte x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update short.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateShort(int columnIndex, short x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update int.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateInt(int columnIndex, int x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update long.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateLong(int columnIndex, long x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update float.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateFloat(int columnIndex, float x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update double.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateDouble(int columnIndex, double x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update big decimal.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateBigDecimal(int columnIndex, BigDecimal x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update string.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateString(int columnIndex, String x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update bytes.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateBytes(int columnIndex, byte[] x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update date.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateDate(int columnIndex, Date x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update time.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateTime(int columnIndex, Time x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update timestamp.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateTimestamp(int columnIndex, Timestamp x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update ascii stream.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateAsciiStream(int columnIndex, InputStream x, int length) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update binary stream.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateBinaryStream(int columnIndex, InputStream x, int length) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update character stream.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateCharacterStream(int columnIndex, Reader x, int length) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update object.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @param scaleOrLength the scale or length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateObject(int columnIndex, Object x, int scaleOrLength) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update object.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateObject(int columnIndex, Object x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update null.
+     *
+     * @param columnLabel the column label
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateNull(String columnLabel) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update boolean.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateBoolean(String columnLabel, boolean x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update byte.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateByte(String columnLabel, byte x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update short.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateShort(String columnLabel, short x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update int.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateInt(String columnLabel, int x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update long.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateLong(String columnLabel, long x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update float.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateFloat(String columnLabel, float x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update double.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateDouble(String columnLabel, double x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update big decimal.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateBigDecimal(String columnLabel, BigDecimal x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update string.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateString(String columnLabel, String x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update bytes.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateBytes(String columnLabel, byte[] x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update date.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateDate(String columnLabel, Date x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update time.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateTime(String columnLabel, Time x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update timestamp.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateTimestamp(String columnLabel, Timestamp x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update ascii stream.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateAsciiStream(String columnLabel, InputStream x, int length) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update binary stream.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateBinaryStream(String columnLabel, InputStream x, int length) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update character stream.
+     *
+     * @param columnLabel the column label
+     * @param reader the reader
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateCharacterStream(String columnLabel, Reader reader, int length) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update object.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @param scaleOrLength the scale or length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateObject(String columnLabel, Object x, int scaleOrLength) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update object.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateObject(String columnLabel, Object x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Insert row.
+     *
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void insertRow() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update row.
+     *
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateRow() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Delete row.
+     *
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void deleteRow() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Refresh row.
+     *
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void refreshRow() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Cancel row updates.
+     *
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void cancelRowUpdates() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Move to insert row.
+     *
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void moveToInsertRow() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Move to current row.
+     *
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void moveToCurrentRow() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the statement.
+     *
+     * @return the statement
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Statement getStatement() throws SQLException {
+        return this.stmnt;
+    }
+
+    /**
+     * Gets the object.
+     *
+     * @param columnIndex the column index
+     * @param map the map
+     * @return the object
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Object getObject(int columnIndex, Map<String, Class<?>> map) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the ref.
+     *
+     * @param columnIndex the column index
+     * @return the ref
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Ref getRef(int columnIndex) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the blob.
+     *
+     * @param columnIndex the column index
+     * @return the blob
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Blob getBlob(int columnIndex) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the clob.
+     *
+     * @param columnIndex the column index
+     * @return the clob
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Clob getClob(int columnIndex) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the array.
+     *
+     * @param columnIndex the column index
+     * @return the array
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Array getArray(int columnIndex) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the object.
+     *
+     * @param columnLabel the column label
+     * @param map the map
+     * @return the object
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Object getObject(String columnLabel, Map<String, Class<?>> map) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the ref.
+     *
+     * @param columnLabel the column label
+     * @return the ref
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Ref getRef(String columnLabel) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the blob.
+     *
+     * @param columnLabel the column label
+     * @return the blob
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Blob getBlob(String columnLabel) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the clob.
+     *
+     * @param columnLabel the column label
+     * @return the clob
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Clob getClob(String columnLabel) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the array.
+     *
+     * @param columnLabel the column label
+     * @return the array
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Array getArray(String columnLabel) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the date.
+     *
+     * @param columnIndex the column index
+     * @param cal the cal
+     * @return the date
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Date getDate(int columnIndex, Calendar cal) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the date.
+     *
+     * @param columnLabel the column label
+     * @param cal the cal
+     * @return the date
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Date getDate(String columnLabel, Calendar cal) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the time.
+     *
+     * @param columnIndex the column index
+     * @param cal the cal
+     * @return the time
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Time getTime(int columnIndex, Calendar cal) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the time.
+     *
+     * @param columnLabel the column label
+     * @param cal the cal
+     * @return the time
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Time getTime(String columnLabel, Calendar cal) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the timestamp.
+     *
+     * @param columnIndex the column index
+     * @param cal the cal
+     * @return the timestamp
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the timestamp.
+     *
+     * @param columnLabel the column label
+     * @param cal the cal
+     * @return the timestamp
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Timestamp getTimestamp(String columnLabel, Calendar cal) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the url.
+     *
+     * @param columnIndex the column index
+     * @return the url
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public URL getURL(int columnIndex) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the url.
+     *
+     * @param columnLabel the column label
+     * @return the url
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public URL getURL(String columnLabel) throws SQLException {
+        try {
+            return new URL(this.currentDoc.getString(columnLabel));
+        } catch (MalformedURLException e) {
+            throw new SQLException(e);
+        }
+    }
+
+    /**
+     * Update ref.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateRef(int columnIndex, Ref x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update ref.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateRef(String columnLabel, Ref x) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update blob.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateBlob(int columnIndex, Blob x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update blob.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateBlob(String columnLabel, Blob x) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update clob.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateClob(int columnIndex, Clob x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update clob.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateClob(String columnLabel, Clob x) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update array.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateArray(int columnIndex, Array x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update array.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateArray(String columnLabel, Array x) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the row id.
+     *
+     * @param columnIndex the column index
+     * @return the row id
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public RowId getRowId(int columnIndex) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the row id.
+     *
+     * @param columnLabel the column label
+     * @return the row id
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public RowId getRowId(String columnLabel) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update row id.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateRowId(int columnIndex, RowId x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update row id.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateRowId(String columnLabel, RowId x) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the holdability.
+     *
+     * @return the holdability
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public int getHoldability() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Checks if is closed.
+     *
+     * @return true, if is closed
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean isClosed() throws SQLException {
+        return this.isClosed;
+    }
+
+    /**
+     * Update N string.
+     *
+     * @param columnIndex the column index
+     * @param nString the n string
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateNString(int columnIndex, String nString) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update N string.
+     *
+     * @param columnLabel the column label
+     * @param nString the n string
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateNString(String columnLabel, String nString) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update N clob.
+     *
+     * @param columnIndex the column index
+     * @param nClob the n clob
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateNClob(int columnIndex, NClob nClob) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update N clob.
+     *
+     * @param columnLabel the column label
+     * @param nClob the n clob
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateNClob(String columnLabel, NClob nClob) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the n clob.
+     *
+     * @param columnIndex the column index
+     * @return the n clob
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public NClob getNClob(int columnIndex) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the n clob.
+     *
+     * @param columnLabel the column label
+     * @return the n clob
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public NClob getNClob(String columnLabel) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the sqlxml.
+     *
+     * @param columnIndex the column index
+     * @return the sqlxml
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public SQLXML getSQLXML(int columnIndex) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the sqlxml.
+     *
+     * @param columnLabel the column label
+     * @return the sqlxml
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public SQLXML getSQLXML(String columnLabel) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update SQLXML.
+     *
+     * @param columnIndex the column index
+     * @param xmlObject the xml object
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateSQLXML(int columnIndex, SQLXML xmlObject) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update SQLXML.
+     *
+     * @param columnLabel the column label
+     * @param xmlObject the xml object
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateSQLXML(String columnLabel, SQLXML xmlObject) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the n string.
+     *
+     * @param columnIndex the column index
+     * @return the n string
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public String getNString(int columnIndex) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the n string.
+     *
+     * @param columnLabel the column label
+     * @return the n string
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public String getNString(String columnLabel) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the n character stream.
+     *
+     * @param columnIndex the column index
+     * @return the n character stream
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Reader getNCharacterStream(int columnIndex) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the n character stream.
+     *
+     * @param columnLabel the column label
+     * @return the n character stream
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Reader getNCharacterStream(String columnLabel) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update N character stream.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateNCharacterStream(int columnIndex, Reader x, long length) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update N character stream.
+     *
+     * @param columnLabel the column label
+     * @param reader the reader
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateNCharacterStream(String columnLabel, Reader reader, long length) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update ascii stream.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateAsciiStream(int columnIndex, InputStream x, long length) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update binary stream.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateBinaryStream(int columnIndex, InputStream x, long length) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update character stream.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateCharacterStream(int columnIndex, Reader x, long length) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update ascii stream.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateAsciiStream(String columnLabel, InputStream x, long length) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update binary stream.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateBinaryStream(String columnLabel, InputStream x, long length) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update character stream.
+     *
+     * @param columnLabel the column label
+     * @param reader the reader
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateCharacterStream(String columnLabel, Reader reader, long length) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update blob.
+     *
+     * @param columnIndex the column index
+     * @param inputStream the input stream
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateBlob(int columnIndex, InputStream inputStream, long length) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update blob.
+     *
+     * @param columnLabel the column label
+     * @param inputStream the input stream
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateBlob(String columnLabel, InputStream inputStream, long length) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update clob.
+     *
+     * @param columnIndex the column index
+     * @param reader the reader
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateClob(int columnIndex, Reader reader, long length) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update clob.
+     *
+     * @param columnLabel the column label
+     * @param reader the reader
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateClob(String columnLabel, Reader reader, long length) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update N clob.
+     *
+     * @param columnIndex the column index
+     * @param reader the reader
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateNClob(int columnIndex, Reader reader, long length) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update N clob.
+     *
+     * @param columnLabel the column label
+     * @param reader the reader
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateNClob(String columnLabel, Reader reader, long length) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update N character stream.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateNCharacterStream(int columnIndex, Reader x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update N character stream.
+     *
+     * @param columnLabel the column label
+     * @param reader the reader
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateNCharacterStream(String columnLabel, Reader reader) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update ascii stream.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateAsciiStream(int columnIndex, InputStream x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update binary stream.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateBinaryStream(int columnIndex, InputStream x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update character stream.
+     *
+     * @param columnIndex the column index
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateCharacterStream(int columnIndex, Reader x) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update ascii stream.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateAsciiStream(String columnLabel, InputStream x) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update binary stream.
+     *
+     * @param columnLabel the column label
+     * @param x the x
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateBinaryStream(String columnLabel, InputStream x) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update character stream.
+     *
+     * @param columnLabel the column label
+     * @param reader the reader
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateCharacterStream(String columnLabel, Reader reader) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update blob.
+     *
+     * @param columnIndex the column index
+     * @param inputStream the input stream
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateBlob(int columnIndex, InputStream inputStream) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update blob.
+     *
+     * @param columnLabel the column label
+     * @param inputStream the input stream
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateBlob(String columnLabel, InputStream inputStream) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update clob.
+     *
+     * @param columnIndex the column index
+     * @param reader the reader
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateClob(int columnIndex, Reader reader) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update clob.
+     *
+     * @param columnLabel the column label
+     * @param reader the reader
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateClob(String columnLabel, Reader reader) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update N clob.
+     *
+     * @param columnIndex the column index
+     * @param reader the reader
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateNClob(int columnIndex, Reader reader) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Update N clob.
+     *
+     * @param columnLabel the column label
+     * @param reader the reader
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public void updateNClob(String columnLabel, Reader reader) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the object.
+     *
+     * @param <T> the generic type
+     * @param columnIndex the column index
+     * @param type the type
+     * @return the object
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the object.
+     *
+     * @param <T> the generic type
+     * @param columnLabel the column label
+     * @param type the type
+     * @return the object
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
+        // TODO
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
+     * Gets the fields.
+     *
+     * @return the fields
+     */
+    public int getFields() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
 }

@@ -17,13 +17,13 @@ import org.eclipse.dirigible.repository.api.ICollection;
  */
 public class Project extends Folder {
 
-  /**
-   * Instantiates a new project.
-   *
-   * @param projectCollection the project collection
-   */
-  public Project(ICollection projectCollection) {
-    super(projectCollection);
-  }
+    /**
+     * Instantiates a new project.
+     *
+     * @param projectCollection the project collection
+     */
+    public Project(ICollection projectCollection) {
+        super(projectCollection);
+    }
 
 }

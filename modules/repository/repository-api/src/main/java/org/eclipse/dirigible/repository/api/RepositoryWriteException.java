@@ -15,42 +15,42 @@ package org.eclipse.dirigible.repository.api;
  */
 public class RepositoryWriteException extends RepositoryException {
 
-  /** The Constant serialVersionUID. */
-  private static final long serialVersionUID = -163847774919514248L;
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = -163847774919514248L;
 
-  /**
-   * Instantiates a new repository write exception.
-   */
-  public RepositoryWriteException() {
-    super();
-  }
+    /**
+     * Instantiates a new repository write exception.
+     */
+    public RepositoryWriteException() {
+        super();
+    }
 
-  /**
-   * Instantiates a new repository write exception.
-   *
-   * @param message the message
-   * @param cause the cause
-   */
-  public RepositoryWriteException(String message, Throwable cause) {
-    super(message, cause);
-  }
+    /**
+     * Instantiates a new repository write exception.
+     *
+     * @param message the message
+     * @param cause the cause
+     */
+    public RepositoryWriteException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-  /**
-   * Instantiates a new repository write exception.
-   *
-   * @param message the message
-   */
-  public RepositoryWriteException(String message) {
-    super(message);
-  }
+    /**
+     * Instantiates a new repository write exception.
+     *
+     * @param message the message
+     */
+    public RepositoryWriteException(String message) {
+        super(message);
+    }
 
-  /**
-   * Instantiates a new repository write exception.
-   *
-   * @param cause the cause
-   */
-  public RepositoryWriteException(Throwable cause) {
-    super(cause);
-  }
+    /**
+     * Instantiates a new repository write exception.
+     *
+     * @param cause the cause
+     */
+    public RepositoryWriteException(Throwable cause) {
+        super(cause);
+    }
 
 }

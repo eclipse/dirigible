@@ -26,33 +26,33 @@ import org.springframework.stereotype.Component;
 @Component
 public class ImageFacade {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(FilesFacade.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(FilesFacade.class);
 
-  /**
-   * Resize an image to the given boundaries.
-   *
-   * @param original original image
-   * @param type type of the image
-   * @param width width of the new image
-   * @param height height of the new image
-   * @return the created input stream
-   * @throws IOException in case of failure in underlying layer
-   */
-  public static final InputStream resize(InputStream original, String type, int width, int height) throws IOException {
-    BufferedImage bufferedImage = javax.imageio.ImageIO.read(original);
-    Image scaledImage = bufferedImage.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
+    /**
+     * Resize an image to the given boundaries.
+     *
+     * @param original original image
+     * @param type type of the image
+     * @param width width of the new image
+     * @param height height of the new image
+     * @return the created input stream
+     * @throws IOException in case of failure in underlying layer
+     */
+    public static final InputStream resize(InputStream original, String type, int width, int height) throws IOException {
+        BufferedImage bufferedImage = javax.imageio.ImageIO.read(original);
+        Image scaledImage = bufferedImage.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
 
-    int bufferedImageType = bufferedImage.getType();
-    BufferedImage buffer = new BufferedImage(width, height, bufferedImageType);
-    buffer.getGraphics()
-          .drawImage(scaledImage, 0, 0, null);
+        int bufferedImageType = bufferedImage.getType();
+        BufferedImage buffer = new BufferedImage(width, height, bufferedImageType);
+        buffer.getGraphics()
+              .drawImage(scaledImage, 0, 0, null);
 
-    ByteArrayOutputStream temp = new ByteArrayOutputStream();
-    javax.imageio.ImageIO.write(buffer, type, temp);
+        ByteArrayOutputStream temp = new ByteArrayOutputStream();
+        javax.imageio.ImageIO.write(buffer, type, temp);
 
-    temp.flush();
-    return temp.toInputStream();
-  }
+        temp.flush();
+        return temp.toInputStream();
+    }
 
 }

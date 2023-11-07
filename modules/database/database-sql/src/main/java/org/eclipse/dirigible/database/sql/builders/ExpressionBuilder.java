@@ -20,85 +20,85 @@ import org.eclipse.dirigible.database.sql.ISqlDialect;
  */
 public class ExpressionBuilder extends AbstractSqlBuilder {
 
-  /** The expressions. */
-  private List<String> expressions = new ArrayList<String>();
+    /** The expressions. */
+    private List<String> expressions = new ArrayList<String>();
 
-  /**
-   * Instantiates a new expression builder.
-   *
-   * @param dialect the dialect
-   */
-  public ExpressionBuilder(ISqlDialect dialect) {
-    super(dialect);
-  }
-
-  /**
-   * And.
-   *
-   * @param name the name
-   * @return the expression builder
-   */
-  public ExpressionBuilder and(String name) {
-    if (this.expressions.isEmpty()) {
-      this.expressions.add(name);
-    } else {
-      this.expressions.add(KEYWORD_AND + SPACE + name);
+    /**
+     * Instantiates a new expression builder.
+     *
+     * @param dialect the dialect
+     */
+    public ExpressionBuilder(ISqlDialect dialect) {
+        super(dialect);
     }
-    return this;
-  }
 
-  /**
-   * Or.
-   *
-   * @param name the name
-   * @return the expression builder
-   */
-  public ExpressionBuilder or(String name) {
-    if (this.expressions.isEmpty()) {
-      this.expressions.add(name);
-    } else {
-      this.expressions.add(KEYWORD_OR + SPACE + name);
+    /**
+     * And.
+     *
+     * @param name the name
+     * @return the expression builder
+     */
+    public ExpressionBuilder and(String name) {
+        if (this.expressions.isEmpty()) {
+            this.expressions.add(name);
+        } else {
+            this.expressions.add(KEYWORD_AND + SPACE + name);
+        }
+        return this;
     }
-    return this;
-  }
 
-  /**
-   * Generate.
-   *
-   * @return the string
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-   */
-  @Override
-  public String generate() {
-    return generateExpressions();
-  }
-
-  /**
-   * Generate expressions.
-   *
-   * @return the string
-   */
-  protected String generateExpressions() {
-    StringBuilder snippet = new StringBuilder();
-    for (String expression : this.expressions) {
-      snippet.append(expression)
-             .append(SPACE);
+    /**
+     * Or.
+     *
+     * @param name the name
+     * @return the expression builder
+     */
+    public ExpressionBuilder or(String name) {
+        if (this.expressions.isEmpty()) {
+            this.expressions.add(name);
+        } else {
+            this.expressions.add(KEYWORD_OR + SPACE + name);
+        }
+        return this;
     }
-    return snippet.toString()
-                  .substring(0, snippet.length() - 1);
-  }
 
-  /**
-   * Gets the expressions.
-   *
-   * @return the expressions
-   */
-  public List<String> getExpressions() {
-    return expressions;
-  }
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
+     */
+    @Override
+    public String generate() {
+        return generateExpressions();
+    }
+
+    /**
+     * Generate expressions.
+     *
+     * @return the string
+     */
+    protected String generateExpressions() {
+        StringBuilder snippet = new StringBuilder();
+        for (String expression : this.expressions) {
+            snippet.append(expression)
+                   .append(SPACE);
+        }
+        return snippet.toString()
+                      .substring(0, snippet.length() - 1);
+    }
+
+    /**
+     * Gets the expressions.
+     *
+     * @return the expressions
+     */
+    public List<String> getExpressions() {
+        return expressions;
+    }
 
 }

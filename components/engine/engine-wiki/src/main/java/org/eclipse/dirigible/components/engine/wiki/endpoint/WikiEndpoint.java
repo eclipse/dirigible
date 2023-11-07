@@ -34,53 +34,53 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping({BaseEndpoint.PREFIX_ENDPOINT_SECURED + "wiki"})
 public class WikiEndpoint extends BaseEndpoint {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(WikiEndpoint.class.getCanonicalName());
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(WikiEndpoint.class.getCanonicalName());
 
 
-  /** The javascript service. */
-  private final WikiService wikiService;
+    /** The javascript service. */
+    private final WikiService wikiService;
 
-  /**
-   * Instantiates a new wiki endpoint.
-   *
-   * @param wikiService the wiki service
-   */
-  @Autowired
-  public WikiEndpoint(WikiService wikiService) {
-    this.wikiService = wikiService;
-  }
-
-  /**
-   * Gets the page.
-   *
-   * @param path the file path
-   * @return the response
-   */
-  @GetMapping("/{*path}")
-  public ResponseEntity<?> get(@PathVariable("path") String path) {
-    if (wikiService.existResource(path)) {
-      IResource resource = wikiService.getResource(path);
-      if (resource.isBinary()) {
-        String message = "Resource found, but it is a binary file: " + path;
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, message);
-      }
-      String content = new String(resource.getContent(), StandardCharsets.UTF_8);
-      String html = wikiService.renderContent(path, content);
-      return ResponseEntity.ok(html);
+    /**
+     * Instantiates a new wiki endpoint.
+     *
+     * @param wikiService the wiki service
+     */
+    @Autowired
+    public WikiEndpoint(WikiService wikiService) {
+        this.wikiService = wikiService;
     }
 
-    String errorMessage = "Resource not found: " + path;
-    try {
-      byte[] content = wikiService.getResourceContent(path);
-      if (content != null) {
-        String html = wikiService.renderContent(path, new String(content, StandardCharsets.UTF_8));
-        return ResponseEntity.ok(html);
-      }
-    } catch (RepositoryNotFoundException e) {
-      throw new RepositoryNotFoundException(errorMessage, e);
+    /**
+     * Gets the page.
+     *
+     * @param path the file path
+     * @return the response
+     */
+    @GetMapping("/{*path}")
+    public ResponseEntity<?> get(@PathVariable("path") String path) {
+        if (wikiService.existResource(path)) {
+            IResource resource = wikiService.getResource(path);
+            if (resource.isBinary()) {
+                String message = "Resource found, but it is a binary file: " + path;
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, message);
+            }
+            String content = new String(resource.getContent(), StandardCharsets.UTF_8);
+            String html = wikiService.renderContent(path, content);
+            return ResponseEntity.ok(html);
+        }
+
+        String errorMessage = "Resource not found: " + path;
+        try {
+            byte[] content = wikiService.getResourceContent(path);
+            if (content != null) {
+                String html = wikiService.renderContent(path, new String(content, StandardCharsets.UTF_8));
+                return ResponseEntity.ok(html);
+            }
+        } catch (RepositoryNotFoundException e) {
+            throw new RepositoryNotFoundException(errorMessage, e);
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage);
     }
-    throw new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage);
-  }
 
 }

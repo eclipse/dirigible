@@ -20,35 +20,35 @@ import java.util.Map;
  */
 public class DirigibleContextGlobalObject implements GlobalObject {
 
-  /** The dirigible context value. */
-  private final Map<Object, Object> dirigibleContextValue;
+    /** The dirigible context value. */
+    private final Map<Object, Object> dirigibleContextValue;
 
-  /**
-   * Instantiates a new dirigible context global object.
-   *
-   * @param dirigibleContextValue the dirigible context value
-   */
-  public DirigibleContextGlobalObject(Map<Object, Object> dirigibleContextValue) {
-    this.dirigibleContextValue = dirigibleContextValue != null ? dirigibleContextValue : new HashMap<>();
-  }
+    /**
+     * Instantiates a new dirigible context global object.
+     *
+     * @param dirigibleContextValue the dirigible context value
+     */
+    public DirigibleContextGlobalObject(Map<Object, Object> dirigibleContextValue) {
+        this.dirigibleContextValue = dirigibleContextValue != null ? dirigibleContextValue : new HashMap<>();
+    }
 
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  @Override
-  public String getName() {
-    return "__context";
-  }
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    @Override
+    public String getName() {
+        return "__context";
+    }
 
-  /**
-   * Gets the value.
-   *
-   * @return the value
-   */
-  @Override
-  public Object getValue() {
-    return dirigibleContextValue;
-  }
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
+    @Override
+    public Object getValue() {
+        return dirigibleContextValue;
+    }
 }

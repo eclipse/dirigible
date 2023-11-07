@@ -31,207 +31,207 @@ import org.springframework.stereotype.Service;
 @Service
 public class PublisherService {
 
-  public static final String DIRIGIBLE_PUBLISH_DISABLED = "DIRIGIBLE_PUBLISH_DISABLED";
+    public static final String DIRIGIBLE_PUBLISH_DISABLED = "DIRIGIBLE_PUBLISH_DISABLED";
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(PublisherService.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(PublisherService.class);
 
-  /** The publisher handlers. */
-  private final List<PublisherHandler> publisherHandlers;
+    /** The publisher handlers. */
+    private final List<PublisherHandler> publisherHandlers;
 
 
-  /** The repository. */
-  private final IRepository repository;
+    /** The repository. */
+    private final IRepository repository;
 
-  /**
-   * Instantiates a new publisher service.
-   *
-   * @param repository the repository
-   * @param publisherHandlers the publisher handlers
-   */
-  @Autowired
-  public PublisherService(IRepository repository, List<PublisherHandler> publisherHandlers) {
-    this.repository = repository;
-    this.publisherHandlers = publisherHandlers;
-  }
-
-  /**
-   * Gets the repository.
-   *
-   * @return the repository
-   */
-  public IRepository getRepository() {
-    return repository;
-  }
-
-  /**
-   * Publish.
-   *
-   * @param workspace the workspace
-   * @param project the project
-   * @param path the path
-   */
-  public void publish(String workspace, String project, String path) {
-    String user = UserFacade.getName();
-    publish(user, workspace, project, path);
-  }
-
-  /**
-   * Publish.
-   *
-   * @param user the user
-   * @param workspace the workspace
-   * @param project the project
-   * @param path the path
-   */
-  public void publish(String user, String workspace, String project, String path) {
-    if (Boolean.parseBoolean(Configuration.get(DIRIGIBLE_PUBLISH_DISABLED, Boolean.FALSE.toString()))) {
-      return;
-    }
-    StringBuilder workspacePath = generateWorkspacePath(user, workspace, null, null);
-    if ("*".equals(project)) {
-      project = "";
+    /**
+     * Instantiates a new publisher service.
+     *
+     * @param repository the repository
+     * @param publisherHandlers the publisher handlers
+     */
+    @Autowired
+    public PublisherService(IRepository repository, List<PublisherHandler> publisherHandlers) {
+        this.repository = repository;
+        this.publisherHandlers = publisherHandlers;
     }
 
-    String sourceLocation = new RepositoryPath(workspacePath.toString(), project, path).toString();
-    ICollection collection = getRepository().getCollection(sourceLocation);
-    if (collection.exists()) {
-      String targetLocation = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, project, path).toString();
-      publishResource(sourceLocation, targetLocation, new PublisherHandler.AfterPublishMetadata(workspace, project, path, true));
-    } else {
-      IResource resource = getRepository().getResource(sourceLocation);
-      if (resource.exists()) {
-        String targetLocation = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, project, path).toString();
-        publishResource(sourceLocation, targetLocation, new PublisherHandler.AfterPublishMetadata(workspace, project, path, false));
-      }
-    }
-  }
-
-  /**
-   * Unpublish.
-   *
-   * @param path the path
-   */
-  public void unpublish(String path) {
-    if (Boolean.parseBoolean(Configuration.get(DIRIGIBLE_PUBLISH_DISABLED, Boolean.FALSE.toString()))) {
-      return;
-    }
-    String targetLocation = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, path).toString();
-    unpublishResource(targetLocation);
-  }
-
-  /**
-   * Publish resource.
-   *
-   * @param sourceLocation the source location
-   * @param targetLocation the target location
-   * @param afterPublishMetadata the after publish metadata
-   */
-  private void publishResource(String sourceLocation, String targetLocation, PublisherHandler.AfterPublishMetadata afterPublishMetadata) {
-    for (PublisherHandler next : publisherHandlers) {
-      try {
-        next.beforePublish(sourceLocation);
-      } catch (Exception e) {
-        logger.error("{} failed on before publish.", next.getClass()
-                                                         .getCanonicalName());
-        logger.error(e.getMessage(), e);
-      }
+    /**
+     * Gets the repository.
+     *
+     * @return the repository
+     */
+    public IRepository getRepository() {
+        return repository;
     }
 
-    ICollection sourceCollection = getRepository().getCollection(sourceLocation);
-    if (sourceCollection.exists()) {
-      // publish collection
-      ICollection targetCollection = getRepository().getCollection(targetLocation);
-      sourceCollection.copyTo(targetCollection.getPath());
-      logger.info("Published collection: {} -> {}", sourceCollection.getPath(), targetCollection.getPath());
-    } else {
-      // publish a single resource
-      IResource sourceResource = getRepository().getResource(sourceLocation);
-      IResource targetResource = getRepository().getResource(targetLocation);
-      if (targetResource.exists()) {
-        targetResource.setContent(sourceResource.getContent());
-      } else {
-        getRepository().createResource(targetLocation, sourceResource.getContent());
-      }
-      logger.info("Published resource: {} -> {}", sourceResource.getPath(), targetResource.getPath());
+    /**
+     * Publish.
+     *
+     * @param workspace the workspace
+     * @param project the project
+     * @param path the path
+     */
+    public void publish(String workspace, String project, String path) {
+        String user = UserFacade.getName();
+        publish(user, workspace, project, path);
     }
 
-    for (PublisherHandler next : publisherHandlers) {
-      try {
-        next.afterPublish(sourceLocation, targetLocation, afterPublishMetadata);
-      } catch (Exception e) {
-        logger.error("{} failed on after publish.", next.getClass()
-                                                        .getCanonicalName());
-        logger.error(e.getMessage(), e);
-      }
-    }
-  }
+    /**
+     * Publish.
+     *
+     * @param user the user
+     * @param workspace the workspace
+     * @param project the project
+     * @param path the path
+     */
+    public void publish(String user, String workspace, String project, String path) {
+        if (Boolean.parseBoolean(Configuration.get(DIRIGIBLE_PUBLISH_DISABLED, Boolean.FALSE.toString()))) {
+            return;
+        }
+        StringBuilder workspacePath = generateWorkspacePath(user, workspace, null, null);
+        if ("*".equals(project)) {
+            project = "";
+        }
 
-  /**
-   * Publish resource.
-   *
-   * @param targetLocation the targetLocation
-   */
-  private void unpublishResource(String targetLocation) {
-
-    for (PublisherHandler next : publisherHandlers) {
-      try {
-        next.beforeUnpublish(targetLocation);
-      } catch (Exception e) {
-        logger.error("{} failed on before unpublish.", next.getClass()
-                                                           .getCanonicalName());
-        logger.error(e.getMessage(), e);
-      }
-    }
-
-    ICollection targetCollection = getRepository().getCollection(targetLocation);
-    if (targetCollection.exists()) {
-      // unpublish collection
-      targetCollection.delete();
-      logger.info("Unpublished collection: {}", targetCollection.getPath());
-    } else {
-      // unpublish a single resource
-      IResource targetResource = getRepository().getResource(targetLocation);
-      if (targetResource.exists()) {
-        targetResource.delete();
-      }
-      logger.info("Unpublished resource: {}", targetCollection.getPath());
+        String sourceLocation = new RepositoryPath(workspacePath.toString(), project, path).toString();
+        ICollection collection = getRepository().getCollection(sourceLocation);
+        if (collection.exists()) {
+            String targetLocation = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, project, path).toString();
+            publishResource(sourceLocation, targetLocation, new PublisherHandler.AfterPublishMetadata(workspace, project, path, true));
+        } else {
+            IResource resource = getRepository().getResource(sourceLocation);
+            if (resource.exists()) {
+                String targetLocation = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, project, path).toString();
+                publishResource(sourceLocation, targetLocation, new PublisherHandler.AfterPublishMetadata(workspace, project, path, false));
+            }
+        }
     }
 
-    for (PublisherHandler next : publisherHandlers) {
-      try {
-        next.afterUnpublish(targetLocation);
-      } catch (Exception e) {
-        logger.error("{} failed on after unpublish.", next.getClass()
-                                                          .getCanonicalName());
-        logger.error(e.getMessage(), e);
-      }
+    /**
+     * Unpublish.
+     *
+     * @param path the path
+     */
+    public void unpublish(String path) {
+        if (Boolean.parseBoolean(Configuration.get(DIRIGIBLE_PUBLISH_DISABLED, Boolean.FALSE.toString()))) {
+            return;
+        }
+        String targetLocation = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, path).toString();
+        unpublishResource(targetLocation);
     }
-  }
 
-  /**
-   * Generate workspace path.
-   *
-   * @param user the user
-   * @param workspace the workspace
-   * @param project the project
-   * @param path the path
-   * @return the string builder
-   */
-  private StringBuilder generateWorkspacePath(String user, String workspace, String project, String path) {
-    StringBuilder relativePath = new StringBuilder(IRepositoryStructure.PATH_USERS).append(IRepositoryStructure.SEPARATOR)
-                                                                                   .append(user)
-                                                                                   .append(IRepositoryStructure.SEPARATOR)
-                                                                                   .append(workspace);
-    if (project != null) {
-      relativePath.append(IRepositoryStructure.SEPARATOR)
-                  .append(project);
+    /**
+     * Publish resource.
+     *
+     * @param sourceLocation the source location
+     * @param targetLocation the target location
+     * @param afterPublishMetadata the after publish metadata
+     */
+    private void publishResource(String sourceLocation, String targetLocation, PublisherHandler.AfterPublishMetadata afterPublishMetadata) {
+        for (PublisherHandler next : publisherHandlers) {
+            try {
+                next.beforePublish(sourceLocation);
+            } catch (Exception e) {
+                logger.error("{} failed on before publish.", next.getClass()
+                                                                 .getCanonicalName());
+                logger.error(e.getMessage(), e);
+            }
+        }
+
+        ICollection sourceCollection = getRepository().getCollection(sourceLocation);
+        if (sourceCollection.exists()) {
+            // publish collection
+            ICollection targetCollection = getRepository().getCollection(targetLocation);
+            sourceCollection.copyTo(targetCollection.getPath());
+            logger.info("Published collection: {} -> {}", sourceCollection.getPath(), targetCollection.getPath());
+        } else {
+            // publish a single resource
+            IResource sourceResource = getRepository().getResource(sourceLocation);
+            IResource targetResource = getRepository().getResource(targetLocation);
+            if (targetResource.exists()) {
+                targetResource.setContent(sourceResource.getContent());
+            } else {
+                getRepository().createResource(targetLocation, sourceResource.getContent());
+            }
+            logger.info("Published resource: {} -> {}", sourceResource.getPath(), targetResource.getPath());
+        }
+
+        for (PublisherHandler next : publisherHandlers) {
+            try {
+                next.afterPublish(sourceLocation, targetLocation, afterPublishMetadata);
+            } catch (Exception e) {
+                logger.error("{} failed on after publish.", next.getClass()
+                                                                .getCanonicalName());
+                logger.error(e.getMessage(), e);
+            }
+        }
     }
-    if (path != null) {
-      relativePath.append(IRepositoryStructure.SEPARATOR)
-                  .append(path);
+
+    /**
+     * Publish resource.
+     *
+     * @param targetLocation the targetLocation
+     */
+    private void unpublishResource(String targetLocation) {
+
+        for (PublisherHandler next : publisherHandlers) {
+            try {
+                next.beforeUnpublish(targetLocation);
+            } catch (Exception e) {
+                logger.error("{} failed on before unpublish.", next.getClass()
+                                                                   .getCanonicalName());
+                logger.error(e.getMessage(), e);
+            }
+        }
+
+        ICollection targetCollection = getRepository().getCollection(targetLocation);
+        if (targetCollection.exists()) {
+            // unpublish collection
+            targetCollection.delete();
+            logger.info("Unpublished collection: {}", targetCollection.getPath());
+        } else {
+            // unpublish a single resource
+            IResource targetResource = getRepository().getResource(targetLocation);
+            if (targetResource.exists()) {
+                targetResource.delete();
+            }
+            logger.info("Unpublished resource: {}", targetCollection.getPath());
+        }
+
+        for (PublisherHandler next : publisherHandlers) {
+            try {
+                next.afterUnpublish(targetLocation);
+            } catch (Exception e) {
+                logger.error("{} failed on after unpublish.", next.getClass()
+                                                                  .getCanonicalName());
+                logger.error(e.getMessage(), e);
+            }
+        }
     }
-    return relativePath;
-  }
+
+    /**
+     * Generate workspace path.
+     *
+     * @param user the user
+     * @param workspace the workspace
+     * @param project the project
+     * @param path the path
+     * @return the string builder
+     */
+    private StringBuilder generateWorkspacePath(String user, String workspace, String project, String path) {
+        StringBuilder relativePath = new StringBuilder(IRepositoryStructure.PATH_USERS).append(IRepositoryStructure.SEPARATOR)
+                                                                                       .append(user)
+                                                                                       .append(IRepositoryStructure.SEPARATOR)
+                                                                                       .append(workspace);
+        if (project != null) {
+            relativePath.append(IRepositoryStructure.SEPARATOR)
+                        .append(project);
+        }
+        if (path != null) {
+            relativePath.append(IRepositoryStructure.SEPARATOR)
+                        .append(path);
+        }
+        return relativePath;
+    }
 
 }

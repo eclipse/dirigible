@@ -36,62 +36,62 @@ import io.swagger.v3.oas.annotations.Parameter;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_SECURED + "websockets")
 public class WebsocketEndpoint extends BaseEndpoint {
 
-  /** The websocket service. */
-  @Autowired
-  private WebsocketService websocketService;
+    /** The websocket service. */
+    @Autowired
+    private WebsocketService websocketService;
 
-  /**
-   * Find all.
-   *
-   * @param size the size
-   * @param page the page
-   * @return the page
-   */
-  @GetMapping("/pages")
-  public Page<Websocket> findAll(
-      @Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
-      @Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
+    /**
+     * Find all.
+     *
+     * @param size the size
+     * @param page the page
+     * @return the page
+     */
+    @GetMapping("/pages")
+    public Page<Websocket> findAll(
+            @Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
+            @Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
 
-    if (size == null) {
-      size = DEFAULT_PAGE_SIZE;
+        if (size == null) {
+            size = DEFAULT_PAGE_SIZE;
+        }
+        if (page == null) {
+            page = 0;
+        }
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Websocket> websockets = websocketService.getPages(pageable);
+        return websockets;
     }
-    if (page == null) {
-      page = 0;
+
+    /**
+     * Gets the.
+     *
+     * @param id the id
+     * @return the response entity
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Websocket> get(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(websocketService.findById(id));
     }
-    Pageable pageable = PageRequest.of(page, size);
-    Page<Websocket> websockets = websocketService.getPages(pageable);
-    return websockets;
-  }
 
-  /**
-   * Gets the.
-   *
-   * @param id the id
-   * @return the response entity
-   */
-  @GetMapping("/{id}")
-  public ResponseEntity<Websocket> get(@PathVariable("id") Long id) {
-    return ResponseEntity.ok(websocketService.findById(id));
-  }
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the response entity
+     */
+    @GetMapping("/search")
+    public ResponseEntity<Websocket> findByName(@RequestParam("name") String name) {
+        return ResponseEntity.ok(websocketService.findByName(name));
+    }
 
-  /**
-   * Find by name.
-   *
-   * @param name the name
-   * @return the response entity
-   */
-  @GetMapping("/search")
-  public ResponseEntity<Websocket> findByName(@RequestParam("name") String name) {
-    return ResponseEntity.ok(websocketService.findByName(name));
-  }
-
-  /**
-   * Gets the all.
-   *
-   * @return the all
-   */
-  @GetMapping
-  public ResponseEntity<List<Websocket>> getAll() {
-    return ResponseEntity.ok(websocketService.getAll());
-  }
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
+    @GetMapping
+    public ResponseEntity<List<Websocket>> getAll() {
+        return ResponseEntity.ok(websocketService.getAll());
+    }
 }

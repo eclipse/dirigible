@@ -18,20 +18,20 @@ import org.eclipse.dirigible.repository.local.LocalRepositoryException;
  */
 public class ZipMasterRepository extends ZipRepository implements IMasterRepository {
 
-  /** The Constant TYPE. */
-  public static final String TYPE = "zip";
+    /** The Constant TYPE. */
+    public static final String TYPE = "zip";
 
-  /** The Constant DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION. */
-  public static final String DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION = "DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION";
+    /** The Constant DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION. */
+    public static final String DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION = "DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION";
 
-  /**
-   * Instantiates a new zip master repository.
-   *
-   * @param zip the zip
-   * @throws LocalRepositoryException the local repository exception
-   */
-  public ZipMasterRepository(String zip) throws LocalRepositoryException {
-    super(zip);
-  }
+    /**
+     * Instantiates a new zip master repository.
+     *
+     * @param zip the zip
+     * @throws LocalRepositoryException the local repository exception
+     */
+    public ZipMasterRepository(String zip) throws LocalRepositoryException {
+        super(zip);
+    }
 
 }

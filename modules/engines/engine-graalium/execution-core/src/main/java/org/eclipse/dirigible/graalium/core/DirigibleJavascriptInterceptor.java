@@ -22,52 +22,52 @@ import org.graalvm.polyglot.Value;
  */
 public class DirigibleJavascriptInterceptor implements GraalJSInterceptor {
 
-  /** The code runner. */
-  private DirigibleJavascriptCodeRunner codeRunner;
+    /** The code runner. */
+    private DirigibleJavascriptCodeRunner codeRunner;
 
-  /**
-   * Gets the code runner.
-   *
-   * @return the code runner
-   */
-  public DirigibleJavascriptCodeRunner getCodeRunner() {
-    return codeRunner;
-  }
+    /**
+     * Gets the code runner.
+     *
+     * @return the code runner
+     */
+    public DirigibleJavascriptCodeRunner getCodeRunner() {
+        return codeRunner;
+    }
 
-  /**
-   * Instantiates a new dirigible javascript interceptor.
-   *
-   * @param codeRunner the code runner
-   */
-  public DirigibleJavascriptInterceptor(DirigibleJavascriptCodeRunner codeRunner) {
-    this.codeRunner = codeRunner;
-  }
+    /**
+     * Instantiates a new dirigible javascript interceptor.
+     *
+     * @param codeRunner the code runner
+     */
+    public DirigibleJavascriptInterceptor(DirigibleJavascriptCodeRunner codeRunner) {
+        this.codeRunner = codeRunner;
+    }
 
-  /**
-   * On before run.
-   *
-   * @param sourceFilePath the source file path
-   * @param absoluteSourcePath the absolute source path
-   * @param source the source
-   * @param context the context
-   */
-  @Override
-  public void onBeforeRun(String sourceFilePath, Path absoluteSourcePath, Source source, Context context) {
+    /**
+     * On before run.
+     *
+     * @param sourceFilePath the source file path
+     * @param absoluteSourcePath the absolute source path
+     * @param source the source
+     * @param context the context
+     */
+    @Override
+    public void onBeforeRun(String sourceFilePath, Path absoluteSourcePath, Source source, Context context) {
 
-  }
+    }
 
-  /**
-   * On after run.
-   *
-   * @param sourceFilePath the source file path
-   * @param absoluteSourcePath the absolute source path
-   * @param source the source
-   * @param context the context
-   * @param value the value
-   */
-  @Override
-  public void onAfterRun(String sourceFilePath, Path absoluteSourcePath, Source source, Context context, Value value) {
+    /**
+     * On after run.
+     *
+     * @param sourceFilePath the source file path
+     * @param absoluteSourcePath the absolute source path
+     * @param source the source
+     * @param context the context
+     * @param value the value
+     */
+    @Override
+    public void onAfterRun(String sourceFilePath, Path absoluteSourcePath, Source source, Context context, Value value) {
 
-  }
+    }
 
 }

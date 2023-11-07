@@ -15,17 +15,17 @@ package org.eclipse.dirigible.graalium.core.graal.globals;
  */
 public interface GlobalObject {
 
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  String getName();
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    String getName();
 
-  /**
-   * Gets the value.
-   *
-   * @return the value
-   */
-  Object getValue();
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
+    Object getValue();
 }

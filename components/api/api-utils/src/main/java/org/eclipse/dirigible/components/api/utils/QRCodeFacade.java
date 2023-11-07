@@ -26,20 +26,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class QRCodeFacade {
 
-  /**
-   * Generate QR code.
-   *
-   * @param text the text
-   * @return the byte[]
-   * @throws WriterException the writer exception
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  public static final byte[] generateQRCode(String text) throws WriterException, IOException {
-    QRCodeWriter qrCodeWriter = new QRCodeWriter();
-    BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 300, 300);
-    ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
+    /**
+     * Generate QR code.
+     *
+     * @param text the text
+     * @return the byte[]
+     * @throws WriterException the writer exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public static final byte[] generateQRCode(String text) throws WriterException, IOException {
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 300, 300);
+        ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
 
-    MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream);
-    return pngOutputStream.toByteArray();
-  }
+        MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream);
+        return pngOutputStream.toByteArray();
+    }
 }

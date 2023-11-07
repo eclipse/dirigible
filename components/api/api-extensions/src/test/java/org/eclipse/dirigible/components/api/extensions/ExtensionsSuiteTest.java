@@ -40,66 +40,66 @@ import org.springframework.web.context.WebApplicationContext;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 public class ExtensionsSuiteTest {
 
-  @Autowired
-  private ExtensionPointRepository extensionPointRepository;
+    @Autowired
+    private ExtensionPointRepository extensionPointRepository;
 
-  @Autowired
-  private ExtensionRepository extensionRepository;
+    @Autowired
+    private ExtensionRepository extensionRepository;
 
-  @Autowired
-  private JavascriptService javascriptService;
+    @Autowired
+    private JavascriptService javascriptService;
 
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Autowired
-  protected WebApplicationContext wac;
+    @Autowired
+    protected WebApplicationContext wac;
 
-  @BeforeEach
-  public void setup() throws Exception {
+    @BeforeEach
+    public void setup() throws Exception {
 
-    cleanup();
+        cleanup();
 
-    // create test ExtensionPoint
-    extensionPointRepository.save(createExtensionPoint("/a/b/c/test_extpoint1.extensionpoint", "test_extpoint1", "description"));
-    // create test Extension
-    extensionRepository.save(
-        createExtension("/a/b/c/test_extension1.extension", "test_extension1", "description", "test_extpoint1", "/test_ext_module1"));
-  }
+        // create test ExtensionPoint
+        extensionPointRepository.save(createExtensionPoint("/a/b/c/test_extpoint1.extensionpoint", "test_extpoint1", "description"));
+        // create test Extension
+        extensionRepository.save(createExtension("/a/b/c/test_extension1.extension", "test_extension1", "description", "test_extpoint1",
+                "/test_ext_module1"));
+    }
 
-  @AfterEach
-  public void cleanup() throws Exception {
-    extensionPointRepository.deleteAll();
-    extensionRepository.deleteAll();
-  }
+    @AfterEach
+    public void cleanup() throws Exception {
+        extensionPointRepository.deleteAll();
+        extensionRepository.deleteAll();
+    }
 
-  @Test
-  public void executeExtensionsTest() throws Exception {
-    javascriptService.handleRequest("extensions-tests", "extensions-get-extension-points.js", null, null, false);
-    javascriptService.handleRequest("extensions-tests", "extensions-get-extensions.js", null, null, false);
-  }
+    @Test
+    public void executeExtensionsTest() throws Exception {
+        javascriptService.handleRequest("extensions-tests", "extensions-get-extension-points.js", null, null, false);
+        javascriptService.handleRequest("extensions-tests", "extensions-get-extensions.js", null, null, false);
+    }
 
-  @Test
-  public void executeExtensionsMockTest() throws Exception {
-    mockMvc.perform(get("/services/js/extensions-tests/extensions-get-extension-points.js"))
-           .andDo(print())
-           .andExpect(status().is2xxSuccessful());
-    mockMvc.perform(get("/services/js/extensions-tests/extensions-get-extensions.js"))
-           .andDo(print())
-           .andExpect(status().is2xxSuccessful());
-  }
+    @Test
+    public void executeExtensionsMockTest() throws Exception {
+        mockMvc.perform(get("/services/js/extensions-tests/extensions-get-extension-points.js"))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+        mockMvc.perform(get("/services/js/extensions-tests/extensions-get-extensions.js"))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+    }
 
-  public static ExtensionPoint createExtensionPoint(String location, String name, String description) {
-    ExtensionPoint extensionPoint = new ExtensionPoint(location, name, description);
-    return extensionPoint;
-  }
+    public static ExtensionPoint createExtensionPoint(String location, String name, String description) {
+        ExtensionPoint extensionPoint = new ExtensionPoint(location, name, description);
+        return extensionPoint;
+    }
 
-  public static Extension createExtension(String location, String name, String description, String extensionPoint, String module) {
-    Extension extension = new Extension(location, name, description, extensionPoint, module);
-    return extension;
-  }
+    public static Extension createExtension(String location, String name, String description, String extensionPoint, String module) {
+        Extension extension = new Extension(location, name, description, extensionPoint, module);
+        return extension;
+    }
 
-  @SpringBootApplication
-  static class TestConfiguration {
-  }
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 }

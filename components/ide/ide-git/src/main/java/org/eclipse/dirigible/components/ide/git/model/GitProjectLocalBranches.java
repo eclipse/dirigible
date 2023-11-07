@@ -19,25 +19,25 @@ import org.eclipse.dirigible.components.ide.git.domain.GitBranch;
  */
 public class GitProjectLocalBranches {
 
-  /** The local. */
-  private List<GitBranch> local;
+    /** The local. */
+    private List<GitBranch> local;
 
-  /**
-   * Getter for the local branches.
-   *
-   * @return the local
-   */
-  public List<GitBranch> getLocal() {
-    return local;
-  }
+    /**
+     * Getter for the local branches.
+     *
+     * @return the local
+     */
+    public List<GitBranch> getLocal() {
+        return local;
+    }
 
-  /**
-   * Setter for the local branches.
-   *
-   * @param local the local to set
-   */
-  public void setLocal(List<GitBranch> local) {
-    this.local = local;
-  }
+    /**
+     * Setter for the local branches.
+     *
+     * @param local the local to set
+     */
+    public void setLocal(List<GitBranch> local) {
+        this.local = local;
+    }
 
 }

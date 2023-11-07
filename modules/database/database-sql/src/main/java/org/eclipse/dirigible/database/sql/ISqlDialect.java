@@ -44,244 +44,244 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
  * @param <LAST> the generic type
  */
 public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, ALTER extends AlterBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder>
-    extends ISqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST>, ISqlKeywords {
+        extends ISqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST>, ISqlKeywords {
 
-  /** The Constant FUNCTIONS. */
-  public static final Set FUNCTIONS = Collections.synchronizedSet(new HashSet<String>(
-      Arrays.asList(new String[] {"ASCII", "CHAR_LENGTH", "CHARACTER_LENGTH", "CONCAT", "CONCAT_WS", "FIELD", "FIND_IN_SET", "FORMAT",
-          "INSERT", "INSTR", "LCASE", "LEFT", "LENGTH", "LOCATE", "LOWER", "LPAD", "LTRIM", "MID", "POSITION", "REPEAT", "REPLACE",
-          "REVERSE", "RIGHT", "RPAD", "RTRIM", "SPACE", "STRCMP", "SUBSTR", "SUBSTRING", "SUBSTRING_INDEX", "TRIM", "UCASE", "UPPER",
+    /** The Constant FUNCTIONS. */
+    public static final Set FUNCTIONS = Collections.synchronizedSet(new HashSet<String>(Arrays.asList(new String[] {"ASCII", "CHAR_LENGTH",
+            "CHARACTER_LENGTH", "CONCAT", "CONCAT_WS", "FIELD", "FIND_IN_SET", "FORMAT", "INSERT", "INSTR", "LCASE", "LEFT", "LENGTH",
+            "LOCATE", "LOWER", "LPAD", "LTRIM", "MID", "POSITION", "REPEAT", "REPLACE", "REVERSE", "RIGHT", "RPAD", "RTRIM", "SPACE",
+            "STRCMP", "SUBSTR", "SUBSTRING", "SUBSTRING_INDEX", "TRIM", "UCASE", "UPPER",
 
-          "ABS", "ACOS", "ASIN", "ATAN", "ATAN2", "AVG", "CEIL", "CEILING", "COS", "COT", "COUNT", "DEGREES", "DIV", "EXP", "FLOOR",
-          "GREATEST", "LEAST", "LN", "LOG", "LOG10", "LOG2", "MAX", "MIN", "MOD", "PI", "POW", "POWER", "RADIANS", "RAND", "ROUND", "SIGN",
-          "SIN", "SQRT", "SUM", "TAN", "TRUNCATE",
+            "ABS", "ACOS", "ASIN", "ATAN", "ATAN2", "AVG", "CEIL", "CEILING", "COS", "COT", "COUNT", "DEGREES", "DIV", "EXP", "FLOOR",
+            "GREATEST", "LEAST", "LN", "LOG", "LOG10", "LOG2", "MAX", "MIN", "MOD", "PI", "POW", "POWER", "RADIANS", "RAND", "ROUND",
+            "SIGN", "SIN", "SQRT", "SUM", "TAN", "TRUNCATE",
 
-          "ADDDATE", "ADDTIME", "CURDATE", "CURRENT_DATE", "CURRENT_TIME", "CURRENT_TIMESTAMP", "CURTIME", "DATE", "DATEDIFF", "DATE_ADD",
-          "DATE_FORMAT", "DATE_SUB", "DAY", "DAYNAME", "DAYOFMONTH", "DAYOFWEEK", "DAYOFYEAR", "EXTRACT", "FROM_DAYS", "HOUR", "LAST_DAY",
-          "LOCALTIME", "LOCALTIMESTAMP", "MAKEDATE", "MAKETIME", "MICROSECOND", "MINUTE", "MONTH", "MONTHNAME", "NOW", "PERIOD_ADD",
-          "PERIOD_DIFF", "QUARTER", "SECOND", "SEC_TO_TIME", "STR_TO_DATE", "SUBDATE", "SUBTIME", "SYSDATE", "TIME", "TIME_FORMAT",
-          "TIME_TO_SEC", "TIMEDIFF", "TIMESTAMP", "TO_DAYS", "WEEK", "WEEKDAY", "WEEKOFYEAR", "YEAR", "YEARWEEK",
+            "ADDDATE", "ADDTIME", "CURDATE", "CURRENT_DATE", "CURRENT_TIME", "CURRENT_TIMESTAMP", "CURTIME", "DATE", "DATEDIFF", "DATE_ADD",
+            "DATE_FORMAT", "DATE_SUB", "DAY", "DAYNAME", "DAYOFMONTH", "DAYOFWEEK", "DAYOFYEAR", "EXTRACT", "FROM_DAYS", "HOUR", "LAST_DAY",
+            "LOCALTIME", "LOCALTIMESTAMP", "MAKEDATE", "MAKETIME", "MICROSECOND", "MINUTE", "MONTH", "MONTHNAME", "NOW", "PERIOD_ADD",
+            "PERIOD_DIFF", "QUARTER", "SECOND", "SEC_TO_TIME", "STR_TO_DATE", "SUBDATE", "SUBTIME", "SYSDATE", "TIME", "TIME_FORMAT",
+            "TIME_TO_SEC", "TIMEDIFF", "TIMESTAMP", "TO_DAYS", "WEEK", "WEEKDAY", "WEEKOFYEAR", "YEAR", "YEARWEEK",
 
-          "BIN", "BINARY", "CASE", "CAST", "COALESCE", "CONNECTION_ID", "CONV", "CONVERT", "CURRENT_USER", "DATABASE", "IF", "IFNULL",
-          "ISNULL", "LAST_INSERT_ID", "NULLIF", "SESSION_USER", "SYSTEM_USER", "USER", "VERSION"
+            "BIN", "BINARY", "CASE", "CAST", "COALESCE", "CONNECTION_ID", "CONV", "CONVERT", "CURRENT_USER", "DATABASE", "IF", "IFNULL",
+            "ISNULL", "LAST_INSERT_ID", "NULLIF", "SESSION_USER", "SYSTEM_USER", "USER", "VERSION"
 
-      })));
+    })));
 
-  /**
-   * Default implementation returns the direct toString() conversion. It may get overridden for
-   * specific database dialects
-   *
-   * @param dataType the data type
-   * @return the data type name
-   */
-  public String getDataTypeName(DataType dataType);
+    /**
+     * Default implementation returns the direct toString() conversion. It may get overridden for
+     * specific database dialects
+     *
+     * @param dataType the data type
+     * @return the data type name
+     */
+    public String getDataTypeName(DataType dataType);
 
-  /**
-   * PRIMARY KEY argument for a column for the create table script Default is "PRIMARY KEY".
-   *
-   * @return the primary key argument
-   */
-  public String getPrimaryKeyArgument();
+    /**
+     * PRIMARY KEY argument for a column for the create table script Default is "PRIMARY KEY".
+     *
+     * @return the primary key argument
+     */
+    public String getPrimaryKeyArgument();
 
-  /**
-   * Identity argument for a column for the create table script Default is "IDENTITY".
-   *
-   * @return the primary key argument
-   */
-  public String getIdentityArgument();
+    /**
+     * Identity argument for a column for the create table script Default is "IDENTITY".
+     *
+     * @return the primary key argument
+     */
+    public String getIdentityArgument();
 
-  /**
-   * NOT NULL argument for a column for the create table script Default is "NOT NULL".
-   *
-   * @return the not null argument
-   */
-  public String getNotNullArgument();
+    /**
+     * NOT NULL argument for a column for the create table script Default is "NOT NULL".
+     *
+     * @return the not null argument
+     */
+    public String getNotNullArgument();
 
-  /**
-   * UNIQUE argument for a column for the create table script Default is "UNIQUE".
-   *
-   * @return the unique argument
-   */
-  public String getUniqueArgument();
+    /**
+     * UNIQUE argument for a column for the create table script Default is "UNIQUE".
+     *
+     * @return the unique argument
+     */
+    public String getUniqueArgument();
 
-  /**
-   * Check existence of a table.
-   *
-   * @param connection the current connection
-   * @param table the table name
-   * @return true if the table exists and false otherwise
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean existsTable(Connection connection, String table) throws SQLException;
+    /**
+     * Check existence of a table.
+     *
+     * @param connection the current connection
+     * @param table the table name
+     * @return true if the table exists and false otherwise
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean existsTable(Connection connection, String table) throws SQLException;
 
-  /**
-   * Check existence of an artifacts.
-   *
-   * @param connection the current connection
-   * @param name the artifact name
-   * @param type the artifact type
-   * @return true if the table exists and false otherwise
-   * @throws SQLException the SQL exception
-   */
+    /**
+     * Check existence of an artifacts.
+     *
+     * @param connection the current connection
+     * @param name the artifact name
+     * @param type the artifact type
+     * @return true if the table exists and false otherwise
+     * @throws SQLException the SQL exception
+     */
 
-  @Override
-  public boolean exists(Connection connection, String name, int type) throws SQLException;
+    @Override
+    public boolean exists(Connection connection, String name, int type) throws SQLException;
 
-  /**
-   * Check existence of a schema.
-   *
-   * @param connection the current connection
-   * @param schema the schema name
-   * @return true if the table exists and false otherwise
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean existsSchema(Connection connection, String schema) throws SQLException;
+    /**
+     * Check existence of a schema.
+     *
+     * @param connection the current connection
+     * @param schema the schema name
+     * @return true if the table exists and false otherwise
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean existsSchema(Connection connection, String schema) throws SQLException;
 
-  /**
-   * Checks if the database is capable of schema-level filtering statements (e.g. to reduce the
-   * provisioned schemas down to those that the current user is entitled to see).
-   *
-   * @return true if the feature is supported, false otherwise
-   */
-  public boolean isSchemaFilterSupported();
+    /**
+     * Checks if the database is capable of schema-level filtering statements (e.g. to reduce the
+     * provisioned schemas down to those that the current user is entitled to see).
+     *
+     * @return true if the feature is supported, false otherwise
+     */
+    public boolean isSchemaFilterSupported();
 
-  /**
-   * If the database supports schema filtering SQL statements (see
-   * {@link #isSchemaFilterSupported()}), this method provides the corresponding SQL statement.
-   *
-   * @return a filtering SQL statement
-   */
-  public String getSchemaFilterScript();
+    /**
+     * If the database supports schema filtering SQL statements (see
+     * {@link #isSchemaFilterSupported()}), this method provides the corresponding SQL statement.
+     *
+     * @return a filtering SQL statement
+     */
+    public String getSchemaFilterScript();
 
-  /**
-   * Does this database support catalogs synonymous to schemas.
-   *
-   * @return whether it is a catalog for schema
-   */
-  boolean isCatalogForSchema();
+    /**
+     * Does this database support catalogs synonymous to schemas.
+     *
+     * @return whether it is a catalog for schema
+     */
+    boolean isCatalogForSchema();
 
-  /**
-   * Gives the dialect specific name of the CURRENT_DATE function.
-   *
-   * @return the name of the function
-   */
-  String functionCurrentDate();
+    /**
+     * Gives the dialect specific name of the CURRENT_DATE function.
+     *
+     * @return the name of the function
+     */
+    String functionCurrentDate();
 
-  /**
-   * Gives the dialect specific name of the CURRENT_TIME function.
-   *
-   * @return the name of the function
-   */
-  String functionCurrentTime();
+    /**
+     * Gives the dialect specific name of the CURRENT_TIME function.
+     *
+     * @return the name of the function
+     */
+    String functionCurrentTime();
 
-  /**
-   * Gives the dialect specific name of the CURRENT_TIMESTAMP function.
-   *
-   * @return the name of the function
-   */
-  String functionCurrentTimestamp();
+    /**
+     * Gives the dialect specific name of the CURRENT_TIMESTAMP function.
+     *
+     * @return the name of the function
+     */
+    String functionCurrentTimestamp();
 
-  /**
-   * Checks if the database is capable to create and use Sequences.
-   *
-   * @return true if the feature is supported, false otherwise
-   */
-  public boolean isSequenceSupported();
+    /**
+     * Checks if the database is capable to create and use Sequences.
+     *
+     * @return true if the feature is supported, false otherwise
+     */
+    public boolean isSequenceSupported();
 
-  /**
-   * Returns the database name.
-   *
-   * @param connection the active database connection
-   * @return the database name
-   */
-  public String getDatabaseName(Connection connection);
+    /**
+     * Returns the database name.
+     *
+     * @param connection the active database connection
+     * @return the database name
+     */
+    public String getDatabaseName(Connection connection);
 
-  /**
-   * Checks if the database is capable to create and use Synonyms.
-   *
-   * @return true if the feature is supported, false otherwise
-   */
-  public boolean isSynonymSupported();
+    /**
+     * Checks if the database is capable to create and use Synonyms.
+     *
+     * @return true if the feature is supported, false otherwise
+     */
+    public boolean isSynonymSupported();
 
-  /**
-   * Returns the function names.
-   *
-   * @return the list of functions names
-   */
-  public Set<String> getFunctionsNames();
+    /**
+     * Returns the function names.
+     *
+     * @return the list of functions names
+     */
+    public Set<String> getFunctionsNames();
 
-  /**
-   * Returns the creation of fuzzy search index.
-   *
-   * @return the string for creating the Fuzzy Search Index
-   */
-  public String getFuzzySearchIndex();
+    /**
+     * Returns the creation of fuzzy search index.
+     *
+     * @return the string for creating the Fuzzy Search Index
+     */
+    public String getFuzzySearchIndex();
 
-  /**
-   * Returns the escape symbol.
-   *
-   * @return the string for escape symbol
-   */
-  public String getEscapeSymbol();
+    /**
+     * Returns the escape symbol.
+     *
+     * @return the string for escape symbol
+     */
+    public String getEscapeSymbol();
 
-  /**
-   * Count.
-   *
-   * @param connection the connection
-   * @param table the table
-   * @return the count
-   * @throws SQLException the SQL exception
-   */
-  public int count(Connection connection, String table) throws SQLException;
+    /**
+     * Count.
+     *
+     * @param connection the connection
+     * @param table the table
+     * @return the count
+     * @throws SQLException the SQL exception
+     */
+    public int count(Connection connection, String table) throws SQLException;
 
-  /**
-   * Count.
-   *
-   * @param connection the connection
-   * @param table the table
-   * @return the result set
-   * @throws SQLException the SQL exception
-   */
-  public ResultSet all(Connection connection, String table) throws SQLException;
+    /**
+     * Count.
+     *
+     * @param connection the connection
+     * @param table the table
+     * @return the result set
+     * @throws SQLException the SQL exception
+     */
+    public ResultSet all(Connection connection, String table) throws SQLException;
 
-  /**
-   * Count.
-   *
-   * @param table the table
-   * @return the count query
-   */
-  public String countQuery(String table);
+    /**
+     * Count.
+     *
+     * @param table the table
+     * @return the count query
+     */
+    public String countQuery(String table);
 
-  /**
-   * All.
-   *
-   * @param table the table
-   * @return the all query
-   */
-  public String allQuery(String table);
+    /**
+     * All.
+     *
+     * @param table the table
+     * @return the all query
+     */
+    public String allQuery(String table);
 
 
-  /**
-   * Export data.
-   *
-   * @param connection the connection
-   * @param table the table
-   * @param output the output
-   * @throws Exception Signals that an I/O or SQL exception has occurred.
-   */
-  public void exportData(Connection connection, String table, OutputStream output) throws Exception;
+    /**
+     * Export data.
+     *
+     * @param connection the connection
+     * @param table the table
+     * @param output the output
+     * @throws Exception Signals that an I/O or SQL exception has occurred.
+     */
+    public void exportData(Connection connection, String table, OutputStream output) throws Exception;
 
-  /**
-   * Import data.
-   *
-   * @param connection the connection
-   * @param table the table
-   * @param input the input
-   * @throws Exception Signals that an I/O or SQL exception has occurred.
-   */
-  public void importData(Connection connection, String table, InputStream input) throws Exception;
+    /**
+     * Import data.
+     *
+     * @param connection the connection
+     * @param table the table
+     * @param input the input
+     * @throws Exception Signals that an I/O or SQL exception has occurred.
+     */
+    public void importData(Connection connection, String table, InputStream input) throws Exception;
 
 
 }

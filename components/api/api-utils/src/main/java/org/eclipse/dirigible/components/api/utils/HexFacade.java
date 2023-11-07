@@ -21,66 +21,66 @@ import org.springframework.stereotype.Component;
 @Component
 public class HexFacade {
 
-  /**
-   * Converts an array of bytes into a String representing the hexadecimal values of each byte in
-   * order. The returned String will be double the length of the passed array, as it takes two
-   * characters to represent any given byte.
-   *
-   * @param input the input byte array
-   * @return the hexadecimal value
-   */
-  public static final String encode(byte[] input) {
-    return Hex.encodeHexString(input);
-  }
+    /**
+     * Converts an array of bytes into a String representing the hexadecimal values of each byte in
+     * order. The returned String will be double the length of the passed array, as it takes two
+     * characters to represent any given byte.
+     *
+     * @param input the input byte array
+     * @return the hexadecimal value
+     */
+    public static final String encode(byte[] input) {
+        return Hex.encodeHexString(input);
+    }
 
-  /**
-   * Converts an array of bytes into a String representing the hexadecimal values of each byte in
-   * order. The returned String will be double the length of the passed array, as it takes two
-   * characters to represent any given byte.
-   *
-   * @param input the input string
-   * @return the hexadecimal value
-   */
-  public static final String encode(String input) {
-    byte[] bytes = BytesHelper.jsonToBytes(input);
-    return encode(bytes);
-  }
+    /**
+     * Converts an array of bytes into a String representing the hexadecimal values of each byte in
+     * order. The returned String will be double the length of the passed array, as it takes two
+     * characters to represent any given byte.
+     *
+     * @param input the input string
+     * @return the hexadecimal value
+     */
+    public static final String encode(String input) {
+        byte[] bytes = BytesHelper.jsonToBytes(input);
+        return encode(bytes);
+    }
 
-  /**
-   * Hex encode.
-   *
-   * @param input the input
-   * @return the hex encoded input
-   */
-  public static final byte[] encodeNative(byte[] input) {
-    Hex hex = new Hex();
-    return hex.encode(input);
-  }
+    /**
+     * Hex encode.
+     *
+     * @param input the input
+     * @return the hex encoded input
+     */
+    public static final byte[] encodeNative(byte[] input) {
+        Hex hex = new Hex();
+        return hex.encode(input);
+    }
 
-  /**
-   * Converts an array of characters representing hexadecimal values into an array of bytes of those
-   * same values. The returned array will be half the length of the passed array, as it takes two
-   * characters to represent any given byte. An exception is thrown if the passed char array has an
-   * odd number of elements.
-   *
-   * @param input the input string
-   * @return the input decoded
-   * @throws DecoderException in case of decoding failure
-   */
-  public static final byte[] decode(String input) throws DecoderException {
-    return Hex.decodeHex(input.toCharArray());
-  }
+    /**
+     * Converts an array of characters representing hexadecimal values into an array of bytes of those
+     * same values. The returned array will be half the length of the passed array, as it takes two
+     * characters to represent any given byte. An exception is thrown if the passed char array has an
+     * odd number of elements.
+     *
+     * @param input the input string
+     * @return the input decoded
+     * @throws DecoderException in case of decoding failure
+     */
+    public static final byte[] decode(String input) throws DecoderException {
+        return Hex.decodeHex(input.toCharArray());
+    }
 
-  /**
-   * Hex decode.
-   *
-   * @param input the input
-   * @return the hex decoded output
-   * @throws DecoderException the decoder exception
-   */
-  public static final byte[] decodeNative(byte[] input) throws DecoderException {
-    Hex hex = new Hex();
-    return hex.decode(input);
-  }
+    /**
+     * Hex decode.
+     *
+     * @param input the input
+     * @return the hex decoded output
+     * @throws DecoderException the decoder exception
+     */
+    public static final byte[] decodeNative(byte[] input) throws DecoderException {
+        Hex hex = new Hex();
+        return hex.decode(input);
+    }
 
 }

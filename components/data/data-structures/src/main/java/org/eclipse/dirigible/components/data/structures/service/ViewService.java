@@ -30,124 +30,124 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ViewService implements ArtefactService<View> {
 
-  /** The view repository. */
-  @Autowired
-  private ViewRepository viewRepository;
+    /** The view repository. */
+    @Autowired
+    private ViewRepository viewRepository;
 
-  /**
-   * Gets the all.
-   *
-   * @return the all
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public List<View> getAll() {
-    return viewRepository.findAll();
-  }
-
-  /**
-   * Find all.
-   *
-   * @param pageable the pageable
-   * @return the page
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public Page<View> getPages(Pageable pageable) {
-    return viewRepository.findAll(pageable);
-  }
-
-  /**
-   * Find by id.
-   *
-   * @param id the id
-   * @return the view
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public View findById(Long id) {
-    Optional<View> view = viewRepository.findById(id);
-    if (view.isPresent()) {
-      return view.get();
-    } else {
-      throw new IllegalArgumentException("View with id does not exist: " + id);
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<View> getAll() {
+        return viewRepository.findAll();
     }
-  }
 
-  /**
-   * Find by name.
-   *
-   * @param name the name
-   * @return the view
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public View findByName(String name) {
-    View filter = new View();
-    filter.setName(name);
-    Example<View> example = Example.of(filter);
-    Optional<View> view = viewRepository.findOne(example);
-    if (view.isPresent()) {
-      return view.get();
-    } else {
-      throw new IllegalArgumentException("View with name does not exist: " + name);
+    /**
+     * Find all.
+     *
+     * @param pageable the pageable
+     * @return the page
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<View> getPages(Pageable pageable) {
+        return viewRepository.findAll(pageable);
     }
-  }
 
-  /**
-   * Find by location.
-   *
-   * @param location the location
-   * @return the list
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public List<View> findByLocation(String location) {
-    View filter = new View();
-    filter.setLocation(location);
-    Example<View> example = Example.of(filter);
-    List<View> list = viewRepository.findAll(example);
-    return list;
-  }
-
-  /**
-   * Find by key.
-   *
-   * @param key the key
-   * @return the view
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public View findByKey(String key) {
-    View filter = new View();
-    filter.setKey(key);
-    Example<View> example = Example.of(filter);
-    Optional<View> view = viewRepository.findOne(example);
-    if (view.isPresent()) {
-      return view.get();
+    /**
+     * Find by id.
+     *
+     * @param id the id
+     * @return the view
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public View findById(Long id) {
+        Optional<View> view = viewRepository.findById(id);
+        if (view.isPresent()) {
+            return view.get();
+        } else {
+            throw new IllegalArgumentException("View with id does not exist: " + id);
+        }
     }
-    return null;
-  }
 
-  /**
-   * Save.
-   *
-   * @param view the view
-   * @return the view
-   */
-  @Override
-  public View save(View view) {
-    return viewRepository.saveAndFlush(view);
-  }
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the view
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public View findByName(String name) {
+        View filter = new View();
+        filter.setName(name);
+        Example<View> example = Example.of(filter);
+        Optional<View> view = viewRepository.findOne(example);
+        if (view.isPresent()) {
+            return view.get();
+        } else {
+            throw new IllegalArgumentException("View with name does not exist: " + name);
+        }
+    }
 
-  /**
-   * Delete.
-   *
-   * @param view the view
-   */
-  @Override
-  public void delete(View view) {
-    viewRepository.delete(view);
-  }
+    /**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<View> findByLocation(String location) {
+        View filter = new View();
+        filter.setLocation(location);
+        Example<View> example = Example.of(filter);
+        List<View> list = viewRepository.findAll(example);
+        return list;
+    }
+
+    /**
+     * Find by key.
+     *
+     * @param key the key
+     * @return the view
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public View findByKey(String key) {
+        View filter = new View();
+        filter.setKey(key);
+        Example<View> example = Example.of(filter);
+        Optional<View> view = viewRepository.findOne(example);
+        if (view.isPresent()) {
+            return view.get();
+        }
+        return null;
+    }
+
+    /**
+     * Save.
+     *
+     * @param view the view
+     * @return the view
+     */
+    @Override
+    public View save(View view) {
+        return viewRepository.saveAndFlush(view);
+    }
+
+    /**
+     * Delete.
+     *
+     * @param view the view
+     */
+    @Override
+    public void delete(View view) {
+        viewRepository.delete(view);
+    }
 
 }

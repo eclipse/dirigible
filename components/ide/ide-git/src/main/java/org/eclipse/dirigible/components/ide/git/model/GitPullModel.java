@@ -16,24 +16,24 @@ package org.eclipse.dirigible.components.ide.git.model;
  */
 public class GitPullModel extends BaseGitProjectModel {
 
-  /** The publish. */
-  private boolean publish;
+    /** The publish. */
+    private boolean publish;
 
-  /**
-   * Checks if is publish.
-   *
-   * @return true, if is publish
-   */
-  public boolean isPublish() {
-    return publish;
-  }
+    /**
+     * Checks if is publish.
+     *
+     * @return true, if is publish
+     */
+    public boolean isPublish() {
+        return publish;
+    }
 
-  /**
-   * Sets the publish.
-   *
-   * @param publish the new publish
-   */
-  public void setPublish(boolean publish) {
-    this.publish = publish;
-  }
+    /**
+     * Sets the publish.
+     *
+     * @param publish the new publish
+     */
+    public void setPublish(boolean publish) {
+        this.publish = publish;
+    }
 }

@@ -16,14 +16,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class JobsEngine implements Engine {
 
-  @Override
-  public String getName() {
-    return "Job (Quartz)";
-  }
+    @Override
+    public String getName() {
+        return "Job (Quartz)";
+    }
 
-  @Override
-  public String getProvider() {
-    return "Eclipse Dirigible";
-  }
+    @Override
+    public String getProvider() {
+        return "Eclipse Dirigible";
+    }
 
 }

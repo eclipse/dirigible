@@ -30,168 +30,168 @@ import org.eclipse.dirigible.repository.api.IResource;
 @CalledFromJS
 public class DirigibleSourceProvider implements JavascriptSourceProvider {
 
-  /**
-   * Gets the repository.
-   *
-   * @return the repository
-   */
-  static IRepository getRepository() {
-    return (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
-  }
-
-  /**
-   * Gets the absolute source path.
-   *
-   * @param projectName the project name
-   * @param projectFileName the project file name
-   * @return the absolute source path
-   */
-  @Override
-  public Path getAbsoluteSourcePath(String projectName, String projectFileName) {
-    String projectFilePath = Path.of(projectName, projectFileName)
-                                 .toString();
-    String internalRepositoryRelativeSourcePath = getInternalRepositoryRelativeSourcePath(projectFilePath);
-    String absoluteSourcePathString = getRepository().getInternalResourcePath(internalRepositoryRelativeSourcePath.toString());
-    return Path.of(absoluteSourcePathString);
-  }
-
-  /**
-   * Gets the absolute project path.
-   *
-   * @param projectName the project name
-   * @return the absolute project path
-   */
-  @Override
-  public Path getAbsoluteProjectPath(String projectName) {
-    String projectFilePath = Path.of(projectName)
-                                 .toString();
-    String internalRepositoryRelativeSourcePath = getInternalRepositoryRelativeSourcePath(projectFilePath);
-    String absoluteSourcePathString = getRepository().getInternalResourcePath(internalRepositoryRelativeSourcePath.toString());
-    return Path.of(absoluteSourcePathString);
-  }
-
-  /**
-   * Gets the internal repository relative source path.
-   *
-   * @param projectFilePath the project file path
-   * @return the internal repository relative source path
-   */
-  protected String getInternalRepositoryRelativeSourcePath(String projectFilePath) {
-    return Path.of(IRepositoryStructure.PATH_REGISTRY_PUBLIC, projectFilePath)
-               .toString();
-  }
-
-  /**
-   * Gets the source.
-   *
-   * @param sourceFilePath the project file path
-   * @return the source
-   */
-  @Override
-  public String getSource(String sourceFilePath) {
-    sourceFilePath = withDefaultFileExtensionIfNecessary(sourceFilePath);
-
-    String internalRepositoryRelativeSourcePath = getInternalRepositoryRelativeSourcePath(sourceFilePath);
-
-    byte[] maybeContentFromRepository = tryGetFromRepository(internalRepositoryRelativeSourcePath);
-    if (maybeContentFromRepository != null) {
-      return new String(maybeContentFromRepository, StandardCharsets.UTF_8);
+    /**
+     * Gets the repository.
+     *
+     * @return the repository
+     */
+    static IRepository getRepository() {
+        return (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
     }
 
-    byte[] maybeContentFromClassLoader = tryGetFromClassLoader(internalRepositoryRelativeSourcePath, sourceFilePath);
-    if (maybeContentFromClassLoader != null) {
-      return new String(maybeContentFromClassLoader, StandardCharsets.UTF_8);
+    /**
+     * Gets the absolute source path.
+     *
+     * @param projectName the project name
+     * @param projectFileName the project file name
+     * @return the absolute source path
+     */
+    @Override
+    public Path getAbsoluteSourcePath(String projectName, String projectFileName) {
+        String projectFilePath = Path.of(projectName, projectFileName)
+                                     .toString();
+        String internalRepositoryRelativeSourcePath = getInternalRepositoryRelativeSourcePath(projectFilePath);
+        String absoluteSourcePathString = getRepository().getInternalResourcePath(internalRepositoryRelativeSourcePath.toString());
+        return Path.of(absoluteSourcePathString);
     }
 
-    return null;
-  }
-
-  /**
-   * With default file extension if necessary.
-   *
-   * @param filePath the file path
-   * @return the string
-   */
-  protected static String withDefaultFileExtensionIfNecessary(String filePath) {
-    if (filePath.endsWith(".js") || filePath.endsWith(".json") || filePath.endsWith(".mjs") || filePath.endsWith(".xsjs")
-        || filePath.endsWith(".ts") || filePath.endsWith(".py")) {
-      return filePath;
+    /**
+     * Gets the absolute project path.
+     *
+     * @param projectName the project name
+     * @return the absolute project path
+     */
+    @Override
+    public Path getAbsoluteProjectPath(String projectName) {
+        String projectFilePath = Path.of(projectName)
+                                     .toString();
+        String internalRepositoryRelativeSourcePath = getInternalRepositoryRelativeSourcePath(projectFilePath);
+        String absoluteSourcePathString = getRepository().getInternalResourcePath(internalRepositoryRelativeSourcePath.toString());
+        return Path.of(absoluteSourcePathString);
     }
 
-    return filePath + ".js";
-  }
-
-  /**
-   * Try get from repository.
-   *
-   * @param repositoryFilePathString the repository file path string
-   * @return the byte[]
-   */
-  protected byte[] tryGetFromRepository(String repositoryFilePathString) {
-    IResource resource = getRepository().getResource(repositoryFilePathString);
-    if (!resource.exists()) {
-      return null;
+    /**
+     * Gets the internal repository relative source path.
+     *
+     * @param projectFilePath the project file path
+     * @return the internal repository relative source path
+     */
+    protected String getInternalRepositoryRelativeSourcePath(String projectFilePath) {
+        return Path.of(IRepositoryStructure.PATH_REGISTRY_PUBLIC, projectFilePath)
+                   .toString();
     }
-    return resource.getContent();
-  }
 
-  /**
-   * Try get from class loader.
-   *
-   * @param repositoryAwareFilePathString the repository aware file path string
-   * @param filePathString the file path string
-   * @return the byte[]
-   */
-  protected byte[] tryGetFromClassLoader(String repositoryAwareFilePathString, String filePathString) {
-    try {
-      var lookupPath = createLookupPath(filePathString);
-      try (InputStream bundled = this.getClass()
-                                     .getResourceAsStream(lookupPath)) {
-        byte[] content = null;
-        if (bundled != null) {
-          content = bundled.readAllBytes();
-          getRepository().createResource(repositoryAwareFilePathString, content);
+    /**
+     * Gets the source.
+     *
+     * @param sourceFilePath the project file path
+     * @return the source
+     */
+    @Override
+    public String getSource(String sourceFilePath) {
+        sourceFilePath = withDefaultFileExtensionIfNecessary(sourceFilePath);
+
+        String internalRepositoryRelativeSourcePath = getInternalRepositoryRelativeSourcePath(sourceFilePath);
+
+        byte[] maybeContentFromRepository = tryGetFromRepository(internalRepositoryRelativeSourcePath);
+        if (maybeContentFromRepository != null) {
+            return new String(maybeContentFromRepository, StandardCharsets.UTF_8);
         }
-        return content;
-      }
-    } catch (IOException e) {
-      return null;
-    }
-  }
 
-  /**
-   * Creates the lookup path.
-   *
-   * @param filePathString the file path string
-   * @return the string
-   */
-  protected String createLookupPath(String filePathString) {
-    if (filePathString.startsWith("/webjars")) {
-      return "/META-INF/resources" + filePathString;
-    } else if (filePathString.startsWith("webjars")) {
-      return "/META-INF/resources/" + filePathString;
+        byte[] maybeContentFromClassLoader = tryGetFromClassLoader(internalRepositoryRelativeSourcePath, sourceFilePath);
+        if (maybeContentFromClassLoader != null) {
+            return new String(maybeContentFromClassLoader, StandardCharsets.UTF_8);
+        }
+
+        return null;
     }
 
-    return "/META-INF/dirigible/" + filePathString;
-  }
+    /**
+     * With default file extension if necessary.
+     *
+     * @param filePath the file path
+     * @return the string
+     */
+    protected static String withDefaultFileExtensionIfNecessary(String filePath) {
+        if (filePath.endsWith(".js") || filePath.endsWith(".json") || filePath.endsWith(".mjs") || filePath.endsWith(".xsjs")
+                || filePath.endsWith(".ts") || filePath.endsWith(".py")) {
+            return filePath;
+        }
 
-  /**
-   * Unpacked to file system.
-   *
-   * @param pathToUnpack the path to unpack
-   * @param pathToLookup the path to lookup
-   * @return the path
-   */
-  public Path unpackedToFileSystem(Path pathToUnpack, Path pathToLookup) {
-    try (InputStream bundled = this.getClass()
-                                   .getResourceAsStream("/META-INF/dirigible/" + pathToLookup.toString())) {
-      Files.createDirectories(pathToUnpack.getParent());
-      Files.createFile(pathToUnpack);
-      Files.copy(bundled, pathToUnpack, StandardCopyOption.REPLACE_EXISTING);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+        return filePath + ".js";
     }
 
-    return pathToUnpack;
-  }
+    /**
+     * Try get from repository.
+     *
+     * @param repositoryFilePathString the repository file path string
+     * @return the byte[]
+     */
+    protected byte[] tryGetFromRepository(String repositoryFilePathString) {
+        IResource resource = getRepository().getResource(repositoryFilePathString);
+        if (!resource.exists()) {
+            return null;
+        }
+        return resource.getContent();
+    }
+
+    /**
+     * Try get from class loader.
+     *
+     * @param repositoryAwareFilePathString the repository aware file path string
+     * @param filePathString the file path string
+     * @return the byte[]
+     */
+    protected byte[] tryGetFromClassLoader(String repositoryAwareFilePathString, String filePathString) {
+        try {
+            var lookupPath = createLookupPath(filePathString);
+            try (InputStream bundled = this.getClass()
+                                           .getResourceAsStream(lookupPath)) {
+                byte[] content = null;
+                if (bundled != null) {
+                    content = bundled.readAllBytes();
+                    getRepository().createResource(repositoryAwareFilePathString, content);
+                }
+                return content;
+            }
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Creates the lookup path.
+     *
+     * @param filePathString the file path string
+     * @return the string
+     */
+    protected String createLookupPath(String filePathString) {
+        if (filePathString.startsWith("/webjars")) {
+            return "/META-INF/resources" + filePathString;
+        } else if (filePathString.startsWith("webjars")) {
+            return "/META-INF/resources/" + filePathString;
+        }
+
+        return "/META-INF/dirigible/" + filePathString;
+    }
+
+    /**
+     * Unpacked to file system.
+     *
+     * @param pathToUnpack the path to unpack
+     * @param pathToLookup the path to lookup
+     * @return the path
+     */
+    public Path unpackedToFileSystem(Path pathToUnpack, Path pathToLookup) {
+        try (InputStream bundled = this.getClass()
+                                       .getResourceAsStream("/META-INF/dirigible/" + pathToLookup.toString())) {
+            Files.createDirectories(pathToUnpack.getParent());
+            Files.createFile(pathToUnpack);
+            Files.copy(bundled, pathToUnpack, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return pathToUnpack;
+    }
 }

@@ -21,18 +21,18 @@ import org.junit.Test;
  */
 public class DropViewTest {
 
-  /**
-   * Drop view.
-   */
-  @Test
-  public void dropView() {
-    String sql = SqlFactory.getNative(new MySQLSqlDialect())
-                           .drop()
-                           .view("CUSTOMERS_VIEW")
-                           .build();
+    /**
+     * Drop view.
+     */
+    @Test
+    public void dropView() {
+        String sql = SqlFactory.getNative(new MySQLSqlDialect())
+                               .drop()
+                               .view("CUSTOMERS_VIEW")
+                               .build();
 
-    assertNotNull(sql);
-    assertEquals("DROP VIEW CUSTOMERS_VIEW", sql);
-  }
+        assertNotNull(sql);
+        assertEquals("DROP VIEW CUSTOMERS_VIEW", sql);
+    }
 
 }

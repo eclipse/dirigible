@@ -15,32 +15,32 @@ package org.eclipse.dirigible.repository.api;
  */
 public interface IRepositoryCache {
 
-  /**
-   * Gets file content from the repository cache by path.
-   *
-   * @param path the repository path
-   * @return the file content
-   */
-  public byte[] get(String path);
+    /**
+     * Gets file content from the repository cache by path.
+     *
+     * @param path the repository path
+     * @return the file content
+     */
+    public byte[] get(String path);
 
-  /**
-   * Adds file content to the repository cache.
-   *
-   * @param path the repository path
-   * @param content the file content
-   */
-  public void put(String path, byte[] content);
+    /**
+     * Adds file content to the repository cache.
+     *
+     * @param path the repository path
+     * @param content the file content
+     */
+    public void put(String path, byte[] content);
 
-  /**
-   * Remove file content from the repository cache by path.
-   *
-   * @param path the repository path
-   */
-  public void remove(String path);
+    /**
+     * Remove file content from the repository cache by path.
+     *
+     * @param path the repository path
+     */
+    public void remove(String path);
 
-  /**
-   * Clear the repository cache.
-   */
-  public void clear();
+    /**
+     * Clear the repository cache.
+     */
+    public void clear();
 
 }

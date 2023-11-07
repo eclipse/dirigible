@@ -23,39 +23,39 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class DefaultPropertyNameEscaperTest {
 
-  /** The escaper. */
-  private DefaultPropertyNameEscaper escaper;
+    /** The escaper. */
+    private DefaultPropertyNameEscaper escaper;
 
-  /**
-   * Sets the up.
-   */
-  @BeforeEach
-  public void setUp() {
-    this.escaper = new DefaultPropertyNameEscaper();
-  }
+    /**
+     * Sets the up.
+     */
+    @BeforeEach
+    public void setUp() {
+        this.escaper = new DefaultPropertyNameEscaper();
+    }
 
-  /**
-   * Test escape dots.
-   */
-  @Test
-  public void testEscapeDots() {
-    assertEquals("Property_Name_With_Dots", escaper.escape("Property.Name.With.Dots"), "Unexpected escaped property name");
-  }
+    /**
+     * Test escape dots.
+     */
+    @Test
+    public void testEscapeDots() {
+        assertEquals("Property_Name_With_Dots", escaper.escape("Property.Name.With.Dots"), "Unexpected escaped property name");
+    }
 
-  /**
-   * Test escape dot.
-   */
-  @Test
-  public void testEscapeDot() {
-    assertEquals("Property_Name", escaper.escape("Property.Name"), "Unexpected escaped property name");
-  }
+    /**
+     * Test escape dot.
+     */
+    @Test
+    public void testEscapeDot() {
+        assertEquals("Property_Name", escaper.escape("Property.Name"), "Unexpected escaped property name");
+    }
 
-  /**
-   * Test escape valid name.
-   */
-  @Test
-  public void testEscapeValidName() {
-    assertEquals("PropertyName", escaper.escape("PropertyName"), "Unexpected escaped property name");
-  }
+    /**
+     * Test escape valid name.
+     */
+    @Test
+    public void testEscapeValidName() {
+        assertEquals("PropertyName", escaper.escape("PropertyName"), "Unexpected escaped property name");
+    }
 
 }

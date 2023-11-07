@@ -35,99 +35,99 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "problems")
 public class ProblemEndpoint extends BaseEndpoint {
 
-  /** The problem service. */
-  private final ProblemService problemService;
+    /** The problem service. */
+    private final ProblemService problemService;
 
-  /**
-   * Instantiates a new problem endpoint.
-   *
-   * @param problemService the problem service
-   */
-  @Autowired
-  public ProblemEndpoint(ProblemService problemService) {
-    this.problemService = problemService;
-  }
+    /**
+     * Instantiates a new problem endpoint.
+     *
+     * @param problemService the problem service
+     */
+    @Autowired
+    public ProblemEndpoint(ProblemService problemService) {
+        this.problemService = problemService;
+    }
 
-  /**
-   * List problems.
-   *
-   * @return the response entity
-   * @throws Exception the exception
-   */
-  @GetMapping(produces = "application/json")
-  public ResponseEntity<List<Problem>> listProblems() throws Exception {
-    return ResponseEntity.ok(problemService.getAll());
-  }
+    /**
+     * List problems.
+     *
+     * @return the response entity
+     * @throws Exception the exception
+     */
+    @GetMapping(produces = "application/json")
+    public ResponseEntity<List<Problem>> listProblems() throws Exception {
+        return ResponseEntity.ok(problemService.getAll());
+    }
 
-  /**
-   * List all the problems currently registered.
-   *
-   * @param condition the condition
-   * @param limit the limit
-   * @return the response
-   * @throws Exception the scheduler exception
-   */
-  @GetMapping(value = "/search", produces = "application/json")
-  public ResponseEntity<Problems> fetchProblemsBatch(@Validated @RequestParam("condition") String condition,
-      @Validated @RequestParam("limit") int limit) throws Exception {
-    return ResponseEntity.ok(problemService.fetchProblemsBatch(condition, limit));
-  }
+    /**
+     * List all the problems currently registered.
+     *
+     * @param condition the condition
+     * @param limit the limit
+     * @return the response
+     * @throws Exception the scheduler exception
+     */
+    @GetMapping(value = "/search", produces = "application/json")
+    public ResponseEntity<Problems> fetchProblemsBatch(@Validated @RequestParam("condition") String condition,
+            @Validated @RequestParam("limit") int limit) throws Exception {
+        return ResponseEntity.ok(problemService.fetchProblemsBatch(condition, limit));
+    }
 
-  /**
-   * Updates the status of all selected problems.
-   *
-   * @param status the status
-   * @param selectedIds the selected ids
-   * @return the complete list of problems after the update
-   * @throws Exception the scheduler exception
-   */
-  @PostMapping(value = "/update/{status}", produces = "application/json", consumes = "application/json")
-  public ResponseEntity<?> updateStatus(@Validated @PathVariable("status") String status, @Nullable List<Long> selectedIds)
-      throws Exception {
-    problemService.updateStatusByIds(selectedIds, status);
-    return ResponseEntity.noContent()
-                         .build();
-  }
+    /**
+     * Updates the status of all selected problems.
+     *
+     * @param status the status
+     * @param selectedIds the selected ids
+     * @return the complete list of problems after the update
+     * @throws Exception the scheduler exception
+     */
+    @PostMapping(value = "/update/{status}", produces = "application/json", consumes = "application/json")
+    public ResponseEntity<?> updateStatus(@Validated @PathVariable("status") String status, @Nullable List<Long> selectedIds)
+            throws Exception {
+        problemService.updateStatusByIds(selectedIds, status);
+        return ResponseEntity.noContent()
+                             .build();
+    }
 
-  /**
-   * Deletes all problems by their status.
-   *
-   * @param status the status
-   * @return the response
-   * @throws Exception the scheduler exception
-   */
-  @DeleteMapping(value = "/delete/{status}", produces = "application/json")
-  public ResponseEntity<?> deleteProblemsByStatus(@Validated @PathVariable("status") String status) throws Exception {
-    problemService.deleteAllByStatus(status);
-    return ResponseEntity.noContent()
-                         .build();
-  }
+    /**
+     * Deletes all problems by their status.
+     *
+     * @param status the status
+     * @return the response
+     * @throws Exception the scheduler exception
+     */
+    @DeleteMapping(value = "/delete/{status}", produces = "application/json")
+    public ResponseEntity<?> deleteProblemsByStatus(@Validated @PathVariable("status") String status) throws Exception {
+        problemService.deleteAllByStatus(status);
+        return ResponseEntity.noContent()
+                             .build();
+    }
 
-  /**
-   * Deletes all problems. s
-   *
-   * @return the response
-   * @throws Exception the scheduler exception
-   */
-  @DeleteMapping(value = "/clear", produces = "application/json")
-  public ResponseEntity<?> clearProblems() throws Exception {
-    problemService.deleteAll();
-    return ResponseEntity.noContent()
-                         .build();
-  }
+    /**
+     * Deletes all problems. s
+     *
+     * @return the response
+     * @throws Exception the scheduler exception
+     */
+    @DeleteMapping(value = "/clear", produces = "application/json")
+    public ResponseEntity<?> clearProblems() throws Exception {
+        problemService.deleteAll();
+        return ResponseEntity.noContent()
+                             .build();
+    }
 
-  /**
-   * Deletes all selected problems.
-   *
-   * @param selectedIds the selected ids
-   * @return the response
-   * @throws Exception the scheduler exception
-   */
-  @PostMapping(value = "/delete/selected", produces = "application/json", consumes = "application/json")
-  public ResponseEntity<?> deleteMultipleProblems(@Nullable List<Long> selectedIds) throws Exception {
-    problemService.deleteAllByIds(selectedIds);
-    return ResponseEntity.noContent()
-                         .build();
-  }
+    /**
+     * Deletes all selected problems.
+     *
+     * @param selectedIds the selected ids
+     * @return the response
+     * @throws Exception the scheduler exception
+     */
+    @PostMapping(value = "/delete/selected", produces = "application/json", consumes = "application/json")
+    public ResponseEntity<?> deleteMultipleProblems(@Nullable List<Long> selectedIds) throws Exception {
+        problemService.deleteAllByIds(selectedIds);
+        return ResponseEntity.noContent()
+                             .build();
+    }
 
 }

@@ -16,14 +16,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class SecurityEngine implements Engine {
 
-  @Override
-  public String getName() {
-    return "Security";
-  }
+    @Override
+    public String getName() {
+        return "Security";
+    }
 
-  @Override
-  public String getProvider() {
-    return "Eclipse Dirigible";
-  }
+    @Override
+    public String getProvider() {
+        return "Eclipse Dirigible";
+    }
 
 }

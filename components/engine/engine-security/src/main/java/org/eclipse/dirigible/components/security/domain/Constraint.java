@@ -20,96 +20,96 @@ import com.google.gson.annotations.Expose;
  */
 public class Constraint {
 
-  /**
-   * The scope.
-   */
-  @Expose
-  private String scope;
+    /**
+     * The scope.
+     */
+    @Expose
+    private String scope;
 
-  /**
-   * The path.
-   */
-  @Expose
-  private String path;
+    /**
+     * The path.
+     */
+    @Expose
+    private String path;
 
-  /**
-   * The method.
-   */
-  @Expose
-  private String method;
+    /**
+     * The method.
+     */
+    @Expose
+    private String method;
 
-  /**
-   * The roles.
-   */
-  @Expose
-  private List<String> roles = new ArrayList<String>();
+    /**
+     * The roles.
+     */
+    @Expose
+    private List<String> roles = new ArrayList<String>();
 
-  /**
-   * Gets the scope.
-   *
-   * @return the scope
-   */
-  public String getScope() {
-    return scope;
-  }
+    /**
+     * Gets the scope.
+     *
+     * @return the scope
+     */
+    public String getScope() {
+        return scope;
+    }
 
-  /**
-   * Sets the scope.
-   *
-   * @param scope the new scope
-   */
-  public void setScope(String scope) {
-    this.scope = scope;
-  }
+    /**
+     * Sets the scope.
+     *
+     * @param scope the new scope
+     */
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
 
-  /**
-   * Gets the path.
-   *
-   * @return the path
-   */
-  public String getPath() {
-    return path;
-  }
+    /**
+     * Gets the path.
+     *
+     * @return the path
+     */
+    public String getPath() {
+        return path;
+    }
 
-  /**
-   * Sets the path.
-   *
-   * @param path the new path
-   */
-  public void setPath(String path) {
-    this.path = path;
-  }
+    /**
+     * Sets the path.
+     *
+     * @param path the new path
+     */
+    public void setPath(String path) {
+        this.path = path;
+    }
 
-  /**
-   * Gets the method.
-   *
-   * @return the method
-   */
-  public String getMethod() {
-    return method;
-  }
+    /**
+     * Gets the method.
+     *
+     * @return the method
+     */
+    public String getMethod() {
+        return method;
+    }
 
-  /**
-   * Sets the method.
-   *
-   * @param method the new method
-   */
-  public void setMethod(String method) {
-    this.method = method;
-  }
+    /**
+     * Sets the method.
+     *
+     * @param method the new method
+     */
+    public void setMethod(String method) {
+        this.method = method;
+    }
 
-  /**
-   * Gets the roles.
-   *
-   * @return the roles
-   */
-  public List<String> getRoles() {
-    return roles;
-  }
+    /**
+     * Gets the roles.
+     *
+     * @return the roles
+     */
+    public List<String> getRoles() {
+        return roles;
+    }
 
-  @Override
-  public String toString() {
-    return "Constraint [scope=" + scope + ", path=" + path + ", method=" + method + ", roles=" + roles + "]";
-  }
+    @Override
+    public String toString() {
+        return "Constraint [scope=" + scope + ", path=" + path + ", method=" + method + ", roles=" + roles + "]";
+    }
 
 }

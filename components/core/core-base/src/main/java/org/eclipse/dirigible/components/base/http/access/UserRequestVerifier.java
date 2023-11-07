@@ -26,65 +26,65 @@ import org.slf4j.LoggerFactory;
  */
 public class UserRequestVerifier {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(UserRequestVerifier.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(UserRequestVerifier.class);
 
-  /** The Constant ACCESS_MANAGERS. */
-  private static final ServiceLoader<UserAccessVerifier> ACCESS_VERIFIERS = ServiceLoader.load(UserAccessVerifier.class);
+    /** The Constant ACCESS_MANAGERS. */
+    private static final ServiceLoader<UserAccessVerifier> ACCESS_VERIFIERS = ServiceLoader.load(UserAccessVerifier.class);
 
-  /** The Constant NO_VALID_REQUEST. */
-  private static final String NO_VALID_REQUEST = "Trying to use HTTP Request Facade without a valid Request";
+    /** The Constant NO_VALID_REQUEST. */
+    private static final String NO_VALID_REQUEST = "Trying to use HTTP Request Facade without a valid Request";
 
-  /**
-   * Returns the request in the current thread context.
-   *
-   * @return the request
-   */
-  public static final HttpServletRequest getRequest() {
-    if (!ThreadContextFacade.isValid()) {
-      return null;
-    }
-    try {
-      return (HttpServletRequest) ThreadContextFacade.get(HttpServletRequest.class.getCanonicalName());
-    } catch (ContextException e) {
-      if (logger.isErrorEnabled()) {
-        logger.error(e.getMessage(), e);
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Checks if there is a request in the current thread context.
-   *
-   * @return true, if there is a request in the current thread context
-   */
-  public static final boolean isValid() {
-    HttpServletRequest request = getRequest();
-    return request != null;
-  }
-
-  /**
-   * Checks if is user in role.
-   *
-   * @param role the role
-   * @return true, if is user in role
-   * @see HttpServletRequest#isUserInRole(String)
-   */
-  public static final boolean isUserInRole(String role) {
-    HttpServletRequest request = getRequest();
-    if (request == null) {
-      throw new InvalidStateException(NO_VALID_REQUEST);
-    }
-    if (Configuration.isJwtModeEnabled()) {
-      for (UserAccessVerifier next : ACCESS_VERIFIERS) {
-        if (next.isInRole(request, role)) {
-          return true;
+    /**
+     * Returns the request in the current thread context.
+     *
+     * @return the request
+     */
+    public static final HttpServletRequest getRequest() {
+        if (!ThreadContextFacade.isValid()) {
+            return null;
         }
-      }
-      return false;
+        try {
+            return (HttpServletRequest) ThreadContextFacade.get(HttpServletRequest.class.getCanonicalName());
+        } catch (ContextException e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
+        }
+        return null;
     }
-    return request.isUserInRole(role);
-  }
+
+    /**
+     * Checks if there is a request in the current thread context.
+     *
+     * @return true, if there is a request in the current thread context
+     */
+    public static final boolean isValid() {
+        HttpServletRequest request = getRequest();
+        return request != null;
+    }
+
+    /**
+     * Checks if is user in role.
+     *
+     * @param role the role
+     * @return true, if is user in role
+     * @see HttpServletRequest#isUserInRole(String)
+     */
+    public static final boolean isUserInRole(String role) {
+        HttpServletRequest request = getRequest();
+        if (request == null) {
+            throw new InvalidStateException(NO_VALID_REQUEST);
+        }
+        if (Configuration.isJwtModeEnabled()) {
+            for (UserAccessVerifier next : ACCESS_VERIFIERS) {
+                if (next.isInRole(request, role)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return request.isUserInRole(role);
+    }
 
 }

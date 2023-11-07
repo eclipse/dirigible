@@ -32,85 +32,87 @@ import org.slf4j.LoggerFactory;
  */
 public class TableForeignKeysCreateProcessor {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(TableForeignKeysCreateProcessor.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(TableForeignKeysCreateProcessor.class);
 
-  /**
-   * Execute the corresponding statement.
-   *
-   * @param connection the connection
-   * @param tableModel the table model
-   * @throws SQLException the SQL exception
-   */
-  public static void execute(Connection connection, Table tableModel) throws SQLException {
-    boolean caseSensitive = Boolean.parseBoolean(Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
-    String tableName = tableModel.getName();
-    if (caseSensitive) {
-      tableName = "\"" + tableName + "\"";
+    /**
+     * Execute the corresponding statement.
+     *
+     * @param connection the connection
+     * @param tableModel the table model
+     * @throws SQLException the SQL exception
+     */
+    public static void execute(Connection connection, Table tableModel) throws SQLException {
+        boolean caseSensitive =
+                Boolean.parseBoolean(Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
+        String tableName = tableModel.getName();
+        if (caseSensitive) {
+            tableName = "\"" + tableName + "\"";
+        }
+
+        if (tableModel.getConstraints() != null) {
+            if (tableModel.getConstraints()
+                          .getForeignKeys() != null
+                    && !tableModel.getConstraints()
+                                  .getForeignKeys()
+                                  .isEmpty()) {
+                if (logger.isInfoEnabled()) {
+                    logger.info("Processing Alter Table Create Foreign Keys Table: " + tableName);
+                }
+                AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection)
+                                                                .alter()
+                                                                .table(tableName);
+                for (TableConstraintForeignKey foreignKey : tableModel.getConstraints()
+                                                                      .getForeignKeys()) {
+
+                    List<String> valsToHashFKName = new ArrayList<>(Arrays.asList(foreignKey.getColumns()));
+                    valsToHashFKName.add(foreignKey.getReferencedTable());
+                    String hashedFKName = "fk" + generateHashedName(valsToHashFKName);
+                    String foreignKeyName = Objects.isNull(foreignKey.getName()) ? hashedFKName : foreignKey.getName();
+                    String referencedTable = foreignKey.getReferencedTable();
+                    if (caseSensitive) {
+                        foreignKeyName = "\"" + foreignKeyName + "\"";
+                        referencedTable = "\"" + referencedTable + "\"";
+                    }
+                    alterTableBuilder.add()
+                                     .foreignKey(foreignKeyName, foreignKey.getColumns(), referencedTable,
+                                             foreignKey.getReferencedColumns());
+                }
+                final String sql = alterTableBuilder.build();
+                if (logger.isInfoEnabled()) {
+                    logger.info(sql);
+                }
+                PreparedStatement statement = connection.prepareStatement(sql);
+                try {
+                    statement.executeUpdate();
+                } catch (SQLException e) {
+                    if (logger.isErrorEnabled()) {
+                        logger.error(sql);
+                    }
+                    // if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+                    throw new SQLException(e.getMessage(), e);
+                } finally {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                }
+            }
+        }
     }
 
-    if (tableModel.getConstraints() != null) {
-      if (tableModel.getConstraints()
-                    .getForeignKeys() != null
-          && !tableModel.getConstraints()
-                        .getForeignKeys()
-                        .isEmpty()) {
-        if (logger.isInfoEnabled()) {
-          logger.info("Processing Alter Table Create Foreign Keys Table: " + tableName);
+    /**
+     * Generate hashed name.
+     *
+     * @param values the values
+     * @return the string
+     */
+    public static String generateHashedName(List<String> values) {
+        StringBuilder hashedName = new StringBuilder("");
+        for (String val : values) {
+            hashedName.append(val);
         }
-        AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection)
-                                                        .alter()
-                                                        .table(tableName);
-        for (TableConstraintForeignKey foreignKey : tableModel.getConstraints()
-                                                              .getForeignKeys()) {
-
-          List<String> valsToHashFKName = new ArrayList<>(Arrays.asList(foreignKey.getColumns()));
-          valsToHashFKName.add(foreignKey.getReferencedTable());
-          String hashedFKName = "fk" + generateHashedName(valsToHashFKName);
-          String foreignKeyName = Objects.isNull(foreignKey.getName()) ? hashedFKName : foreignKey.getName();
-          String referencedTable = foreignKey.getReferencedTable();
-          if (caseSensitive) {
-            foreignKeyName = "\"" + foreignKeyName + "\"";
-            referencedTable = "\"" + referencedTable + "\"";
-          }
-          alterTableBuilder.add()
-                           .foreignKey(foreignKeyName, foreignKey.getColumns(), referencedTable, foreignKey.getReferencedColumns());
-        }
-        final String sql = alterTableBuilder.build();
-        if (logger.isInfoEnabled()) {
-          logger.info(sql);
-        }
-        PreparedStatement statement = connection.prepareStatement(sql);
-        try {
-          statement.executeUpdate();
-        } catch (SQLException e) {
-          if (logger.isErrorEnabled()) {
-            logger.error(sql);
-          }
-          // if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-          throw new SQLException(e.getMessage(), e);
-        } finally {
-          if (statement != null) {
-            statement.close();
-          }
-        }
-      }
+        return String.valueOf(hashedName.toString()
+                                        .hashCode());
     }
-  }
-
-  /**
-   * Generate hashed name.
-   *
-   * @param values the values
-   * @return the string
-   */
-  public static String generateHashedName(List<String> values) {
-    StringBuilder hashedName = new StringBuilder("");
-    for (String val : values) {
-      hashedName.append(val);
-    }
-    return String.valueOf(hashedName.toString()
-                                    .hashCode());
-  }
 
 }

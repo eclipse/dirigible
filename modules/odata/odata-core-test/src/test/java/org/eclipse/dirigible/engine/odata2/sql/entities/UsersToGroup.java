@@ -22,13 +22,13 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 @EdmEntitySet(name = "UsersToGroup")
 public class UsersToGroup {
 
-  /** The User id. */
-  // @EdmKey
-  @EdmProperty
-  private String UserId;
+    /** The User id. */
+    // @EdmKey
+    @EdmProperty
+    private String UserId;
 
-  /** The Group id. */
-  // @EdmKey
-  @EdmProperty
-  private String GroupId;
+    /** The Group id. */
+    // @EdmKey
+    @EdmProperty
+    private String GroupId;
 }

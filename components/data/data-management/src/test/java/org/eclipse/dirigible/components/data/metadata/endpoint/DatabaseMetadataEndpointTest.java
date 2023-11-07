@@ -45,53 +45,53 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 public class DatabaseMetadataEndpointTest {
 
-  /** The datasource repository. */
-  @Autowired
-  private DataSourceRepository datasourceRepository;
+    /** The datasource repository. */
+    @Autowired
+    private DataSourceRepository datasourceRepository;
 
-  /** The datasources manager. */
-  @Autowired
-  private DataSourcesManager datasourcesManager;
+    /** The datasources manager. */
+    @Autowired
+    private DataSourcesManager datasourcesManager;
 
-  /** The mock mvc. */
-  @Autowired
-  private MockMvc mockMvc;
+    /** The mock mvc. */
+    @Autowired
+    private MockMvc mockMvc;
 
-  /** The wac. */
-  @Autowired
-  protected WebApplicationContext wac;
+    /** The wac. */
+    @Autowired
+    protected WebApplicationContext wac;
 
-  /** The spring security filter chain. */
-  @Autowired
-  private FilterChainProxy springSecurityFilterChain;
+    /** The spring security filter chain. */
+    @Autowired
+    private FilterChainProxy springSecurityFilterChain;
 
-  /**
-   * Setup.
-   */
-  @BeforeEach
-  public void setup() {
-    DataSource datasource = new DataSource("/test/TestDB.datasource", "TestDB", "", "org.h2.Driver", "jdbc:h2:~/test", "sa", "");
-    datasourceRepository.save(datasource);
-  }
+    /**
+     * Setup.
+     */
+    @BeforeEach
+    public void setup() {
+        DataSource datasource = new DataSource("/test/TestDB.datasource", "TestDB", "", "org.h2.Driver", "jdbc:h2:~/test", "sa", "");
+        datasourceRepository.save(datasource);
+    }
 
-  /**
-   * Gets the data source by name.
-   *
-   * @return the data source by name
-   * @throws Exception the exception
-   */
-  @Test
-  public void getDataSourceByName() throws Exception {
+    /**
+     * Gets the data source by name.
+     *
+     * @return the data source by name
+     * @throws Exception the exception
+     */
+    @Test
+    public void getDataSourceByName() throws Exception {
 
-    mockMvc.perform(get("/services/data/metadata/{name}/{schema}/{structure}", "TestDB", "INFORMATION_SCHEMA", "INDEXES"))
-           .andDo(print())
-           .andExpect(status().is2xxSuccessful());
-  }
+        mockMvc.perform(get("/services/data/metadata/{name}/{schema}/{structure}", "TestDB", "INFORMATION_SCHEMA", "INDEXES"))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+    }
 
-  /**
-   * The Class TestConfiguration.
-   */
-  @SpringBootApplication
-  static class TestConfiguration {
-  }
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 }

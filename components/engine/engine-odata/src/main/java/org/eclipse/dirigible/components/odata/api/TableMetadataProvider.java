@@ -19,12 +19,12 @@ import org.eclipse.dirigible.components.data.structures.domain.Table;
  */
 public interface TableMetadataProvider {
 
-  /**
-   * Gets the persistence table model.
-   *
-   * @param oDataEntityDefinition the o data entity definition
-   * @return the persistence table model
-   * @throws SQLException the SQL exception
-   */
-  Table getTableMetadata(ODataEntity oDataEntityDefinition) throws SQLException;
+    /**
+     * Gets the persistence table model.
+     *
+     * @param oDataEntityDefinition the o data entity definition
+     * @return the persistence table model
+     * @throws SQLException the SQL exception
+     */
+    Table getTableMetadata(ODataEntity oDataEntityDefinition) throws SQLException;
 }

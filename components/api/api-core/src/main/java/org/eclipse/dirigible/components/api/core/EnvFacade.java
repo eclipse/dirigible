@@ -21,40 +21,40 @@ import org.springframework.stereotype.Component;
 @Component
 public class EnvFacade {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(EnvFacade.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(EnvFacade.class);
 
-  /**
-   * Gets the environment variable by name.
-   *
-   * @param name the name
-   * @return the string
-   */
-  public static final String get(String name) {
-    if (logger.isTraceEnabled()) {
-      logger.trace("API - EnvFacade.get() -> begin");
+    /**
+     * Gets the environment variable by name.
+     *
+     * @param name the name
+     * @return the string
+     */
+    public static final String get(String name) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("API - EnvFacade.get() -> begin");
+        }
+        String value = System.getenv(name);
+        if (logger.isTraceEnabled()) {
+            logger.trace("API - EnvFacade.get() -> end");
+        }
+        return value;
     }
-    String value = System.getenv(name);
-    if (logger.isTraceEnabled()) {
-      logger.trace("API - EnvFacade.get() -> end");
-    }
-    return value;
-  }
 
-  /**
-   * List all the environment variables.
-   *
-   * @return the string
-   */
-  public static final String list() {
-    if (logger.isTraceEnabled()) {
-      logger.trace("API - EnvFacade.get() -> begin");
+    /**
+     * List all the environment variables.
+     *
+     * @return the string
+     */
+    public static final String list() {
+        if (logger.isTraceEnabled()) {
+            logger.trace("API - EnvFacade.get() -> begin");
+        }
+        String value = GsonHelper.toJson(System.getenv());
+        if (logger.isTraceEnabled()) {
+            logger.trace("API - EnvFacade.get() -> end");
+        }
+        return value;
     }
-    String value = GsonHelper.toJson(System.getenv());
-    if (logger.isTraceEnabled()) {
-      logger.trace("API - EnvFacade.get() -> end");
-    }
-    return value;
-  }
 
 }

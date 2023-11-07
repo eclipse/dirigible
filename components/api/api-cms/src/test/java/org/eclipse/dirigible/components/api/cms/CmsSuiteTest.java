@@ -30,25 +30,25 @@ import org.springframework.web.context.WebApplicationContext;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 public class CmsSuiteTest {
 
-  @Autowired
-  private JavascriptService javascriptService;
+    @Autowired
+    private JavascriptService javascriptService;
 
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Autowired
-  protected WebApplicationContext wac;
+    @Autowired
+    protected WebApplicationContext wac;
 
-  @Test
-  public void executeCMISTest() throws Exception {
-    javascriptService.handleRequest("cms-tests", "cmis-create-document.js", null, null, false);
-    javascriptService.handleRequest("cms-tests", "cmis-create-folder.js", null, null, false);
-    javascriptService.handleRequest("cms-tests", "cmis-get-children.js", null, null, false);
-    javascriptService.handleRequest("cms-tests", "cmis-get-root-folder.js", null, null, false);
-    javascriptService.handleRequest("cms-tests", "cmis-get-session.js", null, null, false);
-  }
+    @Test
+    public void executeCMISTest() throws Exception {
+        javascriptService.handleRequest("cms-tests", "cmis-create-document.js", null, null, false);
+        javascriptService.handleRequest("cms-tests", "cmis-create-folder.js", null, null, false);
+        javascriptService.handleRequest("cms-tests", "cmis-get-children.js", null, null, false);
+        javascriptService.handleRequest("cms-tests", "cmis-get-root-folder.js", null, null, false);
+        javascriptService.handleRequest("cms-tests", "cmis-get-session.js", null, null, false);
+    }
 
-  @SpringBootApplication
-  static class TestConfiguration {
-  }
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 }

@@ -28,129 +28,129 @@ import org.springframework.stereotype.Component;
 @Component
 public class WorkspaceFacade implements InitializingBean {
 
-  /** The instance. */
-  private static WorkspaceFacade INSTANCE;
+    /** The instance. */
+    private static WorkspaceFacade INSTANCE;
 
-  /** The workspace service. */
-  private WorkspaceService workspaceService;
+    /** The workspace service. */
+    private WorkspaceService workspaceService;
 
-  /**
-   * Instantiates a new workspace facade.
-   *
-   * @param workspaceService the workspace service
-   */
-  @Autowired
-  public WorkspaceFacade(WorkspaceService workspaceService) {
-    this.workspaceService = workspaceService;
-  }
-
-  /**
-   * After properties set.
-   *
-   * @throws Exception the exception
-   */
-  @Override
-  public void afterPropertiesSet() throws Exception {
-    INSTANCE = this;
-  }
-
-  /**
-   * Gets the instance.
-   *
-   * @return the workspace facade
-   */
-  public static WorkspaceFacade get() {
-    return INSTANCE;
-  }
-
-  /**
-   * Gets the workspace service.
-   *
-   * @return the workspace service
-   */
-  public WorkspaceService getWorkspaceService() {
-    return workspaceService;
-  }
-
-  /**
-   * Creates a workspace.
-   *
-   * @param name the name
-   * @return the workspace
-   */
-  public static Workspace createWorkspace(String name) {
-    return WorkspaceFacade.get()
-                          .getWorkspaceService()
-                          .createWorkspace(name);
-  }
-
-  /**
-   * Gets the workspace.
-   *
-   * @param name the workspace name
-   * @return the workspace
-   */
-  public static Workspace getWorkspace(String name) {
-    return WorkspaceFacade.get()
-                          .getWorkspaceService()
-                          .getWorkspace(name);
-  }
-
-  /**
-   * Gets the workspaces names.
-   *
-   * @return the workspaces
-   */
-  public static String getWorkspacesNames() {
-    List<String> names = new ArrayList<String>();
-    for (Workspace workspace : WorkspaceFacade.get()
-                                              .getWorkspaceService()
-                                              .getWorkspaces()) {
-      names.add(workspace.getName());
+    /**
+     * Instantiates a new workspace facade.
+     *
+     * @param workspaceService the workspace service
+     */
+    @Autowired
+    public WorkspaceFacade(WorkspaceService workspaceService) {
+        this.workspaceService = workspaceService;
     }
-    return GsonHelper.toJson(names);
-  }
 
-  /**
-   * Delete workspace.
-   *
-   * @param name the name
-   */
-  public static void deleteWorkspace(String name) {
-    WorkspaceFacade.get()
-                   .getWorkspaceService()
-                   .deleteWorkspace(name);
-  }
+    /**
+     * After properties set.
+     *
+     * @throws Exception the exception
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        INSTANCE = this;
+    }
 
-  /**
-   * Get the file content.
-   *
-   * @param file the file
-   * @return the content
-   */
-  public static final byte[] getContent(File file) {
-    return file.getContent();
-  }
+    /**
+     * Gets the instance.
+     *
+     * @return the workspace facade
+     */
+    public static WorkspaceFacade get() {
+        return INSTANCE;
+    }
 
-  /**
-   * Set the file content.
-   *
-   * @param file the file
-   * @param input the input
-   */
-  public static final void setContent(File file, String input) {
-    byte[] bytes = BytesHelper.jsonToBytes(input);
-    file.setContent(bytes);
-  }
+    /**
+     * Gets the workspace service.
+     *
+     * @return the workspace service
+     */
+    public WorkspaceService getWorkspaceService() {
+        return workspaceService;
+    }
 
-  /**
-   * Set the file content.
-   *
-   * @param file the file
-   * @param input the input
-   */
-  public static final void setContent(File file, byte[] input) {
-    file.setContent(input);
-  }
+    /**
+     * Creates a workspace.
+     *
+     * @param name the name
+     * @return the workspace
+     */
+    public static Workspace createWorkspace(String name) {
+        return WorkspaceFacade.get()
+                              .getWorkspaceService()
+                              .createWorkspace(name);
+    }
+
+    /**
+     * Gets the workspace.
+     *
+     * @param name the workspace name
+     * @return the workspace
+     */
+    public static Workspace getWorkspace(String name) {
+        return WorkspaceFacade.get()
+                              .getWorkspaceService()
+                              .getWorkspace(name);
+    }
+
+    /**
+     * Gets the workspaces names.
+     *
+     * @return the workspaces
+     */
+    public static String getWorkspacesNames() {
+        List<String> names = new ArrayList<String>();
+        for (Workspace workspace : WorkspaceFacade.get()
+                                                  .getWorkspaceService()
+                                                  .getWorkspaces()) {
+            names.add(workspace.getName());
+        }
+        return GsonHelper.toJson(names);
+    }
+
+    /**
+     * Delete workspace.
+     *
+     * @param name the name
+     */
+    public static void deleteWorkspace(String name) {
+        WorkspaceFacade.get()
+                       .getWorkspaceService()
+                       .deleteWorkspace(name);
+    }
+
+    /**
+     * Get the file content.
+     *
+     * @param file the file
+     * @return the content
+     */
+    public static final byte[] getContent(File file) {
+        return file.getContent();
+    }
+
+    /**
+     * Set the file content.
+     *
+     * @param file the file
+     * @param input the input
+     */
+    public static final void setContent(File file, String input) {
+        byte[] bytes = BytesHelper.jsonToBytes(input);
+        file.setContent(bytes);
+    }
+
+    /**
+     * Set the file content.
+     *
+     * @param file the file
+     * @param input the input
+     */
+    public static final void setContent(File file, byte[] input) {
+        file.setContent(input);
+    }
 
 }

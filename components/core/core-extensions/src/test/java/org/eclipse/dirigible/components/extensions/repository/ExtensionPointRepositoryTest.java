@@ -36,63 +36,63 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ExtensionPointRepositoryTest {
 
-  @Autowired
-  private ExtensionPointRepository extensionPointRepository;
+    @Autowired
+    private ExtensionPointRepository extensionPointRepository;
 
-  @Autowired
-  EntityManager entityManager;
+    @Autowired
+    EntityManager entityManager;
 
-  @BeforeEach
-  public void setup() throws Exception {
+    @BeforeEach
+    public void setup() throws Exception {
 
-    cleanup();
+        cleanup();
 
-    // create test ExtensionPoints
-    extensionPointRepository.save(createExtensionPoint("/a/b/c/e1.extensionpoint", "e1", "description"));
-    extensionPointRepository.save(createExtensionPoint("/a/b/c/e2.extensionpoint", "e2", "description"));
-    extensionPointRepository.save(createExtensionPoint("/a/b/c/e3.extensionpoint", "e3", "description"));
-    extensionPointRepository.save(createExtensionPoint("/a/b/c/e4.extensionpoint", "e4", "description"));
-    extensionPointRepository.save(createExtensionPoint("/a/b/c/e5.extensionpoint", "e5", "description"));
-  }
+        // create test ExtensionPoints
+        extensionPointRepository.save(createExtensionPoint("/a/b/c/e1.extensionpoint", "e1", "description"));
+        extensionPointRepository.save(createExtensionPoint("/a/b/c/e2.extensionpoint", "e2", "description"));
+        extensionPointRepository.save(createExtensionPoint("/a/b/c/e3.extensionpoint", "e3", "description"));
+        extensionPointRepository.save(createExtensionPoint("/a/b/c/e4.extensionpoint", "e4", "description"));
+        extensionPointRepository.save(createExtensionPoint("/a/b/c/e5.extensionpoint", "e5", "description"));
+    }
 
-  @AfterEach
-  public void cleanup() throws Exception {
-    extensionPointRepository.deleteAll();
-  }
+    @AfterEach
+    public void cleanup() throws Exception {
+        extensionPointRepository.deleteAll();
+    }
 
 
-  @Test
-  public void getOne() {
-    Long id = extensionPointRepository.findAll()
-                                      .get(0)
-                                      .getId();
-    Optional<ExtensionPoint> optional = extensionPointRepository.findById(id);
-    ExtensionPoint extensionPoint = optional.isPresent() ? optional.get() : null;
-    assertNotNull(extensionPoint);
-    assertNotNull(extensionPoint.getLocation());
-    assertNotNull(extensionPoint.getCreatedBy());
-    assertEquals("SYSTEM", extensionPoint.getCreatedBy());
-    assertNotNull(extensionPoint.getCreatedAt());
-    // assertEquals("extensionpoint:/a/b/c/e1.extensionpoint:e1",extensionPoint.getKey());
-  }
+    @Test
+    public void getOne() {
+        Long id = extensionPointRepository.findAll()
+                                          .get(0)
+                                          .getId();
+        Optional<ExtensionPoint> optional = extensionPointRepository.findById(id);
+        ExtensionPoint extensionPoint = optional.isPresent() ? optional.get() : null;
+        assertNotNull(extensionPoint);
+        assertNotNull(extensionPoint.getLocation());
+        assertNotNull(extensionPoint.getCreatedBy());
+        assertEquals("SYSTEM", extensionPoint.getCreatedBy());
+        assertNotNull(extensionPoint.getCreatedAt());
+        // assertEquals("extensionpoint:/a/b/c/e1.extensionpoint:e1",extensionPoint.getKey());
+    }
 
-  @Test
-  public void getReferenceUsingEntityManager() {
-    Long id = extensionPointRepository.findAll()
-                                      .get(0)
-                                      .getId();
-    ExtensionPoint extensionPoint = entityManager.getReference(ExtensionPoint.class, id);
-    assertNotNull(extensionPoint);
-    assertNotNull(extensionPoint.getLocation());
-  }
+    @Test
+    public void getReferenceUsingEntityManager() {
+        Long id = extensionPointRepository.findAll()
+                                          .get(0)
+                                          .getId();
+        ExtensionPoint extensionPoint = entityManager.getReference(ExtensionPoint.class, id);
+        assertNotNull(extensionPoint);
+        assertNotNull(extensionPoint.getLocation());
+    }
 
-  public static ExtensionPoint createExtensionPoint(String location, String name, String description) {
-    ExtensionPoint extensionPoint = new ExtensionPoint(location, name, description);
-    return extensionPoint;
-  }
+    public static ExtensionPoint createExtensionPoint(String location, String name, String description) {
+        ExtensionPoint extensionPoint = new ExtensionPoint(location, name, description);
+        return extensionPoint;
+    }
 
-  @SpringBootApplication
-  static class TestConfiguration {
-  }
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 
 }

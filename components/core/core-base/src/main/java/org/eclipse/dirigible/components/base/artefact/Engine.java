@@ -15,18 +15,18 @@ package org.eclipse.dirigible.components.base.artefact;
  */
 public interface Engine {
 
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  public String getName();
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    public String getName();
 
-  /**
-   * Gets the provider.
-   *
-   * @return the provider
-   */
-  public String getProvider();
+    /**
+     * Gets the provider.
+     *
+     * @return the provider
+     */
+    public String getProvider();
 
 }

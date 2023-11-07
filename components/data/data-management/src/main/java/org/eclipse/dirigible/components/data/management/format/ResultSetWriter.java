@@ -21,13 +21,13 @@ import java.sql.SQLException;
  */
 public interface ResultSetWriter<T> {
 
-  /**
-   * Write the provided ResultSet.
-   *
-   * @param rs the rs
-   * @param output the output
-   * @throws Exception the exception
-   */
-  void write(ResultSet rs, OutputStream output) throws Exception;
+    /**
+     * Write the provided ResultSet.
+     *
+     * @param rs the rs
+     * @param output the output
+     * @throws Exception the exception
+     */
+    void write(ResultSet rs, OutputStream output) throws Exception;
 
 }

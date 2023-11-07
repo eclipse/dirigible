@@ -22,36 +22,36 @@ import org.slf4j.LoggerFactory;
  */
 public class UserResponseVerifier {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(UserResponseVerifier.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(UserResponseVerifier.class);
 
-  /**
-   * Returns the HttpServletResponse associated with the current thread context.
-   *
-   * @return the response
-   */
-  public static final HttpServletResponse getResponse() {
-    if (!ThreadContextFacade.isValid()) {
-      return null;
+    /**
+     * Returns the HttpServletResponse associated with the current thread context.
+     *
+     * @return the response
+     */
+    public static final HttpServletResponse getResponse() {
+        if (!ThreadContextFacade.isValid()) {
+            return null;
+        }
+        try {
+            return (HttpServletResponse) ThreadContextFacade.get(HttpServletResponse.class.getCanonicalName());
+        } catch (ContextException e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
+        }
+        return null;
     }
-    try {
-      return (HttpServletResponse) ThreadContextFacade.get(HttpServletResponse.class.getCanonicalName());
-    } catch (ContextException e) {
-      if (logger.isErrorEnabled()) {
-        logger.error(e.getMessage(), e);
-      }
-    }
-    return null;
-  }
 
-  /**
-   * Checks if there is a HttpServletResponse associated with the current thread context.
-   *
-   * @return true, if there is a HttpServletResponse associated with the current thread context
-   */
-  public static final boolean isValid() {
-    HttpServletResponse response = getResponse();
-    return response != null;
-  }
+    /**
+     * Checks if there is a HttpServletResponse associated with the current thread context.
+     *
+     * @return true, if there is a HttpServletResponse associated with the current thread context
+     */
+    public static final boolean isValid() {
+        HttpServletResponse response = getResponse();
+        return response != null;
+    }
 
 }

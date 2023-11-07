@@ -34,47 +34,47 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PDFFacadeTest {
 
-  /**
-   * Generate pdf test.
-   *
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  @Test
-  public void generatePdfTest() throws IOException {
-    String template = IOUtils.toString(getClass().getClassLoader()
-                                                 .getResourceAsStream("template.xsl"),
-        Charset.defaultCharset());
-    String data = IOUtils.toString(getClass().getClassLoader()
-                                             .getResourceAsStream("data.xml"),
-        Charset.defaultCharset());
+    /**
+     * Generate pdf test.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @Test
+    public void generatePdfTest() throws IOException {
+        String template = IOUtils.toString(getClass().getClassLoader()
+                                                     .getResourceAsStream("template.xsl"),
+                Charset.defaultCharset());
+        String data = IOUtils.toString(getClass().getClassLoader()
+                                                 .getResourceAsStream("data.xml"),
+                Charset.defaultCharset());
 
-    byte[] pdf = PDFFacade.generate(template.toString(), data.toString());
+        byte[] pdf = PDFFacade.generate(template.toString(), data.toString());
 
-    assertNotNull(pdf);
-    assertTrue(pdf.length > 0);
-  }
+        assertNotNull(pdf);
+        assertTrue(pdf.length > 0);
+    }
 
-  /**
-   * Generate larger pdf test.
-   *
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  @Test
-  public void generateLargerPdfTest() throws IOException {
-    String template = IOUtils.toString(getClass().getClassLoader()
-                                                 .getResourceAsStream("template.xsl"),
-        Charset.defaultCharset());
-    String data = IOUtils.toString(getClass().getClassLoader()
-                                             .getResourceAsStream("data.xml"),
-        Charset.defaultCharset());
+    /**
+     * Generate larger pdf test.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @Test
+    public void generateLargerPdfTest() throws IOException {
+        String template = IOUtils.toString(getClass().getClassLoader()
+                                                     .getResourceAsStream("template.xsl"),
+                Charset.defaultCharset());
+        String data = IOUtils.toString(getClass().getClassLoader()
+                                                 .getResourceAsStream("data.xml"),
+                Charset.defaultCharset());
 
-    byte[] pdf = PDFFacade.generate(template, data);
+        byte[] pdf = PDFFacade.generate(template, data);
 
-    assertNotNull(pdf);
-    assertTrue(pdf.length > 0);
-  }
+        assertNotNull(pdf);
+        assertTrue(pdf.length > 0);
+    }
 
-  @SpringBootApplication
-  static class TestConfiguration {
-  }
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 }

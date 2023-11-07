@@ -37,64 +37,64 @@ import io.swagger.v3.oas.annotations.Parameter;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_SECURED + "listeners")
 public class ListenerEndpoint {
 
-  /** The listener service. */
-  @Autowired
-  private ListenerService listenerService;
+    /** The listener service. */
+    @Autowired
+    private ListenerService listenerService;
 
-  /**
-   * Find all.
-   *
-   * @param size the size
-   * @param page the page
-   * @return the page
-   */
-  @GetMapping("/pages")
-  public Page<Listener> findAll(
-      @Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
-      @Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
+    /**
+     * Find all.
+     *
+     * @param size the size
+     * @param page the page
+     * @return the page
+     */
+    @GetMapping("/pages")
+    public Page<Listener> findAll(
+            @Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
+            @Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
 
-    if (size == null) {
-      size = DEFAULT_PAGE_SIZE;
+        if (size == null) {
+            size = DEFAULT_PAGE_SIZE;
+        }
+        if (page == null) {
+            page = 0;
+        }
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Listener> listeners = listenerService.getPages(pageable);
+        return listeners;
     }
-    if (page == null) {
-      page = 0;
+
+    /**
+     * Gets the.
+     *
+     * @param id the id
+     * @return the response entity
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Listener> get(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(listenerService.findById(id));
     }
-    Pageable pageable = PageRequest.of(page, size);
-    Page<Listener> listeners = listenerService.getPages(pageable);
-    return listeners;
-  }
 
-  /**
-   * Gets the.
-   *
-   * @param id the id
-   * @return the response entity
-   */
-  @GetMapping("/{id}")
-  public ResponseEntity<Listener> get(@PathVariable("id") Long id) {
-    return ResponseEntity.ok(listenerService.findById(id));
-  }
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the response entity
+     */
+    @GetMapping("/search")
+    public ResponseEntity<Listener> findByName(@RequestParam("name") String name) {
 
-  /**
-   * Find by name.
-   *
-   * @param name the name
-   * @return the response entity
-   */
-  @GetMapping("/search")
-  public ResponseEntity<Listener> findByName(@RequestParam("name") String name) {
+        return ResponseEntity.ok(listenerService.findByName(name));
 
-    return ResponseEntity.ok(listenerService.findByName(name));
+    }
 
-  }
-
-  /**
-   * List jobs.
-   *
-   * @return the response entity
-   */
-  @GetMapping()
-  public ResponseEntity<List<Listener>> listJobs() {
-    return ResponseEntity.ok(listenerService.getAll());
-  }
+    /**
+     * List jobs.
+     *
+     * @return the response entity
+     */
+    @GetMapping()
+    public ResponseEntity<List<Listener>> listJobs() {
+        return ResponseEntity.ok(listenerService.getAll());
+    }
 }

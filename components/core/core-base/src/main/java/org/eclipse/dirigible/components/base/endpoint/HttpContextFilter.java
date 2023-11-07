@@ -31,65 +31,65 @@ import org.springframework.stereotype.Component;
 @Component
 public class HttpContextFilter implements Filter {
 
-  /**
-   * Inits the.
-   *
-   * @param filterConfig the filter config
-   * @throws ServletException the servlet exception
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
-   */
-  @Override
-  public void init(FilterConfig filterConfig) throws ServletException {
-    // Not used
-  }
-
-  /**
-   * Do filter.
-   *
-   * @param request the request
-   * @param response the response
-   * @param chain the chain
-   * @throws IOException Signals that an I/O exception has occurred.
-   * @throws ServletException the servlet exception
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
-   * javax.servlet.FilterChain)
-   */
-  @Override
-  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-    try {
-      ThreadContextFacade.setUp();
-      try {
-        ThreadContextFacade.set(HttpServletRequest.class.getCanonicalName(), request);
-        ThreadContextFacade.set(HttpServletResponse.class.getCanonicalName(), response);
-
-        chain.doFilter(request, response);
-      } finally {
-        ThreadContextFacade.tearDown();
-      }
-    } catch (ContextException e) {
-      throw new ServletException(e);
+    /**
+     * Inits the.
+     *
+     * @param filterConfig the filter config
+     * @throws ServletException the servlet exception
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
+     */
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        // Not used
     }
-  }
 
-  /**
-   * Destroy.
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see javax.servlet.Filter#destroy()
-   */
-  @Override
-  public void destroy() {
-    // Not used
-  }
+    /**
+     * Do filter.
+     *
+     * @param request the request
+     * @param response the response
+     * @param chain the chain
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws ServletException the servlet exception
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
+     * javax.servlet.FilterChain)
+     */
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        try {
+            ThreadContextFacade.setUp();
+            try {
+                ThreadContextFacade.set(HttpServletRequest.class.getCanonicalName(), request);
+                ThreadContextFacade.set(HttpServletResponse.class.getCanonicalName(), response);
+
+                chain.doFilter(request, response);
+            } finally {
+                ThreadContextFacade.tearDown();
+            }
+        } catch (ContextException e) {
+            throw new ServletException(e);
+        }
+    }
+
+    /**
+     * Destroy.
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see javax.servlet.Filter#destroy()
+     */
+    @Override
+    public void destroy() {
+        // Not used
+    }
 
 }

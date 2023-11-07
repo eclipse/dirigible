@@ -21,14 +21,14 @@ import java.util.Base64;
 @Component
 public class Encrypter {
 
-  /**
-   * Encrypt.
-   *
-   * @param value the value
-   * @return the string
-   */
-  public String encrypt(String value) {
-    return Base64.getEncoder()
-                 .encodeToString(value.getBytes(StandardCharsets.UTF_8));
-  }
+    /**
+     * Encrypt.
+     *
+     * @param value the value
+     * @return the string
+     */
+    public String encrypt(String value) {
+        return Base64.getEncoder()
+                     .encodeToString(value.getBytes(StandardCharsets.UTF_8));
+    }
 }

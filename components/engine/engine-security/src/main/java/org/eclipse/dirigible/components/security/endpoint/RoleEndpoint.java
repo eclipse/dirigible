@@ -31,24 +31,24 @@ import java.util.List;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_SECURED + "security")
 public class RoleEndpoint extends BaseEndpoint {
 
-  /**
-   * The Constant logger.
-   */
-  private static final Logger logger = LoggerFactory.getLogger(RoleEndpoint.class);
+    /**
+     * The Constant logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(RoleEndpoint.class);
 
-  /**
-   * The security role service.
-   */
-  @Autowired
-  private RoleService roleService;
+    /**
+     * The security role service.
+     */
+    @Autowired
+    private RoleService roleService;
 
-  /**
-   * Gets the all.
-   *
-   * @return the all
-   */
-  @GetMapping("/roles")
-  public ResponseEntity<List<Role>> getAll() {
-    return ResponseEntity.ok(roleService.getAll());
-  }
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
+    @GetMapping("/roles")
+    public ResponseEntity<List<Role>> getAll() {
+        return ResponseEntity.ok(roleService.getAll());
+    }
 }

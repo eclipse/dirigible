@@ -19,13 +19,13 @@ import org.springframework.data.domain.AuditorAware;
  */
 public class AuditorAwareHandler implements AuditorAware<String> {
 
-  /**
-   * Gets the current auditor.
-   *
-   * @return the current auditor
-   */
-  @Override
-  public Optional<String> getCurrentAuditor() {
-    return Optional.of("SYSTEM"); // TODO
-  }
+    /**
+     * Gets the current auditor.
+     *
+     * @return the current auditor
+     */
+    @Override
+    public Optional<String> getCurrentAuditor() {
+        return Optional.of("SYSTEM"); // TODO
+    }
 }

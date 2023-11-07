@@ -15,59 +15,59 @@ package org.eclipse.dirigible.components.ide.logs.dto;
  */
 public class LogInfo {
 
-  /** The name. */
-  private String name;
+    /** The name. */
+    private String name;
 
-  /** The severity. */
-  private String severity;
+    /** The severity. */
+    private String severity;
 
-  /**
-   * Instantiates a new log info.
-   *
-   * @param name the name
-   * @param severity the severity
-   */
-  public LogInfo(String name, String severity) {
-    super();
-    this.name = name;
-    this.severity = severity;
-  }
+    /**
+     * Instantiates a new log info.
+     *
+     * @param name the name
+     * @param severity the severity
+     */
+    public LogInfo(String name, String severity) {
+        super();
+        this.name = name;
+        this.severity = severity;
+    }
 
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  public String getName() {
-    return name;
-  }
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
-  /**
-   * Sets the name.
-   *
-   * @param name the name to set
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
+    /**
+     * Sets the name.
+     *
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  /**
-   * Gets the severity.
-   *
-   * @return the severity
-   */
-  public String getSeverity() {
-    return severity;
-  }
+    /**
+     * Gets the severity.
+     *
+     * @return the severity
+     */
+    public String getSeverity() {
+        return severity;
+    }
 
-  /**
-   * Sets the severity.
-   *
-   * @param severity the severity to set
-   */
-  public void setSeverity(String severity) {
-    this.severity = severity;
-  }
+    /**
+     * Sets the severity.
+     *
+     * @param severity the severity to set
+     */
+    public void setSeverity(String severity) {
+        this.severity = severity;
+    }
 
 
 

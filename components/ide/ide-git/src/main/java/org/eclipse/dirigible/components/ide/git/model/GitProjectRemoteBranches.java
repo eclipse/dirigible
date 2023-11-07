@@ -19,25 +19,25 @@ import org.eclipse.dirigible.components.ide.git.domain.GitBranch;
  */
 public class GitProjectRemoteBranches {
 
-  /** The remote. */
-  private List<GitBranch> remote;
+    /** The remote. */
+    private List<GitBranch> remote;
 
-  /**
-   * Getter for the remote branches.
-   *
-   * @return the remote
-   */
-  public List<GitBranch> getRemote() {
-    return remote;
-  }
+    /**
+     * Getter for the remote branches.
+     *
+     * @return the remote
+     */
+    public List<GitBranch> getRemote() {
+        return remote;
+    }
 
-  /**
-   * Setter for the remote branches.
-   *
-   * @param remote the remote to set
-   */
-  public void setRemote(List<GitBranch> remote) {
-    this.remote = remote;
-  }
+    /**
+     * Setter for the remote branches.
+     *
+     * @param remote the remote to set
+     */
+    public void setRemote(List<GitBranch> remote) {
+        this.remote = remote;
+    }
 
 }

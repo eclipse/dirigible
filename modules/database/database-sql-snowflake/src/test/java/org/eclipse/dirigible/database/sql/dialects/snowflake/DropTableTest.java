@@ -21,19 +21,19 @@ import org.junit.Test;
  */
 public class DropTableTest {
 
-  /**
-   * Drop table.
-   */
-  @Test
-  public void dropTable() {
-    String sql = SqlFactory.getNative(new SnowflakeSqlDialect())
-                           .drop()
-                           .table("CUSTOMERS")
-                           .build();
+    /**
+     * Drop table.
+     */
+    @Test
+    public void dropTable() {
+        String sql = SqlFactory.getNative(new SnowflakeSqlDialect())
+                               .drop()
+                               .table("CUSTOMERS")
+                               .build();
 
-    assertNotNull(sql);
-    assertEquals("DROP TABLE CUSTOMERS", sql);
-  }
+        assertNotNull(sql);
+        assertEquals("DROP TABLE CUSTOMERS", sql);
+    }
 
 
 }

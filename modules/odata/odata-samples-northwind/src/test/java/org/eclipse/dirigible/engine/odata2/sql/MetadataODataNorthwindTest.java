@@ -25,20 +25,20 @@ import org.junit.Test;
  */
 public class MetadataODataNorthwindTest extends AbstractODataNorthwindTest {
 
-  /**
-   * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/$metadata
-   *
-   * @throws Exception the exception
-   */
-  @Test
-  public void testMetadataResponse() throws Exception {
-    Response response = OData2RequestBuilder.createRequest(sf) //
-                                            .segments("$metadata") //
-                                            .executeRequest(GET);
-    String content = IOUtils.toString((InputStream) response.getEntity());
-    content = content.replaceAll("\\n|\\r\\n", System.getProperty("line.separator"));
-    String expected = loadExpectedMetadata();
-    expected = expected.replaceAll("\\n|\\r\\n", System.getProperty("line.separator"));
-    assertEquals(expected, content);
-  }
+    /**
+     * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/$metadata
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void testMetadataResponse() throws Exception {
+        Response response = OData2RequestBuilder.createRequest(sf) //
+                                                .segments("$metadata") //
+                                                .executeRequest(GET);
+        String content = IOUtils.toString((InputStream) response.getEntity());
+        content = content.replaceAll("\\n|\\r\\n", System.getProperty("line.separator"));
+        String expected = loadExpectedMetadata();
+        expected = expected.replaceAll("\\n|\\r\\n", System.getProperty("line.separator"));
+        assertEquals(expected, content);
+    }
 }

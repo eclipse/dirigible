@@ -23,122 +23,122 @@ import org.slf4j.LoggerFactory;
  */
 public class DeleteBuilder extends AbstractQuerySqlBuilder {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(DeleteBuilder.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(DeleteBuilder.class);
 
-  /** The table. */
-  private String table;
+    /** The table. */
+    private String table;
 
-  /** The wheres. */
-  private List<String> wheres = new ArrayList<String>();
+    /** The wheres. */
+    private List<String> wheres = new ArrayList<String>();
 
-  /**
-   * Instantiates a new delete builder.
-   *
-   * @param dialect the dialect
-   */
-  public DeleteBuilder(ISqlDialect dialect) {
-    super(dialect);
-  }
-
-  /**
-   * From.
-   *
-   * @param table the table
-   * @return the delete builder
-   */
-  public DeleteBuilder from(String table) {
-    if (logger.isTraceEnabled()) {
-      logger.trace("from: " + table);
-    }
-    this.table = table;
-    return this;
-  }
-
-  /**
-   * Where.
-   *
-   * @param condition the condition
-   * @return the delete builder
-   */
-  public DeleteBuilder where(String condition) {
-    if (logger.isTraceEnabled()) {
-      logger.trace("where: " + condition);
-    }
-    wheres.add(OPEN + condition + CLOSE);
-    return this;
-  }
-
-  /**
-   * Generate.
-   *
-   * @return the string
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-   */
-  @Override
-  public String generate() {
-    StringBuilder sql = new StringBuilder();
-
-    // UPDATE
-    generateDelete(sql);
-
-    // TABLE
-    generateTable(sql);
-
-    // WHERE
-    generateWhere(sql, wheres);
-
-    String generated = sql.toString();
-
-    if (logger.isTraceEnabled()) {
-      logger.trace("generated: " + generated);
+    /**
+     * Instantiates a new delete builder.
+     *
+     * @param dialect the dialect
+     */
+    public DeleteBuilder(ISqlDialect dialect) {
+        super(dialect);
     }
 
-    return generated;
-  }
+    /**
+     * From.
+     *
+     * @param table the table
+     * @return the delete builder
+     */
+    public DeleteBuilder from(String table) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("from: " + table);
+        }
+        this.table = table;
+        return this;
+    }
 
-  /**
-   * Generate table.
-   *
-   * @param sql the sql
-   */
-  protected void generateTable(StringBuilder sql) {
-    String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
-    sql.append(SPACE)
-       .append(KEYWORD_FROM)
-       .append(SPACE)
-       .append(tableName);
-  }
+    /**
+     * Where.
+     *
+     * @param condition the condition
+     * @return the delete builder
+     */
+    public DeleteBuilder where(String condition) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("where: " + condition);
+        }
+        wheres.add(OPEN + condition + CLOSE);
+        return this;
+    }
 
-  /**
-   * Generate delete.
-   *
-   * @param sql the sql
-   */
-  protected void generateDelete(StringBuilder sql) {
-    sql.append(KEYWORD_DELETE);
-  }
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
+     */
+    @Override
+    public String generate() {
+        StringBuilder sql = new StringBuilder();
 
-  /**
-   * Gets the table.
-   *
-   * @return the table
-   */
-  public String getTable() {
-    return table;
-  }
+        // UPDATE
+        generateDelete(sql);
 
-  /**
-   * Gets the wheres.
-   *
-   * @return the wheres
-   */
-  public List<String> getWheres() {
-    return wheres;
-  }
+        // TABLE
+        generateTable(sql);
+
+        // WHERE
+        generateWhere(sql, wheres);
+
+        String generated = sql.toString();
+
+        if (logger.isTraceEnabled()) {
+            logger.trace("generated: " + generated);
+        }
+
+        return generated;
+    }
+
+    /**
+     * Generate table.
+     *
+     * @param sql the sql
+     */
+    protected void generateTable(StringBuilder sql) {
+        String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
+        sql.append(SPACE)
+           .append(KEYWORD_FROM)
+           .append(SPACE)
+           .append(tableName);
+    }
+
+    /**
+     * Generate delete.
+     *
+     * @param sql the sql
+     */
+    protected void generateDelete(StringBuilder sql) {
+        sql.append(KEYWORD_DELETE);
+    }
+
+    /**
+     * Gets the table.
+     *
+     * @return the table
+     */
+    public String getTable() {
+        return table;
+    }
+
+    /**
+     * Gets the wheres.
+     *
+     * @return the wheres
+     */
+    public List<String> getWheres() {
+        return wheres;
+    }
 
 }

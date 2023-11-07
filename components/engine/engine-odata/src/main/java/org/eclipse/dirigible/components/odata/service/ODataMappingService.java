@@ -31,154 +31,154 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ODataMappingService implements ArtefactService<ODataMapping>, InitializingBean {
 
-  /** The instance. */
-  private static ODataMappingService INSTANCE;
+    /** The instance. */
+    private static ODataMappingService INSTANCE;
 
-  /**
-   * After properties set.
-   *
-   * @throws Exception the exception
-   */
-  @Override
-  public void afterPropertiesSet() throws Exception {
-    INSTANCE = this;
-  }
-
-  /**
-   * Gets the.
-   *
-   * @return the o data mapping service
-   */
-  public static ODataMappingService get() {
-    return INSTANCE;
-  }
-
-  /** The ODataMapping repository. */
-  @Autowired
-  private ODataMappingRepository odataMappingRepository;
-
-  /**
-   * Gets the all.
-   *
-   * @return the all
-   */
-  @Override
-  public List<ODataMapping> getAll() {
-    return odataMappingRepository.findAll();
-  }
-
-  /**
-   * Find all.
-   *
-   * @param pageable the pageable
-   * @return the page
-   */
-  @Override
-  public Page<ODataMapping> getPages(Pageable pageable) {
-    return odataMappingRepository.findAll(pageable);
-  }
-
-  /**
-   * Find by id.
-   *
-   * @param id the id
-   * @return the ODataMapping
-   */
-  @Override
-  public ODataMapping findById(Long id) {
-    Optional<ODataMapping> odataMapping = odataMappingRepository.findById(id);
-    if (odataMapping.isPresent()) {
-      return odataMapping.get();
-    } else {
-      throw new IllegalArgumentException("OData Mapping with id does not exist: " + id);
+    /**
+     * After properties set.
+     *
+     * @throws Exception the exception
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        INSTANCE = this;
     }
-  }
 
-  /**
-   * Find by name.
-   *
-   * @param name the name
-   * @return the ODataMapping
-   */
-  @Override
-  public ODataMapping findByName(String name) {
-    ODataMapping filter = new ODataMapping();
-    filter.setName(name);
-    Example<ODataMapping> example = Example.of(filter);
-    Optional<ODataMapping> odataMapping = odataMappingRepository.findOne(example);
-    if (odataMapping.isPresent()) {
-      return odataMapping.get();
-    } else {
-      throw new IllegalArgumentException("OData Mapping with name does not exist: " + name);
+    /**
+     * Gets the.
+     *
+     * @return the o data mapping service
+     */
+    public static ODataMappingService get() {
+        return INSTANCE;
     }
-  }
 
-  /**
-   * Find by location.
-   *
-   * @param location the location
-   * @return the list
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public List<ODataMapping> findByLocation(String location) {
-    ODataMapping filter = new ODataMapping();
-    filter.setLocation(location);
-    Example<ODataMapping> example = Example.of(filter);
-    List<ODataMapping> list = odataMappingRepository.findAll(example);
-    return list;
-  }
+    /** The ODataMapping repository. */
+    @Autowired
+    private ODataMappingRepository odataMappingRepository;
 
-  /**
-   * Find by key.
-   *
-   * @param key the key
-   * @return the ODataMapping
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public ODataMapping findByKey(String key) {
-    ODataMapping filter = new ODataMapping();
-    filter.setKey(key);
-    Example<ODataMapping> example = Example.of(filter);
-    Optional<ODataMapping> odataMapping = odataMappingRepository.findOne(example);
-    if (odataMapping.isPresent()) {
-      return odataMapping.get();
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
+    @Override
+    public List<ODataMapping> getAll() {
+        return odataMappingRepository.findAll();
     }
-    return null;
-  }
 
-  /**
-   * Save.
-   *
-   * @param odataMapping the ODataMapping
-   * @return the ODataMapping
-   */
-  @Override
-  public ODataMapping save(ODataMapping odataMapping) {
-    return odataMappingRepository.saveAndFlush(odataMapping);
-  }
+    /**
+     * Find all.
+     *
+     * @param pageable the pageable
+     * @return the page
+     */
+    @Override
+    public Page<ODataMapping> getPages(Pageable pageable) {
+        return odataMappingRepository.findAll(pageable);
+    }
 
-  /**
-   * Delete.
-   *
-   * @param odataMapping the ODataMapping
-   */
-  @Override
-  public void delete(ODataMapping odataMapping) {
-    odataMappingRepository.delete(odataMapping);
-  }
+    /**
+     * Find by id.
+     *
+     * @param id the id
+     * @return the ODataMapping
+     */
+    @Override
+    public ODataMapping findById(Long id) {
+        Optional<ODataMapping> odataMapping = odataMappingRepository.findById(id);
+        if (odataMapping.isPresent()) {
+            return odataMapping.get();
+        } else {
+            throw new IllegalArgumentException("OData Mapping with id does not exist: " + id);
+        }
+    }
 
-  /**
-   * Removes the mapping.
-   *
-   * @param location the location
-   */
-  public void removeMappings(String location) {
-    ODataMapping filter = new ODataMapping();
-    filter.setLocation(location);
-    Example<ODataMapping> example = Example.of(filter);
-    odataMappingRepository.deleteAll(odataMappingRepository.findAll(example));
-  }
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the ODataMapping
+     */
+    @Override
+    public ODataMapping findByName(String name) {
+        ODataMapping filter = new ODataMapping();
+        filter.setName(name);
+        Example<ODataMapping> example = Example.of(filter);
+        Optional<ODataMapping> odataMapping = odataMappingRepository.findOne(example);
+        if (odataMapping.isPresent()) {
+            return odataMapping.get();
+        } else {
+            throw new IllegalArgumentException("OData Mapping with name does not exist: " + name);
+        }
+    }
+
+    /**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<ODataMapping> findByLocation(String location) {
+        ODataMapping filter = new ODataMapping();
+        filter.setLocation(location);
+        Example<ODataMapping> example = Example.of(filter);
+        List<ODataMapping> list = odataMappingRepository.findAll(example);
+        return list;
+    }
+
+    /**
+     * Find by key.
+     *
+     * @param key the key
+     * @return the ODataMapping
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public ODataMapping findByKey(String key) {
+        ODataMapping filter = new ODataMapping();
+        filter.setKey(key);
+        Example<ODataMapping> example = Example.of(filter);
+        Optional<ODataMapping> odataMapping = odataMappingRepository.findOne(example);
+        if (odataMapping.isPresent()) {
+            return odataMapping.get();
+        }
+        return null;
+    }
+
+    /**
+     * Save.
+     *
+     * @param odataMapping the ODataMapping
+     * @return the ODataMapping
+     */
+    @Override
+    public ODataMapping save(ODataMapping odataMapping) {
+        return odataMappingRepository.saveAndFlush(odataMapping);
+    }
+
+    /**
+     * Delete.
+     *
+     * @param odataMapping the ODataMapping
+     */
+    @Override
+    public void delete(ODataMapping odataMapping) {
+        odataMappingRepository.delete(odataMapping);
+    }
+
+    /**
+     * Removes the mapping.
+     *
+     * @param location the location
+     */
+    public void removeMappings(String location) {
+        ODataMapping filter = new ODataMapping();
+        filter.setLocation(location);
+        Example<ODataMapping> example = Example.of(filter);
+        odataMappingRepository.deleteAll(odataMappingRepository.findAll(example));
+    }
 
 }

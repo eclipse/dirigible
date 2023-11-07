@@ -27,107 +27,107 @@ import org.slf4j.LoggerFactory;
  */
 public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBuilder> {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(HanaCreateTableBuilder.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(HanaCreateTableBuilder.class);
 
-  /** The table type. */
-  private String tableType = "";
+    /** The table type. */
+    private String tableType = "";
 
-  /**
-   * Instantiates a new hana create table builder.
-   *
-   * @param dialect the dialect
-   * @param table the table
-   * @param tableType the table type
-   */
+    /**
+     * Instantiates a new hana create table builder.
+     *
+     * @param dialect the dialect
+     * @param table the table
+     * @param tableType the table type
+     */
 
-  public HanaCreateTableBuilder(ISqlDialect dialect, String table, String tableType) {
-    super(dialect, table);
-    this.tableType = tableType;
-  }
-
-  /**
-   * Generate table.
-   *
-   * @param sql the sql
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder#generateTable(java.lang.
-   * StringBuilder)
-   */
-  @Override
-  protected void generateTable(StringBuilder sql) {
-    String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
-    String tableType = "";
-
-    if (this.tableType.equalsIgnoreCase(KEYWORD_COLUMN) || this.tableType.equalsIgnoreCase(KEYWORD_COLUMNSTORE)) {
-      tableType = KEYWORD_COLUMN;
-    } else if (this.tableType.equalsIgnoreCase(KEYWORD_ROW) || this.tableType.equalsIgnoreCase(KEYWORD_ROWSTORE)) {
-      tableType = KEYWORD_ROW;
-    } else if (this.tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY)) {
-      tableType = METADATA_GLOBAL_TEMPORARY;
-    } else if (this.tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY_COLUMN)) {
-      tableType = METADATA_GLOBAL_TEMPORARY_COLUMN;
+    public HanaCreateTableBuilder(ISqlDialect dialect, String table, String tableType) {
+        super(dialect, table);
+        this.tableType = tableType;
     }
 
-    sql.append(SPACE)
-       .append(tableType)
-       .append(SPACE)
-       .append(KEYWORD_TABLE)
-       .append(SPACE)
-       .append(tableName);
-  }
+    /**
+     * Generate table.
+     *
+     * @param sql the sql
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder#generateTable(java.lang.
+     * StringBuilder)
+     */
+    @Override
+    protected void generateTable(StringBuilder sql) {
+        String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
+        String tableType = "";
 
-  /**
-   * Unique.
-   *
-   * @param name the name
-   * @param columns the columns
-   * @param type the type
-   * @param order the order
-   * @return the creates the table builder
-   */
-  @Override
-  public HanaCreateTableBuilder unique(String name, String[] columns, String type, String order) {
-    if (logger.isTraceEnabled()) {
-      logger.trace("unique: " + name + ", columns" + Arrays.toString(columns) + ", indexType " + type + ", order " + order);
+        if (this.tableType.equalsIgnoreCase(KEYWORD_COLUMN) || this.tableType.equalsIgnoreCase(KEYWORD_COLUMNSTORE)) {
+            tableType = KEYWORD_COLUMN;
+        } else if (this.tableType.equalsIgnoreCase(KEYWORD_ROW) || this.tableType.equalsIgnoreCase(KEYWORD_ROWSTORE)) {
+            tableType = KEYWORD_ROW;
+        } else if (this.tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY)) {
+            tableType = METADATA_GLOBAL_TEMPORARY;
+        } else if (this.tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY_COLUMN)) {
+            tableType = METADATA_GLOBAL_TEMPORARY_COLUMN;
+        }
+
+        sql.append(SPACE)
+           .append(tableType)
+           .append(SPACE)
+           .append(KEYWORD_TABLE)
+           .append(SPACE)
+           .append(tableName);
     }
-    CreateTableUniqueIndexBuilder uniqueIndex = new CreateTableUniqueIndexBuilder(this.getDialect(), name);
-    for (String column : columns) {
-      uniqueIndex.column(column);
+
+    /**
+     * Unique.
+     *
+     * @param name the name
+     * @param columns the columns
+     * @param type the type
+     * @param order the order
+     * @return the creates the table builder
+     */
+    @Override
+    public HanaCreateTableBuilder unique(String name, String[] columns, String type, String order) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("unique: " + name + ", columns" + Arrays.toString(columns) + ", indexType " + type + ", order " + order);
+        }
+        CreateTableUniqueIndexBuilder uniqueIndex = new CreateTableUniqueIndexBuilder(this.getDialect(), name);
+        for (String column : columns) {
+            uniqueIndex.column(column);
+        }
+        uniqueIndex.setIndexType(type);
+        uniqueIndex.setOrder(order);
+        this.uniqueIndices.add(uniqueIndex);
+        return this;
+
     }
-    uniqueIndex.setIndexType(type);
-    uniqueIndex.setOrder(order);
-    this.uniqueIndices.add(uniqueIndex);
-    return this;
 
-  }
+    /**
+     * Index.
+     *
+     * @param name the name
+     * @param isUnique the isUnique
+     * @param order the order
+     * @param indexType the indexType
+     * @param indexColumns the indexColumns
+     * @return the creates the table builder
+     */
+    public HanaCreateTableBuilder index(String name, Boolean isUnique, String order, String indexType, Set<String> indexColumns) {
 
-  /**
-   * Index.
-   *
-   * @param name the name
-   * @param isUnique the isUnique
-   * @param order the order
-   * @param indexType the indexType
-   * @param indexColumns the indexColumns
-   * @return the creates the table builder
-   */
-  public HanaCreateTableBuilder index(String name, Boolean isUnique, String order, String indexType, Set<String> indexColumns) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("index: " + name + ", columns" + indexColumns);
+        }
+        CreateTableIndexBuilder index = new CreateTableIndexBuilder(this.getDialect(), name);
+        index.setIndexType(indexType);
+        index.setOrder(order);
+        index.setColumns(indexColumns);
+        index.setUnique(isUnique);
+        this.indices.add(index);
 
-    if (logger.isTraceEnabled()) {
-      logger.trace("index: " + name + ", columns" + indexColumns);
+        return this;
     }
-    CreateTableIndexBuilder index = new CreateTableIndexBuilder(this.getDialect(), name);
-    index.setIndexType(indexType);
-    index.setOrder(order);
-    index.setColumns(indexColumns);
-    index.setUnique(isUnique);
-    this.indices.add(index);
-
-    return this;
-  }
 }

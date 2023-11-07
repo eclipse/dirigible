@@ -15,29 +15,29 @@ package org.eclipse.dirigible.components.odata.api;
  */
 public enum ODataHandlerMethods {
 
-  /** The create. */
-  create,
-  /** The update. */
-  update,
-  /** The delete. */
-  delete;
+    /** The create. */
+    create,
+    /** The update. */
+    update,
+    /** The delete. */
+    delete;
 
-  /**
-   * Value.
-   *
-   * @return the string
-   */
-  public String value() {
-    return name();
-  }
+    /**
+     * Value.
+     *
+     * @return the string
+     */
+    public String value() {
+        return name();
+    }
 
-  /**
-   * From value.
-   *
-   * @param v the v
-   * @return the o data handler methods
-   */
-  public static ODataHandlerMethods fromValue(String v) {
-    return valueOf(v);
-  }
+    /**
+     * From value.
+     *
+     * @param v the v
+     * @return the o data handler methods
+     */
+    public static ODataHandlerMethods fromValue(String v) {
+        return valueOf(v);
+    }
 }

@@ -20,50 +20,50 @@ import org.springframework.stereotype.Component;
 @Component
 public class MessagingFacade {
 
-  /**
-   * Send a message to queue.
-   *
-   * @param destination the destination
-   * @param message the message
-   */
-  public static final void sendToQueue(String destination, String message) {
-    MessagingProducer producer = new MessagingProducer(destination, 'Q', message);
-    new Thread(producer).start();
-  }
+    /**
+     * Send a message to queue.
+     *
+     * @param destination the destination
+     * @param message the message
+     */
+    public static final void sendToQueue(String destination, String message) {
+        MessagingProducer producer = new MessagingProducer(destination, 'Q', message);
+        new Thread(producer).start();
+    }
 
-  /**
-   * Send a message to topic.
-   *
-   * @param destination the destination
-   * @param message the message
-   */
-  public static final void sendToTopic(String destination, String message) {
-    MessagingProducer producer = new MessagingProducer(destination, 'T', message);
-    new Thread(producer).start();
-  }
+    /**
+     * Send a message to topic.
+     *
+     * @param destination the destination
+     * @param message the message
+     */
+    public static final void sendToTopic(String destination, String message) {
+        MessagingProducer producer = new MessagingProducer(destination, 'T', message);
+        new Thread(producer).start();
+    }
 
-  /**
-   * Receive a message from queue.
-   *
-   * @param destination the destination
-   * @param timeout the timeout
-   * @return the message as JSON
-   */
-  public static final String receiveFromQueue(String destination, int timeout) {
-    MessagingConsumer consumer = new MessagingConsumer(destination, 'Q', timeout);
-    return consumer.receiveMessage();
-  }
+    /**
+     * Receive a message from queue.
+     *
+     * @param destination the destination
+     * @param timeout the timeout
+     * @return the message as JSON
+     */
+    public static final String receiveFromQueue(String destination, int timeout) {
+        MessagingConsumer consumer = new MessagingConsumer(destination, 'Q', timeout);
+        return consumer.receiveMessage();
+    }
 
-  /**
-   * Receive a message from topic.
-   *
-   * @param destination the destination
-   * @param timeout the timeout
-   * @return the the message as JSON
-   */
-  public static final String receiveFromTopic(String destination, int timeout) {
-    MessagingConsumer consumer = new MessagingConsumer(destination, 'T', timeout);
-    return consumer.receiveMessage();
-  }
+    /**
+     * Receive a message from topic.
+     *
+     * @param destination the destination
+     * @param timeout the timeout
+     * @return the the message as JSON
+     */
+    public static final String receiveFromTopic(String destination, int timeout) {
+        MessagingConsumer consumer = new MessagingConsumer(destination, 'T', timeout);
+        return consumer.receiveMessage();
+    }
 
 }

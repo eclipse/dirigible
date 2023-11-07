@@ -19,8 +19,8 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnProperty(name = "keycloak.enabled", havingValue = "true")
 public class KeycloakConfiguration {
 
-  @Bean
-  public KeycloakSpringBootConfigResolver keycloakSpringBootConfigResolver() {
-    return new KeycloakSpringBootConfigResolver();
-  }
+    @Bean
+    public KeycloakSpringBootConfigResolver keycloakSpringBootConfigResolver() {
+        return new KeycloakSpringBootConfigResolver();
+    }
 }

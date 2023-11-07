@@ -18,29 +18,29 @@ import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
  */
 public class SnowflakeCreateBranchingBuilder extends CreateBranchingBuilder {
 
-  /**
-   * Instantiates a new Snowflake create branching builder.
-   *
-   * @param dialect the dialect
-   */
-  protected SnowflakeCreateBranchingBuilder(ISqlDialect dialect) {
-    super(dialect);
-  }
+    /**
+     * Instantiates a new Snowflake create branching builder.
+     *
+     * @param dialect the dialect
+     */
+    protected SnowflakeCreateBranchingBuilder(ISqlDialect dialect) {
+        super(dialect);
+    }
 
-  /**
-   * Table.
-   *
-   * @param table the table
-   * @return the Snowflake create table builder
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java.lang.String)
-   */
-  @Override
-  public SnowflakeCreateTableBuilder table(String table) {
-    return new SnowflakeCreateTableBuilder(this.getDialect(), table);
-  }
+    /**
+     * Table.
+     *
+     * @param table the table
+     * @return the Snowflake create table builder
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java.lang.String)
+     */
+    @Override
+    public SnowflakeCreateTableBuilder table(String table) {
+        return new SnowflakeCreateTableBuilder(this.getDialect(), table);
+    }
 
 }

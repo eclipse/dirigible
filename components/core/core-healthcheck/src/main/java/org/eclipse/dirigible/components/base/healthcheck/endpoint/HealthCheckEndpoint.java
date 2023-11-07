@@ -21,15 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "healthcheck")
 public class HealthCheckEndpoint {
 
-  /**
-   * Gets the all.
-   *
-   * @return the all
-   */
-  @GetMapping
-  public ResponseEntity<HealthCheckStatus> getStatus() {
-    return ResponseEntity.ok(HealthCheckStatus.getInstance());
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
+    @GetMapping
+    public ResponseEntity<HealthCheckStatus> getStatus() {
+        return ResponseEntity.ok(HealthCheckStatus.getInstance());
 
-  }
+    }
 
 }

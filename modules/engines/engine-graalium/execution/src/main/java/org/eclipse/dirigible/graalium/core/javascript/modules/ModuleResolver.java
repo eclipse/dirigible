@@ -17,19 +17,19 @@ import java.nio.file.Path;
  */
 public interface ModuleResolver {
 
-  /**
-   * Checks if is resolvable.
-   *
-   * @param moduleToResolve the module to resolve
-   * @return true, if is resolvable
-   */
-  boolean isResolvable(String moduleToResolve);
+    /**
+     * Checks if is resolvable.
+     *
+     * @param moduleToResolve the module to resolve
+     * @return true, if is resolvable
+     */
+    boolean isResolvable(String moduleToResolve);
 
-  /**
-   * Resolve.
-   *
-   * @param moduleToResolve the module to resolve
-   * @return the path
-   */
-  Path resolve(String moduleToResolve);
+    /**
+     * Resolve.
+     *
+     * @param moduleToResolve the module to resolve
+     * @return the path
+     */
+    Path resolve(String moduleToResolve);
 }

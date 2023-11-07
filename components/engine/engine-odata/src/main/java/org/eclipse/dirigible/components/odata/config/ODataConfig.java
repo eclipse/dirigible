@@ -24,19 +24,19 @@ import org.springframework.context.annotation.Configuration;
 @EnableAutoConfiguration(exclude = LiquibaseAutoConfiguration.class)
 public class ODataConfig {
 
-  /**
-   * Olingo servlet.
-   *
-   * @return the servlet registration bean
-   */
-  @Bean
-  public ServletRegistrationBean<ODataServlet> olingoServlet() {
-    ServletRegistrationBean<ODataServlet> bean = new ServletRegistrationBean<ODataServlet>(new ODataServlet(), "/odata/v2/*");
-    bean.addInitParameter("javax.ws.rs.Application", "org.apache.olingo.odata2.core.rest.app.ODataApplication");
-    bean.addInitParameter("org.apache.olingo.odata2.service.factory",
-        "org.eclipse.dirigible.components.odata.factory.DirigibleODataServiceFactory");
-    bean.setLoadOnStartup(1);
-    return bean;
-  }
+    /**
+     * Olingo servlet.
+     *
+     * @return the servlet registration bean
+     */
+    @Bean
+    public ServletRegistrationBean<ODataServlet> olingoServlet() {
+        ServletRegistrationBean<ODataServlet> bean = new ServletRegistrationBean<ODataServlet>(new ODataServlet(), "/odata/v2/*");
+        bean.addInitParameter("javax.ws.rs.Application", "org.apache.olingo.odata2.core.rest.app.ODataApplication");
+        bean.addInitParameter("org.apache.olingo.odata2.service.factory",
+                "org.eclipse.dirigible.components.odata.factory.DirigibleODataServiceFactory");
+        bean.setLoadOnStartup(1);
+        return bean;
+    }
 
 }

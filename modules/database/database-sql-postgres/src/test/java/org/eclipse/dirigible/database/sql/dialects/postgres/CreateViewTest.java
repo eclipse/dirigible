@@ -21,43 +21,43 @@ import org.junit.Test;
  */
 public class CreateViewTest extends CreateTableTest {
 
-  /**
-   * Creates the view as select.
-   */
-  @Test
-  public void createViewAsSelect() {
-    createTableGeneric();
-    String sql = SqlFactory.getNative(new PostgresSqlDialect())
-                           .create()
-                           .view("CUSTOMERS_VIEW")
-                           .column("ID")
-                           .column("FIRST_NAME")
-                           .column("LAST_NAME")
-                           .asSelect(SqlFactory.getDefault()
-                                               .select()
-                                               .column("*")
-                                               .from("CUSTOMERS")
-                                               .build())
-                           .build();
+    /**
+     * Creates the view as select.
+     */
+    @Test
+    public void createViewAsSelect() {
+        createTableGeneric();
+        String sql = SqlFactory.getNative(new PostgresSqlDialect())
+                               .create()
+                               .view("CUSTOMERS_VIEW")
+                               .column("ID")
+                               .column("FIRST_NAME")
+                               .column("LAST_NAME")
+                               .asSelect(SqlFactory.getDefault()
+                                                   .select()
+                                                   .column("*")
+                                                   .from("CUSTOMERS")
+                                                   .build())
+                               .build();
 
-    assertNotNull(sql);
-    assertEquals("CREATE VIEW CUSTOMERS_VIEW ( ID , FIRST_NAME , LAST_NAME ) AS SELECT * FROM CUSTOMERS", sql);
-  }
+        assertNotNull(sql);
+        assertEquals("CREATE VIEW CUSTOMERS_VIEW ( ID , FIRST_NAME , LAST_NAME ) AS SELECT * FROM CUSTOMERS", sql);
+    }
 
-  /**
-   * Creates the view as values.
-   */
-  @Test
-  public void createViewAsValues() {
-    String sql = SqlFactory.getNative(new PostgresSqlDialect())
-                           .create()
-                           .view("STATES")
-                           .column("STATE")
-                           .asValues("'STARTED', 'STOPPED', 'FAILED', 'IN PROCESS'")
-                           .build();
+    /**
+     * Creates the view as values.
+     */
+    @Test
+    public void createViewAsValues() {
+        String sql = SqlFactory.getNative(new PostgresSqlDialect())
+                               .create()
+                               .view("STATES")
+                               .column("STATE")
+                               .asValues("'STARTED', 'STOPPED', 'FAILED', 'IN PROCESS'")
+                               .build();
 
-    assertNotNull(sql);
-    assertEquals("CREATE VIEW STATES ( STATE ) AS VALUES 'STARTED', 'STOPPED', 'FAILED', 'IN PROCESS'", sql);
-  }
+        assertNotNull(sql);
+        assertEquals("CREATE VIEW STATES ( STATE ) AS VALUES 'STARTED', 'STOPPED', 'FAILED', 'IN PROCESS'", sql);
+    }
 
 }

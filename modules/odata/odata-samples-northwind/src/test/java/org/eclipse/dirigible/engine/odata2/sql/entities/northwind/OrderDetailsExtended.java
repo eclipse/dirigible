@@ -24,38 +24,38 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmType;
 @EdmEntitySet(name = "Order_Details_Extendeds", container = "NorthwindEntities")
 public class OrderDetailsExtended {
 
-  /** The order id. */
-  @EdmKey
-  @EdmProperty(name = "OrderID", facets = @EdmFacets(nullable = false))
-  private Integer orderId;
+    /** The order id. */
+    @EdmKey
+    @EdmProperty(name = "OrderID", facets = @EdmFacets(nullable = false))
+    private Integer orderId;
 
-  /** The product id. */
-  @EdmKey
-  @EdmProperty(name = "ProductID", facets = @EdmFacets(nullable = false))
-  private Integer productId;
+    /** The product id. */
+    @EdmKey
+    @EdmProperty(name = "ProductID", facets = @EdmFacets(nullable = false))
+    private Integer productId;
 
-  /** The product name. */
-  @EdmKey
-  @EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 40))
-  private String productName;
+    /** The product name. */
+    @EdmKey
+    @EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 40))
+    private String productName;
 
-  /** The unit price. */
-  @EdmKey
-  @EdmProperty(type = EdmType.DECIMAL, facets = @EdmFacets(nullable = false, precision = 19, scale = 4))
-  private Double unitPrice;
+    /** The unit price. */
+    @EdmKey
+    @EdmProperty(type = EdmType.DECIMAL, facets = @EdmFacets(nullable = false, precision = 19, scale = 4))
+    private Double unitPrice;
 
-  /** The quantity. */
-  @EdmKey
-  @EdmProperty(facets = @EdmFacets(nullable = false))
-  private Short quantity;
+    /** The quantity. */
+    @EdmKey
+    @EdmProperty(facets = @EdmFacets(nullable = false))
+    private Short quantity;
 
-  /** The discount. */
-  @EdmKey
-  @EdmProperty(facets = @EdmFacets(nullable = false))
-  private Float discount;
+    /** The discount. */
+    @EdmKey
+    @EdmProperty(facets = @EdmFacets(nullable = false))
+    private Float discount;
 
-  /** The extended price. */
-  @EdmProperty(type = EdmType.DECIMAL, facets = @EdmFacets(precision = 19, scale = 4))
-  private Double extendedPrice;
+    /** The extended price. */
+    @EdmProperty(type = EdmType.DECIMAL, facets = @EdmFacets(precision = 19, scale = 4))
+    private Double extendedPrice;
 
 }

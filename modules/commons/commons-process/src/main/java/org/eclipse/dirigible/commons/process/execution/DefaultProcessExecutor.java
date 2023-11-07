@@ -27,30 +27,30 @@ import java.util.concurrent.Future;
  */
 public final class DefaultProcessExecutor extends ProcessExecutor<OutputsPair> {
 
-  /**
-   * Execute process.
-   *
-   * @param commandLine the command line
-   * @param executor the executor
-   * @param environmentVariables the environment variables
-   * @return the future
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  @Override
-  public Future<ProcessResult<OutputsPair>> executeProcess(CommandLine commandLine, DefaultExecutor executor,
-      Map<String, String> environmentVariables) throws IOException {
-    ByteArrayOutputStream stdOut = new ByteArrayOutputStream();
-    ByteArrayOutputStream stdErr = new ByteArrayOutputStream();
-    PumpStreamHandler pumpStreamHandler = new PumpStreamHandler(stdOut, stdErr);
-    executor.setStreamHandler(pumpStreamHandler);
+    /**
+     * Execute process.
+     *
+     * @param commandLine the command line
+     * @param executor the executor
+     * @param environmentVariables the environment variables
+     * @return the future
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @Override
+    public Future<ProcessResult<OutputsPair>> executeProcess(CommandLine commandLine, DefaultExecutor executor,
+            Map<String, String> environmentVariables) throws IOException {
+        ByteArrayOutputStream stdOut = new ByteArrayOutputStream();
+        ByteArrayOutputStream stdErr = new ByteArrayOutputStream();
+        PumpStreamHandler pumpStreamHandler = new PumpStreamHandler(stdOut, stdErr);
+        executor.setStreamHandler(pumpStreamHandler);
 
-    ProcessExecutionFuture processExecutionFuture = execute(executor, commandLine, environmentVariables);
+        ProcessExecutionFuture processExecutionFuture = execute(executor, commandLine, environmentVariables);
 
-    return processExecutionFuture.thenApply(exitCode -> {
-      String output = stdOut.toString(StandardCharsets.UTF_8);
-      String errorOutput = stdErr.toString(StandardCharsets.UTF_8);
-      OutputsPair outputsPair = new OutputsPair(output, errorOutput);
-      return new ProcessResult<>(exitCode, outputsPair);
-    });
-  }
+        return processExecutionFuture.thenApply(exitCode -> {
+            String output = stdOut.toString(StandardCharsets.UTF_8);
+            String errorOutput = stdErr.toString(StandardCharsets.UTF_8);
+            OutputsPair outputsPair = new OutputsPair(output, errorOutput);
+            return new ProcessResult<>(exitCode, outputsPair);
+        });
+    }
 }

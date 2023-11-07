@@ -28,39 +28,39 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DatabaseMetadataEndpointTest {
 
-  // @Autowired
-  // private DataSourceRepository datasourceRepository;
-  //
-  // @Autowired
-  // private DataSourcesManager datasourcesManager;
-  //
-  // @Autowired
-  // private MockMvc mockMvc;
-  //
-  // @Autowired
-  // protected WebApplicationContext wac;
-  //
-  // @Autowired
-  // private FilterChainProxy springSecurityFilterChain;
-  //
-  // @BeforeEach
-  // public void setup() {
-  // DataSource datasource = new DataSource("", "TestDB", "", "", "org.h2.Driver", "jdbc:h2:~/test",
-  // "sa", "");
-  // datasourceRepository.save(datasource);
-  // }
-  //
-  // @Test
-  // public void getDataSourceByName() throws Exception {
-  //
-  // mockMvc.perform(get("/services/data/metadata/{name}/{schema}/{structure}",
-  // "TestDB", "INFORMATION_SCHEMA", "INDEXES"))
-  // .andDo(print())
-  // .andExpect(status().is2xxSuccessful())
-  // ;
-  // }
-  //
-  // @SpringBootApplication
-  // static class TestConfiguration {
-  // }
+    // @Autowired
+    // private DataSourceRepository datasourceRepository;
+    //
+    // @Autowired
+    // private DataSourcesManager datasourcesManager;
+    //
+    // @Autowired
+    // private MockMvc mockMvc;
+    //
+    // @Autowired
+    // protected WebApplicationContext wac;
+    //
+    // @Autowired
+    // private FilterChainProxy springSecurityFilterChain;
+    //
+    // @BeforeEach
+    // public void setup() {
+    // DataSource datasource = new DataSource("", "TestDB", "", "", "org.h2.Driver", "jdbc:h2:~/test",
+    // "sa", "");
+    // datasourceRepository.save(datasource);
+    // }
+    //
+    // @Test
+    // public void getDataSourceByName() throws Exception {
+    //
+    // mockMvc.perform(get("/services/data/metadata/{name}/{schema}/{structure}",
+    // "TestDB", "INFORMATION_SCHEMA", "INDEXES"))
+    // .andDo(print())
+    // .andExpect(status().is2xxSuccessful())
+    // ;
+    // }
+    //
+    // @SpringBootApplication
+    // static class TestConfiguration {
+    // }
 }

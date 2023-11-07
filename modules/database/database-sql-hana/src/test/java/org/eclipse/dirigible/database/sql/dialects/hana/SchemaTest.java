@@ -42,133 +42,133 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class SchemaTest {
 
-  /** The Constant DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY. */
-  private static final String DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY = "DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE";
+    /** The Constant DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY. */
+    private static final String DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY = "DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE";
 
-  /** The mock connection. */
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private Connection mockConnection;
+    /** The mock connection. */
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private Connection mockConnection;
 
-  /** The mock database meta data. */
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private DatabaseMetaData mockDatabaseMetaData;
+    /** The mock database meta data. */
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private DatabaseMetaData mockDatabaseMetaData;
 
-  /** The mock prepare statement. */
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private PreparedStatement mockPrepareStatement;
+    /** The mock prepare statement. */
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private PreparedStatement mockPrepareStatement;
 
-  /** The mock result set. */
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private ResultSet mockResultSet;
+    /** The mock result set. */
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private ResultSet mockResultSet;
 
-  /**
-   * Open mocks.
-   */
-  @Before
-  public void openMocks() {
-    // MockitoAnnotations.initMocks(this);
-    // PowerMockito.mockStatic(Configuration.class);
-  }
-
-
-  /**
-   * Execute create schema with case sensitive.
-   */
-  @Test
-  public void executeCreateSchemaWithCaseSensitive() {
-    try (MockedStatic<Configuration> configuration = Mockito.mockStatic(Configuration.class)) {
-      configuration.when(() -> Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY, "false"))
-                   .thenReturn("true");
-      String sql = SqlFactory.getNative(new HanaSqlDialect())
-                             .create()
-                             .schema("MySchema_1")
-                             .build();
-      assertNotNull(sql);
-      assertEquals("CREATE SCHEMA \"MySchema_1\"", sql);
+    /**
+     * Open mocks.
+     */
+    @Before
+    public void openMocks() {
+        // MockitoAnnotations.initMocks(this);
+        // PowerMockito.mockStatic(Configuration.class);
     }
-  }
 
-  /**
-   * Execute create schema no case sensitive.
-   */
-  @Test
-  public void executeCreateSchemaNoCaseSensitive() {
-    try (MockedStatic<Configuration> configuration = Mockito.mockStatic(Configuration.class)) {
-      configuration.when(() -> Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY, "false"))
-                   .thenReturn("false");
-      String sql = SqlFactory.getNative(new HanaSqlDialect())
-                             .create()
-                             .schema("MySchema_1")
-                             .build();
-      assertNotNull(sql);
-      assertEquals("CREATE SCHEMA MySchema_1", sql);
+
+    /**
+     * Execute create schema with case sensitive.
+     */
+    @Test
+    public void executeCreateSchemaWithCaseSensitive() {
+        try (MockedStatic<Configuration> configuration = Mockito.mockStatic(Configuration.class)) {
+            configuration.when(() -> Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY, "false"))
+                         .thenReturn("true");
+            String sql = SqlFactory.getNative(new HanaSqlDialect())
+                                   .create()
+                                   .schema("MySchema_1")
+                                   .build();
+            assertNotNull(sql);
+            assertEquals("CREATE SCHEMA \"MySchema_1\"", sql);
+        }
     }
-  }
 
-  /**
-   * Execute drop schema with case sensitive.
-   */
-  @Test
-  public void executeDropSchemaWithCaseSensitive() {
-    try (MockedStatic<Configuration> configuration = Mockito.mockStatic(Configuration.class)) {
-      configuration.when(() -> Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY, "false"))
-                   .thenReturn("true");
-      String sql = SqlFactory.getNative(new HanaSqlDialect())
-                             .drop()
-                             .schema("MySchema_1")
-                             .build();
-
-      assertNotNull(sql);
-      assertEquals("DROP SCHEMA \"MySchema_1\"", sql);
+    /**
+     * Execute create schema no case sensitive.
+     */
+    @Test
+    public void executeCreateSchemaNoCaseSensitive() {
+        try (MockedStatic<Configuration> configuration = Mockito.mockStatic(Configuration.class)) {
+            configuration.when(() -> Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY, "false"))
+                         .thenReturn("false");
+            String sql = SqlFactory.getNative(new HanaSqlDialect())
+                                   .create()
+                                   .schema("MySchema_1")
+                                   .build();
+            assertNotNull(sql);
+            assertEquals("CREATE SCHEMA MySchema_1", sql);
+        }
     }
-  }
 
-  /**
-   * Execute drop schema no case sensitive.
-   */
-  @Test
-  public void executeDropSchemaNoCaseSensitive() {
-    try (MockedStatic<Configuration> configuration = Mockito.mockStatic(Configuration.class)) {
-      configuration.when(() -> Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY, "false"))
-                   .thenReturn("false");
-      String sql = SqlFactory.getNative(new HanaSqlDialect())
-                             .drop()
-                             .schema("MySchema_1")
-                             .build();
-      assertNotNull(sql);
-      assertEquals("DROP SCHEMA MySchema_1", sql);
+    /**
+     * Execute drop schema with case sensitive.
+     */
+    @Test
+    public void executeDropSchemaWithCaseSensitive() {
+        try (MockedStatic<Configuration> configuration = Mockito.mockStatic(Configuration.class)) {
+            configuration.when(() -> Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY, "false"))
+                         .thenReturn("true");
+            String sql = SqlFactory.getNative(new HanaSqlDialect())
+                                   .drop()
+                                   .schema("MySchema_1")
+                                   .build();
+
+            assertNotNull(sql);
+            assertEquals("DROP SCHEMA \"MySchema_1\"", sql);
+        }
     }
-  }
 
-  /**
-   * Check if schema exist.
-   *
-   * @throws SQLException the SQL exception
-   */
-  @Test
-  public void checkIfSchemaExist() throws SQLException {
-    String schemaName = "MySchema_1";
-    when(mockConnection.getMetaData()).thenReturn(mockDatabaseMetaData);
-    when(mockDatabaseMetaData.getSchemas(null, schemaName)).thenReturn(mockResultSet);
-    when(mockResultSet.next()).thenReturn(true);
-    boolean exist = SqlFactory.getNative(new HanaSqlDialect())
-                              .exists(mockConnection, schemaName, DatabaseArtifactTypes.SCHEMA);
-    assertTrue(exist);
-  }
+    /**
+     * Execute drop schema no case sensitive.
+     */
+    @Test
+    public void executeDropSchemaNoCaseSensitive() {
+        try (MockedStatic<Configuration> configuration = Mockito.mockStatic(Configuration.class)) {
+            configuration.when(() -> Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY, "false"))
+                         .thenReturn("false");
+            String sql = SqlFactory.getNative(new HanaSqlDialect())
+                                   .drop()
+                                   .schema("MySchema_1")
+                                   .build();
+            assertNotNull(sql);
+            assertEquals("DROP SCHEMA MySchema_1", sql);
+        }
+    }
 
-  /**
-   * Check if schema does not exist.
-   *
-   * @throws SQLException the SQL exception
-   */
-  @Test
-  public void checkIfSchemaDoesNotExist() throws SQLException {
-    String schemaName = "MySchema_1";
-    when(mockConnection.prepareStatement(any())).thenReturn(mockPrepareStatement);
-    when(mockPrepareStatement.executeQuery()).thenReturn(mockResultSet);
-    boolean exist = SqlFactory.getNative(new HanaSqlDialect())
-                              .exists(mockConnection, schemaName, DatabaseArtifactTypes.SCHEMA);
-    assertFalse(exist);
-  }
+    /**
+     * Check if schema exist.
+     *
+     * @throws SQLException the SQL exception
+     */
+    @Test
+    public void checkIfSchemaExist() throws SQLException {
+        String schemaName = "MySchema_1";
+        when(mockConnection.getMetaData()).thenReturn(mockDatabaseMetaData);
+        when(mockDatabaseMetaData.getSchemas(null, schemaName)).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true);
+        boolean exist = SqlFactory.getNative(new HanaSqlDialect())
+                                  .exists(mockConnection, schemaName, DatabaseArtifactTypes.SCHEMA);
+        assertTrue(exist);
+    }
+
+    /**
+     * Check if schema does not exist.
+     *
+     * @throws SQLException the SQL exception
+     */
+    @Test
+    public void checkIfSchemaDoesNotExist() throws SQLException {
+        String schemaName = "MySchema_1";
+        when(mockConnection.prepareStatement(any())).thenReturn(mockPrepareStatement);
+        when(mockPrepareStatement.executeQuery()).thenReturn(mockResultSet);
+        boolean exist = SqlFactory.getNative(new HanaSqlDialect())
+                                  .exists(mockConnection, schemaName, DatabaseArtifactTypes.SCHEMA);
+        assertFalse(exist);
+    }
 
 }

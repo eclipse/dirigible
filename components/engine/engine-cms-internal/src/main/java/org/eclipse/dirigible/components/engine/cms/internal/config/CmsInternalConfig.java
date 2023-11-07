@@ -21,14 +21,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CmsInternalConfig {
 
-  /**
-   * Gets the cms provider.
-   *
-   * @return the cms provider
-   */
-  @Bean("CMS_PROVIDER")
-  public CmsProvider getCmsProvider() {
-    return new CmsProviderInternal();
-  }
+    /**
+     * Gets the cms provider.
+     *
+     * @return the cms provider
+     */
+    @Bean("CMS_PROVIDER")
+    public CmsProvider getCmsProvider() {
+        return new CmsProviderInternal();
+    }
 
 }

@@ -35,70 +35,70 @@ import io.swagger.v3.oas.annotations.Parameter;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_DATA + "views")
 public class ViewEndpoint extends BaseEndpoint {
 
-  /** The view service. */
-  private final ViewService viewService;
+    /** The view service. */
+    private final ViewService viewService;
 
-  /**
-   * Instantiates a new view endpoint.
-   *
-   * @param viewService the view service
-   */
-  @Autowired
-  public ViewEndpoint(ViewService viewService) {
-    this.viewService = viewService;
-  }
-
-  /**
-   * Find all.
-   *
-   * @param size the size
-   * @param page the page
-   * @return the page
-   */
-  @GetMapping("/pages")
-  public Page<View> findAll(@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
-      @Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
-    if (size == null) {
-      size = DEFAULT_PAGE_SIZE;
+    /**
+     * Instantiates a new view endpoint.
+     *
+     * @param viewService the view service
+     */
+    @Autowired
+    public ViewEndpoint(ViewService viewService) {
+        this.viewService = viewService;
     }
-    if (page == null) {
-      page = 0;
+
+    /**
+     * Find all.
+     *
+     * @param size the size
+     * @param page the page
+     * @return the page
+     */
+    @GetMapping("/pages")
+    public Page<View> findAll(@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
+            @Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
+        if (size == null) {
+            size = DEFAULT_PAGE_SIZE;
+        }
+        if (page == null) {
+            page = 0;
+        }
+        Pageable pageable = PageRequest.of(page, size);
+        Page<View> views = viewService.getPages(pageable);
+        return views;
     }
-    Pageable pageable = PageRequest.of(page, size);
-    Page<View> views = viewService.getPages(pageable);
-    return views;
-  }
 
-  /**
-   * Gets the.
-   *
-   * @param id the id
-   * @return the response entity
-   */
-  @GetMapping("/{id}")
-  public ResponseEntity<View> get(@PathVariable("id") Long id) {
-    return ResponseEntity.ok(viewService.findById(id));
-  }
+    /**
+     * Gets the.
+     *
+     * @param id the id
+     * @return the response entity
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<View> get(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(viewService.findById(id));
+    }
 
-  /**
-   * Find by name.
-   *
-   * @param name the name
-   * @return the response entity
-   */
-  @GetMapping("/search")
-  public ResponseEntity<View> findByName(@RequestParam("name") String name) {
-    return ResponseEntity.ok(viewService.findByName(name));
-  }
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the response entity
+     */
+    @GetMapping("/search")
+    public ResponseEntity<View> findByName(@RequestParam("name") String name) {
+        return ResponseEntity.ok(viewService.findByName(name));
+    }
 
-  /**
-   * Gets the all.
-   *
-   * @return the all
-   */
-  @GetMapping
-  public ResponseEntity<List<View>> getAll() {
-    return ResponseEntity.ok(viewService.getAll());
-  }
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
+    @GetMapping
+    public ResponseEntity<List<View>> getAll() {
+        return ResponseEntity.ok(viewService.getAll());
+    }
 
 }

@@ -25,29 +25,29 @@ import static org.junit.Assert.assertTrue;
  */
 public class ODataSQLProcessorManyToManyTest extends AbstractSQLProcessorTest {
 
-  /**
-   * Gets the o data entities.
-   *
-   * @return the o data entities
-   */
-  @Override
-  protected Class<?>[] getODataEntities() {
-    return new Class<?>[] {User.class, Group.class};
-  }
+    /**
+     * Gets the o data entities.
+     *
+     * @return the o data entities
+     */
+    @Override
+    protected Class<?>[] getODataEntities() {
+        return new Class<?>[] {User.class, Group.class};
+    }
 
-  /**
-   * Test SQL processor with mapping table.
-   *
-   * @throws Exception the exception
-   */
-  @Test
-  public void testSQLProcessorWithMappingTable() throws Exception {
-    String UUID = "ec20bbaf-ee7a-4405-91d0-7ad8be889270";
-    Response response = OData2RequestBuilder.createRequest(sf) //
-                                            .segments("Users('" + UUID + "')", "Groups") //
-                                            .accept("application/atom+xml")
-                                            .executeRequest(GET);
-    String content = IOUtils.toString((InputStream) response.getEntity());
-    assertTrue(content.contains("Mid"));
-  }
+    /**
+     * Test SQL processor with mapping table.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void testSQLProcessorWithMappingTable() throws Exception {
+        String UUID = "ec20bbaf-ee7a-4405-91d0-7ad8be889270";
+        Response response = OData2RequestBuilder.createRequest(sf) //
+                                                .segments("Users('" + UUID + "')", "Groups") //
+                                                .accept("application/atom+xml")
+                                                .executeRequest(GET);
+        String content = IOUtils.toString((InputStream) response.getEntity());
+        assertTrue(content.contains("Mid"));
+    }
 }

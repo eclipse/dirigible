@@ -17,14 +17,14 @@ import org.eclipse.dirigible.database.sql.ISqlDialect;
  */
 public class CreateTablePrimaryKeyBuilder extends AbstractCreateTableConstraintBuilder<CreateTablePrimaryKeyBuilder> {
 
-  /**
-   * Instantiates a new creates the table primary key builder.
-   *
-   * @param dialect the dialect
-   * @param name the name
-   */
-  public CreateTablePrimaryKeyBuilder(ISqlDialect dialect, String name) {
-    super(dialect, name);
-  }
+    /**
+     * Instantiates a new creates the table primary key builder.
+     *
+     * @param dialect the dialect
+     * @param name the name
+     */
+    public CreateTablePrimaryKeyBuilder(ISqlDialect dialect, String name) {
+        super(dialect, name);
+    }
 
 }

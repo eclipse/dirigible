@@ -23,60 +23,60 @@ import java.util.regex.Pattern;
  */
 public class DirigibleEsmModuleResolver implements ModuleResolver {
 
-  /** The Constant DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN. */
-  private static final Pattern DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN = Pattern.compile("(@dirigible)/(\\w+)(?:/(.+))?"); // e.g.
-                                                                                                                           // @dirigible/core/module/submodule
-                                                                                                                           // =>
-                                                                                                                           // $1=dirigible
-                                                                                                                           // $2=core
-                                                                                                                           // $3=module/submodule
+    /** The Constant DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN. */
+    private static final Pattern DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN = Pattern.compile("(@dirigible)/(\\w+)(?:/(.+))?"); // e.g.
+                                                                                                                             // @dirigible/core/module/submodule
+                                                                                                                             // =>
+                                                                                                                             // $1=dirigible
+                                                                                                                             // $2=core
+                                                                                                                             // $3=module/submodule
 
-  /** The source provider. */
-  private final JavascriptSourceProvider sourceProvider;
+    /** The source provider. */
+    private final JavascriptSourceProvider sourceProvider;
 
-  /**
-   * Instantiates a new dirigible esm module resolver.
-   *
-   * @param sourceProvider the source provider
-   */
-  public DirigibleEsmModuleResolver(JavascriptSourceProvider sourceProvider) {
-    this.sourceProvider = sourceProvider;
-  }
-
-  /**
-   * Checks if is resolvable.
-   *
-   * @param moduleToResolve the module to resolve
-   * @return true, if is resolvable
-   */
-  @Override
-  public boolean isResolvable(String moduleToResolve) {
-    return moduleToResolve.contains("@dirigible") && DirigibleModulesMetadata.isPureEsmModule(moduleToResolve);
-  }
-
-  /**
-   * Resolve.
-   *
-   * @param moduleToResolve the module to resolve
-   * @return the path
-   */
-  @Override
-  public Path resolve(String moduleToResolve) {
-    Matcher modulePathMatcher = DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN.matcher(moduleToResolve);
-    if (!modulePathMatcher.matches()) {
-      throw new RuntimeException("Found invalid Dirigible core modules path!");
+    /**
+     * Instantiates a new dirigible esm module resolver.
+     *
+     * @param sourceProvider the source provider
+     */
+    public DirigibleEsmModuleResolver(JavascriptSourceProvider sourceProvider) {
+        this.sourceProvider = sourceProvider;
     }
 
-    String dirigibleModuleDir = modulePathMatcher.group(2);
-    String dirigibleModuleFile = modulePathMatcher.group(3);
+    /**
+     * Checks if is resolvable.
+     *
+     * @param moduleToResolve the module to resolve
+     * @return true, if is resolvable
+     */
+    @Override
+    public boolean isResolvable(String moduleToResolve) {
+        return moduleToResolve.contains("@dirigible") && DirigibleModulesMetadata.isPureEsmModule(moduleToResolve);
+    }
 
-    boolean hasDirigibleModuleFile = !StringUtils.isEmpty(dirigibleModuleFile);
+    /**
+     * Resolve.
+     *
+     * @param moduleToResolve the module to resolve
+     * @return the path
+     */
+    @Override
+    public Path resolve(String moduleToResolve) {
+        Matcher modulePathMatcher = DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN.matcher(moduleToResolve);
+        if (!modulePathMatcher.matches()) {
+            throw new RuntimeException("Found invalid Dirigible core modules path!");
+        }
 
-    Path dirigibleModulePath = sourceProvider.getAbsoluteProjectPath("modules")
-                                             .resolve("dist")
-                                             .resolve("esm")
-                                             .resolve(dirigibleModuleDir)
-                                             .resolve(hasDirigibleModuleFile ? dirigibleModuleFile + ".mjs" : "index.mjs");
-    return dirigibleModulePath;
-  }
+        String dirigibleModuleDir = modulePathMatcher.group(2);
+        String dirigibleModuleFile = modulePathMatcher.group(3);
+
+        boolean hasDirigibleModuleFile = !StringUtils.isEmpty(dirigibleModuleFile);
+
+        Path dirigibleModulePath = sourceProvider.getAbsoluteProjectPath("modules")
+                                                 .resolve("dist")
+                                                 .resolve("esm")
+                                                 .resolve(dirigibleModuleDir)
+                                                 .resolve(hasDirigibleModuleFile ? dirigibleModuleFile + ".mjs" : "index.mjs");
+        return dirigibleModulePath;
+    }
 }

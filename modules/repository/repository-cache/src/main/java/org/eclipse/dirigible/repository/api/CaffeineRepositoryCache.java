@@ -22,82 +22,82 @@ import com.github.benmanes.caffeine.cache.Caffeine;
  */
 public class CaffeineRepositoryCache implements IRepositoryCache {
 
-  /** The cache. */
-  private static Cache<String, byte[]> cache;
+    /** The cache. */
+    private static Cache<String, byte[]> cache;
 
-  /**
-   * Instantiates a new caffeine repository cache.
-   */
-  public CaffeineRepositoryCache() {
-    initCache();
-  }
-
-  /**
-   * Inits the cache.
-   */
-  private static void initCache() {
-    long timePolicy = Long.parseLong(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_TIME_LIMIT_IN_MINUTES, "10"));
-    long sizePolicy = Long.parseLong(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_SIZE_LIMIT_IN_MEGABYTES, "100"));
-    cache = Caffeine.newBuilder()
-                    .expireAfterAccess(timePolicy, TimeUnit.MINUTES)
-                    .maximumWeight(sizePolicy * 1024 * 1024)
-                    .weigher((String k, byte[] v) -> v.length)
-                    .build();
-  }
-
-  /**
-   * Gets the internal cache.
-   *
-   * @return the internal cache
-   */
-  public static Cache<String, byte[]> getInternalCache() {
-    if (cache == null) {
-      initCache();
+    /**
+     * Instantiates a new caffeine repository cache.
+     */
+    public CaffeineRepositoryCache() {
+        initCache();
     }
 
-    return cache;
-  }
-
-  /**
-   * Gets the.
-   *
-   * @param path the path
-   * @return the byte[]
-   */
-  @Override
-  public byte[] get(String path) {
-    return cache.getIfPresent(path);
-  }
-
-  /**
-   * Put.
-   *
-   * @param path the path
-   * @param content the content
-   */
-  @Override
-  public void put(String path, byte[] content) {
-    if (content != null) {
-      cache.put(path, content);
+    /**
+     * Inits the cache.
+     */
+    private static void initCache() {
+        long timePolicy = Long.parseLong(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_TIME_LIMIT_IN_MINUTES, "10"));
+        long sizePolicy = Long.parseLong(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_SIZE_LIMIT_IN_MEGABYTES, "100"));
+        cache = Caffeine.newBuilder()
+                        .expireAfterAccess(timePolicy, TimeUnit.MINUTES)
+                        .maximumWeight(sizePolicy * 1024 * 1024)
+                        .weigher((String k, byte[] v) -> v.length)
+                        .build();
     }
-  }
 
-  /**
-   * Removes the.
-   *
-   * @param path the path
-   */
-  @Override
-  public void remove(String path) {
-    cache.invalidate(path);
-  }
+    /**
+     * Gets the internal cache.
+     *
+     * @return the internal cache
+     */
+    public static Cache<String, byte[]> getInternalCache() {
+        if (cache == null) {
+            initCache();
+        }
 
-  /**
-   * Clear.
-   */
-  @Override
-  public void clear() {
-    cache.invalidateAll();
-  }
+        return cache;
+    }
+
+    /**
+     * Gets the.
+     *
+     * @param path the path
+     * @return the byte[]
+     */
+    @Override
+    public byte[] get(String path) {
+        return cache.getIfPresent(path);
+    }
+
+    /**
+     * Put.
+     *
+     * @param path the path
+     * @param content the content
+     */
+    @Override
+    public void put(String path, byte[] content) {
+        if (content != null) {
+            cache.put(path, content);
+        }
+    }
+
+    /**
+     * Removes the.
+     *
+     * @param path the path
+     */
+    @Override
+    public void remove(String path) {
+        cache.invalidate(path);
+    }
+
+    /**
+     * Clear.
+     */
+    @Override
+    public void clear() {
+        cache.invalidateAll();
+    }
 
 }

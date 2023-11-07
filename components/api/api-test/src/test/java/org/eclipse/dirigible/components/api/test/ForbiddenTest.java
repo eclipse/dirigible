@@ -28,20 +28,20 @@ import org.springframework.web.context.WebApplicationContext;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 public class ForbiddenTest {
 
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Autowired
-  protected WebApplicationContext wac;
+    @Autowired
+    protected WebApplicationContext wac;
 
-  @Test
-  public void forbidden() throws Exception {
-    mockMvc.perform(get("/services/js/test/successful.js"))
-           .andDo(print())
-           .andExpect(status().is4xxClientError());
-  }
+    @Test
+    public void forbidden() throws Exception {
+        mockMvc.perform(get("/services/js/test/successful.js"))
+               .andDo(print())
+               .andExpect(status().is4xxClientError());
+    }
 
-  @SpringBootApplication
-  static class TestConfiguration {
-  }
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 }

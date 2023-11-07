@@ -28,92 +28,92 @@ import org.springframework.stereotype.Component;
 @Component
 public class JavascriptGenerationEngine implements TemplateEngine {
 
-  /** The Constant ENGINE_NAME. */
-  public static final String ENGINE_NAME = "javascript";
+    /** The Constant ENGINE_NAME. */
+    public static final String ENGINE_NAME = "javascript";
 
 
-  /** The javascript service. */
-  @Autowired
-  private JavascriptService javascriptService;
-
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  @Override
-  public String getName() {
-    return ENGINE_NAME;
-  }
-
-  /**
-   * Generate.
-   *
-   * @param parameters the parameters
-   * @param location the location
-   * @param input the input
-   * @return the byte[]
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  @Override
-  public byte[] generate(Map<String, Object> parameters, String location, byte[] input) throws IOException {
-    return generate(parameters, location, input, null, null);
-  }
-
-  /**
-   * Generate.
-   *
-   * @param parameters the parameters
-   * @param location the location
-   * @param input the input
-   * @param sm the sm
-   * @param em the em
-   * @return the byte[]
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  @Override
-  public byte[] generate(Map<String, Object> parameters, String location, byte[] input, String sm, String em) throws IOException {
-    try {
-      Map<Object, Object> context = new HashMap<Object, Object>();
-      BiConsumer<Object, Object> action = new ContextBiConsumer(context);
-      parameters.forEach(action);
-      RepositoryPath path = new RepositoryPath((String) parameters.get("handler"));
-      Object result = javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
-      // String result = ScriptEngineExecutorsManager.evalModule((String) parameters.get("handler"),
-      // context).toString();
-      return (result != null && result instanceof String) ? ((String) result).getBytes(StandardCharsets.UTF_8) : new byte[] {};
-    } catch (Exception ex) {
-      ex.printStackTrace();
-      throw new IOException("Could not evaluate template by Javascript: " + location, ex);
-    }
-  }
-
-  /**
-   * The Class ContextBiConsumer.
-   */
-  class ContextBiConsumer implements BiConsumer<Object, Object> {
-
-    /** The context. */
-    Map<Object, Object> context;
+    /** The javascript service. */
+    @Autowired
+    private JavascriptService javascriptService;
 
     /**
-     * Instantiates a new context bi consumer.
+     * Gets the name.
      *
-     * @param context the context
+     * @return the name
      */
-    ContextBiConsumer(Map<Object, Object> context) {
-      this.context = context;
+    @Override
+    public String getName() {
+        return ENGINE_NAME;
     }
 
     /**
-     * Accept.
+     * Generate.
      *
-     * @param k the k
-     * @param v the v
+     * @param parameters the parameters
+     * @param location the location
+     * @param input the input
+     * @return the byte[]
+     * @throws IOException Signals that an I/O exception has occurred.
      */
-    public void accept(Object k, Object v) {
-      this.context.put(k, v);
+    @Override
+    public byte[] generate(Map<String, Object> parameters, String location, byte[] input) throws IOException {
+        return generate(parameters, location, input, null, null);
     }
-  }
+
+    /**
+     * Generate.
+     *
+     * @param parameters the parameters
+     * @param location the location
+     * @param input the input
+     * @param sm the sm
+     * @param em the em
+     * @return the byte[]
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @Override
+    public byte[] generate(Map<String, Object> parameters, String location, byte[] input, String sm, String em) throws IOException {
+        try {
+            Map<Object, Object> context = new HashMap<Object, Object>();
+            BiConsumer<Object, Object> action = new ContextBiConsumer(context);
+            parameters.forEach(action);
+            RepositoryPath path = new RepositoryPath((String) parameters.get("handler"));
+            Object result = javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+            // String result = ScriptEngineExecutorsManager.evalModule((String) parameters.get("handler"),
+            // context).toString();
+            return (result != null && result instanceof String) ? ((String) result).getBytes(StandardCharsets.UTF_8) : new byte[] {};
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new IOException("Could not evaluate template by Javascript: " + location, ex);
+        }
+    }
+
+    /**
+     * The Class ContextBiConsumer.
+     */
+    class ContextBiConsumer implements BiConsumer<Object, Object> {
+
+        /** The context. */
+        Map<Object, Object> context;
+
+        /**
+         * Instantiates a new context bi consumer.
+         *
+         * @param context the context
+         */
+        ContextBiConsumer(Map<Object, Object> context) {
+            this.context = context;
+        }
+
+        /**
+         * Accept.
+         *
+         * @param k the k
+         * @param v the v
+         */
+        public void accept(Object k, Object v) {
+            this.context.put(k, v);
+        }
+    }
 
 }

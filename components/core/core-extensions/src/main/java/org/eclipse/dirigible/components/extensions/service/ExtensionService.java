@@ -30,138 +30,138 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ExtensionService implements ArtefactService<Extension> {
 
-  /** The extension repository. */
-  @Autowired
-  private ExtensionRepository extensionRepository;
+    /** The extension repository. */
+    @Autowired
+    private ExtensionRepository extensionRepository;
 
-  /**
-   * Gets the all.
-   *
-   * @return the all
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public List<Extension> getAll() {
-    return extensionRepository.findAll();
-  }
-
-  /**
-   * Find all.
-   *
-   * @param pageable the pageable
-   * @return the page
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public Page<Extension> getPages(Pageable pageable) {
-    return extensionRepository.findAll(pageable);
-  }
-
-  /**
-   * Find by id.
-   *
-   * @param id the id
-   * @return the extension
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public Extension findById(Long id) {
-    Optional<Extension> extension = extensionRepository.findById(id);
-    if (extension.isPresent()) {
-      return extension.get();
-    } else {
-      throw new IllegalArgumentException("Extension with id does not exist: " + id);
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Extension> getAll() {
+        return extensionRepository.findAll();
     }
-  }
 
-  /**
-   * Find by name.
-   *
-   * @param name the name
-   * @return the extension
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public Extension findByName(String name) {
-    Extension filter = new Extension();
-    filter.setName(name);
-    Example<Extension> example = Example.of(filter);
-    Optional<Extension> extension = extensionRepository.findOne(example);
-    if (extension.isPresent()) {
-      return extension.get();
-    } else {
-      throw new IllegalArgumentException("Extension with name does not exist: " + name);
+    /**
+     * Find all.
+     *
+     * @param pageable the pageable
+     * @return the page
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Extension> getPages(Pageable pageable) {
+        return extensionRepository.findAll(pageable);
     }
-  }
 
-  /**
-   * Find by location.
-   *
-   * @param location the location
-   * @return the list
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public List<Extension> findByLocation(String location) {
-    Extension filter = new Extension();
-    filter.setLocation(location);
-    Example<Extension> example = Example.of(filter);
-    List<Extension> list = extensionRepository.findAll(example);
-    return list;
-  }
-
-  /**
-   * Find by key.
-   *
-   * @param key the key
-   * @return the extension point
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public Extension findByKey(String key) {
-    Extension filter = new Extension();
-    filter.setKey(key);
-    Example<Extension> example = Example.of(filter);
-    Optional<Extension> extension = extensionRepository.findOne(example);
-    if (extension.isPresent()) {
-      return extension.get();
+    /**
+     * Find by id.
+     *
+     * @param id the id
+     * @return the extension
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Extension findById(Long id) {
+        Optional<Extension> extension = extensionRepository.findById(id);
+        if (extension.isPresent()) {
+            return extension.get();
+        } else {
+            throw new IllegalArgumentException("Extension with id does not exist: " + id);
+        }
     }
-    return null;
-  }
 
-  /**
-   * Find by extension point.
-   *
-   * @param extensionPoint the extension point
-   * @return the extension
-   */
-  @Transactional(readOnly = true)
-  public List<Extension> findByExtensionPoint(String extensionPoint) {
-    Extension filter = new Extension();
-    filter.setExtensionPoint(extensionPoint);
-    Example<Extension> example = Example.of(filter);
-    return extensionRepository.findAll(example);
-  }
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the extension
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Extension findByName(String name) {
+        Extension filter = new Extension();
+        filter.setName(name);
+        Example<Extension> example = Example.of(filter);
+        Optional<Extension> extension = extensionRepository.findOne(example);
+        if (extension.isPresent()) {
+            return extension.get();
+        } else {
+            throw new IllegalArgumentException("Extension with name does not exist: " + name);
+        }
+    }
 
-  /**
-   * Save.
-   *
-   * @param extension the extension
-   * @return the extension
-   */
-  @Override
-  public Extension save(Extension extension) {
-    return extensionRepository.saveAndFlush(extension);
-  }
+    /**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Extension> findByLocation(String location) {
+        Extension filter = new Extension();
+        filter.setLocation(location);
+        Example<Extension> example = Example.of(filter);
+        List<Extension> list = extensionRepository.findAll(example);
+        return list;
+    }
 
-  /**
-   * Delete.
-   *
-   * @param extension the extension
-   */
-  @Override
-  public void delete(Extension extension) {
-    extensionRepository.delete(extension);
-  }
+    /**
+     * Find by key.
+     *
+     * @param key the key
+     * @return the extension point
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Extension findByKey(String key) {
+        Extension filter = new Extension();
+        filter.setKey(key);
+        Example<Extension> example = Example.of(filter);
+        Optional<Extension> extension = extensionRepository.findOne(example);
+        if (extension.isPresent()) {
+            return extension.get();
+        }
+        return null;
+    }
+
+    /**
+     * Find by extension point.
+     *
+     * @param extensionPoint the extension point
+     * @return the extension
+     */
+    @Transactional(readOnly = true)
+    public List<Extension> findByExtensionPoint(String extensionPoint) {
+        Extension filter = new Extension();
+        filter.setExtensionPoint(extensionPoint);
+        Example<Extension> example = Example.of(filter);
+        return extensionRepository.findAll(example);
+    }
+
+    /**
+     * Save.
+     *
+     * @param extension the extension
+     * @return the extension
+     */
+    @Override
+    public Extension save(Extension extension) {
+        return extensionRepository.saveAndFlush(extension);
+    }
+
+    /**
+     * Delete.
+     *
+     * @param extension the extension
+     */
+    @Override
+    public void delete(Extension extension) {
+        extensionRepository.delete(extension);
+    }
 
 }

@@ -17,21 +17,21 @@ import org.apache.olingo.odata2.api.edm.EdmStructuralType;
  */
 public class SQLQueryTestUtils {
 
-  /**
-   * Instantiates a new SQL query test utils.
-   */
-  private SQLQueryTestUtils() {
-    // Static class
-  }
+    /**
+     * Instantiates a new SQL query test utils.
+     */
+    private SQLQueryTestUtils() {
+        // Static class
+    }
 
-  /**
-   * Grant table alias for structural type in query.
-   *
-   * @param sqlQuery the query
-   * @param structuralType the type
-   */
-  public static void grantTableAliasForStructuralTypeInQuery(final SQLSelectBuilder sqlQuery, final EdmStructuralType structuralType) {
-    sqlQuery.grantTableAliasForStructuralTypeInQuery(structuralType);
-  }
+    /**
+     * Grant table alias for structural type in query.
+     *
+     * @param sqlQuery the query
+     * @param structuralType the type
+     */
+    public static void grantTableAliasForStructuralTypeInQuery(final SQLSelectBuilder sqlQuery, final EdmStructuralType structuralType) {
+        sqlQuery.grantTableAliasForStructuralTypeInQuery(structuralType);
+    }
 
 }

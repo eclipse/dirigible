@@ -26,50 +26,51 @@ import org.slf4j.LoggerFactory;
  */
 public class ViewDropProcessor {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(ViewDropProcessor.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(ViewDropProcessor.class);
 
-  /**
-   * Execute the corresponding statement.
-   *
-   * @param connection the connection
-   * @param viewModel the view model
-   * @throws SQLException the SQL exception
-   */
-  public static void execute(Connection connection, View viewModel) throws SQLException {
-    boolean caseSensitive = Boolean.parseBoolean(Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
-    String viewName = viewModel.getName();
-    if (caseSensitive) {
-      viewName = "\"" + viewName + "\"";
-    }
-    if (logger.isInfoEnabled()) {
-      logger.info("Processing Drop View: " + viewName);
-    }
-    if (SqlFactory.getNative(connection)
-                  .existsTable(connection, viewName)) {
-      String sql = SqlFactory.getNative(connection)
-                             .drop()
-                             .view(viewName)
-                             .build();
-      if (logger.isInfoEnabled()) {
-        logger.info(sql);
-      }
-      PreparedStatement statement = connection.prepareStatement(sql);
-      try {
-        statement.executeUpdate();
-      } catch (SQLException e) {
-        if (logger.isErrorEnabled()) {
-          logger.error(sql);
+    /**
+     * Execute the corresponding statement.
+     *
+     * @param connection the connection
+     * @param viewModel the view model
+     * @throws SQLException the SQL exception
+     */
+    public static void execute(Connection connection, View viewModel) throws SQLException {
+        boolean caseSensitive =
+                Boolean.parseBoolean(Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
+        String viewName = viewModel.getName();
+        if (caseSensitive) {
+            viewName = "\"" + viewName + "\"";
         }
-        if (logger.isErrorEnabled()) {
-          logger.error(e.getMessage(), e);
+        if (logger.isInfoEnabled()) {
+            logger.info("Processing Drop View: " + viewName);
         }
-      } finally {
-        if (statement != null) {
-          statement.close();
+        if (SqlFactory.getNative(connection)
+                      .existsTable(connection, viewName)) {
+            String sql = SqlFactory.getNative(connection)
+                                   .drop()
+                                   .view(viewName)
+                                   .build();
+            if (logger.isInfoEnabled()) {
+                logger.info(sql);
+            }
+            PreparedStatement statement = connection.prepareStatement(sql);
+            try {
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                if (logger.isErrorEnabled()) {
+                    logger.error(sql);
+                }
+                if (logger.isErrorEnabled()) {
+                    logger.error(e.getMessage(), e);
+                }
+            } finally {
+                if (statement != null) {
+                    statement.close();
+                }
+            }
         }
-      }
     }
-  }
 
 }

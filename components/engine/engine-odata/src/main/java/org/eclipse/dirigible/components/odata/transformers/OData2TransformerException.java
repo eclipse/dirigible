@@ -16,42 +16,42 @@ package org.eclipse.dirigible.components.odata.transformers;
  */
 public class OData2TransformerException extends RuntimeException {
 
-  /** The Constant serialVersionUID. */
-  private static final long serialVersionUID = 1L;
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = 1L;
 
-  /**
-   * Instantiates a new repository exception.
-   */
-  public OData2TransformerException() {
-    super();
-  }
+    /**
+     * Instantiates a new repository exception.
+     */
+    public OData2TransformerException() {
+        super();
+    }
 
-  /**
-   * Instantiates a new repository exception.
-   *
-   * @param message the message
-   */
-  public OData2TransformerException(String message) {
-    super(message);
-  }
+    /**
+     * Instantiates a new repository exception.
+     *
+     * @param message the message
+     */
+    public OData2TransformerException(String message) {
+        super(message);
+    }
 
-  /**
-   * Instantiates a new repository exception.
-   *
-   * @param ex the ex
-   */
-  public OData2TransformerException(Throwable ex) {
-    super(ex);
-  }
+    /**
+     * Instantiates a new repository exception.
+     *
+     * @param ex the ex
+     */
+    public OData2TransformerException(Throwable ex) {
+        super(ex);
+    }
 
-  /**
-   * Instantiates a new repository exception.
-   *
-   * @param message the message
-   * @param ex the ex
-   */
-  public OData2TransformerException(String message, Throwable ex) {
-    super(message, ex);
-  }
+    /**
+     * Instantiates a new repository exception.
+     *
+     * @param message the message
+     * @param ex the ex
+     */
+    public OData2TransformerException(String message, Throwable ex) {
+        super(message, ex);
+    }
 
 }

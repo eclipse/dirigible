@@ -37,173 +37,173 @@ import com.google.gson.annotations.Expose;
 @Table(name = "DIRIGIBLE_ODATA")
 public class OData extends Artefact {
 
-  /** The Constant ARTEFACT_TYPE. */
-  public static final String ARTEFACT_TYPE = "odata";
+    /** The Constant ARTEFACT_TYPE. */
+    public static final String ARTEFACT_TYPE = "odata";
 
-  /** The id. */
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "ODATA_ID", nullable = false)
-  private Long id;
+    /** The id. */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ODATA_ID", nullable = false)
+    private Long id;
 
-  /** The namespace. */
-  @Column(name = "ODATA_NAMESPACE", columnDefinition = "VARCHAR", nullable = false, length = 255)
-  @Expose
-  private String namespace;
+    /** The namespace. */
+    @Column(name = "ODATA_NAMESPACE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Expose
+    private String namespace;
 
-  /** The raw content. */
-  @Column(name = "HDB_CONTENT", columnDefinition = "CLOB")
-  @Lob
-  private String content;
+    /** The raw content. */
+    @Column(name = "HDB_CONTENT", columnDefinition = "CLOB")
+    @Lob
+    private String content;
 
-  /** The entities. */
-  @Transient
-  @Expose
-  private List<ODataEntity> entities = new ArrayList<ODataEntity>();
+    /** The entities. */
+    @Transient
+    @Expose
+    private List<ODataEntity> entities = new ArrayList<ODataEntity>();
 
-  /** The associations. */
-  @Transient
-  @Expose
-  private List<ODataAssociation> associations = new ArrayList<ODataAssociation>();
+    /** The associations. */
+    @Transient
+    @Expose
+    private List<ODataAssociation> associations = new ArrayList<ODataAssociation>();
 
-  /**
-   * Instantiates a new o data.
-   *
-   * @param location the location
-   * @param name the name
-   * @param description the description
-   * @param dependencies the dependencies
-   * @param namespace the namespace
-   * @param entities the entities
-   * @param associations the associations
-   */
-  public OData(String location, String name, String description, Set<String> dependencies, String namespace, List<ODataEntity> entities,
-      List<ODataAssociation> associations) {
-    super(location, name, ARTEFACT_TYPE, description, dependencies);
-    this.namespace = namespace;
-    this.entities = entities;
-    this.associations = associations;
-  }
+    /**
+     * Instantiates a new o data.
+     *
+     * @param location the location
+     * @param name the name
+     * @param description the description
+     * @param dependencies the dependencies
+     * @param namespace the namespace
+     * @param entities the entities
+     * @param associations the associations
+     */
+    public OData(String location, String name, String description, Set<String> dependencies, String namespace, List<ODataEntity> entities,
+            List<ODataAssociation> associations) {
+        super(location, name, ARTEFACT_TYPE, description, dependencies);
+        this.namespace = namespace;
+        this.entities = entities;
+        this.associations = associations;
+    }
 
-  /**
-   * Instantiates a new o data.
-   */
-  public OData() {
-    super();
-  }
+    /**
+     * Instantiates a new o data.
+     */
+    public OData() {
+        super();
+    }
 
 
 
-  /**
-   * Gets the id.
-   *
-   * @return the id
-   */
-  public Long getId() {
-    return id;
-  }
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
 
-  /**
-   * Sets the id.
-   *
-   * @param id the new id
-   */
-  public void setId(Long id) {
-    this.id = id;
-  }
+    /**
+     * Sets the id.
+     *
+     * @param id the new id
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  /**
-   * Gets the namesapce.
-   *
-   * @return the namespace
-   */
-  public String getNamespace() {
-    return namespace;
-  }
+    /**
+     * Gets the namesapce.
+     *
+     * @return the namespace
+     */
+    public String getNamespace() {
+        return namespace;
+    }
 
-  /**
-   * Sets the namespace.
-   *
-   * @param namespace the namespace to set
-   */
-  public void setNamespace(String namespace) {
-    this.namespace = namespace;
-  }
+    /**
+     * Sets the namespace.
+     *
+     * @param namespace the namespace to set
+     */
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
 
-  /**
-   * Gets the content.
-   *
-   * @return the content
-   */
-  public String getContent() {
-    return content;
-  }
+    /**
+     * Gets the content.
+     *
+     * @return the content
+     */
+    public String getContent() {
+        return content;
+    }
 
-  /**
-   * Sets the content.
-   *
-   * @param content the new content
-   */
-  public void setContent(String content) {
-    this.content = content;
-  }
+    /**
+     * Sets the content.
+     *
+     * @param content the new content
+     */
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-  /**
-   * To json.
-   *
-   * @return the string
-   */
-  public String toJson() {
-    return GsonHelper.toJson(this);
-  }
+    /**
+     * To json.
+     *
+     * @return the string
+     */
+    public String toJson() {
+        return GsonHelper.toJson(this);
+    }
 
-  /**
-   * Gets the entities.
-   *
-   * @return the entities
-   */
-  public List<ODataEntity> getEntities() {
-    return entities;
-  }
+    /**
+     * Gets the entities.
+     *
+     * @return the entities
+     */
+    public List<ODataEntity> getEntities() {
+        return entities;
+    }
 
-  /**
-   * Sets the entities.
-   *
-   * @param entities the new entities
-   */
-  public void setEntities(List<ODataEntity> entities) {
-    this.entities = entities;
-  }
+    /**
+     * Sets the entities.
+     *
+     * @param entities the new entities
+     */
+    public void setEntities(List<ODataEntity> entities) {
+        this.entities = entities;
+    }
 
-  /**
-   * Gets the associations.
-   *
-   * @return the associations
-   */
-  public List<ODataAssociation> getAssociations() {
-    return associations;
-  }
+    /**
+     * Gets the associations.
+     *
+     * @return the associations
+     */
+    public List<ODataAssociation> getAssociations() {
+        return associations;
+    }
 
-  /**
-   * Sets the associations.
-   *
-   * @param associations the new associations
-   */
-  public void setAssociations(List<ODataAssociation> associations) {
-    this.associations = associations;
-  }
+    /**
+     * Sets the associations.
+     *
+     * @param associations the new associations
+     */
+    public void setAssociations(List<ODataAssociation> associations) {
+        this.associations = associations;
+    }
 
-  /**
-   * To string.
-   *
-   * @return the string
-   */
-  @Override
-  public String toString() {
-    return "OData [id=" + id + ", namespace=" + namespace + ", entities=" + entities + ", associations=" + associations + ", location="
-        + location + ", name=" + name + ", type=" + type + ", description=" + description + ", key=" + key + ", dependencies="
-        + dependencies + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt
-        + "]";
-  }
+    /**
+     * To string.
+     *
+     * @return the string
+     */
+    @Override
+    public String toString() {
+        return "OData [id=" + id + ", namespace=" + namespace + ", entities=" + entities + ", associations=" + associations + ", location="
+                + location + ", name=" + name + ", type=" + type + ", description=" + description + ", key=" + key + ", dependencies="
+                + dependencies + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt="
+                + updatedAt + "]";
+    }
 
 }

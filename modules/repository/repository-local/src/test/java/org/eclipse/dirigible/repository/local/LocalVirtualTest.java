@@ -28,80 +28,80 @@ import org.junit.Test;
  */
 public class LocalVirtualTest {
 
-  /** The repository. */
-  protected LocalRepository repository;
+    /** The repository. */
+    protected LocalRepository repository;
 
-  /**
-   * Sets the up.
-   */
-  @Before
-  public void setUp() {
-    try {
-      repository = new LocalRepository("target/test");
-    } catch (Exception e) {
-      e.printStackTrace();
-      fail(e.getMessage());
-    }
-  }
-
-  /**
-   * Test text.
-   */
-  @Test
-  public void testText() {
-    if (repository == null) {
-      return;
-    }
-
-    IResource resourceA = null;
-    IResource resourceB = null;
-    try {
-      String content = "test1";
-
-      Files.createDirectories(Paths.get("target/linked/b")
-                                   .toAbsolutePath());
-      Files.createFile(Paths.get("target/linked/b/testB.txt")
-                            .toAbsolutePath());
-
-      resourceA = repository.createResource("/a/testA.txt", content.getBytes(), false, //$NON-NLS-1$
-          "text/plain"); //$NON-NLS-1$
-      assertNotNull(resourceA);
-      assertTrue(resourceA.exists());
-
-      repository.linkPath("/a/b", Paths.get("target/linked/b")
-                                       .toAbsolutePath()
-                                       .toString());
-
-
-      resourceB = repository.getResource("/a/b/testB.txt"); //$NON-NLS-1$
-      assertNotNull(resourceB);
-      assertTrue(resourceB.exists());
-
-    } catch (Exception e) {
-      e.printStackTrace();
-      fail(e.getMessage());
-    } finally {
-      try {
-        if ((resourceA != null) && resourceA.exists()) {
-          repository.removeResource("/a/testA.txt"); //$NON-NLS-1$
-          resourceA = repository.getResource("/a/testA.txt"); //$NON-NLS-1$
-          assertNotNull(resourceA);
-          assertFalse(resourceA.exists());
+    /**
+     * Sets the up.
+     */
+    @Before
+    public void setUp() {
+        try {
+            repository = new LocalRepository("target/test");
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage());
         }
-        if ((resourceB != null) && resourceB.exists()) {
-          repository.removeResource("/a/b/testB.txt"); //$NON-NLS-1$
-          resourceB = repository.getResource("/a/b/testB.txt"); //$NON-NLS-1$
-          assertNotNull(resourceB);
-          assertFalse(resourceB.exists());
-        }
-        repository.removeCollection("/a"); //$NON-NLS-1$
-        FileUtils.deleteDirectory(Paths.get("target/linked")
-                                       .toFile());
-      } catch (Exception e) {
-        e.printStackTrace();
-        fail(e.getMessage());
-      }
     }
-  }
+
+    /**
+     * Test text.
+     */
+    @Test
+    public void testText() {
+        if (repository == null) {
+            return;
+        }
+
+        IResource resourceA = null;
+        IResource resourceB = null;
+        try {
+            String content = "test1";
+
+            Files.createDirectories(Paths.get("target/linked/b")
+                                         .toAbsolutePath());
+            Files.createFile(Paths.get("target/linked/b/testB.txt")
+                                  .toAbsolutePath());
+
+            resourceA = repository.createResource("/a/testA.txt", content.getBytes(), false, //$NON-NLS-1$
+                    "text/plain"); //$NON-NLS-1$
+            assertNotNull(resourceA);
+            assertTrue(resourceA.exists());
+
+            repository.linkPath("/a/b", Paths.get("target/linked/b")
+                                             .toAbsolutePath()
+                                             .toString());
+
+
+            resourceB = repository.getResource("/a/b/testB.txt"); //$NON-NLS-1$
+            assertNotNull(resourceB);
+            assertTrue(resourceB.exists());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        } finally {
+            try {
+                if ((resourceA != null) && resourceA.exists()) {
+                    repository.removeResource("/a/testA.txt"); //$NON-NLS-1$
+                    resourceA = repository.getResource("/a/testA.txt"); //$NON-NLS-1$
+                    assertNotNull(resourceA);
+                    assertFalse(resourceA.exists());
+                }
+                if ((resourceB != null) && resourceB.exists()) {
+                    repository.removeResource("/a/b/testB.txt"); //$NON-NLS-1$
+                    resourceB = repository.getResource("/a/b/testB.txt"); //$NON-NLS-1$
+                    assertNotNull(resourceB);
+                    assertFalse(resourceB.exists());
+                }
+                repository.removeCollection("/a"); //$NON-NLS-1$
+                FileUtils.deleteDirectory(Paths.get("target/linked")
+                                               .toFile());
+            } catch (Exception e) {
+                e.printStackTrace();
+                fail(e.getMessage());
+            }
+        }
+    }
 
 }

@@ -37,155 +37,155 @@ import org.slf4j.LoggerFactory;
  */
 public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 
-  /**
-   * The Constant logger.
-   */
-  private static final Logger logger = LoggerFactory.getLogger(ResultSetCsvWriter.class);
+    /**
+     * The Constant logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(ResultSetCsvWriter.class);
 
-  /** The limited. */
-  private boolean limited = true;
+    /** The limited. */
+    private boolean limited = true;
 
-  /** The stringify. */
-  private boolean stringify = true;
+    /** The stringify. */
+    private boolean stringify = true;
 
-  /**
-   * Checks if is limited.
-   *
-   * @return true, if is limited
-   */
-  public boolean isLimited() {
-    return limited;
-  }
-
-  /**
-   * Sets the limited.
-   *
-   * @param limited the new limited
-   */
-  public void setLimited(boolean limited) {
-    this.limited = limited;
-  }
-
-  /**
-   * Checks if is stringified.
-   *
-   * @return true, if is stringified
-   */
-  public boolean isStringified() {
-    return stringify;
-  }
-
-  /**
-   * Sets the stringified.
-   *
-   * @param stringify the new stringified
-   */
-  public void setStringified(boolean stringify) {
-    this.stringify = stringify;
-  }
-
-  /**
-   * Write.
-   *
-   * @param resultSet the result set
-   * @param output the output
-   * @throws Exception the exception
-   */
-  @Override
-  public void write(ResultSet resultSet, OutputStream output) throws Exception {
-
-    OutputStreamWriter sw = new OutputStreamWriter(output);
-
-    ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-
-    int count = 0;
-    List<String> names = new ArrayList<>();
-    if (resultSet.next()) {
-      if (resultSetMetaData == null) {
-        resultSetMetaData = resultSet.getMetaData(); // dynamic result set metadata
-      }
-      for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
-        String name = resultSetMetaData.getColumnName(i);
-        names.add(name);
-      }
+    /**
+     * Checks if is limited.
+     *
+     * @return true, if is limited
+     */
+    public boolean isLimited() {
+        return limited;
     }
 
-    CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
-                                           .setHeader(names.stream()
-                                                           .toArray(String[]::new))
-                                           .build();
-    try {
-      try (final CSVPrinter printer = new CSVPrinter(sw, csvFormat)) {
-        count = 0;
-        do {
-          List<Object> values = new ArrayList<>();
-          for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
-            Object value = null;
-            String name = resultSetMetaData.getColumnName(i);
-            int dbt = resultSetMetaData.getColumnType(i);
-            if (dbt == Types.BLOB || dbt == Types.BINARY || dbt == Types.LONGVARBINARY) {
-              InputStream is = resultSet.getBinaryStream(name);
-              if (is == null && stringify) {
-                value = "[NULL]";
-              } else if (is != null) {
-                byte[] ba = IOUtils.toByteArray(is);
-                if (stringify) {
-                  value = "[BLOB]";
-                } else {
-                  value = Base64.getEncoder()
-                                .encodeToString(ba);
-                }
-              }
-            } else if (dbt == Types.CLOB || dbt == Types.LONGVARCHAR) {
-              Clob clob = resultSet.getClob(name);
-              if (clob == null && stringify) {
-                value = "[NULL]";
-              } else if (clob != null) {
-                byte[] ba = IOUtils.toByteArray(clob.getAsciiStream());
-                if (stringify) {
-                  value = "[CLOB]";
-                } else {
-                  value = Base64.getEncoder()
-                                .encodeToString(ba);
-                }
-              }
-            } else if (dbt == Types.OTHER) {
-              Object dataObject = resultSet.getObject(name);
-              if (dataObject instanceof PGobject) {
-                if (value == null && stringify) {
-                  value = "[NULL]";
-                }
-                value = ((PGobject) dataObject).getValue();
-              }
-            } else {
-              value = resultSet.getObject(name);
-              if (value == null && stringify) {
-                value = "[NULL]";
-              }
-              if (value != null && !ClassUtils.isPrimitiveOrWrapper(value.getClass()) && value.getClass() != String.class
-                  && !java.util.Date.class.isAssignableFrom(value.getClass())) {
-                if (stringify) {
-                  value = "[BINARY]";
-                }
-              }
+    /**
+     * Sets the limited.
+     *
+     * @param limited the new limited
+     */
+    public void setLimited(boolean limited) {
+        this.limited = limited;
+    }
+
+    /**
+     * Checks if is stringified.
+     *
+     * @return true, if is stringified
+     */
+    public boolean isStringified() {
+        return stringify;
+    }
+
+    /**
+     * Sets the stringified.
+     *
+     * @param stringify the new stringified
+     */
+    public void setStringified(boolean stringify) {
+        this.stringify = stringify;
+    }
+
+    /**
+     * Write.
+     *
+     * @param resultSet the result set
+     * @param output the output
+     * @throws Exception the exception
+     */
+    @Override
+    public void write(ResultSet resultSet, OutputStream output) throws Exception {
+
+        OutputStreamWriter sw = new OutputStreamWriter(output);
+
+        ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+
+        int count = 0;
+        List<String> names = new ArrayList<>();
+        if (resultSet.next()) {
+            if (resultSetMetaData == null) {
+                resultSetMetaData = resultSet.getMetaData(); // dynamic result set metadata
             }
-            values.add(value);
-          }
-          try {
-            printer.printRecord(values);
-          } catch (Exception e) {
-            logger.error(e.getMessage());
-          }
+            for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
+                String name = resultSetMetaData.getColumnName(i);
+                names.add(name);
+            }
+        }
 
-          if (this.isLimited() && (++count > getLimit())) {
-            break;
-          }
-        } while (resultSet.next());
+        CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
+                                               .setHeader(names.stream()
+                                                               .toArray(String[]::new))
+                                               .build();
+        try {
+            try (final CSVPrinter printer = new CSVPrinter(sw, csvFormat)) {
+                count = 0;
+                do {
+                    List<Object> values = new ArrayList<>();
+                    for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
+                        Object value = null;
+                        String name = resultSetMetaData.getColumnName(i);
+                        int dbt = resultSetMetaData.getColumnType(i);
+                        if (dbt == Types.BLOB || dbt == Types.BINARY || dbt == Types.LONGVARBINARY) {
+                            InputStream is = resultSet.getBinaryStream(name);
+                            if (is == null && stringify) {
+                                value = "[NULL]";
+                            } else if (is != null) {
+                                byte[] ba = IOUtils.toByteArray(is);
+                                if (stringify) {
+                                    value = "[BLOB]";
+                                } else {
+                                    value = Base64.getEncoder()
+                                                  .encodeToString(ba);
+                                }
+                            }
+                        } else if (dbt == Types.CLOB || dbt == Types.LONGVARCHAR) {
+                            Clob clob = resultSet.getClob(name);
+                            if (clob == null && stringify) {
+                                value = "[NULL]";
+                            } else if (clob != null) {
+                                byte[] ba = IOUtils.toByteArray(clob.getAsciiStream());
+                                if (stringify) {
+                                    value = "[CLOB]";
+                                } else {
+                                    value = Base64.getEncoder()
+                                                  .encodeToString(ba);
+                                }
+                            }
+                        } else if (dbt == Types.OTHER) {
+                            Object dataObject = resultSet.getObject(name);
+                            if (dataObject instanceof PGobject) {
+                                if (value == null && stringify) {
+                                    value = "[NULL]";
+                                }
+                                value = ((PGobject) dataObject).getValue();
+                            }
+                        } else {
+                            value = resultSet.getObject(name);
+                            if (value == null && stringify) {
+                                value = "[NULL]";
+                            }
+                            if (value != null && !ClassUtils.isPrimitiveOrWrapper(value.getClass()) && value.getClass() != String.class
+                                    && !java.util.Date.class.isAssignableFrom(value.getClass())) {
+                                if (stringify) {
+                                    value = "[BINARY]";
+                                }
+                            }
+                        }
+                        values.add(value);
+                    }
+                    try {
+                        printer.printRecord(values);
+                    } catch (Exception e) {
+                        logger.error(e.getMessage());
+                    }
 
-      }
-    } catch (Exception e) {
-      logger.error(e.getMessage(), e);
+                    if (this.isLimited() && (++count > getLimit())) {
+                        break;
+                    }
+                } while (resultSet.next());
+
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
     }
-  }
 
 }

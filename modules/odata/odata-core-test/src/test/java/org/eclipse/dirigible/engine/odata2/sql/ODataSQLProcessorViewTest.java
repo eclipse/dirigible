@@ -25,29 +25,29 @@ import static org.junit.Assert.assertTrue;
  */
 public class ODataSQLProcessorViewTest extends AbstractSQLProcessorTest {
 
-  /**
-   * Gets the o data entities.
-   *
-   * @return the o data entities
-   */
-  @Override
-  protected Class<?>[] getODataEntities() {
-    return new Class<?>[] {View.class};
-  }
+    /**
+     * Gets the o data entities.
+     *
+     * @return the o data entities
+     */
+    @Override
+    protected Class<?>[] getODataEntities() {
+        return new Class<?>[] {View.class};
+    }
 
-  /**
-   * Test SQL processor with generated id.
-   *
-   * @throws Exception the exception
-   */
-  @Test
-  public void testSQLProcessorWithGeneratedId() throws Exception {
-    Response response = OData2RequestBuilder.createRequest(sf) //
-                                            .segments("Views") //
-                                            .accept("application/atom+xml")
-                                            .executeRequest(GET);
-    String content = IOUtils.toString((InputStream) response.getEntity());
-    // check the row number
-    assertTrue(content.contains("3"));
-  }
+    /**
+     * Test SQL processor with generated id.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void testSQLProcessorWithGeneratedId() throws Exception {
+        Response response = OData2RequestBuilder.createRequest(sf) //
+                                                .segments("Views") //
+                                                .accept("application/atom+xml")
+                                                .executeRequest(GET);
+        String content = IOUtils.toString((InputStream) response.getEntity());
+        // check the row number
+        assertTrue(content.contains("3"));
+    }
 }

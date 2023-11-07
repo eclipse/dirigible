@@ -15,31 +15,31 @@ package org.eclipse.dirigible.components.engine.cms.internal.repository;
  */
 public class ObjectType {
 
-  /** The type. */
-  private String type;
+    /** The type. */
+    private String type;
 
-  /**
-   * Instantiates a new object type.
-   *
-   * @param type the type
-   */
-  public ObjectType(String type) {
-    this.type = type;
-  }
+    /**
+     * Instantiates a new object type.
+     *
+     * @param type the type
+     */
+    public ObjectType(String type) {
+        this.type = type;
+    }
 
-  /**
-   * Gets the id.
-   *
-   * @return the id
-   */
-  public String getId() {
-    return this.type;
-  }
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
+    public String getId() {
+        return this.type;
+    }
 
-  /** The Constant FOLDER. */
-  public static final ObjectType FOLDER = new ObjectType(CmisConstants.OBJECT_TYPE_FOLDER);
+    /** The Constant FOLDER. */
+    public static final ObjectType FOLDER = new ObjectType(CmisConstants.OBJECT_TYPE_FOLDER);
 
-  /** The Constant DOCUMENT. */
-  public static final ObjectType DOCUMENT = new ObjectType(CmisConstants.OBJECT_TYPE_DOCUMENT);
+    /** The Constant DOCUMENT. */
+    public static final ObjectType DOCUMENT = new ObjectType(CmisConstants.OBJECT_TYPE_DOCUMENT);
 
 }

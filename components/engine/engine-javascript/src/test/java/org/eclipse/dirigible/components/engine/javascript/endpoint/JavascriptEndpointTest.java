@@ -43,168 +43,168 @@ import org.springframework.web.context.WebApplicationContext;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 public class JavascriptEndpointTest {
 
-  /** The javascript service. */
-  @Autowired
-  private JavascriptService javascriptService;
+    /** The javascript service. */
+    @Autowired
+    private JavascriptService javascriptService;
 
-  /** The mock mvc. */
-  @Autowired
-  private MockMvc mockMvc;
+    /** The mock mvc. */
+    @Autowired
+    private MockMvc mockMvc;
 
-  /** The wac. */
-  @Autowired
-  protected WebApplicationContext wac;
+    /** The wac. */
+    @Autowired
+    protected WebApplicationContext wac;
 
-  /** The spring security filter chain. */
-  @Autowired
-  private FilterChainProxy springSecurityFilterChain;
+    /** The spring security filter chain. */
+    @Autowired
+    private FilterChainProxy springSecurityFilterChain;
 
-  /** The repository. */
-  @Autowired
-  private IRepository repository;
+    /** The repository. */
+    @Autowired
+    private IRepository repository;
 
-  /**
-   * Setup.
-   *
-   * @throws Exception the exception
-   */
-  @BeforeEach
-  public void setup() throws Exception {
+    /**
+     * Setup.
+     *
+     * @throws Exception the exception
+     */
+    @BeforeEach
+    public void setup() throws Exception {
 
-    // create test javascript service
-    repository.createResource("/registry/public/test/hello-world.js",
-        "org.eclipse.dirigible.components.base.http.access.UserResponseVerifier.getResponse().getOutputStream().println(\"Hello World!\");".getBytes());
-    repository.createResource("/registry/public/test1/test2/hello-world.js",
-        "org.eclipse.dirigible.components.base.http.access.UserResponseVerifier.getResponse().getOutputStream().println(\"Hello World!\");".getBytes());
-  }
+        // create test javascript service
+        repository.createResource("/registry/public/test/hello-world.js",
+                "org.eclipse.dirigible.components.base.http.access.UserResponseVerifier.getResponse().getOutputStream().println(\"Hello World!\");".getBytes());
+        repository.createResource("/registry/public/test1/test2/hello-world.js",
+                "org.eclipse.dirigible.components.base.http.access.UserResponseVerifier.getResponse().getOutputStream().println(\"Hello World!\");".getBytes());
+    }
 
-  /**
-   * Cleanup.
-   *
-   * @throws Exception the exception
-   */
-  @AfterEach
-  public void cleanup() throws Exception {
+    /**
+     * Cleanup.
+     *
+     * @throws Exception the exception
+     */
+    @AfterEach
+    public void cleanup() throws Exception {
 
-    // delete test javascript service
-    repository.removeResource("/registry/public/test/hello-world.js");
-    repository.removeResource("/registry/public/test1/test2/hello-world.js");
-  }
+        // delete test javascript service
+        repository.removeResource("/registry/public/test/hello-world.js");
+        repository.removeResource("/registry/public/test1/test2/hello-world.js");
+    }
 
-  // @Test
-  // public void handleRequest() {
-  // assertNotNull(javascriptService.handleRequest("test", "hello-world.js", null, null, false));
-  // }
+    // @Test
+    // public void handleRequest() {
+    // assertNotNull(javascriptService.handleRequest("test", "hello-world.js", null, null, false));
+    // }
 
-  /**
-   * Gets the status.
-   *
-   * @return the status
-   * @throws Exception the exception
-   */
-  @Test
-  public void getStatus() throws Exception {
+    /**
+     * Gets the status.
+     *
+     * @return the status
+     * @throws Exception the exception
+     */
+    @Test
+    public void getStatus() throws Exception {
 
-    mockMvc.perform(get("/services/js/test/hello-world.js"))
-           .andDo(print())
-           .andExpect(status().is2xxSuccessful());
+        mockMvc.perform(get("/services/js/test/hello-world.js"))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
 
-  }
+    }
 
-  /**
-   * Gets the status deep.
-   *
-   * @return the status deep
-   * @throws Exception the exception
-   */
-  @Test
-  public void getStatusDeep() throws Exception {
+    /**
+     * Gets the status deep.
+     *
+     * @return the status deep
+     * @throws Exception the exception
+     */
+    @Test
+    public void getStatusDeep() throws Exception {
 
-    mockMvc.perform(get("/services/js/test1/test2/hello-world.js"))
-           .andDo(print())
-           .andExpect(status().is2xxSuccessful());
+        mockMvc.perform(get("/services/js/test1/test2/hello-world.js"))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
 
-  }
+    }
 
-  /**
-   * Gets the status deep query.
-   *
-   * @return the status deep query
-   * @throws Exception the exception
-   */
-  @Test
-  public void getStatusDeepQuery() throws Exception {
+    /**
+     * Gets the status deep query.
+     *
+     * @return the status deep query
+     * @throws Exception the exception
+     */
+    @Test
+    public void getStatusDeepQuery() throws Exception {
 
-    mockMvc.perform(get("/services/js/test1/test2/hello-world.js?a=1&b=2"))
-           .andDo(print())
-           .andExpect(status().is2xxSuccessful());
+        mockMvc.perform(get("/services/js/test1/test2/hello-world.js?a=1&b=2"))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
 
-  }
+    }
 
-  /**
-   * Gets the result.
-   *
-   * @return the result
-   * @throws Exception the exception
-   */
-  @Test
-  public void getResult() throws Exception {
+    /**
+     * Gets the result.
+     *
+     * @return the result
+     * @throws Exception the exception
+     */
+    @Test
+    public void getResult() throws Exception {
 
-    mockMvc.perform(get("/services/js/test/hello-world.js"))
-           .andDo(print())
-           .andExpect(content().string(containsString("Hello World!")));
+        mockMvc.perform(get("/services/js/test/hello-world.js"))
+               .andDo(print())
+               .andExpect(content().string(containsString("Hello World!")));
 
-  }
+    }
 
-  /**
-   * Gets the result deep.
-   *
-   * @return the result deep
-   * @throws Exception the exception
-   */
-  @Test
-  public void getResultDeep() throws Exception {
+    /**
+     * Gets the result deep.
+     *
+     * @return the result deep
+     * @throws Exception the exception
+     */
+    @Test
+    public void getResultDeep() throws Exception {
 
-    mockMvc.perform(get("/services/js/test1/test2/hello-world.js"))
-           .andDo(print())
-           .andExpect(content().string(containsString("Hello World!")));
+        mockMvc.perform(get("/services/js/test1/test2/hello-world.js"))
+               .andDo(print())
+               .andExpect(content().string(containsString("Hello World!")));
 
-  }
+    }
 
-  /**
-   * Gets the result deep query.
-   *
-   * @return the result deep query
-   * @throws Exception the exception
-   */
-  @Test
-  public void getResultDeepQuery() throws Exception {
+    /**
+     * Gets the result deep query.
+     *
+     * @return the result deep query
+     * @throws Exception the exception
+     */
+    @Test
+    public void getResultDeepQuery() throws Exception {
 
-    mockMvc.perform(get("/services/js/test1/test2/hello-world.js?a=1&b=2"))
-           .andDo(print())
-           .andExpect(content().string(containsString("Hello World!")));
+        mockMvc.perform(get("/services/js/test1/test2/hello-world.js?a=1&b=2"))
+               .andDo(print())
+               .andExpect(content().string(containsString("Hello World!")));
 
-  }
+    }
 
-  /**
-   * Gets the result deep path.
-   *
-   * @return the result deep path
-   * @throws Exception the exception
-   */
-  @Test
-  public void getResultDeepPath() throws Exception {
+    /**
+     * Gets the result deep path.
+     *
+     * @return the result deep path
+     * @throws Exception the exception
+     */
+    @Test
+    public void getResultDeepPath() throws Exception {
 
-    mockMvc.perform(get("/services/js/test1/test2/hello-world.js/1/2"))
-           .andDo(print())
-           .andExpect(content().string(containsString("Hello World!")));
+        mockMvc.perform(get("/services/js/test1/test2/hello-world.js/1/2"))
+               .andDo(print())
+               .andExpect(content().string(containsString("Hello World!")));
 
-  }
+    }
 
-  /**
-   * The Class TestConfiguration.
-   */
-  @SpringBootApplication
-  static class TestConfiguration {
-  }
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 }

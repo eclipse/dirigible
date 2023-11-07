@@ -15,42 +15,42 @@ package org.eclipse.dirigible.repository.api;
  */
 public class RepositoryExportException extends RepositoryException {
 
-  /** The Constant serialVersionUID. */
-  private static final long serialVersionUID = -163847774919514248L;
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = -163847774919514248L;
 
-  /**
-   * Instantiates a new repository export exception.
-   */
-  public RepositoryExportException() {
-    super();
-  }
+    /**
+     * Instantiates a new repository export exception.
+     */
+    public RepositoryExportException() {
+        super();
+    }
 
-  /**
-   * Instantiates a new repository export exception.
-   *
-   * @param message the message
-   * @param cause the cause
-   */
-  public RepositoryExportException(String message, Throwable cause) {
-    super(message, cause);
-  }
+    /**
+     * Instantiates a new repository export exception.
+     *
+     * @param message the message
+     * @param cause the cause
+     */
+    public RepositoryExportException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-  /**
-   * Instantiates a new repository export exception.
-   *
-   * @param message the message
-   */
-  public RepositoryExportException(String message) {
-    super(message);
-  }
+    /**
+     * Instantiates a new repository export exception.
+     *
+     * @param message the message
+     */
+    public RepositoryExportException(String message) {
+        super(message);
+    }
 
-  /**
-   * Instantiates a new repository export exception.
-   *
-   * @param cause the cause
-   */
-  public RepositoryExportException(Throwable cause) {
-    super(cause);
-  }
+    /**
+     * Instantiates a new repository export exception.
+     *
+     * @param cause the cause
+     */
+    public RepositoryExportException(Throwable cause) {
+        super(cause);
+    }
 
 }

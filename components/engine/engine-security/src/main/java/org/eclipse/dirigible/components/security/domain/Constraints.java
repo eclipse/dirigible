@@ -20,45 +20,45 @@ import com.google.gson.annotations.Expose;
  */
 public class Constraints {
 
-  /** The constraints. */
-  @Expose
-  private List<Constraint> constraints = new ArrayList<>();
+    /** The constraints. */
+    @Expose
+    private List<Constraint> constraints = new ArrayList<>();
 
-  /**
-   * Builds the security accesses.
-   *
-   * @param location the location
-   * @return the list
-   */
-  public List<Access> buildSecurityAccesses(String location) {
-    List<Access> securityAccesses = new ArrayList<>();
+    /**
+     * Builds the security accesses.
+     *
+     * @param location the location
+     * @return the list
+     */
+    public List<Access> buildSecurityAccesses(String location) {
+        List<Access> securityAccesses = new ArrayList<>();
 
-    Integer keyIndex = 1;
+        Integer keyIndex = 1;
 
-    for (Constraint securityAccessConstraint : constraints) {
-      for (String role : securityAccessConstraint.getRoles()) {
-        Access securityAccess = new Access();
-        securityAccess.setLocation(location);
-        securityAccess.setType(Access.ARTEFACT_TYPE);
-        securityAccess.setName(keyIndex.toString());
-        securityAccess.updateKey();
-        securityAccess.setMethod(securityAccessConstraint.getMethod());
-        securityAccess.setRole(role);
-        securityAccess.setPath(securityAccessConstraint.getPath());
-        securityAccess.setScope(securityAccessConstraint.getScope());
+        for (Constraint securityAccessConstraint : constraints) {
+            for (String role : securityAccessConstraint.getRoles()) {
+                Access securityAccess = new Access();
+                securityAccess.setLocation(location);
+                securityAccess.setType(Access.ARTEFACT_TYPE);
+                securityAccess.setName(keyIndex.toString());
+                securityAccess.updateKey();
+                securityAccess.setMethod(securityAccessConstraint.getMethod());
+                securityAccess.setRole(role);
+                securityAccess.setPath(securityAccessConstraint.getPath());
+                securityAccess.setScope(securityAccessConstraint.getScope());
 
-        securityAccesses.add(securityAccess);
-        keyIndex++;
-      }
+                securityAccesses.add(securityAccess);
+                keyIndex++;
+            }
+        }
+
+        return securityAccesses;
     }
 
-    return securityAccesses;
-  }
-
-  @Override
-  public String toString() {
-    return "Constraints [constraints=" + constraints + "]";
-  }
+    @Override
+    public String toString() {
+        return "Constraints [constraints=" + constraints + "]";
+    }
 
 
 }

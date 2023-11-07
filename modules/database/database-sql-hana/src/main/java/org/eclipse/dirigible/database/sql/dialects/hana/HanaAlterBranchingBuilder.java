@@ -18,23 +18,23 @@ import org.eclipse.dirigible.database.sql.builders.table.AlterTableBuilder;
  * The Class HanaAlterBranchingBuilder.
  */
 public class HanaAlterBranchingBuilder extends AlterBranchingBuilder {
-  /**
-   * Instantiates a new creates the branching builder.
-   *
-   * @param dialect the dialect
-   */
-  public HanaAlterBranchingBuilder(ISqlDialect dialect) {
-    super(dialect);
-  }
+    /**
+     * Instantiates a new creates the branching builder.
+     *
+     * @param dialect the dialect
+     */
+    public HanaAlterBranchingBuilder(ISqlDialect dialect) {
+        super(dialect);
+    }
 
-  /**
-   * Table.
-   *
-   * @param table the table
-   * @return the alter table builder
-   */
-  @Override
-  public AlterTableBuilder table(String table) {
-    return new HanaAlterTableBuilder(getDialect(), table);
-  }
+    /**
+     * Table.
+     *
+     * @param table the table
+     * @return the alter table builder
+     */
+    @Override
+    public AlterTableBuilder table(String table) {
+        return new HanaAlterTableBuilder(getDialect(), table);
+    }
 }

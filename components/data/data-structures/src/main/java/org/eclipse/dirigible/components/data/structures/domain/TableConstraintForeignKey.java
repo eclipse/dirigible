@@ -31,162 +31,162 @@ import com.google.gson.annotations.Expose;
 @javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_FOREIGNKEYS")
 public class TableConstraintForeignKey extends TableConstraint {
 
-  /** The id. */
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "FOREIGNKEY_ID", nullable = false)
-  private Long id;
+    /** The id. */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "FOREIGNKEY_ID", nullable = false)
+    private Long id;
 
-  /** The referenced table. */
-  @Column(name = "FOREIGNKEY_REF_TABLE", columnDefinition = "VARCHAR", nullable = true, length = 255)
-  @Nullable
-  @Expose
-  private String referencedTable;
+    /** The referenced table. */
+    @Column(name = "FOREIGNKEY_REF_TABLE", columnDefinition = "VARCHAR", nullable = true, length = 255)
+    @Nullable
+    @Expose
+    private String referencedTable;
 
-  /** The referenced schema. */
-  @Column(name = "FOREIGNKEY_REF_SCHEMA", columnDefinition = "VARCHAR", nullable = true, length = 255)
-  @Nullable
-  @Expose
-  private String referencedSchema;
+    /** The referenced schema. */
+    @Column(name = "FOREIGNKEY_REF_SCHEMA", columnDefinition = "VARCHAR", nullable = true, length = 255)
+    @Nullable
+    @Expose
+    private String referencedSchema;
 
-  /** The referenced columns. */
-  @Column(name = "FOREIGNKEY_REF_COLUMNS", columnDefinition = "VARCHAR", nullable = true, length = 2000)
-  @Nullable
-  // @ElementCollection
-  // @OrderColumn
-  @Convert(converter = ArrayOfStringsToCsvConverter.class)
-  @Expose
-  private String[] referencedColumns;
+    /** The referenced columns. */
+    @Column(name = "FOREIGNKEY_REF_COLUMNS", columnDefinition = "VARCHAR", nullable = true, length = 2000)
+    @Nullable
+    // @ElementCollection
+    // @OrderColumn
+    @Convert(converter = ArrayOfStringsToCsvConverter.class)
+    @Expose
+    private String[] referencedColumns;
 
-  /**
-   * Instantiates a new table constraint foreign key.
-   *
-   * @param name the name
-   * @param modifiers the modifiers
-   * @param columns the columns
-   * @param referencedTable the referenced table
-   * @param referencedSchema the referenced schema
-   * @param referencedColumns the referenced columns
-   * @param constraints the constraints
-   */
-  public TableConstraintForeignKey(String name, String[] modifiers, String[] columns, String referencedTable, String referencedSchema,
-      String[] referencedColumns, TableConstraints constraints) {
-    super(name, modifiers, columns, constraints);
-    this.referencedTable = referencedTable;
-    this.referencedSchema = referencedSchema;
-    this.referencedColumns = referencedColumns;
-    this.constraints.getForeignKeys()
-                    .add(this);
-  }
+    /**
+     * Instantiates a new table constraint foreign key.
+     *
+     * @param name the name
+     * @param modifiers the modifiers
+     * @param columns the columns
+     * @param referencedTable the referenced table
+     * @param referencedSchema the referenced schema
+     * @param referencedColumns the referenced columns
+     * @param constraints the constraints
+     */
+    public TableConstraintForeignKey(String name, String[] modifiers, String[] columns, String referencedTable, String referencedSchema,
+            String[] referencedColumns, TableConstraints constraints) {
+        super(name, modifiers, columns, constraints);
+        this.referencedTable = referencedTable;
+        this.referencedSchema = referencedSchema;
+        this.referencedColumns = referencedColumns;
+        this.constraints.getForeignKeys()
+                        .add(this);
+    }
 
-  /**
-   * Instantiates a new table constraint foreign key.
-   *
-   * @param referencedTable the referenced table
-   * @param referencedSchema the referenced schema
-   * @param columnName the column name
-   * @param referencedColumnName the referenced column name
-   * @param constraints the constraints
-   */
-  public TableConstraintForeignKey(String referencedTable, String referencedSchema, String columnName, String referencedColumnName,
-      TableConstraints constraints) {
-    this(constraints.getTable()
-                    .getName()
-        + "_" + referencedTable, null, new String[] {columnName}, referencedTable, referencedSchema, new String[] {referencedColumnName},
-        constraints);
-  }
+    /**
+     * Instantiates a new table constraint foreign key.
+     *
+     * @param referencedTable the referenced table
+     * @param referencedSchema the referenced schema
+     * @param columnName the column name
+     * @param referencedColumnName the referenced column name
+     * @param constraints the constraints
+     */
+    public TableConstraintForeignKey(String referencedTable, String referencedSchema, String columnName, String referencedColumnName,
+            TableConstraints constraints) {
+        this(constraints.getTable()
+                        .getName()
+                + "_" + referencedTable, null, new String[] {columnName}, referencedTable, referencedSchema,
+                new String[] {referencedColumnName}, constraints);
+    }
 
 
-  /**
-   * Instantiates a new table constraint foreign key.
-   */
-  public TableConstraintForeignKey() {
-    super();
-  }
+    /**
+     * Instantiates a new table constraint foreign key.
+     */
+    public TableConstraintForeignKey() {
+        super();
+    }
 
-  /**
-   * Gets the id.
-   *
-   * @return the id
-   */
-  public Long getId() {
-    return id;
-  }
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
 
-  /**
-   * Sets the id.
-   *
-   * @param id the id to set
-   */
-  public void setId(Long id) {
-    this.id = id;
-  }
+    /**
+     * Sets the id.
+     *
+     * @param id the id to set
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  /**
-   * Gets the referenced table.
-   *
-   * @return the referencedTable
-   */
-  public String getReferencedTable() {
-    return referencedTable;
-  }
+    /**
+     * Gets the referenced table.
+     *
+     * @return the referencedTable
+     */
+    public String getReferencedTable() {
+        return referencedTable;
+    }
 
-  /**
-   * Sets the referenced table.
-   *
-   * @param referencedTable the referencedTable to set
-   */
-  public void setReferencedTable(String referencedTable) {
-    this.referencedTable = referencedTable;
-  }
+    /**
+     * Sets the referenced table.
+     *
+     * @param referencedTable the referencedTable to set
+     */
+    public void setReferencedTable(String referencedTable) {
+        this.referencedTable = referencedTable;
+    }
 
-  /**
-   * Gets the referenced schema.
-   *
-   * @return the referenced schema
-   */
-  public String getReferencedSchema() {
-    return referencedSchema;
-  }
+    /**
+     * Gets the referenced schema.
+     *
+     * @return the referenced schema
+     */
+    public String getReferencedSchema() {
+        return referencedSchema;
+    }
 
-  /**
-   * Sets the referenced schema.
-   *
-   * @param referencedSchema the new referenced schema
-   */
-  public void setReferencedSchema(String referencedSchema) {
-    this.referencedSchema = referencedSchema;
-  }
+    /**
+     * Sets the referenced schema.
+     *
+     * @param referencedSchema the new referenced schema
+     */
+    public void setReferencedSchema(String referencedSchema) {
+        this.referencedSchema = referencedSchema;
+    }
 
-  /**
-   * Gets the referenced columns.
-   *
-   * @return the referencedColumns
-   */
-  public String[] getReferencedColumns() {
-    return referencedColumns;
-  }
+    /**
+     * Gets the referenced columns.
+     *
+     * @return the referencedColumns
+     */
+    public String[] getReferencedColumns() {
+        return referencedColumns;
+    }
 
-  /**
-   * Sets the referenced columns.
-   *
-   * @param referencedColumns the referencedColumns to set
-   */
-  public void setReferencedColumns(String[] referencedColumns) {
-    this.referencedColumns = referencedColumns;
-  }
+    /**
+     * Sets the referenced columns.
+     *
+     * @param referencedColumns the referencedColumns to set
+     */
+    public void setReferencedColumns(String[] referencedColumns) {
+        this.referencedColumns = referencedColumns;
+    }
 
-  /**
-   * To string.
-   *
-   * @return the string
-   */
-  @Override
-  public String toString() {
-    return "TableConstraintForeignKey [id=" + id + ", referencedTable=" + referencedTable + ", referencedColumns=" + referencedColumns
-        + ", name=" + name + ", modifiers=" + modifiers + ", columns=" + columns + ", constraints.table=" + constraints.getTable()
-                                                                                                                       .getName()
-        + "]";
-  }
+    /**
+     * To string.
+     *
+     * @return the string
+     */
+    @Override
+    public String toString() {
+        return "TableConstraintForeignKey [id=" + id + ", referencedTable=" + referencedTable + ", referencedColumns=" + referencedColumns
+                + ", name=" + name + ", modifiers=" + modifiers + ", columns=" + columns + ", constraints.table=" + constraints.getTable()
+                                                                                                                               .getName()
+                + "]";
+    }
 
 }

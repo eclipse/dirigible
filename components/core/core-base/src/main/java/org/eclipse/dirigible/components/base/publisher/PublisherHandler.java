@@ -15,45 +15,45 @@ package org.eclipse.dirigible.components.base.publisher;
  */
 public interface PublisherHandler {
 
-  /**
-   * Before publish.
-   *
-   * @param location the location
-   */
-  default void beforePublish(String location) {}
+    /**
+     * Before publish.
+     *
+     * @param location the location
+     */
+    default void beforePublish(String location) {}
 
-  /**
-   * After publish.
-   *
-   * @param workspaceLocation the workspace location
-   * @param registryLocation the registry location
-   * @param metadata the metadata
-   */
-  default void afterPublish(String workspaceLocation, String registryLocation, AfterPublishMetadata metadata) {}
+    /**
+     * After publish.
+     *
+     * @param workspaceLocation the workspace location
+     * @param registryLocation the registry location
+     * @param metadata the metadata
+     */
+    default void afterPublish(String workspaceLocation, String registryLocation, AfterPublishMetadata metadata) {}
 
-  /**
-   * Before unpublish.
-   *
-   * @param location the location
-   */
-  default void beforeUnpublish(String location) {}
+    /**
+     * Before unpublish.
+     *
+     * @param location the location
+     */
+    default void beforeUnpublish(String location) {}
 
-  /**
-   * After unpublish.
-   *
-   * @param location the location
-   */
-  default void afterUnpublish(String location) {}
+    /**
+     * After unpublish.
+     *
+     * @param location the location
+     */
+    default void afterUnpublish(String location) {}
 
-  /**
-   * The AfterPublishMetadata.
-   *
-   * @param workspace the workspace location
-   * @param projectName the project name
-   * @param entryPath the entry path
-   * @param isDirectory whether is a directory
-   */
-  record AfterPublishMetadata(String workspace, String projectName, String entryPath, boolean isDirectory) {
-  }
+    /**
+     * The AfterPublishMetadata.
+     *
+     * @param workspace the workspace location
+     * @param projectName the project name
+     * @param entryPath the entry path
+     * @param isDirectory whether is a directory
+     */
+    record AfterPublishMetadata(String workspace, String projectName, String entryPath, boolean isDirectory) {
+    }
 
 }

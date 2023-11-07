@@ -20,159 +20,159 @@ import org.slf4j.LoggerFactory;
  */
 public class ProjectStatus {
 
-  /** The Constant DIRIGIBLE_FOLDER. */
-  private static final String DIRIGIBLE_FOLDER = "/dirigible/";
+    /** The Constant DIRIGIBLE_FOLDER. */
+    private static final String DIRIGIBLE_FOLDER = "/dirigible/";
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(ProjectStatus.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(ProjectStatus.class);
 
-  /** The project. */
-  private String project;
+    /** The project. */
+    private String project;
 
-  /** The git. */
-  private String git;
+    /** The git. */
+    private String git;
 
-  /** The added. */
-  private Set<String> added;
+    /** The added. */
+    private Set<String> added;
 
-  /** The changed. */
-  private Set<String> changed;
+    /** The changed. */
+    private Set<String> changed;
 
-  /** The removed. */
-  private Set<String> removed;
+    /** The removed. */
+    private Set<String> removed;
 
-  /** The missing. */
-  private Set<String> missing;
+    /** The missing. */
+    private Set<String> missing;
 
-  /** The modified. */
-  private Set<String> modified;
+    /** The modified. */
+    private Set<String> modified;
 
-  /** The conflicting. */
-  private Set<String> conflicting;
+    /** The conflicting. */
+    private Set<String> conflicting;
 
-  /** The untracked. */
-  private Set<String> untracked;
+    /** The untracked. */
+    private Set<String> untracked;
 
-  /** The untracked folders. */
-  private Set<String> untrackedFolders;
+    /** The untracked folders. */
+    private Set<String> untrackedFolders;
 
-  /**
-   * Instantiates a new project status.
-   *
-   * @param project the project
-   * @param git the git
-   * @param added the added
-   * @param changed the changed
-   * @param removed the removed
-   * @param missing the missing
-   * @param modified the modified
-   * @param conflicting the conflicting
-   * @param untracked the untracked
-   * @param untrackedFolders the untracked folders
-   */
-  public ProjectStatus(String project, String git, Set<String> added, Set<String> changed, Set<String> removed, Set<String> missing,
-      Set<String> modified, Set<String> conflicting, Set<String> untracked, Set<String> untrackedFolders) {
-    super();
-    this.project = project;
-    this.git = git;
-    this.added = added; // remapFilesIfNeeded(added, project);
-    this.changed = changed; // remapFilesIfNeeded(changed, project);
-    this.removed = removed; // remapFilesIfNeeded(removed, project);
-    this.missing = missing; // remapFilesIfNeeded(missing, project);
-    this.modified = modified; // remapFilesIfNeeded(modified, project);
-    this.conflicting = conflicting; // remapFilesIfNeeded(conflicting, project);
-    this.untracked = untracked; // remapFilesIfNeeded(untracked, project);
-    this.untrackedFolders = untrackedFolders; // remapFilesIfNeeded(untrackedFolders, project);
-  }
+    /**
+     * Instantiates a new project status.
+     *
+     * @param project the project
+     * @param git the git
+     * @param added the added
+     * @param changed the changed
+     * @param removed the removed
+     * @param missing the missing
+     * @param modified the modified
+     * @param conflicting the conflicting
+     * @param untracked the untracked
+     * @param untrackedFolders the untracked folders
+     */
+    public ProjectStatus(String project, String git, Set<String> added, Set<String> changed, Set<String> removed, Set<String> missing,
+            Set<String> modified, Set<String> conflicting, Set<String> untracked, Set<String> untrackedFolders) {
+        super();
+        this.project = project;
+        this.git = git;
+        this.added = added; // remapFilesIfNeeded(added, project);
+        this.changed = changed; // remapFilesIfNeeded(changed, project);
+        this.removed = removed; // remapFilesIfNeeded(removed, project);
+        this.missing = missing; // remapFilesIfNeeded(missing, project);
+        this.modified = modified; // remapFilesIfNeeded(modified, project);
+        this.conflicting = conflicting; // remapFilesIfNeeded(conflicting, project);
+        this.untracked = untracked; // remapFilesIfNeeded(untracked, project);
+        this.untrackedFolders = untrackedFolders; // remapFilesIfNeeded(untrackedFolders, project);
+    }
 
-  /**
-   * Gets the project.
-   *
-   * @return the project
-   */
-  public String getProject() {
-    return project;
-  }
+    /**
+     * Gets the project.
+     *
+     * @return the project
+     */
+    public String getProject() {
+        return project;
+    }
 
-  /**
-   * Gets the git.
-   *
-   * @return the git
-   */
-  public String getGit() {
-    return git;
-  }
+    /**
+     * Gets the git.
+     *
+     * @return the git
+     */
+    public String getGit() {
+        return git;
+    }
 
-  /**
-   * Gets the added.
-   *
-   * @return the added
-   */
-  public Set<String> getAdded() {
-    return added;
-  }
+    /**
+     * Gets the added.
+     *
+     * @return the added
+     */
+    public Set<String> getAdded() {
+        return added;
+    }
 
-  /**
-   * Gets the changed.
-   *
-   * @return the changed
-   */
-  public Set<String> getChanged() {
-    return changed;
-  }
+    /**
+     * Gets the changed.
+     *
+     * @return the changed
+     */
+    public Set<String> getChanged() {
+        return changed;
+    }
 
-  /**
-   * Gets the removed.
-   *
-   * @return the removed
-   */
-  public Set<String> getRemoved() {
-    return removed;
-  }
+    /**
+     * Gets the removed.
+     *
+     * @return the removed
+     */
+    public Set<String> getRemoved() {
+        return removed;
+    }
 
-  /**
-   * Gets the missing.
-   *
-   * @return the missing
-   */
-  public Set<String> getMissing() {
-    return missing;
-  }
+    /**
+     * Gets the missing.
+     *
+     * @return the missing
+     */
+    public Set<String> getMissing() {
+        return missing;
+    }
 
-  /**
-   * Gets the modified.
-   *
-   * @return the modified
-   */
-  public Set<String> getModified() {
-    return modified;
-  }
+    /**
+     * Gets the modified.
+     *
+     * @return the modified
+     */
+    public Set<String> getModified() {
+        return modified;
+    }
 
-  /**
-   * Gets the conflicting.
-   *
-   * @return the conflicting
-   */
-  public Set<String> getConflicting() {
-    return conflicting;
-  }
+    /**
+     * Gets the conflicting.
+     *
+     * @return the conflicting
+     */
+    public Set<String> getConflicting() {
+        return conflicting;
+    }
 
-  /**
-   * Gets the untracked.
-   *
-   * @return the untracked
-   */
-  public Set<String> getUntracked() {
-    return untracked;
-  }
+    /**
+     * Gets the untracked.
+     *
+     * @return the untracked
+     */
+    public Set<String> getUntracked() {
+        return untracked;
+    }
 
-  /**
-   * Gets the untracked folders.
-   *
-   * @return the untracked folders
-   */
-  public Set<String> getUntrackedFolders() {
-    return untrackedFolders;
-  }
+    /**
+     * Gets the untracked folders.
+     *
+     * @return the untracked folders
+     */
+    public Set<String> getUntrackedFolders() {
+        return untrackedFolders;
+    }
 
 }

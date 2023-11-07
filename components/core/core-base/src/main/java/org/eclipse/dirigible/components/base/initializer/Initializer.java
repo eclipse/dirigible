@@ -16,8 +16,8 @@ package org.eclipse.dirigible.components.base.initializer;
  */
 public interface Initializer {
 
-  /**
-   * Method that would be called for initialization work to be done.
-   */
-  void initialize();
+    /**
+     * Method that would be called for initialization work to be done.
+     */
+    void initialize();
 }

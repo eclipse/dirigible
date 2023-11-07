@@ -33,43 +33,43 @@ import org.springframework.stereotype.Component;
 @Component
 public class PDFFacade {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(PDFFacade.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(PDFFacade.class);
 
-  /**
-   * Generate.
-   *
-   * @param template the template
-   * @param data the data
-   * @return the byte[]
-   */
-  public static byte[] generate(String template, String data) {
-    if (logger.isInfoEnabled()) {
-      logger.info("Generating PDF from template: [\n{}\n] and data: [\n{}\n]", template, data);
+    /**
+     * Generate.
+     *
+     * @param template the template
+     * @param data the data
+     * @return the byte[]
+     */
+    public static byte[] generate(String template, String data) {
+        if (logger.isInfoEnabled()) {
+            logger.info("Generating PDF from template: [\n{}\n] and data: [\n{}\n]", template, data);
+        }
+
+        try {
+            StreamSource templateSource = new StreamSource(IOUtils.toInputStream(template, Charset.defaultCharset()));
+            StreamSource dataSource = new StreamSource(IOUtils.toInputStream(data, Charset.defaultCharset()));
+
+            FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
+            FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, baos);
+
+            TransformerFactory factory = TransformerFactory.newInstance();
+            Transformer transformer = factory.newTransformer(templateSource);
+
+            Result result = new SAXResult(fop.getDefaultHandler());
+
+            transformer.transform(dataSource, result);
+            return baos.toByteArray();
+        } catch (FOPException | TransformerException e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage());
+            }
+            throw new PDFException(e.getMessage(), e);
+        }
     }
-
-    try {
-      StreamSource templateSource = new StreamSource(IOUtils.toInputStream(template, Charset.defaultCharset()));
-      StreamSource dataSource = new StreamSource(IOUtils.toInputStream(data, Charset.defaultCharset()));
-
-      FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
-      FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-      Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, baos);
-
-      TransformerFactory factory = TransformerFactory.newInstance();
-      Transformer transformer = factory.newTransformer(templateSource);
-
-      Result result = new SAXResult(fop.getDefaultHandler());
-
-      transformer.transform(dataSource, result);
-      return baos.toByteArray();
-    } catch (FOPException | TransformerException e) {
-      if (logger.isErrorEnabled()) {
-        logger.error(e.getMessage());
-      }
-      throw new PDFException(e.getMessage(), e);
-    }
-  }
 }

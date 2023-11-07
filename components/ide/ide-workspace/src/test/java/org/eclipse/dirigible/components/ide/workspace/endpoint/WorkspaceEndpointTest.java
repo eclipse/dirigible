@@ -56,117 +56,117 @@ import org.springframework.web.context.WebApplicationContext;
 @EntityScan("org.eclipse.dirigible.components")
 public class WorkspaceEndpointTest {
 
-  /** The workspace service. */
-  @Autowired
-  private WorkspaceService workspaceService;
+    /** The workspace service. */
+    @Autowired
+    private WorkspaceService workspaceService;
 
-  /** The mock mvc. */
-  @Autowired
-  private MockMvc mockMvc;
+    /** The mock mvc. */
+    @Autowired
+    private MockMvc mockMvc;
 
-  /** The wac. */
-  @Autowired
-  protected WebApplicationContext wac;
+    /** The wac. */
+    @Autowired
+    protected WebApplicationContext wac;
 
-  /** The spring security filter chain. */
-  @Autowired
-  private FilterChainProxy springSecurityFilterChain;
-
-  /**
-   * Setup.
-   *
-   * @throws Exception the exception
-   */
-  @BeforeEach
-  public void setup() throws Exception {
-
-    cleanup();
-
-  }
-
-  /**
-   * Cleanup.
-   *
-   * @throws Exception the exception
-   */
-  @AfterEach
-  public void cleanup() throws Exception {}
-
-  /**
-   * Copy.
-   *
-   * @throws Exception the exception
-   */
-  @Test
-  public void copy() throws Exception {
-    Workspace workspace = workspaceService.createWorkspace("workspace1");
-    Project project = workspace.createProject("project1");
-    Folder folder = project.createFolder("folder1");
-    folder.createFile("file1.txt", "hello".getBytes());
-    WorkspaceSourceTargetPair pair = new WorkspaceSourceTargetPair();
-    pair.setSourceWorkspace("workspace1");
-    pair.setTargetWorkspace("workspace1");
-    pair.setSource("project1/folder1/file1.txt");
-    pair.setTarget("project1");
-    mockMvc.perform(post("/services/ide/workspace/workspace1/copy").contentType(MediaType.APPLICATION_JSON)
-                                                                   .content(GsonHelper.toJson(pair))
-                                                                   .with(csrf()))
-           .andDo(print())
-           .andExpect(status().is2xxSuccessful());
-    File file = project.getFile("file1.txt");
-    assertNotNull(file);
-    assertEquals("file1.txt", file.getName());
-    assertTrue(file.exists());
-    mockMvc.perform(delete("/services/ide/workspaces/workspace1").with(csrf()))
-           .andDo(print())
-           .andExpect(status().is2xxSuccessful());
-  }
-
-  /**
-   * Move.
-   *
-   * @throws Exception the exception
-   */
-  @Test
-  public void move() throws Exception {
-    Workspace workspace = workspaceService.createWorkspace("workspace1");
-    Project project = workspace.createProject("project1");
-    Folder folder = project.createFolder("folder1");
-    folder.createFile("file1.txt", "hello".getBytes());
-    WorkspaceSourceTargetPair pair = new WorkspaceSourceTargetPair();
-    pair.setSourceWorkspace("workspace1");
-    pair.setTargetWorkspace("workspace1");
-    pair.setSource("project1/folder1/file1.txt");
-    pair.setTarget("project1/file1.txt");
-    mockMvc.perform(post("/services/ide/workspace/workspace1/move").contentType(MediaType.APPLICATION_JSON)
-                                                                   .content(GsonHelper.toJson(pair))
-                                                                   .with(csrf()))
-           .andDo(print())
-           .andExpect(status().is2xxSuccessful());
-    File file = project.getFile("file1.txt");
-    assertNotNull(file);
-    assertEquals("file1.txt", file.getName());
-    assertTrue(file.exists());
-    mockMvc.perform(delete("/services/ide/workspaces/workspace1").with(csrf()))
-           .andDo(print())
-           .andExpect(status().is2xxSuccessful());
-  }
-
-  /**
-   * The Class TestConfiguration.
-   */
-  @SpringBootApplication
-  static class TestConfiguration {
+    /** The spring security filter chain. */
+    @Autowired
+    private FilterChainProxy springSecurityFilterChain;
 
     /**
-     * Creates the project status provider.
+     * Setup.
      *
-     * @return the project status provider
+     * @throws Exception the exception
      */
-    @Bean
-    public ProjectStatusProvider createProjectStatusProvider() {
-      return new DummyProjectStatusProvider();
+    @BeforeEach
+    public void setup() throws Exception {
+
+        cleanup();
+
     }
 
-  }
+    /**
+     * Cleanup.
+     *
+     * @throws Exception the exception
+     */
+    @AfterEach
+    public void cleanup() throws Exception {}
+
+    /**
+     * Copy.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void copy() throws Exception {
+        Workspace workspace = workspaceService.createWorkspace("workspace1");
+        Project project = workspace.createProject("project1");
+        Folder folder = project.createFolder("folder1");
+        folder.createFile("file1.txt", "hello".getBytes());
+        WorkspaceSourceTargetPair pair = new WorkspaceSourceTargetPair();
+        pair.setSourceWorkspace("workspace1");
+        pair.setTargetWorkspace("workspace1");
+        pair.setSource("project1/folder1/file1.txt");
+        pair.setTarget("project1");
+        mockMvc.perform(post("/services/ide/workspace/workspace1/copy").contentType(MediaType.APPLICATION_JSON)
+                                                                       .content(GsonHelper.toJson(pair))
+                                                                       .with(csrf()))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+        File file = project.getFile("file1.txt");
+        assertNotNull(file);
+        assertEquals("file1.txt", file.getName());
+        assertTrue(file.exists());
+        mockMvc.perform(delete("/services/ide/workspaces/workspace1").with(csrf()))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+    }
+
+    /**
+     * Move.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void move() throws Exception {
+        Workspace workspace = workspaceService.createWorkspace("workspace1");
+        Project project = workspace.createProject("project1");
+        Folder folder = project.createFolder("folder1");
+        folder.createFile("file1.txt", "hello".getBytes());
+        WorkspaceSourceTargetPair pair = new WorkspaceSourceTargetPair();
+        pair.setSourceWorkspace("workspace1");
+        pair.setTargetWorkspace("workspace1");
+        pair.setSource("project1/folder1/file1.txt");
+        pair.setTarget("project1/file1.txt");
+        mockMvc.perform(post("/services/ide/workspace/workspace1/move").contentType(MediaType.APPLICATION_JSON)
+                                                                       .content(GsonHelper.toJson(pair))
+                                                                       .with(csrf()))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+        File file = project.getFile("file1.txt");
+        assertNotNull(file);
+        assertEquals("file1.txt", file.getName());
+        assertTrue(file.exists());
+        mockMvc.perform(delete("/services/ide/workspaces/workspace1").with(csrf()))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+    }
+
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+
+        /**
+         * Creates the project status provider.
+         *
+         * @return the project status provider
+         */
+        @Bean
+        public ProjectStatusProvider createProjectStatusProvider() {
+            return new DummyProjectStatusProvider();
+        }
+
+    }
 }

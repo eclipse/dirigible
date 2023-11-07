@@ -23,25 +23,25 @@ import java.util.List;
 @EdmEntitySet(name = "Entities2")
 public class Entity2 {
 
-  /** The id. */
-  @EdmKey
-  @EdmProperty
-  private Long id;
+    /** The id. */
+    @EdmKey
+    @EdmProperty
+    private Long id;
 
-  /** The name. */
-  @EdmProperty
-  private String name;
+    /** The name. */
+    @EdmProperty
+    private String name;
 
-  /** The value. */
-  @EdmProperty
-  private String value;
+    /** The value. */
+    @EdmProperty
+    private String value;
 
-  /** The entity 1. */
-  @EdmNavigationProperty(toMultiplicity = Multiplicity.ZERO_OR_ONE, toType = Entity1.class, association = "Entities2OfEntity1")
-  private Entity1 entity1;
+    /** The entity 1. */
+    @EdmNavigationProperty(toMultiplicity = Multiplicity.ZERO_OR_ONE, toType = Entity1.class, association = "Entities2OfEntity1")
+    private Entity1 entity1;
 
-  /** The entity 3. */
-  @EdmNavigationProperty(toMultiplicity = Multiplicity.MANY, toType = Entity3.class, association = "Entities3OfEntity2")
-  private List<Entity3> entity3 = new ArrayList<Entity3>();
+    /** The entity 3. */
+    @EdmNavigationProperty(toMultiplicity = Multiplicity.MANY, toType = Entity3.class, association = "Entities3OfEntity2")
+    private List<Entity3> entity3 = new ArrayList<Entity3>();
 
 }

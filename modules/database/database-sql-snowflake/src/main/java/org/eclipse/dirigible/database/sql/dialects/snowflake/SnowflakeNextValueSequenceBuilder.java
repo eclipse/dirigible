@@ -20,33 +20,33 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
  */
 public class SnowflakeNextValueSequenceBuilder extends NextValueSequenceBuilder {
 
-  /** The Constant PATTERN_SELECT_NEXT_VAL_SEQUENCE. */
-  private static final String PATTERN_SELECT_NEXT_VAL_SEQUENCE = "SELECT {0}.NEXTVAL FROM DUAL";
+    /** The Constant PATTERN_SELECT_NEXT_VAL_SEQUENCE. */
+    private static final String PATTERN_SELECT_NEXT_VAL_SEQUENCE = "SELECT {0}.NEXTVAL FROM DUAL";
 
-  /**
-   * Instantiates a new Snowflake next value sequence builder.
-   *
-   * @param dialect the dialect
-   * @param sequence the sequence
-   */
-  public SnowflakeNextValueSequenceBuilder(ISqlDialect dialect, String sequence) {
-    super(dialect, sequence);
-  }
+    /**
+     * Instantiates a new Snowflake next value sequence builder.
+     *
+     * @param dialect the dialect
+     * @param sequence the sequence
+     */
+    public SnowflakeNextValueSequenceBuilder(ISqlDialect dialect, String sequence) {
+        super(dialect, sequence);
+    }
 
-  /**
-   * Generate.
-   *
-   * @return the string
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
-   */
-  @Override
-  public String generate() {
-    String sequenceName = this.getSequence();
-    String sql = format(PATTERN_SELECT_NEXT_VAL_SEQUENCE, sequenceName);
-    return sql;
-  }
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
+     */
+    @Override
+    public String generate() {
+        String sequenceName = this.getSequence();
+        String sql = format(PATTERN_SELECT_NEXT_VAL_SEQUENCE, sequenceName);
+        return sql;
+    }
 }

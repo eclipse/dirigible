@@ -28,79 +28,79 @@ import org.eclipse.dirigible.repository.api.IResource;
  */
 public class RepositoryFileUtils {
 
-  /**
-   * Creates the directory.
-   *
-   * @param directory the directory
-   * @return the file
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  public static File createDirectory(String directory) throws IOException {
-    return FileSystemUtils.forceCreateDirectory(directory);
-  }
-
-  /**
-   * Copy collection to directory.
-   *
-   * @param source the source
-   * @param tempDirectory the temp directory
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  public static void copyCollectionToDirectory(ICollection source, File tempDirectory) throws IOException {
-    copyCollectionToDirectory(source, tempDirectory, new String[] {});
-  }
-
-  /**
-   * Copy collection to directory.
-   *
-   * @param source the source
-   * @param tempDirectory the temp directory
-   * @param roots the roots
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  public static void copyCollectionToDirectory(ICollection source, File tempDirectory, String... roots) throws IOException {
-    if (!source.exists()) {
-      return;
+    /**
+     * Creates the directory.
+     *
+     * @param directory the directory
+     * @return the file
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public static File createDirectory(String directory) throws IOException {
+        return FileSystemUtils.forceCreateDirectory(directory);
     }
-    for (IEntity entity : source.getChildren()) {
-      if (entity instanceof ICollection) {
-        copyCollectionToDirectory((ICollection) entity, tempDirectory, roots);
 
-      }
-      if (entity instanceof IResource) {
-        String path = entity.getParent()
-                            .getPath();
-        StringBuilder resourceDirectory = new StringBuilder();
-        resourceDirectory.append(path);
-        resourceDirectory.append(File.separator);
-
-        String directoryPath = resourceDirectory.toString();
-        for (String root : roots) {
-          if (directoryPath.startsWith(root)) {
-            directoryPath = directoryPath.substring(root.length());
-            break;
-          }
-        }
-        File baseDirectory = new File(tempDirectory, directoryPath);
-        FileUtils.forceMkdir(baseDirectory.getCanonicalFile());
-
-        String resourcePath = entity.getPath();
-        for (String root : roots) {
-          if (resourcePath.startsWith(root)) {
-            resourcePath = resourcePath.substring(root.length());
-            break;
-          }
-        }
-
-        try (InputStream in = new ByteArrayInputStream(((IResource) entity).getContent())) {
-          File outputFile = new File(tempDirectory, resourcePath);
-          try (FileOutputStream out = new FileOutputStream(outputFile)) {
-            IOUtils.copy(in, out);
-            out.flush();
-          }
-        }
-      }
+    /**
+     * Copy collection to directory.
+     *
+     * @param source the source
+     * @param tempDirectory the temp directory
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public static void copyCollectionToDirectory(ICollection source, File tempDirectory) throws IOException {
+        copyCollectionToDirectory(source, tempDirectory, new String[] {});
     }
-  }
+
+    /**
+     * Copy collection to directory.
+     *
+     * @param source the source
+     * @param tempDirectory the temp directory
+     * @param roots the roots
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public static void copyCollectionToDirectory(ICollection source, File tempDirectory, String... roots) throws IOException {
+        if (!source.exists()) {
+            return;
+        }
+        for (IEntity entity : source.getChildren()) {
+            if (entity instanceof ICollection) {
+                copyCollectionToDirectory((ICollection) entity, tempDirectory, roots);
+
+            }
+            if (entity instanceof IResource) {
+                String path = entity.getParent()
+                                    .getPath();
+                StringBuilder resourceDirectory = new StringBuilder();
+                resourceDirectory.append(path);
+                resourceDirectory.append(File.separator);
+
+                String directoryPath = resourceDirectory.toString();
+                for (String root : roots) {
+                    if (directoryPath.startsWith(root)) {
+                        directoryPath = directoryPath.substring(root.length());
+                        break;
+                    }
+                }
+                File baseDirectory = new File(tempDirectory, directoryPath);
+                FileUtils.forceMkdir(baseDirectory.getCanonicalFile());
+
+                String resourcePath = entity.getPath();
+                for (String root : roots) {
+                    if (resourcePath.startsWith(root)) {
+                        resourcePath = resourcePath.substring(root.length());
+                        break;
+                    }
+                }
+
+                try (InputStream in = new ByteArrayInputStream(((IResource) entity).getContent())) {
+                    File outputFile = new File(tempDirectory, resourcePath);
+                    try (FileOutputStream out = new FileOutputStream(outputFile)) {
+                        IOUtils.copy(in, out);
+                        out.flush();
+                    }
+                }
+            }
+        }
+    }
 
 }

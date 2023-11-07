@@ -16,14 +16,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class WebEngine implements Engine {
 
-  @Override
-  public String getName() {
-    return "Web";
-  }
+    @Override
+    public String getName() {
+        return "Web";
+    }
 
-  @Override
-  public String getProvider() {
-    return "Eclipse Dirigible";
-  }
+    @Override
+    public String getProvider() {
+        return "Eclipse Dirigible";
+    }
 
 }

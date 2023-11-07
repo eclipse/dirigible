@@ -41,304 +41,304 @@ import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
  * @param <LAST> the generic type
  */
 public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, ALTER extends AlterBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder>
-    implements ISqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST> {
+        implements ISqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST> {
 
-  /** The dialect. */
-  private ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST> dialect;
+    /** The dialect. */
+    private ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST> dialect;
 
-  /**
-   * Gets the default.
-   *
-   * @return the default
-   */
-  public static SqlFactory getDefault() {
-    return new SqlFactory();
-  }
-
-  /**
-   * Gets the native.
-   *
-   * @param <SELECT> the generic type
-   * @param <INSERT> the generic type
-   * @param <UPDATE> the generic type
-   * @param <DELETE> the generic type
-   * @param <CREATE> the generic type
-   * @param <ALTER> the generic type
-   * @param <DROP> the generic type
-   * @param <NEXT> the generic type
-   * @param <LAST> the generic type
-   * @param dialect the dialect
-   * @return the native
-   */
-  public static <SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, ALTER extends AlterBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder> SqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST> getNative(
-      ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST> dialect) {
-    return new SqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST>(dialect);
-  }
-
-  /**
-   * Gets the native.
-   *
-   * @param connection the connection
-   * @return the native
-   */
-  public static SqlFactory getNative(Connection connection) {
-    return new SqlFactory(deriveDialect(connection));
-  }
-
-  /**
-   * Instantiates a new sql factory.
-   */
-  private SqlFactory() {
-    this(new DefaultSqlDialect());
-  }
-
-  /**
-   * Instantiates a new sql factory.
-   *
-   * @param dialect the dialect
-   */
-  private SqlFactory(ISqlDialect dialect) {
-    this.dialect = dialect;
-  }
-
-  /**
-   * Derive dialect.
-   *
-   * @param connection the connection
-   * @return the i sql dialect
-   */
-  public static ISqlDialect deriveDialect(Connection connection) {
-    try {
-      return SqlDialectFactory.getDialect(connection);
-    } catch (SQLException e) {
-      throw new SqlException("Error on deriving the database dialect from the connection", e);
+    /**
+     * Gets the default.
+     *
+     * @return the default
+     */
+    public static SqlFactory getDefault() {
+        return new SqlFactory();
     }
 
-  }
+    /**
+     * Gets the native.
+     *
+     * @param <SELECT> the generic type
+     * @param <INSERT> the generic type
+     * @param <UPDATE> the generic type
+     * @param <DELETE> the generic type
+     * @param <CREATE> the generic type
+     * @param <ALTER> the generic type
+     * @param <DROP> the generic type
+     * @param <NEXT> the generic type
+     * @param <LAST> the generic type
+     * @param dialect the dialect
+     * @return the native
+     */
+    public static <SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, ALTER extends AlterBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder> SqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST> getNative(
+            ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST> dialect) {
+        return new SqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST>(dialect);
+    }
 
-  /**
-   * Select.
-   *
-   * @return the select
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.ISqlFactory#select()
-   */
-  @Override
-  public SELECT select() {
-    return this.dialect.select();
-  }
+    /**
+     * Gets the native.
+     *
+     * @param connection the connection
+     * @return the native
+     */
+    public static SqlFactory getNative(Connection connection) {
+        return new SqlFactory(deriveDialect(connection));
+    }
 
-  /**
-   * Insert.
-   *
-   * @return the insert
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.ISqlFactory#insert()
-   */
-  @Override
-  public INSERT insert() {
-    return this.dialect.insert();
-  }
+    /**
+     * Instantiates a new sql factory.
+     */
+    private SqlFactory() {
+        this(new DefaultSqlDialect());
+    }
 
-  /**
-   * Update.
-   *
-   * @return the update
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.ISqlFactory#update()
-   */
-  @Override
-  public UPDATE update() {
-    return this.dialect.update();
-  }
+    /**
+     * Instantiates a new sql factory.
+     *
+     * @param dialect the dialect
+     */
+    private SqlFactory(ISqlDialect dialect) {
+        this.dialect = dialect;
+    }
 
-  /**
-   * Delete.
-   *
-   * @return the delete
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.ISqlFactory#delete()
-   */
-  @Override
-  public DELETE delete() {
-    return this.dialect.delete();
-  }
+    /**
+     * Derive dialect.
+     *
+     * @param connection the connection
+     * @return the i sql dialect
+     */
+    public static ISqlDialect deriveDialect(Connection connection) {
+        try {
+            return SqlDialectFactory.getDialect(connection);
+        } catch (SQLException e) {
+            throw new SqlException("Error on deriving the database dialect from the connection", e);
+        }
 
-  /**
-   * Expression.
-   *
-   * @return the expression builder
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.ISqlFactory#expression()
-   */
-  @Override
-  public ExpressionBuilder expression() {
-    return this.dialect.expression();
-  }
+    }
 
-  /**
-   * Creates the.
-   *
-   * @return the creates the
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.ISqlFactory#create()
-   */
-  @Override
-  public CREATE create() {
-    return this.dialect.create();
-  }
+    /**
+     * Select.
+     *
+     * @return the select
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.ISqlFactory#select()
+     */
+    @Override
+    public SELECT select() {
+        return this.dialect.select();
+    }
 
-  /**
-   * Alter.
-   *
-   * @return the alter
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.ISqlFactory#alter()
-   */
-  @Override
-  public ALTER alter() {
-    return this.dialect.alter();
-  }
+    /**
+     * Insert.
+     *
+     * @return the insert
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.ISqlFactory#insert()
+     */
+    @Override
+    public INSERT insert() {
+        return this.dialect.insert();
+    }
 
-  /**
-   * Drop.
-   *
-   * @return the drop
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.ISqlFactory#drop()
-   */
-  @Override
-  public DROP drop() {
-    return this.dialect.drop();
-  }
+    /**
+     * Update.
+     *
+     * @return the update
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.ISqlFactory#update()
+     */
+    @Override
+    public UPDATE update() {
+        return this.dialect.update();
+    }
 
-  /**
-   * Nextval.
-   *
-   * @param sequence the sequence
-   * @return the next
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.ISqlFactory#nextval(java.lang.String)
-   */
-  @Override
-  public NEXT nextval(String sequence) {
-    return this.dialect.nextval(sequence);
-  }
+    /**
+     * Delete.
+     *
+     * @return the delete
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.ISqlFactory#delete()
+     */
+    @Override
+    public DELETE delete() {
+        return this.dialect.delete();
+    }
 
-  /**
-   * Exists.
-   *
-   * @param connection the connection
-   * @param table the table
-   * @return true, if successful
-   * @throws SQLException the SQL exception
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection, java.lang.String)
-   */
-  @Override
-  public boolean existsTable(Connection connection, String table) throws SQLException {
-    return this.dialect.existsTable(connection, table);
-  }
+    /**
+     * Expression.
+     *
+     * @return the expression builder
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.ISqlFactory#expression()
+     */
+    @Override
+    public ExpressionBuilder expression() {
+        return this.dialect.expression();
+    }
 
-  /**
-   * Exists.
-   *
-   * @param connection the connection
-   * @param name the name
-   * @param type the type
-   * @return true, if successful
-   * @throws SQLException the SQL exception
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection, java.lang.String,
-   * java.lang.int)
-   */
-  @Override
-  public boolean exists(Connection connection, String name, int type) throws SQLException {
-    return this.dialect.exists(connection, name, type);
-  }
+    /**
+     * Creates the.
+     *
+     * @return the creates the
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.ISqlFactory#create()
+     */
+    @Override
+    public CREATE create() {
+        return this.dialect.create();
+    }
 
-  /**
-   * Exists.
-   *
-   * @param connection the connection
-   * @param schema the schema
-   * @param name the name
-   * @param type the type
-   * @return true, if successful
-   * @throws SQLException the SQL exception
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection, java.lang.String,
-   * java.lang.String, java.lang.int)
-   */
-  @Override
-  public boolean exists(Connection connection, String schema, String name, int type) throws SQLException {
-    return this.dialect.exists(connection, schema, name, type);
-  }
+    /**
+     * Alter.
+     *
+     * @return the alter
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.ISqlFactory#alter()
+     */
+    @Override
+    public ALTER alter() {
+        return this.dialect.alter();
+    }
 
-  /**
-   * Exists schema.
-   *
-   * @param connection the connection
-   * @param schema the schema
-   * @return true, if successful
-   * @throws SQLException the SQL exception
-   */
-  @Override
-  public boolean existsSchema(Connection connection, String schema) throws SQLException {
-    return this.dialect.existsSchema(connection, schema);
-  }
+    /**
+     * Drop.
+     *
+     * @return the drop
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.ISqlFactory#drop()
+     */
+    @Override
+    public DROP drop() {
+        return this.dialect.drop();
+    }
 
-  /**
-   * Lastval.
-   *
-   * @param args the args
-   * @return the last
-   */
-  @Override
-  public LAST lastval(String... args) {
-    return this.dialect.lastval(args);
-  }
+    /**
+     * Nextval.
+     *
+     * @param sequence the sequence
+     * @return the next
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.ISqlFactory#nextval(java.lang.String)
+     */
+    @Override
+    public NEXT nextval(String sequence) {
+        return this.dialect.nextval(sequence);
+    }
 
-  @Override
-  public String getDatabaseType(Connection connection) {
-    return this.dialect.getDatabaseType(connection);
-  }
+    /**
+     * Exists.
+     *
+     * @param connection the connection
+     * @param table the table
+     * @return true, if successful
+     * @throws SQLException the SQL exception
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection, java.lang.String)
+     */
+    @Override
+    public boolean existsTable(Connection connection, String table) throws SQLException {
+        return this.dialect.existsTable(connection, table);
+    }
+
+    /**
+     * Exists.
+     *
+     * @param connection the connection
+     * @param name the name
+     * @param type the type
+     * @return true, if successful
+     * @throws SQLException the SQL exception
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection, java.lang.String,
+     * java.lang.int)
+     */
+    @Override
+    public boolean exists(Connection connection, String name, int type) throws SQLException {
+        return this.dialect.exists(connection, name, type);
+    }
+
+    /**
+     * Exists.
+     *
+     * @param connection the connection
+     * @param schema the schema
+     * @param name the name
+     * @param type the type
+     * @return true, if successful
+     * @throws SQLException the SQL exception
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection, java.lang.String,
+     * java.lang.String, java.lang.int)
+     */
+    @Override
+    public boolean exists(Connection connection, String schema, String name, int type) throws SQLException {
+        return this.dialect.exists(connection, schema, name, type);
+    }
+
+    /**
+     * Exists schema.
+     *
+     * @param connection the connection
+     * @param schema the schema
+     * @return true, if successful
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean existsSchema(Connection connection, String schema) throws SQLException {
+        return this.dialect.existsSchema(connection, schema);
+    }
+
+    /**
+     * Lastval.
+     *
+     * @param args the args
+     * @return the last
+     */
+    @Override
+    public LAST lastval(String... args) {
+        return this.dialect.lastval(args);
+    }
+
+    @Override
+    public String getDatabaseType(Connection connection) {
+        return this.dialect.getDatabaseType(connection);
+    }
 
 
 

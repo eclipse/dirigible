@@ -20,43 +20,43 @@ import org.junit.Before;
  */
 public class LocalSearchTest extends RepositoryGenericSearchTest {
 
-  /**
-   * Sets the up.
-   */
-  @Before
-  public void setUp() {
-    try {
-      repository = new LocalRepository("target");
-    } catch (Exception e) {
-      e.printStackTrace();
-      fail(e.getMessage());
+    /**
+     * Sets the up.
+     */
+    @Before
+    public void setUp() {
+        try {
+            repository = new LocalRepository("target");
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
     }
-  }
 
-  /**
-   * Test search path.
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest#testSearchPath()
-   */
-  @Override
-  public void testSearchPath() {
-    super.testSearchPath();
-  }
+    /**
+     * Test search path.
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest#testSearchPath()
+     */
+    @Override
+    public void testSearchPath() {
+        super.testSearchPath();
+    }
 
-  /**
-   * Test search text.
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest#testSearchText()
-   */
-  @Override
-  public void testSearchText() {
-    super.testSearchText();
-  }
+    /**
+     * Test search text.
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest#testSearchText()
+     */
+    @Override
+    public void testSearchText() {
+        super.testSearchText();
+    }
 
 }

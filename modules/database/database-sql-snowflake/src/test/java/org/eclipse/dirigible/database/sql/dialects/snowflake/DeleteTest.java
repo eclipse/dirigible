@@ -21,34 +21,34 @@ import org.junit.Test;
  */
 public class DeleteTest {
 
-  /**
-   * Delete simple.
-   */
-  @Test
-  public void deleteSimple() {
-    String sql = SqlFactory.getNative(new SnowflakeSqlDialect())
-                           .delete()
-                           .from("CUSTOMERS")
-                           .build();
+    /**
+     * Delete simple.
+     */
+    @Test
+    public void deleteSimple() {
+        String sql = SqlFactory.getNative(new SnowflakeSqlDialect())
+                               .delete()
+                               .from("CUSTOMERS")
+                               .build();
 
-    assertNotNull(sql);
-    assertEquals("DELETE FROM CUSTOMERS", sql);
-  }
+        assertNotNull(sql);
+        assertEquals("DELETE FROM CUSTOMERS", sql);
+    }
 
-  /**
-   * Delete where.
-   */
-  @Test
-  public void deleteWhere() {
-    String sql = SqlFactory.getNative(new SnowflakeSqlDialect())
-                           .delete()
-                           .from("CUSTOMERS")
-                           .where("AGE > ?")
-                           .where("COMPANY = 'SNOWFLAKE'")
-                           .build();
+    /**
+     * Delete where.
+     */
+    @Test
+    public void deleteWhere() {
+        String sql = SqlFactory.getNative(new SnowflakeSqlDialect())
+                               .delete()
+                               .from("CUSTOMERS")
+                               .where("AGE > ?")
+                               .where("COMPANY = 'SNOWFLAKE'")
+                               .build();
 
-    assertNotNull(sql);
-    assertEquals("DELETE FROM CUSTOMERS WHERE (AGE > ?) AND (COMPANY = 'SNOWFLAKE')", sql);
-  }
+        assertNotNull(sql);
+        assertEquals("DELETE FROM CUSTOMERS WHERE (AGE > ?) AND (COMPANY = 'SNOWFLAKE')", sql);
+    }
 
 }

@@ -24,33 +24,33 @@ import java.util.List;
 @Component
 public class InitializationProcessor {
 
-  /** The Constant LOGGER. */
-  private static final Logger LOGGER = LoggerFactory.getLogger(InitializationProcessor.class);
+    /** The Constant LOGGER. */
+    private static final Logger LOGGER = LoggerFactory.getLogger(InitializationProcessor.class);
 
-  /** The initializers. */
-  private final List<Initializer> initializers;
+    /** The initializers. */
+    private final List<Initializer> initializers;
 
-  /**
-   * Instantiates a new initialization processor.
-   *
-   * @param initializers the initializers
-   */
-  @Autowired
-  public InitializationProcessor(List<Initializer> initializers) {
-    this.initializers = initializers;
-  }
-
-  /**
-   * Process initializers.
-   */
-  void processInitializers() {
-    for (var initializer : initializers) {
-      try {
-        initializer.initialize();
-      } catch (Exception e) {
-        LOGGER.error("Initializer failed", e);
-      }
-
+    /**
+     * Instantiates a new initialization processor.
+     *
+     * @param initializers the initializers
+     */
+    @Autowired
+    public InitializationProcessor(List<Initializer> initializers) {
+        this.initializers = initializers;
     }
-  }
+
+    /**
+     * Process initializers.
+     */
+    void processInitializers() {
+        for (var initializer : initializers) {
+            try {
+                initializer.initialize();
+            } catch (Exception e) {
+                LOGGER.error("Initializer failed", e);
+            }
+
+        }
+    }
 }

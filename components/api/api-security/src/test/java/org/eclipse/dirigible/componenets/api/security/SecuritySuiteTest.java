@@ -33,21 +33,21 @@ import org.springframework.web.context.WebApplicationContext;
 @TestInstance(Lifecycle.PER_CLASS)
 public class SecuritySuiteTest {
 
-  @Autowired
-  private JavascriptService javascriptService;
+    @Autowired
+    private JavascriptService javascriptService;
 
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Autowired
-  protected WebApplicationContext wac;
+    @Autowired
+    protected WebApplicationContext wac;
 
-  @Test
-  public void executeSecurityTest() throws Exception {
-    javascriptService.handleRequest("security-tests", "user-get-name.js", null, null, false);
-  }
+    @Test
+    public void executeSecurityTest() throws Exception {
+        javascriptService.handleRequest("security-tests", "user-get-name.js", null, null, false);
+    }
 
-  @SpringBootApplication
-  static class TestConfiguration {
-  }
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 }

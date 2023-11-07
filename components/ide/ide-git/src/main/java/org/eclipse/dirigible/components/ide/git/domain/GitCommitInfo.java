@@ -15,109 +15,109 @@ package org.eclipse.dirigible.components.ide.git.domain;
  */
 public class GitCommitInfo {
 
-  /** The id. */
-  private String id;
+    /** The id. */
+    private String id;
 
-  /** The author. */
-  private String author;
+    /** The author. */
+    private String author;
 
-  /** The email address. */
-  private String emailAddress;
+    /** The email address. */
+    private String emailAddress;
 
-  /** The date time. */
-  private String dateTime;
+    /** The date time. */
+    private String dateTime;
 
-  /** The message. */
-  private String message;
+    /** The message. */
+    private String message;
 
-  /**
-   * Gets the id.
-   *
-   * @return the id
-   */
-  public String getId() {
-    return id;
-  }
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
+    public String getId() {
+        return id;
+    }
 
-  /**
-   * Sets the id.
-   *
-   * @param id the id to set
-   */
-  public void setId(String id) {
-    this.id = id;
-  }
+    /**
+     * Sets the id.
+     *
+     * @param id the id to set
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
 
-  /**
-   * Gets the author.
-   *
-   * @return the author
-   */
-  public String getAuthor() {
-    return author;
-  }
+    /**
+     * Gets the author.
+     *
+     * @return the author
+     */
+    public String getAuthor() {
+        return author;
+    }
 
-  /**
-   * Sets the author.
-   *
-   * @param author the author to set
-   */
-  public void setAuthor(String author) {
-    this.author = author;
-  }
+    /**
+     * Sets the author.
+     *
+     * @param author the author to set
+     */
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
-  /**
-   * Gets the email address.
-   *
-   * @return the emailAddress
-   */
-  public String getEmailAddress() {
-    return emailAddress;
-  }
+    /**
+     * Gets the email address.
+     *
+     * @return the emailAddress
+     */
+    public String getEmailAddress() {
+        return emailAddress;
+    }
 
-  /**
-   * Sets the email address.
-   *
-   * @param emailAddress the emailAddress to set
-   */
-  public void setEmailAddress(String emailAddress) {
-    this.emailAddress = emailAddress;
-  }
+    /**
+     * Sets the email address.
+     *
+     * @param emailAddress the emailAddress to set
+     */
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
 
-  /**
-   * Gets the date time.
-   *
-   * @return the dateTime
-   */
-  public String getDateTime() {
-    return dateTime;
-  }
+    /**
+     * Gets the date time.
+     *
+     * @return the dateTime
+     */
+    public String getDateTime() {
+        return dateTime;
+    }
 
-  /**
-   * Sets the date time.
-   *
-   * @param dateTime the dateTime to set
-   */
-  public void setDateTime(String dateTime) {
-    this.dateTime = dateTime;
-  }
+    /**
+     * Sets the date time.
+     *
+     * @param dateTime the dateTime to set
+     */
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
+    }
 
-  /**
-   * Gets the message.
-   *
-   * @return the message
-   */
-  public String getMessage() {
-    return message;
-  }
+    /**
+     * Gets the message.
+     *
+     * @return the message
+     */
+    public String getMessage() {
+        return message;
+    }
 
-  /**
-   * Sets the message.
-   *
-   * @param message the message to set
-   */
-  public void setMessage(String message) {
-    this.message = message;
-  }
+    /**
+     * Sets the message.
+     *
+     * @param message the message to set
+     */
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
 }

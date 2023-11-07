@@ -35,82 +35,83 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class OData2ODataHTransformerTest {
 
-  /** The odata 2 O data H transformer. */
-  @InjectMocks
-  OData2ODataHTransformer odata2ODataHTransformer;
+    /** The odata 2 O data H transformer. */
+    @InjectMocks
+    OData2ODataHTransformer odata2ODataHTransformer;
 
-  /**
-   * Test transform.
-   *
-   * @throws IOException Signals that an I/O exception has occurred.
-   * @throws SQLException the SQL exception
-   */
-  @Test
-  public void testTransform() throws IOException, SQLException {
-    byte[] employee = IOUtils.toByteArray(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeWithHandlers.odata"));
-    OData definition = ODataSynchronizer.parseOData("/transformers/EmployeeWithHandlers.odata", employee);
+    /**
+     * Test transform.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
+    @Test
+    public void testTransform() throws IOException, SQLException {
+        byte[] employee =
+                IOUtils.toByteArray(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeWithHandlers.odata"));
+        OData definition = ODataSynchronizer.parseOData("/transformers/EmployeeWithHandlers.odata", employee);
 
-    List<ODataHandler> actualResult = odata2ODataHTransformer.transform(definition);
+        List<ODataHandler> actualResult = odata2ODataHTransformer.transform(definition);
 
-    assertEquals(actualResult.size(), 4);
-    assertEquals("employeeType", actualResult.get(0)
-                                             .getName());
-    assertEquals("np", actualResult.get(0)
-                                   .getNamespace());
-    assertEquals(ODataHandlerMethods.create.name(), actualResult.get(0)
-                                                                .getMethod());
-    assertEquals(ODataHandlerTypes.before.name(), actualResult.get(0)
+        assertEquals(actualResult.size(), 4);
+        assertEquals("employeeType", actualResult.get(0)
+                                                 .getName());
+        assertEquals("np", actualResult.get(0)
+                                       .getNamespace());
+        assertEquals(ODataHandlerMethods.create.name(), actualResult.get(0)
+                                                                    .getMethod());
+        assertEquals(ODataHandlerTypes.before.name(), actualResult.get(0)
+                                                                  .getKind());
+        assertEquals("/test1/myhandler", actualResult.get(0)
+                                                     .getHandler());
+
+        assertEquals("employeeType", actualResult.get(1)
+                                                 .getName());
+        assertEquals("np", actualResult.get(1)
+                                       .getNamespace());
+        assertEquals(ODataHandlerMethods.update.name(), actualResult.get(1)
+                                                                    .getMethod());
+        assertEquals(ODataHandlerTypes.after.name(), actualResult.get(1)
+                                                                 .getKind());
+        assertEquals("/test2/myhandler", actualResult.get(1)
+                                                     .getHandler());
+
+        assertEquals("employeeType", actualResult.get(2)
+                                                 .getName());
+        assertEquals("np", actualResult.get(2)
+                                       .getNamespace());
+        assertEquals(ODataHandlerMethods.delete.name(), actualResult.get(2)
+                                                                    .getMethod());
+        assertEquals(ODataHandlerTypes.on.name(), actualResult.get(2)
                                                               .getKind());
-    assertEquals("/test1/myhandler", actualResult.get(0)
-                                                 .getHandler());
+        assertEquals("/test3/myhandler", actualResult.get(2)
+                                                     .getHandler());
 
-    assertEquals("employeeType", actualResult.get(1)
-                                             .getName());
-    assertEquals("np", actualResult.get(1)
-                                   .getNamespace());
-    assertEquals(ODataHandlerMethods.update.name(), actualResult.get(1)
-                                                                .getMethod());
-    assertEquals(ODataHandlerTypes.after.name(), actualResult.get(1)
-                                                             .getKind());
-    assertEquals("/test2/myhandler", actualResult.get(1)
-                                                 .getHandler());
-
-    assertEquals("employeeType", actualResult.get(2)
-                                             .getName());
-    assertEquals("np", actualResult.get(2)
-                                   .getNamespace());
-    assertEquals(ODataHandlerMethods.delete.name(), actualResult.get(2)
-                                                                .getMethod());
-    assertEquals(ODataHandlerTypes.on.name(), actualResult.get(2)
-                                                          .getKind());
-    assertEquals("/test3/myhandler", actualResult.get(2)
-                                                 .getHandler());
-
-    assertEquals("employeeType", actualResult.get(3)
-                                             .getName());
-    assertEquals("np", actualResult.get(3)
-                                   .getNamespace());
-    assertEquals(ODataHandlerMethods.delete.name(), actualResult.get(3)
-                                                                .getMethod());
-    assertEquals(ODataHandlerTypes.forbid.name(), actualResult.get(3)
-                                                              .getKind());
-  }
-
-  /**
-   * Test transform with incorrect O data handler type.
-   *
-   * @throws IOException Signals that an I/O exception has occurred.
-   * @throws SQLException the SQL exception
-   */
-  @Test
-  public void testTransformWithIncorrectODataHandlerType() throws IOException, SQLException {
-    try {
-      byte[] employee =
-          IOUtils.toByteArray(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeWithWrongHandler.odata"));
-      OData definition = ODataSynchronizer.parseOData("/transformers/EmployeeWithWrongHandler.odata", employee);
-      odata2ODataHTransformer.transform(definition);
-    } catch (Exception e) {
-      assertTrue(e instanceof OData2TransformerException);
+        assertEquals("employeeType", actualResult.get(3)
+                                                 .getName());
+        assertEquals("np", actualResult.get(3)
+                                       .getNamespace());
+        assertEquals(ODataHandlerMethods.delete.name(), actualResult.get(3)
+                                                                    .getMethod());
+        assertEquals(ODataHandlerTypes.forbid.name(), actualResult.get(3)
+                                                                  .getKind());
     }
-  }
+
+    /**
+     * Test transform with incorrect O data handler type.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
+    @Test
+    public void testTransformWithIncorrectODataHandlerType() throws IOException, SQLException {
+        try {
+            byte[] employee = IOUtils.toByteArray(
+                    ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeWithWrongHandler.odata"));
+            OData definition = ODataSynchronizer.parseOData("/transformers/EmployeeWithWrongHandler.odata", employee);
+            odata2ODataHTransformer.transform(definition);
+        } catch (Exception e) {
+            assertTrue(e instanceof OData2TransformerException);
+        }
+    }
 }

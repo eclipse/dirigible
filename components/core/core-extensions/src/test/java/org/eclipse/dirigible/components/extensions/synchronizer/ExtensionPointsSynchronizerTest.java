@@ -43,99 +43,99 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ExtensionPointsSynchronizerTest {
 
-  /** The extension point repository. */
-  @Autowired
-  private ExtensionPointRepository extensionPointRepository;
+    /** The extension point repository. */
+    @Autowired
+    private ExtensionPointRepository extensionPointRepository;
 
-  /** The extension points synchronizer. */
-  @Autowired
-  private ExtensionPointsSynchronizer extensionPointsSynchronizer;
+    /** The extension points synchronizer. */
+    @Autowired
+    private ExtensionPointsSynchronizer extensionPointsSynchronizer;
 
-  /** The entity manager. */
-  @Autowired
-  EntityManager entityManager;
+    /** The entity manager. */
+    @Autowired
+    EntityManager entityManager;
 
-  /**
-   * Setup.
-   *
-   * @throws Exception the exception
-   */
-  @BeforeEach
-  public void setup() throws Exception {
+    /**
+     * Setup.
+     *
+     * @throws Exception the exception
+     */
+    @BeforeEach
+    public void setup() throws Exception {
 
-    cleanup();
+        cleanup();
 
-    // create test ExtensionPoints
-    extensionPointRepository.save(createExtensionPoint("/a/b/c/e1.extensionpoint", "e1", "description"));
-    extensionPointRepository.save(createExtensionPoint("/a/b/c/e2.extensionpoint", "e2", "description"));
-    extensionPointRepository.save(createExtensionPoint("/a/b/c/e3.extensionpoint", "e3", "description"));
-    extensionPointRepository.save(createExtensionPoint("/a/b/c/e4.extensionpoint", "e4", "description"));
-    extensionPointRepository.save(createExtensionPoint("/a/b/c/e5.extensionpoint", "e5", "description"));
-  }
+        // create test ExtensionPoints
+        extensionPointRepository.save(createExtensionPoint("/a/b/c/e1.extensionpoint", "e1", "description"));
+        extensionPointRepository.save(createExtensionPoint("/a/b/c/e2.extensionpoint", "e2", "description"));
+        extensionPointRepository.save(createExtensionPoint("/a/b/c/e3.extensionpoint", "e3", "description"));
+        extensionPointRepository.save(createExtensionPoint("/a/b/c/e4.extensionpoint", "e4", "description"));
+        extensionPointRepository.save(createExtensionPoint("/a/b/c/e5.extensionpoint", "e5", "description"));
+    }
 
-  /**
-   * Cleanup.
-   *
-   * @throws Exception the exception
-   */
-  @AfterEach
-  public void cleanup() throws Exception {
-    extensionPointRepository.deleteAll();
-  }
-
-
-
-  /**
-   * Checks if is accepted.
-   */
-  @Test
-  public void isAcceptedPath() {
-    assertTrue(extensionPointsSynchronizer.isAccepted(Path.of("/a/b/c/e1.extensionpoint"), null));
-  }
-
-  /**
-   * Checks if is accepted.
-   */
-  @Test
-  public void isAcceptedArtefact() {
-    assertTrue(extensionPointsSynchronizer.isAccepted(createExtensionPoint("/a/b/c/e1.extensionpoint", "e1", "description").getType()));
-  }
-
-  /**
-   * Load the artefact.
-   *
-   * @throws ParseException
-   */
-  @Test
-  public void load() throws ParseException {
-    String content =
-        "{\"location\":\"/test/test.extensionpoint\",\"name\":\"/test/test\",\"description\":\"Test Extension Point\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
-    List<ExtensionPoint> list = extensionPointsSynchronizer.parse("/test/test.extensionpoint", content.getBytes());
-    assertNotNull(list);
-    assertEquals("/test/test.extensionpoint", list.get(0)
-                                                  .getLocation());
-  }
+    /**
+     * Cleanup.
+     *
+     * @throws Exception the exception
+     */
+    @AfterEach
+    public void cleanup() throws Exception {
+        extensionPointRepository.deleteAll();
+    }
 
 
 
-  /**
-   * Creates the extension point.
-   *
-   * @param location the location
-   * @param name the name
-   * @param description the description
-   * @return the extension point
-   */
-  public static ExtensionPoint createExtensionPoint(String location, String name, String description) {
-    ExtensionPoint extensionPoint = new ExtensionPoint(location, name, description);
-    return extensionPoint;
-  }
+    /**
+     * Checks if is accepted.
+     */
+    @Test
+    public void isAcceptedPath() {
+        assertTrue(extensionPointsSynchronizer.isAccepted(Path.of("/a/b/c/e1.extensionpoint"), null));
+    }
 
-  /**
-   * The Class TestConfiguration.
-   */
-  @SpringBootApplication
-  static class TestConfiguration {
-  }
+    /**
+     * Checks if is accepted.
+     */
+    @Test
+    public void isAcceptedArtefact() {
+        assertTrue(extensionPointsSynchronizer.isAccepted(createExtensionPoint("/a/b/c/e1.extensionpoint", "e1", "description").getType()));
+    }
+
+    /**
+     * Load the artefact.
+     *
+     * @throws ParseException
+     */
+    @Test
+    public void load() throws ParseException {
+        String content =
+                "{\"location\":\"/test/test.extensionpoint\",\"name\":\"/test/test\",\"description\":\"Test Extension Point\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
+        List<ExtensionPoint> list = extensionPointsSynchronizer.parse("/test/test.extensionpoint", content.getBytes());
+        assertNotNull(list);
+        assertEquals("/test/test.extensionpoint", list.get(0)
+                                                      .getLocation());
+    }
+
+
+
+    /**
+     * Creates the extension point.
+     *
+     * @param location the location
+     * @param name the name
+     * @param description the description
+     * @return the extension point
+     */
+    public static ExtensionPoint createExtensionPoint(String location, String name, String description) {
+        ExtensionPoint extensionPoint = new ExtensionPoint(location, name, description);
+        return extensionPoint;
+    }
+
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 
 }

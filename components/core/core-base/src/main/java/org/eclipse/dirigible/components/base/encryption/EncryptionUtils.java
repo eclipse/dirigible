@@ -19,29 +19,29 @@ import java.lang.reflect.Field;
  */
 public abstract class EncryptionUtils {
 
-  /**
-   * Checks if is field encrypted.
-   *
-   * @param field the field
-   * @return true, if is field encrypted
-   */
-  public static boolean isFieldEncrypted(Field field) {
-    return AnnotationUtils.findAnnotation(field, Encrypted.class) != null;
-  }
-
-  /**
-   * Gets the property index.
-   *
-   * @param name the name
-   * @param properties the properties
-   * @return the property index
-   */
-  public static int getPropertyIndex(String name, String[] properties) {
-    for (int i = 0; i < properties.length; i++) {
-      if (name.equals(properties[i])) {
-        return i;
-      }
+    /**
+     * Checks if is field encrypted.
+     *
+     * @param field the field
+     * @return true, if is field encrypted
+     */
+    public static boolean isFieldEncrypted(Field field) {
+        return AnnotationUtils.findAnnotation(field, Encrypted.class) != null;
     }
-    throw new IllegalArgumentException("No property was found for name " + name);
-  }
+
+    /**
+     * Gets the property index.
+     *
+     * @param name the name
+     * @param properties the properties
+     * @return the property index
+     */
+    public static int getPropertyIndex(String name, String[] properties) {
+        for (int i = 0; i < properties.length; i++) {
+            if (name.equals(properties[i])) {
+                return i;
+            }
+        }
+        throw new IllegalArgumentException("No property was found for name " + name);
+    }
 }

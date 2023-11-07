@@ -20,109 +20,109 @@ import com.google.gson.annotations.Expose;
  */
 public class ODataAssociation {
 
-  /** The name. */
-  @Expose
-  private String name;
+    /** The name. */
+    @Expose
+    private String name;
 
-  /** The from. */
-  @Expose
-  private ODataAssociationEnd from;
+    /** The from. */
+    @Expose
+    private ODataAssociationEnd from;
 
-  /** The to. */
-  @Expose
-  private ODataAssociationEnd to;
+    /** The to. */
+    @Expose
+    private ODataAssociationEnd to;
 
-  /**
-   * <p>
-   * Define list of additional annotations for EntitySet element.
-   * </p>
-   * For example:
-   * <code> &lt;AssociationSet Name="someName" Association="someName" sap:creatable="true" sap:updatable="true" sap:deletable="true"&gt; </code>
-   */
-  @Expose
-  private Map<String, String> annotationsAssociationSet = new HashMap<>();
+    /**
+     * <p>
+     * Define list of additional annotations for EntitySet element.
+     * </p>
+     * For example:
+     * <code> &lt;AssociationSet Name="someName" Association="someName" sap:creatable="true" sap:updatable="true" sap:deletable="true"&gt; </code>
+     */
+    @Expose
+    private Map<String, String> annotationsAssociationSet = new HashMap<>();
 
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  public String getName() {
-    return name;
-  }
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
-  /**
-   * Sets the name.
-   *
-   * @param name the new name
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
+    /**
+     * Sets the name.
+     *
+     * @param name the new name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  /**
-   * Gets the from.
-   *
-   * @return the from
-   */
-  public ODataAssociationEnd getFrom() {
-    return from;
-  }
+    /**
+     * Gets the from.
+     *
+     * @return the from
+     */
+    public ODataAssociationEnd getFrom() {
+        return from;
+    }
 
-  /**
-   * Sets the from.
-   *
-   * @param from the new from
-   */
-  public void setFrom(ODataAssociationEnd from) {
-    this.from = from;
-  }
+    /**
+     * Sets the from.
+     *
+     * @param from the new from
+     */
+    public void setFrom(ODataAssociationEnd from) {
+        this.from = from;
+    }
 
-  /**
-   * Gets the to.
-   *
-   * @return the to
-   */
-  public ODataAssociationEnd getTo() {
-    return to;
-  }
+    /**
+     * Gets the to.
+     *
+     * @return the to
+     */
+    public ODataAssociationEnd getTo() {
+        return to;
+    }
 
-  /**
-   * Sets the to.
-   *
-   * @param to the new to
-   */
-  public void setTo(ODataAssociationEnd to) {
-    this.to = to;
-  }
+    /**
+     * Sets the to.
+     *
+     * @param to the new to
+     */
+    public void setTo(ODataAssociationEnd to) {
+        this.to = to;
+    }
 
-  /**
-   * Gets the annotations association set.
-   *
-   * @return the annotations association set
-   */
-  public Map<String, String> getAnnotationsAssociationSet() {
-    return annotationsAssociationSet;
-  }
+    /**
+     * Gets the annotations association set.
+     *
+     * @return the annotations association set
+     */
+    public Map<String, String> getAnnotationsAssociationSet() {
+        return annotationsAssociationSet;
+    }
 
-  /**
-   * Sets the annotations association set.
-   *
-   * @param annotationsAssociationSet the annotations association set
-   */
-  public void setAnnotationsAssociationSet(Map<String, String> annotationsAssociationSet) {
-    this.annotationsAssociationSet = annotationsAssociationSet;
-  }
+    /**
+     * Sets the annotations association set.
+     *
+     * @param annotationsAssociationSet the annotations association set
+     */
+    public void setAnnotationsAssociationSet(Map<String, String> annotationsAssociationSet) {
+        this.annotationsAssociationSet = annotationsAssociationSet;
+    }
 
-  /**
-   * To string.
-   *
-   * @return the string
-   */
-  @Override
-  public String toString() {
-    return "ODataAssociation [name=" + name + ", from=" + from + ", to=" + to + ", annotationsAssociationSet=" + annotationsAssociationSet
-        + "]";
-  }
+    /**
+     * To string.
+     *
+     * @return the string
+     */
+    @Override
+    public String toString() {
+        return "ODataAssociation [name=" + name + ", from=" + from + ", to=" + to + ", annotationsAssociationSet="
+                + annotationsAssociationSet + "]";
+    }
 
 }

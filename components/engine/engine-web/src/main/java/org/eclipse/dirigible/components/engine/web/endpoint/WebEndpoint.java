@@ -28,32 +28,32 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping({BaseEndpoint.PREFIX_ENDPOINT_SECURED + "web", BaseEndpoint.PREFIX_ENDPOINT_PUBLIC + "web"})
 public class WebEndpoint extends BaseEndpoint {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(WebEndpoint.class.getCanonicalName());
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(WebEndpoint.class.getCanonicalName());
 
 
-  /** The javascript service. */
-  private final WebService webService;
+    /** The javascript service. */
+    private final WebService webService;
 
-  /**
-   * Instantiates a new web endpoint.
-   *
-   * @param webService the web service
-   */
-  @Autowired
-  public WebEndpoint(WebService webService) {
-    this.webService = webService;
-  }
+    /**
+     * Instantiates a new web endpoint.
+     *
+     * @param webService the web service
+     */
+    @Autowired
+    public WebEndpoint(WebService webService) {
+        this.webService = webService;
+    }
 
-  /**
-   * Gets the page.
-   *
-   * @param path the file path
-   * @return the response
-   */
-  @GetMapping("/{*path}")
-  public ResponseEntity get(@PathVariable("path") String path) {
-    return webService.getResource(path);
-  }
+    /**
+     * Gets the page.
+     *
+     * @param path the file path
+     * @return the response
+     */
+    @GetMapping("/{*path}")
+    public ResponseEntity get(@PathVariable("path") String path) {
+        return webService.getResource(path);
+    }
 
 }

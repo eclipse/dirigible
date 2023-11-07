@@ -20,73 +20,73 @@ import org.slf4j.LoggerFactory;
  */
 public class DropSynonymBuilder extends AbstractDropSqlBuilder {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(DropSynonymBuilder.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(DropSynonymBuilder.class);
 
-  /** The synonym. */
-  private String synonym = null;
+    /** The synonym. */
+    private String synonym = null;
 
-  /**
-   * Instantiates a new drop synonym builder.
-   *
-   * @param dialect the dialect
-   * @param synonym the synonym
-   */
-  public DropSynonymBuilder(ISqlDialect dialect, String synonym) {
-    super(dialect);
-    this.synonym = synonym;
-  }
-
-  /**
-   * Generate.
-   *
-   * @return the string
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-   */
-  @Override
-  public String generate() {
-
-    StringBuilder sql = new StringBuilder();
-
-    // DROP
-    generateDrop(sql);
-
-    // SYNONYM
-    generateSynonym(sql);
-
-    String generated = sql.toString();
-
-    if (logger.isTraceEnabled()) {
-      logger.trace("generated: " + generated);
+    /**
+     * Instantiates a new drop synonym builder.
+     *
+     * @param dialect the dialect
+     * @param synonym the synonym
+     */
+    public DropSynonymBuilder(ISqlDialect dialect, String synonym) {
+        super(dialect);
+        this.synonym = synonym;
     }
 
-    return generated;
-  }
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
+     */
+    @Override
+    public String generate() {
 
-  /**
-   * Generate synonym.
-   *
-   * @param sql the sql
-   */
-  protected void generateSynonym(StringBuilder sql) {
-    String synonymName = (isCaseSensitive()) ? encapsulate(this.getSynonym(), true) : this.getSynonym();
-    sql.append(SPACE)
-       .append(KEYWORD_SYNONYM)
-       .append(SPACE)
-       .append(synonymName);
-  }
+        StringBuilder sql = new StringBuilder();
 
-  /**
-   * Gets the synonym.
-   *
-   * @return the synonym
-   */
-  public String getSynonym() {
-    return synonym;
-  }
+        // DROP
+        generateDrop(sql);
+
+        // SYNONYM
+        generateSynonym(sql);
+
+        String generated = sql.toString();
+
+        if (logger.isTraceEnabled()) {
+            logger.trace("generated: " + generated);
+        }
+
+        return generated;
+    }
+
+    /**
+     * Generate synonym.
+     *
+     * @param sql the sql
+     */
+    protected void generateSynonym(StringBuilder sql) {
+        String synonymName = (isCaseSensitive()) ? encapsulate(this.getSynonym(), true) : this.getSynonym();
+        sql.append(SPACE)
+           .append(KEYWORD_SYNONYM)
+           .append(SPACE)
+           .append(synonymName);
+    }
+
+    /**
+     * Gets the synonym.
+     *
+     * @return the synonym
+     */
+    public String getSynonym() {
+        return synonym;
+    }
 
 }

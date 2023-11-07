@@ -38,137 +38,137 @@ import ch.qos.logback.classic.LoggerContext;
 @Service
 public class LogsService {
 
-  /** The Constant DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT. */
-  private static final String DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT = "DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT";
+    /** The Constant DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT. */
+    private static final String DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT = "DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT";
 
-  /** The Constant CATALINA_BASE. */
-  private static final String CATALINA_BASE = "CATALINA_BASE";
+    /** The Constant CATALINA_BASE. */
+    private static final String CATALINA_BASE = "CATALINA_BASE";
 
-  /** The Constant CATALINA_HOME. */
-  private static final String CATALINA_HOME = "CATALINA_HOME";
+    /** The Constant CATALINA_HOME. */
+    private static final String CATALINA_HOME = "CATALINA_HOME";
 
-  /** The Constant DEFAULT_LOGS_FOLDER. */
-  private static final String DEFAULT_LOGS_FOLDER = "logs";
+    /** The Constant DEFAULT_LOGS_FOLDER. */
+    private static final String DEFAULT_LOGS_FOLDER = "logs";
 
-  /** The Constant DEFAULT_LOGS_LOCATION. */
-  private static final String DEFAULT_LOGS_LOCATION = ".." + File.separator + DEFAULT_LOGS_FOLDER;
+    /** The Constant DEFAULT_LOGS_LOCATION. */
+    private static final String DEFAULT_LOGS_LOCATION = ".." + File.separator + DEFAULT_LOGS_FOLDER;
 
-  /**
-   * List.
-   *
-   * @return the string
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  public List<String> list() throws IOException {
-    String logsFolder = getLogsLocation();
-    List<String> fileNames = new ArrayList<>();
-    try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(logsFolder))) {
-      for (Path path : directoryStream) {
-        String name = path.toString();
-        fileNames.add(name.substring(name.lastIndexOf(File.separator) + 1));
-      }
-    } catch (IOException e) {
-      throw e;
-    }
-    return fileNames;
-  }
-
-  /**
-   * Gets the.
-   *
-   * @param file the file
-   * @return the string
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  public String get(String file) throws IOException {
-    String logsFolder = getLogsLocation();
-    Path path = Paths.get(logsFolder, file);
-    FileInputStream input = null;
-    try {
-      input = new FileInputStream(path.toFile());
-      String content = new String(IOUtils.toByteArray(input), StandardCharsets.UTF_8);
-      return content;
-    } finally {
-      if (input != null) {
-        input.close();
-      }
-    }
-  }
-
-  /**
-   * Gets the logs location.
-   *
-   * @return the logs location
-   */
-  private String getLogsLocation() {
-    String logsFolder = Configuration.get(DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT);
-    if (logsFolder != null && !logsFolder.equals("")) {
-      return logsFolder;
-    }
-    logsFolder = Configuration.get(CATALINA_BASE);
-    if (logsFolder != null && !logsFolder.equals("")) {
-      return logsFolder + File.separator + DEFAULT_LOGS_FOLDER;
-    }
-    logsFolder = Configuration.get(CATALINA_HOME);
-    if (logsFolder != null && !logsFolder.equals("")) {
-      return logsFolder + File.separator + DEFAULT_LOGS_FOLDER;
-    }
-    return DEFAULT_LOGS_LOCATION;
-  }
-
-  /**
-   * List loggers.
-   *
-   * @return the list
-   */
-  public List<LogInfo> listLoggers() {
-    List<LogInfo> result = new ArrayList<LogInfo>();
-    LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-    List<Logger> loggers = loggerContext.getLoggerList();
-    for (Logger logger : loggers) {
-      LogInfo logInfo = new LogInfo(logger.getName(), logger.getLevel() == null ? "-"
-          : logger.getLevel()
-                  .toString());
-      result.add(logInfo);
-    }
-    return result;
-  }
-
-  /**
-   * Gets the severity.
-   *
-   * @param loggerName the logger name
-   * @return the severity
-   */
-  public String getSeverity(String loggerName) {
-    org.slf4j.Logger logger = LoggerFactory.getLogger(loggerName);
-    if (logger.isTraceEnabled()) {
-      return Level.TRACE.toString();
-    } else if (logger.isDebugEnabled()) {
-      return Level.DEBUG.toString();
-    } else if (logger.isInfoEnabled()) {
-      return Level.INFO.toString();
-    } else if (logger.isWarnEnabled()) {
-      return Level.WARN.toString();
-    } else if (logger.isErrorEnabled()) {
-      return Level.ERROR.toString();
+    /**
+     * List.
+     *
+     * @return the string
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public List<String> list() throws IOException {
+        String logsFolder = getLogsLocation();
+        List<String> fileNames = new ArrayList<>();
+        try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(logsFolder))) {
+            for (Path path : directoryStream) {
+                String name = path.toString();
+                fileNames.add(name.substring(name.lastIndexOf(File.separator) + 1));
+            }
+        } catch (IOException e) {
+            throw e;
+        }
+        return fileNames;
     }
 
-    return "Unknown logger: " + loggerName;
-  }
+    /**
+     * Gets the.
+     *
+     * @param file the file
+     * @return the string
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public String get(String file) throws IOException {
+        String logsFolder = getLogsLocation();
+        Path path = Paths.get(logsFolder, file);
+        FileInputStream input = null;
+        try {
+            input = new FileInputStream(path.toFile());
+            String content = new String(IOUtils.toByteArray(input), StandardCharsets.UTF_8);
+            return content;
+        } finally {
+            if (input != null) {
+                input.close();
+            }
+        }
+    }
 
-  /**
-   * Sets the severity.
-   *
-   * @param loggerName the logger name
-   * @param logLevel the log level
-   * @return the object
-   */
-  public String setSeverity(String loggerName, String logLevel) {
-    LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-    Logger logger = loggerContext.getLogger(loggerName);
-    logger.setLevel(Level.toLevel(logLevel));
-    return getSeverity(loggerName);
-  }
+    /**
+     * Gets the logs location.
+     *
+     * @return the logs location
+     */
+    private String getLogsLocation() {
+        String logsFolder = Configuration.get(DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT);
+        if (logsFolder != null && !logsFolder.equals("")) {
+            return logsFolder;
+        }
+        logsFolder = Configuration.get(CATALINA_BASE);
+        if (logsFolder != null && !logsFolder.equals("")) {
+            return logsFolder + File.separator + DEFAULT_LOGS_FOLDER;
+        }
+        logsFolder = Configuration.get(CATALINA_HOME);
+        if (logsFolder != null && !logsFolder.equals("")) {
+            return logsFolder + File.separator + DEFAULT_LOGS_FOLDER;
+        }
+        return DEFAULT_LOGS_LOCATION;
+    }
+
+    /**
+     * List loggers.
+     *
+     * @return the list
+     */
+    public List<LogInfo> listLoggers() {
+        List<LogInfo> result = new ArrayList<LogInfo>();
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        List<Logger> loggers = loggerContext.getLoggerList();
+        for (Logger logger : loggers) {
+            LogInfo logInfo = new LogInfo(logger.getName(), logger.getLevel() == null ? "-"
+                    : logger.getLevel()
+                            .toString());
+            result.add(logInfo);
+        }
+        return result;
+    }
+
+    /**
+     * Gets the severity.
+     *
+     * @param loggerName the logger name
+     * @return the severity
+     */
+    public String getSeverity(String loggerName) {
+        org.slf4j.Logger logger = LoggerFactory.getLogger(loggerName);
+        if (logger.isTraceEnabled()) {
+            return Level.TRACE.toString();
+        } else if (logger.isDebugEnabled()) {
+            return Level.DEBUG.toString();
+        } else if (logger.isInfoEnabled()) {
+            return Level.INFO.toString();
+        } else if (logger.isWarnEnabled()) {
+            return Level.WARN.toString();
+        } else if (logger.isErrorEnabled()) {
+            return Level.ERROR.toString();
+        }
+
+        return "Unknown logger: " + loggerName;
+    }
+
+    /**
+     * Sets the severity.
+     *
+     * @param loggerName the logger name
+     * @param logLevel the log level
+     * @return the object
+     */
+    public String setSeverity(String loggerName, String logLevel) {
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        Logger logger = loggerContext.getLogger(loggerName);
+        logger.setLevel(Level.toLevel(logLevel));
+        return getSeverity(loggerName);
+    }
 
 }

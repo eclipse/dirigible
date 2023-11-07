@@ -18,11 +18,11 @@ import java.util.List;
  */
 public interface HeaderFormatter {
 
-  /**
-   * Write the header for the provided ResultSet.
-   *
-   * @param columns the columns
-   * @return the result
-   */
-  String write(List<ColumnDescriptor> columns);
+    /**
+     * Write the header for the provided ResultSet.
+     *
+     * @param columns the columns
+     * @return the result
+     */
+    String write(List<ColumnDescriptor> columns);
 }

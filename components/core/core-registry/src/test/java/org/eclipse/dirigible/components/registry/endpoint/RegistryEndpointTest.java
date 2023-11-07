@@ -38,41 +38,41 @@ import org.springframework.web.context.WebApplicationContext;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 public class RegistryEndpointTest {
 
-  @Autowired
-  private IRepository repository;
+    @Autowired
+    private IRepository repository;
 
-  @Autowired
-  private RegistryService registryService;
+    @Autowired
+    private RegistryService registryService;
 
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Autowired
-  protected WebApplicationContext wac;
+    @Autowired
+    protected WebApplicationContext wac;
 
-  @Autowired
-  private FilterChainProxy springSecurityFilterChain;
+    @Autowired
+    private FilterChainProxy springSecurityFilterChain;
 
-  @BeforeEach
-  public void setup() throws Exception {
-    repository.createResource("/registry/public/test1.txt");
-    repository.createResource("/registry/public/a/test2.txt");
-    repository.createResource("/registry/public/a/test3.txt");
-  }
+    @BeforeEach
+    public void setup() throws Exception {
+        repository.createResource("/registry/public/test1.txt");
+        repository.createResource("/registry/public/a/test2.txt");
+        repository.createResource("/registry/public/a/test3.txt");
+    }
 
-  @Test
-  public void getResource() {
-    assertNotNull(registryService.getResource("test1.txt"));
-  }
+    @Test
+    public void getResource() {
+        assertNotNull(registryService.getResource("test1.txt"));
+    }
 
-  @Test
-  public void getResourceByPath() throws Exception {
-    mockMvc.perform(get("/services/core/registry/{path}", "a/test2.txt"))
-           .andDo(print())
-           .andExpect(status().is2xxSuccessful());
-  }
+    @Test
+    public void getResourceByPath() throws Exception {
+        mockMvc.perform(get("/services/core/registry/{path}", "a/test2.txt"))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+    }
 
-  @SpringBootApplication
-  static class TestConfiguration {
-  }
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 }

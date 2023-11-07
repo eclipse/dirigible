@@ -32,25 +32,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "version")
 public class VersionEndpoint extends BaseEndpoint {
 
-  /**
-   * The Constant logger.
-   */
-  private static final Logger logger = LoggerFactory.getLogger(VersionEndpoint.class);
+    /**
+     * The Constant logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(VersionEndpoint.class);
 
-  /**
-   * The version service.
-   */
-  @Autowired
-  private VersionService versionService;
+    /**
+     * The version service.
+     */
+    @Autowired
+    private VersionService versionService;
 
-  /**
-   * Gets the version.
-   *
-   * @return the version
-   * @throws Exception the exception
-   */
-  @GetMapping
-  public ResponseEntity<Version> getVersion() throws Exception {
-    return ResponseEntity.ok(versionService.getVersion());
-  }
+    /**
+     * Gets the version.
+     *
+     * @return the version
+     * @throws Exception the exception
+     */
+    @GetMapping
+    public ResponseEntity<Version> getVersion() throws Exception {
+        return ResponseEntity.ok(versionService.getVersion());
+    }
 }

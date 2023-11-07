@@ -59,124 +59,125 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 public class JobEndpointTest {
 
-  @Autowired
-  private EntityManager entityManager;
+    @Autowired
+    private EntityManager entityManager;
 
-  /** The job service. */
-  @Autowired
-  private JobService jobService;
+    /** The job service. */
+    @Autowired
+    private JobService jobService;
 
-  /** The job repository. */
-  @Autowired
-  private JobRepository jobRepository;
+    /** The job repository. */
+    @Autowired
+    private JobRepository jobRepository;
 
-  private Job testJob;
+    private Job testJob;
 
-  /** The mockMvc. */
-  @Autowired
-  private MockMvc mockMvc;
+    /** The mockMvc. */
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Autowired
-  protected WebApplicationContext wac;
+    @Autowired
+    protected WebApplicationContext wac;
 
-  @Autowired
-  private FilterChainProxy springSecurityFilterChain;
+    @Autowired
+    private FilterChainProxy springSecurityFilterChain;
 
-  /**
-   * Setup.
-   *
-   * @throws Exception the exception
-   */
-  @BeforeEach
-  public void setup() throws Exception {
-    // create test Job
-    createJob(jobService, "job1", "test_group1", "org....", "test-handler.js", "engine1", "description", "0/1 * * * * ?", false,
-        Collections.emptyList(), "/a/b/c/j1.job", null);
-    createJob(jobService, "job2", "test_group2", "org....", "test-handler.js", "engine2", "description", "0/1 * * * * ?", false,
-        Collections.emptyList(), "/a/b/c/j2.job", null);
-    createJob(jobService, "job3", "test_group3", "org....", "test-handler.js", "engine3", "description", "0/1 * * * * ?", false,
-        Collections.emptyList(), "/a/b/c/j3.job", null);
+    /**
+     * Setup.
+     *
+     * @throws Exception the exception
+     */
+    @BeforeEach
+    public void setup() throws Exception {
+        // create test Job
+        createJob(jobService, "job1", "test_group1", "org....", "test-handler.js", "engine1", "description", "0/1 * * * * ?", false,
+                Collections.emptyList(), "/a/b/c/j1.job", null);
+        createJob(jobService, "job2", "test_group2", "org....", "test-handler.js", "engine2", "description", "0/1 * * * * ?", false,
+                Collections.emptyList(), "/a/b/c/j2.job", null);
+        createJob(jobService, "job3", "test_group3", "org....", "test-handler.js", "engine3", "description", "0/1 * * * * ?", false,
+                Collections.emptyList(), "/a/b/c/j3.job", null);
 
-    Page<Job> job = jobService.getPages(PageRequest.of(0, BaseEndpoint.DEFAULT_PAGE_SIZE));
-    assertNotNull(job);
-    assertEquals(3L, job.getTotalElements());
+        Page<Job> job = jobService.getPages(PageRequest.of(0, BaseEndpoint.DEFAULT_PAGE_SIZE));
+        assertNotNull(job);
+        assertEquals(3L, job.getTotalElements());
 
-    testJob = job.getContent()
-                 .get(0);
+        testJob = job.getContent()
+                     .get(0);
 
-    entityManager.refresh(testJob);
+        entityManager.refresh(testJob);
 
-  }
+    }
 
-  /** Cleanup */
-  @AfterEach
-  public void cleanup() {
-    jobRepository.deleteAll();
-  }
+    /** Cleanup */
+    @AfterEach
+    public void cleanup() {
+        jobRepository.deleteAll();
+    }
 
-  /** Finds all extension points and checks the location of the first one */
-  @Test
-  public void findAllExtensionPoints() throws Exception {
-    mockMvc.perform(get("/services/jobs"))
-           .andDo(print())
-           .andExpect(status().is2xxSuccessful());
-    // .andExpect(jsonPath("$.content[0].location").value("/a/b/c/j1.job"));
-  }
+    /** Finds all extension points and checks the location of the first one */
+    @Test
+    public void findAllExtensionPoints() throws Exception {
+        mockMvc.perform(get("/services/jobs"))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+        // .andExpect(jsonPath("$.content[0].location").value("/a/b/c/j1.job"));
+    }
 
-  /** Gets all extension points */
-  @Test
-  public void getAllExtensionPoints() throws Exception {
-    mockMvc.perform(get("/services/jobs/pages"))
-           .andDo(print())
-           .andExpect(status().is2xxSuccessful());
-  }
+    /** Gets all extension points */
+    @Test
+    public void getAllExtensionPoints() throws Exception {
+        mockMvc.perform(get("/services/jobs/pages"))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+    }
 
-  /** Enables the job by name */
-  @Test
-  public void enableJob() throws Exception {
-    // TODO
-    mockMvc.perform(put("/services/jobs/enable/{name}", testJob.getName()))
-           .andDo(print());
-    // .andExpect(status().is2xxSuccessful());
+    /** Enables the job by name */
+    @Test
+    public void enableJob() throws Exception {
+        // TODO
+        mockMvc.perform(put("/services/jobs/enable/{name}", testJob.getName()))
+               .andDo(print());
+        // .andExpect(status().is2xxSuccessful());
 
-  }
+    }
 
-  /** Disables the job by name */
-  @Test
-  public void disableJob() throws Exception {
-    // TODO
-    mockMvc.perform(put("/services/jobs/disable/{name}", testJob.getName()))
-           .andDo(print());
-    // .andExpect(status().is2xxSuccessful());
+    /** Disables the job by name */
+    @Test
+    public void disableJob() throws Exception {
+        // TODO
+        mockMvc.perform(put("/services/jobs/disable/{name}", testJob.getName()))
+               .andDo(print());
+        // .andExpect(status().is2xxSuccessful());
 
-  }
+    }
 
-  /**
-   * Creates the job.
-   *
-   * @param jobService the job repository
-   * @param name the job name
-   * @param group the job group
-   * @param clazz the job clazz
-   * @param handler the job handler
-   * @param engine the job engine
-   * @param description the job description
-   * @param expression the job expression
-   * @param singleton the singleton
-   * @param parameters the job parameters
-   * @param location the job location
-   * @param dependencies the dependencies
-   */
-  public static void createJob(JobService jobService, String name, String group, String clazz, String handler, String engine,
-      String description, String expression, boolean singleton, List<JobParameter> parameters, String location, Set<String> dependencies) {
-    Job job = new Job(name, group, clazz, handler, engine, description, expression, singleton, parameters, location, dependencies);
-    jobService.save(job);
-  }
+    /**
+     * Creates the job.
+     *
+     * @param jobService the job repository
+     * @param name the job name
+     * @param group the job group
+     * @param clazz the job clazz
+     * @param handler the job handler
+     * @param engine the job engine
+     * @param description the job description
+     * @param expression the job expression
+     * @param singleton the singleton
+     * @param parameters the job parameters
+     * @param location the job location
+     * @param dependencies the dependencies
+     */
+    public static void createJob(JobService jobService, String name, String group, String clazz, String handler, String engine,
+            String description, String expression, boolean singleton, List<JobParameter> parameters, String location,
+            Set<String> dependencies) {
+        Job job = new Job(name, group, clazz, handler, engine, description, expression, singleton, parameters, location, dependencies);
+        jobService.save(job);
+    }
 
-  /**
-   * The Class TestConfiguration.
-   */
-  @SpringBootApplication
-  static class TestConfiguration {
-  }
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 }

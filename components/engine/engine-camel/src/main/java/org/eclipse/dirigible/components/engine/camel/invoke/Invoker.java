@@ -26,30 +26,30 @@ import java.util.Map;
 
 @Component
 public class Invoker {
-  private final JavascriptService javascriptService;
+    private final JavascriptService javascriptService;
 
-  private final CamelProcessor processor;
+    private final CamelProcessor processor;
 
-  @Autowired
-  public Invoker(JavascriptService javascriptService, CamelProcessor processor) {
-    this.javascriptService = javascriptService;
-    this.processor = processor;
-  }
+    @Autowired
+    public Invoker(JavascriptService javascriptService, CamelProcessor processor) {
+        this.javascriptService = javascriptService;
+        this.processor = processor;
+    }
 
-  public void invoke(Message camelMessage) {
-    String resourcePath = (String) camelMessage.getExchange()
-                                               .getProperty("resource");
-    RepositoryPath path = new RepositoryPath(resourcePath);
+    public void invoke(Message camelMessage) {
+        String resourcePath = (String) camelMessage.getExchange()
+                                                   .getProperty("resource");
+        RepositoryPath path = new RepositoryPath(resourcePath);
 
-    String messageBody = camelMessage.getBody(String.class);
+        String messageBody = camelMessage.getBody(String.class);
 
-    Map<Object, Object> context = new HashMap<>();
-    context.put("camelMessage", messageBody);
+        Map<Object, Object> context = new HashMap<>();
+        context.put("camelMessage", messageBody);
 
-    javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
-  }
+        javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+    }
 
-  public Object invokeRoute(String routeId, Object payload, Map<String, Object> headers) {
-    return processor.invokeRoute(routeId, payload, headers);
-  }
+    public Object invokeRoute(String routeId, Object payload, Map<String, Object> headers) {
+        return processor.invokeRoute(routeId, payload, headers);
+    }
 }

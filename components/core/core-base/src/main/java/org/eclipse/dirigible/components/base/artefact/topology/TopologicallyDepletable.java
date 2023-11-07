@@ -17,19 +17,19 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
  */
 public interface TopologicallyDepletable {
 
-  /**
-   * Gets the id.
-   *
-   * @return the id
-   */
-  public String getId();
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
+    public String getId();
 
-  /**
-   * Complete.
-   *
-   * @param flow the flow
-   * @return true, if successful
-   */
-  public boolean complete(ArtefactPhase flow);
+    /**
+     * Complete.
+     *
+     * @param flow the flow
+     * @return true, if successful
+     */
+    public boolean complete(ArtefactPhase flow);
 
 }

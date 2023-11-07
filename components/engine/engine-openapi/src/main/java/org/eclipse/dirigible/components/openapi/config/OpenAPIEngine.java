@@ -16,14 +16,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class OpenAPIEngine implements Engine {
 
-  @Override
-  public String getName() {
-    return "OpenAPI (Swagger)";
-  }
+    @Override
+    public String getName() {
+        return "OpenAPI (Swagger)";
+    }
 
-  @Override
-  public String getProvider() {
-    return "Eclipse Dirigible";
-  }
+    @Override
+    public String getProvider() {
+        return "Eclipse Dirigible";
+    }
 
 }

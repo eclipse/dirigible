@@ -29,33 +29,33 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "logs")
 public class LogsEndpoint {
 
-  /** The logs service. */
-  @Autowired
-  private LogsService logsService;
+    /** The logs service. */
+    @Autowired
+    private LogsService logsService;
 
-  /**
-   * List all the log files in the logs folder.
-   *
-   * @return the response
-   * @throws URISyntaxException the URI syntax exception
-   * @throws IOException the I/O error
-   */
-  @GetMapping(value = "/", produces = "application/json")
-  public ResponseEntity<?> listLogs() throws URISyntaxException, IOException {
-    return ResponseEntity.ok(logsService.list());
-  }
+    /**
+     * List all the log files in the logs folder.
+     *
+     * @return the response
+     * @throws URISyntaxException the URI syntax exception
+     * @throws IOException the I/O error
+     */
+    @GetMapping(value = "/", produces = "application/json")
+    public ResponseEntity<?> listLogs() throws URISyntaxException, IOException {
+        return ResponseEntity.ok(logsService.list());
+    }
 
-  /**
-   * Search.
-   *
-   * @param file the file
-   * @return the response
-   * @throws URISyntaxException the URI syntax exception
-   * @throws IOException the I/O error
-   */
-  @GetMapping(value = "/{file}", produces = "text/plain")
-  public ResponseEntity<?> list(@PathVariable("file") String file) throws URISyntaxException, IOException {
-    return ResponseEntity.ok(logsService.get(file));
-  }
+    /**
+     * Search.
+     *
+     * @param file the file
+     * @return the response
+     * @throws URISyntaxException the URI syntax exception
+     * @throws IOException the I/O error
+     */
+    @GetMapping(value = "/{file}", produces = "text/plain")
+    public ResponseEntity<?> list(@PathVariable("file") String file) throws URISyntaxException, IOException {
+        return ResponseEntity.ok(logsService.get(file));
+    }
 
 }

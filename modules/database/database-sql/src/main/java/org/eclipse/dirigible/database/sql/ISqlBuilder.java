@@ -15,18 +15,18 @@ package org.eclipse.dirigible.database.sql;
  */
 public interface ISqlBuilder extends ISqlKeywords {
 
-  /**
-   * Generate the result script.
-   *
-   * @return the string
-   */
-  public String generate();
+    /**
+     * Generate the result script.
+     *
+     * @return the string
+     */
+    public String generate();
 
-  /**
-   * Builds the result script.
-   *
-   * @return the string
-   */
-  public String build();
+    /**
+     * Builds the result script.
+     *
+     * @return the string
+     */
+    public String build();
 
 }

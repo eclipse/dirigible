@@ -20,49 +20,49 @@ import javax.persistence.Table;
 @Table(name = "DIRIGIBLE_IDENTITY")
 public class Identity {
 
-  /** The table. */
-  @Id
-  @Column(name = "IDENTITY_TABLE", columnDefinition = "VARCHAR", nullable = false, length = 512)
-  private String table;
+    /** The table. */
+    @Id
+    @Column(name = "IDENTITY_TABLE", columnDefinition = "VARCHAR", nullable = false, length = 512)
+    private String table;
 
-  /** The value. */
-  @Column(name = "IDENTITY_VALUE", columnDefinition = "BIGINT", nullable = false)
-  private long value;
+    /** The value. */
+    @Column(name = "IDENTITY_VALUE", columnDefinition = "BIGINT", nullable = false)
+    private long value;
 
-  /**
-   * Gets the table.
-   *
-   * @return the table
-   */
-  public String getTable() {
-    return table;
-  }
+    /**
+     * Gets the table.
+     *
+     * @return the table
+     */
+    public String getTable() {
+        return table;
+    }
 
-  /**
-   * Sets the table.
-   *
-   * @param table the new table
-   */
-  public void setTable(String table) {
-    this.table = table;
-  }
+    /**
+     * Sets the table.
+     *
+     * @param table the new table
+     */
+    public void setTable(String table) {
+        this.table = table;
+    }
 
-  /**
-   * Gets the value.
-   *
-   * @return the value
-   */
-  public long getValue() {
-    return value;
-  }
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
+    public long getValue() {
+        return value;
+    }
 
-  /**
-   * Sets the value.
-   *
-   * @param value the new value
-   */
-  public void setValue(long value) {
-    this.value = value;
-  }
+    /**
+     * Sets the value.
+     *
+     * @param value the new value
+     */
+    public void setValue(long value) {
+        this.value = value;
+    }
 
 }

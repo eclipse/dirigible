@@ -11,11 +11,11 @@
 package org.eclipse.dirigible.components.api.qldb;
 
 public class QLDBRepositoryException extends RuntimeException {
-  QLDBRepositoryException(String message, Throwable cause) {
-    super(message, cause);
-  }
+    QLDBRepositoryException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-  QLDBRepositoryException(String message) {
-    super(message);
-  }
+    QLDBRepositoryException(String message) {
+        super(message);
+    }
 }

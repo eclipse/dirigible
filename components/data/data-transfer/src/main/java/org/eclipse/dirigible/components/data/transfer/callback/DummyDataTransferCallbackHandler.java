@@ -20,176 +20,176 @@ import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
  */
 public class DummyDataTransferCallbackHandler implements DataTransferCallbackHandler {
 
-  /**
-   * Gets the identifier.
-   *
-   * @return the identifier
-   */
-  @Override
-  public String getIdentifier() {
-    return null;
-  }
+    /**
+     * Gets the identifier.
+     *
+     * @return the identifier
+     */
+    @Override
+    public String getIdentifier() {
+        return null;
+    }
 
-  /**
-   * Sets the identifier.
-   *
-   * @param identifier the new identifier
-   */
-  @Override
-  public void setIdentifier(String identifier) {
+    /**
+     * Sets the identifier.
+     *
+     * @param identifier the new identifier
+     */
+    @Override
+    public void setIdentifier(String identifier) {
 
-  }
+    }
 
-  /**
-   * Transfer started.
-   *
-   * @param configuration the configuration
-   */
-  @Override
-  public void transferStarted(DataTransferConfiguration configuration) {
+    /**
+     * Transfer started.
+     *
+     * @param configuration the configuration
+     */
+    @Override
+    public void transferStarted(DataTransferConfiguration configuration) {
 
-  }
+    }
 
-  /**
-   * Transfer finished.
-   *
-   * @param count the count
-   */
-  @Override
-  public void transferFinished(int count) {}
+    /**
+     * Transfer finished.
+     *
+     * @param count the count
+     */
+    @Override
+    public void transferFinished(int count) {}
 
-  /**
-   * Transfer failed.
-   *
-   * @param error the error
-   */
-  @Override
-  public void transferFailed(String error) {}
+    /**
+     * Transfer failed.
+     *
+     * @param error the error
+     */
+    @Override
+    public void transferFailed(String error) {}
 
-  /**
-   * Metadata loading started.
-   */
-  @Override
-  public void metadataLoadingStarted() {}
+    /**
+     * Metadata loading started.
+     */
+    @Override
+    public void metadataLoadingStarted() {}
 
-  /**
-   * Metadata loading error.
-   *
-   * @param error the error
-   */
-  @Override
-  public void metadataLoadingError(String error) {}
+    /**
+     * Metadata loading error.
+     *
+     * @param error the error
+     */
+    @Override
+    public void metadataLoadingError(String error) {}
 
-  /**
-   * Metadata loading finished.
-   *
-   * @param count the count
-   */
-  @Override
-  public void metadataLoadingFinished(int count) {}
+    /**
+     * Metadata loading finished.
+     *
+     * @param count the count
+     */
+    @Override
+    public void metadataLoadingFinished(int count) {}
 
-  /**
-   * Sorting started.
-   *
-   * @param tables the tables
-   */
-  @Override
-  public void sortingStarted(List<PersistenceTableModel> tables) {}
+    /**
+     * Sorting started.
+     *
+     * @param tables the tables
+     */
+    @Override
+    public void sortingStarted(List<PersistenceTableModel> tables) {}
 
-  /**
-   * Sorting finished.
-   *
-   * @param result the result
-   */
-  @Override
-  public void sortingFinished(List<PersistenceTableModel> result) {}
+    /**
+     * Sorting finished.
+     *
+     * @param result the result
+     */
+    @Override
+    public void sortingFinished(List<PersistenceTableModel> result) {}
 
-  /**
-   * Data transfer started.
-   */
-  @Override
-  public void dataTransferStarted() {}
+    /**
+     * Data transfer started.
+     */
+    @Override
+    public void dataTransferStarted() {}
 
-  /**
-   * Data transfer finished.
-   */
-  @Override
-  public void dataTransferFinished() {}
+    /**
+     * Data transfer finished.
+     */
+    @Override
+    public void dataTransferFinished() {}
 
-  /**
-   * Table transfer started.
-   *
-   * @param table the table
-   */
-  @Override
-  public void tableTransferStarted(String table) {}
+    /**
+     * Table transfer started.
+     *
+     * @param table the table
+     */
+    @Override
+    public void tableTransferStarted(String table) {}
 
-  /**
-   * Table transfer finished.
-   *
-   * @param table the table
-   * @param transferedRecords the transfered records
-   */
-  @Override
-  public void tableTransferFinished(String table, int transferedRecords) {}
+    /**
+     * Table transfer finished.
+     *
+     * @param table the table
+     * @param transferedRecords the transfered records
+     */
+    @Override
+    public void tableTransferFinished(String table, int transferedRecords) {}
 
-  /**
-   * Table transfer failed.
-   *
-   * @param table the table
-   * @param error the error
-   */
-  @Override
-  public void tableTransferFailed(String table, String error) {}
+    /**
+     * Table transfer failed.
+     *
+     * @param table the table
+     * @param error the error
+     */
+    @Override
+    public void tableTransferFailed(String table, String error) {}
 
-  /**
-   * Record transfer finished.
-   *
-   * @param tableName the table name
-   * @param i the i
-   */
-  @Override
-  public void recordTransferFinished(String tableName, int i) {}
+    /**
+     * Record transfer finished.
+     *
+     * @param tableName the table name
+     * @param i the i
+     */
+    @Override
+    public void recordTransferFinished(String tableName, int i) {}
 
-  /**
-   * Table select SQL.
-   *
-   * @param selectSQL the select SQL
-   */
-  @Override
-  public void tableSelectSQL(String selectSQL) {}
+    /**
+     * Table select SQL.
+     *
+     * @param selectSQL the select SQL
+     */
+    @Override
+    public void tableSelectSQL(String selectSQL) {}
 
-  /**
-   * Table insert SQL.
-   *
-   * @param insertSQL the insert SQL
-   */
-  @Override
-  public void tableInsertSQL(String insertSQL) {}
+    /**
+     * Table insert SQL.
+     *
+     * @param insertSQL the insert SQL
+     */
+    @Override
+    public void tableInsertSQL(String insertSQL) {}
 
-  /**
-   * Table skipped.
-   *
-   * @param table the table
-   * @param reason the reason
-   */
-  @Override
-  public void tableSkipped(String table, String reason) {}
+    /**
+     * Table skipped.
+     *
+     * @param table the table
+     * @param reason the reason
+     */
+    @Override
+    public void tableSkipped(String table, String reason) {}
 
-  /**
-   * Stop transfer.
-   */
-  @Override
-  public void stopTransfer() {}
+    /**
+     * Stop transfer.
+     */
+    @Override
+    public void stopTransfer() {}
 
-  /**
-   * Checks if is stopped.
-   *
-   * @return true, if is stopped
-   */
-  @Override
-  public boolean isStopped() {
-    return false;
-  }
+    /**
+     * Checks if is stopped.
+     *
+     * @return true, if is stopped
+     */
+    @Override
+    public boolean isStopped() {
+        return false;
+    }
 
 }

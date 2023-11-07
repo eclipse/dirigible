@@ -45,195 +45,195 @@ import org.springframework.context.annotation.ComponentScan;
 @ExtendWith(MockitoExtension.class)
 public class ODataDatabaseMetadataUtilTest {
 
-  /** The Constant CATALOG. */
-  private static final String CATALOG = "Catalog";
+    /** The Constant CATALOG. */
+    private static final String CATALOG = "Catalog";
 
-  /** The Constant MY_TABLE_NAME. */
-  private static final String MY_TABLE_NAME = "MY_TABLE";
+    /** The Constant MY_TABLE_NAME. */
+    private static final String MY_TABLE_NAME = "MY_TABLE";
 
-  /** The Constant MY_SCHEMA_NAME. */
-  private static final String MY_SCHEMA_NAME = "mySchema";
+    /** The Constant MY_SCHEMA_NAME. */
+    private static final String MY_SCHEMA_NAME = "mySchema";
 
-  /** The Constant COLUMN_NAME_LABEL. */
-  private static final String COLUMN_NAME_LABEL = "COLUMN_NAME";
+    /** The Constant COLUMN_NAME_LABEL. */
+    private static final String COLUMN_NAME_LABEL = "COLUMN_NAME";
 
-  /** The Constant COLUMN_TYPE_LABEL. */
-  private static final String COLUMN_TYPE_LABEL = "TYPE_NAME";
+    /** The Constant COLUMN_TYPE_LABEL. */
+    private static final String COLUMN_TYPE_LABEL = "TYPE_NAME";
 
-  /** The Constant SQL_TO_EDM_TYPE_MAP. */
-  private static final Map<String, String> SQL_TO_EDM_TYPE_MAP = new HashMap<>();
+    /** The Constant SQL_TO_EDM_TYPE_MAP. */
+    private static final Map<String, String> SQL_TO_EDM_TYPE_MAP = new HashMap<>();
 
-  static {
-    SQL_TO_EDM_TYPE_MAP.put("TIME", "Edm.Time");
-    SQL_TO_EDM_TYPE_MAP.put("DATE", "Edm.DateTime");
-    SQL_TO_EDM_TYPE_MAP.put("SECONDDATE", "Edm.DateTime");
-    SQL_TO_EDM_TYPE_MAP.put("TIMESTAMP", "Edm.DateTime");
-    SQL_TO_EDM_TYPE_MAP.put("TINYINT", "Edm.Byte");
-    SQL_TO_EDM_TYPE_MAP.put("SMALLINT", "Edm.Int16");
-    SQL_TO_EDM_TYPE_MAP.put("INTEGER", "Edm.Int32");
-    SQL_TO_EDM_TYPE_MAP.put("INT4", "Edm.Int32");
-    SQL_TO_EDM_TYPE_MAP.put("BIGINT", "Edm.Int64");
-    SQL_TO_EDM_TYPE_MAP.put("SMALLDECIMAL", "Edm.Decimal");
-    SQL_TO_EDM_TYPE_MAP.put("DECIMAL", "Edm.Decimal");
-    SQL_TO_EDM_TYPE_MAP.put("REAL", "Edm.Single");
-    SQL_TO_EDM_TYPE_MAP.put("FLOAT", "Edm.Single");
-    SQL_TO_EDM_TYPE_MAP.put("DOUBLE", "Edm.Double");
-    SQL_TO_EDM_TYPE_MAP.put("VARCHAR", "Edm.String");
-    SQL_TO_EDM_TYPE_MAP.put("NVARCHAR", "Edm.String");
-    SQL_TO_EDM_TYPE_MAP.put("CHAR", "Edm.String");
-    SQL_TO_EDM_TYPE_MAP.put("NCHAR", "Edm.String");
-    SQL_TO_EDM_TYPE_MAP.put("BINARY", "Edm.Binary");
-    SQL_TO_EDM_TYPE_MAP.put("VARBINARY", "Edm.Binary");
-    SQL_TO_EDM_TYPE_MAP.put("BOOLEAN", "Edm.Boolean");
-    SQL_TO_EDM_TYPE_MAP.put("BYTE", "Edm.Byte");
-    SQL_TO_EDM_TYPE_MAP.put("BIT", "Edm.Byte");
-    SQL_TO_EDM_TYPE_MAP.put("BLOB", "Edm.String");
-    SQL_TO_EDM_TYPE_MAP.put("NCLOB", "Edm.String");
-    SQL_TO_EDM_TYPE_MAP.put("CLOB", "Edm.String");
-    SQL_TO_EDM_TYPE_MAP.put("TEXT", "Edm.String");
-    SQL_TO_EDM_TYPE_MAP.put("BINTEXT", "Edm.Binary");
-    SQL_TO_EDM_TYPE_MAP.put("ALPHANUM", "Edm.String");
-  }
+    static {
+        SQL_TO_EDM_TYPE_MAP.put("TIME", "Edm.Time");
+        SQL_TO_EDM_TYPE_MAP.put("DATE", "Edm.DateTime");
+        SQL_TO_EDM_TYPE_MAP.put("SECONDDATE", "Edm.DateTime");
+        SQL_TO_EDM_TYPE_MAP.put("TIMESTAMP", "Edm.DateTime");
+        SQL_TO_EDM_TYPE_MAP.put("TINYINT", "Edm.Byte");
+        SQL_TO_EDM_TYPE_MAP.put("SMALLINT", "Edm.Int16");
+        SQL_TO_EDM_TYPE_MAP.put("INTEGER", "Edm.Int32");
+        SQL_TO_EDM_TYPE_MAP.put("INT4", "Edm.Int32");
+        SQL_TO_EDM_TYPE_MAP.put("BIGINT", "Edm.Int64");
+        SQL_TO_EDM_TYPE_MAP.put("SMALLDECIMAL", "Edm.Decimal");
+        SQL_TO_EDM_TYPE_MAP.put("DECIMAL", "Edm.Decimal");
+        SQL_TO_EDM_TYPE_MAP.put("REAL", "Edm.Single");
+        SQL_TO_EDM_TYPE_MAP.put("FLOAT", "Edm.Single");
+        SQL_TO_EDM_TYPE_MAP.put("DOUBLE", "Edm.Double");
+        SQL_TO_EDM_TYPE_MAP.put("VARCHAR", "Edm.String");
+        SQL_TO_EDM_TYPE_MAP.put("NVARCHAR", "Edm.String");
+        SQL_TO_EDM_TYPE_MAP.put("CHAR", "Edm.String");
+        SQL_TO_EDM_TYPE_MAP.put("NCHAR", "Edm.String");
+        SQL_TO_EDM_TYPE_MAP.put("BINARY", "Edm.Binary");
+        SQL_TO_EDM_TYPE_MAP.put("VARBINARY", "Edm.Binary");
+        SQL_TO_EDM_TYPE_MAP.put("BOOLEAN", "Edm.Boolean");
+        SQL_TO_EDM_TYPE_MAP.put("BYTE", "Edm.Byte");
+        SQL_TO_EDM_TYPE_MAP.put("BIT", "Edm.Byte");
+        SQL_TO_EDM_TYPE_MAP.put("BLOB", "Edm.String");
+        SQL_TO_EDM_TYPE_MAP.put("NCLOB", "Edm.String");
+        SQL_TO_EDM_TYPE_MAP.put("CLOB", "Edm.String");
+        SQL_TO_EDM_TYPE_MAP.put("TEXT", "Edm.String");
+        SQL_TO_EDM_TYPE_MAP.put("BINTEXT", "Edm.Binary");
+        SQL_TO_EDM_TYPE_MAP.put("ALPHANUM", "Edm.String");
+    }
 
-  /** The connection. */
-  @Mock
-  private Connection connection;
+    /** The connection. */
+    @Mock
+    private Connection connection;
 
-  /** The data source. */
-  @Mock
-  private DataSource dataSource;
+    /** The data source. */
+    @Mock
+    private DataSource dataSource;
 
-  /** The database meta data. */
-  @Mock
-  private DatabaseMetaData databaseMetaData;
+    /** The database meta data. */
+    @Mock
+    private DatabaseMetaData databaseMetaData;
 
-  /** The datasources manager. */
-  @Mock
-  private DataSourcesManager datasourcesManager;
+    /** The datasources manager. */
+    @Mock
+    private DataSourcesManager datasourcesManager;
 
-  /**
-   * Sets the up.
-   *
-   * @throws SQLException the SQL exception
-   */
-  @BeforeEach
-  public void setUp() throws SQLException {
-    MockitoAnnotations.initMocks(this);
-    Mockito.when(datasourcesManager.getDefaultDataSource())
-           .thenReturn(dataSource);
-    Mockito.when(dataSource.getConnection())
-           .thenReturn(connection);
-    Mockito.when(connection.getCatalog())
-           .thenReturn(CATALOG);
-  }
+    /**
+     * Sets the up.
+     *
+     * @throws SQLException the SQL exception
+     */
+    @BeforeEach
+    public void setUp() throws SQLException {
+        MockitoAnnotations.initMocks(this);
+        Mockito.when(datasourcesManager.getDefaultDataSource())
+               .thenReturn(dataSource);
+        Mockito.when(dataSource.getConnection())
+               .thenReturn(connection);
+        Mockito.when(connection.getCatalog())
+               .thenReturn(CATALOG);
+    }
 
-  /**
-   * Test get table metadata column type conversion.
-   */
-  // @Test
-  // public void testGetTableMetadata_columnTypeConversion(){
-  // SQL_TO_EDM_TYPE_MAP.forEach(this::testGetTableMetadata_columnTypeConversion);
-  // }
+    /**
+     * Test get table metadata column type conversion.
+     */
+    // @Test
+    // public void testGetTableMetadata_columnTypeConversion(){
+    // SQL_TO_EDM_TYPE_MAP.forEach(this::testGetTableMetadata_columnTypeConversion);
+    // }
 
-  /**
-   * Test get table metadata column conversion not supported type.
-   */
-  // @Test
-  // public void testGetTableMetadata_columnConversionNotSupportedType(){
-  // testGetTableMetadata_columnTypeConversion("NotSupportedSQLType", null);
-  // }
+    /**
+     * Test get table metadata column conversion not supported type.
+     */
+    // @Test
+    // public void testGetTableMetadata_columnConversionNotSupportedType(){
+    // testGetTableMetadata_columnTypeConversion("NotSupportedSQLType", null);
+    // }
 
-  /**
-   * Test artifact not found.
-   *
-   * @throws SQLException the SQL exception
-   */
-  // @Test
-  // public void testArtifactNotFound() throws SQLException {
-  // ODataDatabaseMetadataUtil odataDatabaseMetadataUtil = new ODataDatabaseMetadataUtil();
-  // Mockito.when(connection.getMetaData()).thenReturn(databaseMetaData);
-  // mockDBMetaDataQuery_noResult(databaseMetaData.getTables(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME,
-  // null));
-  //
-  // Table tableMetadata = odataDatabaseMetadataUtil.getTableMetadata(MY_TABLE_NAME, MY_SCHEMA_NAME);
-  // Assertions.assertNull(tableMetadata, "Unexpected metadata result for not existing DB artifact.");
-  //
-  // Mockito.verify(databaseMetaData).getTables(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME, null);
-  // Mockito.verifyNoMoreInteractions(databaseMetaData);
-  // }
+    /**
+     * Test artifact not found.
+     *
+     * @throws SQLException the SQL exception
+     */
+    // @Test
+    // public void testArtifactNotFound() throws SQLException {
+    // ODataDatabaseMetadataUtil odataDatabaseMetadataUtil = new ODataDatabaseMetadataUtil();
+    // Mockito.when(connection.getMetaData()).thenReturn(databaseMetaData);
+    // mockDBMetaDataQuery_noResult(databaseMetaData.getTables(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME,
+    // null));
+    //
+    // Table tableMetadata = odataDatabaseMetadataUtil.getTableMetadata(MY_TABLE_NAME, MY_SCHEMA_NAME);
+    // Assertions.assertNull(tableMetadata, "Unexpected metadata result for not existing DB artifact.");
+    //
+    // Mockito.verify(databaseMetaData).getTables(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME, null);
+    // Mockito.verifyNoMoreInteractions(databaseMetaData);
+    // }
 
-  /**
-   * Test get table metadata column type conversion.
-   *
-   * @param sqlType the sql type
-   * @param expectedEdmType the expected edm type
-   */
-  // private void testGetTableMetadata_columnTypeConversion(String sqlType, String expectedEdmType) {
-  // try {
-  // Mockito.when(connection.getMetaData()).thenReturn(databaseMetaData);
-  //
-  // mockDBMetaDataQuery_noResult(databaseMetaData.getPrimaryKeys(CATALOG, MY_SCHEMA_NAME,
-  // MY_TABLE_NAME));
-  // mockDBMetaDataQuery_noResult(databaseMetaData.getImportedKeys(CATALOG, MY_SCHEMA_NAME,
-  // MY_TABLE_NAME));
-  //
-  // ResultSet tables = Mockito.mock(ResultSet.class);
-  // Mockito.when(databaseMetaData.getTables(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME,
-  // null)).thenReturn(tables);
-  // // to skip the PostgreSQL fallback logic
-  // Mockito.when(tables.isBeforeFirst()).thenReturn(true);
-  //
-  // Mockito.when(tables.next()).thenReturn(true).thenReturn(false);
-  // Mockito.when(tables.getString("TABLE_TYPE")).thenReturn("VIEW");
-  //
-  // ResultSet columns = Mockito.mock(ResultSet.class);
-  // Mockito.when(databaseMetaData.getColumns(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME,
-  // null)).thenReturn(columns);
-  // // to skip the PostgreSQL fallback logic
-  // Mockito.when(columns.isBeforeFirst()).thenReturn(true);
-  //
-  // Mockito.when(columns.next()).thenReturn(true).thenReturn(false);
-  // final String myColumnName = "MyColumn";
-  //
-  // Mockito.when(columns.getString(COLUMN_NAME_LABEL)).thenReturn(myColumnName);
-  // Mockito.when(columns.getString(COLUMN_TYPE_LABEL)).thenReturn(sqlType);
-  //
-  // ODataDatabaseMetadataUtil odataDatabaseMetadataUtil = new ODataDatabaseMetadataUtil();
-  // Table tableMetadata = odataDatabaseMetadataUtil.getTableMetadata(MY_TABLE_NAME, MY_SCHEMA_NAME);
-  //
-  // Assertions.assertEquals(1, tableMetadata.getColumns().size(), "Unexpected columns size");
-  // Assertions.assertEquals(myColumnName, tableMetadata.getColumns().get(0).getName(), "Unexpected
-  // column name");
-  // Assertions.assertEquals(expectedEdmType, tableMetadata.getColumns().get(0).getType(), "Unexpected
-  // column type");
-  //
-  // Mockito.verify(columns).getString(COLUMN_NAME_LABEL);
-  // Mockito.verify(columns).getString(COLUMN_TYPE_LABEL);
-  // Mockito.verify(columns, Mockito.times(2)).next();
-  // Mockito.verify(columns).isBeforeFirst();
-  // } catch (SQLException e) {
-  // Assertions.fail("Fail to test column type conversion from [" + sqlType + "] to [" +
-  // expectedEdmType + "] because of: " + e.getMessage());
-  // }
-  //
-  // }
+    /**
+     * Test get table metadata column type conversion.
+     *
+     * @param sqlType the sql type
+     * @param expectedEdmType the expected edm type
+     */
+    // private void testGetTableMetadata_columnTypeConversion(String sqlType, String expectedEdmType) {
+    // try {
+    // Mockito.when(connection.getMetaData()).thenReturn(databaseMetaData);
+    //
+    // mockDBMetaDataQuery_noResult(databaseMetaData.getPrimaryKeys(CATALOG, MY_SCHEMA_NAME,
+    // MY_TABLE_NAME));
+    // mockDBMetaDataQuery_noResult(databaseMetaData.getImportedKeys(CATALOG, MY_SCHEMA_NAME,
+    // MY_TABLE_NAME));
+    //
+    // ResultSet tables = Mockito.mock(ResultSet.class);
+    // Mockito.when(databaseMetaData.getTables(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME,
+    // null)).thenReturn(tables);
+    // // to skip the PostgreSQL fallback logic
+    // Mockito.when(tables.isBeforeFirst()).thenReturn(true);
+    //
+    // Mockito.when(tables.next()).thenReturn(true).thenReturn(false);
+    // Mockito.when(tables.getString("TABLE_TYPE")).thenReturn("VIEW");
+    //
+    // ResultSet columns = Mockito.mock(ResultSet.class);
+    // Mockito.when(databaseMetaData.getColumns(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME,
+    // null)).thenReturn(columns);
+    // // to skip the PostgreSQL fallback logic
+    // Mockito.when(columns.isBeforeFirst()).thenReturn(true);
+    //
+    // Mockito.when(columns.next()).thenReturn(true).thenReturn(false);
+    // final String myColumnName = "MyColumn";
+    //
+    // Mockito.when(columns.getString(COLUMN_NAME_LABEL)).thenReturn(myColumnName);
+    // Mockito.when(columns.getString(COLUMN_TYPE_LABEL)).thenReturn(sqlType);
+    //
+    // ODataDatabaseMetadataUtil odataDatabaseMetadataUtil = new ODataDatabaseMetadataUtil();
+    // Table tableMetadata = odataDatabaseMetadataUtil.getTableMetadata(MY_TABLE_NAME, MY_SCHEMA_NAME);
+    //
+    // Assertions.assertEquals(1, tableMetadata.getColumns().size(), "Unexpected columns size");
+    // Assertions.assertEquals(myColumnName, tableMetadata.getColumns().get(0).getName(), "Unexpected
+    // column name");
+    // Assertions.assertEquals(expectedEdmType, tableMetadata.getColumns().get(0).getType(), "Unexpected
+    // column type");
+    //
+    // Mockito.verify(columns).getString(COLUMN_NAME_LABEL);
+    // Mockito.verify(columns).getString(COLUMN_TYPE_LABEL);
+    // Mockito.verify(columns, Mockito.times(2)).next();
+    // Mockito.verify(columns).isBeforeFirst();
+    // } catch (SQLException e) {
+    // Assertions.fail("Fail to test column type conversion from [" + sqlType + "] to [" +
+    // expectedEdmType + "] because of: " + e.getMessage());
+    // }
+    //
+    // }
 
-  /**
-   * Mock DB meta data query no result.
-   *
-   * @param executedResultSet the executed result set
-   * @throws SQLException the SQL exception
-   */
-  // private void mockDBMetaDataQuery_noResult(ResultSet executedResultSet) throws SQLException {
-  // ResultSet resultSet = Mockito.mock(ResultSet.class);
-  // Mockito.when(executedResultSet).thenReturn(resultSet);
-  // // to skip the PostgreSQL fallback logic
-  // Mockito.when(resultSet.isBeforeFirst()).thenReturn(true);
-  // Mockito.when(resultSet.next()).thenReturn(false);
-  // }
+    /**
+     * Mock DB meta data query no result.
+     *
+     * @param executedResultSet the executed result set
+     * @throws SQLException the SQL exception
+     */
+    // private void mockDBMetaDataQuery_noResult(ResultSet executedResultSet) throws SQLException {
+    // ResultSet resultSet = Mockito.mock(ResultSet.class);
+    // Mockito.when(executedResultSet).thenReturn(resultSet);
+    // // to skip the PostgreSQL fallback logic
+    // Mockito.when(resultSet.isBeforeFirst()).thenReturn(true);
+    // Mockito.when(resultSet.next()).thenReturn(false);
+    // }
 
-  @SpringBootApplication
-  static class TestConfiguration {
-  }
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 
 }

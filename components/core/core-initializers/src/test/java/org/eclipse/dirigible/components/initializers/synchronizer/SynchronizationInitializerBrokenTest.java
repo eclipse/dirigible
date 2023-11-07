@@ -43,88 +43,88 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 @EntityScan("org.eclipse.dirigible.components")
 public class SynchronizationInitializerBrokenTest {
 
-  /**
-   * The Class ContextConfiguration.
-   */
-  @Configuration
-  @ComponentScan("org.eclipse.dirigible.components")
-  static class ContextConfiguration {
+    /**
+     * The Class ContextConfiguration.
+     */
+    @Configuration
+    @ComponentScan("org.eclipse.dirigible.components")
+    static class ContextConfiguration {
+
+        /**
+         * Repository.
+         *
+         * @return the i repository
+         */
+        @Bean("SynchronizationInitializerBrokenTestReposiotry")
+        public IRepository repository() {
+            return new RepositoryConfig().repository();
+        }
+
+    }
+
+    /** The listener. */
+    @Autowired
+    private SynchronizationInitializer initializer;
+
+    /** The synchronization processor. */
+    @Autowired
+    private SynchronizationProcessor synchronizationProcessor;
+
+    /** The synchronization watcher. */
+    @Autowired
+    private SynchronizationWatcher synchronizationWatcher;
+
+    /** The repository. */
+    @Autowired
+    private IRepository repository;
+
+    /** The datasource. */
+    @Autowired
+    private DataSource datasource;
 
     /**
-     * Repository.
+     * Test context started handler.
      *
-     * @return the i repository
+     * @throws RepositoryWriteException the repository write exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
      */
-    @Bean("SynchronizationInitializerBrokenTestReposiotry")
-    public IRepository repository() {
-      return new RepositoryConfig().repository();
+    @Test
+    public void testSynchronizationBroken() throws RepositoryWriteException, IOException, SQLException {
+
+        try (Connection connection = datasource.getConnection()) {
+
+            // initialization
+            initializer.handleContextStart(null);
+
+            // check if the definition has been created
+            CheckDefinitionUtils.isDefinitionBroken(connection);
+
+            // check if the artefact has been created
+            CheckArtefactUtils.isArtefactNotCreated(connection);
+
+            // correct the artefact
+            repository.getResource("/registry/public/test/test_broken.extension")
+                      .setContent(IOUtils.toByteArray(SynchronizationInitializerBrokenTest.class.getResourceAsStream(
+                              "/META-INF/dirigible/test/test_broken.extension_recovered")));
+
+            // process again
+            synchronizationWatcher.force();
+            synchronizationProcessor.processSynchronizers();
+
+            // check if the definition has been recovered
+            CheckDefinitionUtils.isDefinitionRecovered(connection);
+
+            // check if the artefact has been recovered
+            CheckArtefactUtils.isArtefactRecovered(connection);
+        }
     }
 
-  }
-
-  /** The listener. */
-  @Autowired
-  private SynchronizationInitializer initializer;
-
-  /** The synchronization processor. */
-  @Autowired
-  private SynchronizationProcessor synchronizationProcessor;
-
-  /** The synchronization watcher. */
-  @Autowired
-  private SynchronizationWatcher synchronizationWatcher;
-
-  /** The repository. */
-  @Autowired
-  private IRepository repository;
-
-  /** The datasource. */
-  @Autowired
-  private DataSource datasource;
-
-  /**
-   * Test context started handler.
-   *
-   * @throws RepositoryWriteException the repository write exception
-   * @throws IOException Signals that an I/O exception has occurred.
-   * @throws SQLException the SQL exception
-   */
-  @Test
-  public void testSynchronizationBroken() throws RepositoryWriteException, IOException, SQLException {
-
-    try (Connection connection = datasource.getConnection()) {
-
-      // initialization
-      initializer.handleContextStart(null);
-
-      // check if the definition has been created
-      CheckDefinitionUtils.isDefinitionBroken(connection);
-
-      // check if the artefact has been created
-      CheckArtefactUtils.isArtefactNotCreated(connection);
-
-      // correct the artefact
-      repository.getResource("/registry/public/test/test_broken.extension")
-                .setContent(IOUtils.toByteArray(SynchronizationInitializerBrokenTest.class.getResourceAsStream(
-                    "/META-INF/dirigible/test/test_broken.extension_recovered")));
-
-      // process again
-      synchronizationWatcher.force();
-      synchronizationProcessor.processSynchronizers();
-
-      // check if the definition has been recovered
-      CheckDefinitionUtils.isDefinitionRecovered(connection);
-
-      // check if the artefact has been recovered
-      CheckArtefactUtils.isArtefactRecovered(connection);
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
     }
-  }
-
-  /**
-   * The Class TestConfiguration.
-   */
-  @SpringBootApplication
-  static class TestConfiguration {
-  }
 
 }

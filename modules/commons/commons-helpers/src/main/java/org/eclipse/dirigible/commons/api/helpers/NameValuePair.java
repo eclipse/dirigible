@@ -15,46 +15,46 @@ package org.eclipse.dirigible.commons.api.helpers;
  */
 public class NameValuePair {
 
-  /** The name. */
-  private String name;
+    /** The name. */
+    private String name;
 
-  /** The value. */
-  private String value;
+    /** The value. */
+    private String value;
 
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  public String getName() {
-    return name;
-  }
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
-  /**
-   * Sets the name.
-   *
-   * @param name the name to set
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
+    /**
+     * Sets the name.
+     *
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  /**
-   * Gets the value.
-   *
-   * @return the value
-   */
-  public String getValue() {
-    return value;
-  }
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
+    public String getValue() {
+        return value;
+    }
 
-  /**
-   * Sets the value.
-   *
-   * @param value the value to set
-   */
-  public void setValue(String value) {
-    this.value = value;
-  }
+    /**
+     * Sets the value.
+     *
+     * @param value the value to set
+     */
+    public void setValue(String value) {
+        this.value = value;
+    }
 
 }

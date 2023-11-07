@@ -18,19 +18,19 @@ import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
  */
 public interface SQLClause {
 
-  /**
-   * Evaluate.
-   *
-   * @param context the context
-   * @return the string
-   * @throws EdmException the edm exception
-   */
-  String evaluate(SQLContext context) throws EdmException;
+    /**
+     * Evaluate.
+     *
+     * @param context the context
+     * @return the string
+     * @throws EdmException the edm exception
+     */
+    String evaluate(SQLContext context) throws EdmException;
 
-  /**
-   * Checks if is empty.
-   *
-   * @return true, if is empty
-   */
-  boolean isEmpty();
+    /**
+     * Checks if is empty.
+     *
+     * @return true, if is empty
+     */
+    boolean isEmpty();
 }

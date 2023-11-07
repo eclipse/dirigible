@@ -19,30 +19,30 @@ import org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder;
  */
 public class SybaseDropBranchingBuilder extends DropBranchingBuilder {
 
-  /**
-   * Instantiates a new Sybase create branching builder.
-   *
-   * @param dialect the dialect
-   */
-  public SybaseDropBranchingBuilder(ISqlDialect dialect) {
-    super(dialect);
-  }
+    /**
+     * Instantiates a new Sybase create branching builder.
+     *
+     * @param dialect the dialect
+     */
+    public SybaseDropBranchingBuilder(ISqlDialect dialect) {
+        super(dialect);
+    }
 
-  /**
-   * Sequence.
-   *
-   * @param sequence the sequence
-   * @return the drop sequence builder
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(java.lang.String)
-   */
-  @Override
-  public DropSequenceBuilder sequence(String sequence) {
-    return new SybaseDropSequenceBuilder(this.getDialect(), sequence);
-  }
+    /**
+     * Sequence.
+     *
+     * @param sequence the sequence
+     * @return the drop sequence builder
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(java.lang.String)
+     */
+    @Override
+    public DropSequenceBuilder sequence(String sequence) {
+        return new SybaseDropSequenceBuilder(this.getDialect(), sequence);
+    }
 
 }

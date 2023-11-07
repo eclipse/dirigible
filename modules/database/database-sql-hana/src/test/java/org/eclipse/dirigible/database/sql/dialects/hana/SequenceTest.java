@@ -22,59 +22,59 @@ import org.junit.Test;
  */
 public class SequenceTest {
 
-  /**
-   * Creates the sequence.
-   */
-  @Test
-  public void createSequence() {
-    String sql = SqlFactory.getNative(new HanaSqlDialect())
-                           .create()
-                           .sequence("CUSTOMERS_SEQUENCE")
-                           .build();
+    /**
+     * Creates the sequence.
+     */
+    @Test
+    public void createSequence() {
+        String sql = SqlFactory.getNative(new HanaSqlDialect())
+                               .create()
+                               .sequence("CUSTOMERS_SEQUENCE")
+                               .build();
 
-    assertNotNull(sql);
-    assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE", sql);
-  }
+        assertNotNull(sql);
+        assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE", sql);
+    }
 
-  /**
-   * Alter sequence.
-   */
-  @Test
-  public void alterSequence() {
-    String sql = SqlFactory.getNative(new HanaSqlDialect())
-                           .alter()
-                           .sequence("CUSTOMERS_SEQUENCE")
-                           .build();
+    /**
+     * Alter sequence.
+     */
+    @Test
+    public void alterSequence() {
+        String sql = SqlFactory.getNative(new HanaSqlDialect())
+                               .alter()
+                               .sequence("CUSTOMERS_SEQUENCE")
+                               .build();
 
-    assertNotNull(sql);
-    assertEquals("ALTER SEQUENCE CUSTOMERS_SEQUENCE", sql);
-  }
+        assertNotNull(sql);
+        assertEquals("ALTER SEQUENCE CUSTOMERS_SEQUENCE", sql);
+    }
 
-  /**
-   * Drop sequnce.
-   */
-  @Test
-  public void dropSequence() {
-    String sql = SqlFactory.getNative(new HanaSqlDialect())
-                           .drop()
-                           .sequence("CUSTOMERS_SEQUENCE")
-                           .build();
+    /**
+     * Drop sequnce.
+     */
+    @Test
+    public void dropSequence() {
+        String sql = SqlFactory.getNative(new HanaSqlDialect())
+                               .drop()
+                               .sequence("CUSTOMERS_SEQUENCE")
+                               .build();
 
-    assertNotNull(sql);
-    assertEquals("DROP SEQUENCE CUSTOMERS_SEQUENCE RESTRICT", sql);
-  }
+        assertNotNull(sql);
+        assertEquals("DROP SEQUENCE CUSTOMERS_SEQUENCE RESTRICT", sql);
+    }
 
-  /**
-   * Nextval sequnce.
-   */
-  @Test
-  public void nextvalSequnce() {
-    String sql = SqlFactory.getNative(new HanaSqlDialect())
-                           .nextval("CUSTOMERS_SEQUENCE")
-                           .build();
+    /**
+     * Nextval sequnce.
+     */
+    @Test
+    public void nextvalSequnce() {
+        String sql = SqlFactory.getNative(new HanaSqlDialect())
+                               .nextval("CUSTOMERS_SEQUENCE")
+                               .build();
 
-    assertNotNull(sql);
-    assertEquals("SELECT CUSTOMERS_SEQUENCE.NEXTVAL FROM DUMMY", sql);
-  }
+        assertNotNull(sql);
+        assertEquals("SELECT CUSTOMERS_SEQUENCE.NEXTVAL FROM DUMMY", sql);
+    }
 
 }

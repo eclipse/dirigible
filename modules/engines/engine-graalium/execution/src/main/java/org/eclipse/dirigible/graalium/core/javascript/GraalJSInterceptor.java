@@ -18,8 +18,8 @@ import org.graalvm.polyglot.Value;
 
 public interface GraalJSInterceptor {
 
-  void onBeforeRun(String sourceFilePath, Path absoluteSourcePath, Source source, Context context);
+    void onBeforeRun(String sourceFilePath, Path absoluteSourcePath, Source source, Context context);
 
-  void onAfterRun(String sourceFilePath, Path absoluteSourcePath, Source source, Context context, Value value);
+    void onAfterRun(String sourceFilePath, Path absoluteSourcePath, Source source, Context context, Value value);
 
 }

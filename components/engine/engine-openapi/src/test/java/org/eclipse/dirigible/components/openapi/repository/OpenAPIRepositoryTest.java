@@ -33,68 +33,68 @@ import static org.junit.jupiter.api.Assertions.*;
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class OpenAPIRepositoryTest {
-  @Autowired
-  private OpenAPIRepository openAPIRepository;
+    @Autowired
+    private OpenAPIRepository openAPIRepository;
 
-  @Autowired
-  EntityManager entityManager;
+    @Autowired
+    EntityManager entityManager;
 
-  @BeforeEach
-  public void setup() {
+    @BeforeEach
+    public void setup() {
 
-    cleanup();
+        cleanup();
 
-    // Create test OpenAPIs
-    openAPIRepository.save(createOpenAPI("/a/b/c/test1.openapi", "test1", "description"));
-    openAPIRepository.save(createOpenAPI("/a/b/c/test2.openapi", "test2", "description"));
-    openAPIRepository.save(createOpenAPI("/a/b/c/test3.openapi", "test3", "description"));
-    openAPIRepository.save(createOpenAPI("/a/b/c/test4.openapi", "test4", "description"));
-    openAPIRepository.save(createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
-  }
+        // Create test OpenAPIs
+        openAPIRepository.save(createOpenAPI("/a/b/c/test1.openapi", "test1", "description"));
+        openAPIRepository.save(createOpenAPI("/a/b/c/test2.openapi", "test2", "description"));
+        openAPIRepository.save(createOpenAPI("/a/b/c/test3.openapi", "test3", "description"));
+        openAPIRepository.save(createOpenAPI("/a/b/c/test4.openapi", "test4", "description"));
+        openAPIRepository.save(createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
+    }
 
-  @AfterEach
-  public void cleanup() {
-    openAPIRepository.deleteAll();
-  }
+    @AfterEach
+    public void cleanup() {
+        openAPIRepository.deleteAll();
+    }
 
-  @Test
-  public void getOne() {
-    Long id = openAPIRepository.findAll()
-                               .get(0)
-                               .getId();
-    Optional<OpenAPI> optional = openAPIRepository.findById(id);
-    OpenAPI openAPI = optional.isPresent() ? optional.get() : null;
-    assertNotNull(openAPI);
-    assertNotNull(openAPI.getLocation());
-    assertNotNull(openAPI.getCreatedBy());
-    assertEquals("SYSTEM", openAPI.getCreatedBy());
-    assertNotNull(openAPI.getCreatedAt());
-  }
+    @Test
+    public void getOne() {
+        Long id = openAPIRepository.findAll()
+                                   .get(0)
+                                   .getId();
+        Optional<OpenAPI> optional = openAPIRepository.findById(id);
+        OpenAPI openAPI = optional.isPresent() ? optional.get() : null;
+        assertNotNull(openAPI);
+        assertNotNull(openAPI.getLocation());
+        assertNotNull(openAPI.getCreatedBy());
+        assertEquals("SYSTEM", openAPI.getCreatedBy());
+        assertNotNull(openAPI.getCreatedAt());
+    }
 
-  @Test
-  public void getReferenceUsingEntityManager() {
-    Long id = openAPIRepository.findAll()
-                               .get(0)
-                               .getId();
-    OpenAPI openAPI = entityManager.getReference(OpenAPI.class, id);
-    assertNotNull(openAPI);
-    assertNotNull(openAPI.getLocation());
-  }
+    @Test
+    public void getReferenceUsingEntityManager() {
+        Long id = openAPIRepository.findAll()
+                                   .get(0)
+                                   .getId();
+        OpenAPI openAPI = entityManager.getReference(OpenAPI.class, id);
+        assertNotNull(openAPI);
+        assertNotNull(openAPI.getLocation());
+    }
 
-  /**
-   * Creates the openapi.
-   *
-   * @param location the location
-   * @param name the name
-   * @param description the description
-   * @return the openapi
-   */
-  public static OpenAPI createOpenAPI(String location, String name, String description) {
-    OpenAPI openAPI = new OpenAPI(location, name, description);
-    return openAPI;
-  }
+    /**
+     * Creates the openapi.
+     *
+     * @param location the location
+     * @param name the name
+     * @param description the description
+     * @return the openapi
+     */
+    public static OpenAPI createOpenAPI(String location, String name, String description) {
+        OpenAPI openAPI = new OpenAPI(location, name, description);
+        return openAPI;
+    }
 
-  @SpringBootApplication
-  static class TestConfiguration {
-  }
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 }

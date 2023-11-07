@@ -43,107 +43,107 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_DATA + "project")
 public class DataExportEndpoint {
 
-  /**
-   * The database metadata service.
-   */
-  private final DatabaseMetadataService databaseMetadataService;
+    /**
+     * The database metadata service.
+     */
+    private final DatabaseMetadataService databaseMetadataService;
 
-  /**
-   * The database metadata service.
-   */
-  private final DataExportService dataExportService;
+    /**
+     * The database metadata service.
+     */
+    private final DataExportService dataExportService;
 
-  /**
-   * Instantiates a new data export endpoint.
-   *
-   * @param databaseMetadataService the database metadata service
-   * @param dataExportService the data export service
-   */
-  public DataExportEndpoint(DatabaseMetadataService databaseMetadataService, DataExportService dataExportService) {
-    this.databaseMetadataService = databaseMetadataService;
-    this.dataExportService = dataExportService;
-  }
-
-  /**
-   * Export metadata in project as *.schema file.
-   *
-   * @param datasource the datasource
-   * @param schema the schema name
-   * @return the response
-   * @throws SQLException the SQL exception
-   * @throws URISyntaxException the URI syntax exception
-   */
-  @PutMapping(value = "/metadata/{datasource}/{schema}")
-  public ResponseEntity<URI> exportMetadataAsProject(@PathVariable("datasource") String datasource, @PathVariable("schema") String schema)
-      throws SQLException, URISyntaxException {
-
-    if (!databaseMetadataService.existsDataSourceMetadata(datasource)) {
-      String error = format("Datasource {0} does not exist.", datasource);
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
+    /**
+     * Instantiates a new data export endpoint.
+     *
+     * @param databaseMetadataService the database metadata service
+     * @param dataExportService the data export service
+     */
+    public DataExportEndpoint(DatabaseMetadataService databaseMetadataService, DataExportService dataExportService) {
+        this.databaseMetadataService = databaseMetadataService;
+        this.dataExportService = dataExportService;
     }
 
-    String fileWorkspacePath = dataExportService.exportMetadataAsProject(datasource, schema);
+    /**
+     * Export metadata in project as *.schema file.
+     *
+     * @param datasource the datasource
+     * @param schema the schema name
+     * @return the response
+     * @throws SQLException the SQL exception
+     * @throws URISyntaxException the URI syntax exception
+     */
+    @PutMapping(value = "/metadata/{datasource}/{schema}")
+    public ResponseEntity<URI> exportMetadataAsProject(@PathVariable("datasource") String datasource, @PathVariable("schema") String schema)
+            throws SQLException, URISyntaxException {
 
-    return ResponseEntity.ok(new URI("/" + BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspaces" + fileWorkspacePath));
-  }
+        if (!databaseMetadataService.existsDataSourceMetadata(datasource)) {
+            String error = format("Datasource {0} does not exist.", datasource);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
+        }
 
-  /**
-   * Export schema data in project as csvs and csvim.
-   *
-   * @param datasource the datasource
-   * @param schema the schema name
-   * @return the response
-   * @throws URISyntaxException the URI syntax exception
-   * @throws SQLException the SQL exception
-   */
-  @PutMapping(value = "/csv/{datasource}/{schema}")
-  public ResponseEntity<URI> exportDataAsProject(@PathVariable("datasource") String datasource, @PathVariable("schema") String schema)
-      throws URISyntaxException, SQLException {
+        String fileWorkspacePath = dataExportService.exportMetadataAsProject(datasource, schema);
 
-    if (!databaseMetadataService.existsDataSourceMetadata(datasource)) {
-      String error = format("Datasource {0} does not exist.", datasource);
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
+        return ResponseEntity.ok(new URI("/" + BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspaces" + fileWorkspacePath));
     }
 
-    dataExportService.exportSchemaInCsvs(datasource, schema);
+    /**
+     * Export schema data in project as csvs and csvim.
+     *
+     * @param datasource the datasource
+     * @param schema the schema name
+     * @return the response
+     * @throws URISyntaxException the URI syntax exception
+     * @throws SQLException the SQL exception
+     */
+    @PutMapping(value = "/csv/{datasource}/{schema}")
+    public ResponseEntity<URI> exportDataAsProject(@PathVariable("datasource") String datasource, @PathVariable("schema") String schema)
+            throws URISyntaxException, SQLException {
 
-    return ResponseEntity.ok(new URI("/" + BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspaces" + "/" + schema));
-  }
+        if (!databaseMetadataService.existsDataSourceMetadata(datasource)) {
+            String error = format("Datasource {0} does not exist.", datasource);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
+        }
 
-  /**
-   * Export metadata in project as *.schema file.
-   *
-   * @param datasource the datasource
-   * @param schema the schema name
-   * @return the response
-   * @throws SQLException the SQL exception
-   * @throws URISyntaxException the URI syntax exception
-   */
-  @GetMapping(value = "/topology/{datasource}/{schema}")
-  public ResponseEntity<StreamingResponseBody> exportSchemaTopology(@PathVariable("datasource") String datasource,
-      @PathVariable("schema") String schema) throws SQLException, URISyntaxException {
+        dataExportService.exportSchemaInCsvs(datasource, schema);
 
-    if (!databaseMetadataService.existsDataSourceMetadata(datasource)) {
-      String error = format("Datasource {0} does not exist.", datasource);
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
+        return ResponseEntity.ok(new URI("/" + BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspaces" + "/" + schema));
     }
 
-    StreamingResponseBody responseBody = output -> {
-      try {
-        String result = dataExportService.exportSchemaTopology(datasource, schema);
-        OutputStreamWriter sw = new OutputStreamWriter(output);
-        sw.write(result);
-        sw.flush();
-      } catch (SQLException e) {
-        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-      }
-    };
+    /**
+     * Export metadata in project as *.schema file.
+     *
+     * @param datasource the datasource
+     * @param schema the schema name
+     * @return the response
+     * @throws SQLException the SQL exception
+     * @throws URISyntaxException the URI syntax exception
+     */
+    @GetMapping(value = "/topology/{datasource}/{schema}")
+    public ResponseEntity<StreamingResponseBody> exportSchemaTopology(@PathVariable("datasource") String datasource,
+            @PathVariable("schema") String schema) throws SQLException, URISyntaxException {
 
-    return ResponseEntity.ok()
-                         .header(HttpHeaders.CONTENT_DISPOSITION,
-                             "attachment; filename=\"" + schema + "-" + new SimpleDateFormat("yyyyMMddhhmmss").format(new Date())
-                                 + ".topology\"")
-                         .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                         .body(responseBody);
-  }
+        if (!databaseMetadataService.existsDataSourceMetadata(datasource)) {
+            String error = format("Datasource {0} does not exist.", datasource);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
+        }
+
+        StreamingResponseBody responseBody = output -> {
+            try {
+                String result = dataExportService.exportSchemaTopology(datasource, schema);
+                OutputStreamWriter sw = new OutputStreamWriter(output);
+                sw.write(result);
+                sw.flush();
+            } catch (SQLException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+            }
+        };
+
+        return ResponseEntity.ok()
+                             .header(HttpHeaders.CONTENT_DISPOSITION,
+                                     "attachment; filename=\"" + schema + "-" + new SimpleDateFormat("yyyyMMddhhmmss").format(new Date())
+                                             + ".topology\"")
+                             .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                             .body(responseBody);
+    }
 }

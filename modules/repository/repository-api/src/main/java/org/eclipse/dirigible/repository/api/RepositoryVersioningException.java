@@ -15,42 +15,42 @@ package org.eclipse.dirigible.repository.api;
  */
 public class RepositoryVersioningException extends RepositoryException {
 
-  /** The Constant serialVersionUID. */
-  private static final long serialVersionUID = -163847774919514248L;
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = -163847774919514248L;
 
-  /**
-   * Instantiates a new repository versioning exception.
-   */
-  public RepositoryVersioningException() {
-    super();
-  }
+    /**
+     * Instantiates a new repository versioning exception.
+     */
+    public RepositoryVersioningException() {
+        super();
+    }
 
-  /**
-   * Instantiates a new repository versioning exception.
-   *
-   * @param message the message
-   * @param cause the cause
-   */
-  public RepositoryVersioningException(String message, Throwable cause) {
-    super(message, cause);
-  }
+    /**
+     * Instantiates a new repository versioning exception.
+     *
+     * @param message the message
+     * @param cause the cause
+     */
+    public RepositoryVersioningException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-  /**
-   * Instantiates a new repository versioning exception.
-   *
-   * @param message the message
-   */
-  public RepositoryVersioningException(String message) {
-    super(message);
-  }
+    /**
+     * Instantiates a new repository versioning exception.
+     *
+     * @param message the message
+     */
+    public RepositoryVersioningException(String message) {
+        super(message);
+    }
 
-  /**
-   * Instantiates a new repository versioning exception.
-   *
-   * @param cause the cause
-   */
-  public RepositoryVersioningException(Throwable cause) {
-    super(cause);
-  }
+    /**
+     * Instantiates a new repository versioning exception.
+     *
+     * @param cause the cause
+     */
+    public RepositoryVersioningException(Throwable cause) {
+        super(cause);
+    }
 
 }

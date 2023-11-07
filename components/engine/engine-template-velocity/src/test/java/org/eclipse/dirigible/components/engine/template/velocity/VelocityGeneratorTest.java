@@ -24,18 +24,18 @@ import org.junit.jupiter.api.Test;
  */
 public class VelocityGeneratorTest {
 
-  /**
-   * Generate.
-   *
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  @Test
-  public void generate() throws IOException {
-    TemplateEngine generationEngine = new VelocityGenerationEngine();
-    Map<String, Object> parameters = new HashMap<String, Object>();
-    parameters.put("testParameter", "testValue");
-    byte[] result = generationEngine.generate(parameters, "/location", "test $testParameter".getBytes(), null, null);
-    assertEquals("test testValue", new String(result));
-  }
+    /**
+     * Generate.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @Test
+    public void generate() throws IOException {
+        TemplateEngine generationEngine = new VelocityGenerationEngine();
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("testParameter", "testValue");
+        byte[] result = generationEngine.generate(parameters, "/location", "test $testParameter".getBytes(), null, null);
+        assertEquals("test testValue", new String(result));
+    }
 
 }

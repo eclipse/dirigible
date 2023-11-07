@@ -25,108 +25,108 @@ import org.eclipse.dirigible.database.sql.builders.view.DropViewBuilder;
  */
 public class DropBranchingBuilder extends AbstractSqlBuilder {
 
-  /**
-   * Instantiates a new drop branching builder.
-   *
-   * @param dialect the dialect
-   */
-  public DropBranchingBuilder(ISqlDialect dialect) {
-    super(dialect);
-  }
+    /**
+     * Instantiates a new drop branching builder.
+     *
+     * @param dialect the dialect
+     */
+    public DropBranchingBuilder(ISqlDialect dialect) {
+        super(dialect);
+    }
 
-  /**
-   * Table branch.
-   *
-   * @param table the table
-   * @return the drop table builder
-   */
-  public DropTableBuilder table(String table) {
-    return new DropTableBuilder(getDialect(), table);
-  }
+    /**
+     * Table branch.
+     *
+     * @param table the table
+     * @return the drop table builder
+     */
+    public DropTableBuilder table(String table) {
+        return new DropTableBuilder(getDialect(), table);
+    }
 
-  /**
-   * View branch.
-   *
-   * @param view the view
-   * @return the drop view builder
-   */
-  public DropViewBuilder view(String view) {
-    return new DropViewBuilder(getDialect(), view);
-  }
+    /**
+     * View branch.
+     *
+     * @param view the view
+     * @return the drop view builder
+     */
+    public DropViewBuilder view(String view) {
+        return new DropViewBuilder(getDialect(), view);
+    }
 
-  /**
-   * Sequence branch.
-   *
-   * @param sequence the sequence
-   * @return the drop sequence builder
-   */
-  public DropSequenceBuilder sequence(String sequence) {
-    return new DropSequenceBuilder(getDialect(), sequence);
-  }
+    /**
+     * Sequence branch.
+     *
+     * @param sequence the sequence
+     * @return the drop sequence builder
+     */
+    public DropSequenceBuilder sequence(String sequence) {
+        return new DropSequenceBuilder(getDialect(), sequence);
+    }
 
-  /**
-   * Constraint branch.
-   *
-   * @param constraint the constraint
-   * @return the drop constraint builder
-   */
-  public DropConstraintBuilder constraint(String constraint) {
-    return new DropConstraintBuilder(getDialect(), constraint);
-  }
+    /**
+     * Constraint branch.
+     *
+     * @param constraint the constraint
+     * @return the drop constraint builder
+     */
+    public DropConstraintBuilder constraint(String constraint) {
+        return new DropConstraintBuilder(getDialect(), constraint);
+    }
 
-  /**
-   * Synonym branch.
-   *
-   * @param synonym the synonym
-   * @return the drop synonym builder
-   */
-  public DropSynonymBuilder synonym(String synonym) {
-    return new DropSynonymBuilder(getDialect(), synonym);
-  }
+    /**
+     * Synonym branch.
+     *
+     * @param synonym the synonym
+     * @return the drop synonym builder
+     */
+    public DropSynonymBuilder synonym(String synonym) {
+        return new DropSynonymBuilder(getDialect(), synonym);
+    }
 
-  /**
-   * Public synonym branch.
-   *
-   * @param synonym the synonym
-   * @return the drop synonym builder
-   */
-  public DropSynonymBuilder publicSynonym(String synonym) {
-    return synonym(synonym);
-  }
+    /**
+     * Public synonym branch.
+     *
+     * @param synonym the synonym
+     * @return the drop synonym builder
+     */
+    public DropSynonymBuilder publicSynonym(String synonym) {
+        return synonym(synonym);
+    }
 
-  /**
-   * Schema branch.
-   *
-   * @param schema the schema
-   * @return the creates the schema builder
-   */
-  public DropSchemaBuilder schema(String schema) {
-    return new DropSchemaBuilder(getDialect(), schema);
-  }
+    /**
+     * Schema branch.
+     *
+     * @param schema the schema
+     * @return the creates the schema builder
+     */
+    public DropSchemaBuilder schema(String schema) {
+        return new DropSchemaBuilder(getDialect(), schema);
+    }
 
-  /**
-   * Table Type branch.
-   *
-   * @param tableType the tableType
-   * @return the drop tableType builder
-   */
-  public DropTableTypeBuilder tableType(String tableType) {
-    return new DropTableTypeBuilder(getDialect(), tableType);
-  }
+    /**
+     * Table Type branch.
+     *
+     * @param tableType the tableType
+     * @return the drop tableType builder
+     */
+    public DropTableTypeBuilder tableType(String tableType) {
+        return new DropTableTypeBuilder(getDialect(), tableType);
+    }
 
-  /**
-   * Generate.
-   *
-   * @return the string
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-   */
-  @Override
-  public String generate() {
-    throw new SqlException("Invalid method invocation of generate() for Drop Branching Builder");
-  }
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
+     */
+    @Override
+    public String generate() {
+        throw new SqlException("Invalid method invocation of generate() for Drop Branching Builder");
+    }
 
 }

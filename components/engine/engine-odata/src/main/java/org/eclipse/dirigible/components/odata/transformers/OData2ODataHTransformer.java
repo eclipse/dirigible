@@ -23,35 +23,35 @@ import org.eclipse.dirigible.components.odata.domain.ODataHandler;
  */
 public class OData2ODataHTransformer {
 
-  /**
-   * Transform.
-   *
-   * @param model the model
-   * @return the list
-   * @throws SQLException the SQL exception
-   */
-  public List<ODataHandler> transform(OData model) throws SQLException {
+    /**
+     * Transform.
+     *
+     * @param model the model
+     * @return the list
+     * @throws SQLException the SQL exception
+     */
+    public List<ODataHandler> transform(OData model) throws SQLException {
 
-    List<ODataHandler> result = new ArrayList<>();
+        List<ODataHandler> result = new ArrayList<>();
 
-    for (ODataEntity entity : model.getEntities()) {
-      String namespace = model.getNamespace();
-      String name = entity.getName();
+        for (ODataEntity entity : model.getEntities()) {
+            String namespace = model.getNamespace();
+            String name = entity.getName();
 
-      entity.getHandlers()
-            .forEach(handler -> {
-              ODataMetadataUtil.validateHandlerDefinitionMethod(handler.getMethod(), entity.getName());
-              ODataMetadataUtil.validateHandlerDefinitionTypes(handler.getType(), entity.getName());
+            entity.getHandlers()
+                  .forEach(handler -> {
+                      ODataMetadataUtil.validateHandlerDefinitionMethod(handler.getMethod(), entity.getName());
+                      ODataMetadataUtil.validateHandlerDefinitionTypes(handler.getType(), entity.getName());
 
-              ODataHandler handlerModel = new ODataHandler();
-              handlerModel.setNamespace(namespace);
-              handlerModel.setName(name + "Type");
-              handlerModel.setMethod(handler.getMethod());
-              handlerModel.setKind(handler.getType());
-              handlerModel.setHandler(handler.getHandler());
-              result.add(handlerModel);
-            });
+                      ODataHandler handlerModel = new ODataHandler();
+                      handlerModel.setNamespace(namespace);
+                      handlerModel.setName(name + "Type");
+                      handlerModel.setMethod(handler.getMethod());
+                      handlerModel.setKind(handler.getType());
+                      handlerModel.setHandler(handler.getHandler());
+                      result.add(handlerModel);
+                  });
+        }
+        return result;
     }
-    return result;
-  }
 }

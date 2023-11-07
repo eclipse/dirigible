@@ -31,61 +31,61 @@ import org.slf4j.LoggerFactory;
  */
 public class SchemaUpdateProcessor {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(SchemaUpdateProcessor.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(SchemaUpdateProcessor.class);
 
-  /**
-   * Execute the corresponding statement.
-   *
-   * @param connection the connection
-   * @param schemaModel the schema model
-   * @throws SQLException the SQL exception
-   */
-  public static void execute(Connection connection, Schema schemaModel) throws SQLException {
+    /**
+     * Execute the corresponding statement.
+     *
+     * @param connection the connection
+     * @param schemaModel the schema model
+     * @throws SQLException the SQL exception
+     */
+    public static void execute(Connection connection, Schema schemaModel) throws SQLException {
 
-    for (Table tableModel : schemaModel.getTables()) {
-      try {
-        if (!SqlFactory.getNative(connection)
-                       .existsTable(connection, tableModel.getName())) {
-          try {
-            TableCreateProcessor.execute(connection, tableModel, true);
-          } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-              logger.error(e.getMessage(), e);
+        for (Table tableModel : schemaModel.getTables()) {
+            try {
+                if (!SqlFactory.getNative(connection)
+                               .existsTable(connection, tableModel.getName())) {
+                    try {
+                        TableCreateProcessor.execute(connection, tableModel, true);
+                    } catch (Exception e) {
+                        if (logger.isErrorEnabled()) {
+                            logger.error(e.getMessage(), e);
+                        }
+                    }
+                } else {
+                    TableAlterProcessor.execute(connection, tableModel);
+                }
+            } catch (SQLException e) {
+                if (logger.isErrorEnabled()) {
+                    logger.error(e.getMessage(), e);
+                }
             }
-          }
-        } else {
-          TableAlterProcessor.execute(connection, tableModel);
         }
-      } catch (SQLException e) {
-        if (logger.isErrorEnabled()) {
-          logger.error(e.getMessage(), e);
-        }
-      }
-    }
 
-    for (Table tableModel : schemaModel.getTables()) {
-      try {
-        TableForeignKeysDropProcessor.execute(connection, tableModel);
-        TableForeignKeysCreateProcessor.execute(connection, tableModel);
-      } catch (SQLException e) {
-        if (logger.isErrorEnabled()) {
-          logger.error(e.getMessage(), e);
+        for (Table tableModel : schemaModel.getTables()) {
+            try {
+                TableForeignKeysDropProcessor.execute(connection, tableModel);
+                TableForeignKeysCreateProcessor.execute(connection, tableModel);
+            } catch (SQLException e) {
+                if (logger.isErrorEnabled()) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
         }
-      }
-    }
 
-    for (View viewModel : schemaModel.getViews()) {
-      try {
-        ViewDropProcessor.execute(connection, viewModel);
-        ViewCreateProcessor.execute(connection, viewModel);
-      } catch (SQLException e) {
-        if (logger.isErrorEnabled()) {
-          logger.error(e.getMessage(), e);
+        for (View viewModel : schemaModel.getViews()) {
+            try {
+                ViewDropProcessor.execute(connection, viewModel);
+                ViewCreateProcessor.execute(connection, viewModel);
+            } catch (SQLException e) {
+                if (logger.isErrorEnabled()) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
         }
-      }
-    }
 
-  }
+    }
 
 }

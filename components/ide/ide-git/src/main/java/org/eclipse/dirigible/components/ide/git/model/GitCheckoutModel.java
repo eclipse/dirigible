@@ -16,46 +16,46 @@ package org.eclipse.dirigible.components.ide.git.model;
  */
 public class GitCheckoutModel extends BaseGitModel {
 
-  /** The project. */
-  private String project;
+    /** The project. */
+    private String project;
 
-  /** The publish. */
-  private boolean publish;
+    /** The publish. */
+    private boolean publish;
 
-  /**
-   * Gets the project.
-   *
-   * @return the project
-   */
-  public String getProject() {
-    return project;
-  }
+    /**
+     * Gets the project.
+     *
+     * @return the project
+     */
+    public String getProject() {
+        return project;
+    }
 
-  /**
-   * Sets the project.
-   *
-   * @param project the new project
-   */
-  public void setProject(String project) {
-    this.project = project;
-  }
+    /**
+     * Sets the project.
+     *
+     * @param project the new project
+     */
+    public void setProject(String project) {
+        this.project = project;
+    }
 
-  /**
-   * Checks if is publish.
-   *
-   * @return true, if is publish
-   */
-  public boolean isPublish() {
-    return publish;
-  }
+    /**
+     * Checks if is publish.
+     *
+     * @return true, if is publish
+     */
+    public boolean isPublish() {
+        return publish;
+    }
 
-  /**
-   * Sets the publish.
-   *
-   * @param publish the new publish
-   */
-  public void setPublish(boolean publish) {
-    this.publish = publish;
-  }
+    /**
+     * Sets the publish.
+     *
+     * @param publish the new publish
+     */
+    public void setPublish(boolean publish) {
+        this.publish = publish;
+    }
 
 }

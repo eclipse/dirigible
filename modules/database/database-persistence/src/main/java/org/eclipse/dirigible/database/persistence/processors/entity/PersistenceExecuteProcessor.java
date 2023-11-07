@@ -29,71 +29,71 @@ import org.slf4j.LoggerFactory;
  */
 public class PersistenceExecuteProcessor<T> extends AbstractPersistenceProcessor {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(PersistenceExecuteProcessor.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(PersistenceExecuteProcessor.class);
 
-  /**
-   * Instantiates a new persistence execute processor.
-   *
-   * @param entityManagerInterceptor the entity manager interceptor
-   */
-  public PersistenceExecuteProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
-    super(entityManagerInterceptor);
-  }
-
-  /**
-   * Generate script.
-   *
-   * @param connection the connection
-   * @param tableModel the table model
-   * @return the string
-   */
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript
-   * (java.sql. Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
-   */
-  @Override
-  protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-    throw new PersistenceException("Generate Script method cannot be invoked in Query Processor");
-  }
-
-  /**
-   * Execute.
-   *
-   * @param connection the connection
-   * @param sql the sql
-   * @param values the values
-   * @return the int
-   */
-  public int execute(Connection connection, String sql, List<Object> values) {
-    if (logger.isTraceEnabled()) {
-      logger.trace(
-          "execute -> connection: " + connection.hashCode() + ", sql: " + sql + ", values: " + Serializer.serializeListOfObjects(values));
+    /**
+     * Instantiates a new persistence execute processor.
+     *
+     * @param entityManagerInterceptor the entity manager interceptor
+     */
+    public PersistenceExecuteProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
+        super(entityManagerInterceptor);
     }
-    PreparedStatement preparedStatement = null;
-    try {
-      preparedStatement = openPreparedStatement(connection, sql);
-      if (values != null) {
-        int i = 1;
-        for (Object value : values) {
-          setValue(preparedStatement, i++, value);
+
+    /**
+     * Generate script.
+     *
+     * @param connection the connection
+     * @param tableModel the table model
+     * @return the string
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript
+     * (java.sql. Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+     */
+    @Override
+    protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
+        throw new PersistenceException("Generate Script method cannot be invoked in Query Processor");
+    }
+
+    /**
+     * Execute.
+     *
+     * @param connection the connection
+     * @param sql the sql
+     * @param values the values
+     * @return the int
+     */
+    public int execute(Connection connection, String sql, List<Object> values) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("execute -> connection: " + connection.hashCode() + ", sql: " + sql + ", values: "
+                    + Serializer.serializeListOfObjects(values));
         }
-      }
-      return preparedStatement.executeUpdate();
-    } catch (Exception e) {
-      if (logger.isErrorEnabled()) {
-        logger.error(sql);
-      }
-      if (logger.isErrorEnabled()) {
-        logger.error(e.getMessage(), e);
-      }
-      throw new PersistenceException(e);
-    } finally {
-      closePreparedStatement(preparedStatement);
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = openPreparedStatement(connection, sql);
+            if (values != null) {
+                int i = 1;
+                for (Object value : values) {
+                    setValue(preparedStatement, i++, value);
+                }
+            }
+            return preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(sql);
+            }
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
+            throw new PersistenceException(e);
+        } finally {
+            closePreparedStatement(preparedStatement);
+        }
     }
-  }
 
 }

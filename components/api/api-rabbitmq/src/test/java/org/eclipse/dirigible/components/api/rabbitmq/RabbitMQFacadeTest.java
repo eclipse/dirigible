@@ -32,44 +32,44 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RabbitMQFacadeTest {
 
-  LogCaptor logCaptor = LogCaptor.forClass(RabbitMQFacade.class);
-  private static final String message = "testMessage";
-  private static final String queue = "test-queue";
+    LogCaptor logCaptor = LogCaptor.forClass(RabbitMQFacade.class);
+    private static final String message = "testMessage";
+    private static final String queue = "test-queue";
 
 
-  @Before
-  public void setUp() {
-    RabbitMQContainer rabbit = new RabbitMQContainer("rabbitmq:3.8.19-alpine");
-    rabbit.start();
+    @Before
+    public void setUp() {
+        RabbitMQContainer rabbit = new RabbitMQContainer("rabbitmq:3.8.19-alpine");
+        rabbit.start();
 
-    String host = rabbit.getHost();
-    Integer port = rabbit.getFirstMappedPort();
-    Configuration.set("DIRIGIBLE_RABBITMQ_CLIENT_URI", host + ":" + port);
-  }
+        String host = rabbit.getHost();
+        Integer port = rabbit.getFirstMappedPort();
+        Configuration.set("DIRIGIBLE_RABBITMQ_CLIENT_URI", host + ":" + port);
+    }
 
-  @Test
-  public void send() {
-    logCaptor.setLogLevelToInfo();
+    @Test
+    public void send() {
+        logCaptor.setLogLevelToInfo();
 
-    RabbitMQFacade.send(queue, message);
-    assertEquals(logCaptor.getInfoLogs()
-                          .get(0),
-        "Sent: " + "'" + message + "'" + " to [" + queue + "]");
+        RabbitMQFacade.send(queue, message);
+        assertEquals(logCaptor.getInfoLogs()
+                              .get(0),
+                "Sent: " + "'" + message + "'" + " to [" + queue + "]");
 
-  }
+    }
 
-  @Test
-  public void rabbitMQIntegration() {
-    logCaptor.setLogLevelToInfo();
+    @Test
+    public void rabbitMQIntegration() {
+        logCaptor.setLogLevelToInfo();
 
-    RabbitMQFacade.startListening(queue, "rabbitmq/test-handler");
-    assertEquals(logCaptor.getInfoLogs()
-                          .get(0),
-        "RabbitMQ receiver created for [" + queue + "]");
+        RabbitMQFacade.startListening(queue, "rabbitmq/test-handler");
+        assertEquals(logCaptor.getInfoLogs()
+                              .get(0),
+                "RabbitMQ receiver created for [" + queue + "]");
 
-    RabbitMQFacade.stopListening(queue, "rabbitmq/test-handler");
-    assertEquals(logCaptor.getInfoLogs()
-                          .get(1),
-        "RabbitMQ receiver stopped for [" + queue + "]");
-  }
+        RabbitMQFacade.stopListening(queue, "rabbitmq/test-handler");
+        assertEquals(logCaptor.getInfoLogs()
+                              .get(1),
+                "RabbitMQ receiver stopped for [" + queue + "]");
+    }
 }

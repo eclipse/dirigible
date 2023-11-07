@@ -23,42 +23,42 @@ import java.util.List;
 @EdmEntitySet(name = "Cars")
 public class Car {
 
-  /** The Constant CAR_2_TOWNER_ASSOCIATION. */
-  static final String CAR_2_TOWNER_ASSOCIATION = "Car2TOwnerAssociation";
+    /** The Constant CAR_2_TOWNER_ASSOCIATION. */
+    static final String CAR_2_TOWNER_ASSOCIATION = "Car2TOwnerAssociation";
 
-  /** The Constant CAR_2_DRIVERS_ASSOCIATION. */
-  static final String CAR_2_DRIVERS_ASSOCIATION = "Car2DriversAssociation";
+    /** The Constant CAR_2_DRIVERS_ASSOCIATION. */
+    static final String CAR_2_DRIVERS_ASSOCIATION = "Car2DriversAssociation";
 
-  /** The id. */
-  @EdmKey
-  @EdmProperty
-  private String id;
+    /** The id. */
+    @EdmKey
+    @EdmProperty
+    private String id;
 
-  /** The make. */
-  @EdmProperty
-  private String make;
+    /** The make. */
+    @EdmProperty
+    private String make;
 
-  /** The model. */
-  @EdmProperty
-  private String model;
+    /** The model. */
+    @EdmProperty
+    private String model;
 
-  /** The year. */
-  @EdmProperty
-  private Integer year;
+    /** The year. */
+    @EdmProperty
+    private Integer year;
 
-  /** The price. */
-  @EdmProperty
-  private Double price;
+    /** The price. */
+    @EdmProperty
+    private Double price;
 
-  /** The updated. */
-  @EdmProperty(type = EdmType.DATE_TIME)
-  private Date updated;
+    /** The updated. */
+    @EdmProperty(type = EdmType.DATE_TIME)
+    private Date updated;
 
-  /** The drivers. */
-  @EdmNavigationProperty(toMultiplicity = Multiplicity.MANY, toType = Driver.class, association = CAR_2_DRIVERS_ASSOCIATION)
-  private List<Driver> drivers;
+    /** The drivers. */
+    @EdmNavigationProperty(toMultiplicity = Multiplicity.MANY, toType = Driver.class, association = CAR_2_DRIVERS_ASSOCIATION)
+    private List<Driver> drivers;
 
-  /** The owners. */
-  @EdmNavigationProperty(toMultiplicity = Multiplicity.MANY, toType = Owner.class, association = CAR_2_TOWNER_ASSOCIATION)
-  private List<Owner> owners;
+    /** The owners. */
+    @EdmNavigationProperty(toMultiplicity = Multiplicity.MANY, toType = Owner.class, association = CAR_2_TOWNER_ASSOCIATION)
+    private List<Owner> owners;
 }

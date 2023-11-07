@@ -26,99 +26,99 @@ import org.junit.Test;
  */
 public class RepositoryGenericCollectionMoveTest {
 
-  /** The repository. */
-  protected IRepository repository;
+    /** The repository. */
+    protected IRepository repository;
 
-  /**
-   * Test move.
-   */
-  @Test
-  public void testMove() {
-    if (repository == null) {
-      return;
+    /**
+     * Test move.
+     */
+    @Test
+    public void testMove() {
+        if (repository == null) {
+            return;
+        }
+
+        ICollection collection = null;
+        try {
+            collection = repository.createCollection("/a/b/c"); //$NON-NLS-1$
+            assertNotNull(collection);
+            assertTrue(collection.exists());
+
+            collection.moveTo("/a/b/x");
+
+            collection = repository.getCollection("/a/b/x"); //$NON-NLS-1$
+            assertNotNull(collection);
+            assertTrue(collection.exists());
+            assertEquals("x", collection.getName());
+
+            collection = repository.getCollection("/a/b/c"); //$NON-NLS-1$
+            assertNotNull(collection);
+            assertFalse(collection.exists());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        } finally {
+            try {
+                repository.removeCollection("/a");
+            } catch (Exception e) {
+                e.printStackTrace();
+                fail(e.getMessage());
+            }
+        }
     }
 
-    ICollection collection = null;
-    try {
-      collection = repository.createCollection("/a/b/c"); //$NON-NLS-1$
-      assertNotNull(collection);
-      assertTrue(collection.exists());
+    /**
+     * Test move deep.
+     */
+    @Test
+    public void testMoveDeep() {
+        if (repository == null) {
+            return;
+        }
 
-      collection.moveTo("/a/b/x");
+        ICollection collection = null;
+        try {
+            collection = repository.createCollection("/a/b/c"); //$NON-NLS-1$
+            assertNotNull(collection);
+            assertTrue(collection.exists());
 
-      collection = repository.getCollection("/a/b/x"); //$NON-NLS-1$
-      assertNotNull(collection);
-      assertTrue(collection.exists());
-      assertEquals("x", collection.getName());
+            repository.createCollection("/a/b/c/d");
+            repository.createCollection("/a/b/c/d/e");
+            repository.createResource("/a/b/c/d/e/f.txt", "test".getBytes());
 
-      collection = repository.getCollection("/a/b/c"); //$NON-NLS-1$
-      assertNotNull(collection);
-      assertFalse(collection.exists());
+            collection.moveTo("/a/b/x");
 
-    } catch (Exception e) {
-      e.printStackTrace();
-      fail(e.getMessage());
-    } finally {
-      try {
-        repository.removeCollection("/a");
-      } catch (Exception e) {
-        e.printStackTrace();
-        fail(e.getMessage());
-      }
+            collection = repository.getCollection("/a/b/x"); //$NON-NLS-1$
+            assertNotNull(collection);
+            assertTrue(collection.exists());
+            assertEquals("x", collection.getName());
+            collection = repository.getCollection("/a/b/x/d"); //$NON-NLS-1$
+            assertNotNull(collection);
+            assertTrue(collection.exists());
+            collection = repository.getCollection("/a/b/x/d/e"); //$NON-NLS-1$
+            assertNotNull(collection);
+            assertTrue(collection.exists());
+            IResource resource = repository.getResource("/a/b/x/d/e/f.txt"); //$NON-NLS-1$
+            assertNotNull(resource);
+            assertTrue(resource.exists());
+            assertTrue("test".equals(new String(resource.getContent())));
+
+            collection = repository.getCollection("/a/b/c"); //$NON-NLS-1$
+            assertNotNull(collection);
+            assertFalse(collection.exists());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        } finally {
+            try {
+                repository.removeCollection("/a");
+            } catch (Exception e) {
+                e.printStackTrace();
+                fail(e.getMessage());
+            }
+        }
     }
-  }
-
-  /**
-   * Test move deep.
-   */
-  @Test
-  public void testMoveDeep() {
-    if (repository == null) {
-      return;
-    }
-
-    ICollection collection = null;
-    try {
-      collection = repository.createCollection("/a/b/c"); //$NON-NLS-1$
-      assertNotNull(collection);
-      assertTrue(collection.exists());
-
-      repository.createCollection("/a/b/c/d");
-      repository.createCollection("/a/b/c/d/e");
-      repository.createResource("/a/b/c/d/e/f.txt", "test".getBytes());
-
-      collection.moveTo("/a/b/x");
-
-      collection = repository.getCollection("/a/b/x"); //$NON-NLS-1$
-      assertNotNull(collection);
-      assertTrue(collection.exists());
-      assertEquals("x", collection.getName());
-      collection = repository.getCollection("/a/b/x/d"); //$NON-NLS-1$
-      assertNotNull(collection);
-      assertTrue(collection.exists());
-      collection = repository.getCollection("/a/b/x/d/e"); //$NON-NLS-1$
-      assertNotNull(collection);
-      assertTrue(collection.exists());
-      IResource resource = repository.getResource("/a/b/x/d/e/f.txt"); //$NON-NLS-1$
-      assertNotNull(resource);
-      assertTrue(resource.exists());
-      assertTrue("test".equals(new String(resource.getContent())));
-
-      collection = repository.getCollection("/a/b/c"); //$NON-NLS-1$
-      assertNotNull(collection);
-      assertFalse(collection.exists());
-
-    } catch (Exception e) {
-      e.printStackTrace();
-      fail(e.getMessage());
-    } finally {
-      try {
-        repository.removeCollection("/a");
-      } catch (Exception e) {
-        e.printStackTrace();
-        fail(e.getMessage());
-      }
-    }
-  }
 
 }

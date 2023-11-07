@@ -15,42 +15,42 @@ package org.eclipse.dirigible.components.base.artefact;
  */
 public enum ArtefactLifecycle {
 
-  /** The new. */
-  NEW("NEW"),
-  /** The modified. */
-  MODIFIED("MODIFIED"),
-  /** The prepared. */
-  PREPARED("PREPARED"),
-  /** The created. */
-  CREATED("CREATED"),
-  /** The updated. */
-  UPDATED("UPDATED"),
-  /** The deleted. */
-  DELETED("DELETED"),
-  /** The started. */
-  STARTED("STARTED"),
-  /** The failed. */
-  FAILED("FAILED");
+    /** The new. */
+    NEW("NEW"),
+    /** The modified. */
+    MODIFIED("MODIFIED"),
+    /** The prepared. */
+    PREPARED("PREPARED"),
+    /** The created. */
+    CREATED("CREATED"),
+    /** The updated. */
+    UPDATED("UPDATED"),
+    /** The deleted. */
+    DELETED("DELETED"),
+    /** The started. */
+    STARTED("STARTED"),
+    /** The failed. */
+    FAILED("FAILED");
 
-  /** The status. */
-  private String status;
+    /** The status. */
+    private String status;
 
-  /**
-   * Instantiates a new artefact status.
-   *
-   * @param status the status
-   */
-  ArtefactLifecycle(String status) {
-    this.status = status;
-  }
+    /**
+     * Instantiates a new artefact status.
+     *
+     * @param status the status
+     */
+    ArtefactLifecycle(String status) {
+        this.status = status;
+    }
 
-  /**
-   * Gets the value.
-   *
-   * @return the value
-   */
-  public String getValue() {
-    return this.status;
-  }
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
+    public String getValue() {
+        return this.status;
+    }
 
 }

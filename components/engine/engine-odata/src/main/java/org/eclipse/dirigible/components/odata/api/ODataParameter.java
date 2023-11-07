@@ -17,86 +17,86 @@ import com.google.gson.annotations.Expose;
  */
 public class ODataParameter {
 
-  /** The name. */
-  @Expose
-  private String name;
+    /** The name. */
+    @Expose
+    private String name;
 
-  /** The nullable. */
-  @Expose
-  private boolean nullable;
+    /** The nullable. */
+    @Expose
+    private boolean nullable;
 
-  /** The type. */
-  @Expose
-  private String type;
+    /** The type. */
+    @Expose
+    private String type;
 
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  public String getName() {
-    return name;
-  }
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
-  /**
-   * Sets the name.
-   *
-   * @param name the name
-   * @return the o data parameter
-   */
-  public ODataParameter setName(String name) {
-    this.name = name;
-    return this;
-  }
+    /**
+     * Sets the name.
+     *
+     * @param name the name
+     * @return the o data parameter
+     */
+    public ODataParameter setName(String name) {
+        this.name = name;
+        return this;
+    }
 
-  /**
-   * Checks if is nullable.
-   *
-   * @return true, if is nullable
-   */
-  public boolean isNullable() {
-    return nullable;
-  }
+    /**
+     * Checks if is nullable.
+     *
+     * @return true, if is nullable
+     */
+    public boolean isNullable() {
+        return nullable;
+    }
 
-  /**
-   * Sets the nullable.
-   *
-   * @param nullable the nullable
-   * @return the o data parameter
-   */
-  public ODataParameter setNullable(boolean nullable) {
-    this.nullable = nullable;
-    return this;
-  }
+    /**
+     * Sets the nullable.
+     *
+     * @param nullable the nullable
+     * @return the o data parameter
+     */
+    public ODataParameter setNullable(boolean nullable) {
+        this.nullable = nullable;
+        return this;
+    }
 
-  /**
-   * Gets the type.
-   *
-   * @return the type
-   */
-  public String getType() {
-    return type;
-  }
+    /**
+     * Gets the type.
+     *
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
 
-  /**
-   * Sets the type.
-   *
-   * @param type the type
-   * @return the o data parameter
-   */
-  public ODataParameter setType(String type) {
-    this.type = type;
-    return this;
-  }
+    /**
+     * Sets the type.
+     *
+     * @param type the type
+     * @return the o data parameter
+     */
+    public ODataParameter setType(String type) {
+        this.type = type;
+        return this;
+    }
 
-  /**
-   * To string.
-   *
-   * @return the string
-   */
-  @Override
-  public String toString() {
-    return "ODataParameter [name=" + name + ", nullable=" + nullable + ", type=" + type + "]";
-  }
+    /**
+     * To string.
+     *
+     * @return the string
+     */
+    @Override
+    public String toString() {
+        return "ODataParameter [name=" + name + ", nullable=" + nullable + ", type=" + type + "]";
+    }
 
 }

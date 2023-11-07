@@ -25,23 +25,23 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class ConsoleWebsocketConfig implements WebSocketConfigurer {
 
-  /**
-   * Register web socket handlers.
-   *
-   * @param registry the registry
-   */
-  @Override
-  public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-    registry.addHandler(getConsoleWebsocketHandler(), BaseEndpoint.PREFIX_ENDPOINT_WEBSOCKETS + "ide/console");
-  }
+    /**
+     * Register web socket handlers.
+     *
+     * @param registry the registry
+     */
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(getConsoleWebsocketHandler(), BaseEndpoint.PREFIX_ENDPOINT_WEBSOCKETS + "ide/console");
+    }
 
-  /**
-   * Gets the data transfer websocket handler.
-   *
-   * @return the data transfer websocket handler
-   */
-  public WebSocketHandler getConsoleWebsocketHandler() {
-    return new ConsoleWebsocketHandler();
-  }
+    /**
+     * Gets the data transfer websocket handler.
+     *
+     * @return the data transfer websocket handler
+     */
+    public WebSocketHandler getConsoleWebsocketHandler() {
+        return new ConsoleWebsocketHandler();
+    }
 
 }

@@ -22,36 +22,37 @@ import java.lang.reflect.Field;
 @Component
 public class FieldEncrypter {
 
-  /** The encrypter. */
-  @Autowired
-  private Encrypter encrypter;
+    /** The encrypter. */
+    @Autowired
+    private Encrypter encrypter;
 
-  /**
-   * Encrypt.
-   *
-   * @param state the state
-   * @param propertyNames the property names
-   * @param entity the entity
-   */
-  public void encrypt(Object[] state, String[] propertyNames, Object entity) {
-    ReflectionUtils.doWithFields(entity.getClass(), field -> encryptField(field, state, propertyNames), EncryptionUtils::isFieldEncrypted);
-  }
-
-  /**
-   * Encrypt field.
-   *
-   * @param field the field
-   * @param state the state
-   * @param propertyNames the property names
-   */
-  private void encryptField(Field field, Object[] state, String[] propertyNames) {
-    int propertyIndex = EncryptionUtils.getPropertyIndex(field.getName(), propertyNames);
-    Object currentValue = state[propertyIndex];
-    if (currentValue != null) {
-      if (!(currentValue instanceof String)) {
-        throw new IllegalStateException("Encrypted annotation was used on a non-String field");
-      }
-      state[propertyIndex] = encrypter.encrypt(currentValue.toString());
+    /**
+     * Encrypt.
+     *
+     * @param state the state
+     * @param propertyNames the property names
+     * @param entity the entity
+     */
+    public void encrypt(Object[] state, String[] propertyNames, Object entity) {
+        ReflectionUtils.doWithFields(entity.getClass(), field -> encryptField(field, state, propertyNames),
+                EncryptionUtils::isFieldEncrypted);
     }
-  }
+
+    /**
+     * Encrypt field.
+     *
+     * @param field the field
+     * @param state the state
+     * @param propertyNames the property names
+     */
+    private void encryptField(Field field, Object[] state, String[] propertyNames) {
+        int propertyIndex = EncryptionUtils.getPropertyIndex(field.getName(), propertyNames);
+        Object currentValue = state[propertyIndex];
+        if (currentValue != null) {
+            if (!(currentValue instanceof String)) {
+                throw new IllegalStateException("Encrypted annotation was used on a non-String field");
+            }
+            state[propertyIndex] = encrypter.encrypt(currentValue.toString());
+        }
+    }
 }

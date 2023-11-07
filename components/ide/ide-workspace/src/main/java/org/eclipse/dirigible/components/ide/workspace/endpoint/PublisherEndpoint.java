@@ -37,73 +37,73 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "publisher")
 public class PublisherEndpoint {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(WorkspacesEndpoint.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(WorkspacesEndpoint.class);
 
-  /** The publisher service. */
-  @Autowired
-  private PublisherService publisherService;
+    /** The publisher service. */
+    @Autowired
+    private PublisherService publisherService;
 
-  /** The websocket service. */
-  @Autowired
-  private WorkspaceService workspaceService;
+    /** The websocket service. */
+    @Autowired
+    private WorkspaceService workspaceService;
 
 
-  /**
-   * Publish.
-   *
-   * @param workspace the workspace
-   * @param project the project
-   * @param path the path
-   * @return the response
-   * @throws URISyntaxException the URI syntax exception
-   */
-  @PostMapping("{workspace}/{project}/{*path}")
-  public ResponseEntity<?> publish(@PathVariable("workspace") String workspace, @PathVariable("project") String project,
-      @PathVariable("path") String path) throws URISyntaxException {
+    /**
+     * Publish.
+     *
+     * @param workspace the workspace
+     * @param project the project
+     * @param path the path
+     * @return the response
+     * @throws URISyntaxException the URI syntax exception
+     */
+    @PostMapping("{workspace}/{project}/{*path}")
+    public ResponseEntity<?> publish(@PathVariable("workspace") String workspace, @PathVariable("project") String project,
+            @PathVariable("path") String path) throws URISyntaxException {
 
-    if (Boolean.parseBoolean(Configuration.get(PublisherService.DIRIGIBLE_PUBLISH_DISABLED, Boolean.FALSE.toString()))) {
-      return ResponseEntity.ok()
-                           .build();
+        if (Boolean.parseBoolean(Configuration.get(PublisherService.DIRIGIBLE_PUBLISH_DISABLED, Boolean.FALSE.toString()))) {
+            return ResponseEntity.ok()
+                                 .build();
+        }
+
+        if (!workspaceService.existsWorkspace(workspace)) {
+            String error = format("Workspace {0} does not exist.", workspace);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
+        }
+
+        publisherService.publish(workspace, project, path);
+
+        return ResponseEntity.ok()
+                             .build();
     }
 
-    if (!workspaceService.existsWorkspace(workspace)) {
-      String error = format("Workspace {0} does not exist.", workspace);
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
+    /**
+     * Unpublish.
+     *
+     * @param workspace the workspace
+     * @param path the path
+     * @return the response
+     * @throws URISyntaxException the URI syntax exception
+     */
+    @DeleteMapping("{workspace}/{*path}")
+    public ResponseEntity<?> unpublish(@PathVariable("workspace") String workspace, @PathVariable("path") String path)
+            throws URISyntaxException {
+
+        if (Boolean.parseBoolean(Configuration.get(PublisherService.DIRIGIBLE_PUBLISH_DISABLED, Boolean.FALSE.toString()))) {
+            return ResponseEntity.ok()
+                                 .build();
+        }
+
+        if (!workspaceService.existsWorkspace(workspace)) {
+            String error = format("Workspace {0} does not exist.", workspace);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
+        }
+
+        publisherService.unpublish(path);
+
+        return ResponseEntity.ok()
+                             .build();
     }
-
-    publisherService.publish(workspace, project, path);
-
-    return ResponseEntity.ok()
-                         .build();
-  }
-
-  /**
-   * Unpublish.
-   *
-   * @param workspace the workspace
-   * @param path the path
-   * @return the response
-   * @throws URISyntaxException the URI syntax exception
-   */
-  @DeleteMapping("{workspace}/{*path}")
-  public ResponseEntity<?> unpublish(@PathVariable("workspace") String workspace, @PathVariable("path") String path)
-      throws URISyntaxException {
-
-    if (Boolean.parseBoolean(Configuration.get(PublisherService.DIRIGIBLE_PUBLISH_DISABLED, Boolean.FALSE.toString()))) {
-      return ResponseEntity.ok()
-                           .build();
-    }
-
-    if (!workspaceService.existsWorkspace(workspace)) {
-      String error = format("Workspace {0} does not exist.", workspace);
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
-    }
-
-    publisherService.unpublish(path);
-
-    return ResponseEntity.ok()
-                         .build();
-  }
 
 }

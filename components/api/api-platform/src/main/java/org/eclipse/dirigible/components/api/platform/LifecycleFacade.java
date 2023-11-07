@@ -21,88 +21,88 @@ import org.springframework.stereotype.Component;
 @Component
 public class LifecycleFacade implements InitializingBean {
 
-  /** The instance. */
-  private static LifecycleFacade INSTANCE;
+    /** The instance. */
+    private static LifecycleFacade INSTANCE;
 
-  /** The publisherService. */
-  private PublisherService publisherService;
+    /** The publisherService. */
+    private PublisherService publisherService;
 
-  /**
-   * Instantiates a new lifecycle facade.
-   *
-   * @param publisherService the publisher service
-   */
-  @Autowired
-  private LifecycleFacade(PublisherService publisherService) {
-    this.publisherService = publisherService;
-  }
-
-  /**
-   * After properties set.
-   *
-   * @throws Exception the exception
-   */
-  @Override
-  public void afterPropertiesSet() throws Exception {
-    INSTANCE = this;
-  }
-
-  /**
-   * Gets the instance.
-   *
-   * @return the database facade
-   */
-  public static LifecycleFacade get() {
-    return INSTANCE;
-  }
-
-  /**
-   * Gets the publisher service.
-   *
-   * @return the publisher service
-   */
-  public PublisherService getPublisherService() {
-    return publisherService;
-  }
-
-  /**
-   * Publish.
-   *
-   * @param user the user
-   * @param workspace the workspace
-   * @param project the project
-   * @return true, if successful
-   */
-  public static boolean publish(String user, String workspace, String project) {
-    boolean isSuccessfulPublishRequest = false;
-    try {
-      LifecycleFacade.get()
-                     .getPublisherService()
-                     .publish(user, workspace, project, "");
-      isSuccessfulPublishRequest = true;
-    } catch (Exception e) {
-      // Do nothing
+    /**
+     * Instantiates a new lifecycle facade.
+     *
+     * @param publisherService the publisher service
+     */
+    @Autowired
+    private LifecycleFacade(PublisherService publisherService) {
+        this.publisherService = publisherService;
     }
-    return isSuccessfulPublishRequest;
-  }
 
-  /**
-   * Unpublish.
-   *
-   * @param project the project
-   * @return true, if successful
-   */
-  public static boolean unpublish(String project) {
-    boolean isSuccessfulUnpublishRequest = false;
-    try {
-      LifecycleFacade.get()
-                     .getPublisherService()
-                     .unpublish(project);
-      isSuccessfulUnpublishRequest = true;
-    } catch (Exception e) {
-      // Do nothing
+    /**
+     * After properties set.
+     *
+     * @throws Exception the exception
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        INSTANCE = this;
     }
-    return isSuccessfulUnpublishRequest;
-  }
+
+    /**
+     * Gets the instance.
+     *
+     * @return the database facade
+     */
+    public static LifecycleFacade get() {
+        return INSTANCE;
+    }
+
+    /**
+     * Gets the publisher service.
+     *
+     * @return the publisher service
+     */
+    public PublisherService getPublisherService() {
+        return publisherService;
+    }
+
+    /**
+     * Publish.
+     *
+     * @param user the user
+     * @param workspace the workspace
+     * @param project the project
+     * @return true, if successful
+     */
+    public static boolean publish(String user, String workspace, String project) {
+        boolean isSuccessfulPublishRequest = false;
+        try {
+            LifecycleFacade.get()
+                           .getPublisherService()
+                           .publish(user, workspace, project, "");
+            isSuccessfulPublishRequest = true;
+        } catch (Exception e) {
+            // Do nothing
+        }
+        return isSuccessfulPublishRequest;
+    }
+
+    /**
+     * Unpublish.
+     *
+     * @param project the project
+     * @return true, if successful
+     */
+    public static boolean unpublish(String project) {
+        boolean isSuccessfulUnpublishRequest = false;
+        try {
+            LifecycleFacade.get()
+                           .getPublisherService()
+                           .unpublish(project);
+            isSuccessfulUnpublishRequest = true;
+        } catch (Exception e) {
+            // Do nothing
+        }
+        return isSuccessfulUnpublishRequest;
+    }
 
 }

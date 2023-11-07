@@ -17,38 +17,38 @@ import java.nio.file.Path;
  */
 public interface JavascriptSourceProvider {
 
-  /**
-   * Gets the absolute source path.
-   *
-   * @param projectName the project name
-   * @param projectFileName the project file name
-   * @return the absolute source path
-   */
-  public Path getAbsoluteSourcePath(String projectName, String projectFileName);
+    /**
+     * Gets the absolute source path.
+     *
+     * @param projectName the project name
+     * @param projectFileName the project file name
+     * @return the absolute source path
+     */
+    public Path getAbsoluteSourcePath(String projectName, String projectFileName);
 
-  /**
-   * Gets the absolute project path.
-   *
-   * @param projectName the project name
-   * @return the absolute project path
-   */
-  public Path getAbsoluteProjectPath(String projectName);
+    /**
+     * Gets the absolute project path.
+     *
+     * @param projectName the project name
+     * @return the absolute project path
+     */
+    public Path getAbsoluteProjectPath(String projectName);
 
-  /**
-   * Gets the source.
-   *
-   * @param sourceFilePath the project file path
-   * @return the source
-   */
-  public String getSource(String sourceFilePath);
+    /**
+     * Gets the source.
+     *
+     * @param sourceFilePath the project file path
+     * @return the source
+     */
+    public String getSource(String sourceFilePath);
 
-  /**
-   * Unpacked to file system.
-   *
-   * @param pathToUnpack the path to unpack
-   * @param pathToLookup the path to lookup
-   * @return the path
-   */
-  public Path unpackedToFileSystem(Path pathToUnpack, Path pathToLookup);
+    /**
+     * Unpacked to file system.
+     *
+     * @param pathToUnpack the path to unpack
+     * @param pathToLookup the path to lookup
+     * @return the path
+     */
+    public Path unpackedToFileSystem(Path pathToUnpack, Path pathToLookup);
 
 }

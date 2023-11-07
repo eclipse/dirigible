@@ -43,119 +43,119 @@ import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 @Configuration
 public class SystemScheduler {
 
-  /** The Constant DIRIGIBLE_SYNCHRONIZER_FREQUENCY. */
-  private static final String DIRIGIBLE_SYNCHRONIZER_FREQUENCY = "DIRIGIBLE_SYNCHRONIZER_FREQUENCY";
+    /** The Constant DIRIGIBLE_SYNCHRONIZER_FREQUENCY. */
+    private static final String DIRIGIBLE_SYNCHRONIZER_FREQUENCY = "DIRIGIBLE_SYNCHRONIZER_FREQUENCY";
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(SystemScheduler.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(SystemScheduler.class);
 
-  /** The application context. */
-  @Autowired
-  private ApplicationContext applicationContext;
+    /** The application context. */
+    @Autowired
+    private ApplicationContext applicationContext;
 
-  /**
-   * Inits the.
-   */
-  @PostConstruct
-  public void init() {
-    logger.info("System Scheduler...");
-  }
+    /**
+     * Inits the.
+     */
+    @PostConstruct
+    public void init() {
+        logger.info("System Scheduler...");
+    }
 
-  /**
-   * Spring bean job factory.
-   *
-   * @return the spring bean job factory
-   */
-  @Bean
-  public SpringBeanJobFactory springBeanJobFactory() {
-    AutoWiringSpringBeanJobFactory jobFactory = new AutoWiringSpringBeanJobFactory();
-    logger.debug("Configuring Job factory");
+    /**
+     * Spring bean job factory.
+     *
+     * @return the spring bean job factory
+     */
+    @Bean
+    public SpringBeanJobFactory springBeanJobFactory() {
+        AutoWiringSpringBeanJobFactory jobFactory = new AutoWiringSpringBeanJobFactory();
+        logger.debug("Configuring Job factory");
 
-    jobFactory.setApplicationContext(applicationContext);
-    return jobFactory;
-  }
+        jobFactory.setApplicationContext(applicationContext);
+        return jobFactory;
+    }
 
-  /**
-   * Scheduler.
-   *
-   * @param trigger the trigger
-   * @param job the job
-   * @param factory the factory
-   * @return the scheduler
-   * @throws SchedulerException the scheduler exception
-   */
-  @Bean
-  public Scheduler scheduler(Trigger trigger, JobDetail job, SchedulerFactoryBean factory) throws SchedulerException {
-    logger.debug("Getting a handle to the Scheduler");
-    Scheduler scheduler = factory.getScheduler();
-    scheduler.scheduleJob(job, trigger);
+    /**
+     * Scheduler.
+     *
+     * @param trigger the trigger
+     * @param job the job
+     * @param factory the factory
+     * @return the scheduler
+     * @throws SchedulerException the scheduler exception
+     */
+    @Bean
+    public Scheduler scheduler(Trigger trigger, JobDetail job, SchedulerFactoryBean factory) throws SchedulerException {
+        logger.debug("Getting a handle to the Scheduler");
+        Scheduler scheduler = factory.getScheduler();
+        scheduler.scheduleJob(job, trigger);
 
-    logger.debug("Starting Scheduler threads");
-    scheduler.start();
-    return scheduler;
-  }
+        logger.debug("Starting Scheduler threads");
+        scheduler.start();
+        return scheduler;
+    }
 
-  /**
-   * Scheduler factory bean.
-   *
-   * @return the scheduler factory bean
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  @Bean
-  public SchedulerFactoryBean schedulerFactoryBean() throws IOException {
-    SchedulerFactoryBean factory = new SchedulerFactoryBean();
-    factory.setJobFactory(springBeanJobFactory());
-    factory.setQuartzProperties(quartzProperties());
-    return factory;
-  }
+    /**
+     * Scheduler factory bean.
+     *
+     * @return the scheduler factory bean
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @Bean
+    public SchedulerFactoryBean schedulerFactoryBean() throws IOException {
+        SchedulerFactoryBean factory = new SchedulerFactoryBean();
+        factory.setJobFactory(springBeanJobFactory());
+        factory.setQuartzProperties(quartzProperties());
+        return factory;
+    }
 
-  /**
-   * Quartz properties.
-   *
-   * @return the properties
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  public Properties quartzProperties() throws IOException {
-    PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
-    propertiesFactoryBean.setLocation(new ClassPathResource("/quartz.properties"));
-    propertiesFactoryBean.afterPropertiesSet();
-    return propertiesFactoryBean.getObject();
-  }
+    /**
+     * Quartz properties.
+     *
+     * @return the properties
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public Properties quartzProperties() throws IOException {
+        PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
+        propertiesFactoryBean.setLocation(new ClassPathResource("/quartz.properties"));
+        propertiesFactoryBean.afterPropertiesSet();
+        return propertiesFactoryBean.getObject();
+    }
 
-  /**
-   * Job detail.
-   *
-   * @return the job detail
-   */
-  @Bean
-  public JobDetail jobDetail() {
+    /**
+     * Job detail.
+     *
+     * @return the job detail
+     */
+    @Bean
+    public JobDetail jobDetail() {
 
-    return newJob().ofType(SynchronizationJob.class)
-                   .storeDurably()
-                   .withIdentity(JobKey.jobKey("SynchronizationJobDetail"))
-                   .withDescription("Invoke Synchronization Job service...")
-                   .build();
-  }
-
-  /**
-   * Trigger.
-   *
-   * @param job the job
-   * @return the trigger
-   */
-  @Bean
-  public Trigger trigger(JobDetail job) {
-
-    String frequency = org.eclipse.dirigible.commons.config.Configuration.get(DIRIGIBLE_SYNCHRONIZER_FREQUENCY, "10");
-    int frequencyInSec = Integer.parseInt(frequency);
-    logger.info("Configuring trigger to fire every {} seconds", frequencyInSec);
-
-    return newTrigger().forJob(job)
-                       .withIdentity(TriggerKey.triggerKey("SynchronizationJobTrigger"))
-                       .withDescription("Synchronization trigger")
-                       .withSchedule(simpleSchedule().withIntervalInSeconds(frequencyInSec)
-                                                     .repeatForever())
+        return newJob().ofType(SynchronizationJob.class)
+                       .storeDurably()
+                       .withIdentity(JobKey.jobKey("SynchronizationJobDetail"))
+                       .withDescription("Invoke Synchronization Job service...")
                        .build();
-  }
+    }
+
+    /**
+     * Trigger.
+     *
+     * @param job the job
+     * @return the trigger
+     */
+    @Bean
+    public Trigger trigger(JobDetail job) {
+
+        String frequency = org.eclipse.dirigible.commons.config.Configuration.get(DIRIGIBLE_SYNCHRONIZER_FREQUENCY, "10");
+        int frequencyInSec = Integer.parseInt(frequency);
+        logger.info("Configuring trigger to fire every {} seconds", frequencyInSec);
+
+        return newTrigger().forJob(job)
+                           .withIdentity(TriggerKey.triggerKey("SynchronizationJobTrigger"))
+                           .withDescription("Synchronization trigger")
+                           .withSchedule(simpleSchedule().withIntervalInSeconds(frequencyInSec)
+                                                         .repeatForever())
+                           .build();
+    }
 
 }

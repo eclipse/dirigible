@@ -20,68 +20,68 @@ import org.slf4j.LoggerFactory;
  */
 public class HanaDropTableTypeBuilder extends DropTableTypeBuilder {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(HanaDropTableTypeBuilder.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(HanaDropTableTypeBuilder.class);
 
-  /** The table type. */
-  private String tableType;
+    /** The table type. */
+    private String tableType;
 
-  /**
-   * Instantiates a new abstract drop sql builder.
-   *
-   * @param dialect the dialect
-   * @param tableType the table type
-   */
-  public HanaDropTableTypeBuilder(ISqlDialect dialect, String tableType) {
-    super(dialect, tableType);
-    this.tableType = tableType;
-  }
-
-  /**
-   * Generate.
-   *
-   * @return the string
-   */
-  @Override
-  public String generate() {
-
-    StringBuilder sql = new StringBuilder();
-
-    // DROP
-    generateDrop(sql);
-
-    // TABLE TYPE
-    generateTableType(sql);
-
-    String generated = sql.toString();
-
-    if (logger.isTraceEnabled()) {
-      logger.trace("generated: " + generated);
+    /**
+     * Instantiates a new abstract drop sql builder.
+     *
+     * @param dialect the dialect
+     * @param tableType the table type
+     */
+    public HanaDropTableTypeBuilder(ISqlDialect dialect, String tableType) {
+        super(dialect, tableType);
+        this.tableType = tableType;
     }
 
-    return generated;
-  }
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
+    @Override
+    public String generate() {
 
-  /**
-   * Generate table type.
-   *
-   * @param sql the sql
-   */
-  private void generateTableType(StringBuilder sql) {
-    String tableTypeName = (isCaseSensitive()) ? encapsulate(this.getTableType(), true) : this.getTableType();
-    sql.append(SPACE)
-       .append(KEYWORD_TABLE_TYPE)
-       .append(SPACE)
-       .append(tableTypeName);
-  }
+        StringBuilder sql = new StringBuilder();
 
-  /**
-   * Gets the table type.
-   *
-   * @return the table type
-   */
-  public String getTableType() {
-    return tableType;
-  }
+        // DROP
+        generateDrop(sql);
+
+        // TABLE TYPE
+        generateTableType(sql);
+
+        String generated = sql.toString();
+
+        if (logger.isTraceEnabled()) {
+            logger.trace("generated: " + generated);
+        }
+
+        return generated;
+    }
+
+    /**
+     * Generate table type.
+     *
+     * @param sql the sql
+     */
+    private void generateTableType(StringBuilder sql) {
+        String tableTypeName = (isCaseSensitive()) ? encapsulate(this.getTableType(), true) : this.getTableType();
+        sql.append(SPACE)
+           .append(KEYWORD_TABLE_TYPE)
+           .append(SPACE)
+           .append(tableTypeName);
+    }
+
+    /**
+     * Gets the table type.
+     *
+     * @return the table type
+     */
+    public String getTableType() {
+        return tableType;
+    }
 
 }

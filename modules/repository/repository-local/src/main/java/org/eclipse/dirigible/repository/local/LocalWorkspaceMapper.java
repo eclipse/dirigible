@@ -22,30 +22,30 @@ import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 public class LocalWorkspaceMapper {
 
 
-  /**
-   * Gets the mapped name.
-   *
-   * @param repository the repository
-   * @param repositoryName the repository name
-   * @return the mapped name
-   * @throws RepositoryWriteException the repository write exception
-   */
-  public static String getMappedName(FileSystemRepository repository, String repositoryName) throws RepositoryWriteException {
-    String workspaceName = null;
+    /**
+     * Gets the mapped name.
+     *
+     * @param repository the repository
+     * @param repositoryName the repository name
+     * @return the mapped name
+     * @throws RepositoryWriteException the repository write exception
+     */
+    public static String getMappedName(FileSystemRepository repository, String repositoryName) throws RepositoryWriteException {
+        String workspaceName = null;
 
-    if (repositoryName != null) {
-      if (repositoryName.startsWith(repository.getRepositoryPath())) {
-        workspaceName = repositoryName;
-      } else {
-        workspaceName = repository.getRepositoryPath() + repositoryName;
-      }
+        if (repositoryName != null) {
+            if (repositoryName.startsWith(repository.getRepositoryPath())) {
+                workspaceName = repositoryName;
+            } else {
+                workspaceName = repository.getRepositoryPath() + repositoryName;
+            }
+        }
+
+        if (workspaceName != null && !IRepository.SEPARATOR.contentEquals(File.separator)) {
+            workspaceName = workspaceName.replace(IRepository.SEPARATOR, File.separator);
+        }
+
+        return workspaceName;
     }
-
-    if (workspaceName != null && !IRepository.SEPARATOR.contentEquals(File.separator)) {
-      workspaceName = workspaceName.replace(IRepository.SEPARATOR, File.separator);
-    }
-
-    return workspaceName;
-  }
 
 }

@@ -18,24 +18,24 @@ import org.eclipse.dirigible.database.sql.ISqlDialectProvider;
  */
 public class MySQLSqlDialectProvider implements ISqlDialectProvider {
 
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  @Override
-  public String getName() {
-    return "MySQL";
-  }
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    @Override
+    public String getName() {
+        return "MySQL";
+    }
 
-  /**
-   * Gets the dialect.
-   *
-   * @return the dialect
-   */
-  @Override
-  public ISqlDialect getDialect() {
-    return new MySQLSqlDialect();
-  }
+    /**
+     * Gets the dialect.
+     *
+     * @return the dialect
+     */
+    @Override
+    public ISqlDialect getDialect() {
+        return new MySQLSqlDialect();
+    }
 
 }

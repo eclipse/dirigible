@@ -26,17 +26,17 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmType;
 @EdmEntitySet(name = "Summary_of_Sales_by_Years", container = "NorthwindEntities")
 public class SummaryOfSalesByYears {
 
-  /** The shipped date. */
-  @EdmProperty(type = EdmType.DATE_TIME)
-  private Date shippedDate;
+    /** The shipped date. */
+    @EdmProperty(type = EdmType.DATE_TIME)
+    private Date shippedDate;
 
-  /** The order id. */
-  @EdmKey
-  @EdmProperty(name = "OrderID", facets = @EdmFacets(nullable = false))
-  private Integer orderId;
+    /** The order id. */
+    @EdmKey
+    @EdmProperty(name = "OrderID", facets = @EdmFacets(nullable = false))
+    private Integer orderId;
 
-  /** The subtotal. */
-  @EdmProperty(type = EdmType.DECIMAL, facets = @EdmFacets(precision = 19, scale = 4))
-  private Double subtotal;
+    /** The subtotal. */
+    @EdmProperty(type = EdmType.DECIMAL, facets = @EdmFacets(precision = 19, scale = 4))
+    private Double subtotal;
 
 }

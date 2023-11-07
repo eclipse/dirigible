@@ -32,133 +32,133 @@ import com.google.gson.JsonPrimitive;
  */
 public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 
-  /** The limited. */
-  private boolean limited = true;
+    /** The limited. */
+    private boolean limited = true;
 
-  /** The stringify. */
-  private boolean stringify = true;
+    /** The stringify. */
+    private boolean stringify = true;
 
-  /**
-   * Checks if is limited.
-   *
-   * @return true, if is limited
-   */
-  public boolean isLimited() {
-    return limited;
-  }
-
-  /**
-   * Sets the limited.
-   *
-   * @param limited the new limited
-   */
-  public void setLimited(boolean limited) {
-    this.limited = limited;
-  }
-
-  /**
-   * Checks if is stringified.
-   *
-   * @return true, if is stringified
-   */
-  public boolean isStringified() {
-    return stringify;
-  }
-
-  /**
-   * Sets the stringify.
-   *
-   * @param stringify the new stringify
-   */
-  public void setStringified(boolean stringify) {
-    this.stringify = stringify;
-  }
-
-  /** The object mapper. */
-  private ObjectMapper objectMapper = new ObjectMapper();
-
-  /**
-   * Write.
-   *
-   * @param resultSet the result set
-   * @param output the output
-   * @throws Exception the exception
-   */
-  @Override
-  public void write(ResultSet resultSet, OutputStream output) throws Exception {
-
-    JsonGenerator jsonGenerator = objectMapper.getFactory()
-                                              .createGenerator(output);
-
-    jsonGenerator.writeStartArray();
-
-    int count = 0;
-    while (resultSet.next()) {
-      ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-
-      jsonGenerator.writeStartObject();
-
-      for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
-        String name = resultSetMetaData.getColumnName(i);
-        Object value = resultSet.getObject(name);
-        if (value == null && stringify) {
-          value = "[NULL]";
-        }
-        if (value != null && ("org.bson.Document".equals(value.getClass()
-                                                              .getCanonicalName())
-            || "org.bson.types.ObjectId".equals(value.getClass()
-                                                     .getCanonicalName())
-            || "java.util.ArrayList".equals(value.getClass()
-                                                 .getCanonicalName()))) {
-          if (stringify) {
-            value = value.toString();
-          }
-        }
-        if (value != null && !ClassUtils.isPrimitiveOrWrapper(value.getClass()) && value.getClass() != String.class
-            && !java.util.Date.class.isAssignableFrom(value.getClass())) {
-          if (stringify) {
-            value = "[BINARY]";
-          }
-        }
-
-        jsonGenerator.writeFieldName(name);
-
-        if (value instanceof String) {
-          jsonGenerator.writeString((String) value);
-        } else if (value instanceof Character) {
-          jsonGenerator.writeString(new String(new char[] {(char) value}));
-        } else if (value instanceof Float) {
-          jsonGenerator.writeNumber((Float) value);
-        } else if (value instanceof Double) {
-          jsonGenerator.writeNumber((Double) value);
-        } else if (value instanceof BigDecimal) {
-          jsonGenerator.writeNumber((BigDecimal) value);
-        } else if (value instanceof Long) {
-          jsonGenerator.writeNumber((Long) value);
-        } else if (value instanceof BigInteger) {
-          jsonGenerator.writeNumber((BigInteger) value);
-        } else if (value instanceof Integer) {
-          jsonGenerator.writeNumber((Integer) value);
-        } else if (value instanceof Byte) {
-          jsonGenerator.writeNumber((Byte) value);
-        } else if (value instanceof Short) {
-          jsonGenerator.writeNumber((Short) value);
-        } else if (value instanceof Boolean) {
-          jsonGenerator.writeBoolean((Boolean) value);
-        } else {
-          jsonGenerator.writeString(value == null ? null : value.toString());
-        }
-      }
-
-      jsonGenerator.writeEndObject();
-
-      if (this.isLimited() && (++count > getLimit())) {
-        break;
-      }
+    /**
+     * Checks if is limited.
+     *
+     * @return true, if is limited
+     */
+    public boolean isLimited() {
+        return limited;
     }
 
-    jsonGenerator.writeEndArray();
-    jsonGenerator.flush();
-  }
+    /**
+     * Sets the limited.
+     *
+     * @param limited the new limited
+     */
+    public void setLimited(boolean limited) {
+        this.limited = limited;
+    }
+
+    /**
+     * Checks if is stringified.
+     *
+     * @return true, if is stringified
+     */
+    public boolean isStringified() {
+        return stringify;
+    }
+
+    /**
+     * Sets the stringify.
+     *
+     * @param stringify the new stringify
+     */
+    public void setStringified(boolean stringify) {
+        this.stringify = stringify;
+    }
+
+    /** The object mapper. */
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    /**
+     * Write.
+     *
+     * @param resultSet the result set
+     * @param output the output
+     * @throws Exception the exception
+     */
+    @Override
+    public void write(ResultSet resultSet, OutputStream output) throws Exception {
+
+        JsonGenerator jsonGenerator = objectMapper.getFactory()
+                                                  .createGenerator(output);
+
+        jsonGenerator.writeStartArray();
+
+        int count = 0;
+        while (resultSet.next()) {
+            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+
+            jsonGenerator.writeStartObject();
+
+            for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
+                String name = resultSetMetaData.getColumnName(i);
+                Object value = resultSet.getObject(name);
+                if (value == null && stringify) {
+                    value = "[NULL]";
+                }
+                if (value != null && ("org.bson.Document".equals(value.getClass()
+                                                                      .getCanonicalName())
+                        || "org.bson.types.ObjectId".equals(value.getClass()
+                                                                 .getCanonicalName())
+                        || "java.util.ArrayList".equals(value.getClass()
+                                                             .getCanonicalName()))) {
+                    if (stringify) {
+                        value = value.toString();
+                    }
+                }
+                if (value != null && !ClassUtils.isPrimitiveOrWrapper(value.getClass()) && value.getClass() != String.class
+                        && !java.util.Date.class.isAssignableFrom(value.getClass())) {
+                    if (stringify) {
+                        value = "[BINARY]";
+                    }
+                }
+
+                jsonGenerator.writeFieldName(name);
+
+                if (value instanceof String) {
+                    jsonGenerator.writeString((String) value);
+                } else if (value instanceof Character) {
+                    jsonGenerator.writeString(new String(new char[] {(char) value}));
+                } else if (value instanceof Float) {
+                    jsonGenerator.writeNumber((Float) value);
+                } else if (value instanceof Double) {
+                    jsonGenerator.writeNumber((Double) value);
+                } else if (value instanceof BigDecimal) {
+                    jsonGenerator.writeNumber((BigDecimal) value);
+                } else if (value instanceof Long) {
+                    jsonGenerator.writeNumber((Long) value);
+                } else if (value instanceof BigInteger) {
+                    jsonGenerator.writeNumber((BigInteger) value);
+                } else if (value instanceof Integer) {
+                    jsonGenerator.writeNumber((Integer) value);
+                } else if (value instanceof Byte) {
+                    jsonGenerator.writeNumber((Byte) value);
+                } else if (value instanceof Short) {
+                    jsonGenerator.writeNumber((Short) value);
+                } else if (value instanceof Boolean) {
+                    jsonGenerator.writeBoolean((Boolean) value);
+                } else {
+                    jsonGenerator.writeString(value == null ? null : value.toString());
+                }
+            }
+
+            jsonGenerator.writeEndObject();
+
+            if (this.isLimited() && (++count > getLimit())) {
+                break;
+            }
+        }
+
+        jsonGenerator.writeEndArray();
+        jsonGenerator.flush();
+    }
 
 }

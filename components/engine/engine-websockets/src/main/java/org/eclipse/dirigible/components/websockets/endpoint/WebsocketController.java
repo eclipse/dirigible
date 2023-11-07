@@ -36,93 +36,93 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class WebsocketController {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(WebsocketController.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(WebsocketController.class);
 
-  /** The processor. */
-  private final WebsocketProcessor processor;
+    /** The processor. */
+    private final WebsocketProcessor processor;
 
-  /** The client outbound channel. */
-  @Autowired
-  @Qualifier("clientOutboundChannel")
-  private MessageChannel clientOutboundChannel;
+    /** The client outbound channel. */
+    @Autowired
+    @Qualifier("clientOutboundChannel")
+    private MessageChannel clientOutboundChannel;
 
-  /**
-   * Instantiates a new websockets service.
-   *
-   * @param processor the processor
-   */
-  @Autowired
-  public WebsocketController(WebsocketProcessor processor) {
-    this.processor = processor;
-  }
-
-  /**
-   * Gets the processor.
-   *
-   * @return the processor
-   */
-  public WebsocketProcessor getProcessor() {
-    return processor;
-  }
-
-  /**
-   * On message.
-   *
-   * @param endpoint the endpoint
-   * @param message the message
-   * @return the output message
-   * @throws Exception the exception
-   */
-  @MessageMapping("/stomp/{endpoint}")
-  @SendToUser("/queue/reply/{endpoint}")
-  public OutputMessage onMessage(@DestinationVariable String endpoint, final InputMessage message) throws Exception {
-    final String time = new SimpleDateFormat("HH:mm").format(new Date());
-    if (logger.isTraceEnabled()) {
-      logger.trace(String.format("[websocket] Endpoint '%s' received message:%s ", endpoint, message));
+    /**
+     * Instantiates a new websockets service.
+     *
+     * @param processor the processor
+     */
+    @Autowired
+    public WebsocketController(WebsocketProcessor processor) {
+        this.processor = processor;
     }
-    Map<Object, Object> context = new HashMap<>();
-    context.put("message", message.getText());
-    context.put("from", message.getFrom());
-    context.put("method", "onmessage");
-    try {
-      Object result = getProcessor().processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_MESSAGE, context);
-      return new OutputMessage(message.getFrom(), result != null ? result.toString() : "", time);
-    } catch (Exception e) {
-      if (logger.isErrorEnabled()) {
-        logger.error(e.getMessage(), e);
-      }
-      return new OutputMessage(message.getFrom(), e.getMessage(), time);
-    }
-  }
 
-  /**
-   * Handle exception.
-   *
-   * @param endpoint the endpoint
-   * @param throwable the throwable
-   * @return the string
-   */
-  @MessageExceptionHandler
-  @SendToUser("/queue/errors/{endpoint}")
-  public String handleException(@DestinationVariable String endpoint, Throwable throwable) {
-    if (logger.isErrorEnabled()) {
-      logger.error(String.format("[ws:console] Endpoint '%s' error %s", endpoint, throwable.getMessage()));
+    /**
+     * Gets the processor.
+     *
+     * @return the processor
+     */
+    public WebsocketProcessor getProcessor() {
+        return processor;
     }
-    if (logger.isErrorEnabled()) {
-      logger.error("[websocket] " + throwable.getMessage(), throwable);
+
+    /**
+     * On message.
+     *
+     * @param endpoint the endpoint
+     * @param message the message
+     * @return the output message
+     * @throws Exception the exception
+     */
+    @MessageMapping("/stomp/{endpoint}")
+    @SendToUser("/queue/reply/{endpoint}")
+    public OutputMessage onMessage(@DestinationVariable String endpoint, final InputMessage message) throws Exception {
+        final String time = new SimpleDateFormat("HH:mm").format(new Date());
+        if (logger.isTraceEnabled()) {
+            logger.trace(String.format("[websocket] Endpoint '%s' received message:%s ", endpoint, message));
+        }
+        Map<Object, Object> context = new HashMap<>();
+        context.put("message", message.getText());
+        context.put("from", message.getFrom());
+        context.put("method", "onmessage");
+        try {
+            Object result = getProcessor().processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_MESSAGE, context);
+            return new OutputMessage(message.getFrom(), result != null ? result.toString() : "", time);
+        } catch (Exception e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
+            return new OutputMessage(message.getFrom(), e.getMessage(), time);
+        }
     }
-    Map<Object, Object> context = new HashMap<>();
-    context.put("error", throwable.getMessage());
-    context.put("method", "onerror");
-    try {
-      getProcessor().processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_ERROR, context);
-    } catch (Exception e) {
-      if (logger.isErrorEnabled()) {
-        logger.error(e.getMessage(), e);
-      }
+
+    /**
+     * Handle exception.
+     *
+     * @param endpoint the endpoint
+     * @param throwable the throwable
+     * @return the string
+     */
+    @MessageExceptionHandler
+    @SendToUser("/queue/errors/{endpoint}")
+    public String handleException(@DestinationVariable String endpoint, Throwable throwable) {
+        if (logger.isErrorEnabled()) {
+            logger.error(String.format("[ws:console] Endpoint '%s' error %s", endpoint, throwable.getMessage()));
+        }
+        if (logger.isErrorEnabled()) {
+            logger.error("[websocket] " + throwable.getMessage(), throwable);
+        }
+        Map<Object, Object> context = new HashMap<>();
+        context.put("error", throwable.getMessage());
+        context.put("method", "onerror");
+        try {
+            getProcessor().processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_ERROR, context);
+        } catch (Exception e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
+        }
+        return throwable.getMessage();
     }
-    return throwable.getMessage();
-  }
 
 }

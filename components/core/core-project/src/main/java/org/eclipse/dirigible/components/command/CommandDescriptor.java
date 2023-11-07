@@ -17,62 +17,62 @@ import org.apache.commons.lang3.SystemUtils;
  */
 public class CommandDescriptor {
 
-  /** The os. */
-  private final CommandOS os;
+    /** The os. */
+    private final CommandOS os;
 
-  /** The command. */
-  private final String command;
+    /** The command. */
+    private final String command;
 
-  /**
-   * Instantiates a new command line.
-   *
-   * @param os the os
-   * @param command the command
-   */
-  public CommandDescriptor(CommandOS os, String command) {
-    this.os = os;
-    this.command = command;
-  }
-
-  /**
-   * Gets the os.
-   *
-   * @return the os
-   */
-  public CommandOS getOS() {
-    return os;
-  }
-
-  /**
-   * Gets the command.
-   *
-   * @return the command
-   */
-  public String getCommand() {
-    return command;
-  }
-
-  public boolean isCompatibleWithCurrentOS() {
-    if (os == null) {
-      return true; // treat as command with no explicit OS set, so use this command as universal
+    /**
+     * Instantiates a new command line.
+     *
+     * @param os the os
+     * @param command the command
+     */
+    public CommandDescriptor(CommandOS os, String command) {
+        this.os = os;
+        this.command = command;
     }
 
-    switch (os) {
-      case UNIX:
-        return SystemUtils.IS_OS_UNIX;
-      case LINUX:
-        return SystemUtils.IS_OS_LINUX;
-      case MAC:
-        return SystemUtils.IS_OS_MAC;
-      case WINDOWS:
-        return SystemUtils.IS_OS_WINDOWS;
-      default:
-        throw new IllegalArgumentException("Unsupported OS type: " + os);
+    /**
+     * Gets the os.
+     *
+     * @return the os
+     */
+    public CommandOS getOS() {
+        return os;
     }
-  }
 
-  @Override
-  public String toString() {
-    return "CommandLine{" + "os=" + os + ", command='" + command + '\'' + '}';
-  }
+    /**
+     * Gets the command.
+     *
+     * @return the command
+     */
+    public String getCommand() {
+        return command;
+    }
+
+    public boolean isCompatibleWithCurrentOS() {
+        if (os == null) {
+            return true; // treat as command with no explicit OS set, so use this command as universal
+        }
+
+        switch (os) {
+            case UNIX:
+                return SystemUtils.IS_OS_UNIX;
+            case LINUX:
+                return SystemUtils.IS_OS_LINUX;
+            case MAC:
+                return SystemUtils.IS_OS_MAC;
+            case WINDOWS:
+                return SystemUtils.IS_OS_WINDOWS;
+            default:
+                throw new IllegalArgumentException("Unsupported OS type: " + os);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "CommandLine{" + "os=" + os + ", command='" + command + '\'' + '}';
+    }
 }

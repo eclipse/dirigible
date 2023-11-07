@@ -34,47 +34,47 @@ import org.springframework.stereotype.Component;
 @Scope("singleton")
 public class SynchronizationWalker {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(SynchronizationWalker.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(SynchronizationWalker.class);
 
 
-  /** The synchronization walker callback. */
-  private SynchronizationWalkerCallback synchronizationWalkerCallback;
+    /** The synchronization walker callback. */
+    private SynchronizationWalkerCallback synchronizationWalkerCallback;
 
-  /**
-   * Instantiates a new synchronization walker.
-   *
-   * @param synchronizationWalkerCallback the synchronization walker callback
-   */
-  public SynchronizationWalker(SynchronizationWalkerCallback synchronizationWalkerCallback) {
-    this.synchronizationWalkerCallback = synchronizationWalkerCallback;
-  }
+    /**
+     * Instantiates a new synchronization walker.
+     *
+     * @param synchronizationWalkerCallback the synchronization walker callback
+     */
+    public SynchronizationWalker(SynchronizationWalkerCallback synchronizationWalkerCallback) {
+        this.synchronizationWalkerCallback = synchronizationWalkerCallback;
+    }
 
-  /**
-   * Walk.
-   *
-   * @param root the root
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  public void walk(String root) throws IOException {
-    EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
-    Files.walkFileTree(Paths.get(root), opts, Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
+    /**
+     * Walk.
+     *
+     * @param root the root
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public void walk(String root) throws IOException {
+        EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+        Files.walkFileTree(Paths.get(root), opts, Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
 
-      @Override
-      public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-        synchronizationWalkerCallback.visitFile(file, attrs, file.toString()
-                                                                 .substring(root.length())
-                                                                 .replace(File.separator, IRepository.SEPARATOR));
-        return FileVisitResult.CONTINUE;
-      }
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                synchronizationWalkerCallback.visitFile(file, attrs, file.toString()
+                                                                         .substring(root.length())
+                                                                         .replace(File.separator, IRepository.SEPARATOR));
+                return FileVisitResult.CONTINUE;
+            }
 
-      @Override
-      public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-        logger.error("Failed to access file: " + file.toString());
-        return FileVisitResult.CONTINUE;
-      }
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                logger.error("Failed to access file: " + file.toString());
+                return FileVisitResult.CONTINUE;
+            }
 
-    });
-  }
+        });
+    }
 
 }

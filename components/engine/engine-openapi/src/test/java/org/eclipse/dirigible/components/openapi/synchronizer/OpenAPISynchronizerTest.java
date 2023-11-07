@@ -42,89 +42,89 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class OpenAPISynchronizerTest {
 
-  /**
-   * The openapi repository.
-   */
-  @Autowired
-  private OpenAPIRepository openAPIRepository;
+    /**
+     * The openapi repository.
+     */
+    @Autowired
+    private OpenAPIRepository openAPIRepository;
 
-  /**
-   * The openapi synchronizer.
-   */
-  @Autowired
-  private OpenAPISynchronizer openAPISynchronizer;
+    /**
+     * The openapi synchronizer.
+     */
+    @Autowired
+    private OpenAPISynchronizer openAPISynchronizer;
 
-  /**
-   * The entity manager.
-   */
-  @Autowired
-  EntityManager entityManager;
+    /**
+     * The entity manager.
+     */
+    @Autowired
+    EntityManager entityManager;
 
-  /**
-   * Setup.
-   */
-  @BeforeEach
-  public void setup() {
+    /**
+     * Setup.
+     */
+    @BeforeEach
+    public void setup() {
 
-    cleanup();
+        cleanup();
 
-    try {
-      // Create test OpenAPIs
-      openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test1.openapi", "test1", "description"));
-      openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test2.openapi", "test2", "description"));
-      openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test3.openapi", "test3", "description"));
-      openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test4.openapi", "test4", "description"));
-      openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
-    } catch (Exception e) {
-      e.printStackTrace();
+        try {
+            // Create test OpenAPIs
+            openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test1.openapi", "test1", "description"));
+            openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test2.openapi", "test2", "description"));
+            openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test3.openapi", "test3", "description"));
+            openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test4.openapi", "test4", "description"));
+            openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-  }
 
-  /**
-   * Cleanup.
-   */
-  @AfterEach
-  public void cleanup() {
-    openAPIRepository.deleteAll();
-  }
+    /**
+     * Cleanup.
+     */
+    @AfterEach
+    public void cleanup() {
+        openAPIRepository.deleteAll();
+    }
 
-  /**
-   * Checks if is accepted.
-   */
-  @Test
-  public void testIsAcceptedPath() {
-    assertTrue(openAPISynchronizer.isAccepted(Path.of("/a/b/c/test.openapi"), null));
-  }
+    /**
+     * Checks if is accepted.
+     */
+    @Test
+    public void testIsAcceptedPath() {
+        assertTrue(openAPISynchronizer.isAccepted(Path.of("/a/b/c/test.openapi"), null));
+    }
 
-  /**
-   * Checks if is accepted.
-   */
-  @Test
-  public void testIsAcceptedArtefact() {
-    assertTrue(openAPISynchronizer.isAccepted(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test.openapi", "test", "description")
-                                                                   .getType()));
-  }
+    /**
+     * Checks if is accepted.
+     */
+    @Test
+    public void testIsAcceptedArtefact() {
+        assertTrue(openAPISynchronizer.isAccepted(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test.openapi", "test", "description")
+                                                                       .getType()));
+    }
 
-  /**
-   * Load the artefact.
-   *
-   * @throws ParseException
-   */
-  @Test
-  public void testLoad() throws IOException, ParseException {
-    byte[] content = OpenAPISynchronizer.class.getResourceAsStream("/META-INF/dirigible/test/test.openapi")
-                                              .readAllBytes();
-    List<OpenAPI> list = openAPISynchronizer.parse("/META-INF/dirigible/test/test.openapi", content);
-    assertNotNull(list);
-    assertEquals("/META-INF/dirigible/test/test.openapi", list.get(0)
-                                                              .getLocation());
-  }
+    /**
+     * Load the artefact.
+     *
+     * @throws ParseException
+     */
+    @Test
+    public void testLoad() throws IOException, ParseException {
+        byte[] content = OpenAPISynchronizer.class.getResourceAsStream("/META-INF/dirigible/test/test.openapi")
+                                                  .readAllBytes();
+        List<OpenAPI> list = openAPISynchronizer.parse("/META-INF/dirigible/test/test.openapi", content);
+        assertNotNull(list);
+        assertEquals("/META-INF/dirigible/test/test.openapi", list.get(0)
+                                                                  .getLocation());
+    }
 
-  /**
-   * The Class TestConfiguration.
-   */
-  @SpringBootApplication
-  static class TestConfiguration {
-  }
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 
 }

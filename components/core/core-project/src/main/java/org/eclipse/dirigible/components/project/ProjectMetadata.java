@@ -17,207 +17,207 @@ import java.util.List;
  */
 public class ProjectMetadata {
 
-  /** The Constant PROJECT_METADATA_FILE_NAME. */
-  public static final String PROJECT_METADATA_FILE_NAME = "project.json"; //$NON-NLS-1$
+    /** The Constant PROJECT_METADATA_FILE_NAME. */
+    public static final String PROJECT_METADATA_FILE_NAME = "project.json"; //$NON-NLS-1$
 
-  /** The Constant PROJECT_METADATA_ARTEFACT_TYPE. */
-  public static final String PROJECT_METADATA_ARTEFACT_TYPE = "PROJECT"; // $NON-NLS-2$
+    /** The Constant PROJECT_METADATA_ARTEFACT_TYPE. */
+    public static final String PROJECT_METADATA_ARTEFACT_TYPE = "PROJECT"; // $NON-NLS-2$
 
-  /** The guid. */
-  private String guid;
+    /** The guid. */
+    private String guid;
 
-  /** The name. */
-  private String name;
+    /** The name. */
+    private String name;
 
-  /** The component. */
-  private String component;
+    /** The component. */
+    private String component;
 
-  /** The description. */
-  private String description;
+    /** The description. */
+    private String description;
 
-  /** The author. */
-  private String author;
+    /** The author. */
+    private String author;
 
-  /** The licenses. */
-  private ProjectMetadataLicense[] licenses;
+    /** The licenses. */
+    private ProjectMetadataLicense[] licenses;
 
-  /** The dependencies. */
-  private ProjectMetadataDependency[] dependencies;
+    /** The dependencies. */
+    private ProjectMetadataDependency[] dependencies;
 
-  /** The exposes. */
-  private String[] exposes;
+    /** The exposes. */
+    private String[] exposes;
 
-  /** The actions. */
-  private List<ProjectAction> actions;
+    /** The actions. */
+    private List<ProjectAction> actions;
 
-  /**
-   * Gets the guid.
-   *
-   * @return the guid
-   */
-  public String getGuid() {
-    return guid;
-  }
-
-  /**
-   * Sets the guid.
-   *
-   * @param guid the new guid
-   */
-  public void setGuid(String guid) {
-    this.guid = guid;
-  }
-
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * Sets the name.
-   *
-   * @param name the new name
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  /**
-   * Gets the component.
-   *
-   * @return the component
-   */
-  public String getComponent() {
-    return component;
-  }
-
-  /**
-   * Sets the component.
-   *
-   * @param component the new component
-   */
-  public void setComponent(String component) {
-    this.component = component;
-  }
-
-  /**
-   * Gets the description.
-   *
-   * @return the description
-   */
-  public String getDescription() {
-    return description;
-  }
-
-  /**
-   * Sets the description.
-   *
-   * @param description the new description
-   */
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  /**
-   * Gets the author.
-   *
-   * @return the author
-   */
-  public String getAuthor() {
-    return author;
-  }
-
-  /**
-   * Sets the author.
-   *
-   * @param author the new author
-   */
-  public void setAuthor(String author) {
-    this.author = author;
-  }
-
-  /**
-   * Gets the licenses.
-   *
-   * @return the licenses
-   */
-  public ProjectMetadataLicense[] getLicenses() {
-    return licenses != null ? licenses.clone() : new ProjectMetadataLicense[] {};
-  }
-
-  /**
-   * Sets the licenses.
-   *
-   * @param licenses the new licenses
-   */
-  public void setLicenses(ProjectMetadataLicense[] licenses) {
-    if (licenses != null) {
-      this.licenses = licenses.clone();
-    } else {
-      this.licenses = null;
+    /**
+     * Gets the guid.
+     *
+     * @return the guid
+     */
+    public String getGuid() {
+        return guid;
     }
-  }
 
-  /**
-   * Gets the dependencies.
-   *
-   * @return the dependencies
-   */
-  public ProjectMetadataDependency[] getDependencies() {
-    return dependencies != null ? dependencies.clone() : new ProjectMetadataDependency[] {};
-  }
-
-  /**
-   * Sets the dependencies.
-   *
-   * @param dependencies the new dependencies
-   */
-  public void setDependencies(ProjectMetadataDependency[] dependencies) {
-    if (dependencies != null) {
-      this.dependencies = dependencies.clone();
-    } else {
-      this.dependencies = null;
+    /**
+     * Sets the guid.
+     *
+     * @param guid the new guid
+     */
+    public void setGuid(String guid) {
+        this.guid = guid;
     }
-  }
 
-  /**
-   * Gets the exposes.
-   *
-   * @return the exposes
-   */
-  public String[] getExposes() {
-    return exposes;
-  }
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
-  /**
-   * Sets the exposes.
-   *
-   * @param exposes the new exposes
-   */
-  public void setExposes(String[] exposes) {
-    this.exposes = exposes;
-  }
+    /**
+     * Sets the name.
+     *
+     * @param name the new name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  /**
-   * Gets the actions.
-   *
-   * @return the actions
-   */
-  public List<ProjectAction> getActions() {
-    return actions;
-  }
+    /**
+     * Gets the component.
+     *
+     * @return the component
+     */
+    public String getComponent() {
+        return component;
+    }
 
-  /**
-   * Sets the actions.
-   *
-   * @param actions the new actions
-   */
-  public void setActions(List<ProjectAction> actions) {
-    this.actions = actions;
-  }
+    /**
+     * Sets the component.
+     *
+     * @param component the new component
+     */
+    public void setComponent(String component) {
+        this.component = component;
+    }
+
+    /**
+     * Gets the description.
+     *
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Sets the description.
+     *
+     * @param description the new description
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * Gets the author.
+     *
+     * @return the author
+     */
+    public String getAuthor() {
+        return author;
+    }
+
+    /**
+     * Sets the author.
+     *
+     * @param author the new author
+     */
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    /**
+     * Gets the licenses.
+     *
+     * @return the licenses
+     */
+    public ProjectMetadataLicense[] getLicenses() {
+        return licenses != null ? licenses.clone() : new ProjectMetadataLicense[] {};
+    }
+
+    /**
+     * Sets the licenses.
+     *
+     * @param licenses the new licenses
+     */
+    public void setLicenses(ProjectMetadataLicense[] licenses) {
+        if (licenses != null) {
+            this.licenses = licenses.clone();
+        } else {
+            this.licenses = null;
+        }
+    }
+
+    /**
+     * Gets the dependencies.
+     *
+     * @return the dependencies
+     */
+    public ProjectMetadataDependency[] getDependencies() {
+        return dependencies != null ? dependencies.clone() : new ProjectMetadataDependency[] {};
+    }
+
+    /**
+     * Sets the dependencies.
+     *
+     * @param dependencies the new dependencies
+     */
+    public void setDependencies(ProjectMetadataDependency[] dependencies) {
+        if (dependencies != null) {
+            this.dependencies = dependencies.clone();
+        } else {
+            this.dependencies = null;
+        }
+    }
+
+    /**
+     * Gets the exposes.
+     *
+     * @return the exposes
+     */
+    public String[] getExposes() {
+        return exposes;
+    }
+
+    /**
+     * Sets the exposes.
+     *
+     * @param exposes the new exposes
+     */
+    public void setExposes(String[] exposes) {
+        this.exposes = exposes;
+    }
+
+    /**
+     * Gets the actions.
+     *
+     * @return the actions
+     */
+    public List<ProjectAction> getActions() {
+        return actions;
+    }
+
+    /**
+     * Sets the actions.
+     *
+     * @param actions the new actions
+     */
+    public void setActions(List<ProjectAction> actions) {
+        this.actions = actions;
+    }
 
 }

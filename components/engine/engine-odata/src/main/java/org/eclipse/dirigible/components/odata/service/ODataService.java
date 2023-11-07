@@ -31,142 +31,142 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ODataService implements ArtefactService<OData>, InitializingBean {
 
-  /** The instance. */
-  private static ODataService INSTANCE;
+    /** The instance. */
+    private static ODataService INSTANCE;
 
-  /**
-   * After properties set.
-   *
-   * @throws Exception the exception
-   */
-  @Override
-  public void afterPropertiesSet() throws Exception {
-    INSTANCE = this;
-  }
-
-  /**
-   * Gets the.
-   *
-   * @return the o data service
-   */
-  public static ODataService get() {
-    return INSTANCE;
-  }
-
-  /** The OData repository. */
-  @Autowired
-  private ODataRepository odataRepository;
-
-  /**
-   * Gets the all.
-   *
-   * @return the all
-   */
-  @Override
-  public List<OData> getAll() {
-    return odataRepository.findAll();
-  }
-
-  /**
-   * Find all.
-   *
-   * @param pageable the pageable
-   * @return the page
-   */
-  @Override
-  public Page<OData> getPages(Pageable pageable) {
-    return odataRepository.findAll(pageable);
-  }
-
-  /**
-   * Find by id.
-   *
-   * @param id the id
-   * @return the OData
-   */
-  @Override
-  public OData findById(Long id) {
-    Optional<OData> odata = odataRepository.findById(id);
-    if (odata.isPresent()) {
-      return odata.get();
-    } else {
-      throw new IllegalArgumentException("OData with id does not exist: " + id);
+    /**
+     * After properties set.
+     *
+     * @throws Exception the exception
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        INSTANCE = this;
     }
-  }
 
-  /**
-   * Find by name.
-   *
-   * @param name the name
-   * @return the OData
-   */
-  @Override
-  public OData findByName(String name) {
-    OData filter = new OData();
-    filter.setName(name);
-    Example<OData> example = Example.of(filter);
-    Optional<OData> odata = odataRepository.findOne(example);
-    if (odata.isPresent()) {
-      return odata.get();
-    } else {
-      throw new IllegalArgumentException("OData with name does not exist: " + name);
+    /**
+     * Gets the.
+     *
+     * @return the o data service
+     */
+    public static ODataService get() {
+        return INSTANCE;
     }
-  }
 
-  /**
-   * Find by location.
-   *
-   * @param location the location
-   * @return the list
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public List<OData> findByLocation(String location) {
-    OData filter = new OData();
-    filter.setLocation(location);
-    Example<OData> example = Example.of(filter);
-    List<OData> list = odataRepository.findAll(example);
-    return list;
-  }
+    /** The OData repository. */
+    @Autowired
+    private ODataRepository odataRepository;
 
-  /**
-   * Find by key.
-   *
-   * @param key the key
-   * @return the OData
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public OData findByKey(String key) {
-    OData filter = new OData();
-    filter.setKey(key);
-    Example<OData> example = Example.of(filter);
-    Optional<OData> odata = odataRepository.findOne(example);
-    if (odata.isPresent()) {
-      return odata.get();
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
+    @Override
+    public List<OData> getAll() {
+        return odataRepository.findAll();
     }
-    return null;
-  }
 
-  /**
-   * Save.
-   *
-   * @param odata the OData
-   * @return the OData
-   */
-  @Override
-  public OData save(OData odata) {
-    return odataRepository.saveAndFlush(odata);
-  }
+    /**
+     * Find all.
+     *
+     * @param pageable the pageable
+     * @return the page
+     */
+    @Override
+    public Page<OData> getPages(Pageable pageable) {
+        return odataRepository.findAll(pageable);
+    }
 
-  /**
-   * Delete.
-   *
-   * @param odata the OData
-   */
-  @Override
-  public void delete(OData odata) {
-    odataRepository.delete(odata);
-  }
+    /**
+     * Find by id.
+     *
+     * @param id the id
+     * @return the OData
+     */
+    @Override
+    public OData findById(Long id) {
+        Optional<OData> odata = odataRepository.findById(id);
+        if (odata.isPresent()) {
+            return odata.get();
+        } else {
+            throw new IllegalArgumentException("OData with id does not exist: " + id);
+        }
+    }
+
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the OData
+     */
+    @Override
+    public OData findByName(String name) {
+        OData filter = new OData();
+        filter.setName(name);
+        Example<OData> example = Example.of(filter);
+        Optional<OData> odata = odataRepository.findOne(example);
+        if (odata.isPresent()) {
+            return odata.get();
+        } else {
+            throw new IllegalArgumentException("OData with name does not exist: " + name);
+        }
+    }
+
+    /**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<OData> findByLocation(String location) {
+        OData filter = new OData();
+        filter.setLocation(location);
+        Example<OData> example = Example.of(filter);
+        List<OData> list = odataRepository.findAll(example);
+        return list;
+    }
+
+    /**
+     * Find by key.
+     *
+     * @param key the key
+     * @return the OData
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public OData findByKey(String key) {
+        OData filter = new OData();
+        filter.setKey(key);
+        Example<OData> example = Example.of(filter);
+        Optional<OData> odata = odataRepository.findOne(example);
+        if (odata.isPresent()) {
+            return odata.get();
+        }
+        return null;
+    }
+
+    /**
+     * Save.
+     *
+     * @param odata the OData
+     * @return the OData
+     */
+    @Override
+    public OData save(OData odata) {
+        return odataRepository.saveAndFlush(odata);
+    }
+
+    /**
+     * Delete.
+     *
+     * @param odata the OData
+     */
+    @Override
+    public void delete(OData odata) {
+        odataRepository.delete(odata);
+    }
 
 }

@@ -27,52 +27,52 @@ import org.junit.Test;
  */
 public class RepositoryGenericTextTest {
 
-  /** The repository. */
-  protected IRepository repository;
+    /** The repository. */
+    protected IRepository repository;
 
-  /**
-   * Test text.
-   */
-  @Test
-  public void testText() {
-    if (repository == null) {
-      return;
-    }
-
-    IResource resource = null;
-    try {
-      String content = "test1";
-
-      resource = repository.createResource("/testCollection/toBeRemovedText1.txt", content.getBytes(), false, //$NON-NLS-1$
-          "text/plain"); //$NON-NLS-1$
-      assertNotNull(resource);
-      assertTrue(resource.exists());
-      assertFalse(resource.isBinary());
-
-      IResource resourceBack = repository.getResource("/testCollection/toBeRemovedText1.txt"); //$NON-NLS-1$
-      String contentback = new String(resourceBack.getContent(), StandardCharsets.UTF_8);
-
-      assertEquals(content, contentback);
-
-      IResource resource2 = repository.getResource("/testCollection/toBeRemovedText1.txt"); //$NON-NLS-1$
-      resource2.setContent("test2".getBytes());
-
-    } catch (Exception e) {
-      e.printStackTrace();
-      fail(e.getMessage());
-    } finally {
-      try {
-        if ((resource != null) && resource.exists()) {
-          repository.removeResource("/testCollection/toBeRemovedText1.txt"); //$NON-NLS-1$
-          resource = repository.getResource("/testCollection/toBeRemovedText1.txt"); //$NON-NLS-1$
-          assertNotNull(resource);
-          assertFalse(resource.exists());
+    /**
+     * Test text.
+     */
+    @Test
+    public void testText() {
+        if (repository == null) {
+            return;
         }
-      } catch (Exception e) {
-        e.printStackTrace();
-        fail(e.getMessage());
-      }
+
+        IResource resource = null;
+        try {
+            String content = "test1";
+
+            resource = repository.createResource("/testCollection/toBeRemovedText1.txt", content.getBytes(), false, //$NON-NLS-1$
+                    "text/plain"); //$NON-NLS-1$
+            assertNotNull(resource);
+            assertTrue(resource.exists());
+            assertFalse(resource.isBinary());
+
+            IResource resourceBack = repository.getResource("/testCollection/toBeRemovedText1.txt"); //$NON-NLS-1$
+            String contentback = new String(resourceBack.getContent(), StandardCharsets.UTF_8);
+
+            assertEquals(content, contentback);
+
+            IResource resource2 = repository.getResource("/testCollection/toBeRemovedText1.txt"); //$NON-NLS-1$
+            resource2.setContent("test2".getBytes());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        } finally {
+            try {
+                if ((resource != null) && resource.exists()) {
+                    repository.removeResource("/testCollection/toBeRemovedText1.txt"); //$NON-NLS-1$
+                    resource = repository.getResource("/testCollection/toBeRemovedText1.txt"); //$NON-NLS-1$
+                    assertNotNull(resource);
+                    assertFalse(resource.exists());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                fail(e.getMessage());
+            }
+        }
     }
-  }
 
 }

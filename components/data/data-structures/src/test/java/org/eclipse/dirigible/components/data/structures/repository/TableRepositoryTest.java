@@ -40,121 +40,121 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TableRepositoryTest {
 
-  /** The table repository. */
-  @Autowired
-  private TableRepository tableRepository;
+    /** The table repository. */
+    @Autowired
+    private TableRepository tableRepository;
 
-  /** The table column repository. */
-  @Autowired
-  private TableColumnRepository tableColumnRepository;
+    /** The table column repository. */
+    @Autowired
+    private TableColumnRepository tableColumnRepository;
 
-  /** The entity manager. */
-  @Autowired
-  EntityManager entityManager;
+    /** The entity manager. */
+    @Autowired
+    EntityManager entityManager;
 
-  /**
-   * Setup.
-   *
-   * @throws Exception the exception
-   */
-  @BeforeEach
-  public void setup() throws Exception {
+    /**
+     * Setup.
+     *
+     * @throws Exception the exception
+     */
+    @BeforeEach
+    public void setup() throws Exception {
 
-    cleanup();
+        cleanup();
 
-    // create test Tables
-    createTable(tableRepository, tableColumnRepository, "/a/b/c/t1.table", "t1", "description", null);
-    createTable(tableRepository, tableColumnRepository, "/a/b/c/t2.table", "t2", "description", null);
-    createTable(tableRepository, tableColumnRepository, "/a/b/c/t3.table", "t3", "description", null);
-    createTable(tableRepository, tableColumnRepository, "/a/b/c/t4.table", "t4", "description", null);
-    createTable(tableRepository, tableColumnRepository, "/a/b/c/t5.table", "t5", "description", null);
-  }
+        // create test Tables
+        createTable(tableRepository, tableColumnRepository, "/a/b/c/t1.table", "t1", "description", null);
+        createTable(tableRepository, tableColumnRepository, "/a/b/c/t2.table", "t2", "description", null);
+        createTable(tableRepository, tableColumnRepository, "/a/b/c/t3.table", "t3", "description", null);
+        createTable(tableRepository, tableColumnRepository, "/a/b/c/t4.table", "t4", "description", null);
+        createTable(tableRepository, tableColumnRepository, "/a/b/c/t5.table", "t5", "description", null);
+    }
 
-  /**
-   * Cleanup.
-   *
-   * @throws Exception the exception
-   */
-  @AfterEach
-  public void cleanup() throws Exception {
-    // delete test Tables
-    tableRepository.deleteAll();
-  }
+    /**
+     * Cleanup.
+     *
+     * @throws Exception the exception
+     */
+    @AfterEach
+    public void cleanup() throws Exception {
+        // delete test Tables
+        tableRepository.deleteAll();
+    }
 
 
-  /**
-   * Gets the one.
-   *
-   * @return the one
-   */
-  @Test
-  public void getOne() {
-    Long id = tableRepository.findAll()
-                             .get(0)
-                             .getId();
-    Optional<Table> optional = tableRepository.findById(id);
-    Table table = optional.isPresent() ? optional.get() : null;
-    assertNotNull(table);
-    assertNotNull(table.getLocation());
-    assertNotNull(table.getCreatedBy());
-    assertEquals("SYSTEM", table.getCreatedBy());
-    assertNotNull(table.getCreatedAt());
-    assertNotNull(table.getColumns());
-    assertNotNull(table.getColumns()
-                       .get(0));
-    assertEquals(table.getName() + "_1", table.getColumns()
-                                              .get(0)
-                                              .getName());
-    assertNotNull(table.getIndexes());
-    assertNotNull(table.getIndexes()
-                       .get(0));
-    assertEquals(table.getName() + "_1", table.getIndexes()
-                                              .get(0)
-                                              .getName());
-    // assertEquals("table:/a/b/c/t1.table:t1", table.getKey());
-  }
+    /**
+     * Gets the one.
+     *
+     * @return the one
+     */
+    @Test
+    public void getOne() {
+        Long id = tableRepository.findAll()
+                                 .get(0)
+                                 .getId();
+        Optional<Table> optional = tableRepository.findById(id);
+        Table table = optional.isPresent() ? optional.get() : null;
+        assertNotNull(table);
+        assertNotNull(table.getLocation());
+        assertNotNull(table.getCreatedBy());
+        assertEquals("SYSTEM", table.getCreatedBy());
+        assertNotNull(table.getCreatedAt());
+        assertNotNull(table.getColumns());
+        assertNotNull(table.getColumns()
+                           .get(0));
+        assertEquals(table.getName() + "_1", table.getColumns()
+                                                  .get(0)
+                                                  .getName());
+        assertNotNull(table.getIndexes());
+        assertNotNull(table.getIndexes()
+                           .get(0));
+        assertEquals(table.getName() + "_1", table.getIndexes()
+                                                  .get(0)
+                                                  .getName());
+        // assertEquals("table:/a/b/c/t1.table:t1", table.getKey());
+    }
 
-  /**
-   * Gets the reference using entity manager.
-   *
-   * @return the reference using entity manager
-   */
-  @Test
-  public void getReferenceUsingEntityManager() {
-    Long id = tableRepository.findAll()
-                             .get(0)
-                             .getId();
-    Table table = entityManager.getReference(Table.class, id);
-    assertNotNull(table);
-    assertNotNull(table.getLocation());
-  }
+    /**
+     * Gets the reference using entity manager.
+     *
+     * @return the reference using entity manager
+     */
+    @Test
+    public void getReferenceUsingEntityManager() {
+        Long id = tableRepository.findAll()
+                                 .get(0)
+                                 .getId();
+        Table table = entityManager.getReference(Table.class, id);
+        assertNotNull(table);
+        assertNotNull(table.getLocation());
+    }
 
-  /**
-   * Creates the table.
-   *
-   * @param tableRepository the table repository
-   * @param tableColumnRepository the table column repository
-   * @param location the location
-   * @param name the name
-   * @param description the description
-   * @param dependencies the dependencies
-   * @return the table
-   */
-  public static Table createTable(TableRepository tableRepository, TableColumnRepository tableColumnRepository, String location,
-      String name, String description, Set<String> dependencies) {
-    Table table = new Table(location, name, description, dependencies, "TABLE", null);
-    table.addColumn(name + "_1", "VARCHAR", "20", true, false, "", "0", false);
-    table.addColumn(name + "_2", "VARCHAR", "20", true, false, "", "0", false);
-    table.addIndex(name + "_1", "", true, null, new String[] {name + "_1"});
-    tableRepository.save(table);
-    return table;
-  }
+    /**
+     * Creates the table.
+     *
+     * @param tableRepository the table repository
+     * @param tableColumnRepository the table column repository
+     * @param location the location
+     * @param name the name
+     * @param description the description
+     * @param dependencies the dependencies
+     * @return the table
+     */
+    public static Table createTable(TableRepository tableRepository, TableColumnRepository tableColumnRepository, String location,
+            String name, String description, Set<String> dependencies) {
+        Table table = new Table(location, name, description, dependencies, "TABLE", null);
+        table.addColumn(name + "_1", "VARCHAR", "20", true, false, "", "0", false);
+        table.addColumn(name + "_2", "VARCHAR", "20", true, false, "", "0", false);
+        table.addIndex(name + "_1", "", true, null, new String[] {name + "_1"});
+        tableRepository.save(table);
+        return table;
+    }
 
-  /**
-   * The Class TestConfiguration.
-   */
-  @SpringBootApplication
-  static class TestConfiguration {
-  }
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 
 }

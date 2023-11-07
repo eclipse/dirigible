@@ -15,40 +15,40 @@ package org.eclipse.dirigible.components.initializers.definition;
  */
 public enum DefinitionState {
 
-  /** The file definition is brand new. */
-  NEW("NEW"),
+    /** The file definition is brand new. */
+    NEW("NEW"),
 
-  /** The file definition is successfully parsed. */
-  PARSED("PARSED"),
+    /** The file definition is successfully parsed. */
+    PARSED("PARSED"),
 
-  /** The file definition cannot be parsed. */
-  BROKEN("BROKEN"),
+    /** The file definition cannot be parsed. */
+    BROKEN("BROKEN"),
 
-  /** The file definition is modified. */
-  MODIFIED("MODIFIED"),
+    /** The file definition is modified. */
+    MODIFIED("MODIFIED"),
 
-  /** The file definition is deleted. */
-  DELETED("DELETED");
+    /** The file definition is deleted. */
+    DELETED("DELETED");
 
-  /** The state. */
-  private String state;
+    /** The state. */
+    private String state;
 
-  /**
-   * Instantiates a new artefact state.
-   *
-   * @param state the state
-   */
-  DefinitionState(String state) {
-    this.state = state;
-  }
+    /**
+     * Instantiates a new artefact state.
+     *
+     * @param state the state
+     */
+    DefinitionState(String state) {
+        this.state = state;
+    }
 
-  /**
-   * Gets the value.
-   *
-   * @return the value
-   */
-  public String getValue() {
-    return this.state;
-  }
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
+    public String getValue() {
+        return this.state;
+    }
 
 }

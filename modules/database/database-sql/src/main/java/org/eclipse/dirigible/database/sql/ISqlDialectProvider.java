@@ -15,18 +15,18 @@ package org.eclipse.dirigible.database.sql;
  */
 public interface ISqlDialectProvider {
 
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  String getName();
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    String getName();
 
-  /**
-   * Gets the dialect.
-   *
-   * @return the dialect
-   */
-  ISqlDialect getDialect();
+    /**
+     * Gets the dialect.
+     *
+     * @return the dialect
+     */
+    ISqlDialect getDialect();
 
 }

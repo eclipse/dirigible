@@ -31,203 +31,203 @@ import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
  */
 public class SQLDeleteBuilder extends AbstractQueryBuilder {
 
-  /** The delete keys column names. */
-  private final List<String> deleteKeysColumnNames = new ArrayList<>();
+    /** The delete keys column names. */
+    private final List<String> deleteKeysColumnNames = new ArrayList<>();
 
-  /** The delete keys. */
-  private Map<String, Object> deleteKeys;
+    /** The delete keys. */
+    private Map<String, Object> deleteKeys;
 
-  /** The target. */
-  private EdmEntityType target;
+    /** The target. */
+    private EdmEntityType target;
 
-  /** The table name. */
-  private String tableName;
+    /** The table name. */
+    private String tableName;
 
-  /**
-   * Instantiates a new SQL delete builder.
-   *
-   * @param tableMappingProvider the table mapping provider
-   */
-  public SQLDeleteBuilder(final EdmTableBindingProvider tableMappingProvider) {
-    super(tableMappingProvider);
-  }
+    /**
+     * Instantiates a new SQL delete builder.
+     *
+     * @param tableMappingProvider the table mapping provider
+     */
+    public SQLDeleteBuilder(final EdmTableBindingProvider tableMappingProvider) {
+        super(tableMappingProvider);
+    }
 
-  /**
-   * Gets the target.
-   *
-   * @return the target
-   */
-  private EdmEntityType getTarget() {
-    return target;
-  }
+    /**
+     * Gets the target.
+     *
+     * @return the target
+     */
+    private EdmEntityType getTarget() {
+        return target;
+    }
 
-  /**
-   * Delete from.
-   *
-   * @param target the target
-   * @return the SQL delete builder
-   */
-  public SQLDeleteBuilder deleteFrom(final EdmEntityType target) {
-    grantTableAliasForStructuralTypeInQuery(target);
-    this.target = target;
-    return this;
-  }
+    /**
+     * Delete from.
+     *
+     * @param target the target
+     * @return the SQL delete builder
+     */
+    public SQLDeleteBuilder deleteFrom(final EdmEntityType target) {
+        grantTableAliasForStructuralTypeInQuery(target);
+        this.target = target;
+        return this;
+    }
 
-  /**
-   * Keys.
-   *
-   * @param deleteKeys the delete keys
-   * @return the SQL delete builder
-   */
-  public SQLDeleteBuilder keys(final Map<String, Object> deleteKeys) {
-    this.deleteKeys = deleteKeys;
-    return this;
-  }
+    /**
+     * Keys.
+     *
+     * @param deleteKeys the delete keys
+     * @return the SQL delete builder
+     */
+    public SQLDeleteBuilder keys(final Map<String, Object> deleteKeys) {
+        this.deleteKeys = deleteKeys;
+        return this;
+    }
 
-  /**
-   * Gets the delete keys.
-   *
-   * @return the delete keys
-   */
-  public Map<String, Object> getDeleteKeys() {
-    return deleteKeys;
-  }
+    /**
+     * Gets the delete keys.
+     *
+     * @return the delete keys
+     */
+    public Map<String, Object> getDeleteKeys() {
+        return deleteKeys;
+    }
 
-  /**
-   * Builds the from.
-   *
-   * @return the string
-   * @throws EdmException the edm exception
-   */
-  protected String buildFrom() throws EdmException {
-    grantTableAliasForStructuralTypeInQuery(target);
+    /**
+     * Builds the from.
+     *
+     * @return the string
+     * @throws EdmException the edm exception
+     */
+    protected String buildFrom() throws EdmException {
+        grantTableAliasForStructuralTypeInQuery(target);
 
-    for (EdmProperty deleteProperty : target.getKeyProperties()) { // we iterate first the own properties of the type
-      if (deleteKeys.containsKey(deleteProperty.getName())) {
-        String columnName = getSQLTableColumnNoAlias(target, deleteProperty);
-        deleteKeysColumnNames.add(getSQLTableColumnNoAlias(target, deleteProperty));
-        Object keyValue = deleteKeys.get(deleteProperty.getName());
-        if (!isValidKeyValue(keyValue)) {
-          throw new OData2Exception("Invalid key value for property  " + deleteProperty.getName(), HttpStatusCodes.BAD_REQUEST);
+        for (EdmProperty deleteProperty : target.getKeyProperties()) { // we iterate first the own properties of the type
+            if (deleteKeys.containsKey(deleteProperty.getName())) {
+                String columnName = getSQLTableColumnNoAlias(target, deleteProperty);
+                deleteKeysColumnNames.add(getSQLTableColumnNoAlias(target, deleteProperty));
+                Object keyValue = deleteKeys.get(deleteProperty.getName());
+                if (!isValidKeyValue(keyValue)) {
+                    throw new OData2Exception("Invalid key value for property  " + deleteProperty.getName(), HttpStatusCodes.BAD_REQUEST);
+                }
+                Object value = deleteKeys.get(deleteProperty.getName());
+                this.addStatementParam(target, deleteProperty, value);
+
+            } else {
+                throw new OData2Exception(String.format("Key property %s is missing in the DELETE request!", deleteProperty.getName()),
+                        HttpStatusCodes.BAD_REQUEST);
+            }
         }
-        Object value = deleteKeys.get(deleteProperty.getName());
-        this.addStatementParam(target, deleteProperty, value);
 
-      } else {
-        throw new OData2Exception(String.format("Key property %s is missing in the DELETE request!", deleteProperty.getName()),
-            HttpStatusCodes.BAD_REQUEST);
-      }
+        for (EdmNavigationProperty inlineEntry : EdmUtils.getNavigationProperties(target)) {
+            if (deleteKeys.containsKey(inlineEntry.getName())) {
+                throw new OData2Exception("Delete by non-id property is not allowed!", HttpStatusCodes.BAD_REQUEST);
+            }
+        }
+        return buildDeleteFrom();
     }
 
-    for (EdmNavigationProperty inlineEntry : EdmUtils.getNavigationProperties(target)) {
-      if (deleteKeys.containsKey(inlineEntry.getName())) {
-        throw new OData2Exception("Delete by non-id property is not allowed!", HttpStatusCodes.BAD_REQUEST);
-      }
+    /**
+     * Builds the delete from.
+     *
+     * @return the string
+     */
+    private String buildDeleteFrom() {
+        StringBuilder from = new StringBuilder();
+        for (Iterator<String> it = getTablesAliasesForEntitiesInQuery(); it.hasNext();) {
+            String tableAlias = it.next();
+            EdmStructuralType target = getEntityInQueryForAlias(tableAlias);
+            if (isDeleteTarget(target)) {
+                from.append(getSQLTableName(target));
+                break;
+            }
+        }
+        return from.toString();
     }
-    return buildDeleteFrom();
-  }
 
-  /**
-   * Builds the delete from.
-   *
-   * @return the string
-   */
-  private String buildDeleteFrom() {
-    StringBuilder from = new StringBuilder();
-    for (Iterator<String> it = getTablesAliasesForEntitiesInQuery(); it.hasNext();) {
-      String tableAlias = it.next();
-      EdmStructuralType target = getEntityInQueryForAlias(tableAlias);
-      if (isDeleteTarget(target)) {
-        from.append(getSQLTableName(target));
-        break;
-      }
+    /**
+     * Checks if is delete target.
+     *
+     * @param target the target
+     * @return true, if is delete target
+     */
+    private boolean isDeleteTarget(final EdmStructuralType target) {
+        // always select the entity target
+        return fqn(getTarget()).equals(fqn(target));
     }
-    return from.toString();
-  }
 
-  /**
-   * Checks if is delete target.
-   *
-   * @param target the target
-   * @return true, if is delete target
-   */
-  private boolean isDeleteTarget(final EdmStructuralType target) {
-    // always select the entity target
-    return fqn(getTarget()).equals(fqn(target));
-  }
-
-  /**
-   * Builds the delete where clause on keys.
-   *
-   * @param context the context
-   * @return the string
-   */
-  private String buildDeleteWhereClauseOnKeys(final SQLContext context) {
-    List<String> deleteKeyExpressions = new ArrayList<>();
-    for (String columnName : deleteKeysColumnNames) {
-      deleteKeyExpressions.add(columnName + "=?");
+    /**
+     * Builds the delete where clause on keys.
+     *
+     * @param context the context
+     * @return the string
+     */
+    private String buildDeleteWhereClauseOnKeys(final SQLContext context) {
+        List<String> deleteKeyExpressions = new ArrayList<>();
+        for (String columnName : deleteKeysColumnNames) {
+            deleteKeyExpressions.add(columnName + "=?");
+        }
+        return join(deleteKeyExpressions, " AND ");
     }
-    return join(deleteKeyExpressions, " AND ");
-  }
 
 
-  /**
-   * Builds the.
-   *
-   * @param context the context
-   * @return the SQL statement
-   */
-  @Override
-  public SQLStatement build(final SQLContext context) {
-    return new SQLStatement() {
+    /**
+     * Builds the.
+     *
+     * @param context the context
+     * @return the SQL statement
+     */
+    @Override
+    public SQLStatement build(final SQLContext context) {
+        return new SQLStatement() {
 
-      @Override
-      public String sql() throws EdmException {
-        // TODO make immutable
-        StringBuilder builder = new StringBuilder();
-        builder.append("DELETE ");
-        builder.append(" FROM ");
-        builder.append(getTargetTableName());
+            @Override
+            public String sql() throws EdmException {
+                // TODO make immutable
+                StringBuilder builder = new StringBuilder();
+                builder.append("DELETE ");
+                builder.append(" FROM ");
+                builder.append(getTargetTableName());
 
-        SQLWhereClause where = new SQLWhereClause(buildDeleteWhereClauseOnKeys(context));
-        where.and(getWhereClause()); // add any update where clause set by the interceptors
+                SQLWhereClause where = new SQLWhereClause(buildDeleteWhereClauseOnKeys(context));
+                where.and(getWhereClause()); // add any update where clause set by the interceptors
 
-        builder.append(" WHERE ");
-        builder.append(where.getWhereClause());
-        return SQLUtils.assertParametersCount(normalizeSQLExpression(builder.toString()), getStatementParams());
-      }
+                builder.append(" WHERE ");
+                builder.append(where.getWhereClause());
+                return SQLUtils.assertParametersCount(normalizeSQLExpression(builder.toString()), getStatementParams());
+            }
 
 
-      @Override
-      public List<SQLStatementParam> getStatementParams() {
-        return SQLDeleteBuilder.this.getStatementParams();
-      }
+            @Override
+            public List<SQLStatementParam> getStatementParams() {
+                return SQLDeleteBuilder.this.getStatementParams();
+            }
 
-      @Override
-      public boolean isEmpty() {
-        return deleteKeys.isEmpty();
-      }
-    };
-  }
+            @Override
+            public boolean isEmpty() {
+                return deleteKeys.isEmpty();
+            }
+        };
+    }
 
-  /**
-   * Sets the table name.
-   *
-   * @param tableName the table name
-   * @return the SQL delete builder
-   */
-  public SQLDeleteBuilder setTableName(String tableName) {
-    this.tableName = tableName;
-    return this;
-  }
+    /**
+     * Sets the table name.
+     *
+     * @param tableName the table name
+     * @return the SQL delete builder
+     */
+    public SQLDeleteBuilder setTableName(String tableName) {
+        this.tableName = tableName;
+        return this;
+    }
 
-  /**
-   * Gets the target table name.
-   *
-   * @return the target table name
-   * @throws EdmException the edm exception
-   */
-  public String getTargetTableName() throws EdmException {
-    return tableName != null ? tableName : buildFrom();
-  }
+    /**
+     * Gets the target table name.
+     *
+     * @return the target table name
+     * @throws EdmException the edm exception
+     */
+    public String getTargetTableName() throws EdmException {
+        return tableName != null ? tableName : buildFrom();
+    }
 }

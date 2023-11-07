@@ -19,12 +19,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RepositoryConfig {
 
-  @Bean
-  public IRepository repository() {
-    LocalRepository localRepository = new LocalRepository("target");
-    // To be removed once moved to Spring entirely
-    StaticObjects.set(StaticObjects.REPOSITORY, localRepository);
-    return localRepository;
-  }
+    @Bean
+    public IRepository repository() {
+        LocalRepository localRepository = new LocalRepository("target");
+        // To be removed once moved to Spring entirely
+        StaticObjects.set(StaticObjects.REPOSITORY, localRepository);
+        return localRepository;
+    }
 
 }

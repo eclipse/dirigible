@@ -15,32 +15,32 @@ package org.eclipse.dirigible.components.odata.api;
  */
 public enum ODataHandlerTypes {
 
-  /** The before. */
-  before,
-  /** The after. */
-  after,
-  /** The on. */
-  on,
-  /** The forbid. */
-  forbid;
+    /** The before. */
+    before,
+    /** The after. */
+    after,
+    /** The on. */
+    on,
+    /** The forbid. */
+    forbid;
 
-  /**
-   * Value.
-   *
-   * @return the string
-   */
-  public String value() {
-    return name();
-  }
+    /**
+     * Value.
+     *
+     * @return the string
+     */
+    public String value() {
+        return name();
+    }
 
-  /**
-   * From value.
-   *
-   * @param v the v
-   * @return the o data handler types
-   */
-  public static ODataHandlerTypes fromValue(String v) {
-    return valueOf(v);
-  }
+    /**
+     * From value.
+     *
+     * @param v the v
+     * @return the o data handler types
+     */
+    public static ODataHandlerTypes fromValue(String v) {
+        return valueOf(v);
+    }
 
 }

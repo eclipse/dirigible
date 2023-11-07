@@ -38,135 +38,135 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 @ConditionalOnProperty(name = "terminal.enabled", havingValue = "true")
 public class TerminalWebsocketConfig implements WebSocketConfigurer {
 
-  /** The Constant TERMINAL_PREFIX. */
-  private static final String TERMINAL_PREFIX = "[ws:terminal] ";
+    /** The Constant TERMINAL_PREFIX. */
+    private static final String TERMINAL_PREFIX = "[ws:terminal] ";
 
-  // /** The Constant FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE. */
-  // private static final String FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE = "Feature 'Terminal' is
-  // disabled in this mode.";
+    // /** The Constant FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE. */
+    // private static final String FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE = "Feature 'Terminal' is
+    // disabled in this mode.";
 
-  /** The Constant PERMISSIONS_FAILED. */
-  private static final String PERMISSIONS_FAILED = "Failed to set permissions on file";
+    /** The Constant PERMISSIONS_FAILED. */
+    private static final String PERMISSIONS_FAILED = "Failed to set permissions on file";
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(TerminalWebsocketConfig.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(TerminalWebsocketConfig.class);
 
-  static {
-    runTTYD();
-  }
+    static {
+        runTTYD();
+    }
 
-  /**
-   * Register web socket handlers.
-   *
-   * @param registry the registry
-   */
-  @Override
-  public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-    registry.addHandler(getConsoleWebsocketHandler(), BaseEndpoint.PREFIX_ENDPOINT_WEBSOCKETS + "ide/terminal");
-  }
+    /**
+     * Register web socket handlers.
+     *
+     * @param registry the registry
+     */
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(getConsoleWebsocketHandler(), BaseEndpoint.PREFIX_ENDPOINT_WEBSOCKETS + "ide/terminal");
+    }
 
-  /**
-   * Gets the data transfer websocket handler.
-   *
-   * @return the data transfer websocket handler
-   */
-  @Bean
-  public WebSocketHandler getConsoleWebsocketHandler() {
-    return new TerminalWebsocketHandler();
-  }
+    /**
+     * Gets the data transfer websocket handler.
+     *
+     * @return the data transfer websocket handler
+     */
+    @Bean
+    public WebSocketHandler getConsoleWebsocketHandler() {
+        return new TerminalWebsocketHandler();
+    }
 
-  /** The started. */
-  static volatile boolean started = false;
+    /** The started. */
+    static volatile boolean started = false;
 
-  /**
-   * Run TTYD.
-   */
-  public synchronized static void runTTYD() {
-    if (!started) {
-      // if (Configuration.isAnonymousModeEnabled()) {
-      // if (logger.isWarnEnabled()) {logger.warn(TERMINAL_PREFIX +
-      // FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE);}
-      // return;
-      // }
-      try {
-        String command = "";
-        String os = System.getProperty("os.name")
-                          .toLowerCase();
-        if ((os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0)) {
-          command = "bash -c ./ttyd.sh";
-          File ttydShell = new File("./ttyd.sh");
-          if (!ttydShell.exists()) {
-            // ttyd binary should be placed in advance to $CATALINA_HOME/bin
+    /**
+     * Run TTYD.
+     */
+    public synchronized static void runTTYD() {
+        if (!started) {
+            // if (Configuration.isAnonymousModeEnabled()) {
+            // if (logger.isWarnEnabled()) {logger.warn(TERMINAL_PREFIX +
+            // FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE);}
+            // return;
+            // }
+            try {
+                String command = "";
+                String os = System.getProperty("os.name")
+                                  .toLowerCase();
+                if ((os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0)) {
+                    command = "bash -c ./ttyd.sh";
+                    File ttydShell = new File("./ttyd.sh");
+                    if (!ttydShell.exists()) {
+                        // ttyd binary should be placed in advance to $CATALINA_HOME/bin
 
-            createShellScript(ttydShell, "./ttyd -p 9000 bash");
-            if (ttydShell.setExecutable(true)) {
-              File ttydExecutable = new File("./ttyd");
-              createExecutable(TerminalWebsocketConfig.class.getResourceAsStream("/ttyd_linux.x86_64_1.6.0"), ttydExecutable);
-              if (!ttydExecutable.setExecutable(true)) {
-                if (logger.isWarnEnabled()) {
-                  logger.warn(TERMINAL_PREFIX + PERMISSIONS_FAILED);
+                        createShellScript(ttydShell, "./ttyd -p 9000 bash");
+                        if (ttydShell.setExecutable(true)) {
+                            File ttydExecutable = new File("./ttyd");
+                            createExecutable(TerminalWebsocketConfig.class.getResourceAsStream("/ttyd_linux.x86_64_1.6.0"), ttydExecutable);
+                            if (!ttydExecutable.setExecutable(true)) {
+                                if (logger.isWarnEnabled()) {
+                                    logger.warn(TERMINAL_PREFIX + PERMISSIONS_FAILED);
+                                }
+                            }
+                        } else {
+                            if (logger.isWarnEnabled()) {
+                                logger.warn(TERMINAL_PREFIX + PERMISSIONS_FAILED);
+                            }
+                        }
+                    }
+                } else if (os.indexOf("mac") >= 0) {
+                    command = "bash -c ./ttyd.sh";
+                    File ttydShell = new File("./ttyd.sh");
+                    if (!ttydShell.exists()) {
+                        // ttyd should be pre-installed with: brew install ttyd
+                        // ProcessRunnable processRunnable = new ProcessRunnable("brew install ttyd");
+                        // new Thread(processRunnable).start();
+                        // processRunnable.getProcess().waitFor();
+
+                        createShellScript(ttydShell, "ttyd -p 9000 bash");
+                        ttydShell.setExecutable(true);
+                    }
+                } else if (os.indexOf("win") >= 0) {
+                    throw new IllegalStateException("Windows is not yet supported");
+                } else {
+                    throw new IllegalStateException("Unknown OS: " + os);
                 }
-              }
-            } else {
-              if (logger.isWarnEnabled()) {
-                logger.warn(TERMINAL_PREFIX + PERMISSIONS_FAILED);
-              }
+
+                ProcessRunnable processRunnable = new ProcessRunnable(command);
+                new Thread(processRunnable).start();
+
+            } catch (IOException e) {
+                logger.error(TERMINAL_PREFIX + e.getMessage(), e);
             }
-          }
-        } else if (os.indexOf("mac") >= 0) {
-          command = "bash -c ./ttyd.sh";
-          File ttydShell = new File("./ttyd.sh");
-          if (!ttydShell.exists()) {
-            // ttyd should be pre-installed with: brew install ttyd
-            // ProcessRunnable processRunnable = new ProcessRunnable("brew install ttyd");
-            // new Thread(processRunnable).start();
-            // processRunnable.getProcess().waitFor();
-
-            createShellScript(ttydShell, "ttyd -p 9000 bash");
-            ttydShell.setExecutable(true);
-          }
-        } else if (os.indexOf("win") >= 0) {
-          throw new IllegalStateException("Windows is not yet supported");
-        } else {
-          throw new IllegalStateException("Unknown OS: " + os);
+            started = true;
         }
-
-        ProcessRunnable processRunnable = new ProcessRunnable(command);
-        new Thread(processRunnable).start();
-
-      } catch (IOException e) {
-        logger.error(TERMINAL_PREFIX + e.getMessage(), e);
-      }
-      started = true;
     }
-  }
 
-  /**
-   * Creates the shell script.
-   *
-   * @param file the file
-   * @param command the command
-   * @throws FileNotFoundException the file not found exception
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  private static void createShellScript(File file, String command) throws FileNotFoundException, IOException {
-    try (FileOutputStream fos = new FileOutputStream(file)) {
-      IOUtils.write(command, fos, Charset.defaultCharset());
+    /**
+     * Creates the shell script.
+     *
+     * @param file the file
+     * @param command the command
+     * @throws FileNotFoundException the file not found exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    private static void createShellScript(File file, String command) throws FileNotFoundException, IOException {
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            IOUtils.write(command, fos, Charset.defaultCharset());
+        }
     }
-  }
 
-  /**
-   * Creates the executable.
-   *
-   * @param in the in
-   * @param file the file
-   * @throws FileNotFoundException the file not found exception
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  private static void createExecutable(InputStream in, File file) throws FileNotFoundException, IOException {
-    try (FileOutputStream fos = new FileOutputStream(file)) {
-      IOUtils.copy(in, fos);
+    /**
+     * Creates the executable.
+     *
+     * @param in the in
+     * @param file the file
+     * @throws FileNotFoundException the file not found exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    private static void createExecutable(InputStream in, File file) throws FileNotFoundException, IOException {
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            IOUtils.copy(in, fos);
+        }
     }
-  }
 
 }

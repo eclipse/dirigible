@@ -34,47 +34,47 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping({BaseEndpoint.PREFIX_ENDPOINT_SECURED + "command"})
 public class CommandEndpoint extends BaseEndpoint {
 
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(CommandEndpoint.class.getCanonicalName());
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(CommandEndpoint.class.getCanonicalName());
 
 
-  /** The command service. */
-  private final CommandService commandService;
+    /** The command service. */
+    private final CommandService commandService;
 
-  /**
-   * Instantiates a new command endpoint.
-   *
-   * @param commandService the command service
-   */
-  @Autowired
-  public CommandEndpoint(CommandService commandService) {
-    this.commandService = commandService;
-  }
-
-  /**
-   * Gets the page.
-   *
-   * @param path the file path
-   * @param params the params
-   * @return the response
-   * @throws Exception the exception
-   */
-  @GetMapping("/{*path}")
-  public ResponseEntity<?> get(@PathVariable("path") String path,
-      @Nullable @RequestParam(required = false) MultiValueMap<String, String> params) throws Exception {
-    if (commandService.existResource(path)) {
-      IResource resource = commandService.getResource(path);
-      if (resource.isBinary()) {
-        String message = "Resource found, but it is a binary file: " + path;
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, message);
-      }
-
-      String result = commandService.executeCommand(path, params.toSingleValueMap());
-      return ResponseEntity.ok(result);
+    /**
+     * Instantiates a new command endpoint.
+     *
+     * @param commandService the command service
+     */
+    @Autowired
+    public CommandEndpoint(CommandService commandService) {
+        this.commandService = commandService;
     }
 
-    String errorMessage = "Resource not found: " + path;
-    throw new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage);
-  }
+    /**
+     * Gets the page.
+     *
+     * @param path the file path
+     * @param params the params
+     * @return the response
+     * @throws Exception the exception
+     */
+    @GetMapping("/{*path}")
+    public ResponseEntity<?> get(@PathVariable("path") String path,
+            @Nullable @RequestParam(required = false) MultiValueMap<String, String> params) throws Exception {
+        if (commandService.existResource(path)) {
+            IResource resource = commandService.getResource(path);
+            if (resource.isBinary()) {
+                String message = "Resource found, but it is a binary file: " + path;
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, message);
+            }
+
+            String result = commandService.executeCommand(path, params.toSingleValueMap());
+            return ResponseEntity.ok(result);
+        }
+
+        String errorMessage = "Resource not found: " + path;
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage);
+    }
 
 }
