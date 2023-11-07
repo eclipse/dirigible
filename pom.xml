@@ -109,12 +109,14 @@
 							<compilerTargetPlatform>${formatter.java.version}</compilerTargetPlatform>
 						</configuration>
 				        <executions>
-				          <execution>
-				            <goals>
-				              <goal>validate</goal>
-				            </goals>
-				          </execution>
-				        </executions>
+							<execution>
+							<id>validate-java-code-formatting</id>
+							<phase>validate</phase>
+							<goals>
+								<goal>validate</goal>
+							</goals>
+							</execution>
+						</executions>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
