@@ -21,20 +21,20 @@ import java.util.List;
 @EdmEntitySet(name = "Groups")
 public class Group {
 
-	/** The Constant USER_2_GROUP_ASSOCIATION. */
-	static final String USER_2_GROUP_ASSOCIATION = "UserToGroup";
+  /** The Constant USER_2_GROUP_ASSOCIATION. */
+  static final String USER_2_GROUP_ASSOCIATION = "UserToGroup";
 
-	/** The id. */
-	@EdmKey
-	@EdmProperty
-	private String id;
+  /** The id. */
+  @EdmKey
+  @EdmProperty
+  private String id;
 
-	/** The name. */
-	@EdmProperty
-	private String name;
+  /** The name. */
+  @EdmProperty
+  private String name;
 
-	/** The users. */
-	@EdmNavigationProperty(toMultiplicity = EdmNavigationProperty.Multiplicity.MANY, toType = User.class,
-			association = USER_2_GROUP_ASSOCIATION)
-	private List<User> users;
+  /** The users. */
+  @EdmNavigationProperty(toMultiplicity = EdmNavigationProperty.Multiplicity.MANY, toType = User.class,
+      association = USER_2_GROUP_ASSOCIATION)
+  private List<User> users;
 }

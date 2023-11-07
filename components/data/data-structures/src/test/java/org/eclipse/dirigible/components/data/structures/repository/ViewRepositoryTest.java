@@ -40,102 +40,101 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ViewRepositoryTest {
 
-	/** The view repository. */
-	@Autowired
-	private ViewRepository viewRepository;
+  /** The view repository. */
+  @Autowired
+  private ViewRepository viewRepository;
 
-	/** The entity manager. */
-	@Autowired
-	EntityManager entityManager;
+  /** The entity manager. */
+  @Autowired
+  EntityManager entityManager;
 
-	/**
-	 * Setup.
-	 *
-	 * @throws Exception the exception
-	 */
-	@BeforeEach
-	public void setup() throws Exception {
+  /**
+   * Setup.
+   *
+   * @throws Exception the exception
+   */
+  @BeforeEach
+  public void setup() throws Exception {
 
-		cleanup();
+    cleanup();
 
-		// create test Views
-		createView(viewRepository, "/a/b/c/v1.view", "v1", "description", null);
-		createView(viewRepository, "/a/b/c/v2.view", "v2", "description", null);
-		createView(viewRepository, "/a/b/c/v3.view", "v3", "description", null);
-		createView(viewRepository, "/a/b/c/v4.view", "v4", "description", null);
-		createView(viewRepository, "/a/b/c/v5.view", "v5", "description", null);
-	}
+    // create test Views
+    createView(viewRepository, "/a/b/c/v1.view", "v1", "description", null);
+    createView(viewRepository, "/a/b/c/v2.view", "v2", "description", null);
+    createView(viewRepository, "/a/b/c/v3.view", "v3", "description", null);
+    createView(viewRepository, "/a/b/c/v4.view", "v4", "description", null);
+    createView(viewRepository, "/a/b/c/v5.view", "v5", "description", null);
+  }
 
-	/**
-	 * Cleanup.
-	 *
-	 * @throws Exception the exception
-	 */
-	@AfterEach
-	public void cleanup() throws Exception {
-		// delete test Views
-		viewRepository.deleteAll();
-	}
+  /**
+   * Cleanup.
+   *
+   * @throws Exception the exception
+   */
+  @AfterEach
+  public void cleanup() throws Exception {
+    // delete test Views
+    viewRepository.deleteAll();
+  }
 
 
-	/**
-	 * Gets the one.
-	 *
-	 * @return the one
-	 */
-	@Test
-	public void getOne() {
-		Long id = viewRepository.findAll()
-								.get(0)
-								.getId();
-		Optional<View> optional = viewRepository.findById(id);
-		View view = optional.isPresent() ? optional.get() : null;
-		assertNotNull(view);
-		assertNotNull(view.getLocation());
-		assertNotNull(view.getCreatedBy());
-		assertEquals("SYSTEM", view.getCreatedBy());
-		assertNotNull(view.getCreatedAt());
-		assertNotNull(view.getQuery());
-		// assertEquals("view:/a/b/c/t1.view:t1", view.getKey());
-	}
+  /**
+   * Gets the one.
+   *
+   * @return the one
+   */
+  @Test
+  public void getOne() {
+    Long id = viewRepository.findAll()
+                            .get(0)
+                            .getId();
+    Optional<View> optional = viewRepository.findById(id);
+    View view = optional.isPresent() ? optional.get() : null;
+    assertNotNull(view);
+    assertNotNull(view.getLocation());
+    assertNotNull(view.getCreatedBy());
+    assertEquals("SYSTEM", view.getCreatedBy());
+    assertNotNull(view.getCreatedAt());
+    assertNotNull(view.getQuery());
+    // assertEquals("view:/a/b/c/t1.view:t1", view.getKey());
+  }
 
-	/**
-	 * Gets the reference using entity manager.
-	 *
-	 * @return the reference using entity manager
-	 */
-	@Test
-	public void getReferenceUsingEntityManager() {
-		Long id = viewRepository.findAll()
-								.get(0)
-								.getId();
-		View view = entityManager.getReference(View.class, id);
-		assertNotNull(view);
-		assertNotNull(view.getLocation());
-	}
+  /**
+   * Gets the reference using entity manager.
+   *
+   * @return the reference using entity manager
+   */
+  @Test
+  public void getReferenceUsingEntityManager() {
+    Long id = viewRepository.findAll()
+                            .get(0)
+                            .getId();
+    View view = entityManager.getReference(View.class, id);
+    assertNotNull(view);
+    assertNotNull(view.getLocation());
+  }
 
-	/**
-	 * Creates the view.
-	 *
-	 * @param viewRepository the view repository
-	 * @param location the location
-	 * @param name the name
-	 * @param description the description
-	 * @param dependencies the dependencies
-	 * @return the view
-	 */
-	public static View createView(ViewRepository viewRepository, String location, String name, String description,
-			Set<String> dependencies) {
-		View view = new View(location, name, description, dependencies, null, "VIEW", "SELECT ...");
-		viewRepository.save(view);
-		return view;
-	}
+  /**
+   * Creates the view.
+   *
+   * @param viewRepository the view repository
+   * @param location the location
+   * @param name the name
+   * @param description the description
+   * @param dependencies the dependencies
+   * @return the view
+   */
+  public static View createView(ViewRepository viewRepository, String location, String name, String description, Set<String> dependencies) {
+    View view = new View(location, name, description, dependencies, null, "VIEW", "SELECT ...");
+    viewRepository.save(view);
+    return view;
+  }
 
-	/**
-	 * The Class TestConfiguration.
-	 */
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  /**
+   * The Class TestConfiguration.
+   */
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 
 }

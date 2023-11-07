@@ -33,261 +33,260 @@ import org.springframework.stereotype.Component;
 @Component
 public class KafkaFacade {
 
-	/** The Constant DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER. */
-	private static final String DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER = "DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER";
+  /** The Constant DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER. */
+  private static final String DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER = "DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER";
 
-	/** The Constant DIRIGIBLE_KAFKA_ACKS. */
-	private static final String DIRIGIBLE_KAFKA_ACKS = "DIRIGIBLE_KAFKA_ACKS";
+  /** The Constant DIRIGIBLE_KAFKA_ACKS. */
+  private static final String DIRIGIBLE_KAFKA_ACKS = "DIRIGIBLE_KAFKA_ACKS";
 
-	/** The Constant DIRIGIBLE_KAFKA_KEY_SERIALIZER. */
-	private static final String DIRIGIBLE_KAFKA_KEY_SERIALIZER = "DIRIGIBLE_KAFKA_KEY_SERIALIZER";
+  /** The Constant DIRIGIBLE_KAFKA_KEY_SERIALIZER. */
+  private static final String DIRIGIBLE_KAFKA_KEY_SERIALIZER = "DIRIGIBLE_KAFKA_KEY_SERIALIZER";
 
-	/** The Constant DIRIGIBLE_KAFKA_VALUE_SERIALIZER. */
-	private static final String DIRIGIBLE_KAFKA_VALUE_SERIALIZER = "DIRIGIBLE_KAFKA_VALUE_SERIALIZER";
+  /** The Constant DIRIGIBLE_KAFKA_VALUE_SERIALIZER. */
+  private static final String DIRIGIBLE_KAFKA_VALUE_SERIALIZER = "DIRIGIBLE_KAFKA_VALUE_SERIALIZER";
 
-	/** The Constant DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED. */
-	private static final String DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED = "DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED";
+  /** The Constant DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED. */
+  private static final String DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED = "DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED";
 
-	/** The Constant DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL. */
-	private static final String DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL = "DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL";
-
-
-	/** The Constant DEFAULT_BOOTSTRAP_SERVER. */
-	private static final String DEFAULT_BOOTSTRAP_SERVER = "localhost:9092";
-
-	/** The Constant DIRIGIBLE_KAFKA_ACKS_ALL. */
-	private static final String DIRIGIBLE_KAFKA_ACKS_ALL = "all";
-
-	/** The Constant DIRIGIBLE_KAFKA_SERIALIZER_STRING. */
-	private static final String DIRIGIBLE_KAFKA_SERIALIZER_STRING = "org.apache.kafka.common.serialization.StringSerializer";
-
-	/** The Constant DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED_DEFAULT. */
-	private static final String DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED_DEFAULT = "true";
-
-	/** The Constant DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL_DEFAULT. */
-	private static final String DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL_DEFAULT = "1000";
+  /** The Constant DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL. */
+  private static final String DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL = "DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL";
 
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(KafkaFacade.class);
+  /** The Constant DEFAULT_BOOTSTRAP_SERVER. */
+  private static final String DEFAULT_BOOTSTRAP_SERVER = "localhost:9092";
 
-	/** The producers. */
-	private static Map<String, Producer<String, String>> PRODUCERS = Collections.synchronizedMap(new HashMap());
+  /** The Constant DIRIGIBLE_KAFKA_ACKS_ALL. */
+  private static final String DIRIGIBLE_KAFKA_ACKS_ALL = "all";
 
-	/** The consumers. */
-	private static Map<String, KafkaConsumerRunner> CONSUMERS = Collections.synchronizedMap(new HashMap());
+  /** The Constant DIRIGIBLE_KAFKA_SERIALIZER_STRING. */
+  private static final String DIRIGIBLE_KAFKA_SERIALIZER_STRING = "org.apache.kafka.common.serialization.StringSerializer";
 
-	/**
-	 * Send a key-value pair to a topic.
-	 *
-	 * @param destination the destination
-	 * @param key the key
-	 * @param value the value
-	 * @param configuration the configuration
-	 */
-	public static final void send(String destination, String key, String value, String configuration) {
-		if (configuration == null) {
-			configuration = "{}";
-		}
+  /** The Constant DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED_DEFAULT. */
+  private static final String DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED_DEFAULT = "true";
 
-		Map map = GsonHelper.fromJson(configuration, Map.class);
-		Producer<String, String> producer = null;
+  /** The Constant DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL_DEFAULT. */
+  private static final String DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL_DEFAULT = "1000";
 
-		String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
-		String server = map.get("bootstrap.servers") != null ? map	.get("bootstrap.servers")
-																	.toString()
-				: bootstrapServer;
-		if (server != null) {
-			producer = PRODUCERS.get(server);
-		}
 
-		if (producer == null) {
-			Properties props = new Properties();
-			for (Object k : map.keySet()) {
-				props.put(k, map.get(k));
-			}
-			if (props.get("bootstrap.servers") == null) {
-				// default to localhost
-				props.put("bootstrap.servers", bootstrapServer);
-			}
-			if (props.get("acks") == null) {
-				// default to all
-				String acks = Configuration.get(DIRIGIBLE_KAFKA_ACKS, DIRIGIBLE_KAFKA_ACKS_ALL);
-				props.put("acks", acks);
-			}
-			if (props.get("key.serializer") == null) {
-				// default to org.apache.kafka.common.serialization.StringSerializer
-				String keySerializer = Configuration.get(DIRIGIBLE_KAFKA_KEY_SERIALIZER, DIRIGIBLE_KAFKA_SERIALIZER_STRING);
-				props.put("key.serializer", keySerializer);
-			}
-			if (props.get("value.serializer") == null) {
-				// default to org.apache.kafka.common.serialization.StringSerializer
-				String valueSerializer = Configuration.get(DIRIGIBLE_KAFKA_VALUE_SERIALIZER, DIRIGIBLE_KAFKA_SERIALIZER_STRING);
-				props.put("value.serializer", valueSerializer);
-			}
-			producer = new KafkaProducer<>(props);
-			PRODUCERS.put(server, producer);
-			if (logger.isInfoEnabled()) {
-				logger.info("Kafka Producer [{}] created.", server);
-			}
-		}
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(KafkaFacade.class);
 
-		producer.send(new ProducerRecord<String, String>(destination, key, value));
+  /** The producers. */
+  private static Map<String, Producer<String, String>> PRODUCERS = Collections.synchronizedMap(new HashMap());
 
-		// producer.close();
-	}
+  /** The consumers. */
+  private static Map<String, KafkaConsumerRunner> CONSUMERS = Collections.synchronizedMap(new HashMap());
 
-	/**
-	 * Close the producer per server endpoint.
-	 *
-	 * @param configuration the configuration
-	 */
-	public static final void closeProducer(String configuration) {
-		if (configuration == null) {
-			configuration = "{}";
-		}
+  /**
+   * Send a key-value pair to a topic.
+   *
+   * @param destination the destination
+   * @param key the key
+   * @param value the value
+   * @param configuration the configuration
+   */
+  public static final void send(String destination, String key, String value, String configuration) {
+    if (configuration == null) {
+      configuration = "{}";
+    }
 
-		Map map = GsonHelper.fromJson(configuration, Map.class);
-		Producer<String, String> producer = null;
+    Map map = GsonHelper.fromJson(configuration, Map.class);
+    Producer<String, String> producer = null;
 
-		String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
-		String server = map.get("bootstrap.servers") != null ? map	.get("bootstrap.servers")
-																	.toString()
-				: bootstrapServer;
-		if (server != null) {
-			producer = PRODUCERS.get(server);
-		}
+    String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
+    String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers")
+                                                              .toString()
+        : bootstrapServer;
+    if (server != null) {
+      producer = PRODUCERS.get(server);
+    }
 
-		if (producer != null) {
-			producer.close();
-			PRODUCERS.remove(server);
-		} else {
-			if (logger.isWarnEnabled()) {
-				logger.warn("Kafka Producer [{}] has not been started yet.", server);
-			}
-		}
-	}
+    if (producer == null) {
+      Properties props = new Properties();
+      for (Object k : map.keySet()) {
+        props.put(k, map.get(k));
+      }
+      if (props.get("bootstrap.servers") == null) {
+        // default to localhost
+        props.put("bootstrap.servers", bootstrapServer);
+      }
+      if (props.get("acks") == null) {
+        // default to all
+        String acks = Configuration.get(DIRIGIBLE_KAFKA_ACKS, DIRIGIBLE_KAFKA_ACKS_ALL);
+        props.put("acks", acks);
+      }
+      if (props.get("key.serializer") == null) {
+        // default to org.apache.kafka.common.serialization.StringSerializer
+        String keySerializer = Configuration.get(DIRIGIBLE_KAFKA_KEY_SERIALIZER, DIRIGIBLE_KAFKA_SERIALIZER_STRING);
+        props.put("key.serializer", keySerializer);
+      }
+      if (props.get("value.serializer") == null) {
+        // default to org.apache.kafka.common.serialization.StringSerializer
+        String valueSerializer = Configuration.get(DIRIGIBLE_KAFKA_VALUE_SERIALIZER, DIRIGIBLE_KAFKA_SERIALIZER_STRING);
+        props.put("value.serializer", valueSerializer);
+      }
+      producer = new KafkaProducer<>(props);
+      PRODUCERS.put(server, producer);
+      if (logger.isInfoEnabled()) {
+        logger.info("Kafka Producer [{}] created.", server);
+      }
+    }
 
-	/**
-	 * Start listening.
-	 *
-	 * @param destination the destination
-	 * @param handler the handler
-	 * @param timeout the timeout
-	 * @param configuration the configuration
-	 */
-	public static final void startListening(String destination, String handler, int timeout, String configuration) {
-		if (configuration == null) {
-			configuration = "{}";
-		}
+    producer.send(new ProducerRecord<String, String>(destination, key, value));
 
-		Map map = GsonHelper.fromJson(configuration, Map.class);
+    // producer.close();
+  }
 
-		Consumer<String, String> consumer = null;
-		KafkaConsumerRunner consumerRunner = null;
+  /**
+   * Close the producer per server endpoint.
+   *
+   * @param configuration the configuration
+   */
+  public static final void closeProducer(String configuration) {
+    if (configuration == null) {
+      configuration = "{}";
+    }
 
-		String location = null;
-		String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
-		String server = map.get("bootstrap.servers") != null ? map	.get("bootstrap.servers")
-																	.toString()
-				: bootstrapServer;
-		location = createLocation(destination, server);
-		consumerRunner = CONSUMERS.get(location);
+    Map map = GsonHelper.fromJson(configuration, Map.class);
+    Producer<String, String> producer = null;
 
-		if (consumerRunner == null) {
-			Properties props = new Properties();
-			for (Object k : map.keySet()) {
-				props.put(k, map.get(k));
-			}
-			if (props.get("bootstrap.servers") == null) {
-				// default to localhost
-				props.put("bootstrap.servers", bootstrapServer);
-			}
-			if (props.get("group.id") == null) {
-				// default to handler
-				props.put("group.id", handler != null ? handler : destination);
-			}
-			if (props.get("enable.auto.commit") == null) {
-				// autocommit
-				String enableAutoCommit = Configuration.get(DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED, DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED_DEFAULT);
-				props.put("enable.auto.commit", enableAutoCommit);
-			}
-			if (props.get("auto.commit.interval.ms") == null) {
-				// autocommit interval 1000
-				String autoCommitInterval =
-						Configuration.get(DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL, DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL_DEFAULT);
-				props.put("auto.commit.interval.ms", autoCommitInterval);
-			}
-			if (props.get("key.deserializer") == null) {
-				// default to org.apache.kafka.common.serialization.StringSerializer
-				String keySerializer = Configuration.get(DIRIGIBLE_KAFKA_KEY_SERIALIZER, DIRIGIBLE_KAFKA_SERIALIZER_STRING);
-				props.put("key.deserializer", keySerializer);
-			}
-			if (props.get("value.deserializer") == null) {
-				// default to org.apache.kafka.common.serialization.StringSerializer
-				String valueSerializer = Configuration.get(DIRIGIBLE_KAFKA_VALUE_SERIALIZER, DIRIGIBLE_KAFKA_SERIALIZER_STRING);
-				props.put("value.deserializer", valueSerializer);
-			}
+    String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
+    String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers")
+                                                              .toString()
+        : bootstrapServer;
+    if (server != null) {
+      producer = PRODUCERS.get(server);
+    }
 
-			consumer = new KafkaConsumer<>(props);
+    if (producer != null) {
+      producer.close();
+      PRODUCERS.remove(server);
+    } else {
+      if (logger.isWarnEnabled()) {
+        logger.warn("Kafka Producer [{}] has not been started yet.", server);
+      }
+    }
+  }
 
-			consumerRunner = new KafkaConsumerRunner(consumer, destination, handler, timeout);
-			Thread consumerThread = new Thread(consumerRunner);
-			consumerThread.setDaemon(false);
-			consumerThread.start();
-			CONSUMERS.put(location, consumerRunner);
-			if (logger.isInfoEnabled()) {
-				logger.info("Kafka Consumer [{}] created.", location);
-			}
-		} else {
-			if (logger.isWarnEnabled()) {
-				logger.warn("Kafka Consumer [{}] has already been started.", location);
-			}
-		}
-	}
+  /**
+   * Start listening.
+   *
+   * @param destination the destination
+   * @param handler the handler
+   * @param timeout the timeout
+   * @param configuration the configuration
+   */
+  public static final void startListening(String destination, String handler, int timeout, String configuration) {
+    if (configuration == null) {
+      configuration = "{}";
+    }
 
-	/**
-	 * Stop listening.
-	 *
-	 * @param destination the destination
-	 * @param configuration the configuration
-	 */
-	public static final void stopListening(String destination, String configuration) {
-		if (configuration == null) {
-			configuration = "{}";
-		}
+    Map map = GsonHelper.fromJson(configuration, Map.class);
 
-		Map map = GsonHelper.fromJson(configuration, Map.class);
+    Consumer<String, String> consumer = null;
+    KafkaConsumerRunner consumerRunner = null;
 
-		KafkaConsumerRunner consumerRunner = null;
+    String location = null;
+    String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
+    String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers")
+                                                              .toString()
+        : bootstrapServer;
+    location = createLocation(destination, server);
+    consumerRunner = CONSUMERS.get(location);
 
-		String location = null;
-		String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
-		String server = map.get("bootstrap.servers") != null ? map	.get("bootstrap.servers")
-																	.toString()
-				: bootstrapServer;
-		location = createLocation(destination, server);
-		consumerRunner = CONSUMERS.get(location);
+    if (consumerRunner == null) {
+      Properties props = new Properties();
+      for (Object k : map.keySet()) {
+        props.put(k, map.get(k));
+      }
+      if (props.get("bootstrap.servers") == null) {
+        // default to localhost
+        props.put("bootstrap.servers", bootstrapServer);
+      }
+      if (props.get("group.id") == null) {
+        // default to handler
+        props.put("group.id", handler != null ? handler : destination);
+      }
+      if (props.get("enable.auto.commit") == null) {
+        // autocommit
+        String enableAutoCommit = Configuration.get(DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED, DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED_DEFAULT);
+        props.put("enable.auto.commit", enableAutoCommit);
+      }
+      if (props.get("auto.commit.interval.ms") == null) {
+        // autocommit interval 1000
+        String autoCommitInterval = Configuration.get(DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL, DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL_DEFAULT);
+        props.put("auto.commit.interval.ms", autoCommitInterval);
+      }
+      if (props.get("key.deserializer") == null) {
+        // default to org.apache.kafka.common.serialization.StringSerializer
+        String keySerializer = Configuration.get(DIRIGIBLE_KAFKA_KEY_SERIALIZER, DIRIGIBLE_KAFKA_SERIALIZER_STRING);
+        props.put("key.deserializer", keySerializer);
+      }
+      if (props.get("value.deserializer") == null) {
+        // default to org.apache.kafka.common.serialization.StringSerializer
+        String valueSerializer = Configuration.get(DIRIGIBLE_KAFKA_VALUE_SERIALIZER, DIRIGIBLE_KAFKA_SERIALIZER_STRING);
+        props.put("value.deserializer", valueSerializer);
+      }
 
-		if (consumerRunner != null) {
-			consumerRunner.stop();
-			CONSUMERS.remove(location);
-		} else {
-			if (logger.isWarnEnabled()) {
-				logger.warn("Kafka Consumer [" + location + "] has not been started yet.");
-			}
-		}
-	}
+      consumer = new KafkaConsumer<>(props);
 
-	/**
-	 * Create internal identifier for a consumer.
-	 *
-	 * @param destination the destination
-	 * @param server the server
-	 * @return the identifier
-	 */
-	private static String createLocation(String destination, String server) {
-		return "[" + server + "]:[" + destination + "]";
-	}
+      consumerRunner = new KafkaConsumerRunner(consumer, destination, handler, timeout);
+      Thread consumerThread = new Thread(consumerRunner);
+      consumerThread.setDaemon(false);
+      consumerThread.start();
+      CONSUMERS.put(location, consumerRunner);
+      if (logger.isInfoEnabled()) {
+        logger.info("Kafka Consumer [{}] created.", location);
+      }
+    } else {
+      if (logger.isWarnEnabled()) {
+        logger.warn("Kafka Consumer [{}] has already been started.", location);
+      }
+    }
+  }
+
+  /**
+   * Stop listening.
+   *
+   * @param destination the destination
+   * @param configuration the configuration
+   */
+  public static final void stopListening(String destination, String configuration) {
+    if (configuration == null) {
+      configuration = "{}";
+    }
+
+    Map map = GsonHelper.fromJson(configuration, Map.class);
+
+    KafkaConsumerRunner consumerRunner = null;
+
+    String location = null;
+    String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
+    String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers")
+                                                              .toString()
+        : bootstrapServer;
+    location = createLocation(destination, server);
+    consumerRunner = CONSUMERS.get(location);
+
+    if (consumerRunner != null) {
+      consumerRunner.stop();
+      CONSUMERS.remove(location);
+    } else {
+      if (logger.isWarnEnabled()) {
+        logger.warn("Kafka Consumer [" + location + "] has not been started yet.");
+      }
+    }
+  }
+
+  /**
+   * Create internal identifier for a consumer.
+   *
+   * @param destination the destination
+   * @param server the server
+   * @return the identifier
+   */
+  private static String createLocation(String destination, String server) {
+    return "[" + server + "]:[" + destination + "]";
+  }
 
 }

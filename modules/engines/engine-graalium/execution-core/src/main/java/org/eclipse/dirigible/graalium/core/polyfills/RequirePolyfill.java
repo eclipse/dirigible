@@ -17,30 +17,30 @@ import org.eclipse.dirigible.graalium.core.javascript.polyfills.JavascriptPolyfi
  */
 public class RequirePolyfill implements JavascriptPolyfill {
 
-	/** The Constant POLYFILL_PATH_IN_RESOURCES. */
-	private static final String POLYFILL_PATH_IN_RESOURCES = "/polyfills/require.js";
+  /** The Constant POLYFILL_PATH_IN_RESOURCES. */
+  private static final String POLYFILL_PATH_IN_RESOURCES = "/polyfills/require.js";
 
-	/**
-	 * Instantiates a new require polyfill.
-	 */
-	public RequirePolyfill() {}
+  /**
+   * Instantiates a new require polyfill.
+   */
+  public RequirePolyfill() {}
 
-	/**
-	 * Gets the source.
-	 *
-	 * @return the source
-	 */
-	public String getSource() {
-		return this.getPolyfillFromResources("/polyfills/require.js");
-	}
+  /**
+   * Gets the source.
+   *
+   * @return the source
+   */
+  public String getSource() {
+    return this.getPolyfillFromResources("/polyfills/require.js");
+  }
 
-	/**
-	 * Gets the file name.
-	 *
-	 * @return the file name
-	 */
-	public String getFileName() {
-		return "/polyfills/require.js";
-	}
+  /**
+   * Gets the file name.
+   *
+   * @return the file name
+   */
+  public String getFileName() {
+    return "/polyfills/require.js";
+  }
 }
 

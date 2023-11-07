@@ -32,125 +32,125 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class RoleService implements ArtefactService<Role> {
 
-	/**
-	 * The security role repository.
-	 */
-	@Autowired
-	private RoleRepository roleRepository;
+  /**
+   * The security role repository.
+   */
+  @Autowired
+  private RoleRepository roleRepository;
 
-	/**
-	 * Gets the all.
-	 *
-	 * @return the all
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public List<Role> getAll() {
-		return roleRepository.findAll();
-	}
+  /**
+   * Gets the all.
+   *
+   * @return the all
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public List<Role> getAll() {
+    return roleRepository.findAll();
+  }
 
-	/**
-	 * Find all.
-	 *
-	 * @param pageable the pageable
-	 * @return the page
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public Page<Role> getPages(Pageable pageable) {
-		return roleRepository.findAll(pageable);
-	}
+  /**
+   * Find all.
+   *
+   * @param pageable the pageable
+   * @return the page
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public Page<Role> getPages(Pageable pageable) {
+    return roleRepository.findAll(pageable);
+  }
 
-	/**
-	 * Find by id.
-	 *
-	 * @param id the id
-	 * @return the security role
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public Role findById(Long id) {
-		Optional<Role> securityRole = roleRepository.findById(id);
-		if (securityRole.isPresent()) {
-			return securityRole.get();
-		} else {
-			throw new IllegalArgumentException("SecurityRole with id does not exist: " + id);
-		}
-	}
+  /**
+   * Find by id.
+   *
+   * @param id the id
+   * @return the security role
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public Role findById(Long id) {
+    Optional<Role> securityRole = roleRepository.findById(id);
+    if (securityRole.isPresent()) {
+      return securityRole.get();
+    } else {
+      throw new IllegalArgumentException("SecurityRole with id does not exist: " + id);
+    }
+  }
 
-	/**
-	 * Find by name.
-	 *
-	 * @param name the name
-	 * @return the security role
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public Role findByName(String name) {
-		Role filter = new Role();
-		filter.setName(name);
-		Example<Role> example = Example.of(filter);
-		Optional<Role> securityRole = roleRepository.findOne(example);
-		if (securityRole.isPresent()) {
-			return securityRole.get();
-		} else {
-			throw new IllegalArgumentException("SecurityRole with name does not exist: " + name);
-		}
-	}
+  /**
+   * Find by name.
+   *
+   * @param name the name
+   * @return the security role
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public Role findByName(String name) {
+    Role filter = new Role();
+    filter.setName(name);
+    Example<Role> example = Example.of(filter);
+    Optional<Role> securityRole = roleRepository.findOne(example);
+    if (securityRole.isPresent()) {
+      return securityRole.get();
+    } else {
+      throw new IllegalArgumentException("SecurityRole with name does not exist: " + name);
+    }
+  }
 
-	/**
-	 * Find by location.
-	 *
-	 * @param location the location
-	 * @return the list
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public List<Role> findByLocation(String location) {
-		Role filter = new Role();
-		filter.setLocation(location);
-		Example<Role> example = Example.of(filter);
-		List<Role> list = roleRepository.findAll(example);
-		return list;
-	}
+  /**
+   * Find by location.
+   *
+   * @param location the location
+   * @return the list
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public List<Role> findByLocation(String location) {
+    Role filter = new Role();
+    filter.setLocation(location);
+    Example<Role> example = Example.of(filter);
+    List<Role> list = roleRepository.findAll(example);
+    return list;
+  }
 
-	/**
-	 * Find by key.
-	 *
-	 * @param key the key
-	 * @return the role
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public Role findByKey(String key) {
-		Role filter = new Role();
-		filter.setKey(key);
-		Example<Role> example = Example.of(filter);
-		Optional<Role> role = roleRepository.findOne(example);
-		if (role.isPresent()) {
-			return role.get();
-		}
-		return null;
-	}
+  /**
+   * Find by key.
+   *
+   * @param key the key
+   * @return the role
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public Role findByKey(String key) {
+    Role filter = new Role();
+    filter.setKey(key);
+    Example<Role> example = Example.of(filter);
+    Optional<Role> role = roleRepository.findOne(example);
+    if (role.isPresent()) {
+      return role.get();
+    }
+    return null;
+  }
 
-	/**
-	 * Save.
-	 *
-	 * @param securityRole the security role
-	 * @return the security role
-	 */
-	@Override
-	public Role save(Role securityRole) {
-		return roleRepository.saveAndFlush(securityRole);
-	}
+  /**
+   * Save.
+   *
+   * @param securityRole the security role
+   * @return the security role
+   */
+  @Override
+  public Role save(Role securityRole) {
+    return roleRepository.saveAndFlush(securityRole);
+  }
 
-	/**
-	 * Delete.
-	 *
-	 * @param securityRole the security role
-	 */
-	@Override
-	public void delete(Role securityRole) {
-		roleRepository.delete(securityRole);
-	}
+  /**
+   * Delete.
+   *
+   * @param securityRole the security role
+   */
+  @Override
+  public void delete(Role securityRole) {
+    roleRepository.delete(securityRole);
+  }
 }

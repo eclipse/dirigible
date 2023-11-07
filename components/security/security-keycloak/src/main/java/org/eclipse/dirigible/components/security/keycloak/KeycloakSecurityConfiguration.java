@@ -27,69 +27,69 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @ConditionalOnProperty(name = "keycloak.enabled", havingValue = "true")
 public class KeycloakSecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter {
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) {
-		KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
-		keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(new SimpleAuthorityMapper()); // prefix = "ROLE_
-		auth.authenticationProvider(keycloakAuthenticationProvider);
-	}
+  @Autowired
+  public void configureGlobal(AuthenticationManagerBuilder auth) {
+    KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
+    keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(new SimpleAuthorityMapper()); // prefix = "ROLE_
+    auth.authenticationProvider(keycloakAuthenticationProvider);
+  }
 
-	@Override
-	protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
-		return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
-	}
+  @Override
+  protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
+    return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
+  }
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		super.configure(http);
-		http.csrf()
-			.disable();
-		http.headers()
-			.frameOptions()
-			.sameOrigin();
-		HttpSecurityURIConfigurator.configure(http);
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    super.configure(http);
+    http.csrf()
+        .disable();
+    http.headers()
+        .frameOptions()
+        .sameOrigin();
+    HttpSecurityURIConfigurator.configure(http);
 
-		// http
-		// .authorizeRequests()
-		// .antMatchers("/").permitAll()
-		// .antMatchers("/home").permitAll()
-		// .antMatchers("/logout").permitAll()
-		// .antMatchers("/index-busy.html").permitAll()
-		//
-		// .antMatchers("/stomp").permitAll()
-		//
-		// .antMatchers("/error/**").permitAll()
-		// .antMatchers("/error.html").permitAll()
-		//
-		// // Public
-		// .antMatchers("/favicon.ico").permitAll()
-		// .antMatchers("/public/**").permitAll()
-		// .antMatchers("/webjars/**").permitAll()
-		//
-		// .antMatchers("/services/core/theme/**").permitAll()
-		// .antMatchers("/services/core/version/**").permitAll()
-		// .antMatchers("/services/core/healthcheck/**").permitAll()
-		// .antMatchers("/services/web/resources/**").permitAll()
-		// .antMatchers("/services/web/resources-core/**").permitAll()
-		// .antMatchers("/services/js/resources-core/**").permitAll()
-		//
-		// .antMatchers("/actuator/**").permitAll()
-		//
-		// // Authenticated
-		// .antMatchers("/services/**").authenticated()
-		// .antMatchers("/websockets/**").authenticated()
-		// .antMatchers("/odata/**").authenticated()
-		//
-		// // "Developer" role required
-		// .antMatchers("/services/ide/**").hasRole("Developer")
-		// .antMatchers("/websockets/ide/**").hasRole("Developer")
+    // http
+    // .authorizeRequests()
+    // .antMatchers("/").permitAll()
+    // .antMatchers("/home").permitAll()
+    // .antMatchers("/logout").permitAll()
+    // .antMatchers("/index-busy.html").permitAll()
+    //
+    // .antMatchers("/stomp").permitAll()
+    //
+    // .antMatchers("/error/**").permitAll()
+    // .antMatchers("/error.html").permitAll()
+    //
+    // // Public
+    // .antMatchers("/favicon.ico").permitAll()
+    // .antMatchers("/public/**").permitAll()
+    // .antMatchers("/webjars/**").permitAll()
+    //
+    // .antMatchers("/services/core/theme/**").permitAll()
+    // .antMatchers("/services/core/version/**").permitAll()
+    // .antMatchers("/services/core/healthcheck/**").permitAll()
+    // .antMatchers("/services/web/resources/**").permitAll()
+    // .antMatchers("/services/web/resources-core/**").permitAll()
+    // .antMatchers("/services/js/resources-core/**").permitAll()
+    //
+    // .antMatchers("/actuator/**").permitAll()
+    //
+    // // Authenticated
+    // .antMatchers("/services/**").authenticated()
+    // .antMatchers("/websockets/**").authenticated()
+    // .antMatchers("/odata/**").authenticated()
+    //
+    // // "Developer" role required
+    // .antMatchers("/services/ide/**").hasRole("Developer")
+    // .antMatchers("/websockets/ide/**").hasRole("Developer")
 
-		// "Operator" role required
-		// .antMatchers("/services/ops/**").hasRole("Operator")
-		// .antMatchers("/services/transport/**").hasRole("Operator")
-		// .antMatchers("/websockets/ops/**").hasRole("Operator")
+    // "Operator" role required
+    // .antMatchers("/services/ops/**").hasRole("Operator")
+    // .antMatchers("/services/transport/**").hasRole("Operator")
+    // .antMatchers("/websockets/ops/**").hasRole("Operator")
 
-		// Deny all other requests
-		// .anyRequest().denyAll();
-	}
+    // Deny all other requests
+    // .anyRequest().denyAll();
+  }
 }

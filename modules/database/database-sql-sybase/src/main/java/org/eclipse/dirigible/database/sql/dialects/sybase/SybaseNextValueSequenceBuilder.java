@@ -18,28 +18,28 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
  */
 public class SybaseNextValueSequenceBuilder extends NextValueSequenceBuilder {
 
-	/**
-	 * Instantiates a new Sybase next value sequence builder.
-	 *
-	 * @param dialect the dialect
-	 * @param sequence the sequence
-	 */
-	public SybaseNextValueSequenceBuilder(ISqlDialect dialect, String sequence) {
-		super(dialect, sequence);
-	}
+  /**
+   * Instantiates a new Sybase next value sequence builder.
+   *
+   * @param dialect the dialect
+   * @param sequence the sequence
+   */
+  public SybaseNextValueSequenceBuilder(ISqlDialect dialect, String sequence) {
+    super(dialect, sequence);
+  }
 
-	/**
-	 * Generate.
-	 *
-	 * @return the string
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
-	 */
-	@Override
-	public String generate() {
-		throw new IllegalStateException("Sybase ASE does not support Sequences");
-	}
+  /**
+   * Generate.
+   *
+   * @return the string
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
+   */
+  @Override
+  public String generate() {
+    throw new IllegalStateException("Sybase ASE does not support Sequences");
+  }
 }

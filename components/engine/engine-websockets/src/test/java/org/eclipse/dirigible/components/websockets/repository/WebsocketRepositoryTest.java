@@ -38,58 +38,58 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class WebsocketRepositoryTest {
 
-	@Autowired
-	private WebsocketRepository websocketRepository;
+  @Autowired
+  private WebsocketRepository websocketRepository;
 
-	@Autowired
-	EntityManager entityManager;
+  @Autowired
+  EntityManager entityManager;
 
-	@BeforeEach
-	public void setup() {
+  @BeforeEach
+  public void setup() {
 
-		cleanup();
+    cleanup();
 
-		websocketRepository.save(new Websocket("/a/b/c/w1.websocket", "name1", "description", "endpoint1", "handler1", "engine1"));
-		websocketRepository.save(new Websocket("/a/b/c/w2.websocket", "name2", "description", "endpoint2", "handler2", "engine2"));
-		websocketRepository.save(new Websocket("/a/b/c/w3.websocket", "name3", "description", "endpoint3", "handler3", "engine3"));
-	}
+    websocketRepository.save(new Websocket("/a/b/c/w1.websocket", "name1", "description", "endpoint1", "handler1", "engine1"));
+    websocketRepository.save(new Websocket("/a/b/c/w2.websocket", "name2", "description", "endpoint2", "handler2", "engine2"));
+    websocketRepository.save(new Websocket("/a/b/c/w3.websocket", "name3", "description", "endpoint3", "handler3", "engine3"));
+  }
 
-	@AfterEach
-	public void cleanup() {
-		websocketRepository.deleteAll();
-	}
+  @AfterEach
+  public void cleanup() {
+    websocketRepository.deleteAll();
+  }
 
-	@Test
-	public void getOne() {
-		List<Websocket> all = websocketRepository.findAll();
-		assertEquals(3, all.size());
-		Long id = all	.get(0)
-						.getId();
-		Optional<Websocket> optional = websocketRepository.findById(id);
-		Websocket websocket = optional.isPresent() ? optional.get() : null;
-		assertNotNull(websocket);
-		assertEquals("/a/b/c/w1.websocket", websocket.getLocation());
-		assertEquals("name1", websocket.getName());
-		assertEquals("engine1", websocket.getEngine());
-		assertEquals("handler1", websocket.getHandler());
-		assertEquals("endpoint1", websocket.getEndpoint());
-		assertEquals("websocket", websocket.getType());
-		assertEquals("description", websocket.getDescription());
-		assertEquals("SYSTEM", websocket.getCreatedBy());
-		assertNotNull(websocket.getCreatedAt());
-	}
+  @Test
+  public void getOne() {
+    List<Websocket> all = websocketRepository.findAll();
+    assertEquals(3, all.size());
+    Long id = all.get(0)
+                 .getId();
+    Optional<Websocket> optional = websocketRepository.findById(id);
+    Websocket websocket = optional.isPresent() ? optional.get() : null;
+    assertNotNull(websocket);
+    assertEquals("/a/b/c/w1.websocket", websocket.getLocation());
+    assertEquals("name1", websocket.getName());
+    assertEquals("engine1", websocket.getEngine());
+    assertEquals("handler1", websocket.getHandler());
+    assertEquals("endpoint1", websocket.getEndpoint());
+    assertEquals("websocket", websocket.getType());
+    assertEquals("description", websocket.getDescription());
+    assertEquals("SYSTEM", websocket.getCreatedBy());
+    assertNotNull(websocket.getCreatedAt());
+  }
 
-	@Test
-	public void getReferenceUsingEntityManager() {
-		Long id = websocketRepository	.findAll()
-										.get(0)
-										.getId();
-		Websocket websocket = entityManager.getReference(Websocket.class, id);
-		assertNotNull(websocket);
-		assertEquals("/a/b/c/w1.websocket", websocket.getLocation());
-	}
+  @Test
+  public void getReferenceUsingEntityManager() {
+    Long id = websocketRepository.findAll()
+                                 .get(0)
+                                 .getId();
+    Websocket websocket = entityManager.getReference(Websocket.class, id);
+    assertNotNull(websocket);
+    assertEquals("/a/b/c/w1.websocket", websocket.getLocation());
+  }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 }

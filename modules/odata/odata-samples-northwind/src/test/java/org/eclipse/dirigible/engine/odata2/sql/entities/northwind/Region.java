@@ -27,21 +27,21 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 @EdmEntitySet(name = "Regions", container = "NorthwindEntities")
 public class Region {
 
-	/** The region id. */
-	@EdmKey
-	@EdmProperty(name = "RegionID", facets = @EdmFacets(nullable = false))
-	private Integer regionId;
+  /** The region id. */
+  @EdmKey
+  @EdmProperty(name = "RegionID", facets = @EdmFacets(nullable = false))
+  private Integer regionId;
 
-	/** The region description. */
-	@EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 50))
-	private String regionDescription;
+  /** The region description. */
+  @EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 50))
+  private String regionDescription;
 
-	/** The territories. */
-	@EdmNavigationProperty( //
-			toMultiplicity = Multiplicity.MANY, //
-			toType = Territory.class, //
-			toRole = "Territories", //
-			association = "FK_Territories_Region" //
-	)
-	private List<Territory> territories;
+  /** The territories. */
+  @EdmNavigationProperty( //
+      toMultiplicity = Multiplicity.MANY, //
+      toType = Territory.class, //
+      toRole = "Territories", //
+      association = "FK_Territories_Region" //
+  )
+  private List<Territory> territories;
 }

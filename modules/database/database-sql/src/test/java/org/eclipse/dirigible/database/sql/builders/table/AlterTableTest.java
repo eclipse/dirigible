@@ -23,100 +23,100 @@ import org.junit.Test;
  */
 public class AlterTableTest {
 
-	/**
-	 * Alter the table generic.
-	 */
-	@Test
-	public void alterAddTableGeneric() {
-		String sql = SqlFactory	.getDefault()
-								.alter()
-								.table("CUSTOMERS")
-								.add()
-								.column("FIRST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(20)")
-								.build();
+  /**
+   * Alter the table generic.
+   */
+  @Test
+  public void alterAddTableGeneric() {
+    String sql = SqlFactory.getDefault()
+                           .alter()
+                           .table("CUSTOMERS")
+                           .add()
+                           .column("FIRST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(20)")
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("ALTER TABLE CUSTOMERS ADD FIRST_NAME VARCHAR (20) ;", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("ALTER TABLE CUSTOMERS ADD FIRST_NAME VARCHAR (20) ;", sql);
+  }
 
-	/**
-	 * Alter the table type safe.
-	 */
-	@Test
-	public void alterAddTableTypeSafe() {
-		String sql = SqlFactory	.getDefault()
-								.alter()
-								.table("CUSTOMERS")
-								.add()
-								.columnVarchar("FIRST_NAME", 20, false, true, false)
-								.build();
+  /**
+   * Alter the table type safe.
+   */
+  @Test
+  public void alterAddTableTypeSafe() {
+    String sql = SqlFactory.getDefault()
+                           .alter()
+                           .table("CUSTOMERS")
+                           .add()
+                           .columnVarchar("FIRST_NAME", 20, false, true, false)
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("ALTER TABLE CUSTOMERS ADD FIRST_NAME VARCHAR (20) ;", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("ALTER TABLE CUSTOMERS ADD FIRST_NAME VARCHAR (20) ;", sql);
+  }
 
-	/**
-	 * Alter the table generic.
-	 */
-	@Test
-	public void alerDropTableGeneric() {
-		String sql = SqlFactory	.getDefault()
-								.alter()
-								.table("CUSTOMERS")
-								.drop()
-								.column("FIRST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NOT_NULL, Modifiers.UNIQUE, "(20)")
-								.build();
+  /**
+   * Alter the table generic.
+   */
+  @Test
+  public void alerDropTableGeneric() {
+    String sql = SqlFactory.getDefault()
+                           .alter()
+                           .table("CUSTOMERS")
+                           .drop()
+                           .column("FIRST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NOT_NULL, Modifiers.UNIQUE, "(20)")
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("ALTER TABLE CUSTOMERS DROP COLUMN FIRST_NAME ;", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("ALTER TABLE CUSTOMERS DROP COLUMN FIRST_NAME ;", sql);
+  }
 
-	/**
-	 * Alter the table type safe.
-	 */
-	@Test
-	public void alterDropTableTypeSafe() {
-		String sql = SqlFactory	.getDefault()
-								.alter()
-								.table("CUSTOMERS")
-								.drop()
-								.columnVarchar("FIRST_NAME", 20, false, true, true)
-								.build();
+  /**
+   * Alter the table type safe.
+   */
+  @Test
+  public void alterDropTableTypeSafe() {
+    String sql = SqlFactory.getDefault()
+                           .alter()
+                           .table("CUSTOMERS")
+                           .drop()
+                           .columnVarchar("FIRST_NAME", 20, false, true, true)
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("ALTER TABLE CUSTOMERS DROP COLUMN FIRST_NAME ;", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("ALTER TABLE CUSTOMERS DROP COLUMN FIRST_NAME ;", sql);
+  }
 
-	/**
-	 * Alter table add foreign key.
-	 */
-	@Test
-	public void alterAddForeignKey() {
-		String sql = SqlFactory	.getDefault()
-								.alter()
-								.table("ORDERS")
-								.add()
-								.foreignKey("FK1", new String[] {"ORDER_CUSTOMER_ID"}, "CUSTOMERS", new String[] {"CUSTOMER_ID"})
-								.build();
+  /**
+   * Alter table add foreign key.
+   */
+  @Test
+  public void alterAddForeignKey() {
+    String sql = SqlFactory.getDefault()
+                           .alter()
+                           .table("ORDERS")
+                           .add()
+                           .foreignKey("FK1", new String[] {"ORDER_CUSTOMER_ID"}, "CUSTOMERS", new String[] {"CUSTOMER_ID"})
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("ALTER TABLE ORDERS ADD CONSTRAINT FK1 FOREIGN KEY ( ORDER_CUSTOMER_ID ) REFERENCES CUSTOMERS ( CUSTOMER_ID );", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("ALTER TABLE ORDERS ADD CONSTRAINT FK1 FOREIGN KEY ( ORDER_CUSTOMER_ID ) REFERENCES CUSTOMERS ( CUSTOMER_ID );", sql);
+  }
 
-	/**
-	 * Alter table drop foreign key.
-	 */
-	@Test
-	public void alterDropForeignKey() {
-		String sql = SqlFactory	.getDefault()
-								.alter()
-								.table("ORDERS")
-								.drop()
-								.foreignKey("FK1", new String[] {"ORDER_CUSTOMER_ID"}, "CUSTOMERS", new String[] {"CUSTOMER_ID"})
-								.build();
+  /**
+   * Alter table drop foreign key.
+   */
+  @Test
+  public void alterDropForeignKey() {
+    String sql = SqlFactory.getDefault()
+                           .alter()
+                           .table("ORDERS")
+                           .drop()
+                           .foreignKey("FK1", new String[] {"ORDER_CUSTOMER_ID"}, "CUSTOMERS", new String[] {"CUSTOMER_ID"})
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("ALTER TABLE ORDERS DROP CONSTRAINT FK1;", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("ALTER TABLE ORDERS DROP CONSTRAINT FK1;", sql);
+  }
 
 }

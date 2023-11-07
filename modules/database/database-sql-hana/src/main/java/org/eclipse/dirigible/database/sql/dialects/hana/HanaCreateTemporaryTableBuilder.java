@@ -20,82 +20,82 @@ import org.slf4j.LoggerFactory;
  */
 public class HanaCreateTemporaryTableBuilder extends CreateTemporaryTableBuilder<HanaCreateTemporaryTableBuilder> {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(CreateTemporaryTableBuilder.class);
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(CreateTemporaryTableBuilder.class);
 
-	/** The Constant NO_LIKE_TABLE_OR_AS_SELECT_QUERY_SPECIFIED. */
-	private static final String NO_LIKE_TABLE_OR_AS_SELECT_QUERY_SPECIFIED = "No `like` table or `as` select query specified.";
+  /** The Constant NO_LIKE_TABLE_OR_AS_SELECT_QUERY_SPECIFIED. */
+  private static final String NO_LIKE_TABLE_OR_AS_SELECT_QUERY_SPECIFIED = "No `like` table or `as` select query specified.";
 
-	/**
-	 * Instantiates a new abstract sql builder.
-	 *
-	 * @param dialect the dialect
-	 * @param table the table
-	 */
-	protected HanaCreateTemporaryTableBuilder(ISqlDialect dialect, String table) {
-		super(dialect, table);
-	}
+  /**
+   * Instantiates a new abstract sql builder.
+   *
+   * @param dialect the dialect
+   * @param table the table
+   */
+  protected HanaCreateTemporaryTableBuilder(ISqlDialect dialect, String table) {
+    super(dialect, table);
+  }
 
-	/**
-	 * Generate.
-	 *
-	 * @return the string
-	 */
-	@Override
-	public String generate() {
+  /**
+   * Generate.
+   *
+   * @return the string
+   */
+  @Override
+  public String generate() {
 
-		StringBuilder sql = new StringBuilder();
+    StringBuilder sql = new StringBuilder();
 
-		// CREATE
-		generateCreate(sql);
+    // CREATE
+    generateCreate(sql);
 
-		sql	.append(SPACE)
-			.append(METADATA_LOCAL_TEMPORARY);
+    sql.append(SPACE)
+       .append(METADATA_LOCAL_TEMPORARY);
 
-		// TABLE
-		generateTable(sql);
+    // TABLE
+    generateTable(sql);
 
-		sql.append(SPACE);
-		if (this.likeTable != null) {
-			// LIKE table
-			sql	.append(KEYWORD_LIKE)
-				.append(SPACE)
-				.append(this.likeTable);
-			appendWithNoDataKeywords(sql);
-		} else if (this.asSelectQuery != null) {
-			// AS select query
-			sql	.append(KEYWORD_AS)
-				.append(SPACE)
-				.append(OPEN)
-				.append(this.asSelectQuery)
-				.append(CLOSE);
-			if (this.selectWithNoData) {
-				appendWithNoDataKeywords(sql);
-			}
-		} else {
-			throw new IllegalStateException(NO_LIKE_TABLE_OR_AS_SELECT_QUERY_SPECIFIED);
-		}
+    sql.append(SPACE);
+    if (this.likeTable != null) {
+      // LIKE table
+      sql.append(KEYWORD_LIKE)
+         .append(SPACE)
+         .append(this.likeTable);
+      appendWithNoDataKeywords(sql);
+    } else if (this.asSelectQuery != null) {
+      // AS select query
+      sql.append(KEYWORD_AS)
+         .append(SPACE)
+         .append(OPEN)
+         .append(this.asSelectQuery)
+         .append(CLOSE);
+      if (this.selectWithNoData) {
+        appendWithNoDataKeywords(sql);
+      }
+    } else {
+      throw new IllegalStateException(NO_LIKE_TABLE_OR_AS_SELECT_QUERY_SPECIFIED);
+    }
 
-		String generated = sql.toString();
+    String generated = sql.toString();
 
-		if (logger.isTraceEnabled()) {
-			logger.trace("generated: " + generated);
-		}
+    if (logger.isTraceEnabled()) {
+      logger.trace("generated: " + generated);
+    }
 
-		return generated;
-	}
+    return generated;
+  }
 
-	/**
-	 * Append with no data keywords.
-	 *
-	 * @param sql the sql
-	 */
-	private void appendWithNoDataKeywords(StringBuilder sql) {
-		sql	.append(SPACE)
-			.append(KEYWORD_WITH)
-			.append(SPACE)
-			.append(KEYWORD_NO)
-			.append(SPACE)
-			.append(KEYWORD_DATA);
-	}
+  /**
+   * Append with no data keywords.
+   *
+   * @param sql the sql
+   */
+  private void appendWithNoDataKeywords(StringBuilder sql) {
+    sql.append(SPACE)
+       .append(KEYWORD_WITH)
+       .append(SPACE)
+       .append(KEYWORD_NO)
+       .append(SPACE)
+       .append(KEYWORD_DATA);
+  }
 }

@@ -17,12 +17,12 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface UserAccessVerifier {
 
-	/**
-	 * Checks if is in role.
-	 *
-	 * @param request the request
-	 * @param role the role
-	 * @return true, if is in role
-	 */
-	public boolean isInRole(HttpServletRequest request, String role);
+  /**
+   * Checks if is in role.
+   *
+   * @param request the request
+   * @param role the role
+   * @return true, if is in role
+   */
+  public boolean isInRole(HttpServletRequest request, String role);
 }

@@ -37,33 +37,33 @@ import org.springframework.web.context.WebApplicationContext;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 public class IOSuiteTest {
 
-	@Autowired
-	private JavascriptService javascriptService;
+  @Autowired
+  private JavascriptService javascriptService;
 
-	@Autowired
-	private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-	@Autowired
-	protected WebApplicationContext wac;
+  @Autowired
+  protected WebApplicationContext wac;
 
-	@Test
-	public void executeFilesTest() throws Exception {
-		javascriptService.handleRequest("io-tests", "files-create-temp-file.js", null, null, false);
-		javascriptService.handleRequest("io-tests", "files-file-streams.js", null, null, false);
-	}
+  @Test
+  public void executeFilesTest() throws Exception {
+    javascriptService.handleRequest("io-tests", "files-create-temp-file.js", null, null, false);
+    javascriptService.handleRequest("io-tests", "files-file-streams.js", null, null, false);
+  }
 
-	// @Test
-	// public void executeFTPTest() throws Exception {
-	// javascriptService.handleRequest("io-tests", "ftp-get-file.js", null, null, false);
-	// }
+  // @Test
+  // public void executeFTPTest() throws Exception {
+  // javascriptService.handleRequest("io-tests", "ftp-get-file.js", null, null, false);
+  // }
 
-	@Test
-	public void executeStreamsTest() throws Exception {
-		javascriptService.handleRequest("io-tests", "streams-copy.js", null, null, false);
-		javascriptService.handleRequest("io-tests", "streams-text.js", null, null, false);
-	}
+  @Test
+  public void executeStreamsTest() throws Exception {
+    javascriptService.handleRequest("io-tests", "streams-copy.js", null, null, false);
+    javascriptService.handleRequest("io-tests", "streams-text.js", null, null, false);
+  }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 }

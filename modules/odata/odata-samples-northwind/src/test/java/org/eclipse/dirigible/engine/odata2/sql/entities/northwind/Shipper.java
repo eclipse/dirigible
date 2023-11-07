@@ -27,25 +27,25 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty.Multipl
 @EdmEntitySet(name = "Shippers", container = "NorthwindEntities")
 public class Shipper {
 
-	/** The shipper id. */
-	@EdmKey
-	@EdmProperty(name = "ShipperID", facets = @EdmFacets(nullable = false))
-	private Integer shipperId;
+  /** The shipper id. */
+  @EdmKey
+  @EdmProperty(name = "ShipperID", facets = @EdmFacets(nullable = false))
+  private Integer shipperId;
 
-	/** The company name. */
-	@EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 40))
-	private String companyName;
+  /** The company name. */
+  @EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 40))
+  private String companyName;
 
-	/** The phone. */
-	@EdmProperty(facets = @EdmFacets(maxLength = 24))
-	private String phone;
+  /** The phone. */
+  @EdmProperty(facets = @EdmFacets(maxLength = 24))
+  private String phone;
 
-	/** The orders. */
-	@EdmNavigationProperty( //
-			toMultiplicity = Multiplicity.MANY, //
-			toType = OrderDetail.class, //
-			toRole = "Orders", //
-			association = "FK_Orders_Shippers" //
-	)
-	private List<Order> orders;
+  /** The orders. */
+  @EdmNavigationProperty( //
+      toMultiplicity = Multiplicity.MANY, //
+      toType = OrderDetail.class, //
+      toRole = "Orders", //
+      association = "FK_Orders_Shippers" //
+  )
+  private List<Order> orders;
 }

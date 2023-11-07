@@ -37,75 +37,75 @@ import static org.eclipse.dirigible.components.openapi.repository.OpenAPIReposit
 @Transactional
 class OpenAPIServiceTest {
 
-	@Autowired
-	private OpenAPIRepository openAPIRepository;
+  @Autowired
+  private OpenAPIRepository openAPIRepository;
 
-	@Autowired
-	private OpenAPIService openAPIService;
+  @Autowired
+  private OpenAPIService openAPIService;
 
-	@BeforeEach
-	public void setup() {
+  @BeforeEach
+  public void setup() {
 
-		cleanup();
+    cleanup();
 
-		// Create test OpenAPIs
-		openAPIRepository.save(createOpenAPI("/a/b/c/test1.openapi", "test1", "description"));
-		openAPIRepository.save(createOpenAPI("/a/b/c/test2.openapi", "test2", "description"));
-		openAPIRepository.save(createOpenAPI("/a/b/c/test3.openapi", "test3", "description"));
-		openAPIRepository.save(createOpenAPI("/a/b/c/test4.openapi", "test4", "description"));
-		openAPIRepository.save(createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
-	}
+    // Create test OpenAPIs
+    openAPIRepository.save(createOpenAPI("/a/b/c/test1.openapi", "test1", "description"));
+    openAPIRepository.save(createOpenAPI("/a/b/c/test2.openapi", "test2", "description"));
+    openAPIRepository.save(createOpenAPI("/a/b/c/test3.openapi", "test3", "description"));
+    openAPIRepository.save(createOpenAPI("/a/b/c/test4.openapi", "test4", "description"));
+    openAPIRepository.save(createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
+  }
 
-	@AfterEach
-	public void cleanup() {
-		// Delete test OpenAPIs
-		openAPIRepository.deleteAll();
-	}
+  @AfterEach
+  public void cleanup() {
+    // Delete test OpenAPIs
+    openAPIRepository.deleteAll();
+  }
 
-	@Test
-	void testGetAll() {
-		List<OpenAPI> openAPIList = openAPIService.getAll();
-		assertEquals(5, openAPIList.size());
-	}
+  @Test
+  void testGetAll() {
+    List<OpenAPI> openAPIList = openAPIService.getAll();
+    assertEquals(5, openAPIList.size());
+  }
 
-	@Test
-	void testFindAll() {
-		Page<OpenAPI> openApiPage = openAPIService.getPages(Pageable.ofSize(1));
-		assertEquals(5, openApiPage.getTotalElements());
-	}
+  @Test
+  void testFindAll() {
+    Page<OpenAPI> openApiPage = openAPIService.getPages(Pageable.ofSize(1));
+    assertEquals(5, openApiPage.getTotalElements());
+  }
 
-	@Test
-	void testFindById() {
-		OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
-		openAPIService.save(openAPI);
-		OpenAPI openAPIServiceById = openAPIService.findById(openAPI.getId());
-		assertEquals("test", openAPIServiceById.getName());
-	}
+  @Test
+  void testFindById() {
+    OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
+    openAPIService.save(openAPI);
+    OpenAPI openAPIServiceById = openAPIService.findById(openAPI.getId());
+    assertEquals("test", openAPIServiceById.getName());
+  }
 
-	@Test
-	void testFindByName() {
-		OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
-		openAPIService.save(openAPI);
-		OpenAPI openAPIServiceByName = openAPIService.findByName("test");
-		assertEquals(openAPI.getId(), openAPIServiceByName.getId());
-	}
+  @Test
+  void testFindByName() {
+    OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
+    openAPIService.save(openAPI);
+    OpenAPI openAPIServiceByName = openAPIService.findByName("test");
+    assertEquals(openAPI.getId(), openAPIServiceByName.getId());
+  }
 
-	@Test
-	void testSave() {
-		OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
-		openAPIService.save(openAPI);
-		assertNotNull(openAPIService.findByName("test"));
-	}
+  @Test
+  void testSave() {
+    OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
+    openAPIService.save(openAPI);
+    assertNotNull(openAPIService.findByName("test"));
+  }
 
-	@Test
-	void testDelete() {
-		try {
-			OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
-			openAPIService.save(openAPI);
-			openAPIService.delete(openAPI);
-			openAPIService.findByName("test");
-		} catch (Exception e) {
-			assertEquals("OpenAPI with name does not exist: test", e.getMessage());
-		}
-	}
+  @Test
+  void testDelete() {
+    try {
+      OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
+      openAPIService.save(openAPI);
+      openAPIService.delete(openAPI);
+      openAPIService.findByName("test");
+    } catch (Exception e) {
+      assertEquals("OpenAPI with name does not exist: test", e.getMessage());
+    }
+  }
 }

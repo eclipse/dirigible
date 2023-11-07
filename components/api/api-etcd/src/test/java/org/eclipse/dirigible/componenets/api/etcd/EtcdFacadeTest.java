@@ -10,16 +10,11 @@
  */
 package org.eclipse.dirigible.componenets.api.etcd;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
-
-import io.etcd.jetcd.kv.GetResponse;
-import io.etcd.jetcd.ByteSequence;
-import io.etcd.jetcd.KV;
-import io.etcd.jetcd.test.EtcdClusterExtension;
-
-import com.google.common.base.Charsets;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.api.etcd.EtcdFacade;
 import org.junit.Before;
@@ -32,8 +27,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import static org.junit.jupiter.api.Assertions.*;
+import com.google.common.base.Charsets;
+import io.etcd.jetcd.ByteSequence;
+import io.etcd.jetcd.KV;
+import io.etcd.jetcd.kv.GetResponse;
+import io.etcd.jetcd.test.EtcdClusterExtension;
 
 /**
  * The Class EtcdFacadeTest.
@@ -46,93 +44,93 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EtcdFacadeTest {
 
-	/**
-	 * The Constant etcd.
-	 */
-	@RegisterExtension
-	public static final EtcdClusterExtension cluster = EtcdClusterExtension	.builder()
-																			.withNodes(1)
-																			.build();
+  /**
+   * The Constant etcd.
+   */
+  @RegisterExtension
+  public static final EtcdClusterExtension cluster = EtcdClusterExtension.builder()
+                                                                         .withNodes(1)
+                                                                         .build();
 
-	/**
-	 * Sets the up.
-	 */
-	@Before
-	public void setUp() {
-		cluster.restart();
-		Configuration.set("DIRIGIBLE_ETCD_CLIENT_ENDPOINT", cluster	.clientEndpoints()
-																	.get(0)
-																	.toString());
-	}
+  /**
+   * Sets the up.
+   */
+  @Before
+  public void setUp() {
+    cluster.restart();
+    Configuration.set("DIRIGIBLE_ETCD_CLIENT_ENDPOINT", cluster.clientEndpoints()
+                                                               .get(0)
+                                                               .toString());
+  }
 
-	/**
-	 * Gets the client.
-	 *
-	 * @return the client
-	 * @throws ExecutionException the execution exception
-	 * @throws InterruptedException the interrupted exception
-	 */
-	@Test
-	public void getClient() throws ExecutionException, InterruptedException {
-		KV etcdClient = EtcdFacade.getClient();
-		assertNotNull(etcdClient);
+  /**
+   * Gets the client.
+   *
+   * @return the client
+   * @throws ExecutionException the execution exception
+   * @throws InterruptedException the interrupted exception
+   */
+  @Test
+  public void getClient() throws ExecutionException, InterruptedException {
+    KV etcdClient = EtcdFacade.getClient();
+    assertNotNull(etcdClient);
 
-		ByteSequence key = ByteSequence.from("foo", Charsets.UTF_8);
-		ByteSequence value = ByteSequence.from("bar", Charsets.UTF_8);
+    ByteSequence key = ByteSequence.from("foo", Charsets.UTF_8);
+    ByteSequence value = ByteSequence.from("bar", Charsets.UTF_8);
 
-		etcdClient.put(key, value);
-		Thread.sleep(500);
+    etcdClient.put(key, value);
+    Thread.sleep(500);
 
-		GetResponse getPutResponse = etcdClient	.get(key)
-												.get();
-		assertEquals(getPutResponse	.getKvs()
-									.get(0)
-									.getValue()
-									.toString(Charsets.UTF_8),
-				value.toString(Charsets.UTF_8));
+    GetResponse getPutResponse = etcdClient.get(key)
+                                           .get();
+    assertEquals(getPutResponse.getKvs()
+                               .get(0)
+                               .getValue()
+                               .toString(Charsets.UTF_8),
+        value.toString(Charsets.UTF_8));
 
-		etcdClient.delete(key);
-		Thread.sleep(500);
+    etcdClient.delete(key);
+    Thread.sleep(500);
 
-		GetResponse getDelResponse = etcdClient	.get(key)
-												.get();
-		assertTrue(getDelResponse	.getKvs()
-									.isEmpty());
-	}
+    GetResponse getDelResponse = etcdClient.get(key)
+                                           .get();
+    assertTrue(getDelResponse.getKvs()
+                             .isEmpty());
+  }
 
-	/**
-	 * String to byte sequence.
-	 */
-	@Test
-	public void stringToByteSequence() {
-		String s = "foo";
-		ByteSequence bs = EtcdFacade.stringToByteSequence(s);
+  /**
+   * String to byte sequence.
+   */
+  @Test
+  public void stringToByteSequence() {
+    String s = "foo";
+    ByteSequence bs = EtcdFacade.stringToByteSequence(s);
 
-		assertNotNull(bs);
-		assertEquals(bs.toString(Charsets.UTF_8), s);
-	}
+    assertNotNull(bs);
+    assertEquals(bs.toString(Charsets.UTF_8), s);
+  }
 
-	/**
-	 * Byte array to byte sequence.
-	 */
-	@Test
-	public void byteArrayToByteSequence() {
-		byte[] arr = {100, 100, 100};
-		ByteSequence bs = EtcdFacade.byteArrayToByteSequence(arr);
+  /**
+   * Byte array to byte sequence.
+   */
+  @Test
+  public void byteArrayToByteSequence() {
+    byte[] arr = {100, 100, 100};
+    ByteSequence bs = EtcdFacade.byteArrayToByteSequence(arr);
 
-		assertNotNull(bs);
-		assertTrue(Arrays.equals(bs.getBytes(), arr));
-	}
+    assertNotNull(bs);
+    assertTrue(Arrays.equals(bs.getBytes(), arr));
+  }
 
-	/**
-	 * Byte sequence to string.
-	 */
-	@Test
-	public void byteSequenceToString() {
-		ByteSequence bs = ByteSequence.from("foo", Charsets.UTF_8);
-		String s = EtcdFacade.byteSequenceToString(bs);
+  /**
+   * Byte sequence to string.
+   */
+  @Test
+  public void byteSequenceToString() {
+    ByteSequence bs = ByteSequence.from("foo", Charsets.UTF_8);
+    String s = EtcdFacade.byteSequenceToString(bs);
 
-		assertNotNull(s);
-		assertEquals(bs.toString(Charsets.UTF_8), s);
-	}
+    assertNotNull(s);
+    assertEquals(bs.toString(Charsets.UTF_8), s);
+  }
 }

@@ -18,29 +18,29 @@ import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
  */
 public class PostgresCreateBranchingBuilder extends CreateBranchingBuilder {
 
-	/**
-	 * Instantiates a new PostgreSQL create branching builder.
-	 *
-	 * @param dialect the dialect
-	 */
-	public PostgresCreateBranchingBuilder(ISqlDialect dialect) {
-		super(dialect);
-	}
+  /**
+   * Instantiates a new PostgreSQL create branching builder.
+   *
+   * @param dialect the dialect
+   */
+  public PostgresCreateBranchingBuilder(ISqlDialect dialect) {
+    super(dialect);
+  }
 
-	/**
-	 * View.
-	 *
-	 * @param view the view
-	 * @return the postgres create view builder
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#view(java.lang.String)
-	 */
-	@Override
-	public PostgresCreateViewBuilder view(String view) {
-		return new PostgresCreateViewBuilder(this.getDialect(), view);
-	}
+  /**
+   * View.
+   *
+   * @param view the view
+   * @return the postgres create view builder
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#view(java.lang.String)
+   */
+  @Override
+  public PostgresCreateViewBuilder view(String view) {
+    return new PostgresCreateViewBuilder(this.getDialect(), view);
+  }
 
 }

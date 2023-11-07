@@ -19,24 +19,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class FtpEngine implements Engine {
 
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-	@Override
-	public String getName() {
-		return "FTP";
-	}
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  @Override
+  public String getName() {
+    return "FTP";
+  }
 
-	/**
-	 * Gets the provider.
-	 *
-	 * @return the provider
-	 */
-	@Override
-	public String getProvider() {
-		return "Eclipse Dirigible";
-	}
+  /**
+   * Gets the provider.
+   *
+   * @return the provider
+   */
+  @Override
+  public String getProvider() {
+    return "Eclipse Dirigible";
+  }
 
 }

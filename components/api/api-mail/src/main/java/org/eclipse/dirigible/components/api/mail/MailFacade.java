@@ -20,41 +20,41 @@ import org.eclipse.dirigible.commons.config.Configuration;
  */
 public class MailFacade {
 
-	/** The Constant DIRIGIBLE_MAIL_CONFIG_PROVIDER. */
-	// Dirigible mail properties
-	private static final String DIRIGIBLE_MAIL_CONFIG_PROVIDER = "DIRIGIBLE_MAIL_CONFIG_PROVIDER";
+  /** The Constant DIRIGIBLE_MAIL_CONFIG_PROVIDER. */
+  // Dirigible mail properties
+  private static final String DIRIGIBLE_MAIL_CONFIG_PROVIDER = "DIRIGIBLE_MAIL_CONFIG_PROVIDER";
 
-	/** The Constant DEFAULT_PROVIDER_NAME. */
-	// Default values
-	private static final String DEFAULT_PROVIDER_NAME = "environment";
+  /** The Constant DEFAULT_PROVIDER_NAME. */
+  // Default values
+  private static final String DEFAULT_PROVIDER_NAME = "environment";
 
-	/** The Constant MAIL_PROVIDERS. */
-	private static final ServiceLoader<MailConfigurationProvider> MAIL_PROVIDERS = ServiceLoader.load(MailConfigurationProvider.class);
+  /** The Constant MAIL_PROVIDERS. */
+  private static final ServiceLoader<MailConfigurationProvider> MAIL_PROVIDERS = ServiceLoader.load(MailConfigurationProvider.class);
 
-	/**
-	 * Get MailClient with configuration options from the chosen mail configuration provider.
-	 *
-	 * @return MailClient instance
-	 */
-	public static MailClient getInstance() {
-		Properties properties = new Properties();
-		String providerName = Configuration.get(DIRIGIBLE_MAIL_CONFIG_PROVIDER, DEFAULT_PROVIDER_NAME);
-		for (MailConfigurationProvider next : MAIL_PROVIDERS) {
-			if (providerName.equals(next.getName())) {
-				properties.putAll(next.getProperties());
-				break;
-			}
-		}
-		return getInstance(properties);
-	}
+  /**
+   * Get MailClient with configuration options from the chosen mail configuration provider.
+   *
+   * @return MailClient instance
+   */
+  public static MailClient getInstance() {
+    Properties properties = new Properties();
+    String providerName = Configuration.get(DIRIGIBLE_MAIL_CONFIG_PROVIDER, DEFAULT_PROVIDER_NAME);
+    for (MailConfigurationProvider next : MAIL_PROVIDERS) {
+      if (providerName.equals(next.getName())) {
+        properties.putAll(next.getProperties());
+        break;
+      }
+    }
+    return getInstance(properties);
+  }
 
-	/**
-	 * Get MailClient with custom configuration options.
-	 *
-	 * @param properties mail client configuration options
-	 * @return MailClient instance
-	 */
-	public static MailClient getInstance(Properties properties) {
-		return new MailClient(properties);
-	}
+  /**
+   * Get MailClient with custom configuration options.
+   *
+   * @param properties mail client configuration options
+   * @return MailClient instance
+   */
+  public static MailClient getInstance(Properties properties) {
+    return new MailClient(properties);
+  }
 }

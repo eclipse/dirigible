@@ -15,64 +15,64 @@ package org.eclipse.dirigible.components.ide.git.model;
  */
 public class GitDiffModel {
 
-	/** The original. */
-	private String original;
+  /** The original. */
+  private String original;
 
-	/** The modified. */
-	private String modified;
+  /** The modified. */
+  private String modified;
 
-	/**
-	 * Instantiates a new git diff model.
-	 */
-	public GitDiffModel() {
+  /**
+   * Instantiates a new git diff model.
+   */
+  public GitDiffModel() {
 
-	}
+  }
 
-	/**
-	 * Instantiates a new git diff model.
-	 *
-	 * @param original the original
-	 * @param modified the modified
-	 */
-	public GitDiffModel(String original, String modified) {
-		this.original = original;
-		this.modified = modified;
-	}
+  /**
+   * Instantiates a new git diff model.
+   *
+   * @param original the original
+   * @param modified the modified
+   */
+  public GitDiffModel(String original, String modified) {
+    this.original = original;
+    this.modified = modified;
+  }
 
-	/**
-	 * Gets the original.
-	 *
-	 * @return the original text
-	 */
-	public String getOriginal() {
-		return original;
-	}
+  /**
+   * Gets the original.
+   *
+   * @return the original text
+   */
+  public String getOriginal() {
+    return original;
+  }
 
-	/**
-	 * Sets the original.
-	 *
-	 * @param original the original text to set
-	 */
-	public void setOriginal(String original) {
-		this.original = original;
-	}
+  /**
+   * Sets the original.
+   *
+   * @param original the original text to set
+   */
+  public void setOriginal(String original) {
+    this.original = original;
+  }
 
-	/**
-	 * Gets the modified.
-	 *
-	 * @return the modified text
-	 */
-	public String getModified() {
-		return modified;
-	}
+  /**
+   * Gets the modified.
+   *
+   * @return the modified text
+   */
+  public String getModified() {
+    return modified;
+  }
 
-	/**
-	 * Sets the modified.
-	 *
-	 * @param modified the modified text to set
-	 */
-	public void setModified(String modified) {
-		this.modified = modified;
-	}
+  /**
+   * Sets the modified.
+   *
+   * @param modified the modified text to set
+   */
+  public void setModified(String modified) {
+    this.modified = modified;
+  }
 
 }

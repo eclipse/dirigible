@@ -20,30 +20,30 @@ import java.util.List;
  */
 public interface SQLStatement {
 
-	/** The empty string. */
-	String EMPTY_STRING = "";
+  /** The empty string. */
+  String EMPTY_STRING = "";
 
-	/**
-	 * Sql.
-	 *
-	 * @return the string
-	 * @throws ODataException the o data exception
-	 */
-	String sql() throws ODataException;
+  /**
+   * Sql.
+   *
+   * @return the string
+   * @throws ODataException the o data exception
+   */
+  String sql() throws ODataException;
 
-	/**
-	 * Gets the statement params.
-	 *
-	 * @return the statement params
-	 * @throws EdmException the edm exception
-	 */
-	List<SQLStatementParam> getStatementParams() throws EdmException;
+  /**
+   * Gets the statement params.
+   *
+   * @return the statement params
+   * @throws EdmException the edm exception
+   */
+  List<SQLStatementParam> getStatementParams() throws EdmException;
 
-	/**
-	 * Checks if is empty.
-	 *
-	 * @return true, if is empty
-	 */
-	boolean isEmpty();
+  /**
+   * Checks if is empty.
+   *
+   * @return true, if is empty
+   */
+  boolean isEmpty();
 
 }

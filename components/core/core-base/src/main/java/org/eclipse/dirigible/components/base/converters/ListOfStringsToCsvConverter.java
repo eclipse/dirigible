@@ -21,32 +21,32 @@ import javax.persistence.AttributeConverter;
  */
 public class ListOfStringsToCsvConverter implements AttributeConverter<List<String>, String> {
 
-	/**
-	 * Convert to database column.
-	 *
-	 * @param attribute the attribute
-	 * @return the string
-	 */
-	@Override
-	public String convertToDatabaseColumn(List<String> attribute) {
-		return attribute == null ? null
-				: attribute	.stream()
-							.map(String::trim)
-							.collect(Collectors.joining(","));
-	}
+  /**
+   * Convert to database column.
+   *
+   * @param attribute the attribute
+   * @return the string
+   */
+  @Override
+  public String convertToDatabaseColumn(List<String> attribute) {
+    return attribute == null ? null
+        : attribute.stream()
+                   .map(String::trim)
+                   .collect(Collectors.joining(","));
+  }
 
-	/**
-	 * Convert to entity attribute.
-	 *
-	 * @param data the data
-	 * @return the list
-	 */
-	@Override
-	public List<String> convertToEntityAttribute(String data) {
-		return data == null ? null
-				: Arrays.stream(data.split(","))
-						.map(String::trim)
-						.collect(Collectors.toList());
-	}
+  /**
+   * Convert to entity attribute.
+   *
+   * @param data the data
+   * @return the list
+   */
+  @Override
+  public List<String> convertToEntityAttribute(String data) {
+    return data == null ? null
+        : Arrays.stream(data.split(","))
+                .map(String::trim)
+                .collect(Collectors.toList());
+  }
 
 }

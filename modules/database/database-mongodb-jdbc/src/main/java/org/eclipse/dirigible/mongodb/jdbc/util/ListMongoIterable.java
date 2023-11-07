@@ -24,92 +24,92 @@ import com.mongodb.client.MongoIterable;
  */
 public class ListMongoIterable implements MongoIterable<String> {
 
-	/** The entries. */
-	List<String> entries;
+  /** The entries. */
+  List<String> entries;
 
-	/**
-	 * Instantiates a new list mongo iterable.
-	 *
-	 * @param backingList the backing list
-	 */
-	public ListMongoIterable(List<String> backingList) {
-		this.entries = backingList;
-	}
+  /**
+   * Instantiates a new list mongo iterable.
+   *
+   * @param backingList the backing list
+   */
+  public ListMongoIterable(List<String> backingList) {
+    this.entries = backingList;
+  }
 
-	/**
-	 * Map.
-	 *
-	 * @param <U> the generic type
-	 * @param mapper the mapper
-	 * @return the mongo iterable
-	 */
-	@Override
-	public <U> MongoIterable<U> map(Function<String, U> mapper) {
-		return null;
-	}
+  /**
+   * Map.
+   *
+   * @param <U> the generic type
+   * @param mapper the mapper
+   * @return the mongo iterable
+   */
+  @Override
+  public <U> MongoIterable<U> map(Function<String, U> mapper) {
+    return null;
+  }
 
-	/**
-	 * Iterator.
-	 *
-	 * @return the mongo cursor
-	 */
-	@Override
-	public MongoCursor<String> iterator() {
-		return new LocalIteratorMongoCursor(entries.iterator());
-	}
+  /**
+   * Iterator.
+   *
+   * @return the mongo cursor
+   */
+  @Override
+  public MongoCursor<String> iterator() {
+    return new LocalIteratorMongoCursor(entries.iterator());
+  }
 
-	/**
-	 * Into.
-	 *
-	 * @param <A> the generic type
-	 * @param target the target
-	 * @return the a
-	 */
-	@Override
-	public <A extends Collection<? super String>> A into(A target) {
-		return null;
-	}
+  /**
+   * Into.
+   *
+   * @param <A> the generic type
+   * @param target the target
+   * @return the a
+   */
+  @Override
+  public <A extends Collection<? super String>> A into(A target) {
+    return null;
+  }
 
-	/**
-	 * For each.
-	 *
-	 * @param block the block
-	 */
-	@Override
-	public void forEach(Block<? super String> block) {}
+  /**
+   * For each.
+   *
+   * @param block the block
+   */
+  @Override
+  public void forEach(Block<? super String> block) {}
 
-	/**
-	 * First.
-	 *
-	 * @return the string
-	 */
-	@Override
-	public String first() {
-		Iterator<String> iter = this.iterator();
-		return iter.hasNext() ? this.iterator()
-									.next()
-				: null;
-	}
+  /**
+   * First.
+   *
+   * @return the string
+   */
+  @Override
+  public String first() {
+    Iterator<String> iter = this.iterator();
+    return iter.hasNext() ? this.iterator()
+                                .next()
+        : null;
+  }
 
-	/**
-	 * Batch size.
-	 *
-	 * @param batchSize the batch size
-	 * @return the mongo iterable
-	 */
-	@Override
-	public MongoIterable<String> batchSize(int batchSize) {
-		return this;
-	}
+  /**
+   * Batch size.
+   *
+   * @param batchSize the batch size
+   * @return the mongo iterable
+   */
+  @Override
+  public MongoIterable<String> batchSize(int batchSize) {
+    return this;
+  }
 
-	/**
-	 * Cursor.
-	 *
-	 * @return the mongo cursor
-	 */
-	@Override
-	public MongoCursor<String> cursor() {
-		return null;
-	}
+  /**
+   * Cursor.
+   *
+   * @return the mongo cursor
+   */
+  @Override
+  public MongoCursor<String> cursor() {
+    return null;
+  }
 
 }

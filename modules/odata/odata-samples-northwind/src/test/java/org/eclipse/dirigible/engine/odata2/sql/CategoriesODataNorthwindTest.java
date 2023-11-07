@@ -25,86 +25,86 @@ import org.junit.Test;
  */
 public class CategoriesODataNorthwindTest extends AbstractODataNorthwindTest {
 
-	/**
-	 * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/Categories/$count
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testCount() throws Exception {
-		Response response = OData2RequestBuilder.createRequest(sf) //
-												.segments("Categories") //
-												.segments("$count") //
-												.executeRequest(GET);
-		int count = Integer.valueOf(IOUtils.toString((InputStream) response.getEntity()));
-		int expectedCount = 8;
-		assertEquals(expectedCount, count);
-	}
+  /**
+   * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/Categories/$count
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testCount() throws Exception {
+    Response response = OData2RequestBuilder.createRequest(sf) //
+                                            .segments("Categories") //
+                                            .segments("$count") //
+                                            .executeRequest(GET);
+    int count = Integer.valueOf(IOUtils.toString((InputStream) response.getEntity()));
+    int expectedCount = 8;
+    assertEquals(expectedCount, count);
+  }
 
-	/**
-	 * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/Categories?$format=json
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testGet() throws Exception {
-		Response response = OData2RequestBuilder.createRequest(sf) //
-												.segments("Categories") //
-												.param("$format", "json") //
-												.executeRequest(GET);
-		String data = IOUtils.toString((InputStream) response.getEntity());
-		String expectedData = loadExpectedData("Categories-get.json");
-		assertEquals(expectedData, data);
-	}
+  /**
+   * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/Categories?$format=json
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testGet() throws Exception {
+    Response response = OData2RequestBuilder.createRequest(sf) //
+                                            .segments("Categories") //
+                                            .param("$format", "json") //
+                                            .executeRequest(GET);
+    String data = IOUtils.toString((InputStream) response.getEntity());
+    String expectedData = loadExpectedData("Categories-get.json");
+    assertEquals(expectedData, data);
+  }
 
-	/**
-	 * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/Categories(1)?$format=json
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testGetById() throws Exception {
-		Response response = OData2RequestBuilder.createRequest(sf) //
-												.segments("Categories(1)") //
-												.param("$format", "json") //
-												.executeRequest(GET);
-		String data = IOUtils.toString((InputStream) response.getEntity());
-		String expectedData = loadExpectedData("Categories-getById.json");
-		assertEquals(expectedData, data);
-	}
+  /**
+   * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/Categories(1)?$format=json
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testGetById() throws Exception {
+    Response response = OData2RequestBuilder.createRequest(sf) //
+                                            .segments("Categories(1)") //
+                                            .param("$format", "json") //
+                                            .executeRequest(GET);
+    String data = IOUtils.toString((InputStream) response.getEntity());
+    String expectedData = loadExpectedData("Categories-getById.json");
+    assertEquals(expectedData, data);
+  }
 
-	/**
-	 * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/Categories(1)/Products/$count
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testNavigationProductsCount() throws Exception {
-		Response response = OData2RequestBuilder.createRequest(sf) //
-												.segments("Categories(1)") //
-												.segments("Products")
-												.segments("$count") //
-												.executeRequest(GET);
-		int count = Integer.valueOf(IOUtils.toString((InputStream) response.getEntity()));
-		int expectedCount = 12;
-		assertEquals(expectedCount, count);
-	}
+  /**
+   * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/Categories(1)/Products/$count
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testNavigationProductsCount() throws Exception {
+    Response response = OData2RequestBuilder.createRequest(sf) //
+                                            .segments("Categories(1)") //
+                                            .segments("Products")
+                                            .segments("$count") //
+                                            .executeRequest(GET);
+    int count = Integer.valueOf(IOUtils.toString((InputStream) response.getEntity()));
+    int expectedCount = 12;
+    assertEquals(expectedCount, count);
+  }
 
-	/**
-	 * HTTP GET:
-	 * https://services.odata.org/V2/Northwind/Northwind.svc/Categories(1)/Products?$format=json
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testNavigationProductsGet() throws Exception {
-		Response response = OData2RequestBuilder.createRequest(sf) //
-												.segments("Categories(1)") //
-												.segments("Products") //
-												.param("$format", "json") //
-												.executeRequest(GET);
-		String data = IOUtils.toString((InputStream) response.getEntity());
-		String expectedData = loadExpectedData("Categories-navigationProductsGet.json");
-		assertEquals(expectedData, data);
-	}
+  /**
+   * HTTP GET:
+   * https://services.odata.org/V2/Northwind/Northwind.svc/Categories(1)/Products?$format=json
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testNavigationProductsGet() throws Exception {
+    Response response = OData2RequestBuilder.createRequest(sf) //
+                                            .segments("Categories(1)") //
+                                            .segments("Products") //
+                                            .param("$format", "json") //
+                                            .executeRequest(GET);
+    String data = IOUtils.toString((InputStream) response.getEntity());
+    String expectedData = loadExpectedData("Categories-navigationProductsGet.json");
+    assertEquals(expectedData, data);
+  }
 }

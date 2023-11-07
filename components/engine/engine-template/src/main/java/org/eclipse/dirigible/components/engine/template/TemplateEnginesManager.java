@@ -21,42 +21,42 @@ import org.springframework.stereotype.Component;
 @Component
 public class TemplateEnginesManager {
 
-	/** The template engines. */
-	private List<TemplateEngine> templateEngines;
+  /** The template engines. */
+  private List<TemplateEngine> templateEngines;
 
-	/**
-	 * Instantiates a new template engines manager.
-	 *
-	 * @param templateEngines the template generation engines
-	 */
-	@Autowired
-	public TemplateEnginesManager(List<TemplateEngine> templateEngines) {
-		this.templateEngines = templateEngines;
-	}
+  /**
+   * Instantiates a new template engines manager.
+   *
+   * @param templateEngines the template generation engines
+   */
+  @Autowired
+  public TemplateEnginesManager(List<TemplateEngine> templateEngines) {
+    this.templateEngines = templateEngines;
+  }
 
-	/**
-	 * Gets the template engines.
-	 *
-	 * @return the template engines
-	 */
-	public List<TemplateEngine> getTemplateEngines() {
-		return templateEngines;
-	}
+  /**
+   * Gets the template engines.
+   *
+   * @return the template engines
+   */
+  public List<TemplateEngine> getTemplateEngines() {
+    return templateEngines;
+  }
 
-	/**
-	 * Select a Template Engine by Name.
-	 *
-	 * @param name the name
-	 * @return the engine
-	 */
-	public final TemplateEngine getTemplateEngine(String name) {
-		for (TemplateEngine next : getTemplateEngines()) {
-			if (next.getName()
-					.equalsIgnoreCase(name)) {
-				return next;
-			}
-		}
-		return null;
-	}
+  /**
+   * Select a Template Engine by Name.
+   *
+   * @param name the name
+   * @return the engine
+   */
+  public final TemplateEngine getTemplateEngine(String name) {
+    for (TemplateEngine next : getTemplateEngines()) {
+      if (next.getName()
+              .equalsIgnoreCase(name)) {
+        return next;
+      }
+    }
+    return null;
+  }
 
 }

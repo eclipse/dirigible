@@ -32,38 +32,38 @@ import static org.junit.jupiter.api.Assertions.*;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 public class ListenerSynchronizerTest {
-	@Autowired
-	private ListenerSynchronizer listenerSynchronizer;
+  @Autowired
+  private ListenerSynchronizer listenerSynchronizer;
 
-	@Autowired
-	private ListenerRepository listenerRepository;
+  @Autowired
+  private ListenerRepository listenerRepository;
 
-	@AfterEach
-	public void cleanup() {
-		listenerRepository.deleteAll();
-	}
+  @AfterEach
+  public void cleanup() {
+    listenerRepository.deleteAll();
+  }
 
-	@Test
-	public void isAcceptedPath() {
-		assertTrue(listenerSynchronizer.isAccepted(Path.of("/a/b/c/l1.listener"), null));
-	}
+  @Test
+  public void isAcceptedPath() {
+    assertTrue(listenerSynchronizer.isAccepted(Path.of("/a/b/c/l1.listener"), null));
+  }
 
-	@Test
-	public void isAcceptedArtefact() {
-		assertTrue(listenerSynchronizer.isAccepted(new Listener("/a/b/c/l1.listener", "name1", "description", "handler1", 'Q').getType()));
-	}
+  @Test
+  public void isAcceptedArtefact() {
+    assertTrue(listenerSynchronizer.isAccepted(new Listener("/a/b/c/l1.listener", "name1", "description", "handler1", 'Q').getType()));
+  }
 
-	@Test
-	public void load() throws ParseException {
-		String content =
-				"{\"location\":\"/control/control.listener\",\"name\":\"/control/control\",\"kind\":\"Q\",\"handler\":\"control/handler.js\",\"description\":\"Control Listener\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
-		List<Listener> list = listenerSynchronizer.parse("/test/test.listener", content.getBytes());
-		assertNotNull(list);
-		assertEquals("/test/test.listener", list.get(0)
-												.getLocation());
-	}
+  @Test
+  public void load() throws ParseException {
+    String content =
+        "{\"location\":\"/control/control.listener\",\"name\":\"/control/control\",\"kind\":\"Q\",\"handler\":\"control/handler.js\",\"description\":\"Control Listener\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
+    List<Listener> list = listenerSynchronizer.parse("/test/test.listener", content.getBytes());
+    assertNotNull(list);
+    assertEquals("/test/test.listener", list.get(0)
+                                            .getLocation());
+  }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 }

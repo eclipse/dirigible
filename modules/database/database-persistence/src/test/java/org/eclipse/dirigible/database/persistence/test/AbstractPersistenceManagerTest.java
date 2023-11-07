@@ -22,30 +22,30 @@ import org.junit.Before;
  */
 public class AbstractPersistenceManagerTest {
 
-	/** The data source. */
-	private DataSource dataSource = null;
+  /** The data source. */
+  private DataSource dataSource = null;
 
-	/**
-	 * Sets the up.
-	 */
-	@Before
-	public void setUp() {
-		try {
-			H2Database h2Database = new H2Database();
-			this.dataSource = h2Database.getDataSource("target/h2");
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
+  /**
+   * Sets the up.
+   */
+  @Before
+  public void setUp() {
+    try {
+      H2Database h2Database = new H2Database();
+      this.dataSource = h2Database.getDataSource("target/h2");
+    } catch (Exception e) {
+      e.printStackTrace();
+      fail(e.getMessage());
+    }
+  }
 
-	/**
-	 * Gets the data source.
-	 *
-	 * @return the data source
-	 */
-	public DataSource getDataSource() {
-		return dataSource;
-	}
+  /**
+   * Gets the data source.
+   *
+   * @return the data source
+   */
+  public DataSource getDataSource() {
+    return dataSource;
+  }
 
 }

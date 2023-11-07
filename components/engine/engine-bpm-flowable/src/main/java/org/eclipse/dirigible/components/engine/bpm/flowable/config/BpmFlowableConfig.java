@@ -24,9 +24,9 @@ import org.springframework.context.annotation.Configuration;
 @EnableAutoConfiguration(exclude = LiquibaseAutoConfiguration.class)
 public class BpmFlowableConfig {
 
-	@Bean("BPM_PROVIDER")
-	public BpmProvider getBpmProvider(DataSource datasource, IRepository repository) {
-		return new BpmProviderFlowable(datasource, repository);
-	}
+  @Bean("BPM_PROVIDER")
+  public BpmProvider getBpmProvider(DataSource datasource, IRepository repository) {
+    return new BpmProviderFlowable(datasource, repository);
+  }
 
 }

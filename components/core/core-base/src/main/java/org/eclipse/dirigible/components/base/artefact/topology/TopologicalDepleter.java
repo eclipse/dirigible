@@ -23,30 +23,30 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
  */
 public class TopologicalDepleter<T extends TopologicallyDepletable> {
 
-	/**
-	 * Deplete.
-	 *
-	 * @param list the list
-	 * @param flow the flow
-	 * @return the list
-	 */
-	public List<T> deplete(List<T> list, ArtefactPhase flow) {
-		List<T> depletables = new ArrayList<>();
-		depletables.addAll(list);
-		int count = depletables.size();
-		boolean repeat = true;
-		do {
-			Iterator<T> iterator = depletables.iterator();
-			while (iterator.hasNext()) {
-				TopologicallyDepletable depletable = iterator.next();
-				if (depletable.complete(flow)) {
-					iterator.remove();
-				}
-			}
-			repeat = count > depletables.size();
-			count = depletables.size();
-		} while (repeat);
-		return depletables;
-	}
+  /**
+   * Deplete.
+   *
+   * @param list the list
+   * @param flow the flow
+   * @return the list
+   */
+  public List<T> deplete(List<T> list, ArtefactPhase flow) {
+    List<T> depletables = new ArrayList<>();
+    depletables.addAll(list);
+    int count = depletables.size();
+    boolean repeat = true;
+    do {
+      Iterator<T> iterator = depletables.iterator();
+      while (iterator.hasNext()) {
+        TopologicallyDepletable depletable = iterator.next();
+        if (depletable.complete(flow)) {
+          iterator.remove();
+        }
+      }
+      repeat = count > depletables.size();
+      count = depletables.size();
+    } while (repeat);
+    return depletables;
+  }
 
 }

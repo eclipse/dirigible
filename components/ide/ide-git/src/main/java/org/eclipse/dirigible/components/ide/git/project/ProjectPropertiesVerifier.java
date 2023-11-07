@@ -24,41 +24,41 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProjectPropertiesVerifier {
 
-	/** The Constant DOT_GIT. */
-	private static final String DOT_GIT = ".git";
+  /** The Constant DOT_GIT. */
+  private static final String DOT_GIT = ".git";
 
-	/** The repository. */
-	private IRepository repository = null;
+  /** The repository. */
+  private IRepository repository = null;
 
-	/**
-	 * Gets the repository.
-	 *
-	 * @return the repository
-	 */
-	protected synchronized IRepository getRepository() {
-		if (repository == null) {
-			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
-		}
-		return repository;
-	}
+  /**
+   * Gets the repository.
+   *
+   * @return the repository
+   */
+  protected synchronized IRepository getRepository() {
+    if (repository == null) {
+      repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+    }
+    return repository;
+  }
 
-	/**
-	 * Verify.
-	 *
-	 * @param workspace the workspace
-	 * @param repositoryName the repositoryName
-	 * @return true, if successful
-	 */
-	public boolean verify(String workspace, String repositoryName) {
-		try {
-			if (getRepository() instanceof FileSystemRepository) {
-				File gitRepository = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repositoryName);
-				return (gitRepository != null);
-			}
-		} catch (Exception e) {
-			// do nothing
-		}
-		return false;
-	}
+  /**
+   * Verify.
+   *
+   * @param workspace the workspace
+   * @param repositoryName the repositoryName
+   * @return true, if successful
+   */
+  public boolean verify(String workspace, String repositoryName) {
+    try {
+      if (getRepository() instanceof FileSystemRepository) {
+        File gitRepository = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repositoryName);
+        return (gitRepository != null);
+      }
+    } catch (Exception e) {
+      // do nothing
+    }
+    return false;
+  }
 
 }

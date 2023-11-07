@@ -45,236 +45,236 @@ import org.springframework.stereotype.Component;
 @Order(SynchronizersOrder.CONFLUENCE)
 public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<Confluence> {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(ConfluenceSynchronizer.class);
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(ConfluenceSynchronizer.class);
 
-	/**
-	 * The Constant FILE_EXTENSION_CONFLUENCE.
-	 */
-	private static final String FILE_EXTENSION_CONFLUENCE = ".confluence";
+  /**
+   * The Constant FILE_EXTENSION_CONFLUENCE.
+   */
+  private static final String FILE_EXTENSION_CONFLUENCE = ".confluence";
 
-	/** The confluence service. */
-	private ConfluenceService confluenceService;
+  /** The confluence service. */
+  private ConfluenceService confluenceService;
 
-	/** The wiki service. */
-	private WikiService wikiService;
+  /** The wiki service. */
+  private WikiService wikiService;
 
-	/** The synchronization callback. */
-	private SynchronizerCallback callback;
+  /** The synchronization callback. */
+  private SynchronizerCallback callback;
 
-	/**
-	 * Instantiates a new confluence synchronizer.
-	 *
-	 * @param confluenceService the confluence service
-	 * @param wikiService the wiki service
-	 */
-	@Autowired
-	public ConfluenceSynchronizer(ConfluenceService confluenceService, WikiService wikiService) {
-		this.confluenceService = confluenceService;
-		this.wikiService = wikiService;
-	}
+  /**
+   * Instantiates a new confluence synchronizer.
+   *
+   * @param confluenceService the confluence service
+   * @param wikiService the wiki service
+   */
+  @Autowired
+  public ConfluenceSynchronizer(ConfluenceService confluenceService, WikiService wikiService) {
+    this.confluenceService = confluenceService;
+    this.wikiService = wikiService;
+  }
 
-	/**
-	 * Gets the service.
-	 *
-	 * @return the service
-	 */
-	@Override
-	public ArtefactService<Confluence> getService() {
-		return confluenceService;
-	}
+  /**
+   * Gets the service.
+   *
+   * @return the service
+   */
+  @Override
+  public ArtefactService<Confluence> getService() {
+    return confluenceService;
+  }
 
-	/**
-	 * Gets the wiki service.
-	 *
-	 * @return the wiki service
-	 */
-	public WikiService getWikiService() {
-		return wikiService;
-	}
+  /**
+   * Gets the wiki service.
+   *
+   * @return the wiki service
+   */
+  public WikiService getWikiService() {
+    return wikiService;
+  }
 
-	/**
-	 * Checks if is accepted.
-	 *
-	 * @param file the file
-	 * @param attrs the attrs
-	 * @return true, if is accepted
-	 */
-	@Override
-	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file	.toString()
-					.endsWith(FILE_EXTENSION_CONFLUENCE)
-				&& file	.toString()
-						.indexOf("webjars") == -1;
-	}
+  /**
+   * Checks if is accepted.
+   *
+   * @param file the file
+   * @param attrs the attrs
+   * @return true, if is accepted
+   */
+  @Override
+  public boolean isAccepted(Path file, BasicFileAttributes attrs) {
+    return file.toString()
+               .endsWith(FILE_EXTENSION_CONFLUENCE)
+        && file.toString()
+               .indexOf("webjars") == -1;
+  }
 
-	/**
-	 * Checks if is accepted.
-	 *
-	 * @param type the artefact
-	 * @return true, if is accepted
-	 */
-	@Override
-	public boolean isAccepted(String type) {
-		return Confluence.ARTEFACT_TYPE.equals(type);
-	}
+  /**
+   * Checks if is accepted.
+   *
+   * @param type the artefact
+   * @return true, if is accepted
+   */
+  @Override
+  public boolean isAccepted(String type) {
+    return Confluence.ARTEFACT_TYPE.equals(type);
+  }
 
-	/**
-	 * Load.
-	 *
-	 * @param location the location
-	 * @param content the content
-	 * @return the list
-	 * @throws ParseException
-	 */
-	@Override
-	public List<Confluence> parse(String location, byte[] content) throws ParseException {
-		Confluence wiki = new Confluence();
-		Configuration.configureObject(wiki);
-		wiki.setLocation(location);
-		wiki.setName(Paths	.get(location)
-							.getFileName()
-							.toString());
-		wiki.setType(Confluence.ARTEFACT_TYPE);
-		wiki.updateKey();
-		wiki.setContent(content);
-		try {
-			Confluence maybe = getService().findByKey(wiki.getKey());
-			if (maybe != null) {
-				wiki.setId(maybe.getId());
-			}
-			wiki = getService().save(wiki);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {
-				logger.error(e.getMessage(), e);
-			}
-			if (logger.isErrorEnabled()) {
-				logger.error("wiki: {}", wiki);
-			}
-			if (logger.isErrorEnabled()) {
-				logger.error("content: {}", new String(content));
-			}
-			throw new ParseException(e.getMessage(), 0);
-		}
-		return List.of(wiki);
-	}
+  /**
+   * Load.
+   *
+   * @param location the location
+   * @param content the content
+   * @return the list
+   * @throws ParseException
+   */
+  @Override
+  public List<Confluence> parse(String location, byte[] content) throws ParseException {
+    Confluence wiki = new Confluence();
+    Configuration.configureObject(wiki);
+    wiki.setLocation(location);
+    wiki.setName(Paths.get(location)
+                      .getFileName()
+                      .toString());
+    wiki.setType(Confluence.ARTEFACT_TYPE);
+    wiki.updateKey();
+    wiki.setContent(content);
+    try {
+      Confluence maybe = getService().findByKey(wiki.getKey());
+      if (maybe != null) {
+        wiki.setId(maybe.getId());
+      }
+      wiki = getService().save(wiki);
+    } catch (Exception e) {
+      if (logger.isErrorEnabled()) {
+        logger.error(e.getMessage(), e);
+      }
+      if (logger.isErrorEnabled()) {
+        logger.error("wiki: {}", wiki);
+      }
+      if (logger.isErrorEnabled()) {
+        logger.error("content: {}", new String(content));
+      }
+      throw new ParseException(e.getMessage(), 0);
+    }
+    return List.of(wiki);
+  }
 
-	/**
-	 * Retrieve.
-	 *
-	 * @param location the location
-	 * @return the list
-	 */
-	@Override
-	public List<Confluence> retrieve(String location) {
-		return getService().getAll();
-	}
+  /**
+   * Retrieve.
+   *
+   * @param location the location
+   * @return the list
+   */
+  @Override
+  public List<Confluence> retrieve(String location) {
+    return getService().getAll();
+  }
 
-	/**
-	 * Sets the status.
-	 *
-	 * @param artefact the artefact
-	 * @param lifecycle the lifecycle
-	 * @param error the error
-	 */
-	@Override
-	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
-		artefact.setLifecycle(lifecycle);
-		artefact.setError(error);
-		getService().save((Confluence) artefact);
-	}
+  /**
+   * Sets the status.
+   *
+   * @param artefact the artefact
+   * @param lifecycle the lifecycle
+   * @param error the error
+   */
+  @Override
+  public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    artefact.setLifecycle(lifecycle);
+    artefact.setError(error);
+    getService().save((Confluence) artefact);
+  }
 
-	/**
-	 * Complete.
-	 *
-	 * @param wrapper the wrapper
-	 * @param flow the flow
-	 * @return true, if successful
-	 */
-	@Override
-	public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-		Confluence wiki = null;
-		if (wrapper.getArtefact() instanceof Confluence) {
-			wiki = (Confluence) wrapper.getArtefact();
-		} else {
-			throw new UnsupportedOperationException(String.format("Trying to process %s as Confluence", wrapper	.getArtefact()
-																												.getClass()));
-		}
+  /**
+   * Complete.
+   *
+   * @param wrapper the wrapper
+   * @param flow the flow
+   * @return true, if successful
+   */
+  @Override
+  public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    Confluence wiki = null;
+    if (wrapper.getArtefact() instanceof Confluence) {
+      wiki = (Confluence) wrapper.getArtefact();
+    } else {
+      throw new UnsupportedOperationException(String.format("Trying to process %s as Confluence", wrapper.getArtefact()
+                                                                                                         .getClass()));
+    }
 
-		switch (flow) {
-			case CREATE:
-				if (ArtefactLifecycle.NEW.equals(wiki.getLifecycle())) {
-					wikiService.generateContent(wiki.getLocation(), new String(wiki.getContent(), StandardCharsets.UTF_8));
-					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
-				}
-				break;
-			case UPDATE:
-				if (ArtefactLifecycle.MODIFIED.equals(wiki.getLifecycle())) {
-					wikiService.generateContent(wiki.getLocation(), new String(wiki.getContent(), StandardCharsets.UTF_8));
-					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
-				}
-				break;
-			case DELETE:
-				if (ArtefactLifecycle.CREATED.equals(wiki.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(wiki.getLifecycle())) {
-					wikiService.removeGenerated(wiki.getLocation());
-					getService().delete(wiki);
-					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
-				}
-				break;
-			case START:
-			case STOP:
-		}
+    switch (flow) {
+      case CREATE:
+        if (ArtefactLifecycle.NEW.equals(wiki.getLifecycle())) {
+          wikiService.generateContent(wiki.getLocation(), new String(wiki.getContent(), StandardCharsets.UTF_8));
+          callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+        }
+        break;
+      case UPDATE:
+        if (ArtefactLifecycle.MODIFIED.equals(wiki.getLifecycle())) {
+          wikiService.generateContent(wiki.getLocation(), new String(wiki.getContent(), StandardCharsets.UTF_8));
+          callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+        }
+        break;
+      case DELETE:
+        if (ArtefactLifecycle.CREATED.equals(wiki.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(wiki.getLifecycle())) {
+          wikiService.removeGenerated(wiki.getLocation());
+          getService().delete(wiki);
+          callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+        }
+        break;
+      case START:
+      case STOP:
+    }
 
-		return true;
-	}
+    return true;
+  }
 
-	/**
-	 * Cleanup.
-	 *
-	 * @param wiki the wiki
-	 */
-	@Override
-	public void cleanup(Confluence wiki) {
-		try {
-			wikiService.removeGenerated(wiki.getLocation());
-			getService().delete(wiki);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {
-				logger.error(e.getMessage(), e);
-			}
-			callback.addError(e.getMessage());
-			callback.registerState(this, wiki, ArtefactLifecycle.DELETED, e.getMessage());
-		}
-	}
+  /**
+   * Cleanup.
+   *
+   * @param wiki the wiki
+   */
+  @Override
+  public void cleanup(Confluence wiki) {
+    try {
+      wikiService.removeGenerated(wiki.getLocation());
+      getService().delete(wiki);
+    } catch (Exception e) {
+      if (logger.isErrorEnabled()) {
+        logger.error(e.getMessage(), e);
+      }
+      callback.addError(e.getMessage());
+      callback.registerState(this, wiki, ArtefactLifecycle.DELETED, e.getMessage());
+    }
+  }
 
-	/**
-	 * Sets the callback.
-	 *
-	 * @param callback the new callback
-	 */
-	@Override
-	public void setCallback(SynchronizerCallback callback) {
-		this.callback = callback;
-	}
+  /**
+   * Sets the callback.
+   *
+   * @param callback the new callback
+   */
+  @Override
+  public void setCallback(SynchronizerCallback callback) {
+    this.callback = callback;
+  }
 
-	/**
-	 * Gets the file extension.
-	 *
-	 * @return the file extension
-	 */
-	@Override
-	public String getFileExtension() {
-		return FILE_EXTENSION_CONFLUENCE;
-	}
+  /**
+   * Gets the file extension.
+   *
+   * @return the file extension
+   */
+  @Override
+  public String getFileExtension() {
+    return FILE_EXTENSION_CONFLUENCE;
+  }
 
-	/**
-	 * Gets the artefact type.
-	 *
-	 * @return the artefact type
-	 */
-	@Override
-	public String getArtefactType() {
-		return Confluence.ARTEFACT_TYPE;
-	}
+  /**
+   * Gets the artefact type.
+   *
+   * @return the artefact type
+   */
+  @Override
+  public String getArtefactType() {
+    return Confluence.ARTEFACT_TYPE;
+  }
 
 }

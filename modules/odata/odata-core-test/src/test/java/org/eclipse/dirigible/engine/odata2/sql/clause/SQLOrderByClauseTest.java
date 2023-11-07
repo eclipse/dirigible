@@ -36,98 +36,98 @@ import static org.junit.Assert.assertEquals;
  */
 public class SQLOrderByClauseTest {
 
-	/** The edm. */
-	EdmImplProv edm;
+  /** The edm. */
+  EdmImplProv edm;
 
-	/** The table mapping provider. */
-	EdmTableBindingProvider tableMappingProvider;
+  /** The table mapping provider. */
+  EdmTableBindingProvider tableMappingProvider;
 
-	/**
-	 * Sets the up.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		Class<?>[] classes = { //
-				Entity1.class, //
-				Entity2.class, //
-				Entity3.class //
-		};
-		AnnotationEdmProvider provider = new AnnotationEdmProvider(Arrays.asList(classes));
-		edm = new EdmImplProv(provider);
-		tableMappingProvider = new DefaultEdmTableMappingProvider(OData2TestUtils.resources(classes));
-	}
+  /**
+   * Sets the up.
+   *
+   * @throws Exception the exception
+   */
+  @Before
+  public void setUp() throws Exception {
+    Class<?>[] classes = { //
+        Entity1.class, //
+        Entity2.class, //
+        Entity3.class //
+    };
+    AnnotationEdmProvider provider = new AnnotationEdmProvider(Arrays.asList(classes));
+    edm = new EdmImplProv(provider);
+    tableMappingProvider = new DefaultEdmTableMappingProvider(OData2TestUtils.resources(classes));
+  }
 
-	/**
-	 * Test simple order by.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testSimpleOrderBy() throws Exception {
-		SQLOrderByClause sqlOrderBy = createOrderByExpression("Status");
-		assertEquals("T0.STATUS ASC", sqlOrderBy.evaluate(null));
-	}
+  /**
+   * Test simple order by.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testSimpleOrderBy() throws Exception {
+    SQLOrderByClause sqlOrderBy = createOrderByExpression("Status");
+    assertEquals("T0.STATUS ASC", sqlOrderBy.evaluate(null));
+  }
 
-	/**
-	 * Test order by with 2 cols.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testOrderByWith2Cols() throws Exception {
-		SQLOrderByClause sqlOrderBy = createOrderByExpression("Status, LogStart desc");
-		assertEquals("T0.STATUS ASC, T0.LOGSTART DESC", sqlOrderBy.evaluate(null));
-	}
+  /**
+   * Test order by with 2 cols.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testOrderByWith2Cols() throws Exception {
+    SQLOrderByClause sqlOrderBy = createOrderByExpression("Status, LogStart desc");
+    assertEquals("T0.STATUS ASC, T0.LOGSTART DESC", sqlOrderBy.evaluate(null));
+  }
 
-	/**
-	 * Test order by with 3 cols.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testOrderByWith3Cols() throws Exception {
-		SQLOrderByClause sqlOrderBy = createOrderByExpression("Status desc, LogEnd, LogStart desc");
-		assertEquals("T0.STATUS DESC, T0.LOGEND ASC, T0.LOGSTART DESC", sqlOrderBy.evaluate(null));
-	}
+  /**
+   * Test order by with 3 cols.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testOrderByWith3Cols() throws Exception {
+    SQLOrderByClause sqlOrderBy = createOrderByExpression("Status desc, LogEnd, LogStart desc");
+    assertEquals("T0.STATUS DESC, T0.LOGEND ASC, T0.LOGSTART DESC", sqlOrderBy.evaluate(null));
+  }
 
-	/**
-	 * Test order by with no order by.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testOrderByWithNoOrderBy() throws Exception {
-		OrderByExpression orderBy = UriParser	.parse(edm, new ArrayList<>(), new HashMap<>())
-												.getOrderBy();
-		EdmEntityType type = edm.getEntityType(Entity1.class.getPackage()
-															.getName(),
-				Entity1.class.getSimpleName());
-		SQLSelectBuilder noop = new SQLSelectBuilder(tableMappingProvider);
-		SQLOrderByClause sqlOrderBy = new SQLOrderByClause(noop, type, orderBy);
+  /**
+   * Test order by with no order by.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testOrderByWithNoOrderBy() throws Exception {
+    OrderByExpression orderBy = UriParser.parse(edm, new ArrayList<>(), new HashMap<>())
+                                         .getOrderBy();
+    EdmEntityType type = edm.getEntityType(Entity1.class.getPackage()
+                                                        .getName(),
+        Entity1.class.getSimpleName());
+    SQLSelectBuilder noop = new SQLSelectBuilder(tableMappingProvider);
+    SQLOrderByClause sqlOrderBy = new SQLOrderByClause(noop, type, orderBy);
 
-		assertEquals("T0.MESSAGEGUID ASC", sqlOrderBy.evaluate(null));
-	}
+    assertEquals("T0.MESSAGEGUID ASC", sqlOrderBy.evaluate(null));
+  }
 
-	/**
-	 * Creates the order by expression.
-	 *
-	 * @param expression the expression
-	 * @return the SQL order by clause
-	 */
-	private SQLOrderByClause createOrderByExpression(final String expression) {
-		try {
-			OrderByExpression orderBy = UriParser.parseOrderBy(edm, edm.getEntityType(Entity1.class	.getPackage()
-																									.getName(),
-					Entity1.class.getSimpleName()), expression);
-			EdmEntityType type = edm.getEntityType(Entity1.class.getPackage()
-																.getName(),
-					Entity1.class.getSimpleName());
-			SQLSelectBuilder noop = new SQLSelectBuilder(tableMappingProvider);
-			return new SQLOrderByClause(noop, type, orderBy);
-		} catch (Throwable t) {
-			throw new RuntimeException(t);
-		}
-	}
+  /**
+   * Creates the order by expression.
+   *
+   * @param expression the expression
+   * @return the SQL order by clause
+   */
+  private SQLOrderByClause createOrderByExpression(final String expression) {
+    try {
+      OrderByExpression orderBy = UriParser.parseOrderBy(edm, edm.getEntityType(Entity1.class.getPackage()
+                                                                                             .getName(),
+          Entity1.class.getSimpleName()), expression);
+      EdmEntityType type = edm.getEntityType(Entity1.class.getPackage()
+                                                          .getName(),
+          Entity1.class.getSimpleName());
+      SQLSelectBuilder noop = new SQLSelectBuilder(tableMappingProvider);
+      return new SQLOrderByClause(noop, type, orderBy);
+    } catch (Throwable t) {
+      throw new RuntimeException(t);
+    }
+  }
 }

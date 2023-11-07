@@ -48,58 +48,58 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 class OpenAPIEndpointTest {
 
-	@Autowired
-	private OpenAPIRepository openAPIRepository;
+  @Autowired
+  private OpenAPIRepository openAPIRepository;
 
-	@Autowired
-	private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-	@Autowired
-	protected WebApplicationContext wac;
+  @Autowired
+  protected WebApplicationContext wac;
 
-	@Autowired
-	private FilterChainProxy springSecurityFilterChain;
+  @Autowired
+  private FilterChainProxy springSecurityFilterChain;
 
-	@Autowired
-	private IRepository repository;
+  @Autowired
+  private IRepository repository;
 
-	@BeforeEach
-	public void setup() {
+  @BeforeEach
+  public void setup() {
 
-		cleanup();
+    cleanup();
 
-		try {
-			// Create test OpenAPI
-			openAPIRepository.save(createOpenAPI("/a/b/c/test1.openapi", "test1", "description"));
-			openAPIRepository.save(createOpenAPI("/a/b/c/test2.openapi", "test2", "description"));
-			openAPIRepository.save(createOpenAPI("/a/b/c/test3.openapi", "test3", "description"));
-			openAPIRepository.save(createOpenAPI("/a/b/c/test4.openapi", "test4", "description"));
-			openAPIRepository.save(createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    try {
+      // Create test OpenAPI
+      openAPIRepository.save(createOpenAPI("/a/b/c/test1.openapi", "test1", "description"));
+      openAPIRepository.save(createOpenAPI("/a/b/c/test2.openapi", "test2", "description"));
+      openAPIRepository.save(createOpenAPI("/a/b/c/test3.openapi", "test3", "description"));
+      openAPIRepository.save(createOpenAPI("/a/b/c/test4.openapi", "test4", "description"));
+      openAPIRepository.save(createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 
-	@AfterEach
-	public void cleanup() {
-		openAPIRepository.deleteAll();
-	}
+  @AfterEach
+  public void cleanup() {
+    openAPIRepository.deleteAll();
+  }
 
-	@Test
-	public void testGetVersion() throws Exception {
-		String openAPILocation = "/META-INF/dirigible/test/test.openapi";
-		byte[] content = OpenAPISynchronizer.class	.getResourceAsStream(openAPILocation)
-													.readAllBytes();
-		openAPIRepository.save(createOpenAPI(openAPILocation, "test", "description"));
-		repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + openAPILocation, content);
-		mockMvc	.perform(get("/services/openapi"))
-				.andDo(print())
-				.andExpect(status().isOk())
-				.andExpect(content().string(containsString(
-						"{\"openapi\":\"3.0.1\",\"info\":{\"title\":\"Eclipse Dirigible - Applications REST Services API\",\"description\":\"Eclipse Dirigible API of the REST services provided by the applications\",\"contact\":{\"name\":\"Eclipse Dirigible\",\"url\":\"https://www.dirigible.io\",\"email\":\"dirigible-dev@eclipse.org\"},\"license\":{\"name\":\"Eclipse Public License - v 2.0\",\"url\":\"https://www.eclipse.org/legal/epl-v20.html\"},\"version\":\"0.0.1\"},\"servers\":[{\"url\":\"/services/js\"}],\"security\":[],\"tags\":[],\"paths\":{\"/test/openapi/api.mjs/hello-world\":{\"get\":{\"description\":\"Returns Hello World message\",\"responses\":{\"200\":{\"description\":\"Hello World response\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/HelloWorldModel\"}}}}}}}},\"components\":{\"schemas\":{\"HelloWorldModel\":{\"type\":\"object\",\"properties\":{\"status\":{\"type\":\"string\"}}}},\"responses\":{},\"parameters\":{},\"examples\":{},\"requestBodies\":{},\"headers\":{},\"securitySchemes\":{},\"links\":{},\"callbacks\":{}}}")));
-	}
+  @Test
+  public void testGetVersion() throws Exception {
+    String openAPILocation = "/META-INF/dirigible/test/test.openapi";
+    byte[] content = OpenAPISynchronizer.class.getResourceAsStream(openAPILocation)
+                                              .readAllBytes();
+    openAPIRepository.save(createOpenAPI(openAPILocation, "test", "description"));
+    repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + openAPILocation, content);
+    mockMvc.perform(get("/services/openapi"))
+           .andDo(print())
+           .andExpect(status().isOk())
+           .andExpect(content().string(containsString(
+               "{\"openapi\":\"3.0.1\",\"info\":{\"title\":\"Eclipse Dirigible - Applications REST Services API\",\"description\":\"Eclipse Dirigible API of the REST services provided by the applications\",\"contact\":{\"name\":\"Eclipse Dirigible\",\"url\":\"https://www.dirigible.io\",\"email\":\"dirigible-dev@eclipse.org\"},\"license\":{\"name\":\"Eclipse Public License - v 2.0\",\"url\":\"https://www.eclipse.org/legal/epl-v20.html\"},\"version\":\"0.0.1\"},\"servers\":[{\"url\":\"/services/js\"}],\"security\":[],\"tags\":[],\"paths\":{\"/test/openapi/api.mjs/hello-world\":{\"get\":{\"description\":\"Returns Hello World message\",\"responses\":{\"200\":{\"description\":\"Hello World response\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/HelloWorldModel\"}}}}}}}},\"components\":{\"schemas\":{\"HelloWorldModel\":{\"type\":\"object\",\"properties\":{\"status\":{\"type\":\"string\"}}}},\"responses\":{},\"parameters\":{},\"examples\":{},\"requestBodies\":{},\"headers\":{},\"securitySchemes\":{},\"links\":{},\"callbacks\":{}}}")));
+  }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 }

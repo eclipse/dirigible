@@ -15,88 +15,88 @@ package org.eclipse.dirigible.components.project;
  */
 public class ProjectMetadataDependency {
 
-	/** The guid. */
-	private String guid;
+  /** The guid. */
+  private String guid;
 
-	/** The type. */
-	private String type;
+  /** The type. */
+  private String type;
 
-	/** The url. */
-	private String url;
+  /** The url. */
+  private String url;
 
-	/** The branch. */
-	private String branch;
+  /** The branch. */
+  private String branch;
 
-	/**
-	 * Gets the guid.
-	 *
-	 * @return the guid
-	 */
-	public String getGuid() {
-		return guid;
-	}
+  /**
+   * Gets the guid.
+   *
+   * @return the guid
+   */
+  public String getGuid() {
+    return guid;
+  }
 
-	/**
-	 * Sets the guid.
-	 *
-	 * @param guid the new guid
-	 */
-	public void setGuid(String guid) {
-		this.guid = guid;
-	}
+  /**
+   * Sets the guid.
+   *
+   * @param guid the new guid
+   */
+  public void setGuid(String guid) {
+    this.guid = guid;
+  }
 
-	/**
-	 * Gets the type.
-	 *
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
-	}
+  /**
+   * Gets the type.
+   *
+   * @return the type
+   */
+  public String getType() {
+    return type;
+  }
 
-	/**
-	 * Sets the type.
-	 *
-	 * @param type the new type
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
+  /**
+   * Sets the type.
+   *
+   * @param type the new type
+   */
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	/**
-	 * Gets the url.
-	 *
-	 * @return the url
-	 */
-	public String getUrl() {
-		return url;
-	}
+  /**
+   * Gets the url.
+   *
+   * @return the url
+   */
+  public String getUrl() {
+    return url;
+  }
 
-	/**
-	 * Sets the url.
-	 *
-	 * @param url the new url
-	 */
-	public void setUrl(String url) {
-		this.url = url;
-	}
+  /**
+   * Sets the url.
+   *
+   * @param url the new url
+   */
+  public void setUrl(String url) {
+    this.url = url;
+  }
 
-	/**
-	 * Gets the branch.
-	 *
-	 * @return the branch
-	 */
-	public String getBranch() {
-		return branch;
-	}
+  /**
+   * Gets the branch.
+   *
+   * @return the branch
+   */
+  public String getBranch() {
+    return branch;
+  }
 
-	/**
-	 * Sets the branch.
-	 *
-	 * @param branch the new branch
-	 */
-	public void setBranch(String branch) {
-		this.branch = branch;
-	}
+  /**
+   * Sets the branch.
+   *
+   * @param branch the new branch
+   */
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
 
 }

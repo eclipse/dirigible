@@ -34,46 +34,46 @@ import com.zaxxer.hikari.HikariDataSource;
 @org.springframework.context.annotation.Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager",
-		basePackages = {"org.eclipse.dirigible.components"})
+    basePackages = {"org.eclipse.dirigible.components"})
 public class DataSourceSystemConfig {
 
-	@Value("${dirigible.scan.packages:org.eclipse.dirigible.components}")
-	private String dirigibleScanPackages;
+  @Value("${dirigible.scan.packages:org.eclipse.dirigible.components}")
+  private String dirigibleScanPackages;
 
-	@Bean(name = "SystemDB")
-	public HikariDataSource getDataSource() {
-		DataSourceProperties dataSourceProperties = new DataSourceProperties();
-		dataSourceProperties.setName("SystemDB");
-		dataSourceProperties.setDriverClassName("org.h2.Driver");
-		dataSourceProperties.setUrl("jdbc:h2:file:./target/dirigible/h2/SystemDB");
-		dataSourceProperties.setUsername("sa");
-		dataSourceProperties.setPassword("");
-		return dataSourceProperties	.initializeDataSourceBuilder()
-									.type(HikariDataSource.class)
-									.build();
-	}
+  @Bean(name = "SystemDB")
+  public HikariDataSource getDataSource() {
+    DataSourceProperties dataSourceProperties = new DataSourceProperties();
+    dataSourceProperties.setName("SystemDB");
+    dataSourceProperties.setDriverClassName("org.h2.Driver");
+    dataSourceProperties.setUrl("jdbc:h2:file:./target/dirigible/h2/SystemDB");
+    dataSourceProperties.setUsername("sa");
+    dataSourceProperties.setPassword("");
+    return dataSourceProperties.initializeDataSourceBuilder()
+                               .type(HikariDataSource.class)
+                               .build();
+  }
 
-	@Bean(name = "entityManagerFactory")
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier("SystemDB") DataSource dataSource) {
-		LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-		em.setDataSource(dataSource);
-		String[] packages = dirigibleScanPackages.split(",");
-		em.setPackagesToScan(packages);
+  @Bean(name = "entityManagerFactory")
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier("SystemDB") DataSource dataSource) {
+    LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+    em.setDataSource(dataSource);
+    String[] packages = dirigibleScanPackages.split(",");
+    em.setPackagesToScan(packages);
 
-		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-		em.setJpaVendorAdapter(vendorAdapter);
+    JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+    em.setJpaVendorAdapter(vendorAdapter);
 
-		Properties properties = new Properties();
-		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-		properties.setProperty("hibernate.hbm2ddl.auto", "update");
-		em.setJpaProperties(properties);
+    Properties properties = new Properties();
+    properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+    properties.setProperty("hibernate.hbm2ddl.auto", "update");
+    em.setJpaProperties(properties);
 
-		return em;
-	}
+    return em;
+  }
 
-	@Bean(name = "transactionManager")
-	public PlatformTransactionManager transactionManager(@Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory) {
-		return new JpaTransactionManager(entityManagerFactory);
-	}
+  @Bean(name = "transactionManager")
+  public PlatformTransactionManager transactionManager(@Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory) {
+    return new JpaTransactionManager(entityManagerFactory);
+  }
 
 }

@@ -30,81 +30,81 @@ import org.slf4j.LoggerFactory;
  */
 public class PersistenceNextValueSequenceProcessor extends AbstractPersistenceProcessor {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(PersistenceNextValueSequenceProcessor.class);
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(PersistenceNextValueSequenceProcessor.class);
 
-	/**
-	 * Instantiates a new persistence next value sequence processor.
-	 *
-	 * @param entityManagerInterceptor the entity manager interceptor
-	 */
-	public PersistenceNextValueSequenceProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
-		super(entityManagerInterceptor);
-	}
+  /**
+   * Instantiates a new persistence next value sequence processor.
+   *
+   * @param entityManagerInterceptor the entity manager interceptor
+   */
+  public PersistenceNextValueSequenceProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
+    super(entityManagerInterceptor);
+  }
 
-	/**
-	 * Generate script.
-	 *
-	 * @param connection the connection
-	 * @param tableModel the table model
-	 * @return the string
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript
-	 * (java.sql. Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
-	 */
-	@Override
-	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-		NextValueSequenceBuilder nextValueBuilder = SqlFactory	.getNative(SqlFactory.deriveDialect(connection))
-																.nextval(tableModel.getTableName() + ISqlKeywords.UNDERSCROE
-																		+ ISqlKeywords.KEYWORD_SEQUENCE);
+  /**
+   * Generate script.
+   *
+   * @param connection the connection
+   * @param tableModel the table model
+   * @return the string
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript
+   * (java.sql. Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+   */
+  @Override
+  protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
+    NextValueSequenceBuilder nextValueBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
+                                                          .nextval(tableModel.getTableName() + ISqlKeywords.UNDERSCROE
+                                                              + ISqlKeywords.KEYWORD_SEQUENCE);
 
-		String sql = nextValueBuilder.toString();
-		if (logger.isTraceEnabled()) {
-			logger.trace(sql);
-		}
-		return sql;
-	}
+    String sql = nextValueBuilder.toString();
+    if (logger.isTraceEnabled()) {
+      logger.trace(sql);
+    }
+    return sql;
+  }
 
-	/**
-	 * Nextval.
-	 *
-	 * @param connection the connection
-	 * @param tableModel the table model
-	 * @return the long
-	 * @throws PersistenceException the persistence exception
-	 */
-	public long nextval(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
-		if (logger.isTraceEnabled()) {
-			logger.trace("nextval -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
-		}
-		long result = -1;
-		String sql = null;
-		PreparedStatement preparedStatement = null;
-		try {
-			sql = generateScript(connection, tableModel);
-			preparedStatement = openPreparedStatement(connection, sql);
-			ResultSet resultSet = null;
-			try {
-				resultSet = preparedStatement.executeQuery();
-				if (resultSet.next()) {
-					result = resultSet.getLong(1);
-					return result;
-				}
-			} finally {
-				if (resultSet != null) {
-					resultSet.close();
-				}
-			}
-		} catch (Exception e) {
-			throw new PersistenceException(sql, e);
-		} finally {
-			closePreparedStatement(preparedStatement);
-		}
-		return result;
-	}
+  /**
+   * Nextval.
+   *
+   * @param connection the connection
+   * @param tableModel the table model
+   * @return the long
+   * @throws PersistenceException the persistence exception
+   */
+  public long nextval(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
+    if (logger.isTraceEnabled()) {
+      logger.trace("nextval -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
+    }
+    long result = -1;
+    String sql = null;
+    PreparedStatement preparedStatement = null;
+    try {
+      sql = generateScript(connection, tableModel);
+      preparedStatement = openPreparedStatement(connection, sql);
+      ResultSet resultSet = null;
+      try {
+        resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+          result = resultSet.getLong(1);
+          return result;
+        }
+      } finally {
+        if (resultSet != null) {
+          resultSet.close();
+        }
+      }
+    } catch (Exception e) {
+      throw new PersistenceException(sql, e);
+    } finally {
+      closePreparedStatement(preparedStatement);
+    }
+    return result;
+  }
 
 }

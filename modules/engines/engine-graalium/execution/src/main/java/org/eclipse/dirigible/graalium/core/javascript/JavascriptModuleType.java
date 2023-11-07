@@ -15,12 +15,12 @@ package org.eclipse.dirigible.graalium.core.javascript;
  */
 public enum JavascriptModuleType {
 
-	/** The based on file extension. */
-	BASED_ON_FILE_EXTENSION,
+  /** The based on file extension. */
+  BASED_ON_FILE_EXTENSION,
 
-	/** The esm. */
-	ESM,
+  /** The esm. */
+  ESM,
 
-	/** The cjs. */
-	CJS
+  /** The cjs. */
+  CJS
 }

@@ -20,55 +20,55 @@ import org.slf4j.LoggerFactory;
  */
 public class HanaDropSequenceBuilder extends DropSequenceBuilder {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(HanaDropSequenceBuilder.class);
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(HanaDropSequenceBuilder.class);
 
-	/**
-	 * Instantiates a new drop sequence builder.
-	 *
-	 * @param dialect the dialect
-	 * @param sequence the sequence
-	 */
-	public HanaDropSequenceBuilder(ISqlDialect dialect, String sequence) {
-		super(dialect, sequence);
-	}
+  /**
+   * Instantiates a new drop sequence builder.
+   *
+   * @param dialect the dialect
+   * @param sequence the sequence
+   */
+  public HanaDropSequenceBuilder(ISqlDialect dialect, String sequence) {
+    super(dialect, sequence);
+  }
 
-	/**
-	 * Generate.
-	 *
-	 * @return the string
-	 */
-	@Override
-	public String generate() {
+  /**
+   * Generate.
+   *
+   * @return the string
+   */
+  @Override
+  public String generate() {
 
-		StringBuilder sql = new StringBuilder();
+    StringBuilder sql = new StringBuilder();
 
-		// DROP
-		generateDrop(sql);
+    // DROP
+    generateDrop(sql);
 
-		// SEQUENCE
-		generateSequence(sql);
+    // SEQUENCE
+    generateSequence(sql);
 
-		// RESTRICT
-		generateRestrict(sql);
+    // RESTRICT
+    generateRestrict(sql);
 
-		String generated = sql.toString();
+    String generated = sql.toString();
 
-		if (logger.isTraceEnabled()) {
-			logger.trace("generated: " + generated);
-		}
+    if (logger.isTraceEnabled()) {
+      logger.trace("generated: " + generated);
+    }
 
-		return generated;
-	}
+    return generated;
+  }
 
-	/**
-	 * Generate restrict.
-	 *
-	 * @param sql the sql
-	 */
-	protected void generateRestrict(StringBuilder sql) {
-		String sequenceName = (isCaseSensitive()) ? encapsulate(this.getSequence(), true) : this.getSequence();
-		sql	.append(SPACE)
-			.append(KEYWORD_DATABASE_DROP_RESTRICT);
-	}
+  /**
+   * Generate restrict.
+   *
+   * @param sql the sql
+   */
+  protected void generateRestrict(StringBuilder sql) {
+    String sequenceName = (isCaseSensitive()) ? encapsulate(this.getSequence(), true) : this.getSequence();
+    sql.append(SPACE)
+       .append(KEYWORD_DATABASE_DROP_RESTRICT);
+  }
 }

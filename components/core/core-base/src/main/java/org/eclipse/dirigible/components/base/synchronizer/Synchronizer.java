@@ -28,92 +28,92 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
  */
 public interface Synchronizer<A extends Artefact> {
 
-	/**
-	 * Gets the service.
-	 *
-	 * @return the service
-	 */
-	ArtefactService<A> getService();
+  /**
+   * Gets the service.
+   *
+   * @return the service
+   */
+  ArtefactService<A> getService();
 
-	/**
-	 * Checks if is accepted.
-	 *
-	 * @param file the file
-	 * @param attrs the attrs
-	 * @return true, if is accepted
-	 */
-	boolean isAccepted(Path file, BasicFileAttributes attrs);
+  /**
+   * Checks if is accepted.
+   *
+   * @param file the file
+   * @param attrs the attrs
+   * @return true, if is accepted
+   */
+  boolean isAccepted(Path file, BasicFileAttributes attrs);
 
-	/**
-	 * Checks if is accepted.
-	 *
-	 * @param type the type
-	 * @return true, if is accepted
-	 */
-	boolean isAccepted(String type);
+  /**
+   * Checks if is accepted.
+   *
+   * @param type the type
+   * @return true, if is accepted
+   */
+  boolean isAccepted(String type);
 
-	/**
-	 * Parse the definition and produce artefacts.
-	 *
-	 * @param location the location
-	 * @param content the content
-	 * @return the list
-	 * @throws ParseException the parse exception
-	 */
-	List<A> parse(String location, byte[] content) throws ParseException;
+  /**
+   * Parse the definition and produce artefacts.
+   *
+   * @param location the location
+   * @param content the content
+   * @return the list
+   * @throws ParseException the parse exception
+   */
+  List<A> parse(String location, byte[] content) throws ParseException;
 
-	/**
-	 * Retrieve all the processed artefacts by the definition location.
-	 *
-	 * @param location the location
-	 * @return the list
-	 */
-	List<A> retrieve(String location);
+  /**
+   * Retrieve all the processed artefacts by the definition location.
+   *
+   * @param location the location
+   * @return the list
+   */
+  List<A> retrieve(String location);
 
-	/**
-	 * Retrieve all the processed artefacts by the definition location.
-	 *
-	 * @param artefact the artefact
-	 * @param lifecycle the lifecycle
-	 * @param message the message
-	 */
-	void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String message);
+  /**
+   * Retrieve all the processed artefacts by the definition location.
+   *
+   * @param artefact the artefact
+   * @param lifecycle the lifecycle
+   * @param message the message
+   */
+  void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String message);
 
-	/**
-	 * Complete.
-	 *
-	 * @param wrapper the topology wrapper
-	 * @param flow the flow
-	 * @return true, if successful
-	 */
-	boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow);
+  /**
+   * Complete.
+   *
+   * @param wrapper the topology wrapper
+   * @param flow the flow
+   * @return true, if successful
+   */
+  boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow);
 
-	/**
-	 * Cleanup.
-	 *
-	 * @param artefact the artefact
-	 */
-	void cleanup(A artefact);
+  /**
+   * Cleanup.
+   *
+   * @param artefact the artefact
+   */
+  void cleanup(A artefact);
 
-	/**
-	 * Set the callback.
-	 *
-	 * @param callback the new callback
-	 */
-	void setCallback(SynchronizerCallback callback);
+  /**
+   * Set the callback.
+   *
+   * @param callback the new callback
+   */
+  void setCallback(SynchronizerCallback callback);
 
-	/**
-	 * Gets the file extension.
-	 *
-	 * @return the file extension
-	 */
-	String getFileExtension();
+  /**
+   * Gets the file extension.
+   *
+   * @return the file extension
+   */
+  String getFileExtension();
 
-	/**
-	 * Gets the artefact type.
-	 *
-	 * @return the artefact type
-	 */
-	String getArtefactType();
+  /**
+   * Gets the artefact type.
+   *
+   * @return the artefact type
+   */
+  String getArtefactType();
 
 }

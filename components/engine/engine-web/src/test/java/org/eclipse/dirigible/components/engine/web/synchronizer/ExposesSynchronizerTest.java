@@ -52,154 +52,148 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ExposesSynchronizerTest {
 
-	/** The expose repository. */
-	@Autowired
-	private ExposeRepository exposeRepository;
+  /** The expose repository. */
+  @Autowired
+  private ExposeRepository exposeRepository;
 
-	/** The expose synchronizer. */
-	@Autowired
-	private ExposesSynchronizer exposesSynchronizer;
+  /** The expose synchronizer. */
+  @Autowired
+  private ExposesSynchronizer exposesSynchronizer;
 
-	/** The synchronization processor. */
-	@Autowired
-	private SynchronizationProcessor synchronizationProcessor;
+  /** The synchronization processor. */
+  @Autowired
+  private SynchronizationProcessor synchronizationProcessor;
 
-	/** The synchronization watcher. */
-	@Autowired
-	private SynchronizationWatcher synchronizationWatcher;
+  /** The synchronization watcher. */
+  @Autowired
+  private SynchronizationWatcher synchronizationWatcher;
 
-	/** The entity manager. */
-	@Autowired
-	EntityManager entityManager;
+  /** The entity manager. */
+  @Autowired
+  EntityManager entityManager;
 
-	/** The definition repository. */
-	@MockBean
-	DefinitionRepository definitionRepository;
+  /** The definition repository. */
+  @MockBean
+  DefinitionRepository definitionRepository;
 
-	/** The content. */
-	private String content = "{\n" + "    \"guid\":\"sync\",\n" + "    \"repository\":{\n" + "        \"type\":\"git\",\n"
-			+ "        \"branch\":\"master\",\n" + "        \"url\":\"https://github.com/dirigiblelabs/sync.git\"\n" + "    },\n"
-			+ "    \"exposes\": [\n" + "        \"ui\",\n" + "        \"samples\"\n" + "    ]\n" + "}\n" + "";
+  /** The content. */
+  private String content = "{\n" + "    \"guid\":\"sync\",\n" + "    \"repository\":{\n" + "        \"type\":\"git\",\n"
+      + "        \"branch\":\"master\",\n" + "        \"url\":\"https://github.com/dirigiblelabs/sync.git\"\n" + "    },\n"
+      + "    \"exposes\": [\n" + "        \"ui\",\n" + "        \"samples\"\n" + "    ]\n" + "}\n" + "";
 
-	/**
-	 * Setup.
-	 *
-	 * @throws Exception the exception
-	 */
-	@BeforeEach
-	public void setup() throws Exception {
+  /**
+   * Setup.
+   *
+   * @throws Exception the exception
+   */
+  @BeforeEach
+  public void setup() throws Exception {
 
-		cleanup();
+    cleanup();
 
-		// create test Exposes
-		exposeRepository.save(
-				createExpose(exposeRepository, "/a/b/c/p1/project.json", "p1", "description", new String[] {"ui", "samples"}));
-		exposeRepository.save(
-				createExpose(exposeRepository, "/a/b/c/p2/project.json", "p2", "description", new String[] {"ui", "samples"}));
-		exposeRepository.save(
-				createExpose(exposeRepository, "/a/b/c/p3/project.json", "p3", "description", new String[] {"ui", "samples"}));
-		exposeRepository.save(
-				createExpose(exposeRepository, "/a/b/c/p4/project.json", "p4", "description", new String[] {"ui", "samples"}));
-		exposeRepository.save(
-				createExpose(exposeRepository, "/a/b/c/p5/project.json", "p5", "description", new String[] {"ui", "samples"}));
-	}
+    // create test Exposes
+    exposeRepository.save(createExpose(exposeRepository, "/a/b/c/p1/project.json", "p1", "description", new String[] {"ui", "samples"}));
+    exposeRepository.save(createExpose(exposeRepository, "/a/b/c/p2/project.json", "p2", "description", new String[] {"ui", "samples"}));
+    exposeRepository.save(createExpose(exposeRepository, "/a/b/c/p3/project.json", "p3", "description", new String[] {"ui", "samples"}));
+    exposeRepository.save(createExpose(exposeRepository, "/a/b/c/p4/project.json", "p4", "description", new String[] {"ui", "samples"}));
+    exposeRepository.save(createExpose(exposeRepository, "/a/b/c/p5/project.json", "p5", "description", new String[] {"ui", "samples"}));
+  }
 
-	/**
-	 * Cleanup.
-	 *
-	 * @throws Exception the exception
-	 */
-	@AfterEach
-	public void cleanup() throws Exception {
-		exposeRepository.deleteAll();
-	}
+  /**
+   * Cleanup.
+   *
+   * @throws Exception the exception
+   */
+  @AfterEach
+  public void cleanup() throws Exception {
+    exposeRepository.deleteAll();
+  }
 
 
 
-	/**
-	 * Checks if is accepted.
-	 */
-	@Test
-	public void isAcceptedPath() {
-		assertTrue(exposesSynchronizer.isAccepted(Path.of("/a/b/c/p1/project.json"), null));
-	}
+  /**
+   * Checks if is accepted.
+   */
+  @Test
+  public void isAcceptedPath() {
+    assertTrue(exposesSynchronizer.isAccepted(Path.of("/a/b/c/p1/project.json"), null));
+  }
 
-	/**
-	 * Checks if is accepted.
-	 */
-	@Test
-	public void isAcceptedArtefact() {
-		assertTrue(exposesSynchronizer.isAccepted(
-				createExpose(exposeRepository, "/a/b/c/p1/project.json", "p1", "description", new String[] {"ui", "samples"}).getType()));
-	}
+  /**
+   * Checks if is accepted.
+   */
+  @Test
+  public void isAcceptedArtefact() {
+    assertTrue(exposesSynchronizer.isAccepted(
+        createExpose(exposeRepository, "/a/b/c/p1/project.json", "p1", "description", new String[] {"ui", "samples"}).getType()));
+  }
 
-	/**
-	 * Load the artefact.
-	 *
-	 * @throws ParseException the parse exception
-	 */
-	@Test
-	public void load() throws ParseException {
-		List<Expose> list = exposesSynchronizer.parse("/load/project.json", content.getBytes());
-		assertNotNull(list);
-		assertEquals("/load/project.json", list	.get(0)
-												.getLocation());
-		assertEquals(2, list.get(0)
-							.getExposes().length);
-	}
+  /**
+   * Load the artefact.
+   *
+   * @throws ParseException the parse exception
+   */
+  @Test
+  public void load() throws ParseException {
+    List<Expose> list = exposesSynchronizer.parse("/load/project.json", content.getBytes());
+    assertNotNull(list);
+    assertEquals("/load/project.json", list.get(0)
+                                           .getLocation());
+    assertEquals(2, list.get(0)
+                        .getExposes().length);
+  }
 
-	/**
-	 * Load the artefact.
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	@Test
-	public void process() throws IOException {
-		String registyrFolder = synchronizationProcessor.getRegistryFolder();
-		Paths	.get(registyrFolder, "sync")
-				.toFile()
-				.mkdirs();
-		Files.writeString(Paths.get(registyrFolder, "sync", "project.json"), content, StandardOpenOption.CREATE);
-		try {
-			synchronizationWatcher.force();
-			synchronizationProcessor.processSynchronizers();
-			String e = null;
-			for (String p : ExposeManager.listRegisteredProjects()) {
-				if (p.equals("sync")) {
-					e = p;
-				}
-			} ;
-			assertNotNull(e);
-			assertTrue(ExposeManager.listRegisteredProjects()
-									.size() > 0);
-			assertTrue(ExposeManager.isPathExposed("sync/ui"));
-		} finally {
-			Files.deleteIfExists(Paths.get(registyrFolder, "sync", "project.json"));
-			synchronizationProcessor.processSynchronizers();
-		}
-	}
+  /**
+   * Load the artefact.
+   *
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  @Test
+  public void process() throws IOException {
+    String registyrFolder = synchronizationProcessor.getRegistryFolder();
+    Paths.get(registyrFolder, "sync")
+         .toFile()
+         .mkdirs();
+    Files.writeString(Paths.get(registyrFolder, "sync", "project.json"), content, StandardOpenOption.CREATE);
+    try {
+      synchronizationWatcher.force();
+      synchronizationProcessor.processSynchronizers();
+      String e = null;
+      for (String p : ExposeManager.listRegisteredProjects()) {
+        if (p.equals("sync")) {
+          e = p;
+        }
+      } ;
+      assertNotNull(e);
+      assertTrue(ExposeManager.listRegisteredProjects()
+                              .size() > 0);
+      assertTrue(ExposeManager.isPathExposed("sync/ui"));
+    } finally {
+      Files.deleteIfExists(Paths.get(registyrFolder, "sync", "project.json"));
+      synchronizationProcessor.processSynchronizers();
+    }
+  }
 
-	/**
-	 * Creates the table.
-	 *
-	 * @param exposeRepository the table repository
-	 * @param location the location
-	 * @param name the name
-	 * @param description the description
-	 * @param exposes the exposes
-	 * @return the expose
-	 */
-	public static Expose createExpose(ExposeRepository exposeRepository, String location, String name, String description,
-			String[] exposes) {
-		Expose expose = new Expose(location, name, description, exposes);
-		return expose;
-	}
+  /**
+   * Creates the table.
+   *
+   * @param exposeRepository the table repository
+   * @param location the location
+   * @param name the name
+   * @param description the description
+   * @param exposes the exposes
+   * @return the expose
+   */
+  public static Expose createExpose(ExposeRepository exposeRepository, String location, String name, String description, String[] exposes) {
+    Expose expose = new Expose(location, name, description, exposes);
+    return expose;
+  }
 
-	/**
-	 * The Class TestConfiguration.
-	 */
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  /**
+   * The Class TestConfiguration.
+   */
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 
 }

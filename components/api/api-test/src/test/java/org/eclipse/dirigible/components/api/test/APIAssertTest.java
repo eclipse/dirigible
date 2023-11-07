@@ -35,44 +35,44 @@ import org.springframework.web.context.WebApplicationContext;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 public class APIAssertTest {
 
-	@Autowired
-	private JavascriptService javascriptService;
+  @Autowired
+  private JavascriptService javascriptService;
 
-	@Autowired
-	private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-	@Autowired
-	protected WebApplicationContext wac;
+  @Autowired
+  protected WebApplicationContext wac;
 
-	// @Autowired
-	// private FilterChainProxy springSecurityFilterChain;
-	//
-	// @Autowired
-	// private IRepository repository;
+  // @Autowired
+  // private FilterChainProxy springSecurityFilterChain;
+  //
+  // @Autowired
+  // private IRepository repository;
 
-	@Test
-	public void successful() throws Exception {
-		// javascriptService.handleRequest("test", "successful.js", null, null, false);
+  @Test
+  public void successful() throws Exception {
+    // javascriptService.handleRequest("test", "successful.js", null, null, false);
 
-		mockMvc	.perform(get("/services/js/test/successful.js"))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful());
-	}
+    mockMvc.perform(get("/services/js/test/successful.js"))
+           .andDo(print())
+           .andExpect(status().is2xxSuccessful());
+  }
 
-	@Test
-	public void failed() throws Exception {
-		try {
-			mockMvc	.perform(get("/services/js/test/failed.js"))
-					.andDo(print())
-					.andExpect(status().is5xxServerError());
-		} catch (Exception e) {
-			// successfully failed
-			assertTrue(e.getMessage()
-						.endsWith("Assertion 'assertTrue' failed"));
-		}
-	}
+  @Test
+  public void failed() throws Exception {
+    try {
+      mockMvc.perform(get("/services/js/test/failed.js"))
+             .andDo(print())
+             .andExpect(status().is5xxServerError());
+    } catch (Exception e) {
+      // successfully failed
+      assertTrue(e.getMessage()
+                  .endsWith("Assertion 'assertTrue' failed"));
+    }
+  }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 }

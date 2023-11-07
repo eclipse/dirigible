@@ -30,125 +30,125 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SchemaService implements ArtefactService<Schema> {
 
-	/** The Schema repository. */
-	@Autowired
-	private SchemaRepository schemaRepository;
+  /** The Schema repository. */
+  @Autowired
+  private SchemaRepository schemaRepository;
 
-	/**
-	 * Gets the all.
-	 *
-	 * @return the all
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public List<Schema> getAll() {
-		List<Schema> schemas = schemaRepository.findAll();
-		return schemas;
-	}
+  /**
+   * Gets the all.
+   *
+   * @return the all
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public List<Schema> getAll() {
+    List<Schema> schemas = schemaRepository.findAll();
+    return schemas;
+  }
 
-	/**
-	 * Find all.
-	 *
-	 * @param pageable the pageable
-	 * @return the page
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public Page<Schema> getPages(Pageable pageable) {
-		return schemaRepository.findAll(pageable);
-	}
+  /**
+   * Find all.
+   *
+   * @param pageable the pageable
+   * @return the page
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public Page<Schema> getPages(Pageable pageable) {
+    return schemaRepository.findAll(pageable);
+  }
 
-	/**
-	 * Find by id.
-	 *
-	 * @param id the id
-	 * @return the schema
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public Schema findById(Long id) {
-		Optional<Schema> schema = schemaRepository.findById(id);
-		if (schema.isPresent()) {
-			return schema.get();
-		} else {
-			throw new IllegalArgumentException("Schema with id does not exist: " + id);
-		}
-	}
+  /**
+   * Find by id.
+   *
+   * @param id the id
+   * @return the schema
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public Schema findById(Long id) {
+    Optional<Schema> schema = schemaRepository.findById(id);
+    if (schema.isPresent()) {
+      return schema.get();
+    } else {
+      throw new IllegalArgumentException("Schema with id does not exist: " + id);
+    }
+  }
 
-	/**
-	 * Find by name.
-	 *
-	 * @param name the name
-	 * @return the schema
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public Schema findByName(String name) {
-		Schema filter = new Schema();
-		filter.setName(name);
-		Example<Schema> example = Example.of(filter);
-		Optional<Schema> schema = schemaRepository.findOne(example);
-		if (schema.isPresent()) {
-			return schema.get();
-		} else {
-			throw new IllegalArgumentException("Schema with name does not exist: " + name);
-		}
-	}
+  /**
+   * Find by name.
+   *
+   * @param name the name
+   * @return the schema
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public Schema findByName(String name) {
+    Schema filter = new Schema();
+    filter.setName(name);
+    Example<Schema> example = Example.of(filter);
+    Optional<Schema> schema = schemaRepository.findOne(example);
+    if (schema.isPresent()) {
+      return schema.get();
+    } else {
+      throw new IllegalArgumentException("Schema with name does not exist: " + name);
+    }
+  }
 
-	/**
-	 * Find by location.
-	 *
-	 * @param location the location
-	 * @return the list
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public List<Schema> findByLocation(String location) {
-		Schema filter = new Schema();
-		filter.setLocation(location);
-		Example<Schema> example = Example.of(filter);
-		List<Schema> list = schemaRepository.findAll(example);
-		return list;
-	}
+  /**
+   * Find by location.
+   *
+   * @param location the location
+   * @return the list
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public List<Schema> findByLocation(String location) {
+    Schema filter = new Schema();
+    filter.setLocation(location);
+    Example<Schema> example = Example.of(filter);
+    List<Schema> list = schemaRepository.findAll(example);
+    return list;
+  }
 
-	/**
-	 * Find by key.
-	 *
-	 * @param key the key
-	 * @return the schema
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public Schema findByKey(String key) {
-		Schema filter = new Schema();
-		filter.setKey(key);
-		Example<Schema> example = Example.of(filter);
-		Optional<Schema> schema = schemaRepository.findOne(example);
-		if (schema.isPresent()) {
-			return schema.get();
-		}
-		return null;
-	}
+  /**
+   * Find by key.
+   *
+   * @param key the key
+   * @return the schema
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public Schema findByKey(String key) {
+    Schema filter = new Schema();
+    filter.setKey(key);
+    Example<Schema> example = Example.of(filter);
+    Optional<Schema> schema = schemaRepository.findOne(example);
+    if (schema.isPresent()) {
+      return schema.get();
+    }
+    return null;
+  }
 
-	/**
-	 * Save.
-	 *
-	 * @param schema the schema
-	 * @return the schema
-	 */
-	@Override
-	public Schema save(Schema schema) {
-		return schemaRepository.saveAndFlush(schema);
-	}
+  /**
+   * Save.
+   *
+   * @param schema the schema
+   * @return the schema
+   */
+  @Override
+  public Schema save(Schema schema) {
+    return schemaRepository.saveAndFlush(schema);
+  }
 
-	/**
-	 * Delete.
-	 *
-	 * @param schema the schema
-	 */
-	@Override
-	public void delete(Schema schema) {
-		schemaRepository.delete(schema);
-	}
+  /**
+   * Delete.
+   *
+   * @param schema the schema
+   */
+  @Override
+  public void delete(Schema schema) {
+    schemaRepository.delete(schema);
+  }
 
 }

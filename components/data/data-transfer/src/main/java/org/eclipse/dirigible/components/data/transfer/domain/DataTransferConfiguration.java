@@ -15,46 +15,46 @@ package org.eclipse.dirigible.components.data.transfer.domain;
  */
 public class DataTransferConfiguration {
 
-	/** The source schema. */
-	private String sourceSchema;
+  /** The source schema. */
+  private String sourceSchema;
 
-	/** The target schema. */
-	private String targetSchema;
+  /** The target schema. */
+  private String targetSchema;
 
-	/**
-	 * Gets the source schema.
-	 *
-	 * @return the sourceSchema
-	 */
-	public String getSourceSchema() {
-		return sourceSchema;
-	}
+  /**
+   * Gets the source schema.
+   *
+   * @return the sourceSchema
+   */
+  public String getSourceSchema() {
+    return sourceSchema;
+  }
 
-	/**
-	 * Sets the source schema.
-	 *
-	 * @param sourceSchema the sourceSchema to set
-	 */
-	public void setSourceSchema(String sourceSchema) {
-		this.sourceSchema = sourceSchema;
-	}
+  /**
+   * Sets the source schema.
+   *
+   * @param sourceSchema the sourceSchema to set
+   */
+  public void setSourceSchema(String sourceSchema) {
+    this.sourceSchema = sourceSchema;
+  }
 
-	/**
-	 * Gets the target schema.
-	 *
-	 * @return the targetSchema
-	 */
-	public String getTargetSchema() {
-		return targetSchema;
-	}
+  /**
+   * Gets the target schema.
+   *
+   * @return the targetSchema
+   */
+  public String getTargetSchema() {
+    return targetSchema;
+  }
 
-	/**
-	 * Sets the target schema.
-	 *
-	 * @param targetSchema the targetSchema to set
-	 */
-	public void setTargetSchema(String targetSchema) {
-		this.targetSchema = targetSchema;
-	}
+  /**
+   * Sets the target schema.
+   *
+   * @param targetSchema the targetSchema to set
+   */
+  public void setTargetSchema(String targetSchema) {
+    this.targetSchema = targetSchema;
+  }
 
 }

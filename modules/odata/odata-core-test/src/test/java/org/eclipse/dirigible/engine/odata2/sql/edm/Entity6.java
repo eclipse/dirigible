@@ -20,22 +20,22 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty.Multipl
 @EdmEntitySet(name = "Entities6")
 public class Entity6 {
 
-	/** The Current employee id. */
-	@EdmKey
-	@EdmProperty
-	private Long CurrentEmployeeId;
+  /** The Current employee id. */
+  @EdmKey
+  @EdmProperty
+  private Long CurrentEmployeeId;
 
-	/** The Current employee name. */
-	@EdmKey
-	@EdmProperty
-	private String CurrentEmployeeName;
+  /** The Current employee name. */
+  @EdmKey
+  @EdmProperty
+  private String CurrentEmployeeName;
 
-	/** The id. */
-	@EdmKey
-	@EdmProperty
-	private Long ID;
+  /** The id. */
+  @EdmKey
+  @EdmProperty
+  private Long ID;
 
-	/** The name. */
-	@EdmProperty
-	private String NAME;
+  /** The name. */
+  @EdmProperty
+  private String NAME;
 }

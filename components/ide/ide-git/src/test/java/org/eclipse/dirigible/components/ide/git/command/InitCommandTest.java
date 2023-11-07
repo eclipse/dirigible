@@ -38,35 +38,35 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @EntityScan("org.eclipse.dirigible.components")
 public class InitCommandTest {
 
-	/** The init command. */
-	@Autowired
-	private InitCommand initCommand;
+  /** The init command. */
+  @Autowired
+  private InitCommand initCommand;
 
-	/**
-	 * Inits the repository test.
-	 *
-	 * @throws GitConnectorException the git connector exception
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	@Test
-	public void initRepositoryTest() throws GitConnectorException, IOException {
-		String gitEnabled = System.getenv(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
-		if (gitEnabled != null) {
-			String user = UserFacade.getName();
-			if (GitFileUtils.getGitDirectory(user, "workspace1")
-							.exists()) {
-				GitFileUtils.deleteGitDirectory(user, "workspace1", "workspace-repo");
-			}
-			File gitRepo = GitFileUtils.createGitDirectory(user, "workspace1", "workspace-repo");
-			initCommand.execute(gitRepo.getCanonicalPath(), false);
-		}
-	}
+  /**
+   * Inits the repository test.
+   *
+   * @throws GitConnectorException the git connector exception
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  @Test
+  public void initRepositoryTest() throws GitConnectorException, IOException {
+    String gitEnabled = System.getenv(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
+    if (gitEnabled != null) {
+      String user = UserFacade.getName();
+      if (GitFileUtils.getGitDirectory(user, "workspace1")
+                      .exists()) {
+        GitFileUtils.deleteGitDirectory(user, "workspace1", "workspace-repo");
+      }
+      File gitRepo = GitFileUtils.createGitDirectory(user, "workspace1", "workspace-repo");
+      initCommand.execute(gitRepo.getCanonicalPath(), false);
+    }
+  }
 
-	/**
-	 * The Class TestConfiguration.
-	 */
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  /**
+   * The Class TestConfiguration.
+   */
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 
 }

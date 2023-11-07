@@ -17,18 +17,18 @@ import java.util.List;
  */
 public interface TopologicallySortable {
 
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
-	public String getId();
+  /**
+   * Gets the id.
+   *
+   * @return the id
+   */
+  public String getId();
 
-	/**
-	 * Gets the dependencies.
-	 *
-	 * @return the dependencies
-	 */
-	public List<TopologicallySortable> getDependencies();
+  /**
+   * Gets the dependencies.
+   *
+   * @return the dependencies
+   */
+  public List<TopologicallySortable> getDependencies();
 
 }

@@ -48,192 +48,192 @@ import io.swagger.v3.oas.annotations.Parameter;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_SECURED + "jobs")
 public class JobEndpoint extends BaseEndpoint {
 
-	/** The job service. */
-	@Autowired
-	private JobService jobService;
+  /** The job service. */
+  @Autowired
+  private JobService jobService;
 
-	/** The job log service. */
-	@Autowired
-	private JobLogService jobLogService;
+  /** The job log service. */
+  @Autowired
+  private JobLogService jobLogService;
 
-	/** The job email service. */
-	@Autowired
-	private JobEmailService jobEmailService;
+  /** The job email service. */
+  @Autowired
+  private JobEmailService jobEmailService;
 
 
 
-	/**
-	 * Find all.
-	 *
-	 * @param size the size
-	 * @param page the page
-	 * @return the page
-	 */
-	@GetMapping("/pages")
-	public Page<Job> findAll(@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
-			@Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
+  /**
+   * Find all.
+   *
+   * @param size the size
+   * @param page the page
+   * @return the page
+   */
+  @GetMapping("/pages")
+  public Page<Job> findAll(@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
+      @Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
 
-		if (size == null) {
-			size = DEFAULT_PAGE_SIZE;
-		}
-		if (page == null) {
-			page = 0;
-		}
-		Pageable pageable = PageRequest.of(page, size);
-		Page<Job> extensions = jobService.getPages(pageable);
-		return extensions;
+    if (size == null) {
+      size = DEFAULT_PAGE_SIZE;
+    }
+    if (page == null) {
+      page = 0;
+    }
+    Pageable pageable = PageRequest.of(page, size);
+    Page<Job> extensions = jobService.getPages(pageable);
+    return extensions;
 
-	}
+  }
 
-	/**
-	 * Find by name.
-	 *
-	 * @param name the name
-	 * @return the response entity
-	 */
-	@GetMapping("/search")
-	public ResponseEntity<Job> findByName(@RequestParam("name") String name) {
+  /**
+   * Find by name.
+   *
+   * @param name the name
+   * @return the response entity
+   */
+  @GetMapping("/search")
+  public ResponseEntity<Job> findByName(@RequestParam("name") String name) {
 
-		return ResponseEntity.ok(jobService.findByName(name));
+    return ResponseEntity.ok(jobService.findByName(name));
 
-	}
+  }
 
-	/**
-	 * List jobs.
-	 *
-	 * @return the response entity
-	 */
-	@GetMapping
-	public ResponseEntity<List<Job>> listJobs() {
-		return ResponseEntity.ok(jobService.getAll());
-	}
+  /**
+   * List jobs.
+   *
+   * @return the response entity
+   */
+  @GetMapping
+  public ResponseEntity<List<Job>> listJobs() {
+    return ResponseEntity.ok(jobService.getAll());
+  }
 
-	/**
-	 * Enable job.
-	 *
-	 * @param name the name
-	 * @return the response entity
-	 * @throws Exception the exception
-	 */
-	@PostMapping("enable/{name}")
-	public ResponseEntity<Job> enableJob(@PathVariable("name") String name) throws Exception {
-		return ResponseEntity.ok(jobService.enable(IRepository.SEPARATOR + name));
-	}
+  /**
+   * Enable job.
+   *
+   * @param name the name
+   * @return the response entity
+   * @throws Exception the exception
+   */
+  @PostMapping("enable/{name}")
+  public ResponseEntity<Job> enableJob(@PathVariable("name") String name) throws Exception {
+    return ResponseEntity.ok(jobService.enable(IRepository.SEPARATOR + name));
+  }
 
-	/**
-	 * Disable job.
-	 *
-	 * @param name the name
-	 * @return the response entity
-	 * @throws Exception the exception
-	 */
-	@PostMapping("disable/{name}")
-	public ResponseEntity<Job> disableJob(@PathVariable("name") String name) throws Exception {
-		return ResponseEntity.ok(jobService.disable(IRepository.SEPARATOR + name));
-	}
+  /**
+   * Disable job.
+   *
+   * @param name the name
+   * @return the response entity
+   * @throws Exception the exception
+   */
+  @PostMapping("disable/{name}")
+  public ResponseEntity<Job> disableJob(@PathVariable("name") String name) throws Exception {
+    return ResponseEntity.ok(jobService.disable(IRepository.SEPARATOR + name));
+  }
 
-	/**
-	 * List job logs.
-	 *
-	 * @param job the job
-	 * @return the response entity
-	 */
-	@GetMapping(value = "/logs/{*job}", produces = "application/json")
-	public ResponseEntity<List<JobLog>> listJobLogs(@PathVariable("job") String job) {
-		return ResponseEntity.ok(jobLogService.findByJob(job));
-	}
+  /**
+   * List job logs.
+   *
+   * @param job the job
+   * @return the response entity
+   */
+  @GetMapping(value = "/logs/{*job}", produces = "application/json")
+  public ResponseEntity<List<JobLog>> listJobLogs(@PathVariable("job") String job) {
+    return ResponseEntity.ok(jobLogService.findByJob(job));
+  }
 
-	/**
-	 * Clear job logs.
-	 *
-	 * @param job the job
-	 * @return the response entity
-	 */
-	@GetMapping(value = "/clear/{*job}", produces = "application/json")
-	public ResponseEntity<?> clearJobLogs(@PathVariable("job") String job) {
-		jobLogService.deleteAllByJobName(job);
-		return ResponseEntity	.noContent()
-								.build();
-	}
+  /**
+   * Clear job logs.
+   *
+   * @param job the job
+   * @return the response entity
+   */
+  @GetMapping(value = "/clear/{*job}", produces = "application/json")
+  public ResponseEntity<?> clearJobLogs(@PathVariable("job") String job) {
+    jobLogService.deleteAllByJobName(job);
+    return ResponseEntity.noContent()
+                         .build();
+  }
 
-	/**
-	 * List job parameters.
-	 *
-	 * @param job the job
-	 * @return the response entity
-	 */
-	@GetMapping(value = "/parameters/{*job}", produces = "application/json")
-	public ResponseEntity<List<JobParameter>> getJobParameters(@PathVariable("job") String job) {
-		return ResponseEntity.ok(jobService	.findByName(job)
-											.getParameters());
-	}
+  /**
+   * List job parameters.
+   *
+   * @param job the job
+   * @return the response entity
+   */
+  @GetMapping(value = "/parameters/{*job}", produces = "application/json")
+  public ResponseEntity<List<JobParameter>> getJobParameters(@PathVariable("job") String job) {
+    return ResponseEntity.ok(jobService.findByName(job)
+                                       .getParameters());
+  }
 
-	/**
-	 * Trigger job.
-	 *
-	 * @param job the job
-	 * @param parameters the parameters
-	 * @return the response entity
-	 * @throws Exception in case of an error
-	 */
-	@PostMapping(value = "/trigger/{*job}", produces = "application/json")
-	public ResponseEntity<?> triggerJob(@PathVariable("job") String job, @Valid @RequestBody List<NameValuePair> parameters)
-			throws Exception {
-		Map<String, String> parametersMap = new HashMap<String, String>();
+  /**
+   * Trigger job.
+   *
+   * @param job the job
+   * @param parameters the parameters
+   * @return the response entity
+   * @throws Exception in case of an error
+   */
+  @PostMapping(value = "/trigger/{*job}", produces = "application/json")
+  public ResponseEntity<?> triggerJob(@PathVariable("job") String job, @Valid @RequestBody List<NameValuePair> parameters)
+      throws Exception {
+    Map<String, String> parametersMap = new HashMap<String, String>();
 
-		for (NameValuePair pair : parameters) {
-			parametersMap.put(pair.getName(), pair.getValue());
-		}
-		return ResponseEntity.ok(jobService.trigger(job, parametersMap));
-	}
+    for (NameValuePair pair : parameters) {
+      parametersMap.put(pair.getName(), pair.getValue());
+    }
+    return ResponseEntity.ok(jobService.trigger(job, parametersMap));
+  }
 
-	/**
-	 * List job emails.
-	 *
-	 * @param job the job
-	 * @return the response entity
-	 */
-	@GetMapping(value = "/emails/{*job}", produces = "application/json")
-	public ResponseEntity<List<JobEmail>> getJobEmails(@PathVariable("job") String job) {
-		return ResponseEntity.ok(jobEmailService.findAllByJobName(job));
-	}
+  /**
+   * List job emails.
+   *
+   * @param job the job
+   * @return the response entity
+   */
+  @GetMapping(value = "/emails/{*job}", produces = "application/json")
+  public ResponseEntity<List<JobEmail>> getJobEmails(@PathVariable("job") String job) {
+    return ResponseEntity.ok(jobEmailService.findAllByJobName(job));
+  }
 
-	/**
-	 * Add job email.
-	 *
-	 * @param job the job
-	 * @param email the email
-	 * @return the response entity
-	 */
-	@PostMapping(value = "/emailadd/{*job}", produces = "application/json")
-	public ResponseEntity<?> addJobEmails(@PathVariable("job") String job, @Valid @RequestBody String email) {
+  /**
+   * Add job email.
+   *
+   * @param job the job
+   * @param email the email
+   * @return the response entity
+   */
+  @PostMapping(value = "/emailadd/{*job}", produces = "application/json")
+  public ResponseEntity<?> addJobEmails(@PathVariable("job") String job, @Valid @RequestBody String email) {
 
-		if (email != null && email.indexOf(',') > -1) {
-			String[] emails = email.split(",");
-			for (String e : emails) {
-				jobEmailService.addEmail(job, e);
-			}
-		} else {
-			jobEmailService.addEmail(job, email);
-		}
+    if (email != null && email.indexOf(',') > -1) {
+      String[] emails = email.split(",");
+      for (String e : emails) {
+        jobEmailService.addEmail(job, e);
+      }
+    } else {
+      jobEmailService.addEmail(job, email);
+    }
 
-		return ResponseEntity	.ok()
-								.build();
-	}
+    return ResponseEntity.ok()
+                         .build();
+  }
 
-	/**
-	 * Remove job email.
-	 *
-	 * @param id the id
-	 * @return the response entity
-	 */
-	@PostMapping(value = "/emailremove/{id}", produces = "application/json")
-	public ResponseEntity<?> removeJobEmail(@PathVariable("job") Long id) {
+  /**
+   * Remove job email.
+   *
+   * @param id the id
+   * @return the response entity
+   */
+  @PostMapping(value = "/emailremove/{id}", produces = "application/json")
+  public ResponseEntity<?> removeJobEmail(@PathVariable("job") Long id) {
 
-		jobEmailService.removeEmail(id);
+    jobEmailService.removeEmail(id);
 
-		return ResponseEntity	.ok()
-								.build();
-	}
+    return ResponseEntity.ok()
+                         .build();
+  }
 
 }

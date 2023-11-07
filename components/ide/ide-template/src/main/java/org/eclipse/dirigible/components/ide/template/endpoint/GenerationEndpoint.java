@@ -43,51 +43,51 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "generate")
 public class GenerationEndpoint {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(GenerationEndpoint.class);
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(GenerationEndpoint.class);
 
-	/** The processor. */
-	@Autowired
-	private GenerationService generationService;
+  /** The processor. */
+  @Autowired
+  private GenerationService generationService;
 
-	/** The processor. */
-	@Autowired
-	private WorkspaceService workspaceService;
+  /** The processor. */
+  @Autowired
+  private WorkspaceService workspaceService;
 
-	/**
-	 * Generate file.
-	 *
-	 * @param workspace the workspace
-	 * @param project tsyntax exception
-	 * @param path the path
-	 * @param parameters the parameters
-	 * @return the response entity
-	 * @throws URISyntaxException the URI syntax exception
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	@PostMapping("/file/{workspace}/{project}/{*path}")
-	public ResponseEntity<URI> generateFile(@PathVariable("workspace") String workspace, @PathVariable("project") String project,
-			@PathVariable("path") String path, @Valid @RequestBody GenerationTemplateParameters parameters)
-			throws URISyntaxException, IOException {
+  /**
+   * Generate file.
+   *
+   * @param workspace the workspace
+   * @param project tsyntax exception
+   * @param path the path
+   * @param parameters the parameters
+   * @return the response entity
+   * @throws URISyntaxException the URI syntax exception
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  @PostMapping("/file/{workspace}/{project}/{*path}")
+  public ResponseEntity<URI> generateFile(@PathVariable("workspace") String workspace, @PathVariable("project") String project,
+      @PathVariable("path") String path, @Valid @RequestBody GenerationTemplateParameters parameters)
+      throws URISyntaxException, IOException {
 
-		if (!workspaceService.existsWorkspace(workspace)) {
-			String error = format("Workspace {0} does not exist.", workspace);
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
-		}
+    if (!workspaceService.existsWorkspace(workspace)) {
+      String error = format("Workspace {0} does not exist.", workspace);
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
+    }
 
-		if (!workspaceService.existsProject(workspace, project)) {
-			workspaceService.createProject(workspace, project);
-		}
+    if (!workspaceService.existsProject(workspace, project)) {
+      workspaceService.createProject(workspace, project);
+    }
 
-		File file = workspaceService.getFile(workspace, project, path);
-		if (file.exists()) {
-			String error = format("File {0} already exists in Project {1} in Workspace {2}.", path, project, workspace);
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
-		}
+    File file = workspaceService.getFile(workspace, project, path);
+    if (file.exists()) {
+      String error = format("File {0} already exists in Project {1} in Workspace {2}.", path, project, workspace);
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
+    }
 
-		List<File> files = generationService.generateFile(workspace, project, path, parameters);
-		return ResponseEntity	.created(workspaceService.getURI(workspace, project, path))
-								.build();
-	}
+    List<File> files = generationService.generateFile(workspace, project, path, parameters);
+    return ResponseEntity.created(workspaceService.getURI(workspace, project, path))
+                         .build();
+  }
 
 }

@@ -27,34 +27,34 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 @EdmEntitySet(name = "Territories", container = "NorthwindEntities")
 public class Territory {
 
-	/** The territory id. */
-	@EdmKey
-	@EdmProperty(name = "TerritoryID", facets = @EdmFacets(nullable = false, maxLength = 20))
-	private String territoryId;
+  /** The territory id. */
+  @EdmKey
+  @EdmProperty(name = "TerritoryID", facets = @EdmFacets(nullable = false, maxLength = 20))
+  private String territoryId;
 
-	/** The territory description. */
-	@EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 50))
-	private String territoryDescription;
+  /** The territory description. */
+  @EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 50))
+  private String territoryDescription;
 
-	/** The region id. */
-	@EdmProperty(name = "RegionID", facets = @EdmFacets(nullable = false))
-	private Integer regionId;
+  /** The region id. */
+  @EdmProperty(name = "RegionID", facets = @EdmFacets(nullable = false))
+  private Integer regionId;
 
-	/** The employees. */
-	@EdmNavigationProperty( //
-			toMultiplicity = Multiplicity.MANY, //
-			toType = Territory.class, //
-			toRole = "Employees", //
-			association = "EmployeeTerritories" //
-	)
-	private List<Employee> employees;
+  /** The employees. */
+  @EdmNavigationProperty( //
+      toMultiplicity = Multiplicity.MANY, //
+      toType = Territory.class, //
+      toRole = "Employees", //
+      association = "EmployeeTerritories" //
+  )
+  private List<Employee> employees;
 
-	/** The region. */
-	@EdmNavigationProperty( //
-			toMultiplicity = Multiplicity.ONE, //
-			toType = Region.class, //
-			toRole = "Region", //
-			association = "FK_Territories_Region" //
-	)
-	private Region region;
+  /** The region. */
+  @EdmNavigationProperty( //
+      toMultiplicity = Multiplicity.ONE, //
+      toType = Region.class, //
+      toRole = "Region", //
+      association = "FK_Territories_Region" //
+  )
+  private Region region;
 }

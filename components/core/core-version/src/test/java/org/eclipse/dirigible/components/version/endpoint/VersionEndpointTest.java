@@ -39,27 +39,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class VersionEndpointTest {
 
-	@Autowired
-	private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-	@Autowired
-	protected WebApplicationContext wac;
+  @Autowired
+  protected WebApplicationContext wac;
 
-	@Autowired
-	private FilterChainProxy springSecurityFilterChain;
+  @Autowired
+  private FilterChainProxy springSecurityFilterChain;
 
-	@Test
-	public void testGetVersion() throws Exception {
-		// TODO: Update expected value when engines added.
-		mockMvc	.perform(get("/services/core/version"))
-				.andExpect(status().isOk())
-				.andExpect(content().string(containsString("{\"productName\":\"dirigible\",\"productVersion\":\"0.0"
-						+ ".1\",\"productCommitId\":\"test\",\"productRepository\":\"https://github"
-						+ ".com/eclipse/dirigible\",\"productType\":\"all\",\"instanceName\":\"server-spring-boot\","
-						+ "\"repositoryProvider\":\"local\",\"databaseProvider\":\"local\",\"engines\":[]}")));
-	}
+  @Test
+  public void testGetVersion() throws Exception {
+    // TODO: Update expected value when engines added.
+    mockMvc.perform(get("/services/core/version"))
+           .andExpect(status().isOk())
+           .andExpect(content().string(containsString("{\"productName\":\"dirigible\",\"productVersion\":\"0.0"
+               + ".1\",\"productCommitId\":\"test\",\"productRepository\":\"https://github"
+               + ".com/eclipse/dirigible\",\"productType\":\"all\",\"instanceName\":\"server-spring-boot\","
+               + "\"repositoryProvider\":\"local\",\"databaseProvider\":\"local\",\"engines\":[]}")));
+  }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 }

@@ -18,29 +18,29 @@ import org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder;
  */
 public class MySQLDropSequenceBuilder extends DropSequenceBuilder {
 
-	/**
-	 * Instantiates a new MySQL drop sequence builder.
-	 *
-	 * @param dialect the dialect
-	 * @param sequence the sequence
-	 */
-	public MySQLDropSequenceBuilder(ISqlDialect dialect, String sequence) {
-		super(dialect, sequence);
-	}
+  /**
+   * Instantiates a new MySQL drop sequence builder.
+   *
+   * @param dialect the dialect
+   * @param sequence the sequence
+   */
+  public MySQLDropSequenceBuilder(ISqlDialect dialect, String sequence) {
+    super(dialect, sequence);
+  }
 
-	/**
-	 * Generate.
-	 *
-	 * @return the string
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder#generate()
-	 */
-	@Override
-	public String generate() {
-		throw new IllegalStateException("MySQL does not support Sequences");
-	}
+  /**
+   * Generate.
+   *
+   * @return the string
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder#generate()
+   */
+  @Override
+  public String generate() {
+    throw new IllegalStateException("MySQL does not support Sequences");
+  }
 
 }

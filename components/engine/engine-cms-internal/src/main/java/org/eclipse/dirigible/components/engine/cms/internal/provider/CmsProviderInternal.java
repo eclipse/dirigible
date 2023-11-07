@@ -25,41 +25,41 @@ import org.eclipse.dirigible.repository.local.LocalRepository;
  */
 public class CmsProviderInternal implements CmsProvider {
 
-	/** The Constant CMS. */
-	private static final String CMS = "cms"; //$NON-NLS-1$
+  /** The Constant CMS. */
+  private static final String CMS = "cms"; //$NON-NLS-1$
 
-	/** The Constant NAME. */
-	public static final String NAME = "repository"; //$NON-NLS-1$
+  /** The Constant NAME. */
+  public static final String NAME = "repository"; //$NON-NLS-1$
 
-	/** The Constant TYPE. */
-	public static final String TYPE = "internal"; //$NON-NLS-1$
+  /** The Constant TYPE. */
+  public static final String TYPE = "internal"; //$NON-NLS-1$
 
-	/** The cmis repository. */
-	private CmisRepository cmisRepository;
+  /** The cmis repository. */
+  private CmisRepository cmisRepository;
 
-	/**
-	 * Instantiates a new cms provider internal.
-	 */
-	public CmsProviderInternal() {
+  /**
+   * Instantiates a new cms provider internal.
+   */
+  public CmsProviderInternal() {
 
-		String rootFolder = Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER, "target/dirigible");
-		boolean absolute = Boolean.parseBoolean(Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE, "false"));
+    String rootFolder = Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER, "target/dirigible");
+    boolean absolute = Boolean.parseBoolean(Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE, "false"));
 
-		String repositoryFolder = rootFolder + File.separator + CMS;
+    String repositoryFolder = rootFolder + File.separator + CMS;
 
-		IRepository repository = new LocalRepository(repositoryFolder, absolute);
-		this.cmisRepository = CmisRepositoryFactory.createCmisRepository(repository);
-	}
+    IRepository repository = new LocalRepository(repositoryFolder, absolute);
+    this.cmisRepository = CmisRepositoryFactory.createCmisRepository(repository);
+  }
 
-	/**
-	 * Gets the session.
-	 *
-	 * @return the session
-	 */
-	@Override
-	public Object getSession() {
-		CmisSession cmisSession = this.cmisRepository.getSession();
-		return cmisSession;
-	}
+  /**
+   * Gets the session.
+   *
+   * @return the session
+   */
+  @Override
+  public Object getSession() {
+    CmisSession cmisSession = this.cmisRepository.getSession();
+    return cmisSession;
+  }
 
 }

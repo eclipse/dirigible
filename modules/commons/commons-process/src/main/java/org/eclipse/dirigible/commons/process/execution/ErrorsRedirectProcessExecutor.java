@@ -26,26 +26,26 @@ import java.util.concurrent.Future;
  */
 public final class ErrorsRedirectProcessExecutor extends ProcessExecutor<String> {
 
-	/**
-	 * Execute process.
-	 *
-	 * @param commandLine the command line
-	 * @param executor the executor
-	 * @param environmentVariables the environment variables
-	 * @return the future
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	@Override
-	public Future<ProcessResult<String>> executeProcess(CommandLine commandLine, DefaultExecutor executor,
-			Map<String, String> environmentVariables) throws IOException {
-		ByteArrayOutputStream stdOutAndErr = new ByteArrayOutputStream();
-		PumpStreamHandler pumpStreamHandler = new PumpStreamHandler(stdOutAndErr);
-		executor.setStreamHandler(pumpStreamHandler);
-		ProcessExecutionFuture processExecutionFuture = execute(executor, commandLine, environmentVariables);
+  /**
+   * Execute process.
+   *
+   * @param commandLine the command line
+   * @param executor the executor
+   * @param environmentVariables the environment variables
+   * @return the future
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  @Override
+  public Future<ProcessResult<String>> executeProcess(CommandLine commandLine, DefaultExecutor executor,
+      Map<String, String> environmentVariables) throws IOException {
+    ByteArrayOutputStream stdOutAndErr = new ByteArrayOutputStream();
+    PumpStreamHandler pumpStreamHandler = new PumpStreamHandler(stdOutAndErr);
+    executor.setStreamHandler(pumpStreamHandler);
+    ProcessExecutionFuture processExecutionFuture = execute(executor, commandLine, environmentVariables);
 
-		return processExecutionFuture.thenApply(exitCode -> {
-			String outAndErr = stdOutAndErr.toString(StandardCharsets.UTF_8);
-			return new ProcessResult<>(exitCode, outAndErr);
-		});
-	}
+    return processExecutionFuture.thenApply(exitCode -> {
+      String outAndErr = stdOutAndErr.toString(StandardCharsets.UTF_8);
+      return new ProcessResult<>(exitCode, outAndErr);
+    });
+  }
 }

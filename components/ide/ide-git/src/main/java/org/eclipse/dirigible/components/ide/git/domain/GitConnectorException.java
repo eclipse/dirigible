@@ -15,54 +15,54 @@ package org.eclipse.dirigible.components.ide.git.domain;
  */
 public class GitConnectorException extends Exception {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 3164412135969838078L;
+  /** The Constant serialVersionUID. */
+  private static final long serialVersionUID = 3164412135969838078L;
 
-	/**
-	 * Instantiates a new git connector exception.
-	 */
-	public GitConnectorException() {
-		super();
-	}
+  /**
+   * Instantiates a new git connector exception.
+   */
+  public GitConnectorException() {
+    super();
+  }
 
-	/**
-	 * Instantiates a new git connector exception.
-	 *
-	 * @param message the message
-	 * @param cause the cause
-	 * @param enableSuppression the enable suppression
-	 * @param writableStackTrace the writable stack trace
-	 */
-	public GitConnectorException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
+  /**
+   * Instantiates a new git connector exception.
+   *
+   * @param message the message
+   * @param cause the cause
+   * @param enableSuppression the enable suppression
+   * @param writableStackTrace the writable stack trace
+   */
+  public GitConnectorException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+  }
 
-	/**
-	 * Instantiates a new git connector exception.
-	 *
-	 * @param message the message
-	 * @param cause the cause
-	 */
-	public GitConnectorException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  /**
+   * Instantiates a new git connector exception.
+   *
+   * @param message the message
+   * @param cause the cause
+   */
+  public GitConnectorException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-	/**
-	 * Instantiates a new git connector exception.
-	 *
-	 * @param message the message
-	 */
-	public GitConnectorException(String message) {
-		super(message);
-	}
+  /**
+   * Instantiates a new git connector exception.
+   *
+   * @param message the message
+   */
+  public GitConnectorException(String message) {
+    super(message);
+  }
 
-	/**
-	 * Instantiates a new git connector exception.
-	 *
-	 * @param cause the cause
-	 */
-	public GitConnectorException(Throwable cause) {
-		super(cause);
-	}
+  /**
+   * Instantiates a new git connector exception.
+   *
+   * @param cause the cause
+   */
+  public GitConnectorException(Throwable cause) {
+    super(cause);
+  }
 
 }

@@ -19,30 +19,30 @@ import org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder;
  */
 public class MySQLDropBranchingBuilder extends DropBranchingBuilder {
 
-	/**
-	 * Instantiates a new mySQL create branching builder.
-	 *
-	 * @param dialect the dialect
-	 */
-	public MySQLDropBranchingBuilder(ISqlDialect dialect) {
-		super(dialect);
-	}
+  /**
+   * Instantiates a new mySQL create branching builder.
+   *
+   * @param dialect the dialect
+   */
+  public MySQLDropBranchingBuilder(ISqlDialect dialect) {
+    super(dialect);
+  }
 
-	/**
-	 * Sequence.
-	 *
-	 * @param sequence the sequence
-	 * @return the drop sequence builder
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(java.lang.String)
-	 */
-	@Override
-	public DropSequenceBuilder sequence(String sequence) {
-		return new MySQLDropSequenceBuilder(this.getDialect(), sequence);
-	}
+  /**
+   * Sequence.
+   *
+   * @param sequence the sequence
+   * @return the drop sequence builder
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(java.lang.String)
+   */
+  @Override
+  public DropSequenceBuilder sequence(String sequence) {
+    return new MySQLDropSequenceBuilder(this.getDialect(), sequence);
+  }
 
 }

@@ -44,50 +44,50 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @EntityScan("org.eclipse.dirigible.components")
 public class PullComandTest {
 
-	/** The clone command. */
-	@Autowired
-	private CloneCommand cloneCommand;
+  /** The clone command. */
+  @Autowired
+  private CloneCommand cloneCommand;
 
-	/** The pull command. */
-	@Autowired
-	private PullCommand pullCommand;
+  /** The pull command. */
+  @Autowired
+  private PullCommand pullCommand;
 
-	/** The workspaces service. */
-	@Autowired
-	private WorkspaceService workspaceService;
+  /** The workspaces service. */
+  @Autowired
+  private WorkspaceService workspaceService;
 
-	/**
-	 * Creates the workspace test.
-	 *
-	 * @throws GitConnectorException the git connector exception
-	 */
-	@Test
-	public void createWorkspaceTest() throws GitConnectorException {
-		String gitEnabled = System.getenv(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
-		if (gitEnabled != null) {
-			Workspace workspace1 = workspaceService.getWorkspace("workspace1");
-			GitCloneModel cloneModel = new GitCloneModel();
-			cloneModel.setRepository("https://github.com/dirigiblelabs/sample_git_test.git");
-			cloneModel.setBranch(IGitConnector.GIT_MASTER);
-			cloneModel.setPublish(true);
-			cloneCommand.execute(workspace1, cloneModel);
-			assertNotNull(workspace1);
-			assertTrue(workspace1.exists());
-			Project project1 = workspace1.getProject("project1");
-			assertNotNull(project1);
-			assertTrue(project1.exists());
-			GitPullModel pullModel = new GitPullModel();
-			pullModel.setProjects(Arrays.asList("sample_git_test"));
-			pullModel.setPublish(true);
-			pullCommand.execute(workspace1, pullModel);
-		}
-	}
+  /**
+   * Creates the workspace test.
+   *
+   * @throws GitConnectorException the git connector exception
+   */
+  @Test
+  public void createWorkspaceTest() throws GitConnectorException {
+    String gitEnabled = System.getenv(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
+    if (gitEnabled != null) {
+      Workspace workspace1 = workspaceService.getWorkspace("workspace1");
+      GitCloneModel cloneModel = new GitCloneModel();
+      cloneModel.setRepository("https://github.com/dirigiblelabs/sample_git_test.git");
+      cloneModel.setBranch(IGitConnector.GIT_MASTER);
+      cloneModel.setPublish(true);
+      cloneCommand.execute(workspace1, cloneModel);
+      assertNotNull(workspace1);
+      assertTrue(workspace1.exists());
+      Project project1 = workspace1.getProject("project1");
+      assertNotNull(project1);
+      assertTrue(project1.exists());
+      GitPullModel pullModel = new GitPullModel();
+      pullModel.setProjects(Arrays.asList("sample_git_test"));
+      pullModel.setPublish(true);
+      pullCommand.execute(workspace1, pullModel);
+    }
+  }
 
-	/**
-	 * The Class TestConfiguration.
-	 */
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  /**
+   * The Class TestConfiguration.
+   */
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 
 }

@@ -20,50 +20,50 @@ import org.springframework.stereotype.Component;
 @Component
 public class SynchronizationWatcherPublisherHandler implements PublisherHandler {
 
-	/** The synchronization watcher. */
-	@Autowired
-	private SynchronizationWatcher synchronizationWatcher;
+  /** The synchronization watcher. */
+  @Autowired
+  private SynchronizationWatcher synchronizationWatcher;
 
-	/**
-	 * Before publish.
-	 *
-	 * @param location the location
-	 */
-	@Override
-	public void beforePublish(String location) {
+  /**
+   * Before publish.
+   *
+   * @param location the location
+   */
+  @Override
+  public void beforePublish(String location) {
 
-	}
+  }
 
-	/**
-	 * After publish.
-	 *
-	 * @param workspaceLocation the workspace location
-	 * @param registryLocation the registry location
-	 * @param metadata the metadata
-	 */
-	@Override
-	public void afterPublish(String workspaceLocation, String registryLocation, AfterPublishMetadata metadata) {
-		synchronizationWatcher.force();
-	}
+  /**
+   * After publish.
+   *
+   * @param workspaceLocation the workspace location
+   * @param registryLocation the registry location
+   * @param metadata the metadata
+   */
+  @Override
+  public void afterPublish(String workspaceLocation, String registryLocation, AfterPublishMetadata metadata) {
+    synchronizationWatcher.force();
+  }
 
-	/**
-	 * Before unpublish.
-	 *
-	 * @param location the location
-	 */
-	@Override
-	public void beforeUnpublish(String location) {
+  /**
+   * Before unpublish.
+   *
+   * @param location the location
+   */
+  @Override
+  public void beforeUnpublish(String location) {
 
-	}
+  }
 
-	/**
-	 * After unpublish.
-	 *
-	 * @param location the location
-	 */
-	@Override
-	public void afterUnpublish(String location) {
-		synchronizationWatcher.force();
-	}
+  /**
+   * After unpublish.
+   *
+   * @param location the location
+   */
+  @Override
+  public void afterUnpublish(String location) {
+    synchronizationWatcher.force();
+  }
 
 }

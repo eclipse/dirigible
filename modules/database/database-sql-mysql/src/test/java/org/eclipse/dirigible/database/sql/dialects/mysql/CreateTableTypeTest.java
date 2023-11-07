@@ -19,17 +19,17 @@ import org.junit.Test;
  */
 public class CreateTableTypeTest {
 
-	/**
-	 * Create table type MySQL dialect.
-	 */
-	@Test(expected = IllegalStateException.class)
-	public void executeCreateTableTypeDifferentFromHanaDialect() {
-		SqlFactory	.getNative(new MySQLSqlDialect())
-					.create()
-					.tableType("CUSTOMERS_STRUCTURE")
-					.column("CATEGORY_ID", DataType.INTEGER)
-					.column("NAME", DataType.VARCHAR, "255")
-					.column("TYPES", DataType.VARCHAR, true, false, "220")
-					.build();
-	}
+  /**
+   * Create table type MySQL dialect.
+   */
+  @Test(expected = IllegalStateException.class)
+  public void executeCreateTableTypeDifferentFromHanaDialect() {
+    SqlFactory.getNative(new MySQLSqlDialect())
+              .create()
+              .tableType("CUSTOMERS_STRUCTURE")
+              .column("CATEGORY_ID", DataType.INTEGER)
+              .column("NAME", DataType.VARCHAR, "255")
+              .column("TYPES", DataType.VARCHAR, true, false, "220")
+              .build();
+  }
 }

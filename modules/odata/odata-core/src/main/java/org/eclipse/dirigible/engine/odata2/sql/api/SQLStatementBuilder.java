@@ -18,13 +18,13 @@ import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
  */
 public interface SQLStatementBuilder {
 
-	/**
-	 * Builds the.
-	 *
-	 * @param context the context
-	 * @return the SQL statement
-	 * @throws ODataException the o data exception
-	 */
-	SQLStatement build(SQLContext context) throws ODataException;
+  /**
+   * Builds the.
+   *
+   * @param context the context
+   * @return the SQL statement
+   * @throws ODataException the o data exception
+   */
+  SQLStatement build(SQLContext context) throws ODataException;
 
 }

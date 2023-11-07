@@ -26,44 +26,44 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmType;
 @EdmEntitySet(name = "Order_Details", container = "NorthwindEntities")
 public class OrderDetail {
 
-	/** The order id. */
-	@EdmKey
-	@EdmProperty(name = "OrderID", facets = @EdmFacets(nullable = false))
-	private Integer orderId;
+  /** The order id. */
+  @EdmKey
+  @EdmProperty(name = "OrderID", facets = @EdmFacets(nullable = false))
+  private Integer orderId;
 
-	/** The product id. */
-	@EdmKey
-	@EdmProperty(name = "ProductID", facets = @EdmFacets(nullable = false))
-	private Integer productId;
+  /** The product id. */
+  @EdmKey
+  @EdmProperty(name = "ProductID", facets = @EdmFacets(nullable = false))
+  private Integer productId;
 
-	/** The unit price. */
-	@EdmProperty(type = EdmType.DECIMAL, facets = @EdmFacets(nullable = false, precision = 19, scale = 4))
-	private Double unitPrice;
+  /** The unit price. */
+  @EdmProperty(type = EdmType.DECIMAL, facets = @EdmFacets(nullable = false, precision = 19, scale = 4))
+  private Double unitPrice;
 
-	/** The quantity. */
-	@EdmProperty(facets = @EdmFacets(nullable = false))
-	private Short quantity;
+  /** The quantity. */
+  @EdmProperty(facets = @EdmFacets(nullable = false))
+  private Short quantity;
 
-	/** The discount. */
-	@EdmProperty(type = EdmType.SINGLE, facets = @EdmFacets(nullable = false))
-	private Integer discount;
+  /** The discount. */
+  @EdmProperty(type = EdmType.SINGLE, facets = @EdmFacets(nullable = false))
+  private Integer discount;
 
-	/** The order. */
-	@EdmNavigationProperty( //
-			toMultiplicity = Multiplicity.ONE, //
-			toType = Order.class, //
-			toRole = "Orders", //
-			association = "FK_Order_Details_Orders" //
-	)
-	private Order order;
+  /** The order. */
+  @EdmNavigationProperty( //
+      toMultiplicity = Multiplicity.ONE, //
+      toType = Order.class, //
+      toRole = "Orders", //
+      association = "FK_Order_Details_Orders" //
+  )
+  private Order order;
 
-	/** The product. */
-	@EdmNavigationProperty( //
-			toMultiplicity = Multiplicity.ONE, //
-			toType = Product.class, //
-			toRole = "Products", //
-			association = "FK_Order_Details_Products" //
-	)
-	private Product product;
+  /** The product. */
+  @EdmNavigationProperty( //
+      toMultiplicity = Multiplicity.ONE, //
+      toType = Product.class, //
+      toRole = "Products", //
+      association = "FK_Order_Details_Products" //
+  )
+  private Product product;
 
 }

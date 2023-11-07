@@ -35,71 +35,70 @@ import io.swagger.v3.oas.annotations.Parameter;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_DATA + "schemas")
 public class SchemaEndpoint extends BaseEndpoint {
 
-	/** The schema service. */
-	private final SchemaService schemaService;
+  /** The schema service. */
+  private final SchemaService schemaService;
 
-	/**
-	 * Instantiates a new schema endpoint.
-	 *
-	 * @param schemaService the schema service
-	 */
-	@Autowired
-	public SchemaEndpoint(SchemaService schemaService) {
-		this.schemaService = schemaService;
-	}
+  /**
+   * Instantiates a new schema endpoint.
+   *
+   * @param schemaService the schema service
+   */
+  @Autowired
+  public SchemaEndpoint(SchemaService schemaService) {
+    this.schemaService = schemaService;
+  }
 
-	/**
-	 * Find all.
-	 *
-	 * @param size the size
-	 * @param page the page
-	 * @return the page
-	 */
-	@GetMapping("/pages")
-	public Page<Schema> findAll(
-			@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
-			@Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
-		if (size == null) {
-			size = DEFAULT_PAGE_SIZE;
-		}
-		if (page == null) {
-			page = 0;
-		}
-		Pageable pageable = PageRequest.of(page, size);
-		Page<Schema> schemas = schemaService.getPages(pageable);
-		return schemas;
-	}
+  /**
+   * Find all.
+   *
+   * @param size the size
+   * @param page the page
+   * @return the page
+   */
+  @GetMapping("/pages")
+  public Page<Schema> findAll(@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
+      @Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
+    if (size == null) {
+      size = DEFAULT_PAGE_SIZE;
+    }
+    if (page == null) {
+      page = 0;
+    }
+    Pageable pageable = PageRequest.of(page, size);
+    Page<Schema> schemas = schemaService.getPages(pageable);
+    return schemas;
+  }
 
-	/**
-	 * Gets the.
-	 *
-	 * @param id the id
-	 * @return the response entity
-	 */
-	@GetMapping("/{id}")
-	public ResponseEntity<Schema> get(@PathVariable("id") Long id) {
-		return ResponseEntity.ok(schemaService.findById(id));
-	}
+  /**
+   * Gets the.
+   *
+   * @param id the id
+   * @return the response entity
+   */
+  @GetMapping("/{id}")
+  public ResponseEntity<Schema> get(@PathVariable("id") Long id) {
+    return ResponseEntity.ok(schemaService.findById(id));
+  }
 
-	/**
-	 * Find by name.
-	 *
-	 * @param name the name
-	 * @return the response entity
-	 */
-	@GetMapping("/search")
-	public ResponseEntity<Schema> findByName(@RequestParam("name") String name) {
-		return ResponseEntity.ok(schemaService.findByName(name));
-	}
+  /**
+   * Find by name.
+   *
+   * @param name the name
+   * @return the response entity
+   */
+  @GetMapping("/search")
+  public ResponseEntity<Schema> findByName(@RequestParam("name") String name) {
+    return ResponseEntity.ok(schemaService.findByName(name));
+  }
 
-	/**
-	 * Gets the all.
-	 *
-	 * @return the all
-	 */
-	@GetMapping
-	public ResponseEntity<List<Schema>> getAll() {
-		return ResponseEntity.ok(schemaService.getAll());
-	}
+  /**
+   * Gets the all.
+   *
+   * @return the all
+   */
+  @GetMapping
+  public ResponseEntity<List<Schema>> getAll() {
+    return ResponseEntity.ok(schemaService.getAll());
+  }
 
 }

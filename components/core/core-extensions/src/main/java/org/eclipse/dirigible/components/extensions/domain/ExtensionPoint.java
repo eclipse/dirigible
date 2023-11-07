@@ -30,82 +30,82 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 @Table(name = "DIRIGIBLE_EXTENSION_POINTS")
 public class ExtensionPoint extends Artefact {
 
-	/** The Constant ARTEFACT_TYPE. */
-	public static final String ARTEFACT_TYPE = "extensionpoint";
+  /** The Constant ARTEFACT_TYPE. */
+  public static final String ARTEFACT_TYPE = "extensionpoint";
 
-	/** The id. */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "EXTENSIONPOINT_ID", nullable = false)
-	private Long id;
+  /** The id. */
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "EXTENSIONPOINT_ID", nullable = false)
+  private Long id;
 
-	@Transient
-	private transient Set<Extension> extensions = new HashSet<Extension>();
+  @Transient
+  private transient Set<Extension> extensions = new HashSet<Extension>();
 
-	/**
-	 * Instantiates a new extension point.
-	 *
-	 * @param location the location
-	 * @param name the name
-	 * @param description the description
-	 */
-	public ExtensionPoint(String location, String name, String description) {
-		super(location, name, ARTEFACT_TYPE, description, null);
-	}
+  /**
+   * Instantiates a new extension point.
+   *
+   * @param location the location
+   * @param name the name
+   * @param description the description
+   */
+  public ExtensionPoint(String location, String name, String description) {
+    super(location, name, ARTEFACT_TYPE, description, null);
+  }
 
-	/**
-	 * Instantiates a new extension point.
-	 */
-	public ExtensionPoint() {
-		super();
-	}
+  /**
+   * Instantiates a new extension point.
+   */
+  public ExtensionPoint() {
+    super();
+  }
 
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
+  /**
+   * Gets the id.
+   *
+   * @return the id
+   */
+  public Long getId() {
+    return id;
+  }
 
-	/**
-	 * Sets the id.
-	 *
-	 * @param id the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
+  /**
+   * Sets the id.
+   *
+   * @param id the id to set
+   */
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-	/**
-	 * Gets the extensions.
-	 *
-	 * @return the extensions
-	 */
-	public Set<Extension> getExtensions() {
-		return extensions;
-	}
+  /**
+   * Gets the extensions.
+   *
+   * @return the extensions
+   */
+  public Set<Extension> getExtensions() {
+    return extensions;
+  }
 
-	/**
-	 * Sets the extensions.
-	 *
-	 * @param extensions the extensions to set
-	 */
-	public void setExtensions(Set<Extension> extensions) {
-		this.extensions = extensions;
-	}
+  /**
+   * Sets the extensions.
+   *
+   * @param extensions the extensions to set
+   */
+  public void setExtensions(Set<Extension> extensions) {
+    this.extensions = extensions;
+  }
 
-	/**
-	 * To string.
-	 *
-	 * @return the string
-	 */
-	@Override
-	public String toString() {
-		return "ExtensionPoint [id=" + id + ", location=" + location + ", name=" + name + ", description=" + description + ", type=" + type
-				+ ", key=" + key + ", dependencies=" + dependencies + ", state=" + createdBy + ", createdAt=" + createdAt + ", updatedBy="
-				+ updatedBy + ", updatedAt=" + updatedAt + "]";
-	}
+  /**
+   * To string.
+   *
+   * @return the string
+   */
+  @Override
+  public String toString() {
+    return "ExtensionPoint [id=" + id + ", location=" + location + ", name=" + name + ", description=" + description + ", type=" + type
+        + ", key=" + key + ", dependencies=" + dependencies + ", state=" + createdBy + ", createdAt=" + createdAt + ", updatedBy="
+        + updatedBy + ", updatedAt=" + updatedAt + "]";
+  }
 
 }

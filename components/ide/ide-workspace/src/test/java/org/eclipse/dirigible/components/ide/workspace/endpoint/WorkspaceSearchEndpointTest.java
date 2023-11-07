@@ -45,54 +45,54 @@ import org.springframework.web.context.WebApplicationContext;
 @EntityScan("org.eclipse.dirigible.components")
 public class WorkspaceSearchEndpointTest {
 
-	/** The mock mvc. */
-	@Autowired
-	private MockMvc mockMvc;
+  /** The mock mvc. */
+  @Autowired
+  private MockMvc mockMvc;
 
-	/** The wac. */
-	@Autowired
-	protected WebApplicationContext wac;
+  /** The wac. */
+  @Autowired
+  protected WebApplicationContext wac;
 
-	/** The spring security filter chain. */
-	@Autowired
-	private FilterChainProxy springSecurityFilterChain;
+  /** The spring security filter chain. */
+  @Autowired
+  private FilterChainProxy springSecurityFilterChain;
 
-	/**
-	 * Setup.
-	 *
-	 * @throws Exception the exception
-	 */
-	@BeforeEach
-	public void setup() throws Exception {
-		cleanup();
+  /**
+   * Setup.
+   *
+   * @throws Exception the exception
+   */
+  @BeforeEach
+  public void setup() throws Exception {
+    cleanup();
 
-	}
+  }
 
-	/**
-	 * Cleanup.
-	 *
-	 * @throws Exception the exception
-	 */
-	@AfterEach
-	public void cleanup() throws Exception {}
+  /**
+   * Cleanup.
+   *
+   * @throws Exception the exception
+   */
+  @AfterEach
+  public void cleanup() throws Exception {}
 
-	/**
-	 * Find in workspace.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void findInWorkspace() throws Exception {
-		mockMvc	.perform(post("/services/ide/workspace-search/workspace1")	.content("test")
-																			.with(csrf()))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful());
-	}
+  /**
+   * Find in workspace.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void findInWorkspace() throws Exception {
+    mockMvc.perform(post("/services/ide/workspace-search/workspace1").content("test")
+                                                                     .with(csrf()))
+           .andDo(print())
+           .andExpect(status().is2xxSuccessful());
+  }
 
-	/**
-	 * The Class TestConfiguration.
-	 */
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  /**
+   * The Class TestConfiguration.
+   */
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 }

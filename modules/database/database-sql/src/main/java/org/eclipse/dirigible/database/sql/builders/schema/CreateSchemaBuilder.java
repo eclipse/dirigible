@@ -20,72 +20,72 @@ import org.slf4j.LoggerFactory;
  */
 public class CreateSchemaBuilder extends AbstractCreateSqlBuilder {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(CreateSchemaBuilder.class);
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(CreateSchemaBuilder.class);
 
-	/** The name. */
-	private String name;
+  /** The name. */
+  private String name;
 
-	/**
-	 * Instantiates a new creates the schema builder.
-	 *
-	 * @param dialect the dialect
-	 * @param name the schema name
-	 */
-	public CreateSchemaBuilder(ISqlDialect dialect, String name) {
-		super(dialect);
-		this.name = name;
-	}
+  /**
+   * Instantiates a new creates the schema builder.
+   *
+   * @param dialect the dialect
+   * @param name the schema name
+   */
+  public CreateSchemaBuilder(ISqlDialect dialect, String name) {
+    super(dialect);
+    this.name = name;
+  }
 
-	/**
-	 * Generate.
-	 *
-	 * @return the string
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-	 */
-	@Override
-	public String generate() {
+  /**
+   * Generate.
+   *
+   * @return the string
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
+   */
+  @Override
+  public String generate() {
 
-		StringBuilder sql = new StringBuilder();
+    StringBuilder sql = new StringBuilder();
 
-		// CREATE
-		generateCreate(sql);
+    // CREATE
+    generateCreate(sql);
 
-		// SCHEMA
-		generateSchema(sql);
+    // SCHEMA
+    generateSchema(sql);
 
-		String generated = sql.toString();
+    String generated = sql.toString();
 
-		if (logger.isTraceEnabled()) {
-			logger.trace("generated: " + generated);
-		}
+    if (logger.isTraceEnabled()) {
+      logger.trace("generated: " + generated);
+    }
 
-		return generated;
-	}
+    return generated;
+  }
 
-	/**
-	 * Generate schema.
-	 *
-	 * @param sql the sql
-	 */
-	protected void generateSchema(StringBuilder sql) {
-		String schemaName = (isCaseSensitive()) ? encapsulate(this.getName(), true) : this.getName();
-		sql	.append(SPACE)
-			.append(KEYWORD_SCHEMA)
-			.append(SPACE)
-			.append(schemaName);
-	}
+  /**
+   * Generate schema.
+   *
+   * @param sql the sql
+   */
+  protected void generateSchema(StringBuilder sql) {
+    String schemaName = (isCaseSensitive()) ? encapsulate(this.getName(), true) : this.getName();
+    sql.append(SPACE)
+       .append(KEYWORD_SCHEMA)
+       .append(SPACE)
+       .append(schemaName);
+  }
 
-	/**
-	 * Gets the schema name.
-	 *
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * Gets the schema name.
+   *
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 }

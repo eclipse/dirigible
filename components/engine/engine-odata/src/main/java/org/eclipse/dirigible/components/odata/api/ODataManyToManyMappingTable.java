@@ -17,59 +17,58 @@ import com.google.gson.annotations.Expose;
  */
 public class ODataManyToManyMappingTable {
 
-	/** The mapping table name. */
-	@Expose
-	private String mappingTableName;
+  /** The mapping table name. */
+  @Expose
+  private String mappingTableName;
 
-	/** The mapping table join column. */
-	@Expose
-	private String mappingTableJoinColumn;
+  /** The mapping table join column. */
+  @Expose
+  private String mappingTableJoinColumn;
 
-	/**
-	 * Gets the mapping table name.
-	 *
-	 * @return the mapping table name
-	 */
-	public String getMappingTableName() {
-		return mappingTableName;
-	}
+  /**
+   * Gets the mapping table name.
+   *
+   * @return the mapping table name
+   */
+  public String getMappingTableName() {
+    return mappingTableName;
+  }
 
-	/**
-	 * Sets the mapping table name.
-	 *
-	 * @param mappingTableName the new mapping table name
-	 */
-	public void setMappingTableName(String mappingTableName) {
-		this.mappingTableName = mappingTableName;
-	}
+  /**
+   * Sets the mapping table name.
+   *
+   * @param mappingTableName the new mapping table name
+   */
+  public void setMappingTableName(String mappingTableName) {
+    this.mappingTableName = mappingTableName;
+  }
 
-	/**
-	 * Gets the mapping table join column.
-	 *
-	 * @return the mapping table join column
-	 */
-	public String getMappingTableJoinColumn() {
-		return mappingTableJoinColumn;
-	}
+  /**
+   * Gets the mapping table join column.
+   *
+   * @return the mapping table join column
+   */
+  public String getMappingTableJoinColumn() {
+    return mappingTableJoinColumn;
+  }
 
-	/**
-	 * Sets the mapping table join column.
-	 *
-	 * @param mappingTableJoinColumn the new mapping table join column
-	 */
-	public void setMappingTableJoinColumn(String mappingTableJoinColumn) {
-		this.mappingTableJoinColumn = mappingTableJoinColumn;
-	}
+  /**
+   * Sets the mapping table join column.
+   *
+   * @param mappingTableJoinColumn the new mapping table join column
+   */
+  public void setMappingTableJoinColumn(String mappingTableJoinColumn) {
+    this.mappingTableJoinColumn = mappingTableJoinColumn;
+  }
 
-	/**
-	 * To string.
-	 *
-	 * @return the string
-	 */
-	@Override
-	public String toString() {
-		return "ODataManyToManyMappingTable [mappingTableName=" + mappingTableName + ", mappingTableJoinColumn=" + mappingTableJoinColumn
-				+ "]";
-	}
+  /**
+   * To string.
+   *
+   * @return the string
+   */
+  @Override
+  public String toString() {
+    return "ODataManyToManyMappingTable [mappingTableName=" + mappingTableName + ", mappingTableJoinColumn=" + mappingTableJoinColumn + "]";
+  }
 
 }

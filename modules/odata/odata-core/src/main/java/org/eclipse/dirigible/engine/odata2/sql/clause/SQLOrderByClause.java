@@ -36,148 +36,146 @@ import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.isProper
  */
 public class SQLOrderByClause implements SQLClause {
 
-	/** The Constant EMPTY_STRING. */
-	private static final String EMPTY_STRING = "";
+  /** The Constant EMPTY_STRING. */
+  private static final String EMPTY_STRING = "";
 
-	/** The order by expression. */
-	private final OrderByExpression orderByExpression;
+  /** The order by expression. */
+  private final OrderByExpression orderByExpression;
 
-	/** The query. */
-	private final SQLSelectBuilder query;
+  /** The query. */
+  private final SQLSelectBuilder query;
 
-	/** The entity type. */
-	private final EdmEntityType entityType;
+  /** The entity type. */
+  private final EdmEntityType entityType;
 
-	/** The log. */
-	private final Logger LOG = LoggerFactory.getLogger(SQLOrderByClause.class);
+  /** The log. */
+  private final Logger LOG = LoggerFactory.getLogger(SQLOrderByClause.class);
 
-	/**
-	 * Instantiates a new SQL order by clause.
-	 *
-	 * @param query the query
-	 * @param orderByEntityType the order by entity type
-	 * @param orderByExpression the order by expression
-	 */
-	public SQLOrderByClause(final SQLSelectBuilder query, final EdmEntityType orderByEntityType,
-			final OrderByExpression orderByExpression) {
-		this.orderByExpression = orderByExpression;
-		this.query = query;
-		this.entityType = orderByEntityType;
-	}
+  /**
+   * Instantiates a new SQL order by clause.
+   *
+   * @param query the query
+   * @param orderByEntityType the order by entity type
+   * @param orderByExpression the order by expression
+   */
+  public SQLOrderByClause(final SQLSelectBuilder query, final EdmEntityType orderByEntityType, final OrderByExpression orderByExpression) {
+    this.orderByExpression = orderByExpression;
+    this.query = query;
+    this.entityType = orderByEntityType;
+  }
 
 
-	/**
-	 * Evaluate.
-	 *
-	 * @param context the context
-	 * @return the string
-	 * @throws EdmException the edm exception
-	 */
-	@Override
-	public String evaluate(final SQLContext context) throws EdmException {
-		return isEmpty() ? getDefaultExpression(context) : parseExpression(context, orderByExpression);
-	}
+  /**
+   * Evaluate.
+   *
+   * @param context the context
+   * @return the string
+   * @throws EdmException the edm exception
+   */
+  @Override
+  public String evaluate(final SQLContext context) throws EdmException {
+    return isEmpty() ? getDefaultExpression(context) : parseExpression(context, orderByExpression);
+  }
 
-	/**
-	 * Checks if is empty.
-	 *
-	 * @return true, if is empty
-	 */
-	@Override
-	public boolean isEmpty() {
-		return orderByExpression == null || orderByExpression.getOrders() == null;
-	}
+  /**
+   * Checks if is empty.
+   *
+   * @return true, if is empty
+   */
+  @Override
+  public boolean isEmpty() {
+    return orderByExpression == null || orderByExpression.getOrders() == null;
+  }
 
-	/**
-	 * Gets the default expression.
-	 *
-	 * @param context the context
-	 * @return the default expression
-	 * @throws EdmException the edm exception
-	 */
-	private String getDefaultExpression(SQLContext context) throws EdmException {
-		List<String> keyPropertyNames = entityType.getKeyPropertyNames();
-		if (null == keyPropertyNames || keyPropertyNames.isEmpty()) {
-			return EMPTY_STRING;
-		}
+  /**
+   * Gets the default expression.
+   *
+   * @param context the context
+   * @return the default expression
+   * @throws EdmException the edm exception
+   */
+  private String getDefaultExpression(SQLContext context) throws EdmException {
+    List<String> keyPropertyNames = entityType.getKeyPropertyNames();
+    if (null == keyPropertyNames || keyPropertyNames.isEmpty()) {
+      return EMPTY_STRING;
+    }
 
-		String defaultOrderByExpression = String.join(",", keyPropertyNames);
-		OrderByParserImpl orderByParser = new OrderByParserImpl(entityType);
-		OrderByExpression orderExpression;
-		try {
-			orderExpression = orderByParser.parseOrderByString(defaultOrderByExpression);
-		} catch (ExpressionParserException | ExpressionParserInternalError e) {
-			throw new IllegalStateException("Failed to parse default OrderBy expression.", e);
-		}
+    String defaultOrderByExpression = String.join(",", keyPropertyNames);
+    OrderByParserImpl orderByParser = new OrderByParserImpl(entityType);
+    OrderByExpression orderExpression;
+    try {
+      orderExpression = orderByParser.parseOrderByString(defaultOrderByExpression);
+    } catch (ExpressionParserException | ExpressionParserInternalError e) {
+      throw new IllegalStateException("Failed to parse default OrderBy expression.", e);
+    }
 
-		return parseExpression(context, orderExpression);
-	}
+    return parseExpression(context, orderExpression);
+  }
 
-	/**
-	 * Parses the expression.
-	 *
-	 * @param context the context
-	 * @param orderExpression the order expression
-	 * @return the string
-	 * @throws EdmException the edm exception
-	 */
-	private String parseExpression(SQLContext context, OrderByExpression orderExpression) throws EdmException {
-		List<String> orderByClauses = new ArrayList<>();
-		List<OrderExpression> orderBys = orderExpression.getOrders();
-		for (OrderExpression orderBy : orderBys) {
-			orderByClauses.add(orderByClause(context, orderBy));
-		}
-		return SQLUtils.csv(orderByClauses);
-	}
+  /**
+   * Parses the expression.
+   *
+   * @param context the context
+   * @param orderExpression the order expression
+   * @return the string
+   * @throws EdmException the edm exception
+   */
+  private String parseExpression(SQLContext context, OrderByExpression orderExpression) throws EdmException {
+    List<String> orderByClauses = new ArrayList<>();
+    List<OrderExpression> orderBys = orderExpression.getOrders();
+    for (OrderExpression orderBy : orderBys) {
+      orderByClauses.add(orderByClause(context, orderBy));
+    }
+    return SQLUtils.csv(orderByClauses);
+  }
 
-	/**
-	 * Order by clause.
-	 *
-	 * @param context the context
-	 * @param orderBy the order by
-	 * @return the string
-	 * @throws EdmException the edm exception
-	 */
-	protected String orderByClause(SQLContext context, OrderExpression orderBy) throws EdmException {
-		CommonExpression expression = orderBy.getExpression();
-		EdmStructuralType entityType;
-		EdmProperty prop;
-		StringBuilder orderByClause = new StringBuilder();
+  /**
+   * Order by clause.
+   *
+   * @param context the context
+   * @param orderBy the order by
+   * @return the string
+   * @throws EdmException the edm exception
+   */
+  protected String orderByClause(SQLContext context, OrderExpression orderBy) throws EdmException {
+    CommonExpression expression = orderBy.getExpression();
+    EdmStructuralType entityType;
+    EdmProperty prop;
+    StringBuilder orderByClause = new StringBuilder();
 
-		if (expression instanceof MemberExpression) {
-			MemberExpression memberExpression = (MemberExpression) expression;
-			CommonExpression pathExpression = memberExpression.getPath();
-			entityType = (EdmStructuralType) pathExpression.getEdmType();
-			PropertyExpression propertyExpression = (PropertyExpression) memberExpression.getProperty();
-			prop = (EdmProperty) propertyExpression.getEdmProperty();
+    if (expression instanceof MemberExpression) {
+      MemberExpression memberExpression = (MemberExpression) expression;
+      CommonExpression pathExpression = memberExpression.getPath();
+      entityType = (EdmStructuralType) pathExpression.getEdmType();
+      PropertyExpression propertyExpression = (PropertyExpression) memberExpression.getProperty();
+      prop = (EdmProperty) propertyExpression.getEdmProperty();
 
-		} else if (expression instanceof PropertyExpression) {
-			PropertyExpression propertyExpression = (PropertyExpression) expression;
-			prop = (EdmProperty) propertyExpression.getEdmProperty();
-			entityType = this.entityType;
-		} else {
-			throw new OData2Exception("Not Implemented", INTERNAL_SERVER_ERROR);
-		}
-		if (query.isTransientType(entityType, prop)) {
-			// Unable to sort with a transient property in the list. This changes the semantic of order by and
-			// the result of the select
-			LOG.error("Unmapped property {}! Unable to use an order by expression for properties that are not mapped to the DB.",
-					prop.getName());
-			throw new OData2Exception(INTERNAL_SERVER_ERROR);
-		}
+    } else if (expression instanceof PropertyExpression) {
+      PropertyExpression propertyExpression = (PropertyExpression) expression;
+      prop = (EdmProperty) propertyExpression.getEdmProperty();
+      entityType = this.entityType;
+    } else {
+      throw new OData2Exception("Not Implemented", INTERNAL_SERVER_ERROR);
+    }
+    if (query.isTransientType(entityType, prop)) {
+      // Unable to sort with a transient property in the list. This changes the semantic of order by and
+      // the result of the select
+      LOG.error("Unmapped property {}! Unable to use an order by expression for properties that are not mapped to the DB.", prop.getName());
+      throw new OData2Exception(INTERNAL_SERVER_ERROR);
+    }
 
-		if ((context == null || context.getDatabaseProduct() != null)) {
-			if (isPropertyParameter(prop, query, entityType)) {
-				orderByClause.append(query.getSQLTableColumnAlias(entityType, prop));
-			} else {
-				orderByClause.append(query.getSQLTableColumn(entityType, prop));
-			}
-		} else {
-			orderByClause.append(query.getSQLTableColumnAlias(entityType, prop)); // This gives the correct "order by" column name for Open
-																					// SQL
-		}
-		orderByClause	.append(" ")
-						.append(orderBy.getSortOrder() == SortOrder.asc ? "ASC" : "DESC");
-		return orderByClause.toString();
-	}
+    if ((context == null || context.getDatabaseProduct() != null)) {
+      if (isPropertyParameter(prop, query, entityType)) {
+        orderByClause.append(query.getSQLTableColumnAlias(entityType, prop));
+      } else {
+        orderByClause.append(query.getSQLTableColumn(entityType, prop));
+      }
+    } else {
+      orderByClause.append(query.getSQLTableColumnAlias(entityType, prop)); // This gives the correct "order by" column name for Open
+                                                                            // SQL
+    }
+    orderByClause.append(" ")
+                 .append(orderBy.getSortOrder() == SortOrder.asc ? "ASC" : "DESC");
+    return orderByClause.toString();
+  }
 }

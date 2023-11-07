@@ -24,58 +24,58 @@ import java.util.Stack;
 public class TopologicalSorter<T extends TopologicallySortable> {
 
 
-	/** The stack. */
-	private Stack<TopologicalSorterNode<T>> stack;
+  /** The stack. */
+  private Stack<TopologicalSorterNode<T>> stack;
 
-	/**
-	 * Instantiates a new topological sorter.
-	 */
-	public TopologicalSorter() {
-		this.stack = new Stack<>();
-	}
+  /**
+   * Instantiates a new topological sorter.
+   */
+  public TopologicalSorter() {
+    this.stack = new Stack<>();
+  }
 
-	/**
-	 * Sort.
-	 *
-	 * @param list the list
-	 * @return the list
-	 */
-	public List<T> sort(List<T> list) {
-		Map<String, TopologicalSorterNode<T>> nodes = new HashMap<>();
-		for (TopologicallySortable sortable : list) {
-			TopologicalSorterNode<T> node = new TopologicalSorterNode(sortable, nodes);
-			nodes.put(sortable.getId(), node);
-		}
+  /**
+   * Sort.
+   *
+   * @param list the list
+   * @return the list
+   */
+  public List<T> sort(List<T> list) {
+    Map<String, TopologicalSorterNode<T>> nodes = new HashMap<>();
+    for (TopologicallySortable sortable : list) {
+      TopologicalSorterNode<T> node = new TopologicalSorterNode(sortable, nodes);
+      nodes.put(sortable.getId(), node);
+    }
 
-		for (TopologicalSorterNode<T> node : nodes.values()) {
-			topologicalSort(node);
-		}
+    for (TopologicalSorterNode<T> node : nodes.values()) {
+      topologicalSort(node);
+    }
 
-		List<T> results = new ArrayList<>();
-		for (TopologicalSorterNode<T> node : stack) {
-			results.add(node.getData());
-		}
+    List<T> results = new ArrayList<>();
+    for (TopologicalSorterNode<T> node : stack) {
+      results.add(node.getData());
+    }
 
-		return results;
-	}
+    return results;
+  }
 
-	/**
-	 * Topological sort.
-	 *
-	 * @param node the node
-	 */
-	private void topologicalSort(TopologicalSorterNode<T> node) {
-		List<TopologicalSorterNode<T>> dependencies = node.getDependencies();
-		for (int i = 0; i < dependencies.size(); i++) {
-			TopologicalSorterNode<T> n = dependencies.get(i);
-			if (n != null && !n.isVisited()) {
-				n.setVisited(true);
-				topologicalSort(n);
-			}
-		}
-		if (!stack.contains(node)) {
-			stack.push(node);
-		}
-	}
+  /**
+   * Topological sort.
+   *
+   * @param node the node
+   */
+  private void topologicalSort(TopologicalSorterNode<T> node) {
+    List<TopologicalSorterNode<T>> dependencies = node.getDependencies();
+    for (int i = 0; i < dependencies.size(); i++) {
+      TopologicalSorterNode<T> n = dependencies.get(i);
+      if (n != null && !n.isVisited()) {
+        n.setVisited(true);
+        topologicalSort(n);
+      }
+    }
+    if (!stack.contains(node)) {
+      stack.push(node);
+    }
+  }
 
 }

@@ -21,18 +21,18 @@ import org.eclipse.dirigible.components.odata.api.TableMetadataProvider;
  */
 public class DefaultTableMetadataProvider implements TableMetadataProvider {
 
-	/** The db metadata util. */
-	private ODataDatabaseMetadataUtil odataDatabaseMetadataUtil = new ODataDatabaseMetadataUtil();
+  /** The db metadata util. */
+  private ODataDatabaseMetadataUtil odataDatabaseMetadataUtil = new ODataDatabaseMetadataUtil();
 
-	/**
-	 * Gets the persistence table model.
-	 *
-	 * @param odataEntityDefinition the o data entity definition
-	 * @return the persistence table model
-	 * @throws SQLException the SQL exception
-	 */
-	public Table getTableMetadata(ODataEntity odataEntityDefinition) throws SQLException {
-		return odataDatabaseMetadataUtil.getTableMetadata(odataEntityDefinition.getTable(),
-				odataDatabaseMetadataUtil.getOdataArtifactTypeSchema(odataEntityDefinition.getTable()));
-	}
+  /**
+   * Gets the persistence table model.
+   *
+   * @param odataEntityDefinition the o data entity definition
+   * @return the persistence table model
+   * @throws SQLException the SQL exception
+   */
+  public Table getTableMetadata(ODataEntity odataEntityDefinition) throws SQLException {
+    return odataDatabaseMetadataUtil.getTableMetadata(odataEntityDefinition.getTable(),
+        odataDatabaseMetadataUtil.getOdataArtifactTypeSchema(odataEntityDefinition.getTable()));
+  }
 }

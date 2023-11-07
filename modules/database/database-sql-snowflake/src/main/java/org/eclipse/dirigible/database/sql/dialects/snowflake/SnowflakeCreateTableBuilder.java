@@ -24,78 +24,77 @@ import org.slf4j.LoggerFactory;
  */
 public class SnowflakeCreateTableBuilder extends CreateTableBuilder<SnowflakeCreateTableBuilder> {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(SnowflakeCreateTableBuilder.class);
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(SnowflakeCreateTableBuilder.class);
 
-	/**
-	 * Instantiates a new h 2 create table builder.
-	 *
-	 * @param dialect the dialect
-	 * @param table the table
-	 */
-	public SnowflakeCreateTableBuilder(ISqlDialect dialect, String table) {
-		super(dialect, table);
-	}
+  /**
+   * Instantiates a new h 2 create table builder.
+   *
+   * @param dialect the dialect
+   * @param table the table
+   */
+  public SnowflakeCreateTableBuilder(ISqlDialect dialect, String table) {
+    super(dialect, table);
+  }
 
-	/**
-	 * Column.
-	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param isIdentity the is identity
-	 * @param isFuzzyIndexEnabled the is fuzzy index enabled
-	 * @param args the args
-	 * @return the h 2 create table builder
-	 */
-	public SnowflakeCreateTableBuilder column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
-			Boolean isIdentity, Boolean isFuzzyIndexEnabled, String... args) {
-		if (logger.isTraceEnabled()) {
-			logger.trace("column: " + name + ", type: " + (type != null ? type.name() : null) + ", isPrimaryKey: " + isPrimaryKey
-					+ ", isNullable: " + isNullable + ", isUnique: " + isUnique + ", isIdentity: " + isIdentity + ", args: "
-					+ Arrays.toString(args));
-		}
-		String[] definition;
-		if (isIdentity) {
-			definition = new String[] {name};
-		} else {
-			definition = new String[] {name, getDialect().getDataTypeName(type)};
-		}
-		String[] column;
-		if (isIdentity) {
-			column = Stream	.of(definition, args, new String[] {getDialect().getIdentityArgument()})
-							.flatMap(Stream::of)
-							.toArray(String[]::new);
-		} else {
-			column = Stream	.of(definition, args)
-							.flatMap(Stream::of)
-							.toArray(String[]::new);
-		}
-		if (!isNullable) {
-			column = Stream	.of(column, new String[] {getDialect().getNotNullArgument()})
-							.flatMap(Stream::of)
-							.toArray(String[]::new);
-		}
-		if (isPrimaryKey) {
-			column = Stream	.of(column, new String[] {getDialect().getPrimaryKeyArgument()})
-							.flatMap(Stream::of)
-							.toArray(String[]::new);
-		}
-		if (isUnique && !isPrimaryKey) {
-			column = Stream	.of(column, new String[] {getDialect().getUniqueArgument()})
-							.flatMap(Stream::of)
-							.toArray(String[]::new);
-		}
-		if (isFuzzyIndexEnabled) {
-			column = Stream	.of(column, new String[] {getDialect().getFuzzySearchIndex()})
-							.flatMap(Stream::of)
-							.toArray(String[]::new);
-		}
+  /**
+   * Column.
+   *
+   * @param name the name
+   * @param type the type
+   * @param isPrimaryKey the is primary key
+   * @param isNullable the is nullable
+   * @param isUnique the is unique
+   * @param isIdentity the is identity
+   * @param isFuzzyIndexEnabled the is fuzzy index enabled
+   * @param args the args
+   * @return the h 2 create table builder
+   */
+  public SnowflakeCreateTableBuilder column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
+      Boolean isIdentity, Boolean isFuzzyIndexEnabled, String... args) {
+    if (logger.isTraceEnabled()) {
+      logger.trace("column: " + name + ", type: " + (type != null ? type.name() : null) + ", isPrimaryKey: " + isPrimaryKey
+          + ", isNullable: " + isNullable + ", isUnique: " + isUnique + ", isIdentity: " + isIdentity + ", args: " + Arrays.toString(args));
+    }
+    String[] definition;
+    if (isIdentity) {
+      definition = new String[] {name};
+    } else {
+      definition = new String[] {name, getDialect().getDataTypeName(type)};
+    }
+    String[] column;
+    if (isIdentity) {
+      column = Stream.of(definition, args, new String[] {getDialect().getIdentityArgument()})
+                     .flatMap(Stream::of)
+                     .toArray(String[]::new);
+    } else {
+      column = Stream.of(definition, args)
+                     .flatMap(Stream::of)
+                     .toArray(String[]::new);
+    }
+    if (!isNullable) {
+      column = Stream.of(column, new String[] {getDialect().getNotNullArgument()})
+                     .flatMap(Stream::of)
+                     .toArray(String[]::new);
+    }
+    if (isPrimaryKey) {
+      column = Stream.of(column, new String[] {getDialect().getPrimaryKeyArgument()})
+                     .flatMap(Stream::of)
+                     .toArray(String[]::new);
+    }
+    if (isUnique && !isPrimaryKey) {
+      column = Stream.of(column, new String[] {getDialect().getUniqueArgument()})
+                     .flatMap(Stream::of)
+                     .toArray(String[]::new);
+    }
+    if (isFuzzyIndexEnabled) {
+      column = Stream.of(column, new String[] {getDialect().getFuzzySearchIndex()})
+                     .flatMap(Stream::of)
+                     .toArray(String[]::new);
+    }
 
-		this.columns.add(column);
-		return this;
-	}
+    this.columns.add(column);
+    return this;
+  }
 
 }

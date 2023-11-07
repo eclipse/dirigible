@@ -22,41 +22,41 @@ import org.junit.Test;
  */
 public class CreateTableTest {
 
-	/**
-	 * Creates the table generic.
-	 */
-	@Test
-	public void createTableGeneric() {
-		String sql = SqlFactory	.getNative(new H2SqlDialect())
-								.create()
-								.table("CUSTOMERS")
-								.column("ID", DataType.INTEGER, true, false, false)
-								.column("FIRST_NAME", DataType.VARCHAR, false, false, true, "(20)")
-								.column("LAST_NAME", DataType.VARCHAR, false, true, false, "(30)")
-								.build();
+  /**
+   * Creates the table generic.
+   */
+  @Test
+  public void createTableGeneric() {
+    String sql = SqlFactory.getNative(new H2SqlDialect())
+                           .create()
+                           .table("CUSTOMERS")
+                           .column("ID", DataType.INTEGER, true, false, false)
+                           .column("FIRST_NAME", DataType.VARCHAR, false, false, true, "(20)")
+                           .column("LAST_NAME", DataType.VARCHAR, false, true, false, "(30)")
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals(
-				"CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )",
-				sql);
-	}
+    assertNotNull(sql);
+    assertEquals(
+        "CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )",
+        sql);
+  }
 
-	/**
-	 * Creates the table type safe.
-	 */
-	@Test
-	public void createTableTypeSafe() {
-		String sql = SqlFactory	.getNative(new H2SqlDialect())
-								.create()
-								.table("CUSTOMERS")
-								.columnInteger("ID", true, false, false)
-								.columnVarchar("FIRST_NAME", 20, false, true, true)
-								.columnVarchar("LAST_NAME", 30, false, true, false)
-								.build();
+  /**
+   * Creates the table type safe.
+   */
+  @Test
+  public void createTableTypeSafe() {
+    String sql = SqlFactory.getNative(new H2SqlDialect())
+                           .create()
+                           .table("CUSTOMERS")
+                           .columnInteger("ID", true, false, false)
+                           .columnVarchar("FIRST_NAME", 20, false, true, true)
+                           .columnVarchar("LAST_NAME", 30, false, true, false)
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) )",
-				sql);
-	}
+    assertNotNull(sql);
+    assertEquals("CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) )",
+        sql);
+  }
 
 }

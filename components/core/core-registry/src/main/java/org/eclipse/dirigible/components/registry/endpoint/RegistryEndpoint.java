@@ -33,47 +33,47 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "registry")
 public class RegistryEndpoint extends BaseEndpoint {
 
-	private final RegistryService registryService;
+  private final RegistryService registryService;
 
-	private final RegistryAccessor registryAccessor;
+  private final RegistryAccessor registryAccessor;
 
-	@Autowired
-	public RegistryEndpoint(RegistryService registryService, RegistryAccessor registryAccessor) {
-		this.registryService = registryService;
-		this.registryAccessor = registryAccessor;
-	}
+  @Autowired
+  public RegistryEndpoint(RegistryService registryService, RegistryAccessor registryAccessor) {
+    this.registryService = registryService;
+    this.registryAccessor = registryAccessor;
+  }
 
-	@GetMapping("/{*path}")
-	public ResponseEntity<?> get(@PathVariable("path") String path) {
+  @GetMapping("/{*path}")
+  public ResponseEntity<?> get(@PathVariable("path") String path) {
 
-		final HttpHeaders httpHeaders = new HttpHeaders();
+    final HttpHeaders httpHeaders = new HttpHeaders();
 
-		IResource resource = registryService.getResource(path);
-		if (!resource.exists()) {
-			ICollection collection = registryService.getCollection(path);
-			if (!collection.exists()) {
-				byte[] content;
-				try {
-					content = registryAccessor.getRegistryContent(path);
-				} catch (Exception e) {
-					throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, path, e);
-				}
-				if (content != null) {
-					httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-					return new ResponseEntity(content, httpHeaders, HttpStatus.OK);
-				}
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, path);
-			}
-			httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-			return new ResponseEntity(registryService.renderRegistry(collection), httpHeaders, HttpStatus.OK);
-		}
-		if (resource.isBinary()) {
-			httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-			return new ResponseEntity(resource.getContent(), httpHeaders, HttpStatus.OK);
-		}
+    IResource resource = registryService.getResource(path);
+    if (!resource.exists()) {
+      ICollection collection = registryService.getCollection(path);
+      if (!collection.exists()) {
+        byte[] content;
+        try {
+          content = registryAccessor.getRegistryContent(path);
+        } catch (Exception e) {
+          throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, path, e);
+        }
+        if (content != null) {
+          httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+          return new ResponseEntity(content, httpHeaders, HttpStatus.OK);
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, path);
+      }
+      httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+      return new ResponseEntity(registryService.renderRegistry(collection), httpHeaders, HttpStatus.OK);
+    }
+    if (resource.isBinary()) {
+      httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+      return new ResponseEntity(resource.getContent(), httpHeaders, HttpStatus.OK);
+    }
 
-		httpHeaders.setContentType(MediaType.TEXT_PLAIN);
-		return new ResponseEntity(new String(resource.getContent(), StandardCharsets.UTF_8), httpHeaders, HttpStatus.OK);
-	}
+    httpHeaders.setContentType(MediaType.TEXT_PLAIN);
+    return new ResponseEntity(new String(resource.getContent(), StandardCharsets.UTF_8), httpHeaders, HttpStatus.OK);
+  }
 
 }

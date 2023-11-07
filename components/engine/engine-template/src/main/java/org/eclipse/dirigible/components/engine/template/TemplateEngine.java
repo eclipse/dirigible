@@ -18,38 +18,38 @@ import java.util.Map;
  */
 public interface TemplateEngine {
 
-	/** The Constant TEMPLATE_ENGINE_DEFAULT. */
-	public static final String TEMPLATE_ENGINE_DEFAULT = "mustache";
+  /** The Constant TEMPLATE_ENGINE_DEFAULT. */
+  public static final String TEMPLATE_ENGINE_DEFAULT = "mustache";
 
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-	public String getName();
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  public String getName();
 
-	/**
-	 * Generate.
-	 *
-	 * @param parameters the parameters
-	 * @param location the location
-	 * @param input the input
-	 * @return the byte[]
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public byte[] generate(Map<String, Object> parameters, String location, byte[] input) throws IOException;
+  /**
+   * Generate.
+   *
+   * @param parameters the parameters
+   * @param location the location
+   * @param input the input
+   * @return the byte[]
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  public byte[] generate(Map<String, Object> parameters, String location, byte[] input) throws IOException;
 
-	/**
-	 * Generate.
-	 *
-	 * @param parameters the parameters
-	 * @param location the location
-	 * @param input the input
-	 * @param sm the sm
-	 * @param em the em
-	 * @return the byte[]
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public byte[] generate(Map<String, Object> parameters, String location, byte[] input, String sm, String em) throws IOException;
+  /**
+   * Generate.
+   *
+   * @param parameters the parameters
+   * @param location the location
+   * @param input the input
+   * @param sm the sm
+   * @param em the em
+   * @return the byte[]
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  public byte[] generate(Map<String, Object> parameters, String location, byte[] input, String sm, String em) throws IOException;
 
 }

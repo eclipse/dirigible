@@ -49,51 +49,51 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 public class WikiEndpointTest {
 
-	/** The mock mvc. */
-	@Autowired
-	private MockMvc mockMvc;
+  /** The mock mvc. */
+  @Autowired
+  private MockMvc mockMvc;
 
-	/** The wac. */
-	@Autowired
-	protected WebApplicationContext wac;
+  /** The wac. */
+  @Autowired
+  protected WebApplicationContext wac;
 
-	/** The spring security filter chain. */
-	@Autowired
-	private FilterChainProxy springSecurityFilterChain;
+  /** The spring security filter chain. */
+  @Autowired
+  private FilterChainProxy springSecurityFilterChain;
 
-	/** The synchronization processor. */
-	@Autowired
-	private SynchronizationProcessor synchronizationProcessor;
+  /** The synchronization processor. */
+  @Autowired
+  private SynchronizationProcessor synchronizationProcessor;
 
-	/**
-	 * Load the artefact.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void process() throws Exception {
-		String registyrFolder = synchronizationProcessor.getRegistryFolder();
-		Paths	.get(registyrFolder, "demo")
-				.toFile()
-				.mkdirs();
-		Files.writeString(Paths.get(registyrFolder, "demo", "hello.md"), "Hello\n===", StandardOpenOption.CREATE);
-		try {
-			synchronizationProcessor.processSynchronizers();
-			mockMvc	.perform(get("/services/wiki/demo/hello.md"))
-					.andDo(print())
-					.andExpect(content().string(containsString("<h1>Hello</h1>")))
-					.andExpect(status().is2xxSuccessful());
-		} finally {
-			FileUtils.deleteDirectory(Paths	.get(registyrFolder, "demo")
-											.toFile());
-			synchronizationProcessor.processSynchronizers();
-		}
-	}
+  /**
+   * Load the artefact.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void process() throws Exception {
+    String registyrFolder = synchronizationProcessor.getRegistryFolder();
+    Paths.get(registyrFolder, "demo")
+         .toFile()
+         .mkdirs();
+    Files.writeString(Paths.get(registyrFolder, "demo", "hello.md"), "Hello\n===", StandardOpenOption.CREATE);
+    try {
+      synchronizationProcessor.processSynchronizers();
+      mockMvc.perform(get("/services/wiki/demo/hello.md"))
+             .andDo(print())
+             .andExpect(content().string(containsString("<h1>Hello</h1>")))
+             .andExpect(status().is2xxSuccessful());
+    } finally {
+      FileUtils.deleteDirectory(Paths.get(registyrFolder, "demo")
+                                     .toFile());
+      synchronizationProcessor.processSynchronizers();
+    }
+  }
 
-	/**
-	 * The Class TestConfiguration.
-	 */
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  /**
+   * The Class TestConfiguration.
+   */
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 }

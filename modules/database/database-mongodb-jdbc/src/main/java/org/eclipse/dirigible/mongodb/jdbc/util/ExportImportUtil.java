@@ -33,68 +33,68 @@ import com.mongodb.client.MongoCursor;
  */
 public class ExportImportUtil {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(ExportImportUtil.class);
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(ExportImportUtil.class);
 
-	/**
-	 * Export collection.
-	 *
-	 * @param connection the connection
-	 * @param collection the collection
-	 * @param output the output
-	 * @throws Exception the exception
-	 */
-	public static void exportCollection(MongoDBConnection connection, String collection, OutputStream output) throws Exception {
-		MongoCursor<Document> cursor = connection	.getMongoDatabase()
-													.getCollection(collection)
-													.find()
-													.iterator();
-		try (Writer writer = new OutputStreamWriter(output)) {
-			writer.append("[");
-			while (cursor.hasNext()) {
-				writer.write(cursor	.next()
-									.toJson()
-						+ (cursor.hasNext() ? "," : ""));
-			}
-			writer.append("]");
-		}
-		output.flush();
-		cursor.close();
-	}
+  /**
+   * Export collection.
+   *
+   * @param connection the connection
+   * @param collection the collection
+   * @param output the output
+   * @throws Exception the exception
+   */
+  public static void exportCollection(MongoDBConnection connection, String collection, OutputStream output) throws Exception {
+    MongoCursor<Document> cursor = connection.getMongoDatabase()
+                                             .getCollection(collection)
+                                             .find()
+                                             .iterator();
+    try (Writer writer = new OutputStreamWriter(output)) {
+      writer.append("[");
+      while (cursor.hasNext()) {
+        writer.write(cursor.next()
+                           .toJson()
+            + (cursor.hasNext() ? "," : ""));
+      }
+      writer.append("]");
+    }
+    output.flush();
+    cursor.close();
+  }
 
-	/**
-	 * Import collection.
-	 *
-	 * @param connection the connection
-	 * @param collection the collection
-	 * @param input the input
-	 * @throws Exception the exception
-	 */
-	public static void importCollection(MongoDBConnection connection, String collection, InputStream input) throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.registerModule(new JavaTimeModule());
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+  /**
+   * Import collection.
+   *
+   * @param connection the connection
+   * @param collection the collection
+   * @param input the input
+   * @throws Exception the exception
+   */
+  public static void importCollection(MongoDBConnection connection, String collection, InputStream input) throws Exception {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new JavaTimeModule());
+    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-		try (JsonParser jsonParser = mapper	.getFactory()
-											.createParser(input)) {
+    try (JsonParser jsonParser = mapper.getFactory()
+                                       .createParser(input)) {
 
-			if (jsonParser.nextToken() != JsonToken.START_ARRAY) {
-				throw new IllegalStateException("Expected content to be an array");
-			}
+      if (jsonParser.nextToken() != JsonToken.START_ARRAY) {
+        throw new IllegalStateException("Expected content to be an array");
+      }
 
-			while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
-				try {
-					Document document = Document.parse(jsonParser	.readValueAsTree()
-																	.toString());
-					connection	.getMongoDatabase()
-								.getCollection(collection)
-								.insertOne(document);
-				} catch (IOException e) {
-					logger.error(e.getMessage(), e);
-				}
-			}
-		}
+      while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
+        try {
+          Document document = Document.parse(jsonParser.readValueAsTree()
+                                                       .toString());
+          connection.getMongoDatabase()
+                    .getCollection(collection)
+                    .insertOne(document);
+        } catch (IOException e) {
+          logger.error(e.getMessage(), e);
+        }
+      }
+    }
 
-	}
+  }
 
 }

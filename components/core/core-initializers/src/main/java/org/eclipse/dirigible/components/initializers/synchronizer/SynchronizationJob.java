@@ -29,50 +29,50 @@ import org.springframework.stereotype.Component;
 @Scope("singleton")
 public class SynchronizationJob implements Job {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(SynchronizationJob.class);
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(SynchronizationJob.class);
 
-	/** The executor. */
-	private static ExecutorService executor = Executors.newFixedThreadPool(1);
+  /** The executor. */
+  private static ExecutorService executor = Executors.newFixedThreadPool(1);
 
-	/** The job service. */
-	@Autowired
-	private SynchronizationJobService jobService;
+  /** The job service. */
+  @Autowired
+  private SynchronizationJobService jobService;
 
-	/**
-	 * Execute.
-	 *
-	 * @param context the context
-	 * @throws JobExecutionException the job execution exception
-	 */
-	public void execute(JobExecutionContext context) throws JobExecutionException {
+  /**
+   * Execute.
+   *
+   * @param context the context
+   * @throws JobExecutionException the job execution exception
+   */
+  public void execute(JobExecutionContext context) throws JobExecutionException {
 
-		logger.debug("Job {} fired @ {}", context	.getJobDetail()
-													.getKey()
-													.getName(),
-				context.getFireTime());
+    logger.debug("Job {} fired @ {}", context.getJobDetail()
+                                             .getKey()
+                                             .getName(),
+        context.getFireTime());
 
-		executor.submit(() -> {
-			Runtime runtime = Runtime.getRuntime();
-			runtime.gc();
-			long usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory();
+    executor.submit(() -> {
+      Runtime runtime = Runtime.getRuntime();
+      runtime.gc();
+      long usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory();
 
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("Used memory at the start: %-+,15d", usedMemoryBefore));
-			}
+      if (logger.isDebugEnabled()) {
+        logger.debug(String.format("Used memory at the start: %-+,15d", usedMemoryBefore));
+      }
 
-			jobService.executeSynchronizationJob();
+      jobService.executeSynchronizationJob();
 
-			runtime.gc();
-			long usedMemoryAfter = runtime.totalMemory() - runtime.freeMemory();
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("Used memory at the end:   %-+,15d / delta: %-+,15d", usedMemoryAfter,
-						(usedMemoryAfter - usedMemoryBefore)));
-			}
+      runtime.gc();
+      long usedMemoryAfter = runtime.totalMemory() - runtime.freeMemory();
+      if (logger.isDebugEnabled()) {
+        logger.debug(
+            String.format("Used memory at the end:   %-+,15d / delta: %-+,15d", usedMemoryAfter, (usedMemoryAfter - usedMemoryBefore)));
+      }
 
-		});
+    });
 
-		logger.debug("Next job scheduled @ {}", context.getNextFireTime());
-	}
+    logger.debug("Next job scheduled @ {}", context.getNextFireTime());
+  }
 
 }

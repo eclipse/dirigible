@@ -19,43 +19,43 @@ import org.eclipse.dirigible.database.persistence.parser.PersistenceJsonParser;
  */
 public class PersistenceFactory {
 
-	/**
-	 * Creates a new Persistence object.
-	 *
-	 * @param pojo the pojo
-	 * @return the persistence table model
-	 * @throws PersistenceException the persistence exception
-	 */
-	public static PersistenceTableModel createModel(Object pojo) throws PersistenceException {
-		PersistenceAnnotationsParser parser = new PersistenceAnnotationsParser();
-		PersistenceTableModel persistenceModel = parser.parsePojo(pojo);
-		return persistenceModel;
-	}
+  /**
+   * Creates a new Persistence object.
+   *
+   * @param pojo the pojo
+   * @return the persistence table model
+   * @throws PersistenceException the persistence exception
+   */
+  public static PersistenceTableModel createModel(Object pojo) throws PersistenceException {
+    PersistenceAnnotationsParser parser = new PersistenceAnnotationsParser();
+    PersistenceTableModel persistenceModel = parser.parsePojo(pojo);
+    return persistenceModel;
+  }
 
-	/**
-	 * Creates a new Persistence object.
-	 *
-	 * @param clazz the clazz
-	 * @return the persistence table model
-	 * @throws PersistenceException the persistence exception
-	 */
-	public static PersistenceTableModel createModel(Class<? extends Object> clazz) throws PersistenceException {
-		PersistenceAnnotationsParser parser = new PersistenceAnnotationsParser();
-		PersistenceTableModel persistenceModel = parser.parsePojo(clazz);
-		return persistenceModel;
-	}
+  /**
+   * Creates a new Persistence object.
+   *
+   * @param clazz the clazz
+   * @return the persistence table model
+   * @throws PersistenceException the persistence exception
+   */
+  public static PersistenceTableModel createModel(Class<? extends Object> clazz) throws PersistenceException {
+    PersistenceAnnotationsParser parser = new PersistenceAnnotationsParser();
+    PersistenceTableModel persistenceModel = parser.parsePojo(clazz);
+    return persistenceModel;
+  }
 
-	/**
-	 * Creates a new Persistence object.
-	 *
-	 * @param json the json
-	 * @return the persistence table model
-	 * @throws PersistenceException the persistence exception
-	 */
-	public static PersistenceTableModel createModel(String json) throws PersistenceException {
-		PersistenceJsonParser<?> parser = new PersistenceJsonParser<>();
-		PersistenceTableModel persistenceModel = parser.parseModel(json);
-		return persistenceModel;
-	}
+  /**
+   * Creates a new Persistence object.
+   *
+   * @param json the json
+   * @return the persistence table model
+   * @throws PersistenceException the persistence exception
+   */
+  public static PersistenceTableModel createModel(String json) throws PersistenceException {
+    PersistenceJsonParser<?> parser = new PersistenceJsonParser<>();
+    PersistenceTableModel persistenceModel = parser.parseModel(json);
+    return persistenceModel;
+  }
 
 }

@@ -19,98 +19,98 @@ import org.eclipse.dirigible.database.sql.builders.synonym.CreateSynonymBuilder;
  */
 public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 
-	/**
-	 * Instantiates a new HANA create branching builder.
-	 *
-	 * @param dialect the dialect
-	 */
-	protected HanaCreateBranchingBuilder(ISqlDialect dialect) {
-		super(dialect);
-	}
+  /**
+   * Instantiates a new HANA create branching builder.
+   *
+   * @param dialect the dialect
+   */
+  protected HanaCreateBranchingBuilder(ISqlDialect dialect) {
+    super(dialect);
+  }
 
-	/**
-	 * Table.
-	 *
-	 * @param table the table
-	 * @return the hana create table builder
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java.lang.String)
-	 */
-	@Override
-	public HanaCreateTableBuilder table(String table) {
-		return new HanaCreateTableBuilder(this.getDialect(), table, ISqlDialect.KEYWORD_COLUMN);
-	}
+  /**
+   * Table.
+   *
+   * @param table the table
+   * @return the hana create table builder
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java.lang.String)
+   */
+  @Override
+  public HanaCreateTableBuilder table(String table) {
+    return new HanaCreateTableBuilder(this.getDialect(), table, ISqlDialect.KEYWORD_COLUMN);
+  }
 
-	/**
-	 * Table.
-	 *
-	 * @param table the table
-	 * @param tableType the table type
-	 * @return the hana create table builder
-	 */
-	@Override
-	public HanaCreateTableBuilder table(String table, String tableType) {
-		if (tableType.equalsIgnoreCase(KEYWORD_COLUMN) || tableType.equalsIgnoreCase(KEYWORD_COLUMNSTORE)
-				|| tableType.equalsIgnoreCase(KEYWORD_ROW) || tableType.equalsIgnoreCase(KEYWORD_ROWSTORE)
-				|| tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY) || tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY_COLUMN)) {
-			return new HanaCreateTableBuilder(this.getDialect(), table, tableType);
-		} else {
-			throw new IllegalStateException(String.format("Unsupported table type is defined for table %s", table));
-		}
-	}
+  /**
+   * Table.
+   *
+   * @param table the table
+   * @param tableType the table type
+   * @return the hana create table builder
+   */
+  @Override
+  public HanaCreateTableBuilder table(String table, String tableType) {
+    if (tableType.equalsIgnoreCase(KEYWORD_COLUMN) || tableType.equalsIgnoreCase(KEYWORD_COLUMNSTORE)
+        || tableType.equalsIgnoreCase(KEYWORD_ROW) || tableType.equalsIgnoreCase(KEYWORD_ROWSTORE)
+        || tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY) || tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY_COLUMN)) {
+      return new HanaCreateTableBuilder(this.getDialect(), table, tableType);
+    } else {
+      throw new IllegalStateException(String.format("Unsupported table type is defined for table %s", table));
+    }
+  }
 
-	/**
-	 * Temporary table.
-	 *
-	 * @param table the table
-	 * @return the hana create temporary table builder
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#temporaryTable(java.lang.
-	 * String)
-	 */
-	public HanaCreateTemporaryTableBuilder temporaryTable(String table) {
-		return new HanaCreateTemporaryTableBuilder(this.getDialect(), table);
-	}
+  /**
+   * Temporary table.
+   *
+   * @param table the table
+   * @return the hana create temporary table builder
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#temporaryTable(java.lang.
+   * String)
+   */
+  public HanaCreateTemporaryTableBuilder temporaryTable(String table) {
+    return new HanaCreateTemporaryTableBuilder(this.getDialect(), table);
+  }
 
 
-	/**
-	 * Column table.
-	 *
-	 * @param table the table
-	 * @return the creates the table builder
-	 */
-	public HanaCreateTableBuilder columnTable(String table) {
-		return new HanaCreateTableBuilder(this.getDialect(), table, ISqlDialect.KEYWORD_COLUMN);
-	}
+  /**
+   * Column table.
+   *
+   * @param table the table
+   * @return the creates the table builder
+   */
+  public HanaCreateTableBuilder columnTable(String table) {
+    return new HanaCreateTableBuilder(this.getDialect(), table, ISqlDialect.KEYWORD_COLUMN);
+  }
 
-	/**
-	 * Row table.
-	 *
-	 * @param table the table
-	 * @return the creates the table builder
-	 */
-	public HanaCreateTableBuilder rowTable(String table) {
-		return new HanaCreateTableBuilder(this.getDialect(), table, ISqlDialect.KEYWORD_ROW);
-	}
+  /**
+   * Row table.
+   *
+   * @param table the table
+   * @return the creates the table builder
+   */
+  public HanaCreateTableBuilder rowTable(String table) {
+    return new HanaCreateTableBuilder(this.getDialect(), table, ISqlDialect.KEYWORD_ROW);
+  }
 
-	/**
-	 * Table type.
-	 *
-	 * @param tableType the table type
-	 * @return the hana create table type builder
-	 */
-	public HanaCreateTableTypeBuilder tableType(String tableType) {
-		return new HanaCreateTableTypeBuilder(this.getDialect(), tableType);
-	}
+  /**
+   * Table type.
+   *
+   * @param tableType the table type
+   * @return the hana create table type builder
+   */
+  public HanaCreateTableTypeBuilder tableType(String tableType) {
+    return new HanaCreateTableTypeBuilder(this.getDialect(), tableType);
+  }
 
-	@Override
-	public CreateSynonymBuilder publicSynonym(String synonym) {
-		return new HanaCreatePublicSynonymBuilder(getDialect(), synonym);
-	}
+  @Override
+  public CreateSynonymBuilder publicSynonym(String synonym) {
+    return new HanaCreatePublicSynonymBuilder(getDialect(), synonym);
+  }
 }

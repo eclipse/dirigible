@@ -20,23 +20,23 @@ import java.util.concurrent.CompletableFuture;
  */
 public class ProcessExecutionFuture extends CompletableFuture<Integer> implements ExecuteResultHandler {
 
-	/**
-	 * On process complete.
-	 *
-	 * @param i the i
-	 */
-	@Override
-	public void onProcessComplete(int i) {
-		complete(i);
-	}
+  /**
+   * On process complete.
+   *
+   * @param i the i
+   */
+  @Override
+  public void onProcessComplete(int i) {
+    complete(i);
+  }
 
-	/**
-	 * On process failed.
-	 *
-	 * @param e the e
-	 */
-	@Override
-	public void onProcessFailed(ExecuteException e) {
-		completeExceptionally(e);
-	}
+  /**
+   * On process failed.
+   *
+   * @param e the e
+   */
+  @Override
+  public void onProcessFailed(ExecuteException e) {
+    completeExceptionally(e);
+  }
 }

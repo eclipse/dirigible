@@ -15,7 +15,7 @@ package org.eclipse.dirigible.repository.api;
  */
 public interface IMasterRepository extends IRepositoryReader {
 
-	/** The Constant DIRIGIBLE_MASTER_REPOSITORY_PROVIDER. */
-	public static final String DIRIGIBLE_MASTER_REPOSITORY_PROVIDER = "DIRIGIBLE_MASTER_REPOSITORY_PROVIDER"; //$NON-NLS-1$
+  /** The Constant DIRIGIBLE_MASTER_REPOSITORY_PROVIDER. */
+  public static final String DIRIGIBLE_MASTER_REPOSITORY_PROVIDER = "DIRIGIBLE_MASTER_REPOSITORY_PROVIDER"; //$NON-NLS-1$
 
 }

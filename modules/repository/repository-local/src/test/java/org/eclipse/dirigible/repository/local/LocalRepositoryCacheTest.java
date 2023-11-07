@@ -32,96 +32,96 @@ import org.junit.Test;
  */
 public class LocalRepositoryCacheTest extends RepositoryGenericCacheTest {
 
-	/**
-	 * Sets the up.
-	 */
-	@Before
-	public void setUp() {
-		try {
-			repository = new LocalRepository("target/test");
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
+  /**
+   * Sets the up.
+   */
+  @Before
+  public void setUp() {
+    try {
+      repository = new LocalRepository("target/test");
+    } catch (Exception e) {
+      e.printStackTrace();
+      fail(e.getMessage());
+    }
+  }
 
-	/**
-	 * Test cache text.
-	 */
-	@Test
-	public void testCacheDisable() {
-		if (repository == null) {
-			return;
-		}
+  /**
+   * Test cache text.
+   */
+  @Test
+  public void testCacheDisable() {
+    if (repository == null) {
+      return;
+    }
 
-		IResource resource1 = null;
-		IResource resource2 = null;
-		RepositoryCache.enable();
-		try {
-			resource1 = repository.createResource("/testCollection/toBeRemoved1Cached.txt", "cached file".getBytes()); //$NON-NLS-1$
-			assertNotNull(resource1);
-			assertTrue(resource1.exists());
-			assertFalse(resource1.isBinary());
+    IResource resource1 = null;
+    IResource resource2 = null;
+    RepositoryCache.enable();
+    try {
+      resource1 = repository.createResource("/testCollection/toBeRemoved1Cached.txt", "cached file".getBytes()); //$NON-NLS-1$
+      assertNotNull(resource1);
+      assertTrue(resource1.exists());
+      assertFalse(resource1.isBinary());
 
-			String workspacePath =
-					LocalWorkspaceMapper.getMappedName(((FileSystemRepository) repository), "/testCollection/toBeRemoved1Cached2.txt");
+      String workspacePath =
+          LocalWorkspaceMapper.getMappedName(((FileSystemRepository) repository), "/testCollection/toBeRemoved1Cached2.txt");
 
-			FileSystemUtils.createFile(workspacePath);
+      FileSystemUtils.createFile(workspacePath);
 
-			resource2 = repository.getResource("/testCollection/toBeRemoved1Cached2.txt"); //$NON-NLS-1$
-			assertNotNull(resource2);
-			assertTrue(resource2.exists());
+      resource2 = repository.getResource("/testCollection/toBeRemoved1Cached2.txt"); //$NON-NLS-1$
+      assertNotNull(resource2);
+      assertTrue(resource2.exists());
 
-			String workspacePath1 =
-					LocalWorkspaceMapper.getMappedName(((FileSystemRepository) repository), "/testCollection/toBeRemoved1Cached.txt");
-			FileWriter output = new FileWriter(workspacePath1);
-			IOUtils.write("cached file changed", output);
-			output.flush();
-			output.close();
+      String workspacePath1 =
+          LocalWorkspaceMapper.getMappedName(((FileSystemRepository) repository), "/testCollection/toBeRemoved1Cached.txt");
+      FileWriter output = new FileWriter(workspacePath1);
+      IOUtils.write("cached file changed", output);
+      output.flush();
+      output.close();
 
-			String content = new String(resource1.getContent());
-			assertEquals("cached file", content);
+      String content = new String(resource1.getContent());
+      assertEquals("cached file", content);
 
-			try {
-				RepositoryCache.disable();
-				resource2 = repository.getResource("/testCollection/toBeRemoved1Cached2.txt"); //$NON-NLS-1$
-				assertNotNull(resource2);
-				assertTrue(resource2.exists());
-				resource1 = repository.getResource("/testCollection/toBeRemoved1Cached.txt"); //$NON-NLS-1$
-				content = new String(resource1.getContent());
-				assertEquals("cached file changed", content);
+      try {
+        RepositoryCache.disable();
+        resource2 = repository.getResource("/testCollection/toBeRemoved1Cached2.txt"); //$NON-NLS-1$
+        assertNotNull(resource2);
+        assertTrue(resource2.exists());
+        resource1 = repository.getResource("/testCollection/toBeRemoved1Cached.txt"); //$NON-NLS-1$
+        content = new String(resource1.getContent());
+        assertEquals("cached file changed", content);
 
-				output = new FileWriter(workspacePath1);
-				IOUtils.write("cached file changed 2", output);
-				output.flush();
-				output.close();
+        output = new FileWriter(workspacePath1);
+        IOUtils.write("cached file changed 2", output);
+        output.flush();
+        output.close();
 
-				resource1 = repository.getResource("/testCollection/toBeRemoved1Cached.txt"); //$NON-NLS-1$
-				content = new String(resource1.getContent());
-				assertEquals("cached file changed 2", content);
+        resource1 = repository.getResource("/testCollection/toBeRemoved1Cached.txt"); //$NON-NLS-1$
+        content = new String(resource1.getContent());
+        assertEquals("cached file changed 2", content);
 
-			} finally {
-				RepositoryCache.enable();
-			}
+      } finally {
+        RepositoryCache.enable();
+      }
 
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		} finally {
-			try {
-				if ((resource1 != null) && resource1.exists()) {
-					repository.removeResource("/testCollection/toBeRemoved1Cached.txt"); //$NON-NLS-1$
-					resource1 = repository.getResource("/testCollection/toBeRemoved1Cached.txt"); //$NON-NLS-1$
-					assertNotNull(resource1);
-					assertFalse(resource1.exists());
-					repository.removeResource("/testCollection/toBeRemoved1Cached2.txt"); //$NON-NLS-1$
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				fail(e.getMessage());
-			}
-		}
-	}
+    } catch (Exception e) {
+      e.printStackTrace();
+      fail(e.getMessage());
+    } finally {
+      try {
+        if ((resource1 != null) && resource1.exists()) {
+          repository.removeResource("/testCollection/toBeRemoved1Cached.txt"); //$NON-NLS-1$
+          resource1 = repository.getResource("/testCollection/toBeRemoved1Cached.txt"); //$NON-NLS-1$
+          assertNotNull(resource1);
+          assertFalse(resource1.exists());
+          repository.removeResource("/testCollection/toBeRemoved1Cached2.txt"); //$NON-NLS-1$
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+        fail(e.getMessage());
+      }
+    }
+  }
 
 }

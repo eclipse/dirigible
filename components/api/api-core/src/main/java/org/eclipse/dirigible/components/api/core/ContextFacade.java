@@ -22,56 +22,56 @@ import org.springframework.stereotype.Component;
 @Component
 public class ContextFacade {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(ContextFacade.class);
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(ContextFacade.class);
 
-	/**
-	 * Gets the value per name.
-	 *
-	 * @param name the name
-	 * @return the string
-	 */
-	public static final Object get(String name) {
-		if (logger.isTraceEnabled()) {
-			logger.trace("API - ContextFacade.get() -> begin");
-		}
-		Object contextValue;
-		try {
-			contextValue = ThreadContextFacade.get(name);
-		} catch (ContextException e) {
-			if (logger.isErrorEnabled()) {
-				logger.error(e.getMessage(), e);
-			}
-			throw new IllegalStateException(e);
-		}
-		// String value = contextValue != null ? contextValue.toString() : null;
-		if (logger.isTraceEnabled()) {
-			logger.trace("API - ContextFacade.get() -> end");
-		}
-		return contextValue;
-	}
+  /**
+   * Gets the value per name.
+   *
+   * @param name the name
+   * @return the string
+   */
+  public static final Object get(String name) {
+    if (logger.isTraceEnabled()) {
+      logger.trace("API - ContextFacade.get() -> begin");
+    }
+    Object contextValue;
+    try {
+      contextValue = ThreadContextFacade.get(name);
+    } catch (ContextException e) {
+      if (logger.isErrorEnabled()) {
+        logger.error(e.getMessage(), e);
+      }
+      throw new IllegalStateException(e);
+    }
+    // String value = contextValue != null ? contextValue.toString() : null;
+    if (logger.isTraceEnabled()) {
+      logger.trace("API - ContextFacade.get() -> end");
+    }
+    return contextValue;
+  }
 
-	/**
-	 * Sets the value for name.
-	 *
-	 * @param name the name
-	 * @param value the value
-	 */
-	public static final void set(String name, Object value) {
-		if (logger.isTraceEnabled()) {
-			logger.trace("API - ContextFacade.set() -> begin");
-		}
-		try {
-			ThreadContextFacade.set(name, value);
-		} catch (ContextException e) {
-			if (logger.isErrorEnabled()) {
-				logger.error(e.getMessage(), e);
-			}
-			throw new IllegalStateException(e);
-		}
-		if (logger.isTraceEnabled()) {
-			logger.trace("API - ContextFacade.set() -> end");
-		}
-	}
+  /**
+   * Sets the value for name.
+   *
+   * @param name the name
+   * @param value the value
+   */
+  public static final void set(String name, Object value) {
+    if (logger.isTraceEnabled()) {
+      logger.trace("API - ContextFacade.set() -> begin");
+    }
+    try {
+      ThreadContextFacade.set(name, value);
+    } catch (ContextException e) {
+      if (logger.isErrorEnabled()) {
+        logger.error(e.getMessage(), e);
+      }
+      throw new IllegalStateException(e);
+    }
+    if (logger.isTraceEnabled()) {
+      logger.trace("API - ContextFacade.set() -> end");
+    }
+  }
 
 }

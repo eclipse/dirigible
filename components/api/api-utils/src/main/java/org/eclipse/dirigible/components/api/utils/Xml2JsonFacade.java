@@ -19,25 +19,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class Xml2JsonFacade {
 
-	/**
-	 * Converts JSON to XML.
-	 *
-	 * @param json the JSON contents
-	 * @return the JSON as XML
-	 * @throws Exception in case of parsing failure
-	 */
-	public static final String fromJson(String json) throws Exception {
-		return Xml2Json.toXml(json);
-	}
+  /**
+   * Converts JSON to XML.
+   *
+   * @param json the JSON contents
+   * @return the JSON as XML
+   * @throws Exception in case of parsing failure
+   */
+  public static final String fromJson(String json) throws Exception {
+    return Xml2Json.toXml(json);
+  }
 
-	/**
-	 * Converts XML to JSON.
-	 *
-	 * @param xml the XML contents
-	 * @return the XML as JSON
-	 * @throws Exception in case of parsing failure
-	 */
-	public static final String toJson(String xml) throws Exception {
-		return Xml2Json.toJson(xml);
-	}
+  /**
+   * Converts XML to JSON.
+   *
+   * @param xml the XML contents
+   * @return the XML as JSON
+   * @throws Exception in case of parsing failure
+   */
+  public static final String toJson(String xml) throws Exception {
+    return Xml2Json.toJson(xml);
+  }
 }

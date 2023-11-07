@@ -32,70 +32,70 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_DATA + "metadata")
 public class DatabaseMetadataEndpoint extends BaseEndpoint {
 
-	/** The databases service. */
-	private final DatabaseMetadataService databasesService;
+  /** The databases service. */
+  private final DatabaseMetadataService databasesService;
 
-	/**
-	 * Instantiates a new data source metadata endpoint.
-	 *
-	 * @param databasesService the databases service
-	 */
-	@Autowired
-	public DatabaseMetadataEndpoint(DatabaseMetadataService databasesService) {
-		this.databasesService = databasesService;
-	}
+  /**
+   * Instantiates a new data source metadata endpoint.
+   *
+   * @param databasesService the databases service
+   */
+  @Autowired
+  public DatabaseMetadataEndpoint(DatabaseMetadataService databasesService) {
+    this.databasesService = databasesService;
+  }
 
-	/**
-	 * Gets the data sources.
-	 *
-	 * @return the data sources
-	 */
-	@GetMapping(value = "/", produces = "application/json")
-	public ResponseEntity<Set<String>> getDataSourcesNames() {
-		return ResponseEntity.ok(databasesService.getDataSourcesNames());
-	}
+  /**
+   * Gets the data sources.
+   *
+   * @return the data sources
+   */
+  @GetMapping(value = "/", produces = "application/json")
+  public ResponseEntity<Set<String>> getDataSourcesNames() {
+    return ResponseEntity.ok(databasesService.getDataSourcesNames());
+  }
 
-	/**
-	 * Gets the data source metadata.
-	 *
-	 * @param datasource the datasource
-	 * @return the structures
-	 * @throws SQLException the SQL exception
-	 */
-	@GetMapping(value = "/{datasource}", produces = "application/json")
-	public ResponseEntity<String> getSchemaMetadata(@PathVariable("datasource") String datasource) throws SQLException {
-		return ResponseEntity.ok(databasesService.getDataSourceMetadata(datasource));
-	}
+  /**
+   * Gets the data source metadata.
+   *
+   * @param datasource the datasource
+   * @return the structures
+   * @throws SQLException the SQL exception
+   */
+  @GetMapping(value = "/{datasource}", produces = "application/json")
+  public ResponseEntity<String> getSchemaMetadata(@PathVariable("datasource") String datasource) throws SQLException {
+    return ResponseEntity.ok(databasesService.getDataSourceMetadata(datasource));
+  }
 
-	/**
-	 * Gets the metadata of a schema.
-	 *
-	 * @param datasource the datasource
-	 * @param schema the schema
-	 * @return the response entity
-	 * @throws SQLException the SQL exception
-	 */
-	@GetMapping(value = "/{datasource}/{schema}", produces = "application/json")
-	public ResponseEntity<String> getSchemaMetadata(@PathVariable("datasource") String datasource, @PathVariable("schema") String schema)
-			throws SQLException {
-		return ResponseEntity.ok(databasesService.getSchemaMetadata(datasource, schema));
-	}
+  /**
+   * Gets the metadata of a schema.
+   *
+   * @param datasource the datasource
+   * @param schema the schema
+   * @return the response entity
+   * @throws SQLException the SQL exception
+   */
+  @GetMapping(value = "/{datasource}/{schema}", produces = "application/json")
+  public ResponseEntity<String> getSchemaMetadata(@PathVariable("datasource") String datasource, @PathVariable("schema") String schema)
+      throws SQLException {
+    return ResponseEntity.ok(databasesService.getSchemaMetadata(datasource, schema));
+  }
 
-	/**
-	 * Gets the metadata of a structure.
-	 *
-	 * @param datasource the datasource
-	 * @param schema the schema
-	 * @param structure the structure
-	 * @param kind the kind
-	 * @return the response entity
-	 * @throws SQLException the SQL exception
-	 */
-	@GetMapping(value = "/{datasource}/{schema}/{structure}", produces = "application/json")
-	public ResponseEntity<String> getStructureMetadata(@PathVariable("datasource") String datasource, @PathVariable("schema") String schema,
-			@PathVariable("structure") String structure, @Nullable @RequestParam("kind") String kind) throws SQLException {
+  /**
+   * Gets the metadata of a structure.
+   *
+   * @param datasource the datasource
+   * @param schema the schema
+   * @param structure the structure
+   * @param kind the kind
+   * @return the response entity
+   * @throws SQLException the SQL exception
+   */
+  @GetMapping(value = "/{datasource}/{schema}/{structure}", produces = "application/json")
+  public ResponseEntity<String> getStructureMetadata(@PathVariable("datasource") String datasource, @PathVariable("schema") String schema,
+      @PathVariable("structure") String structure, @Nullable @RequestParam("kind") String kind) throws SQLException {
 
-		return ResponseEntity.ok(databasesService.getStructureMetadata(datasource, schema, structure, kind));
-	}
+    return ResponseEntity.ok(databasesService.getStructureMetadata(datasource, schema, structure, kind));
+  }
 
 }

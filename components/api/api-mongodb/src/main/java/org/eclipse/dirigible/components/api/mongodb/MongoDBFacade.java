@@ -26,52 +26,52 @@ import com.mongodb.MongoClientURI;
 @Component
 public class MongoDBFacade {
 
-	/** The Constant DIRIGIBLE_MONGODB_CLIENT_URI. */
-	private static final String DIRIGIBLE_MONGODB_CLIENT_URI = "DIRIGIBLE_MONGODB_CLIENT_URI";
+  /** The Constant DIRIGIBLE_MONGODB_CLIENT_URI. */
+  private static final String DIRIGIBLE_MONGODB_CLIENT_URI = "DIRIGIBLE_MONGODB_CLIENT_URI";
 
-	/** The Constant CLIENT_URI. */
-	private static final String CLIENT_URI = "mongodb://localhost:27017";
+  /** The Constant CLIENT_URI. */
+  private static final String CLIENT_URI = "mongodb://localhost:27017";
 
-	/** The Constant DIRIGIBLE_MONGODB_DATABASE_DEFAULT. */
-	private static final String DIRIGIBLE_MONGODB_DATABASE_DEFAULT = "DIRIGIBLE_MONGODB_DATABASE_DEFAULT";
+  /** The Constant DIRIGIBLE_MONGODB_DATABASE_DEFAULT. */
+  private static final String DIRIGIBLE_MONGODB_DATABASE_DEFAULT = "DIRIGIBLE_MONGODB_DATABASE_DEFAULT";
 
-	/** The Constant DIRIGIBLE_MONGODB_DATABASE_DEFAULT_DB. */
-	private static final String DIRIGIBLE_MONGODB_DATABASE_DEFAULT_DB = "db";
+  /** The Constant DIRIGIBLE_MONGODB_DATABASE_DEFAULT_DB. */
+  private static final String DIRIGIBLE_MONGODB_DATABASE_DEFAULT_DB = "db";
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(MongoDBFacade.class);
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(MongoDBFacade.class);
 
 
-	/**
-	 * Gets the client.
-	 *
-	 * @return the client
-	 */
-	public static MongoClient getClient() {
+  /**
+   * Gets the client.
+   *
+   * @return the client
+   */
+  public static MongoClient getClient() {
 
-		String clientUri = Configuration.get(DIRIGIBLE_MONGODB_CLIENT_URI, CLIENT_URI);
+    String clientUri = Configuration.get(DIRIGIBLE_MONGODB_CLIENT_URI, CLIENT_URI);
 
-		MongoClient mongoClient = new MongoClient(new MongoClientURI(clientUri));
+    MongoClient mongoClient = new MongoClient(new MongoClientURI(clientUri));
 
-		return mongoClient;
-	}
+    return mongoClient;
+  }
 
-	/**
-	 * Creates the basic DB object.
-	 *
-	 * @return the DB object
-	 */
-	public static DBObject createBasicDBObject() {
-		return new BasicDBObject();
-	}
+  /**
+   * Creates the basic DB object.
+   *
+   * @return the DB object
+   */
+  public static DBObject createBasicDBObject() {
+    return new BasicDBObject();
+  }
 
-	/**
-	 * Gets the default database name.
-	 *
-	 * @return the default database name
-	 */
-	public static String getDefaultDatabaseName() {
-		return Configuration.get(DIRIGIBLE_MONGODB_DATABASE_DEFAULT, DIRIGIBLE_MONGODB_DATABASE_DEFAULT_DB);
-	}
+  /**
+   * Gets the default database name.
+   *
+   * @return the default database name
+   */
+  public static String getDefaultDatabaseName() {
+    return Configuration.get(DIRIGIBLE_MONGODB_DATABASE_DEFAULT, DIRIGIBLE_MONGODB_DATABASE_DEFAULT_DB);
+  }
 
 }

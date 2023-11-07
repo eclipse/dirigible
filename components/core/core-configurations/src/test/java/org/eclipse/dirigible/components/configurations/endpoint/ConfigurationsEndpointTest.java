@@ -25,15 +25,15 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 public class ConfigurationsEndpointTest {
 
-	@Autowired
-	private ConfigurationsService configurationsService;
+  @Autowired
+  private ConfigurationsService configurationsService;
 
-	@Test
-	public void findAll() {
-		assertNotNull(configurationsService.findAll());
-	}
+  @Test
+  public void findAll() {
+    assertNotNull(configurationsService.findAll());
+  }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 }

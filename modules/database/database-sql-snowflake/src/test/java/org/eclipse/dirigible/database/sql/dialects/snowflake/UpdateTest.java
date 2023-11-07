@@ -21,99 +21,97 @@ import org.junit.Test;
  */
 public class UpdateTest {
 
-	/**
-	 * Update simple.
-	 */
-	@Test
-	public void updateSimple() {
-		String sql = SqlFactory	.getNative(new SnowflakeSqlDialect())
-								.update()
-								.table("CUSTOMERS")
-								.set("FIRST_NAME", "'John'")
-								.build();
+  /**
+   * Update simple.
+   */
+  @Test
+  public void updateSimple() {
+    String sql = SqlFactory.getNative(new SnowflakeSqlDialect())
+                           .update()
+                           .table("CUSTOMERS")
+                           .set("FIRST_NAME", "'John'")
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John'", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John'", sql);
+  }
 
-	/**
-	 * Update values.
-	 */
-	@Test
-	public void updateValues() {
-		String sql = SqlFactory	.getNative(new SnowflakeSqlDialect())
-								.update()
-								.table("CUSTOMERS")
-								.set("FIRST_NAME", "'John'")
-								.set("LAST_NAME", "'Smith'")
-								.build();
+  /**
+   * Update values.
+   */
+  @Test
+  public void updateValues() {
+    String sql = SqlFactory.getNative(new SnowflakeSqlDialect())
+                           .update()
+                           .table("CUSTOMERS")
+                           .set("FIRST_NAME", "'John'")
+                           .set("LAST_NAME", "'Smith'")
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith'", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith'", sql);
+  }
 
-	/**
-	 * Update where.
-	 */
-	@Test
-	public void updateWhere() {
-		String sql = SqlFactory	.getNative(new SnowflakeSqlDialect())
-								.update()
-								.table("CUSTOMERS")
-								.set("FIRST_NAME", "'John'")
-								.set("LAST_NAME", "'Smith'")
-								.where("AGE > ?")
-								.where("COMPANY = 'SNOWFLAKE'")
-								.build();
+  /**
+   * Update where.
+   */
+  @Test
+  public void updateWhere() {
+    String sql = SqlFactory.getNative(new SnowflakeSqlDialect())
+                           .update()
+                           .table("CUSTOMERS")
+                           .set("FIRST_NAME", "'John'")
+                           .set("LAST_NAME", "'Smith'")
+                           .where("AGE > ?")
+                           .where("COMPANY = 'SNOWFLAKE'")
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith' WHERE (AGE > ?) AND (COMPANY = 'SNOWFLAKE')", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith' WHERE (AGE > ?) AND (COMPANY = 'SNOWFLAKE')", sql);
+  }
 
-	/**
-	 * Update where select.
-	 */
-	@Test
-	public void updateWhereSelect() {
-		String sql = SqlFactory	.getNative(new SnowflakeSqlDialect())
-								.update()
-								.table("CUSTOMERS")
-								.set("FIRST_NAME", "'John'")
-								.set("SALARY", SqlFactory	.getNative(new SnowflakeSqlDialect())
-															.select()
-															.column("MAX(SALARY)")
-															.from("BENEFITS")
-															.build())
-								.where("COMPANY = 'SNOWFLAKE'")
-								.build();
+  /**
+   * Update where select.
+   */
+  @Test
+  public void updateWhereSelect() {
+    String sql = SqlFactory.getNative(new SnowflakeSqlDialect())
+                           .update()
+                           .table("CUSTOMERS")
+                           .set("FIRST_NAME", "'John'")
+                           .set("SALARY", SqlFactory.getNative(new SnowflakeSqlDialect())
+                                                    .select()
+                                                    .column("MAX(SALARY)")
+                                                    .from("BENEFITS")
+                                                    .build())
+                           .where("COMPANY = 'SNOWFLAKE'")
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', SALARY = SELECT MAX(SALARY) FROM BENEFITS WHERE (COMPANY = 'SNOWFLAKE')",
-				sql);
-	}
+    assertNotNull(sql);
+    assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', SALARY = SELECT MAX(SALARY) FROM BENEFITS WHERE (COMPANY = 'SNOWFLAKE')", sql);
+  }
 
-	/**
-	 * Update where expr.
-	 */
-	@Test
-	public void updateWhereExpr() {
-		String sql = SqlFactory	.getNative(new SnowflakeSqlDialect())
-								.update()
-								.table("CUSTOMERS")
-								.set("FIRST_NAME", "'John'")
-								.set("LAST_NAME", "'Smith'")
-								.where(SqlFactory	.getNative(new SnowflakeSqlDialect())
-													.expression()
-													.and("PRICE > ?")
-													.or("AMOUNT < ?")
-													.and("COMPANY = 'SNOWFLAKE'")
-													.build())
-								.build();
+  /**
+   * Update where expr.
+   */
+  @Test
+  public void updateWhereExpr() {
+    String sql = SqlFactory.getNative(new SnowflakeSqlDialect())
+                           .update()
+                           .table("CUSTOMERS")
+                           .set("FIRST_NAME", "'John'")
+                           .set("LAST_NAME", "'Smith'")
+                           .where(SqlFactory.getNative(new SnowflakeSqlDialect())
+                                            .expression()
+                                            .and("PRICE > ?")
+                                            .or("AMOUNT < ?")
+                                            .and("COMPANY = 'SNOWFLAKE'")
+                                            .build())
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals(
-				"UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith' WHERE (PRICE > ? OR AMOUNT < ? AND COMPANY = 'SNOWFLAKE')",
-				sql);
-	}
+    assertNotNull(sql);
+    assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith' WHERE (PRICE > ? OR AMOUNT < ? AND COMPANY = 'SNOWFLAKE')",
+        sql);
+  }
 
 }

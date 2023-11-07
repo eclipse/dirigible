@@ -20,127 +20,127 @@ import org.eclipse.dirigible.repository.api.IRepository;
  */
 public class CmisObject {
 
-	/** The session. */
-	private CmisSession session;
+  /** The session. */
+  private CmisSession session;
 
-	/** The internal entity. */
-	private IEntity internalEntity;
+  /** The internal entity. */
+  private IEntity internalEntity;
 
-	/** The type collection. */
-	private boolean typeCollection = false;
+  /** The type collection. */
+  private boolean typeCollection = false;
 
-	/**
-	 * Instantiates a new cmis object.
-	 *
-	 * @param session the session
-	 * @param path the path
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public CmisObject(CmisSession session, String path) throws IOException {
-		super();
-		this.session = session;
-		path = sanitize(path);
-		IRepository repository = ((IRepository) session	.getCmisRepository()
-														.getInternalObject());
-		if (repository.hasCollection(path)) {
-			this.internalEntity = repository.getCollection(path);
-			this.typeCollection = true;
-		} else if (repository.hasResource(path)) {
-			this.internalEntity = repository.getResource(path);
-			this.typeCollection = false;
-		}
-	}
+  /**
+   * Instantiates a new cmis object.
+   *
+   * @param session the session
+   * @param path the path
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  public CmisObject(CmisSession session, String path) throws IOException {
+    super();
+    this.session = session;
+    path = sanitize(path);
+    IRepository repository = ((IRepository) session.getCmisRepository()
+                                                   .getInternalObject());
+    if (repository.hasCollection(path)) {
+      this.internalEntity = repository.getCollection(path);
+      this.typeCollection = true;
+    } else if (repository.hasResource(path)) {
+      this.internalEntity = repository.getResource(path);
+      this.typeCollection = false;
+    }
+  }
 
-	/**
-	 * Sanitize.
-	 *
-	 * @param path the path
-	 * @return the string
-	 */
-	protected String sanitize(String path) {
-		return path.replace("\\", "");
-	}
+  /**
+   * Sanitize.
+   *
+   * @param path the path
+   * @return the string
+   */
+  protected String sanitize(String path) {
+    return path.replace("\\", "");
+  }
 
-	/**
-	 * Gets the internal entity.
-	 *
-	 * @return the internal entity
-	 */
-	public IEntity getInternalEntity() {
-		return internalEntity;
-	}
+  /**
+   * Gets the internal entity.
+   *
+   * @return the internal entity
+   */
+  public IEntity getInternalEntity() {
+    return internalEntity;
+  }
 
-	/**
-	 * Returns the ID of this CmisObject.
-	 *
-	 * @return the Id
-	 */
-	public String getId() {
-		return this	.getInternalEntity()
-					.getPath();
-	}
+  /**
+   * Returns the ID of this CmisObject.
+   *
+   * @return the Id
+   */
+  public String getId() {
+    return this.getInternalEntity()
+               .getPath();
+  }
 
-	/**
-	 * Returns the Name of this CmisObject.
-	 *
-	 * @return the name
-	 */
-	public String getName() {
-		if ("".equals(this	.getInternalEntity()
-							.getName())) {
-			return "root";
-		}
-		return this	.getInternalEntity()
-					.getName();
-	}
+  /**
+   * Returns the Name of this CmisObject.
+   *
+   * @return the name
+   */
+  public String getName() {
+    if ("".equals(this.getInternalEntity()
+                      .getName())) {
+      return "root";
+    }
+    return this.getInternalEntity()
+               .getName();
+  }
 
-	/**
-	 * Returns the Type of this CmisObject.
-	 *
-	 * @return the object type
-	 */
-	public ObjectType getType() {
-		return this.isCollection() ? ObjectType.FOLDER : ObjectType.DOCUMENT;
-	}
+  /**
+   * Returns the Type of this CmisObject.
+   *
+   * @return the object type
+   */
+  public ObjectType getType() {
+    return this.isCollection() ? ObjectType.FOLDER : ObjectType.DOCUMENT;
+  }
 
-	/**
-	 * Checks if is collection.
-	 *
-	 * @return true, if is collection
-	 */
-	protected boolean isCollection() {
-		return typeCollection;
-	}
+  /**
+   * Checks if is collection.
+   *
+   * @return true, if is collection
+   */
+  protected boolean isCollection() {
+    return typeCollection;
+  }
 
-	/**
-	 * Delete this CmisObject.
-	 *
-	 * @throws IOException IO Exception
-	 */
-	public void delete() throws IOException {
-		this.getInternalEntity()
-			.delete();
-	}
+  /**
+   * Delete this CmisObject.
+   *
+   * @throws IOException IO Exception
+   */
+  public void delete() throws IOException {
+    this.getInternalEntity()
+        .delete();
+  }
 
-	/**
-	 * Delete this CmisObject.
-	 *
-	 * @param allVersions whether to delete all versions
-	 * @throws IOException IO Exception
-	 */
-	public void delete(boolean allVersions) throws IOException {
-		delete();
-	}
+  /**
+   * Delete this CmisObject.
+   *
+   * @param allVersions whether to delete all versions
+   * @throws IOException IO Exception
+   */
+  public void delete(boolean allVersions) throws IOException {
+    delete();
+  }
 
-	/**
-	 * Rename this CmisObject.
-	 *
-	 * @param newName the new name
-	 * @throws IOException IO Exception
-	 */
-	public void rename(String newName) throws IOException {
-		this.getInternalEntity()
-			.renameTo(newName);
-	}
+  /**
+   * Rename this CmisObject.
+   *
+   * @param newName the new name
+   * @throws IOException IO Exception
+   */
+  public void rename(String newName) throws IOException {
+    this.getInternalEntity()
+        .renameTo(newName);
+  }
 
 }

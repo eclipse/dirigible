@@ -18,29 +18,29 @@ import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
  */
 public class H2CreateBranchingBuilder extends CreateBranchingBuilder {
 
-	/**
-	 * Instantiates a new H2 create branching builder.
-	 *
-	 * @param dialect the dialect
-	 */
-	protected H2CreateBranchingBuilder(ISqlDialect dialect) {
-		super(dialect);
-	}
+  /**
+   * Instantiates a new H2 create branching builder.
+   *
+   * @param dialect the dialect
+   */
+  protected H2CreateBranchingBuilder(ISqlDialect dialect) {
+    super(dialect);
+  }
 
-	/**
-	 * Table.
-	 *
-	 * @param table the table
-	 * @return the h2 create table builder
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java.lang.String)
-	 */
-	@Override
-	public H2CreateTableBuilder table(String table) {
-		return new H2CreateTableBuilder(this.getDialect(), table);
-	}
+  /**
+   * Table.
+   *
+   * @param table the table
+   * @return the h2 create table builder
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java.lang.String)
+   */
+  @Override
+  public H2CreateTableBuilder table(String table) {
+    return new H2CreateTableBuilder(this.getDialect(), table);
+  }
 
 }

@@ -15,54 +15,54 @@ package org.eclipse.dirigible.components.api.io;
  */
 public class FileObject {
 
-	/** The name. */
-	private String name;
+  /** The name. */
+  private String name;
 
-	/** The path. */
-	private String path;
+  /** The path. */
+  private String path;
 
-	/** The type. */
-	private String type;
+  /** The type. */
+  private String type;
 
-	/**
-	 * Instantiates a new file object.
-	 *
-	 * @param name the name
-	 * @param path the path
-	 * @param type the type
-	 */
-	public FileObject(String name, String path, String type) {
-		super();
-		this.name = name;
-		this.path = path;
-		this.type = type;
-	}
+  /**
+   * Instantiates a new file object.
+   *
+   * @param name the name
+   * @param path the path
+   * @param type the type
+   */
+  public FileObject(String name, String path, String type) {
+    super();
+    this.name = name;
+    this.path = path;
+    this.type = type;
+  }
 
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * Gets the path.
-	 *
-	 * @return the path
-	 */
-	public String getPath() {
-		return path;
-	}
+  /**
+   * Gets the path.
+   *
+   * @return the path
+   */
+  public String getPath() {
+    return path;
+  }
 
-	/**
-	 * Gets the type.
-	 *
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
-	}
+  /**
+   * Gets the type.
+   *
+   * @return the type
+   */
+  public String getType() {
+    return type;
+  }
 
 }

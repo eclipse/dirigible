@@ -34,21 +34,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RedisFacadeTest {
 
-	@Before
-	public void setUp() {
-		GenericContainer redis = new GenericContainer(DockerImageName.parse("redis:5.0.3-alpine")).withExposedPorts(6379);
-		redis.start();
+  @Before
+  public void setUp() {
+    GenericContainer redis = new GenericContainer(DockerImageName.parse("redis:5.0.3-alpine")).withExposedPorts(6379);
+    redis.start();
 
-		String host = redis.getHost();
-		Integer port = redis.getFirstMappedPort();
+    String host = redis.getHost();
+    Integer port = redis.getFirstMappedPort();
 
-		Configuration.set("DIRIGIBLE_REDIS_CLIENT_URI", host + ":" + port);
-	}
+    Configuration.set("DIRIGIBLE_REDIS_CLIENT_URI", host + ":" + port);
+  }
 
-	@Test
-	public void getClient() {
-		Jedis client = RedisFacade.getClient();
-		client.set("key", "value");
-		assertEquals("value", client.get("key"));
-	}
+  @Test
+  public void getClient() {
+    Jedis client = RedisFacade.getClient();
+    client.set("key", "value");
+    assertEquals("value", client.get("key"));
+  }
 }

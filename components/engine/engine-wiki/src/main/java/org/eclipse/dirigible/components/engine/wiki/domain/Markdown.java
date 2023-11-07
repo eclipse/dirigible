@@ -29,84 +29,84 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 @Table(name = "DIRIGIBLE_MARKDOWN")
 public class Markdown extends Artefact {
 
-	/** The Constant ARTEFACT_TYPE. */
-	public static final String ARTEFACT_TYPE = "markdown";
+  /** The Constant ARTEFACT_TYPE. */
+  public static final String ARTEFACT_TYPE = "markdown";
 
-	/** The id. */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "MARKDOWN_ID", nullable = false)
-	private Long id;
+  /** The id. */
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "MARKDOWN_ID", nullable = false)
+  private Long id;
 
-	/** The content. */
-	@Column(name = "MARKDOWN_CONTENT", columnDefinition = "CLOB")
-	@Lob
-	private byte[] content;
+  /** The content. */
+  @Column(name = "MARKDOWN_CONTENT", columnDefinition = "CLOB")
+  @Lob
+  private byte[] content;
 
-	/**
-	 * Instantiates a new markdown.
-	 *
-	 * @param location the location
-	 * @param name the name
-	 * @param description the description
-	 */
-	public Markdown(String location, String name, String description) {
-		super(location, name, ARTEFACT_TYPE, description, null);
-	}
+  /**
+   * Instantiates a new markdown.
+   *
+   * @param location the location
+   * @param name the name
+   * @param description the description
+   */
+  public Markdown(String location, String name, String description) {
+    super(location, name, ARTEFACT_TYPE, description, null);
+  }
 
-	/**
-	 * Instantiates a new markdown.
-	 */
-	public Markdown() {
-		super();
-	}
+  /**
+   * Instantiates a new markdown.
+   */
+  public Markdown() {
+    super();
+  }
 
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
+  /**
+   * Gets the id.
+   *
+   * @return the id
+   */
+  public Long getId() {
+    return id;
+  }
 
-	/**
-	 * Sets the id.
-	 *
-	 * @param id the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
+  /**
+   * Sets the id.
+   *
+   * @param id the id to set
+   */
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-	/**
-	 * Gets the content.
-	 *
-	 * @return the content
-	 */
-	public byte[] getContent() {
-		return content;
-	}
+  /**
+   * Gets the content.
+   *
+   * @return the content
+   */
+  public byte[] getContent() {
+    return content;
+  }
 
-	/**
-	 * Sets the content.
-	 *
-	 * @param content the new content
-	 */
-	public void setContent(byte[] content) {
-		this.content = content;
-	}
+  /**
+   * Sets the content.
+   *
+   * @param content the new content
+   */
+  public void setContent(byte[] content) {
+    this.content = content;
+  }
 
-	/**
-	 * To string.
-	 *
-	 * @return the string
-	 */
-	@Override
-	public String toString() {
-		return "Markdown [id=" + id + ", content=" + Arrays.toString(content) + ", location=" + location + ", name=" + name + ", type="
-				+ type + ", description=" + description + ", key=" + key + ", dependencies=" + dependencies + ", createdBy=" + createdBy
-				+ ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
-	}
+  /**
+   * To string.
+   *
+   * @return the string
+   */
+  @Override
+  public String toString() {
+    return "Markdown [id=" + id + ", content=" + Arrays.toString(content) + ", location=" + location + ", name=" + name + ", type=" + type
+        + ", description=" + description + ", key=" + key + ", dependencies=" + dependencies + ", createdBy=" + createdBy + ", createdAt="
+        + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
+  }
 
 }

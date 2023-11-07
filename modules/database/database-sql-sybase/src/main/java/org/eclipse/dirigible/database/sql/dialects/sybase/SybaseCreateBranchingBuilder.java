@@ -19,30 +19,30 @@ import org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilde
  */
 public class SybaseCreateBranchingBuilder extends CreateBranchingBuilder {
 
-	/**
-	 * Instantiates a new Sybase create branching builder.
-	 *
-	 * @param dialect the dialect
-	 */
-	public SybaseCreateBranchingBuilder(ISqlDialect dialect) {
-		super(dialect);
-	}
+  /**
+   * Instantiates a new Sybase create branching builder.
+   *
+   * @param dialect the dialect
+   */
+  public SybaseCreateBranchingBuilder(ISqlDialect dialect) {
+    super(dialect);
+  }
 
-	/**
-	 * Sequence.
-	 *
-	 * @param sequence the sequence
-	 * @return the creates the sequence builder
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(java.lang.String)
-	 */
-	@Override
-	public CreateSequenceBuilder sequence(String sequence) {
-		return new SybaseCreateSequenceBuilder(this.getDialect(), sequence);
-	}
+  /**
+   * Sequence.
+   *
+   * @param sequence the sequence
+   * @return the creates the sequence builder
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(java.lang.String)
+   */
+  @Override
+  public CreateSequenceBuilder sequence(String sequence) {
+    return new SybaseCreateSequenceBuilder(this.getDialect(), sequence);
+  }
 
 }

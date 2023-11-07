@@ -21,56 +21,56 @@ import org.springframework.stereotype.Component;
 @Component
 public class GlobalsFacade {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(GlobalsFacade.class);
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(GlobalsFacade.class);
 
-	/**
-	 * Gets the value per name.
-	 *
-	 * @param name the name
-	 * @return the string value
-	 */
-	public static final String get(String name) {
-		if (logger.isTraceEnabled()) {
-			logger.trace("API - GlobalsFacade.get() -> begin");
-		}
-		String value = System.getProperty(name);
-		if (logger.isTraceEnabled()) {
-			logger.trace("API - GlobalsFacade.get() -> end");
-		}
-		return value;
-	}
+  /**
+   * Gets the value per name.
+   *
+   * @param name the name
+   * @return the string value
+   */
+  public static final String get(String name) {
+    if (logger.isTraceEnabled()) {
+      logger.trace("API - GlobalsFacade.get() -> begin");
+    }
+    String value = System.getProperty(name);
+    if (logger.isTraceEnabled()) {
+      logger.trace("API - GlobalsFacade.get() -> end");
+    }
+    return value;
+  }
 
-	/**
-	 * Sets the value per name.
-	 *
-	 * @param name the name
-	 * @param value the value
-	 */
-	public static final void set(String name, String value) {
-		if (logger.isTraceEnabled()) {
-			logger.trace("API - GlobalsFacade.set() -> begin");
-		}
-		System.setProperty(name, value);
-		if (logger.isTraceEnabled()) {
-			logger.trace("API - GlobalsFacade.set() -> end");
-		}
-	}
+  /**
+   * Sets the value per name.
+   *
+   * @param name the name
+   * @param value the value
+   */
+  public static final void set(String name, String value) {
+    if (logger.isTraceEnabled()) {
+      logger.trace("API - GlobalsFacade.set() -> begin");
+    }
+    System.setProperty(name, value);
+    if (logger.isTraceEnabled()) {
+      logger.trace("API - GlobalsFacade.set() -> end");
+    }
+  }
 
-	/**
-	 * List all the name value pairs.
-	 *
-	 * @return the string
-	 */
-	public static final String list() {
-		if (logger.isTraceEnabled()) {
-			logger.trace("API - GlobalsFacade.get() -> begin");
-		}
-		String value = GsonHelper.toJson(System.getProperties());
-		if (logger.isTraceEnabled()) {
-			logger.trace("API - GlobalsFacade.get() -> end");
-		}
-		return value;
-	}
+  /**
+   * List all the name value pairs.
+   *
+   * @return the string
+   */
+  public static final String list() {
+    if (logger.isTraceEnabled()) {
+      logger.trace("API - GlobalsFacade.get() -> begin");
+    }
+    String value = GsonHelper.toJson(System.getProperties());
+    if (logger.isTraceEnabled()) {
+      logger.trace("API - GlobalsFacade.get() -> end");
+    }
+    return value;
+  }
 
 }

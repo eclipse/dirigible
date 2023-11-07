@@ -31,20 +31,20 @@ import org.springframework.web.context.WebApplicationContext;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 public class IndexingSuiteTest {
 
-	@Autowired
-	private JavascriptService javascriptService;
+  @Autowired
+  private JavascriptService javascriptService;
 
-	@Autowired
-	protected WebApplicationContext context;
+  @Autowired
+  protected WebApplicationContext context;
 
-	@Test
-	public void executeClientTest() throws Exception {
-		javascriptService.handleRequest("indexing-tests", "searcher-between.js", null, null, false);
-		javascriptService.handleRequest("indexing-tests", "searcher-search.js", null, null, false);
-		javascriptService.handleRequest("indexing-tests", "writer-add.js", null, null, false);
-	}
+  @Test
+  public void executeClientTest() throws Exception {
+    javascriptService.handleRequest("indexing-tests", "searcher-between.js", null, null, false);
+    javascriptService.handleRequest("indexing-tests", "searcher-search.js", null, null, false);
+    javascriptService.handleRequest("indexing-tests", "writer-add.js", null, null, false);
+  }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 }

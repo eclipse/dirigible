@@ -15,25 +15,25 @@ package org.eclipse.dirigible.components.ide.git.domain;
  */
 public enum GitChangeType {
 
-	/** The Conflicting. */
-	Conflicting,
+  /** The Conflicting. */
+  Conflicting,
 
-	/** The Added. */
-	Added,
-	/** The Changed. */
-	// staged
-	Changed,
-	/** The Missing. */
-	// staged
-	Missing,
-	/** The Modified. */
-	// unstaged
-	Modified,
-	/** The Removed. */
-	// unstaged
-	Removed,
-	/** The Untracked. */
-	// staged
-	Untracked // unstaged
+  /** The Added. */
+  Added,
+  /** The Changed. */
+  // staged
+  Changed,
+  /** The Missing. */
+  // staged
+  Missing,
+  /** The Modified. */
+  // unstaged
+  Modified,
+  /** The Removed. */
+  // unstaged
+  Removed,
+  /** The Untracked. */
+  // staged
+  Untracked // unstaged
 
 }

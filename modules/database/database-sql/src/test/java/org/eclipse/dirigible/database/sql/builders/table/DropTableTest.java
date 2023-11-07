@@ -22,36 +22,36 @@ import org.junit.Test;
  */
 public class DropTableTest {
 
-	/**
-	 * Drop table.
-	 */
-	@Test
-	public void dropTable() {
-		String sql = SqlFactory	.getDefault()
-								.drop()
-								.table("CUSTOMERS")
-								.build();
+  /**
+   * Drop table.
+   */
+  @Test
+  public void dropTable() {
+    String sql = SqlFactory.getDefault()
+                           .drop()
+                           .table("CUSTOMERS")
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("DROP TABLE CUSTOMERS", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("DROP TABLE CUSTOMERS", sql);
+  }
 
-	/**
-	 * Drop table case sensitive.
-	 */
-	@Test
-	public void dropTableCaseSensitive() {
-		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-		try {
-			String sql = SqlFactory	.getDefault()
-									.drop()
-									.table("CUSTOMERS")
-									.build();
+  /**
+   * Drop table case sensitive.
+   */
+  @Test
+  public void dropTableCaseSensitive() {
+    Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
+    try {
+      String sql = SqlFactory.getDefault()
+                             .drop()
+                             .table("CUSTOMERS")
+                             .build();
 
-			assertNotNull(sql);
-			assertEquals("DROP TABLE \"CUSTOMERS\"", sql);
-		} finally {
-			Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-		}
-	}
+      assertNotNull(sql);
+      assertEquals("DROP TABLE \"CUSTOMERS\"", sql);
+    } finally {
+      Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
+    }
+  }
 }

@@ -21,15 +21,15 @@ import java.util.Base64;
 @Component
 public class Decrypter {
 
-	/**
-	 * Decrypt.
-	 *
-	 * @param value the value
-	 * @return the string
-	 */
-	public String decrypt(String value) {
-		return new String(Base64.getDecoder()
-								.decode(value.getBytes(StandardCharsets.UTF_8)),
-				StandardCharsets.UTF_8);
-	}
+  /**
+   * Decrypt.
+   *
+   * @param value the value
+   * @return the string
+   */
+  public String decrypt(String value) {
+    return new String(Base64.getDecoder()
+                            .decode(value.getBytes(StandardCharsets.UTF_8)),
+        StandardCharsets.UTF_8);
+  }
 }

@@ -48,70 +48,70 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 public class ProblemsEndpointTest {
 
-	@Autowired
-	private EntityManager entityManager;
+  @Autowired
+  private EntityManager entityManager;
 
-	@Autowired
-	private ProblemService problemService;
+  @Autowired
+  private ProblemService problemService;
 
-	@Autowired
-	private ProblemRepository problemRepository;
+  @Autowired
+  private ProblemRepository problemRepository;
 
-	@Autowired
-	private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-	@Autowired
-	protected WebApplicationContext wac;
+  @Autowired
+  protected WebApplicationContext wac;
 
-	@Autowired
-	private FilterChainProxy springSecurityFilterChain;
+  @Autowired
+  private FilterChainProxy springSecurityFilterChain;
 
-	@BeforeEach
-	public void setup() throws Exception {
+  @BeforeEach
+  public void setup() throws Exception {
 
-		cleanup();
+    cleanup();
 
-		problemService.save(createProblem("location1", "type1", "line1", "column1", "cause1", "expected1", "category1", "module1",
-				"source1", "program1"));
-		problemService.save(createProblem("location2", "type2", "line2", "column2", "cause2", "expected2", "category2", "module2",
-				"source2", "program2"));
+    problemService.save(
+        createProblem("location1", "type1", "line1", "column1", "cause1", "expected1", "category1", "module1", "source1", "program1"));
+    problemService.save(
+        createProblem("location2", "type2", "line2", "column2", "cause2", "expected2", "category2", "module2", "source2", "program2"));
 
-	}
+  }
 
-	@AfterEach
-	public void cleanup() throws Exception {
+  @AfterEach
+  public void cleanup() throws Exception {
 
-	}
+  }
 
-	@Test
-	public void findAllProblems() {
-		Integer size = 10;
-		Integer page = 0;
-		Pageable pageable = PageRequest.of(page, size);
-		assertNotNull(problemService.getPages(pageable));
-	}
+  @Test
+  public void findAllProblems() {
+    Integer size = 10;
+    Integer page = 0;
+    Pageable pageable = PageRequest.of(page, size);
+    assertNotNull(problemService.getPages(pageable));
+  }
 
-	@Test
-	public void getProblems() throws Exception {
-		mockMvc	.perform(get("/services/ide/problems/"))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful());
-	}
+  @Test
+  public void getProblems() throws Exception {
+    mockMvc.perform(get("/services/ide/problems/"))
+           .andDo(print())
+           .andExpect(status().is2xxSuccessful());
+  }
 
-	@Test
-	public void getProblemsByCondition() throws Exception {
-		mockMvc	.perform(get("/services/ide/problems/search?condition=co&limit=5"))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful());
-	}
+  @Test
+  public void getProblemsByCondition() throws Exception {
+    mockMvc.perform(get("/services/ide/problems/search?condition=co&limit=5"))
+           .andDo(print())
+           .andExpect(status().is2xxSuccessful());
+  }
 
-	public static Problem createProblem(String location, String type, String line, String column, String cause, String expected,
-			String category, String module, String source, String program) {
-		Problem problem = new Problem(location, type, line, column, cause, expected, category, module, source, program);
-		return problem;
-	}
+  public static Problem createProblem(String location, String type, String line, String column, String cause, String expected,
+      String category, String module, String source, String program) {
+    Problem problem = new Problem(location, type, line, column, cause, expected, category, module, source, program);
+    return problem;
+  }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 }

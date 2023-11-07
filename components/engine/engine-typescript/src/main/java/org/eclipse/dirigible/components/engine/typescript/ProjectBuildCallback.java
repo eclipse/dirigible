@@ -33,77 +33,77 @@ import java.util.function.Consumer;
 @Component
 public class ProjectBuildCallback implements PublisherHandler, Initializer {
 
-	/** The Constant LOGGER. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(ProjectBuildCallback.class);
+  /** The Constant LOGGER. */
+  private static final Logger LOGGER = LoggerFactory.getLogger(ProjectBuildCallback.class);
 
-	/** The project build service. */
-	private final ProjectBuildService projectBuildService;
+  /** The project build service. */
+  private final ProjectBuildService projectBuildService;
 
-	/** The repository. */
-	private final IRepository repository;
+  /** The repository. */
+  private final IRepository repository;
 
-	/**
-	 * Instantiates a new project build callback.
-	 *
-	 * @param projectBuildService the project build service
-	 * @param repository the repository
-	 */
-	@Autowired
-	public ProjectBuildCallback(ProjectBuildService projectBuildService, IRepository repository) {
-		this.projectBuildService = projectBuildService;
-		this.repository = repository;
-	}
+  /**
+   * Instantiates a new project build callback.
+   *
+   * @param projectBuildService the project build service
+   * @param repository the repository
+   */
+  @Autowired
+  public ProjectBuildCallback(ProjectBuildService projectBuildService, IRepository repository) {
+    this.projectBuildService = projectBuildService;
+    this.repository = repository;
+  }
 
-	/**
-	 * After publish.
-	 *
-	 * @param workspaceLocation the workspace location
-	 * @param registryLocation the registry location
-	 * @param metadata the metadata
-	 */
-	@Override
-	public void afterPublish(String workspaceLocation, String registryLocation, AfterPublishMetadata metadata) {
-		try {
-			String project = metadata.projectName();
-			if (StringUtils.isEmpty(project)) {
-				initialize();
-			} else {
-				projectBuildService.build(metadata.projectName(), metadata.entryPath());
-			}
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-		}
-	}
+  /**
+   * After publish.
+   *
+   * @param workspaceLocation the workspace location
+   * @param registryLocation the registry location
+   * @param metadata the metadata
+   */
+  @Override
+  public void afterPublish(String workspaceLocation, String registryLocation, AfterPublishMetadata metadata) {
+    try {
+      String project = metadata.projectName();
+      if (StringUtils.isEmpty(project)) {
+        initialize();
+      } else {
+        projectBuildService.build(metadata.projectName(), metadata.entryPath());
+      }
+    } catch (Exception e) {
+      LOGGER.error(e.getMessage(), e);
+    }
+  }
 
-	/**
-	 * Initialize.
-	 */
-	@Override
-	public void initialize() {
-		Path registryPath = registryPath();
-		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(registryPath)) {
-			for (Path projectPath : directoryStream) {
-				File projectDir = projectPath.toFile();
-				if (projectDir.isDirectory()) {
-					try {
-						projectBuildService.build(projectDir.getName());
-					} catch (Exception e) {
-						LOGGER.error(e.getMessage(), e);
-					}
-				}
-			}
-		} catch (IOException e) {
-			throw new TypeScriptException("Error while reading registry projects", e);
-		}
-	}
+  /**
+   * Initialize.
+   */
+  @Override
+  public void initialize() {
+    Path registryPath = registryPath();
+    try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(registryPath)) {
+      for (Path projectPath : directoryStream) {
+        File projectDir = projectPath.toFile();
+        if (projectDir.isDirectory()) {
+          try {
+            projectBuildService.build(projectDir.getName());
+          } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+          }
+        }
+      }
+    } catch (IOException e) {
+      throw new TypeScriptException("Error while reading registry projects", e);
+    }
+  }
 
-	/**
-	 * Registry path.
-	 *
-	 * @return the path
-	 */
-	private Path registryPath() {
-		return Path.of(repository.getInternalResourcePath(IRepositoryStructure.PATH_REGISTRY_PUBLIC));
-	}
+  /**
+   * Registry path.
+   *
+   * @return the path
+   */
+  private Path registryPath() {
+    return Path.of(repository.getInternalResourcePath(IRepositoryStructure.PATH_REGISTRY_PUBLIC));
+  }
 
 }

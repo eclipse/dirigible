@@ -30,116 +30,116 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class JobHandler implements Job {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(JobHandler.class);
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(JobHandler.class);
 
-	/** The handler parameter. */
-	public static String JOB_PARAMETER_HANDLER = "dirigible-job-handler";
+  /** The handler parameter. */
+  public static String JOB_PARAMETER_HANDLER = "dirigible-job-handler";
 
-	/** The engine type. */
-	public static String JOB_PARAMETER_ENGINE = "dirigible-engine-type";
+  /** The engine type. */
+  public static String JOB_PARAMETER_ENGINE = "dirigible-engine-type";
 
-	/** The job log service. */
-	@Autowired
-	private JobLogService jobLogService;
+  /** The job log service. */
+  @Autowired
+  private JobLogService jobLogService;
 
-	/** The javascript service. */
-	@Autowired
-	private JavascriptService javascriptService;
+  /** The javascript service. */
+  @Autowired
+  private JavascriptService javascriptService;
 
-	/**
-	 * Execute.
-	 *
-	 * @param context the context
-	 * @throws JobExecutionException the job execution exception
-	 */
-	@Override
-	public void execute(JobExecutionContext context) throws JobExecutionException {
-		String name = context	.getJobDetail()
-								.getKey()
-								.getName();
-		String handler = (String) context	.getJobDetail()
-											.getJobDataMap()
-											.get(JOB_PARAMETER_HANDLER);
-		String type = (String) context	.getJobDetail()
-										.getJobDataMap()
-										.get(JOB_PARAMETER_ENGINE);
+  /**
+   * Execute.
+   *
+   * @param context the context
+   * @throws JobExecutionException the job execution exception
+   */
+  @Override
+  public void execute(JobExecutionContext context) throws JobExecutionException {
+    String name = context.getJobDetail()
+                         .getKey()
+                         .getName();
+    String handler = (String) context.getJobDetail()
+                                     .getJobDataMap()
+                                     .get(JOB_PARAMETER_HANDLER);
+    String type = (String) context.getJobDetail()
+                                  .getJobDataMap()
+                                  .get(JOB_PARAMETER_ENGINE);
 
-		JobLog triggered = registerTriggered(name, handler);
-		if (triggered != null) {
-			try {
-				if (type == null) {
-					type = "javascript";
-				}
-				Map<Object, Object> internal = new HashMap<>();
-				context.put("handler", handler);
-				RepositoryPath path = new RepositoryPath(handler);
-				javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, internal, false);
-			} catch (Exception e) {
-				registeredFailed(name, handler, triggered, e);
+    JobLog triggered = registerTriggered(name, handler);
+    if (triggered != null) {
+      try {
+        if (type == null) {
+          type = "javascript";
+        }
+        Map<Object, Object> internal = new HashMap<>();
+        context.put("handler", handler);
+        RepositoryPath path = new RepositoryPath(handler);
+        javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, internal, false);
+      } catch (Exception e) {
+        registeredFailed(name, handler, triggered, e);
 
-				throw new JobExecutionException(e);
-			}
+        throw new JobExecutionException(e);
+      }
 
-			registeredFinished(name, handler, triggered);
-		}
-	}
+      registeredFinished(name, handler, triggered);
+    }
+  }
 
-	/**
-	 * Register triggered.
-	 *
-	 * @param name the name
-	 * @param module the module
-	 * @return the job log definition
-	 */
-	private JobLog registerTriggered(String name, String module) {
-		JobLog triggered = null;
-		try {
-			triggered = jobLogService.jobTriggered(name, module);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {
-				logger.error(e.getMessage(), e);
-			}
-		}
-		return triggered;
-	}
+  /**
+   * Register triggered.
+   *
+   * @param name the name
+   * @param module the module
+   * @return the job log definition
+   */
+  private JobLog registerTriggered(String name, String module) {
+    JobLog triggered = null;
+    try {
+      triggered = jobLogService.jobTriggered(name, module);
+    } catch (Exception e) {
+      if (logger.isErrorEnabled()) {
+        logger.error(e.getMessage(), e);
+      }
+    }
+    return triggered;
+  }
 
-	/**
-	 * Registered failed.
-	 *
-	 * @param name the name
-	 * @param module the module
-	 * @param triggered the triggered
-	 * @param e the e
-	 */
-	private void registeredFailed(String name, String module, JobLog triggered, Exception e) {
-		try {
-			jobLogService.jobFailed(name, module, triggered.getId(), new Date(triggered	.getTriggeredAt()
-																						.getTime()),
-					e.getMessage());
-		} catch (Exception se) {
-			if (logger.isErrorEnabled()) {
-				logger.error(se.getMessage(), se);
-			}
-		}
-	}
+  /**
+   * Registered failed.
+   *
+   * @param name the name
+   * @param module the module
+   * @param triggered the triggered
+   * @param e the e
+   */
+  private void registeredFailed(String name, String module, JobLog triggered, Exception e) {
+    try {
+      jobLogService.jobFailed(name, module, triggered.getId(), new Date(triggered.getTriggeredAt()
+                                                                                 .getTime()),
+          e.getMessage());
+    } catch (Exception se) {
+      if (logger.isErrorEnabled()) {
+        logger.error(se.getMessage(), se);
+      }
+    }
+  }
 
-	/**
-	 * Registered finished.
-	 *
-	 * @param name the name
-	 * @param module the module
-	 * @param triggered the triggered
-	 */
-	private void registeredFinished(String name, String module, JobLog triggered) {
-		try {
-			jobLogService.jobFinished(name, module, triggered.getId(), new Date(triggered	.getTriggeredAt()
-																							.getTime()));
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {
-				logger.error(e.getMessage(), e);
-			}
-		}
-	}
+  /**
+   * Registered finished.
+   *
+   * @param name the name
+   * @param module the module
+   * @param triggered the triggered
+   */
+  private void registeredFinished(String name, String module, JobLog triggered) {
+    try {
+      jobLogService.jobFinished(name, module, triggered.getId(), new Date(triggered.getTriggeredAt()
+                                                                                   .getTime()));
+    } catch (Exception e) {
+      if (logger.isErrorEnabled()) {
+        logger.error(e.getMessage(), e);
+      }
+    }
+  }
 
 }

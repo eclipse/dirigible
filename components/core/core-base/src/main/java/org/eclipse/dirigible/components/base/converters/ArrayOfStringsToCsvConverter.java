@@ -20,35 +20,35 @@ import javax.persistence.AttributeConverter;
  */
 public class ArrayOfStringsToCsvConverter implements AttributeConverter<String[], String> {
 
-	/**
-	 * Convert to database column.
-	 *
-	 * @param attribute the attribute
-	 * @return the string
-	 */
-	@Override
-	public String convertToDatabaseColumn(String[] attribute) {
-		return attribute == null ? null
-				: Arrays.asList(attribute)
-						.stream()
-						.map(String::trim)
-						.collect(Collectors.joining(","));
-	}
+  /**
+   * Convert to database column.
+   *
+   * @param attribute the attribute
+   * @return the string
+   */
+  @Override
+  public String convertToDatabaseColumn(String[] attribute) {
+    return attribute == null ? null
+        : Arrays.asList(attribute)
+                .stream()
+                .map(String::trim)
+                .collect(Collectors.joining(","));
+  }
 
-	/**
-	 * Convert to entity attribute.
-	 *
-	 * @param data the data
-	 * @return the string[]
-	 */
-	@Override
-	public String[] convertToEntityAttribute(String data) {
-		return data == null ? null
-				: Arrays.stream(data.split(","))
-						.map(String::trim)
-						.collect(Collectors.toList())
-						.stream()
-						.toArray(String[]::new);
-	}
+  /**
+   * Convert to entity attribute.
+   *
+   * @param data the data
+   * @return the string[]
+   */
+  @Override
+  public String[] convertToEntityAttribute(String data) {
+    return data == null ? null
+        : Arrays.stream(data.split(","))
+                .map(String::trim)
+                .collect(Collectors.toList())
+                .stream()
+                .toArray(String[]::new);
+  }
 
 }

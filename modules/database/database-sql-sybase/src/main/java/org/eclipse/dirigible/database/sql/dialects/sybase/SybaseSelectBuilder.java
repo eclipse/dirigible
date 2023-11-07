@@ -18,45 +18,45 @@ import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
  */
 public class SybaseSelectBuilder extends SelectBuilder {
 
-	/**
-	 * Instantiates a new Sybase select builder.
-	 *
-	 * @param dialect the dialect
-	 */
-	public SybaseSelectBuilder(ISqlDialect dialect) {
-		super(dialect);
-	}
+  /**
+   * Instantiates a new Sybase select builder.
+   *
+   * @param dialect the dialect
+   */
+  public SybaseSelectBuilder(ISqlDialect dialect) {
+    super(dialect);
+  }
 
-	/**
-	 * Generate limit and offset.
-	 *
-	 * @param sql the sql
-	 * @param limit the limit
-	 * @param offset the offset
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.dirigible.database.sql.builders.AbstractQuerySqlBuilder#generateLimitAndOffset(java.
-	 * lang. StringBuilder, int, int)
-	 */
-	@Override
-	protected void generateLimitAndOffset(StringBuilder sql, int limit, int offset) {
-		if (limit > -1) {
-			sql	.append(SPACE)
-				.append(KEYWORD_ROWS)
-				.append(SPACE)
-				.append(KEYWORD_LIMIT)
-				.append(SPACE)
-				.append(limit);
-		}
-		if (offset > -1) {
-			sql	.append(SPACE)
-				.append(KEYWORD_OFFSET)
-				.append(SPACE)
-				.append(offset);
-		}
-	}
+  /**
+   * Generate limit and offset.
+   *
+   * @param sql the sql
+   * @param limit the limit
+   * @param offset the offset
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.eclipse.dirigible.database.sql.builders.AbstractQuerySqlBuilder#generateLimitAndOffset(java.
+   * lang. StringBuilder, int, int)
+   */
+  @Override
+  protected void generateLimitAndOffset(StringBuilder sql, int limit, int offset) {
+    if (limit > -1) {
+      sql.append(SPACE)
+         .append(KEYWORD_ROWS)
+         .append(SPACE)
+         .append(KEYWORD_LIMIT)
+         .append(SPACE)
+         .append(limit);
+    }
+    if (offset > -1) {
+      sql.append(SPACE)
+         .append(KEYWORD_OFFSET)
+         .append(SPACE)
+         .append(offset);
+    }
+  }
 
 }

@@ -15,24 +15,24 @@ package org.eclipse.dirigible.commons.api.helpers;
  */
 public class BytesHelper {
 
-	/**
-	 * Transform a json string to bytes array.
-	 *
-	 * @param input the input
-	 * @return the byte[]
-	 */
-	public static byte[] jsonToBytes(String input) {
-		return GsonHelper.fromJson(input, byte[].class);
-	}
+  /**
+   * Transform a json string to bytes array.
+   *
+   * @param input the input
+   * @return the byte[]
+   */
+  public static byte[] jsonToBytes(String input) {
+    return GsonHelper.fromJson(input, byte[].class);
+  }
 
-	/**
-	 * Transform a bytes array to json string.
-	 *
-	 * @param bytes the bytes
-	 * @return the string
-	 */
-	public static String bytesToJson(byte[] bytes) {
-		return GsonHelper.toJson(bytes);
-	}
+  /**
+   * Transform a bytes array to json string.
+   *
+   * @param bytes the bytes
+   * @return the string
+   */
+  public static String bytesToJson(byte[] bytes) {
+    return GsonHelper.toJson(bytes);
+  }
 
 }

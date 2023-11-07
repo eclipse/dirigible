@@ -20,17 +20,17 @@ import org.junit.Before;
  */
 public class LocalRepositoryBinaryTest extends RepositoryGenericBinaryTest {
 
-	/**
-	 * Sets the up.
-	 */
-	@Before
-	public void setUp() {
-		try {
-			repository = new LocalRepository("target/test");
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
+  /**
+   * Sets the up.
+   */
+  @Before
+  public void setUp() {
+    try {
+      repository = new LocalRepository("target/test");
+    } catch (Exception e) {
+      e.printStackTrace();
+      fail(e.getMessage());
+    }
+  }
 
 }

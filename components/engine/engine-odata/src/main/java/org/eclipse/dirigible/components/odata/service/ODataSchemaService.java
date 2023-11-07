@@ -31,154 +31,154 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ODataSchemaService implements ArtefactService<ODataSchema>, InitializingBean {
 
-	/** The instance. */
-	private static ODataSchemaService INSTANCE;
+  /** The instance. */
+  private static ODataSchemaService INSTANCE;
 
-	/**
-	 * After properties set.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;
-	}
+  /**
+   * After properties set.
+   *
+   * @throws Exception the exception
+   */
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    INSTANCE = this;
+  }
 
-	/**
-	 * Gets the.
-	 *
-	 * @return the o data schema service
-	 */
-	public static ODataSchemaService get() {
-		return INSTANCE;
-	}
+  /**
+   * Gets the.
+   *
+   * @return the o data schema service
+   */
+  public static ODataSchemaService get() {
+    return INSTANCE;
+  }
 
-	/** The ODataSchema repository. */
-	@Autowired
-	private ODataSchemaRepository odataSchemaRepository;
+  /** The ODataSchema repository. */
+  @Autowired
+  private ODataSchemaRepository odataSchemaRepository;
 
-	/**
-	 * Gets the all.
-	 *
-	 * @return the all
-	 */
-	@Override
-	public List<ODataSchema> getAll() {
-		return odataSchemaRepository.findAll();
-	}
+  /**
+   * Gets the all.
+   *
+   * @return the all
+   */
+  @Override
+  public List<ODataSchema> getAll() {
+    return odataSchemaRepository.findAll();
+  }
 
-	/**
-	 * Find all.
-	 *
-	 * @param pageable the pageable
-	 * @return the page
-	 */
-	@Override
-	public Page<ODataSchema> getPages(Pageable pageable) {
-		return odataSchemaRepository.findAll(pageable);
-	}
+  /**
+   * Find all.
+   *
+   * @param pageable the pageable
+   * @return the page
+   */
+  @Override
+  public Page<ODataSchema> getPages(Pageable pageable) {
+    return odataSchemaRepository.findAll(pageable);
+  }
 
-	/**
-	 * Find by id.
-	 *
-	 * @param id the id
-	 * @return the ODataSchema
-	 */
-	@Override
-	public ODataSchema findById(Long id) {
-		Optional<ODataSchema> odataSchema = odataSchemaRepository.findById(id);
-		if (odataSchema.isPresent()) {
-			return odataSchema.get();
-		} else {
-			throw new IllegalArgumentException("OData Schema with id does not exist: " + id);
-		}
-	}
+  /**
+   * Find by id.
+   *
+   * @param id the id
+   * @return the ODataSchema
+   */
+  @Override
+  public ODataSchema findById(Long id) {
+    Optional<ODataSchema> odataSchema = odataSchemaRepository.findById(id);
+    if (odataSchema.isPresent()) {
+      return odataSchema.get();
+    } else {
+      throw new IllegalArgumentException("OData Schema with id does not exist: " + id);
+    }
+  }
 
-	/**
-	 * Find by name.
-	 *
-	 * @param name the name
-	 * @return the ODataSchema
-	 */
-	@Override
-	public ODataSchema findByName(String name) {
-		ODataSchema filter = new ODataSchema();
-		filter.setName(name);
-		Example<ODataSchema> example = Example.of(filter);
-		Optional<ODataSchema> odataSchema = odataSchemaRepository.findOne(example);
-		if (odataSchema.isPresent()) {
-			return odataSchema.get();
-		} else {
-			throw new IllegalArgumentException("OData Schema with name does not exist: " + name);
-		}
-	}
+  /**
+   * Find by name.
+   *
+   * @param name the name
+   * @return the ODataSchema
+   */
+  @Override
+  public ODataSchema findByName(String name) {
+    ODataSchema filter = new ODataSchema();
+    filter.setName(name);
+    Example<ODataSchema> example = Example.of(filter);
+    Optional<ODataSchema> odataSchema = odataSchemaRepository.findOne(example);
+    if (odataSchema.isPresent()) {
+      return odataSchema.get();
+    } else {
+      throw new IllegalArgumentException("OData Schema with name does not exist: " + name);
+    }
+  }
 
-	/**
-	 * Find by location.
-	 *
-	 * @param location the location
-	 * @return the list
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public List<ODataSchema> findByLocation(String location) {
-		ODataSchema filter = new ODataSchema();
-		filter.setLocation(location);
-		Example<ODataSchema> example = Example.of(filter);
-		List<ODataSchema> list = odataSchemaRepository.findAll(example);
-		return list;
-	}
+  /**
+   * Find by location.
+   *
+   * @param location the location
+   * @return the list
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public List<ODataSchema> findByLocation(String location) {
+    ODataSchema filter = new ODataSchema();
+    filter.setLocation(location);
+    Example<ODataSchema> example = Example.of(filter);
+    List<ODataSchema> list = odataSchemaRepository.findAll(example);
+    return list;
+  }
 
-	/**
-	 * Find by key.
-	 *
-	 * @param key the key
-	 * @return the ODataSchema
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public ODataSchema findByKey(String key) {
-		ODataSchema filter = new ODataSchema();
-		filter.setKey(key);
-		Example<ODataSchema> example = Example.of(filter);
-		Optional<ODataSchema> odataSchema = odataSchemaRepository.findOne(example);
-		if (odataSchema.isPresent()) {
-			return odataSchema.get();
-		}
-		return null;
-	}
+  /**
+   * Find by key.
+   *
+   * @param key the key
+   * @return the ODataSchema
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public ODataSchema findByKey(String key) {
+    ODataSchema filter = new ODataSchema();
+    filter.setKey(key);
+    Example<ODataSchema> example = Example.of(filter);
+    Optional<ODataSchema> odataSchema = odataSchemaRepository.findOne(example);
+    if (odataSchema.isPresent()) {
+      return odataSchema.get();
+    }
+    return null;
+  }
 
-	/**
-	 * Save.
-	 *
-	 * @param odataSchema the ODataSchema
-	 * @return the ODataSchema
-	 */
-	@Override
-	public ODataSchema save(ODataSchema odataSchema) {
-		return odataSchemaRepository.saveAndFlush(odataSchema);
-	}
+  /**
+   * Save.
+   *
+   * @param odataSchema the ODataSchema
+   * @return the ODataSchema
+   */
+  @Override
+  public ODataSchema save(ODataSchema odataSchema) {
+    return odataSchemaRepository.saveAndFlush(odataSchema);
+  }
 
-	/**
-	 * Delete.
-	 *
-	 * @param odataSchema the ODataSchema
-	 */
-	@Override
-	public void delete(ODataSchema odataSchema) {
-		odataSchemaRepository.delete(odataSchema);
-	}
+  /**
+   * Delete.
+   *
+   * @param odataSchema the ODataSchema
+   */
+  @Override
+  public void delete(ODataSchema odataSchema) {
+    odataSchemaRepository.delete(odataSchema);
+  }
 
-	/**
-	 * Removes the schema.
-	 *
-	 * @param location the location
-	 */
-	public void removeSchema(String location) {
-		ODataSchema filter = new ODataSchema();
-		filter.setLocation(location);
-		Example<ODataSchema> example = Example.of(filter);
-		odataSchemaRepository.deleteAll(odataSchemaRepository.findAll(example));
-	}
+  /**
+   * Removes the schema.
+   *
+   * @param location the location
+   */
+  public void removeSchema(String location) {
+    ODataSchema filter = new ODataSchema();
+    filter.setLocation(location);
+    Example<ODataSchema> example = Example.of(filter);
+    odataSchemaRepository.deleteAll(odataSchemaRepository.findAll(example));
+  }
 
 }

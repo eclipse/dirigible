@@ -21,25 +21,25 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SecurityFilterConfig {
 
-	/**
-	 * Security filter registration bean.
-	 *
-	 * @param securityFilter the security filter
-	 * @return the filter registration bean
-	 */
-	@Bean
-	public FilterRegistrationBean<SecurityFilter> securityFilterRegistrationBean(SecurityFilter securityFilter) {
-		FilterRegistrationBean<SecurityFilter> filterRegistrationBean = new FilterRegistrationBean<>(securityFilter);
+  /**
+   * Security filter registration bean.
+   *
+   * @param securityFilter the security filter
+   * @return the filter registration bean
+   */
+  @Bean
+  public FilterRegistrationBean<SecurityFilter> securityFilterRegistrationBean(SecurityFilter securityFilter) {
+    FilterRegistrationBean<SecurityFilter> filterRegistrationBean = new FilterRegistrationBean<>(securityFilter);
 
-		filterRegistrationBean.setFilter(securityFilter);
-		filterRegistrationBean.addUrlPatterns("/services/js/*", "/services/public/*", "/services/web/*", "/services/wiki/*",
-				"/services/command/*",
+    filterRegistrationBean.setFilter(securityFilter);
+    filterRegistrationBean.addUrlPatterns("/services/js/*", "/services/public/*", "/services/web/*", "/services/wiki/*",
+        "/services/command/*",
 
-				"/public/js/*", "/public/public/*", "/public/web/*", "/public/wiki/*", "/public/command/*",
+        "/public/js/*", "/public/public/*", "/public/web/*", "/public/wiki/*", "/public/command/*",
 
-				"/odata/v2/*");
+        "/odata/v2/*");
 
-		return filterRegistrationBean;
-	}
+    return filterRegistrationBean;
+  }
 
 }

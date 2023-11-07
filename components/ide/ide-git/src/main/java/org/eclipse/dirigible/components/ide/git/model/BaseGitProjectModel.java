@@ -18,24 +18,24 @@ import java.util.List;
  */
 public class BaseGitProjectModel extends BaseGitModel {
 
-	/** The projects. */
-	private List<String> projects;
+  /** The projects. */
+  private List<String> projects;
 
-	/**
-	 * Gets the projects.
-	 *
-	 * @return the projects
-	 */
-	public List<String> getProjects() {
-		return projects;
-	}
+  /**
+   * Gets the projects.
+   *
+   * @return the projects
+   */
+  public List<String> getProjects() {
+    return projects;
+  }
 
-	/**
-	 * Sets the projects.
-	 *
-	 * @param projects the new projects
-	 */
-	public void setProjects(List<String> projects) {
-		this.projects = projects;
-	}
+  /**
+   * Sets the projects.
+   *
+   * @param projects the new projects
+   */
+  public void setProjects(List<String> projects) {
+    this.projects = projects;
+  }
 }

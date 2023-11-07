@@ -18,47 +18,47 @@ import java.util.Map;
  */
 public class GenerationTemplateParameters {
 
-	/** The template. */
-	private String template;
+  /** The template. */
+  private String template;
 
-	/** The parameters. */
-	private Map<String, Object> parameters = new HashMap<String, Object>();
+  /** The parameters. */
+  private Map<String, Object> parameters = new HashMap<String, Object>();
 
-	/**
-	 * Gets the template.
-	 *
-	 * @return the template
-	 */
-	public String getTemplate() {
-		return template;
-	}
+  /**
+   * Gets the template.
+   *
+   * @return the template
+   */
+  public String getTemplate() {
+    return template;
+  }
 
-	/**
-	 * Sets the template.
-	 *
-	 * @param template the new template
-	 */
-	public void setTemplate(String template) {
-		this.template = template;
-	}
+  /**
+   * Sets the template.
+   *
+   * @param template the new template
+   */
+  public void setTemplate(String template) {
+    this.template = template;
+  }
 
-	/**
-	 * Gets the parameters.
-	 *
-	 * @return the parameters
-	 */
-	public Map<String, Object> getParameters() {
-		return parameters;
-	}
+  /**
+   * Gets the parameters.
+   *
+   * @return the parameters
+   */
+  public Map<String, Object> getParameters() {
+    return parameters;
+  }
 
-	/**
-	 * Sets the parameters.
-	 *
-	 * @param parameters the parameters
-	 */
-	public void setParameters(Map<String, Object> parameters) {
-		this.parameters = parameters;
-	}
+  /**
+   * Sets the parameters.
+   *
+   * @param parameters the parameters
+   */
+  public void setParameters(Map<String, Object> parameters) {
+    this.parameters = parameters;
+  }
 
 
 

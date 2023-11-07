@@ -15,41 +15,41 @@ package org.eclipse.dirigible.components.engine.cms.internal.repository;
  */
 public class RepositoryInfo {
 
-	/** The session. */
-	private CmisSession session;
+  /** The session. */
+  private CmisSession session;
 
-	/**
-	 * Instantiates a new repository info.
-	 *
-	 * @param session the session
-	 */
-	public RepositoryInfo(CmisSession session) {
-		super();
-		this.session = session;
-	}
+  /**
+   * Instantiates a new repository info.
+   *
+   * @param session the session
+   */
+  public RepositoryInfo(CmisSession session) {
+    super();
+    this.session = session;
+  }
 
-	/**
-	 * Returns the ID of the CMIS repository.
-	 *
-	 * @return the Id
-	 */
-	public String getId() {
-		return this.session	.getCmisRepository()
-							.getInternalObject()
-							.getClass()
-							.getCanonicalName();
-	}
+  /**
+   * Returns the ID of the CMIS repository.
+   *
+   * @return the Id
+   */
+  public String getId() {
+    return this.session.getCmisRepository()
+                       .getInternalObject()
+                       .getClass()
+                       .getCanonicalName();
+  }
 
-	/**
-	 * Returns the Name of the CMIS repository.
-	 *
-	 * @return the Name
-	 */
-	public String getName() {
-		return this.session	.getCmisRepository()
-							.getInternalObject()
-							.getClass()
-							.getCanonicalName();
-	}
+  /**
+   * Returns the Name of the CMIS repository.
+   *
+   * @return the Name
+   */
+  public String getName() {
+    return this.session.getCmisRepository()
+                       .getInternalObject()
+                       .getClass()
+                       .getCanonicalName();
+  }
 
 }

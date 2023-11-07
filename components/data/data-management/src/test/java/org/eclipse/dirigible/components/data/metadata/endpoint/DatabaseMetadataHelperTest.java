@@ -34,30 +34,30 @@ import org.springframework.context.annotation.ComponentScan;
 @EntityScan("org.eclipse.dirigible.components")
 public class DatabaseMetadataHelperTest {
 
-	/** The datasources manager. */
-	@Autowired
-	private DataSourcesManager datasourcesManager;
+  /** The datasources manager. */
+  @Autowired
+  private DataSourcesManager datasourcesManager;
 
-	/**
-	 * List schemas test.
-	 */
-	@Test
-	public void listSchemasTest() {
-		try {
-			try (Connection connection = datasourcesManager	.getDefaultDataSource()
-															.getConnection()) {
-				DatabaseMetadataHelper.listSchemas(connection, null, null, null);
-			}
-		} catch (SQLException e) {
-			fail(e);
-		}
-	}
+  /**
+   * List schemas test.
+   */
+  @Test
+  public void listSchemasTest() {
+    try {
+      try (Connection connection = datasourcesManager.getDefaultDataSource()
+                                                     .getConnection()) {
+        DatabaseMetadataHelper.listSchemas(connection, null, null, null);
+      }
+    } catch (SQLException e) {
+      fail(e);
+    }
+  }
 
-	/**
-	 * The Class TestConfiguration.
-	 */
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  /**
+   * The Class TestConfiguration.
+   */
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 
 }

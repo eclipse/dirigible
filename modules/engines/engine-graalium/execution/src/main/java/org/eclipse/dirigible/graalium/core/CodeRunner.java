@@ -20,25 +20,25 @@ import java.nio.file.Path;
  */
 public interface CodeRunner<TSource, TResult> extends AutoCloseable {
 
-	/**
-	 * Prepare the source.
-	 *
-	 * @param codeFilePath the code file path
-	 * @return the source
-	 */
-	TSource prepareSource(Path codeFilePath);
+  /**
+   * Prepare the source.
+   *
+   * @param codeFilePath the code file path
+   * @return the source
+   */
+  TSource prepareSource(Path codeFilePath);
 
-	/**
-	 * Run.
-	 *
-	 * @param codeSource the code source
-	 * @return the t result
-	 */
-	TResult run(TSource codeSource);
+  /**
+   * Run.
+   *
+   * @param codeSource the code source
+   * @return the t result
+   */
+  TResult run(TSource codeSource);
 
-	/**
-	 * Close.
-	 */
-	@Override
-	void close();
+  /**
+   * Close.
+   */
+  @Override
+  void close();
 }

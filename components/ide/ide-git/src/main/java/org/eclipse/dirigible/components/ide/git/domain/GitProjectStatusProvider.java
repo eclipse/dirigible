@@ -26,55 +26,55 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class GitProjectStatusProvider implements ProjectStatusProvider {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(GitProjectStatusProvider.class);
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(GitProjectStatusProvider.class);
 
-	/** The status command. */
-	private StatusCommand statusCommand;
+  /** The status command. */
+  private StatusCommand statusCommand;
 
-	/**
-	 * Instantiates a new git project status provider.
-	 *
-	 * @param statusCommand the status command
-	 */
-	@Autowired
-	public GitProjectStatusProvider(StatusCommand statusCommand) {
-		this.statusCommand = statusCommand;
-	}
+  /**
+   * Instantiates a new git project status provider.
+   *
+   * @param statusCommand the status command
+   */
+  @Autowired
+  public GitProjectStatusProvider(StatusCommand statusCommand) {
+    this.statusCommand = statusCommand;
+  }
 
-	/**
-	 * Gets the project status.
-	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @return the project status
-	 */
-	@Override
-	public ProjectStatus getProjectStatus(String workspace, String project) {
-		try {
-			return statusCommand.execute(workspace, project);
-		} catch (GitConnectorException e) {
-			if (logger.isErrorEnabled()) {
-				logger.error(e.getMessage(), e);
-			}
-		}
-		return null;
-	}
+  /**
+   * Gets the project status.
+   *
+   * @param workspace the workspace
+   * @param project the project
+   * @return the project status
+   */
+  @Override
+  public ProjectStatus getProjectStatus(String workspace, String project) {
+    try {
+      return statusCommand.execute(workspace, project);
+    } catch (GitConnectorException e) {
+      if (logger.isErrorEnabled()) {
+        logger.error(e.getMessage(), e);
+      }
+    }
+    return null;
+  }
 
-	/**
-	 * Gets the project git folder.
-	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @return the project git folder
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	@Override
-	public String getProjectGitFolder(String workspace, String project) throws IOException {
-		File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, project)
-										.getCanonicalFile();
-		String git = gitDirectory.getCanonicalPath() + File.separator;
-		return git;
-	}
+  /**
+   * Gets the project git folder.
+   *
+   * @param workspace the workspace
+   * @param project the project
+   * @return the project git folder
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  @Override
+  public String getProjectGitFolder(String workspace, String project) throws IOException {
+    File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, project)
+                                    .getCanonicalFile();
+    String git = gitDirectory.getCanonicalPath() + File.separator;
+    return git;
+  }
 
 }

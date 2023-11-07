@@ -21,50 +21,50 @@ import javax.persistence.Table;
 @Table(name = "ORDERS")
 public class Order {
 
-	/** The id. */
-	@Id
-	@GeneratedValue
-	@Column(name = "ORDER_ID", columnDefinition = "BIGINT", nullable = false)
-	private long id;
+  /** The id. */
+  @Id
+  @GeneratedValue
+  @Column(name = "ORDER_ID", columnDefinition = "BIGINT", nullable = false)
+  private long id;
 
-	/** The subject. */
-	@Column(name = "ORDER_SUBJECT", columnDefinition = "VARCHAR", nullable = false, length = 512)
-	private String subject;
+  /** The subject. */
+  @Column(name = "ORDER_SUBJECT", columnDefinition = "VARCHAR", nullable = false, length = 512)
+  private String subject;
 
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * Gets the id.
+   *
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * Sets the id.
-	 *
-	 * @param id the new id
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * Sets the id.
+   *
+   * @param id the new id
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * Gets the subject.
-	 *
-	 * @return the subject
-	 */
-	public String getSubject() {
-		return subject;
-	}
+  /**
+   * Gets the subject.
+   *
+   * @return the subject
+   */
+  public String getSubject() {
+    return subject;
+  }
 
-	/**
-	 * Sets the subject.
-	 *
-	 * @param subject the new subject
-	 */
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
+  /**
+   * Sets the subject.
+   *
+   * @param subject the new subject
+   */
+  public void setSubject(String subject) {
+    this.subject = subject;
+  }
 
 }

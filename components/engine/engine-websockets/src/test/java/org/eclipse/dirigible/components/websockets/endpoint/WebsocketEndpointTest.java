@@ -40,45 +40,45 @@ import org.springframework.web.context.WebApplicationContext;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @Transactional
 public class WebsocketEndpointTest {
-	@Autowired
-	private WebsocketService websocketService;
+  @Autowired
+  private WebsocketService websocketService;
 
-	@Autowired
-	private WebsocketRepository websocketRepository;
+  @Autowired
+  private WebsocketRepository websocketRepository;
 
-	@Autowired
-	private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-	@Autowired
-	protected WebApplicationContext wac;
+  @Autowired
+  protected WebApplicationContext wac;
 
-	@Autowired
-	private FilterChainProxy springSecurityFilterChain;
+  @Autowired
+  private FilterChainProxy springSecurityFilterChain;
 
-	@BeforeEach
-	public void setup() {
+  @BeforeEach
+  public void setup() {
 
-		cleanup();
+    cleanup();
 
-		websocketService.save(new Websocket("/a/b/c/w1.websocket", "name1", "description", "endpoint1", "handler1", "engine1"));
-		websocketService.save(new Websocket("/a/b/c/w2.websocket", "name2", "description", "endpoint2", "handler2", "engine2"));
-		websocketService.save(new Websocket("/a/b/c/w3.websocket", "name3", "description", "endpoint3", "handler3", "engine3"));
-	}
+    websocketService.save(new Websocket("/a/b/c/w1.websocket", "name1", "description", "endpoint1", "handler1", "engine1"));
+    websocketService.save(new Websocket("/a/b/c/w2.websocket", "name2", "description", "endpoint2", "handler2", "engine2"));
+    websocketService.save(new Websocket("/a/b/c/w3.websocket", "name3", "description", "endpoint3", "handler3", "engine3"));
+  }
 
-	@AfterEach
-	public void cleanup() {
-		websocketRepository.deleteAll();
-	}
+  @AfterEach
+  public void cleanup() {
+    websocketRepository.deleteAll();
+  }
 
-	@Test
-	public void findAllExtensionPoints() throws Exception {
-		mockMvc	.perform(get("/services/websockets"))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful());
-		// .andExpect(jsonPath("$.content[0].location").value("/a/b/c/w1.websocket"));
-	}
+  @Test
+  public void findAllExtensionPoints() throws Exception {
+    mockMvc.perform(get("/services/websockets"))
+           .andDo(print())
+           .andExpect(status().is2xxSuccessful());
+    // .andExpect(jsonPath("$.content[0].location").value("/a/b/c/w1.websocket"));
+  }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 }

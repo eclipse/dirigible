@@ -15,42 +15,42 @@ package org.eclipse.dirigible.repository.api;
  */
 public class RepositoryCreationException extends RepositoryException {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -163847774919514248L;
+  /** The Constant serialVersionUID. */
+  private static final long serialVersionUID = -163847774919514248L;
 
-	/**
-	 * Instantiates a new repository creation exception.
-	 */
-	public RepositoryCreationException() {
-		super();
-	}
+  /**
+   * Instantiates a new repository creation exception.
+   */
+  public RepositoryCreationException() {
+    super();
+  }
 
-	/**
-	 * Instantiates a new repository creation exception.
-	 *
-	 * @param message the message
-	 * @param cause the cause
-	 */
-	public RepositoryCreationException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  /**
+   * Instantiates a new repository creation exception.
+   *
+   * @param message the message
+   * @param cause the cause
+   */
+  public RepositoryCreationException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-	/**
-	 * Instantiates a new repository creation exception.
-	 *
-	 * @param message the message
-	 */
-	public RepositoryCreationException(String message) {
-		super(message);
-	}
+  /**
+   * Instantiates a new repository creation exception.
+   *
+   * @param message the message
+   */
+  public RepositoryCreationException(String message) {
+    super(message);
+  }
 
-	/**
-	 * Instantiates a new repository creation exception.
-	 *
-	 * @param cause the cause
-	 */
-	public RepositoryCreationException(Throwable cause) {
-		super(cause);
-	}
+  /**
+   * Instantiates a new repository creation exception.
+   *
+   * @param cause the cause
+   */
+  public RepositoryCreationException(Throwable cause) {
+    super(cause);
+  }
 
 }

@@ -18,31 +18,31 @@ import org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilde
  */
 public class MySQLCreateSequenceBuilder extends CreateSequenceBuilder {
 
-	/**
-	 * Instantiates a new MySQL create sequence builder.
-	 *
-	 * @param dialect the dialect
-	 * @param sequence the sequence
-	 */
-	public MySQLCreateSequenceBuilder(ISqlDialect dialect, String sequence) {
-		super(dialect, sequence);
-	}
+  /**
+   * Instantiates a new MySQL create sequence builder.
+   *
+   * @param dialect the dialect
+   * @param sequence the sequence
+   */
+  public MySQLCreateSequenceBuilder(ISqlDialect dialect, String sequence) {
+    super(dialect, sequence);
+  }
 
-	/**
-	 * Generate start.
-	 *
-	 * @param sql the sql
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilder#generateStart(java.
-	 * lang.StringBuilder)
-	 */
-	@Override
-	protected void generateStart(StringBuilder sql) {
-		throw new IllegalStateException("MySQL does not support Sequences");
-	}
+  /**
+   * Generate start.
+   *
+   * @param sql the sql
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilder#generateStart(java.
+   * lang.StringBuilder)
+   */
+  @Override
+  protected void generateStart(StringBuilder sql) {
+    throw new IllegalStateException("MySQL does not support Sequences");
+  }
 
 }

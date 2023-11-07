@@ -30,25 +30,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_SECURED + "exposes")
 public class ExposeEndpoint extends BaseEndpoint {
 
-	/**
-	 * The Constant logger.
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(ExposeEndpoint.class);
+  /**
+   * The Constant logger.
+   */
+  private static final Logger logger = LoggerFactory.getLogger(ExposeEndpoint.class);
 
-	/**
-	 * The expose service.
-	 */
-	@Autowired
-	private ExposeService exposeService;
+  /**
+   * The expose service.
+   */
+  @Autowired
+  private ExposeService exposeService;
 
-	/**
-	 * Gets the all.
-	 *
-	 * @return the all
-	 */
-	@GetMapping
-	public ResponseEntity<List<Expose>> getAll() {
-		return ResponseEntity.ok(exposeService.getAll());
-	}
+  /**
+   * Gets the all.
+   *
+   * @return the all
+   */
+  @GetMapping
+  public ResponseEntity<List<Expose>> getAll() {
+    return ResponseEntity.ok(exposeService.getAll());
+  }
 
 }

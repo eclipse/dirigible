@@ -16,46 +16,46 @@ package org.eclipse.dirigible.components.ide.git.model;
  */
 public class GitCloneModel extends BaseGitModel {
 
-	/** The repository. */
-	private String repository;
+  /** The repository. */
+  private String repository;
 
-	/** The publish. */
-	private boolean publish;
+  /** The publish. */
+  private boolean publish;
 
-	/**
-	 * Gets the repository.
-	 *
-	 * @return the repository
-	 */
-	public String getRepository() {
-		return repository;
-	}
+  /**
+   * Gets the repository.
+   *
+   * @return the repository
+   */
+  public String getRepository() {
+    return repository;
+  }
 
-	/**
-	 * Sets the repository.
-	 *
-	 * @param repository the new repository
-	 */
-	public void setRepository(String repository) {
-		this.repository = repository;
-	}
+  /**
+   * Sets the repository.
+   *
+   * @param repository the new repository
+   */
+  public void setRepository(String repository) {
+    this.repository = repository;
+  }
 
-	/**
-	 * Checks if is publish.
-	 *
-	 * @return true, if is publish
-	 */
-	public boolean isPublish() {
-		return publish;
-	}
+  /**
+   * Checks if is publish.
+   *
+   * @return true, if is publish
+   */
+  public boolean isPublish() {
+    return publish;
+  }
 
-	/**
-	 * Sets the publish.
-	 *
-	 * @param publish the new publish
-	 */
-	public void setPublish(boolean publish) {
-		this.publish = publish;
-	}
+  /**
+   * Sets the publish.
+   *
+   * @param publish the new publish
+   */
+  public void setPublish(boolean publish) {
+    this.publish = publish;
+  }
 
 }

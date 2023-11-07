@@ -18,34 +18,34 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericMultiThreadTest
  */
 public class LocalRepositoryMultiThreadTest extends RepositoryGenericMultiThreadTest {
 
-	/**
-	 * Gets the new repository.
-	 *
-	 * @param user the user
-	 * @return the new repository
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.dirigible.repository.generic.RepositoryGenericMultiThreadTest#getNewRepository(java.
-	 * lang.String)
-	 */
-	@Override
-	protected IRepository getNewRepository(String user) {
-		// TODO uncomment only for manual tests
-		// return new LocalRepository(user);
-		return null;
-	}
+  /**
+   * Gets the new repository.
+   *
+   * @param user the user
+   * @return the new repository
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.eclipse.dirigible.repository.generic.RepositoryGenericMultiThreadTest#getNewRepository(java.
+   * lang.String)
+   */
+  @Override
+  protected IRepository getNewRepository(String user) {
+    // TODO uncomment only for manual tests
+    // return new LocalRepository(user);
+    return null;
+  }
 
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String[] args) {
-		LocalRepositoryMultiThreadTest localMultiThreadTest = new LocalRepositoryMultiThreadTest();
-		localMultiThreadTest.multi();
-	}
+  /**
+   * The main method.
+   *
+   * @param args the arguments
+   */
+  public static void main(String[] args) {
+    LocalRepositoryMultiThreadTest localMultiThreadTest = new LocalRepositoryMultiThreadTest();
+    localMultiThreadTest.multi();
+  }
 
 }

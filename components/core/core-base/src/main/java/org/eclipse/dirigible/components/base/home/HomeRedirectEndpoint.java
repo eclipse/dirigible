@@ -28,23 +28,23 @@ import org.springframework.web.bind.annotation.RestController;
 @WebServlet(name = "HomeRedirectEndpoint", urlPatterns = {"/home"})
 public class HomeRedirectEndpoint {
 
-	/** The Constant DIRIGIBLE_HOME_URL. */
-	private static final String DIRIGIBLE_HOME_URL = "DIRIGIBLE_HOME_URL";
+  /** The Constant DIRIGIBLE_HOME_URL. */
+  private static final String DIRIGIBLE_HOME_URL = "DIRIGIBLE_HOME_URL";
 
-	/**
-	 * Go home.
-	 *
-	 * @param request the request
-	 * @param response the response
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	@RequestMapping("/home")
-	void goHome(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String pathInfo = request.getPathInfo();
-		if ((pathInfo == null) || "".equals(pathInfo) || "/".equals(pathInfo)) {
-			String homeUrl = Configuration.get(DIRIGIBLE_HOME_URL);
-			response.sendRedirect(homeUrl);
-		}
-	}
+  /**
+   * Go home.
+   *
+   * @param request the request
+   * @param response the response
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  @RequestMapping("/home")
+  void goHome(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String pathInfo = request.getPathInfo();
+    if ((pathInfo == null) || "".equals(pathInfo) || "/".equals(pathInfo)) {
+      String homeUrl = Configuration.get(DIRIGIBLE_HOME_URL);
+      response.sendRedirect(homeUrl);
+    }
+  }
 
 }

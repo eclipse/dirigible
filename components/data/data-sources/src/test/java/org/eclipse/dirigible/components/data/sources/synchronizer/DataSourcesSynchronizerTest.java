@@ -43,99 +43,99 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DataSourcesSynchronizerTest {
 
-	/** The datasource repository. */
-	@Autowired
-	private DataSourceRepository datasourceRepository;
+  /** The datasource repository. */
+  @Autowired
+  private DataSourceRepository datasourceRepository;
 
-	/** The datasource synchronizer. */
-	@Autowired
-	private DataSourcesSynchronizer<DataSource> datasourcesSynchronizer;
+  /** The datasource synchronizer. */
+  @Autowired
+  private DataSourcesSynchronizer<DataSource> datasourcesSynchronizer;
 
-	/** The entity manager. */
-	@Autowired
-	EntityManager entityManager;
+  /** The entity manager. */
+  @Autowired
+  EntityManager entityManager;
 
-	/**
-	 * Setup.
-	 *
-	 * @throws Exception the exception
-	 */
-	@BeforeEach
-	public void setup() throws Exception {
+  /**
+   * Setup.
+   *
+   * @throws Exception the exception
+   */
+  @BeforeEach
+  public void setup() throws Exception {
 
-		cleanup();
+    cleanup();
 
-		// create test DataSources
-		datasourceRepository.save(createDataSource("/a/b/c/ds1.datasource", "ds1", "description"));
-		datasourceRepository.save(createDataSource("/a/b/c/ds2.datasource", "ds2", "description"));
-		datasourceRepository.save(createDataSource("/a/b/c/ds3.datasource", "ds3", "description"));
-		datasourceRepository.save(createDataSource("/a/b/c/ds4.datasource", "ds4", "description"));
-		datasourceRepository.save(createDataSource("/a/b/c/ds5.datasource", "ds5", "description"));
-	}
+    // create test DataSources
+    datasourceRepository.save(createDataSource("/a/b/c/ds1.datasource", "ds1", "description"));
+    datasourceRepository.save(createDataSource("/a/b/c/ds2.datasource", "ds2", "description"));
+    datasourceRepository.save(createDataSource("/a/b/c/ds3.datasource", "ds3", "description"));
+    datasourceRepository.save(createDataSource("/a/b/c/ds4.datasource", "ds4", "description"));
+    datasourceRepository.save(createDataSource("/a/b/c/ds5.datasource", "ds5", "description"));
+  }
 
-	/**
-	 * Cleanup.
-	 *
-	 * @throws Exception the exception
-	 */
-	@AfterEach
-	public void cleanup() throws Exception {
-		datasourceRepository.deleteAll();
-	}
-
-
-
-	/**
-	 * Checks if is accepted.
-	 */
-	@Test
-	public void isAcceptedPath() {
-		assertTrue(datasourcesSynchronizer.isAccepted(Path.of("/a/b/c/ds1.datasource"), null));
-	}
-
-	/**
-	 * Checks if is accepted.
-	 */
-	@Test
-	public void isAcceptedArtefact() {
-		assertTrue(datasourcesSynchronizer.isAccepted(createDataSource("/a/b/c/ds1.datasource", "ds1", "description").getType()));
-	}
-
-	/**
-	 * Load the artefact.
-	 *
-	 * @throws ParseException the parse exception
-	 */
-	@Test
-	public void load() throws ParseException {
-		String content =
-				"{\"location\":\"/test/test.datasource\",\"name\":\"test\",\"driver\":\"org.h2.Driver\",\"url\":\"jdbc:h2:~/test\",\"username\":\"sa\",\"password\":\"\"}";
-		List<DataSource> list = datasourcesSynchronizer.parse("/test/test.datasource", content.getBytes());
-		assertNotNull(list);
-		assertEquals("/test/test.datasource", list	.get(0)
-													.getLocation());
-	}
+  /**
+   * Cleanup.
+   *
+   * @throws Exception the exception
+   */
+  @AfterEach
+  public void cleanup() throws Exception {
+    datasourceRepository.deleteAll();
+  }
 
 
 
-	/**
-	 * Creates the datasource.
-	 *
-	 * @param location the location
-	 * @param name the name
-	 * @param description the description
-	 * @return the extension point
-	 */
-	public static DataSource createDataSource(String location, String name, String description) {
-		DataSource dataSource = new DataSource(location, name, description, "", "", "", "");
-		return dataSource;
-	}
+  /**
+   * Checks if is accepted.
+   */
+  @Test
+  public void isAcceptedPath() {
+    assertTrue(datasourcesSynchronizer.isAccepted(Path.of("/a/b/c/ds1.datasource"), null));
+  }
 
-	/**
-	 * The Class TestConfiguration.
-	 */
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  /**
+   * Checks if is accepted.
+   */
+  @Test
+  public void isAcceptedArtefact() {
+    assertTrue(datasourcesSynchronizer.isAccepted(createDataSource("/a/b/c/ds1.datasource", "ds1", "description").getType()));
+  }
+
+  /**
+   * Load the artefact.
+   *
+   * @throws ParseException the parse exception
+   */
+  @Test
+  public void load() throws ParseException {
+    String content =
+        "{\"location\":\"/test/test.datasource\",\"name\":\"test\",\"driver\":\"org.h2.Driver\",\"url\":\"jdbc:h2:~/test\",\"username\":\"sa\",\"password\":\"\"}";
+    List<DataSource> list = datasourcesSynchronizer.parse("/test/test.datasource", content.getBytes());
+    assertNotNull(list);
+    assertEquals("/test/test.datasource", list.get(0)
+                                              .getLocation());
+  }
+
+
+
+  /**
+   * Creates the datasource.
+   *
+   * @param location the location
+   * @param name the name
+   * @param description the description
+   * @return the extension point
+   */
+  public static DataSource createDataSource(String location, String name, String description) {
+    DataSource dataSource = new DataSource(location, name, description, "", "", "", "");
+    return dataSource;
+  }
+
+  /**
+   * The Class TestConfiguration.
+   */
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 
 }

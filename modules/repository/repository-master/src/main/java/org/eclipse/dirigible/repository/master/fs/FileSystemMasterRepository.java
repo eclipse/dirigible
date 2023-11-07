@@ -20,73 +20,73 @@ import org.eclipse.dirigible.repository.local.LocalRepositoryException;
  */
 public class FileSystemMasterRepository extends FileSystemRepository implements IMasterRepository {
 
-	/** The Constant TYPE. */
-	public static final String TYPE = "filesystem";
+  /** The Constant TYPE. */
+  public static final String TYPE = "filesystem";
 
-	/** The Constant DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER. */
-	public static final String DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER = "DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER";
+  /** The Constant DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER. */
+  public static final String DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER = "DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER";
 
-	/** The Constant DIRIGIBLE_MASTER_ROOT_FOLDER_DEFAULT. */
-	private static final String DIRIGIBLE_MASTER_ROOT_FOLDER_DEFAULT = "dirigible_master";
+  /** The Constant DIRIGIBLE_MASTER_ROOT_FOLDER_DEFAULT. */
+  private static final String DIRIGIBLE_MASTER_ROOT_FOLDER_DEFAULT = "dirigible_master";
 
-	/**
-	 * Instantiates a new file system master repository.
-	 *
-	 * @param rootFolder the root folder
-	 * @throws LocalRepositoryException the local repository exception
-	 */
-	public FileSystemMasterRepository(String rootFolder) throws LocalRepositoryException {
-		super(rootFolder);
-	}
+  /**
+   * Instantiates a new file system master repository.
+   *
+   * @param rootFolder the root folder
+   * @throws LocalRepositoryException the local repository exception
+   */
+  public FileSystemMasterRepository(String rootFolder) throws LocalRepositoryException {
+    super(rootFolder);
+  }
 
-	/**
-	 * Instantiates a new file system master repository.
-	 *
-	 * @throws LocalRepositoryException the local repository exception
-	 */
-	public FileSystemMasterRepository() throws LocalRepositoryException {
-		super();
-	}
+  /**
+   * Instantiates a new file system master repository.
+   *
+   * @throws LocalRepositoryException the local repository exception
+   */
+  public FileSystemMasterRepository() throws LocalRepositoryException {
+    super();
+  }
 
-	/**
-	 * Gets the repository root folder.
-	 *
-	 * @return the repository root folder
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.dirigible.repository.fs.FileSystemRepository#getRepositoryRootFolder()
-	 */
-	@Override
-	protected String getRepositoryRootFolder() {
-		return DIRIGIBLE_MASTER_ROOT_FOLDER_DEFAULT;
-	}
+  /**
+   * Gets the repository root folder.
+   *
+   * @return the repository root folder
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.eclipse.dirigible.repository.fs.FileSystemRepository#getRepositoryRootFolder()
+   */
+  @Override
+  protected String getRepositoryRootFolder() {
+    return DIRIGIBLE_MASTER_ROOT_FOLDER_DEFAULT;
+  }
 
-	/**
-	 * Initialize.
-	 *
-	 * @throws RepositoryInitializationException the repository initialization exception
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#initialize()
-	 */
-	@Override
-	public void initialize() throws RepositoryInitializationException {
-		// TODO Auto-generated method stub
+  /**
+   * Initialize.
+   *
+   * @throws RepositoryInitializationException the repository initialization exception
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.eclipse.dirigible.repository.api.IRepositoryReader#initialize()
+   */
+  @Override
+  public void initialize() throws RepositoryInitializationException {
+    // TODO Auto-generated method stub
 
-	}
+  }
 
-	/**
-	 * Gets the last modified.
-	 *
-	 * @return the last modified
-	 */
-	@Override
-	public long getLastModified() {
-		return 0;
-	}
+  /**
+   * Gets the last modified.
+   *
+   * @return the last modified
+   */
+  @Override
+  public long getLastModified() {
+    return 0;
+  }
 
 }

@@ -17,23 +17,23 @@ import org.eclipse.dirigible.graalium.core.graal.globals.GlobalObject;
  */
 public class DirigibleEngineTypeGlobalObject implements GlobalObject {
 
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-	@Override
-	public String getName() {
-		return "__engine";
-	}
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  @Override
+  public String getName() {
+    return "__engine";
+  }
 
-	/**
-	 * Gets the value.
-	 *
-	 * @return the value
-	 */
-	@Override
-	public Object getValue() {
-		return "graalium";
-	}
+  /**
+   * Gets the value.
+   *
+   * @return the value
+   */
+  @Override
+  public Object getValue() {
+    return "graalium";
+  }
 }

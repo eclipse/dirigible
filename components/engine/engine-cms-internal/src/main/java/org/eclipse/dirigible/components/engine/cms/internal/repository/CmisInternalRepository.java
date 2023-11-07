@@ -17,37 +17,37 @@ import org.eclipse.dirigible.repository.api.IRepository;
  */
 public class CmisInternalRepository implements CmisRepository {
 
-	/** The internal repository. */
-	private IRepository internalRepository;
+  /** The internal repository. */
+  private IRepository internalRepository;
 
-	/**
-	 * Instantiates a new cmis internal repository.
-	 *
-	 * @param internalRepository the internal repository
-	 */
-	public CmisInternalRepository(IRepository internalRepository) {
-		super();
-		this.internalRepository = internalRepository;
-	}
+  /**
+   * Instantiates a new cmis internal repository.
+   *
+   * @param internalRepository the internal repository
+   */
+  public CmisInternalRepository(IRepository internalRepository) {
+    super();
+    this.internalRepository = internalRepository;
+  }
 
-	/**
-	 * Gets the session.
-	 *
-	 * @return the session
-	 */
-	@Override
-	public CmisSession getSession() {
-		return new CmisSession(this);
-	}
+  /**
+   * Gets the session.
+   *
+   * @return the session
+   */
+  @Override
+  public CmisSession getSession() {
+    return new CmisSession(this);
+  }
 
-	/**
-	 * Gets the internal object.
-	 *
-	 * @return the internal object
-	 */
-	@Override
-	public Object getInternalObject() {
-		return this.internalRepository;
-	}
+  /**
+   * Gets the internal object.
+   *
+   * @return the internal object
+   */
+  @Override
+  public Object getInternalObject() {
+    return this.internalRepository;
+  }
 
 }

@@ -24,190 +24,190 @@ import java.util.List;
  */
 public class ResultSetMonospacedWriter extends AbstractResultSetWriter<String> {
 
-	/** The Constant EMPTY_RESULT_SET. */
-	private static final String EMPTY_RESULT_SET = "Empty result set";
+  /** The Constant EMPTY_RESULT_SET. */
+  private static final String EMPTY_RESULT_SET = "Empty result set";
 
-	/** DELIMITER. */
-	public static final String DELIMITER = "|"; //$NON-NLS-1$
+  /** DELIMITER. */
+  public static final String DELIMITER = "|"; //$NON-NLS-1$
 
-	/** NEWLINE_CHARACTER. */
-	public static final String NEWLINE_CHARACTER = System.getProperty("line.separator"); //$NON-NLS-1$
+  /** NEWLINE_CHARACTER. */
+  public static final String NEWLINE_CHARACTER = System.getProperty("line.separator"); //$NON-NLS-1$
 
-	/** The header format. */
-	private HeaderFormatter headerFormat = new StringHeaderFormatter();
+  /** The header format. */
+  private HeaderFormatter headerFormat = new StringHeaderFormatter();
 
-	/** The row format. */
-	private RowFormatter rowFormat = new StringRowFormatter();
+  /** The row format. */
+  private RowFormatter rowFormat = new StringRowFormatter();
 
-	/** The limited. */
-	private boolean limited = true;
+  /** The limited. */
+  private boolean limited = true;
 
-	/**
-	 * Checks if is limited.
-	 *
-	 * @return true, if is limited
-	 */
-	public boolean isLimited() {
-		return limited;
-	}
+  /**
+   * Checks if is limited.
+   *
+   * @return true, if is limited
+   */
+  public boolean isLimited() {
+    return limited;
+  }
 
-	/**
-	 * Sets the limited.
-	 *
-	 * @param limited the new limited
-	 */
-	public void setLimited(boolean limited) {
-		this.limited = limited;
-	}
+  /**
+   * Sets the limited.
+   *
+   * @param limited the new limited
+   */
+  public void setLimited(boolean limited) {
+    this.limited = limited;
+  }
 
-	/**
-	 * Write.
-	 *
-	 * @param resultSet the result set
-	 * @param output the output
-	 * @throws SQLException the SQL exception
-	 */
-	@Override
-	public void write(ResultSet resultSet, OutputStream output) throws SQLException {
+  /**
+   * Write.
+   *
+   * @param resultSet the result set
+   * @param output the output
+   * @throws SQLException the SQL exception
+   */
+  @Override
+  public void write(ResultSet resultSet, OutputStream output) throws SQLException {
 
-		OutputStreamWriter sw = new OutputStreamWriter(output);
+    OutputStreamWriter sw = new OutputStreamWriter(output);
 
-		List<ColumnDescriptor> columnHeaderDescriptors = new ArrayList<ColumnDescriptor>();
-		ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+    List<ColumnDescriptor> columnHeaderDescriptors = new ArrayList<ColumnDescriptor>();
+    ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
-		try {
-			if (columnHeaderDescriptors.size() > 0) {
-				String headers = (String) this.headerFormat.write(columnHeaderDescriptors);
-				sw.append(headers);
-			}
+    try {
+      if (columnHeaderDescriptors.size() > 0) {
+        String headers = (String) this.headerFormat.write(columnHeaderDescriptors);
+        sw.append(headers);
+      }
 
-			int count = 0;
-			while (resultSet.next()) {
+      int count = 0;
+      while (resultSet.next()) {
 
-				resultSetMetaData = resultSet.getMetaData();// needs an update on each iteration for nosql dbs as it can
-															// change with each document
+        resultSetMetaData = resultSet.getMetaData();// needs an update on each iteration for nosql dbs as it can
+                                                    // change with each document
 
-				List<String> headersForRow = this.getHeader(resultSetMetaData);
+        List<String> headersForRow = this.getHeader(resultSetMetaData);
 
-				for (String headerForRow : headersForRow) {
+        for (String headerForRow : headersForRow) {
 
-					ColumnDescriptor columnDescriptor = new ColumnDescriptor();
+          ColumnDescriptor columnDescriptor = new ColumnDescriptor();
 
-					columnDescriptor.setName(headerForRow);
+          columnDescriptor.setName(headerForRow);
 
-					int columnIndex = this.getColumnIndexByName(columnDescriptor.getName(), resultSetMetaData);
+          int columnIndex = this.getColumnIndexByName(columnDescriptor.getName(), resultSetMetaData);
 
-					columnDescriptor.setLabel(resultSetMetaData.getColumnLabel(columnIndex));
-					if (columnDescriptor.getLabel() == null) {
-						columnDescriptor.setLabel(columnDescriptor.getName());
-					}
+          columnDescriptor.setLabel(resultSetMetaData.getColumnLabel(columnIndex));
+          if (columnDescriptor.getLabel() == null) {
+            columnDescriptor.setLabel(columnDescriptor.getName());
+          }
 
-					columnDescriptor.setSqlType(resultSetMetaData.getColumnType(columnIndex));
+          columnDescriptor.setSqlType(resultSetMetaData.getColumnType(columnIndex));
 
-					int displaySize = resultSetMetaData.getColumnDisplaySize(columnIndex);
-					if (displaySize > 256) {
-						displaySize = 256;
-					}
-					columnDescriptor.setDisplaySize(displaySize);
-					if (columnDescriptor.getDisplaySize() < columnDescriptor.getName()
-																			.length()) {
-						columnDescriptor.setDisplaySize(columnDescriptor.getName()
-																		.length());// make sure headers never get
-																					// truncated
-					}
+          int displaySize = resultSetMetaData.getColumnDisplaySize(columnIndex);
+          if (displaySize > 256) {
+            displaySize = 256;
+          }
+          columnDescriptor.setDisplaySize(displaySize);
+          if (columnDescriptor.getDisplaySize() < columnDescriptor.getName()
+                                                                  .length()) {
+            columnDescriptor.setDisplaySize(columnDescriptor.getName()
+                                                            .length());// make sure headers never get
+                                                                       // truncated
+          }
 
-					if (!columnHeaderDescriptors.contains(columnDescriptor)) {
-						columnHeaderDescriptors.add(columnDescriptor);
-					}
-				}
+          if (!columnHeaderDescriptors.contains(columnDescriptor)) {
+            columnHeaderDescriptors.add(columnDescriptor);
+          }
+        }
 
-				sw.append(this.rowFormat.write(columnHeaderDescriptors, resultSetMetaData, resultSet));
+        sw.append(this.rowFormat.write(columnHeaderDescriptors, resultSetMetaData, resultSet));
 
-				if (this.isLimited() && (++count > getLimit())) {
-					sw.append("..."); //$NON-NLS-1$
-					break;
-				}
-			}
+        if (this.isLimited() && (++count > getLimit())) {
+          sw.append("..."); //$NON-NLS-1$
+          break;
+        }
+      }
 
-			if (columnHeaderDescriptors.size() == 0) {
-				sw.append(EMPTY_RESULT_SET);
-			}
-		} catch (IOException e) {
-			throw new SQLException(e);
-		}
-	}
+      if (columnHeaderDescriptors.size() == 0) {
+        sw.append(EMPTY_RESULT_SET);
+      }
+    } catch (IOException e) {
+      throw new SQLException(e);
+    }
+  }
 
-	/**
-	 * Gets the colum index by name.
-	 *
-	 * @param columnName the column name
-	 * @param metadata the metadata
-	 * @return the column index by name
-	 * @throws SQLException the SQL exception
-	 */
-	int getColumnIndexByName(String columnName, ResultSetMetaData metadata) throws SQLException {
-		for (int i = 1; i < (metadata.getColumnCount() + 1); i++) {
-			if (columnName.equals(metadata.getColumnName(i))) {
-				return i;
-			}
-		}
-		return Integer.MIN_VALUE;
-	}
+  /**
+   * Gets the colum index by name.
+   *
+   * @param columnName the column name
+   * @param metadata the metadata
+   * @return the column index by name
+   * @throws SQLException the SQL exception
+   */
+  int getColumnIndexByName(String columnName, ResultSetMetaData metadata) throws SQLException {
+    for (int i = 1; i < (metadata.getColumnCount() + 1); i++) {
+      if (columnName.equals(metadata.getColumnName(i))) {
+        return i;
+      }
+    }
+    return Integer.MIN_VALUE;
+  }
 
-	/**
-	 * Gets the header.
-	 *
-	 * @param resultSetMetaData the result set meta data
-	 * @return the header
-	 * @throws SQLException the SQL exception
-	 */
-	List<String> getHeader(ResultSetMetaData resultSetMetaData) throws SQLException {
+  /**
+   * Gets the header.
+   *
+   * @param resultSetMetaData the result set meta data
+   * @return the header
+   * @throws SQLException the SQL exception
+   */
+  List<String> getHeader(ResultSetMetaData resultSetMetaData) throws SQLException {
 
-		List<String> columnHeaderLabels = new ArrayList<String>();
+    List<String> columnHeaderLabels = new ArrayList<String>();
 
-		for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
+    for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
 
-			String columnHeaderLabel = resultSetMetaData.getColumnLabel(i);
-			columnHeaderLabels.add(columnHeaderLabel);
-		}
+      String columnHeaderLabel = resultSetMetaData.getColumnLabel(i);
+      columnHeaderLabels.add(columnHeaderLabel);
+    }
 
-		return columnHeaderLabels;
-	}
+    return columnHeaderLabels;
+  }
 
-	/**
-	 * Gets the header format.
-	 *
-	 * @return the header format
-	 */
-	public HeaderFormatter getHeaderFormat() {
-		return headerFormat;
-	}
+  /**
+   * Gets the header format.
+   *
+   * @return the header format
+   */
+  public HeaderFormatter getHeaderFormat() {
+    return headerFormat;
+  }
 
-	/**
-	 * Sets the header format.
-	 *
-	 * @param headerFormat the new header format
-	 */
-	public void setHeaderFormat(HeaderFormatter headerFormat) {
-		this.headerFormat = headerFormat;
-	}
+  /**
+   * Sets the header format.
+   *
+   * @param headerFormat the new header format
+   */
+  public void setHeaderFormat(HeaderFormatter headerFormat) {
+    this.headerFormat = headerFormat;
+  }
 
-	/**
-	 * Gets the row format.
-	 *
-	 * @return the row format
-	 */
-	public RowFormatter getRowFormat() {
-		return rowFormat;
-	}
+  /**
+   * Gets the row format.
+   *
+   * @return the row format
+   */
+  public RowFormatter getRowFormat() {
+    return rowFormat;
+  }
 
-	/**
-	 * Sets the row format.
-	 *
-	 * @param rowFormat the new row format
-	 */
-	public void setRowFormat(RowFormatter rowFormat) {
-		this.rowFormat = rowFormat;
-	}
+  /**
+   * Sets the row format.
+   *
+   * @param rowFormat the new row format
+   */
+  public void setRowFormat(RowFormatter rowFormat) {
+    this.rowFormat = rowFormat;
+  }
 
 }

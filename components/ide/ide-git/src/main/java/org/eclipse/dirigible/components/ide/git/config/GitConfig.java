@@ -22,15 +22,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GitConfig {
 
-	/**
-	 * Creates the project status provider.
-	 *
-	 * @param statusCommand the status command
-	 * @return the project status provider
-	 */
-	@Bean
-	public ProjectStatusProvider createProjectStatusProvider(StatusCommand statusCommand) {
-		return new GitProjectStatusProvider(statusCommand);
-	}
+  /**
+   * Creates the project status provider.
+   *
+   * @param statusCommand the status command
+   * @return the project status provider
+   */
+  @Bean
+  public ProjectStatusProvider createProjectStatusProvider(StatusCommand statusCommand) {
+    return new GitProjectStatusProvider(statusCommand);
+  }
 
 }

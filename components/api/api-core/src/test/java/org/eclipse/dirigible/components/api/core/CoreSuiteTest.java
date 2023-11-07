@@ -37,63 +37,63 @@ import org.springframework.web.context.WebApplicationContext;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 public class CoreSuiteTest {
 
-	@Autowired
-	private JavascriptService javascriptService;
+  @Autowired
+  private JavascriptService javascriptService;
 
-	@Autowired
-	private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-	@Autowired
-	protected WebApplicationContext wac;
+  @Autowired
+  protected WebApplicationContext wac;
 
-	@Test
-	public void executeConfigurationGetTest() throws Exception {
-		javascriptService.handleRequest("core-tests", "configurations-get-test.js", null, null, false);
-	}
+  @Test
+  public void executeConfigurationGetTest() throws Exception {
+    javascriptService.handleRequest("core-tests", "configurations-get-test.js", null, null, false);
+  }
 
-	@Test
-	public void executeContextGetTest() throws Exception {
-		mockMvc	.perform(get("/services/js/core-tests/context-get-test.js"))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful());
-	}
+  @Test
+  public void executeContextGetTest() throws Exception {
+    mockMvc.perform(get("/services/js/core-tests/context-get-test.js"))
+           .andDo(print())
+           .andExpect(status().is2xxSuccessful());
+  }
 
-	@Test
-	public void executeEnvGetTest() throws Exception {
-		mockMvc	.perform(get("/services/js/core-tests/env-get-test.js"))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful());
-	}
+  @Test
+  public void executeEnvGetTest() throws Exception {
+    mockMvc.perform(get("/services/js/core-tests/env-get-test.js"))
+           .andDo(print())
+           .andExpect(status().is2xxSuccessful());
+  }
 
-	@Test
-	public void executeEnvListTest() throws Exception {
-		mockMvc	.perform(get("/services/js/core-tests/env-list-test.js"))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful());
-	}
+  @Test
+  public void executeEnvListTest() throws Exception {
+    mockMvc.perform(get("/services/js/core-tests/env-list-test.js"))
+           .andDo(print())
+           .andExpect(status().is2xxSuccessful());
+  }
 
-	@Test
-	public void executeGlobalsGetTest() throws Exception {
-		mockMvc	.perform(get("/services/js/core-tests/globals-get-test.js"))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful());
-	}
+  @Test
+  public void executeGlobalsGetTest() throws Exception {
+    mockMvc.perform(get("/services/js/core-tests/globals-get-test.js"))
+           .andDo(print())
+           .andExpect(status().is2xxSuccessful());
+  }
 
-	@Test
-	public void executeGlobalsListTest() throws Exception {
-		mockMvc	.perform(get("/services/js/core-tests/globals-list-test.js"))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful());
-	}
+  @Test
+  public void executeGlobalsListTest() throws Exception {
+    mockMvc.perform(get("/services/js/core-tests/globals-list-test.js"))
+           .andDo(print())
+           .andExpect(status().is2xxSuccessful());
+  }
 
-	@Test
-	public void executeDestinationsGetTest() throws Exception {
-		mockMvc	.perform(get("/services/js/core-tests/destinations-get-test.js"))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful());
-	}
+  @Test
+  public void executeDestinationsGetTest() throws Exception {
+    mockMvc.perform(get("/services/js/core-tests/destinations-get-test.js"))
+           .andDo(print())
+           .andExpect(status().is2xxSuccessful());
+  }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 }

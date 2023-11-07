@@ -38,29 +38,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspace-search")
 public class WorkspaceSearchEndpoint {
 
-	/** The workspace service. */
-	@Autowired
-	private WorkspaceService workspaceService;
+  /** The workspace service. */
+  @Autowired
+  private WorkspaceService workspaceService;
 
-	/**
-	 * Search.
-	 *
-	 * @param workspace the workspace
-	 * @param term the term
-	 * @return the response
-	 * @throws URISyntaxException the URI syntax exception
-	 * @throws UnsupportedEncodingException the unsupported encoding exception
-	 * @throws DecoderException the decoder exception
-	 */
-	@PostMapping("{workspace}")
-	public ResponseEntity<List<FileDescriptor>> find(@PathVariable("workspace") String workspace, @Valid @RequestBody String term)
-			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
-		if ((term == null) || term.isEmpty()) {
-			ResponseEntity.ok("No search term provided in the request body");
-		}
+  /**
+   * Search.
+   *
+   * @param workspace the workspace
+   * @param term the term
+   * @return the response
+   * @throws URISyntaxException the URI syntax exception
+   * @throws UnsupportedEncodingException the unsupported encoding exception
+   * @throws DecoderException the decoder exception
+   */
+  @PostMapping("{workspace}")
+  public ResponseEntity<List<FileDescriptor>> find(@PathVariable("workspace") String workspace, @Valid @RequestBody String term)
+      throws URISyntaxException, UnsupportedEncodingException, DecoderException {
+    if ((term == null) || term.isEmpty()) {
+      ResponseEntity.ok("No search term provided in the request body");
+    }
 
-		List<File> files = workspaceService.search(workspace, term);
-		return ResponseEntity.ok(workspaceService.renderFileDescriptions(files));
-	}
+    List<File> files = workspaceService.search(workspace, term);
+    return ResponseEntity.ok(workspaceService.renderFileDescriptions(files));
+  }
 
 }

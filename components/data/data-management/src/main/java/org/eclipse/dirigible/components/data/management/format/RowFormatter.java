@@ -21,14 +21,14 @@ import java.util.List;
  */
 public interface RowFormatter {
 
-	/**
-	 * Write formatted row.
-	 *
-	 * @param columnDescriptors the column descriptors
-	 * @param resultSetMetaData the result set meta data
-	 * @param resultSet the result set
-	 * @return the result
-	 * @throws SQLException the SQL exception
-	 */
-	String write(List<ColumnDescriptor> columnDescriptors, ResultSetMetaData resultSetMetaData, ResultSet resultSet) throws SQLException;
+  /**
+   * Write formatted row.
+   *
+   * @param columnDescriptors the column descriptors
+   * @param resultSetMetaData the result set meta data
+   * @param resultSet the result set
+   * @return the result
+   * @throws SQLException the SQL exception
+   */
+  String write(List<ColumnDescriptor> columnDescriptors, ResultSetMetaData resultSetMetaData, ResultSet resultSet) throws SQLException;
 }

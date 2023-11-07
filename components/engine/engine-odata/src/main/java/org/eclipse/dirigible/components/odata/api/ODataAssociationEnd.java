@@ -20,146 +20,146 @@ import com.google.gson.annotations.Expose;
  */
 public class ODataAssociationEnd {
 
-	/** The entity. */
-	@Expose
-	private String entity;
+  /** The entity. */
+  @Expose
+  private String entity;
 
-	/** The property. */
-	@Expose
-	private String property;
+  /** The property. */
+  @Expose
+  private String property;
 
-	/** The properties. */
-	@Expose
-	private List<String> properties = new ArrayList<String>();
+  /** The properties. */
+  @Expose
+  private List<String> properties = new ArrayList<String>();
 
-	/** The column. */
-	@Expose
-	private String column;
+  /** The column. */
+  @Expose
+  private String column;
 
-	/** The multiplicity. */
-	@Expose
-	private String multiplicity;
+  /** The multiplicity. */
+  @Expose
+  private String multiplicity;
 
-	/** The mapping table definition. */
-	@Expose
-	private ODataManyToManyMappingTable mappingTable = new ODataManyToManyMappingTable();
+  /** The mapping table definition. */
+  @Expose
+  private ODataManyToManyMappingTable mappingTable = new ODataManyToManyMappingTable();
 
-	/**
-	 * Gets the entity.
-	 *
-	 * @return the entity
-	 */
-	public String getEntity() {
-		return entity;
-	}
+  /**
+   * Gets the entity.
+   *
+   * @return the entity
+   */
+  public String getEntity() {
+    return entity;
+  }
 
-	/**
-	 * Sets the entity.
-	 *
-	 * @param entity the new entity
-	 */
-	public void setEntity(String entity) {
-		this.entity = entity;
-	}
+  /**
+   * Sets the entity.
+   *
+   * @param entity the new entity
+   */
+  public void setEntity(String entity) {
+    this.entity = entity;
+  }
 
-	/**
-	 * Gets the property.
-	 *
-	 * @return the property
-	 */
-	public String getProperty() {
-		return property;
-	}
+  /**
+   * Gets the property.
+   *
+   * @return the property
+   */
+  public String getProperty() {
+    return property;
+  }
 
-	/**
-	 * Sets the property.
-	 *
-	 * @param property the new property
-	 */
-	public void setProperty(String property) {
-		this.property = property;
-	}
+  /**
+   * Sets the property.
+   *
+   * @param property the new property
+   */
+  public void setProperty(String property) {
+    this.property = property;
+  }
 
-	/**
-	 * Gets the properties.
-	 *
-	 * @return the properties
-	 */
-	public List<String> getProperties() {
-		return properties;
-	}
+  /**
+   * Gets the properties.
+   *
+   * @return the properties
+   */
+  public List<String> getProperties() {
+    return properties;
+  }
 
-	/**
-	 * Sets the properties.
-	 *
-	 * @param properties the new properties
-	 */
-	public void setProperties(List<String> properties) {
-		this.properties = properties;
-	}
+  /**
+   * Sets the properties.
+   *
+   * @param properties the new properties
+   */
+  public void setProperties(List<String> properties) {
+    this.properties = properties;
+  }
 
-	/**
-	 * Gets the column.
-	 *
-	 * @return the column
-	 */
-	public String getColumn() {
-		return column;
-	}
+  /**
+   * Gets the column.
+   *
+   * @return the column
+   */
+  public String getColumn() {
+    return column;
+  }
 
-	/**
-	 * Sets the column.
-	 *
-	 * @param column the new column
-	 */
-	public void setColumn(String column) {
-		this.column = column;
-	}
+  /**
+   * Sets the column.
+   *
+   * @param column the new column
+   */
+  public void setColumn(String column) {
+    this.column = column;
+  }
 
-	/**
-	 * Gets the multiplicity.
-	 *
-	 * @return the multiplicity
-	 */
-	public String getMultiplicity() {
-		return multiplicity;
-	}
+  /**
+   * Gets the multiplicity.
+   *
+   * @return the multiplicity
+   */
+  public String getMultiplicity() {
+    return multiplicity;
+  }
 
-	/**
-	 * Sets the multiplicity.
-	 *
-	 * @param multiplicity the new multiplicity
-	 */
-	public void setMultiplicity(String multiplicity) {
-		this.multiplicity = multiplicity;
-	}
+  /**
+   * Sets the multiplicity.
+   *
+   * @param multiplicity the new multiplicity
+   */
+  public void setMultiplicity(String multiplicity) {
+    this.multiplicity = multiplicity;
+  }
 
-	/**
-	 * Gets the mapping table definition.
-	 *
-	 * @return the mapping table definition
-	 */
-	public ODataManyToManyMappingTable getMappingTable() {
-		return mappingTable;
-	}
+  /**
+   * Gets the mapping table definition.
+   *
+   * @return the mapping table definition
+   */
+  public ODataManyToManyMappingTable getMappingTable() {
+    return mappingTable;
+  }
 
-	/**
-	 * Sets the mapping table definition.
-	 *
-	 * @param mappingTable the new mapping table
-	 */
-	public void setMappingTable(ODataManyToManyMappingTable mappingTable) {
-		this.mappingTable = mappingTable;
-	}
+  /**
+   * Sets the mapping table definition.
+   *
+   * @param mappingTable the new mapping table
+   */
+  public void setMappingTable(ODataManyToManyMappingTable mappingTable) {
+    this.mappingTable = mappingTable;
+  }
 
-	/**
-	 * To string.
-	 *
-	 * @return the string
-	 */
-	@Override
-	public String toString() {
-		return "ODataAssociationEnd [entity=" + entity + ", property=" + property + ", properties=" + properties + ", column=" + column
-				+ ", multiplicity=" + multiplicity + ", mappingTable=" + mappingTable + "]";
-	}
+  /**
+   * To string.
+   *
+   * @return the string
+   */
+  @Override
+  public String toString() {
+    return "ODataAssociationEnd [entity=" + entity + ", property=" + property + ", properties=" + properties + ", column=" + column
+        + ", multiplicity=" + multiplicity + ", mappingTable=" + mappingTable + "]";
+  }
 }

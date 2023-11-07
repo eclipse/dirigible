@@ -20,12 +20,12 @@ import org.junit.jupiter.api.Test;
 
 public class ImageFacadeTest {
 
-	@Test
-	public void resizeTest() throws IOException {
-		InputStream original = ImageFacadeTest.class.getResourceAsStream("/dirigible.png");
-		InputStream result = ImageFacade.resize(original, "png", 300, 155);
-		FileOutputStream out = new FileOutputStream("./target/dirigible_output.png");
-		IOUtils.copy(result, out);
-	}
+  @Test
+  public void resizeTest() throws IOException {
+    InputStream original = ImageFacadeTest.class.getResourceAsStream("/dirigible.png");
+    InputStream result = ImageFacade.resize(original, "png", 300, 155);
+    FileOutputStream out = new FileOutputStream("./target/dirigible_output.png");
+    IOUtils.copy(result, out);
+  }
 
 }

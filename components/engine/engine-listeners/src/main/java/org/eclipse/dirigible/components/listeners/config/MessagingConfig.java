@@ -23,19 +23,19 @@ import org.springframework.context.annotation.Scope;
 @Configuration
 public class MessagingConfig {
 
-	@Qualifier("SystemDB")
-	@Autowired
-	private DataSource dataSource;
+  @Qualifier("SystemDB")
+  @Autowired
+  private DataSource dataSource;
 
-	/** The repository. */
-	@Autowired
-	private IRepository repository;
+  /** The repository. */
+  @Autowired
+  private IRepository repository;
 
-	@Bean
-	@Scope("singleton")
-	public ListenersManager createSchedulerManager() throws Exception {
-		ListenersManager schedulerManager = new ListenersManager(dataSource, repository);
-		schedulerManager.initialize();
-		return schedulerManager;
-	}
+  @Bean
+  @Scope("singleton")
+  public ListenersManager createSchedulerManager() throws Exception {
+    ListenersManager schedulerManager = new ListenersManager(dataSource, repository);
+    schedulerManager.initialize();
+    return schedulerManager;
+  }
 }

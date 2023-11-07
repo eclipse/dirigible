@@ -33,336 +33,336 @@ import com.google.gson.annotations.Expose;
 @MappedSuperclass
 public abstract class Artefact extends Auditable<String> implements Serializable {
 
-	/** The Constant KEY_SEPARATOR. */
-	public static final String KEY_SEPARATOR = ":";
+  /** The Constant KEY_SEPARATOR. */
+  public static final String KEY_SEPARATOR = ":";
 
-	/** The location. */
-	@Column(name = "ARTEFACT_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
-	@Expose
-	protected String location;
+  /** The location. */
+  @Column(name = "ARTEFACT_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
+  @Expose
+  protected String location;
 
-	/** The name. */
-	@Column(name = "ARTEFACT_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
-	@Expose
-	protected String name;
+  /** The name. */
+  @Column(name = "ARTEFACT_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
+  @Expose
+  protected String name;
 
-	/** The key. */
-	@Column(name = "ARTEFACT_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 255)
-	@Expose
-	protected String type;
+  /** The key. */
+  @Column(name = "ARTEFACT_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+  @Expose
+  protected String type;
 
-	/** The description. */
-	@Column(name = "ARTEFACT_DESCRIPTION")
-	@Lob()
-	@Expose
-	protected String description;
+  /** The description. */
+  @Column(name = "ARTEFACT_DESCRIPTION")
+  @Lob()
+  @Expose
+  protected String description;
 
-	/**
-	 * The key e.g. table:/sales/domain/customer.table:customer
-	 */
-	@Column(name = "ARTEFACT_KEY", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = true)
-	@Expose
-	protected String key;
+  /**
+   * The key e.g. table:/sales/domain/customer.table:customer
+   */
+  @Column(name = "ARTEFACT_KEY", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = true)
+  @Expose
+  protected String key;
 
-	/** The dependencies as comma separated keys. */
-	@Column(name = "ARTEFACT_DEPENDENCIES", columnDefinition = "VARCHAR", nullable = true, length = 2000)
-	@Expose
-	@Nullable
-	@Convert(converter = SetOfStringsToCsvConverter.class)
-	protected Set<String> dependencies;
+  /** The dependencies as comma separated keys. */
+  @Column(name = "ARTEFACT_DEPENDENCIES", columnDefinition = "VARCHAR", nullable = true, length = 2000)
+  @Expose
+  @Nullable
+  @Convert(converter = SetOfStringsToCsvConverter.class)
+  protected Set<String> dependencies;
 
-	/** The lifecycle. */
-	@Column(name = "ARTEFACT_STATUS", columnDefinition = "VARCHAR", nullable = true, length = 32)
-	@Enumerated(EnumType.STRING)
-	@JsonIgnore
-	protected ArtefactLifecycle lifecycle;
+  /** The lifecycle. */
+  @Column(name = "ARTEFACT_STATUS", columnDefinition = "VARCHAR", nullable = true, length = 32)
+  @Enumerated(EnumType.STRING)
+  @JsonIgnore
+  protected ArtefactLifecycle lifecycle;
 
-	/** The phase. */
-	@Column(name = "ARTEFACT_PHASE", columnDefinition = "VARCHAR", nullable = true, length = 32)
-	@Enumerated(EnumType.STRING)
-	@JsonIgnore
-	protected ArtefactPhase phase;
+  /** The phase. */
+  @Column(name = "ARTEFACT_PHASE", columnDefinition = "VARCHAR", nullable = true, length = 32)
+  @Enumerated(EnumType.STRING)
+  @JsonIgnore
+  protected ArtefactPhase phase;
 
-	/** The description. */
-	@Column(name = "ARTEFACT_ERROR", columnDefinition = "VARCHAR", nullable = true, length = 2000)
-	@Expose
-	protected String error;
+  /** The description. */
+  @Column(name = "ARTEFACT_ERROR", columnDefinition = "VARCHAR", nullable = true, length = 2000)
+  @Expose
+  protected String error;
 
-	/** The running. */
-	@Column(name = "ARTEFACT_RUNNING", columnDefinition = "BOOLEAN")
-	@JsonIgnore
-	private Boolean running;
+  /** The running. */
+  @Column(name = "ARTEFACT_RUNNING", columnDefinition = "BOOLEAN")
+  @JsonIgnore
+  private Boolean running;
 
 
 
-	/**
-	 * Instantiates a new artefact.
-	 *
-	 * @param location the location
-	 * @param name the name
-	 * @param type the type
-	 * @param description the description
-	 * @param dependencies the dependencies
-	 */
-	public Artefact(String location, String name, String type, String description, Set<String> dependencies) {
-		super();
-		this.location = location;
-		this.name = name;
-		this.type = type;
-		this.description = description;
-		this.dependencies = dependencies;
-		updateKey();
-	}
+  /**
+   * Instantiates a new artefact.
+   *
+   * @param location the location
+   * @param name the name
+   * @param type the type
+   * @param description the description
+   * @param dependencies the dependencies
+   */
+  public Artefact(String location, String name, String type, String description, Set<String> dependencies) {
+    super();
+    this.location = location;
+    this.name = name;
+    this.type = type;
+    this.description = description;
+    this.dependencies = dependencies;
+    updateKey();
+  }
 
-	/**
-	 * Instantiates a new artefact.
-	 */
-	public Artefact() {}
+  /**
+   * Instantiates a new artefact.
+   */
+  public Artefact() {}
 
-	/**
-	 * Gets the location.
-	 *
-	 * @return the location
-	 */
-	public String getLocation() {
-		return location;
-	}
+  /**
+   * Gets the location.
+   *
+   * @return the location
+   */
+  public String getLocation() {
+    return location;
+  }
 
-	/**
-	 * Sets the location.
-	 *
-	 * @param location the location to set
-	 */
-	public void setLocation(String location) {
-		this.location = location;
-		// updateKey();
-	}
+  /**
+   * Sets the location.
+   *
+   * @param location the location to set
+   */
+  public void setLocation(String location) {
+    this.location = location;
+    // updateKey();
+  }
 
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * Sets the name.
-	 *
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-		// updateKey();
-	}
+  /**
+   * Sets the name.
+   *
+   * @param name the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+    // updateKey();
+  }
 
-	/**
-	 * Gets the type.
-	 *
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
-	}
+  /**
+   * Gets the type.
+   *
+   * @return the type
+   */
+  public String getType() {
+    return type;
+  }
 
-	/**
-	 * Sets the type.
-	 *
-	 * @param type the type to set
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
+  /**
+   * Sets the type.
+   *
+   * @param type the type to set
+   */
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	/**
-	 * Gets the description.
-	 *
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
+  /**
+   * Gets the description.
+   *
+   * @return the description
+   */
+  public String getDescription() {
+    return description;
+  }
 
-	/**
-	 * Sets the description.
-	 *
-	 * @param description the description to set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
+  /**
+   * Sets the description.
+   *
+   * @param description the description to set
+   */
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-	/**
-	 * Gets the key.
-	 *
-	 * @return the key
-	 */
-	public String getKey() {
-		return key;
-	}
+  /**
+   * Gets the key.
+   *
+   * @return the key
+   */
+  public String getKey() {
+    return key;
+  }
 
-	/**
-	 * Sets the key.
-	 *
-	 * @param key the key to set
-	 */
-	public void setKey(String key) {
-		this.key = key;
-	}
+  /**
+   * Sets the key.
+   *
+   * @param key the key to set
+   */
+  public void setKey(String key) {
+    this.key = key;
+  }
 
-	/**
-	 * Gets the dependencies.
-	 *
-	 * @return the dependencies
-	 */
-	public Set<String> getDependencies() {
-		return dependencies;
-	}
+  /**
+   * Gets the dependencies.
+   *
+   * @return the dependencies
+   */
+  public Set<String> getDependencies() {
+    return dependencies;
+  }
 
-	/**
-	 * Sets the dependencies.
-	 *
-	 * @param dependencies the dependencies to set
-	 */
-	public void setDependencies(Set<String> dependencies) {
-		this.dependencies = dependencies;
-	}
+  /**
+   * Sets the dependencies.
+   *
+   * @param dependencies the dependencies to set
+   */
+  public void setDependencies(Set<String> dependencies) {
+    this.dependencies = dependencies;
+  }
 
-	/**
-	 * Adds the dependency.
-	 *
-	 * @param dependency the dependency
-	 */
-	public void addDependency(String dependency) {
-		if (dependencies == null) {
-			dependencies = new HashSet<String>();
-		}
-		dependencies.add(dependency);
-	}
+  /**
+   * Adds the dependency.
+   *
+   * @param dependency the dependency
+   */
+  public void addDependency(String dependency) {
+    if (dependencies == null) {
+      dependencies = new HashSet<String>();
+    }
+    dependencies.add(dependency);
+  }
 
-	/**
-	 * Adds the dependency.
-	 *
-	 * @param location the location
-	 * @param name the name
-	 * @param type the type
-	 */
-	public void addDependency(String location, String name, String type) {
-		addDependency(type + KEY_SEPARATOR + location + KEY_SEPARATOR + name);
-	}
+  /**
+   * Adds the dependency.
+   *
+   * @param location the location
+   * @param name the name
+   * @param type the type
+   */
+  public void addDependency(String location, String name, String type) {
+    addDependency(type + KEY_SEPARATOR + location + KEY_SEPARATOR + name);
+  }
 
-	/**
-	 * Gets the lifecycle.
-	 *
-	 * @return the lifecycle
-	 */
-	public ArtefactLifecycle getLifecycle() {
-		return lifecycle;
-	}
+  /**
+   * Gets the lifecycle.
+   *
+   * @return the lifecycle
+   */
+  public ArtefactLifecycle getLifecycle() {
+    return lifecycle;
+  }
 
-	/**
-	 * Sets the lifecycle.
-	 *
-	 * @param lifecycle the new lifecycle
-	 */
-	public void setLifecycle(ArtefactLifecycle lifecycle) {
-		this.lifecycle = lifecycle;
-	}
+  /**
+   * Sets the lifecycle.
+   *
+   * @param lifecycle the new lifecycle
+   */
+  public void setLifecycle(ArtefactLifecycle lifecycle) {
+    this.lifecycle = lifecycle;
+  }
 
-	/**
-	 * Gets the phase.
-	 *
-	 * @return the phase
-	 */
-	public ArtefactPhase getPhase() {
-		return phase;
-	}
+  /**
+   * Gets the phase.
+   *
+   * @return the phase
+   */
+  public ArtefactPhase getPhase() {
+    return phase;
+  }
 
-	/**
-	 * Sets the phase.
-	 *
-	 * @param phase the new phase
-	 */
-	public void setPhase(ArtefactPhase phase) {
-		this.phase = phase;
-	}
+  /**
+   * Sets the phase.
+   *
+   * @param phase the new phase
+   */
+  public void setPhase(ArtefactPhase phase) {
+    this.phase = phase;
+  }
 
-	/**
-	 * Gets the error.
-	 *
-	 * @return the error
-	 */
-	public String getError() {
-		return error;
-	}
+  /**
+   * Gets the error.
+   *
+   * @return the error
+   */
+  public String getError() {
+    return error;
+  }
 
-	/**
-	 * Sets the error.
-	 *
-	 * @param error the new error
-	 */
-	public void setError(String error) {
-		this.error = error;
-	}
+  /**
+   * Sets the error.
+   *
+   * @param error the new error
+   */
+  public void setError(String error) {
+    this.error = error;
+  }
 
-	/**
-	 * Gets the running.
-	 *
-	 * @return the running
-	 */
-	public Boolean getRunning() {
-		return running;
-	}
+  /**
+   * Gets the running.
+   *
+   * @return the running
+   */
+  public Boolean getRunning() {
+    return running;
+  }
 
-	/**
-	 * Sets the running.
-	 *
-	 * @param running the running to set
-	 */
-	public void setRunning(Boolean running) {
-		this.running = running;
-	}
+  /**
+   * Sets the running.
+   *
+   * @param running the running to set
+   */
+  public void setRunning(Boolean running) {
+    this.running = running;
+  }
 
-	/**
-	 * Update key.
-	 *
-	 */
-	public void updateKey() {
-		if (this.type != null && this.location != null && this.name != null) {
-			this.key = this.type + KEY_SEPARATOR + this.location + KEY_SEPARATOR + this.name;
-		} else {
-			throw new IllegalArgumentException(
-					String.format("Attempt to generate an artefact key by type=[%s], location=[%s], name=[%s]", type, location, name));
-		}
-	}
+  /**
+   * Update key.
+   *
+   */
+  public void updateKey() {
+    if (this.type != null && this.location != null && this.name != null) {
+      this.key = this.type + KEY_SEPARATOR + this.location + KEY_SEPARATOR + this.name;
+    } else {
+      throw new IllegalArgumentException(
+          String.format("Attempt to generate an artefact key by type=[%s], location=[%s], name=[%s]", type, location, name));
+    }
+  }
 
-	/**
-	 * Construct key.
-	 *
-	 * @param typeA the type A
-	 * @param locationA the location A
-	 * @param nameA the name A
-	 * @return the string
-	 */
-	public String constructKey(String typeA, String locationA, String nameA) {
-		if (typeA != null && locationA != null && nameA != null) {
-			String keyA = typeA + KEY_SEPARATOR + locationA + KEY_SEPARATOR + nameA;
-			return keyA;
-		}
-		return null;
-	}
+  /**
+   * Construct key.
+   *
+   * @param typeA the type A
+   * @param locationA the location A
+   * @param nameA the name A
+   * @return the string
+   */
+  public String constructKey(String typeA, String locationA, String nameA) {
+    if (typeA != null && locationA != null && nameA != null) {
+      String keyA = typeA + KEY_SEPARATOR + locationA + KEY_SEPARATOR + nameA;
+      return keyA;
+    }
+    return null;
+  }
 
-	/**
-	 * To string.
-	 *
-	 * @return the string
-	 */
-	@Override
-	public String toString() {
-		return "Artefact [location=" + location + ", name=" + name + ", type=" + type + ", description=" + description + ", key=" + key
-				+ ", dependencies=" + dependencies + ", lifecycle=" + lifecycle + ", phase=" + phase + ", error=" + error + ", createdBy="
-				+ createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
-	}
+  /**
+   * To string.
+   *
+   * @return the string
+   */
+  @Override
+  public String toString() {
+    return "Artefact [location=" + location + ", name=" + name + ", type=" + type + ", description=" + description + ", key=" + key
+        + ", dependencies=" + dependencies + ", lifecycle=" + lifecycle + ", phase=" + phase + ", error=" + error + ", createdBy="
+        + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
+  }
 
 }

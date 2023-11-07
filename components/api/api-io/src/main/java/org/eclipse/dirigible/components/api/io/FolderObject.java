@@ -18,39 +18,39 @@ import java.util.List;
  */
 public class FolderObject extends FileObject {
 
-	/**
-	 * Instantiates a new folder object.
-	 *
-	 * @param name the name
-	 * @param path the path
-	 * @param type the type
-	 */
-	public FolderObject(String name, String path, String type) {
-		super(name, path, type);
-	}
+  /**
+   * Instantiates a new folder object.
+   *
+   * @param name the name
+   * @param path the path
+   * @param type the type
+   */
+  public FolderObject(String name, String path, String type) {
+    super(name, path, type);
+  }
 
-	/** The files. */
-	private List<FileObject> files = new ArrayList<>();
+  /** The files. */
+  private List<FileObject> files = new ArrayList<>();
 
-	/** The folders. */
-	private List<FolderObject> folders = new ArrayList<>();
+  /** The folders. */
+  private List<FolderObject> folders = new ArrayList<>();
 
-	/**
-	 * Gets the files.
-	 *
-	 * @return the files
-	 */
-	public List<FileObject> getFiles() {
-		return files;
-	}
+  /**
+   * Gets the files.
+   *
+   * @return the files
+   */
+  public List<FileObject> getFiles() {
+    return files;
+  }
 
-	/**
-	 * Gets the folders.
-	 *
-	 * @return the folders
-	 */
-	public List<FolderObject> getFolders() {
-		return folders;
-	}
+  /**
+   * Gets the folders.
+   *
+   * @return the folders
+   */
+  public List<FolderObject> getFolders() {
+    return folders;
+  }
 
 }

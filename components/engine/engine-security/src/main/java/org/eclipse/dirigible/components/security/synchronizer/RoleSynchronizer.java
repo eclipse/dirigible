@@ -45,196 +45,196 @@ import org.springframework.stereotype.Component;
 @Order(SynchronizersOrder.ROLE)
 public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> {
 
-	/**
-	 * The Constant logger.
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(RoleSynchronizer.class);
+  /**
+   * The Constant logger.
+   */
+  private static final Logger logger = LoggerFactory.getLogger(RoleSynchronizer.class);
 
-	/**
-	 * The Constant FILE_EXTENSION_SECURITY_ROLE.
-	 */
-	public static final String FILE_EXTENSION_SECURITY_ROLE = ".role";
+  /**
+   * The Constant FILE_EXTENSION_SECURITY_ROLE.
+   */
+  public static final String FILE_EXTENSION_SECURITY_ROLE = ".role";
 
-	/**
-	 * The security role service.
-	 */
-	private RoleService securityRoleService;
+  /**
+   * The security role service.
+   */
+  private RoleService securityRoleService;
 
-	/**
-	 * The synchronization callback.
-	 */
-	private SynchronizerCallback callback;
+  /**
+   * The synchronization callback.
+   */
+  private SynchronizerCallback callback;
 
-	/**
-	 * Instantiates a new security role synchronizer.
-	 *
-	 * @param securityRoleService the security role service
-	 */
-	@Autowired
-	public RoleSynchronizer(RoleService securityRoleService) {
-		this.securityRoleService = securityRoleService;
-	}
+  /**
+   * Instantiates a new security role synchronizer.
+   *
+   * @param securityRoleService the security role service
+   */
+  @Autowired
+  public RoleSynchronizer(RoleService securityRoleService) {
+    this.securityRoleService = securityRoleService;
+  }
 
-	/**
-	 * Gets the service.
-	 *
-	 * @return the service
-	 */
-	@Override
-	public ArtefactService<Role> getService() {
-		return securityRoleService;
-	}
+  /**
+   * Gets the service.
+   *
+   * @return the service
+   */
+  @Override
+  public ArtefactService<Role> getService() {
+    return securityRoleService;
+  }
 
 
-	/**
-	 * Checks if is accepted.
-	 *
-	 * @param file the file
-	 * @param attrs the attrs
-	 * @return true, if is accepted
-	 */
-	@Override
-	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file	.toString()
-					.endsWith(getFileExtension());
-	}
+  /**
+   * Checks if is accepted.
+   *
+   * @param file the file
+   * @param attrs the attrs
+   * @return true, if is accepted
+   */
+  @Override
+  public boolean isAccepted(Path file, BasicFileAttributes attrs) {
+    return file.toString()
+               .endsWith(getFileExtension());
+  }
 
-	/**
-	 * Checks if is accepted.
-	 *
-	 * @param type the artefact
-	 * @return true, if is accepted
-	 */
-	@Override
-	public boolean isAccepted(String type) {
-		return Role.ARTEFACT_TYPE.equals(type);
-	}
+  /**
+   * Checks if is accepted.
+   *
+   * @param type the artefact
+   * @return true, if is accepted
+   */
+  @Override
+  public boolean isAccepted(String type) {
+    return Role.ARTEFACT_TYPE.equals(type);
+  }
 
-	/**
-	 * Load.
-	 *
-	 * @param location the location
-	 * @param content the content
-	 * @return the list
-	 * @throws ParseException
-	 */
-	@Override
-	public List<Role> parse(String location, byte[] content) throws ParseException {
-		Role[] roles = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Role[].class);
-		Integer roleIndex = 1;
-		for (Role role : roles) {
-			Configuration.configureObject(role);
-			role.setLocation(location);
-			role.setName(roleIndex.toString());
-			role.setType(Role.ARTEFACT_TYPE);
-			role.updateKey();
+  /**
+   * Load.
+   *
+   * @param location the location
+   * @param content the content
+   * @return the list
+   * @throws ParseException
+   */
+  @Override
+  public List<Role> parse(String location, byte[] content) throws ParseException {
+    Role[] roles = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Role[].class);
+    Integer roleIndex = 1;
+    for (Role role : roles) {
+      Configuration.configureObject(role);
+      role.setLocation(location);
+      role.setName(roleIndex.toString());
+      role.setType(Role.ARTEFACT_TYPE);
+      role.updateKey();
 
-			try {
-				Role maybe = getService().findByKey(role.getKey());
-				if (maybe != null) {
-					role.setId(maybe.getId());
-				}
-				role = getService().save(role);
-			} catch (Exception e) {
-				if (logger.isErrorEnabled()) {
-					logger.error(e.getMessage(), e);
-				}
-				if (logger.isErrorEnabled()) {
-					logger.error("security role: {}", role);
-				}
-				if (logger.isErrorEnabled()) {
-					logger.error("content: {}", new String(content));
-				}
-				throw new ParseException(e.getMessage(), roleIndex);
-			}
-			roleIndex++;
-		}
-		return List.of(roles);
-	}
+      try {
+        Role maybe = getService().findByKey(role.getKey());
+        if (maybe != null) {
+          role.setId(maybe.getId());
+        }
+        role = getService().save(role);
+      } catch (Exception e) {
+        if (logger.isErrorEnabled()) {
+          logger.error(e.getMessage(), e);
+        }
+        if (logger.isErrorEnabled()) {
+          logger.error("security role: {}", role);
+        }
+        if (logger.isErrorEnabled()) {
+          logger.error("content: {}", new String(content));
+        }
+        throw new ParseException(e.getMessage(), roleIndex);
+      }
+      roleIndex++;
+    }
+    return List.of(roles);
+  }
 
-	/**
-	 * Retrieve.
-	 *
-	 * @param location the location
-	 * @return the list
-	 */
-	@Override
-	public List<Role> retrieve(String location) {
-		return getService().getAll();
-	}
+  /**
+   * Retrieve.
+   *
+   * @param location the location
+   * @return the list
+   */
+  @Override
+  public List<Role> retrieve(String location) {
+    return getService().getAll();
+  }
 
-	/**
-	 * Sets the status.
-	 *
-	 * @param artefact the artefact
-	 * @param lifecycle the lifecycle
-	 * @param error the error
-	 */
-	@Override
-	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
-		artefact.setLifecycle(lifecycle);
-		artefact.setError(error);
-		getService().save((Role) artefact);
-	}
+  /**
+   * Sets the status.
+   *
+   * @param artefact the artefact
+   * @param lifecycle the lifecycle
+   * @param error the error
+   */
+  @Override
+  public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    artefact.setLifecycle(lifecycle);
+    artefact.setError(error);
+    getService().save((Role) artefact);
+  }
 
-	/**
-	 * Complete.
-	 *
-	 * @param wrapper the wrapper
-	 * @param flow the flow
-	 * @return true, if successful
-	 */
-	@Override
-	public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
-		return true;
-	}
+  /**
+   * Complete.
+   *
+   * @param wrapper the wrapper
+   * @param flow the flow
+   * @return true, if successful
+   */
+  @Override
+  public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+    return true;
+  }
 
-	/**
-	 * Cleanup.
-	 *
-	 * @param role the security role
-	 */
-	@Override
-	public void cleanup(Role role) {
-		try {
-			getService().delete(role);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {
-				logger.error(e.getMessage(), e);
-			}
-			callback.addError(e.getMessage());
-			callback.registerState(this, role, ArtefactLifecycle.DELETED, e.getMessage());
-		}
-	}
+  /**
+   * Cleanup.
+   *
+   * @param role the security role
+   */
+  @Override
+  public void cleanup(Role role) {
+    try {
+      getService().delete(role);
+    } catch (Exception e) {
+      if (logger.isErrorEnabled()) {
+        logger.error(e.getMessage(), e);
+      }
+      callback.addError(e.getMessage());
+      callback.registerState(this, role, ArtefactLifecycle.DELETED, e.getMessage());
+    }
+  }
 
-	/**
-	 * Sets the callback.
-	 *
-	 * @param callback the new callback
-	 */
-	@Override
-	public void setCallback(SynchronizerCallback callback) {
-		this.callback = callback;
-	}
+  /**
+   * Sets the callback.
+   *
+   * @param callback the new callback
+   */
+  @Override
+  public void setCallback(SynchronizerCallback callback) {
+    this.callback = callback;
+  }
 
-	/**
-	 * Gets the file extension.
-	 *
-	 * @return the file extension
-	 */
-	@Override
-	public String getFileExtension() {
-		return FILE_EXTENSION_SECURITY_ROLE;
-	}
+  /**
+   * Gets the file extension.
+   *
+   * @return the file extension
+   */
+  @Override
+  public String getFileExtension() {
+    return FILE_EXTENSION_SECURITY_ROLE;
+  }
 
-	/**
-	 * Gets the artefact type.
-	 *
-	 * @return the artefact type
-	 */
-	@Override
-	public String getArtefactType() {
-		return Role.ARTEFACT_TYPE;
-	}
+  /**
+   * Gets the artefact type.
+   *
+   * @return the artefact type
+   */
+  @Override
+  public String getArtefactType() {
+    return Role.ARTEFACT_TYPE;
+  }
 }

@@ -17,72 +17,72 @@ import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
  */
 public class OData2Exception extends RuntimeException {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -3168076877969983097L;
+  /** The Constant serialVersionUID. */
+  private static final long serialVersionUID = -3168076877969983097L;
 
-	/** The http status. */
-	private final HttpStatusCodes httpStatus;
+  /** The http status. */
+  private final HttpStatusCodes httpStatus;
 
-	/**
-	 * Instantiates a new o data 2 exception.
-	 *
-	 * @param httpStatus the http status
-	 */
-	public OData2Exception(final HttpStatusCodes httpStatus) {
-		this.httpStatus = httpStatus;
-	}
+  /**
+   * Instantiates a new o data 2 exception.
+   *
+   * @param httpStatus the http status
+   */
+  public OData2Exception(final HttpStatusCodes httpStatus) {
+    this.httpStatus = httpStatus;
+  }
 
-	/**
-	 * Instantiates a new o data 2 exception.
-	 *
-	 * @param text the text
-	 * @param httpStatus the http status
-	 */
-	public OData2Exception(String text, final HttpStatusCodes httpStatus) {
-		super(text);
-		this.httpStatus = httpStatus;
-	}
+  /**
+   * Instantiates a new o data 2 exception.
+   *
+   * @param text the text
+   * @param httpStatus the http status
+   */
+  public OData2Exception(String text, final HttpStatusCodes httpStatus) {
+    super(text);
+    this.httpStatus = httpStatus;
+  }
 
-	/**
-	 * Instantiates a new o data 2 exception.
-	 *
-	 * @param text the text
-	 * @param httpStatus the http status
-	 * @param cause the cause
-	 */
-	public OData2Exception(String text, final HttpStatusCodes httpStatus, final Throwable cause) {
-		super(text, cause);
-		this.httpStatus = httpStatus;
-	}
+  /**
+   * Instantiates a new o data 2 exception.
+   *
+   * @param text the text
+   * @param httpStatus the http status
+   * @param cause the cause
+   */
+  public OData2Exception(String text, final HttpStatusCodes httpStatus, final Throwable cause) {
+    super(text, cause);
+    this.httpStatus = httpStatus;
+  }
 
-	/**
-	 * Instantiates a new o data 2 exception.
-	 *
-	 * @param httpStatus the http status
-	 * @param cause the cause
-	 */
-	public OData2Exception(final HttpStatusCodes httpStatus, final Throwable cause) {
-		super(cause);
-		this.httpStatus = httpStatus;
-	}
+  /**
+   * Instantiates a new o data 2 exception.
+   *
+   * @param httpStatus the http status
+   * @param cause the cause
+   */
+  public OData2Exception(final HttpStatusCodes httpStatus, final Throwable cause) {
+    super(cause);
+    this.httpStatus = httpStatus;
+  }
 
-	/**
-	 * Gets the http status.
-	 *
-	 * @return the http status
-	 */
-	public HttpStatusCodes getHttpStatus() {
-		return httpStatus;
-	}
+  /**
+   * Gets the http status.
+   *
+   * @return the http status
+   */
+  public HttpStatusCodes getHttpStatus() {
+    return httpStatus;
+  }
 
-	/**
-	 * To string.
-	 *
-	 * @return the string
-	 */
-	@Override
-	public String toString() {
-		return super.toString() + ": [" + httpStatus + " " + httpStatus.getStatusCode() + "]";
-	}
+  /**
+   * To string.
+   *
+   * @return the string
+   */
+  @Override
+  public String toString() {
+    return super.toString() + ": [" + httpStatus + " " + httpStatus.getStatusCode() + "]";
+  }
 
 }

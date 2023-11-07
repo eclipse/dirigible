@@ -15,32 +15,32 @@ package org.eclipse.dirigible.components.base.endpoint;
  */
 public abstract class BaseEndpoint {
 
-	/** The Constant DEFAULT_PAGE_SIZE. */
-	public static final int DEFAULT_PAGE_SIZE = 100;
+  /** The Constant DEFAULT_PAGE_SIZE. */
+  public static final int DEFAULT_PAGE_SIZE = 100;
 
-	/** The Constant PREFIX_ENDPOINT_SECURED. */
-	public static final String PREFIX_ENDPOINT_SECURED = "services/";
+  /** The Constant PREFIX_ENDPOINT_SECURED. */
+  public static final String PREFIX_ENDPOINT_SECURED = "services/";
 
-	/** The Constant PREFIX_ENDPOINT_CORE. */
-	public static final String PREFIX_ENDPOINT_CORE = "services/core/";
+  /** The Constant PREFIX_ENDPOINT_CORE. */
+  public static final String PREFIX_ENDPOINT_CORE = "services/core/";
 
-	/** The Constant PREFIX_ENDPOINT_DATA. */
-	public static final String PREFIX_ENDPOINT_DATA = "services/data/";
+  /** The Constant PREFIX_ENDPOINT_DATA. */
+  public static final String PREFIX_ENDPOINT_DATA = "services/data/";
 
-	/** The Constant PREFIX_ENDPOINT_IDE. */
-	public static final String PREFIX_ENDPOINT_IDE = "services/ide/";
+  /** The Constant PREFIX_ENDPOINT_IDE. */
+  public static final String PREFIX_ENDPOINT_IDE = "services/ide/";
 
-	/** The Constant PREFIX_ENDPOINT_PUBLIC. */
-	public static final String PREFIX_ENDPOINT_PUBLIC = "public/";
+  /** The Constant PREFIX_ENDPOINT_PUBLIC. */
+  public static final String PREFIX_ENDPOINT_PUBLIC = "public/";
 
-	/** The Constant PREFIX_ENDPOINT_WEBSOCKETS. */
-	public static final String PREFIX_ENDPOINT_WEBSOCKETS = "/websockets/";
+  /** The Constant PREFIX_ENDPOINT_WEBSOCKETS. */
+  public static final String PREFIX_ENDPOINT_WEBSOCKETS = "/websockets/";
 
-	/**
-	 * Instantiates a new base endpoint.
-	 */
-	public BaseEndpoint() {
-		super();
-	}
+  /**
+   * Instantiates a new base endpoint.
+   */
+  public BaseEndpoint() {
+    super();
+  }
 
 }

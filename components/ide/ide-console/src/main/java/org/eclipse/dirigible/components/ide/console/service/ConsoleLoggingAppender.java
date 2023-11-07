@@ -18,22 +18,22 @@ import ch.qos.logback.core.AppenderBase;
  */
 public class ConsoleLoggingAppender extends AppenderBase<ILoggingEvent> {
 
-	/**
-	 * Append.
-	 *
-	 * @param event the event
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see ch.qos.logback.core.AppenderBase#append(java.lang.Object)
-	 */
-	@Override
-	protected void append(ILoggingEvent event) {
-		ConsoleLogRecord record = new ConsoleLogRecord(event.getLevel()
-															.toString(),
-				event.getFormattedMessage(), event.getTimeStamp());
-		ConsoleWebsocketHandler.distribute(record);
-	}
+  /**
+   * Append.
+   *
+   * @param event the event
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see ch.qos.logback.core.AppenderBase#append(java.lang.Object)
+   */
+  @Override
+  protected void append(ILoggingEvent event) {
+    ConsoleLogRecord record = new ConsoleLogRecord(event.getLevel()
+                                                        .toString(),
+        event.getFormattedMessage(), event.getTimeStamp());
+    ConsoleWebsocketHandler.distribute(record);
+  }
 
 }

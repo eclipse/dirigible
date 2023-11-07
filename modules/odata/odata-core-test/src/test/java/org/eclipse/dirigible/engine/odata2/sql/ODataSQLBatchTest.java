@@ -51,255 +51,252 @@ import static org.junit.Assert.*;
  */
 public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
 
-	/**
-	 * Gets the o data entities.
-	 *
-	 * @return the o data entities
-	 */
-	@Override
-	protected Class<?>[] getODataEntities() {
-		return new Class[] {Car.class, Driver.class, Owner.class, Address.class};
-	}
+  /**
+   * Gets the o data entities.
+   *
+   * @return the o data entities
+   */
+  @Override
+  protected Class<?>[] getODataEntities() {
+    return new Class[] {Car.class, Driver.class, Owner.class, Address.class};
+  }
 
 
-	/**
-	 * Gets the boundary.
-	 *
-	 * @param body the body
-	 * @return the boundary
-	 */
-	private String getBoundary(String body) {
-		return body.split("\r\n")[0].substring(2);
-	}
+  /**
+   * Gets the boundary.
+   *
+   * @param body the body
+   * @return the boundary
+   */
+  private String getBoundary(String body) {
+    return body.split("\r\n")[0].substring(2);
+  }
 
-	/**
-	 * Test execute metadata request in batch.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testExecuteMetadataRequestInBatch() throws Exception {
-		List<BatchPart> batch = new ArrayList<>();
-		BatchPart request = BatchQueryPart	.method(ODataHttpMethod.GET.name())
-											.uri("$metadata")
-											.build();
-		batch.add(request);
-		ODataResponse res = OData2RequestBuilder.createRequest(sf)
-												.executeBatchRequest(batch);
-		assertEquals(202, res	.getStatus()
-								.getStatusCode()); // Accepted
-		String responseEntity = IOUtils.toString(res.getEntityAsStream());
-		String boundary = getBoundary(responseEntity);
+  /**
+   * Test execute metadata request in batch.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testExecuteMetadataRequestInBatch() throws Exception {
+    List<BatchPart> batch = new ArrayList<>();
+    BatchPart request = BatchQueryPart.method(ODataHttpMethod.GET.name())
+                                      .uri("$metadata")
+                                      .build();
+    batch.add(request);
+    ODataResponse res = OData2RequestBuilder.createRequest(sf)
+                                            .executeBatchRequest(batch);
+    assertEquals(202, res.getStatus()
+                         .getStatusCode()); // Accepted
+    String responseEntity = IOUtils.toString(res.getEntityAsStream());
+    String boundary = getBoundary(responseEntity);
 
-		BatchParser parser = new BatchParser("multipart/mixed;boundary=" + boundary, true);
-		List<BatchSingleResponse> responses = parser.parseBatchResponse(new ByteArrayInputStream(responseEntity.getBytes()));
-		for (BatchSingleResponse response : responses) {
-			assertEquals("200", response.getStatusCode());
-			assertEquals("OK", response.getStatusInfo());
-			assertTrue(response	.getBody()
-								.startsWith(
-										"<?xml version='1.0' encoding='UTF-8'?><edmx:Edmx xmlns:edmx=\"http://schemas.microsoft.com/ado/2007/06/edmx\" Version=\"1.0\"><edmx:DataServices"));
-		}
-	}
-
-
-	/**
-	 * Test execute metadata request batch change set two updates.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testExecuteMetadataRequestBatchChangeSetTwoUpdates() throws Exception {
-		String content = "{" //
-				+ "  \"d\": {" //
-				+ "    \"__metadata\": {" //
-				+ "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.entities.Car\"" //
-				+ "    }," //
-				+ "    \"Id\": \"XXXXXXXXX\"," //
-				+ "    \"Price\": 123456789.0" //
-				+ " }" + "}";
-
-		List<BatchPart> batch = new ArrayList<>();
-
-		Map<String, String> changeSetHeaders = new HashMap<>();
-		changeSetHeaders.put("content-type", "application/json");
-		changeSetHeaders.put("Accept", "application/json");
-		String body = "/9j/4AAQSkZJRgABAQEBLAEsAAD/4RM0RXhpZgAATU0AKgAAAAgABwESAAMAAAABAAEA";
-		BatchChangeSetPart changeRequest = BatchChangeSetPart	.method(PUT.toString())
-																.uri("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')")
-																.body(content.replaceAll("XXXXXXXXX",
-																		"639cac17-4cfd-4d94-b5d0-111fd5488423"))
-																.headers(changeSetHeaders)
-																.contentId("1")
-																.build();
-		BatchChangeSet changeSet = BatchChangeSet	.newBuilder()
-													.build();
-		changeSet.add(changeRequest);
-
-		changeSetHeaders = new HashMap<>();
-		changeSetHeaders.put("content-type", "application/json;odata=verbose");
-		changeSetHeaders.put("Accept", "application/json");
-		BatchChangeSetPart changeRequest2 = BatchChangeSetPart	.method(PUT.toString())
-																.uri("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')")
-																.body(content.replaceAll("XXXXXXXXX",
-																		"3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5"))
-																.headers(changeSetHeaders)
-																.contentId("2")
-																.build();
-		changeSet.add(changeRequest2);
-		batch.add(changeSet);
+    BatchParser parser = new BatchParser("multipart/mixed;boundary=" + boundary, true);
+    List<BatchSingleResponse> responses = parser.parseBatchResponse(new ByteArrayInputStream(responseEntity.getBytes()));
+    for (BatchSingleResponse response : responses) {
+      assertEquals("200", response.getStatusCode());
+      assertEquals("OK", response.getStatusInfo());
+      assertTrue(response.getBody()
+                         .startsWith(
+                             "<?xml version='1.0' encoding='UTF-8'?><edmx:Edmx xmlns:edmx=\"http://schemas.microsoft.com/ado/2007/06/edmx\" Version=\"1.0\"><edmx:DataServices"));
+    }
+  }
 
 
-		ODataResponse res = OData2RequestBuilder.createRequest(sf)
-												.executeBatchRequest(batch);
-		assertEquals(202, res	.getStatus()
-								.getStatusCode()); // Accepted
-		String responseEntity = IOUtils.toString(res.getEntityAsStream());
-		String boundary = getBoundary(responseEntity);
+  /**
+   * Test execute metadata request batch change set two updates.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testExecuteMetadataRequestBatchChangeSetTwoUpdates() throws Exception {
+    String content = "{" //
+        + "  \"d\": {" //
+        + "    \"__metadata\": {" //
+        + "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.entities.Car\"" //
+        + "    }," //
+        + "    \"Id\": \"XXXXXXXXX\"," //
+        + "    \"Price\": 123456789.0" //
+        + " }" + "}";
 
-		BatchParser parser = new BatchParser("multipart/mixed;boundary=" + boundary, true);
-		List<BatchSingleResponse> responses = parser.parseBatchResponse(new ByteArrayInputStream(responseEntity.getBytes()));
-		assertEquals(2, responses.size());
-		for (BatchSingleResponse response : responses) {
-			assertEquals("204", response.getStatusCode());
-			assertEquals("No Content", response.getStatusInfo());
-		}
-		assertCarHasPrice("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')", 123456789.0d);
-		assertCarHasPrice("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')", 123456789.0d);
-	}
+    List<BatchPart> batch = new ArrayList<>();
 
-	/**
-	 * Test execute metadata request batch change set rollback.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testExecuteMetadataRequestBatchChangeSetRollback() throws Exception {
-		String content = "{" //
-				+ "  \"d\": {" //
-				+ "    \"__metadata\": {" //
-				+ "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.entities.Car\"" //
-				+ "    }," //
-				+ "    \"Id\": \"XXXXXXXXX\"," //
-				+ "    \"Price\": 123456789.0" //
-				+ " }" + "}";
+    Map<String, String> changeSetHeaders = new HashMap<>();
+    changeSetHeaders.put("content-type", "application/json");
+    changeSetHeaders.put("Accept", "application/json");
+    String body = "/9j/4AAQSkZJRgABAQEBLAEsAAD/4RM0RXhpZgAATU0AKgAAAAgABwESAAMAAAABAAEA";
+    BatchChangeSetPart changeRequest = BatchChangeSetPart.method(PUT.toString())
+                                                         .uri("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')")
+                                                         .body(content.replaceAll("XXXXXXXXX", "639cac17-4cfd-4d94-b5d0-111fd5488423"))
+                                                         .headers(changeSetHeaders)
+                                                         .contentId("1")
+                                                         .build();
+    BatchChangeSet changeSet = BatchChangeSet.newBuilder()
+                                             .build();
+    changeSet.add(changeRequest);
 
-		List<BatchPart> batch = new ArrayList<>();
-
-		Map<String, String> changeSetHeaders = new HashMap<>();
-		changeSetHeaders.put("content-type", "application/json");
-		changeSetHeaders.put("Accept", "application/json");
-		String body = "/9j/4AAQSkZJRgABAQEBLAEsAAD/4RM0RXhpZgAATU0AKgAAAAgABwESAAMAAAABAAEA";
-		BatchChangeSetPart changeRequest = BatchChangeSetPart	.method(PUT.toString())
-																.uri("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')")
-																.body(content.replaceAll("XXXXXXXXX",
-																		"639cac17-4cfd-4d94-b5d0-111fd5488423"))
-																.headers(changeSetHeaders)
-																.contentId("1")
-																.build();
-		BatchChangeSet changeSet = BatchChangeSet	.newBuilder()
-													.build();
-		changeSet.add(changeRequest);
-
-		changeSetHeaders = new HashMap<>();
-		changeSetHeaders.put("content-type", "application/json;odata=verbose");
-		changeSetHeaders.put("Accept", "application/json");
-		BatchChangeSetPart invalidPriceChangeSet = BatchChangeSetPart	.method(PUT.toString())
-																		.uri("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')")
-																		.body(content	.replaceAll("123456789.0", "BOOM")// Simulate error
-																															// by setting
-																															// invalid price
-																						.replaceAll("XXXXXXXXX",
-																								"3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5"))
-																		.headers(changeSetHeaders)
-																		.contentId("2")
-																		.build();
-		changeSet.add(invalidPriceChangeSet);
-		batch.add(changeSet);
+    changeSetHeaders = new HashMap<>();
+    changeSetHeaders.put("content-type", "application/json;odata=verbose");
+    changeSetHeaders.put("Accept", "application/json");
+    BatchChangeSetPart changeRequest2 = BatchChangeSetPart.method(PUT.toString())
+                                                          .uri("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')")
+                                                          .body(content.replaceAll("XXXXXXXXX", "3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5"))
+                                                          .headers(changeSetHeaders)
+                                                          .contentId("2")
+                                                          .build();
+    changeSet.add(changeRequest2);
+    batch.add(changeSet);
 
 
-		ODataResponse res = OData2RequestBuilder.createRequest(sf)
-												.executeBatchRequest(batch);
-		assertEquals(202, res	.getStatus()
-								.getStatusCode()); // Accepted
-		String responseEntity = IOUtils.toString(res.getEntityAsStream());
-		String boundary = getBoundary(responseEntity);
+    ODataResponse res = OData2RequestBuilder.createRequest(sf)
+                                            .executeBatchRequest(batch);
+    assertEquals(202, res.getStatus()
+                         .getStatusCode()); // Accepted
+    String responseEntity = IOUtils.toString(res.getEntityAsStream());
+    String boundary = getBoundary(responseEntity);
 
-		BatchParser parser = new BatchParser("multipart/mixed;boundary=" + boundary, true);
-		List<BatchSingleResponse> responses = parser.parseBatchResponse(new ByteArrayInputStream(responseEntity.getBytes()));
-		assertEquals(1, responses.size());
-		for (BatchSingleResponse response : responses) {
-			assertEquals("400", response.getStatusCode());
-			assertEquals("Bad Request", response.getStatusInfo());
-		}
+    BatchParser parser = new BatchParser("multipart/mixed;boundary=" + boundary, true);
+    List<BatchSingleResponse> responses = parser.parseBatchResponse(new ByteArrayInputStream(responseEntity.getBytes()));
+    assertEquals(2, responses.size());
+    for (BatchSingleResponse response : responses) {
+      assertEquals("204", response.getStatusCode());
+      assertEquals("No Content", response.getStatusInfo());
+    }
+    assertCarHasPrice("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')", 123456789.0d);
+    assertCarHasPrice("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')", 123456789.0d);
+  }
 
-		assertCarHasPrice("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')", 67000.0);
-		assertCarHasPrice("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')", 7000.0);
-	}
+  /**
+   * Test execute metadata request batch change set rollback.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testExecuteMetadataRequestBatchChangeSetRollback() throws Exception {
+    String content = "{" //
+        + "  \"d\": {" //
+        + "    \"__metadata\": {" //
+        + "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.entities.Car\"" //
+        + "    }," //
+        + "    \"Id\": \"XXXXXXXXX\"," //
+        + "    \"Price\": 123456789.0" //
+        + " }" + "}";
 
-	/**
-	 * Test execute metadata request batch change set rollback and put.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testExecuteMetadataRequestBatchChangeSetRollbackAndPut() throws Exception {
-		String content = "{" //
-				+ "  \"d\": {" //
-				+ "    \"__metadata\": {" //
-				+ "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.entities.Car\"" //
-				+ "    }," //
-				+ "    \"Id\": \"3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5\"," //
-				+ "    \"Price\": 123456789.0" //
-				+ " }" + "}";
+    List<BatchPart> batch = new ArrayList<>();
 
-		List<BatchPart> batch = new ArrayList<>();
+    Map<String, String> changeSetHeaders = new HashMap<>();
+    changeSetHeaders.put("content-type", "application/json");
+    changeSetHeaders.put("Accept", "application/json");
+    String body = "/9j/4AAQSkZJRgABAQEBLAEsAAD/4RM0RXhpZgAATU0AKgAAAAgABwESAAMAAAABAAEA";
+    BatchChangeSetPart changeRequest = BatchChangeSetPart.method(PUT.toString())
+                                                         .uri("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')")
+                                                         .body(content.replaceAll("XXXXXXXXX", "639cac17-4cfd-4d94-b5d0-111fd5488423"))
+                                                         .headers(changeSetHeaders)
+                                                         .contentId("1")
+                                                         .build();
+    BatchChangeSet changeSet = BatchChangeSet.newBuilder()
+                                             .build();
+    changeSet.add(changeRequest);
 
-		BatchChangeSet changeSet = BatchChangeSet	.newBuilder()
-													.build();
-
-		Map<String, String> changeSetHeaders = new HashMap<>();
-		changeSetHeaders.put("content-type", "application/json;odata=verbose");
-		changeSetHeaders.put("Accept", "application/json");
-		BatchChangeSetPart invalidPriceChangeSet = BatchChangeSetPart	.method(PUT.toString())
-																		.uri("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')")
-																		.body(content.replaceAll("123456789.0", "BOOM"))// Simulate error by
-																														// setting invalid
-																														// price
-																		.headers(changeSetHeaders)
-																		.contentId("1")
-																		.build();
-		changeSet.add(invalidPriceChangeSet);
-		batch.add(changeSet);
-
-
-		ODataResponse res = OData2RequestBuilder.createRequest(sf)
-												.executeBatchRequest(batch);
-		assertEquals(202, res	.getStatus()
-								.getStatusCode()); // Accepted
-		String responseEntity = IOUtils.toString(res.getEntityAsStream());
-		String boundary = getBoundary(responseEntity);
-
-		BatchParser parser = new BatchParser("multipart/mixed;boundary=" + boundary, true);
-		List<BatchSingleResponse> responses = parser.parseBatchResponse(new ByteArrayInputStream(responseEntity.getBytes()));
-		assertEquals(1, responses.size());
-		for (BatchSingleResponse response : responses) {
-			assertEquals("400", response.getStatusCode());
-			assertEquals("Bad Request", response.getStatusInfo());
-		}
-		assertCarHasPrice("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')", 7000.0);
-
-		Response response = modifyingRequestBuilder(sf, content)//
-																.segments("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')") //
-																.accept("application/json")//
-																.content(content)//
-																.param("content-type", "application/json")//
-																.contentSize(content.length())
-																.executeRequest(PUT);
-
-		assertCarHasPrice("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')", 123456789.0);
+    changeSetHeaders = new HashMap<>();
+    changeSetHeaders.put("content-type", "application/json;odata=verbose");
+    changeSetHeaders.put("Accept", "application/json");
+    BatchChangeSetPart invalidPriceChangeSet = BatchChangeSetPart.method(PUT.toString())
+                                                                 .uri("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')")
+                                                                 .body(content.replaceAll("123456789.0", "BOOM")// Simulate error
+                                                                                                                // by setting
+                                                                                                                // invalid price
+                                                                              .replaceAll("XXXXXXXXX",
+                                                                                  "3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5"))
+                                                                 .headers(changeSetHeaders)
+                                                                 .contentId("2")
+                                                                 .build();
+    changeSet.add(invalidPriceChangeSet);
+    batch.add(changeSet);
 
 
-	}
+    ODataResponse res = OData2RequestBuilder.createRequest(sf)
+                                            .executeBatchRequest(batch);
+    assertEquals(202, res.getStatus()
+                         .getStatusCode()); // Accepted
+    String responseEntity = IOUtils.toString(res.getEntityAsStream());
+    String boundary = getBoundary(responseEntity);
+
+    BatchParser parser = new BatchParser("multipart/mixed;boundary=" + boundary, true);
+    List<BatchSingleResponse> responses = parser.parseBatchResponse(new ByteArrayInputStream(responseEntity.getBytes()));
+    assertEquals(1, responses.size());
+    for (BatchSingleResponse response : responses) {
+      assertEquals("400", response.getStatusCode());
+      assertEquals("Bad Request", response.getStatusInfo());
+    }
+
+    assertCarHasPrice("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')", 67000.0);
+    assertCarHasPrice("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')", 7000.0);
+  }
+
+  /**
+   * Test execute metadata request batch change set rollback and put.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testExecuteMetadataRequestBatchChangeSetRollbackAndPut() throws Exception {
+    String content = "{" //
+        + "  \"d\": {" //
+        + "    \"__metadata\": {" //
+        + "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.entities.Car\"" //
+        + "    }," //
+        + "    \"Id\": \"3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5\"," //
+        + "    \"Price\": 123456789.0" //
+        + " }" + "}";
+
+    List<BatchPart> batch = new ArrayList<>();
+
+    BatchChangeSet changeSet = BatchChangeSet.newBuilder()
+                                             .build();
+
+    Map<String, String> changeSetHeaders = new HashMap<>();
+    changeSetHeaders.put("content-type", "application/json;odata=verbose");
+    changeSetHeaders.put("Accept", "application/json");
+    BatchChangeSetPart invalidPriceChangeSet = BatchChangeSetPart.method(PUT.toString())
+                                                                 .uri("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')")
+                                                                 .body(content.replaceAll("123456789.0", "BOOM"))// Simulate error by
+                                                                                                                 // setting invalid
+                                                                                                                 // price
+                                                                 .headers(changeSetHeaders)
+                                                                 .contentId("1")
+                                                                 .build();
+    changeSet.add(invalidPriceChangeSet);
+    batch.add(changeSet);
+
+
+    ODataResponse res = OData2RequestBuilder.createRequest(sf)
+                                            .executeBatchRequest(batch);
+    assertEquals(202, res.getStatus()
+                         .getStatusCode()); // Accepted
+    String responseEntity = IOUtils.toString(res.getEntityAsStream());
+    String boundary = getBoundary(responseEntity);
+
+    BatchParser parser = new BatchParser("multipart/mixed;boundary=" + boundary, true);
+    List<BatchSingleResponse> responses = parser.parseBatchResponse(new ByteArrayInputStream(responseEntity.getBytes()));
+    assertEquals(1, responses.size());
+    for (BatchSingleResponse response : responses) {
+      assertEquals("400", response.getStatusCode());
+      assertEquals("Bad Request", response.getStatusInfo());
+    }
+    assertCarHasPrice("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')", 7000.0);
+
+    Response response = modifyingRequestBuilder(sf, content)//
+                                                            .segments("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')") //
+                                                            .accept("application/json")//
+                                                            .content(content)//
+                                                            .param("content-type", "application/json")//
+                                                            .contentSize(content.length())
+                                                            .executeRequest(PUT);
+
+    assertCarHasPrice("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')", 123456789.0);
+
+
+  }
 
 }

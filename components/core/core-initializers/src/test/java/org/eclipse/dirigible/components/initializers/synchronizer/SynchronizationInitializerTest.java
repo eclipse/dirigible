@@ -43,89 +43,89 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 @EntityScan("org.eclipse.dirigible.components")
 public class SynchronizationInitializerTest {
 
-	/**
-	 * The Class ContextConfiguration.
-	 */
-	@Configuration
-	@ComponentScan("org.eclipse.dirigible.components")
-	static class ContextConfiguration {
+  /**
+   * The Class ContextConfiguration.
+   */
+  @Configuration
+  @ComponentScan("org.eclipse.dirigible.components")
+  static class ContextConfiguration {
 
-		/**
-		 * Repository.
-		 *
-		 * @return the i repository
-		 */
-		@Bean("SynchronizationInitializerTestReposiotry")
-		public IRepository repository() {
-			return new RepositoryConfig().repository();
-		}
+    /**
+     * Repository.
+     *
+     * @return the i repository
+     */
+    @Bean("SynchronizationInitializerTestReposiotry")
+    public IRepository repository() {
+      return new RepositoryConfig().repository();
+    }
 
-	}
+  }
 
-	/** The listener. */
-	@Autowired
-	private SynchronizationInitializer initializer;
+  /** The listener. */
+  @Autowired
+  private SynchronizationInitializer initializer;
 
-	/** The synchronization processor. */
-	@Autowired
-	private SynchronizationProcessor synchronizationProcessor;
+  /** The synchronization processor. */
+  @Autowired
+  private SynchronizationProcessor synchronizationProcessor;
 
-	/** The synchronization watcher. */
-	@Autowired
-	private SynchronizationWatcher synchronizationWatcher;
+  /** The synchronization watcher. */
+  @Autowired
+  private SynchronizationWatcher synchronizationWatcher;
 
-	/** The repository. */
-	@Autowired
-	private IRepository repository;
+  /** The repository. */
+  @Autowired
+  private IRepository repository;
 
-	/** The datasource. */
-	@Autowired
-	private DataSource datasource;
+  /** The datasource. */
+  @Autowired
+  private DataSource datasource;
 
-	/**
-	 * Test context started handler.
-	 *
-	 * @throws RepositoryWriteException the repository write exception
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws SQLException the SQL exception
-	 */
-	@Test
-	public void testSynchronizationSuccessful() throws RepositoryWriteException, IOException, SQLException {
+  /**
+   * Test context started handler.
+   *
+   * @throws RepositoryWriteException the repository write exception
+   * @throws IOException Signals that an I/O exception has occurred.
+   * @throws SQLException the SQL exception
+   */
+  @Test
+  public void testSynchronizationSuccessful() throws RepositoryWriteException, IOException, SQLException {
 
-		try (Connection connection = datasource.getConnection()) {
+    try (Connection connection = datasource.getConnection()) {
 
-			// initialization
-			initializer.handleContextStart(null);
+      // initialization
+      initializer.handleContextStart(null);
 
-			// check if the definition has been parsed successfully
-			CheckDefinitionUtils.isDefinitionParsed(connection);
+      // check if the definition has been parsed successfully
+      CheckDefinitionUtils.isDefinitionParsed(connection);
 
-			// check if the artefact has been created
-			CheckArtefactUtils.isArtefactCreated(connection);
+      // check if the artefact has been created
+      CheckArtefactUtils.isArtefactCreated(connection);
 
-			// correct the artefact
-			repository	.getResource("/registry/public/test/test.extension")
-						.setContent(IOUtils.toByteArray(SynchronizationInitializerBrokenTest.class.getResourceAsStream(
-								"/META-INF/dirigible/test/test.extension_modified")));
+      // correct the artefact
+      repository.getResource("/registry/public/test/test.extension")
+                .setContent(IOUtils.toByteArray(
+                    SynchronizationInitializerBrokenTest.class.getResourceAsStream("/META-INF/dirigible/test/test.extension_modified")));
 
-			// process again
-			synchronizationWatcher.force();
-			synchronizationProcessor.processSynchronizers();
+      // process again
+      synchronizationWatcher.force();
+      synchronizationProcessor.processSynchronizers();
 
-			// check if the definition has been parsed successfully again
-			CheckDefinitionUtils.isDefinitionParsed(connection);
+      // check if the definition has been parsed successfully again
+      CheckDefinitionUtils.isDefinitionParsed(connection);
 
-			// check if the artefact has been updated
-			CheckArtefactUtils.isArtefactUpdated(connection);
+      // check if the artefact has been updated
+      CheckArtefactUtils.isArtefactUpdated(connection);
 
-		}
-	}
+    }
+  }
 
-	/**
-	 * The Class TestConfiguration.
-	 */
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  /**
+   * The Class TestConfiguration.
+   */
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 
 }

@@ -19,25 +19,25 @@ import org.eclipse.dirigible.components.ide.git.domain.GitChangedFile;
  */
 public class GitProjectChangedFiles {
 
-	/** The files. */
-	private List<GitChangedFile> files;
+  /** The files. */
+  private List<GitChangedFile> files;
 
-	/**
-	 * Getter for the files.
-	 *
-	 * @return the files
-	 */
-	public List<GitChangedFile> getFiles() {
-		return files;
-	}
+  /**
+   * Getter for the files.
+   *
+   * @return the files
+   */
+  public List<GitChangedFile> getFiles() {
+    return files;
+  }
 
-	/**
-	 * Setter for the files.
-	 *
-	 * @param files the files to set
-	 */
-	public void setFiles(List<GitChangedFile> files) {
-		this.files = files;
-	}
+  /**
+   * Setter for the files.
+   *
+   * @param files the files to set
+   */
+  public void setFiles(List<GitChangedFile> files) {
+    this.files = files;
+  }
 
 }

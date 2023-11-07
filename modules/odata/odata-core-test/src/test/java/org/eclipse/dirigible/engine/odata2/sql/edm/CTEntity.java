@@ -20,13 +20,13 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 @EdmComplexType(name = "CTEntity")
 public class CTEntity {
 
-	/** The id. */
-	@EdmKey
-	@EdmProperty
-	private String id;
+  /** The id. */
+  @EdmKey
+  @EdmProperty
+  private String id;
 
-	/** The detail. */
-	@EdmProperty
-	private String detail;
+  /** The detail. */
+  @EdmProperty
+  private String detail;
 
 }

@@ -18,28 +18,28 @@ import org.eclipse.dirigible.database.sql.builders.sequence.LastValueIdentityBui
  */
 public class SnowflakeLastValueIdentityBuilder extends LastValueIdentityBuilder {
 
-	/**
-	 * Instantiates a new Snowflake last value identity builder.
-	 *
-	 * @param dialect the dialect
-	 */
-	public SnowflakeLastValueIdentityBuilder(ISqlDialect dialect) {
-		super(dialect);
-		throw new IllegalArgumentException("Snowflake does not support current identity value");
-	}
+  /**
+   * Instantiates a new Snowflake last value identity builder.
+   *
+   * @param dialect the dialect
+   */
+  public SnowflakeLastValueIdentityBuilder(ISqlDialect dialect) {
+    super(dialect);
+    throw new IllegalArgumentException("Snowflake does not support current identity value");
+  }
 
-	/**
-	 * Generate.
-	 *
-	 * @return the string
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
-	 */
-	@Override
-	public String generate() {
-		return null;
-	}
+  /**
+   * Generate.
+   *
+   * @return the string
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
+   */
+  @Override
+  public String generate() {
+    return null;
+  }
 }

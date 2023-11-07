@@ -22,16 +22,16 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 @EdmEntitySet(name = "Customers")
 public class Customer {
 
-	/** The id. */
-	@EdmKey
-	@EdmProperty
-	private String id;
+  /** The id. */
+  @EdmKey
+  @EdmProperty
+  private String id;
 
-	/** The number. */
-	@EdmProperty
-	private Integer number;
+  /** The number. */
+  @EdmProperty
+  private Integer number;
 
-	/** The payment. */
-	@EdmProperty
-	private Integer payment;
+  /** The payment. */
+  @EdmProperty
+  private Integer payment;
 }

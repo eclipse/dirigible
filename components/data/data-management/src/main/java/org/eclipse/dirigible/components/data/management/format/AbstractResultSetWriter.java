@@ -20,74 +20,74 @@ import org.eclipse.dirigible.components.database.DatabaseParameters;
  */
 public abstract class AbstractResultSetWriter<T> implements ResultSetWriter<T> {
 
-	/** The limit. */
-	private int limit = 1000;
+  /** The limit. */
+  private int limit = 1000;
 
-	/** The limited. */
-	private boolean limited = true;
+  /** The limited. */
+  private boolean limited = true;
 
-	/** The stringify. */
-	private boolean stringify = true;
+  /** The stringify. */
+  private boolean stringify = true;
 
-	/**
-	 * Default Constructor.
-	 */
-	public AbstractResultSetWriter() {
-		this.limit = Integer.parseInt(Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DEFAULT_QUERY_LIMIT, "1000"));
-	}
+  /**
+   * Default Constructor.
+   */
+  public AbstractResultSetWriter() {
+    this.limit = Integer.parseInt(Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DEFAULT_QUERY_LIMIT, "1000"));
+  }
 
-	/**
-	 * Getter for the limit.
-	 *
-	 * @return the limit
-	 */
-	public int getLimit() {
-		return limit;
-	}
+  /**
+   * Getter for the limit.
+   *
+   * @return the limit
+   */
+  public int getLimit() {
+    return limit;
+  }
 
-	/**
-	 * Setter for the limit.
-	 *
-	 * @param limit the limit
-	 */
-	public void setLimit(int limit) {
-		this.limit = limit;
-	}
+  /**
+   * Setter for the limit.
+   *
+   * @param limit the limit
+   */
+  public void setLimit(int limit) {
+    this.limit = limit;
+  }
 
-	/**
-	 * Checks if is limited.
-	 *
-	 * @return true, if is limited
-	 */
-	public boolean isLimited() {
-		return limited;
-	}
+  /**
+   * Checks if is limited.
+   *
+   * @return true, if is limited
+   */
+  public boolean isLimited() {
+    return limited;
+  }
 
-	/**
-	 * Sets the limited.
-	 *
-	 * @param limited the new limited
-	 */
-	public void setLimited(boolean limited) {
-		this.limited = limited;
-	}
+  /**
+   * Sets the limited.
+   *
+   * @param limited the new limited
+   */
+  public void setLimited(boolean limited) {
+    this.limited = limited;
+  }
 
-	/**
-	 * Checks if is stringified.
-	 *
-	 * @return true, if is stringified
-	 */
-	public boolean isStringified() {
-		return stringify;
-	}
+  /**
+   * Checks if is stringified.
+   *
+   * @return true, if is stringified
+   */
+  public boolean isStringified() {
+    return stringify;
+  }
 
-	/**
-	 * Sets the stringified.
-	 *
-	 * @param stringify the new stringified
-	 */
-	public void setStringified(boolean stringify) {
-		this.stringify = stringify;
-	}
+  /**
+   * Sets the stringified.
+   *
+   * @param stringify the new stringified
+   */
+  public void setStringified(boolean stringify) {
+    this.stringify = stringify;
+  }
 
 }

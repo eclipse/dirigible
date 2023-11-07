@@ -27,125 +27,125 @@ import java.util.List;
 @Table(name = "DIRIGIBLE_CSVIM")
 public class Csvim extends Artefact {
 
-	/**
-	 * The Constant ARTEFACT_TYPE.
-	 */
-	public static final String ARTEFACT_TYPE = "csvim";
+  /**
+   * The Constant ARTEFACT_TYPE.
+   */
+  public static final String ARTEFACT_TYPE = "csvim";
 
-	/**
-	 * The id.
-	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "CSVIM_ID", nullable = false)
-	private Long id;
+  /**
+   * The id.
+   */
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "CSVIM_ID", nullable = false)
+  private Long id;
 
-	/**
-	 * The version.
-	 */
-	@Column(name = "CSVIM_VERSION", columnDefinition = "VARCHAR")
-	@Expose
-	private String version;
+  /**
+   * The version.
+   */
+  @Column(name = "CSVIM_VERSION", columnDefinition = "VARCHAR")
+  @Expose
+  private String version;
 
-	/**
-	 * The csv file definitions.
-	 */
-	@OneToMany(mappedBy = "csvim", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@Nullable
-	@Expose
-	private List<CsvFile> files = new ArrayList<CsvFile>();
+  /**
+   * The csv file definitions.
+   */
+  @OneToMany(mappedBy = "csvim", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @LazyCollection(LazyCollectionOption.FALSE)
+  @Nullable
+  @Expose
+  private List<CsvFile> files = new ArrayList<CsvFile>();
 
-	/**
-	 * Instantiates a new csvim.
-	 *
-	 * @param id the id
-	 * @param version the version
-	 * @param files the files
-	 */
-	public Csvim(Long id, String version, List<CsvFile> files) {
-		this.id = id;
-		this.version = version;
-		this.files = files;
-	}
+  /**
+   * Instantiates a new csvim.
+   *
+   * @param id the id
+   * @param version the version
+   * @param files the files
+   */
+  public Csvim(Long id, String version, List<CsvFile> files) {
+    this.id = id;
+    this.version = version;
+    this.files = files;
+  }
 
-	/**
-	 * Instantiates a new csvim.
-	 */
-	public Csvim() {
+  /**
+   * Instantiates a new csvim.
+   */
+  public Csvim() {
 
-	}
+  }
 
-	/**
-	 * Gets the id.
-	 *
-	 * @return get the id of csvim
-	 */
-	public Long getId() {
-		return id;
-	}
+  /**
+   * Gets the id.
+   *
+   * @return get the id of csvim
+   */
+  public Long getId() {
+    return id;
+  }
 
-	/**
-	 * Sets the id.
-	 *
-	 * @param id the id of the csvim
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
+  /**
+   * Sets the id.
+   *
+   * @param id the id of the csvim
+   */
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-	/**
-	 * Gets the version.
-	 *
-	 * @return get the version of csvim
-	 */
-	public String getVersion() {
-		return version;
-	}
+  /**
+   * Gets the version.
+   *
+   * @return get the version of csvim
+   */
+  public String getVersion() {
+    return version;
+  }
 
-	/**
-	 * Sets the version.
-	 *
-	 * @param version the version of the csvim
-	 */
-	public void setVersion(String version) {
-		this.version = version;
-	}
+  /**
+   * Sets the version.
+   *
+   * @param version the version of the csvim
+   */
+  public void setVersion(String version) {
+    this.version = version;
+  }
 
-	/**
-	 * Gets the files.
-	 *
-	 * @return get list of csvFiles
-	 */
-	@Nullable
-	public List<CsvFile> getFiles() {
-		return files;
-	}
+  /**
+   * Gets the files.
+   *
+   * @return get list of csvFiles
+   */
+  @Nullable
+  public List<CsvFile> getFiles() {
+    return files;
+  }
 
-	/**
-	 * Sets the files.
-	 *
-	 * @param csvFile set list of csvFiles
-	 */
-	public void setFiles(@Nullable List<CsvFile> csvFile) {
-		this.files = csvFile;
-	}
+  /**
+   * Sets the files.
+   *
+   * @param csvFile set list of csvFiles
+   */
+  public void setFiles(@Nullable List<CsvFile> csvFile) {
+    this.files = csvFile;
+  }
 
-	/**
-	 * Gets the file by location.
-	 *
-	 * @param location the location of the file
-	 * @return the file
-	 */
-	public CsvFile getFileByLocation(String location) {
-		if (files != null) {
-			for (CsvFile cf : files) {
-				if (cf	.getLocation()
-						.equals(location)) {
-					return cf;
-				}
-			}
-		}
-		return null;
-	}
+  /**
+   * Gets the file by location.
+   *
+   * @param location the location of the file
+   * @return the file
+   */
+  public CsvFile getFileByLocation(String location) {
+    if (files != null) {
+      for (CsvFile cf : files) {
+        if (cf.getLocation()
+              .equals(location)) {
+          return cf;
+        }
+      }
+    }
+    return null;
+  }
 }

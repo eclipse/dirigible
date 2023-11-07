@@ -27,44 +27,44 @@ import org.slf4j.LoggerFactory;
  */
 public class SchemaDropProcessor {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(SchemaDropProcessor.class);
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(SchemaDropProcessor.class);
 
-	/**
-	 * Execute the corresponding statement.
-	 *
-	 * @param connection the connection
-	 * @param schemaModel the schema model
-	 * @throws SQLException the SQL exception
-	 */
-	public static void execute(Connection connection, Schema schemaModel) throws SQLException {
-		for (View viewModel : schemaModel.getViews()) {
-			try {
-				ViewDropProcessor.execute(connection, viewModel);
-			} catch (SQLException e) {
-				if (logger.isErrorEnabled()) {
-					logger.error(e.getMessage(), e);
-				}
-			}
-		}
-		for (Table tableModel : schemaModel.getTables()) {
-			try {
-				TableForeignKeysDropProcessor.execute(connection, tableModel);
-			} catch (SQLException e) {
-				if (logger.isErrorEnabled()) {
-					logger.error(e.getMessage(), e);
-				}
-			}
-		}
-		for (Table tableModel : schemaModel.getTables()) {
-			try {
-				TableDropProcessor.execute(connection, tableModel);
-			} catch (SQLException e) {
-				if (logger.isErrorEnabled()) {
-					logger.error(e.getMessage(), e);
-				}
-			}
-		}
-	}
+  /**
+   * Execute the corresponding statement.
+   *
+   * @param connection the connection
+   * @param schemaModel the schema model
+   * @throws SQLException the SQL exception
+   */
+  public static void execute(Connection connection, Schema schemaModel) throws SQLException {
+    for (View viewModel : schemaModel.getViews()) {
+      try {
+        ViewDropProcessor.execute(connection, viewModel);
+      } catch (SQLException e) {
+        if (logger.isErrorEnabled()) {
+          logger.error(e.getMessage(), e);
+        }
+      }
+    }
+    for (Table tableModel : schemaModel.getTables()) {
+      try {
+        TableForeignKeysDropProcessor.execute(connection, tableModel);
+      } catch (SQLException e) {
+        if (logger.isErrorEnabled()) {
+          logger.error(e.getMessage(), e);
+        }
+      }
+    }
+    for (Table tableModel : schemaModel.getTables()) {
+      try {
+        TableDropProcessor.execute(connection, tableModel);
+      } catch (SQLException e) {
+        if (logger.isErrorEnabled()) {
+          logger.error(e.getMessage(), e);
+        }
+      }
+    }
+  }
 
 }

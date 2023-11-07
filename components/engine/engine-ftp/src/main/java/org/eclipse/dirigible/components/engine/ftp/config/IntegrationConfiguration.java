@@ -29,58 +29,58 @@ import org.springframework.messaging.MessageChannel;
 @Configuration
 public class IntegrationConfiguration {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(IntegrationConfiguration.class);
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(IntegrationConfiguration.class);
 
-	/**
-	 * Apache mina ftplet.
-	 *
-	 * @return the apache mina ftplet
-	 */
-	@Bean
-	ApacheMinaFtplet apacheMinaFtplet() {
-		return new ApacheMinaFtplet();
-	}
+  /**
+   * Apache mina ftplet.
+   *
+   * @return the apache mina ftplet
+   */
+  @Bean
+  ApacheMinaFtplet apacheMinaFtplet() {
+    return new ApacheMinaFtplet();
+  }
 
-	/**
-	 * Events channel.
-	 *
-	 * @return the message channel
-	 */
-	@Bean
-	MessageChannel eventsChannel() {
-		return MessageChannels	.direct()
-								.get();
-	}
+  /**
+   * Events channel.
+   *
+   * @return the message channel
+   */
+  @Bean
+  MessageChannel eventsChannel() {
+    return MessageChannels.direct()
+                          .get();
+  }
 
-	/**
-	 * Integration flow.
-	 *
-	 * @return the integration flow
-	 */
-	@Bean
-	IntegrationFlow integrationFlow() {
-		return IntegrationFlows	.from(this.eventsChannel())
-								.handle((GenericHandler<ApacheMinaFtpEvent>) (apacheMinaFtpEvent, messageHeaders) -> {
-									logger.info("new event: " + apacheMinaFtpEvent	.getClass()
-																					.getName()
-											+ ':' + apacheMinaFtpEvent.getSession());
-									return null;
-								})
-								.get();
-	}
+  /**
+   * Integration flow.
+   *
+   * @return the integration flow
+   */
+  @Bean
+  IntegrationFlow integrationFlow() {
+    return IntegrationFlows.from(this.eventsChannel())
+                           .handle((GenericHandler<ApacheMinaFtpEvent>) (apacheMinaFtpEvent, messageHeaders) -> {
+                             logger.info("new event: " + apacheMinaFtpEvent.getClass()
+                                                                           .getName()
+                                 + ':' + apacheMinaFtpEvent.getSession());
+                             return null;
+                           })
+                           .get();
+  }
 
-	/**
-	 * Application event listening message producer.
-	 *
-	 * @return the application event listening message producer
-	 */
-	@Bean
-	ApplicationEventListeningMessageProducer applicationEventListeningMessageProducer() {
-		var producer = new ApplicationEventListeningMessageProducer();
-		producer.setEventTypes(ApacheMinaFtpEvent.class);
-		producer.setOutputChannel(eventsChannel());
-		return producer;
-	}
+  /**
+   * Application event listening message producer.
+   *
+   * @return the application event listening message producer
+   */
+  @Bean
+  ApplicationEventListeningMessageProducer applicationEventListeningMessageProducer() {
+    var producer = new ApplicationEventListeningMessageProducer();
+    producer.setEventTypes(ApacheMinaFtpEvent.class);
+    producer.setOutputChannel(eventsChannel());
+    return producer;
+  }
 
 }

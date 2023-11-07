@@ -30,117 +30,117 @@ import org.junit.Test;
  */
 public class RepositoryGenericFileRenameTest {
 
-	/** The repository. */
-	protected IRepository repository;
+  /** The repository. */
+  protected IRepository repository;
 
-	/**
-	 * Test rename by collection.
-	 */
-	@Test
-	public void testRenameByCollection() {
-		if (repository == null) {
-			return;
-		}
+  /**
+   * Test rename by collection.
+   */
+  @Test
+  public void testRenameByCollection() {
+    if (repository == null) {
+      return;
+    }
 
-		ICollection collection = null;
-		IResource resource = null;
-		try {
-			collection = repository.createCollection("/a/b/c"); //$NON-NLS-1$
-			assertNotNull(collection);
-			assertTrue(collection.exists());
+    ICollection collection = null;
+    IResource resource = null;
+    try {
+      collection = repository.createCollection("/a/b/c"); //$NON-NLS-1$
+      assertNotNull(collection);
+      assertTrue(collection.exists());
 
-			byte[] bytes = new byte[400000];
-			for (int i = 0; i < bytes.length; i++) {
-				int ch = 'A' + new Random().nextInt(20);
-				bytes[i] = (byte) ch;
-			}
+      byte[] bytes = new byte[400000];
+      for (int i = 0; i < bytes.length; i++) {
+        int ch = 'A' + new Random().nextInt(20);
+        bytes[i] = (byte) ch;
+      }
 
-			String base64 = DatatypeConverter.printBase64Binary(bytes);
+      String base64 = DatatypeConverter.printBase64Binary(bytes);
 
-			resource = repository.createResource("/a/b/c/toBeRemoved1.txt", bytes, false, //$NON-NLS-1$
-					"text/plain"); //$NON-NLS-1$
-			assertNotNull(resource);
-			assertTrue(resource.exists());
-			assertFalse(resource.isBinary());
+      resource = repository.createResource("/a/b/c/toBeRemoved1.txt", bytes, false, //$NON-NLS-1$
+          "text/plain"); //$NON-NLS-1$
+      assertNotNull(resource);
+      assertTrue(resource.exists());
+      assertFalse(resource.isBinary());
 
-			collection.renameTo("x");
+      collection.renameTo("x");
 
-			collection = repository.getCollection("/a/b/x"); //$NON-NLS-1$
-			assertNotNull(collection);
-			assertTrue(collection.exists());
+      collection = repository.getCollection("/a/b/x"); //$NON-NLS-1$
+      assertNotNull(collection);
+      assertTrue(collection.exists());
 
-			resource = repository.getResource("/a/b/x/toBeRemoved1.txt"); //$NON-NLS-1$
-			assertNotNull(collection);
-			assertTrue(collection.exists());
+      resource = repository.getResource("/a/b/x/toBeRemoved1.txt"); //$NON-NLS-1$
+      assertNotNull(collection);
+      assertTrue(collection.exists());
 
-			String base64back = DatatypeConverter.printBase64Binary(resource.getContent());
+      String base64back = DatatypeConverter.printBase64Binary(resource.getContent());
 
-			assertEquals(base64, base64back);
+      assertEquals(base64, base64back);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		} finally {
-			try {
-				repository.removeCollection("/a");
-			} catch (Exception e) {
-				e.printStackTrace();
-				fail(e.getMessage());
-			}
-		}
-	}
+    } catch (Exception e) {
+      e.printStackTrace();
+      fail(e.getMessage());
+    } finally {
+      try {
+        repository.removeCollection("/a");
+      } catch (Exception e) {
+        e.printStackTrace();
+        fail(e.getMessage());
+      }
+    }
+  }
 
-	/**
-	 * Test rename by file.
-	 */
-	@Test
-	public void testRenameByFile() {
-		if (repository == null) {
-			return;
-		}
+  /**
+   * Test rename by file.
+   */
+  @Test
+  public void testRenameByFile() {
+    if (repository == null) {
+      return;
+    }
 
-		ICollection collection = null;
-		IResource resource = null;
-		try {
-			collection = repository.createCollection("/a/b/c"); //$NON-NLS-1$
-			assertNotNull(collection);
-			assertTrue(collection.exists());
+    ICollection collection = null;
+    IResource resource = null;
+    try {
+      collection = repository.createCollection("/a/b/c"); //$NON-NLS-1$
+      assertNotNull(collection);
+      assertTrue(collection.exists());
 
-			byte[] bytes = new byte[400000];
-			for (int i = 0; i < bytes.length; i++) {
-				int ch = 'A' + new Random().nextInt(20);
-				bytes[i] = (byte) ch;
-			}
+      byte[] bytes = new byte[400000];
+      for (int i = 0; i < bytes.length; i++) {
+        int ch = 'A' + new Random().nextInt(20);
+        bytes[i] = (byte) ch;
+      }
 
-			String base64 = DatatypeConverter.printBase64Binary(bytes);
+      String base64 = DatatypeConverter.printBase64Binary(bytes);
 
-			resource = repository.createResource("/a/b/c/toBeRemoved1.txt", bytes, false, //$NON-NLS-1$
-					"text/plain"); //$NON-NLS-1$
-			assertNotNull(resource);
-			assertTrue(resource.exists());
-			assertFalse(resource.isBinary());
+      resource = repository.createResource("/a/b/c/toBeRemoved1.txt", bytes, false, //$NON-NLS-1$
+          "text/plain"); //$NON-NLS-1$
+      assertNotNull(resource);
+      assertTrue(resource.exists());
+      assertFalse(resource.isBinary());
 
-			resource.renameTo("toBeRemoved2.txt");
+      resource.renameTo("toBeRemoved2.txt");
 
-			resource = repository.getResource("/a/b/c/toBeRemoved2.txt"); //$NON-NLS-1$
-			assertNotNull(collection);
-			assertTrue(collection.exists());
-			assertEquals("toBeRemoved2.txt", resource.getName());
+      resource = repository.getResource("/a/b/c/toBeRemoved2.txt"); //$NON-NLS-1$
+      assertNotNull(collection);
+      assertTrue(collection.exists());
+      assertEquals("toBeRemoved2.txt", resource.getName());
 
-			String base64back = DatatypeConverter.printBase64Binary(resource.getContent());
+      String base64back = DatatypeConverter.printBase64Binary(resource.getContent());
 
-			assertEquals(base64, base64back);
+      assertEquals(base64, base64back);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		} finally {
-			try {
-				repository.removeCollection("/a");
-			} catch (Exception e) {
-				e.printStackTrace();
-				fail(e.getMessage());
-			}
-		}
-	}
+    } catch (Exception e) {
+      e.printStackTrace();
+      fail(e.getMessage());
+    } finally {
+      try {
+        repository.removeCollection("/a");
+      } catch (Exception e) {
+        e.printStackTrace();
+        fail(e.getMessage());
+      }
+    }
+  }
 }

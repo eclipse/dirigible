@@ -17,87 +17,87 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
  */
 public class HttpSecurityURIConfigurator {
 
-	/**
-	 * Configure.
-	 *
-	 * @param http the http
-	 * @throws Exception the exception
-	 */
-	public static void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-			.antMatchers("/")
-			.permitAll()
-			.antMatchers("/home")
-			.permitAll()
-			.antMatchers("/logout")
-			.permitAll()
-			.antMatchers("/index-busy.html")
-			.permitAll()
+  /**
+   * Configure.
+   *
+   * @param http the http
+   * @throws Exception the exception
+   */
+  public static void configure(HttpSecurity http) throws Exception {
+    http.authorizeRequests()
+        .antMatchers("/")
+        .permitAll()
+        .antMatchers("/home")
+        .permitAll()
+        .antMatchers("/logout")
+        .permitAll()
+        .antMatchers("/index-busy.html")
+        .permitAll()
 
-			.antMatchers("/stomp")
-			.permitAll()
+        .antMatchers("/stomp")
+        .permitAll()
 
-			.antMatchers("/error/**")
-			.permitAll()
-			.antMatchers("/error.html")
-			.permitAll()
+        .antMatchers("/error/**")
+        .permitAll()
+        .antMatchers("/error.html")
+        .permitAll()
 
-			// Public
-			.antMatchers("/favicon.ico")
-			.permitAll()
-			.antMatchers("/public/**")
-			.permitAll()
-			.antMatchers("/webjars/**")
-			.permitAll()
+        // Public
+        .antMatchers("/favicon.ico")
+        .permitAll()
+        .antMatchers("/public/**")
+        .permitAll()
+        .antMatchers("/webjars/**")
+        .permitAll()
 
-			.antMatchers("/services/core/theme/**")
-			.permitAll()
-			.antMatchers("/services/core/version/**")
-			.permitAll()
-			.antMatchers("/services/core/healthcheck/**")
-			.permitAll()
-			.antMatchers("/services/web/resources/**")
-			.permitAll()
-			.antMatchers("/services/web/resources-core/**")
-			.permitAll()
-			.antMatchers("/services/js/resources-core/**")
-			.permitAll()
-			.antMatchers("/camel/*")
-			.permitAll()
+        .antMatchers("/services/core/theme/**")
+        .permitAll()
+        .antMatchers("/services/core/version/**")
+        .permitAll()
+        .antMatchers("/services/core/healthcheck/**")
+        .permitAll()
+        .antMatchers("/services/web/resources/**")
+        .permitAll()
+        .antMatchers("/services/web/resources-core/**")
+        .permitAll()
+        .antMatchers("/services/js/resources-core/**")
+        .permitAll()
+        .antMatchers("/camel/*")
+        .permitAll()
 
-			.antMatchers("/actuator/**")
-			.permitAll()
+        .antMatchers("/actuator/**")
+        .permitAll()
 
-			// Authenticated
-			.antMatchers("/services/**")
-			.authenticated()
-			.antMatchers("/websockets/**")
-			.authenticated()
-			.antMatchers("/odata/**")
-			.authenticated()
+        // Authenticated
+        .antMatchers("/services/**")
+        .authenticated()
+        .antMatchers("/websockets/**")
+        .authenticated()
+        .antMatchers("/odata/**")
+        .authenticated()
 
-			// Swagger UI
-			.antMatchers("/swagger-ui/**")
-			.authenticated()
-			.antMatchers("/v3/api-docs/swagger-config")
-			.authenticated()
-			.antMatchers("/v3/api-docs/**")
-			.authenticated()
+        // Swagger UI
+        .antMatchers("/swagger-ui/**")
+        .authenticated()
+        .antMatchers("/v3/api-docs/swagger-config")
+        .authenticated()
+        .antMatchers("/v3/api-docs/**")
+        .authenticated()
 
-			// "Developer" role required
-			.antMatchers("/services/ide/**")
-			.hasRole("Developer")
-			.antMatchers("/websockets/ide/**")
-			.hasRole("Developer")
+        // "Developer" role required
+        .antMatchers("/services/ide/**")
+        .hasRole("Developer")
+        .antMatchers("/websockets/ide/**")
+        .hasRole("Developer")
 
-			// "Operator" role required
-			// .antMatchers("/services/ops/**").hasRole("Operator")
-			// .antMatchers("/services/transport/**").hasRole("Operator")
-			// .antMatchers("/websockets/ops/**").hasRole("Operator")
+        // "Operator" role required
+        // .antMatchers("/services/ops/**").hasRole("Operator")
+        // .antMatchers("/services/transport/**").hasRole("Operator")
+        // .antMatchers("/websockets/ops/**").hasRole("Operator")
 
-			// Deny all other requests
-			.anyRequest()
-			.denyAll();
-	}
+        // Deny all other requests
+        .anyRequest()
+        .denyAll();
+  }
 
 }

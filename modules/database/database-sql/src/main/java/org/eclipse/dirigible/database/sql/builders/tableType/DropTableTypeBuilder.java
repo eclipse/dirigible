@@ -18,23 +18,23 @@ import org.eclipse.dirigible.database.sql.builders.AbstractDropSqlBuilder;
  */
 public class DropTableTypeBuilder extends AbstractDropSqlBuilder {
 
-	/**
-	 * Instantiates a new drop table type builder.
-	 *
-	 * @param dialect the dialect
-	 * @param tableType the tableType
-	 */
-	public DropTableTypeBuilder(ISqlDialect dialect, String tableType) {
-		super(dialect);
-	}
+  /**
+   * Instantiates a new drop table type builder.
+   *
+   * @param dialect the dialect
+   * @param tableType the tableType
+   */
+  public DropTableTypeBuilder(ISqlDialect dialect, String tableType) {
+    super(dialect);
+  }
 
-	/**
-	 * Generate.
-	 *
-	 * @return the string
-	 */
-	@Override
-	public String generate() {
-		throw new IllegalStateException("Table type is not supported for this dialect");
-	}
+  /**
+   * Generate.
+   *
+   * @return the string
+   */
+  @Override
+  public String generate() {
+    throw new IllegalStateException("Table type is not supported for this dialect");
+  }
 }

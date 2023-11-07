@@ -27,75 +27,75 @@ import java.util.Optional;
 @Transactional
 public class CamelService implements ArtefactService<Camel> {
 
-	/** The camel repository. */
-	@Autowired
-	private CamelRepository camelRepository;
+  /** The camel repository. */
+  @Autowired
+  private CamelRepository camelRepository;
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<Camel> getAll() {
-		return camelRepository.findAll();
-	}
+  @Override
+  @Transactional(readOnly = true)
+  public List<Camel> getAll() {
+    return camelRepository.findAll();
+  }
 
-	@Override
-	@Transactional(readOnly = true)
-	public Page<Camel> getPages(Pageable pageable) {
-		return camelRepository.findAll(pageable);
-	}
+  @Override
+  @Transactional(readOnly = true)
+  public Page<Camel> getPages(Pageable pageable) {
+    return camelRepository.findAll(pageable);
+  }
 
-	@Override
-	@Transactional(readOnly = true)
-	public Camel findById(Long id) {
-		Optional<Camel> camel = camelRepository.findById(id);
-		if (camel.isPresent()) {
-			return camel.get();
-		} else {
-			throw new IllegalArgumentException("Camel with id does not exist: " + id);
-		}
-	}
+  @Override
+  @Transactional(readOnly = true)
+  public Camel findById(Long id) {
+    Optional<Camel> camel = camelRepository.findById(id);
+    if (camel.isPresent()) {
+      return camel.get();
+    } else {
+      throw new IllegalArgumentException("Camel with id does not exist: " + id);
+    }
+  }
 
-	@Override
-	@Transactional(readOnly = true)
-	public Camel findByName(String name) {
-		Camel filter = new Camel();
-		filter.setName(name);
-		Example<Camel> example = Example.of(filter);
-		Optional<Camel> camel = camelRepository.findOne(example);
-		if (camel.isPresent()) {
-			return camel.get();
-		} else {
-			throw new IllegalArgumentException("Camel with name does not exist: " + name);
-		}
-	}
+  @Override
+  @Transactional(readOnly = true)
+  public Camel findByName(String name) {
+    Camel filter = new Camel();
+    filter.setName(name);
+    Example<Camel> example = Example.of(filter);
+    Optional<Camel> camel = camelRepository.findOne(example);
+    if (camel.isPresent()) {
+      return camel.get();
+    } else {
+      throw new IllegalArgumentException("Camel with name does not exist: " + name);
+    }
+  }
 
-	@Override
-	public List<Camel> findByLocation(String location) {
-		Camel filter = new Camel();
-		filter.setLocation(location);
-		Example<Camel> example = Example.of(filter);
-		return camelRepository.findAll(example);
-	}
+  @Override
+  public List<Camel> findByLocation(String location) {
+    Camel filter = new Camel();
+    filter.setLocation(location);
+    Example<Camel> example = Example.of(filter);
+    return camelRepository.findAll(example);
+  }
 
-	@Override
-	@Transactional(readOnly = true)
-	public Camel findByKey(String key) {
-		Camel filter = new Camel();
-		filter.setKey(key);
-		Example<Camel> example = Example.of(filter);
-		Optional<Camel> camel = camelRepository.findOne(example);
-		if (camel.isPresent()) {
-			return camel.get();
-		}
-		return null;
-	}
+  @Override
+  @Transactional(readOnly = true)
+  public Camel findByKey(String key) {
+    Camel filter = new Camel();
+    filter.setKey(key);
+    Example<Camel> example = Example.of(filter);
+    Optional<Camel> camel = camelRepository.findOne(example);
+    if (camel.isPresent()) {
+      return camel.get();
+    }
+    return null;
+  }
 
-	@Override
-	public Camel save(Camel camel) {
-		return camelRepository.saveAndFlush(camel);
-	}
+  @Override
+  public Camel save(Camel camel) {
+    return camelRepository.saveAndFlush(camel);
+  }
 
-	@Override
-	public void delete(Camel camel) {
-		camelRepository.delete(camel);
-	}
+  @Override
+  public void delete(Camel camel) {
+    camelRepository.delete(camel);
+  }
 }

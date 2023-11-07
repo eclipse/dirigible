@@ -27,41 +27,41 @@ import java.util.List;
 @Scope("singleton")
 public class SynchronizationInitializer {
 
-	/** The synchronization processor. */
-	private final SynchronizationProcessor synchronizationProcessor;
+  /** The synchronization processor. */
+  private final SynchronizationProcessor synchronizationProcessor;
 
-	/** The classpath expander. */
-	private final ClasspathExpander classpathExpander;
+  /** The classpath expander. */
+  private final ClasspathExpander classpathExpander;
 
-	/** The initialization processor. */
-	private final InitializationProcessor initializationProcessor;
+  /** The initialization processor. */
+  private final InitializationProcessor initializationProcessor;
 
-	/**
-	 * Instantiates a new synchronizers initializer.
-	 *
-	 * @param synchronizationProcessor the synchronization processor
-	 * @param classpathExpander the classpath expander
-	 * @param initializationProcessor the initialization processor
-	 */
-	@Autowired
-	public SynchronizationInitializer(SynchronizationProcessor synchronizationProcessor, ClasspathExpander classpathExpander,
-			InitializationProcessor initializationProcessor) {
-		this.synchronizationProcessor = synchronizationProcessor;
-		this.classpathExpander = classpathExpander;
-		this.initializationProcessor = initializationProcessor;
-	}
+  /**
+   * Instantiates a new synchronizers initializer.
+   *
+   * @param synchronizationProcessor the synchronization processor
+   * @param classpathExpander the classpath expander
+   * @param initializationProcessor the initialization processor
+   */
+  @Autowired
+  public SynchronizationInitializer(SynchronizationProcessor synchronizationProcessor, ClasspathExpander classpathExpander,
+      InitializationProcessor initializationProcessor) {
+    this.synchronizationProcessor = synchronizationProcessor;
+    this.classpathExpander = classpathExpander;
+    this.initializationProcessor = initializationProcessor;
+  }
 
-	/**
-	 * Handle context start.
-	 *
-	 * @param applicationReadyEvent the ApplicationReadyEvent
-	 */
-	@EventListener(ApplicationReadyEvent.class)
-	public void handleContextStart(final ApplicationReadyEvent applicationReadyEvent) {
-		synchronizationProcessor.prepareSynchronizers();
-		classpathExpander.expandContent();
-		synchronizationProcessor.processSynchronizers();
-		initializationProcessor.processInitializers();
-	}
+  /**
+   * Handle context start.
+   *
+   * @param applicationReadyEvent the ApplicationReadyEvent
+   */
+  @EventListener(ApplicationReadyEvent.class)
+  public void handleContextStart(final ApplicationReadyEvent applicationReadyEvent) {
+    synchronizationProcessor.prepareSynchronizers();
+    classpathExpander.expandContent();
+    synchronizationProcessor.processSynchronizers();
+    initializationProcessor.processInitializers();
+  }
 
 }

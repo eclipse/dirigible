@@ -21,64 +21,64 @@ import javax.persistence.*;
 @Table(name = "DIRIGIBLE_OPENAPI")
 public class OpenAPI extends Artefact {
 
-	/**
-	 * The Constant ARTEFACT_TYPE.
-	 */
-	public static final String ARTEFACT_TYPE = "openapi";
+  /**
+   * The Constant ARTEFACT_TYPE.
+   */
+  public static final String ARTEFACT_TYPE = "openapi";
 
-	/**
-	 * The id.
-	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "OPENAPI_ID", nullable = false)
-	private Long id;
+  /**
+   * The id.
+   */
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "OPENAPI_ID", nullable = false)
+  private Long id;
 
-	/**
-	 * Instantiates a new open API.
-	 *
-	 * @param location the location
-	 * @param name the name
-	 * @param description the description
-	 */
-	public OpenAPI(String location, String name, String description) {
-		super(location, name, ARTEFACT_TYPE, description, null);
-	}
+  /**
+   * Instantiates a new open API.
+   *
+   * @param location the location
+   * @param name the name
+   * @param description the description
+   */
+  public OpenAPI(String location, String name, String description) {
+    super(location, name, ARTEFACT_TYPE, description, null);
+  }
 
-	/**
-	 * Instantiates a new open API.
-	 */
-	public OpenAPI() {
-		super();
-	}
+  /**
+   * Instantiates a new open API.
+   */
+  public OpenAPI() {
+    super();
+  }
 
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
+  /**
+   * Gets the id.
+   *
+   * @return the id
+   */
+  public Long getId() {
+    return id;
+  }
 
-	/**
-	 * Sets the id.
-	 *
-	 * @param id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
+  /**
+   * Sets the id.
+   *
+   * @param id to set
+   */
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-	/**
-	 * To string.
-	 *
-	 * @return the string
-	 */
-	@Override
-	public String toString() {
-		return "OpenAPI{" + "id=" + id + ", location='" + location + '\'' + ", name='" + name + '\'' + ", type='" + type + '\''
-				+ ", description='" + description + '\'' + ", key='" + key + '\'' + ", dependencies='" + dependencies + '\''
-				+ ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + '}';
-	}
+  /**
+   * To string.
+   *
+   * @return the string
+   */
+  @Override
+  public String toString() {
+    return "OpenAPI{" + "id=" + id + ", location='" + location + '\'' + ", name='" + name + '\'' + ", type='" + type + '\''
+        + ", description='" + description + '\'' + ", key='" + key + '\'' + ", dependencies='" + dependencies + '\'' + ", createdBy="
+        + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + '}';
+  }
 }

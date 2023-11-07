@@ -25,65 +25,65 @@ import org.slf4j.LoggerFactory;
  */
 public class DataTransferSortableTableWrapper implements TopologicallySortable {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(DataTransferSortableTableWrapper.class);
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(DataTransferSortableTableWrapper.class);
 
-	/** The table model. */
-	private PersistenceTableModel tableModel;
+  /** The table model. */
+  private PersistenceTableModel tableModel;
 
-	/** The wrappers. */
-	Map<String, DataTransferSortableTableWrapper> wrappers;
+  /** The wrappers. */
+  Map<String, DataTransferSortableTableWrapper> wrappers;
 
-	/**
-	 * Instantiates a new data transfer sortable table wrapper.
-	 *
-	 * @param tableModel the table model
-	 * @param wrappers the wrappers
-	 */
-	public DataTransferSortableTableWrapper(PersistenceTableModel tableModel, Map<String, DataTransferSortableTableWrapper> wrappers) {
-		this.tableModel = tableModel;
-		this.wrappers = wrappers;
-		this.wrappers.put(getId(), this);
-	}
+  /**
+   * Instantiates a new data transfer sortable table wrapper.
+   *
+   * @param tableModel the table model
+   * @param wrappers the wrappers
+   */
+  public DataTransferSortableTableWrapper(PersistenceTableModel tableModel, Map<String, DataTransferSortableTableWrapper> wrappers) {
+    this.tableModel = tableModel;
+    this.wrappers = wrappers;
+    this.wrappers.put(getId(), this);
+  }
 
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
-	@Override
-	public String getId() {
-		return tableModel.getTableName();
-	}
+  /**
+   * Gets the id.
+   *
+   * @return the id
+   */
+  @Override
+  public String getId() {
+    return tableModel.getTableName();
+  }
 
-	/**
-	 * Gets the dependencies.
-	 *
-	 * @return the dependencies
-	 */
-	@Override
-	public List<TopologicallySortable> getDependencies() {
-		List<TopologicallySortable> dependencies = new ArrayList<TopologicallySortable>();
-		for (PersistenceTableRelationModel dependency : this.tableModel.getRelations()) {
-			String dependencyName = dependency.getToTableName();
-			if (!wrappers.containsKey(dependencyName)) {
-				if (logger.isWarnEnabled()) {
-					logger.warn("Dependency is not present in this cycle: " + dependencyName);
-				}
-			} else {
-				dependencies.add(wrappers.get(dependencyName));
-			}
-		}
-		return dependencies;
-	}
+  /**
+   * Gets the dependencies.
+   *
+   * @return the dependencies
+   */
+  @Override
+  public List<TopologicallySortable> getDependencies() {
+    List<TopologicallySortable> dependencies = new ArrayList<TopologicallySortable>();
+    for (PersistenceTableRelationModel dependency : this.tableModel.getRelations()) {
+      String dependencyName = dependency.getToTableName();
+      if (!wrappers.containsKey(dependencyName)) {
+        if (logger.isWarnEnabled()) {
+          logger.warn("Dependency is not present in this cycle: " + dependencyName);
+        }
+      } else {
+        dependencies.add(wrappers.get(dependencyName));
+      }
+    }
+    return dependencies;
+  }
 
-	/**
-	 * Gets the table model.
-	 *
-	 * @return the table model
-	 */
-	public PersistenceTableModel getTableModel() {
-		return tableModel;
-	}
+  /**
+   * Gets the table model.
+   *
+   * @return the table model
+   */
+  public PersistenceTableModel getTableModel() {
+    return tableModel;
+  }
 
 }

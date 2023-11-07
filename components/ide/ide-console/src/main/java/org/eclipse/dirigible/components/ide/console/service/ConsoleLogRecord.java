@@ -15,54 +15,54 @@ package org.eclipse.dirigible.components.ide.console.service;
  */
 public class ConsoleLogRecord {
 
-	/** The level. */
-	private String level;
+  /** The level. */
+  private String level;
 
-	/** The message. */
-	private String message;
+  /** The message. */
+  private String message;
 
-	/** The timestamp. */
-	private long timestamp;
+  /** The timestamp. */
+  private long timestamp;
 
-	/**
-	 * Instantiates a new console log record.
-	 *
-	 * @param level the level
-	 * @param message the message
-	 * @param timestamp the timestamp
-	 */
-	public ConsoleLogRecord(String level, String message, long timestamp) {
-		super();
-		this.level = level;
-		this.message = message;
-		this.timestamp = timestamp;
-	}
+  /**
+   * Instantiates a new console log record.
+   *
+   * @param level the level
+   * @param message the message
+   * @param timestamp the timestamp
+   */
+  public ConsoleLogRecord(String level, String message, long timestamp) {
+    super();
+    this.level = level;
+    this.message = message;
+    this.timestamp = timestamp;
+  }
 
-	/**
-	 * Gets the level.
-	 *
-	 * @return the level
-	 */
-	public String getLevel() {
-		return level;
-	}
+  /**
+   * Gets the level.
+   *
+   * @return the level
+   */
+  public String getLevel() {
+    return level;
+  }
 
-	/**
-	 * Gets the message.
-	 *
-	 * @return the message
-	 */
-	public String getMessage() {
-		return message;
-	}
+  /**
+   * Gets the message.
+   *
+   * @return the message
+   */
+  public String getMessage() {
+    return message;
+  }
 
-	/**
-	 * Gets the timestamp.
-	 *
-	 * @return the timestamp
-	 */
-	public long getTimestamp() {
-		return timestamp;
-	}
+  /**
+   * Gets the timestamp.
+   *
+   * @return the timestamp
+   */
+  public long getTimestamp() {
+    return timestamp;
+  }
 
 }

@@ -33,25 +33,25 @@ import org.springframework.web.context.WebApplicationContext;
 @TestInstance(Lifecycle.PER_CLASS)
 public class PlatformSuiteTest {
 
-	@Autowired
-	private JavascriptService javascriptService;
+  @Autowired
+  private JavascriptService javascriptService;
 
-	@Autowired
-	private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-	@Autowired
-	protected WebApplicationContext wac;
+  @Autowired
+  protected WebApplicationContext wac;
 
-	@Test
-	public void executePlatformTest() throws Exception {
-		javascriptService.handleRequest("platform-tests", "engines-get-types.js", null, null, false);
-		javascriptService.handleRequest("platform-tests", "lifecycle-publish-project.js", null, null, false);
-		javascriptService.handleRequest("platform-tests", "repository-create-file.js", null, null, false);
-		javascriptService.handleRequest("platform-tests", "workspace-create-workspace.js", null, null, false);
-		javascriptService.handleRequest("platform-tests", "command-execute.js", null, null, false);
-	}
+  @Test
+  public void executePlatformTest() throws Exception {
+    javascriptService.handleRequest("platform-tests", "engines-get-types.js", null, null, false);
+    javascriptService.handleRequest("platform-tests", "lifecycle-publish-project.js", null, null, false);
+    javascriptService.handleRequest("platform-tests", "repository-create-file.js", null, null, false);
+    javascriptService.handleRequest("platform-tests", "workspace-create-workspace.js", null, null, false);
+    javascriptService.handleRequest("platform-tests", "command-execute.js", null, null, false);
+  }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 }

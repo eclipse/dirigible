@@ -17,14 +17,14 @@ import org.eclipse.dirigible.repository.api.IRepository;
  */
 public class CmisRepositoryFactory {
 
-	/**
-	 * Creates a new CmisRepository object.
-	 *
-	 * @param repository the repository
-	 * @return the cmis repository
-	 */
-	public static CmisRepository createCmisRepository(IRepository repository) {
-		return new CmisInternalRepository(repository);
-	}
+  /**
+   * Creates a new CmisRepository object.
+   *
+   * @param repository the repository
+   * @return the cmis repository
+   */
+  public static CmisRepository createCmisRepository(IRepository repository) {
+    return new CmisInternalRepository(repository);
+  }
 
 }

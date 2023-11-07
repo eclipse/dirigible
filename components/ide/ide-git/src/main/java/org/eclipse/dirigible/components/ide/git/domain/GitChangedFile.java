@@ -15,59 +15,59 @@ package org.eclipse.dirigible.components.ide.git.domain;
  */
 public class GitChangedFile {
 
-	/** The path. */
-	private String path;
+  /** The path. */
+  private String path;
 
-	/** The type. */
-	private int type;
+  /** The type. */
+  private int type;
 
-	/**
-	 * The constructor.
-	 *
-	 * @param path the full path
-	 * @param type the change type
-	 */
-	public GitChangedFile(String path, int type) {
-		super();
-		this.path = path;
-		this.type = type;
-	}
+  /**
+   * The constructor.
+   *
+   * @param path the full path
+   * @param type the change type
+   */
+  public GitChangedFile(String path, int type) {
+    super();
+    this.path = path;
+    this.type = type;
+  }
 
-	/**
-	 * Getter for path.
-	 *
-	 * @return the path
-	 */
-	public String getPath() {
-		return path;
-	}
+  /**
+   * Getter for path.
+   *
+   * @return the path
+   */
+  public String getPath() {
+    return path;
+  }
 
-	/**
-	 * Setter for path.
-	 *
-	 * @param path the path to set
-	 */
-	public void setPath(String path) {
-		this.path = path;
-	}
+  /**
+   * Setter for path.
+   *
+   * @param path the path to set
+   */
+  public void setPath(String path) {
+    this.path = path;
+  }
 
-	/**
-	 * Getter for type.
-	 *
-	 * @return the type
-	 */
-	public int getType() {
-		return type;
-	}
+  /**
+   * Getter for type.
+   *
+   * @return the type
+   */
+  public int getType() {
+    return type;
+  }
 
-	/**
-	 * Setter for type.
-	 *
-	 * @param type the type to set
-	 */
-	public void setType(int type) {
-		this.type = type;
-	}
+  /**
+   * Setter for type.
+   *
+   * @param type the type to set
+   */
+  public void setType(int type) {
+    this.type = type;
+  }
 
 
 

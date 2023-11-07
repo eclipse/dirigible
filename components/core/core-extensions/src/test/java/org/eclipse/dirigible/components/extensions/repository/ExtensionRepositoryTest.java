@@ -36,63 +36,63 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ExtensionRepositoryTest {
 
-	@Autowired
-	private ExtensionRepository extensionRepository;
+  @Autowired
+  private ExtensionRepository extensionRepository;
 
-	@Autowired
-	EntityManager entityManager;
+  @Autowired
+  EntityManager entityManager;
 
-	@BeforeEach
-	public void setup() throws Exception {
+  @BeforeEach
+  public void setup() throws Exception {
 
-		cleanup();
+    cleanup();
 
-		// create test Extensions
-		extensionRepository.save(createExtension("/a/b/c/e1.extension", "e1", "description", "epoint1", "e1"));
-		extensionRepository.save(createExtension("/a/b/c/e2.extension", "e2", "description", "epoint1", "e2"));
-		extensionRepository.save(createExtension("/a/b/c/e3.extension", "e3", "description", "epoint2", "e3"));
-		extensionRepository.save(createExtension("/a/b/c/e4.extension", "e4", "description", "epoint2", "e4"));
-		extensionRepository.save(createExtension("/a/b/c/e5.extension", "e5", "description", "epoint2", "e5"));
-	}
+    // create test Extensions
+    extensionRepository.save(createExtension("/a/b/c/e1.extension", "e1", "description", "epoint1", "e1"));
+    extensionRepository.save(createExtension("/a/b/c/e2.extension", "e2", "description", "epoint1", "e2"));
+    extensionRepository.save(createExtension("/a/b/c/e3.extension", "e3", "description", "epoint2", "e3"));
+    extensionRepository.save(createExtension("/a/b/c/e4.extension", "e4", "description", "epoint2", "e4"));
+    extensionRepository.save(createExtension("/a/b/c/e5.extension", "e5", "description", "epoint2", "e5"));
+  }
 
-	@AfterEach
-	public void cleanup() throws Exception {
-		extensionRepository.deleteAll();
-	}
+  @AfterEach
+  public void cleanup() throws Exception {
+    extensionRepository.deleteAll();
+  }
 
 
-	@Test
-	public void getOne() {
-		Long id = extensionRepository	.findAll()
-										.get(0)
-										.getId();
-		Optional<Extension> optional = extensionRepository.findById(id);
-		Extension extension = optional.isPresent() ? optional.get() : null;
-		assertNotNull(extension);
-		assertNotNull(extension.getLocation());
-		assertNotNull(extension.getCreatedBy());
-		assertEquals("SYSTEM", extension.getCreatedBy());
-		assertNotNull(extension.getCreatedAt());
-		// assertEquals("extension:/a/b/c/e1.extension:e1",extension.getKey());
-	}
+  @Test
+  public void getOne() {
+    Long id = extensionRepository.findAll()
+                                 .get(0)
+                                 .getId();
+    Optional<Extension> optional = extensionRepository.findById(id);
+    Extension extension = optional.isPresent() ? optional.get() : null;
+    assertNotNull(extension);
+    assertNotNull(extension.getLocation());
+    assertNotNull(extension.getCreatedBy());
+    assertEquals("SYSTEM", extension.getCreatedBy());
+    assertNotNull(extension.getCreatedAt());
+    // assertEquals("extension:/a/b/c/e1.extension:e1",extension.getKey());
+  }
 
-	@Test
-	public void getReferenceUsingEntityManager() {
-		Long id = extensionRepository	.findAll()
-										.get(0)
-										.getId();
-		Extension extension = entityManager.getReference(Extension.class, id);
-		assertNotNull(extension);
-		assertNotNull(extension.getLocation());
-	}
+  @Test
+  public void getReferenceUsingEntityManager() {
+    Long id = extensionRepository.findAll()
+                                 .get(0)
+                                 .getId();
+    Extension extension = entityManager.getReference(Extension.class, id);
+    assertNotNull(extension);
+    assertNotNull(extension.getLocation());
+  }
 
-	public static Extension createExtension(String location, String name, String description, String extensionPoint, String module) {
-		Extension extension = new Extension(location, name, description, extensionPoint, module);
-		return extension;
-	}
+  public static Extension createExtension(String location, String name, String description, String extensionPoint, String module) {
+    Extension extension = new Extension(location, name, description, extensionPoint, module);
+    return extension;
+  }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 
 }

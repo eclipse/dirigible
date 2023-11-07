@@ -25,67 +25,67 @@ import java.util.regex.Pattern;
  */
 public class JavaModuleResolver implements ModuleResolver {
 
-	/** The Constant JAVA_MODULE_PATTERN. */
-	private static final Pattern JAVA_MODULE_PATTERN = Pattern.compile("(@java)(\\/)(.+[^\"])");
+  /** The Constant JAVA_MODULE_PATTERN. */
+  private static final Pattern JAVA_MODULE_PATTERN = Pattern.compile("(@java)(\\/)(.+[^\"])");
 
-	/** The cache directory path. */
-	private final Path cacheDirectoryPath;
+  /** The cache directory path. */
+  private final Path cacheDirectoryPath;
 
-	/** The java package proxy generator. */
-	private final JavaPackageProxyGenerator javaPackageProxyGenerator;
+  /** The java package proxy generator. */
+  private final JavaPackageProxyGenerator javaPackageProxyGenerator;
 
-	/**
-	 * Instantiates a new java module resolver.
-	 *
-	 * @param cacheDirectoryPath the cache directory path
-	 */
-	public JavaModuleResolver(Path cacheDirectoryPath) {
-		javaPackageProxyGenerator = new JavaPackageProxyGenerator();
-		cacheDirectoryPath	.toFile()
-							.mkdirs();
-		this.cacheDirectoryPath = cacheDirectoryPath;
-	}
+  /**
+   * Instantiates a new java module resolver.
+   *
+   * @param cacheDirectoryPath the cache directory path
+   */
+  public JavaModuleResolver(Path cacheDirectoryPath) {
+    javaPackageProxyGenerator = new JavaPackageProxyGenerator();
+    cacheDirectoryPath.toFile()
+                      .mkdirs();
+    this.cacheDirectoryPath = cacheDirectoryPath;
+  }
 
-	/**
-	 * Checks if is resolvable.
-	 *
-	 * @param moduleToResolve the module to resolve
-	 * @return true, if is resolvable
-	 */
-	@Override
-	public boolean isResolvable(String moduleToResolve) {
-		return moduleToResolve.contains("@java");
-	}
+  /**
+   * Checks if is resolvable.
+   *
+   * @param moduleToResolve the module to resolve
+   * @return true, if is resolvable
+   */
+  @Override
+  public boolean isResolvable(String moduleToResolve) {
+    return moduleToResolve.contains("@java");
+  }
 
-	/**
-	 * Resolve.
-	 *
-	 * @param moduleToResolve the module to resolve
-	 * @return the path
-	 */
-	@Override
-	public Path resolve(String moduleToResolve) {
-		Matcher modulePathMatcher = JAVA_MODULE_PATTERN.matcher(moduleToResolve);
-		if (!modulePathMatcher.matches()) {
-			throw new RuntimeException("Found invalid Java module path!");
-		}
+  /**
+   * Resolve.
+   *
+   * @param moduleToResolve the module to resolve
+   * @return the path
+   */
+  @Override
+  public Path resolve(String moduleToResolve) {
+    Matcher modulePathMatcher = JAVA_MODULE_PATTERN.matcher(moduleToResolve);
+    if (!modulePathMatcher.matches()) {
+      throw new RuntimeException("Found invalid Java module path!");
+    }
 
-		String javaPackageName = modulePathMatcher.group(3);
+    String javaPackageName = modulePathMatcher.group(3);
 
-		Path javaPackageProxyGeneratedPath = cacheDirectoryPath.resolve(javaPackageName + ".mjs");
-		File javaPackageProxyGeneratedFile = javaPackageProxyGeneratedPath.toFile();
+    Path javaPackageProxyGeneratedPath = cacheDirectoryPath.resolve(javaPackageName + ".mjs");
+    File javaPackageProxyGeneratedFile = javaPackageProxyGeneratedPath.toFile();
 
-		if (javaPackageProxyGeneratedFile.exists()) {
-			return javaPackageProxyGeneratedPath;
-		}
+    if (javaPackageProxyGeneratedFile.exists()) {
+      return javaPackageProxyGeneratedPath;
+    }
 
-		String coreModuleContent = javaPackageProxyGenerator.generate(javaPackageName);
-		try {
-			Files.writeString(javaPackageProxyGeneratedPath, coreModuleContent, StandardCharsets.UTF_8);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+    String coreModuleContent = javaPackageProxyGenerator.generate(javaPackageName);
+    try {
+      Files.writeString(javaPackageProxyGeneratedPath, coreModuleContent, StandardCharsets.UTF_8);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
 
-		return javaPackageProxyGeneratedPath;
-	}
+    return javaPackageProxyGeneratedPath;
+  }
 }

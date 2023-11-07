@@ -15,19 +15,19 @@ package org.eclipse.dirigible.components.data.management.domain;
  */
 public enum DatabaseStructureTypes {
 
-	/** SCHEMA. */
-	SCHEMA,
+  /** SCHEMA. */
+  SCHEMA,
 
-	/** TABLE. */
-	TABLE,
+  /** TABLE. */
+  TABLE,
 
-	/** VIEW. */
-	VIEW,
+  /** VIEW. */
+  VIEW,
 
-	/** PROCEDURE. */
-	PROCEDURE,
+  /** PROCEDURE. */
+  PROCEDURE,
 
-	/** FUNCTION. */
-	FUNCTION
+  /** FUNCTION. */
+  FUNCTION
 
 }

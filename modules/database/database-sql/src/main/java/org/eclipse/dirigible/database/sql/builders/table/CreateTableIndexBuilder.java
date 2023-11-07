@@ -19,77 +19,77 @@ import java.util.Set;
  */
 public class CreateTableIndexBuilder extends AbstractCreateTableConstraintBuilder<CreateTableIndexBuilder> {
 
-	/** The index type. */
-	private String indexType;
+  /** The index type. */
+  private String indexType;
 
-	/** The order. */
-	private String order;
+  /** The order. */
+  private String order;
 
-	/** The unique. */
-	private Boolean unique;
+  /** The unique. */
+  private Boolean unique;
 
-	/**
-	 * Instantiates a new abstract create table constraint builder.
-	 *
-	 * @param dialect the dialect
-	 * @param name the name
-	 */
-	public CreateTableIndexBuilder(ISqlDialect dialect, String name) {
-		super(dialect, name);
-	}
+  /**
+   * Instantiates a new abstract create table constraint builder.
+   *
+   * @param dialect the dialect
+   * @param name the name
+   */
+  public CreateTableIndexBuilder(ISqlDialect dialect, String name) {
+    super(dialect, name);
+  }
 
-	/**
-	 * Gets the index type.
-	 *
-	 * @return the index type
-	 */
-	public String getIndexType() {
-		return indexType;
-	}
+  /**
+   * Gets the index type.
+   *
+   * @return the index type
+   */
+  public String getIndexType() {
+    return indexType;
+  }
 
-	/**
-	 * Gets the order.
-	 *
-	 * @return the order
-	 */
-	public String getOrder() {
-		return order;
-	}
+  /**
+   * Gets the order.
+   *
+   * @return the order
+   */
+  public String getOrder() {
+    return order;
+  }
 
-	/**
-	 * Checks if is unique.
-	 *
-	 * @return the boolean
-	 */
-	public Boolean isUnique() {
-		return unique;
-	}
+  /**
+   * Checks if is unique.
+   *
+   * @return the boolean
+   */
+  public Boolean isUnique() {
+    return unique;
+  }
 
-	/**
-	 * Sets the index type.
-	 *
-	 * @param indexType the new index type
-	 */
-	public void setIndexType(String indexType) {
-		this.indexType = indexType;
-	}
+  /**
+   * Sets the index type.
+   *
+   * @param indexType the new index type
+   */
+  public void setIndexType(String indexType) {
+    this.indexType = indexType;
+  }
 
-	/**
-	 * Sets the order.
-	 *
-	 * @param order the new order
-	 */
-	public void setOrder(String order) {
-		this.order = order;
-	}
+  /**
+   * Sets the order.
+   *
+   * @param order the new order
+   */
+  public void setOrder(String order) {
+    this.order = order;
+  }
 
-	/**
-	 * Sets the unique.
-	 *
-	 * @param unique the new unique
-	 */
-	public void setUnique(Boolean unique) {
-		this.unique = unique;
-	}
+  /**
+   * Sets the unique.
+   *
+   * @param unique the new unique
+   */
+  public void setUnique(Boolean unique) {
+    this.unique = unique;
+  }
 
 }

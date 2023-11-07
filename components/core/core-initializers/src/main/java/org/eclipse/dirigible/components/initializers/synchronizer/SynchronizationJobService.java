@@ -25,50 +25,50 @@ import org.springframework.stereotype.Service;
 @Scope("singleton")
 public class SynchronizationJobService {
 
-	/** The logger. */
-	private Logger logger = LoggerFactory.getLogger(SynchronizationJobService.class);
+  /** The logger. */
+  private Logger logger = LoggerFactory.getLogger(SynchronizationJobService.class);
 
-	/** The count. */
-	private AtomicInteger count = new AtomicInteger();
+  /** The count. */
+  private AtomicInteger count = new AtomicInteger();
 
-	/** The synchronization processor. */
-	private final SynchronizationProcessor synchronizationProcessor;
+  /** The synchronization processor. */
+  private final SynchronizationProcessor synchronizationProcessor;
 
-	/**
-	 * Instantiates a new synchronizers initializer.
-	 *
-	 * @param synchronizationProcessor the synchronization processor
-	 */
-	@Autowired
-	public SynchronizationJobService(SynchronizationProcessor synchronizationProcessor) {
-		this.synchronizationProcessor = synchronizationProcessor;
-	}
+  /**
+   * Instantiates a new synchronizers initializer.
+   *
+   * @param synchronizationProcessor the synchronization processor
+   */
+  @Autowired
+  public SynchronizationJobService(SynchronizationProcessor synchronizationProcessor) {
+    this.synchronizationProcessor = synchronizationProcessor;
+  }
 
-	/**
-	 * Execute synchronization job.
-	 */
-	public void executeSynchronizationJob() {
+  /**
+   * Execute synchronization job.
+   */
+  public void executeSynchronizationJob() {
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("Synchronization started...");
-		}
-		try {
-			synchronizationProcessor.processSynchronizers();
-		} finally {
-			count.incrementAndGet();
-			if (logger.isDebugEnabled()) {
-				logger.debug("Synchronization finished.");
-			}
-		}
-	}
+    if (logger.isDebugEnabled()) {
+      logger.debug("Synchronization started...");
+    }
+    try {
+      synchronizationProcessor.processSynchronizers();
+    } finally {
+      count.incrementAndGet();
+      if (logger.isDebugEnabled()) {
+        logger.debug("Synchronization finished.");
+      }
+    }
+  }
 
-	/**
-	 * Gets the number of invocations.
-	 *
-	 * @return the number of invocations
-	 */
-	public int getNumberOfInvocations() {
-		return count.get();
-	}
+  /**
+   * Gets the number of invocations.
+   *
+   * @return the number of invocations
+   */
+  public int getNumberOfInvocations() {
+    return count.get();
+  }
 
 }

@@ -38,66 +38,66 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_DATA + "anonymize")
 public class DataAnonymizeEndpoint {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(DataAnonymizeEndpoint.class);
+  /** The Constant logger. */
+  private static final Logger logger = LoggerFactory.getLogger(DataAnonymizeEndpoint.class);
 
-	/** The data anonymize service. */
-	private DataAnonymizeService dataAnonymizeService;
+  /** The data anonymize service. */
+  private DataAnonymizeService dataAnonymizeService;
 
-	/** The database metadata service. */
-	private DatabaseMetadataService databaseMetadataService;
+  /** The database metadata service. */
+  private DatabaseMetadataService databaseMetadataService;
 
-	/**
-	 * Instantiates a new data anonymize endpoint.
-	 *
-	 * @param dataAnonymizeService the database anonymize service
-	 * @param databaseMetadataService the database metadata service
-	 */
-	@Autowired
-	public DataAnonymizeEndpoint(DataAnonymizeService dataAnonymizeService, DatabaseMetadataService databaseMetadataService) {
-		this.dataAnonymizeService = dataAnonymizeService;
-		this.databaseMetadataService = databaseMetadataService;
-	}
+  /**
+   * Instantiates a new data anonymize endpoint.
+   *
+   * @param dataAnonymizeService the database anonymize service
+   * @param databaseMetadataService the database metadata service
+   */
+  @Autowired
+  public DataAnonymizeEndpoint(DataAnonymizeService dataAnonymizeService, DatabaseMetadataService databaseMetadataService) {
+    this.dataAnonymizeService = dataAnonymizeService;
+    this.databaseMetadataService = databaseMetadataService;
+  }
 
-	/**
-	 * Gets the data export anonymize service.
-	 *
-	 * @return the data export anonymize service
-	 */
-	public DataAnonymizeService getDataAnonymizeService() {
-		return dataAnonymizeService;
-	}
+  /**
+   * Gets the data export anonymize service.
+   *
+   * @return the data export anonymize service
+   */
+  public DataAnonymizeService getDataAnonymizeService() {
+    return dataAnonymizeService;
+  }
 
-	/**
-	 * Gets the database metadata service.
-	 *
-	 * @return the database metadata service
-	 */
-	public DatabaseMetadataService getDatabaseMetadataService() {
-		return databaseMetadataService;
-	}
+  /**
+   * Gets the database metadata service.
+   *
+   * @return the database metadata service
+   */
+  public DatabaseMetadataService getDatabaseMetadataService() {
+    return databaseMetadataService;
+  }
 
 
-	/**
-	 * Execute artifact export.
-	 *
-	 * @param content the content
-	 * @return the response
-	 * @throws SQLException the SQL exception
-	 */
-	@PostMapping(value = "column", produces = "application/json")
-	public ResponseEntity anonymizeColumn(@Valid @RequestBody DataAnonymizeParameters content) throws SQLException {
+  /**
+   * Execute artifact export.
+   *
+   * @param content the content
+   * @return the response
+   * @throws SQLException the SQL exception
+   */
+  @PostMapping(value = "column", produces = "application/json")
+  public ResponseEntity anonymizeColumn(@Valid @RequestBody DataAnonymizeParameters content) throws SQLException {
 
-		if (!databaseMetadataService.existsDataSourceMetadata(content.getDatasource())) {
-			String error = format("Datasource {0} does not exist.", content.getDatasource());
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
-		}
+    if (!databaseMetadataService.existsDataSourceMetadata(content.getDatasource())) {
+      String error = format("Datasource {0} does not exist.", content.getDatasource());
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
+    }
 
-		dataAnonymizeService.anonymizeColumn(content.getDatasource(), content.getSchema(), content.getTable(), content.getColumn(),
-				content.getPrimaryKey(), content.getType());
+    dataAnonymizeService.anonymizeColumn(content.getDatasource(), content.getSchema(), content.getTable(), content.getColumn(),
+        content.getPrimaryKey(), content.getType());
 
-		return ResponseEntity	.ok()
-								.build();
-	}
+    return ResponseEntity.ok()
+                         .build();
+  }
 
 }

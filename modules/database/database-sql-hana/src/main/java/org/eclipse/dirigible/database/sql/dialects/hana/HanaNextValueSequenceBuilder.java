@@ -20,33 +20,33 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
  */
 public class HanaNextValueSequenceBuilder extends NextValueSequenceBuilder {
 
-	/** The Constant PATTERN_SELECT_NEXT_VAL_SEQUENCE. */
-	private static final String PATTERN_SELECT_NEXT_VAL_SEQUENCE = "SELECT {0}.NEXTVAL FROM DUMMY";
+  /** The Constant PATTERN_SELECT_NEXT_VAL_SEQUENCE. */
+  private static final String PATTERN_SELECT_NEXT_VAL_SEQUENCE = "SELECT {0}.NEXTVAL FROM DUMMY";
 
-	/**
-	 * Instantiates a new hana next value sequence builder.
-	 *
-	 * @param dialect the dialect
-	 * @param sequence the sequence
-	 */
-	public HanaNextValueSequenceBuilder(ISqlDialect dialect, String sequence) {
-		super(dialect, sequence);
-	}
+  /**
+   * Instantiates a new hana next value sequence builder.
+   *
+   * @param dialect the dialect
+   * @param sequence the sequence
+   */
+  public HanaNextValueSequenceBuilder(ISqlDialect dialect, String sequence) {
+    super(dialect, sequence);
+  }
 
-	/**
-	 * Generate.
-	 *
-	 * @return the string
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
-	 */
-	@Override
-	public String generate() {
-		String sequenceName = (isCaseSensitive()) ? encapsulate(this.getSequence(), true) : this.getSequence();
-		String sql = format(PATTERN_SELECT_NEXT_VAL_SEQUENCE, sequenceName);
-		return sql;
-	}
+  /**
+   * Generate.
+   *
+   * @return the string
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
+   */
+  @Override
+  public String generate() {
+    String sequenceName = (isCaseSensitive()) ? encapsulate(this.getSequence(), true) : this.getSequence();
+    String sql = format(PATTERN_SELECT_NEXT_VAL_SEQUENCE, sequenceName);
+    return sql;
+  }
 }

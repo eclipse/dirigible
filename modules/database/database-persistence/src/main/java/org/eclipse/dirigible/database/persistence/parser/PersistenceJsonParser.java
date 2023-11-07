@@ -22,29 +22,29 @@ import com.google.gson.Gson;
  */
 public class PersistenceJsonParser<T> {
 
-	/** The Constant gson. */
-	private static final Gson gson = new Gson();
+  /** The Constant gson. */
+  private static final Gson gson = new Gson();
 
-	/**
-	 * Parses the model.
-	 *
-	 * @param json the json
-	 * @return the persistence table model
-	 * @throws PersistenceException the persistence exception
-	 */
-	public PersistenceTableModel parseModel(String json) throws PersistenceException {
-		PersistenceTableModel persistenceTableModel = gson.fromJson(json, PersistenceTableModel.class);
-		return persistenceTableModel;
-	}
+  /**
+   * Parses the model.
+   *
+   * @param json the json
+   * @return the persistence table model
+   * @throws PersistenceException the persistence exception
+   */
+  public PersistenceTableModel parseModel(String json) throws PersistenceException {
+    PersistenceTableModel persistenceTableModel = gson.fromJson(json, PersistenceTableModel.class);
+    return persistenceTableModel;
+  }
 
-	/**
-	 * Serialize model.
-	 *
-	 * @param persistenceTableModel the persistence table model
-	 * @return the string
-	 */
-	public String serializeModel(PersistenceTableModel persistenceTableModel) {
-		return gson.toJson(persistenceTableModel);
-	}
+  /**
+   * Serialize model.
+   *
+   * @param persistenceTableModel the persistence table model
+   * @return the string
+   */
+  public String serializeModel(PersistenceTableModel persistenceTableModel) {
+    return gson.toJson(persistenceTableModel);
+  }
 
 }

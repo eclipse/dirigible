@@ -19,42 +19,42 @@ package org.eclipse.dirigible.repository.api;
  */
 public class RepositoryException extends RuntimeException {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 1L;
+  /** The Constant serialVersionUID. */
+  private static final long serialVersionUID = 1L;
 
-	/**
-	 * Instantiates a new repository exception.
-	 */
-	public RepositoryException() {
-		super();
-	}
+  /**
+   * Instantiates a new repository exception.
+   */
+  public RepositoryException() {
+    super();
+  }
 
-	/**
-	 * Instantiates a new repository exception.
-	 *
-	 * @param message the message
-	 */
-	public RepositoryException(String message) {
-		super(message);
-	}
+  /**
+   * Instantiates a new repository exception.
+   *
+   * @param message the message
+   */
+  public RepositoryException(String message) {
+    super(message);
+  }
 
-	/**
-	 * Instantiates a new repository exception.
-	 *
-	 * @param ex the ex
-	 */
-	public RepositoryException(Throwable ex) {
-		super(ex);
-	}
+  /**
+   * Instantiates a new repository exception.
+   *
+   * @param ex the ex
+   */
+  public RepositoryException(Throwable ex) {
+    super(ex);
+  }
 
-	/**
-	 * Instantiates a new repository exception.
-	 *
-	 * @param message the message
-	 * @param ex the ex
-	 */
-	public RepositoryException(String message, Throwable ex) {
-		super(message, ex);
-	}
+  /**
+   * Instantiates a new repository exception.
+   *
+   * @param message the message
+   * @param ex the ex
+   */
+  public RepositoryException(String message, Throwable ex) {
+    super(message, ex);
+  }
 
 }

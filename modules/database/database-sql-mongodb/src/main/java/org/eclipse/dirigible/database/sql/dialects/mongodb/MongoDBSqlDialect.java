@@ -39,148 +39,148 @@ import org.eclipse.dirigible.mongodb.jdbc.util.ExportImportUtil;
  * The MongoDB SQL Dialect.
  */
 public class MongoDBSqlDialect extends
-		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, AlterBranchingBuilder, DropBranchingBuilder, NextValueSequenceBuilder, LastValueIdentityBuilder> {
+    DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, AlterBranchingBuilder, DropBranchingBuilder, NextValueSequenceBuilder, LastValueIdentityBuilder> {
 
-	/** The Constant FUNCTIONS. */
-	public static final Set<String> FUNCTIONS = Collections.synchronizedSet(new HashSet<String>(Arrays.asList(new String[] {})));
+  /** The Constant FUNCTIONS. */
+  public static final Set<String> FUNCTIONS = Collections.synchronizedSet(new HashSet<String>(Arrays.asList(new String[] {})));
 
-	/**
-	 * Checks if is synonym supported.
-	 *
-	 * @return true, if is synonym supported
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#isSynonymSupported()
-	 */
-	@Override
-	public boolean isSynonymSupported() {
-		return false;
-	}
+  /**
+   * Checks if is synonym supported.
+   *
+   * @return true, if is synonym supported
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.eclipse.dirigible.database.sql.ISqlDialect#isSynonymSupported()
+   */
+  @Override
+  public boolean isSynonymSupported() {
+    return false;
+  }
 
-	/**
-	 * Gets the functions names.
-	 *
-	 * @return the functions names
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#getFunctionsNames()
-	 */
-	@Override
-	public Set<String> getFunctionsNames() {
-		return FUNCTIONS;
-	}
+  /**
+   * Gets the functions names.
+   *
+   * @return the functions names
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.eclipse.dirigible.database.sql.ISqlDialect#getFunctionsNames()
+   */
+  @Override
+  public Set<String> getFunctionsNames() {
+    return FUNCTIONS;
+  }
 
-	/**
-	 * Exists schema.
-	 *
-	 * @param connection the connection
-	 * @param schema the schema
-	 * @return true, if successful
-	 * @throws SQLException the SQL exception
-	 */
-	@Override
-	public boolean existsSchema(Connection connection, String schema) throws SQLException {
-		return false;
-	}
+  /**
+   * Exists schema.
+   *
+   * @param connection the connection
+   * @param schema the schema
+   * @return true, if successful
+   * @throws SQLException the SQL exception
+   */
+  @Override
+  public boolean existsSchema(Connection connection, String schema) throws SQLException {
+    return false;
+  }
 
-	/**
-	 * Count.
-	 *
-	 * @param connection the connection
-	 * @param table the table
-	 * @return the int
-	 * @throws SQLException the SQL exception
-	 */
-	@Override
-	public int count(Connection connection, String table) throws SQLException {
-		String sql = countQuery(table);
-		PreparedStatement statement = connection.prepareStatement(sql);
-		ResultSet resultSet = statement.executeQuery();
-		if (resultSet.next()) {
-			return resultSet.getInt(null);
-		}
-		return -1;
-	}
+  /**
+   * Count.
+   *
+   * @param connection the connection
+   * @param table the table
+   * @return the int
+   * @throws SQLException the SQL exception
+   */
+  @Override
+  public int count(Connection connection, String table) throws SQLException {
+    String sql = countQuery(table);
+    PreparedStatement statement = connection.prepareStatement(sql);
+    ResultSet resultSet = statement.executeQuery();
+    if (resultSet.next()) {
+      return resultSet.getInt(null);
+    }
+    return -1;
+  }
 
-	/**
-	 * All.
-	 *
-	 * @param connection the connection
-	 * @param table the table
-	 * @return the result set
-	 * @throws SQLException the SQL exception
-	 */
-	@Override
-	public ResultSet all(Connection connection, String table) throws SQLException {
-		String sql = allQuery(table);
-		PreparedStatement statement = connection.prepareStatement(sql);
-		ResultSet resultSet = statement.executeQuery();
-		return resultSet;
-	}
+  /**
+   * All.
+   *
+   * @param connection the connection
+   * @param table the table
+   * @return the result set
+   * @throws SQLException the SQL exception
+   */
+  @Override
+  public ResultSet all(Connection connection, String table) throws SQLException {
+    String sql = allQuery(table);
+    PreparedStatement statement = connection.prepareStatement(sql);
+    ResultSet resultSet = statement.executeQuery();
+    return resultSet;
+  }
 
-	/**
-	 * Count query.
-	 *
-	 * @param table the table
-	 * @return the string
-	 */
-	@Override
-	public String countQuery(String table) {
-		String sql = "{ 'count': '" + normalizeTableNameOnly(table) + "'}";
-		return sql;
-	}
+  /**
+   * Count query.
+   *
+   * @param table the table
+   * @return the string
+   */
+  @Override
+  public String countQuery(String table) {
+    String sql = "{ 'count': '" + normalizeTableNameOnly(table) + "'}";
+    return sql;
+  }
 
-	/**
-	 * All query.
-	 *
-	 * @param table the table
-	 * @return the string
-	 */
-	@Override
-	public String allQuery(String table) {
-		String sql = "{ 'find': '" + normalizeTableNameOnly(table) + "'}";
-		return sql;
-	}
+  /**
+   * All query.
+   *
+   * @param table the table
+   * @return the string
+   */
+  @Override
+  public String allQuery(String table) {
+    String sql = "{ 'find': '" + normalizeTableNameOnly(table) + "'}";
+    return sql;
+  }
 
-	/**
-	 * Gets the database type.
-	 *
-	 * @param connection the connection
-	 * @return the database type
-	 */
-	@Override
-	public String getDatabaseType(Connection connection) {
-		return DatabaseType.NOSQL.getName();
-	}
+  /**
+   * Gets the database type.
+   *
+   * @param connection the connection
+   * @return the database type
+   */
+  @Override
+  public String getDatabaseType(Connection connection) {
+    return DatabaseType.NOSQL.getName();
+  }
 
-	/**
-	 * Export data.
-	 *
-	 * @param connection the connection
-	 * @param table the table
-	 * @param output the output
-	 * @throws Exception the exception
-	 */
-	@Override
-	public void exportData(Connection connection, String table, OutputStream output) throws Exception {
-		ExportImportUtil.exportCollection(connection.unwrap(MongoDBConnection.class), table, output);
-	}
+  /**
+   * Export data.
+   *
+   * @param connection the connection
+   * @param table the table
+   * @param output the output
+   * @throws Exception the exception
+   */
+  @Override
+  public void exportData(Connection connection, String table, OutputStream output) throws Exception {
+    ExportImportUtil.exportCollection(connection.unwrap(MongoDBConnection.class), table, output);
+  }
 
-	/**
-	 * Import data.
-	 *
-	 * @param connection the connection
-	 * @param table the table
-	 * @param input the input
-	 * @throws Exception the exception
-	 */
-	@Override
-	public void importData(Connection connection, String table, InputStream input) throws Exception {
-		ExportImportUtil.importCollection(connection.unwrap(MongoDBConnection.class), table, input);
-	}
+  /**
+   * Import data.
+   *
+   * @param connection the connection
+   * @param table the table
+   * @param input the input
+   * @throws Exception the exception
+   */
+  @Override
+  public void importData(Connection connection, String table, InputStream input) throws Exception {
+    ExportImportUtil.importCollection(connection.unwrap(MongoDBConnection.class), table, input);
+  }
 
 }

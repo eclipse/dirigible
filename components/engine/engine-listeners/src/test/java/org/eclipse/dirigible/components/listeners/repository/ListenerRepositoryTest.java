@@ -35,56 +35,56 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class ListenerRepositoryTest {
-	@Autowired
-	private ListenerRepository listenerRepository;
+  @Autowired
+  private ListenerRepository listenerRepository;
 
-	@Autowired
-	EntityManager entityManager;
+  @Autowired
+  EntityManager entityManager;
 
-	@BeforeEach
-	public void setup() {
+  @BeforeEach
+  public void setup() {
 
-		cleanup();
+    cleanup();
 
-		listenerRepository.save(new Listener("/a/b/c/l1.listener", "name1", "description", "handler1", 'Q'));
-		listenerRepository.save(new Listener("/a/b/c/l2.listener", "name2", "description", "handler2", 'Q'));
-		listenerRepository.save(new Listener("/a/b/c/l3.listener", "name3", "description", "handler3", 'Q'));
-	}
+    listenerRepository.save(new Listener("/a/b/c/l1.listener", "name1", "description", "handler1", 'Q'));
+    listenerRepository.save(new Listener("/a/b/c/l2.listener", "name2", "description", "handler2", 'Q'));
+    listenerRepository.save(new Listener("/a/b/c/l3.listener", "name3", "description", "handler3", 'Q'));
+  }
 
-	@AfterEach
-	public void cleanup() {
-		listenerRepository.deleteAll();
-	}
+  @AfterEach
+  public void cleanup() {
+    listenerRepository.deleteAll();
+  }
 
-	@Test
-	public void getOne() {
-		List<Listener> all = listenerRepository.findAll();
-		assertEquals(3, all.size());
-		Long id = all	.get(0)
-						.getId();
-		Optional<Listener> optional = listenerRepository.findById(id);
-		Listener listener = optional.isPresent() ? optional.get() : null;
-		assertNotNull(listener);
-		assertEquals("/a/b/c/l1.listener", listener.getLocation());
-		assertEquals("name1", listener.getName());
-		assertEquals("handler1", listener.getHandler());
-		assertEquals("listener", listener.getType());
-		assertEquals("description", listener.getDescription());
-		assertEquals("SYSTEM", listener.getCreatedBy());
-		assertNotNull(listener.getCreatedAt());
-	}
+  @Test
+  public void getOne() {
+    List<Listener> all = listenerRepository.findAll();
+    assertEquals(3, all.size());
+    Long id = all.get(0)
+                 .getId();
+    Optional<Listener> optional = listenerRepository.findById(id);
+    Listener listener = optional.isPresent() ? optional.get() : null;
+    assertNotNull(listener);
+    assertEquals("/a/b/c/l1.listener", listener.getLocation());
+    assertEquals("name1", listener.getName());
+    assertEquals("handler1", listener.getHandler());
+    assertEquals("listener", listener.getType());
+    assertEquals("description", listener.getDescription());
+    assertEquals("SYSTEM", listener.getCreatedBy());
+    assertNotNull(listener.getCreatedAt());
+  }
 
-	@Test
-	public void getReferenceUsingEntityManager() {
-		Long id = listenerRepository.findAll()
-									.get(0)
-									.getId();
-		Listener listener = entityManager.getReference(Listener.class, id);
-		assertNotNull(listener);
-		assertEquals("/a/b/c/l1.listener", listener.getLocation());
-	}
+  @Test
+  public void getReferenceUsingEntityManager() {
+    Long id = listenerRepository.findAll()
+                                .get(0)
+                                .getId();
+    Listener listener = entityManager.getReference(Listener.class, id);
+    assertNotNull(listener);
+    assertEquals("/a/b/c/l1.listener", listener.getLocation());
+  }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 }

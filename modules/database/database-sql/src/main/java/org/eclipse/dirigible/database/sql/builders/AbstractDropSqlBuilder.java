@@ -17,22 +17,22 @@ import org.eclipse.dirigible.database.sql.ISqlDialect;
  */
 public abstract class AbstractDropSqlBuilder extends AbstractSqlBuilder {
 
-	/**
-	 * Instantiates a new abstract drop sql builder.
-	 *
-	 * @param dialect the dialect
-	 */
-	protected AbstractDropSqlBuilder(ISqlDialect dialect) {
-		super(dialect);
-	}
+  /**
+   * Instantiates a new abstract drop sql builder.
+   *
+   * @param dialect the dialect
+   */
+  protected AbstractDropSqlBuilder(ISqlDialect dialect) {
+    super(dialect);
+  }
 
-	/**
-	 * Generate drop.
-	 *
-	 * @param sql the sql
-	 */
-	protected void generateDrop(StringBuilder sql) {
-		sql.append(KEYWORD_DROP);
-	}
+  /**
+   * Generate drop.
+   *
+   * @param sql the sql
+   */
+  protected void generateDrop(StringBuilder sql) {
+    sql.append(KEYWORD_DROP);
+  }
 
 }

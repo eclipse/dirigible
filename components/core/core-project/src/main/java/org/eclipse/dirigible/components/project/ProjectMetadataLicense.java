@@ -15,46 +15,46 @@ package org.eclipse.dirigible.components.project;
  */
 public class ProjectMetadataLicense {
 
-	/** The name. */
-	private String name;
+  /** The name. */
+  private String name;
 
-	/** The url. */
-	private String url;
+  /** The url. */
+  private String url;
 
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * Sets the name.
-	 *
-	 * @param name the new name
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * Sets the name.
+   *
+   * @param name the new name
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	/**
-	 * Gets the url.
-	 *
-	 * @return the url
-	 */
-	public String getUrl() {
-		return url;
-	}
+  /**
+   * Gets the url.
+   *
+   * @return the url
+   */
+  public String getUrl() {
+    return url;
+  }
 
-	/**
-	 * Sets the url.
-	 *
-	 * @param url the new url
-	 */
-	public void setUrl(String url) {
-		this.url = url;
-	}
+  /**
+   * Sets the url.
+   *
+   * @param url the new url
+   */
+  public void setUrl(String url) {
+    this.url = url;
+  }
 
 }

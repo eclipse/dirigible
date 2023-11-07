@@ -17,31 +17,31 @@ import org.eclipse.dirigible.database.sql.ISqlDialect;
  */
 public abstract class AbstractCreateSqlBuilder extends AbstractSqlBuilder {
 
-	/**
-	 * Instantiates a new abstract create sql builder.
-	 *
-	 * @param dialect the dialect
-	 */
-	protected AbstractCreateSqlBuilder(ISqlDialect dialect) {
-		super(dialect);
-	}
+  /**
+   * Instantiates a new abstract create sql builder.
+   *
+   * @param dialect the dialect
+   */
+  protected AbstractCreateSqlBuilder(ISqlDialect dialect) {
+    super(dialect);
+  }
 
-	/**
-	 * Generate create.
-	 *
-	 * @param sql the sql
-	 */
-	protected void generateCreate(StringBuilder sql) {
-		sql.append(KEYWORD_CREATE);
-	}
+  /**
+   * Generate create.
+   *
+   * @param sql the sql
+   */
+  protected void generateCreate(StringBuilder sql) {
+    sql.append(KEYWORD_CREATE);
+  }
 
-	/**
-	 * Generate alter.
-	 *
-	 * @param sql the sql
-	 */
-	protected void generateAlter(StringBuilder sql) {
-		sql.append(KEYWORD_ALTER);
-	}
+  /**
+   * Generate alter.
+   *
+   * @param sql the sql
+   */
+  protected void generateAlter(StringBuilder sql) {
+    sql.append(KEYWORD_ALTER);
+  }
 
 }

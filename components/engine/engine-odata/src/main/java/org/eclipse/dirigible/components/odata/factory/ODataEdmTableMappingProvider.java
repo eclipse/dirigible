@@ -24,33 +24,33 @@ import org.eclipse.dirigible.engine.odata2.sql.mapping.DefaultEdmTableMappingPro
  */
 public class ODataEdmTableMappingProvider extends DefaultEdmTableMappingProvider {
 
-	/**
-	 * Instantiates a new o data edm table mapping provider.
-	 *
-	 * @throws ODataException the o data exception
-	 */
-	public ODataEdmTableMappingProvider() throws ODataException {
-		super();
-	}
+  /**
+   * Instantiates a new o data edm table mapping provider.
+   *
+   * @throws ODataException the o data exception
+   */
+  public ODataEdmTableMappingProvider() throws ODataException {
+    super();
+  }
 
-	/**
-	 * Fill bindings.
-	 *
-	 * @param resources the resources
-	 * @throws ODataException the o data exception
-	 */
-	@Override
-	protected void fillBindings(String... resources) throws ODataException {
-		EdmTableBindingFactory tableBindingFactory = new EdmTableBindingFactory();
+  /**
+   * Fill bindings.
+   *
+   * @param resources the resources
+   * @throws ODataException the o data exception
+   */
+  @Override
+  protected void fillBindings(String... resources) throws ODataException {
+    EdmTableBindingFactory tableBindingFactory = new EdmTableBindingFactory();
 
-		List<ODataMapping> mappings = ODataMappingService	.get()
-															.getAll();
-		for (ODataMapping mapping : mappings) {
-			EdmTableBinding binding = loadEdmTableBinding(tableBindingFactory, new String(mapping.getContent()));
-			String fqn = binding.getEdmFullyQualifedName();
-			getBindings().put(fqn, binding);
-		}
-	}
+    List<ODataMapping> mappings = ODataMappingService.get()
+                                                     .getAll();
+    for (ODataMapping mapping : mappings) {
+      EdmTableBinding binding = loadEdmTableBinding(tableBindingFactory, new String(mapping.getContent()));
+      String fqn = binding.getEdmFullyQualifedName();
+      getBindings().put(fqn, binding);
+    }
+  }
 
 
 }

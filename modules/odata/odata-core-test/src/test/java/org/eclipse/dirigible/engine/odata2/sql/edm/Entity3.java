@@ -24,20 +24,20 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 @EdmEntitySet(name = "Entities3")
 public class Entity3 {
 
-	/** The id. */
-	@EdmKey
-	@EdmProperty
-	private Long id;
+  /** The id. */
+  @EdmKey
+  @EdmProperty
+  private Long id;
 
-	/** The description. */
-	@EdmProperty
-	private String description;
+  /** The description. */
+  @EdmProperty
+  private String description;
 
-	/** The complex type property. */
-	@EdmProperty
-	private CTEntity complexTypeProperty;
+  /** The complex type property. */
+  @EdmProperty
+  private CTEntity complexTypeProperty;
 
-	/** The entity 2. */
-	@EdmNavigationProperty(toMultiplicity = Multiplicity.ZERO_OR_ONE, toType = Entity2.class, association = "Entities3OfEntity2")
-	private Entity2 entity2;
+  /** The entity 2. */
+  @EdmNavigationProperty(toMultiplicity = Multiplicity.ZERO_OR_ONE, toType = Entity2.class, association = "Entities3OfEntity2")
+  private Entity2 entity2;
 }

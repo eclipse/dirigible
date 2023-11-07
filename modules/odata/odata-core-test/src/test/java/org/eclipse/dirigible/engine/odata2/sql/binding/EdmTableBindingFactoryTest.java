@@ -33,151 +33,151 @@ import static org.junit.Assert.assertTrue;
 @SuppressWarnings("unchecked")
 public class EdmTableBindingFactoryTest {
 
-	/** The edm. */
-	private EdmImplProv edm;
+  /** The edm. */
+  private EdmImplProv edm;
 
-	/**
-	 * Sets the up.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		Class<?>[] classes = { //
-				Entity1.class, //
-				Entity2.class, //
-				Entity3.class //
-		};
-		AnnotationEdmProvider provider = new AnnotationEdmProvider(Arrays.asList(classes));
-		edm = new EdmImplProv(provider);
-	}
+  /**
+   * Sets the up.
+   *
+   * @throws Exception the exception
+   */
+  @Before
+  public void setUp() throws Exception {
+    Class<?>[] classes = { //
+        Entity1.class, //
+        Entity2.class, //
+        Entity3.class //
+    };
+    AnnotationEdmProvider provider = new AnnotationEdmProvider(Arrays.asList(classes));
+    edm = new EdmImplProv(provider);
+  }
 
-	/**
-	 * Test mpl binding.
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	@Test
-	public void testMplBinding() throws IOException {
-		try (InputStream stream = stream(Entity1.class)) {
-			Map<String, Object> config = new EdmTableBindingFactory().loadTableBindings(stream);
-			assertEquals("MPLHEADER", config.get("sqlTable"));
-			assertEquals("STATUS", config.get("Status"));
-			assertEquals("MESSAGEGUID", config.get("MessageGuid"));
-		}
-	}
+  /**
+   * Test mpl binding.
+   *
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  @Test
+  public void testMplBinding() throws IOException {
+    try (InputStream stream = stream(Entity1.class)) {
+      Map<String, Object> config = new EdmTableBindingFactory().loadTableBindings(stream);
+      assertEquals("MPLHEADER", config.get("sqlTable"));
+      assertEquals("STATUS", config.get("Status"));
+      assertEquals("MESSAGEGUID", config.get("MessageGuid"));
+    }
+  }
 
-	/**
-	 * Test reference 1.
-	 *
-	 * @throws Exception the exception
-	 */
-	@SuppressWarnings("rawtypes")
-	@Test
-	public void testReference1() throws Exception {
-		try (InputStream stream = stream(Entity2.class)) {
-			Map<String, Object> config = new EdmTableBindingFactory().loadTableBindings(stream);
-			assertEquals("NAME", config.get("Name"));
-			assertEquals("VALUE", config.get("Value"));
-			assertTrue("complex column definition not correctly read!", config.get("Id") instanceof Map);
-			assertEquals("ID", ((Map) config.get("Id")).get("name"));
-			assertEquals("NUMERIC", ((Map) config.get("Id")).get("sqlType"));
-			assertEquals(Arrays.asList("HEADER_ID"), ((Map<String, Object>) config.get("_ref_Entity1")).get("joinColumn"));
-			assertEquals("ID", config.get("_pk_"));
-		}
-	}
+  /**
+   * Test reference 1.
+   *
+   * @throws Exception the exception
+   */
+  @SuppressWarnings("rawtypes")
+  @Test
+  public void testReference1() throws Exception {
+    try (InputStream stream = stream(Entity2.class)) {
+      Map<String, Object> config = new EdmTableBindingFactory().loadTableBindings(stream);
+      assertEquals("NAME", config.get("Name"));
+      assertEquals("VALUE", config.get("Value"));
+      assertTrue("complex column definition not correctly read!", config.get("Id") instanceof Map);
+      assertEquals("ID", ((Map) config.get("Id")).get("name"));
+      assertEquals("NUMERIC", ((Map) config.get("Id")).get("sqlType"));
+      assertEquals(Arrays.asList("HEADER_ID"), ((Map<String, Object>) config.get("_ref_Entity1")).get("joinColumn"));
+      assertEquals("ID", config.get("_pk_"));
+    }
+  }
 
 
-	/**
-	 * Test reference 2.
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	@Test
-	public void testReference2() throws IOException {
-		try (InputStream stream = stream(Entity1.class)) {
-			Map<String, Object> config = new EdmTableBindingFactory().loadTableBindings(stream);
-			assertEquals(Arrays.asList("ID"), ((Map<String, Object>) config.get("_ref_Entity2")).get("joinColumn"));
-		}
-	}
+  /**
+   * Test reference 2.
+   *
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  @Test
+  public void testReference2() throws IOException {
+    try (InputStream stream = stream(Entity1.class)) {
+      Map<String, Object> config = new EdmTableBindingFactory().loadTableBindings(stream);
+      assertEquals(Arrays.asList("ID"), ((Map<String, Object>) config.get("_ref_Entity2")).get("joinColumn"));
+    }
+  }
 
-	/**
-	 * Test table mapping.
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	@Test
-	public void testTableMapping() throws IOException {
-		try (InputStream stream = stream(Entity1.class)) {
-			Map<String, Object> config = new EdmTableBindingFactory().loadTableBindings(stream);
-			assertEquals(Arrays.asList("ID"), ((Map<String, Object>) config.get("_ref_Entity2")).get("joinColumn"));
-		}
-	}
+  /**
+   * Test table mapping.
+   *
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  @Test
+  public void testTableMapping() throws IOException {
+    try (InputStream stream = stream(Entity1.class)) {
+      Map<String, Object> config = new EdmTableBindingFactory().loadTableBindings(stream);
+      assertEquals(Arrays.asList("ID"), ((Map<String, Object>) config.get("_ref_Entity2")).get("joinColumn"));
+    }
+  }
 
-	/**
-	 * Test create table bindings.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testCreateTableBindings() throws Exception {
-		try (InputStream stream = stream(Entity1.class)) {
-			EdmTableBinding config = new EdmTableBindingFactory().createTableBinding(stream);
-			assertEquals("STATUS", config.getColumnName("Status"));
-		}
-	}
+  /**
+   * Test create table bindings.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testCreateTableBindings() throws Exception {
+    try (InputStream stream = stream(Entity1.class)) {
+      EdmTableBinding config = new EdmTableBindingFactory().createTableBinding(stream);
+      assertEquals("STATUS", config.getColumnName("Status"));
+    }
+  }
 
-	/**
-	 * Test get PK.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testGetPK() throws Exception {
-		try (InputStream stream = stream(Entity1.class)) {
-			EdmTableBinding config = new EdmTableBindingFactory().createTableBinding(stream);
-			assertEquals("ID", config.getPrimaryKey());
-		}
-	}
+  /**
+   * Test get PK.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testGetPK() throws Exception {
+    try (InputStream stream = stream(Entity1.class)) {
+      EdmTableBinding config = new EdmTableBindingFactory().createTableBinding(stream);
+      assertEquals("ID", config.getPrimaryKey());
+    }
+  }
 
-	/**
-	 * Test get join column entity 2.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testGetJoinColumnEntity2() throws Exception {
-		try (InputStream stream = stream(Entity1.class)) {
-			EdmTableBinding config = new EdmTableBindingFactory().createTableBinding(stream);
-			assertEquals(Arrays.asList("ID"), config.getJoinColumnTo(edm.getEntityType(Entity2.class.getPackage()
-																									.getName(),
-					Entity2.class.getSimpleName())));
-		}
-	}
+  /**
+   * Test get join column entity 2.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testGetJoinColumnEntity2() throws Exception {
+    try (InputStream stream = stream(Entity1.class)) {
+      EdmTableBinding config = new EdmTableBindingFactory().createTableBinding(stream);
+      assertEquals(Arrays.asList("ID"), config.getJoinColumnTo(edm.getEntityType(Entity2.class.getPackage()
+                                                                                              .getName(),
+          Entity2.class.getSimpleName())));
+    }
+  }
 
-	/**
-	 * Test get data structure type.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testGetDataStructureType() throws Exception {
-		try (InputStream stream = stream(Entity1.class)) {
-			EdmTableBinding config = new EdmTableBindingFactory().createTableBinding(stream);
-			assertEquals(EdmTableBinding.DataStructureType.TABLE, config.getDataStructureType());
-		}
-	}
+  /**
+   * Test get data structure type.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testGetDataStructureType() throws Exception {
+    try (InputStream stream = stream(Entity1.class)) {
+      EdmTableBinding config = new EdmTableBindingFactory().createTableBinding(stream);
+      assertEquals(EdmTableBinding.DataStructureType.TABLE, config.getDataStructureType());
+    }
+  }
 
-	/**
-	 * Test get parameters.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testGetParameters() throws Exception {
-		try (InputStream stream = stream(Entity1.class)) {
-			EdmTableBinding config = new EdmTableBindingFactory().createTableBinding(stream);
-			assertEquals(Arrays.asList(), config.getParameters());
-		}
-	}
+  /**
+   * Test get parameters.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testGetParameters() throws Exception {
+    try (InputStream stream = stream(Entity1.class)) {
+      EdmTableBinding config = new EdmTableBindingFactory().createTableBinding(stream);
+      assertEquals(Arrays.asList(), config.getParameters());
+    }
+  }
 }

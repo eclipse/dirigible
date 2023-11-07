@@ -15,18 +15,18 @@ package org.eclipse.dirigible.components.engine.cms.internal.repository;
  */
 public interface CmisRepository {
 
-	/**
-	 * Gets the session.
-	 *
-	 * @return the session
-	 */
-	public CmisSession getSession();
+  /**
+   * Gets the session.
+   *
+   * @return the session
+   */
+  public CmisSession getSession();
 
-	/**
-	 * Gets the internal object.
-	 *
-	 * @return the internal object
-	 */
-	public Object getInternalObject();
+  /**
+   * Gets the internal object.
+   *
+   * @return the internal object
+   */
+  public Object getInternalObject();
 
 }

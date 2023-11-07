@@ -22,19 +22,19 @@ import org.springframework.stereotype.Repository;
 @Repository("ftpUserRepository")
 public interface FtpUserRepository extends JpaRepository<FtpUser, Long> {
 
-	/**
-	 * Find all by username.
-	 *
-	 * @param username the username
-	 * @return the list
-	 */
-	List<FtpUser> findAllByUsername(String username);
+  /**
+   * Find all by username.
+   *
+   * @param username the username
+   * @return the list
+   */
+  List<FtpUser> findAllByUsername(String username);
 
-	/**
-	 * Delete by username.
-	 *
-	 * @param username the username
-	 */
-	void deleteByUsername(String username);
+  /**
+   * Delete by username.
+   *
+   * @param username the username
+   */
+  void deleteByUsername(String username);
 
 }

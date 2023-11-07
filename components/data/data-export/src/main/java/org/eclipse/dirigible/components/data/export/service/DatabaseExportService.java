@@ -39,154 +39,154 @@ import com.google.gson.JsonObject;
 @Service
 public class DatabaseExportService {
 
-	/**
-	 * The Constant logger.
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(DatabaseExportService.class);
+  /**
+   * The Constant logger.
+   */
+  private static final Logger logger = LoggerFactory.getLogger(DatabaseExportService.class);
 
-	/**
-	 * The data sources manager.
-	 */
-	private final DataSourcesManager datasourceManager;
+  /**
+   * The data sources manager.
+   */
+  private final DataSourcesManager datasourceManager;
 
-	/** The database execution service. */
-	private final DatabaseExecutionService databaseExecutionService;
+  /** The database execution service. */
+  private final DatabaseExecutionService databaseExecutionService;
 
-	/**
-	 * Instantiates a new data source endpoint.
-	 *
-	 * @param datasourceManager the datasource manager
-	 * @param databaseExecutionService the database execution service
-	 */
-	@Autowired
-	public DatabaseExportService(DataSourcesManager datasourceManager, DatabaseExecutionService databaseExecutionService) {
-		this.datasourceManager = datasourceManager;
-		this.databaseExecutionService = databaseExecutionService;
-	}
+  /**
+   * Instantiates a new data source endpoint.
+   *
+   * @param datasourceManager the datasource manager
+   * @param databaseExecutionService the database execution service
+   */
+  @Autowired
+  public DatabaseExportService(DataSourcesManager datasourceManager, DatabaseExecutionService databaseExecutionService) {
+    this.datasourceManager = datasourceManager;
+    this.databaseExecutionService = databaseExecutionService;
+  }
 
-	/**
-	 * Export structure.
-	 *
-	 * @param datasource the datasource
-	 * @param schema the schema
-	 * @param structure the structure
-	 * @param output the output
-	 */
-	public void exportStructure(String datasource, String schema, String structure, OutputStream output) {
-		javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
-		if (dataSource != null) {
-			String structureName = "\"" + schema + "\".\"" + structure + "\"";
-			String sql = "SELECT * FROM " + structureName;
-			String productName = null;
-			try (Connection connection = dataSource.getConnection()) {
-				ISqlDialect dialect = SqlDialectFactory.getDialect(connection);
-				sql = dialect.allQuery(structureName);
-				productName = connection.getMetaData()
-										.getDatabaseProductName();
-				if ("MongoDB".equals(productName)) {
-					dialect.exportData(connection, structure, output);
-					return;
-				}
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
+  /**
+   * Export structure.
+   *
+   * @param datasource the datasource
+   * @param schema the schema
+   * @param structure the structure
+   * @param output the output
+   */
+  public void exportStructure(String datasource, String schema, String structure, OutputStream output) {
+    javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
+    if (dataSource != null) {
+      String structureName = "\"" + schema + "\".\"" + structure + "\"";
+      String sql = "SELECT * FROM " + structureName;
+      String productName = null;
+      try (Connection connection = dataSource.getConnection()) {
+        ISqlDialect dialect = SqlDialectFactory.getDialect(connection);
+        sql = dialect.allQuery(structureName);
+        productName = connection.getMetaData()
+                                .getDatabaseProductName();
+        if ("MongoDB".equals(productName)) {
+          dialect.exportData(connection, structure, output);
+          return;
+        }
+      } catch (Exception e) {
+        logger.error(e.getMessage(), e);
+      }
 
-			databaseExecutionService.executeStatement(dataSource, sql, true, false, true, true, output);
-		}
-	}
+      databaseExecutionService.executeStatement(dataSource, sql, true, false, true, true, output);
+    }
+  }
 
-	/**
-	 * Export structure.
-	 *
-	 * @param datasource the datasource
-	 * @param schema the schema
-	 * @param structure the structure
-	 * @return the string
-	 */
-	public String structureExportType(String datasource, String schema, String structure) {
-		javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
-		if (dataSource != null) {
-			String productName = null;
-			try (Connection connection = dataSource.getConnection()) {
-				ISqlDialect dialect = SqlDialectFactory.getDialect(connection);
-				productName = connection.getMetaData()
-										.getDatabaseProductName();
-				if ("MongoDB".equals(productName)) {
-					return "json";
-				}
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
+  /**
+   * Export structure.
+   *
+   * @param datasource the datasource
+   * @param schema the schema
+   * @param structure the structure
+   * @return the string
+   */
+  public String structureExportType(String datasource, String schema, String structure) {
+    javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
+    if (dataSource != null) {
+      String productName = null;
+      try (Connection connection = dataSource.getConnection()) {
+        ISqlDialect dialect = SqlDialectFactory.getDialect(connection);
+        productName = connection.getMetaData()
+                                .getDatabaseProductName();
+        if ("MongoDB".equals(productName)) {
+          return "json";
+        }
+      } catch (Exception e) {
+        logger.error(e.getMessage(), e);
+      }
 
-			return "csv";
-		}
-		return "error";
-	}
+      return "csv";
+    }
+    return "error";
+  }
 
-	/**
-	 * Export schema.
-	 *
-	 * @param datasource the datasource
-	 * @param schema the schema
-	 * @param output the output
-	 */
-	public void exportSchema(String datasource, String schema, OutputStream output) {
-		try {
-			ZipOutputStream zipOutputStream = null;
-			try {
-				zipOutputStream = new ZipOutputStream(output);
+  /**
+   * Export schema.
+   *
+   * @param datasource the datasource
+   * @param schema the schema
+   * @param output the output
+   */
+  public void exportSchema(String datasource, String schema, OutputStream output) {
+    try {
+      ZipOutputStream zipOutputStream = null;
+      try {
+        zipOutputStream = new ZipOutputStream(output);
 
-				javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
-				if (dataSource != null) {
-					String metadata = DatabaseMetadataHelper.getMetadataAsJson(dataSource);
-					JsonElement database = GsonHelper.parseJson(metadata);
-					JsonArray schemes = database.getAsJsonObject()
-												.get("schemas")
-												.getAsJsonArray();
-					for (int i = 0; i < schemes.size(); i++) {
-						JsonObject scheme = schemes	.get(i)
-													.getAsJsonObject();
-						if (!scheme	.get("name")
-									.getAsString()
-									.equalsIgnoreCase(schema)) {
-							continue;
-						}
-						JsonArray tables = scheme	.get("tables")
-													.getAsJsonArray();
-						for (int j = 0; j < tables.size(); j++) {
-							JsonObject table = tables	.get(j)
-														.getAsJsonObject();
-							String artifact = table	.get("name")
-													.getAsString();
-							String artifactName = "\"" + schema + "\".\"" + artifact + "\"";
-							String sql = "SELECT * FROM " + artifactName;
-							try (Connection connection = dataSource.getConnection()) {
-								sql = SqlDialectFactory	.getDialect(connection)
-														.allQuery(artifactName);
-							} catch (Exception e) {
-								logger.error(e.getMessage(), e);
-							}
-							ZipEntry zipEntry = new ZipEntry(schema + "." + artifact + ".csv");
-							zipOutputStream.putNextEntry(zipEntry);
-							databaseExecutionService.executeStatement(dataSource, sql, true, false, true, true, zipOutputStream);
-							zipOutputStream.closeEntry();
-						}
-					}
-				}
+        javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
+        if (dataSource != null) {
+          String metadata = DatabaseMetadataHelper.getMetadataAsJson(dataSource);
+          JsonElement database = GsonHelper.parseJson(metadata);
+          JsonArray schemes = database.getAsJsonObject()
+                                      .get("schemas")
+                                      .getAsJsonArray();
+          for (int i = 0; i < schemes.size(); i++) {
+            JsonObject scheme = schemes.get(i)
+                                       .getAsJsonObject();
+            if (!scheme.get("name")
+                       .getAsString()
+                       .equalsIgnoreCase(schema)) {
+              continue;
+            }
+            JsonArray tables = scheme.get("tables")
+                                     .getAsJsonArray();
+            for (int j = 0; j < tables.size(); j++) {
+              JsonObject table = tables.get(j)
+                                       .getAsJsonObject();
+              String artifact = table.get("name")
+                                     .getAsString();
+              String artifactName = "\"" + schema + "\".\"" + artifact + "\"";
+              String sql = "SELECT * FROM " + artifactName;
+              try (Connection connection = dataSource.getConnection()) {
+                sql = SqlDialectFactory.getDialect(connection)
+                                       .allQuery(artifactName);
+              } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+              }
+              ZipEntry zipEntry = new ZipEntry(schema + "." + artifact + ".csv");
+              zipOutputStream.putNextEntry(zipEntry);
+              databaseExecutionService.executeStatement(dataSource, sql, true, false, true, true, zipOutputStream);
+              zipOutputStream.closeEntry();
+            }
+          }
+        }
 
-			} finally {
-				if (zipOutputStream != null) {
-					zipOutputStream.finish();
-					zipOutputStream.flush();
-					zipOutputStream.close();
-				}
-			}
+      } finally {
+        if (zipOutputStream != null) {
+          zipOutputStream.finish();
+          zipOutputStream.flush();
+          zipOutputStream.close();
+        }
+      }
 
-		} catch (IOException | SQLException e) {
-			if (logger.isErrorEnabled()) {
-				logger.error(e.getMessage());
-			}
-		}
-	}
+    } catch (IOException | SQLException e) {
+      if (logger.isErrorEnabled()) {
+        logger.error(e.getMessage());
+      }
+    }
+  }
 
 }

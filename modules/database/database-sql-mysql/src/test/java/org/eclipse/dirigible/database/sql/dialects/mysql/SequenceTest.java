@@ -22,68 +22,68 @@ import org.junit.Test;
  */
 public class SequenceTest {
 
-	/**
-	 * Creates the sequence.
-	 */
-	@Test
-	public void createSequence() {
-		try {
-			String sql = SqlFactory	.getNative(new MySQLSqlDialect())
-									.create()
-									.sequence("CUSTOMERS_SEQUENCE")
-									.build();
-		} catch (Exception e) {
-			return;
-		}
+  /**
+   * Creates the sequence.
+   */
+  @Test
+  public void createSequence() {
+    try {
+      String sql = SqlFactory.getNative(new MySQLSqlDialect())
+                             .create()
+                             .sequence("CUSTOMERS_SEQUENCE")
+                             .build();
+    } catch (Exception e) {
+      return;
+    }
 
-		fail("Does MySQL support Sequences?");
-	}
+    fail("Does MySQL support Sequences?");
+  }
 
-	/**
-	 * Alter sequence.
-	 */
-	@Test
-	public void alterSequence() {
-		String sql = SqlFactory	.getNative(new MySQLSqlDialect())
-								.alter()
-								.sequence("CUSTOMERS_SEQUENCE")
-								.build();
+  /**
+   * Alter sequence.
+   */
+  @Test
+  public void alterSequence() {
+    String sql = SqlFactory.getNative(new MySQLSqlDialect())
+                           .alter()
+                           .sequence("CUSTOMERS_SEQUENCE")
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("ALTER SEQUENCE CUSTOMERS_SEQUENCE", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("ALTER SEQUENCE CUSTOMERS_SEQUENCE", sql);
+  }
 
-	/**
-	 * Drop sequnce.
-	 */
-	@Test
-	public void dropSequnce() {
-		try {
-			String sql = SqlFactory	.getNative(new MySQLSqlDialect())
-									.drop()
-									.sequence("CUSTOMERS_SEQUENCE")
-									.build();
-		} catch (Exception e) {
-			return;
-		}
+  /**
+   * Drop sequnce.
+   */
+  @Test
+  public void dropSequnce() {
+    try {
+      String sql = SqlFactory.getNative(new MySQLSqlDialect())
+                             .drop()
+                             .sequence("CUSTOMERS_SEQUENCE")
+                             .build();
+    } catch (Exception e) {
+      return;
+    }
 
-		fail("Does MySQL support Sequences?");
-	}
+    fail("Does MySQL support Sequences?");
+  }
 
-	/**
-	 * Nextval sequnce.
-	 */
-	@Test
-	public void nextvalSequnce() {
-		try {
-			String sql = SqlFactory	.getNative(new MySQLSqlDialect())
-									.nextval("CUSTOMERS_SEQUENCE")
-									.build();
-		} catch (Exception e) {
-			return;
-		}
+  /**
+   * Nextval sequnce.
+   */
+  @Test
+  public void nextvalSequnce() {
+    try {
+      String sql = SqlFactory.getNative(new MySQLSqlDialect())
+                             .nextval("CUSTOMERS_SEQUENCE")
+                             .build();
+    } catch (Exception e) {
+      return;
+    }
 
-		fail("Does MySQL support Sequences?");
-	}
+    fail("Does MySQL support Sequences?");
+  }
 
 }

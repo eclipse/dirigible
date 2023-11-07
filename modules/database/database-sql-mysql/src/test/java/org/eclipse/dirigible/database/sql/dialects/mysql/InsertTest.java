@@ -21,59 +21,59 @@ import org.junit.Test;
  */
 public class InsertTest {
 
-	/**
-	 * Insert simple.
-	 */
-	@Test
-	public void insertSimple() {
-		String sql = SqlFactory	.getNative(new MySQLSqlDialect())
-								.insert()
-								.into("CUSTOMERS")
-								.column("FIRST_NAME")
-								.column("LAST_NAME")
-								.build();
+  /**
+   * Insert simple.
+   */
+  @Test
+  public void insertSimple() {
+    String sql = SqlFactory.getNative(new MySQLSqlDialect())
+                           .insert()
+                           .into("CUSTOMERS")
+                           .column("FIRST_NAME")
+                           .column("LAST_NAME")
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) VALUES (?, ?)", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) VALUES (?, ?)", sql);
+  }
 
-	/**
-	 * Insert values.
-	 */
-	@Test
-	public void insertValues() {
-		String sql = SqlFactory	.getNative(new MySQLSqlDialect())
-								.insert()
-								.into("CUSTOMERS")
-								.column("FIRST_NAME")
-								.column("LAST_NAME")
-								.value("?")
-								.value("'Smith'")
-								.build();
+  /**
+   * Insert values.
+   */
+  @Test
+  public void insertValues() {
+    String sql = SqlFactory.getNative(new MySQLSqlDialect())
+                           .insert()
+                           .into("CUSTOMERS")
+                           .column("FIRST_NAME")
+                           .column("LAST_NAME")
+                           .value("?")
+                           .value("'Smith'")
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) VALUES (?, 'Smith')", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) VALUES (?, 'Smith')", sql);
+  }
 
-	/**
-	 * Insert select.
-	 */
-	@Test
-	public void insertSelect() {
-		String sql = SqlFactory	.getNative(new MySQLSqlDialect())
-								.insert()
-								.into("CUSTOMERS")
-								.column("FIRST_NAME")
-								.column("LAST_NAME")
-								.select(SqlFactory	.getNative(new MySQLSqlDialect())
-													.select()
-													.column("*")
-													.from("SUPPLIERS")
-													.build())
-								.toString();
+  /**
+   * Insert select.
+   */
+  @Test
+  public void insertSelect() {
+    String sql = SqlFactory.getNative(new MySQLSqlDialect())
+                           .insert()
+                           .into("CUSTOMERS")
+                           .column("FIRST_NAME")
+                           .column("LAST_NAME")
+                           .select(SqlFactory.getNative(new MySQLSqlDialect())
+                                             .select()
+                                             .column("*")
+                                             .from("SUPPLIERS")
+                                             .build())
+                           .toString();
 
-		assertNotNull(sql);
-		assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) SELECT * FROM SUPPLIERS", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) SELECT * FROM SUPPLIERS", sql);
+  }
 
 }

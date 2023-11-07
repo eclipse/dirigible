@@ -20,31 +20,31 @@ import org.eclipse.dirigible.database.sql.builders.sequence.LastValueIdentityBui
  */
 public class H2LastValueIdentityBuilder extends LastValueIdentityBuilder {
 
-	/** The Constant PATTERN_SELECT_LAST_VALUE_IDENTITY. */
-	private static final String PATTERN_SELECT_LAST_VALUE_IDENTITY = "SELECT IDENTITY()";
+  /** The Constant PATTERN_SELECT_LAST_VALUE_IDENTITY. */
+  private static final String PATTERN_SELECT_LAST_VALUE_IDENTITY = "SELECT IDENTITY()";
 
-	/**
-	 * Instantiates a new H2 last value identity builder.
-	 *
-	 * @param dialect the dialect
-	 */
-	public H2LastValueIdentityBuilder(ISqlDialect dialect) {
-		super(dialect);
-	}
+  /**
+   * Instantiates a new H2 last value identity builder.
+   *
+   * @param dialect the dialect
+   */
+  public H2LastValueIdentityBuilder(ISqlDialect dialect) {
+    super(dialect);
+  }
 
-	/**
-	 * Generate.
-	 *
-	 * @return the string
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
-	 */
-	@Override
-	public String generate() {
-		String sql = format(PATTERN_SELECT_LAST_VALUE_IDENTITY);
-		return sql;
-	}
+  /**
+   * Generate.
+   *
+   * @return the string
+   */
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
+   */
+  @Override
+  public String generate() {
+    String sql = format(PATTERN_SELECT_LAST_VALUE_IDENTITY);
+    return sql;
+  }
 }

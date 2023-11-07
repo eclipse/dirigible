@@ -18,24 +18,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class SpringBeanProvider implements InitializingBean {
 
-	private static SpringBeanProvider INSTANCE;
-	private final ApplicationContext applicationContext;
+  private static SpringBeanProvider INSTANCE;
+  private final ApplicationContext applicationContext;
 
-	@Autowired
-	public SpringBeanProvider(ApplicationContext applicationContext) {
-		this.applicationContext = applicationContext;
-	}
+  @Autowired
+  public SpringBeanProvider(ApplicationContext applicationContext) {
+    this.applicationContext = applicationContext;
+  }
 
-	@Override
-	public void afterPropertiesSet() {
-		INSTANCE = this;
-	}
+  @Override
+  public void afterPropertiesSet() {
+    INSTANCE = this;
+  }
 
-	public static <T> T getBean(Class<T> clazz) {
-		return INSTANCE.applicationContext.getBean(clazz);
-	}
+  public static <T> T getBean(Class<T> clazz) {
+    return INSTANCE.applicationContext.getBean(clazz);
+  }
 
-	public static <T> T getBean(String className) {
-		return (T) INSTANCE.applicationContext.getBean(className);
-	}
+  public static <T> T getBean(String className) {
+    return (T) INSTANCE.applicationContext.getBean(className);
+  }
 }

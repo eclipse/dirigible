@@ -22,59 +22,59 @@ import org.junit.Test;
  */
 public class SequenceTest {
 
-	/**
-	 * Creates the sequence.
-	 */
-	@Test
-	public void createSequence() {
-		String sql = SqlFactory	.getNative(new H2SqlDialect())
-								.create()
-								.sequence("CUSTOMERS_SEQUENCE")
-								.build();
+  /**
+   * Creates the sequence.
+   */
+  @Test
+  public void createSequence() {
+    String sql = SqlFactory.getNative(new H2SqlDialect())
+                           .create()
+                           .sequence("CUSTOMERS_SEQUENCE")
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE", sql);
+  }
 
-	/**
-	 * Alter sequence.
-	 */
-	@Test
-	public void alterSequence() {
-		String sql = SqlFactory	.getNative(new H2SqlDialect())
-								.alter()
-								.sequence("CUSTOMERS_SEQUENCE")
-								.build();
+  /**
+   * Alter sequence.
+   */
+  @Test
+  public void alterSequence() {
+    String sql = SqlFactory.getNative(new H2SqlDialect())
+                           .alter()
+                           .sequence("CUSTOMERS_SEQUENCE")
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("ALTER SEQUENCE CUSTOMERS_SEQUENCE", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("ALTER SEQUENCE CUSTOMERS_SEQUENCE", sql);
+  }
 
-	/**
-	 * Drop sequnce.
-	 */
-	@Test
-	public void dropSequnce() {
-		String sql = SqlFactory	.getNative(new H2SqlDialect())
-								.drop()
-								.sequence("CUSTOMERS_SEQUENCE")
-								.build();
+  /**
+   * Drop sequnce.
+   */
+  @Test
+  public void dropSequnce() {
+    String sql = SqlFactory.getNative(new H2SqlDialect())
+                           .drop()
+                           .sequence("CUSTOMERS_SEQUENCE")
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("DROP SEQUENCE CUSTOMERS_SEQUENCE", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("DROP SEQUENCE CUSTOMERS_SEQUENCE", sql);
+  }
 
-	/**
-	 * Nextval sequnce.
-	 */
-	@Test
-	public void nextvalSequnce() {
-		String sql = SqlFactory	.getNative(new H2SqlDialect())
-								.nextval("CUSTOMERS_SEQUENCE")
-								.build();
+  /**
+   * Nextval sequnce.
+   */
+  @Test
+  public void nextvalSequnce() {
+    String sql = SqlFactory.getNative(new H2SqlDialect())
+                           .nextval("CUSTOMERS_SEQUENCE")
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("SELECT NEXTVAL( 'CUSTOMERS_SEQUENCE' )", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("SELECT NEXTVAL( 'CUSTOMERS_SEQUENCE' )", sql);
+  }
 
 }

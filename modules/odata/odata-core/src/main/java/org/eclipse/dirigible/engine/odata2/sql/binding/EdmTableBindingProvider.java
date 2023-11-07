@@ -17,11 +17,11 @@ import org.apache.olingo.odata2.api.edm.EdmStructuralType;
  */
 public interface EdmTableBindingProvider {
 
-	/**
-	 * Gets the edm table binding.
-	 *
-	 * @param entityType the entity type
-	 * @return the edm table binding
-	 */
-	public EdmTableBinding getEdmTableBinding(EdmStructuralType entityType);
+  /**
+   * Gets the edm table binding.
+   *
+   * @param entityType the entity type
+   * @return the edm table binding
+   */
+  public EdmTableBinding getEdmTableBinding(EdmStructuralType entityType);
 }

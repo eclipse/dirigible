@@ -22,31 +22,31 @@ import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 
 public class GraalPyCodeRunner implements CodeRunner<Source, Value> {
-	private final Context context;
+  private final Context context;
 
-	public GraalPyCodeRunner(Path workingDirectoryPath, Path projectDirectoryPath, Path pythonModulesPath, boolean debug) {
-		var engine = debug ? EngineCreator.getOrCreateDebuggableEngine() : EngineCreator.getOrCreateEngine();
-		var fs = new GraalPyFileSystem(workingDirectoryPath, FileSystems.getDefault());
-		context = new ContextCreator(engine, workingDirectoryPath, projectDirectoryPath, pythonModulesPath, fs).createContext();
-	}
+  public GraalPyCodeRunner(Path workingDirectoryPath, Path projectDirectoryPath, Path pythonModulesPath, boolean debug) {
+    var engine = debug ? EngineCreator.getOrCreateDebuggableEngine() : EngineCreator.getOrCreateEngine();
+    var fs = new GraalPyFileSystem(workingDirectoryPath, FileSystems.getDefault());
+    context = new ContextCreator(engine, workingDirectoryPath, projectDirectoryPath, pythonModulesPath, fs).createContext();
+  }
 
-	@Override
-	public Source prepareSource(Path codeFilePath) {
-		try {
-			return Source	.newBuilder("python", codeFilePath.toFile())
-							.build();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+  @Override
+  public Source prepareSource(Path codeFilePath) {
+    try {
+      return Source.newBuilder("python", codeFilePath.toFile())
+                   .build();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
-	@Override
-	public Value run(Source codeSource) {
-		return context.eval(codeSource);
-	}
+  @Override
+  public Value run(Source codeSource) {
+    return context.eval(codeSource);
+  }
 
-	@Override
-	public void close() {
-		context.close();
-	}
+  @Override
+  public void close() {
+    context.close();
+  }
 }

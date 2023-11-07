@@ -25,98 +25,98 @@ import org.junit.Test;
  */
 public class RepositoryGenericCollectionRenameTest {
 
-	/** The repository. */
-	protected IRepository repository;
+  /** The repository. */
+  protected IRepository repository;
 
-	/**
-	 * Test create.
-	 */
-	@Test
-	public void testCreate() {
-		if (repository == null) {
-			return;
-		}
+  /**
+   * Test create.
+   */
+  @Test
+  public void testCreate() {
+    if (repository == null) {
+      return;
+    }
 
-		ICollection collection = null;
-		try {
-			collection = repository.createCollection("/testCollectionToBeRemoved1"); //$NON-NLS-1$
-			assertNotNull(collection);
-			assertTrue(collection.exists());
-			assertEquals(0, collection	.getChildren()
-										.size());
+    ICollection collection = null;
+    try {
+      collection = repository.createCollection("/testCollectionToBeRemoved1"); //$NON-NLS-1$
+      assertNotNull(collection);
+      assertTrue(collection.exists());
+      assertEquals(0, collection.getChildren()
+                                .size());
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		} finally {
-			try {
-				if ((collection != null) && collection.exists()) {
-					repository.removeCollection("/testCollectionToBeRemoved1"); //$NON-NLS-1$
-					collection = repository.getCollection("/testCollectionToBeRemoved1"); //$NON-NLS-1$
-					assertNotNull(collection);
-					assertFalse(collection.exists());
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				fail(e.getMessage());
-			}
-		}
-	}
+    } catch (Exception e) {
+      e.printStackTrace();
+      fail(e.getMessage());
+    } finally {
+      try {
+        if ((collection != null) && collection.exists()) {
+          repository.removeCollection("/testCollectionToBeRemoved1"); //$NON-NLS-1$
+          collection = repository.getCollection("/testCollectionToBeRemoved1"); //$NON-NLS-1$
+          assertNotNull(collection);
+          assertFalse(collection.exists());
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+        fail(e.getMessage());
+      }
+    }
+  }
 
-	/**
-	 * Test rename.
-	 */
-	@Test
-	public void testRename() {
-		if (repository == null) {
-			return;
-		}
+  /**
+   * Test rename.
+   */
+  @Test
+  public void testRename() {
+    if (repository == null) {
+      return;
+    }
 
-		ICollection collection = null;
-		try {
-			collection = repository.createCollection("/a/b/c"); //$NON-NLS-1$
-			assertNotNull(collection);
-			assertTrue(collection.exists());
+    ICollection collection = null;
+    try {
+      collection = repository.createCollection("/a/b/c"); //$NON-NLS-1$
+      assertNotNull(collection);
+      assertTrue(collection.exists());
 
-			collection = repository.createCollection("/a/b/c/d"); //$NON-NLS-1$
-			assertNotNull(collection);
-			assertTrue(collection.exists());
+      collection = repository.createCollection("/a/b/c/d"); //$NON-NLS-1$
+      assertNotNull(collection);
+      assertTrue(collection.exists());
 
-			collection = repository.createCollection("/c/b/a"); //$NON-NLS-1$
-			assertNotNull(collection);
-			assertTrue(collection.exists());
+      collection = repository.createCollection("/c/b/a"); //$NON-NLS-1$
+      assertNotNull(collection);
+      assertTrue(collection.exists());
 
-			collection = repository.getCollection("/a/b/c"); //$NON-NLS-1$
-			assertNotNull(collection);
-			assertTrue(collection.exists());
+      collection = repository.getCollection("/a/b/c"); //$NON-NLS-1$
+      assertNotNull(collection);
+      assertTrue(collection.exists());
 
-			collection.renameTo("x");
+      collection.renameTo("x");
 
-			collection = repository.getCollection("/a/b/x"); //$NON-NLS-1$
-			assertNotNull(collection);
-			assertTrue(collection.exists());
-			assertEquals("x", collection.getName());
+      collection = repository.getCollection("/a/b/x"); //$NON-NLS-1$
+      assertNotNull(collection);
+      assertTrue(collection.exists());
+      assertEquals("x", collection.getName());
 
-			collection = repository.getCollection("/a/b/x/d"); //$NON-NLS-1$
-			assertNotNull(collection);
-			assertTrue(collection.exists());
+      collection = repository.getCollection("/a/b/x/d"); //$NON-NLS-1$
+      assertNotNull(collection);
+      assertTrue(collection.exists());
 
-			collection = repository.getCollection("/a/b/c"); //$NON-NLS-1$
-			assertNotNull(collection);
-			assertFalse(collection.exists());
+      collection = repository.getCollection("/a/b/c"); //$NON-NLS-1$
+      assertNotNull(collection);
+      assertFalse(collection.exists());
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		} finally {
-			try {
-				repository.removeCollection("/a");
-				repository.removeCollection("/c");
-			} catch (Exception e) {
-				e.printStackTrace();
-				fail(e.getMessage());
-			}
-		}
-	}
+    } catch (Exception e) {
+      e.printStackTrace();
+      fail(e.getMessage());
+    } finally {
+      try {
+        repository.removeCollection("/a");
+        repository.removeCollection("/c");
+      } catch (Exception e) {
+        e.printStackTrace();
+        fail(e.getMessage());
+      }
+    }
+  }
 
 }

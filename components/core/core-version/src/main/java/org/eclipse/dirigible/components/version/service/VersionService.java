@@ -29,59 +29,59 @@ import org.springframework.stereotype.Service;
 @Service
 public class VersionService {
 
-	/** The Constant DIRIGIBLE_PROPERTIES_PATH. */
-	private static final String DIRIGIBLE_PROPERTIES_PATH = "/dirigible.properties";
+  /** The Constant DIRIGIBLE_PROPERTIES_PATH. */
+  private static final String DIRIGIBLE_PROPERTIES_PATH = "/dirigible.properties";
 
-	/** The Constant DIRIGIBLE_PRODUCT_NAME. */
-	private static final String DIRIGIBLE_PRODUCT_NAME = "DIRIGIBLE_PRODUCT_NAME";
+  /** The Constant DIRIGIBLE_PRODUCT_NAME. */
+  private static final String DIRIGIBLE_PRODUCT_NAME = "DIRIGIBLE_PRODUCT_NAME";
 
-	/** The Constant DIRIGIBLE_PRODUCT_VERSION. */
-	private static final String DIRIGIBLE_PRODUCT_VERSION = "DIRIGIBLE_PRODUCT_VERSION";
+  /** The Constant DIRIGIBLE_PRODUCT_VERSION. */
+  private static final String DIRIGIBLE_PRODUCT_VERSION = "DIRIGIBLE_PRODUCT_VERSION";
 
-	/** The Constant DIRIGIBLE_PRODUCT_REPOSITORY. */
-	private static final String DIRIGIBLE_PRODUCT_REPOSITORY = "DIRIGIBLE_PRODUCT_REPOSITORY";
+  /** The Constant DIRIGIBLE_PRODUCT_REPOSITORY. */
+  private static final String DIRIGIBLE_PRODUCT_REPOSITORY = "DIRIGIBLE_PRODUCT_REPOSITORY";
 
-	/** The Constant DIRIGIBLE_PRODUCT_COMMIT_ID. */
-	private static final String DIRIGIBLE_PRODUCT_COMMIT_ID = "DIRIGIBLE_PRODUCT_COMMIT_ID";
+  /** The Constant DIRIGIBLE_PRODUCT_COMMIT_ID. */
+  private static final String DIRIGIBLE_PRODUCT_COMMIT_ID = "DIRIGIBLE_PRODUCT_COMMIT_ID";
 
-	/** The Constant DIRIGIBLE_PRODUCT_TYPE. */
-	private static final String DIRIGIBLE_PRODUCT_TYPE = "DIRIGIBLE_PRODUCT_TYPE";
+  /** The Constant DIRIGIBLE_PRODUCT_TYPE. */
+  private static final String DIRIGIBLE_PRODUCT_TYPE = "DIRIGIBLE_PRODUCT_TYPE";
 
-	/** The Constant DIRIGIBLE_INSTANCE_NAME. */
-	private static final String DIRIGIBLE_INSTANCE_NAME = "DIRIGIBLE_INSTANCE_NAME";
+  /** The Constant DIRIGIBLE_INSTANCE_NAME. */
+  private static final String DIRIGIBLE_INSTANCE_NAME = "DIRIGIBLE_INSTANCE_NAME";
 
-	private List<Engine> engines;
+  private List<Engine> engines;
 
-	public VersionService(List<Engine> engines) {
-		this.engines = engines;
-	}
+  public VersionService(List<Engine> engines) {
+    this.engines = engines;
+  }
 
-	/**
-	 * Gets the version.
-	 *
-	 * @return the version
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public Version getVersion() throws IOException {
-		Version version = new Version();
-		final Properties properties = new Properties();
-		properties.load(VersionService.class.getResourceAsStream(DIRIGIBLE_PROPERTIES_PATH));
-		version.setProductName(properties.getProperty(DIRIGIBLE_PRODUCT_NAME));
-		version.setProductVersion(properties.getProperty(DIRIGIBLE_PRODUCT_VERSION));
-		version.setProductRepository(properties.getProperty(DIRIGIBLE_PRODUCT_REPOSITORY));
-		version.setProductCommitId(properties.getProperty(DIRIGIBLE_PRODUCT_COMMIT_ID));
-		version.setProductType(properties.getProperty(DIRIGIBLE_PRODUCT_TYPE));
-		version.setInstanceName(properties.getProperty(DIRIGIBLE_INSTANCE_NAME));
-		version.setRepositoryProvider(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_PROVIDER, "local"));
-		// version.setDatabaseProvider(Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER));
+  /**
+   * Gets the version.
+   *
+   * @return the version
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  public Version getVersion() throws IOException {
+    Version version = new Version();
+    final Properties properties = new Properties();
+    properties.load(VersionService.class.getResourceAsStream(DIRIGIBLE_PROPERTIES_PATH));
+    version.setProductName(properties.getProperty(DIRIGIBLE_PRODUCT_NAME));
+    version.setProductVersion(properties.getProperty(DIRIGIBLE_PRODUCT_VERSION));
+    version.setProductRepository(properties.getProperty(DIRIGIBLE_PRODUCT_REPOSITORY));
+    version.setProductCommitId(properties.getProperty(DIRIGIBLE_PRODUCT_COMMIT_ID));
+    version.setProductType(properties.getProperty(DIRIGIBLE_PRODUCT_TYPE));
+    version.setInstanceName(properties.getProperty(DIRIGIBLE_INSTANCE_NAME));
+    version.setRepositoryProvider(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_PROVIDER, "local"));
+    // version.setDatabaseProvider(Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER));
 
-		List<String> enginesNames = engines	.stream()
-											.map(Engine::getName)
-											.collect(Collectors.toList());
-		Collections.sort(enginesNames);
-		version	.getEngines()
-				.addAll(enginesNames);
+    List<String> enginesNames = engines.stream()
+                                       .map(Engine::getName)
+                                       .collect(Collectors.toList());
+    Collections.sort(enginesNames);
+    version.getEngines()
+           .addAll(enginesNames);
 
-		return version;
-	}
+    return version;
+  }
 }

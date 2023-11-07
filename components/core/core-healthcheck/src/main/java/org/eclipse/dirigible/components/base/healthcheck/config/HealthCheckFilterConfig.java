@@ -21,20 +21,20 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class HealthCheckFilterConfig {
 
-	/**
-	 * Health check filter filter registration bean.
-	 *
-	 * @param healthCheckFilter the health check filter
-	 * @return the filter registration bean
-	 */
-	@Bean
-	public FilterRegistrationBean<HealthCheckFilter> healthCheckFilterRegistrationBean(HealthCheckFilter healthCheckFilter) {
-		FilterRegistrationBean<HealthCheckFilter> filterRegistrationBean = new FilterRegistrationBean<>(healthCheckFilter);
+  /**
+   * Health check filter filter registration bean.
+   *
+   * @param healthCheckFilter the health check filter
+   * @return the filter registration bean
+   */
+  @Bean
+  public FilterRegistrationBean<HealthCheckFilter> healthCheckFilterRegistrationBean(HealthCheckFilter healthCheckFilter) {
+    FilterRegistrationBean<HealthCheckFilter> filterRegistrationBean = new FilterRegistrationBean<>(healthCheckFilter);
 
-		filterRegistrationBean.setFilter(healthCheckFilter);
-		filterRegistrationBean.addUrlPatterns("/services/*", "/public/*");
+    filterRegistrationBean.setFilter(healthCheckFilter);
+    filterRegistrationBean.addUrlPatterns("/services/*", "/public/*");
 
-		return filterRegistrationBean;
-	}
+    return filterRegistrationBean;
+  }
 
 }

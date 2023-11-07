@@ -20,29 +20,29 @@ import redis.clients.jedis.Jedis;
 @Component
 public class RedisFacade {
 
-	/**
-	 * The Constant DIRIGIBLE_REDIS_CLIENT_URI.
-	 */
-	private static final String DIRIGIBLE_REDIS_CLIENT_URI = "DIRIGIBLE_REDIS_CLIENT_URI";
+  /**
+   * The Constant DIRIGIBLE_REDIS_CLIENT_URI.
+   */
+  private static final String DIRIGIBLE_REDIS_CLIENT_URI = "DIRIGIBLE_REDIS_CLIENT_URI";
 
-	/**
-	 * The Constant CLIENT_URI.
-	 */
-	private static final String CLIENT_URI = "localhost:6379";
+  /**
+   * The Constant CLIENT_URI.
+   */
+  private static final String CLIENT_URI = "localhost:6379";
 
-	/**
-	 * Gets the client.
-	 *
-	 * @return the client
-	 */
-	public static Jedis getClient() {
+  /**
+   * Gets the client.
+   *
+   * @return the client
+   */
+  public static Jedis getClient() {
 
-		String[] splitUri = Configuration	.get(DIRIGIBLE_REDIS_CLIENT_URI, CLIENT_URI)
-											.split(":");
+    String[] splitUri = Configuration.get(DIRIGIBLE_REDIS_CLIENT_URI, CLIENT_URI)
+                                     .split(":");
 
-		String host = splitUri[0];
-		int port = Integer.parseInt(splitUri[1]);
+    String host = splitUri[0];
+    int port = Integer.parseInt(splitUri[1]);
 
-		return new Jedis(host, port);
-	}
+    return new Jedis(host, port);
+  }
 }

@@ -39,47 +39,47 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class AccessVerifierTest {
 
-	@Autowired
-	private AccessVerifier securityAccessVerifier;
+  @Autowired
+  private AccessVerifier securityAccessVerifier;
 
-	@Autowired
-	private AccessRepository securityAccessRepository;
+  @Autowired
+  private AccessRepository securityAccessRepository;
 
-	@Autowired
-	private RoleRepository securityRoleRepository;
+  @Autowired
+  private RoleRepository securityRoleRepository;
 
-	@BeforeEach
-	public void setup() {
+  @BeforeEach
+  public void setup() {
 
-		cleanup();
+    cleanup();
 
-		// Create test security roles and accesses
-		securityRoleRepository.save(createSecurityRole("/a/b/c/test1.role", "test1", "description"));
-		securityRoleRepository.save(createSecurityRole("/a/b/c/test2.role", "test2", "description"));
-		securityAccessRepository.save(
-				createSecurityAccess("/a/b/c/test.access", "test1", "description", "HTTP", "/a" + "/b/c/test.txt", "GET", "test1"));
-		securityAccessRepository.save(
-				createSecurityAccess("/a/b/c/test.access", "test2", "description", "HTTP", "/a" + "/b/c/test.txt", "GET", "test2"));
-	}
+    // Create test security roles and accesses
+    securityRoleRepository.save(createSecurityRole("/a/b/c/test1.role", "test1", "description"));
+    securityRoleRepository.save(createSecurityRole("/a/b/c/test2.role", "test2", "description"));
+    securityAccessRepository.save(
+        createSecurityAccess("/a/b/c/test.access", "test1", "description", "HTTP", "/a" + "/b/c/test.txt", "GET", "test1"));
+    securityAccessRepository.save(
+        createSecurityAccess("/a/b/c/test.access", "test2", "description", "HTTP", "/a" + "/b/c/test.txt", "GET", "test2"));
+  }
 
-	@AfterEach
-	public void cleanup() {
-		// Delete test security roles and accesses
-		securityRoleRepository.deleteAll();
-		securityAccessRepository.deleteAll();
-	}
+  @AfterEach
+  public void cleanup() {
+    // Delete test security roles and accesses
+    securityRoleRepository.deleteAll();
+    securityAccessRepository.deleteAll();
+  }
 
-	@Test
-	void testGetMatchingSecurityAccesses() {
-		List<Access> matchingSecurityAccesses = securityAccessVerifier.getMatchingSecurityAccesses("HTTP", "/a/b/c", "GET");
-		assertTrue(matchingSecurityAccesses.isEmpty());
+  @Test
+  void testGetMatchingSecurityAccesses() {
+    List<Access> matchingSecurityAccesses = securityAccessVerifier.getMatchingSecurityAccesses("HTTP", "/a/b/c", "GET");
+    assertTrue(matchingSecurityAccesses.isEmpty());
 
-		matchingSecurityAccesses = securityAccessVerifier.getMatchingSecurityAccesses("HTTP", "/a/b/c/test.txt", "GET");
-		assertFalse(matchingSecurityAccesses.isEmpty());
-		assertEquals(2, matchingSecurityAccesses.size());
-	}
+    matchingSecurityAccesses = securityAccessVerifier.getMatchingSecurityAccesses("HTTP", "/a/b/c/test.txt", "GET");
+    assertFalse(matchingSecurityAccesses.isEmpty());
+    assertEquals(2, matchingSecurityAccesses.size());
+  }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 }

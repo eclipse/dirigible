@@ -31,73 +31,73 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @ConditionalOnProperty(name = "oauth2.enabled", havingValue = "true")
 public class OAuth2SecurityConfiguration {
 
-	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		// http.authorizeRequests()
-		// .anyRequest().authenticated()
-		// .and()
-		// .oauth2Login();
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    // http.authorizeRequests()
+    // .anyRequest().authenticated()
+    // .and()
+    // .oauth2Login();
 
-		http.cors()
-			.and()
-			.csrf()
-			.disable()
-			.oauth2Login()
-			.and()
-			// .authorizeRequests()
-			// .antMatchers("/login/**").permitAll()
-			// .antMatchers("/error/**").permitAll()
-			// .antMatchers("/error.html").permitAll()
-			// .antMatchers("/index-busy.html").permitAll()
-			// .antMatchers("/stomp").permitAll()
-			// .antMatchers("/actuator/**").permitAll()
-			// .antMatchers("/*").fullyAuthenticated()
-			// .anyRequest().authenticated()
-			// .and()
-			// .formLogin()
-			// .and()
-			// .logout().deleteCookies("JSESSIONID")
-			// .and()
-			.headers()
-			.frameOptions()
-			.disable();
+    http.cors()
+        .and()
+        .csrf()
+        .disable()
+        .oauth2Login()
+        .and()
+        // .authorizeRequests()
+        // .antMatchers("/login/**").permitAll()
+        // .antMatchers("/error/**").permitAll()
+        // .antMatchers("/error.html").permitAll()
+        // .antMatchers("/index-busy.html").permitAll()
+        // .antMatchers("/stomp").permitAll()
+        // .antMatchers("/actuator/**").permitAll()
+        // .antMatchers("/*").fullyAuthenticated()
+        // .anyRequest().authenticated()
+        // .and()
+        // .formLogin()
+        // .and()
+        // .logout().deleteCookies("JSESSIONID")
+        // .and()
+        .headers()
+        .frameOptions()
+        .disable();
 
-		HttpSecurityURIConfigurator.configure(http);
+    HttpSecurityURIConfigurator.configure(http);
 
-		return http.build();
-	}
+    return http.build();
+  }
 
-	// @Bean
-	// public InMemoryUserDetailsManager userDetailsService() {
-	// String username =
-	// org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_BASIC_USERNAME", "YWRtaW4=");
-	// // admin
-	// String password =
-	// org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_BASIC_PASSWORD", "YWRtaW4=");
-	// // admin
-	// UserDetails user = User
-	// .withUsername(new String(new Base64().decode(username.getBytes()),
-	// StandardCharsets.UTF_8).trim())
-	// .password("{noop}" + new String(new Base64().decode(password.getBytes()),
-	// StandardCharsets.UTF_8).trim())
-	// .roles("DEVELOPER", "OPERATOR")
-	// .build();
-	// return new InMemoryUserDetailsManager(user);
-	// }
+  // @Bean
+  // public InMemoryUserDetailsManager userDetailsService() {
+  // String username =
+  // org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_BASIC_USERNAME", "YWRtaW4=");
+  // // admin
+  // String password =
+  // org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_BASIC_PASSWORD", "YWRtaW4=");
+  // // admin
+  // UserDetails user = User
+  // .withUsername(new String(new Base64().decode(username.getBytes()),
+  // StandardCharsets.UTF_8).trim())
+  // .password("{noop}" + new String(new Base64().decode(password.getBytes()),
+  // StandardCharsets.UTF_8).trim())
+  // .roles("DEVELOPER", "OPERATOR")
+  // .build();
+  // return new InMemoryUserDetailsManager(user);
+  // }
 
-	// @Bean
-	// public CorsConfigurationSource corsConfigurationSource() {
-	// CorsConfiguration configuration = new CorsConfiguration();
-	// configuration.setAllowedOriginPatterns(Arrays.asList("*"));
-	// configuration.setAllowCredentials(true);
-	// configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Headers","Access-Control-Allow-Origin","Access-Control-Request-Method",
-	// "Access-Control-Request-Headers", "Origin", "Cache-Control", "Content-Type", "Authorization"));
-	// configuration.setExposedHeaders(Arrays.asList("Access-Control-Allow-Headers","Access-Control-Allow-Origin","Access-Control-Request-Method",
-	// "Access-Control-Request-Headers", "Origin", "Cache-Control", "Content-Type", "Authorization"));
-	// configuration.setAllowedMethods(Arrays.asList("HEAD", "DELETE", "GET", "POST", "PATCH", "PUT"));
-	// UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-	// source.registerCorsConfiguration("/**", configuration);
-	// return source;
-	// }
+  // @Bean
+  // public CorsConfigurationSource corsConfigurationSource() {
+  // CorsConfiguration configuration = new CorsConfiguration();
+  // configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+  // configuration.setAllowCredentials(true);
+  // configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Headers","Access-Control-Allow-Origin","Access-Control-Request-Method",
+  // "Access-Control-Request-Headers", "Origin", "Cache-Control", "Content-Type", "Authorization"));
+  // configuration.setExposedHeaders(Arrays.asList("Access-Control-Allow-Headers","Access-Control-Allow-Origin","Access-Control-Request-Method",
+  // "Access-Control-Request-Headers", "Origin", "Cache-Control", "Content-Type", "Authorization"));
+  // configuration.setAllowedMethods(Arrays.asList("HEAD", "DELETE", "GET", "POST", "PATCH", "PUT"));
+  // UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+  // source.registerCorsConfiguration("/**", configuration);
+  // return source;
+  // }
 
 }

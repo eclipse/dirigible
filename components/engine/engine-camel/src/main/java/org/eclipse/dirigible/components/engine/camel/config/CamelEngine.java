@@ -15,13 +15,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CamelEngine implements Engine {
-	@Override
-	public String getName() {
-		return "Integrations (Camel)";
-	}
+  @Override
+  public String getName() {
+    return "Integrations (Camel)";
+  }
 
-	@Override
-	public String getProvider() {
-		return "Eclipse Dirigible";
-	}
+  @Override
+  public String getProvider() {
+    return "Eclipse Dirigible";
+  }
 }

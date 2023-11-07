@@ -45,44 +45,44 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 class AccessEndpointTest {
 
-	@Autowired
-	private AccessRepository accessRepository;
+  @Autowired
+  private AccessRepository accessRepository;
 
-	@Autowired
-	private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-	@Autowired
-	protected WebApplicationContext wac;
+  @Autowired
+  protected WebApplicationContext wac;
 
-	@Autowired
-	private FilterChainProxy springSecurityFilterChain;
+  @Autowired
+  private FilterChainProxy springSecurityFilterChain;
 
-	@BeforeEach
-	public void setup() {
+  @BeforeEach
+  public void setup() {
 
-		cleanup();
+    cleanup();
 
-		// Create test security accesses
-		accessRepository.save(
-				createSecurityAccess("/a/b/c/test1.access", "test1", "description", "HTTP", "/a" + "/b/c/test1.txt", "GET", "test_role_1"));
-		accessRepository.save(
-				createSecurityAccess("/a/b/c/test2.access", "test2", "description", "HTTP", "/a" + "/b/c/test2.txt", "GET", "test_role_2"));
-	}
+    // Create test security accesses
+    accessRepository.save(
+        createSecurityAccess("/a/b/c/test1.access", "test1", "description", "HTTP", "/a" + "/b/c/test1.txt", "GET", "test_role_1"));
+    accessRepository.save(
+        createSecurityAccess("/a/b/c/test2.access", "test2", "description", "HTTP", "/a" + "/b/c/test2.txt", "GET", "test_role_2"));
+  }
 
-	@AfterEach
-	public void cleanup() {
-		// Delete test security accesses
-		accessRepository.deleteAll();
-	}
+  @AfterEach
+  public void cleanup() {
+    // Delete test security accesses
+    accessRepository.deleteAll();
+  }
 
-	@Test
-	public void testGetSecurityAccesses() throws Exception {
-		mockMvc	.perform(get("/services/security/access").accept(MediaType.APPLICATION_JSON))
-				.andDo(print())
-				.andExpect(status().isOk());
-	}
+  @Test
+  public void testGetSecurityAccesses() throws Exception {
+    mockMvc.perform(get("/services/security/access").accept(MediaType.APPLICATION_JSON))
+           .andDo(print())
+           .andExpect(status().isOk());
+  }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+  @SpringBootApplication
+  static class TestConfiguration {
+  }
 }

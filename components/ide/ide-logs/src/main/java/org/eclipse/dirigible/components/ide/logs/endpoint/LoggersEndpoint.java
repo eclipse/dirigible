@@ -30,58 +30,58 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "loggers")
 public class LoggersEndpoint {
 
-	/** The logs service. */
-	@Autowired
-	private LogsService logsService;
+  /** The logs service. */
+  @Autowired
+  private LogsService logsService;
 
-	/**
-	 * List all loggers with their severity level.
-	 *
-	 * @return the response
-	 * @throws URISyntaxException the URI syntax exception
-	 * @throws IOException the I/O error
-	 */
-	@GetMapping(value = "/", produces = "application/json")
-	public ResponseEntity<?> listLoggers() throws URISyntaxException, IOException {
-		return ResponseEntity.ok(logsService.listLoggers());
-	}
+  /**
+   * List all loggers with their severity level.
+   *
+   * @return the response
+   * @throws URISyntaxException the URI syntax exception
+   * @throws IOException the I/O error
+   */
+  @GetMapping(value = "/", produces = "application/json")
+  public ResponseEntity<?> listLoggers() throws URISyntaxException, IOException {
+    return ResponseEntity.ok(logsService.listLoggers());
+  }
 
-	/**
-	 * Get severity.
-	 *
-	 * @param loggerName the loggerName
-	 * @return the response
-	 * @throws URISyntaxException the URI syntax exception
-	 * @throws IOException the I/O error
-	 */
-	@GetMapping(value = "/severity/{loggerName}", produces = "text/plain")
-	public ResponseEntity<?> getSeverity(@PathVariable("loggerName") String loggerName) throws URISyntaxException, IOException {
+  /**
+   * Get severity.
+   *
+   * @param loggerName the loggerName
+   * @return the response
+   * @throws URISyntaxException the URI syntax exception
+   * @throws IOException the I/O error
+   */
+  @GetMapping(value = "/severity/{loggerName}", produces = "text/plain")
+  public ResponseEntity<?> getSeverity(@PathVariable("loggerName") String loggerName) throws URISyntaxException, IOException {
 
-		if (loggerName == null) {
-			loggerName = "ROOT";
-		}
+    if (loggerName == null) {
+      loggerName = "ROOT";
+    }
 
-		return ResponseEntity.ok(logsService.getSeverity(loggerName));
-	}
+    return ResponseEntity.ok(logsService.getSeverity(loggerName));
+  }
 
-	/**
-	 * Set severity.
-	 *
-	 * @param loggerName the loggerName
-	 * @param logLevel the logLevel
-	 * @return the response
-	 * @throws URISyntaxException the URI syntax exception
-	 * @throws IOException the I/O error
-	 */
-	@PostMapping(value = "/severity/{loggerName}", produces = "text/plain", consumes = "text/plain")
-	public ResponseEntity<?> setSeverity(@PathVariable("loggerName") String loggerName, @Valid @RequestBody String logLevel)
-			throws URISyntaxException, IOException {
+  /**
+   * Set severity.
+   *
+   * @param loggerName the loggerName
+   * @param logLevel the logLevel
+   * @return the response
+   * @throws URISyntaxException the URI syntax exception
+   * @throws IOException the I/O error
+   */
+  @PostMapping(value = "/severity/{loggerName}", produces = "text/plain", consumes = "text/plain")
+  public ResponseEntity<?> setSeverity(@PathVariable("loggerName") String loggerName, @Valid @RequestBody String logLevel)
+      throws URISyntaxException, IOException {
 
-		if (loggerName == null) {
-			loggerName = "ROOT";
-		}
+    if (loggerName == null) {
+      loggerName = "ROOT";
+    }
 
-		return ResponseEntity.ok(logsService.setSeverity(loggerName, logLevel));
-	}
+    return ResponseEntity.ok(logsService.setSeverity(loggerName, logLevel));
+  }
 
 }

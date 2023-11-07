@@ -25,29 +25,29 @@ import static org.junit.Assert.assertTrue;
  */
 public class ODataSQLProcessorAggregationTest extends AbstractSQLProcessorTest {
 
-	/**
-	 * Gets the o data entities.
-	 *
-	 * @return the o data entities
-	 */
-	@Override
-	protected Class<?>[] getODataEntities() {
-		return new Class<?>[] {Customer.class};
-	}
+  /**
+   * Gets the o data entities.
+   *
+   * @return the o data entities
+   */
+  @Override
+  protected Class<?>[] getODataEntities() {
+    return new Class<?>[] {Customer.class};
+  }
 
-	/**
-	 * Test SQL processor with group by.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testSQLProcessorWithGroupBy() throws Exception {
-		Response response = OData2RequestBuilder.createRequest(sf) //
-												.segments("Customers") //
-												.accept("application/atom+xml")
-												.executeRequest(GET);
-		String content = IOUtils.toString((InputStream) response.getEntity());
-		// Check the SUM of the NUMBER column
-		assertTrue(content.contains("6"));
-	}
+  /**
+   * Test SQL processor with group by.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testSQLProcessorWithGroupBy() throws Exception {
+    Response response = OData2RequestBuilder.createRequest(sf) //
+                                            .segments("Customers") //
+                                            .accept("application/atom+xml")
+                                            .executeRequest(GET);
+    String content = IOUtils.toString((InputStream) response.getEntity());
+    // Check the SUM of the NUMBER column
+    assertTrue(content.contains("6"));
+  }
 }

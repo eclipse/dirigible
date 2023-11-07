@@ -27,20 +27,20 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 class VersionServiceTest {
 
-	@Autowired
-	VersionService versionService;
+  @Autowired
+  VersionService versionService;
 
-	@Test
-	void testGetVersion() throws IOException {
-		Version version = versionService.getVersion();
-		assertEquals("dirigible", version.getProductName());
-		assertEquals("0.0.1", version.getProductVersion());
-		assertEquals("test", version.getProductCommitId());
-		assertEquals("https://github.com/eclipse/dirigible", version.getProductRepository());
-		assertEquals("all", version.getProductType());
-		assertEquals("server-spring-boot", version.getInstanceName());
-		// assertEquals("local", version.getDatabaseProvider());
-		// assertEquals(0, version.getModules().size());
-		// TODO: Аdd assertion for engines.
-	}
+  @Test
+  void testGetVersion() throws IOException {
+    Version version = versionService.getVersion();
+    assertEquals("dirigible", version.getProductName());
+    assertEquals("0.0.1", version.getProductVersion());
+    assertEquals("test", version.getProductCommitId());
+    assertEquals("https://github.com/eclipse/dirigible", version.getProductRepository());
+    assertEquals("all", version.getProductType());
+    assertEquals("server-spring-boot", version.getInstanceName());
+    // assertEquals("local", version.getDatabaseProvider());
+    // assertEquals(0, version.getModules().size());
+    // TODO: Аdd assertion for engines.
+  }
 }

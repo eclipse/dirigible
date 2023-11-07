@@ -23,79 +23,79 @@ import org.junit.Test;
  */
 public class CreateViewTest extends CreateTableTest {
 
-	/**
-	 * Creates the view as select.
-	 */
-	@Test
-	public void createViewAsSelect() {
-		createTableGeneric();
-		String sql = SqlFactory	.getDefault()
-								.create()
-								.view("CUSTOMERS_VIEW")
-								.column("ID")
-								.column("FIRST_NAME")
-								.column("LAST_NAME")
-								.asSelect(SqlFactory.getDefault()
-													.select()
-													.column("*")
-													.from("CUSTOMERS")
-													.build())
-								.build();
+  /**
+   * Creates the view as select.
+   */
+  @Test
+  public void createViewAsSelect() {
+    createTableGeneric();
+    String sql = SqlFactory.getDefault()
+                           .create()
+                           .view("CUSTOMERS_VIEW")
+                           .column("ID")
+                           .column("FIRST_NAME")
+                           .column("LAST_NAME")
+                           .asSelect(SqlFactory.getDefault()
+                                               .select()
+                                               .column("*")
+                                               .from("CUSTOMERS")
+                                               .build())
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("CREATE VIEW CUSTOMERS_VIEW ( ID , FIRST_NAME , LAST_NAME ) AS SELECT * FROM CUSTOMERS", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("CREATE VIEW CUSTOMERS_VIEW ( ID , FIRST_NAME , LAST_NAME ) AS SELECT * FROM CUSTOMERS", sql);
+  }
 
-	/**
-	 * Creates the view as select case sensitive.
-	 */
-	@Test
-	public void createViewAsSelectCaseSensitive() {
-		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-		try {
-			String sql = SqlFactory	.getDefault()
-									.create()
-									.view("CUSTOMERS_VIEW")
-									.column("ID")
-									.column("FIRST_NAME")
-									.column("LAST_NAME")
-									.asSelect(SqlFactory.getDefault()
-														.select()
-														.column("*")
-														.from("CUSTOMERS")
-														.build())
-									.build();
+  /**
+   * Creates the view as select case sensitive.
+   */
+  @Test
+  public void createViewAsSelectCaseSensitive() {
+    Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
+    try {
+      String sql = SqlFactory.getDefault()
+                             .create()
+                             .view("CUSTOMERS_VIEW")
+                             .column("ID")
+                             .column("FIRST_NAME")
+                             .column("LAST_NAME")
+                             .asSelect(SqlFactory.getDefault()
+                                                 .select()
+                                                 .column("*")
+                                                 .from("CUSTOMERS")
+                                                 .build())
+                             .build();
 
-			assertNotNull(sql);
-			assertEquals("CREATE VIEW \"CUSTOMERS_VIEW\" ( \"ID\" , \"FIRST_NAME\" , \"LAST_NAME\" ) AS SELECT * FROM \"CUSTOMERS\"", sql);
+      assertNotNull(sql);
+      assertEquals("CREATE VIEW \"CUSTOMERS_VIEW\" ( \"ID\" , \"FIRST_NAME\" , \"LAST_NAME\" ) AS SELECT * FROM \"CUSTOMERS\"", sql);
 
-		} finally {
-			Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-		}
-	}
+    } finally {
+      Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
+    }
+  }
 
-	/**
-	 * Creates the view as select with join and alias.
-	 */
-	@Test
-	public void createViewWithJoinAndAlias() {
-		createTableGeneric();
-		String sql = SqlFactory	.getDefault()
-								.create()
-								.view("CUSTOMERS_VIEW")
-								.column("ID")
-								.column("FIRST_NAME")
-								.column("LAST_NAME")
-								.asSelect(SqlFactory.getDefault()
-													.select()
-													.column("*")
-													.from("CUSTOMERS", "CUST")
-													.innerJoin("EMPLOYEE", "CUST.ID = EMP.ID", "EMP")
-													.build())
-								.build();
+  /**
+   * Creates the view as select with join and alias.
+   */
+  @Test
+  public void createViewWithJoinAndAlias() {
+    createTableGeneric();
+    String sql = SqlFactory.getDefault()
+                           .create()
+                           .view("CUSTOMERS_VIEW")
+                           .column("ID")
+                           .column("FIRST_NAME")
+                           .column("LAST_NAME")
+                           .asSelect(SqlFactory.getDefault()
+                                               .select()
+                                               .column("*")
+                                               .from("CUSTOMERS", "CUST")
+                                               .innerJoin("EMPLOYEE", "CUST.ID = EMP.ID", "EMP")
+                                               .build())
+                           .build();
 
-		assertNotNull(sql);
-		assertEquals("CREATE VIEW CUSTOMERS_VIEW ( ID , FIRST_NAME , LAST_NAME ) AS SELECT * FROM CUSTOMERS "
-				+ "AS CUST INNER JOIN EMPLOYEE AS EMP ON CUST.ID = EMP.ID", sql);
-	}
+    assertNotNull(sql);
+    assertEquals("CREATE VIEW CUSTOMERS_VIEW ( ID , FIRST_NAME , LAST_NAME ) AS SELECT * FROM CUSTOMERS "
+        + "AS CUST INNER JOIN EMPLOYEE AS EMP ON CUST.ID = EMP.ID", sql);
+  }
 }

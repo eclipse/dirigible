@@ -15,42 +15,42 @@ package org.eclipse.dirigible.repository.api;
  */
 public class RepositorySearchException extends RepositoryException {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -163847774919514248L;
+  /** The Constant serialVersionUID. */
+  private static final long serialVersionUID = -163847774919514248L;
 
-	/**
-	 * Instantiates a new repository search exception.
-	 */
-	public RepositorySearchException() {
-		super();
-	}
+  /**
+   * Instantiates a new repository search exception.
+   */
+  public RepositorySearchException() {
+    super();
+  }
 
-	/**
-	 * Instantiates a new repository search exception.
-	 *
-	 * @param message the message
-	 * @param cause the cause
-	 */
-	public RepositorySearchException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  /**
+   * Instantiates a new repository search exception.
+   *
+   * @param message the message
+   * @param cause the cause
+   */
+  public RepositorySearchException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-	/**
-	 * Instantiates a new repository search exception.
-	 *
-	 * @param message the message
-	 */
-	public RepositorySearchException(String message) {
-		super(message);
-	}
+  /**
+   * Instantiates a new repository search exception.
+   *
+   * @param message the message
+   */
+  public RepositorySearchException(String message) {
+    super(message);
+  }
 
-	/**
-	 * Instantiates a new repository search exception.
-	 *
-	 * @param cause the cause
-	 */
-	public RepositorySearchException(Throwable cause) {
-		super(cause);
-	}
+  /**
+   * Instantiates a new repository search exception.
+   *
+   * @param cause the cause
+   */
+  public RepositorySearchException(Throwable cause) {
+    super(cause);
+  }
 
 }

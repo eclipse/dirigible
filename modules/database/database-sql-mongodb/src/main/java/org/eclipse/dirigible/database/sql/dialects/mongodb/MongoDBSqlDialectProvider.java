@@ -18,24 +18,24 @@ import org.eclipse.dirigible.database.sql.ISqlDialectProvider;
  */
 public class MongoDBSqlDialectProvider implements ISqlDialectProvider {
 
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-	@Override
-	public String getName() {
-		return "MongoDB";
-	}
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  @Override
+  public String getName() {
+    return "MongoDB";
+  }
 
-	/**
-	 * Gets the dialect.
-	 *
-	 * @return the dialect
-	 */
-	@Override
-	public ISqlDialect getDialect() {
-		return new MongoDBSqlDialect();
-	}
+  /**
+   * Gets the dialect.
+   *
+   * @return the dialect
+   */
+  @Override
+  public ISqlDialect getDialect() {
+    return new MongoDBSqlDialect();
+  }
 
 }

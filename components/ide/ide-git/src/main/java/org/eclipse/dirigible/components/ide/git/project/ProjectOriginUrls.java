@@ -15,56 +15,56 @@ package org.eclipse.dirigible.components.ide.git.project;
  */
 public class ProjectOriginUrls {
 
-	/** The fetch url. */
-	private String fetchUrl;
+  /** The fetch url. */
+  private String fetchUrl;
 
-	/** The push url. */
-	private String pushUrl;
+  /** The push url. */
+  private String pushUrl;
 
-	/**
-	 * Instantiates a new project origin urls.
-	 *
-	 * @param fetchUrl the fetch url
-	 * @param pushUrl the push url
-	 */
-	public ProjectOriginUrls(String fetchUrl, String pushUrl) {
-		this.fetchUrl = fetchUrl;
-		this.pushUrl = pushUrl;
-	}
+  /**
+   * Instantiates a new project origin urls.
+   *
+   * @param fetchUrl the fetch url
+   * @param pushUrl the push url
+   */
+  public ProjectOriginUrls(String fetchUrl, String pushUrl) {
+    this.fetchUrl = fetchUrl;
+    this.pushUrl = pushUrl;
+  }
 
-	/**
-	 * Gets the fetch url.
-	 *
-	 * @return the fetch url
-	 */
-	public String getFetchUrl() {
-		return fetchUrl;
-	}
+  /**
+   * Gets the fetch url.
+   *
+   * @return the fetch url
+   */
+  public String getFetchUrl() {
+    return fetchUrl;
+  }
 
-	/**
-	 * Gets the push url.
-	 *
-	 * @return the push url
-	 */
-	public String getPushUrl() {
-		return pushUrl;
-	}
+  /**
+   * Gets the push url.
+   *
+   * @return the push url
+   */
+  public String getPushUrl() {
+    return pushUrl;
+  }
 
-	/**
-	 * Sets the fetch url.
-	 *
-	 * @param fetchURL the new fetch url
-	 */
-	public void setFetchUrl(String fetchURL) {
-		this.fetchUrl = fetchURL;
-	}
+  /**
+   * Sets the fetch url.
+   *
+   * @param fetchURL the new fetch url
+   */
+  public void setFetchUrl(String fetchURL) {
+    this.fetchUrl = fetchURL;
+  }
 
-	/**
-	 * Sets the push url.
-	 *
-	 * @param pushURL the new push url
-	 */
-	public void setPushUrl(String pushURL) {
-		this.pushUrl = pushURL;
-	}
+  /**
+   * Sets the push url.
+   *
+   * @param pushURL the new push url
+   */
+  public void setPushUrl(String pushURL) {
+    this.pushUrl = pushURL;
+  }
 }

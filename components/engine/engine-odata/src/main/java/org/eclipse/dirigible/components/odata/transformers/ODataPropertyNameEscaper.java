@@ -15,12 +15,12 @@ package org.eclipse.dirigible.components.odata.transformers;
  */
 public interface ODataPropertyNameEscaper {
 
-	/**
-	 * Escape.
-	 *
-	 * @param propertyName the property name
-	 * @return the string
-	 */
-	String escape(String propertyName);
+  /**
+   * Escape.
+   *
+   * @param propertyName the property name
+   * @return the string
+   */
+  String escape(String propertyName);
 
 }

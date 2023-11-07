@@ -35,102 +35,102 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Auditable<U> {
 
-	/** The created by. */
-	@CreatedBy
-	@Column(name = "CREATED_BY", columnDefinition = "VARCHAR", nullable = true, length = 128)
-	@Expose
-	protected U createdBy;
+  /** The created by. */
+  @CreatedBy
+  @Column(name = "CREATED_BY", columnDefinition = "VARCHAR", nullable = true, length = 128)
+  @Expose
+  protected U createdBy;
 
-	/** The created at. */
-	@CreatedDate
-	@Temporal(TIMESTAMP)
-	@Column(name = "CREATED_AT", columnDefinition = "TIMESTAMP", nullable = true)
-	@Expose
-	protected Date createdAt;
+  /** The created at. */
+  @CreatedDate
+  @Temporal(TIMESTAMP)
+  @Column(name = "CREATED_AT", columnDefinition = "TIMESTAMP", nullable = true)
+  @Expose
+  protected Date createdAt;
 
-	/** The updated by. */
-	@LastModifiedBy
-	@Column(name = "UPDATED_BY", columnDefinition = "VARCHAR", nullable = true, length = 128)
-	@Expose
-	protected U updatedBy;
+  /** The updated by. */
+  @LastModifiedBy
+  @Column(name = "UPDATED_BY", columnDefinition = "VARCHAR", nullable = true, length = 128)
+  @Expose
+  protected U updatedBy;
 
-	/** The updated at. */
-	@LastModifiedDate
-	@Temporal(TIMESTAMP)
-	@Column(name = "UPDATED_AT", columnDefinition = "TIMESTAMP", nullable = true)
-	@Expose
-	protected Date updatedAt;
+  /** The updated at. */
+  @LastModifiedDate
+  @Temporal(TIMESTAMP)
+  @Column(name = "UPDATED_AT", columnDefinition = "TIMESTAMP", nullable = true)
+  @Expose
+  protected Date updatedAt;
 
-	/**
-	 * Gets the created by.
-	 *
-	 * @return the createdBy
-	 */
-	public U getCreatedBy() {
-		return createdBy;
-	}
+  /**
+   * Gets the created by.
+   *
+   * @return the createdBy
+   */
+  public U getCreatedBy() {
+    return createdBy;
+  }
 
-	/**
-	 * Sets the created by.
-	 *
-	 * @param createdBy the createdBy to set
-	 */
-	public void setCreatedBy(U createdBy) {
-		this.createdBy = createdBy;
-	}
+  /**
+   * Sets the created by.
+   *
+   * @param createdBy the createdBy to set
+   */
+  public void setCreatedBy(U createdBy) {
+    this.createdBy = createdBy;
+  }
 
-	/**
-	 * Gets the created at.
-	 *
-	 * @return the createdAt
-	 */
-	public Date getCreatedAt() {
-		return createdAt;
-	}
+  /**
+   * Gets the created at.
+   *
+   * @return the createdAt
+   */
+  public Date getCreatedAt() {
+    return createdAt;
+  }
 
-	/**
-	 * Sets the created at.
-	 *
-	 * @param createdAt the createdAt to set
-	 */
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
+  /**
+   * Sets the created at.
+   *
+   * @param createdAt the createdAt to set
+   */
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
+  }
 
-	/**
-	 * Gets the updated by.
-	 *
-	 * @return the updatedBy
-	 */
-	public U getUpdatedBy() {
-		return updatedBy;
-	}
+  /**
+   * Gets the updated by.
+   *
+   * @return the updatedBy
+   */
+  public U getUpdatedBy() {
+    return updatedBy;
+  }
 
-	/**
-	 * Sets the updated by.
-	 *
-	 * @param updatedBy the updatedBy to set
-	 */
-	public void setUpdatedBy(U updatedBy) {
-		this.updatedBy = updatedBy;
-	}
+  /**
+   * Sets the updated by.
+   *
+   * @param updatedBy the updatedBy to set
+   */
+  public void setUpdatedBy(U updatedBy) {
+    this.updatedBy = updatedBy;
+  }
 
-	/**
-	 * Gets the updated at.
-	 *
-	 * @return the updatedAt
-	 */
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
+  /**
+   * Gets the updated at.
+   *
+   * @return the updatedAt
+   */
+  public Date getUpdatedAt() {
+    return updatedAt;
+  }
 
-	/**
-	 * Sets the updated at.
-	 *
-	 * @param updatedAt the updatedAt to set
-	 */
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
-	}
+  /**
+   * Sets the updated at.
+   *
+   * @param updatedAt the updatedAt to set
+   */
+  public void setUpdatedAt(Date updatedAt) {
+    this.updatedAt = updatedAt;
+  }
 
 }

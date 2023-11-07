@@ -16,14 +16,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class WebSocketsEngine implements Engine {
 
-	@Override
-	public String getName() {
-		return "WebSocket";
-	}
+  @Override
+  public String getName() {
+    return "WebSocket";
+  }
 
-	@Override
-	public String getProvider() {
-		return "Eclipse Dirigible";
-	}
+  @Override
+  public String getProvider() {
+    return "Eclipse Dirigible";
+  }
 
 }
