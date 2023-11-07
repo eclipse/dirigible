@@ -211,6 +211,7 @@
 								<exclude>**/src/main/resources/META-INF/dirigible/template-mobile-hello-world/node_modules/**</exclude>
 								<exclude>**/src/main/resources/META-INF/dirigible/utils/jsonpath.js</exclude>
 							</excludes>
+							<skipExistingHeaders>true</skipExistingHeaders>
 						</configuration>
 						<dependencies>
 							<dependency>
