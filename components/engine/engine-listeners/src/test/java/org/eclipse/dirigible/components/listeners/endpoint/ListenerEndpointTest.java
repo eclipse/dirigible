@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.eclipse.dirigible.components.listeners.domain.Listener;
+import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
 import org.eclipse.dirigible.components.listeners.repository.ListenerRepository;
 import org.eclipse.dirigible.components.listeners.service.ListenerService;
 import org.junit.jupiter.api.AfterEach;
@@ -58,12 +59,11 @@ public class ListenerEndpointTest {
 
     @BeforeEach
     public void setup() {
-
         cleanup();
 
-        listenerService.save(new Listener("/a/b/c/l1.listener", "name1", "description", "handler1", 'Q'));
-        listenerService.save(new Listener("/a/b/c/l2.listener", "name2", "description", "handler2", 'Q'));
-        listenerService.save(new Listener("/a/b/c/l3.listener", "name3", "description", "handler3", 'Q'));
+        listenerService.save(new Listener("/a/b/c/l1.listener", "name1", "description", "handler1", ListenerKind.QUEUE));
+        listenerService.save(new Listener("/a/b/c/l2.listener", "name2", "description", "handler2", ListenerKind.QUEUE));
+        listenerService.save(new Listener("/a/b/c/l3.listener", "name3", "description", "handler3", ListenerKind.QUEUE));
     }
 
     @AfterEach

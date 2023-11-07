@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.components.listeners.synchronizer;
 
 import org.eclipse.dirigible.components.listeners.domain.Listener;
+import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
 import org.eclipse.dirigible.components.listeners.repository.ListenerRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +51,8 @@ public class ListenerSynchronizerTest {
 
     @Test
     public void isAcceptedArtefact() {
-        assertTrue(listenerSynchronizer.isAccepted(new Listener("/a/b/c/l1.listener", "name1", "description", "handler1", 'Q').getType()));
+        assertTrue(listenerSynchronizer.isAccepted(
+                new Listener("/a/b/c/l1.listener", "name1", "description", "handler1", ListenerKind.QUEUE).getType()));
     }
 
     @Test

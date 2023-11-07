@@ -20,6 +20,7 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,7 @@ public class MessagingProducer implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(MessagingProducer.class);
 
     private String name;
-    private char type;
+    private ListenerKind type;
     private String message;
 
     /**
@@ -41,7 +42,7 @@ public class MessagingProducer implements Runnable {
      * @param type the type
      * @param message the message
      */
-    public MessagingProducer(String name, char type, String message) {
+    public MessagingProducer(String name, ListenerKind type, String message) {
         this.name = name;
         this.type = type;
         this.message = message;
@@ -63,9 +64,9 @@ public class MessagingProducer implements Runnable {
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             try {
                 Destination destination = null;
-                if (type == 'Q') {
+                if (ListenerKind.QUEUE.equals(type)) {
                     destination = session.createQueue(this.name);
-                } else if (type == 'T') {
+                } else if (ListenerKind.TOPIC.equals(type)) {
                     destination = session.createTopic(this.name);
                 } else {
                     throw new Exception(format("Invalid Destination Type [{0}] for destination [{1}]", this.type, this.name));
