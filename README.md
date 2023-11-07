@@ -201,6 +201,16 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
 5. Then you can run Dirigible with PostgreSQL default database (DefaultDB).
 
+### Code formatting
+In order to contribute to the project, you need to configure your java code formatter.
+Please follow the steps bellow
+#### Eclipse
+1. Window -> Preferences -> Java -> Code Style -> Formatter -> Import -> Select [this](https://github.com/eclipse/dirigible/blob/master/dirigible-formatter.xml) formatter
+2. Window -> Preferences -> Java -> Editor -> Save Actions -> Check `Perform the selected actions on save` -> Check `Format source code` -> Select -> `Format all lines`
+#### Maven
+To format the code using Maven execute the following in the root dir of the project
+`mvn formatter:format`
+
 ## Additional Information
 
 ### License
