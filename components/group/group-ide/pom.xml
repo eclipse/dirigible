@@ -398,6 +398,7 @@
     
     <properties>
 		<license.header.location>../../../licensing-header.txt</license.header.location>
+		<parent.pom.folder>../../../</parent.pom.folder>
 	</properties>
 
 </project>

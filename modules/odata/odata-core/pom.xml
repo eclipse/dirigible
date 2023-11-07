@@ -81,6 +81,7 @@
 		<!-- Required to enable usage in projects that run on java 1.8 -->
 		<custom.java.build.version>11</custom.java.build.version>
 		<license.header.location>../../../licensing-header.txt</license.header.location>
+		<parent.pom.folder>../../../</parent.pom.folder>
 		<liquibase.version>3.8.1</liquibase.version>
 	</properties>
 </project>
