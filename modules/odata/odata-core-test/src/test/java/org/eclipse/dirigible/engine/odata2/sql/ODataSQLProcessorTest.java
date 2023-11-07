@@ -1157,8 +1157,7 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
                                                 .param("$expand", "Drivers,Owners/Addresses") //
                                                 .accept("application/atom+xml")
                                                 .executeRequest(GET);
-        // System.out.println(IOUtils.toString((InputStream) response.getEntity()));
-        // //print the feed
+        // System.out.println(IOUtils.toString((InputStream) response.getEntity())); //print the feed
 
         ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
         assertEquals(1, resultFeed.getEntries()

@@ -290,8 +290,7 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
     public int getColumnType(int column) throws SQLException {
         Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap.entrySet()
                                                                              .toArray()[column - 1];
-        // return entries[column-1].getValue().getValue();//TODO: this returns the BSON
-        // type ordinal. What
+        // return entries[column-1].getValue().getValue();//TODO: this returns the BSON type ordinal. What
         // we need is a mapping to SQL types ordinals.
         return this.getSqlType(entry.getValue());
     }
@@ -308,8 +307,7 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
     public String getColumnTypeName(int column) throws SQLException {
         Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap.entrySet()
                                                                              .toArray()[column - 1];
-        // return entries[column-1].getValue().toString();// return MongoDB specific
-        // datatype name.
+        // return entries[column-1].getValue().toString();// return MongoDB specific datatype name.
         return this.getSqlTypeName(entry.getValue());
     }
 

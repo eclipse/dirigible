@@ -168,8 +168,8 @@ public class ODataMetadataUtil {
     }
 
     /**
-     * Check if the provided ODataProperty column is the same as the one defined in
-     * the DB for the given entity.
+     * Check if the provided ODataProperty column is the same as the one defined in the DB for the given
+     * entity.
      *
      * @param dbColumnNames db artifact column name
      * @param entityProperties list of entity properties

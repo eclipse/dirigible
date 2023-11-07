@@ -36,9 +36,7 @@ public class PostgresCreateBranchingBuilder extends CreateBranchingBuilder {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#view(java.
-     * lang.String)
+     * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#view(java.lang.String)
      */
     @Override
     public PostgresCreateViewBuilder view(String view) {

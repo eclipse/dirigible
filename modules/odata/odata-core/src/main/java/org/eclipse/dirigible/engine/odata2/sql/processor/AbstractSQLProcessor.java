@@ -371,9 +371,8 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
     }
 
     /**
-     * Generates the next link for server-side paging. The next-link is based on the
-     * URI of the current request, except that {@code $skip} or {@code $skiptoken}
-     * will be removed.
+     * Generates the next link for server-side paging. The next-link is based on the URI of the current
+     * request, except that {@code $skip} or {@code $skiptoken} will be removed.
      *
      * @param query the query
      * @param targetEntityType the target entity type
@@ -536,8 +535,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         try (Connection connection = getDataSource().getConnection()) {
             if (odata2EventHandler.isUsingAfterCreateEntity(uriInfo, requestContentType, contentType)) {
                 if (response != null) {
-                    // Read entry from response and set entity again since it is consumed after
-                    // being parsed
+                    // Read entry from response and set entity again since it is consumed after being parsed
                     try (ByteArrayOutputStream entityOutputStream = new ByteArrayOutputStream()) {
                         ((InputStream) response.getEntity()).transferTo(entityOutputStream);
                         try (InputStream entityInputStream = new ByteArrayInputStream(entityOutputStream.toByteArray());
@@ -908,8 +906,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
             this.setDataSource(singleConnectionDataSource);
             boolean originalAutoCommit = connection.getAutoCommit();
             try {
-                // override the setDataSource so that all requests in a change set run in the
-                // same connection
+                // override the setDataSource so that all requests in a change set run in the same connection
                 return doExecuteChangeSet(handler, requests);
             } finally {
                 connection.setAutoCommit(originalAutoCommit);

@@ -89,8 +89,7 @@ public class DataExportService {
      * @param workspaceService the workspace service
      * @param databaseExecutionService the database execution service
      * @param databaseDefinitionService the database definition service
-     * @param dataTransferSchemaTopologyService the data transfer schema topology
-     * service
+     * @param dataTransferSchemaTopologyService the data transfer schema topology service
      */
     @Autowired
     public DataExportService(DataSourcesManager datasourceManager, WorkspaceService workspaceService,

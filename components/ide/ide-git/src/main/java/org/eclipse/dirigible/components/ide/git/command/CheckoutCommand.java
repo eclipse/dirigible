@@ -122,8 +122,7 @@ public class CheckoutCommand {
     }
 
     /**
-     * Checkout project from git repository by executing several low level Git
-     * commands.
+     * Checkout project from git repository by executing several low level Git commands.
      *
      * @param workspace the workspace
      * @param model the git checkout model

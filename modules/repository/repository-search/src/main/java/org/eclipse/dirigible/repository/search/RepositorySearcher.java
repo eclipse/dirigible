@@ -214,8 +214,7 @@ public class RepositorySearcher {
      * Search for a given term in the text files content.
      *
      * @param term the term
-     * @return the list of the paths of resources which content matching the search
-     * term
+     * @return the list of the paths of resources which content matching the search term
      * @throws RepositoryReadException in case of an error
      */
     public List<String> search(String term) throws RepositoryReadException {

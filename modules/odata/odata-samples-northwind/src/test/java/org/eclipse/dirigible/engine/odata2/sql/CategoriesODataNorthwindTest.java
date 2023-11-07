@@ -26,8 +26,7 @@ import org.junit.Test;
 public class CategoriesODataNorthwindTest extends AbstractODataNorthwindTest {
 
     /**
-     * HTTP GET:
-     * https://services.odata.org/V2/Northwind/Northwind.svc/Categories/$count
+     * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/Categories/$count
      *
      * @throws Exception the exception
      */
@@ -43,8 +42,7 @@ public class CategoriesODataNorthwindTest extends AbstractODataNorthwindTest {
     }
 
     /**
-     * HTTP GET:
-     * https://services.odata.org/V2/Northwind/Northwind.svc/Categories?$format=json
+     * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/Categories?$format=json
      *
      * @throws Exception the exception
      */
@@ -60,8 +58,7 @@ public class CategoriesODataNorthwindTest extends AbstractODataNorthwindTest {
     }
 
     /**
-     * HTTP GET:
-     * https://services.odata.org/V2/Northwind/Northwind.svc/Categories(1)?$format=json
+     * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/Categories(1)?$format=json
      *
      * @throws Exception the exception
      */
@@ -77,8 +74,7 @@ public class CategoriesODataNorthwindTest extends AbstractODataNorthwindTest {
     }
 
     /**
-     * HTTP GET:
-     * https://services.odata.org/V2/Northwind/Northwind.svc/Categories(1)/Products/$count
+     * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/Categories(1)/Products/$count
      *
      * @throws Exception the exception
      */

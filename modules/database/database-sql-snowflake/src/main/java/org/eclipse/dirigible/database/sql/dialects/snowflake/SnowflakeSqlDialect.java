@@ -146,9 +146,7 @@ public class SnowflakeSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.
-     * lang.String)
+     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
      */
     @Override
     public SnowflakeNextValueSequenceBuilder nextval(String sequence) {
@@ -164,9 +162,7 @@ public class SnowflakeSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.
-     * lang.String)
+     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
      */
     @Override
     public SnowflakeLastValueIdentityBuilder lastval(String... args) {

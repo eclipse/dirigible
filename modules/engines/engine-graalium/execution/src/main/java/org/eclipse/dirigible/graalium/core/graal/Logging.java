@@ -63,9 +63,9 @@ public class Logging {
         protected byte[] buf;
 
         /**
-         * The number of valid bytes in the buffer. This value is always in the range
-         * <code>0</code> through <code>buf.length</code>; elements <code>buf[0]</code>
-         * through <code>buf[count-1]</code> contain valid byte data.
+         * The number of valid bytes in the buffer. This value is always in the range <code>0</code> through
+         * <code>buf.length</code>; elements <code>buf[0]</code> through <code>buf[count-1]</code> contain
+         * valid byte data.
          */
         protected int count;
 
@@ -106,10 +106,9 @@ public class Logging {
         }
 
         /**
-         * Closes this output stream and releases any system resources associated with
-         * this stream. The general contract of <code>close</code> is that it closes the
-         * output stream. A closed stream cannot perform output operations and cannot be
-         * reopened.
+         * Closes this output stream and releases any system resources associated with this stream. The
+         * general contract of <code>close</code> is that it closes the output stream. A closed stream
+         * cannot perform output operations and cannot be reopened.
          */
         @Override
         public void close() {
@@ -118,10 +117,9 @@ public class Logging {
         }
 
         /**
-         * Writes the specified byte to this output stream. The general contract for
-         * <code>write</code> is that one byte is written to the output stream. The byte
-         * to be written is the eight low-order bits of the argument <code>b</code>. The
-         * 24 high-order bits of <code>b</code> are ignored.
+         * Writes the specified byte to this output stream. The general contract for <code>write</code> is
+         * that one byte is written to the output stream. The byte to be written is the eight low-order bits
+         * of the argument <code>b</code>. The 24 high-order bits of <code>b</code> are ignored.
          *
          * @param b the <code>byte</code> to write
          * @throws IOException Signals that an I/O exception has occurred.
@@ -151,11 +149,10 @@ public class Logging {
         }
 
         /**
-         * Flushes this output stream and forces any buffered output bytes to be written
-         * out. The general contract of <code>flush</code> is that calling it is an
-         * indication that, if any bytes previously written have been buffered by the
-         * implementation of the output stream, such bytes should immediately be written
-         * to their intended destination.
+         * Flushes this output stream and forces any buffered output bytes to be written out. The general
+         * contract of <code>flush</code> is that calling it is an indication that, if any bytes previously
+         * written have been buffered by the implementation of the output stream, such bytes should
+         * immediately be written to their intended destination.
          */
         @Override
         public void flush() {

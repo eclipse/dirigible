@@ -199,8 +199,8 @@ public class FilesFacade {
     }
 
     /**
-     * Write the provided data to the file represented by the provided path. If the
-     * file exists the old content is discarded.
+     * Write the provided data to the file represented by the provided path. If the file exists the old
+     * content is discarded.
      *
      * @param path path to the file to write to
      * @param input the data to write
@@ -212,8 +212,8 @@ public class FilesFacade {
     }
 
     /**
-     * Write the provided data to the file represented by the provided path. If the
-     * file exists the old content is discarded.
+     * Write the provided data to the file represented by the provided path. If the file exists the old
+     * content is discarded.
      *
      * @param path path to the file to write to
      * @param input the data to write
@@ -224,8 +224,8 @@ public class FilesFacade {
     }
 
     /**
-     * Write text to the file represented by the provided path using UTF-8 charset.
-     * If the file exists the old content is discarded.
+     * Write text to the file represented by the provided path using UTF-8 charset. If the file exists
+     * the old content is discarded.
      *
      * @param path path to the file to write to
      * @param text the data to write

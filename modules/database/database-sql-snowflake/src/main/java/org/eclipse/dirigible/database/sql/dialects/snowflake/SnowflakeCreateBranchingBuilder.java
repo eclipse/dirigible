@@ -36,9 +36,7 @@ public class SnowflakeCreateBranchingBuilder extends CreateBranchingBuilder {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java
-     * .lang.String)
+     * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java.lang.String)
      */
     @Override
     public SnowflakeCreateTableBuilder table(String table) {

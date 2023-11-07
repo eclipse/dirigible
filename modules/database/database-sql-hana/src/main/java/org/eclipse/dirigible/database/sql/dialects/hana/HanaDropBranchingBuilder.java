@@ -39,9 +39,7 @@ public class HanaDropBranchingBuilder extends DropBranchingBuilder {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder#sequence(
-     * java.lang.String)
+     * @see org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder#sequence(java.lang.String)
      */
     @Override
     public DropSequenceBuilder sequence(String sequence) {

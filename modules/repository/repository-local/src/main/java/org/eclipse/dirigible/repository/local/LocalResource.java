@@ -177,8 +177,7 @@ public class LocalResource extends LocalEntity implements IResource {
     @Override
     public boolean exists() throws RepositoryReadException {
         String repositoryPath = getRepositoryPath().toString();
-        // String localPath = LocalWorkspaceMapper.getMappedName(getRepository(),
-        // repositoryPath);
+        // String localPath = LocalWorkspaceMapper.getMappedName(getRepository(), repositoryPath);
         return getRepository().getRepositoryDao()
                               .fileExists(repositoryPath);// (FileSystemUtils.fileExists(localPath));
     }
@@ -259,8 +258,7 @@ public class LocalResource extends LocalEntity implements IResource {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.local.LocalEntity#equals(java.lang.Object)
+     * @see org.eclipse.dirigible.repository.local.LocalEntity#equals(java.lang.Object)
      */
     @Override
     public boolean equals(Object obj) {
@@ -293,8 +291,8 @@ public class LocalResource extends LocalEntity implements IResource {
     }
 
     /**
-     * Returns the {@link LocalFile} object matching this {@link LocalResource}. If
-     * there is no such object, then <code>null</code> is returned.
+     * Returns the {@link LocalFile} object matching this {@link LocalResource}. If there is no such
+     * object, then <code>null</code> is returned.
      *
      * @return the document
      * @throws RepositoryReadException the repository read exception
@@ -311,8 +309,8 @@ public class LocalResource extends LocalEntity implements IResource {
     }
 
     /**
-     * Returns the {@link LocalFile} object matching this {@link LocalResource}. If
-     * there is no such object, then <code>null</code> is returned.
+     * Returns the {@link LocalFile} object matching this {@link LocalResource}. If there is no such
+     * object, then <code>null</code> is returned.
      *
      * @return the local file
      * @throws RepositoryReadException the repository read exception
@@ -322,9 +320,8 @@ public class LocalResource extends LocalEntity implements IResource {
     }
 
     /**
-     * Returns the {@link LocalFile} object matching this {@link LocalResource}. If
-     * there is no such object, then an {@link RepositoryNotFoundException} is
-     * thrown.
+     * Returns the {@link LocalFile} object matching this {@link LocalResource}. If there is no such
+     * object, then an {@link RepositoryNotFoundException} is thrown.
      *
      * @return the document safe
      * @throws RepositoryNotFoundException the repository not found exception
@@ -378,8 +375,7 @@ public class LocalResource extends LocalEntity implements IResource {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.repository.api.IResource#setContent(byte[],
-     * boolean, java.lang.String)
+     * @see org.eclipse.dirigible.repository.api.IResource#setContent(byte[], boolean, java.lang.String)
      */
     @Override
     public void setContent(byte[] content, boolean isBinary, String contentType) throws RepositoryWriteException {

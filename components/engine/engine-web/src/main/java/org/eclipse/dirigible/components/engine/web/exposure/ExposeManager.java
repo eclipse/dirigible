@@ -88,8 +88,7 @@ public class ExposeManager {
                     }
                 }
 
-                // path does not match any of the registered exposed values of a known project,
-                // so it is not allowed
+                // path does not match any of the registered exposed values of a known project, so it is not allowed
                 return false;
             }
         } else {

@@ -27,9 +27,8 @@ import com.google.common.net.UrlEscapers;
 public class UrlFacade {
 
     /**
-     * Translates a string into application/x-www-form-urlencoded format using a
-     * specific encoding scheme. This method uses the supplied encoding scheme to
-     * obtain the bytes for unsafe characters.
+     * Translates a string into application/x-www-form-urlencoded format using a specific encoding
+     * scheme. This method uses the supplied encoding scheme to obtain the bytes for unsafe characters.
      *
      * @param input the input string
      * @param charset the input charset
@@ -44,9 +43,8 @@ public class UrlFacade {
     }
 
     /**
-     * Translates a string into application/x-www-form-urlencoded format using a
-     * specific encoding scheme. This method uses the supplied encoding scheme to
-     * obtain the bytes for unsafe characters.
+     * Translates a string into application/x-www-form-urlencoded format using a specific encoding
+     * scheme. This method uses the supplied encoding scheme to obtain the bytes for unsafe characters.
      *
      * @param input the input string
      * @return the translated input
@@ -57,9 +55,9 @@ public class UrlFacade {
     }
 
     /**
-     * Decodes a application/x-www-form-urlencoded string using a specific encoding
-     * scheme. The supplied encoding is used to determine what characters are
-     * represented by any consecutive sequences of the form "%xy".
+     * Decodes a application/x-www-form-urlencoded string using a specific encoding scheme. The supplied
+     * encoding is used to determine what characters are represented by any consecutive sequences of the
+     * form "%xy".
      *
      * @param input the input string
      * @param charset the input charset
@@ -75,9 +73,9 @@ public class UrlFacade {
     }
 
     /**
-     * Decodes a application/x-www-form-urlencoded string using a specific encoding
-     * scheme. The supplied encoding is used to determine what characters are
-     * represented by any consecutive sequences of the form "%xy".
+     * Decodes a application/x-www-form-urlencoded string using a specific encoding scheme. The supplied
+     * encoding is used to determine what characters are represented by any consecutive sequences of the
+     * form "%xy".
      *
      * @param input the input string
      * @return the decoded input

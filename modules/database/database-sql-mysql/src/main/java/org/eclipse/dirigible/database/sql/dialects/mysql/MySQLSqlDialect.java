@@ -154,9 +154,7 @@ public class MySQLSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.
-     * lang.String)
+     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
      */
     @Override
     public MySQLNextValueSequenceBuilder nextval(String sequence) {
@@ -172,9 +170,7 @@ public class MySQLSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.
-     * lang.String)
+     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
      */
     @Override
     public MySQLLastValueIdentityBuilder lastval(String... args) {
@@ -222,9 +218,7 @@ public class MySQLSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection,
-     * java.lang.String)
+     * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String)
      */
     @Override
     public boolean existsTable(Connection connection, String table) throws SQLException {

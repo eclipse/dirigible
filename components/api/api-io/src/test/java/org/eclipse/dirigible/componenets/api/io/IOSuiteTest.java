@@ -54,8 +54,7 @@ public class IOSuiteTest {
 
     // @Test
     // public void executeFTPTest() throws Exception {
-    // javascriptService.handleRequest("io-tests", "ftp-get-file.js", null, null,
-    // false);
+    // javascriptService.handleRequest("io-tests", "ftp-get-file.js", null, null, false);
     // }
 
     @Test

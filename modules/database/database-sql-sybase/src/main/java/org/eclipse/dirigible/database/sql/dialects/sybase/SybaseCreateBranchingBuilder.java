@@ -38,8 +38,7 @@ public class SybaseCreateBranchingBuilder extends CreateBranchingBuilder {
      * (non-Javadoc)
      *
      * @see
-     * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(
-     * java.lang.String)
+     * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(java.lang.String)
      */
     @Override
     public CreateSequenceBuilder sequence(String sequence) {

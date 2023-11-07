@@ -65,8 +65,7 @@ public abstract class LocalEntity implements IEntity {
     }
 
     /**
-     * Returns the path of this {@link IEntity} represented by an instance of
-     * {@link RepositoryPath}.
+     * Returns the path of this {@link IEntity} represented by an instance of {@link RepositoryPath}.
      *
      * @return the repository path location
      */
@@ -140,8 +139,8 @@ public abstract class LocalEntity implements IEntity {
     }
 
     /**
-     * Returns the {@link LocalObject} that matches this entity's path. If there is
-     * no such object in the real repository, then <code>null</code> is returned.
+     * Returns the {@link LocalObject} that matches this entity's path. If there is no such object in
+     * the real repository, then <code>null</code> is returned.
      *
      * @return the local object
      * @throws RepositoryReadException the repository read exception
@@ -159,13 +158,11 @@ public abstract class LocalEntity implements IEntity {
     }
 
     /**
-     * Returns the {@link LocalObject} that matches this entity's path. If there is
-     * no such object in the real repository, then an
-     * {@link RepositoryNotFoundException} is thrown.
+     * Returns the {@link LocalObject} that matches this entity's path. If there is no such object in
+     * the real repository, then an {@link RepositoryNotFoundException} is thrown.
      *
      * @return the {@link LocalObject} that matches this entity's path
-     * @throws RepositoryNotFoundException If there is no such object in the real
-     * repository
+     * @throws RepositoryNotFoundException If there is no such object in the real repository
      */
     protected LocalObject getLocalObjectSafe() throws RepositoryNotFoundException {
         final LocalObject result = getLocalObject();
@@ -176,8 +173,8 @@ public abstract class LocalEntity implements IEntity {
     }
 
     /**
-     * Creates all ancestors of the given {@link IEntity} inside the repository if
-     * they don't already exist.
+     * Creates all ancestors of the given {@link IEntity} inside the repository if they don't already
+     * exist.
      *
      * @throws RepositoryWriteException the repository write exception
      */
@@ -189,8 +186,7 @@ public abstract class LocalEntity implements IEntity {
     }
 
     /**
-     * Creates all ancestors of the given {@link IEntity} and itself too if they
-     * don't already exist.
+     * Creates all ancestors of the given {@link IEntity} and itself too if they don't already exist.
      *
      * @throws RepositoryWriteException the repository write exception
      */

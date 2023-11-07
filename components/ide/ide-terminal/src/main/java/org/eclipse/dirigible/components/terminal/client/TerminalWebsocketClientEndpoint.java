@@ -92,8 +92,7 @@ public class TerminalWebsocketClientEndpoint {
     }
 
     /**
-     * Callback hook for Message Events. This method will be invoked when a client
-     * send a message.
+     * Callback hook for Message Events. This method will be invoked when a client send a message.
      *
      * @param message the message
      */

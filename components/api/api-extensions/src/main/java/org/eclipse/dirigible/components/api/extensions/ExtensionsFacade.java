@@ -23,8 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * The ExtensionsFacade expose the information about the current extension
- * points and extensions.
+ * The ExtensionsFacade expose the information about the current extension points and extensions.
  */
 @Component
 public class ExtensionsFacade implements InitializingBean {

@@ -21,8 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Scripting context facade is the centralized place where the different
- * scripting facade providers can register the request (sync) scoped objects.
+ * Scripting context facade is the centralized place where the different scripting facade providers
+ * can register the request (sync) scoped objects.
  */
 public class ThreadContextFacade {
 
@@ -42,8 +42,8 @@ public class ThreadContextFacade {
     private static final ThreadLocal<Integer> STACK_ID = new ThreadLocal<>();
 
     /**
-     * Initializes the context. This has to be called at the very first (as
-     * possible) place at the service entry point
+     * Initializes the context. This has to be called at the very first (as possible) place at the
+     * service entry point
      */
     public static void setUp() {
         if (stackedContextIsEmpty()) {
@@ -90,8 +90,8 @@ public class ThreadContextFacade {
     }
 
     /**
-     * IMPORTANT! This have to be added at the finally block to clean up objects
-     * after the execution of the service.
+     * IMPORTANT! This have to be added at the finally block to clean up objects after the execution of
+     * the service.
      */
     public static void tearDown() {
         Integer stackId = STACK_ID.get();
@@ -170,8 +170,8 @@ public class ThreadContextFacade {
     }
 
     /**
-     * Set a context scripting object. If object with with this key exists, it will
-     * be replaced with the new object
+     * Set a context scripting object. If object with with this key exists, it will be replaced with the
+     * new object
      *
      * @param key the key
      * @param value the value

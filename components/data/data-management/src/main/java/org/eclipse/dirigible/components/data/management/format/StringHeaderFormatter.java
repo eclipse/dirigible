@@ -26,9 +26,7 @@ public class StringHeaderFormatter implements HeaderFormatter {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.databases.processor.format.HeaderFormatter#write(java.
-     * util.List)
+     * @see org.eclipse.dirigible.databases.processor.format.HeaderFormatter#write(java.util.List)
      */
     @Override
     public String write(List<ColumnDescriptor> columnDescriptors) {

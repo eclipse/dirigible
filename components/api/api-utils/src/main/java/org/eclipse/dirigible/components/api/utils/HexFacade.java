@@ -22,9 +22,9 @@ import org.springframework.stereotype.Component;
 public class HexFacade {
 
     /**
-     * Converts an array of bytes into a String representing the hexadecimal values
-     * of each byte in order. The returned String will be double the length of the
-     * passed array, as it takes two characters to represent any given byte.
+     * Converts an array of bytes into a String representing the hexadecimal values of each byte in
+     * order. The returned String will be double the length of the passed array, as it takes two
+     * characters to represent any given byte.
      *
      * @param input the input byte array
      * @return the hexadecimal value
@@ -34,9 +34,9 @@ public class HexFacade {
     }
 
     /**
-     * Converts an array of bytes into a String representing the hexadecimal values
-     * of each byte in order. The returned String will be double the length of the
-     * passed array, as it takes two characters to represent any given byte.
+     * Converts an array of bytes into a String representing the hexadecimal values of each byte in
+     * order. The returned String will be double the length of the passed array, as it takes two
+     * characters to represent any given byte.
      *
      * @param input the input string
      * @return the hexadecimal value
@@ -58,10 +58,10 @@ public class HexFacade {
     }
 
     /**
-     * Converts an array of characters representing hexadecimal values into an array
-     * of bytes of those same values. The returned array will be half the length of
-     * the passed array, as it takes two characters to represent any given byte. An
-     * exception is thrown if the passed char array has an odd number of elements.
+     * Converts an array of characters representing hexadecimal values into an array of bytes of those
+     * same values. The returned array will be half the length of the passed array, as it takes two
+     * characters to represent any given byte. An exception is thrown if the passed char array has an
+     * odd number of elements.
      *
      * @param input the input string
      * @return the input decoded

@@ -54,8 +54,9 @@ public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBu
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder#
-     * generateTable(java.lang. StringBuilder)
+     * @see
+     * org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder#generateTable(java.lang.
+     * StringBuilder)
      */
     @Override
     protected void generateTable(StringBuilder sql) {

@@ -94,8 +94,7 @@ public abstract class FileSystemRepository implements IRepository {
     private Map<String, String> parameters = Collections.synchronizedMap(new HashMap<>());
 
     /**
-     * Constructor with default root folder - user.dir and without database
-     * initialization
+     * Constructor with default root folder - user.dir and without database initialization
      *
      * @throws LocalRepositoryException in case the repository cannot be created
      */
@@ -227,9 +226,7 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryWriter#createCollection(java.
-     * lang.String)
+     * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#createCollection(java.lang.String)
      */
     @Override
     public ICollection createCollection(String path) throws RepositoryWriteException {
@@ -254,9 +251,7 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryReader#getCollection(java.
-     * lang.String)
+     * @see org.eclipse.dirigible.repository.api.IRepositoryReader#getCollection(java.lang.String)
      */
     @Override
     public ICollection getCollection(String path) {
@@ -280,9 +275,7 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryWriter#removeCollection(java.
-     * lang.String)
+     * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#removeCollection(java.lang.String)
      */
     @Override
     public void removeCollection(String path) throws RepositoryWriteException {
@@ -307,9 +300,7 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryReader#hasCollection(java.
-     * lang.String)
+     * @see org.eclipse.dirigible.repository.api.IRepositoryReader#hasCollection(java.lang.String)
      */
     @Override
     public boolean hasCollection(String path) throws RepositoryReadException {
@@ -335,9 +326,7 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryWriter#createResource(java.
-     * lang.String)
+     * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#createResource(java.lang.String)
      */
     @Override
     public IResource createResource(String path) throws RepositoryWriteException {
@@ -364,9 +353,8 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryWriter#createResource(java.
-     * lang.String, byte[])
+     * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#createResource(java.lang.String,
+     * byte[])
      */
     @Override
     public IResource createResource(String path, byte[] content) throws RepositoryWriteException {
@@ -395,9 +383,8 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryWriter#createResource(java.
-     * lang.String, byte[], boolean, java.lang.String)
+     * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#createResource(java.lang.String,
+     * byte[], boolean, java.lang.String)
      */
     @Override
     public IResource createResource(String path, byte[] content, boolean isBinary, String contentType) throws RepositoryWriteException {
@@ -418,9 +405,8 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryWriter#createResource(java.
-     * lang.String, byte[], boolean, java.lang.String, boolean)
+     * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#createResource(java.lang.String,
+     * byte[], boolean, java.lang.String, boolean)
      */
     @Override
     public IResource createResource(String path, byte[] content, boolean isBinary, String contentType, boolean override)
@@ -450,9 +436,7 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryReader#getResource(java.lang.
-     * String)
+     * @see org.eclipse.dirigible.repository.api.IRepositoryReader#getResource(java.lang.String)
      */
     @Override
     public IResource getResource(String path) {
@@ -476,9 +460,7 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryWriter#removeResource(java.
-     * lang.String)
+     * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#removeResource(java.lang.String)
      */
     @Override
     public void removeResource(String path) throws RepositoryWriteException {
@@ -503,9 +485,7 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryReader#hasResource(java.lang.
-     * String)
+     * @see org.eclipse.dirigible.repository.api.IRepositoryReader#hasResource(java.lang.String)
      */
     @Override
     public boolean hasResource(String path) throws RepositoryReadException {
@@ -554,8 +534,8 @@ public abstract class FileSystemRepository implements IRepository {
      * (non-Javadoc)
      *
      * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(java.util.
-     * zip.ZipInputStream, java.lang.String)
+     * org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(java.util.zip.ZipInputStream,
+     * java.lang.String)
      */
     @Override
     public void importZip(ZipInputStream zipInputStream, String path) throws RepositoryImportException {
@@ -574,8 +554,8 @@ public abstract class FileSystemRepository implements IRepository {
      * (non-Javadoc)
      *
      * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(java.util.
-     * zip.ZipInputStream, java.lang.String, boolean)
+     * org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(java.util.zip.ZipInputStream,
+     * java.lang.String, boolean)
      */
     @Override
     public void importZip(ZipInputStream zipInputStream, String path, boolean override) throws RepositoryImportException {
@@ -595,8 +575,8 @@ public abstract class FileSystemRepository implements IRepository {
      * (non-Javadoc)
      *
      * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(java.util.
-     * zip.ZipInputStream, java.lang.String, boolean, boolean)
+     * org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(java.util.zip.ZipInputStream,
+     * java.lang.String, boolean, boolean)
      */
     @Override
     public void importZip(ZipInputStream zipInputStream, String relativeRoot, boolean override, boolean excludeRootFolderName)
@@ -620,9 +600,7 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(byte[],
-     * java.lang.String)
+     * @see org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(byte[], java.lang.String)
      */
     @Override
     public void importZip(byte[] data, String path) throws RepositoryImportException {
@@ -640,9 +618,8 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(byte[],
-     * java.lang.String, boolean)
+     * @see org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(byte[], java.lang.String,
+     * boolean)
      */
     @Override
     public void importZip(byte[] data, String path, boolean override) throws RepositoryImportException {
@@ -662,9 +639,8 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(byte[],
-     * java.lang.String, boolean, boolean, java.util.Map)
+     * @see org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(byte[], java.lang.String,
+     * boolean, boolean, java.util.Map)
      */
     @Override
     public void importZip(byte[] data, String relativeRoot, boolean override, boolean excludeRootFolderName, Map<String, String> filter)
@@ -689,9 +665,7 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryExporter#exportZip(java.util.
-     * List)
+     * @see org.eclipse.dirigible.repository.api.IRepositoryExporter#exportZip(java.util.List)
      */
     @Override
     public byte[] exportZip(List<String> relativeRoots) throws RepositoryExportException {
@@ -709,9 +683,8 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryExporter#exportZip(java.lang.
-     * String, boolean)
+     * @see org.eclipse.dirigible.repository.api.IRepositoryExporter#exportZip(java.lang.String,
+     * boolean)
      */
     @Override
     public byte[] exportZip(String relativeRoot, boolean inclusive) throws RepositoryExportException {
@@ -729,9 +702,7 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositorySearch#searchName(java.lang.
-     * String, boolean)
+     * @see org.eclipse.dirigible.repository.api.IRepositorySearch#searchName(java.lang.String, boolean)
      */
     @Override
     public List<IEntity> searchName(String parameter, boolean caseInsensitive) throws RepositorySearchException {
@@ -750,9 +721,8 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositorySearch#searchName(java.lang.
-     * String, java.lang.String, boolean)
+     * @see org.eclipse.dirigible.repository.api.IRepositorySearch#searchName(java.lang.String,
+     * java.lang.String, boolean)
      */
     @Override
     public List<IEntity> searchName(String root, String parameter, boolean caseInsensitive) throws RepositorySearchException {
@@ -799,9 +769,7 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositorySearch#searchPath(java.lang.
-     * String, boolean)
+     * @see org.eclipse.dirigible.repository.api.IRepositorySearch#searchPath(java.lang.String, boolean)
      */
     @Override
     public List<IEntity> searchPath(String parameter, boolean caseInsensitive) throws RepositorySearchException {
@@ -830,9 +798,7 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositorySearch#searchText(java.lang.
-     * String, boolean)
+     * @see org.eclipse.dirigible.repository.api.IRepositorySearch#searchText(java.lang.String, boolean)
      */
     @Override
     public List<IEntity> searchText(String parameter) throws RepositorySearchException {
@@ -863,8 +829,7 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositoryReader#getAllResourcePaths()
+     * @see org.eclipse.dirigible.repository.api.IRepositoryReader#getAllResourcePaths()
      */
     @Override
     public List<String> getAllResourcePaths() throws RepositoryReadException {
@@ -890,8 +855,7 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.repository.api.IRepository#getParameter(java.lang.
-     * String)
+     * @see org.eclipse.dirigible.repository.api.IRepository#getParameter(java.lang.String)
      */
     @Override
     public String getParameter(String key) {
@@ -984,9 +948,7 @@ public abstract class FileSystemRepository implements IRepository {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.repository.api.IRepositorySearch#find(java.lang.String,
-     * boolean)
+     * @see org.eclipse.dirigible.repository.api.IRepositorySearch#find(java.lang.String, boolean)
      */
     @Override
     public List<String> find(String path, String pattern) throws RepositorySearchException {

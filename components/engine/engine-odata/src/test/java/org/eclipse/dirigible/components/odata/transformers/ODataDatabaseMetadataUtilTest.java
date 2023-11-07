@@ -150,20 +150,15 @@ public class ODataDatabaseMetadataUtilTest {
      */
     // @Test
     // public void testArtifactNotFound() throws SQLException {
-    // ODataDatabaseMetadataUtil odataDatabaseMetadataUtil = new
-    // ODataDatabaseMetadataUtil();
+    // ODataDatabaseMetadataUtil odataDatabaseMetadataUtil = new ODataDatabaseMetadataUtil();
     // Mockito.when(connection.getMetaData()).thenReturn(databaseMetaData);
-    // mockDBMetaDataQuery_noResult(databaseMetaData.getTables(CATALOG,
-    // MY_SCHEMA_NAME, MY_TABLE_NAME,
+    // mockDBMetaDataQuery_noResult(databaseMetaData.getTables(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME,
     // null));
     //
-    // Table tableMetadata =
-    // odataDatabaseMetadataUtil.getTableMetadata(MY_TABLE_NAME, MY_SCHEMA_NAME);
-    // Assertions.assertNull(tableMetadata, "Unexpected metadata result for not
-    // existing DB artifact.");
+    // Table tableMetadata = odataDatabaseMetadataUtil.getTableMetadata(MY_TABLE_NAME, MY_SCHEMA_NAME);
+    // Assertions.assertNull(tableMetadata, "Unexpected metadata result for not existing DB artifact.");
     //
-    // Mockito.verify(databaseMetaData).getTables(CATALOG, MY_SCHEMA_NAME,
-    // MY_TABLE_NAME, null);
+    // Mockito.verify(databaseMetaData).getTables(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME, null);
     // Mockito.verifyNoMoreInteractions(databaseMetaData);
     // }
 
@@ -173,21 +168,17 @@ public class ODataDatabaseMetadataUtilTest {
      * @param sqlType the sql type
      * @param expectedEdmType the expected edm type
      */
-    // private void testGetTableMetadata_columnTypeConversion(String sqlType, String
-    // expectedEdmType) {
+    // private void testGetTableMetadata_columnTypeConversion(String sqlType, String expectedEdmType) {
     // try {
     // Mockito.when(connection.getMetaData()).thenReturn(databaseMetaData);
     //
-    // mockDBMetaDataQuery_noResult(databaseMetaData.getPrimaryKeys(CATALOG,
-    // MY_SCHEMA_NAME,
+    // mockDBMetaDataQuery_noResult(databaseMetaData.getPrimaryKeys(CATALOG, MY_SCHEMA_NAME,
     // MY_TABLE_NAME));
-    // mockDBMetaDataQuery_noResult(databaseMetaData.getImportedKeys(CATALOG,
-    // MY_SCHEMA_NAME,
+    // mockDBMetaDataQuery_noResult(databaseMetaData.getImportedKeys(CATALOG, MY_SCHEMA_NAME,
     // MY_TABLE_NAME));
     //
     // ResultSet tables = Mockito.mock(ResultSet.class);
-    // Mockito.when(databaseMetaData.getTables(CATALOG, MY_SCHEMA_NAME,
-    // MY_TABLE_NAME,
+    // Mockito.when(databaseMetaData.getTables(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME,
     // null)).thenReturn(tables);
     // // to skip the PostgreSQL fallback logic
     // Mockito.when(tables.isBeforeFirst()).thenReturn(true);
@@ -196,8 +187,7 @@ public class ODataDatabaseMetadataUtilTest {
     // Mockito.when(tables.getString("TABLE_TYPE")).thenReturn("VIEW");
     //
     // ResultSet columns = Mockito.mock(ResultSet.class);
-    // Mockito.when(databaseMetaData.getColumns(CATALOG, MY_SCHEMA_NAME,
-    // MY_TABLE_NAME,
+    // Mockito.when(databaseMetaData.getColumns(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME,
     // null)).thenReturn(columns);
     // // to skip the PostgreSQL fallback logic
     // Mockito.when(columns.isBeforeFirst()).thenReturn(true);
@@ -208,18 +198,13 @@ public class ODataDatabaseMetadataUtilTest {
     // Mockito.when(columns.getString(COLUMN_NAME_LABEL)).thenReturn(myColumnName);
     // Mockito.when(columns.getString(COLUMN_TYPE_LABEL)).thenReturn(sqlType);
     //
-    // ODataDatabaseMetadataUtil odataDatabaseMetadataUtil = new
-    // ODataDatabaseMetadataUtil();
-    // Table tableMetadata =
-    // odataDatabaseMetadataUtil.getTableMetadata(MY_TABLE_NAME, MY_SCHEMA_NAME);
+    // ODataDatabaseMetadataUtil odataDatabaseMetadataUtil = new ODataDatabaseMetadataUtil();
+    // Table tableMetadata = odataDatabaseMetadataUtil.getTableMetadata(MY_TABLE_NAME, MY_SCHEMA_NAME);
     //
-    // Assertions.assertEquals(1, tableMetadata.getColumns().size(), "Unexpected
-    // columns size");
-    // Assertions.assertEquals(myColumnName,
-    // tableMetadata.getColumns().get(0).getName(), "Unexpected
+    // Assertions.assertEquals(1, tableMetadata.getColumns().size(), "Unexpected columns size");
+    // Assertions.assertEquals(myColumnName, tableMetadata.getColumns().get(0).getName(), "Unexpected
     // column name");
-    // Assertions.assertEquals(expectedEdmType,
-    // tableMetadata.getColumns().get(0).getType(), "Unexpected
+    // Assertions.assertEquals(expectedEdmType, tableMetadata.getColumns().get(0).getType(), "Unexpected
     // column type");
     //
     // Mockito.verify(columns).getString(COLUMN_NAME_LABEL);
@@ -227,8 +212,7 @@ public class ODataDatabaseMetadataUtilTest {
     // Mockito.verify(columns, Mockito.times(2)).next();
     // Mockito.verify(columns).isBeforeFirst();
     // } catch (SQLException e) {
-    // Assertions.fail("Fail to test column type conversion from [" + sqlType + "]
-    // to [" +
+    // Assertions.fail("Fail to test column type conversion from [" + sqlType + "] to [" +
     // expectedEdmType + "] because of: " + e.getMessage());
     // }
     //
@@ -240,8 +224,7 @@ public class ODataDatabaseMetadataUtilTest {
      * @param executedResultSet the executed result set
      * @throws SQLException the SQL exception
      */
-    // private void mockDBMetaDataQuery_noResult(ResultSet executedResultSet) throws
-    // SQLException {
+    // private void mockDBMetaDataQuery_noResult(ResultSet executedResultSet) throws SQLException {
     // ResultSet resultSet = Mockito.mock(ResultSet.class);
     // Mockito.when(executedResultSet).thenReturn(resultSet);
     // // to skip the PostgreSQL fallback logic

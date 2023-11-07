@@ -73,15 +73,13 @@ public class LocalRepositoryCopyGitTest {
     // }
     // }
     //
-    // private void copyRepository(IRepository sourceRepository, IRepository
-    // targetRepository) throws
+    // private void copyRepository(IRepository sourceRepository, IRepository targetRepository) throws
     // IOException {
     // ICollection root = sourceRepository.getRoot();
     // copyCollection(root, targetRepository);
     // }
     //
-    // private void copyCollection(ICollection parent, IRepository targetRepository)
-    // throws IOException
+    // private void copyCollection(ICollection parent, IRepository targetRepository) throws IOException
     // {
     // List<IEntity> entities = parent.getChildren();
     // for (IEntity entity : entities) {
@@ -91,8 +89,7 @@ public class LocalRepositoryCopyGitTest {
     // } else {
     // IResource resource = (IResource) entity;
     // try {
-    // targetRepository.createResource(resource.getPath(), resource.getContent(),
-    // resource.isBinary(),
+    // targetRepository.createResource(resource.getPath(), resource.getContent(), resource.isBinary(),
     // resource.getContentType(), true);
     // } catch (Exception e) {
     // e.printStackTrace();

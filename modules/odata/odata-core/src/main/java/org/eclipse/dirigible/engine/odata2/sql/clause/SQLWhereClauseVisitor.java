@@ -319,8 +319,7 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
                                                                     .getKind();
         String format = "%s %s";
         if (operandExpressionKind == ExpressionKind.UNARY || operandExpressionKind == ExpressionKind.BINARY) {
-            // Brackets are only required in case Unary clause operates on another unary or
-            // binary clause
+            // Brackets are only required in case Unary clause operates on another unary or binary clause
             format = "%s(%s)";
         }
 
@@ -462,8 +461,7 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
             }
             whereClauseParams.add(SQLWhereClause.param(literalValue, (EdmSimpleType) expression.getEdmType(),
                     columnInfo == null ? null : columnInfo.get(0)));
-            // we should be using a prepared statement, so therefore always return the
-            // question marks here,
+            // we should be using a prepared statement, so therefore always return the question marks here,
             // since we have added the param to the query
             return "?";
         }
@@ -537,8 +535,7 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
             EdmSimpleType edmType = (EdmSimpleType) expression.getEdmType();
             Object literalValue = evaluateDateTimeExpressions(value, edmType);
             whereClauseParams.add(SQLWhereClause.param(literalValue, edmType, info));
-            // we should be using a prepared statement, so therefore always return the
-            // question marks here,
+            // we should be using a prepared statement, so therefore always return the question marks here,
             // since we have added the param to the query
             return "?";
         }
@@ -559,8 +556,7 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
             final Integer expressionPriority = binaryOperatorPriorities.get(expression.getOperator());
             final Integer subExpressionPriority = binaryOperatorPriorities.get(((BinaryExpression) subExpression).getOperator());
             if (expressionPriority > subExpressionPriority) {
-                // If subExpression has lower implicit priority use brackets to invert
-                // precedence
+                // If subExpression has lower implicit priority use brackets to invert precedence
                 return "(" + subExpressionString + ")";
             }
         }

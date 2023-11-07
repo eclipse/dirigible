@@ -22,8 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Utility class that checks whether the location is secured via the *.access
- * file
+ * Utility class that checks whether the location is secured via the *.access file
  */
 
 @Component

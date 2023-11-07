@@ -373,8 +373,7 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
                     }
                 }
 
-                // backup if the definitions is modified, but the old version get broken and
-                // does not exist in the
+                // backup if the definitions is modified, but the old version get broken and does not exist in the
                 // process engine
                 deployOnProcessEngine(bpmn);
             }

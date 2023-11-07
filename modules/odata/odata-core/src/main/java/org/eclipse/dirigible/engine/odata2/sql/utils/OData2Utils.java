@@ -68,9 +68,8 @@ public class OData2Utils {
     }
 
     /**
-     * Generates the next link for server-side paging. The next-link is based on the
-     * URI of the current request, except that {@code $skip} or {@code $skiptoken}
-     * will be removed.
+     * Generates the next link for server-side paging. The next-link is based on the URI of the current
+     * request, except that {@code $skip} or {@code $skiptoken} will be removed.
      *
      * @param context the context
      * @param top the top param

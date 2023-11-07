@@ -36,9 +36,7 @@ public class MySQLNextValueSequenceBuilder extends NextValueSequenceBuilder {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder
-     * #generate()
+     * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
      */
     @Override
     public String generate() {

@@ -173,8 +173,7 @@ public class HanaCreateTableBuilderTest {
     }
 
     /**
-     * Creates the table with composite key with set PK on constraint and column
-     * level.
+     * Creates the table with composite key with set PK on constraint and column level.
      */
     @Test
     public void createTableWithCompositeKeyWithSetPKOnConstraintAndColumnLevel() {

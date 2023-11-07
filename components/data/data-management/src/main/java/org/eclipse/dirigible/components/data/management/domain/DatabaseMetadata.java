@@ -1795,8 +1795,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports mixed case quoted identifiers.
      *
-     * @param supportsMixedCaseQuotedIdentifiers the new supports mixed case quoted
-     * identifiers
+     * @param supportsMixedCaseQuotedIdentifiers the new supports mixed case quoted identifiers
      */
     public void setSupportsMixedCaseQuotedIdentifiers(boolean supportsMixedCaseQuotedIdentifiers) {
         this.supportsMixedCaseQuotedIdentifiers = supportsMixedCaseQuotedIdentifiers;
@@ -1814,8 +1813,7 @@ public class DatabaseMetadata {
     /**
      * Sets the stores upper case quoted identifiers.
      *
-     * @param storesUpperCaseQuotedIdentifiers the new stores upper case quoted
-     * identifiers
+     * @param storesUpperCaseQuotedIdentifiers the new stores upper case quoted identifiers
      */
     public void setStoresUpperCaseQuotedIdentifiers(boolean storesUpperCaseQuotedIdentifiers) {
         this.storesUpperCaseQuotedIdentifiers = storesUpperCaseQuotedIdentifiers;
@@ -1833,8 +1831,7 @@ public class DatabaseMetadata {
     /**
      * Sets the stores lower case quoted identifiers.
      *
-     * @param storesLowerCaseQuotedIdentifiers the new stores lower case quoted
-     * identifiers
+     * @param storesLowerCaseQuotedIdentifiers the new stores lower case quoted identifiers
      */
     public void setStoresLowerCaseQuotedIdentifiers(boolean storesLowerCaseQuotedIdentifiers) {
         this.storesLowerCaseQuotedIdentifiers = storesLowerCaseQuotedIdentifiers;
@@ -1852,8 +1849,7 @@ public class DatabaseMetadata {
     /**
      * Sets the stores mixed case quoted identifiers.
      *
-     * @param storesMixedCaseQuotedIdentifiers the new stores mixed case quoted
-     * identifiers
+     * @param storesMixedCaseQuotedIdentifiers the new stores mixed case quoted identifiers
      */
     public void setStoresMixedCaseQuotedIdentifiers(boolean storesMixedCaseQuotedIdentifiers) {
         this.storesMixedCaseQuotedIdentifiers = storesMixedCaseQuotedIdentifiers;
@@ -2015,8 +2011,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports alter table with add column.
      *
-     * @param supportsAlterTableWithAddColumn the new supports alter table with add
-     * column
+     * @param supportsAlterTableWithAddColumn the new supports alter table with add column
      */
     public void setSupportsAlterTableWithAddColumn(boolean supportsAlterTableWithAddColumn) {
         this.supportsAlterTableWithAddColumn = supportsAlterTableWithAddColumn;
@@ -2034,8 +2029,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports alter table with drop column.
      *
-     * @param supportsAlterTableWithDropColumn the new supports alter table with
-     * drop column
+     * @param supportsAlterTableWithDropColumn the new supports alter table with drop column
      */
     public void setSupportsAlterTableWithDropColumn(boolean supportsAlterTableWithDropColumn) {
         this.supportsAlterTableWithDropColumn = supportsAlterTableWithDropColumn;
@@ -2125,8 +2119,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports different table correlation names.
      *
-     * @param supportsDifferentTableCorrelationNames the new supports different
-     * table correlation names
+     * @param supportsDifferentTableCorrelationNames the new supports different table correlation names
      */
     public void setSupportsDifferentTableCorrelationNames(boolean supportsDifferentTableCorrelationNames) {
         this.supportsDifferentTableCorrelationNames = supportsDifferentTableCorrelationNames;
@@ -2378,8 +2371,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports ANSI 92 intermediate SQL.
      *
-     * @param supportsANSI92IntermediateSQL the new supports ANSI 92 intermediate
-     * SQL
+     * @param supportsANSI92IntermediateSQL the new supports ANSI 92 intermediate SQL
      */
     public void setSupportsANSI92IntermediateSQL(boolean supportsANSI92IntermediateSQL) {
         this.supportsANSI92IntermediateSQL = supportsANSI92IntermediateSQL;
@@ -2415,8 +2407,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports integrity enhancement facility.
      *
-     * @param supportsIntegrityEnhancementFacility the new supports integrity
-     * enhancement facility
+     * @param supportsIntegrityEnhancementFacility the new supports integrity enhancement facility
      */
     public void setSupportsIntegrityEnhancementFacility(boolean supportsIntegrityEnhancementFacility) {
         this.supportsIntegrityEnhancementFacility = supportsIntegrityEnhancementFacility;
@@ -2578,8 +2569,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports schemas in data manipulation.
      *
-     * @param supportsSchemasInDataManipulation the new supports schemas in data
-     * manipulation
+     * @param supportsSchemasInDataManipulation the new supports schemas in data manipulation
      */
     public void setSupportsSchemasInDataManipulation(boolean supportsSchemasInDataManipulation) {
         this.supportsSchemasInDataManipulation = supportsSchemasInDataManipulation;
@@ -2597,8 +2587,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports schemas in procedure calls.
      *
-     * @param supportsSchemasInProcedureCalls the new supports schemas in procedure
-     * calls
+     * @param supportsSchemasInProcedureCalls the new supports schemas in procedure calls
      */
     public void setSupportsSchemasInProcedureCalls(boolean supportsSchemasInProcedureCalls) {
         this.supportsSchemasInProcedureCalls = supportsSchemasInProcedureCalls;
@@ -2616,8 +2605,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports schemas in table definitions.
      *
-     * @param supportsSchemasInTableDefinitions the new supports schemas in table
-     * definitions
+     * @param supportsSchemasInTableDefinitions the new supports schemas in table definitions
      */
     public void setSupportsSchemasInTableDefinitions(boolean supportsSchemasInTableDefinitions) {
         this.supportsSchemasInTableDefinitions = supportsSchemasInTableDefinitions;
@@ -2635,8 +2623,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports schemas in index definitions.
      *
-     * @param supportsSchemasInIndexDefinitions the new supports schemas in index
-     * definitions
+     * @param supportsSchemasInIndexDefinitions the new supports schemas in index definitions
      */
     public void setSupportsSchemasInIndexDefinitions(boolean supportsSchemasInIndexDefinitions) {
         this.supportsSchemasInIndexDefinitions = supportsSchemasInIndexDefinitions;
@@ -2654,8 +2641,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports schemas in privilege definitions.
      *
-     * @param supportsSchemasInPrivilegeDefinitions the new supports schemas in
-     * privilege definitions
+     * @param supportsSchemasInPrivilegeDefinitions the new supports schemas in privilege definitions
      */
     public void setSupportsSchemasInPrivilegeDefinitions(boolean supportsSchemasInPrivilegeDefinitions) {
         this.supportsSchemasInPrivilegeDefinitions = supportsSchemasInPrivilegeDefinitions;
@@ -2673,8 +2659,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports catalogs in data manipulation.
      *
-     * @param supportsCatalogsInDataManipulation the new supports catalogs in data
-     * manipulation
+     * @param supportsCatalogsInDataManipulation the new supports catalogs in data manipulation
      */
     public void setSupportsCatalogsInDataManipulation(boolean supportsCatalogsInDataManipulation) {
         this.supportsCatalogsInDataManipulation = supportsCatalogsInDataManipulation;
@@ -2692,8 +2677,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports catalogs in procedure calls.
      *
-     * @param supportsCatalogsInProcedureCalls the new supports catalogs in
-     * procedure calls
+     * @param supportsCatalogsInProcedureCalls the new supports catalogs in procedure calls
      */
     public void setSupportsCatalogsInProcedureCalls(boolean supportsCatalogsInProcedureCalls) {
         this.supportsCatalogsInProcedureCalls = supportsCatalogsInProcedureCalls;
@@ -2711,8 +2695,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports catalogs in table definitions.
      *
-     * @param supportsCatalogsInTableDefinitions the new supports catalogs in table
-     * definitions
+     * @param supportsCatalogsInTableDefinitions the new supports catalogs in table definitions
      */
     public void setSupportsCatalogsInTableDefinitions(boolean supportsCatalogsInTableDefinitions) {
         this.supportsCatalogsInTableDefinitions = supportsCatalogsInTableDefinitions;
@@ -2730,8 +2713,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports catalogs in index definitions.
      *
-     * @param supportsCatalogsInIndexDefinitions the new supports catalogs in index
-     * definitions
+     * @param supportsCatalogsInIndexDefinitions the new supports catalogs in index definitions
      */
     public void setSupportsCatalogsInIndexDefinitions(boolean supportsCatalogsInIndexDefinitions) {
         this.supportsCatalogsInIndexDefinitions = supportsCatalogsInIndexDefinitions;
@@ -2749,8 +2731,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports catalogs in privilege definitions.
      *
-     * @param supportsCatalogsInPrivilegeDefinitions the new supports catalogs in
-     * privilege definitions
+     * @param supportsCatalogsInPrivilegeDefinitions the new supports catalogs in privilege definitions
      */
     public void setSupportsCatalogsInPrivilegeDefinitions(boolean supportsCatalogsInPrivilegeDefinitions) {
         this.supportsCatalogsInPrivilegeDefinitions = supportsCatalogsInPrivilegeDefinitions;
@@ -2840,8 +2821,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports subqueries in comparisons.
      *
-     * @param supportsSubqueriesInComparisons the new supports subqueries in
-     * comparisons
+     * @param supportsSubqueriesInComparisons the new supports subqueries in comparisons
      */
     public void setSupportsSubqueriesInComparisons(boolean supportsSubqueriesInComparisons) {
         this.supportsSubqueriesInComparisons = supportsSubqueriesInComparisons;
@@ -2895,8 +2875,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports subqueries in quantifieds.
      *
-     * @param supportsSubqueriesInQuantifieds the new supports subqueries in
-     * quantifieds
+     * @param supportsSubqueriesInQuantifieds the new supports subqueries in quantifieds
      */
     public void setSupportsSubqueriesInQuantifieds(boolean supportsSubqueriesInQuantifieds) {
         this.supportsSubqueriesInQuantifieds = supportsSubqueriesInQuantifieds;
@@ -2968,8 +2947,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports open cursors across commit.
      *
-     * @param supportsOpenCursorsAcrossCommit the new supports open cursors across
-     * commit
+     * @param supportsOpenCursorsAcrossCommit the new supports open cursors across commit
      */
     public void setSupportsOpenCursorsAcrossCommit(boolean supportsOpenCursorsAcrossCommit) {
         this.supportsOpenCursorsAcrossCommit = supportsOpenCursorsAcrossCommit;
@@ -2987,8 +2965,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports open cursors across rollback.
      *
-     * @param supportsOpenCursorsAcrossRollback the new supports open cursors across
-     * rollback
+     * @param supportsOpenCursorsAcrossRollback the new supports open cursors across rollback
      */
     public void setSupportsOpenCursorsAcrossRollback(boolean supportsOpenCursorsAcrossRollback) {
         this.supportsOpenCursorsAcrossRollback = supportsOpenCursorsAcrossRollback;
@@ -3006,8 +2983,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports open statements across commit.
      *
-     * @param supportsOpenStatementsAcrossCommit the new supports open statements
-     * across commit
+     * @param supportsOpenStatementsAcrossCommit the new supports open statements across commit
      */
     public void setSupportsOpenStatementsAcrossCommit(boolean supportsOpenStatementsAcrossCommit) {
         this.supportsOpenStatementsAcrossCommit = supportsOpenStatementsAcrossCommit;
@@ -3025,8 +3001,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports open statements across rollback.
      *
-     * @param supportsOpenStatementsAcrossRollback the new supports open statements
-     * across rollback
+     * @param supportsOpenStatementsAcrossRollback the new supports open statements across rollback
      */
     public void setSupportsOpenStatementsAcrossRollback(boolean supportsOpenStatementsAcrossRollback) {
         this.supportsOpenStatementsAcrossRollback = supportsOpenStatementsAcrossRollback;
@@ -3449,8 +3424,7 @@ public class DatabaseMetadata {
     /**
      * Checks if is supports data definition and data manipulation transactions.
      *
-     * @return true, if is supports data definition and data manipulation
-     * transactions
+     * @return true, if is supports data definition and data manipulation transactions
      */
     public boolean isSupportsDataDefinitionAndDataManipulationTransactions() {
         return supportsDataDefinitionAndDataManipulationTransactions;
@@ -3459,8 +3433,8 @@ public class DatabaseMetadata {
     /**
      * Sets the supports data definition and data manipulation transactions.
      *
-     * @param supportsDataDefinitionAndDataManipulationTransactions the new supports
-     * data definition and data manipulation transactions
+     * @param supportsDataDefinitionAndDataManipulationTransactions the new supports data definition and
+     *        data manipulation transactions
      */
     public void setSupportsDataDefinitionAndDataManipulationTransactions(boolean supportsDataDefinitionAndDataManipulationTransactions) {
         this.supportsDataDefinitionAndDataManipulationTransactions = supportsDataDefinitionAndDataManipulationTransactions;
@@ -3478,8 +3452,8 @@ public class DatabaseMetadata {
     /**
      * Sets the supports data manipulation transactions only.
      *
-     * @param supportsDataManipulationTransactionsOnly the new supports data
-     * manipulation transactions only
+     * @param supportsDataManipulationTransactionsOnly the new supports data manipulation transactions
+     *        only
      */
     public void setSupportsDataManipulationTransactionsOnly(boolean supportsDataManipulationTransactionsOnly) {
         this.supportsDataManipulationTransactionsOnly = supportsDataManipulationTransactionsOnly;
@@ -3497,8 +3471,7 @@ public class DatabaseMetadata {
     /**
      * Sets the data definition causes transaction commit.
      *
-     * @param dataDefinitionCausesTransactionCommit the new data definition causes
-     * transaction commit
+     * @param dataDefinitionCausesTransactionCommit the new data definition causes transaction commit
      */
     public void setDataDefinitionCausesTransactionCommit(boolean dataDefinitionCausesTransactionCommit) {
         this.dataDefinitionCausesTransactionCommit = dataDefinitionCausesTransactionCommit;
@@ -3516,8 +3489,7 @@ public class DatabaseMetadata {
     /**
      * Sets the data definition ignored in transactions.
      *
-     * @param dataDefinitionIgnoredInTransactions the new data definition ignored in
-     * transactions
+     * @param dataDefinitionIgnoredInTransactions the new data definition ignored in transactions
      */
     public void setDataDefinitionIgnoredInTransactions(boolean dataDefinitionIgnoredInTransactions) {
         this.dataDefinitionIgnoredInTransactions = dataDefinitionIgnoredInTransactions;
@@ -3769,8 +3741,7 @@ public class DatabaseMetadata {
     /**
      * Sets the supports stored functions using call syntax.
      *
-     * @param supportsStoredFunctionsUsingCallSyntax the new supports stored
-     * functions using call syntax
+     * @param supportsStoredFunctionsUsingCallSyntax the new supports stored functions using call syntax
      */
     public void setSupportsStoredFunctionsUsingCallSyntax(boolean supportsStoredFunctionsUsingCallSyntax) {
         this.supportsStoredFunctionsUsingCallSyntax = supportsStoredFunctionsUsingCallSyntax;
@@ -3788,8 +3759,7 @@ public class DatabaseMetadata {
     /**
      * Sets the auto commit failure closes all result sets.
      *
-     * @param autoCommitFailureClosesAllResultSets the new auto commit failure
-     * closes all result sets
+     * @param autoCommitFailureClosesAllResultSets the new auto commit failure closes all result sets
      */
     public void setAutoCommitFailureClosesAllResultSets(boolean autoCommitFailureClosesAllResultSets) {
         this.autoCommitFailureClosesAllResultSets = autoCommitFailureClosesAllResultSets;
@@ -3858,33 +3828,26 @@ public class DatabaseMetadata {
         return schemas;
     }
 
-    // public boolean supportsTransactionIsolationLevel(int level) throws
-    // SQLException {
+    // public boolean supportsTransactionIsolationLevel(int level) throws SQLException {
     // return databaseMetaData.supportsTransactionIsolationLevel(level);
     // }
     //
-    // public ResultSet getProcedures(String catalog, String schemaPattern, String
-    // procedureNamePattern)
+    // public ResultSet getProcedures(String catalog, String schemaPattern, String procedureNamePattern)
     // throws SQLException {
-    // return databaseMetaData.getProcedures(catalog, schemaPattern,
-    // procedureNamePattern);
+    // return databaseMetaData.getProcedures(catalog, schemaPattern, procedureNamePattern);
     // }
     //
-    // public ResultSet getProcedureColumns(String catalog, String schemaPattern,
-    // String
+    // public ResultSet getProcedureColumns(String catalog, String schemaPattern, String
     // procedureNamePattern,
     // String columnNamePattern) throws SQLException {
-    // return databaseMetaData.getProcedureColumns(catalog, schemaPattern,
-    // procedureNamePattern,
+    // return databaseMetaData.getProcedureColumns(catalog, schemaPattern, procedureNamePattern,
     // columnNamePattern);
     // }
     //
-    // public ResultSet getTables(String catalog, String schemaPattern, String
-    // tableNamePattern,
+    // public ResultSet getTables(String catalog, String schemaPattern, String tableNamePattern,
     // String[] types)
     // throws SQLException {
-    // return databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern,
-    // types);
+    // return databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types);
     // }
     //
     // public ResultSet getSchemas() throws SQLException {
@@ -3899,68 +3862,53 @@ public class DatabaseMetadata {
     // return databaseMetaData.getTableTypes();
     // }
 
-    // public ResultSet getColumns(String catalog, String schemaPattern, String
-    // tableNamePattern, String
+    // public ResultSet getColumns(String catalog, String schemaPattern, String tableNamePattern, String
     // columnNamePattern)
     // throws SQLException {
-    // return databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern,
-    // columnNamePattern);
+    // return databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
     // }
     //
-    // public ResultSet getColumnPrivileges(String catalog, String schema, String
-    // table, String
+    // public ResultSet getColumnPrivileges(String catalog, String schema, String table, String
     // columnNamePattern)
     // throws SQLException {
-    // return databaseMetaData.getColumnPrivileges(catalog, schema, table,
-    // columnNamePattern);
+    // return databaseMetaData.getColumnPrivileges(catalog, schema, table, columnNamePattern);
     // }
     //
-    // public ResultSet getTablePrivileges(String catalog, String schemaPattern,
-    // String
+    // public ResultSet getTablePrivileges(String catalog, String schemaPattern, String
     // tableNamePattern)
     // throws SQLException {
-    // return databaseMetaData.getTablePrivileges(catalog, schemaPattern,
-    // tableNamePattern);
+    // return databaseMetaData.getTablePrivileges(catalog, schemaPattern, tableNamePattern);
     // }
     //
-    // public ResultSet getBestRowIdentifier(String catalog, String schema, String
-    // table, int scope,
+    // public ResultSet getBestRowIdentifier(String catalog, String schema, String table, int scope,
     // boolean nullable)
     // throws SQLException {
-    // return databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope,
-    // nullable);
+    // return databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope, nullable);
     // }
     //
-    // public ResultSet getVersionColumns(String catalog, String schema, String
-    // table) throws
+    // public ResultSet getVersionColumns(String catalog, String schema, String table) throws
     // SQLException {
     // return databaseMetaData.getVersionColumns(catalog, schema, table);
     // }
     //
-    // public ResultSet getPrimaryKeys(String catalog, String schema, String table)
-    // throws SQLException
+    // public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException
     // {
     // return databaseMetaData.getPrimaryKeys(catalog, schema, table);
     // }
     //
-    // public ResultSet getImportedKeys(String catalog, String schema, String table)
-    // throws SQLException
+    // public ResultSet getImportedKeys(String catalog, String schema, String table) throws SQLException
     // {
     // return databaseMetaData.getImportedKeys(catalog, schema, table);
     // }
     //
-    // public ResultSet getExportedKeys(String catalog, String schema, String table)
-    // throws SQLException
+    // public ResultSet getExportedKeys(String catalog, String schema, String table) throws SQLException
     // {
     // return databaseMetaData.getExportedKeys(catalog, schema, table);
     // }
     //
-    // public ResultSet getCrossReference(String parentCatalog, String parentSchema,
-    // String parentTable,
-    // String foreignCatalog, String foreignSchema, String foreignTable) throws
-    // SQLException {
-    // return databaseMetaData.getCrossReference(parentCatalog, parentSchema,
-    // parentTable,
+    // public ResultSet getCrossReference(String parentCatalog, String parentSchema, String parentTable,
+    // String foreignCatalog, String foreignSchema, String foreignTable) throws SQLException {
+    // return databaseMetaData.getCrossReference(parentCatalog, parentSchema, parentTable,
     // foreignCatalog,
     // foreignSchema, foreignTable);
     // }
@@ -3969,20 +3917,17 @@ public class DatabaseMetadata {
     // return databaseMetaData.getTypeInfo();
     // }
     //
-    // public ResultSet getIndexInfo(String catalog, String schema, String table,
-    // boolean unique,
+    // public ResultSet getIndexInfo(String catalog, String schema, String table, boolean unique,
     // boolean approximate)
     // throws SQLException {
-    // return databaseMetaData.getIndexInfo(catalog, schema, table, unique,
-    // approximate);
+    // return databaseMetaData.getIndexInfo(catalog, schema, table, unique, approximate);
     // }
     //
     // public boolean supportsResultSetType(int type) throws SQLException {
     // return databaseMetaData.supportsResultSetType(type);
     // }
     //
-    // public boolean supportsResultSetConcurrency(int type, int concurrency) throws
-    // SQLException {
+    // public boolean supportsResultSetConcurrency(int type, int concurrency) throws SQLException {
     // return databaseMetaData.supportsResultSetConcurrency(type, concurrency);
     // }
     //
@@ -4022,44 +3967,35 @@ public class DatabaseMetadata {
     // return databaseMetaData.insertsAreDetected(type);
     // }
     //
-    // public ResultSet getUDTs(String catalog, String schemaPattern, String
-    // typeNamePattern, int[]
+    // public ResultSet getUDTs(String catalog, String schemaPattern, String typeNamePattern, int[]
     // types)
     // throws SQLException {
-    // return databaseMetaData.getUDTs(catalog, schemaPattern, typeNamePattern,
-    // types);
+    // return databaseMetaData.getUDTs(catalog, schemaPattern, typeNamePattern, types);
     // }
     //
     // public Connection getConnection() throws SQLException {
     // return databaseMetaData.getConnection();
     // }
     //
-    // public ResultSet getSuperTypes(String catalog, String schemaPattern, String
-    // typeNamePattern)
+    // public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern)
     // throws SQLException
     // {
-    // return databaseMetaData.getSuperTypes(catalog, schemaPattern,
-    // typeNamePattern);
+    // return databaseMetaData.getSuperTypes(catalog, schemaPattern, typeNamePattern);
     // }
     //
-    // public ResultSet getSuperTables(String catalog, String schemaPattern, String
-    // tableNamePattern)
+    // public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern)
     // throws
     // SQLException {
-    // return databaseMetaData.getSuperTables(catalog, schemaPattern,
-    // tableNamePattern);
+    // return databaseMetaData.getSuperTables(catalog, schemaPattern, tableNamePattern);
     // }
     //
-    // public ResultSet getAttributes(String catalog, String schemaPattern, String
-    // typeNamePattern,
+    // public ResultSet getAttributes(String catalog, String schemaPattern, String typeNamePattern,
     // String attributeNamePattern) throws SQLException {
-    // return databaseMetaData.getAttributes(catalog, schemaPattern,
-    // typeNamePattern,
+    // return databaseMetaData.getAttributes(catalog, schemaPattern, typeNamePattern,
     // attributeNamePattern);
     // }
     //
-    // public boolean supportsResultSetHoldability(int holdability) throws
-    // SQLException {
+    // public boolean supportsResultSetHoldability(int holdability) throws SQLException {
     // return databaseMetaData.supportsResultSetHoldability(holdability);
     // }
     //
@@ -4067,8 +4003,7 @@ public class DatabaseMetadata {
     // return databaseMetaData.getRowIdLifetime();
     // }
     //
-    // public ResultSet getSchemas(String catalog, String schemaPattern) throws
-    // SQLException {
+    // public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
     // return databaseMetaData.getSchemas(catalog, schemaPattern);
     // }
     //
@@ -4076,27 +4011,21 @@ public class DatabaseMetadata {
     // return databaseMetaData.getClientInfoProperties();
     // }
     //
-    // public ResultSet getFunctions(String catalog, String schemaPattern, String
-    // functionNamePattern)
+    // public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
     // throws SQLException {
-    // return databaseMetaData.getFunctions(catalog, schemaPattern,
-    // functionNamePattern);
+    // return databaseMetaData.getFunctions(catalog, schemaPattern, functionNamePattern);
     // }
     //
-    // public ResultSet getFunctionColumns(String catalog, String schemaPattern,
-    // String
+    // public ResultSet getFunctionColumns(String catalog, String schemaPattern, String
     // functionNamePattern,
     // String columnNamePattern) throws SQLException {
-    // return databaseMetaData.getFunctionColumns(catalog, schemaPattern,
-    // functionNamePattern,
+    // return databaseMetaData.getFunctionColumns(catalog, schemaPattern, functionNamePattern,
     // columnNamePattern);
     // }
     //
-    // public ResultSet getPseudoColumns(String catalog, String schemaPattern,
-    // String tableNamePattern,
+    // public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern,
     // String columnNamePattern) throws SQLException {
-    // return databaseMetaData.getPseudoColumns(catalog, schemaPattern,
-    // tableNamePattern,
+    // return databaseMetaData.getPseudoColumns(catalog, schemaPattern, tableNamePattern,
     // columnNamePattern);
     // }
 

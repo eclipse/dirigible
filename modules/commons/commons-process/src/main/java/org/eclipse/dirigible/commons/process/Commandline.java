@@ -26,16 +26,14 @@ public class Commandline {
      */
     /** The following function has been taken from Apache Ant code base */
     /** Class: org/apache/tools/ant/types/Commandline.java */
-    /**
-     * =====================================================================================
-     */
+    /** ===================================================================================== */
 
     /**
      * Crack a command line.
      *
      * @param toProcess the command line to process
-     * @return the command line broken into strings. An empty or null toProcess
-     * parameter results in a zero sized array
+     * @return the command line broken into strings. An empty or null toProcess parameter results in a
+     *         zero sized array
      */
     public static String[] translateCommandline(final String toProcess) {
         if ((toProcess == null) || (toProcess.length() == 0)) {

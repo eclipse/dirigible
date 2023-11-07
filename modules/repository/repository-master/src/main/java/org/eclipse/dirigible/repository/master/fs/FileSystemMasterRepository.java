@@ -56,8 +56,7 @@ public class FileSystemMasterRepository extends FileSystemRepository implements 
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.repository.fs.FileSystemRepository#
-     * getRepositoryRootFolder()
+     * @see org.eclipse.dirigible.repository.fs.FileSystemRepository#getRepositoryRootFolder()
      */
     @Override
     protected String getRepositoryRootFolder() {
@@ -67,8 +66,7 @@ public class FileSystemMasterRepository extends FileSystemRepository implements 
     /**
      * Initialize.
      *
-     * @throws RepositoryInitializationException the repository initialization
-     * exception
+     * @throws RepositoryInitializationException the repository initialization exception
      */
     /*
      * (non-Javadoc)

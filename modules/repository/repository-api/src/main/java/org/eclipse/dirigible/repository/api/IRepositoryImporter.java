@@ -28,8 +28,8 @@ public interface IRepositoryImporter {
     public void importZip(ZipInputStream zipInputStream, String relativeRoot) throws RepositoryImportException;
 
     /**
-     * Imports content from zip file to the repository, based on the relative root.
-     * Overrides the previous content depending on the override parameter.
+     * Imports content from zip file to the repository, based on the relative root. Overrides the
+     * previous content depending on the override parameter.
      *
      * @param zipInputStream the input stream
      * @param relativeRoot the relative root
@@ -39,10 +39,9 @@ public interface IRepositoryImporter {
     public void importZip(ZipInputStream zipInputStream, String relativeRoot, boolean override) throws RepositoryImportException;
 
     /**
-     * Imports content from zip file to the repository, based on the relative root.
-     * Overrides the previous content depending on the override parameter. Excludes
-     * the name of the root folder, during the import, based on the
-     * excludeRootFolderName parameter.
+     * Imports content from zip file to the repository, based on the relative root. Overrides the
+     * previous content depending on the override parameter. Excludes the name of the root folder,
+     * during the import, based on the excludeRootFolderName parameter.
      *
      * @param zipInputStream the input stream
      * @param relativeRoot the relative root
@@ -63,8 +62,8 @@ public interface IRepositoryImporter {
     public void importZip(byte[] data, String relativeRoot) throws RepositoryImportException;
 
     /**
-     * Imports content from zip file to the repository, based on the relative root.
-     * Overrides the previous content depending on the override parameter.
+     * Imports content from zip file to the repository, based on the relative root. Overrides the
+     * previous content depending on the override parameter.
      *
      * @param data the zip file as byte array
      * @param relativeRoot the relative root
@@ -74,10 +73,9 @@ public interface IRepositoryImporter {
     public void importZip(byte[] data, String relativeRoot, boolean override) throws RepositoryImportException;
 
     /**
-     * Imports content from zip file to the repository, based on the relative root.
-     * Overrides the previous content depending on the override parameter. Excludes
-     * the name of the root folder, during the import, based on the
-     * excludeRootFolderName parameter.
+     * Imports content from zip file to the repository, based on the relative root. Overrides the
+     * previous content depending on the override parameter. Excludes the name of the root folder,
+     * during the import, based on the excludeRootFolderName parameter.
      *
      * @param data the zip file as byte array
      * @param relativeRoot the relative root

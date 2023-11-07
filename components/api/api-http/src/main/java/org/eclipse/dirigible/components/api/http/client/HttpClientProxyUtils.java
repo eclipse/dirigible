@@ -169,8 +169,7 @@ public class HttpClientProxyUtils {
     /**
      * Sets the trust all SSL.
      *
-     * @throws IOException in case an error occurs while setting the SSL socket
-     * factory
+     * @throws IOException in case an error occurs while setting the SSL socket factory
      */
     private static void setTrustAllSSL() throws IOException {
         try {

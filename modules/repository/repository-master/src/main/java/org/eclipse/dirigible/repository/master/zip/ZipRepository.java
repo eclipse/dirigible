@@ -135,8 +135,7 @@ public class ZipRepository extends FileSystemRepository {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.repository.fs.FileSystemRepository#
-     * getRepositoryRootFolder()
+     * @see org.eclipse.dirigible.repository.fs.FileSystemRepository#getRepositoryRootFolder()
      */
     @Override
     protected String getRepositoryRootFolder() {
@@ -146,8 +145,7 @@ public class ZipRepository extends FileSystemRepository {
     /**
      * Initialize.
      *
-     * @throws RepositoryInitializationException the repository initialization
-     * exception
+     * @throws RepositoryInitializationException the repository initialization exception
      */
     /*
      * (non-Javadoc)

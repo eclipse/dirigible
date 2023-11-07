@@ -40,11 +40,10 @@ public class OData2TestUtils {
     private OData2TestUtils() {}
 
     /**
-     * Helper method to retrieve the {@link ODataEntry} from the response object
-     * returned by OData2RequestBuilder#executeRequest().
+     * Helper method to retrieve the {@link ODataEntry} from the response object returned by
+     * OData2RequestBuilder#executeRequest().
      *
-     * @param response the response returned by
-     * OData2RequestBuilder#executeRequest()
+     * @param response the response returned by OData2RequestBuilder#executeRequest()
      * @param entitySet the EdmEntitySet used to parse the response
      * @return the ODataEntry
      * @throws IOException in case of error
@@ -66,8 +65,7 @@ public class OData2TestUtils {
      * Helper method to retrieve the ODataFeed from the response object returned by
      * OData2RequestBuilder#executeRequest().
      *
-     * @param response the response returned by
-     * OData2RequestBuilder#executeRequest()
+     * @param response the response returned by OData2RequestBuilder#executeRequest()
      * @param entitySet the EdmEntitySet used to parse the response
      * @return the ODataFeed
      * @throws IOException in case of error
@@ -86,14 +84,13 @@ public class OData2TestUtils {
     }
 
     /**
-     * Helper method to retrieve the ODataErrorContext representing the error
-     * response to a failed call to an OData API from the response object returned
-     * by OData2RequestBuilder#executeRequest().
+     * Helper method to retrieve the ODataErrorContext representing the error response to a failed call
+     * to an OData API from the response object returned by OData2RequestBuilder#executeRequest().
      *
      * @param response the object containing the error response
-     * @return the ODataErrorContext representing the content of the returned error
-     * document. <b>NOTE:</b> The used parser does not parse the message's locale so
-     * it will always be <code>null</code>.
+     * @return the ODataErrorContext representing the content of the returned error document.
+     *         <b>NOTE:</b> The used parser does not parse the message's locale so it will always be
+     *         <code>null</code>.
      * @throws IOException in case of error
      * @throws EntityProviderException in case of error
      */
@@ -106,21 +103,18 @@ public class OData2TestUtils {
     }
 
     /**
-     * Validates an ODataFeed against a list of Maps, which represents the expected
-     * properties of each entry. The expected properties define only a minimal set
-     * of properties, which have to be contained in the ODataEntrys. The ODataEntrys
-     * can contain more entries. The properties of the entries itself can contain
-     * entries or maps, which are validated recursively. The validation is
-     * independent of the order of the entries. The result is returned as a
-     * {@link Pair}, where the first member gives the result of the validation as an
-     * Boolean value and the second the reason, if the validation has failed.
+     * Validates an ODataFeed against a list of Maps, which represents the expected properties of each
+     * entry. The expected properties define only a minimal set of properties, which have to be
+     * contained in the ODataEntrys. The ODataEntrys can contain more entries. The properties of the
+     * entries itself can contain entries or maps, which are validated recursively. The validation is
+     * independent of the order of the entries. The result is returned as a {@link Pair}, where the
+     * first member gives the result of the validation as an Boolean value and the second the reason, if
+     * the validation has failed.
      *
-     * @param expectedEntries a list of maps which represent the expected properties
-     * of the ODataEntrys
+     * @param expectedEntries a list of maps which represent the expected properties of the ODataEntrys
      * @param oDataFeed an ODataFeed, which shall be validated
-     * @return a Pair where the first member is true or false depending on the
-     * result of the validation and the second gives the reason, if the validation
-     * has failed
+     * @return a Pair where the first member is true or false depending on the result of the validation
+     *         and the second gives the reason, if the validation has failed
      */
     public static Pair<Boolean, String> validateODataFeed(final List<Map<String, Object>> expectedEntries, final ODataFeed oDataFeed) {
         List<ODataEntry> actualEntries = oDataFeed.getEntries();
@@ -128,18 +122,15 @@ public class OData2TestUtils {
     }
 
     /**
-     * Validates an ODataEntry against a map of expected properties (key/value
-     * pairs). The properties of the entry itself can contain entries or maps, which
-     * are validated recursively. The result is returned as a Pair, where the first
-     * member gives the result of the validation as an Boolean value and the second
-     * the reason, if the validation has failed.
+     * Validates an ODataEntry against a map of expected properties (key/value pairs). The properties of
+     * the entry itself can contain entries or maps, which are validated recursively. The result is
+     * returned as a Pair, where the first member gives the result of the validation as an Boolean value
+     * and the second the reason, if the validation has failed.
      *
-     * @param expectedProperties a map which represent the expected properties of
-     * the ODataEntry
+     * @param expectedProperties a map which represent the expected properties of the ODataEntry
      * @param oDataEntry an ODataEntry, which shall be validated
-     * @return a Pair, where the first member is true or false depending on the
-     * result of the validation and the second gives the reason, if the validation
-     * has failed
+     * @return a Pair, where the first member is true or false depending on the result of the validation
+     *         and the second gives the reason, if the validation has failed
      */
     public static Pair<Boolean, String> validateODataEntry(final Map<String, Object> expectedProperties, final ODataEntry oDataEntry) {
         Map<String, Object> actualProperties = oDataEntry.getProperties();

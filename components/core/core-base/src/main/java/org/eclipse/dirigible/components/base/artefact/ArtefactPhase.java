@@ -15,30 +15,17 @@ package org.eclipse.dirigible.components.base.artefact;
  */
 public enum ArtefactPhase {
 
-    /**
-     * The phase where the artifact should perform stateful operations for
-     * preparation.
-     */
+    /** The phase where the artifact should perform stateful operations for preparation. */
     PREPARE("PREPARE"),
-    /**
-     * The phase where the artifact should perform stateful operations for create.
-     */
+    /** The phase where the artifact should perform stateful operations for create. */
     CREATE("CREATE"),
-    /**
-     * The phase where the artifact should perform stateful operations for update.
-     */
+    /** The phase where the artifact should perform stateful operations for update. */
     UPDATE("UPDATE"),
-    /**
-     * The phase where the artifact should perform stateful operations for delete.
-     */
+    /** The phase where the artifact should perform stateful operations for delete. */
     DELETE("DELETE"),
-    /**
-     * The phase where the artifact should perform stateless operations for start.
-     */
+    /** The phase where the artifact should perform stateless operations for start. */
     START("START"),
-    /**
-     * The phase where the artifact should perform stateless operations for stop.
-     */
+    /** The phase where the artifact should perform stateless operations for stop. */
     STOP("STOP");
 
     /** The phase. */

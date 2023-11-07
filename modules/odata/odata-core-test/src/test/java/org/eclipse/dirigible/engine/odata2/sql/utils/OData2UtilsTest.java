@@ -56,8 +56,7 @@ public class OData2UtilsTest {
         EasyMock.replay(ctx, uriInfo);
         String contentType = "application/json";
 
-        // null written to response => valid error document has to be returned as
-        // response
+        // null written to response => valid error document has to be returned as response
         ODataResponse response = ExpandCallBack.writeEntryWithExpand(ctx, uriInfo, (Map<String, Object>) null, contentType);
         assertNotNull(response);
 
@@ -87,8 +86,7 @@ public class OData2UtilsTest {
         EasyMock.replay(ctx, uriInfo);
         String contentType = "application/json";
 
-        // null written to response => valid error document has to be returned as
-        // response
+        // null written to response => valid error document has to be returned as response
         ODataResponse response = ExpandCallBack.writeEntryWithExpand(ctx, uriInfo, Collections.emptyMap(), contentType);
         assertNotNull(response);
 

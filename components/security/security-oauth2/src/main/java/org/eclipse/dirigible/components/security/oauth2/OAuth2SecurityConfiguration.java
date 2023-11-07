@@ -70,12 +70,10 @@ public class OAuth2SecurityConfiguration {
     // @Bean
     // public InMemoryUserDetailsManager userDetailsService() {
     // String username =
-    // org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_BASIC_USERNAME",
-    // "YWRtaW4=");
+    // org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_BASIC_USERNAME", "YWRtaW4=");
     // // admin
     // String password =
-    // org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_BASIC_PASSWORD",
-    // "YWRtaW4=");
+    // org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_BASIC_PASSWORD", "YWRtaW4=");
     // // admin
     // UserDetails user = User
     // .withUsername(new String(new Base64().decode(username.getBytes()),
@@ -93,15 +91,11 @@ public class OAuth2SecurityConfiguration {
     // configuration.setAllowedOriginPatterns(Arrays.asList("*"));
     // configuration.setAllowCredentials(true);
     // configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Headers","Access-Control-Allow-Origin","Access-Control-Request-Method",
-    // "Access-Control-Request-Headers", "Origin", "Cache-Control", "Content-Type",
-    // "Authorization"));
+    // "Access-Control-Request-Headers", "Origin", "Cache-Control", "Content-Type", "Authorization"));
     // configuration.setExposedHeaders(Arrays.asList("Access-Control-Allow-Headers","Access-Control-Allow-Origin","Access-Control-Request-Method",
-    // "Access-Control-Request-Headers", "Origin", "Cache-Control", "Content-Type",
-    // "Authorization"));
-    // configuration.setAllowedMethods(Arrays.asList("HEAD", "DELETE", "GET",
-    // "POST", "PATCH", "PUT"));
-    // UrlBasedCorsConfigurationSource source = new
-    // UrlBasedCorsConfigurationSource();
+    // "Access-Control-Request-Headers", "Origin", "Cache-Control", "Content-Type", "Authorization"));
+    // configuration.setAllowedMethods(Arrays.asList("HEAD", "DELETE", "GET", "POST", "PATCH", "PUT"));
+    // UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     // source.registerCorsConfiguration("/**", configuration);
     // return source;
     // }

@@ -32,8 +32,8 @@ import org.eclipse.dirigible.repository.api.RepositoryReadException;
 public class RepositoryZipExporter {
 
     /**
-     * Export all the content under the given path(s) with the target repository
-     * instance Include the last segment of the relative roots during the archiving.
+     * Export all the content under the given path(s) with the target repository instance Include the
+     * last segment of the relative roots during the archiving.
      *
      * @param repository the target {@link IRepository} instance
      * @param relativeRoots the relative roots
@@ -82,14 +82,13 @@ public class RepositoryZipExporter {
     }
 
     /**
-     * Export all the content under the given path with the target repository
-     * instance Include or NOT the last segment of the relative root during the
-     * archiving.
+     * Export all the content under the given path with the target repository instance Include or NOT
+     * the last segment of the relative root during the archiving.
      *
      * @param repository the repository
      * @param relativeRoot single root
-     * @param inclusive whether to include the last segment of the root or to pack
-     * its content directly in the archive
+     * @param inclusive whether to include the last segment of the root or to pack its content directly
+     *        in the archive
      * @return the exported content
      * @throws RepositoryExportException in case the content cannot be exported
      */

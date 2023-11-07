@@ -16,8 +16,7 @@ import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 
 /**
- * The ContentTypeHelper class is an utility used to map file extensions to mime
- * types.
+ * The ContentTypeHelper class is an utility used to map file extensions to mime types.
  */
 public class ContentTypeHelper {
 

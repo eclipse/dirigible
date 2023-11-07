@@ -55,9 +55,9 @@ public class LogFacade {
      */
     public static final Logger getLogger(final String loggerName) {
         /*
-         * logger names are implicitly prefixed with 'app.' to derive from the
-         * applications root logger configuration for severity and appenders. Null
-         * arguments for logger name will be treated as reference to the 'app' logger
+         * logger names are implicitly prefixed with 'app.' to derive from the applications root logger
+         * configuration for severity and appenders. Null arguments for logger name will be treated as
+         * reference to the 'app' logger
          */
         String appLoggerName = loggerName;
         if (appLoggerName == null) {

@@ -79,8 +79,7 @@ public class JavascriptGenerationEngine implements TemplateEngine {
             parameters.forEach(action);
             RepositoryPath path = new RepositoryPath((String) parameters.get("handler"));
             Object result = javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
-            // String result = ScriptEngineExecutorsManager.evalModule((String)
-            // parameters.get("handler"),
+            // String result = ScriptEngineExecutorsManager.evalModule((String) parameters.get("handler"),
             // context).toString();
             return (result != null && result instanceof String) ? ((String) result).getBytes(StandardCharsets.UTF_8) : new byte[] {};
         } catch (Exception ex) {

@@ -226,8 +226,8 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
      * (non-Javadoc)
      *
      * @see
-     * org.eclipse.dirigible.database.sql.ISqlDialect#getDataTypeName(org.eclipse.
-     * dirigible.database.sql .DataType)
+     * org.eclipse.dirigible.database.sql.ISqlDialect#getDataTypeName(org.eclipse.dirigible.database.sql
+     * .DataType)
      */
     @Override
     public String getDataTypeName(DataType dataType) {
@@ -305,9 +305,7 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection,
-     * java.lang.String)
+     * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String)
      */
     @Override
     public boolean existsTable(Connection connection, String table) throws SQLException {
@@ -326,9 +324,8 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection,
-     * java.lang.String, java.lang.int)
+     * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String,
+     * java.lang.int)
      */
     @Override
     public boolean exists(Connection connection, String table, int type) throws SQLException {
@@ -521,8 +518,7 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.sql.ISqlDialect#functionCurrentTimestamp()
+     * @see org.eclipse.dirigible.database.sql.ISqlDialect#functionCurrentTimestamp()
      */
     @Override
     public String functionCurrentTimestamp() {
@@ -621,9 +617,7 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.sql.ISqlDialect#count(java.sql.Connection,
-     * java.lang.String)
+     * @see org.eclipse.dirigible.database.sql.ISqlDialect#count(java.sql.Connection, java.lang.String)
      */
     @Override
     public int count(Connection connection, String table) throws SQLException {

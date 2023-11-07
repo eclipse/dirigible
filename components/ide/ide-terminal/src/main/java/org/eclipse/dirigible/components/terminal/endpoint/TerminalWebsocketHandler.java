@@ -57,13 +57,10 @@ public class TerminalWebsocketHandler extends BinaryWebSocketHandler implements 
      */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        // if (Configuration.isAnonymousModeEnabled() ||
-        // !Configuration.isTerminalEnabled()) {
+        // if (Configuration.isAnonymousModeEnabled() || !Configuration.isTerminalEnabled()) {
         // try {
-        // session.getBasicRemote().sendText(FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE,
-        // true);
-        // if (logger.isWarnEnabled())
-        // {logger.warn(FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE);}
+        // session.getBasicRemote().sendText(FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE, true);
+        // if (logger.isWarnEnabled()) {logger.warn(FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE);}
         // } catch (IOException e) {
         // logger.error(TERMINAL_PREFIX + e.getMessage(), e);
         // }

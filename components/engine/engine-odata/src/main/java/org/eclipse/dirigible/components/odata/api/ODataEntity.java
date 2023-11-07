@@ -55,8 +55,8 @@ public class ODataEntity {
     private List<ODataHandler> handlers = new ArrayList<>();
 
     /**
-     * For VIEW type the keys need to be specified explicitly, because on DB side
-     * there will be no keys definitions.
+     * For VIEW type the keys need to be specified explicitly, because on DB side there will be no keys
+     * definitions.
      */
     @Expose
     private List<String> keys = new ArrayList<>();
@@ -75,8 +75,7 @@ public class ODataEntity {
      * <p>
      * Define list of additional annotations for EntityType element.
      * </p>
-     * For example:
-     * <code> &lt;EntityType Name="SomeTypeName" sap:semantics="aggregate""&gt; </code>
+     * For example: <code> &lt;EntityType Name="SomeTypeName" sap:semantics="aggregate""&gt; </code>
      */
     @Expose
     private Map<String, String> annotationsEntityType = new HashMap<>();

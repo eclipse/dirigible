@@ -221,8 +221,7 @@ public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, 
         WriteFeedCallbackResult expandedPropertyFeed = new WriteFeedCallbackResult();
         HashMap<String, Object> entryData = (HashMap<String, Object>) context.getEntryData();
         try {
-            // the data must be a map, for each navigation property the data should be in an
-            // entry with key the
+            // the data must be a map, for each navigation property the data should be in an entry with key the
             // FQN of the property
             List<Map<String, Object>> navigationEntryData =
                     (List<Map<String, Object>>) entryData.get(OData2Utils.fqn(context.getNavigationProperty()

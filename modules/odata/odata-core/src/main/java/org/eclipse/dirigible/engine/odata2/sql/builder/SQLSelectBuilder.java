@@ -201,12 +201,9 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
                     case PROPERTY:
                         continue;
                     case MEMBER:
-                        // For a member order by to work we need a corresponding expand (which also
-                        // means a join).
-                        // Otherwise the table in the member order by clause will not be part of the
-                        // query
-                        // E.g. SELECT T0.ID AS "ID_T0" FROM CARS AS T0 ORDER BY T1.FIRSTNAME DESC (we
-                        // need a join to define
+                        // For a member order by to work we need a corresponding expand (which also means a join).
+                        // Otherwise the table in the member order by clause will not be part of the query
+                        // E.g. SELECT T0.ID AS "ID_T0" FROM CARS AS T0 ORDER BY T1.FIRSTNAME DESC (we need a join to define
                         // T1)
                         if (!isOrderByEntityInExpand(orderExpression, uriInfo)) {
                             throw new OData2Exception("Missing $expand of the entity in the OrderBy clause", HttpStatusCodes.BAD_REQUEST); // no
@@ -237,8 +234,7 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
      * @throws ODataException the o data exception
      */
     public SQLSelectBuilder filter(final EdmEntitySet filterTarget, final FilterExpression filter) throws ODataException {
-        // TODO we do not search only filter target table. What if we filter on property
-        // that is complex
+        // TODO we do not search only filter target table. What if we filter on property that is complex
         // type and is field of the target entity?
         SQLWhereClause where = SQLUtils.buildSQLWhereClause(this, filterTarget.getEntityType(), filter);
         if (!where.isEmpty()) {

@@ -183,8 +183,7 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
                 }
             }
         }
-        // Add the key values in the end. The syntax is update table set (col=val) where
-        // key1=val1,key2=val2
+        // Add the key values in the end. The syntax is update table set (col=val) where key1=val1,key2=val2
         for (String key : target.getKeyPropertyNames()) { // the order matters
             Object value = uriKeyProperties.get(key);
             if (!isValidKeyValue(value)) {

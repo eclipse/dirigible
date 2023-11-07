@@ -311,8 +311,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                                              JobStatus.Succeeded);
                 }
 
-                // Processing of cross-synchronizer artefacts once again due to eventual
-                // dependency issues
+                // Processing of cross-synchronizer artefacts once again due to eventual dependency issues
                 if (undepleted.size() > 0) {
                     if (logger.isWarnEnabled()) {
                         logger.warn("Cross-processing of undepleated artefacts...");
@@ -844,8 +843,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
     @Override
     public void registerState(Synchronizer<? extends Artefact> synchronizer, Artefact artefact, ArtefactLifecycle lifecycle,
             String message) {
-        // if (logger.isTraceEnabled()) {logger.trace("Processed artefact with key: {}
-        // with status: {}",
+        // if (logger.isTraceEnabled()) {logger.trace("Processed artefact with key: {} with status: {}",
         // artefact.getKey(), lifecycle.getValue());}
         synchronizer.setStatus(artefact, lifecycle, message);
     }

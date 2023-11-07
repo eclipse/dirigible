@@ -68,8 +68,8 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
     })));
 
     /**
-     * Default implementation returns the direct toString() conversion. It may get
-     * overridden for specific database dialects
+     * Default implementation returns the direct toString() conversion. It may get overridden for
+     * specific database dialects
      *
      * @param dataType the data type
      * @return the data type name
@@ -77,24 +77,21 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
     public String getDataTypeName(DataType dataType);
 
     /**
-     * PRIMARY KEY argument for a column for the create table script Default is
-     * "PRIMARY KEY".
+     * PRIMARY KEY argument for a column for the create table script Default is "PRIMARY KEY".
      *
      * @return the primary key argument
      */
     public String getPrimaryKeyArgument();
 
     /**
-     * Identity argument for a column for the create table script Default is
-     * "IDENTITY".
+     * Identity argument for a column for the create table script Default is "IDENTITY".
      *
      * @return the primary key argument
      */
     public String getIdentityArgument();
 
     /**
-     * NOT NULL argument for a column for the create table script Default is "NOT
-     * NULL".
+     * NOT NULL argument for a column for the create table script Default is "NOT NULL".
      *
      * @return the not null argument
      */
@@ -143,9 +140,8 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
     public boolean existsSchema(Connection connection, String schema) throws SQLException;
 
     /**
-     * Checks if the database is capable of schema-level filtering statements (e.g.
-     * to reduce the provisioned schemas down to those that the current user is
-     * entitled to see).
+     * Checks if the database is capable of schema-level filtering statements (e.g. to reduce the
+     * provisioned schemas down to those that the current user is entitled to see).
      *
      * @return true if the feature is supported, false otherwise
      */
@@ -153,8 +149,7 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 
     /**
      * If the database supports schema filtering SQL statements (see
-     * {@link #isSchemaFilterSupported()}), this method provides the corresponding
-     * SQL statement.
+     * {@link #isSchemaFilterSupported()}), this method provides the corresponding SQL statement.
      *
      * @return a filtering SQL statement
      */

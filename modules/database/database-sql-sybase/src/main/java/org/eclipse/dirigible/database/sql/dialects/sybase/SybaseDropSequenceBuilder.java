@@ -36,9 +36,7 @@ public class SybaseDropSequenceBuilder extends DropSequenceBuilder {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder#
-     * generate()
+     * @see org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder#generate()
      */
     @Override
     public String generate() {

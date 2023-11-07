@@ -27,13 +27,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Configuration Facade class keeps all the configurations in the Dirigible
- * instance It has the default built in properties file - dirigible.properties
- * After the initialization, all the default properties are replaced with the
- * ones coming as: 1. System's properties 2. Environment variables This can be
- * triggered programmatically with update() method It supports also loading of
- * custom properties files from the class loader with load() for the modules and
- * also merge with a provided properties object with add() methods
+ * Configuration Facade class keeps all the configurations in the Dirigible instance It has the
+ * default built in properties file - dirigible.properties After the initialization, all the default
+ * properties are replaced with the ones coming as: 1. System's properties 2. Environment variables
+ * This can be triggered programmatically with update() method It supports also loading of custom
+ * properties files from the class loader with load() for the modules and also merge with a provided
+ * properties object with add() methods
  */
 public class Configuration {
 
@@ -262,8 +261,7 @@ public class Configuration {
     }
 
     /**
-     * Setter for the property's key and value. Sets the new value, only if the key
-     * value is null.
+     * Setter for the property's key and value. Sets the new value, only if the key value is null.
      *
      * @param key the key
      * @param value the value
@@ -298,8 +296,7 @@ public class Configuration {
     }
 
     /**
-     * Update the properties values from the System's properties and from the
-     * Environment if any.
+     * Update the properties values from the System's properties and from the Environment if any.
      */
     public static void update() {
         loadEnvironmentConfig();
@@ -436,8 +433,7 @@ public class Configuration {
     /**
      * Getter for the configurations from the module's dirigible-*.properties files
      *
-     * @return the map of the variables from the module's dirigible-*.properties
-     * files
+     * @return the map of the variables from the module's dirigible-*.properties files
      */
     public static Map<String, String> getModuleVariables() {
         return new HashMap<String, String>(MODULE_VARIABLES);
@@ -556,9 +552,8 @@ public class Configuration {
     }
 
     /**
-     * Configure a runtime object from configuration sources. The parameter patterns
-     * are: 1) ${CONFIGURATION_PARAMETER} 2)
-     * ${CONFIGURATION_PARAMETER}.{DEFAULT_VALUE}
+     * Configure a runtime object from configuration sources. The parameter patterns are: 1)
+     * ${CONFIGURATION_PARAMETER} 2) ${CONFIGURATION_PARAMETER}.{DEFAULT_VALUE}
      *
      * @param o the object
      */

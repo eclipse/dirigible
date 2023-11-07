@@ -154,8 +154,7 @@ public class SQLQueryBuilder {
              .from(target, uri.getKeyPredicates());
             q.filter(uri.getTargetEntitySet(), uri.getFilter());
         } else {
-            // we have the problem that top does not work for exapnd. Therefore we do 2
-            // queries to select the
+            // we have the problem that top does not work for exapnd. Therefore we do 2 queries to select the
             // ids of the target entities (with applied filter),
             // and then we do filter on these IDS with the expand, with no top and skip
             // SELECT TOP XXX FROM TTTT AS M WHERE FILTER
@@ -207,14 +206,12 @@ public class SQLQueryBuilder {
          .join(uri.getStartEntitySet(), uri.getTargetEntitySet(), uri.getNavigationSegments())
          .with(uri.getKeyPredicates());
 
-        // adds additional joins on the navigation properties required for correct
-        // ordering of the result
+        // adds additional joins on the navigation properties required for correct ordering of the result
         // set
         for (ArrayList<NavigationPropertySegment> segments : uri.getExpand()) {
             EdmEntitySet joinTarget = uri.getTargetEntitySet();
             for (NavigationPropertySegment nav : segments) {
-                // when we have Owners/Addresses the addresses needs to be joined with the
-                // Owners.
+                // when we have Owners/Addresses the addresses needs to be joined with the Owners.
                 // The joinTarget would be Owner when nav.getTargetEntitySet is Address
                 q.join(nav.getTargetEntitySet(), joinTarget, Collections.emptyList());
                 joinTarget = nav.getTargetEntitySet();
@@ -357,8 +354,7 @@ public class SQLQueryBuilder {
     }
 
     /**
-     * Calculates the effective value for skip which is based on $skip and
-     * $skipToken.
+     * Calculates the effective value for skip which is based on $skip and $skipToken.
      *
      * @param uri the uri
      * @return the integer

@@ -81,8 +81,7 @@ public class SynchronizationWatcher {
     }
 
     /**
-     * Register the given directory and all its sub-directories with the
-     * WatchService.
+     * Register the given directory and all its sub-directories with the WatchService.
      *
      * @param start the start
      * @param watchService the watch service

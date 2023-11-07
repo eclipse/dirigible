@@ -134,8 +134,7 @@ public abstract class AbstractQuerySqlBuilder extends AbstractSqlBuilder {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.sql.builders.AbstractSqlBuilder#toString()
+     * @see org.eclipse.dirigible.database.sql.builders.AbstractSqlBuilder#toString()
      */
     @Override
     public String toString() {

@@ -11,8 +11,8 @@
 package org.eclipse.dirigible.components.odata.transformers;
 
 /**
- * The {@link OData2TransformerException} is thrown in situations when there is
- * an issue when transforming odata file.
+ * The {@link OData2TransformerException} is thrown in situations when there is an issue when
+ * transforming odata file.
  */
 public class OData2TransformerException extends RuntimeException {
 

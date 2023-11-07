@@ -47,8 +47,7 @@ public class ConfigurationsService {
             result.add(row);
         }
 
-        // String customDataSourcesList =
-        // Configuration.get("DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES");
+        // String customDataSourcesList = Configuration.get("DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES");
         // if ((customDataSourcesList != null) && !"".equals(customDataSourcesList)) {
         // StringTokenizer tokens = new StringTokenizer(customDataSourcesList, ",");
         // while (tokens.hasMoreTokens()) {

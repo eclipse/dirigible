@@ -38,8 +38,7 @@ public class MySQLCreateBranchingBuilder extends CreateBranchingBuilder {
      * (non-Javadoc)
      *
      * @see
-     * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(
-     * java.lang.String)
+     * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(java.lang.String)
      */
     @Override
     public CreateSequenceBuilder sequence(String sequence) {
@@ -55,9 +54,7 @@ public class MySQLCreateBranchingBuilder extends CreateBranchingBuilder {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#view(java.
-     * lang.String)
+     * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#view(java.lang.String)
      */
     @Override
     public MySQLCreateViewBuilder view(String view) {

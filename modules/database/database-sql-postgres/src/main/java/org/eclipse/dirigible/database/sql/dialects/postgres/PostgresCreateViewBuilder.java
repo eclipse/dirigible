@@ -40,9 +40,7 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#column(
-     * java.lang.String)
+     * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#column(java.lang.String)
      */
     @Override
     public PostgresCreateViewBuilder column(String name) {
@@ -60,8 +58,7 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
      * (non-Javadoc)
      *
      * @see
-     * org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#asSelect(
-     * java.lang.String)
+     * org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#asSelect(java.lang.String)
      */
     @Override
     public PostgresCreateViewBuilder asSelect(String select) {
@@ -115,8 +112,7 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#generate()
+     * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#generate()
      */
     @Override
     public String generate() {

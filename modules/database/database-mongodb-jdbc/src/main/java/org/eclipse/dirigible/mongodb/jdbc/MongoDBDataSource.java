@@ -173,8 +173,7 @@ public class MongoDBDataSource implements DataSource {
      * Gets the parent logger.
      *
      * @return the parent logger
-     * @throws SQLFeatureNotSupportedException the SQL feature not supported
-     * exception
+     * @throws SQLFeatureNotSupportedException the SQL feature not supported exception
      */
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {

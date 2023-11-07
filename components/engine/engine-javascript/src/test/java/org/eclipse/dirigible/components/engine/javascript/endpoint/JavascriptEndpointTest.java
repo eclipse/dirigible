@@ -93,8 +93,7 @@ public class JavascriptEndpointTest {
 
     // @Test
     // public void handleRequest() {
-    // assertNotNull(javascriptService.handleRequest("test", "hello-world.js", null,
-    // null, false));
+    // assertNotNull(javascriptService.handleRequest("test", "hello-world.js", null, null, false));
     // }
 
     /**

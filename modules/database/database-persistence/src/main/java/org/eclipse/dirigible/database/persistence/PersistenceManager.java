@@ -41,14 +41,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * PersistenceManager is a simple transport mechanism to store and retrieve POJO
- * object to/from underlying JDBC compliant database. It reads a limited set of
- * the standard JPA annotations from the POJO, such as Table, Id, Column, etc.
- * and generate a dialect dependent SQL script. It works on flat POJOs and no
- * lazy loading, associations, caches, etc. are supported. It is the simplest
- * possible persistence channel for POJOs and will stay at this level in the
- * future The POJO supported by this manager must have a single mandatory Id
- * (PRIMARY KEY) field
+ * PersistenceManager is a simple transport mechanism to store and retrieve POJO object to/from
+ * underlying JDBC compliant database. It reads a limited set of the standard JPA annotations from
+ * the POJO, such as Table, Id, Column, etc. and generate a dialect dependent SQL script. It works
+ * on flat POJOs and no lazy loading, associations, caches, etc. are supported. It is the simplest
+ * possible persistence channel for POJOs and will stay at this level in the future The POJO
+ * supported by this manager must have a single mandatory Id (PRIMARY KEY) field
  *
  * @param <T> the entity type
  */
@@ -159,8 +157,7 @@ public class PersistenceManager<T> {
     }
 
     /**
-     * Check whether the table already exists in the database and create it if
-     * needed.
+     * Check whether the table already exists in the database and create it if needed.
      *
      * @param connection the database connection
      * @param clazz the clazz

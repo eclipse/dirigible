@@ -34,8 +34,7 @@ public class RepositoryZipImporter {
     private static final Logger logger = LoggerFactory.getLogger(RepositoryZipImporter.class);
 
     /**
-     * Import all the content from a given zip to the target repository instance
-     * within the given path.
+     * Import all the content from a given zip to the target repository instance within the given path.
      *
      * @param repository the target {@link IRepository} instance
      * @param zipInputStream the content input stream
@@ -48,8 +47,8 @@ public class RepositoryZipImporter {
     }
 
     /**
-     * Import all the content from a given zip to the target repository instance
-     * within the given path, overrides files during the pass.
+     * Import all the content from a given zip to the target repository instance within the given path,
+     * overrides files during the pass.
      *
      * @param repository the target {@link IRepository} instance
      * @param zipInputStream the content input stream
@@ -63,9 +62,8 @@ public class RepositoryZipImporter {
     }
 
     /**
-     * Import all the content from a given zip to the target repository instance
-     * within the given path, overrides files during the pass and removes the root
-     * folder name.
+     * Import all the content from a given zip to the target repository instance within the given path,
+     * overrides files during the pass and removes the root folder name.
      *
      * @param repository the target {@link IRepository} instance
      * @param zipInputStream the content input stream
@@ -80,9 +78,8 @@ public class RepositoryZipImporter {
     }
 
     /**
-     * Import all the content from a given zip to the target repository instance
-     * within the given path, overrides files during the pass and removes the root
-     * folder name.
+     * Import all the content from a given zip to the target repository instance within the given path,
+     * overrides files during the pass and removes the root folder name.
      *
      * @param repository the target {@link IRepository} instance
      * @param zipInputStream the content input stream

@@ -456,8 +456,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
         }
         if (SqlFactory.getNative(connection)
                       .existsTable(connection, tableModel.getName())) {
-            // if (SqlFactory.getNative(connection).count(connection, tableModel.getName())
-            // == 0) {
+            // if (SqlFactory.getNative(connection).count(connection, tableModel.getName()) == 0) {
             // executeTableDrop(connection, tableModel);
             // executeTableCreate(connection, tableModel);
             // } else {

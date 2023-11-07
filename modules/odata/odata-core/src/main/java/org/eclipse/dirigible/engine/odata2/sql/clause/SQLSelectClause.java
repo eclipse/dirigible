@@ -265,8 +265,7 @@ public final class SQLSelectClause {
      *
      * @param target the target
      * @param keyPredicates the key predicates
-     * @return the org.eclipse.dirigible.engine.odata 2 .sql.builder. SQL select
-     * builder
+     * @return the org.eclipse.dirigible.engine.odata 2 .sql.builder. SQL select builder
      * @throws ODataException the o data exception
      */
     @SuppressWarnings("unchecked")

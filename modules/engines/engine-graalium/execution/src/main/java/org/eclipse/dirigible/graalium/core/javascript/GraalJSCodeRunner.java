@@ -96,8 +96,7 @@ public class GraalJSCodeRunner implements CodeRunner<Source, Value> {
     /**
      * Provide on before context created hook.
      *
-     * @param onBeforeContextCreatedListeners the on before context created
-     * listeners
+     * @param onBeforeContextCreatedListeners the on before context created listeners
      * @return the consumer
      */
     private static Consumer<Context.Builder> provideOnBeforeContextCreatedHook(
@@ -420,9 +419,8 @@ public class GraalJSCodeRunner implements CodeRunner<Source, Value> {
         }
 
         /**
-         * Sets a callback to invoke when a Path's toRealPath fails in GraalJS'
-         * FileSystem. This callback should return another Path if it could be
-         * constructed or throw an exception
+         * Sets a callback to invoke when a Path's toRealPath fails in GraalJS' FileSystem. This callback
+         * should return another Path if it could be constructed or throw an exception
          *
          * @param onRealPathNotFound the callback to invoke
          * @return the builder

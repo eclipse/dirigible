@@ -53,11 +53,10 @@ public class OData2TestUtils {
     private OData2TestUtils() {}
 
     /**
-     * Helper method to retrieve the {@link ODataEntry} from the response object
-     * returned by {@link OData2RequestBuilder#executeRequest()}.
+     * Helper method to retrieve the {@link ODataEntry} from the response object returned by
+     * {@link OData2RequestBuilder#executeRequest()}.
      *
-     * @param response the response returned by
-     * {@link OData2RequestBuilder#executeRequest()}
+     * @param response the response returned by {@link OData2RequestBuilder#executeRequest()}
      * @param entitySet the {@link EdmEntitySet} used to parse the response
      * @return the {@link ODataEntry}
      * @throws IOException in case of error
@@ -76,11 +75,10 @@ public class OData2TestUtils {
     }
 
     /**
-     * Helper method to retrieve the {@link ODataFeed} from the response object
-     * returned by {@link OData2RequestBuilder#executeRequest()}.
+     * Helper method to retrieve the {@link ODataFeed} from the response object returned by
+     * {@link OData2RequestBuilder#executeRequest()}.
      *
-     * @param response the response returned by
-     * {@link OData2RequestBuilder#executeRequest()}
+     * @param response the response returned by {@link OData2RequestBuilder#executeRequest()}
      * @param entitySet the {@link EdmEntitySet} used to parse the response
      * @return the {@link ODataFeed}
      * @throws IOException in case of error
@@ -99,14 +97,14 @@ public class OData2TestUtils {
     }
 
     /**
-     * Helper method to retrieve the {@link ODataErrorContext} representing the
-     * error response to a failed call to an OData API from the response object
-     * returned by {@link OData2RequestBuilder#executeRequest()}.
+     * Helper method to retrieve the {@link ODataErrorContext} representing the error response to a
+     * failed call to an OData API from the response object returned by
+     * {@link OData2RequestBuilder#executeRequest()}.
      *
      * @param response the object containing the error response
-     * @return the ODataErrorContext representing the content of the returned error
-     * document. <b>NOTE:</b> The used parser does not parse the message's locale so
-     * it will always be <code>null</code>.
+     * @return the ODataErrorContext representing the content of the returned error document.
+     *         <b>NOTE:</b> The used parser does not parse the message's locale so it will always be
+     *         <code>null</code>.
      * @throws IOException in case of error
      * @throws EntityProviderException in case of error
      */

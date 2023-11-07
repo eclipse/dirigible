@@ -18,8 +18,7 @@ import java.util.List;
 public interface IRepositorySearch {
 
     /**
-     * Search the given parameter in the names of the files and folders ( means
-     * *parameter).
+     * Search the given parameter in the names of the files and folders ( means *parameter).
      *
      * @param parameter the search text
      * @param caseInsensitive whether to be case insensitive
@@ -29,8 +28,8 @@ public interface IRepositorySearch {
     public List<IEntity> searchName(String parameter, boolean caseInsensitive) throws RepositorySearchException;
 
     /**
-     * Search the given parameter in the names of the files and folders ( means
-     * *parameter) under specified root folder (means *root).
+     * Search the given parameter in the names of the files and folders ( means *parameter) under
+     * specified root folder (means *root).
      *
      * @param root the root location to start the search from
      * @param parameter the search text
@@ -41,8 +40,7 @@ public interface IRepositorySearch {
     public List<IEntity> searchName(String root, String parameter, boolean caseInsensitive) throws RepositorySearchException;
 
     /**
-     * Search the given given parameter in the names of the files and folders (means
-     * *parameter*).
+     * Search the given given parameter in the names of the files and folders (means *parameter*).
      *
      * @param parameter the search text
      * @param caseInsensitive whether to be case insensitive
@@ -52,8 +50,8 @@ public interface IRepositorySearch {
     public List<IEntity> searchPath(String parameter, boolean caseInsensitive) throws RepositorySearchException;
 
     /**
-     * Search the given given parameter in the names of the files and folders as
-     * well as in the content of the text files.
+     * Search the given given parameter in the names of the files and folders as well as in the content
+     * of the text files.
      *
      * @param term the search text
      * @return a list of {@link IEntity} instances
