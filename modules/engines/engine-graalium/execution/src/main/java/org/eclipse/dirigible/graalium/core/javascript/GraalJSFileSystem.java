@@ -131,7 +131,8 @@ public class GraalJSFileSystem implements FileSystem {
 
         String pathString = path.toString();
         if (!pathString.endsWith(".js") && !pathString.endsWith(".mjs") && !pathString.endsWith(".json")) {
-            // handle cases like `import { Data } from "./data"` where `./data` does not have an extension
+            // handle cases like `import { Data } from "./data"` where `./data` does not
+            // have an extension
             // mainly found when dealing with TS imports
             for (String supportedImportFromExtension : SUPPORTED_IMPORT_FROM_EXTENSIONS) {
                 var fileWithExtensionPath = Path.of(pathString + supportedImportFromExtension);

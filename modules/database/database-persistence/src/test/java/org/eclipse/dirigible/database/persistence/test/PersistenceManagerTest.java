@@ -47,7 +47,8 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
             assertTrue(existsTable(connection, persistenceManager));
             // insert a record in the table for a pojo
             insertPojo(connection, persistenceManager);
-            // insert a record in the table for a pojo with longer than column length parameters
+            // insert a record in the table for a pojo with longer than column length
+            // parameters
             insertPojoTruncated(connection, persistenceManager);
             // retreive the record by the primary key
             findPojo(connection, persistenceManager);

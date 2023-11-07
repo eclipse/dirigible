@@ -159,7 +159,8 @@ public class SQLOrderByClause implements SQLClause {
             throw new OData2Exception("Not Implemented", INTERNAL_SERVER_ERROR);
         }
         if (query.isTransientType(entityType, prop)) {
-            // Unable to sort with a transient property in the list. This changes the semantic of order by and
+            // Unable to sort with a transient property in the list. This changes the
+            // semantic of order by and
             // the result of the select
             LOG.error("Unmapped property {}! Unable to use an order by expression for properties that are not mapped to the DB.",
                     prop.getName());

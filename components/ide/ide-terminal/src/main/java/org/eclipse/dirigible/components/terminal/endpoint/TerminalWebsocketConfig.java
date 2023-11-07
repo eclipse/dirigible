@@ -42,7 +42,8 @@ public class TerminalWebsocketConfig implements WebSocketConfigurer {
     private static final String TERMINAL_PREFIX = "[ws:terminal] ";
 
     // /** The Constant FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE. */
-    // private static final String FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE = "Feature 'Terminal' is
+    // private static final String FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE =
+    // "Feature 'Terminal' is
     // disabled in this mode.";
 
     /** The Constant PERMISSIONS_FAILED. */

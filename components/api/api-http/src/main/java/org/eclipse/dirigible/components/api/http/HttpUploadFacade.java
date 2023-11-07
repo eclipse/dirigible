@@ -55,8 +55,8 @@ public class HttpUploadFacade {
     /**
      * Parses the request.
      *
-     * @return A list of FileItem instances parsed from the request, in the order that they were
-     *         transmitted.
+     * @return A list of FileItem instances parsed from the request, in the order
+     * that they were transmitted.
      * @throws FileUploadException if there is a problem parsing the request
      */
     public static final List<FileItem> parseRequest() throws FileUploadException {
@@ -73,7 +73,8 @@ public class HttpUploadFacade {
      * Converts header names iterator object to list object.
      *
      * @param headerNames header names iterator
-     * @return A list of String elements which represent the name of the multipart request headers.
+     * @return A list of String elements which represent the name of the multipart
+     * request headers.
      */
     public static final List<String> headerNamesToList(Iterator<String> headerNames) {
         List<String> headerNamesList = new ArrayList<String>();

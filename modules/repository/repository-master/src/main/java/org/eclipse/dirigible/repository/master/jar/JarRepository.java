@@ -97,7 +97,8 @@ public class JarRepository extends ZipRepository {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.repository.master.zip.ZipRepository#getRepositoryRootFolder()
+     * @see org.eclipse.dirigible.repository.master.zip.ZipRepository#
+     * getRepositoryRootFolder()
      */
     @Override
     protected String getRepositoryRootFolder() {

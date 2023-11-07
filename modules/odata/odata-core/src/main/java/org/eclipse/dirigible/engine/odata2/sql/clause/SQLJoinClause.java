@@ -54,8 +54,8 @@ public final class SQLJoinClause implements SQLClause {
     private final JoinType joinType;
 
     /**
-     * The left join should be used for expands - we would like to get the properties of an entity even
-     * if the expand (lik) or complex type is empty.
+     * The left join should be used for expands - we would like to get the
+     * properties of an entity even if the expand (lik) or complex type is empty.
      */
     public enum JoinType {
 

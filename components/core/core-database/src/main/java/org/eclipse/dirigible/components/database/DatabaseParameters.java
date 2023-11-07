@@ -12,7 +12,10 @@ package org.eclipse.dirigible.components.database;
 
 public interface DatabaseParameters {
 
-    /** Whether or not to use case sensitive syntax for table or view names and column names. */
+    /**
+     * Whether or not to use case sensitive syntax for table or view names and
+     * column names.
+     */
     public static final String DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE = "DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE";
 
     /** The Constant DIRIGIBLE_DATABASE_DEFAULT_QUERY_LIMIT. */

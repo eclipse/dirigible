@@ -28,8 +28,8 @@ public class LocalRepositoryMultiThreadTest extends RepositoryGenericMultiThread
      * (non-Javadoc)
      *
      * @see
-     * org.eclipse.dirigible.repository.generic.RepositoryGenericMultiThreadTest#getNewRepository(java.
-     * lang.String)
+     * org.eclipse.dirigible.repository.generic.RepositoryGenericMultiThreadTest#
+     * getNewRepository(java. lang.String)
      */
     @Override
     protected IRepository getNewRepository(String user) {

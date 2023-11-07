@@ -108,7 +108,8 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
     @Override
     public List<OpenAPI> parse(String location, byte[] content) throws ParseException {
         OpenAPI openAPI = new OpenAPI();
-        // JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), OpenAPI.class);
+        // JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8),
+        // OpenAPI.class);
         Configuration.configureObject(openAPI);
         openAPI.setLocation(location);
         openAPI.setName(FilenameUtils.getBaseName(location));

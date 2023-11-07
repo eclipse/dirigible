@@ -119,7 +119,9 @@ public class PostgresSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
+     * @see
+     * org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.
+     * lang.String)
      */
     @Override
     public PostgresNextValueSequenceBuilder nextval(String sequence) {
@@ -134,7 +136,8 @@ public class PostgresSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentDate()
+     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#
+     * functionCurrentDate()
      */
     @Override
     public String functionCurrentDate() {
@@ -149,7 +152,8 @@ public class PostgresSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentTime()
+     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#
+     * functionCurrentTime()
      */
     @Override
     public String functionCurrentTime() {
@@ -164,7 +168,8 @@ public class PostgresSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentTimestamp()
+     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#
+     * functionCurrentTimestamp()
      */
     @Override
     public String functionCurrentTimestamp() {
@@ -200,7 +205,9 @@ public class PostgresSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String)
+     * @see
+     * org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection,
+     * java.lang.String)
      */
     @Override
     public boolean existsTable(Connection connection, String table) throws SQLException {

@@ -283,8 +283,8 @@ public class PersistenceTableColumnModel {
     }
 
     /**
-     * Returns the name of the enumerated type in case the column is of type enumerated or null
-     * otherwise.
+     * Returns the name of the enumerated type in case the column is of type
+     * enumerated or null otherwise.
      *
      * @return enumerated type name
      */

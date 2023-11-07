@@ -269,7 +269,8 @@ public class JobEmailProcessor {
                 MailFacade.getInstance()
                           .send(emailSender, emails.length > 0 ? emails : emailRecipients, null, null,
                                   String.format(emailSubject, job.getName()), parts);
-                // String from, String[] to, String[] cc, String[] bcc, String subject, List<Map> parts
+                // String from, String[] to, String[] cc, String[] bcc, String subject,
+                // List<Map> parts
             } else {
                 if (emailRecipientsLine != null) {
                     if (logger.isErrorEnabled()) {

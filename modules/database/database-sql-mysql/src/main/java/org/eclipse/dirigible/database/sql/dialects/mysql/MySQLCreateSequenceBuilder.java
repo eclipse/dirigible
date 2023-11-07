@@ -37,8 +37,8 @@ public class MySQLCreateSequenceBuilder extends CreateSequenceBuilder {
      * (non-Javadoc)
      *
      * @see
-     * org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilder#generateStart(java.
-     * lang.StringBuilder)
+     * org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilder#
+     * generateStart(java. lang.StringBuilder)
      */
     @Override
     protected void generateStart(StringBuilder sql) {

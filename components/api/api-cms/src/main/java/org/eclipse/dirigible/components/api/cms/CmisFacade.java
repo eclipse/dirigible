@@ -140,8 +140,8 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
     }
 
     /**
-     * Mapping utility between the CMIS standard and Javascript string representation of the versioning
-     * state.
+     * Mapping utility between the CMIS standard and Javascript string
+     * representation of the versioning state.
      *
      * @param state the Javascript state
      * @return the CMIS state

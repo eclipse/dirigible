@@ -48,7 +48,9 @@ public class HanaLastValueIdentityBuilder extends LastValueIdentityBuilder {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
+     * @see
+     * org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder
+     * #generate()
      */
     @Override
     public String generate() {

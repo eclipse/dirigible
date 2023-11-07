@@ -48,9 +48,9 @@ public class PersistenceCreateIdentityProcessor extends AbstractPersistenceProce
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript
-     * (java.sql. Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+     * @see org.eclipse.dirigible.database.persistence.processors.
+     * AbstractPersistenceProcessor#generateScript (java.sql. Connection,
+     * org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
      */
     @Override
     protected String generateScript(Connection connection, PersistenceTableModel tableModel) {

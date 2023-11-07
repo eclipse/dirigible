@@ -30,7 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Push the changes of a project from the local repository to remote Git repository.
+ * Push the changes of a project from the local repository to remote Git
+ * repository.
  */
 @Component
 public class PushCommand {

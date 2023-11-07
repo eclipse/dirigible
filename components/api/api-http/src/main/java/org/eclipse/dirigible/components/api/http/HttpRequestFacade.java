@@ -61,8 +61,8 @@ public class HttpRequestFacade {
     }
 
     /**
-     * Returns the name of the HTTP method with which this request in the current thread context was
-     * made.
+     * Returns the name of the HTTP method with which this request in the current
+     * thread context was made.
      *
      * @return the HTTP method of the request
      * @see HttpServletRequest#getMethod()
@@ -76,7 +76,8 @@ public class HttpRequestFacade {
     }
 
     /**
-     * Returns the login of the user making the request or null if the user hasn't been authenticated.
+     * Returns the login of the user making the request or null if the user hasn't
+     * been authenticated.
      *
      * @return the login of the user making the request
      * @see HttpServletRequest#getRemoteUser()
@@ -90,8 +91,8 @@ public class HttpRequestFacade {
     }
 
     /**
-     * Returns any extra path information associated with the URL the client sent when it made this
-     * request.
+     * Returns any extra path information associated with the URL the client sent
+     * when it made this request.
      *
      * @return the path info
      * @see HttpServletRequest#getPathInfo()
@@ -105,8 +106,8 @@ public class HttpRequestFacade {
     }
 
     /**
-     * Returns any extra path information after the servlet name but before the query string, and
-     * translates it to a real path.
+     * Returns any extra path information after the servlet name but before the
+     * query string, and translates it to a real path.
      *
      * @return the path translated
      * @see HttpServletRequest#getPathTranslated()
@@ -120,8 +121,8 @@ public class HttpRequestFacade {
     }
 
     /**
-     * Returns the value of the specified request header as a String. If the request did not include a
-     * header of the specified name, this method returns null
+     * Returns the value of the specified request header as a String. If the request
+     * did not include a header of the specified name, this method returns null
      *
      * @param name the header name
      * @return the header value

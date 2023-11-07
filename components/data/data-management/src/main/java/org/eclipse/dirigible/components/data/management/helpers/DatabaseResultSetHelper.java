@@ -24,7 +24,8 @@ import org.eclipse.dirigible.components.data.management.format.ResultSetMonospac
 public class DatabaseResultSetHelper {
 
     /**
-     * Prints the provided ResultSet to the {@link ResultSetMonospacedWriter} writer.
+     * Prints the provided ResultSet to the {@link ResultSetMonospacedWriter}
+     * writer.
      *
      * @param resultSet the result set
      * @param limited the limited

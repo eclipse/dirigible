@@ -36,7 +36,8 @@ import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.Ref;
 
 /**
- * The IGitConnector provides the simplified methods for communicating with a Git SCM server.
+ * The IGitConnector provides the simplified methods for communicating with a
+ * Git SCM server.
  */
 public interface IGitConnector {
 
@@ -83,8 +84,9 @@ public interface IGitConnector {
     /**
      * Adds file(s) to the staging index.
      *
-     * @param filePattern File to add content from. Example: "." includes all files. If "dir/subdir/" is
-     *        directory then "dir/subdir" all files from the directory recursively
+     * @param filePattern File to add content from. Example: "." includes all files.
+     * If "dir/subdir/" is directory then "dir/subdir" all files from the directory
+     * recursively
      * @throws IOException IO Exception
      * @throws NoFilepatternException No File Pattern Exception
      * @throws GitAPIException Git API Exception
@@ -94,8 +96,9 @@ public interface IGitConnector {
     /**
      * Adds deleted file(s) to the staging index.
      *
-     * @param filePattern File to add content from. Example: "." includes all files. If "dir/subdir/" is
-     *        directory then "dir/subdir" all files from the directory recursively
+     * @param filePattern File to add content from. Example: "." includes all files.
+     * If "dir/subdir/" is directory then "dir/subdir" all files from the directory
+     * recursively
      * @throws IOException IO Exception
      * @throws NoFilepatternException No File Pattern Exception
      * @throws GitAPIException Git API Exception
@@ -129,9 +132,9 @@ public interface IGitConnector {
      * @param message the commit message
      * @param name the name of the committer used for the commit
      * @param email the email of the committer used for the commit
-     * @param all if set to true, command will automatically stages files that have been modified and
-     *        deleted, but new files not known by the repository are not affected. This corresponds to
-     *        the parameter -a on the command line.
+     * @param all if set to true, command will automatically stages files that have
+     * been modified and deleted, but new files not known by the repository are not
+     * affected. This corresponds to the parameter -a on the command line.
      * @throws NoHeadException No Head Exception
      * @throws NoMessageException No Message Exception
      * @throws UnmergedPathsException Unmerged Path Exception
@@ -148,7 +151,7 @@ public interface IGitConnector {
      *
      * @param name the branch name
      * @param startPoint valid tree-ish object example: "5c15e8", "master", "HEAD",
-     *        "21d5a96070353d01c0f30bc0559ab4de4f5e3ca0"
+     * "21d5a96070353d01c0f30bc0559ab4de4f5e3ca0"
      * @throws RefAlreadyExistsException Already Exists Exception
      * @throws RefNotFoundException Ref Not Found Exception
      * @throws InvalidRefNameException Invalid Ref Name Exception
@@ -186,7 +189,7 @@ public interface IGitConnector {
      *
      * @param name the branch name
      * @param startPoint valid tree-ish object example: "5c15e8", "master", "HEAD",
-     *        "21d5a96070353d01c0f30bc0559ab4de4f5e3ca0"
+     * "21d5a96070353d01c0f30bc0559ab4de4f5e3ca0"
      * @param username the username
      * @param password the password
      * @throws RefAlreadyExistsException Already Exists Exception
@@ -227,8 +230,8 @@ public interface IGitConnector {
             throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException;
 
     /**
-     * Hard reset the repository. Makes the working directory and staging index content to exactly match
-     * the Git repository.
+     * Hard reset the repository. Makes the working directory and staging index
+     * content to exactly match the Git repository.
      *
      * @throws CheckoutConflictException Checkout Conflict Exception
      * @throws GitAPIException Git API Exception
@@ -325,7 +328,8 @@ public interface IGitConnector {
     // * Git API Exception
     // */
     // String getLastSHAForBranch(String branch)
-    // throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException,
+    // throws RefAlreadyExistsException, RefNotFoundException,
+    // InvalidRefNameException,
     // CheckoutConflictException, GitAPIException;
 
     /**

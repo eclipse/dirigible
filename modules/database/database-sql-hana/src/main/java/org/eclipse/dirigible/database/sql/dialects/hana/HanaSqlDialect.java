@@ -201,7 +201,9 @@ public class HanaSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
+     * @see
+     * org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.
+     * lang.String)
      */
     @Override
     public HanaNextValueSequenceBuilder nextval(String sequence) {
@@ -262,7 +264,9 @@ public class HanaSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
+     * @see
+     * org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.
+     * lang.String)
      */
     @Override
     public HanaLastValueIdentityBuilder lastval(String... args) {
@@ -280,7 +284,9 @@ public class HanaSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String)
+     * @see
+     * org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection,
+     * java.lang.String)
      */
     @Override
     public boolean existsTable(Connection connection, String table) throws SQLException {
@@ -299,8 +305,9 @@ public class HanaSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String,
-     * java.lang.int)
+     * @see
+     * org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection,
+     * java.lang.String, java.lang.int)
      */
     @Override
     public boolean exists(Connection connection, String artefact, int type) throws SQLException {
@@ -320,8 +327,9 @@ public class HanaSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String,
-     * java.lang.int)
+     * @see
+     * org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection,
+     * java.lang.String, java.lang.int)
      */
     @Override
     public boolean exists(Connection connection, String schema, String artefact, int type) throws SQLException {

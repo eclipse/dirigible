@@ -187,8 +187,8 @@ public class SQLSelectBuilderComplexTypeTest {
      * @throws Exception the exception
      */
     /*
-     * OData Specification 2.0/3.0: Negative test: It is not supported to use single properties of a
-     * complex type within a $select clause
+     * OData Specification 2.0/3.0: Negative test: It is not supported to use single
+     * properties of a complex type within a $select clause
      */
     @Test(expected = UriSyntaxException.class)
     @SuppressWarnings("unchecked")

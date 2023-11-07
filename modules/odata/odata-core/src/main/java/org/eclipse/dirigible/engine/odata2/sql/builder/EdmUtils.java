@@ -36,9 +36,9 @@ public final class EdmUtils {
     private static final Logger LOG = LoggerFactory.getLogger(EdmUtils.class);
 
     /**
-     * Extract selected properties from query option. This method assumes ONLY Properties of Entity in
-     * the items but NOT NavigationPaths or '*' terms. Both cases are considered NOT IMPLEMENTED and
-     * will yield an exception
+     * Extract selected properties from query option. This method assumes ONLY
+     * Properties of Entity in the items but NOT NavigationPaths or '*' terms. Both
+     * cases are considered NOT IMPLEMENTED and will yield an exception
      *
      * @param selectedItems the selected items
      * @param entityType the entity type
@@ -94,15 +94,17 @@ public final class EdmUtils {
     /**
      * IMPORTANT: This method does not make much sense in general case.
      * <p>
-     * SelectItem may not only contain plain Properties but NavigationPath or even an '*' flag as well.
-     * Both latter cases are considered as "Note implemented" (yet)
+     * SelectItem may not only contain plain Properties but NavigationPath or even
+     * an '*' flag as well. Both latter cases are considered as "Note implemented"
+     * (yet)
      * <p>
-     * throws EdmException. Determines which object properties have to be queried and populated in the
-     * entity.
+     * throws EdmException. Determines which object properties have to be queried
+     * and populated in the entity.
      * <ul>
-     * <li>If no select has been specified, all of the entity type's properties are returned</li>
-     * <li>If a select has been specified, the selected properties plus all not-selected key properties
-     * are returned</li>
+     * <li>If no select has been specified, all of the entity type's properties are
+     * returned</li>
+     * <li>If a select has been specified, the selected properties plus all
+     * not-selected key properties are returned</li>
      * </ul>
      *
      * @param selectedItems the selected items
@@ -125,7 +127,8 @@ public final class EdmUtils {
                 throw new OData2Exception(format("Some of the selected properties don't exist: %s", nonExistingProperties),
                         HttpStatusCodes.BAD_REQUEST);
             }
-            // Ensure key properties are always read even if not selected (those are required to build the self
+            // Ensure key properties are always read even if not selected (those are
+            // required to build the self
             // link, NullPointerException will occur otherwise)
             final List<String> keyPropertyNames =
                     type instanceof EdmEntityType ? ((EdmEntityType) type).getKeyPropertyNames() : Collections.emptyList();
@@ -160,8 +163,8 @@ public final class EdmUtils {
     }
 
     /**
-     * This method evaluates the clause based on the type instance. Used for adding escape characters
-     * where necessary.
+     * This method evaluates the clause based on the type instance. Used for adding
+     * escape characters where necessary.
      *
      * @param value the datetime instance
      * @param edmSimpleType edm type

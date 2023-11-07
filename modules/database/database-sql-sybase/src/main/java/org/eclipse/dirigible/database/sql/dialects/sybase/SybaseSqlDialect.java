@@ -111,7 +111,9 @@ public class SybaseSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
+     * @see
+     * org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.
+     * lang.String)
      */
     @Override
     public SybaseNextValueSequenceBuilder nextval(String sequence) {
@@ -150,7 +152,9 @@ public class SybaseSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
+     * @see
+     * org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.
+     * lang.String)
      */
     @Override
     public SybaseLastValueIdentityBuilder lastval(String... args) {
@@ -180,7 +184,8 @@ public class SybaseSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentDate()
+     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#
+     * functionCurrentDate()
      */
     @Override
     public String functionCurrentDate() {
@@ -195,7 +200,8 @@ public class SybaseSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentTime()
+     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#
+     * functionCurrentTime()
      */
     @Override
     public String functionCurrentTime() {
@@ -210,7 +216,8 @@ public class SybaseSqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentTimestamp()
+     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#
+     * functionCurrentTimestamp()
      */
     @Override
     public String functionCurrentTimestamp() {

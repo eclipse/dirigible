@@ -45,9 +45,11 @@ public class UserResponseVerifier {
     }
 
     /**
-     * Checks if there is a HttpServletResponse associated with the current thread context.
+     * Checks if there is a HttpServletResponse associated with the current thread
+     * context.
      *
-     * @return true, if there is a HttpServletResponse associated with the current thread context
+     * @return true, if there is a HttpServletResponse associated with the current
+     * thread context
      */
     public static final boolean isValid() {
         HttpServletResponse response = getResponse();

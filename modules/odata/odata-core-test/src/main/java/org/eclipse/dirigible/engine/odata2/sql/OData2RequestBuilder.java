@@ -68,16 +68,16 @@ import org.eclipse.dirigible.engine.odata2.sql.processor.DefaultSQLProcessor;
 
 
 /**
- * Base class for OData API tests, which can be used to simulate calls to the OData API without
- * having to use a servlet.
+ * Base class for OData API tests, which can be used to simulate calls to the
+ * OData API without having to use a servlet.
  *
  * In order to use the class, inherit from it and overwrite the
- * {@link OData2RequestBuilder#executeRequest(ODataHttpMethod)} method. You can use this method also
- * to provide mock data to your API. If you API retrieves handles to data sources via the servlet
- * context or the servlet request, use the
- * {@link OData2RequestBuilder#enrichServletContextMock(ServletContext)} and
- * {@link OData2RequestBuilder#enrichServletRequestMock(ServletRequest)} methods to provide the
- * handles to you mock data.
+ * {@link OData2RequestBuilder#executeRequest(ODataHttpMethod)} method. You can
+ * use this method also to provide mock data to your API. If you API retrieves
+ * handles to data sources via the servlet context or the servlet request, use
+ * the {@link OData2RequestBuilder#enrichServletContextMock(ServletContext)} and
+ * {@link OData2RequestBuilder#enrichServletRequestMock(ServletRequest)} methods
+ * to provide the handles to you mock data.
  *
  */
 public class OData2RequestBuilder {
@@ -189,10 +189,11 @@ public class OData2RequestBuilder {
     }
 
     /**
-     * This methods executes an OData Request based on applied parameters and mocked REST layer.
+     * This methods executes an OData Request based on applied parameters and mocked
+     * REST layer.
      *
-     * @param method Mandatory parameter defining Http Method to be used for the request. Expected
-     *        values are: GET, PUT, POST, DELETE, PATCH, MERGE
+     * @param method Mandatory parameter defining Http Method to be used for the
+     * request. Expected values are: GET, PUT, POST, DELETE, PATCH, MERGE
      * @return OData Response
      * @throws IOException in case of error
      * @throws ODataException in case of error
@@ -278,7 +279,8 @@ public class OData2RequestBuilder {
                 response = subLocator.handlePut();
                 break;
             case POST:
-                // Note: As of now this class does not cover x-http-method. If needed handlePost needs
+                // Note: As of now this class does not cover x-http-method. If needed handlePost
+                // needs
                 // to be invoked by the proper value for @HeaderParam("X-HTTP-Method")
                 response = subLocator.handlePost(null);
                 break;
@@ -376,9 +378,10 @@ public class OData2RequestBuilder {
     }
 
     /**
-     * Callback to add entries to the servletContext needed for the respective test context. EasyMock is
-     * used for the tests, so you can add data by using {@link EasyMock#expect(Object)} in the passed
-     * {@link ServletContext} reference, for instance.
+     * Callback to add entries to the servletContext needed for the respective test
+     * context. EasyMock is used for the tests, so you can add data by using
+     * {@link EasyMock#expect(Object)} in the passed {@link ServletContext}
+     * reference, for instance.
      *
      * @param servletContext the EasyMock instance of the {@link ServletContext}.
      */
@@ -387,9 +390,10 @@ public class OData2RequestBuilder {
     }
 
     /**
-     * Callback to add entries to the servletRequest needed for the test request. EasyMock is used for
-     * the tests, so you can add data by using {@link EasyMock#expect(Object)} in the passed
-     * {@link ServletContext} reference, for instance.
+     * Callback to add entries to the servletRequest needed for the test request.
+     * EasyMock is used for the tests, so you can add data by using
+     * {@link EasyMock#expect(Object)} in the passed {@link ServletContext}
+     * reference, for instance.
      *
      * @param servletRequest the EasyMock instance of the {@link ServletRequest}.
      *

@@ -13,8 +13,8 @@ package org.eclipse.dirigible.repository.api;
 import java.util.List;
 
 /**
- * This interface represents a READ ONLY Repository. It allows for navigating through collections
- * and resources.
+ * This interface represents a READ ONLY Repository. It allows for navigating
+ * through collections and resources.
  */
 public interface IRepositoryReader {
 
@@ -26,18 +26,19 @@ public interface IRepositoryReader {
     public void initialize() throws RepositoryInitializationException;
 
     /**
-     * Returns an instance of <code>ICollection</code> which represents the root collection of the
-     * repository.
+     * Returns an instance of <code>ICollection</code> which represents the root
+     * collection of the repository.
      * <p>
-     * This method does not throw any exceptions for convenience but is not guaranteed to return a valid
-     * collection.
+     * This method does not throw any exceptions for convenience but is not
+     * guaranteed to return a valid collection.
      *
      * @return an {@link ICollection} instance
      */
     public ICollection getRoot();
 
     /**
-     * Returns an <code>ICollection</code> instance representing the resource at the specified path.
+     * Returns an <code>ICollection</code> instance representing the resource at the
+     * specified path.
      * <p>
      * The collection may not exist at the specified path.
      *
@@ -47,7 +48,8 @@ public interface IRepositoryReader {
     public ICollection getCollection(String path);
 
     /**
-     * Returns whether a collection with the specified path exists in the repository.
+     * Returns whether a collection with the specified path exists in the
+     * repository.
      *
      * @param path the {@link ICollection} location
      * @return whether the {@link ICollection} exists
@@ -56,8 +58,8 @@ public interface IRepositoryReader {
     public boolean hasCollection(String path) throws RepositoryReadException;
 
     /**
-     * Returns an instance of <code>IResource</code> which represents the resource located at the
-     * specified path.
+     * Returns an instance of <code>IResource</code> which represents the resource
+     * located at the specified path.
      * <p>
      * The resource may not exist at the specified path.
      *

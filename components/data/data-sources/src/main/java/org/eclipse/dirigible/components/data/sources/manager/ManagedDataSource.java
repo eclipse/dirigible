@@ -24,8 +24,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
- * The WrappedDataSource of the standard JDBC {@link DataSource} object with added some additional
- * capabilities..
+ * The WrappedDataSource of the standard JDBC {@link DataSource} object with
+ * added some additional capabilities..
  */
 public class ManagedDataSource implements DataSource {
 
@@ -42,8 +42,9 @@ public class ManagedDataSource implements DataSource {
     private final DataSource originalDataSource;
 
     /**
-     * Wrapper of the default datasource provided by the underlying platform It has some fault tolerance
-     * features, which are not available by default in the popular JDBC drivers.
+     * Wrapper of the default datasource provided by the underlying platform It has
+     * some fault tolerance features, which are not available by default in the
+     * popular JDBC drivers.
      *
      * @param originalDataSource the original data source
      */
@@ -215,7 +216,8 @@ public class ManagedDataSource implements DataSource {
      * Gets the parent logger.
      *
      * @return the parent logger
-     * @throws SQLFeatureNotSupportedException the SQL feature not supported exception
+     * @throws SQLFeatureNotSupportedException the SQL feature not supported
+     * exception
      */
     /*
      * (non-Javadoc)

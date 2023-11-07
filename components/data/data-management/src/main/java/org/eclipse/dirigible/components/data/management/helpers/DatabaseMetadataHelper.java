@@ -551,7 +551,8 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
      * @param catalogName the catalog name
      * @param schemaName the schema name
      * @param procedureName the procedure name
-     * @param procedureColumnsIteratorCallback the procedure columns iterator callback
+     * @param procedureColumnsIteratorCallback the procedure columns iterator
+     * callback
      * @throws SQLException the SQL exception
      */
     public static void iterateProcedureDefinition(Connection connection, String catalogName, String schemaName, String procedureName,

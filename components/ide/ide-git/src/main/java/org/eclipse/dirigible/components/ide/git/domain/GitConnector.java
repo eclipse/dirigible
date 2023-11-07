@@ -80,7 +80,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The GitConnector utility is used for simplified communication with Git SCM server.
+ * The GitConnector utility is used for simplified communication with Git SCM
+ * server.
  */
 public class GitConnector implements IGitConnector {
 
@@ -207,7 +208,8 @@ public class GitConnector implements IGitConnector {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.core.git.IGitConnector#addDeleted(java.lang.String)
+     * @see
+     * org.eclipse.dirigible.core.git.IGitConnector#addDeleted(java.lang.String)
      */
     @Override
     public void addDeleted(String filePattern) throws IOException, NoFilepatternException, GitAPIException {
@@ -282,8 +284,8 @@ public class GitConnector implements IGitConnector {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.core.git.IGitConnector#commit(java.lang.String, java.lang.String,
-     * java.lang.String, boolean)
+     * @see org.eclipse.dirigible.core.git.IGitConnector#commit(java.lang.String,
+     * java.lang.String, java.lang.String, boolean)
      */
     @Override
     public void commit(String message, String name, String email, boolean all) throws NoHeadException, NoMessageException,
@@ -310,7 +312,8 @@ public class GitConnector implements IGitConnector {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.core.git.IGitConnector#createBranch(java.lang.String,
+     * @see
+     * org.eclipse.dirigible.core.git.IGitConnector#createBranch(java.lang.String,
      * java.lang.String)
      */
     @Override
@@ -339,7 +342,8 @@ public class GitConnector implements IGitConnector {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.core.git.IGitConnector#deleteBranch(java.lang.String)
+     * @see
+     * org.eclipse.dirigible.core.git.IGitConnector#deleteBranch(java.lang.String)
      */
     @Override
     public void deleteBranch(String name) throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
@@ -363,7 +367,8 @@ public class GitConnector implements IGitConnector {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.core.git.IGitConnector#renameBranch(java.lang.String,
+     * @see
+     * org.eclipse.dirigible.core.git.IGitConnector#renameBranch(java.lang.String,
      * java.lang.String)
      */
     @Override
@@ -392,8 +397,9 @@ public class GitConnector implements IGitConnector {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.core.git.IGitConnector#createRemoteBranch(java.lang. String,
-     * java.lang.String)
+     * @see
+     * org.eclipse.dirigible.core.git.IGitConnector#createRemoteBranch(java.lang.
+     * String, java.lang.String)
      */
     @Override
     public void createRemoteBranch(String name, String startPoint, String username, String password)
@@ -439,7 +445,9 @@ public class GitConnector implements IGitConnector {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.core.git.IGitConnector#deleteRemoteBranch(java.lang. String)
+     * @see
+     * org.eclipse.dirigible.core.git.IGitConnector#deleteRemoteBranch(java.lang.
+     * String)
      */
     @Override
     public void deleteRemoteBranch(String name, String username, String password)
@@ -554,7 +562,8 @@ public class GitConnector implements IGitConnector {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.core.git.IGitConnector#pull(java.lang.String, java.lang.String)
+     * @see org.eclipse.dirigible.core.git.IGitConnector#pull(java.lang.String,
+     * java.lang.String)
      */
     @Override
     public void pull(String username, String password)
@@ -577,7 +586,8 @@ public class GitConnector implements IGitConnector {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.core.git.IGitConnector#push(java.lang.String, java.lang.String)
+     * @see org.eclipse.dirigible.core.git.IGitConnector#push(java.lang.String,
+     * java.lang.String)
      */
     @Override
     public void push(String username, String password) throws InvalidRemoteException, TransportException, GitAPIException {
@@ -644,11 +654,13 @@ public class GitConnector implements IGitConnector {
 
     // /*
     // * (non-Javadoc)
-    // * @see org.eclipse.dirigible.core.git.IGitConnector#getLastSHAForBranch(java.lang.String)
+    // * @see
+    // org.eclipse.dirigible.core.git.IGitConnector#getLastSHAForBranch(java.lang.String)
     // */
     // @Override
     // public String getLastSHAForBranch(String branch)
-    // throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException,
+    // throws RefAlreadyExistsException, RefNotFoundException,
+    // InvalidRefNameException,
     // CheckoutConflictException, GitAPIException {
     // return checkout(branch).getLeaf().getObjectId().getName();
     // }

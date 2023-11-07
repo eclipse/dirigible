@@ -24,7 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Convenience class for common DataSource operations. An instance represents a single DataSource.
+ * Convenience class for common DataSource operations. An instance represents a
+ * single DataSource.
  */
 public class DatabaseQueryHelper {
 
@@ -93,9 +94,10 @@ public class DatabaseQueryHelper {
     }
 
     /**
-     * Executes a single SQL statement. The callbacks are on queryDone in case of query or updateDone in
-     * case of update, and on error. The method does not iterate on the result set and its pointer is in
-     * its initial position. It is up to the callback to do something with it.
+     * Executes a single SQL statement. The callbacks are on queryDone in case of
+     * query or updateDone in case of update, and on error. The method does not
+     * iterate on the result set and its pointer is in its initial position. It is
+     * up to the callback to do something with it.
      *
      * @param connection the connection
      * @param sql the SQL expression
@@ -126,9 +128,10 @@ public class DatabaseQueryHelper {
     }
 
     /**
-     * Executes a single SQL procedure. The callbacks are on queryDone in case of query or updateDone in
-     * case of update, and on error. The method does not iterate on the result set and its pointer is in
-     * its initial position. It is up to the callback to do something with it.
+     * Executes a single SQL procedure. The callbacks are on queryDone in case of
+     * query or updateDone in case of update, and on error. The method does not
+     * iterate on the result set and its pointer is in its initial position. It is
+     * up to the callback to do something with it.
      *
      * @param connection the connection
      * @param sql the SQL expression
@@ -203,9 +206,9 @@ public class DatabaseQueryHelper {
     }
 
     /**
-     * Unlike executeSingleStatement(String, boolean, RequestIteratorCallback), this method iterates on
-     * the ResultSet and produces a table data structure in the form of a list of ordered key-value
-     * tuples. Schematically it looks like this:
+     * Unlike executeSingleStatement(String, boolean, RequestIteratorCallback), this
+     * method iterates on the ResultSet and produces a table data structure in the
+     * form of a list of ordered key-value tuples. Schematically it looks like this:
      *
      * <PRE>
      * [[{column 1:value A}, {column 2: value B}, {column 3: value C}],
@@ -213,7 +216,8 @@ public class DatabaseQueryHelper {
      *  [{column 1:value G}, {column 2: value I}, {column 3: value H}]]
      * </PRE>
      *
-     * The callbacks are on completing the whole data structure, on error, and on each row construction.
+     * The callbacks are on completing the whole data structure, on error, and on
+     * each row construction.
      *
      * @param connection the connection
      * @param sql the SQL expression

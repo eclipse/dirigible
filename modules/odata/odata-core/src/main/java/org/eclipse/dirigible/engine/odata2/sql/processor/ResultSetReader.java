@@ -146,9 +146,9 @@ public class ResultSetReader {
         for (List<NavigationPropertySegment> expandContents : expandEntities) {
             List<ResultSetEntity> parents = new ArrayList<>();
             /*
-             * The inner loop is for nested expands e.g. Owner/Address, where the parent has a higher index. If
-             * the resultset contains an Address, the Owner would be empty. If the result set contains an owner,
-             * it is added ot the accumulation
+             * The inner loop is for nested expands e.g. Owner/Address, where the parent has
+             * a higher index. If the resultset contains an Address, the Owner would be
+             * empty. If the result set contains an owner, it is added ot the accumulation
              */
             for (NavigationPropertySegment expandContent : expandContents) {
                 EdmEntityType expandType = expandContent.getTargetEntitySet()

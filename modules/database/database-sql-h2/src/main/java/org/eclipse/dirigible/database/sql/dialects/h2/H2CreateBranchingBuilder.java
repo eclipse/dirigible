@@ -36,7 +36,9 @@ public class H2CreateBranchingBuilder extends CreateBranchingBuilder {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java.lang.String)
+     * @see
+     * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java
+     * .lang.String)
      */
     @Override
     public H2CreateTableBuilder table(String table) {

@@ -11,7 +11,8 @@
 package org.eclipse.dirigible.repository.api;
 
 /**
- * The <code>IResource</code> interface represents a resource located in the repository.
+ * The <code>IResource</code> interface represents a resource located in the
+ * repository.
  */
 public interface IResource extends IEntity {
 
@@ -40,7 +41,8 @@ public interface IResource extends IEntity {
      * @param content the raw content
      * @param isBinary whether it is binary
      * @param contentType the type of the content
-     * @throws RepositoryWriteException in case the content of the {@link IResource} cannot be retrieved
+     * @throws RepositoryWriteException in case the content of the {@link IResource}
+     * cannot be retrieved
      */
     public void setContent(byte[] content, boolean isBinary, String contentType) throws RepositoryWriteException;
 

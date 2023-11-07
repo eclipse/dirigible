@@ -200,11 +200,13 @@ public final class SQLUtils {
      * @throws ExceptionVisitExpression the exception visit expression
      * @throws ODataApplicationException the o data application exception
      */
-    // TODO handle also Grouping Operators () for example /Products?$filter=(Price sub 5) gt 10
+    // TODO handle also Grouping Operators () for example /Products?$filter=(Price
+    // sub 5) gt 10
     public static SQLWhereClause buildSQLWhereClause(SQLSelectBuilder query, EdmStructuralType targetEntityType,
             final FilterExpression expression) throws ExceptionVisitExpression, ODataApplicationException {
         // Better make use of a visitor pattern
-        // TODO the filter might have join tables. Table alias must be removed. We must know in what context
+        // TODO the filter might have join tables. Table alias must be removed. We must
+        // know in what context
         // we are.
         SQLWhereClauseVisitor visitor = new SQLWhereClauseVisitor(query, targetEntityType);
         return expression == null ? new SQLWhereClause() : (SQLWhereClause) expression.accept(visitor);
@@ -300,9 +302,9 @@ public final class SQLUtils {
 
 
     /**
-     * Basic validity check for the values. Prevents that someone deletes an entity with an invalid
-     * request In short, a composite key makes sense if all elements are not-null (otherwise the
-     * non-null element suffices)
+     * Basic validity check for the values. Prevents that someone deletes an entity
+     * with an invalid request In short, a composite key makes sense if all elements
+     * are not-null (otherwise the non-null element suffices)
      *
      * @param keyValue the value of the key
      * @return if the key value is valid

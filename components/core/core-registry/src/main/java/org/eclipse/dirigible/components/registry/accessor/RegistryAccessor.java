@@ -171,7 +171,8 @@ public class RegistryAccessor {
     // * @return the byte[]
     // */
     // private byte[] tryFromDirigibleLocation(String module, String extension) {
-    // return tryFromClassloaderLocation(module, extension, LOCATION_META_INF_DIRIGIBLE);
+    // return tryFromClassloaderLocation(module, extension,
+    // LOCATION_META_INF_DIRIGIBLE);
     // }
     //
     // /**
@@ -182,7 +183,8 @@ public class RegistryAccessor {
     // * @return the byte[]
     // */
     // private byte[] tryFromWebJarsLocation(String module, String extension) {
-    // return tryFromClassloaderLocation(module, extension, LOCATION_META_INF_WEBJARS);
+    // return tryFromClassloaderLocation(module, extension,
+    // LOCATION_META_INF_WEBJARS);
     // }
     //
     // /**
@@ -193,17 +195,20 @@ public class RegistryAccessor {
     // * @param path the path
     // * @return the byte[]
     // */
-    // private byte[] tryFromClassloaderLocation(String module, String extension, String path) {
+    // private byte[] tryFromClassloaderLocation(String module, String extension,
+    // String path) {
     // byte[] result = null;
     // try {
-    // String prefix = Character.toString(module.charAt(0)).equals(IRepository.SEPARATOR) ? "" :
+    // String prefix =
+    // Character.toString(module.charAt(0)).equals(IRepository.SEPARATOR) ? "" :
     // IRepository.SEPARATOR;
     // String location = prefix + module + (extension != null ? extension : "");
     // byte[] content = PREDELIVERED.get(location);
     // if (content != null) {
     // return content;
     // }
-    // InputStream bundled = RegistryAccessor.class.getResourceAsStream(path + location);
+    // InputStream bundled = RegistryAccessor.class.getResourceAsStream(path +
+    // location);
     // try {
     // if (bundled != null) {
     // content = IOUtils.toByteArray(bundled);

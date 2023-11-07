@@ -120,8 +120,8 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
     }
 
     /**
-     * Check whether the name is a column (one word) or it is complex expression containing functions,
-     * etc. (count(*))
+     * Check whether the name is a column (one word) or it is complex expression
+     * containing functions, etc. (count(*))
      *
      * @param name the name of the eventual column
      * @return true if it is one word

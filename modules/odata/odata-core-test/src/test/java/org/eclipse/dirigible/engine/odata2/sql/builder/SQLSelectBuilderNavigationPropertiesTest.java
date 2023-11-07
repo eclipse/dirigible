@@ -121,7 +121,8 @@ public class SQLSelectBuilderNavigationPropertiesTest {
     }
 
     // @Test(expected = UriSyntaxException.class)
-    // // Olingo 2.0.6: one-to-many navigation with filter and attribute access is not supported by
+    // // Olingo 2.0.6: one-to-many navigation with filter and attribute access is
+    // not supported by
     // OData.
     // // Hence the UriSyntaxException has been introduced for that case.
     // public void testOneToManyNavigationWithFilter() throws Exception {
@@ -132,10 +133,13 @@ public class SQLSelectBuilderNavigationPropertiesTest {
     //
     // SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
     // assertEquals(
-    // "SELECT T0.MESSAGEGUID AS MESSAGEGUID_T0, T0.LOGSTART AS LOGSTART_T0, T0.LOGEND AS LOGEND_T0,
-    // T0.SENDER AS SENDER_T0, T0.RECEIVER AS RECEIVER_T0, T0.STATUS AS STATUS_T0, T0.MESSAGEGUID AS
+    // "SELECT T0.MESSAGEGUID AS MESSAGEGUID_T0, T0.LOGSTART AS LOGSTART_T0,
+    // T0.LOGEND AS LOGEND_T0,
+    // T0.SENDER AS SENDER_T0, T0.RECEIVER AS RECEIVER_T0, T0.STATUS AS STATUS_T0,
+    // T0.MESSAGEGUID AS
     // MESSAGEGUID_T0 "
-    // + "FROM MPLHEADER AS T0 LEFT JOIN ITOP_MPLUSERDEFINEDATTRIBUTE AS T1 ON T1.HEADER_ID = T0.ID " //
+    // + "FROM MPLHEADER AS T0 LEFT JOIN ITOP_MPLUSERDEFINEDATTRIBUTE AS T1 ON
+    // T1.HEADER_ID = T0.ID " //
     // + "WHERE T0.STATUS = ? AND T1.VALUE = ?" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX,
     // q.buildSelect(context));
     // }

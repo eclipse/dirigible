@@ -127,7 +127,8 @@ public class GitFacade implements InitializingBean {
         GitConnectorFactory.initRepository(gitDirectory.getCanonicalPath(), false);
         GitFileUtils.importProjectFromGitRepositoryToWorkspace(projectGitDirectory, projectObject.getPath());
 
-        // the code below is needed because otherwise getHistory method will throw an error in the git
+        // the code below is needed because otherwise getHistory method will throw an
+        // error in the git
         // perspective
         IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
         gitConnector.add(IGitConnector.GIT_ADD_ALL_FILE_PATTERN);

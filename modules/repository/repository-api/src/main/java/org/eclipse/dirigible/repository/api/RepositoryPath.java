@@ -275,7 +275,8 @@ public class RepositoryPath {
     }
 
     /**
-     * Set the segment of the given index position to the given value, starting with zero.
+     * Set the segment of the given index position to the given value, starting with
+     * zero.
      *
      * @param index the index
      * @param value the value

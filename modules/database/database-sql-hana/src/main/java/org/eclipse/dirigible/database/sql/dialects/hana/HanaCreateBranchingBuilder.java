@@ -37,7 +37,9 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java.lang.String)
+     * @see
+     * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java
+     * .lang.String)
      */
     @Override
     public HanaCreateTableBuilder table(String table) {
@@ -71,8 +73,8 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#temporaryTable(java.lang.
-     * String)
+     * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#
+     * temporaryTable(java.lang. String)
      */
     public HanaCreateTemporaryTableBuilder temporaryTable(String table) {
         return new HanaCreateTemporaryTableBuilder(this.getDialect(), table);

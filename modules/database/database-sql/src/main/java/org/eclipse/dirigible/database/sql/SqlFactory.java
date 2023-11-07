@@ -263,7 +263,9 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection, java.lang.String)
+     * @see
+     * org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection,
+     * java.lang.String)
      */
     @Override
     public boolean existsTable(Connection connection, String table) throws SQLException {
@@ -282,8 +284,9 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection, java.lang.String,
-     * java.lang.int)
+     * @see
+     * org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection,
+     * java.lang.String, java.lang.int)
      */
     @Override
     public boolean exists(Connection connection, String name, int type) throws SQLException {
@@ -303,8 +306,9 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection, java.lang.String,
-     * java.lang.String, java.lang.int)
+     * @see
+     * org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection,
+     * java.lang.String, java.lang.String, java.lang.int)
      */
     @Override
     public boolean exists(Connection connection, String schema, String name, int type) throws SQLException {

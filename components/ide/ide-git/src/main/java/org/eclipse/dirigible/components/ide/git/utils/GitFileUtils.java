@@ -276,7 +276,8 @@ public class GitFileUtils implements InitializingBean {
      *
      * @param source the source
      * @param tempGitDirectory the temp git directory
-     * @param shareInRootFolder the whether to share project in the repository root folder
+     * @param shareInRootFolder the whether to share project in the repository root
+     * folder
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public static void copyProjectToDirectory(Folder source, File tempGitDirectory, boolean shareInRootFolder) throws IOException {
@@ -420,7 +421,8 @@ public class GitFileUtils implements InitializingBean {
      * @return the directory
      */
     public static File getGitDirectoryByRepositoryName(String user, String workspace, String repositoryName) {
-        // File gitDirectoryByRepositoryName = FileSystemUtils.getGitDirectoryByRepositoryName(user,
+        // File gitDirectoryByRepositoryName =
+        // FileSystemUtils.getGitDirectoryByRepositoryName(user,
         // workspace, repositoryName + IRepository.SEPARATOR + repositoryName);
         File gitDirectoryByRepositoryName = FileSystemUtils.getGitDirectoryByRepositoryName(user, workspace, repositoryName);
         if (gitDirectoryByRepositoryName == null) {

@@ -77,12 +77,14 @@ public class ODataSQLInterceptorTest extends AbstractSQLProcessorTest {
     // public void testSQLInterceptorReadEntity() throws Exception {
     // sf.addInterceptors(Collections.singletonList(new SQLInterceptor(){
     // @Override
-    // public SQLSelectBuilder onRead(SQLSelectBuilder query, UriInfo uriInfo, ODataContext context)
+    // public SQLSelectBuilder onRead(SQLSelectBuilder query, UriInfo uriInfo,
+    // ODataContext context)
     // throws ODataException {
     // EdmEntityType et = uriInfo.getTargetEntitySet().getEntityType();
     // EdmProperty prop = (EdmProperty) et.getProperty("Make");
     // String sql = query.getSQLTableColumn(et, prop) + "=?";
-    // SQLStatementParam param = new SQLStatementParam("BMW", prop, query.getSQLTableColumnInfo(et,
+    // SQLStatementParam param = new SQLStatementParam("BMW", prop,
+    // query.getSQLTableColumnInfo(et,
     // prop));
     // SQLWhereClause wc = new SQLWhereClause(sql, param);
     // query.getWhereClause().and(wc);
@@ -97,7 +99,8 @@ public class ODataSQLInterceptorTest extends AbstractSQLProcessorTest {
     // assertEquals(200, response.getStatus());
     // ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
     // List<ODataEntry> entries = resultFeed.getEntries();
-    // assertEquals("The interceptor has to add a condition where we get a filter", 1, entries.size());
+    // assertEquals("The interceptor has to add a condition where we get a filter",
+    // 1, entries.size());
     // for (ODataEntry entry: entries){
     // Map<String, Object> props = entry.getProperties();
     // assertEquals("BMW", props.get("Make"));

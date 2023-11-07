@@ -16,8 +16,8 @@ package org.eclipse.dirigible.components.odata.transformers;
 class DefaultPropertyNameEscaper implements ODataPropertyNameEscaper {
 
     /**
-     * Replace unsupported olingo symbols with underscore symbol The olingo do not allow dot symbol to
-     * be part of the property name.
+     * Replace unsupported olingo symbols with underscore symbol The olingo do not
+     * allow dot symbol to be part of the property name.
      *
      * @param propertyName entity property name
      * @return replaced string

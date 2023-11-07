@@ -410,7 +410,8 @@ public class ODataDatabaseMetadataUtil {
     }
 
     /**
-     * Find schema of a given artifact name. The searchable artifacts are TABLE, VIEW, CALC_VIEW
+     * Find schema of a given artifact name. The searchable artifacts are TABLE,
+     * VIEW, CALC_VIEW
      *
      * @param artifactName name of the artifact
      * @return of a given artifact name

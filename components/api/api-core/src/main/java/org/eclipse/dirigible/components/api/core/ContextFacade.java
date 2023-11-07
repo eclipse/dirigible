@@ -17,7 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * The ContextFacade is used to store name value pairs to the execution (Thread) context.
+ * The ContextFacade is used to store name value pairs to the execution (Thread)
+ * context.
  */
 @Component
 public class ContextFacade {

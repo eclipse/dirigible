@@ -48,7 +48,8 @@ public class DirigibleModule {
      * @param pathDefault the path default
      * @param isPackageDescription the is package description
      * @param shouldBeUnexposedToESM the should be unexposed to ESM
-     * @param deconstruct the CJS exported members to re-export in a deconstructed manner
+     * @param deconstruct the CJS exported members to re-export in a deconstructed
+     * manner
      */
     DirigibleModule(String name, String api, String[] versionedPaths, String pathDefault, boolean isPackageDescription,
             Boolean shouldBeUnexposedToESM, List<String> deconstruct) {

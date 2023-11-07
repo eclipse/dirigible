@@ -50,7 +50,8 @@ public class StringRowFormatter implements RowFormatter {
 
             String value = null;
 
-            // For the schemaless NoSQL DBs it's perfectly legal for records to miss some key-value tuples.
+            // For the schemaless NoSQL DBs it's perfectly legal for records to miss some
+            // key-value tuples.
             if (columnDescriptor.getSqlType() == Integer.MIN_VALUE) {
                 value = "";
             } else {

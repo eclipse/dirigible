@@ -168,12 +168,14 @@ public class Xml2Json {
                                 Iterator attrs = childJson.entrySet()
                                                           .iterator();
                                 if (attrs.hasNext()) {
-                                    // there are attributes, so reorganize the element to include the attributes and the
+                                    // there are attributes, so reorganize the element to include the attributes and
+                                    // the
                                     // value as property - #text
                                     reorganizeForAttributes(parentJson, childNode, existing, attrs);
                                 }
                             } else if (existing instanceof JsonArray) {
-                                // already added and reorganized as an array, so take the last element of this type and
+                                // already added and reorganized as an array, so take the last element of this
+                                // type and
                                 // add the attributes
                                 Iterator attrs = childJson.entrySet()
                                                           .iterator();
@@ -526,7 +528,8 @@ public class Xml2Json {
      *
      * @param xml the xml
      * @return pretty xml
-     * @throws TransformerFactoryConfigurationError the transformer factory configuration error
+     * @throws TransformerFactoryConfigurationError the transformer factory
+     * configuration error
      * @throws ParserConfigurationException the parser configuration exception
      * @throws SAXException the SAX exception
      * @throws IOException Signals that an I/O exception has occurred.

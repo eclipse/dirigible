@@ -26,7 +26,8 @@ public class DummyMasterRepository implements IMasterRepository {
     /**
      * Initialize.
      *
-     * @throws RepositoryInitializationException the repository initialization exception
+     * @throws RepositoryInitializationException the repository initialization
+     * exception
      */
     @Override
     public void initialize() throws RepositoryInitializationException {

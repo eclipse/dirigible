@@ -32,7 +32,8 @@ public class MailFacade {
     private static final ServiceLoader<MailConfigurationProvider> MAIL_PROVIDERS = ServiceLoader.load(MailConfigurationProvider.class);
 
     /**
-     * Get MailClient with configuration options from the chosen mail configuration provider.
+     * Get MailClient with configuration options from the chosen mail configuration
+     * provider.
      *
      * @return MailClient instance
      */

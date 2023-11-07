@@ -33,8 +33,9 @@ public class WorkspaceGitHelper {
     private static final String DOT_GIT = ".git";
 
     /**
-     * Get the git info. Returns a Pair. Left value is boolean indicating the existence of the git
-     * directory Right value contains the path to the root git project folder name
+     * Get the git info. Returns a Pair. Left value is boolean indicating the
+     * existence of the git directory Right value contains the path to the root git
+     * project folder name
      *
      * @param repository the repository
      * @param repositoryPath the path

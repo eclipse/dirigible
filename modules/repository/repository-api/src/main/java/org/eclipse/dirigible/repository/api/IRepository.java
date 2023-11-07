@@ -13,8 +13,8 @@ package org.eclipse.dirigible.repository.api;
 import java.nio.charset.Charset;
 
 /**
- * This interface represents a Repository. It allows for querying, modifying and navigating through
- * collections and resources.
+ * This interface represents a Repository. It allows for querying, modifying and
+ * navigating through collections and resources.
  */
 public interface IRepository extends IRepositoryReader, IRepositoryWriter, IRepositoryImporter, IRepositoryExporter, IRepositorySearch {
 

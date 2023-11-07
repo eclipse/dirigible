@@ -39,7 +39,8 @@ public class LocalRepository extends FileSystemRepository {
     private static final AtomicLong lastModified = new AtomicLong(0);
 
     /**
-     * Constructor with default root folder - user.dir and without database initialization
+     * Constructor with default root folder - user.dir and without database
+     * initialization
      *
      * @throws LocalRepositoryException in case the repository cannot be created
      */

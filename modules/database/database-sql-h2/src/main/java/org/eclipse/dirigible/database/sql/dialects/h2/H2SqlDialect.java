@@ -73,7 +73,9 @@ public class H2SqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
+     * @see
+     * org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.
+     * lang.String)
      */
     @Override
     public H2NextValueSequenceBuilder nextval(String sequence) {
@@ -89,7 +91,9 @@ public class H2SqlDialect extends
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
+     * @see
+     * org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.
+     * lang.String)
      */
     @Override
     public H2LastValueIdentityBuilder lastval(String... args) {

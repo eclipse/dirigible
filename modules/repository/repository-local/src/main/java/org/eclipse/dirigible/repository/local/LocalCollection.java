@@ -160,7 +160,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
         if (IRepository.SEPARATOR.equals(repositoryPath)) {
             return true;
         }
-        // String localPath = LocalWorkspaceMapper.getMappedName(getRepository(), repositoryPath);
+        // String localPath = LocalWorkspaceMapper.getMappedName(getRepository(),
+        // repositoryPath);
         return getRepository().getRepositoryDao()
                               .directoryExists(repositoryPath);
     }
@@ -240,7 +241,9 @@ public class LocalCollection extends LocalEntity implements ICollection {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.repository.api.ICollection#createCollection(java.lang.String)
+     * @see
+     * org.eclipse.dirigible.repository.api.ICollection#createCollection(java.lang.
+     * String)
      */
     @Override
     public ICollection createCollection(String name) throws RepositoryWriteException {
@@ -263,7 +266,9 @@ public class LocalCollection extends LocalEntity implements ICollection {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.repository.api.ICollection#getCollection(java.lang.String)
+     * @see
+     * org.eclipse.dirigible.repository.api.ICollection#getCollection(java.lang.
+     * String)
      */
     @Override
     public ICollection getCollection(String name) {
@@ -280,7 +285,9 @@ public class LocalCollection extends LocalEntity implements ICollection {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.repository.api.ICollection#removeCollection(java.lang.String)
+     * @see
+     * org.eclipse.dirigible.repository.api.ICollection#removeCollection(java.lang.
+     * String)
      */
     @Override
     public void removeCollection(String name) throws RepositoryWriteException {
@@ -297,8 +304,9 @@ public class LocalCollection extends LocalEntity implements ICollection {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.repository.api.ICollection#removeCollection(org.eclipse.dirigible.
-     * repository.api. ICollection)
+     * @see
+     * org.eclipse.dirigible.repository.api.ICollection#removeCollection(org.eclipse
+     * .dirigible. repository.api. ICollection)
      */
     @Override
     public void removeCollection(ICollection childCollection) throws RepositoryWriteException {
@@ -363,7 +371,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.repository.api.ICollection#getResource(java.lang.String)
+     * @see org.eclipse.dirigible.repository.api.ICollection#getResource(java.lang.
+     * String)
      */
     @Override
     public IResource getResource(String name) throws RepositoryReadException {
@@ -384,8 +393,9 @@ public class LocalCollection extends LocalEntity implements ICollection {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.repository.api.ICollection#createResource(java.lang.String, byte[],
-     * boolean, java.lang.String)
+     * @see
+     * org.eclipse.dirigible.repository.api.ICollection#createResource(java.lang.
+     * String, byte[], boolean, java.lang.String)
      */
     @Override
     public IResource createResource(String name, byte[] content, boolean isBinary, String contentType) throws RepositoryWriteException {
@@ -410,7 +420,9 @@ public class LocalCollection extends LocalEntity implements ICollection {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.repository.api.ICollection#createResource(java.lang.String, byte[])
+     * @see
+     * org.eclipse.dirigible.repository.api.ICollection#createResource(java.lang.
+     * String, byte[])
      */
     @Override
     public IResource createResource(String name, byte[] content) throws RepositoryWriteException {
@@ -428,7 +440,9 @@ public class LocalCollection extends LocalEntity implements ICollection {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.repository.api.ICollection#removeResource(java.lang.String)
+     * @see
+     * org.eclipse.dirigible.repository.api.ICollection#removeResource(java.lang.
+     * String)
      */
     @Override
     public void removeResource(String name) throws RepositoryWriteException {
@@ -446,8 +460,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
      * (non-Javadoc)
      *
      * @see
-     * org.eclipse.dirigible.repository.api.ICollection#removeResource(org.eclipse.dirigible.repository.
-     * api.IResource)
+     * org.eclipse.dirigible.repository.api.ICollection#removeResource(org.eclipse.
+     * dirigible.repository. api.IResource)
      */
     @Override
     public void removeResource(IResource resource) throws RepositoryWriteException {
@@ -482,7 +496,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
     /*
      * (non-Javadoc)
      *
-     * @see org.eclipse.dirigible.repository.local.LocalEntity#equals(java.lang.Object)
+     * @see
+     * org.eclipse.dirigible.repository.local.LocalEntity#equals(java.lang.Object)
      */
     @Override
     public boolean equals(Object obj) {

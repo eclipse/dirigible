@@ -207,22 +207,26 @@ public class SQLSelectBuilderExpandTest {
 
     // @Test(expected = UriSyntaxException.class)
     // @SuppressWarnings("unchecked")
-    // // Olingo 2.0.6: one-to-many navigation with filter and attribute access is not supported by
+    // // Olingo 2.0.6: one-to-many navigation with filter and attribute access is
+    // not supported by
     // OData.
     // // Hence the UriSyntaxException has been introduced for that case.
     // public void testExpandWithFilter() throws Exception {
     // Map<String, String> params = new HashMap<>();
     // params.put("$expand", "Entity2");
-    // params.put("$filter", "MessageGuid eq 'AAA' and Entity2/Name eq 'Something'");
+    // params.put("$filter", "MessageGuid eq 'AAA' and Entity2/Name eq
+    // 'Something'");
     // PathSegment ps1 = new ODataPathSegmentImpl("Entities1", EMPTY_MAP);
     // UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
     //
     // SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
     // SQLContext context = new SQLContext();
     // String expected = "SELECT T0.MESSAGEGUID AS MESSAGEGUID_T0,"
-    // + " T0.LOGSTART AS LOGSTART_T0, T0.LOGEND AS LOGEND_T0, T0.SENDER AS SENDER_T0,"
+    // + " T0.LOGSTART AS LOGSTART_T0, T0.LOGEND AS LOGEND_T0, T0.SENDER AS
+    // SENDER_T0,"
     // + " T0.RECEIVER AS RECEIVER_T0, T0.STATUS AS STATUS_T0,"
-    // + " T0.MESSAGEGUID AS MESSAGEGUID_T0, T1.ID AS ID_T1, T1.NAME AS NAME_T1," + " T1.VALUE AS
+    // + " T0.MESSAGEGUID AS MESSAGEGUID_T0, T1.ID AS ID_T1, T1.NAME AS NAME_T1," +
+    // " T1.VALUE AS
     // VALUE_T1"
     // + " FROM MPLHEADER AS T0" //
     // + " LEFT JOIN ITOP_MPLUSERDEFINEDATTRIBUTE AS T1 ON T1.HEADER_ID = T0.ID" //

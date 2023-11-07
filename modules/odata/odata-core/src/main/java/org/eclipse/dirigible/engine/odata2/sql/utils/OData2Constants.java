@@ -17,15 +17,22 @@ import org.apache.olingo.odata2.api.processor.ODataContext;
  */
 public final class OData2Constants {
 
-    /** Name of the parameter at the {@link ODataContext} in which the tenantId is available. */
+    /**
+     * Name of the parameter at the {@link ODataContext} in which the tenantId is
+     * available.
+     */
     public static final String ODATA_CTX_PARAMETER_TENANT_ID = "com.sap.it.commons.odata.api.ctx.parameter.tenantid";
 
-    /** Name of the parameter at the {@link ODataContext} in which the tenantName is available. */
+    /**
+     * Name of the parameter at the {@link ODataContext} in which the tenantName is
+     * available.
+     */
     public static final String ODATA_CTX_PARAMETER_TENANT_NAME = "com.sap.it.commons.odata.api.ctx.parameter.tenantname";
 
     /**
-     * Name of the parameter at the {@link ODataContext} in which the JWT Token is available. For the
-     * time being, this parameter is only available if the processor runs in a multicloud environment
+     * Name of the parameter at the {@link ODataContext} in which the JWT Token is
+     * available. For the time being, this parameter is only available if the
+     * processor runs in a multicloud environment
      */
     public static final String ODATA_CTX_PARAMETER_JWT_TOKEN = "com.sap.it.commons.odata.api.ctx.parameter.jwttoken";
 }

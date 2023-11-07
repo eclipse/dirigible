@@ -31,7 +31,8 @@ public class StreamsFacade {
      * Read the next byte from the provided {@link InputStream}.
      *
      * @param input the input stream to read from
-     * @return the next byte of data in the range 0-255 or -1 if end of stream is reached
+     * @return the next byte of data in the range 0-255 or -1 if end of stream is
+     * reached
      * @throws IOException in case of failure in underlying layer
      */
     public static final int read(InputStream input) throws IOException {
@@ -71,7 +72,8 @@ public class StreamsFacade {
     }
 
     /**
-     * Write byte to the provided {@link OutputStream}. The 24 higher bits are ignored.
+     * Write byte to the provided {@link OutputStream}. The 24 higher bits are
+     * ignored.
      *
      * @param output the output stream to write to
      * @param value the byte to write

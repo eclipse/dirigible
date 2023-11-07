@@ -38,7 +38,8 @@ public class MySQLDropBranchingBuilder extends DropBranchingBuilder {
      * (non-Javadoc)
      *
      * @see
-     * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(java.lang.String)
+     * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(
+     * java.lang.String)
      */
     @Override
     public DropSequenceBuilder sequence(String sequence) {

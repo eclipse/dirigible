@@ -20,8 +20,9 @@ import java.sql.Connection;
 import java.util.logging.Logger;
 
 /**
- * The operations in a OData changeset must be executed within one transaction (connection)
- * Therefore we create a single and non-closable connection datasource for simplicity.
+ * The operations in a OData changeset must be executed within one transaction
+ * (connection) Therefore we create a single and non-closable connection
+ * datasource for simplicity.
  */
 public class SingleConnectionDataSource implements DataSource {
 

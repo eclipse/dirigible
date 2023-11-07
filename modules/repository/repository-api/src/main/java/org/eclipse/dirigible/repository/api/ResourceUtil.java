@@ -16,8 +16,9 @@ package org.eclipse.dirigible.repository.api;
 public final class ResourceUtil {
 
     /**
-     * Returns the extension of the resource name if there is such, otherwise returns <code>null</code>.
-     * If there is a dot but there is no extension, then this method returns the empty string.
+     * Returns the extension of the resource name if there is such, otherwise
+     * returns <code>null</code>. If there is a dot but there is no extension, then
+     * this method returns the empty string.
      * <p>
      * For example:
      * <ul>

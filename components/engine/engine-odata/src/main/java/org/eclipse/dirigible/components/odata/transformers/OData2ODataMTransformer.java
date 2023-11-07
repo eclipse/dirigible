@@ -171,7 +171,8 @@ public class OData2ODataMTransformer {
                                                                                                     .stream()
                                                                                                     .collect(Collectors.groupingBy(
                                                                                                             TableConstraintForeignKey::getReferencedTable));
-            // In case there is FK on DB side, but the entity and it's navigation are not defined in the .odata
+            // In case there is FK on DB side, but the entity and it's navigation are not
+            // defined in the .odata
             // file -> then the relation will not be exposed
             List<Map.Entry<String, List<TableConstraintForeignKey>>> relationsThatExistInOdataFile = groupRelationsByToTableName.entrySet()
                                                                                                                                 .stream()

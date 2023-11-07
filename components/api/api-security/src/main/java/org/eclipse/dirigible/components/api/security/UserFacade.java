@@ -219,8 +219,8 @@ public class UserFacade {
     }
 
     /**
-     * The Authorization header returns the type + token. Substring from the empty space to only get the
-     * token.
+     * The Authorization header returns the type + token. Substring from the empty
+     * space to only get the token.
      *
      * @return the security token
      */
@@ -253,8 +253,9 @@ public class UserFacade {
     }
 
     /**
-     * The accept-language attribute returns multiple values. Eg. en-GB,en-US;q=0.9,en;q=0.8 Substring
-     * until the semicolon to get the IETF (BCP 47) format.
+     * The accept-language attribute returns multiple values. Eg.
+     * en-GB,en-US;q=0.9,en;q=0.8 Substring until the semicolon to get the IETF (BCP
+     * 47) format.
      *
      * @return the language
      */
