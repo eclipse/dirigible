@@ -117,8 +117,7 @@ public class Driver implements java.sql.Driver {
      * Gets the parent logger.
      *
      * @return the parent logger
-     * @throws SQLFeatureNotSupportedException the SQL feature not supported
-     * exception
+     * @throws SQLFeatureNotSupportedException the SQL feature not supported exception
      */
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         throw new SQLFeatureNotSupportedException("The Driver uses slf4j for logging");
