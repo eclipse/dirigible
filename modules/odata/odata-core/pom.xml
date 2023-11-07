@@ -83,5 +83,6 @@
 		<license.header.location>../../../licensing-header.txt</license.header.location>
 		<parent.pom.folder>../../../</parent.pom.folder>
 		<liquibase.version>3.8.1</liquibase.version>
+		<formatter.java.version>${custom.java.build.version}</formatter.java.version>
 	</properties>
 </project>

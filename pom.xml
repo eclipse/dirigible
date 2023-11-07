@@ -104,9 +104,9 @@
 						<version>2.23.0</version>
 						<configuration>
 							<configFile>${formatter.location}</configFile>
-							<compilerSource>${java.version}</compilerSource>
-							<compilerCompliance>${java.version}</compilerCompliance>
-							<compilerTargetPlatform>${java.version}</compilerTargetPlatform>
+							<compilerSource>${formatter.java.version}</compilerSource>
+							<compilerCompliance>${formatter.java.version}</compilerCompliance>
+							<compilerTargetPlatform>${formatter.java.version}</compilerTargetPlatform>
 						</configuration>
 				        <executions>
 				          <execution>
@@ -694,6 +694,7 @@
 		
 		<parent.pom.folder>./</parent.pom.folder>
 		<formatter.location>${parent.pom.folder}/dirigible-formatter.xml</formatter.location>
+		<formatter.java.version>${java.version}</formatter.java.version>
 	</properties>
 
 </project>

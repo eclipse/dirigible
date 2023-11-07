@@ -136,5 +136,6 @@
 		<custom.java.build.version>1.8</custom.java.build.version>
 		<license.header.location>../../../licensing-header.txt</license.header.location>
 		<parent.pom.folder>../../../</parent.pom.folder>
+		<formatter.java.version>${custom.java.build.version}</formatter.java.version>
 	</properties>
 </project>
