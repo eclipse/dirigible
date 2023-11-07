@@ -122,7 +122,8 @@ public class DataStore {
 															.setProperty("hibernate.current_session_context_class",
 																	"org.hibernate.context.internal.ThreadLocalSessionContext");
 
-		mappings.entrySet().forEach(e -> configuration.addInputStream(IOUtils.toInputStream(e.getValue(), StandardCharsets.UTF_8)));
+		mappings.entrySet()
+				.forEach(e -> configuration.addInputStream(IOUtils.toInputStream(e.getValue(), StandardCharsets.UTF_8)));
 
 		StandardServiceRegistryBuilder serviceRegistryBuilder = new StandardServiceRegistryBuilder();
 		serviceRegistryBuilder.applySetting(Environment.DATASOURCE, getDataSource());
@@ -278,7 +279,8 @@ public class DataStore {
 	 */
 	public List<Map> list(String type, DataSource datasource) {
 		try (Session session = sessionFactory.openSession()) {
-			return session.createCriteria(type).list();
+			return session	.createCriteria(type)
+							.list();
 		}
 	}
 
@@ -307,10 +309,12 @@ public class DataStore {
 		try (Session session = sessionFactory.openSession()) {
 			Criteria criteria = session.createCriteria(type);
 			if (aliases != null) {
-				aliases.entrySet().forEach(e -> criteria.createAlias(e.getKey(), e.getValue()));
+				aliases	.entrySet()
+						.forEach(e -> criteria.createAlias(e.getKey(), e.getValue()));
 			}
 			if (restrictions != null) {
-				restrictions.entrySet().forEach(e -> criteria.add(Restrictions.like(e.getKey(), e.getValue())));
+				restrictions.entrySet()
+							.forEach(e -> criteria.add(Restrictions.like(e.getKey(), e.getValue())));
 			}
 			return criteria.list();
 		}
@@ -335,7 +339,8 @@ public class DataStore {
 	 */
 	public List<Map> query(String query, DataSource datasource) {
 		try (Session session = sessionFactory.openSession()) {
-			return session.createNativeQuery(query).list();
+			return session	.createNativeQuery(query)
+							.list();
 		}
 	}
 

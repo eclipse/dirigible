@@ -51,7 +51,8 @@ public class TemplateEnginesManager {
 	 */
 	public final TemplateEngine getTemplateEngine(String name) {
 		for (TemplateEngine next : getTemplateEngines()) {
-			if (next.getName().equalsIgnoreCase(name)) {
+			if (next.getName()
+					.equalsIgnoreCase(name)) {
 				return next;
 			}
 		}

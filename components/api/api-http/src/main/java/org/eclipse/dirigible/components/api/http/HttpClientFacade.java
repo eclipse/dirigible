@@ -196,18 +196,24 @@ public class HttpClientFacade {
 	public static HttpClientResponse processHttpClientResponse(CloseableHttpResponse response, boolean binary) throws IOException {
 		try {
 			HttpClientResponse httpClientResponse = new HttpClientResponse();
-			httpClientResponse.setStatusCode(response.getStatusLine().getStatusCode());
-			httpClientResponse.setStatusMessage(response.getStatusLine().getReasonPhrase());
-			httpClientResponse.setProtocol(response.getProtocolVersion().getProtocol());
-			httpClientResponse.setProtocol(response.getProtocolVersion().getProtocol());
+			httpClientResponse.setStatusCode(response	.getStatusLine()
+														.getStatusCode());
+			httpClientResponse.setStatusMessage(response.getStatusLine()
+														.getReasonPhrase());
+			httpClientResponse.setProtocol(response	.getProtocolVersion()
+													.getProtocol());
+			httpClientResponse.setProtocol(response	.getProtocolVersion()
+													.getProtocol());
 			HttpEntity entity = response.getEntity();
 			if (entity != null && entity.getContent() != null) {
 				byte[] content = IOUtils.toByteArray(entity.getContent());
-				String processedContentType = ContentType.getOrDefault(entity).getMimeType();
+				String processedContentType = ContentType	.getOrDefault(entity)
+															.getMimeType();
 				boolean isSupportedTextType = recognizedTextMimeTypes.contains(processedContentType);
 
 				if (!binary && isSupportedTextType) {
-					Charset charset = ContentType.getOrDefault(entity).getCharset();
+					Charset charset = ContentType	.getOrDefault(entity)
+													.getCharset();
 					String text = new String(content, charset != null ? charset : StandardCharsets.UTF_8);
 					httpClientResponse.setText(text);
 				} else {
@@ -216,7 +222,8 @@ public class HttpClientFacade {
 			}
 
 			for (Header header : response.getAllHeaders()) {
-				httpClientResponse.getHeaders().add(new HttpClientHeader(header.getName(), header.getValue()));
+				httpClientResponse	.getHeaders()
+									.add(new HttpClientHeader(header.getName(), header.getValue()));
 			}
 			EntityUtils.consume(entity);
 			return httpClientResponse;
@@ -368,7 +375,9 @@ public class HttpClientFacade {
 		boolean shouldParseContentType = contentTypeString.contains("charset") || contentTypeString.contains(";");
 		ContentType contentType = shouldParseContentType ? ContentType.parse(contentTypeString) : ContentType.create(contentTypeString);
 
-		EntityBuilder entityBuilder = EntityBuilder.create().setText(httpClientRequestOptions.getText()).setContentType(contentType);
+		EntityBuilder entityBuilder = EntityBuilder	.create()
+													.setText(httpClientRequestOptions.getText())
+													.setContentType(contentType);
 
 		httpPost.setEntity(entityBuilder.build());
 		return httpPost;

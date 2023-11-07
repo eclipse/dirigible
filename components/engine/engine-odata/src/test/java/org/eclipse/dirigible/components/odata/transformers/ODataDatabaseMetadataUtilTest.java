@@ -119,9 +119,12 @@ public class ODataDatabaseMetadataUtilTest {
 	@BeforeEach
 	public void setUp() throws SQLException {
 		MockitoAnnotations.initMocks(this);
-		Mockito.when(datasourcesManager.getDefaultDataSource()).thenReturn(dataSource);
-		Mockito.when(dataSource.getConnection()).thenReturn(connection);
-		Mockito.when(connection.getCatalog()).thenReturn(CATALOG);
+		Mockito	.when(datasourcesManager.getDefaultDataSource())
+				.thenReturn(dataSource);
+		Mockito	.when(dataSource.getConnection())
+				.thenReturn(connection);
+		Mockito	.when(connection.getCatalog())
+				.thenReturn(CATALOG);
 	}
 
 	/**

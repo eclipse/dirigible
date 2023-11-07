@@ -22,7 +22,12 @@ public class HanaDropPublicSynonymBuilder extends DropSynonymBuilder {
 	@Override
 	protected void generateSynonym(StringBuilder sql) {
 		String synonymName = (isCaseSensitive()) ? encapsulate(this.getSynonym(), true) : this.getSynonym();
-		sql.append(SPACE).append(KEYWORD_PUBLIC).append(SPACE).append(KEYWORD_SYNONYM).append(SPACE).append(synonymName);
+		sql	.append(SPACE)
+			.append(KEYWORD_PUBLIC)
+			.append(SPACE)
+			.append(KEYWORD_SYNONYM)
+			.append(SPACE)
+			.append(synonymName);
 	}
 
 }

@@ -66,7 +66,8 @@ public class BpmFacade implements InitializingBean {
 	 * @return the BPM engine object
 	 */
 	public static final Object getEngine() {
-		return BpmFacade.get().getBpmProviderFlowable();
+		return BpmFacade.get()
+						.getBpmProviderFlowable();
 	}
 
 	/**
@@ -76,7 +77,9 @@ public class BpmFacade implements InitializingBean {
 	 * @return the deployment id
 	 */
 	public static String deployProcess(String location) {
-		return BpmFacade.get().getBpmProviderFlowable().deployProcess(location);
+		return BpmFacade.get()
+						.getBpmProviderFlowable()
+						.deployProcess(location);
 	}
 
 	/**
@@ -85,7 +88,9 @@ public class BpmFacade implements InitializingBean {
 	 * @param deploymentId the BPMN process definition deployment id
 	 */
 	public static void undeployProcess(String deploymentId) {
-		BpmFacade.get().getBpmProviderFlowable().undeployProcess(deploymentId);
+		BpmFacade	.get()
+					.getBpmProviderFlowable()
+					.undeployProcess(deploymentId);
 	}
 
 	/**
@@ -96,7 +101,9 @@ public class BpmFacade implements InitializingBean {
 	 * @return the process instance id
 	 */
 	public static String startProcess(String key, String parameters) {
-		return BpmFacade.get().getBpmProviderFlowable().startProcess(key, parameters);
+		return BpmFacade.get()
+						.getBpmProviderFlowable()
+						.startProcess(key, parameters);
 	}
 
 	/**
@@ -106,7 +113,9 @@ public class BpmFacade implements InitializingBean {
 	 * @param reason the reason for deletion
 	 */
 	public static void deleteProcess(String id, String reason) {
-		BpmFacade.get().getBpmProviderFlowable().deleteProcess(id, reason);
+		BpmFacade	.get()
+					.getBpmProviderFlowable()
+					.deleteProcess(id, reason);
 	}
 
 	/**
@@ -117,7 +126,9 @@ public class BpmFacade implements InitializingBean {
 	 * @return the value
 	 */
 	public static Object getVariable(String processInstanceId, String variableName) {
-		return BpmFacade.get().getBpmProviderFlowable().getVariable(processInstanceId, variableName);
+		return BpmFacade.get()
+						.getBpmProviderFlowable()
+						.getVariable(processInstanceId, variableName);
 	}
 
 	/**
@@ -128,7 +139,9 @@ public class BpmFacade implements InitializingBean {
 	 * @param value the value object
 	 */
 	public static void setVariable(String processInstanceId, String variableName, Object value) {
-		BpmFacade.get().getBpmProviderFlowable().setVariable(processInstanceId, variableName, value);
+		BpmFacade	.get()
+					.getBpmProviderFlowable()
+					.setVariable(processInstanceId, variableName, value);
 	}
 
 	/**
@@ -138,7 +151,9 @@ public class BpmFacade implements InitializingBean {
 	 * @param variableName the variable name
 	 */
 	public static void removeVariable(String processInstanceId, String variableName) {
-		BpmFacade.get().getBpmProviderFlowable().removeVariable(processInstanceId, variableName);
+		BpmFacade	.get()
+					.getBpmProviderFlowable()
+					.removeVariable(processInstanceId, variableName);
 	}
 
 	/**
@@ -147,7 +162,9 @@ public class BpmFacade implements InitializingBean {
 	 * @return the list of tasks
 	 */
 	public static String getTasks() {
-		return BpmFacade.get().getBpmProviderFlowable().getTasks();
+		return BpmFacade.get()
+						.getBpmProviderFlowable()
+						.getTasks();
 	}
 
 	/**
@@ -157,7 +174,9 @@ public class BpmFacade implements InitializingBean {
 	 * @return the task's variables
 	 */
 	public static String getTaskVariables(String taskId) {
-		return BpmFacade.get().getBpmProviderFlowable().getTaskVariables(taskId);
+		return BpmFacade.get()
+						.getBpmProviderFlowable()
+						.getTaskVariables(taskId);
 	}
 
 	/**
@@ -167,7 +186,9 @@ public class BpmFacade implements InitializingBean {
 	 * @param variables serialized as JSON string
 	 */
 	public static void getTaskVariables(String taskId, String variables) {
-		BpmFacade.get().getBpmProviderFlowable().setTaskVariables(taskId, variables);
+		BpmFacade	.get()
+					.getBpmProviderFlowable()
+					.setTaskVariables(taskId, variables);
 	}
 
 	/**
@@ -177,7 +198,9 @@ public class BpmFacade implements InitializingBean {
 	 * @param variables serialized as JSON string
 	 */
 	public static void completeTask(String taskId, String variables) {
-		BpmFacade.get().getBpmProviderFlowable().completeTask(taskId, variables);
+		BpmFacade	.get()
+					.getBpmProviderFlowable()
+					.completeTask(taskId, variables);
 	}
 
 }

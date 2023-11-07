@@ -276,7 +276,9 @@ public class LocalRepositoryDao {
 			File objectFile = new File(workspacePath);
 			if (!objectFile.exists()) {
 				// This is folder, that was not created
-				if (ContentTypeHelper.getExtension(workspacePath).isEmpty() && !workspacePath.endsWith(".")) {
+				if (ContentTypeHelper	.getExtension(workspacePath)
+										.isEmpty()
+						&& !workspacePath.endsWith(".")) {
 					return null;
 				}
 			}
@@ -291,7 +293,8 @@ public class LocalRepositoryDao {
 			localObject.setModifiedAt(new Date(objectFile.lastModified()));
 			String owner;
 			try {
-				owner = Files.getOwner(objectFile.toPath()).getName();
+				owner = Files	.getOwner(objectFile.toPath())
+								.getName();
 			} catch (Exception e) {
 				owner = "SYSTEM";
 			}

@@ -83,7 +83,8 @@ public class WorkspaceSearchEndpointTest {
 	 */
 	@Test
 	public void findInWorkspace() throws Exception {
-		mockMvc	.perform(post("/services/ide/workspace-search/workspace1").content("test").with(csrf()))
+		mockMvc	.perform(post("/services/ide/workspace-search/workspace1")	.content("test")
+																			.with(csrf()))
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful());
 	}

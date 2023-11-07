@@ -86,7 +86,9 @@ public class ListMongoIterable implements MongoIterable<String> {
 	@Override
 	public String first() {
 		Iterator<String> iter = this.iterator();
-		return iter.hasNext() ? this.iterator().next() : null;
+		return iter.hasNext() ? this.iterator()
+									.next()
+				: null;
 	}
 
 	/**

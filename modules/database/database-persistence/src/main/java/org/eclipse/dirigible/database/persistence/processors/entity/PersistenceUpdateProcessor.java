@@ -60,7 +60,9 @@ public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor 
 	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-		UpdateBuilder updateBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).update().table(tableModel.getTableName());
+		UpdateBuilder updateBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
+												.update()
+												.table(tableModel.getTableName());
 
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (!columnModel.isPrimaryKey()) {
@@ -108,7 +110,9 @@ public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor 
 			sql = generateScript(connection, tableModel);
 			preparedStatement = openPreparedStatement(connection, sql);
 			setValuesFromPojo(tableModel, pojo, preparedStatement);
-			setValue(preparedStatement, tableModel.getColumns().size(), id);
+			setValue(preparedStatement, tableModel	.getColumns()
+													.size(),
+					id);
 			return preparedStatement.executeUpdate();
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {

@@ -75,7 +75,8 @@ public class TableConstraintForeignKey extends TableConstraint {
 		this.referencedTable = referencedTable;
 		this.referencedSchema = referencedSchema;
 		this.referencedColumns = referencedColumns;
-		this.constraints.getForeignKeys().add(this);
+		this.constraints.getForeignKeys()
+						.add(this);
 	}
 
 	/**
@@ -89,7 +90,9 @@ public class TableConstraintForeignKey extends TableConstraint {
 	 */
 	public TableConstraintForeignKey(String referencedTable, String referencedSchema, String columnName, String referencedColumnName,
 			TableConstraints constraints) {
-		this(constraints.getTable().getName() + "_" + referencedTable, null, new String[] {columnName}, referencedTable, referencedSchema,
+		this(constraints.getTable()
+						.getName()
+				+ "_" + referencedTable, null, new String[] {columnName}, referencedTable, referencedSchema,
 				new String[] {referencedColumnName}, constraints);
 	}
 
@@ -181,8 +184,9 @@ public class TableConstraintForeignKey extends TableConstraint {
 	@Override
 	public String toString() {
 		return "TableConstraintForeignKey [id=" + id + ", referencedTable=" + referencedTable + ", referencedColumns=" + referencedColumns
-				+ ", name=" + name + ", modifiers=" + modifiers + ", columns=" + columns + ", constraints.table="
-				+ constraints.getTable().getName() + "]";
+				+ ", name=" + name + ", modifiers=" + modifiers + ", columns=" + columns + ", constraints.table=" + constraints	.getTable()
+																																.getName()
+				+ "]";
 	}
 
 }

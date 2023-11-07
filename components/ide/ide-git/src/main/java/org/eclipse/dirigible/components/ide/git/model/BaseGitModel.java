@@ -60,7 +60,9 @@ public class BaseGitModel {
 		if (password == null) {
 			return null;
 		}
-		return new String(Base64.getDecoder().decode(password.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
+		return new String(Base64.getDecoder()
+								.decode(password.getBytes(StandardCharsets.UTF_8)),
+				StandardCharsets.UTF_8);
 	}
 
 	/**

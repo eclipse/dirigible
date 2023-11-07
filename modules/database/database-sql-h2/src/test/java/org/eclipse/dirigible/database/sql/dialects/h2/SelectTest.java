@@ -26,7 +26,11 @@ public class SelectTest {
 	 */
 	@Test
 	public void selectStar() {
-		String sql = SqlFactory.getNative(new H2SqlDialect()).select().column("*").from("CUSTOMERS").build();
+		String sql = SqlFactory	.getNative(new H2SqlDialect())
+								.select()
+								.column("*")
+								.from("CUSTOMERS")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT * FROM CUSTOMERS", sql);
@@ -37,7 +41,12 @@ public class SelectTest {
 	 */
 	@Test
 	public void selectColumnsFromTable() {
-		String sql = SqlFactory.getNative(new H2SqlDialect()).select().column("FIRST_NAME").column("LAST_NAME").from("CUSTOMERS").build();
+		String sql = SqlFactory	.getNative(new H2SqlDialect())
+								.select()
+								.column("FIRST_NAME")
+								.column("LAST_NAME")
+								.from("CUSTOMERS")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS", sql);
@@ -218,7 +227,12 @@ public class SelectTest {
 	 */
 	@Test
 	public void selectWhereSimple() {
-		String sql = SqlFactory.getNative(new H2SqlDialect()).select().column("*").from("CUSTOMERS").where("PRICE > ?").build();
+		String sql = SqlFactory	.getNative(new H2SqlDialect())
+								.select()
+								.column("*")
+								.from("CUSTOMERS")
+								.where("PRICE > ?")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT * FROM CUSTOMERS WHERE (PRICE > ?)", sql);
@@ -246,8 +260,12 @@ public class SelectTest {
 	 */
 	@Test
 	public void selectWhereOr() {
-		String sql =
-				SqlFactory.getNative(new H2SqlDialect()).select().column("*").from("CUSTOMERS").where("PRICE > ? OR AMOUNT < ?").build();
+		String sql = SqlFactory	.getNative(new H2SqlDialect())
+								.select()
+								.column("*")
+								.from("CUSTOMERS")
+								.where("PRICE > ? OR AMOUNT < ?")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT * FROM CUSTOMERS WHERE (PRICE > ? OR AMOUNT < ?)", sql);
@@ -262,7 +280,11 @@ public class SelectTest {
 								.select()
 								.column("*")
 								.from("CUSTOMERS")
-								.where(SqlFactory.getNative(new H2SqlDialect()).expression().and("PRICE > ?").or("AMOUNT < ?").build())
+								.where(SqlFactory	.getNative(new H2SqlDialect())
+													.expression()
+													.and("PRICE > ?")
+													.or("AMOUNT < ?")
+													.build())
 								.build();
 
 		assertNotNull(sql);
@@ -274,7 +296,12 @@ public class SelectTest {
 	 */
 	@Test
 	public void selectLimit() {
-		String sql = SqlFactory.getNative(new H2SqlDialect()).select().column("*").from("CUSTOMERS").limit(10).build();
+		String sql = SqlFactory	.getNative(new H2SqlDialect())
+								.select()
+								.column("*")
+								.from("CUSTOMERS")
+								.limit(10)
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT * FROM CUSTOMERS LIMIT 10", sql);
@@ -285,7 +312,13 @@ public class SelectTest {
 	 */
 	@Test
 	public void selectLimitOffset() {
-		String sql = SqlFactory.getNative(new H2SqlDialect()).select().column("*").from("CUSTOMERS").limit(10).offset(20).build();
+		String sql = SqlFactory	.getNative(new H2SqlDialect())
+								.select()
+								.column("*")
+								.from("CUSTOMERS")
+								.limit(10)
+								.offset(20)
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT * FROM CUSTOMERS LIMIT 10 OFFSET 20", sql);
@@ -318,7 +351,11 @@ public class SelectTest {
 								.select()
 								.column("COUNTRY")
 								.from("CUSTOMERS")
-								.union(SqlFactory.getNative(new H2SqlDialect()).select().column("COUNTRY").from("SUPPLIERS").build())
+								.union(SqlFactory	.getNative(new H2SqlDialect())
+													.select()
+													.column("COUNTRY")
+													.from("SUPPLIERS")
+													.build())
 								.build();
 
 		assertNotNull(sql);

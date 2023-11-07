@@ -108,7 +108,8 @@ public class DataSourceEndpointTest {
 		assertNotNull(datasources);
 		assertEquals(5L, datasources.getTotalElements());
 
-		testDataSource = datasources.getContent().get(0);
+		testDataSource = datasources.getContent()
+									.get(0);
 
 		entityManager.refresh(testDataSource);
 	}
@@ -144,7 +145,9 @@ public class DataSourceEndpointTest {
 	public void getDataSourceById() throws Exception {
 		Long id = testDataSource.getId();
 
-		mockMvc.perform(get("/services/data/sources/{id}", id)).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/data/sources/{id}", id))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	/**
@@ -157,7 +160,9 @@ public class DataSourceEndpointTest {
 	public void getDataSourceByName() throws Exception {
 		String name = testDataSource.getName();
 
-		mockMvc.perform(get("/services/data/sources/search?name={name}", name)).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/data/sources/search?name={name}", name))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	/**
@@ -170,7 +175,9 @@ public class DataSourceEndpointTest {
 	public void getPagesDataSources() throws Exception {
 		String name = testDataSource.getName();
 
-		mockMvc.perform(get("/services/data/sources/pages", name)).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/data/sources/pages", name))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	/**
@@ -183,7 +190,9 @@ public class DataSourceEndpointTest {
 	public void getAllDataSources() throws Exception {
 		String name = testDataSource.getName();
 
-		mockMvc.perform(get("/services/data/sources", name)).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/data/sources", name))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	/**

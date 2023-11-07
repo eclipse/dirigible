@@ -36,7 +36,8 @@ public class DownloadableModuleResolver {
 	 * @param dependenciesCachePath the dependencies cache path
 	 */
 	public DownloadableModuleResolver(Path dependenciesCachePath) {
-		dependenciesCachePath.toFile().mkdirs();
+		dependenciesCachePath	.toFile()
+								.mkdirs();
 		this.dependenciesCachePath = dependenciesCachePath;
 	}
 
@@ -77,7 +78,10 @@ public class DownloadableModuleResolver {
 	 */
 	private Path downloadDependency(URI uri) {
 		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder().GET().uri(uri).build();
+		HttpRequest request = HttpRequest	.newBuilder()
+											.GET()
+											.uri(uri)
+											.build();
 
 		try {
 			BodyHandler<byte[]> responseBodyHandler = HttpResponse.BodyHandlers.ofByteArray();
@@ -110,7 +114,8 @@ public class DownloadableModuleResolver {
 	 */
 	private static String getBase64FromURI(URI uri) {
 		Base64.Encoder encoder = Base64.getEncoder();
-		byte[] bytes = uri.toString().getBytes(StandardCharsets.UTF_8);
+		byte[] bytes = uri	.toString()
+							.getBytes(StandardCharsets.UTF_8);
 		return encoder.encodeToString(bytes);
 	}
 }

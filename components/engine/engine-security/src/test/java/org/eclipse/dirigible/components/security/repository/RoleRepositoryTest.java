@@ -54,12 +54,16 @@ public class RoleRepositoryTest {
 	@AfterEach
 	public void cleanup() {
 		// Delete test security roles
-		securityRoleRepository.findAll().stream().forEach(securityRole -> securityRoleRepository.delete(securityRole));
+		securityRoleRepository	.findAll()
+								.stream()
+								.forEach(securityRole -> securityRoleRepository.delete(securityRole));
 	}
 
 	@Test
 	public void getOne() {
-		Long id = securityRoleRepository.findAll().get(0).getId();
+		Long id = securityRoleRepository.findAll()
+										.get(0)
+										.getId();
 		Optional<Role> optional = securityRoleRepository.findById(id);
 		Role securityRole = optional.isPresent() ? optional.get() : null;
 		assertNotNull(securityRole);
@@ -71,7 +75,9 @@ public class RoleRepositoryTest {
 
 	@Test
 	public void getReferenceUsingEntityManager() {
-		Long id = securityRoleRepository.findAll().get(0).getId();
+		Long id = securityRoleRepository.findAll()
+										.get(0)
+										.getId();
 		Role securityRole = entityManager.getReference(Role.class, id);
 		assertNotNull(securityRole);
 		assertNotNull(securityRole.getLocation());

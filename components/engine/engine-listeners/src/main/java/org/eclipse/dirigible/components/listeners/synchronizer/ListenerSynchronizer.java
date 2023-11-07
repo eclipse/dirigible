@@ -71,7 +71,8 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(FILE_EXTENSION_LISTENER);
+		return file	.toString()
+					.endsWith(FILE_EXTENSION_LISTENER);
 	}
 
 	/**
@@ -169,7 +170,8 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
 		if (wrapper.getArtefact() instanceof Listener) {
 			listener = (Listener) wrapper.getArtefact();
 		} else {
-			throw new UnsupportedOperationException(String.format("Trying to process %s as Listener", wrapper.getArtefact().getClass()));
+			throw new UnsupportedOperationException(String.format("Trying to process %s as Listener", wrapper	.getArtefact()
+																												.getClass()));
 		}
 
 		switch (flow) {

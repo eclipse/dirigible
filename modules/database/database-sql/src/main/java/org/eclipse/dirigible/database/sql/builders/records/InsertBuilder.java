@@ -149,7 +149,10 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	 */
 	protected void generateTable(StringBuilder sql) {
 		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
-		sql.append(SPACE).append(KEYWORD_INTO).append(SPACE).append(tableName);
+		sql	.append(SPACE)
+			.append(KEYWORD_INTO)
+			.append(SPACE)
+			.append(tableName);
 	}
 
 	/**
@@ -159,7 +162,10 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	 */
 	protected void generateColumns(StringBuilder sql) {
 		if (!this.columns.isEmpty()) {
-			sql.append(SPACE).append(OPEN).append(traverseColumns()).append(CLOSE);
+			sql	.append(SPACE)
+				.append(OPEN)
+				.append(traverseColumns())
+				.append(CLOSE);
 		}
 	}
 
@@ -170,9 +176,19 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	 */
 	protected void generateValues(StringBuilder sql) {
 		if (!this.values.isEmpty()) {
-			sql.append(SPACE).append(KEYWORD_VALUES).append(SPACE).append(OPEN).append(traverseValues()).append(CLOSE);
+			sql	.append(SPACE)
+				.append(KEYWORD_VALUES)
+				.append(SPACE)
+				.append(OPEN)
+				.append(traverseValues())
+				.append(CLOSE);
 		} else if (!this.columns.isEmpty() && (this.select == null)) {
-			sql.append(SPACE).append(KEYWORD_VALUES).append(SPACE).append(OPEN).append(enumerateValues()).append(CLOSE);
+			sql	.append(SPACE)
+				.append(KEYWORD_VALUES)
+				.append(SPACE)
+				.append(OPEN)
+				.append(enumerateValues())
+				.append(CLOSE);
 		}
 	}
 
@@ -183,7 +199,8 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	 */
 	protected void generateSelect(StringBuilder sql) {
 		if (this.select != null) {
-			sql.append(SPACE).append(this.select);
+			sql	.append(SPACE)
+				.append(this.select);
 		}
 	}
 
@@ -196,9 +213,12 @@ public class InsertBuilder extends AbstractSqlBuilder {
 		StringBuilder snippet = new StringBuilder();
 		for (String column : this.columns) {
 			String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
-			snippet.append(columnName).append(COMMA).append(SPACE);
+			snippet	.append(columnName)
+					.append(COMMA)
+					.append(SPACE);
 		}
-		return snippet.toString().substring(0, snippet.length() - 2);
+		return snippet	.toString()
+						.substring(0, snippet.length() - 2);
 	}
 
 	/**
@@ -209,9 +229,12 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	protected String traverseValues() {
 		StringBuilder snippet = new StringBuilder();
 		for (String value : this.values) {
-			snippet.append(value).append(COMMA).append(SPACE);
+			snippet	.append(value)
+					.append(COMMA)
+					.append(SPACE);
 		}
-		return snippet.toString().substring(0, snippet.length() - 2);
+		return snippet	.toString()
+						.substring(0, snippet.length() - 2);
 	}
 
 	/**
@@ -222,9 +245,12 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	protected String enumerateValues() {
 		StringBuilder snippet = new StringBuilder();
 		for (int i = 0; i < columns.size(); i++) {
-			snippet.append(QUESTION).append(COMMA).append(SPACE);
+			snippet	.append(QUESTION)
+					.append(COMMA)
+					.append(SPACE);
 		}
-		return snippet.toString().substring(0, snippet.length() - 2);
+		return snippet	.toString()
+						.substring(0, snippet.length() - 2);
 	}
 
 	/**

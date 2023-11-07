@@ -97,7 +97,8 @@ public class StatusCommand {
 		String errorMessage = String.format("Error occurred whilegetting the status for project [%s].", project);
 
 		try {
-			File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, project).getCanonicalFile();
+			File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, project)
+											.getCanonicalFile();
 			String git = gitDirectory.getCanonicalPath() + File.separator;
 
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());

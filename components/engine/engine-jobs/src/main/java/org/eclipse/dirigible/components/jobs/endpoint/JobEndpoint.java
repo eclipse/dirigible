@@ -152,7 +152,8 @@ public class JobEndpoint extends BaseEndpoint {
 	@GetMapping(value = "/clear/{*job}", produces = "application/json")
 	public ResponseEntity<?> clearJobLogs(@PathVariable("job") String job) {
 		jobLogService.deleteAllByJobName(job);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity	.noContent()
+								.build();
 	}
 
 	/**
@@ -163,7 +164,8 @@ public class JobEndpoint extends BaseEndpoint {
 	 */
 	@GetMapping(value = "/parameters/{*job}", produces = "application/json")
 	public ResponseEntity<List<JobParameter>> getJobParameters(@PathVariable("job") String job) {
-		return ResponseEntity.ok(jobService.findByName(job).getParameters());
+		return ResponseEntity.ok(jobService	.findByName(job)
+											.getParameters());
 	}
 
 	/**
@@ -215,7 +217,8 @@ public class JobEndpoint extends BaseEndpoint {
 			jobEmailService.addEmail(job, email);
 		}
 
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -229,7 +232,8 @@ public class JobEndpoint extends BaseEndpoint {
 
 		jobEmailService.removeEmail(id);
 
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 }

@@ -103,7 +103,8 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(getFileExtension());
+		return file	.toString()
+					.endsWith(getFileExtension());
 	}
 
 	/**
@@ -133,18 +134,20 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
 		job.setName(FilenameUtils.getBaseName(location));
 		job.setType(Job.ARTEFACT_TYPE);
 		job.updateKey();
-		job.getParameters().forEach(j -> j.setJob(job));
+		job	.getParameters()
+			.forEach(j -> j.setJob(job));
 		try {
 			Job maybe = getService().findByKey(job.getKey());
 			if (maybe != null) {
 				job.setId(maybe.getId());
-				job.getParameters().forEach(p -> {
-					JobParameter m = maybe.getParameter(p.getName());
-					if (m != null) {
-						p.setId(m.getId());
-						p.setValue(m.getValue());
-					}
-				});
+				job	.getParameters()
+					.forEach(p -> {
+						JobParameter m = maybe.getParameter(p.getName());
+						if (m != null) {
+							p.setId(m.getId());
+							p.setValue(m.getValue());
+						}
+					});
 			}
 			Job result = getService().save(job);
 			return List.of(result);
@@ -210,7 +213,8 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
 		if (wrapper.getArtefact() instanceof Job) {
 			job = (Job) wrapper.getArtefact();
 		} else {
-			throw new UnsupportedOperationException(String.format("Trying to process %s as Job", wrapper.getArtefact().getClass()));
+			throw new UnsupportedOperationException(String.format("Trying to process %s as Job", wrapper.getArtefact()
+																										.getClass()));
 		}
 
 		switch (flow) {

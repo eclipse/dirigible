@@ -27,7 +27,12 @@ public class InsertRecordTest {
 	 */
 	@Test
 	public void insertSimple() {
-		String sql = SqlFactory.getDefault().insert().into("CUSTOMERS").column("FIRST_NAME").column("LAST_NAME").build();
+		String sql = SqlFactory	.getDefault()
+								.insert()
+								.into("CUSTOMERS")
+								.column("FIRST_NAME")
+								.column("LAST_NAME")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) VALUES (?, ?)", sql);
@@ -40,7 +45,12 @@ public class InsertRecordTest {
 	public void insertSimpleCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().insert().into("CUSTOMERS").column("FIRST_NAME").column("LAST_NAME").build();
+			String sql = SqlFactory	.getDefault()
+									.insert()
+									.into("CUSTOMERS")
+									.column("FIRST_NAME")
+									.column("LAST_NAME")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("INSERT INTO \"CUSTOMERS\" (\"FIRST_NAME\", \"LAST_NAME\") VALUES (?, ?)", sql);
@@ -101,7 +111,11 @@ public class InsertRecordTest {
 								.into("CUSTOMERS")
 								.column("FIRST_NAME")
 								.column("LAST_NAME")
-								.select(SqlFactory.getDefault().select().column("*").from("SUPPLIERS").build())
+								.select(SqlFactory	.getDefault()
+													.select()
+													.column("*")
+													.from("SUPPLIERS")
+													.build())
 								.build();
 
 		assertNotNull(sql);
@@ -120,7 +134,11 @@ public class InsertRecordTest {
 									.into("CUSTOMERS")
 									.column("FIRST_NAME")
 									.column("LAST_NAME")
-									.select(SqlFactory.getDefault().select().column("*").from("SUPPLIERS").build())
+									.select(SqlFactory	.getDefault()
+														.select()
+														.column("*")
+														.from("SUPPLIERS")
+														.build())
 									.build();
 
 			assertNotNull(sql);

@@ -58,7 +58,10 @@ public class DatabaseMetadataService {
 	 * @return the data sources
 	 */
 	public Set<String> getDataSourcesNames() {
-		return datasourceService.getAll().stream().map(DataSource::getName).collect(Collectors.toSet());
+		return datasourceService.getAll()
+								.stream()
+								.map(DataSource::getName)
+								.collect(Collectors.toSet());
 	}
 
 	/**
@@ -116,7 +119,8 @@ public class DatabaseMetadataService {
 		if (kind == null) {
 			kind = DatabaseStructureTypes.TABLE.name();
 		}
-		if (artifact != null && !artifact.trim().isEmpty()) {
+		if (artifact != null && !artifact	.trim()
+											.isEmpty()) {
 			DatabaseStructureTypes type = DatabaseStructureTypes.TABLE;
 			try {
 				type = DatabaseStructureTypes.valueOf(kind);

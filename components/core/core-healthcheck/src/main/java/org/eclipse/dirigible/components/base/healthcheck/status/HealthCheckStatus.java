@@ -54,7 +54,8 @@ public class HealthCheckStatus {
 	private static void setCurrentStatus() {
 		HealthCheckStatus healthCheckStatus = getInstance();
 		healthCheckStatus.currentStatus = Status.NotReady;
-		for (JobStatus next : healthCheckStatus.getJobs().getJobsStatuses()) {
+		for (JobStatus next : healthCheckStatus	.getJobs()
+												.getJobsStatuses()) {
 			if (next.equals(JobStatus.Running)) {
 				healthCheckStatus.currentStatus = Status.Running;
 				break;

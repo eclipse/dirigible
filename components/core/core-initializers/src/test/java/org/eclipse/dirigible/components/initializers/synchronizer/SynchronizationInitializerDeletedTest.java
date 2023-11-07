@@ -103,7 +103,8 @@ public class SynchronizationInitializerDeletedTest {
 			CheckArtefactUtils.isArtefactForDeletionCreated(connection);
 
 			// delete the artefact
-			repository.getResource("/registry/public/test/test_deleted.extension").delete();
+			repository	.getResource("/registry/public/test/test_deleted.extension")
+						.delete();
 
 			// process again
 			synchronizationWatcher.force();

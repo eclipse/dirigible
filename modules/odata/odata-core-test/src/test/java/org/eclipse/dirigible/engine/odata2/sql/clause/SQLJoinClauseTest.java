@@ -101,8 +101,12 @@ public class SQLJoinClauseTest {
 	 */
 	public void testSimpleJoin(boolean caseSensitiveNames, String expectedJoinStatement) throws Exception {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", String.valueOf(caseSensitiveNames));
-		EdmEntityType mpl = edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName());
-		EdmEntityType uda = edm.getEntityType(Entity2.class.getPackage().getName(), Entity2.class.getSimpleName());
+		EdmEntityType mpl = edm.getEntityType(Entity1.class	.getPackage()
+															.getName(),
+				Entity1.class.getSimpleName());
+		EdmEntityType uda = edm.getEntityType(Entity2.class	.getPackage()
+															.getName(),
+				Entity2.class.getSimpleName());
 		SQLSelectBuilder noop = new SQLSelectBuilder(tableMappingProvider);
 
 		SQLJoinClause join = new SQLJoinClause(noop, mpl, uda);
@@ -121,8 +125,12 @@ public class SQLJoinClauseTest {
 	 */
 	@Test
 	public void testSimpleJoinFlippedBecauseOfMapping() throws Exception {
-		EdmEntityType mpl = edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName());
-		EdmEntityType uda = edm.getEntityType(Entity2.class.getPackage().getName(), Entity2.class.getSimpleName());
+		EdmEntityType mpl = edm.getEntityType(Entity1.class	.getPackage()
+															.getName(),
+				Entity1.class.getSimpleName());
+		EdmEntityType uda = edm.getEntityType(Entity2.class	.getPackage()
+															.getName(),
+				Entity2.class.getSimpleName());
 		SQLSelectBuilder noop = new SQLSelectBuilder(tableMappingProvider);
 
 		SQLJoinClause join = new SQLJoinClause(noop, uda, mpl);
@@ -137,7 +145,9 @@ public class SQLJoinClauseTest {
 	 */
 	@Test
 	public void testNoNeedForJoin_fromAndToAreTheSame() throws Exception {
-		EdmEntityType from = edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName());
+		EdmEntityType from = edm.getEntityType(Entity1.class.getPackage()
+															.getName(),
+				Entity1.class.getSimpleName());
 		SQLSelectBuilder noop = new SQLSelectBuilder(tableMappingProvider);
 		SQLJoinClause join = new SQLJoinClause(noop, from, from);
 		assertEquals("", join.evaluate(context));

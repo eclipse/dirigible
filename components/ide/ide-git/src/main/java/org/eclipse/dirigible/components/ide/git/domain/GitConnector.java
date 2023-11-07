@@ -316,7 +316,8 @@ public class GitConnector implements IGitConnector {
 	@Override
 	public void createBranch(String name, String startPoint)
 			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
-		repository.getConfig().setString(GIT_BRANCH, name, GIT_MERGE, GIT_REFS_HEADS_MASTER);
+		repository	.getConfig()
+					.setString(GIT_BRANCH, name, GIT_MERGE, GIT_REFS_HEADS_MASTER);
 		CreateBranchCommand createBranchCommand = git.branchCreate();
 		createBranchCommand.setName(name);
 		if (!startPoint.equals("HEAD")) {
@@ -342,7 +343,8 @@ public class GitConnector implements IGitConnector {
 	 */
 	@Override
 	public void deleteBranch(String name) throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
-		repository.getConfig().setString(GIT_BRANCH, name, GIT_MERGE, GIT_REFS_HEADS_MASTER);
+		repository	.getConfig()
+					.setString(GIT_BRANCH, name, GIT_MERGE, GIT_REFS_HEADS_MASTER);
 		DeleteBranchCommand deleteBranchCommand = git.branchDelete();
 		deleteBranchCommand.setBranchNames(name);
 		deleteBranchCommand.call();
@@ -367,7 +369,8 @@ public class GitConnector implements IGitConnector {
 	@Override
 	public void renameBranch(String oldName, String newName)
 			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
-		repository.getConfig().setString(GIT_BRANCH, oldName, GIT_MERGE, GIT_REFS_HEADS_MASTER);
+		repository	.getConfig()
+					.setString(GIT_BRANCH, oldName, GIT_MERGE, GIT_REFS_HEADS_MASTER);
 		RenameBranchCommand renameBranchCommand = git.branchRename();
 		renameBranchCommand.setOldName(oldName);
 		renameBranchCommand.setNewName(newName);
@@ -395,7 +398,8 @@ public class GitConnector implements IGitConnector {
 	@Override
 	public void createRemoteBranch(String name, String startPoint, String username, String password)
 			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
-		repository.getConfig().setString(GIT_BRANCH, name, GIT_MERGE, GIT_REFS_HEADS_MASTER);
+		repository	.getConfig()
+					.setString(GIT_BRANCH, name, GIT_MERGE, GIT_REFS_HEADS_MASTER);
 		CreateBranchCommand createBranchCommand = git.branchCreate();
 		createBranchCommand.setName(name);
 		if (!startPoint.equals("HEAD")) {
@@ -410,7 +414,9 @@ public class GitConnector implements IGitConnector {
 			.setRefSpecs(new RefSpec(name + ":" + name))
 			.call();
 
-		git.branchDelete().setBranchNames(name).call();
+		git	.branchDelete()
+			.setBranchNames(name)
+			.call();
 		git	.checkout()
 			.setCreateBranch(true)
 			.setName(name)
@@ -440,9 +446,12 @@ public class GitConnector implements IGitConnector {
 			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
 
 		String remoteName = "refs/heads/" + name;
-		git.branchDelete().setBranchNames(remoteName).call();
+		git	.branchDelete()
+			.setBranchNames(remoteName)
+			.call();
 
-		RefSpec refSpec = new RefSpec().setSource(null).setDestination(remoteName);
+		RefSpec refSpec = new RefSpec()	.setSource(null)
+										.setDestination(remoteName);
 		git	.push()
 			.setRefSpecs(refSpec)
 			.setRemote("origin")
@@ -612,7 +621,8 @@ public class GitConnector implements IGitConnector {
 	 */
 	@Override
 	public Status status() throws NoWorkTreeException, GitAPIException {
-		return git.status().call();
+		return git	.status()
+					.call();
 	}
 
 	/**
@@ -628,7 +638,8 @@ public class GitConnector implements IGitConnector {
 	 */
 	@Override
 	public String getBranch() throws IOException {
-		return git.getRepository().getBranch();
+		return git	.getRepository()
+					.getBranch();
 	}
 
 	// /*
@@ -660,7 +671,8 @@ public class GitConnector implements IGitConnector {
 	public List<GitBranch> getLocalBranches() throws GitConnectorException {
 		try {
 			List<GitBranch> result = new ArrayList<GitBranch>();
-			List<Ref> branches = git.branchList().call(); // .setListMode(ListMode.ALL)
+			List<Ref> branches = git.branchList()
+									.call(); // .setListMode(ListMode.ALL)
 			Collections.sort(branches, new Comparator<Ref>() {
 				@Override
 				public int compare(Ref ref1, Ref ref2) {
@@ -675,8 +687,15 @@ public class GitConnector implements IGitConnector {
 					RevCommit commit = walk.parseCommit(branch.getObjectId());
 					String shortLocalBranchName = getShortBranchName(branch);
 					GitBranch gitBranch = new GitBranch(shortLocalBranchName, false, currentBranch.equals(shortLocalBranchName),
-							commit.getId().getName(), commit.getId().abbreviate(7).name(), format.format(commit.getAuthorIdent().getWhen()),
-							commit.getShortMessage(), commit.getAuthorIdent().getName());
+							commit	.getId()
+									.getName(),
+							commit	.getId()
+									.abbreviate(7)
+									.name(),
+							format.format(commit.getAuthorIdent()
+												.getWhen()),
+							commit.getShortMessage(), commit.getAuthorIdent()
+															.getName());
 					result.add(gitBranch);
 				}
 			} finally {
@@ -705,7 +724,9 @@ public class GitConnector implements IGitConnector {
 			List<GitBranch> result = new ArrayList<GitBranch>();
 			Collection<Ref> remotes = Git	.lsRemoteRepository()
 											.setHeads(true)
-											.setRemote(git.getRepository().getConfig().getString("remote", "origin", "url"))
+											.setRemote(git	.getRepository()
+															.getConfig()
+															.getString("remote", "origin", "url"))
 											.call();
 
 			List<Ref> branches = new ArrayList<Ref>(remotes);
@@ -715,9 +736,15 @@ public class GitConnector implements IGitConnector {
 				for (Ref branch : branches) {
 					try {
 						RevCommit commit = walk.parseCommit(branch.getObjectId());
-						GitBranch gitBranch = new GitBranch(getShortBranchName(branch), true, false, commit.getId().getName(),
-								commit.getId().abbreviate(7).name(), format.format(commit.getAuthorIdent().getWhen()),
-								commit.getShortMessage(), commit.getAuthorIdent().getName());
+						GitBranch gitBranch = new GitBranch(getShortBranchName(branch), true, false, commit	.getId()
+																											.getName(),
+								commit	.getId()
+										.abbreviate(7)
+										.name(),
+								format.format(commit.getAuthorIdent()
+													.getWhen()),
+								commit.getShortMessage(), commit.getAuthorIdent()
+																.getName());
 						result.add(gitBranch);
 					} catch (MissingObjectException e) {
 						// pass
@@ -756,7 +783,8 @@ public class GitConnector implements IGitConnector {
 	public List<GitChangedFile> getUnstagedChanges() throws GitConnectorException {
 		List<GitChangedFile> list = new ArrayList<GitChangedFile>();
 		try {
-			Status status = git.status().call();
+			Status status = git	.status()
+								.call();
 			Set<String> missing = status.getMissing();
 			for (String miss : missing) {
 				GitChangedFile file = new GitChangedFile(miss, GitChangeType.Missing.ordinal());
@@ -788,7 +816,8 @@ public class GitConnector implements IGitConnector {
 	public List<GitChangedFile> getStagedChanges() throws GitConnectorException {
 		List<GitChangedFile> list = new ArrayList<GitChangedFile>();
 		try {
-			Status status = git.status().call();
+			Status status = git	.status()
+								.call();
 			Set<String> added = status.getAdded();
 			for (String add : added) {
 				GitChangedFile file = new GitChangedFile(add, GitChangeType.Added.ordinal());
@@ -887,7 +916,8 @@ public class GitConnector implements IGitConnector {
 					dtfmt.setTimeZone(personIdentity.getTimeZone());
 
 					GitCommitInfo info = new GitCommitInfo();
-					info.setId(log.getId().getName());
+					info.setId(log	.getId()
+									.getName());
 					info.setAuthor(personIdentity.getName());
 					info.setEmailAddress(personIdentity.getEmailAddress());
 					info.setDateTime(dtfmt.format(personIdentity.getWhen()));

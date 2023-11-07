@@ -105,7 +105,9 @@ public class JavascriptEndpointTest {
 	@Test
 	public void getStatus() throws Exception {
 
-		mockMvc.perform(get("/services/js/test/hello-world.js")).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/js/test/hello-world.js"))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 
 	}
 
@@ -118,7 +120,9 @@ public class JavascriptEndpointTest {
 	@Test
 	public void getStatusDeep() throws Exception {
 
-		mockMvc.perform(get("/services/js/test1/test2/hello-world.js")).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/js/test1/test2/hello-world.js"))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 
 	}
 
@@ -131,7 +135,9 @@ public class JavascriptEndpointTest {
 	@Test
 	public void getStatusDeepQuery() throws Exception {
 
-		mockMvc.perform(get("/services/js/test1/test2/hello-world.js?a=1&b=2")).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/js/test1/test2/hello-world.js?a=1&b=2"))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 
 	}
 
@@ -144,7 +150,9 @@ public class JavascriptEndpointTest {
 	@Test
 	public void getResult() throws Exception {
 
-		mockMvc.perform(get("/services/js/test/hello-world.js")).andDo(print()).andExpect(content().string(containsString("Hello World!")));
+		mockMvc	.perform(get("/services/js/test/hello-world.js"))
+				.andDo(print())
+				.andExpect(content().string(containsString("Hello World!")));
 
 	}
 

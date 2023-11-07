@@ -82,7 +82,9 @@ public class DataStoreFacade implements InitializingBean {
 	 * @param json the json
 	 */
 	public static void save(String name, String json) {
-		DataStoreFacade.get().getDataStore().save(name, json);
+		DataStoreFacade	.get()
+						.getDataStore()
+						.save(name, json);
 	}
 
 	/**
@@ -92,7 +94,9 @@ public class DataStoreFacade implements InitializingBean {
 	 * @return the string
 	 */
 	public static String list(String name) {
-		List list = DataStoreFacade.get().getDataStore().list(name);
+		List list = DataStoreFacade	.get()
+									.getDataStore()
+									.list(name);
 		return JsonHelper.toJson(list);
 	}
 
@@ -104,7 +108,9 @@ public class DataStoreFacade implements InitializingBean {
 	 * @return the string
 	 */
 	public static String get(String name, Serializable id) {
-		Map object = DataStoreFacade.get().getDataStore().get(name, id);
+		Map object = DataStoreFacade.get()
+									.getDataStore()
+									.get(name, id);
 		return JsonHelper.toJson(object);
 	}
 
@@ -115,7 +121,9 @@ public class DataStoreFacade implements InitializingBean {
 	 * @param id the id
 	 */
 	public static void deleteEntry(String name, Serializable id) {
-		DataStoreFacade.get().getDataStore().delete(name, id);
+		DataStoreFacade	.get()
+						.getDataStore()
+						.delete(name, id);
 	}
 
 }

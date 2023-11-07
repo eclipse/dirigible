@@ -78,22 +78,26 @@ public class PersistenceManager<T> {
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.getGenerated() != null) {
-				if (GenerationType.SEQUENCE.name().equals(columnModel.getGenerated())) {
+				if (GenerationType.SEQUENCE	.name()
+											.equals(columnModel.getGenerated())) {
 					ISqlDialect dialect = SqlFactory.deriveDialect(connection);
 					if (dialect.isSequenceSupported()) {
 						PersistenceCreateSequenceProcessor persistenceCreateSequenceProcessor =
 								new PersistenceCreateSequenceProcessor(getEntityManagerInterceptor());
 						persistenceCreateSequenceProcessor.create(connection, tableModel);
 					} else {
-						throw new IllegalArgumentException(format(
-								"Generation Type: [{0}] not supported for database: [{1}] by using the dialect: [{2}].",
-								columnModel.getGenerated(), dialect.getDatabaseName(connection), dialect.getClass().getSimpleName()));
+						throw new IllegalArgumentException(
+								format("Generation Type: [{0}] not supported for database: [{1}] by using the dialect: [{2}].",
+										columnModel.getGenerated(), dialect.getDatabaseName(connection), dialect.getClass()
+																												.getSimpleName()));
 					}
-				} else if (GenerationType.TABLE.name().equals(columnModel.getGenerated())) {
+				} else if (GenerationType.TABLE	.name()
+												.equals(columnModel.getGenerated())) {
 					PersistenceCreateIdentityProcessor persistenceCreateIdentityProcessor =
 							new PersistenceCreateIdentityProcessor(getEntityManagerInterceptor());
 					persistenceCreateIdentityProcessor.create(connection, tableModel);
-				} else if (GenerationType.IDENTITY.name().equals(columnModel.getGenerated())) {
+				} else if (GenerationType.IDENTITY	.name()
+													.equals(columnModel.getGenerated())) {
 					// nothing in advance
 				} else {
 					throw new IllegalArgumentException(format("Generation Type: [{0}] not supported.", columnModel.getGenerated()));
@@ -118,7 +122,8 @@ public class PersistenceManager<T> {
 		}
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
-			if (GenerationType.SEQUENCE.name().equals(columnModel.getGenerated())) {
+			if (GenerationType.SEQUENCE	.name()
+										.equals(columnModel.getGenerated())) {
 				PersistenceDropSequenceProcessor persistenceDropSequenceProcessor =
 						new PersistenceDropSequenceProcessor(getEntityManagerInterceptor());
 				persistenceDropSequenceProcessor.drop(connection, tableModel);
@@ -144,7 +149,8 @@ public class PersistenceManager<T> {
 		}
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
 		try {
-			return SqlFactory.getNative(connection).existsTable(connection, tableModel.getTableName());
+			return SqlFactory	.getNative(connection)
+								.existsTable(connection, tableModel.getTableName());
 		} catch (Exception e) {
 			throw new PersistenceException(e);
 		}
@@ -189,7 +195,8 @@ public class PersistenceManager<T> {
 	 */
 	private String getConnectionIdentity(Connection connection) {
 		try {
-			String url = connection.getMetaData().getURL();
+			String url = connection	.getMetaData()
+									.getURL();
 			return url.hashCode() + "";
 		} catch (SQLException e) {
 			if (logger.isErrorEnabled()) {

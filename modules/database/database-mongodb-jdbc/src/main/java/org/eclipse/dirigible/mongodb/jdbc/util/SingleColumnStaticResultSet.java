@@ -576,7 +576,8 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	public ResultSetMetaData getMetaData() throws SQLException {
 		MongoDBResultSetMetaData metadata = new MongoDBResultSetMetaData("");
 		metadata.setColumnCount(1);
-		metadata.keys().put("_", BsonType.STRING);
+		metadata.keys()
+				.put("_", BsonType.STRING);
 		return metadata;
 	}
 

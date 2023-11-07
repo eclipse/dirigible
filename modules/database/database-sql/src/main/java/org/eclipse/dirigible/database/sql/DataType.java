@@ -164,7 +164,8 @@ public enum DataType {
 	 */
 	public static final DataType valueOfByName(String name) {
 		for (DataType type : DataType.class.getEnumConstants()) {
-			if (type.toString().equals(name)) {
+			if (type.toString()
+					.equals(name)) {
 				return type;
 			}
 		}

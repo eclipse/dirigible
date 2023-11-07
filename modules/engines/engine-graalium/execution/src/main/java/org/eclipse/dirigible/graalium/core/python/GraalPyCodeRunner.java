@@ -33,7 +33,8 @@ public class GraalPyCodeRunner implements CodeRunner<Source, Value> {
 	@Override
 	public Source prepareSource(Path codeFilePath) {
 		try {
-			return Source.newBuilder("python", codeFilePath.toFile()).build();
+			return Source	.newBuilder("python", codeFilePath.toFile())
+							.build();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

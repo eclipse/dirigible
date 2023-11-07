@@ -110,12 +110,14 @@ public class WorkspaceSelectionTargetPair {
 	 */
 	public void skipByPath(String skipPath) {
 		for (int i = 0; i < sourceSelection.size(); i++) {
-			String pathOfNode = sourceSelection.get(i).getPath();
+			String pathOfNode = sourceSelection	.get(i)
+												.getPath();
 			String pathToCompare =
 					pathOfNode.substring(0, pathOfNode.length() >= skipPath.length() ? skipPath.length() : pathOfNode.length());
 			System.out.println(pathToCompare + ", " + pathOfNode);
 			if (pathToCompare.equals(skipPath)) {
-				sourceSelection.set(i, sourceSelection.get(i).setResolution("skip"));
+				sourceSelection.set(i, sourceSelection	.get(i)
+														.setResolution("skip"));
 			}
 		}
 	}
@@ -184,7 +186,9 @@ public class WorkspaceSelectionTargetPair {
 		 */
 		public String getRelativePath() {
 			Path fullpath = Paths.get(path);
-			return fullpath.subpath(2, fullpath.getNameCount()).toString().replaceAll("^/+", "");
+			return fullpath	.subpath(2, fullpath.getNameCount())
+							.toString()
+							.replaceAll("^/+", "");
 		}
 
 		/**

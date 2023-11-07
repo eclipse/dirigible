@@ -91,7 +91,9 @@ public class ODataMetadataService implements InitializingBean {
 				.append("Default")
 				.append("\"\n")
 				.append("    xmlns=\"http://schemas.microsoft.com/ado/2008/09/edm\">\n");
-		builder.append("    <EntityContainer Name=\"").append("Default").append("EntityContainer\" m:IsDefaultEntityContainer=\"true\">\n");
+		builder	.append("    <EntityContainer Name=\"")
+				.append("Default")
+				.append("EntityContainer\" m:IsDefaultEntityContainer=\"true\">\n");
 		List<ODataContainer> containers = getODataContainerService().getAll();
 		for (ODataContainer container : containers) {
 			builder.append(new String(container.getContent()));
@@ -103,7 +105,8 @@ public class ODataMetadataService implements InitializingBean {
 		builder.append("    </edmx:DataServices>\n");
 		builder.append("</edmx:Edmx>\n");
 
-		return new ByteArrayInputStream(builder.toString().getBytes());
+		return new ByteArrayInputStream(builder	.toString()
+												.getBytes());
 	}
 
 }

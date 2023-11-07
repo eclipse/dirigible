@@ -26,7 +26,10 @@ public class DropTableTest {
 	 */
 	@Test
 	public void dropTable() {
-		String sql = SqlFactory.getNative(new H2SqlDialect()).drop().table("CUSTOMERS").build();
+		String sql = SqlFactory	.getNative(new H2SqlDialect())
+								.drop()
+								.table("CUSTOMERS")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("DROP TABLE CUSTOMERS", sql);

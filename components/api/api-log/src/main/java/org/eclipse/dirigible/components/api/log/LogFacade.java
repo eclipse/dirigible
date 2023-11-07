@@ -44,7 +44,8 @@ public class LogFacade {
 	private static final ObjectMapper om = new ObjectMapper();
 
 	/** The Constant objectArrayType. */
-	private static final ArrayType objectArrayType = TypeFactory.defaultInstance().constructArrayType(Object.class);
+	private static final ArrayType objectArrayType = TypeFactory.defaultInstance()
+																.constructArrayType(Object.class);
 
 	/**
 	 * Gets the logger.
@@ -130,15 +131,20 @@ public class LogFacade {
 			}
 		}
 
-		if (ch.qos.logback.classic.Level.DEBUG.toString().equalsIgnoreCase(level)) {
+		if (ch.qos.logback.classic.Level.DEBUG	.toString()
+												.equalsIgnoreCase(level)) {
 			logger.debug(message, args);
-		} else if (ch.qos.logback.classic.Level.TRACE.toString().equalsIgnoreCase(level)) {
+		} else if (ch.qos.logback.classic.Level.TRACE	.toString()
+														.equalsIgnoreCase(level)) {
 			logger.trace(message, args);
-		} else if (ch.qos.logback.classic.Level.INFO.toString().equalsIgnoreCase(level)) {
+		} else if (ch.qos.logback.classic.Level.INFO.toString()
+													.equalsIgnoreCase(level)) {
 			logger.info(message, args);
-		} else if (ch.qos.logback.classic.Level.WARN.toString().equalsIgnoreCase(level)) {
+		} else if (ch.qos.logback.classic.Level.WARN.toString()
+													.equalsIgnoreCase(level)) {
 			logger.warn(message, args);
-		} else if (ch.qos.logback.classic.Level.ERROR.toString().equalsIgnoreCase(level)) {
+		} else if (ch.qos.logback.classic.Level.ERROR	.toString()
+														.equalsIgnoreCase(level)) {
 			logger.error(message, args);
 		}
 	}

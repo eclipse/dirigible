@@ -29,7 +29,10 @@ public class ListOfStringsToCsvConverter implements AttributeConverter<List<Stri
 	 */
 	@Override
 	public String convertToDatabaseColumn(List<String> attribute) {
-		return attribute == null ? null : attribute.stream().map(String::trim).collect(Collectors.joining(","));
+		return attribute == null ? null
+				: attribute	.stream()
+							.map(String::trim)
+							.collect(Collectors.joining(","));
 	}
 
 	/**
@@ -40,7 +43,10 @@ public class ListOfStringsToCsvConverter implements AttributeConverter<List<Stri
 	 */
 	@Override
 	public List<String> convertToEntityAttribute(String data) {
-		return data == null ? null : Arrays.stream(data.split(",")).map(String::trim).collect(Collectors.toList());
+		return data == null ? null
+				: Arrays.stream(data.split(","))
+						.map(String::trim)
+						.collect(Collectors.toList());
 	}
 
 }

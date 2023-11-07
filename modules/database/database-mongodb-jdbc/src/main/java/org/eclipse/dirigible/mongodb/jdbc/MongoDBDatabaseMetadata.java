@@ -1661,7 +1661,8 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	@Override
 	public ResultSet getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
 		// we ignore catalog (not valid in mongodb) and schema pattern (not implemented)
-		MongoIterable<String> collections = connection.getMongoDatabase().listCollectionNames();
+		MongoIterable<String> collections = connection	.getMongoDatabase()
+														.listCollectionNames();
 		ArrayNode array = MAPPER.createArrayNode();
 		for (String name : collections) {
 			ObjectNode obj = MAPPER.createObjectNode();
@@ -1721,7 +1722,10 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	@Override
 	public ResultSet getColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
 			throws SQLException {
-		Document first = connection.getMongoDatabase().getCollection(tableNamePattern).find().first();
+		Document first = connection	.getMongoDatabase()
+									.getCollection(tableNamePattern)
+									.find()
+									.first();
 		if (first == null) {
 			first = new Document();
 			first.append("error", "The first element in the collection is null");
@@ -1741,8 +1745,12 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 		ArrayNode array = MAPPER.createArrayNode();
 		for (Entry<String, Object> entry : document.entrySet()) {
 			ObjectNode obj = MAPPER.createObjectNode();
-			obj.put(COLUMN_NAME, entry.getKey().toString());
-			obj.put(TYPE_NAME, entry.getValue() != null ? entry.getValue().getClass().getSimpleName() : "?");
+			obj.put(COLUMN_NAME, entry	.getKey()
+										.toString());
+			obj.put(TYPE_NAME, entry.getValue() != null ? entry	.getValue()
+																.getClass()
+																.getSimpleName()
+					: "?");
 			if (entry.getValue() != null && entry.getValue() instanceof Document) {
 				Document nestedDocument = (Document) entry.getValue();
 				ArrayNode nestedArray = populateColumns(nestedDocument);
@@ -1751,7 +1759,8 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 			obj.put(COLUMN_SIZE, "");
 			obj.put(IS_NULLABLE, true);
 			obj.put(DECIMAL_DIGITS, 0);
-			obj.put(PK, "_id".equals(entry.getKey().toString()));
+			obj.put(PK, "_id".equals(entry	.getKey()
+											.toString()));
 			array.add(obj);
 		}
 		return array;
@@ -1831,7 +1840,8 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 */
 	@Override
 	public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException {
-		ResultSet primaryKeys = new SingleColumnStaticResultSet(Arrays.asList(new String[] {"_id"}).iterator());
+		ResultSet primaryKeys = new SingleColumnStaticResultSet(Arrays	.asList(new String[] {"_id"})
+																		.iterator());
 		return primaryKeys;
 	}
 
@@ -1909,7 +1919,8 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 */
 	@Override
 	public ResultSet getIndexInfo(String catalog, String schema, String table, boolean unique, boolean approximate) throws SQLException {
-		ResultSet indexInfo = new SingleColumnStaticResultSet(Arrays.asList(new String[] {}).iterator());
+		ResultSet indexInfo = new SingleColumnStaticResultSet(Arrays.asList(new String[] {})
+																	.iterator());
 		return indexInfo;
 	}
 
@@ -2322,7 +2333,8 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 */
 	@Override
 	public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
-		ResultSet schemas = new SingleColumnStaticResultSet(Arrays.asList(new String[] {connection.mongoDatabase.getName()}).iterator());
+		ResultSet schemas = new SingleColumnStaticResultSet(Arrays	.asList(new String[] {connection.mongoDatabase.getName()})
+																	.iterator());
 		return schemas;
 	}
 

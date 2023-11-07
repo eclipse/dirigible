@@ -142,8 +142,10 @@ public class ExposesSynchronizerTest {
 	public void load() throws ParseException {
 		List<Expose> list = exposesSynchronizer.parse("/load/project.json", content.getBytes());
 		assertNotNull(list);
-		assertEquals("/load/project.json", list.get(0).getLocation());
-		assertEquals(2, list.get(0).getExposes().length);
+		assertEquals("/load/project.json", list	.get(0)
+												.getLocation());
+		assertEquals(2, list.get(0)
+							.getExposes().length);
 	}
 
 	/**
@@ -154,7 +156,9 @@ public class ExposesSynchronizerTest {
 	@Test
 	public void process() throws IOException {
 		String registyrFolder = synchronizationProcessor.getRegistryFolder();
-		Paths.get(registyrFolder, "sync").toFile().mkdirs();
+		Paths	.get(registyrFolder, "sync")
+				.toFile()
+				.mkdirs();
 		Files.writeString(Paths.get(registyrFolder, "sync", "project.json"), content, StandardOpenOption.CREATE);
 		try {
 			synchronizationWatcher.force();
@@ -166,7 +170,8 @@ public class ExposesSynchronizerTest {
 				}
 			} ;
 			assertNotNull(e);
-			assertTrue(ExposeManager.listRegisteredProjects().size() > 0);
+			assertTrue(ExposeManager.listRegisteredProjects()
+									.size() > 0);
 			assertTrue(ExposeManager.isPathExposed("sync/ui"));
 		} finally {
 			Files.deleteIfExists(Paths.get(registyrFolder, "sync", "project.json"));

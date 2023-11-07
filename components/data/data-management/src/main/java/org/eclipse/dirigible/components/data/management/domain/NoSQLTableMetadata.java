@@ -107,12 +107,21 @@ public class NoSQLTableMetadata {
 
 		while (nestedNodes.hasNext()) {
 			JsonNode node = nestedNodes.next();
-			NoSQLColumnMetadata column = new NoSQLColumnMetadata(node.get(DatabaseMetadataHelper.COLUMN_NAME).asText(),
-					node.get(DatabaseMetadataHelper.TYPE_NAME).asText(), node.get(DatabaseMetadataHelper.COLUMN_SIZE).asInt(),
-					node.get(DatabaseMetadataHelper.IS_NULLABLE).asBoolean(), node.get(DatabaseMetadataHelper.PK).asBoolean(),
-					node.get(DatabaseMetadataHelper.DECIMAL_DIGITS).asInt());
+			NoSQLColumnMetadata column = new NoSQLColumnMetadata(node	.get(DatabaseMetadataHelper.COLUMN_NAME)
+																		.asText(),
+					node.get(DatabaseMetadataHelper.TYPE_NAME)
+						.asText(),
+					node.get(DatabaseMetadataHelper.COLUMN_SIZE)
+						.asInt(),
+					node.get(DatabaseMetadataHelper.IS_NULLABLE)
+						.asBoolean(),
+					node.get(DatabaseMetadataHelper.PK)
+						.asBoolean(),
+					node.get(DatabaseMetadataHelper.DECIMAL_DIGITS)
+						.asInt());
 			if (node.get("NESTED") != null) {
-				Iterator<JsonNode> nestedIterator = node.get("NESTED").iterator();
+				Iterator<JsonNode> nestedIterator = node.get("NESTED")
+														.iterator();
 				populateNestedColumns(column, nestedIterator);
 			}
 			columns.add(column);

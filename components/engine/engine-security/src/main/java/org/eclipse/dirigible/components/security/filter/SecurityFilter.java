@@ -206,7 +206,8 @@ public class SecurityFilter implements Filter {
 		if (logger.isWarnEnabled()) {
 			logger.warn(error);
 		}
-		response.sendError(HttpServletResponse.SC_FORBIDDEN, HtmlEscapers.htmlEscaper().escape(error));
+		response.sendError(HttpServletResponse.SC_FORBIDDEN, HtmlEscapers	.htmlEscaper()
+																			.escape(error));
 	}
 
 	/**

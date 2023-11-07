@@ -124,9 +124,15 @@ public class WebEndpointTest {
 	@Test
 	public void process() throws Exception {
 		String registyrFolder = synchronizationProcessor.getRegistryFolder();
-		Paths.get(registyrFolder, "demo").toFile().mkdirs();
-		Paths.get(registyrFolder, "demo", "hidden").toFile().mkdirs();
-		Paths.get(registyrFolder, "demo", "ui").toFile().mkdirs();
+		Paths	.get(registyrFolder, "demo")
+				.toFile()
+				.mkdirs();
+		Paths	.get(registyrFolder, "demo", "hidden")
+				.toFile()
+				.mkdirs();
+		Paths	.get(registyrFolder, "demo", "ui")
+				.toFile()
+				.mkdirs();
 		Files.writeString(Paths.get(registyrFolder, "demo", "project.json"), projectJson, StandardOpenOption.CREATE);
 		Files.writeString(Paths.get(registyrFolder, "demo", "ui", "hello-world.txt"), "Hello World!", StandardOpenOption.CREATE);
 		Files.writeString(Paths.get(registyrFolder, "demo", "hidden", "hidden.txt"), "Hidden", StandardOpenOption.CREATE);
@@ -134,19 +140,29 @@ public class WebEndpointTest {
 		try {
 			synchronizationWatcher.force();
 			synchronizationProcessor.processSynchronizers();
-			assertTrue(ExposeManager.listRegisteredProjects().size() > 0);
+			assertTrue(ExposeManager.listRegisteredProjects()
+									.size() > 0);
 			assertTrue(ExposeManager.isPathExposed("demo/ui"));
 			assertFalse(ExposeManager.isPathExposed("demo/hidden"));
 			mockMvc	.perform(get("/services/web/demo/ui/hello-world.txt"))
 					.andDo(print())
 					.andExpect(content().string(containsString("Hello World!")))
 					.andExpect(status().is2xxSuccessful());
-			mockMvc.perform(get("/services/web/demo/hidden/hidden.txt")).andDo(print()).andExpect(status().isForbidden());
-			mockMvc.perform(get("/services/web/demo/ui/not-existing.txt")).andDo(print()).andExpect(status().isNotFound());
-			mockMvc.perform(get("/services/web/demo/ui")).andDo(print()).andExpect(status().isNotFound());
-			mockMvc.perform(get("/services/web/demo/ui/")).andDo(print()).andExpect(status().is2xxSuccessful());
+			mockMvc	.perform(get("/services/web/demo/hidden/hidden.txt"))
+					.andDo(print())
+					.andExpect(status().isForbidden());
+			mockMvc	.perform(get("/services/web/demo/ui/not-existing.txt"))
+					.andDo(print())
+					.andExpect(status().isNotFound());
+			mockMvc	.perform(get("/services/web/demo/ui"))
+					.andDo(print())
+					.andExpect(status().isNotFound());
+			mockMvc	.perform(get("/services/web/demo/ui/"))
+					.andDo(print())
+					.andExpect(status().is2xxSuccessful());
 		} finally {
-			FileUtils.deleteDirectory(Paths.get(registyrFolder, "demo").toFile());
+			FileUtils.deleteDirectory(Paths	.get(registyrFolder, "demo")
+											.toFile());
 			synchronizationProcessor.processSynchronizers();
 		}
 	}

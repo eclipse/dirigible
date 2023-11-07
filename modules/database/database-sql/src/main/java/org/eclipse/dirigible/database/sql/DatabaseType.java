@@ -55,7 +55,8 @@ public enum DatabaseType {
 	 */
 	public static final DatabaseType valueOfByName(String name) {
 		for (DatabaseType type : DatabaseType.class.getEnumConstants()) {
-			if (type.toString().equals(name)) {
+			if (type.toString()
+					.equals(name)) {
 				return type;
 			}
 		}

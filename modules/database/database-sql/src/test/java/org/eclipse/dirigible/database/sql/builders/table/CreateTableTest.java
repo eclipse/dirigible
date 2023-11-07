@@ -53,14 +53,14 @@ public class CreateTableTest {
 	public void createTableCaseSensitiveGeneric() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql =
-					SqlFactory	.getDefault()
-								.create()
-								.table("CUSTOMERS")
-								.column("ID", DataType.INTEGER, Modifiers.PRIMARY_KEY, Modifiers.NOT_NULL, Modifiers.NON_UNIQUE)
-								.column("FIRST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NOT_NULL, Modifiers.UNIQUE, "(20)")
-								.column("LAST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(30)")
-								.build();
+			String sql = SqlFactory	.getDefault()
+									.create()
+									.table("CUSTOMERS")
+									.column("ID", DataType.INTEGER, Modifiers.PRIMARY_KEY, Modifiers.NOT_NULL, Modifiers.NON_UNIQUE)
+									.column("FIRST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NOT_NULL, Modifiers.UNIQUE, "(20)")
+									.column("LAST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE,
+											"(30)")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals(
@@ -131,14 +131,14 @@ public class CreateTableTest {
 	 */
 	@Test
 	public void createTableTypeConstraintForeignKey() {
-		String sql =
-				SqlFactory	.getDefault()
-							.create()
-							.table("CUSTOMERS")
-							.column("FIRST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(20)")
-							.column("LAST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(30)")
-							.foreignKey("FOREIGN_KEY", new String[] {"PERSON_ADDRESS_ID"}, "ADDRESSES", null, new String[] {"ADDRESS_ID"})
-							.build();
+		String sql = SqlFactory	.getDefault()
+								.create()
+								.table("CUSTOMERS")
+								.column("FIRST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(20)")
+								.column("LAST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(30)")
+								.foreignKey("FOREIGN_KEY", new String[] {"PERSON_ADDRESS_ID"}, "ADDRESSES", null,
+										new String[] {"ADDRESS_ID"})
+								.build();
 
 		assertNotNull(sql);
 		assertEquals(

@@ -57,10 +57,10 @@ public class PersistenceCreateSequenceProcessor extends AbstractPersistenceProce
 	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-		CreateSequenceBuilder createSequenceBuilder =
-				SqlFactory	.getNative(SqlFactory.deriveDialect(connection))
-							.create()
-							.sequence(tableModel.getTableName() + ISqlKeywords.UNDERSCROE + ISqlKeywords.KEYWORD_SEQUENCE);
+		CreateSequenceBuilder createSequenceBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
+																.create()
+																.sequence(tableModel.getTableName() + ISqlKeywords.UNDERSCROE
+																		+ ISqlKeywords.KEYWORD_SEQUENCE);
 
 		String sql = createSequenceBuilder.toString();
 		if (logger.isTraceEnabled()) {

@@ -258,7 +258,9 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
 			if (indexOf > 0) {
 				accessPath = path.substring(0, indexOf);
 			}
-			accessDefinitions.addAll(CmisFacade.get().getSecurityAccessVerifier().getMatchingSecurityAccesses("CMIS", accessPath, method));
+			accessDefinitions.addAll(CmisFacade	.get()
+												.getSecurityAccessVerifier()
+												.getMatchingSecurityAccesses("CMIS", accessPath, method));
 		} while (indexOf > 0);
 		return accessDefinitions;
 	}

@@ -74,7 +74,10 @@ public class DropSchemaBuilder extends AbstractDropSqlBuilder {
 	 */
 	protected void generateSchema(StringBuilder sql) {
 		String schemaName = (isCaseSensitive()) ? encapsulate(this.getName(), true) : this.getName();
-		sql.append(SPACE).append(KEYWORD_SCHEMA).append(SPACE).append(schemaName);
+		sql	.append(SPACE)
+			.append(KEYWORD_SCHEMA)
+			.append(SPACE)
+			.append(schemaName);
 	}
 
 	/**

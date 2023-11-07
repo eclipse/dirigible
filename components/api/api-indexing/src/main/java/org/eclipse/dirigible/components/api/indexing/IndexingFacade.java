@@ -92,7 +92,9 @@ public class IndexingFacade implements InitializingBean {
 	 * @throws IOException the indexing exception
 	 */
 	public static final String search(String index, String term) throws IOException {
-		return IndexingFacade.get().getIndexingService().search(index, term);
+		return IndexingFacade	.get()
+								.getIndexingService()
+								.search(index, term);
 	}
 
 	/**
@@ -104,7 +106,9 @@ public class IndexingFacade implements InitializingBean {
 	 * @throws IOException the indexing exception
 	 */
 	public static final String before(String index, String date) throws IOException {
-		return IndexingFacade.get().getIndexingService().before(index, Long.parseLong(date));
+		return IndexingFacade	.get()
+								.getIndexingService()
+								.before(index, Long.parseLong(date));
 	}
 
 	/**
@@ -116,7 +120,9 @@ public class IndexingFacade implements InitializingBean {
 	 * @throws IOException the indexing exception
 	 */
 	public static final String after(String index, String date) throws IOException {
-		return IndexingFacade.get().getIndexingService().after(index, Long.parseLong(date));
+		return IndexingFacade	.get()
+								.getIndexingService()
+								.after(index, Long.parseLong(date));
 	}
 
 	/**
@@ -129,7 +135,9 @@ public class IndexingFacade implements InitializingBean {
 	 * @throws IOException the indexing exception
 	 */
 	public static final String between(String index, String lower, String upper) throws IOException {
-		return IndexingFacade.get().getIndexingService().between(index, Long.parseLong(lower), Long.parseLong(upper));
+		return IndexingFacade	.get()
+								.getIndexingService()
+								.between(index, Long.parseLong(lower), Long.parseLong(upper));
 	}
 
 }

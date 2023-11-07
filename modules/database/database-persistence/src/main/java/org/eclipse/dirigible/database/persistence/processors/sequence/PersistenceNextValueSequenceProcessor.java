@@ -58,9 +58,9 @@ public class PersistenceNextValueSequenceProcessor extends AbstractPersistencePr
 	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-		NextValueSequenceBuilder nextValueBuilder =
-				SqlFactory	.getNative(SqlFactory.deriveDialect(connection))
-							.nextval(tableModel.getTableName() + ISqlKeywords.UNDERSCROE + ISqlKeywords.KEYWORD_SEQUENCE);
+		NextValueSequenceBuilder nextValueBuilder = SqlFactory	.getNative(SqlFactory.deriveDialect(connection))
+																.nextval(tableModel.getTableName() + ISqlKeywords.UNDERSCROE
+																		+ ISqlKeywords.KEYWORD_SEQUENCE);
 
 		String sql = nextValueBuilder.toString();
 		if (logger.isTraceEnabled()) {

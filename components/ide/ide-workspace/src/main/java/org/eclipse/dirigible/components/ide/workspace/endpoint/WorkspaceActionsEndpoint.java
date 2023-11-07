@@ -80,7 +80,8 @@ public class WorkspaceActionsEndpoint {
 		int result = actionsService.executeAction(workspace, project, action);
 		if (result == 0) {
 			logger.debug("Executed project action: " + action);
-			return ResponseEntity.ok().build();
+			return ResponseEntity	.ok()
+									.build();
 		} else {
 			logger.debug("Executed project action: " + action);
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,

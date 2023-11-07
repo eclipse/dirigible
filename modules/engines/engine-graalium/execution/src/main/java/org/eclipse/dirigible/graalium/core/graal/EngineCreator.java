@@ -32,12 +32,14 @@ public class EngineCreator {
 
 	public static Engine getOrCreateDebuggableEngine() {
 		if (DEBUGGABLE_ENGINE == null) {
-			DEBUGGABLE_ENGINE =
-					getDefaultEngineBuilder()	.option("inspect", Configuration.get("DIRIGIBLE_GRAALIUM_DEBUG_PORT", "8081"))
-												.option("inspect.Secure", Configuration.get("DIRIGIBLE_GRAALIUM_DEBUG_SECURE", "false"))
-												.option("inspect.Suspend", Configuration.get("DIRIGIBLE_GRAALIUM_DEBUG_SUSPEND", "true"))
-												.option("inspect.Path", Configuration.get("DIRIGIBLE_GRAALIUM_DEBUG_PATH", "debug"))
-												.build();
+			DEBUGGABLE_ENGINE = getDefaultEngineBuilder()	.option("inspect", Configuration.get("DIRIGIBLE_GRAALIUM_DEBUG_PORT", "8081"))
+															.option("inspect.Secure",
+																	Configuration.get("DIRIGIBLE_GRAALIUM_DEBUG_SECURE", "false"))
+															.option("inspect.Suspend",
+																	Configuration.get("DIRIGIBLE_GRAALIUM_DEBUG_SUSPEND", "true"))
+															.option("inspect.Path",
+																	Configuration.get("DIRIGIBLE_GRAALIUM_DEBUG_PATH", "debug"))
+															.build();
 		}
 
 		return DEBUGGABLE_ENGINE;

@@ -47,7 +47,8 @@ public class GitConnectorFactory {
 			File current = new File(repositoryDirectory);
 			repositoryBuilder.findGitDir(current);
 			Repository repository = repositoryBuilder.build();
-			repository.getConfig().setString(GIT_BRANCH, GIT_MASTER, GIT_MERGE, GIT_REFS_HEADS_MASTER);
+			repository	.getConfig()
+						.setString(GIT_BRANCH, GIT_MASTER, GIT_MERGE, GIT_REFS_HEADS_MASTER);
 			return new GitConnector(repository);
 		} catch (IOException e) {
 			throw new GitConnectorException(e);

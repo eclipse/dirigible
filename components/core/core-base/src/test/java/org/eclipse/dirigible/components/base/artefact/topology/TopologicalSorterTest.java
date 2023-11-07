@@ -67,7 +67,9 @@ public class TopologicalSorterTest {
 			System.out.println(sortable.getId());
 		}
 
-		assertEquals(results.get(0).getId(), "F");
+		assertEquals(results.get(0)
+							.getId(),
+				"F");
 
 		// F
 		// A

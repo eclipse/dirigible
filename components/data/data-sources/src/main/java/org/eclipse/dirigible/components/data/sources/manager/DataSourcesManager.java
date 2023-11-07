@@ -135,7 +135,8 @@ public class DataSourcesManager implements InitializingBean {
 		}
 		DataSource datasource;
 		datasource = getDataSourceDefinition(name);
-		if (datasource.getDriver().equals("org.h2.Driver")) {
+		if (datasource	.getDriver()
+						.equals("org.h2.Driver")) {
 			try {
 				prepareRootFolder(name);
 			} catch (IOException e) {
@@ -156,7 +157,8 @@ public class DataSourcesManager implements InitializingBean {
 		HikariConfig config = new HikariConfig(properties);
 		config.setPoolName(name);
 		config.setAutoCommit(true);
-		datasource.getProperties().forEach(dsp -> config.addDataSourceProperty(dsp.getName(), dsp.getValue()));
+		datasource	.getProperties()
+					.forEach(dsp -> config.addDataSourceProperty(dsp.getName(), dsp.getValue()));
 		HikariDataSource hds = new HikariDataSource(config);
 
 		ManagedDataSource managedDataSource = new ManagedDataSource(hds);
@@ -239,7 +241,8 @@ public class DataSourcesManager implements InitializingBean {
 				: DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
 		String h2Root = Configuration.get(rootFolder, name);
 		File rootFile = new File(h2Root);
-		File parentFile = rootFile.getCanonicalFile().getParentFile();
+		File parentFile = rootFile	.getCanonicalFile()
+									.getParentFile();
 		if (!parentFile.exists()) {
 			if (!parentFile.mkdirs()) {
 				throw new IOException(format("Creation of the root folder [{0}] of the embedded H2 database failed.", h2Root));

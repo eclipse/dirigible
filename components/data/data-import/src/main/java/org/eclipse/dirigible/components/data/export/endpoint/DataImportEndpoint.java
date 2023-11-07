@@ -108,7 +108,8 @@ public class DataImportEndpoint {
 
 		InputStream is = file.getInputStream();
 		dataImportService.importData(datasource, schema, table, is);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 }

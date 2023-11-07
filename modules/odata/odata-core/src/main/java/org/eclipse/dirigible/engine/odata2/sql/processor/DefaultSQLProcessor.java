@@ -166,13 +166,20 @@ public class DefaultSQLProcessor extends AbstractSQLProcessor {
 			}
 		} else if (value instanceof BigDecimal) {
 			BigDecimal dec = (BigDecimal) value;
-			if (property.getType().equals(EdmInt32.getInstance())) {
-				return dec.toBigInteger().intValue();
-			} else if (property.getType().equals(EdmInt64.getInstance())) {
-				return dec.toBigInteger().longValue();
-			} else if (property.getType().equals(EdmInt16.getInstance())) {
-				return dec.toBigInteger().shortValue();
-			} else if (property.getType().equals(EdmDouble.getInstance())) {
+			if (property.getType()
+						.equals(EdmInt32.getInstance())) {
+				return dec	.toBigInteger()
+							.intValue();
+			} else if (property	.getType()
+								.equals(EdmInt64.getInstance())) {
+				return dec	.toBigInteger()
+							.longValue();
+			} else if (property	.getType()
+								.equals(EdmInt16.getInstance())) {
+				return dec	.toBigInteger()
+							.shortValue();
+			} else if (property	.getType()
+								.equals(EdmDouble.getInstance())) {
 				return dec.doubleValue();
 			}
 		} else if (value instanceof HanaClob) {

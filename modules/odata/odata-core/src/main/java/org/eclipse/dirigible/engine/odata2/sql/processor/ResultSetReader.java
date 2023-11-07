@@ -106,7 +106,8 @@ public class ResultSetReader {
 		if (property.isSimple()) {
 			if (!selectEntityQuery.isTransientType(entityType, property)) {
 				final String columnName = selectEntityQuery.getSQLTableColumnAlias(entityType, property);
-				if ("Binary".equals(property.getType().getName())) {
+				if ("Binary".equals(property.getType()
+											.getName())) {
 					propertyDbValue = resultSet.getBytes(columnName);
 				} else {
 					propertyDbValue = resultSet.getObject(columnName);
@@ -150,7 +151,8 @@ public class ResultSetReader {
 			 * it is added ot the accumulation
 			 */
 			for (NavigationPropertySegment expandContent : expandContents) {
-				EdmEntityType expandType = expandContent.getTargetEntitySet().getEntityType();
+				EdmEntityType expandType = expandContent.getTargetEntitySet()
+														.getEntityType();
 				Map<String, Object> expandData =
 						getEntityDataFromResultSet(query, expandType, EdmUtils.getProperties(expandType), resultSet);
 				if (OData2Utils.isEmpty(expandType, expandData)) {

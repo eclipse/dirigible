@@ -112,7 +112,8 @@ public class DataSourcesSynchronizerTest {
 				"{\"location\":\"/test/test.datasource\",\"name\":\"test\",\"driver\":\"org.h2.Driver\",\"url\":\"jdbc:h2:~/test\",\"username\":\"sa\",\"password\":\"\"}";
 		List<DataSource> list = datasourcesSynchronizer.parse("/test/test.datasource", content.getBytes());
 		assertNotNull(list);
-		assertEquals("/test/test.datasource", list.get(0).getLocation());
+		assertEquals("/test/test.datasource", list	.get(0)
+													.getLocation());
 	}
 
 

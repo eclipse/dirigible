@@ -121,7 +121,9 @@ public class RegistryFacade {
 	 * @return the string
 	 */
 	private static String toRepositoryPath(String path) {
-		return new RepositoryPath().append(IRepositoryStructure.PATH_REGISTRY_PUBLIC).append(path).build();
+		return new RepositoryPath()	.append(IRepositoryStructure.PATH_REGISTRY_PUBLIC)
+									.append(path)
+									.build();
 	}
 
 	/**
@@ -148,8 +150,13 @@ public class RegistryFacade {
 	public static String find(String path, String pattern) throws IOException {
 		ICollection collection = RepositoryFacade.getCollection(toRepositoryPath(path));
 		if (collection.exists() && collection instanceof LocalCollection) {
-			List<String> list = FileSystemUtils.find(((LocalCollection) collection).getFolder().getPath(), pattern);
-			int repositoryRootLength = ((LocalCollection) collection.getRepository().getRoot()).getFolder().getPath().length()
+			List<String> list = FileSystemUtils.find(((LocalCollection) collection)	.getFolder()
+																					.getPath(),
+					pattern);
+			int repositoryRootLength = ((LocalCollection) collection.getRepository()
+																	.getRoot())	.getFolder()
+																				.getPath()
+																				.length()
 					+ IRepositoryStructure.PATH_REGISTRY_PUBLIC.length();
 			List<String> prepared = new ArrayList<String>();
 			list.forEach(item -> {

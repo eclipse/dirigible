@@ -96,7 +96,8 @@ public class DataAnonymizeEndpoint {
 		dataAnonymizeService.anonymizeColumn(content.getDatasource(), content.getSchema(), content.getTable(), content.getColumn(),
 				content.getPrimaryKey(), content.getType());
 
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 }

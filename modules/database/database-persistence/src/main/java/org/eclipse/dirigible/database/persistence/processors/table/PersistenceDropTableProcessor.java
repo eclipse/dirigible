@@ -56,8 +56,9 @@ public class PersistenceDropTableProcessor extends AbstractPersistenceProcessor 
 	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-		DropTableBuilder dropTableBuilder =
-				SqlFactory.getNative(SqlFactory.deriveDialect(connection)).drop().table(tableModel.getTableName());
+		DropTableBuilder dropTableBuilder = SqlFactory	.getNative(SqlFactory.deriveDialect(connection))
+														.drop()
+														.table(tableModel.getTableName());
 
 		String sql = dropTableBuilder.toString();
 		if (logger.isTraceEnabled()) {

@@ -49,7 +49,8 @@ public class IntegrationConfiguration {
 	 */
 	@Bean
 	MessageChannel eventsChannel() {
-		return MessageChannels.direct().get();
+		return MessageChannels	.direct()
+								.get();
 	}
 
 	/**
@@ -61,8 +62,9 @@ public class IntegrationConfiguration {
 	IntegrationFlow integrationFlow() {
 		return IntegrationFlows	.from(this.eventsChannel())
 								.handle((GenericHandler<ApacheMinaFtpEvent>) (apacheMinaFtpEvent, messageHeaders) -> {
-									logger.info("new event: " + apacheMinaFtpEvent.getClass().getName() + ':'
-											+ apacheMinaFtpEvent.getSession());
+									logger.info("new event: " + apacheMinaFtpEvent	.getClass()
+																					.getName()
+											+ ':' + apacheMinaFtpEvent.getSession());
 									return null;
 								})
 								.get();

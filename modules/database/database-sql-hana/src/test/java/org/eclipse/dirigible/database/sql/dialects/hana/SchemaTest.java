@@ -77,8 +77,12 @@ public class SchemaTest {
 	@Test
 	public void executeCreateSchemaWithCaseSensitive() {
 		try (MockedStatic<Configuration> configuration = Mockito.mockStatic(Configuration.class)) {
-			configuration.when(() -> Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY, "false")).thenReturn("true");
-			String sql = SqlFactory.getNative(new HanaSqlDialect()).create().schema("MySchema_1").build();
+			configuration	.when(() -> Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY, "false"))
+							.thenReturn("true");
+			String sql = SqlFactory	.getNative(new HanaSqlDialect())
+									.create()
+									.schema("MySchema_1")
+									.build();
 			assertNotNull(sql);
 			assertEquals("CREATE SCHEMA \"MySchema_1\"", sql);
 		}
@@ -90,8 +94,12 @@ public class SchemaTest {
 	@Test
 	public void executeCreateSchemaNoCaseSensitive() {
 		try (MockedStatic<Configuration> configuration = Mockito.mockStatic(Configuration.class)) {
-			configuration.when(() -> Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY, "false")).thenReturn("false");
-			String sql = SqlFactory.getNative(new HanaSqlDialect()).create().schema("MySchema_1").build();
+			configuration	.when(() -> Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY, "false"))
+							.thenReturn("false");
+			String sql = SqlFactory	.getNative(new HanaSqlDialect())
+									.create()
+									.schema("MySchema_1")
+									.build();
 			assertNotNull(sql);
 			assertEquals("CREATE SCHEMA MySchema_1", sql);
 		}
@@ -103,8 +111,12 @@ public class SchemaTest {
 	@Test
 	public void executeDropSchemaWithCaseSensitive() {
 		try (MockedStatic<Configuration> configuration = Mockito.mockStatic(Configuration.class)) {
-			configuration.when(() -> Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY, "false")).thenReturn("true");
-			String sql = SqlFactory.getNative(new HanaSqlDialect()).drop().schema("MySchema_1").build();
+			configuration	.when(() -> Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY, "false"))
+							.thenReturn("true");
+			String sql = SqlFactory	.getNative(new HanaSqlDialect())
+									.drop()
+									.schema("MySchema_1")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("DROP SCHEMA \"MySchema_1\"", sql);
@@ -117,8 +129,12 @@ public class SchemaTest {
 	@Test
 	public void executeDropSchemaNoCaseSensitive() {
 		try (MockedStatic<Configuration> configuration = Mockito.mockStatic(Configuration.class)) {
-			configuration.when(() -> Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY, "false")).thenReturn("false");
-			String sql = SqlFactory.getNative(new HanaSqlDialect()).drop().schema("MySchema_1").build();
+			configuration	.when(() -> Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY, "false"))
+							.thenReturn("false");
+			String sql = SqlFactory	.getNative(new HanaSqlDialect())
+									.drop()
+									.schema("MySchema_1")
+									.build();
 			assertNotNull(sql);
 			assertEquals("DROP SCHEMA MySchema_1", sql);
 		}
@@ -135,7 +151,8 @@ public class SchemaTest {
 		when(mockConnection.getMetaData()).thenReturn(mockDatabaseMetaData);
 		when(mockDatabaseMetaData.getSchemas(null, schemaName)).thenReturn(mockResultSet);
 		when(mockResultSet.next()).thenReturn(true);
-		boolean exist = SqlFactory.getNative(new HanaSqlDialect()).exists(mockConnection, schemaName, DatabaseArtifactTypes.SCHEMA);
+		boolean exist = SqlFactory	.getNative(new HanaSqlDialect())
+									.exists(mockConnection, schemaName, DatabaseArtifactTypes.SCHEMA);
 		assertTrue(exist);
 	}
 
@@ -149,7 +166,8 @@ public class SchemaTest {
 		String schemaName = "MySchema_1";
 		when(mockConnection.prepareStatement(any())).thenReturn(mockPrepareStatement);
 		when(mockPrepareStatement.executeQuery()).thenReturn(mockResultSet);
-		boolean exist = SqlFactory.getNative(new HanaSqlDialect()).exists(mockConnection, schemaName, DatabaseArtifactTypes.SCHEMA);
+		boolean exist = SqlFactory	.getNative(new HanaSqlDialect())
+									.exists(mockConnection, schemaName, DatabaseArtifactTypes.SCHEMA);
 		assertFalse(exist);
 	}
 

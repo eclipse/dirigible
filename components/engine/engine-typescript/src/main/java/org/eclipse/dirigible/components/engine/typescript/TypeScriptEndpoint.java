@@ -161,7 +161,8 @@ public class TypeScriptEndpoint extends BaseEndpoint {
 		}
 
 		String projectFilePathWithoutExtension = projectFilePath.substring(0, indexOfExtensionStart);
-		String maybePathParameters = projectFilePath.substring(indexOfExtensionStart).replace(".ts", ""); // for decorators and rs api
+		String maybePathParameters = projectFilePath.substring(indexOfExtensionStart)
+													.replace(".ts", ""); // for decorators and rs api
 		return projectFilePathWithoutExtension + ".mjs" + maybePathParameters;
 	}
 }

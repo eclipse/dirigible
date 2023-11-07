@@ -55,7 +55,8 @@ public class GraalJSSourceCreator {
 	 * @return the source
 	 */
 	public Source createInternalSource(String source, String fileName) {
-		Source.Builder sourceBuilder = Source.newBuilder("js", source, fileName).internal(true);
+		Source.Builder sourceBuilder = Source	.newBuilder("js", source, fileName)
+												.internal(true);
 		return createSource(sourceBuilder);
 	}
 
@@ -83,7 +84,9 @@ public class GraalJSSourceCreator {
 				sourceBuilder.mimeType("application/javascript+module");
 			}
 
-			return sourceBuilder.cached(false).encoding(StandardCharsets.UTF_8).build();
+			return sourceBuilder.cached(false)
+								.encoding(StandardCharsets.UTF_8)
+								.build();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

@@ -116,8 +116,10 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
 			}
 		}
 
-		if (sqlDialect.getDatabaseType(connection).equals(DatabaseType.NOSQL.getName())) {
-			result.forEach(s -> s.setKind(DatabaseType.NOSQL.getName().toLowerCase()));
+		if (sqlDialect	.getDatabaseType(connection)
+						.equals(DatabaseType.NOSQL.getName())) {
+			result.forEach(s -> s.setKind(DatabaseType.NOSQL.getName()
+															.toLowerCase()));
 		}
 		return result;
 	}
@@ -661,7 +663,9 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
-			if (SqlFactory.deriveDialect(connection).getDatabaseType(connection).equals(DatabaseType.NOSQL.getName())) {
+			if (SqlFactory	.deriveDialect(connection)
+							.getDatabaseType(connection)
+							.equals(DatabaseType.NOSQL.getName())) {
 				NoSQLTableMetadata noSQLTableMetadata = describeNoSQL(connection, null, schema, table);
 				String json = GsonHelper.toJson(noSQLTableMetadata);
 				return json;

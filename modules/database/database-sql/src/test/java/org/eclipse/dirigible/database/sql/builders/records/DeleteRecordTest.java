@@ -27,7 +27,10 @@ public class DeleteRecordTest {
 	 */
 	@Test
 	public void deleteSimple() {
-		String sql = SqlFactory.getDefault().delete().from("CUSTOMERS").build();
+		String sql = SqlFactory	.getDefault()
+								.delete()
+								.from("CUSTOMERS")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("DELETE FROM CUSTOMERS", sql);
@@ -38,7 +41,12 @@ public class DeleteRecordTest {
 	 */
 	@Test
 	public void deleteWhere() {
-		String sql = SqlFactory.getDefault().delete().from("CUSTOMERS").where("AGE > ?").where("COMPANY = 'SAP'").build();
+		String sql = SqlFactory	.getDefault()
+								.delete()
+								.from("CUSTOMERS")
+								.where("AGE > ?")
+								.where("COMPANY = 'SAP'")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("DELETE FROM CUSTOMERS WHERE (AGE > ?) AND (COMPANY = 'SAP')", sql);
@@ -51,7 +59,11 @@ public class DeleteRecordTest {
 	public void deleteWehereWithSpecialCharsCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().delete().from("CUSTOMERS").where("PRICE_BASIC1$ LIKE ?").build();
+			String sql = SqlFactory	.getDefault()
+									.delete()
+									.from("CUSTOMERS")
+									.where("PRICE_BASIC1$ LIKE ?")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("DELETE FROM \"CUSTOMERS\" WHERE (\"PRICE_BASIC1$\" LIKE ?)", sql);
@@ -67,7 +79,11 @@ public class DeleteRecordTest {
 	public void deleteWehereWithSpecialCharsCaseSensitiveWIthEqualCondition() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().delete().from("CUSTOMERS").where("id= 'asas.as.as:asas`,_!@#$%^&*()+-::/\\'").build();
+			String sql = SqlFactory	.getDefault()
+									.delete()
+									.from("CUSTOMERS")
+									.where("id= 'asas.as.as:asas`,_!@#$%^&*()+-::/\\'")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("DELETE FROM \"CUSTOMERS\" WHERE (\"id\"= 'asas.as.as:asas`,_!@#$%^&*()+-::/\\')", sql);
@@ -83,7 +99,11 @@ public class DeleteRecordTest {
 	public void deleteWehereWithSpecialCharsCaseSensitiveWithInCondition() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().delete().from("CUSTOMERS").where("id in('as', 'bd')").build();
+			String sql = SqlFactory	.getDefault()
+									.delete()
+									.from("CUSTOMERS")
+									.where("id in('as', 'bd')")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("DELETE FROM \"CUSTOMERS\" WHERE (\"id\" in('as', 'bd'))", sql);

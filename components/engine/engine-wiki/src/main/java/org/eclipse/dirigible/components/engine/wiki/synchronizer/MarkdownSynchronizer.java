@@ -102,7 +102,10 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(FILE_EXTENSION_MARKDOWN) && file.toString().indexOf("webjars") == -1;
+		return file	.toString()
+					.endsWith(FILE_EXTENSION_MARKDOWN)
+				&& file	.toString()
+						.indexOf("webjars") == -1;
 	}
 
 	/**
@@ -129,7 +132,9 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
 		Markdown wiki = new Markdown();
 		Configuration.configureObject(wiki);
 		wiki.setLocation(location);
-		wiki.setName(Paths.get(location).getFileName().toString());
+		wiki.setName(Paths	.get(location)
+							.getFileName()
+							.toString());
 		wiki.setType(Markdown.ARTEFACT_TYPE);
 		wiki.updateKey();
 		wiki.setContent(content);
@@ -192,7 +197,8 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
 		if (wrapper.getArtefact() instanceof Markdown) {
 			wiki = (Markdown) wrapper.getArtefact();
 		} else {
-			throw new UnsupportedOperationException(String.format("Trying to process %s as Markdown", wrapper.getArtefact().getClass()));
+			throw new UnsupportedOperationException(String.format("Trying to process %s as Markdown", wrapper	.getArtefact()
+																												.getClass()));
 		}
 
 		switch (flow) {

@@ -277,7 +277,8 @@ public class Definition extends Auditable<String> implements Serializable {
 			md = MessageDigest.getInstance("MD5");
 			md.update(content);
 			byte[] digest = md.digest();
-			this.checksum = DatatypeConverter.printHexBinary(digest).toUpperCase();
+			this.checksum = DatatypeConverter	.printHexBinary(digest)
+												.toUpperCase();
 		} catch (NoSuchAlgorithmException e) {
 			this.checksum = "";
 		}

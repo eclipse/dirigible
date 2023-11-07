@@ -44,7 +44,8 @@ public class SchemaCreateProcessor {
 
 		for (Table tableModel : schemaModel.getTables()) {
 			try {
-				if (!SqlFactory.getNative(connection).existsTable(connection, tableModel.getName())) {
+				if (!SqlFactory	.getNative(connection)
+								.existsTable(connection, tableModel.getName())) {
 					try {
 						TableCreateProcessor.execute(connection, tableModel, true);
 					} catch (Exception e) {
@@ -78,7 +79,8 @@ public class SchemaCreateProcessor {
 
 		for (View viewModel : schemaModel.getViews()) {
 			try {
-				if (!SqlFactory.getNative(connection).existsTable(connection, viewModel.getName())) {
+				if (!SqlFactory	.getNative(connection)
+								.existsTable(connection, viewModel.getName())) {
 					try {
 						ViewCreateProcessor.execute(connection, viewModel);
 					} catch (Exception e) {

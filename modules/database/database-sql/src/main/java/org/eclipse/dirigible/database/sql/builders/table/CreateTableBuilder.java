@@ -284,8 +284,11 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
 		TableStatements table = buildTable();
 
 		String generated = table.getCreateTableStatement();
-		if (!table.getCreateIndicesStatements().isEmpty()) {
-			String uniqueIndices = table.getCreateIndicesStatements().stream().collect(Collectors.joining(STATEMENT_DELIMITER));
+		if (!table	.getCreateIndicesStatements()
+					.isEmpty()) {
+			String uniqueIndices = table.getCreateIndicesStatements()
+										.stream()
+										.collect(Collectors.joining(STATEMENT_DELIMITER));
 			generated = String.join(STATEMENT_DELIMITER, generated, uniqueIndices);
 		}
 
@@ -311,7 +314,8 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
 		// TABLE
 		generateTable(sql);
 
-		sql.append(SPACE).append(OPEN);
+		sql	.append(SPACE)
+			.append(OPEN);
 
 		// COLUMNS
 		generateColumns(sql);
@@ -345,15 +349,21 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
 	protected void generatePrimaryKey(StringBuilder sql) {
 		List<String[]> allPrimaryKeys = this.getColumns()
 											.stream()
-											.filter(el -> Arrays.stream(el).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
+											.filter(el -> Arrays.stream(el)
+																.anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
 											.collect(Collectors.toList());
 		boolean isCompositeKey = allPrimaryKeys.size() > 1;
 
-		if ((this.primaryKey != null) && allPrimaryKeys.size() == 0 && !this.primaryKey.getColumns().isEmpty()) {
-			sql.append(COMMA).append(SPACE);
+		if ((this.primaryKey != null) && allPrimaryKeys.size() == 0 && !this.primaryKey	.getColumns()
+																						.isEmpty()) {
+			sql	.append(COMMA)
+				.append(SPACE);
 			if (this.primaryKey.getName() != null) {
 				String primaryKeyName = (isCaseSensitive()) ? encapsulate(this.primaryKey.getName()) : this.primaryKey.getName();
-				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(primaryKeyName).append(SPACE);
+				sql	.append(KEYWORD_CONSTRAINT)
+					.append(SPACE)
+					.append(primaryKeyName)
+					.append(SPACE);
 			}
 			sql	.append(KEYWORD_PRIMARY)
 				.append(SPACE)
@@ -364,7 +374,8 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
 				.append(CLOSE);
 		} else {
 			if (isCompositeKey) {
-				sql.append(COMMA).append(SPACE);
+				sql	.append(COMMA)
+					.append(SPACE);
 				ArrayList<String> keys = new ArrayList<>();
 				allPrimaryKeys.forEach(el -> keys.add(el[0]));
 				sql	.append(KEYWORD_PRIMARY)
@@ -397,10 +408,14 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
 	 */
 	protected void generateForeignKey(StringBuilder sql, CreateTableForeignKeyBuilder foreignKey) {
 		if (foreignKey != null) {
-			sql.append(COMMA).append(SPACE);
+			sql	.append(COMMA)
+				.append(SPACE);
 			if (foreignKey.getName() != null) {
 				String foreignKeyName = (isCaseSensitive()) ? encapsulate(foreignKey.getName()) : foreignKey.getName();
-				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(foreignKeyName).append(SPACE);
+				sql	.append(KEYWORD_CONSTRAINT)
+					.append(SPACE)
+					.append(foreignKeyName)
+					.append(SPACE);
 			}
 			String referencedTableName =
 					(isCaseSensitive()) ? encapsulate(foreignKey.getReferencedTable(), true) : foreignKey.getReferencedTable();
@@ -415,9 +430,13 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
 				.append(KEYWORD_REFERENCES)
 				.append(SPACE);
 			if (foreignKey.getReferencedTableSchema() != null) {
-				sql.append(foreignKey.getReferencedTableSchema()).append(".");
+				sql	.append(foreignKey.getReferencedTableSchema())
+					.append(".");
 			}
-			sql.append(referencedTableName).append(OPEN).append(traverseNames(foreignKey.getReferencedColumns())).append(CLOSE);
+			sql	.append(referencedTableName)
+				.append(OPEN)
+				.append(traverseNames(foreignKey.getReferencedColumns()))
+				.append(CLOSE);
 		}
 	}
 
@@ -445,19 +464,30 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
 	protected String generateUniqueIndex(CreateTableUniqueIndexBuilder uniqueIndex) {
 		StringBuilder sql = new StringBuilder();
 		if (uniqueIndex != null) {
-			sql.append(KEYWORD_CREATE).append(SPACE);
-			sql.append(KEYWORD_UNIQUE).append(SPACE);
+			sql	.append(KEYWORD_CREATE)
+				.append(SPACE);
+			sql	.append(KEYWORD_UNIQUE)
+				.append(SPACE);
 			if (uniqueIndex.getIndexType() != null) {
-				sql.append(uniqueIndex.getIndexType()).append(SPACE);
+				sql	.append(uniqueIndex.getIndexType())
+					.append(SPACE);
 			}
-			sql.append(KEYWORD_INDEX).append(SPACE);
+			sql	.append(KEYWORD_INDEX)
+				.append(SPACE);
 			if (uniqueIndex.getName() != null) {
-				sql.append(uniqueIndex.getName()).append(SPACE);
+				sql	.append(uniqueIndex.getName())
+					.append(SPACE);
 			}
-			sql.append(KEYWORD_ON).append(SPACE).append(this.getTable());
-			sql.append(SPACE).append(OPEN).append(traverseNames(uniqueIndex.getColumns())).append(CLOSE);
+			sql	.append(KEYWORD_ON)
+				.append(SPACE)
+				.append(this.getTable());
+			sql	.append(SPACE)
+				.append(OPEN)
+				.append(traverseNames(uniqueIndex.getColumns()))
+				.append(CLOSE);
 			if (uniqueIndex.getOrder() != null) {
-				sql.append(SPACE).append(uniqueIndex.getOrder());
+				sql	.append(SPACE)
+					.append(uniqueIndex.getOrder());
 			}
 
 		}
@@ -484,12 +514,20 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
 	 */
 	protected void generateCheck(StringBuilder sql, CreateTableCheckBuilder check) {
 		if (check != null) {
-			sql.append(COMMA).append(SPACE);
+			sql	.append(COMMA)
+				.append(SPACE);
 			if (check.getName() != null) {
 				String checkName = (isCaseSensitive()) ? encapsulate(check.getName()) : check.getName();
-				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(checkName).append(SPACE);
+				sql	.append(KEYWORD_CONSTRAINT)
+					.append(SPACE)
+					.append(checkName)
+					.append(SPACE);
 			}
-			sql.append(KEYWORD_CHECK).append(SPACE).append(OPEN).append(check.getExpression()).append(CLOSE);
+			sql	.append(KEYWORD_CHECK)
+				.append(SPACE)
+				.append(OPEN)
+				.append(check.getExpression())
+				.append(CLOSE);
 		}
 	}
 
@@ -516,9 +554,11 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
 	protected String generateIndex(CreateTableIndexBuilder index) {
 		StringBuilder sql = new StringBuilder();
 		if (index != null && !index.isUnique()) {
-			sql.append(KEYWORD_CREATE).append(SPACE);
+			sql	.append(KEYWORD_CREATE)
+				.append(SPACE);
 			if (index.getIndexType() != null) {
-				sql.append(index.getIndexType()).append(SPACE);
+				sql	.append(index.getIndexType())
+					.append(SPACE);
 			}
 			sql	.append(KEYWORD_INDEX)
 				.append(SPACE)
@@ -527,9 +567,13 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
 				.append(KEYWORD_ON)
 				.append(SPACE)
 				.append(this.getTable());
-			sql.append(SPACE).append(OPEN).append(traverseNames(index.getColumns())).append(CLOSE);
+			sql	.append(SPACE)
+				.append(OPEN)
+				.append(traverseNames(index.getColumns()))
+				.append(CLOSE);
 			if (index.getOrder() != null) {
-				sql.append(SPACE).append(index.getOrder());
+				sql	.append(SPACE)
+					.append(index.getOrder());
 			}
 		}
 

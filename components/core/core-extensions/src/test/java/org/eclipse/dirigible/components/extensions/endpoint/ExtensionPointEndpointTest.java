@@ -88,7 +88,8 @@ public class ExtensionPointEndpointTest {
 		assertNotNull(extensionPoints);
 		assertEquals(5L, extensionPoints.getTotalElements());
 
-		testExtensionPoint = extensionPoints.getContent().get(0);
+		testExtensionPoint = extensionPoints.getContent()
+											.get(0);
 
 		entityManager.refresh(testExtensionPoint);
 
@@ -111,7 +112,9 @@ public class ExtensionPointEndpointTest {
 	public void getExtensionPointById() throws Exception {
 		Long id = testExtensionPoint.getId();
 
-		mockMvc.perform(get("/services/core/extensionpoints/{id}", id)).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/core/extensionpoints/{id}", id))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	@Test
@@ -127,14 +130,18 @@ public class ExtensionPointEndpointTest {
 	public void getPagesExtensionPoints() throws Exception {
 		String name = testExtensionPoint.getName();
 
-		mockMvc.perform(get("/services/core/extensionpoints/pages", name)).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/core/extensionpoints/pages", name))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	@Test
 	public void getAllExtensionPoints() throws Exception {
 		String name = testExtensionPoint.getName();
 
-		mockMvc.perform(get("/services/core/extensionpoints", name)).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/core/extensionpoints", name))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	@SpringBootApplication

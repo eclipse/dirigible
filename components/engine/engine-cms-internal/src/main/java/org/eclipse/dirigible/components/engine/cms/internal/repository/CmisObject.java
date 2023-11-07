@@ -40,7 +40,8 @@ public class CmisObject {
 		super();
 		this.session = session;
 		path = sanitize(path);
-		IRepository repository = ((IRepository) session.getCmisRepository().getInternalObject());
+		IRepository repository = ((IRepository) session	.getCmisRepository()
+														.getInternalObject());
 		if (repository.hasCollection(path)) {
 			this.internalEntity = repository.getCollection(path);
 			this.typeCollection = true;
@@ -75,7 +76,8 @@ public class CmisObject {
 	 * @return the Id
 	 */
 	public String getId() {
-		return this.getInternalEntity().getPath();
+		return this	.getInternalEntity()
+					.getPath();
 	}
 
 	/**
@@ -84,10 +86,12 @@ public class CmisObject {
 	 * @return the name
 	 */
 	public String getName() {
-		if ("".equals(this.getInternalEntity().getName())) {
+		if ("".equals(this	.getInternalEntity()
+							.getName())) {
 			return "root";
 		}
-		return this.getInternalEntity().getName();
+		return this	.getInternalEntity()
+					.getName();
 	}
 
 	/**
@@ -114,7 +118,8 @@ public class CmisObject {
 	 * @throws IOException IO Exception
 	 */
 	public void delete() throws IOException {
-		this.getInternalEntity().delete();
+		this.getInternalEntity()
+			.delete();
 	}
 
 	/**
@@ -134,7 +139,8 @@ public class CmisObject {
 	 * @throws IOException IO Exception
 	 */
 	public void rename(String newName) throws IOException {
-		this.getInternalEntity().renameTo(newName);
+		this.getInternalEntity()
+			.renameTo(newName);
 	}
 
 }

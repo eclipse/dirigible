@@ -93,7 +93,8 @@ public class UrlFacade {
 	 * @return escaped input
 	 */
 	public static final String escape(String input) {
-		return UrlEscapers.urlFragmentEscaper().escape(input);
+		return UrlEscapers	.urlFragmentEscaper()
+							.escape(input);
 
 	}
 
@@ -104,7 +105,8 @@ public class UrlFacade {
 	 * @return escaped input
 	 */
 	public static final String escapePath(String input) {
-		return UrlEscapers.urlPathSegmentEscaper().escape(input);
+		return UrlEscapers	.urlPathSegmentEscaper()
+							.escape(input);
 
 	}
 
@@ -115,7 +117,8 @@ public class UrlFacade {
 	 * @return escaped input
 	 */
 	public static final String escapeForm(String input) {
-		return UrlEscapers.urlFormParameterEscaper().escape(input);
+		return UrlEscapers	.urlFormParameterEscaper()
+							.escape(input);
 
 	}
 

@@ -43,7 +43,8 @@ public class ODataEdmTableMappingProvider extends DefaultEdmTableMappingProvider
 	protected void fillBindings(String... resources) throws ODataException {
 		EdmTableBindingFactory tableBindingFactory = new EdmTableBindingFactory();
 
-		List<ODataMapping> mappings = ODataMappingService.get().getAll();
+		List<ODataMapping> mappings = ODataMappingService	.get()
+															.getAll();
 		for (ODataMapping mapping : mappings) {
 			EdmTableBinding binding = loadEdmTableBinding(tableBindingFactory, new String(mapping.getContent()));
 			String fqn = binding.getEdmFullyQualifedName();

@@ -137,7 +137,8 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
 	public SQLSelectBuilder orderBy(final OrderByExpression orderBy, final EdmEntityType entityType) throws ODataNotImplementedException {
 		if (orderBy != null && orderBy.getOrders() != null) {
 			for (OrderExpression order : orderBy.getOrders()) {
-				switch (order.getExpression().getKind()) {
+				switch (order	.getExpression()
+								.getKind()) {
 					case PROPERTY:
 					case MEMBER:
 						continue;
@@ -190,10 +191,13 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
 	 * @throws ODataNotImplementedException the o data not implemented exception
 	 */
 	public void validateOrderBy(final UriInfo uriInfo) throws EdmException, ODataNotImplementedException {
-		boolean usingOrderBy = uriInfo.getOrderBy() != null && uriInfo.getOrderBy().getOrders() != null;
+		boolean usingOrderBy = uriInfo.getOrderBy() != null && uriInfo	.getOrderBy()
+																		.getOrders() != null;
 		if (usingOrderBy) {
-			for (OrderExpression orderExpression : uriInfo.getOrderBy().getOrders()) {
-				switch (orderExpression.getExpression().getKind()) {
+			for (OrderExpression orderExpression : uriInfo	.getOrderBy()
+															.getOrders()) {
+				switch (orderExpression	.getExpression()
+										.getKind()) {
 					case PROPERTY:
 						continue;
 					case MEMBER:
@@ -331,7 +335,8 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
 		List<SQLStatementParam> selectClauseStatementParams = getSelectExpression().getStatementParams();
 		List<SQLStatementParam> whereClauseStatementParams = getWhereClause().getStatementParams();
 
-		return Stream.concat(selectClauseStatementParams.stream(), whereClauseStatementParams.stream()).collect(Collectors.toList());
+		return Stream	.concat(selectClauseStatementParams.stream(), whereClauseStatementParams.stream())
+						.collect(Collectors.toList());
 	}
 
 	/**
@@ -347,7 +352,8 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
 			if (join.isEmpty()) {
 				continue;
 			}
-			builder.append(join.evaluate(context)).append(SPACE);
+			builder	.append(join.evaluate(context))
+					.append(SPACE);
 		}
 		return builder.toString();
 	}
@@ -368,18 +374,22 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
 		builder.append("SELECT ");
 		builder.append(selectExpression.evaluate(context, SELECT_COLUMN_LIST));
 		builder.append(" FROM ");
-		builder.append(selectExpression.evaluate(context, FROM)).append(SPACE);
+		builder	.append(selectExpression.evaluate(context, FROM))
+				.append(SPACE);
 		builder.append(evaluateJoins(context));
 		if (!getWhereClause().isEmpty()) {
 			builder.append(" WHERE ");
-			builder.append(getWhereClause().evaluate(context)).append(SPACE);
+			builder	.append(getWhereClause().evaluate(context))
+					.append(SPACE);
 		}
 
 		SQLGroupByClause gb = getGroupByClause();
 		if (gb != null) {
 			String groupByExpression = gb.evaluate(context);
 			if (!groupByExpression.isEmpty()) {
-				builder.append("GROUP BY ").append(groupByExpression).append(SPACE);
+				builder	.append("GROUP BY ")
+						.append(groupByExpression)
+						.append(SPACE);
 			}
 		}
 
@@ -387,7 +397,9 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
 		if (null != ob) {
 			String orderByExpression = ob.evaluate(context);
 			if (!orderByExpression.isEmpty()) {
-				builder.append("ORDER BY ").append(orderByExpression).append(SPACE);
+				builder	.append("ORDER BY ")
+						.append(orderByExpression)
+						.append(SPACE);
 			}
 		}
 
@@ -408,7 +420,8 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
 	private void addSelectOption(SQLContext context, StringBuilder statementBuilder, EvaluationType option) throws EdmException {
 		String optionSupplement = selectExpression.evaluate(context, option);
 		if (!optionSupplement.isEmpty()) {
-			statementBuilder.append(optionSupplement).append(SPACE);
+			statementBuilder.append(optionSupplement)
+							.append(SPACE);
 		}
 	}
 

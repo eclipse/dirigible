@@ -99,7 +99,9 @@ public class DataAnonymizeService {
 			DataAnonymizeType typeValue = DataAnonymizeType.valueOf(type);
 
 			try (Connection connection = dataSource.getConnection()) {
-				if (SqlFactory.deriveDialect(connection).getDatabaseType(connection).equals(DatabaseType.NOSQL.getName())) {
+				if (SqlFactory	.deriveDialect(connection)
+								.getDatabaseType(connection)
+								.equals(DatabaseType.NOSQL.getName())) {
 					anonymizeNoSQLColumn(schema, table, column, primaryKey, dataSource, faker, typeValue, connection);
 				} else {
 					anonymizeRDBMSColumn(schema, table, column, primaryKey, dataSource, faker, typeValue, connection);
@@ -136,29 +138,40 @@ public class DataAnonymizeService {
 			int updatedRecords = 0;
 			try (PreparedStatement preparedStatement = connection.prepareStatement(update)) {
 				ResultSet rs = statement.executeQuery(select);
-				int size = rs.getMetaData().getColumnDisplaySize(2);
+				int size = rs	.getMetaData()
+								.getColumnDisplaySize(2);
 				while (rs.next()) {
 					String value = rs.getString(2);
 					int length = value != null ? value.length() : 0;
 					switch (typeValue) {
 						case FULL_NAME: {
-							preparedStatement.setString(1, truncate(faker.name().fullName(), size));
+							preparedStatement.setString(1, truncate(faker	.name()
+																			.fullName(),
+									size));
 							break;
 						}
 						case FIRST_NAME: {
-							preparedStatement.setString(1, truncate(faker.name().firstName(), size));
+							preparedStatement.setString(1, truncate(faker	.name()
+																			.firstName(),
+									size));
 							break;
 						}
 						case LAST_NAME: {
-							preparedStatement.setString(1, truncate(faker.name().lastName(), size));
+							preparedStatement.setString(1, truncate(faker	.name()
+																			.lastName(),
+									size));
 							break;
 						}
 						case USER_NAME: {
-							preparedStatement.setString(1, truncate(faker.internet().username(), size));
+							preparedStatement.setString(1, truncate(faker	.internet()
+																			.username(),
+									size));
 							break;
 						}
 						case EMAIL: {
-							preparedStatement.setString(1, truncate((faker.internet().username() + "@acme.com"), size));
+							preparedStatement.setString(1, truncate((faker	.internet()
+																			.username()
+									+ "@acme.com"), size));
 							break;
 						}
 						case PHONE: {
@@ -170,21 +183,28 @@ public class DataAnonymizeService {
 							break;
 						}
 						case ADDRESS: {
-							preparedStatement.setString(1, truncate(faker.address().streetAddress(), size));
+							preparedStatement.setString(1, truncate(faker	.address()
+																			.streetAddress(),
+									size));
 							break;
 						}
 						case CITY: {
-							preparedStatement.setString(1, truncate(faker.address().city(), size));
+							preparedStatement.setString(1, truncate(faker	.address()
+																			.city(),
+									size));
 							break;
 						}
 						case COUNTRY: {
-							preparedStatement.setString(1, truncate(faker.address().country(), size));
+							preparedStatement.setString(1, truncate(faker	.address()
+																			.country(),
+									size));
 							break;
 						}
 						case DATE: {
 							Date date = rs.getDate(2);
 							if (date != null) {
-								java.util.Date past = faker.date().past(10, TimeUnit.DAYS, new java.util.Date(date.getTime()));
+								java.util.Date past = faker	.date()
+															.past(10, TimeUnit.DAYS, new java.util.Date(date.getTime()));
 								preparedStatement.setDate(1, new Date(past.getTime()));
 							} else {
 								preparedStatement.setNull(1, Types.DATE);
@@ -267,7 +287,8 @@ public class DataAnonymizeService {
 			ResultSet rs = statement.executeQuery(find);
 			while (rs.next()) {
 				String json = rs.getString(-100);
-				JsonObject document = JsonHelper.parseJson(json).getAsJsonObject();
+				JsonObject document = JsonHelper.parseJson(json)
+												.getAsJsonObject();
 				JsonObject object;
 				if (nested) {
 					object = extractObject(document, column);
@@ -295,27 +316,33 @@ public class DataAnonymizeService {
 					switch (typeValue) {
 						case FULL_NAME: {
 							object.remove(name);
-							object.addProperty(name, faker.name().fullName());
+							object.addProperty(name, faker	.name()
+															.fullName());
 							break;
 						}
 						case FIRST_NAME: {
 							object.remove(name);
-							object.addProperty(name, faker.name().firstName());
+							object.addProperty(name, faker	.name()
+															.firstName());
 							break;
 						}
 						case LAST_NAME: {
 							object.remove(name);
-							object.addProperty(name, faker.name().lastName());
+							object.addProperty(name, faker	.name()
+															.lastName());
 							break;
 						}
 						case USER_NAME: {
 							object.remove(name);
-							object.addProperty(name, faker.internet().username());
+							object.addProperty(name, faker	.internet()
+															.username());
 							break;
 						}
 						case EMAIL: {
 							object.remove(name);
-							object.addProperty(name, faker.internet().username() + "@acme.com");
+							object.addProperty(name, faker	.internet()
+															.username()
+									+ "@acme.com");
 							break;
 						}
 						case PHONE: {
@@ -327,23 +354,27 @@ public class DataAnonymizeService {
 						}
 						case ADDRESS: {
 							object.remove(name);
-							object.addProperty(name, faker.address().streetAddress());
+							object.addProperty(name, faker	.address()
+															.streetAddress());
 							break;
 						}
 						case CITY: {
 							object.remove(name);
-							object.addProperty(name, faker.address().city());
+							object.addProperty(name, faker	.address()
+															.city());
 							break;
 						}
 						case COUNTRY: {
 							object.remove(name);
-							object.addProperty(name, faker.address().country());
+							object.addProperty(name, faker	.address()
+															.country());
 							break;
 						}
 						case DATE: {
 							Date date = rs.getDate(2);
 							if (date != null) {
-								java.util.Date past = faker.date().past(10, TimeUnit.DAYS, new java.util.Date(date.getTime()));
+								java.util.Date past = faker	.date()
+															.past(10, TimeUnit.DAYS, new java.util.Date(date.getTime()));
 								object.remove(name);
 								object.addProperty(name, past.getTime());
 							}
@@ -404,8 +435,10 @@ public class DataAnonymizeService {
 			if (object.get(name) == null) {
 				return null;
 			}
-			if (object.get(name).isJsonObject()) {
-				object = object.get(name).getAsJsonObject();
+			if (object	.get(name)
+						.isJsonObject()) {
+				object = object	.get(name)
+								.getAsJsonObject();
 			} else {
 				break;
 			}

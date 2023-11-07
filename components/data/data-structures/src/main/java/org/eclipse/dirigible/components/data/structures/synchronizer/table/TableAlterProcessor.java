@@ -69,7 +69,9 @@ public class TableAlterProcessor {
 			// String typeName =
 			// nativeDialect.getDataTypeName(DataTypeUtils.getDatabaseType(rsColumns.getInt(5)));
 			String typeName = DataTypeUtils.getDatabaseTypeName(rsColumns.getInt(5));
-			columnDefinitions.put(rsColumns.getString(4).toUpperCase(), typeName);
+			columnDefinitions.put(rsColumns	.getString(4)
+											.toUpperCase(),
+					typeName);
 		}
 
 		List<String> modelColumnNames = new ArrayList<String>();
@@ -116,9 +118,12 @@ public class TableAlterProcessor {
 
 			if (!columnDefinitions.containsKey(nameOriginal.toUpperCase())) {
 
-				AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection).alter().table(tableName);
+				AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection)
+																.alter()
+																.table(tableName);
 
-				alterTableBuilder.add().column(name, type, isPrimaryKey, isNullable, isUnique, args);
+				alterTableBuilder	.add()
+									.column(name, type, isPrimaryKey, isNullable, isUnique, args);
 
 				if (!isNullable) {
 					throw new SQLException(String.format(INCOMPATIBLE_CHANGE_OF_TABLE, tableName, name, "NOT NULL"));
@@ -129,7 +134,8 @@ public class TableAlterProcessor {
 
 				executeAlterBuilder(connection, alterTableBuilder);
 
-			} else if (!columnDefinitions.get(nameOriginal.toUpperCase()).equals(type.toString())) {
+			} else if (!columnDefinitions	.get(nameOriginal.toUpperCase())
+											.equals(type.toString())) {
 				throw new SQLException(String.format(INCOMPATIBLE_CHANGE_OF_TABLE, tableName, name,
 						"of type " + columnDefinitions.get(name) + " to be changed to" + type));
 			}
@@ -142,8 +148,11 @@ public class TableAlterProcessor {
 				columnName = "\"" + columnName + "\"";
 			}
 			if (!modelColumnNames.contains(columnName.toUpperCase())) {
-				AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection).alter().table(tableName);
-				alterTableBuilder.drop().column(columnName, DataType.BOOLEAN);
+				AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection)
+																.alter()
+																.table(tableName);
+				alterTableBuilder	.drop()
+									.column(columnName, DataType.BOOLEAN);
 				executeAlterBuilder(connection, alterTableBuilder);
 			}
 		}

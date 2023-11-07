@@ -123,7 +123,8 @@ public class ExtensionPointEndpoint extends BaseEndpoint {
 	@GetMapping("/tree")
 	public ResponseEntity<List<ExtensionPoint>> getTree() {
 		List<ExtensionPoint> list = extensionPointService.getAll();
-		list.forEach(ep -> ep.getExtensions().addAll(extensionService.findByExtensionPoint(ep.getName())));
+		list.forEach(ep -> ep	.getExtensions()
+								.addAll(extensionService.findByExtensionPoint(ep.getName())));
 		return ResponseEntity.ok(list);
 
 	}

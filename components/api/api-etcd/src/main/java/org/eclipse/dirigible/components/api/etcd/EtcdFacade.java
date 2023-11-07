@@ -51,7 +51,9 @@ public class EtcdFacade {
 
 		String clientEndpoint = Configuration.get(DIRIGIBLE_ETCD_CLIENT_ENDPOINT, CLIENT_ENDPOINT);
 
-		Client client = Client.builder().endpoints(clientEndpoint).build();
+		Client client = Client	.builder()
+								.endpoints(clientEndpoint)
+								.build();
 
 		return client.getKVClient();
 	}

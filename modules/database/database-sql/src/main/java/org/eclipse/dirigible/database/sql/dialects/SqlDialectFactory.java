@@ -36,7 +36,8 @@ public class SqlDialectFactory {
 	 * @throws SQLException the SQL exception
 	 */
 	public static final ISqlDialect getDialect(Connection connection) throws SQLException {
-		String productName = connection.getMetaData().getDatabaseProductName();
+		String productName = connection	.getMetaData()
+										.getDatabaseProductName();
 		ISqlDialect dialect = databaseTypeMappings.get(productName);
 		if (dialect == null) {
 			throw new RuntimeException("Database dialect for " + productName + " is not avalable.");

@@ -82,7 +82,10 @@ public class NextValueSequenceBuilder extends AbstractQuerySqlBuilder {
 	 */
 	protected void generateNextValue(StringBuilder sql) {
 		String sequenceName = (isCaseSensitive()) ? encapsulate(this.getSequence(), true) : this.getSequence();
-		sql.append(SPACE).append(KEYWORD_NEXT_VALUE_FOR).append(SPACE).append(sequenceName);
+		sql	.append(SPACE)
+			.append(KEYWORD_NEXT_VALUE_FOR)
+			.append(SPACE)
+			.append(sequenceName);
 	}
 
 	/**

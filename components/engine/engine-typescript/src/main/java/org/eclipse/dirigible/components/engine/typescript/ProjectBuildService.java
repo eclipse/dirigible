@@ -102,7 +102,10 @@ public class ProjectBuildService {
 		return actions	.stream()
 						.filter(ProjectAction::isPublish)
 						.findFirst()
-						.flatMap(action -> action.getCommands().stream().filter(CommandDescriptor::isCompatibleWithCurrentOS).findFirst());
+						.flatMap(action -> action	.getCommands()
+													.stream()
+													.filter(CommandDescriptor::isCompatibleWithCurrentOS)
+													.findFirst());
 	}
 
 	/**
@@ -131,7 +134,9 @@ public class ProjectBuildService {
 		try {
 			var processExecutor = ProcessExecutor.create();
 			Future<ProcessResult<OutputsPair>> outputFuture = processExecutor.executeProcess(buildCommand.getCommand(), env, options);
-			String output = outputFuture.get().getProcessOutputs().getStandardOutput();
+			String output = outputFuture.get()
+										.getProcessOutputs()
+										.getStandardOutput();
 			LOGGER.info(output);
 		} catch (ExecutionException | InterruptedException e) {
 			LOGGER.error("Could not run command: " + buildCommand, e);
@@ -147,7 +152,8 @@ public class ProjectBuildService {
 	private Optional<ProjectMetadata> getProjectJson(String project) {
 		Path projectJsonPath = getProjectPath(project).resolve("project.json");
 
-		if (!projectJsonPath.toFile().exists()) {
+		if (!projectJsonPath.toFile()
+							.exists()) {
 			return Optional.empty();
 		}
 

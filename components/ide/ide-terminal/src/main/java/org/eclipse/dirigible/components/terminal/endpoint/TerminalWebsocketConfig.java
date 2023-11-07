@@ -90,7 +90,8 @@ public class TerminalWebsocketConfig implements WebSocketConfigurer {
 			// }
 			try {
 				String command = "";
-				String os = System.getProperty("os.name").toLowerCase();
+				String os = System	.getProperty("os.name")
+									.toLowerCase();
 				if ((os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0)) {
 					command = "bash -c ./ttyd.sh";
 					File ttydShell = new File("./ttyd.sh");

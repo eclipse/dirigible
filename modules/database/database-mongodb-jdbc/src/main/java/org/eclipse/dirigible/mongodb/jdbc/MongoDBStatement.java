@@ -110,7 +110,8 @@ public class MongoDBStatement implements Statement {
 		}
 
 		if (filterDocument.containsKey("find")) {
-			String collectionName = filterDocument.getString("find").getValue();
+			String collectionName = filterDocument	.getString("find")
+													.getValue();
 			if (collectionName == null) {
 				collectionName = this.conn.getCollectionName();// fallback if any
 				currentCollection = collectionName;
@@ -122,19 +123,24 @@ public class MongoDBStatement implements Statement {
 			BsonDocument filter = filterDocument.containsKey("filter") ? filterDocument.getDocument("filter") : null;
 			FindIterable<Document> searchHits = null;
 			if (filter == null) {
-				searchHits = db.getCollection(collectionName).find();
+				searchHits = db	.getCollection(collectionName)
+								.find();
 			} else {
-				searchHits = db.getCollection(collectionName).find(filter);
+				searchHits = db	.getCollection(collectionName)
+								.find(filter);
 			}
 			if (filterDocument.containsKey("batchSize"))
-				searchHits.batchSize(filterDocument.getInt32("batchSize").getValue());
+				searchHits.batchSize(filterDocument	.getInt32("batchSize")
+													.getValue());
 			if (filterDocument.containsKey("limit"))
-				searchHits.limit(filterDocument.getInt32("limit").getValue());
+				searchHits.limit(filterDocument	.getInt32("limit")
+												.getValue());
 			if (filterDocument.containsKey("sort"))
 				searchHits.sort(filterDocument.getDocument("sort"));
 			return new MongoDBResultSet(this, searchHits);
 		} else if (filterDocument.containsKey("count")) {
-			String collectionName = filterDocument.getString("count").getValue();
+			String collectionName = filterDocument	.getString("count")
+													.getValue();
 			if (collectionName == null) {
 				collectionName = this.conn.getCollectionName();// fallback if any
 			}
@@ -145,11 +151,14 @@ public class MongoDBStatement implements Statement {
 			BsonDocument filter = filterDocument.containsKey("filter") ? filterDocument.getDocument("filter") : null;
 			long count = -1;
 			if (filter == null) {
-				count = db.getCollection(collectionName).countDocuments();
+				count = db	.getCollection(collectionName)
+							.countDocuments();
 			} else {
-				count = db.getCollection(collectionName).countDocuments(filter);
+				count = db	.getCollection(collectionName)
+							.countDocuments(filter);
 			}
-			ResultSet result = new SingleColumnStaticResultSet(Arrays.asList(new String[] {count + ""}).iterator());
+			ResultSet result = new SingleColumnStaticResultSet(Arrays	.asList(new String[] {count + ""})
+																		.iterator());
 			return result;
 		}
 
@@ -171,7 +180,8 @@ public class MongoDBStatement implements Statement {
 		else
 			updateDocument = BsonDocument.parse(sql);
 
-		Document response = this.conn.getMongoDatabase().runCommand(updateDocument);
+		Document response = this.conn	.getMongoDatabase()
+										.runCommand(updateDocument);
 		int updatedDocuments = 0;
 		if (response != null && response.get("ok") != null) {
 			try {
@@ -478,7 +488,8 @@ public class MongoDBStatement implements Statement {
 		BulkWriteOptions options = new BulkWriteOptions();
 		options.ordered(false);
 		options.bypassDocumentValidation(true);
-		BulkWriteResult result = db.getCollection(currentCollection).bulkWrite(batchList, options);
+		BulkWriteResult result = db	.getCollection(currentCollection)
+									.bulkWrite(batchList, options);
 		clearBatch();
 		return new int[] {result.getInsertedCount() + result.getModifiedCount() + result.getDeletedCount()};
 	}

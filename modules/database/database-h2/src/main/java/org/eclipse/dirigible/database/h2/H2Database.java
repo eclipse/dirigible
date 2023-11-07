@@ -84,7 +84,9 @@ public class H2Database {
 	public void initialize() {
 		Configuration.loadModuleConfig("/dirigible-database-h2.properties");
 		if (logger.isDebugEnabled()) {
-			logger.debug(this.getClass().getCanonicalName() + " module initialized.");
+			logger.debug(this	.getClass()
+								.getCanonicalName()
+					+ " module initialized.");
 		}
 	}
 
@@ -198,7 +200,8 @@ public class H2Database {
 				("DefaultDB".equals(name)) ? DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT : DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
 		String h2Root = Configuration.get(rootFolder, name);
 		File rootFile = new File(h2Root);
-		File parentFile = rootFile.getCanonicalFile().getParentFile();
+		File parentFile = rootFile	.getCanonicalFile()
+									.getParentFile();
 		if (!parentFile.exists()) {
 			if (!parentFile.mkdirs()) {
 				throw new IOException(format("Creation of the root folder [{0}] of the embedded H2 database failed.", h2Root));

@@ -96,7 +96,8 @@ public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View>
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(getFileExtension());
+		return file	.toString()
+					.endsWith(getFileExtension());
 	}
 
 	/**
@@ -185,19 +186,22 @@ public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View>
 	@Override
 	public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
 
-		try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
+		try (Connection connection = datasourcesManager	.getDefaultDataSource()
+														.getConnection()) {
 
 			View view = null;
 			if (wrapper.getArtefact() instanceof View) {
 				view = (View) wrapper.getArtefact();
 			} else {
-				throw new UnsupportedOperationException(String.format("Trying to process %s as View", wrapper.getArtefact().getClass()));
+				throw new UnsupportedOperationException(String.format("Trying to process %s as View", wrapper	.getArtefact()
+																												.getClass()));
 			}
 
 			switch (flow) {
 				case CREATE:
 					if (ArtefactLifecycle.NEW.equals(view.getLifecycle())) {
-						if (!SqlFactory.getNative(connection).existsTable(connection, view.getName())) {
+						if (!SqlFactory	.getNative(connection)
+										.existsTable(connection, view.getName())) {
 							try {
 								executeViewCreate(connection, view);
 								callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
@@ -225,7 +229,8 @@ public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View>
 					break;
 				case DELETE:
 					if (ArtefactLifecycle.CREATED.equals(view.getLifecycle())) {
-						if (SqlFactory.getNative(connection).existsTable(connection, view.getName())) {
+						if (SqlFactory	.getNative(connection)
+										.existsTable(connection, view.getName())) {
 							executeViewDrop(connection, view);
 							callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
 						}
@@ -254,7 +259,8 @@ public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View>
 	 */
 	@Override
 	public void cleanup(View view) {
-		try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
+		try (Connection connection = datasourcesManager	.getDefaultDataSource()
+														.getConnection()) {
 			getService().delete(view);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {
@@ -286,7 +292,8 @@ public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View>
 		if (logger.isInfoEnabled()) {
 			logger.info("Processing Update View: " + viewModel.getName());
 		}
-		if (SqlFactory.getNative(connection).existsTable(connection, viewModel.getName())) {
+		if (SqlFactory	.getNative(connection)
+						.existsTable(connection, viewModel.getName())) {
 			executeViewDrop(connection, viewModel);
 			executeViewCreate(connection, viewModel);
 		} else {

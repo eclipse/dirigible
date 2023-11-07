@@ -76,7 +76,8 @@ public final class SQLWhereClauseTest {
 		SQLWhereClause where = new SQLWhereClause(EMPTY_STRING);
 		where.and(new SQLWhereClause(EMPTY_STRING));
 
-		assertTrue(where.getStatementParams().isEmpty());
+		assertTrue(where.getStatementParams()
+						.isEmpty());
 		assertEquals(EMPTY_STRING, where.getWhereClause());
 		assertTrue(where.isEmpty());
 	}
@@ -130,7 +131,8 @@ public final class SQLWhereClauseTest {
 	@Test
 	public void testIsNullFilter() throws Exception {
 		SQLWhereClause where = createWhereClause("MessageGuid eq null");
-		assertTrue("Statement params are not expected for \"Is Null\" filter", where.getStatementParams().isEmpty());
+		assertTrue("Statement params are not expected for \"Is Null\" filter", where.getStatementParams()
+																					.isEmpty());
 
 		assertEquals("Unexpected where clause generated for Null predicate", "T0.MESSAGEGUID IS NULL", where.getWhereClause());
 	}
@@ -143,7 +145,8 @@ public final class SQLWhereClauseTest {
 	@Test
 	public void testIsNotNullFilter() throws Exception {
 		SQLWhereClause where = createWhereClause("MessageGuid ne null");
-		assertTrue("Statement params are not expected for \"Is Not Null\" filter", where.getStatementParams().isEmpty());
+		assertTrue("Statement params are not expected for \"Is Not Null\" filter", where.getStatementParams()
+																						.isEmpty());
 
 		assertEquals("Unexpected where clause generated for Null predicate", "T0.MESSAGEGUID IS NOT NULL", where.getWhereClause());
 	}
@@ -156,7 +159,8 @@ public final class SQLWhereClauseTest {
 	@Test
 	public void testIsNotNullAndNullFilter() throws Exception {
 		SQLWhereClause where = createWhereClause("MessageGuid ne null").and(createWhereClause("Status eq null"));
-		assertTrue("Statement params are not expected filter with Null predicates only", where.getStatementParams().isEmpty());
+		assertTrue("Statement params are not expected filter with Null predicates only", where	.getStatementParams()
+																								.isEmpty());
 
 		assertEquals("Unexpected where clause generated for Null predicate", "T0.MESSAGEGUID IS NOT NULL AND T0.STATUS IS NULL",
 				where.getWhereClause());
@@ -267,7 +271,8 @@ public final class SQLWhereClauseTest {
 	public void testConcatFunction3() throws Exception {
 		SQLWhereClause where = createWhereClause( //
 				"concat(MessageGuid, MessageGuid)");
-		assertEquals(0, where.getStatementParams().size());
+		assertEquals(0, where	.getStatementParams()
+								.size());
 		assertEquals("CONCAT(T0.MESSAGEGUID,T0.MESSAGEGUID)", where.getWhereClause());
 	}
 
@@ -280,7 +285,8 @@ public final class SQLWhereClauseTest {
 	public void testLengthFunction() throws Exception {
 		SQLWhereClause where = createWhereClause( //
 				"length(MessageGuid)");
-		assertEquals(0, where.getStatementParams().size());
+		assertEquals(0, where	.getStatementParams()
+								.size());
 		assertEquals("LENGTH(T0.MESSAGEGUID)", where.getWhereClause());
 	}
 
@@ -343,9 +349,12 @@ public final class SQLWhereClauseTest {
 				String.format("Status ne 'ERROR' and LogEnd lt datetime'%s'", date));
 
 		assertEquals("T0.STATUS <> ? AND T0.LOGEND < ?", where.getWhereClause());
-		assertEquals("ERROR", where.getParamAt(0).getValue());
-		assertTrue(where.getParamAt(1).getValue() instanceof Calendar);
-		Calendar c = (Calendar) where.getParamAt(1).getValue();
+		assertEquals("ERROR", where	.getParamAt(0)
+									.getValue());
+		assertTrue(where.getParamAt(1)
+						.getValue() instanceof Calendar);
+		Calendar c = (Calendar) where	.getParamAt(1)
+										.getValue();
 
 		// We are expecting to get the client date parsed with a UTC locale
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
@@ -367,17 +376,21 @@ public final class SQLWhereClauseTest {
 				String.format("Status eq 'FAILED' and LogEnd ge datetime'%s' and LogEnd lt datetime'%s'", from, to));
 
 		assertEquals("T0.STATUS = ? AND T0.LOGEND >= ? AND T0.LOGEND < ?", where.getWhereClause());
-		assertTrue(where.getParamAt(1).getValue() instanceof Calendar);
-		assertTrue(where.getParamAt(2).getValue() instanceof Calendar);
+		assertTrue(where.getParamAt(1)
+						.getValue() instanceof Calendar);
+		assertTrue(where.getParamAt(2)
+						.getValue() instanceof Calendar);
 
-		Calendar cfr = (Calendar) where.getParamAt(1).getValue();
+		Calendar cfr = (Calendar) where	.getParamAt(1)
+										.getValue();
 
 		// We are expecting to get the client date parsed with a UTC locale
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
 		f.setTimeZone(TimeZone.getTimeZone("UTC"));
 		assertEquals(f.parse(from), cfr.getTime());
 
-		Calendar cto = (Calendar) where.getParamAt(2).getValue();
+		Calendar cto = (Calendar) where	.getParamAt(2)
+										.getValue();
 		// We are expecting to get the client date parsed with a UTC locale
 		f.setTimeZone(TimeZone.getTimeZone("UTC"));
 		assertEquals(f.parse(to), cto.getTime());
@@ -455,17 +468,21 @@ public final class SQLWhereClauseTest {
 				String.format("Status eq 'FAILED' and LogEnd gt datetime'%s' and LogEnd le datetime'%s'", from, to));
 
 		assertEquals("T0.STATUS = ? AND T0.LOGEND > ? AND T0.LOGEND <= ?", where.getWhereClause());
-		assertTrue(where.getParamAt(1).getValue() instanceof Calendar);
-		assertTrue(where.getParamAt(2).getValue() instanceof Calendar);
+		assertTrue(where.getParamAt(1)
+						.getValue() instanceof Calendar);
+		assertTrue(where.getParamAt(2)
+						.getValue() instanceof Calendar);
 
-		Calendar cfr = (Calendar) where.getParamAt(1).getValue();
+		Calendar cfr = (Calendar) where	.getParamAt(1)
+										.getValue();
 
 		// We are expecting to get the client date parsed with a UTC locale
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
 		f.setTimeZone(TimeZone.getTimeZone("UTC"));
 		assertEquals(f.parse(from), cfr.getTime());
 
-		Calendar cto = (Calendar) where.getParamAt(2).getValue();
+		Calendar cto = (Calendar) where	.getParamAt(2)
+										.getValue();
 		// We are expecting to get the client date parsed with a UTC locale
 		f.setTimeZone(TimeZone.getTimeZone("UTC"));
 		assertEquals(f.parse(to), cto.getTime());
@@ -479,7 +496,9 @@ public final class SQLWhereClauseTest {
 	 * @throws ODataException the o data exception
 	 */
 	private SQLWhereClause createWhereClause(final String expression) throws ODataException {
-		EdmEntityType type = edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName());
+		EdmEntityType type = edm.getEntityType(Entity1.class.getPackage()
+															.getName(),
+				Entity1.class.getSimpleName());
 		FilterExpression filter = UriParser.parseFilter(edm, type, expression);
 		SQLSelectBuilder noop = new SQLSelectBuilder(tableMappingProvider);
 		return SQLUtils.buildSQLWhereClause(noop, type, filter);
@@ -498,7 +517,8 @@ public final class SQLWhereClauseTest {
 		final Iterator<SQLStatementParam> itParam = paramsAct.iterator();
 		for (String p : paramsExp) {
 			assertTrue(itParam.hasNext());
-			assertEquals(p, itParam.next().getValue());
+			assertEquals(p, itParam	.next()
+									.getValue());
 		}
 	}
 }

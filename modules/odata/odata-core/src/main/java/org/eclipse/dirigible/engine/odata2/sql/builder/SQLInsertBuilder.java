@@ -188,7 +188,9 @@ public class SQLInsertBuilder extends AbstractQueryBuilder {
 	 */
 	protected String buildInto(final SQLContext context) {
 		StringBuilder into = new StringBuilder();
-		into.append(tableName != null ? tableName : getTargetTableName()).append(" ").append(buildColumnList(context));
+		into.append(tableName != null ? tableName : getTargetTableName())
+			.append(" ")
+			.append(buildColumnList(context));
 		return into.toString();
 	}
 
@@ -220,7 +222,9 @@ public class SQLInsertBuilder extends AbstractQueryBuilder {
 	 * @return the string
 	 */
 	private String buildValues(final SQLContext context) {
-		return csvInBrackets(columnNames.stream().map(n -> "?").collect(Collectors.toList()));
+		return csvInBrackets(columnNames.stream()
+										.map(n -> "?")
+										.collect(Collectors.toList()));
 	}
 
 }

@@ -148,7 +148,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public String getString(int columnIndex) throws SQLException {
-		return this.currentRecord.get(columnIndex).textValue();
+		return this.currentRecord	.get(columnIndex)
+									.textValue();
 	}
 
 	/**
@@ -160,7 +161,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean getBoolean(int columnIndex) throws SQLException {
-		return this.currentRecord.get(columnIndex).booleanValue();
+		return this.currentRecord	.get(columnIndex)
+									.booleanValue();
 	}
 
 	/**
@@ -172,7 +174,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public byte getByte(int columnIndex) throws SQLException {
-		return (byte) this.currentRecord.get(columnIndex).intValue();
+		return (byte) this.currentRecord.get(columnIndex)
+										.intValue();
 	}
 
 	/**
@@ -184,7 +187,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public short getShort(int columnIndex) throws SQLException {
-		return this.currentRecord.get(columnIndex).shortValue();
+		return this.currentRecord	.get(columnIndex)
+									.shortValue();
 	}
 
 	/**
@@ -196,7 +200,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public int getInt(int columnIndex) throws SQLException {
-		return this.currentRecord.get(columnIndex).intValue();
+		return this.currentRecord	.get(columnIndex)
+									.intValue();
 	}
 
 	/**
@@ -208,7 +213,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public long getLong(int columnIndex) throws SQLException {
-		return this.currentRecord.get(columnIndex).longValue();
+		return this.currentRecord	.get(columnIndex)
+									.longValue();
 	}
 
 	/**
@@ -220,7 +226,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public float getFloat(int columnIndex) throws SQLException {
-		return this.currentRecord.get(columnIndex).floatValue();
+		return this.currentRecord	.get(columnIndex)
+									.floatValue();
 	}
 
 	/**
@@ -232,7 +239,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public double getDouble(int columnIndex) throws SQLException {
-		return (byte) this.currentRecord.get(columnIndex).doubleValue();
+		return (byte) this.currentRecord.get(columnIndex)
+										.doubleValue();
 	}
 
 	/**
@@ -245,7 +253,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
-		return this.currentRecord.get(columnIndex).decimalValue();
+		return this.currentRecord	.get(columnIndex)
+									.decimalValue();
 	}
 
 	/**
@@ -258,7 +267,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	@Override
 	public byte[] getBytes(int columnIndex) throws SQLException {
 		try {
-			return this.currentRecord.get(columnIndex).binaryValue();
+			return this.currentRecord	.get(columnIndex)
+										.binaryValue();
 		} catch (IOException e) {
 			throw new SQLException(e);
 		}
@@ -273,7 +283,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public Date getDate(int columnIndex) throws SQLException {
-		return new Date(this.currentRecord.get(columnIndex).longValue());
+		return new Date(this.currentRecord	.get(columnIndex)
+											.longValue());
 	}
 
 	/**
@@ -285,7 +296,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public Time getTime(int columnIndex) throws SQLException {
-		return new Time(this.currentRecord.get(columnIndex).longValue());
+		return new Time(this.currentRecord	.get(columnIndex)
+											.longValue());
 	}
 
 	/**
@@ -297,7 +309,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public Timestamp getTimestamp(int columnIndex) throws SQLException {
-		return new Timestamp(this.currentRecord.get(columnIndex).longValue());
+		return new Timestamp(this.currentRecord	.get(columnIndex)
+												.longValue());
 	}
 
 	/**
@@ -345,7 +358,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public String getString(String columnLabel) throws SQLException {
-		return this.currentRecord.get(columnLabel).textValue();
+		return this.currentRecord	.get(columnLabel)
+									.textValue();
 	}
 
 	/**
@@ -357,7 +371,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean getBoolean(String columnLabel) throws SQLException {
-		return this.currentRecord.get(columnLabel).booleanValue();
+		return this.currentRecord	.get(columnLabel)
+									.booleanValue();
 	}
 
 	/**
@@ -369,7 +384,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public byte getByte(String columnLabel) throws SQLException {
-		return (byte) this.currentRecord.get(columnLabel).intValue();
+		return (byte) this.currentRecord.get(columnLabel)
+										.intValue();
 	}
 
 	/**
@@ -381,7 +397,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public short getShort(String columnLabel) throws SQLException {
-		return this.currentRecord.get(columnLabel).shortValue();
+		return this.currentRecord	.get(columnLabel)
+									.shortValue();
 	}
 
 	/**
@@ -393,7 +410,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public int getInt(String columnLabel) throws SQLException {
-		return this.currentRecord.get(columnLabel).intValue();
+		return this.currentRecord	.get(columnLabel)
+									.intValue();
 	}
 
 	/**
@@ -405,7 +423,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public long getLong(String columnLabel) throws SQLException {
-		return this.currentRecord.get(columnLabel).longValue();
+		return this.currentRecord	.get(columnLabel)
+									.longValue();
 	}
 
 	/**
@@ -417,7 +436,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public float getFloat(String columnLabel) throws SQLException {
-		return this.currentRecord.get(columnLabel).floatValue();
+		return this.currentRecord	.get(columnLabel)
+									.floatValue();
 	}
 
 	/**
@@ -429,7 +449,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public double getDouble(String columnLabel) throws SQLException {
-		return this.currentRecord.get(columnLabel).doubleValue();
+		return this.currentRecord	.get(columnLabel)
+									.doubleValue();
 	}
 
 	/**
@@ -442,7 +463,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
-		return this.currentRecord.get(columnLabel).decimalValue();
+		return this.currentRecord	.get(columnLabel)
+									.decimalValue();
 	}
 
 	/**
@@ -455,7 +477,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	@Override
 	public byte[] getBytes(String columnLabel) throws SQLException {
 		try {
-			return this.currentRecord.get(columnLabel).binaryValue();
+			return this.currentRecord	.get(columnLabel)
+										.binaryValue();
 		} catch (IOException e) {
 			throw new SQLException(e);
 		}
@@ -470,7 +493,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public Date getDate(String columnLabel) throws SQLException {
-		return new Date(this.currentRecord.get(columnLabel).longValue());
+		return new Date(this.currentRecord	.get(columnLabel)
+											.longValue());
 	}
 
 	/**
@@ -482,7 +506,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public Time getTime(String columnLabel) throws SQLException {
-		return new Time(this.currentRecord.get(columnLabel).longValue());
+		return new Time(this.currentRecord	.get(columnLabel)
+											.longValue());
 	}
 
 	/**
@@ -494,7 +519,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public Timestamp getTimestamp(String columnLabel) throws SQLException {
-		return new Timestamp(this.currentRecord.get(columnLabel).longValue());
+		return new Timestamp(this.currentRecord	.get(columnLabel)
+												.longValue());
 	}
 
 	/**
@@ -643,7 +669,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
-		return this.currentRecord.get(columnIndex).decimalValue();
+		return this.currentRecord	.get(columnIndex)
+									.decimalValue();
 	}
 
 	/**
@@ -655,7 +682,8 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	 */
 	@Override
 	public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
-		return this.currentRecord.get(columnLabel).decimalValue();
+		return this.currentRecord	.get(columnLabel)
+									.decimalValue();
 	}
 
 	/**

@@ -153,7 +153,8 @@ public class SystemScheduler {
 		return newTrigger()	.forJob(job)
 							.withIdentity(TriggerKey.triggerKey("SynchronizationJobTrigger"))
 							.withDescription("Synchronization trigger")
-							.withSchedule(simpleSchedule().withIntervalInSeconds(frequencyInSec).repeatForever())
+							.withSchedule(simpleSchedule()	.withIntervalInSeconds(frequencyInSec)
+															.repeatForever())
 							.build();
 	}
 

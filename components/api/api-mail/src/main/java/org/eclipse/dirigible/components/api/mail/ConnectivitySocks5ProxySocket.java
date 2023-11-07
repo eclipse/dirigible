@@ -179,9 +179,13 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 	private byte[] createPasswordAuthenticationRequest() throws IOException {
 		try (ByteArrayOutputStream byteArraysStream = new ByteArrayOutputStream()) {
 			byteArraysStream.write(SOCKS5_PASSWORD_AUTHENTICATION_METHOD_VERSION);
-			byteArraysStream.write(ByteBuffer.allocate(1).put((byte) this.username.getBytes().length).array());
+			byteArraysStream.write(ByteBuffer	.allocate(1)
+												.put((byte) this.username.getBytes().length)
+												.array());
 			byteArraysStream.write(this.username.getBytes());
-			byteArraysStream.write(ByteBuffer.allocate(1).put((byte) this.password.getBytes().length).array());
+			byteArraysStream.write(ByteBuffer	.allocate(1)
+												.put((byte) this.password.getBytes().length)
+												.array());
 			byteArraysStream.write(this.password.getBytes());
 			return byteArraysStream.toByteArray();
 		}
@@ -241,10 +245,14 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 				byteArraysStream.write(hostToIPv4);
 			} else {
 				byteArraysStream.write(SOCKS5_COMMAND_ADDRESS_TYPE_DOMAIN_BYTE);
-				byteArraysStream.write(ByteBuffer.allocate(1).put((byte) host.getBytes().length).array());
+				byteArraysStream.write(ByteBuffer	.allocate(1)
+													.put((byte) host.getBytes().length)
+													.array());
 				byteArraysStream.write(host.getBytes());
 			}
-			byteArraysStream.write(ByteBuffer.allocate(2).putShort((short) port).array());
+			byteArraysStream.write(ByteBuffer	.allocate(2)
+												.putShort((short) port)
+												.array());
 			return byteArraysStream.toByteArray();
 		}
 	}

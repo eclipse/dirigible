@@ -66,8 +66,10 @@ public class OData2TestUtils {
 			throws IOException, ODataException {
 		try (InputStream content = response.readEntity(InputStream.class)) {
 
-			ODataEntry entry = EntityProvider.readEntry(response.getMediaType().toString(), entitySet, content,
-					EntityProviderReadProperties.init().build());
+			ODataEntry entry = EntityProvider.readEntry(response.getMediaType()
+																.toString(),
+					entitySet, content, EntityProviderReadProperties.init()
+																	.build());
 			return entry;
 		}
 	}
@@ -86,8 +88,10 @@ public class OData2TestUtils {
 			throws IOException, ODataException {
 		try (InputStream content = response.readEntity(InputStream.class)) {
 
-			ODataFeed feed = EntityProvider.readFeed(response.getMediaType().toString(), entitySet, content,
-					EntityProviderReadProperties.init().build());
+			ODataFeed feed = EntityProvider.readFeed(response	.getMediaType()
+																.toString(),
+					entitySet, content, EntityProviderReadProperties.init()
+																	.build());
 			return feed;
 		}
 	}
@@ -107,7 +111,8 @@ public class OData2TestUtils {
 	public static ODataErrorContext retrieveODataErrorDocumentFromResponse(final Response response)
 			throws IOException, EntityProviderException {
 		try (InputStream content = response.readEntity(InputStream.class)) {
-			return EntityProvider.readErrorDocument(content, response.getMediaType().toString());
+			return EntityProvider.readErrorDocument(content, response	.getMediaType()
+																		.toString());
 		}
 	}
 
@@ -192,7 +197,8 @@ public class OData2TestUtils {
 	 * @return InputStream
 	 */
 	public static <T> InputStream stream(Class<T> clazz) {
-		return OData2TestUtils.class.getClassLoader().getResourceAsStream(resource(clazz));
+		return OData2TestUtils.class.getClassLoader()
+									.getResourceAsStream(resource(clazz));
 	}
 
 	/**
@@ -204,7 +210,8 @@ public class OData2TestUtils {
 	 */
 	public static void initLiquibase(DataSource ds, AbstractResourceAccessor resourceAccessor) throws SQLException {
 		try (Connection connection = ds.getConnection()) {
-			Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+			Database database = DatabaseFactory	.getInstance()
+												.findCorrectDatabaseImplementation(new JdbcConnection(connection));
 			Liquibase liquibase = new liquibase.Liquibase("liquibase/changelog.xml", resourceAccessor, database);
 			liquibase.update(new Contexts(), new LabelExpression());
 		} catch (DatabaseException e) {

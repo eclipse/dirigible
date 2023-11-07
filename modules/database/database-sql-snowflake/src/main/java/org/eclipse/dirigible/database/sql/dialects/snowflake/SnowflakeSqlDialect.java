@@ -224,7 +224,11 @@ public class SnowflakeSqlDialect extends
 	 */
 	@Override
 	public boolean existsSchema(Connection connection, String schema) throws SQLException {
-		String sql = new SelectBuilder(this).column("*").schema("INFORMATION_SCHEMA").from("SCHEMATA").where("SCHEMA_NAME = ?").build();
+		String sql = new SelectBuilder(this).column("*")
+											.schema("INFORMATION_SCHEMA")
+											.from("SCHEMATA")
+											.where("SCHEMA_NAME = ?")
+											.build();
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setString(1, schema);
 		ResultSet resultSet = statement.executeQuery();

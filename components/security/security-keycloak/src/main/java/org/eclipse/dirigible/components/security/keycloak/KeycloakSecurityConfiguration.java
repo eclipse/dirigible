@@ -42,8 +42,11 @@ public class KeycloakSecurityConfiguration extends KeycloakWebSecurityConfigurer
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		super.configure(http);
-		http.csrf().disable();
-		http.headers().frameOptions().sameOrigin();
+		http.csrf()
+			.disable();
+		http.headers()
+			.frameOptions()
+			.sameOrigin();
 		HttpSecurityURIConfigurator.configure(http);
 
 		// http

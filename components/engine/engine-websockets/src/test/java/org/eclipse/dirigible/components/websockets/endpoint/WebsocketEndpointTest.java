@@ -72,7 +72,9 @@ public class WebsocketEndpointTest {
 
 	@Test
 	public void findAllExtensionPoints() throws Exception {
-		mockMvc.perform(get("/services/websockets")).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/websockets"))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 		// .andExpect(jsonPath("$.content[0].location").value("/a/b/c/w1.websocket"));
 	}
 

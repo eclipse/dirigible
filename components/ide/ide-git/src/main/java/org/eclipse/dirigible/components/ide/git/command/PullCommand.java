@@ -100,7 +100,8 @@ public class PullCommand {
 	 * @throws GitConnectorException in case of exception
 	 */
 	public void execute(final Workspace workspace, GitPullModel model) throws GitConnectorException {
-		if (model.getProjects().size() == 0) {
+		if (model	.getProjects()
+					.size() == 0) {
 			logger.warn("No repository is selected for the Pull action");
 		}
 		List<String> pulledProjects = new ArrayList<String>();
@@ -164,7 +165,9 @@ public class PullCommand {
 				logger.debug(String.format("Pull of the repository %s finished.", repositoryName));
 			}
 
-			int numberOfConflictingFiles = gitConnector.status().getConflicting().size();
+			int numberOfConflictingFiles = gitConnector	.status()
+														.getConflicting()
+														.size();
 			if (logger.isDebugEnabled()) {
 				logger.debug(
 						String.format("Number of conflicting files in the repository [%s]: %d.", repositoryName, numberOfConflictingFiles));
@@ -209,7 +212,8 @@ public class PullCommand {
 			for (String pulledProject : pulledProjects) {
 				List<Project> projects = workspace.getProjects();
 				for (Project project : projects) {
-					if (project.getName().equals(pulledProject)) {
+					if (project	.getName()
+								.equals(pulledProject)) {
 						try {
 							publisherService.publish(workspace.getName(), pulledProject, "");
 							if (logger.isInfoEnabled()) {

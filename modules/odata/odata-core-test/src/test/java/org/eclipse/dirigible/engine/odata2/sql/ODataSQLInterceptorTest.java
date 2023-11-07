@@ -117,8 +117,10 @@ public class ODataSQLInterceptorTest extends AbstractSQLProcessorTest {
 			@Override
 			public SQLInsertBuilder onCreate(SQLInsertBuilder query, PostUriInfo uriInfo, ODataContext context) throws ODataException {
 				ODataEntry entry = query.getEntry();
-				entry.getProperties().put("FirstName", "Dan");
-				entry.getProperties().put("LastName", "Kolov");
+				entry	.getProperties()
+						.put("FirstName", "Dan");
+				entry	.getProperties()
+						.put("LastName", "Kolov");
 				return query;
 			}
 		}));
@@ -204,7 +206,8 @@ public class ODataSQLInterceptorTest extends AbstractSQLProcessorTest {
 			@Override
 			public SQLUpdateBuilder onUpdate(SQLUpdateBuilder query, PutMergePatchUriInfo uriInfo, ODataContext context) {
 				ODataEntry entry = query.getUpdateEntry();
-				entry.getProperties().put("Price", "10000000");
+				entry	.getProperties()
+						.put("Price", "10000000");
 				return query;
 			}
 		}));

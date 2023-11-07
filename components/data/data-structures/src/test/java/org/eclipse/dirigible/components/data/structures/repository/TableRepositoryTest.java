@@ -89,7 +89,9 @@ public class TableRepositoryTest {
 	 */
 	@Test
 	public void getOne() {
-		Long id = tableRepository.findAll().get(0).getId();
+		Long id = tableRepository	.findAll()
+									.get(0)
+									.getId();
 		Optional<Table> optional = tableRepository.findById(id);
 		Table table = optional.isPresent() ? optional.get() : null;
 		assertNotNull(table);
@@ -98,11 +100,17 @@ public class TableRepositoryTest {
 		assertEquals("SYSTEM", table.getCreatedBy());
 		assertNotNull(table.getCreatedAt());
 		assertNotNull(table.getColumns());
-		assertNotNull(table.getColumns().get(0));
-		assertEquals(table.getName() + "_1", table.getColumns().get(0).getName());
+		assertNotNull(table	.getColumns()
+							.get(0));
+		assertEquals(table.getName() + "_1", table	.getColumns()
+													.get(0)
+													.getName());
 		assertNotNull(table.getIndexes());
-		assertNotNull(table.getIndexes().get(0));
-		assertEquals(table.getName() + "_1", table.getIndexes().get(0).getName());
+		assertNotNull(table	.getIndexes()
+							.get(0));
+		assertEquals(table.getName() + "_1", table	.getIndexes()
+													.get(0)
+													.getName());
 		// assertEquals("table:/a/b/c/t1.table:t1", table.getKey());
 	}
 
@@ -113,7 +121,9 @@ public class TableRepositoryTest {
 	 */
 	@Test
 	public void getReferenceUsingEntityManager() {
-		Long id = tableRepository.findAll().get(0).getId();
+		Long id = tableRepository	.findAll()
+									.get(0)
+									.getId();
 		Table table = entityManager.getReference(Table.class, id);
 		assertNotNull(table);
 		assertNotNull(table.getLocation());

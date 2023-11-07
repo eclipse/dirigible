@@ -26,8 +26,12 @@ public class InsertTest {
 	 */
 	@Test
 	public void insertSimple() {
-		String sql =
-				SqlFactory.getNative(new PostgresSqlDialect()).insert().into("CUSTOMERS").column("FIRST_NAME").column("LAST_NAME").build();
+		String sql = SqlFactory	.getNative(new PostgresSqlDialect())
+								.insert()
+								.into("CUSTOMERS")
+								.column("FIRST_NAME")
+								.column("LAST_NAME")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) VALUES (?, ?)", sql);
@@ -61,7 +65,11 @@ public class InsertTest {
 								.into("CUSTOMERS")
 								.column("FIRST_NAME")
 								.column("LAST_NAME")
-								.select(SqlFactory.getNative(new PostgresSqlDialect()).select().column("*").from("SUPPLIERS").build())
+								.select(SqlFactory	.getNative(new PostgresSqlDialect())
+													.select()
+													.column("*")
+													.from("SUPPLIERS")
+													.build())
 								.build();
 
 		assertNotNull(sql);

@@ -103,7 +103,8 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(getFileExtension());
+		return file	.toString()
+					.endsWith(getFileExtension());
 	}
 
 	/**
@@ -160,70 +161,114 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	}
 
 	static void assignParent(Table table) {
-		table.getColumns().forEach(c -> c.setTable(table));
+		table	.getColumns()
+				.forEach(c -> c.setTable(table));
 		if (table.getIndexes() != null) {
-			table.getIndexes().forEach(i -> i.setTable(table));
+			table	.getIndexes()
+					.forEach(i -> i.setTable(table));
 		}
 		if (table.getConstraints() != null) {
-			table.getConstraints().setTable(table);
-			if (table.getConstraints().getPrimaryKey() != null) {
-				table.getConstraints().getPrimaryKey().setConstraints(table.getConstraints());
+			table	.getConstraints()
+					.setTable(table);
+			if (table	.getConstraints()
+						.getPrimaryKey() != null) {
+				table	.getConstraints()
+						.getPrimaryKey()
+						.setConstraints(table.getConstraints());
 			}
-			if (table.getConstraints().getForeignKeys() != null) {
-				table.getConstraints().getForeignKeys().forEach(fk -> fk.setConstraints(table.getConstraints()));
+			if (table	.getConstraints()
+						.getForeignKeys() != null) {
+				table	.getConstraints()
+						.getForeignKeys()
+						.forEach(fk -> fk.setConstraints(table.getConstraints()));
 			}
-			if (table.getConstraints().getUniqueIndexes() != null) {
-				table.getConstraints().getUniqueIndexes().forEach(u -> u.setConstraints(table.getConstraints()));
+			if (table	.getConstraints()
+						.getUniqueIndexes() != null) {
+				table	.getConstraints()
+						.getUniqueIndexes()
+						.forEach(u -> u.setConstraints(table.getConstraints()));
 			}
-			if (table.getConstraints().getChecks() != null) {
-				table.getConstraints().getChecks().forEach(c -> c.setConstraints(table.getConstraints()));
+			if (table	.getConstraints()
+						.getChecks() != null) {
+				table	.getConstraints()
+						.getChecks()
+						.forEach(c -> c.setConstraints(table.getConstraints()));
 			}
 		}
 	}
 
 	static void reassignIds(Table table, Table maybe) {
-		table.getColumns().forEach(c -> {
-			TableColumn m = maybe.getColumn(c.getName());
-			if (m != null) {
-				c.setId(m.getId());
-			}
-		});
+		table	.getColumns()
+				.forEach(c -> {
+					TableColumn m = maybe.getColumn(c.getName());
+					if (m != null) {
+						c.setId(m.getId());
+					}
+				});
 		if (table.getIndexes() != null) {
-			table.getIndexes().forEach(i -> {
-				TableIndex m = maybe.getIndex(i.getName());
-				if (m != null) {
-					i.setId(m.getId());
-				}
-			});
+			table	.getIndexes()
+					.forEach(i -> {
+						TableIndex m = maybe.getIndex(i.getName());
+						if (m != null) {
+							i.setId(m.getId());
+						}
+					});
 		}
 		if (table.getConstraints() != null) {
-			table.getConstraints().setId(maybe.getConstraints().getId());
-			if (table.getConstraints().getPrimaryKey() != null && maybe.getConstraints().getPrimaryKey() != null) {
-				table.getConstraints().getPrimaryKey().setId(maybe.getConstraints().getPrimaryKey().getId());
+			table	.getConstraints()
+					.setId(maybe.getConstraints()
+								.getId());
+			if (table	.getConstraints()
+						.getPrimaryKey() != null
+					&& maybe.getConstraints()
+							.getPrimaryKey() != null) {
+				table	.getConstraints()
+						.getPrimaryKey()
+						.setId(maybe.getConstraints()
+									.getPrimaryKey()
+									.getId());
 			}
-			if (table.getConstraints().getForeignKeys() != null && maybe.getConstraints().getForeignKeys() != null) {
-				table.getConstraints().getForeignKeys().forEach(fk -> {
-					TableConstraintForeignKey m = maybe.getConstraints().getForeignKey(fk.getName());
-					if (m != null) {
-						fk.setId(m.getId());
-					}
-				});
+			if (table	.getConstraints()
+						.getForeignKeys() != null
+					&& maybe.getConstraints()
+							.getForeignKeys() != null) {
+				table	.getConstraints()
+						.getForeignKeys()
+						.forEach(fk -> {
+							TableConstraintForeignKey m = maybe	.getConstraints()
+																.getForeignKey(fk.getName());
+							if (m != null) {
+								fk.setId(m.getId());
+							}
+						});
 			}
-			if (table.getConstraints().getUniqueIndexes() != null && maybe.getConstraints().getUniqueIndexes() != null) {
-				table.getConstraints().getUniqueIndexes().forEach(ui -> {
-					TableConstraintUnique m = maybe.getConstraints().getUniqueIndex(ui.getName());
-					if (m != null) {
-						ui.setId(m.getId());
-					}
-				});
+			if (table	.getConstraints()
+						.getUniqueIndexes() != null
+					&& maybe.getConstraints()
+							.getUniqueIndexes() != null) {
+				table	.getConstraints()
+						.getUniqueIndexes()
+						.forEach(ui -> {
+							TableConstraintUnique m = maybe	.getConstraints()
+															.getUniqueIndex(ui.getName());
+							if (m != null) {
+								ui.setId(m.getId());
+							}
+						});
 			}
-			if (table.getConstraints().getChecks() != null && maybe.getConstraints().getChecks() != null) {
-				table.getConstraints().getChecks().forEach(ck -> {
-					TableConstraintCheck m = maybe.getConstraints().getCheck(ck.getName());
-					if (m != null) {
-						ck.setId(m.getId());
-					}
-				});
+			if (table	.getConstraints()
+						.getChecks() != null
+					&& maybe.getConstraints()
+							.getChecks() != null) {
+				table	.getConstraints()
+						.getChecks()
+						.forEach(ck -> {
+							TableConstraintCheck m = maybe	.getConstraints()
+															.getCheck(ck.getName());
+							if (m != null) {
+								ck.setId(m.getId());
+							}
+						});
 			}
 		}
 	}
@@ -263,19 +308,22 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	@Override
 	public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
 
-		try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
+		try (Connection connection = datasourcesManager	.getDefaultDataSource()
+														.getConnection()) {
 
 			Table table = null;
 			if (wrapper.getArtefact() instanceof Table) {
 				table = (Table) wrapper.getArtefact();
 			} else {
-				throw new UnsupportedOperationException(String.format("Trying to process %s as Table", wrapper.getArtefact().getClass()));
+				throw new UnsupportedOperationException(String.format("Trying to process %s as Table", wrapper	.getArtefact()
+																												.getClass()));
 			}
 
 			switch (flow) {
 				case CREATE:
 					if (ArtefactLifecycle.NEW.equals(table.getLifecycle())) {
-						if (!SqlFactory.getNative(connection).existsTable(connection, table.getName())) {
+						if (!SqlFactory	.getNative(connection)
+										.existsTable(connection, table.getName())) {
 							try {
 								executeTableCreate(connection, table);
 							} catch (Exception e) {
@@ -296,7 +344,8 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 					break;
 				case UPDATE:
 					if (ArtefactLifecycle.CREATED.equals(table.getLifecycle())) {
-						if (SqlFactory.getNative(connection).existsTable(connection, table.getName())) {
+						if (SqlFactory	.getNative(connection)
+										.existsTable(connection, table.getName())) {
 							try {
 								executeTableForeignKeysCreate(connection, table);
 							} catch (SQLException e) {
@@ -313,8 +362,10 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 					break;
 				case DELETE:
 					if (ArtefactLifecycle.CREATED.equals(table.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(table.getLifecycle())) {
-						if (SqlFactory.getNative(connection).existsTable(connection, table.getName())) {
-							if (SqlFactory.deriveDialect(connection).count(connection, table.getName()) == 0) {
+						if (SqlFactory	.getNative(connection)
+										.existsTable(connection, table.getName())) {
+							if (SqlFactory	.deriveDialect(connection)
+											.count(connection, table.getName()) == 0) {
 								executeTableDrop(connection, table);
 								callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
 							} else {
@@ -357,9 +408,12 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	 */
 	@Override
 	public void cleanup(Table table) {
-		try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
-			if (SqlFactory.getNative(connection).existsTable(connection, table.getName())) {
-				if (SqlFactory.deriveDialect(connection).count(connection, table.getName()) == 0) {
+		try (Connection connection = datasourcesManager	.getDefaultDataSource()
+														.getConnection()) {
+			if (SqlFactory	.getNative(connection)
+							.existsTable(connection, table.getName())) {
+				if (SqlFactory	.deriveDialect(connection)
+								.count(connection, table.getName()) == 0) {
 					executeTableDrop(connection, table);
 					getService().delete(table);
 				} else {
@@ -400,7 +454,8 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 		if (logger.isInfoEnabled()) {
 			logger.info("Processing Update Table: " + tableModel.getName());
 		}
-		if (SqlFactory.getNative(connection).existsTable(connection, tableModel.getName())) {
+		if (SqlFactory	.getNative(connection)
+						.existsTable(connection, tableModel.getName())) {
 			// if (SqlFactory.getNative(connection).count(connection, tableModel.getName()) == 0) {
 			// executeTableDrop(connection, tableModel);
 			// executeTableCreate(connection, tableModel);

@@ -74,7 +74,10 @@ public class DropViewBuilder extends AbstractDropSqlBuilder {
 	 */
 	protected void generateView(StringBuilder sql) {
 		String viewName = (isCaseSensitive()) ? encapsulate(this.getView(), true) : this.getView();
-		sql.append(SPACE).append(KEYWORD_VIEW).append(SPACE).append(viewName);
+		sql	.append(SPACE)
+			.append(KEYWORD_VIEW)
+			.append(SPACE)
+			.append(viewName);
 	}
 
 	/**

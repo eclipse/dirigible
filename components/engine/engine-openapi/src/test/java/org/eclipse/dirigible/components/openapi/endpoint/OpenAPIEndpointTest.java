@@ -88,7 +88,8 @@ class OpenAPIEndpointTest {
 	@Test
 	public void testGetVersion() throws Exception {
 		String openAPILocation = "/META-INF/dirigible/test/test.openapi";
-		byte[] content = OpenAPISynchronizer.class.getResourceAsStream(openAPILocation).readAllBytes();
+		byte[] content = OpenAPISynchronizer.class	.getResourceAsStream(openAPILocation)
+													.readAllBytes();
 		openAPIRepository.save(createOpenAPI(openAPILocation, "test", "description"));
 		repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + openAPILocation, content);
 		mockMvc	.perform(get("/services/openapi"))

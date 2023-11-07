@@ -223,11 +223,14 @@ public class DatabaseQueryHelper {
 		try {
 			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 				try (ResultSet resultSet = preparedStatement.executeQuery()) {
-					int columnsCount = resultSet.getMetaData().getColumnCount();
+					int columnsCount = resultSet.getMetaData()
+												.getColumnCount();
 					List<NavigableMap<String, Object>> table = new ArrayList<NavigableMap<String, Object>>();
 					NavigableMap<String, Object> row = new TreeMap<String, Object>();
 					for (int i = 1; i <= columnsCount; i++) {
-						row.put(resultSet.getMetaData().getColumnName(i), resultSet.getObject(i));
+						row.put(resultSet	.getMetaData()
+											.getColumnName(i),
+								resultSet.getObject(i));
 						callback.onRowConstruction(connection, row);
 						table.add(row);
 					}

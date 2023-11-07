@@ -79,7 +79,8 @@ public class CommandFacade {
 		Future<ProcessResult<OutputsPair>> outputFuture =
 				processExecutor.executeProcess(command, environmentVariablesToUse, processExecutionOptions);
 		ProcessResult<OutputsPair> output = outputFuture.get();
-		return output.getProcessOutputs().getStandardOutput();
+		return output	.getProcessOutputs()
+						.getStandardOutput();
 	}
 
 	/**

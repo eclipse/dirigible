@@ -68,7 +68,9 @@ public class TableCreateProcessor {
 		if (logger.isInfoEnabled()) {
 			logger.info("Processing Create Table: " + tableName);
 		}
-		CreateTableBuilder createTableBuilder = SqlFactory.getNative(connection).create().table(tableName);
+		CreateTableBuilder createTableBuilder = SqlFactory	.getNative(connection)
+															.create()
+															.table(tableName);
 		List<TableColumn> columns = tableModel.getColumns();
 		List<TableIndex> indexes = tableModel.getIndexes();
 		for (TableColumn columnModel : columns) {
@@ -108,10 +110,15 @@ public class TableCreateProcessor {
 			createTableBuilder.column(name, type, isPrimaryKey, isNullable, isUnique, args);
 		}
 		if (tableModel.getConstraints() != null) {
-			if (tableModel.getConstraints().getPrimaryKey() != null) {
-				String[] primaryKeyColumns = new String[tableModel.getConstraints().getPrimaryKey().getColumns().length];
+			if (tableModel	.getConstraints()
+							.getPrimaryKey() != null) {
+				String[] primaryKeyColumns = new String[tableModel	.getConstraints()
+																	.getPrimaryKey()
+																	.getColumns().length];
 				int i = 0;
-				for (String column : tableModel.getConstraints().getPrimaryKey().getColumns()) {
+				for (String column : tableModel	.getConstraints()
+												.getPrimaryKey()
+												.getColumns()) {
 					if (caseSensitive) {
 						primaryKeyColumns[i++] = "\"" + column + "\"";
 					} else {
@@ -122,8 +129,13 @@ public class TableCreateProcessor {
 				createTableBuilder.primaryKey(primaryKeyColumns);
 			}
 			if (!skipForeignKeys) {
-				if (tableModel.getConstraints().getForeignKeys() != null && !tableModel.getConstraints().getForeignKeys().isEmpty()) {
-					for (TableConstraintForeignKey foreignKey : tableModel.getConstraints().getForeignKeys()) {
+				if (tableModel	.getConstraints()
+								.getForeignKeys() != null
+						&& !tableModel	.getConstraints()
+										.getForeignKeys()
+										.isEmpty()) {
+					for (TableConstraintForeignKey foreignKey : tableModel	.getConstraints()
+																			.getForeignKeys()) {
 						String foreignKeyName = foreignKey.getName();
 						if (caseSensitive) {
 							foreignKeyName = "\"" + foreignKeyName + "\"";
@@ -156,8 +168,10 @@ public class TableCreateProcessor {
 					}
 				}
 			}
-			if (tableModel.getConstraints().getUniqueIndexes() != null) {
-				for (TableConstraintUnique uniqueIndex : tableModel.getConstraints().getUniqueIndexes()) {
+			if (tableModel	.getConstraints()
+							.getUniqueIndexes() != null) {
+				for (TableConstraintUnique uniqueIndex : tableModel	.getConstraints()
+																	.getUniqueIndexes()) {
 					String uniqueIndexName = uniqueIndex.getName();
 					if (caseSensitive) {
 						uniqueIndexName = "\"" + uniqueIndexName + "\"";
@@ -174,8 +188,10 @@ public class TableCreateProcessor {
 					createTableBuilder.unique(uniqueIndexName, uniqueIndexColumns);
 				}
 			}
-			if (tableModel.getConstraints().getChecks() != null) {
-				for (TableConstraintCheck check : tableModel.getConstraints().getChecks()) {
+			if (tableModel	.getConstraints()
+							.getChecks() != null) {
+				for (TableConstraintCheck check : tableModel.getConstraints()
+															.getChecks()) {
 					String checkName = check.getName();
 					if (caseSensitive) {
 						checkName = "\"" + checkName + "\"";

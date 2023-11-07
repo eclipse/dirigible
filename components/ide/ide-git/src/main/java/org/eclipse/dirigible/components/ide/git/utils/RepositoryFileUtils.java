@@ -68,7 +68,8 @@ public class RepositoryFileUtils {
 
 			}
 			if (entity instanceof IResource) {
-				String path = entity.getParent().getPath();
+				String path = entity.getParent()
+									.getPath();
 				StringBuilder resourceDirectory = new StringBuilder();
 				resourceDirectory.append(path);
 				resourceDirectory.append(File.separator);

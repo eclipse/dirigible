@@ -84,7 +84,8 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(getFileExtension());
+		return file	.toString()
+					.endsWith(getFileExtension());
 	}
 
 	/**
@@ -172,8 +173,8 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 		if (wrapper.getArtefact() instanceof ExtensionPoint) {
 			extensionPoint = (ExtensionPoint) wrapper.getArtefact();
 		} else {
-			throw new UnsupportedOperationException(
-					String.format("Trying to process %s as Extension Point", wrapper.getArtefact().getClass()));
+			throw new UnsupportedOperationException(String.format("Trying to process %s as Extension Point", wrapper.getArtefact()
+																													.getClass()));
 		}
 
 		switch (flow) {

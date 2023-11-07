@@ -106,15 +106,23 @@ public class HttpSuiteTest {
 																					.requestAttr("attr1", "val1"))
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful());
-		mockMvc.perform(get("/services/js/http-tests/request-get-method.js").header(HttpHeaders.AUTHORIZATION,
-				"Basic " + Base64Utils.encodeToString("user:password".getBytes()))).andDo(print()).andExpect(status().is2xxSuccessful());
-		mockMvc.perform(get("/services/js/http-tests/request-get-path-info.js").header(HttpHeaders.AUTHORIZATION,
-				"Basic " + Base64Utils.encodeToString("user:password".getBytes()))).andDo(print()).andExpect(status().is2xxSuccessful());
-		mockMvc.perform(get("/services/js/http-tests/request-get-path-translated.js").header(HttpHeaders.AUTHORIZATION,
-				"Basic " + Base64Utils.encodeToString("user:password".getBytes()))).andDo(print()).andExpect(status().is2xxSuccessful());
-		mockMvc.perform(get("/services/js/http-tests/request-get-remote-user.js").header(HttpHeaders.AUTHORIZATION,
-				"Basic " + Base64Utils.encodeToString("user:password".getBytes()))).andDo(print()).andExpect(status().is2xxSuccessful());
-		mockMvc.perform(get("/services/js/http-tests/request-get-server-name.js")
+		mockMvc	.perform(get("/services/js/http-tests/request-get-method.js").header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("user:password".getBytes())))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/js/http-tests/request-get-path-info.js").header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("user:password".getBytes())))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/js/http-tests/request-get-path-translated.js").header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("user:password".getBytes())))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/js/http-tests/request-get-remote-user.js").header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("user:password".getBytes())))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/js/http-tests/request-get-server-name.js")
 																					.header(HttpHeaders.AUTHORIZATION,
 																							"Basic " + Base64Utils.encodeToString(
 																									"user:password".getBytes()))
@@ -127,35 +135,48 @@ public class HttpSuiteTest {
 																					}))
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful());
-		mockMvc.perform(get("/services/js/http-tests/request-is-user-in-role.js").header(HttpHeaders.AUTHORIZATION,
-				"Basic " + Base64Utils.encodeToString("user:password".getBytes()))).andDo(print()).andExpect(status().is2xxSuccessful());
-		mockMvc.perform(get("/services/js/http-tests/request-is-valid.js").header(HttpHeaders.AUTHORIZATION,
-				"Basic " + Base64Utils.encodeToString("user:password".getBytes()))).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/js/http-tests/request-is-user-in-role.js").header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("user:password".getBytes())))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/js/http-tests/request-is-valid.js").header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("user:password".getBytes())))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	@Test
 	public void executeResponseTest() throws Exception {
-		mockMvc.perform(get("/services/js/http-tests/response-get-header-names.js").header(HttpHeaders.AUTHORIZATION,
-				"Basic " + Base64Utils.encodeToString("user:password".getBytes()))).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/js/http-tests/response-get-header-names.js").header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("user:password".getBytes())))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	@Test
 	public void executeSessionTest() throws Exception {
-		mockMvc.perform(get("/services/js/http-tests/session-get-attribute-names.js").header(HttpHeaders.AUTHORIZATION,
-				"Basic " + Base64Utils.encodeToString("user:password".getBytes()))).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/js/http-tests/session-get-attribute-names.js").header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("user:password".getBytes())))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	@Test
 	public void executeRSTest() throws Exception {
-		mockMvc.perform(get("/services/js/http-tests/rs-define-request-handlers.js").header(HttpHeaders.AUTHORIZATION,
-				"Basic " + Base64Utils.encodeToString("user:password".getBytes()))).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/js/http-tests/rs-define-request-handlers.js").header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("user:password".getBytes())))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	@Configuration
 	static class Config {
 		@Autowired
 		public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-			auth.inMemoryAuthentication().withUser("user").password("password").roles("ROLE");
+			auth.inMemoryAuthentication()
+				.withUser("user")
+				.password("password")
+				.roles("ROLE");
 		}
 
 		@Bean

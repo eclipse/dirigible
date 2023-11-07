@@ -55,9 +55,15 @@ public class JobHandler implements Job {
 	 */
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
-		String name = context.getJobDetail().getKey().getName();
-		String handler = (String) context.getJobDetail().getJobDataMap().get(JOB_PARAMETER_HANDLER);
-		String type = (String) context.getJobDetail().getJobDataMap().get(JOB_PARAMETER_ENGINE);
+		String name = context	.getJobDetail()
+								.getKey()
+								.getName();
+		String handler = (String) context	.getJobDetail()
+											.getJobDataMap()
+											.get(JOB_PARAMETER_HANDLER);
+		String type = (String) context	.getJobDetail()
+										.getJobDataMap()
+										.get(JOB_PARAMETER_ENGINE);
 
 		JobLog triggered = registerTriggered(name, handler);
 		if (triggered != null) {
@@ -108,7 +114,9 @@ public class JobHandler implements Job {
 	 */
 	private void registeredFailed(String name, String module, JobLog triggered, Exception e) {
 		try {
-			jobLogService.jobFailed(name, module, triggered.getId(), new Date(triggered.getTriggeredAt().getTime()), e.getMessage());
+			jobLogService.jobFailed(name, module, triggered.getId(), new Date(triggered	.getTriggeredAt()
+																						.getTime()),
+					e.getMessage());
 		} catch (Exception se) {
 			if (logger.isErrorEnabled()) {
 				logger.error(se.getMessage(), se);
@@ -125,7 +133,8 @@ public class JobHandler implements Job {
 	 */
 	private void registeredFinished(String name, String module, JobLog triggered) {
 		try {
-			jobLogService.jobFinished(name, module, triggered.getId(), new Date(triggered.getTriggeredAt().getTime()));
+			jobLogService.jobFinished(name, module, triggered.getId(), new Date(triggered	.getTriggeredAt()
+																							.getTime()));
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {
 				logger.error(e.getMessage(), e);

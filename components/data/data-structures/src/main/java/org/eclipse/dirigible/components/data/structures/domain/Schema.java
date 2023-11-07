@@ -138,7 +138,8 @@ public class Schema extends Artefact {
 	 */
 	public Table findTable(String name) {
 		for (Table t : getTables()) {
-			if (t.getName().equals(name)) {
+			if (t	.getName()
+					.equals(name)) {
 				return t;
 			}
 		}
@@ -153,7 +154,8 @@ public class Schema extends Artefact {
 	 */
 	public View findView(String name) {
 		for (View v : getViews()) {
-			if (v.getName().equals(name)) {
+			if (v	.getName()
+					.equals(name)) {
 				return v;
 			}
 		}

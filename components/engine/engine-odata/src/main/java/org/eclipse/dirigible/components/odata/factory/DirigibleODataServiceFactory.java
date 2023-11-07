@@ -158,7 +158,8 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
 		String odata2EventHandlerName = Configuration.get(OData2EventHandler.DIRIGIBLE_ODATA_EVENT_HANDLER_NAME,
 				OData2EventHandler.DEFAULT_ODATA_EVENT_HANDLER_NAME);
 		for (OData2EventHandler next : odata2EventHandlers) {
-			if (next.getName().equals(odata2EventHandlerName)) {
+			if (next.getName()
+					.equals(odata2EventHandlerName)) {
 				return next;
 			}
 		}

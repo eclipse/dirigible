@@ -155,15 +155,42 @@ public class OData2ODataXTransformerTest {
 		byte[] employee = IOUtils.toByteArray(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/Employee.odata"));
 		OData definition = ODataSynchronizer.parseOData("/transformers/Employee.odata", employee);
 
-		definition.getEntities().get(0).getAnnotationsEntitySet().put("sap:creatable", "true");
-		definition.getEntities().get(0).getAnnotationsEntitySet().put("sap:updatable-path", "Updatable");
-		definition.getEntities().get(0).getAnnotationsEntityType().put("sap:semantics", "aggregate");
+		definition	.getEntities()
+					.get(0)
+					.getAnnotationsEntitySet()
+					.put("sap:creatable", "true");
+		definition	.getEntities()
+					.get(0)
+					.getAnnotationsEntitySet()
+					.put("sap:updatable-path", "Updatable");
+		definition	.getEntities()
+					.get(0)
+					.getAnnotationsEntityType()
+					.put("sap:semantics", "aggregate");
 
-		definition.getEntities().get(0).getProperties().get(0).getAnnotationsProperty().put("sap:label", "someLabel");
-		definition.getEntities().get(0).getProperties().get(0).getAnnotationsProperty().put("sap:aggregation-role", "dimension");
-		definition.getEntities().get(0).getNavigations().get(0).getAnnotationsNavigationProperty().put("sap:filterable", "false");
+		definition	.getEntities()
+					.get(0)
+					.getProperties()
+					.get(0)
+					.getAnnotationsProperty()
+					.put("sap:label", "someLabel");
+		definition	.getEntities()
+					.get(0)
+					.getProperties()
+					.get(0)
+					.getAnnotationsProperty()
+					.put("sap:aggregation-role", "dimension");
+		definition	.getEntities()
+					.get(0)
+					.getNavigations()
+					.get(0)
+					.getAnnotationsNavigationProperty()
+					.put("sap:filterable", "false");
 
-		definition.getAssociations().get(0).getAnnotationsAssociationSet().put("sap:creatable", "true");
+		definition	.getAssociations()
+					.get(0)
+					.getAnnotationsAssociationSet()
+					.put("sap:creatable", "true");
 
 		Table model = new Table("EMPLOYEES");
 		TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
@@ -214,7 +241,10 @@ public class OData2ODataXTransformerTest {
 	public void testTransformOnViewWithGenId() throws IOException, SQLException {
 		byte[] employee = IOUtils.toByteArray(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"));
 		OData definition = ODataSynchronizer.parseOData("/transformers/EmployeeView.odata", employee);
-		definition.getEntities().get(0).getKeys().add("GEN_ID");
+		definition	.getEntities()
+					.get(0)
+					.getKeys()
+					.add("GEN_ID");
 
 		Table model = new Table("EMPLOYEES");
 		TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
@@ -248,8 +278,14 @@ public class OData2ODataXTransformerTest {
 	public void testTransformOnViewWithOriginalKeys() throws IOException, SQLException {
 		byte[] employee = IOUtils.toByteArray(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"));
 		OData definition = ODataSynchronizer.parseOData("/transformers/EmployeeView.odata", employee);
-		definition.getEntities().get(0).getKeys().add("COMPANY_ID");
-		definition.getEntities().get(0).getKeys().add("EMPLOYEE_NUMBER");
+		definition	.getEntities()
+					.get(0)
+					.getKeys()
+					.add("COMPANY_ID");
+		definition	.getEntities()
+					.get(0)
+					.getKeys()
+					.add("EMPLOYEE_NUMBER");
 
 		Table model = new Table("EMPLOYEES");
 		TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
@@ -283,17 +319,29 @@ public class OData2ODataXTransformerTest {
 	public void testTransformOnViewWithPropsAndOriginalKeys() throws IOException, SQLException {
 		byte[] employee = IOUtils.toByteArray(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"));
 		OData definition = ODataSynchronizer.parseOData("/transformers/EmployeeView.odata", employee);
-		definition.getEntities().get(0).getKeys().add("COMPANY_ID");
-		definition.getEntities().get(0).getKeys().add("EMPLOYEE_NUMBER");
+		definition	.getEntities()
+					.get(0)
+					.getKeys()
+					.add("COMPANY_ID");
+		definition	.getEntities()
+					.get(0)
+					.getKeys()
+					.add("EMPLOYEE_NUMBER");
 
 		definition	.getEntities()
 					.get(0)
 					.getProperties()
-					.add(new ODataProperty().setName("myORDER_ID").setType("Edm.Int32").setNullable(false).setColumn("ORDER_ID"));
+					.add(new ODataProperty().setName("myORDER_ID")
+											.setType("Edm.Int32")
+											.setNullable(false)
+											.setColumn("ORDER_ID"));
 		definition	.getEntities()
 					.get(0)
 					.getProperties()
-					.add(new ODataProperty().setName("myCOMPANY_ID").setType("Edm.Int32").setNullable(false).setColumn("COMPANY_ID"));
+					.add(new ODataProperty().setName("myCOMPANY_ID")
+											.setType("Edm.Int32")
+											.setNullable(false)
+											.setColumn("COMPANY_ID"));
 		definition	.getEntities()
 					.get(0)
 					.getProperties()
@@ -334,7 +382,10 @@ public class OData2ODataXTransformerTest {
 	public void testTransformOnViewWithNotOriginalKeys() throws IOException, SQLException {
 		byte[] employee = IOUtils.toByteArray(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"));
 		OData definition = ODataSynchronizer.parseOData("/transformers/EmployeeView.odata", employee);
-		definition.getEntities().get(0).getKeys().add("ADDRESS_ID");
+		definition	.getEntities()
+					.get(0)
+					.getKeys()
+					.add("ADDRESS_ID");
 
 		Table model = new Table("EMPLOYEES");
 		TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
@@ -369,16 +420,25 @@ public class OData2ODataXTransformerTest {
 	public void testTransformOnViewWithPropsAndNotOriginalKeys() throws IOException, SQLException {
 		byte[] employee = IOUtils.toByteArray(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"));
 		OData definition = ODataSynchronizer.parseOData("/transformers/EmployeeView.odata", employee);
-		definition.getEntities().get(0).getKeys().add("ADDRESS_ID");
+		definition	.getEntities()
+					.get(0)
+					.getKeys()
+					.add("ADDRESS_ID");
 
 		definition	.getEntities()
 					.get(0)
 					.getProperties()
-					.add(new ODataProperty().setName("myORDER_ID").setType("Edm.Int32").setNullable(false).setColumn("ORDER_ID"));
+					.add(new ODataProperty().setName("myORDER_ID")
+											.setType("Edm.Int32")
+											.setNullable(false)
+											.setColumn("ORDER_ID"));
 		definition	.getEntities()
 					.get(0)
 					.getProperties()
-					.add(new ODataProperty().setName("myADDRESS_ID").setType("Edm.Int32").setNullable(false).setColumn("ADDRESS_ID"));
+					.add(new ODataProperty().setName("myADDRESS_ID")
+											.setType("Edm.Int32")
+											.setNullable(false)
+											.setColumn("ADDRESS_ID"));
 
 		Table model = new Table("EMPLOYEES");
 		TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
@@ -410,16 +470,25 @@ public class OData2ODataXTransformerTest {
 		try {
 			byte[] employee = IOUtils.toByteArray(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"));
 			OData definition = ODataSynchronizer.parseOData("/transformers/EmployeeView.odata", employee);
-			definition.getEntities().get(0).getKeys().add("ADDRESS_ID");
+			definition	.getEntities()
+						.get(0)
+						.getKeys()
+						.add("ADDRESS_ID");
 
 			definition	.getEntities()
 						.get(0)
 						.getProperties()
-						.add(new ODataProperty().setName("myERROR_ID").setType("Edm.Int32").setNullable(false).setColumn("ERROR_ID"));
+						.add(new ODataProperty().setName("myERROR_ID")
+												.setType("Edm.Int32")
+												.setNullable(false)
+												.setColumn("ERROR_ID"));
 			definition	.getEntities()
 						.get(0)
 						.getProperties()
-						.add(new ODataProperty().setName("myADDRESS_ID").setType("Edm.Int32").setNullable(false).setColumn("ADDRESS_ID"));
+						.add(new ODataProperty().setName("myADDRESS_ID")
+												.setType("Edm.Int32")
+												.setNullable(false)
+												.setColumn("ADDRESS_ID"));
 
 			Table model = new Table("EMPLOYEES");
 			TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
@@ -447,17 +516,29 @@ public class OData2ODataXTransformerTest {
 		byte[] employee = IOUtils.toByteArray(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"));
 		OData definition = ODataSynchronizer.parseOData("/transformers/EmployeeView.odata", employee);
 
-		definition.getEntities().get(0).getKeys().add("COMPANY_ID");
-		definition.getEntities().get(0).getKeys().add("EMPLOYEE_NUMBER");
+		definition	.getEntities()
+					.get(0)
+					.getKeys()
+					.add("COMPANY_ID");
+		definition	.getEntities()
+					.get(0)
+					.getKeys()
+					.add("EMPLOYEE_NUMBER");
 
 		definition	.getEntities()
 					.get(0)
 					.getProperties()
-					.add(new ODataProperty().setName("myORDER_ID").setType("Edm.Int32").setNullable(false).setColumn("ORDER_ID"));
+					.add(new ODataProperty().setName("myORDER_ID")
+											.setType("Edm.Int32")
+											.setNullable(false)
+											.setColumn("ORDER_ID"));
 		definition	.getEntities()
 					.get(0)
 					.getProperties()
-					.add(new ODataProperty().setName("myCOMPANY_ID").setType("Edm.Int32").setNullable(false).setColumn("COMPANY_ID"));
+					.add(new ODataProperty().setName("myCOMPANY_ID")
+											.setType("Edm.Int32")
+											.setNullable(false)
+											.setColumn("COMPANY_ID"));
 		definition	.getEntities()
 					.get(0)
 					.getProperties()
@@ -469,7 +550,9 @@ public class OData2ODataXTransformerTest {
 		definition	.getEntities()
 					.get(0)
 					.getParameters()
-					.add(new ODataParameter().setName("isEmployeeFrom").setType("Edm.DateTime").setNullable(true));
+					.add(new ODataParameter()	.setName("isEmployeeFrom")
+												.setType("Edm.DateTime")
+												.setNullable(true));
 
 		Table model = new Table("EMPLOYEES");
 		TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);

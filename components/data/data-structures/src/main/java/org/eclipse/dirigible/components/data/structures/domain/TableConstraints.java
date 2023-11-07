@@ -163,7 +163,8 @@ public class TableConstraints {
 		final List<TableConstraintForeignKey> foreignKeysList = foreignKeys;
 		if (foreignKeysList != null) {
 			for (TableConstraintForeignKey fk : foreignKeysList) {
-				if (fk.getName().equals(name)) {
+				if (fk	.getName()
+						.equals(name)) {
 					return fk;
 				}
 			}
@@ -198,7 +199,8 @@ public class TableConstraints {
 		final List<TableConstraintUnique> uniqueIndexesList = uniqueIndexes;
 		if (uniqueIndexesList != null) {
 			for (TableConstraintUnique ui : uniqueIndexesList) {
-				if (ui.getName().equals(name)) {
+				if (ui	.getName()
+						.equals(name)) {
 					return ui;
 				}
 			}
@@ -233,7 +235,8 @@ public class TableConstraints {
 		final List<TableConstraintCheck> checksList = checks;
 		if (checksList != null) {
 			for (TableConstraintCheck ck : checksList) {
-				if (ck.getName().equals(name)) {
+				if (ck	.getName()
+						.equals(name)) {
 					return ck;
 				}
 			}

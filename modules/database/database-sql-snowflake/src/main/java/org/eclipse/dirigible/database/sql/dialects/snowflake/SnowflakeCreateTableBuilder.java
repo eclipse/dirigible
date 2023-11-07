@@ -69,19 +69,29 @@ public class SnowflakeCreateTableBuilder extends CreateTableBuilder<SnowflakeCre
 							.flatMap(Stream::of)
 							.toArray(String[]::new);
 		} else {
-			column = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
+			column = Stream	.of(definition, args)
+							.flatMap(Stream::of)
+							.toArray(String[]::new);
 		}
 		if (!isNullable) {
-			column = Stream.of(column, new String[] {getDialect().getNotNullArgument()}).flatMap(Stream::of).toArray(String[]::new);
+			column = Stream	.of(column, new String[] {getDialect().getNotNullArgument()})
+							.flatMap(Stream::of)
+							.toArray(String[]::new);
 		}
 		if (isPrimaryKey) {
-			column = Stream.of(column, new String[] {getDialect().getPrimaryKeyArgument()}).flatMap(Stream::of).toArray(String[]::new);
+			column = Stream	.of(column, new String[] {getDialect().getPrimaryKeyArgument()})
+							.flatMap(Stream::of)
+							.toArray(String[]::new);
 		}
 		if (isUnique && !isPrimaryKey) {
-			column = Stream.of(column, new String[] {getDialect().getUniqueArgument()}).flatMap(Stream::of).toArray(String[]::new);
+			column = Stream	.of(column, new String[] {getDialect().getUniqueArgument()})
+							.flatMap(Stream::of)
+							.toArray(String[]::new);
 		}
 		if (isFuzzyIndexEnabled) {
-			column = Stream.of(column, new String[] {getDialect().getFuzzySearchIndex()}).flatMap(Stream::of).toArray(String[]::new);
+			column = Stream	.of(column, new String[] {getDialect().getFuzzySearchIndex()})
+							.flatMap(Stream::of)
+							.toArray(String[]::new);
 		}
 
 		this.columns.add(column);

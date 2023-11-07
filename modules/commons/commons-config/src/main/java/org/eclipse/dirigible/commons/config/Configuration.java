@@ -502,7 +502,8 @@ public class Configuration {
 	 * @return the os
 	 */
 	public static String getOS() {
-		return System.getProperty("os.name").toLowerCase();
+		return System	.getProperty("os.name")
+						.toLowerCase();
 	}
 
 	/**

@@ -148,7 +148,8 @@ public class RabbitMQFacade extends Thread {
 	 * @return the connection
 	 */
 	private static Connection connect() {
-		String[] splitUri = Configuration.get(DIRIGIBLE_RABBITMQ_CLIENT_URI, RABBITMQ_CLIENT).split(":");
+		String[] splitUri = Configuration	.get(DIRIGIBLE_RABBITMQ_CLIENT_URI, RABBITMQ_CLIENT)
+											.split(":");
 		String host = splitUri[0];
 		int port = Integer.parseInt(splitUri[1]);
 

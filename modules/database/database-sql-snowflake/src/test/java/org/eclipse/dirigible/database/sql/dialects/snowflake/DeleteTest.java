@@ -26,7 +26,10 @@ public class DeleteTest {
 	 */
 	@Test
 	public void deleteSimple() {
-		String sql = SqlFactory.getNative(new SnowflakeSqlDialect()).delete().from("CUSTOMERS").build();
+		String sql = SqlFactory	.getNative(new SnowflakeSqlDialect())
+								.delete()
+								.from("CUSTOMERS")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("DELETE FROM CUSTOMERS", sql);

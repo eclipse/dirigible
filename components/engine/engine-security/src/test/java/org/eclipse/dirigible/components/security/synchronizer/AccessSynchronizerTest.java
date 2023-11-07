@@ -115,11 +115,13 @@ class AccessSynchronizerTest {
 	 */
 	@Test
 	public void testLoad() throws IOException, ParseException {
-		byte[] content = AccessSynchronizerTest.class.getResourceAsStream("/META-INF/dirigible/test/test.access").readAllBytes();
+		byte[] content = AccessSynchronizerTest.class	.getResourceAsStream("/META-INF/dirigible/test/test.access")
+														.readAllBytes();
 		List<Access> list = accessSynchronizer.parse("/META-INF/dirigible/test/test.access", content);
 		assertNotNull(list);
 		assertTrue(list.size() > 0);
-		assertEquals("/META-INF/dirigible/test/test.access", list.get(0).getLocation());
+		assertEquals("/META-INF/dirigible/test/test.access", list	.get(0)
+																	.getLocation());
 	}
 
 	/**

@@ -133,7 +133,8 @@ public class OpenAPIEndpoint extends BaseEndpoint {
 			}
 		}
 
-		String openAPIJson = io.swagger.v3.core.util.Json.mapper().writeValueAsString(openApi);
+		String openAPIJson = io.swagger.v3.core.util.Json	.mapper()
+															.writeValueAsString(openApi);
 		return new ResponseEntity<>(openAPIJson, HttpStatus.OK);
 	}
 
@@ -178,53 +179,102 @@ public class OpenAPIEndpoint extends BaseEndpoint {
 		OpenAPI contributionOpenApi = contributionOpenApiParseResult.getOpenAPI();
 		if (contributionOpenApi != null) {
 			if (contributionOpenApi.getComponents() != null) {
-				if (contributionOpenApi.getComponents().getCallbacks() != null) {
-					openApi.getComponents().getCallbacks().putAll(contributionOpenApi.getComponents().getCallbacks());
+				if (contributionOpenApi	.getComponents()
+										.getCallbacks() != null) {
+					openApi	.getComponents()
+							.getCallbacks()
+							.putAll(contributionOpenApi	.getComponents()
+														.getCallbacks());
 				}
-				if (contributionOpenApi.getComponents().getExamples() != null) {
-					openApi.getComponents().getExamples().putAll(contributionOpenApi.getComponents().getExamples());
+				if (contributionOpenApi	.getComponents()
+										.getExamples() != null) {
+					openApi	.getComponents()
+							.getExamples()
+							.putAll(contributionOpenApi	.getComponents()
+														.getExamples());
 				}
-				if (contributionOpenApi.getComponents().getExtensions() != null) {
-					openApi.getComponents().getExtensions().putAll(contributionOpenApi.getComponents().getExtensions());
+				if (contributionOpenApi	.getComponents()
+										.getExtensions() != null) {
+					openApi	.getComponents()
+							.getExtensions()
+							.putAll(contributionOpenApi	.getComponents()
+														.getExtensions());
 				}
-				if (contributionOpenApi.getComponents().getHeaders() != null) {
-					openApi.getComponents().getHeaders().putAll(contributionOpenApi.getComponents().getHeaders());
+				if (contributionOpenApi	.getComponents()
+										.getHeaders() != null) {
+					openApi	.getComponents()
+							.getHeaders()
+							.putAll(contributionOpenApi	.getComponents()
+														.getHeaders());
 				}
-				if (contributionOpenApi.getComponents().getLinks() != null) {
-					openApi.getComponents().getLinks().putAll(contributionOpenApi.getComponents().getLinks());
+				if (contributionOpenApi	.getComponents()
+										.getLinks() != null) {
+					openApi	.getComponents()
+							.getLinks()
+							.putAll(contributionOpenApi	.getComponents()
+														.getLinks());
 				}
-				if (contributionOpenApi.getComponents().getParameters() != null) {
-					openApi.getComponents().getParameters().putAll(contributionOpenApi.getComponents().getParameters());
+				if (contributionOpenApi	.getComponents()
+										.getParameters() != null) {
+					openApi	.getComponents()
+							.getParameters()
+							.putAll(contributionOpenApi	.getComponents()
+														.getParameters());
 				}
-				if (contributionOpenApi.getComponents().getPathItems() != null) {
-					openApi.getComponents().getPathItems().putAll(contributionOpenApi.getComponents().getPathItems());
+				if (contributionOpenApi	.getComponents()
+										.getPathItems() != null) {
+					openApi	.getComponents()
+							.getPathItems()
+							.putAll(contributionOpenApi	.getComponents()
+														.getPathItems());
 				}
-				if (contributionOpenApi.getComponents().getRequestBodies() != null) {
-					openApi.getComponents().getRequestBodies().putAll(contributionOpenApi.getComponents().getRequestBodies());
+				if (contributionOpenApi	.getComponents()
+										.getRequestBodies() != null) {
+					openApi	.getComponents()
+							.getRequestBodies()
+							.putAll(contributionOpenApi	.getComponents()
+														.getRequestBodies());
 				}
-				if (contributionOpenApi.getComponents().getResponses() != null) {
-					openApi.getComponents().getResponses().putAll(contributionOpenApi.getComponents().getResponses());
+				if (contributionOpenApi	.getComponents()
+										.getResponses() != null) {
+					openApi	.getComponents()
+							.getResponses()
+							.putAll(contributionOpenApi	.getComponents()
+														.getResponses());
 				}
-				if (contributionOpenApi.getComponents().getSchemas() != null) {
-					openApi.getComponents().getSchemas().putAll(contributionOpenApi.getComponents().getSchemas());
+				if (contributionOpenApi	.getComponents()
+										.getSchemas() != null) {
+					openApi	.getComponents()
+							.getSchemas()
+							.putAll(contributionOpenApi	.getComponents()
+														.getSchemas());
 				}
-				if (contributionOpenApi.getComponents().getSecuritySchemes() != null) {
-					openApi.getComponents().getSecuritySchemes().putAll(contributionOpenApi.getComponents().getSecuritySchemes());
+				if (contributionOpenApi	.getComponents()
+										.getSecuritySchemes() != null) {
+					openApi	.getComponents()
+							.getSecuritySchemes()
+							.putAll(contributionOpenApi	.getComponents()
+														.getSecuritySchemes());
 				}
 			}
 			if (contributionOpenApi.getPaths() != null) {
-				for (Entry<String, PathItem> path : contributionOpenApi.getPaths().entrySet()) {
-					openApi.getPaths().addPathItem(path.getKey(), path.getValue());
+				for (Entry<String, PathItem> path : contributionOpenApi	.getPaths()
+																		.entrySet()) {
+					openApi	.getPaths()
+							.addPathItem(path.getKey(), path.getValue());
 				}
 			}
 			if (contributionOpenApi.getSecurity() != null) {
-				openApi.getSecurity().addAll(contributionOpenApi.getSecurity());
+				openApi	.getSecurity()
+						.addAll(contributionOpenApi.getSecurity());
 			}
 			if (contributionOpenApi.getServers() != null) {
-				openApi.getServers().addAll(contributionOpenApi.getServers());
+				openApi	.getServers()
+						.addAll(contributionOpenApi.getServers());
 			}
 			if (contributionOpenApi.getTags() != null) {
-				openApi.getTags().addAll(contributionOpenApi.getTags());
+				openApi	.getTags()
+						.addAll(contributionOpenApi.getTags());
 			}
 		}
 	}

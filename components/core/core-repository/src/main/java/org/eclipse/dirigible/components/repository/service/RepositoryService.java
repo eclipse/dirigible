@@ -154,7 +154,8 @@ public class RepositoryService {
 	public URI getURI(String path) throws URISyntaxException {
 		StringBuilder relativePath = new StringBuilder(REPOSITORY_SERVICE_PREFIX).append(IRepositoryStructure.SEPARATOR);
 		if (path != null) {
-			relativePath.append(IRepositoryStructure.SEPARATOR).append(path);
+			relativePath.append(IRepositoryStructure.SEPARATOR)
+						.append(path);
 		}
 		return new URI(escape(relativePath.toString()));
 	}
@@ -170,8 +171,13 @@ public class RepositoryService {
 	public String find(String path, String pattern) throws IOException {
 		ICollection collection = getCollection(path);
 		if (collection.exists() && collection instanceof LocalCollection) {
-			List<String> list = FileSystemUtils.find(((LocalCollection) collection).getFolder().getPath(), pattern);
-			int repositoryRootLength = ((LocalCollection) collection.getRepository().getRoot()).getFolder().getPath().length();
+			List<String> list = FileSystemUtils.find(((LocalCollection) collection)	.getFolder()
+																					.getPath(),
+					pattern);
+			int repositoryRootLength = ((LocalCollection) collection.getRepository()
+																	.getRoot())	.getFolder()
+																				.getPath()
+																				.length();
 			List<String> prepared = new ArrayList<String>();
 			list.forEach(item -> {
 				String truncated = item.substring(repositoryRootLength);
@@ -193,7 +199,8 @@ public class RepositoryService {
 	 * @return escaped input
 	 */
 	public static final String escape(String input) {
-		return UrlEscapers.urlFragmentEscaper().escape(input);
+		return UrlEscapers	.urlFragmentEscaper()
+							.escape(input);
 
 	}
 

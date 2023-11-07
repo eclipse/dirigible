@@ -118,7 +118,8 @@ public class GenerationService {
 		Workspace workspaceObject = getWorkspaceService().getWorkspace(workspace);
 		Project projectObject = workspaceObject.getProject(project);
 		List<File> generatedFiles = new ArrayList<File>();
-		if (parameters.getParameters().size() == 0) {
+		if (parameters	.getParameters()
+						.size() == 0) {
 			parameters.getParameters();
 		}
 		addStandardParameters(workspace, project, path, parameters.getParameters());
@@ -129,15 +130,17 @@ public class GenerationService {
 		// Object metadata =
 		// ScriptEngineExecutorsManager.executeServiceCode(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT,
 		// wrapper, null);
-		Object metadata =
-				getWorkspaceService().getJavascriptService().handleRequest(projectObject.getName(), TEMPLATE_WRAPPER, null, null, false);
+		Object metadata = getWorkspaceService()	.getJavascriptService()
+												.handleRequest(projectObject.getName(), TEMPLATE_WRAPPER, null, null, false);
 		if (metadata != null) {
 			GenerationTemplateMetadata metadataObject = GsonHelper.fromJson(metadata.toString(), GenerationTemplateMetadata.class);
 
 			for (GenerationTemplateMetadataSource source : metadataObject.getSources()) {
-				String sourcePath =
-						new RepositoryPath().append(IRepositoryStructure.PATH_REGISTRY_PUBLIC).append(source.getLocation()).build();
-				IResource sourceResource = projectObject.getRepository().getResource(sourcePath);
+				String sourcePath = new RepositoryPath().append(IRepositoryStructure.PATH_REGISTRY_PUBLIC)
+														.append(source.getLocation())
+														.build();
+				IResource sourceResource = projectObject.getRepository()
+														.getResource(sourcePath);
 				if (sourceResource.exists()) {
 					byte[] input = sourceResource.getContent();
 					if (logger.isTraceEnabled()) {
@@ -185,7 +188,8 @@ public class GenerationService {
 	private void generateWithTemplateIterable(GenerationTemplateParameters parameters, Project projectObject, List<File> generatedFiles,
 			GenerationTemplateMetadataSource source, byte[] input) throws IOException {
 		if (source.getCollection() != null) {
-			List<Map<String, Object>> elements = (List<Map<String, Object>>) parameters.getParameters().get(source.getCollection());
+			List<Map<String, Object>> elements = (List<Map<String, Object>>) parameters	.getParameters()
+																						.get(source.getCollection());
 			if (elements == null) {
 				throw new IOException(
 						format("Invalid template definition file: [{0}]. Multiplicity element is set, but no actual parameter provided.",
@@ -243,9 +247,13 @@ public class GenerationService {
 		if (rename != null) {
 			generatedFileName = generateName(parameters, source.getLocation() + "-name", rename);
 		} else {
-			generatedFileName = new RepositoryPath().append(source.getLocation()).getLastSegment();
+			generatedFileName = new RepositoryPath().append(source.getLocation())
+													.getLastSegment();
 		}
-		String generatedFilePath = new RepositoryPath().append(parameters.get("packagePath").toString()).append(generatedFileName).build();
+		String generatedFilePath = new RepositoryPath()	.append(parameters	.get("packagePath")
+																			.toString())
+														.append(generatedFileName)
+														.build();
 		String contentType = ContentTypeHelper.getContentType(ContentTypeHelper.getExtension(generatedFileName));
 		boolean isBinary = ContentTypeHelper.isBinary(contentType);
 		File fileObject = projectObject.createFile(generatedFilePath, output, isBinary, contentType);
@@ -277,7 +285,8 @@ public class GenerationService {
 	 */
 	private void addStandardParameters(String workspace, String project, String path, Map<String, Object> parameters) {
 		RepositoryPath filePath = new RepositoryPath().append(path);
-		RepositoryPath packagePath = new RepositoryPath().append(path).getParentPath();
+		RepositoryPath packagePath = new RepositoryPath()	.append(path)
+															.getParentPath();
 		String fileName = filePath.getLastSegment();
 		String fileNameExt = FilenameUtils.getExtension(fileName);
 		String fileNameBase = FilenameUtils.getBaseName(fileName);
@@ -307,7 +316,8 @@ public class GenerationService {
 			throws IOException {
 		List<TemplateEngine> generationEngines = templateEnginesManager.getTemplateEngines();
 		for (TemplateEngine next : generationEngines) {
-			if (next.getName().equals(engine)) {
+			if (next.getName()
+					.equals(engine)) {
 				return next.generate(parameters, location, input, sm, em);
 			}
 		}
@@ -326,7 +336,8 @@ public class GenerationService {
 	private String generateName(Map<String, Object> parameters, String location, String input) throws IOException {
 		List<TemplateEngine> generationEngines = templateEnginesManager.getTemplateEngines();
 		for (TemplateEngine next : generationEngines) {
-			if (next.getName().equals(TemplateEngine.TEMPLATE_ENGINE_DEFAULT)) {
+			if (next.getName()
+					.equals(TemplateEngine.TEMPLATE_ENGINE_DEFAULT)) {
 				return new String(next.generate(parameters, location, input.getBytes()));
 			}
 		}

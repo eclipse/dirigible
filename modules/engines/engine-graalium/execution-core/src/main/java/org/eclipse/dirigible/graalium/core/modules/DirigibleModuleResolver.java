@@ -49,7 +49,8 @@ public class DirigibleModuleResolver implements ModuleResolver {
 	 */
 	public DirigibleModuleResolver(Path cacheDirectoryPath, JavascriptSourceProvider dirigibleSourceProvider) {
 		dirigibleModuleESMProxyGenerator = new DirigibleModuleESMProxyGenerator(dirigibleSourceProvider);
-		cacheDirectoryPath.toFile().mkdirs();
+		cacheDirectoryPath	.toFile()
+							.mkdirs();
 		this.cacheDirectoryPath = cacheDirectoryPath;
 	}
 

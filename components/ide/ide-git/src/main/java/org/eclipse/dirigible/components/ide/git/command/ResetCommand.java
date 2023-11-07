@@ -101,7 +101,8 @@ public class ResetCommand {
 		String errorMessage = String.format("Error occurred while hard reseting repository [%s].", repositoryName);
 
 		try {
-			File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repositoryName).getCanonicalFile();
+			File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repositoryName)
+											.getCanonicalFile();
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 			try {
 				gitConnector.hardReset();

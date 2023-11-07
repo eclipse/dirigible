@@ -23,6 +23,9 @@ public class DropTableTypeTest {
 	 */
 	@Test(expected = IllegalStateException.class)
 	public void executeDropTableTypeDifferentFromHanaDialect() {
-		SqlFactory.getNative(new MySQLSqlDialect()).drop().tableType("CUSTOMERS_STRUCTURE").build();
+		SqlFactory	.getNative(new MySQLSqlDialect())
+					.drop()
+					.tableType("CUSTOMERS_STRUCTURE")
+					.build();
 	}
 }

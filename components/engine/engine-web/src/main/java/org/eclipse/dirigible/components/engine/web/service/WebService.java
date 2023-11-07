@@ -64,12 +64,14 @@ public class WebService {
 		if (ExposeManager.isPathExposed(path)) {
 			if ("".equals(path.trim())) {
 				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Listing of web folders is forbidden.");
-			} else if (path.trim().endsWith(IRepositoryStructure.SEPARATOR)) {
+			} else if (path	.trim()
+							.endsWith(IRepositoryStructure.SEPARATOR)) {
 				return getResourceByPath(path + INDEX_HTML);
 			}
 			ResponseEntity resourceResponse = getResourceByPath(path);
 			if (!Configuration.isProductiveIFrameEnabled()) {
-				resourceResponse.getHeaders().add("X-Frame-Options", "Deny");
+				resourceResponse.getHeaders()
+								.add("X-Frame-Options", "Deny");
 			}
 			return resourceResponse;
 		}

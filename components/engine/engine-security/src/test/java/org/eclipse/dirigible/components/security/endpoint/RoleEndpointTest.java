@@ -77,7 +77,9 @@ class RoleEndpointTest {
 
 	@Test
 	public void testGetSecurityRoles() throws Exception {
-		mockMvc.perform(get("/services/security/roles")).andDo(print()).andExpect(status().isOk());
+		mockMvc	.perform(get("/services/security/roles"))
+				.andDo(print())
+				.andExpect(status().isOk());
 	}
 
 	@SpringBootApplication

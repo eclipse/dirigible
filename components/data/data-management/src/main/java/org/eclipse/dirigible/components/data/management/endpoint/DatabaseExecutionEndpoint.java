@@ -92,11 +92,17 @@ public class DatabaseExecutionEndpoint {
 		};
 
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(responseBody);
+			return ResponseEntity	.ok()
+									.contentType(MediaType.TEXT_PLAIN)
+									.body(responseBody);
 		} else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
-			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(responseBody);
+			return ResponseEntity	.ok()
+									.contentType(MediaType.TEXT_PLAIN)
+									.body(responseBody);
 		} else {
-			return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(responseBody);
+			return ResponseEntity	.ok()
+									.contentType(MediaType.APPLICATION_JSON)
+									.body(responseBody);
 		}
 	}
 
@@ -128,11 +134,17 @@ public class DatabaseExecutionEndpoint {
 		};
 
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(responseBody);
+			return ResponseEntity	.ok()
+									.contentType(MediaType.TEXT_PLAIN)
+									.body(responseBody);
 		} else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
-			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(responseBody);
+			return ResponseEntity	.ok()
+									.contentType(MediaType.TEXT_PLAIN)
+									.body(responseBody);
 		} else {
-			return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(responseBody);
+			return ResponseEntity	.ok()
+									.contentType(MediaType.APPLICATION_JSON)
+									.body(responseBody);
 		}
 	}
 
@@ -164,11 +176,17 @@ public class DatabaseExecutionEndpoint {
 		};
 
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(responseBody);
+			return ResponseEntity	.ok()
+									.contentType(MediaType.TEXT_PLAIN)
+									.body(responseBody);
 		} else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
-			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(responseBody);
+			return ResponseEntity	.ok()
+									.contentType(MediaType.TEXT_PLAIN)
+									.body(responseBody);
 		} else {
-			return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(responseBody);
+			return ResponseEntity	.ok()
+									.contentType(MediaType.APPLICATION_JSON)
+									.body(responseBody);
 		}
 	}
 
@@ -200,11 +218,17 @@ public class DatabaseExecutionEndpoint {
 		};
 
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(responseBody);
+			return ResponseEntity	.ok()
+									.contentType(MediaType.TEXT_PLAIN)
+									.body(responseBody);
 		} else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
-			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(responseBody);
+			return ResponseEntity	.ok()
+									.contentType(MediaType.TEXT_PLAIN)
+									.body(responseBody);
 		} else {
-			return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(responseBody);
+			return ResponseEntity	.ok()
+									.contentType(MediaType.APPLICATION_JSON)
+									.body(responseBody);
 		}
 	}
 

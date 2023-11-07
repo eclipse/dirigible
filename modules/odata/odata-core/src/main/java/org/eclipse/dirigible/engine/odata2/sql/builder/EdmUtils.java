@@ -145,14 +145,16 @@ public final class EdmUtils {
 	private static Set<String> getSelectedPropertyNames(List<SelectItem> selectedPropertyNames) throws EdmException {
 		Set<String> result = new HashSet<>();
 		for (SelectItem selectItem : selectedPropertyNames) {
-			if (selectItem.getNavigationPropertySegments() != null && !(selectItem.getNavigationPropertySegments().isEmpty()) //
+			if (selectItem.getNavigationPropertySegments() != null && !(selectItem	.getNavigationPropertySegments()
+																					.isEmpty()) //
 					|| selectItem.getProperty() == null //
 					|| selectItem.isStar() //
 			) {
 				LOG.error("SelectItems with NavigationPath or 'Star' values are not implemented yet!");
 				throw new OData2Exception("Not Implemented", HttpStatusCodes.NOT_IMPLEMENTED);
 			}
-			result.add(selectItem.getProperty().getName());
+			result.add(selectItem	.getProperty()
+									.getName());
 		}
 		return result;
 	}

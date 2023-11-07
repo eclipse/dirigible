@@ -88,7 +88,11 @@ public class CsvRecord {
 	 */
 	public String getPkColumnName() {
 		if (pkColumnName == null) {
-			ColumnMetadata found = table.getColumns().stream().filter(c -> c.isKey()).findFirst().orElse(null);
+			ColumnMetadata found = table.getColumns()
+										.stream()
+										.filter(c -> c.isKey())
+										.findFirst()
+										.orElse(null);
 			pkColumnName = found != null ? found.getName() : null;
 		}
 

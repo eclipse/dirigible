@@ -779,7 +779,8 @@ public abstract class FileSystemRepository implements IRepository {
 				new WildcardFileFilter("*" + parameter + "*", (caseInsensitive ? INSENSITIVE : SENSITIVE)), TRUE);
 		while (foundFiles.hasNext()) {
 			File foundFile = foundFiles.next();
-			String repositoryName = foundFile.getAbsolutePath().substring(getRepositoryPath().length());
+			String repositoryName = foundFile	.getAbsolutePath()
+												.substring(getRepositoryPath().length());
 			RepositoryPath localRepositoryPath = new RepositoryPath(repositoryName);
 			entities.add(new LocalResource(this, localRepositoryPath));
 		}
@@ -837,7 +838,8 @@ public abstract class FileSystemRepository implements IRepository {
 		Iterator<File> foundFiles = FileUtils.iterateFiles(new File(rootRepositoryPath), new WildcardFileFilter("*.*", INSENSITIVE), TRUE);
 		while (foundFiles.hasNext()) {
 			File foundFile = foundFiles.next();
-			String repositoryName = foundFile.getAbsolutePath().substring(getRepositoryPath().length());
+			String repositoryName = foundFile	.getAbsolutePath()
+												.substring(getRepositoryPath().length());
 			RepositoryPath localRepositoryPath = new RepositoryPath(repositoryName);
 			paths.add(localRepositoryPath.toString());
 		}
@@ -893,10 +895,18 @@ public abstract class FileSystemRepository implements IRepository {
 			throw new IOException("The source path does not exist: " + filePath);
 		}
 		String workspacePath = LocalWorkspaceMapper.getMappedName(this, repositoryPath);
-		if (!Paths.get(workspacePath).getParent().toFile().exists()) {
-			FileSystemUtils.forceCreateDirectory(Paths.get(workspacePath).getParent().toString());
+		if (!Paths	.get(workspacePath)
+					.getParent()
+					.toFile()
+					.exists()) {
+			FileSystemUtils.forceCreateDirectory(Paths	.get(workspacePath)
+														.getParent()
+														.toString());
 		}
-		Files.createSymbolicLink(Paths.get(workspacePath).toAbsolutePath(), Paths.get(filePath).toAbsolutePath());
+		Files.createSymbolicLink(Paths	.get(workspacePath)
+										.toAbsolutePath(),
+				Paths	.get(filePath)
+						.toAbsolutePath());
 	}
 
 	/**
@@ -923,7 +933,8 @@ public abstract class FileSystemRepository implements IRepository {
 	@Override
 	public boolean isLinkedPath(String repositoryPath) {
 		String workspacePath = LocalWorkspaceMapper.getMappedName(this, repositoryPath);
-		return Files.isSymbolicLink(Paths.get(workspacePath).toAbsolutePath());
+		return Files.isSymbolicLink(Paths	.get(workspacePath)
+											.toAbsolutePath());
 	}
 
 	/**
@@ -944,8 +955,13 @@ public abstract class FileSystemRepository implements IRepository {
 		try {
 			ICollection collection = getCollection(path);
 			if (collection.exists() && collection instanceof LocalCollection) {
-				List<String> list = FileSystemUtils.find(((LocalCollection) collection).getFolder().getPath(), pattern);
-				int repositoryRootLength = ((LocalCollection) collection.getRepository().getRoot()).getFolder().getPath().length();
+				List<String> list = FileSystemUtils.find(((LocalCollection) collection)	.getFolder()
+																						.getPath(),
+						pattern);
+				int repositoryRootLength = ((LocalCollection) collection.getRepository()
+																		.getRoot())	.getFolder()
+																					.getPath()
+																					.length();
 				List<String> prepared = new ArrayList<String>();
 				list.forEach(item -> {
 					String truncated = item.substring(repositoryRootLength);

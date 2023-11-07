@@ -49,7 +49,8 @@ public class HanaCreateTemporaryTableBuilder extends CreateTemporaryTableBuilder
 		// CREATE
 		generateCreate(sql);
 
-		sql.append(SPACE).append(METADATA_LOCAL_TEMPORARY);
+		sql	.append(SPACE)
+			.append(METADATA_LOCAL_TEMPORARY);
 
 		// TABLE
 		generateTable(sql);
@@ -57,11 +58,17 @@ public class HanaCreateTemporaryTableBuilder extends CreateTemporaryTableBuilder
 		sql.append(SPACE);
 		if (this.likeTable != null) {
 			// LIKE table
-			sql.append(KEYWORD_LIKE).append(SPACE).append(this.likeTable);
+			sql	.append(KEYWORD_LIKE)
+				.append(SPACE)
+				.append(this.likeTable);
 			appendWithNoDataKeywords(sql);
 		} else if (this.asSelectQuery != null) {
 			// AS select query
-			sql.append(KEYWORD_AS).append(SPACE).append(OPEN).append(this.asSelectQuery).append(CLOSE);
+			sql	.append(KEYWORD_AS)
+				.append(SPACE)
+				.append(OPEN)
+				.append(this.asSelectQuery)
+				.append(CLOSE);
 			if (this.selectWithNoData) {
 				appendWithNoDataKeywords(sql);
 			}
@@ -84,6 +91,11 @@ public class HanaCreateTemporaryTableBuilder extends CreateTemporaryTableBuilder
 	 * @param sql the sql
 	 */
 	private void appendWithNoDataKeywords(StringBuilder sql) {
-		sql.append(SPACE).append(KEYWORD_WITH).append(SPACE).append(KEYWORD_NO).append(SPACE).append(KEYWORD_DATA);
+		sql	.append(SPACE)
+			.append(KEYWORD_WITH)
+			.append(SPACE)
+			.append(KEYWORD_NO)
+			.append(SPACE)
+			.append(KEYWORD_DATA);
 	}
 }

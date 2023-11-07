@@ -104,7 +104,9 @@ public class GitFacade implements InitializingBean {
 	 */
 	public static void initRepository(String username, String email, String workspaceName, String projectName, String repositoryName,
 			String commitMessage) throws IOException, GitAPIException, GitConnectorException {
-		Workspace workspaceObject = GitFacade.get().getWorkspaceService().getWorkspace(workspaceName);
+		Workspace workspaceObject = GitFacade	.get()
+												.getWorkspaceService()
+												.getWorkspace(workspaceName);
 		Project projectObject = workspaceObject.getProject(projectName);
 		ensureProjectJsonIsCreatedForProject(workspaceObject, projectName);
 		String user = UserFacade.getName();
@@ -178,7 +180,9 @@ public class GitFacade implements InitializingBean {
 	 */
 	public static List<ProjectDescriptor> getGitRepositories(String workspaceName) {
 		String user = UserFacade.getName();
-		Workspace workspaceObject = GitFacade.get().getWorkspaceService().getWorkspace(workspaceName);
+		Workspace workspaceObject = GitFacade	.get()
+												.getWorkspaceService()
+												.getWorkspace(workspaceName);
 		if (!workspaceObject.exists()) {
 			return null;
 		}
@@ -228,8 +232,11 @@ public class GitFacade implements InitializingBean {
 				throw new RefNotFoundException("Repository not found");
 			}
 
-			Workspace workspaceApi = GitFacade.get().getWorkspaceService().getWorkspace(workspaceName);
-			Project[] workspaceProjects = workspaceApi.getProjects().toArray(new Project[0]);
+			Workspace workspaceApi = GitFacade	.get()
+												.getWorkspaceService()
+												.getWorkspace(workspaceName);
+			Project[] workspaceProjects = workspaceApi	.getProjects()
+														.toArray(new Project[0]);
 			for (Project next : workspaceProjects) {
 				if (next.exists()) {
 					next.delete();

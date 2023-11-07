@@ -129,11 +129,11 @@ public class Command {
 			throw new IllegalArgumentException("Commands array is empty. Set appropriate command per target OS");
 		}
 
-		CommandDescriptor commandDescriptor =
-				commands.stream()
-						.filter(CommandDescriptor::isCompatibleWithCurrentOS)
-						.findFirst()
-						.orElseThrow(() -> new IllegalArgumentException("There is no command for current OS"));
+		CommandDescriptor commandDescriptor = commands	.stream()
+														.filter(CommandDescriptor::isCompatibleWithCurrentOS)
+														.findFirst()
+														.orElseThrow(
+																() -> new IllegalArgumentException("There is no command for current OS"));
 		setTargetCommand(commandDescriptor);
 	}
 

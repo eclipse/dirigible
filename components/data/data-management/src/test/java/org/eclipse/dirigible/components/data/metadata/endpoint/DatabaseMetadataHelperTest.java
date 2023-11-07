@@ -44,7 +44,8 @@ public class DatabaseMetadataHelperTest {
 	@Test
 	public void listSchemasTest() {
 		try {
-			try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
+			try (Connection connection = datasourcesManager	.getDefaultDataSource()
+															.getConnection()) {
 				DatabaseMetadataHelper.listSchemas(connection, null, null, null);
 			}
 		} catch (SQLException e) {

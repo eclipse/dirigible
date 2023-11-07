@@ -73,7 +73,8 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
 		// TABLE TYPE
 		generateTableType(sql);
 
-		sql.append(SPACE).append(OPEN);
+		sql	.append(SPACE)
+			.append(OPEN);
 
 		// COLUMNS
 		generateStructureColumns(sql);
@@ -98,7 +99,8 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
 	 * @param sql the sql
 	 */
 	private void generateStructureColumns(StringBuilder sql) {
-		if (!this.getColumns().isEmpty()) {
+		if (!this	.getColumns()
+					.isEmpty()) {
 			sql.append(iterateColumns());
 		}
 	}
@@ -110,10 +112,10 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
 	 */
 	private String iterateColumns() {
 
-		List<String[]> allPrimaryKeys =
-				this.columns.stream()
-							.filter(el -> Arrays.stream(el).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
-							.collect(Collectors.toList());
+		List<String[]> allPrimaryKeys = this.columns.stream()
+													.filter(el -> Arrays.stream(el)
+																		.anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
+													.collect(Collectors.toList());
 		boolean isCompositeKey = allPrimaryKeys.size() > 1;
 
 		StringBuilder snippet = new StringBuilder();
@@ -124,16 +126,19 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
 			for (String arg : column) {
 				if (isColumnName) {
 					String columnName = (isCaseSensitive()) ? encapsulate(arg) : arg;
-					snippet.append(columnName).append(SPACE);
+					snippet	.append(columnName)
+							.append(SPACE);
 					isColumnName = false;
 					continue;
 				}
 				if (isCompositeKey && arg.equals(getDialect().getPrimaryKeyArgument())) {
 					continue;
 				}
-				snippet.append(arg).append(SPACE);
+				snippet	.append(arg)
+						.append(SPACE);
 			}
-			snippet.append(COMMA).append(SPACE);
+			snippet	.append(COMMA)
+					.append(SPACE);
 		}
 		return snippet.substring(0, snippet.length() - 2);
 	}
@@ -218,11 +223,14 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
 
 
 		if (!isNullable) {
-			definition = Stream.of(definition, new String[] {getDialect().getNotNullArgument()}).flatMap(Stream::of).toArray(String[]::new);
+			definition = Stream	.of(definition, new String[] {getDialect().getNotNullArgument()})
+								.flatMap(Stream::of)
+								.toArray(String[]::new);
 		}
 		if (isPrimaryKey) {
-			definition =
-					Stream.of(definition, new String[] {getDialect().getPrimaryKeyArgument()}).flatMap(Stream::of).toArray(String[]::new);
+			definition = Stream	.of(definition, new String[] {getDialect().getPrimaryKeyArgument()})
+								.flatMap(Stream::of)
+								.toArray(String[]::new);
 		}
 
 		this.columns.add(definition);
@@ -237,15 +245,21 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
 	protected void generatePrimaryKey(StringBuilder sql) {
 		List<String[]> allPrimaryKeys = this.getColumns()
 											.stream()
-											.filter(el -> Arrays.stream(el).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
+											.filter(el -> Arrays.stream(el)
+																.anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
 											.collect(Collectors.toList());
 		boolean isCompositeKey = allPrimaryKeys.size() > 1;
 
-		if ((this.primaryKey != null) && allPrimaryKeys.size() == 0 && !this.primaryKey.getColumns().isEmpty()) {
-			sql.append(COMMA).append(SPACE);
+		if ((this.primaryKey != null) && allPrimaryKeys.size() == 0 && !this.primaryKey	.getColumns()
+																						.isEmpty()) {
+			sql	.append(COMMA)
+				.append(SPACE);
 			if (this.primaryKey.getName() != null) {
 				String primaryKeyName = (isCaseSensitive()) ? encapsulate(this.primaryKey.getName()) : this.primaryKey.getName();
-				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(primaryKeyName).append(SPACE);
+				sql	.append(KEYWORD_CONSTRAINT)
+					.append(SPACE)
+					.append(primaryKeyName)
+					.append(SPACE);
 			}
 			sql	.append(KEYWORD_PRIMARY)
 				.append(SPACE)
@@ -256,7 +270,8 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
 				.append(CLOSE);
 		} else {
 			if (isCompositeKey) {
-				sql.append(COMMA).append(SPACE);
+				sql	.append(COMMA)
+					.append(SPACE);
 				ArrayList<String> keys = new ArrayList<>();
 				allPrimaryKeys.forEach(el -> keys.add(el[0]));
 				sql	.append(KEYWORD_PRIMARY)
@@ -299,7 +314,10 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
 		snippet.append(SPACE);
 		for (String column : names) {
 			String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
-			snippet.append(columnName).append(SPACE).append(COMMA).append(SPACE);
+			snippet	.append(columnName)
+					.append(SPACE)
+					.append(COMMA)
+					.append(SPACE);
 		}
 		return snippet.substring(0, snippet.length() - 2);
 	}

@@ -54,28 +54,47 @@ public class OData2ODataHTransformerTest {
 		List<ODataHandler> actualResult = odata2ODataHTransformer.transform(definition);
 
 		assertEquals(actualResult.size(), 4);
-		assertEquals("employeeType", actualResult.get(0).getName());
-		assertEquals("np", actualResult.get(0).getNamespace());
-		assertEquals(ODataHandlerMethods.create.name(), actualResult.get(0).getMethod());
-		assertEquals(ODataHandlerTypes.before.name(), actualResult.get(0).getKind());
-		assertEquals("/test1/myhandler", actualResult.get(0).getHandler());
+		assertEquals("employeeType", actualResult	.get(0)
+													.getName());
+		assertEquals("np", actualResult	.get(0)
+										.getNamespace());
+		assertEquals(ODataHandlerMethods.create.name(), actualResult.get(0)
+																	.getMethod());
+		assertEquals(ODataHandlerTypes.before.name(), actualResult	.get(0)
+																	.getKind());
+		assertEquals("/test1/myhandler", actualResult	.get(0)
+														.getHandler());
 
-		assertEquals("employeeType", actualResult.get(1).getName());
-		assertEquals("np", actualResult.get(1).getNamespace());
-		assertEquals(ODataHandlerMethods.update.name(), actualResult.get(1).getMethod());
-		assertEquals(ODataHandlerTypes.after.name(), actualResult.get(1).getKind());
-		assertEquals("/test2/myhandler", actualResult.get(1).getHandler());
+		assertEquals("employeeType", actualResult	.get(1)
+													.getName());
+		assertEquals("np", actualResult	.get(1)
+										.getNamespace());
+		assertEquals(ODataHandlerMethods.update.name(), actualResult.get(1)
+																	.getMethod());
+		assertEquals(ODataHandlerTypes.after.name(), actualResult	.get(1)
+																	.getKind());
+		assertEquals("/test2/myhandler", actualResult	.get(1)
+														.getHandler());
 
-		assertEquals("employeeType", actualResult.get(2).getName());
-		assertEquals("np", actualResult.get(2).getNamespace());
-		assertEquals(ODataHandlerMethods.delete.name(), actualResult.get(2).getMethod());
-		assertEquals(ODataHandlerTypes.on.name(), actualResult.get(2).getKind());
-		assertEquals("/test3/myhandler", actualResult.get(2).getHandler());
+		assertEquals("employeeType", actualResult	.get(2)
+													.getName());
+		assertEquals("np", actualResult	.get(2)
+										.getNamespace());
+		assertEquals(ODataHandlerMethods.delete.name(), actualResult.get(2)
+																	.getMethod());
+		assertEquals(ODataHandlerTypes.on.name(), actualResult	.get(2)
+																.getKind());
+		assertEquals("/test3/myhandler", actualResult	.get(2)
+														.getHandler());
 
-		assertEquals("employeeType", actualResult.get(3).getName());
-		assertEquals("np", actualResult.get(3).getNamespace());
-		assertEquals(ODataHandlerMethods.delete.name(), actualResult.get(3).getMethod());
-		assertEquals(ODataHandlerTypes.forbid.name(), actualResult.get(3).getKind());
+		assertEquals("employeeType", actualResult	.get(3)
+													.getName());
+		assertEquals("np", actualResult	.get(3)
+										.getNamespace());
+		assertEquals(ODataHandlerMethods.delete.name(), actualResult.get(3)
+																	.getMethod());
+		assertEquals(ODataHandlerTypes.forbid.name(), actualResult	.get(3)
+																	.getKind());
 	}
 
 	/**

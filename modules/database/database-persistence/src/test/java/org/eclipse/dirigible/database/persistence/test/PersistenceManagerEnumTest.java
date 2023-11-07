@@ -99,7 +99,8 @@ public class PersistenceManagerEnumTest extends AbstractPersistenceManagerTest {
 		try {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				assertTrue(Process.ProcessType.STARTED.name().equals(resultSet.getString("PROCESS_TYPE_AS_STRING")));
+				assertTrue(Process.ProcessType.STARTED	.name()
+														.equals(resultSet.getString("PROCESS_TYPE_AS_STRING")));
 				assertTrue(Process.ProcessType.STARTED.ordinal() == resultSet.getInt("PROCESS_TYPE_AS_INT"));
 			}
 		} finally {

@@ -155,7 +155,8 @@ public class LocalResource extends LocalEntity implements IResource {
 			// repositorySourcePath);
 			// String workspacePathNew = LocalWorkspaceMapper.getMappedName(getRepository(),
 			// repositoryTargetPath);
-			getRepository().getRepositoryDao().copyFile(repositorySourcePath, repositoryTargetPath);
+			getRepository()	.getRepositoryDao()
+							.copyFile(repositorySourcePath, repositoryTargetPath);
 			// FileSystemUtils.copyFile(workspacePathOld, workspacePathNew);
 		} catch (LocalRepositoryException e) {
 			throw new RepositoryWriteException(e);
@@ -177,7 +178,8 @@ public class LocalResource extends LocalEntity implements IResource {
 	public boolean exists() throws RepositoryReadException {
 		String repositoryPath = getRepositoryPath().toString();
 		// String localPath = LocalWorkspaceMapper.getMappedName(getRepository(), repositoryPath);
-		return getRepository().getRepositoryDao().fileExists(repositoryPath);// (FileSystemUtils.fileExists(localPath));
+		return getRepository()	.getRepositoryDao()
+								.fileExists(repositoryPath);// (FileSystemUtils.fileExists(localPath));
 	}
 
 	/**

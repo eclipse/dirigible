@@ -99,7 +99,8 @@ public class TerminalWebsocketHandler extends BinaryWebSocketHandler implements 
 	@Override
 	protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws Exception {
 		if (logger.isTraceEnabled()) {
-			logger.trace("[ws:terminal] onMessage: " + new String(message.getPayload().array()));
+			logger.trace("[ws:terminal] onMessage: " + new String(message	.getPayload()
+																			.array()));
 		}
 
 		TerminalWebsocketClientEndpoint clientEndPoint = SESSION_TO_CLIENT.get(session.getId());
@@ -143,7 +144,8 @@ public class TerminalWebsocketHandler extends BinaryWebSocketHandler implements 
 		TerminalWebsocketClientEndpoint clientEndPoint = SESSION_TO_CLIENT.remove(session.getId());
 		try {
 			if (clientEndPoint != null && clientEndPoint.getSession() != null) {
-				clientEndPoint.getSession().close();
+				clientEndPoint	.getSession()
+								.close();
 			}
 		} catch (IOException e) {
 			logger.error(TERMINAL_PREFIX + e.getMessage(), e);
@@ -216,7 +218,8 @@ public class TerminalWebsocketHandler extends BinaryWebSocketHandler implements 
 		@Override
 		public void run() {
 			try {
-				this.process = Runtime.getRuntime().exec(this.command);
+				this.process = Runtime	.getRuntime()
+										.exec(this.command);
 
 				Thread reader = new Thread(new Runnable() {
 					public void run() {

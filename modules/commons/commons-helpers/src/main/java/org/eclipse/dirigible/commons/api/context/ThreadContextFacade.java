@@ -59,11 +59,14 @@ public class ThreadContextFacade {
 
 		}
 
-		STACKED_CONTEXT.get().put(STACK_ID.get(), collectParentObjects());
-		STACKED_CLOSEABLES.get().put(STACK_ID.get(), new HashMap<>());
+		STACKED_CONTEXT	.get()
+						.put(STACK_ID.get(), collectParentObjects());
+		STACKED_CLOSEABLES	.get()
+							.put(STACK_ID.get(), new HashMap<>());
 
 		if (logger.isTraceEnabled()) {
-			logger.trace("Scripting context {} has been set up", Thread.currentThread().hashCode());
+			logger.trace("Scripting context {} has been set up", Thread	.currentThread()
+																		.hashCode());
 		}
 	}
 
@@ -76,7 +79,8 @@ public class ThreadContextFacade {
 		Map<String, Object> allParentObjects = new HashMap<>();
 
 		for (int parentStackId = STACK_ID.get() - 1; parentStackId >= 0; parentStackId -= 1) {
-			Map<String, Object> parentStackObjects = STACKED_CONTEXT.get().get(parentStackId);
+			Map<String, Object> parentStackObjects = STACKED_CONTEXT.get()
+																	.get(parentStackId);
 			allParentObjects.putAll(parentStackObjects);
 		}
 
@@ -94,25 +98,34 @@ public class ThreadContextFacade {
 		}
 
 		if (stackedContextIsNotEmpty()) {
-			STACKED_CONTEXT.get().get(stackId).clear();
+			STACKED_CONTEXT	.get()
+							.get(stackId)
+							.clear();
 		}
 
 		if (stackedCloseablesIsNotEmpty()) {
-			Map<String, AutoCloseable> CLOSEABLES = STACKED_CLOSEABLES.get().get(stackId);
+			Map<String, AutoCloseable> CLOSEABLES = STACKED_CLOSEABLES	.get()
+																		.get(stackId);
 			for (Entry<String, AutoCloseable> closeable : CLOSEABLES.entrySet()) {
 				try {
 					if (logger.isErrorEnabled()) {
-						logger.error("Object of type {} from the context {} has not been closed properly.",
-								closeable.getValue().getClass().getCanonicalName(), Thread.currentThread().hashCode());
+						logger.error("Object of type {} from the context {} has not been closed properly.", closeable	.getValue()
+																														.getClass()
+																														.getCanonicalName(),
+								Thread	.currentThread()
+										.hashCode());
 					}
-					closeable.getValue().close();
+					closeable	.getValue()
+								.close();
 				} catch (Exception e) {
 					if (logger.isErrorEnabled()) {
 						logger.error(e.getMessage(), e);
 					}
 				}
 			}
-			STACKED_CLOSEABLES.get().get(stackId).clear();
+			STACKED_CLOSEABLES	.get()
+								.get(stackId)
+								.clear();
 		}
 
 		if (stackId == 0) {
@@ -122,7 +135,8 @@ public class ThreadContextFacade {
 		STACK_ID.set(stackId - 1);
 
 		if (logger.isTraceEnabled()) {
-			logger.trace("Scripting context {} has been torn down", Thread.currentThread().hashCode());
+			logger.trace("Scripting context {} has been torn down", Thread	.currentThread()
+																			.hashCode());
 		}
 	}
 
@@ -163,9 +177,13 @@ public class ThreadContextFacade {
 	 */
 	public static void set(String key, Object value) throws ContextException {
 		checkContext();
-		STACKED_CONTEXT.get().get(STACK_ID.get()).put(key, value);
+		STACKED_CONTEXT	.get()
+						.get(STACK_ID.get())
+						.put(key, value);
 		if (logger.isTraceEnabled()) {
-			logger.trace("Context object has been added to {} with key {}", Thread.currentThread().hashCode(), key);
+			logger.trace("Context object has been added to {} with key {}", Thread	.currentThread()
+																					.hashCode(),
+					key);
 		}
 	}
 
@@ -177,7 +195,9 @@ public class ThreadContextFacade {
 	 */
 	public static void remove(String key) throws ContextException {
 		checkContext();
-		STACKED_CONTEXT.get().get(STACK_ID.get()).remove(key);
+		STACKED_CONTEXT	.get()
+						.get(STACK_ID.get())
+						.remove(key);
 		if (logger.isTraceEnabled()) {
 			logger.trace("Context object has been removed - key {}", key);
 		}
@@ -220,9 +240,13 @@ public class ThreadContextFacade {
 	 */
 	public static void addCloseable(AutoCloseable closeable) {
 		if (STACKED_CLOSEABLES.get() != null) {
-			STACKED_CLOSEABLES.get().get(STACK_ID.get()).put(STACK_ID.get() + "_" + closeable.hashCode(), closeable);
+			STACKED_CLOSEABLES	.get()
+								.get(STACK_ID.get())
+								.put(STACK_ID.get() + "_" + closeable.hashCode(), closeable);
 			if (logger.isTraceEnabled()) {
-				logger.trace("Closeable object has been added to {} with hash {}", Thread.currentThread().hashCode(), closeable.hashCode());
+				logger.trace("Closeable object has been added to {} with hash {}", Thread	.currentThread()
+																							.hashCode(),
+						closeable.hashCode());
 			}
 		}
 	}
@@ -234,7 +258,9 @@ public class ThreadContextFacade {
 	 */
 	public static void removeCloseable(AutoCloseable closeable) {
 		if (STACKED_CLOSEABLES.get() != null) {
-			STACKED_CLOSEABLES.get().get(STACK_ID.get()).remove(STACK_ID.get() + "_" + closeable.hashCode());
+			STACKED_CLOSEABLES	.get()
+								.get(STACK_ID.get())
+								.remove(STACK_ID.get() + "_" + closeable.hashCode());
 			if (logger.isTraceEnabled()) {
 				logger.trace("Closeable object has been removed - hash {}", closeable.hashCode());
 			}

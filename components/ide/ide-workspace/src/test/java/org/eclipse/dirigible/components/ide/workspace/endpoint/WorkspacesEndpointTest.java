@@ -87,7 +87,8 @@ public class WorkspacesEndpointTest {
 	 */
 	@AfterEach
 	public void cleanup() throws Exception {
-		mockMvc.perform(delete("/services/ide/workspaces/workspace1").with(csrf())).andDo(print());
+		mockMvc	.perform(delete("/services/ide/workspaces/workspace1").with(csrf()))
+				.andDo(print());
 	}
 
 	/**
@@ -98,7 +99,9 @@ public class WorkspacesEndpointTest {
 	 */
 	@Test
 	public void getAllWorkspaces() throws Exception {
-		mockMvc.perform(get("/services/ide/workspaces")).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/ide/workspaces"))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	/**
@@ -108,13 +111,19 @@ public class WorkspacesEndpointTest {
 	 */
 	@Test
 	public void createGetDeleteWorkspace() throws Exception {
-		mockMvc.perform(post("/services/ide/workspaces/workspace1").with(csrf())).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(post("/services/ide/workspaces/workspace1").with(csrf()))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 		Workspace workspace = workspaceService.getWorkspace("workspace1");
 		assertNotNull(workspace);
 		assertEquals("workspace1", workspace.getName());
 		assertTrue(workspace.exists());
-		mockMvc.perform(get("/services/ide/workspaces/workspace1")).andDo(print()).andExpect(status().is2xxSuccessful());
-		mockMvc.perform(delete("/services/ide/workspaces/workspace1").with(csrf())).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/ide/workspaces/workspace1"))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(delete("/services/ide/workspaces/workspace1").with(csrf()))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	/**
@@ -124,7 +133,9 @@ public class WorkspacesEndpointTest {
 	 */
 	@Test
 	public void createGetDeleteProject() throws Exception {
-		mockMvc.perform(post("/services/ide/workspaces/workspace1").with(csrf())).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(post("/services/ide/workspaces/workspace1").with(csrf()))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 		mockMvc	.perform(post("/services/ide/workspaces/workspace1/project1").with(csrf()))
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful());
@@ -134,14 +145,18 @@ public class WorkspacesEndpointTest {
 		assertNotNull(project);
 		assertEquals("project1", project.getName());
 		assertTrue(project.exists());
-		mockMvc.perform(get("/services/ide/workspaces/workspace1/project1")).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/ide/workspaces/workspace1/project1"))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 		mockMvc	.perform(delete("/services/ide/workspaces/workspace1/project1").with(csrf()))
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful());
 		project = workspace.getProject("project1");
 		assertNotNull(project);
 		assertFalse(project.exists());
-		mockMvc.perform(delete("/services/ide/workspaces/workspace1").with(csrf())).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(delete("/services/ide/workspaces/workspace1").with(csrf()))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	/**
@@ -151,7 +166,9 @@ public class WorkspacesEndpointTest {
 	 */
 	@Test
 	public void createGetDeleteFile() throws Exception {
-		mockMvc.perform(post("/services/ide/workspaces/workspace1").with(csrf())).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(post("/services/ide/workspaces/workspace1").with(csrf()))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 		mockMvc	.perform(post("/services/ide/workspaces/workspace1/project1").with(csrf()))
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful());
@@ -180,7 +197,9 @@ public class WorkspacesEndpointTest {
 		mockMvc	.perform(delete("/services/ide/workspaces/workspace1/project1").with(csrf()))
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful());
-		mockMvc.perform(delete("/services/ide/workspaces/workspace1").with(csrf())).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(delete("/services/ide/workspaces/workspace1").with(csrf()))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	/**

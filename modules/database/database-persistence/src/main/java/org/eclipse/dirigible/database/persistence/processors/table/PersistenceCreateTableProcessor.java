@@ -58,8 +58,9 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-		CreateTableBuilder createTableBuilder =
-				SqlFactory.getNative(SqlFactory.deriveDialect(connection)).create().table(tableModel.getTableName());
+		CreateTableBuilder createTableBuilder = SqlFactory	.getNative(SqlFactory.deriveDialect(connection))
+															.create()
+															.table(tableModel.getTableName());
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			DataType dataType;
 			dataType = DataType.valueOfByName(columnModel.getType());

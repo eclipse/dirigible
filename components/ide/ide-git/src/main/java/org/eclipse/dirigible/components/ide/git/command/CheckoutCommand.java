@@ -150,7 +150,9 @@ public class CheckoutCommand {
 				logger.debug(String.format("Checkout of the repository %s and branch %s finished.", model.getProject(), model.getBranch()));
 			}
 
-			int numberOfConflictingFiles = gitConnector.status().getConflicting().size();
+			int numberOfConflictingFiles = gitConnector	.status()
+														.getConflicting()
+														.size();
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("Number of conflicting files in the repository [%s]: %d.", model.getProject(),
 						numberOfConflictingFiles));
@@ -196,7 +198,8 @@ public class CheckoutCommand {
 			for (String pulledProject : pulledProjects) {
 				List<Project> projects = workspace.getProjects();
 				for (Project project : projects) {
-					if (project.getName().equals(pulledProject)) {
+					if (project	.getName()
+								.equals(pulledProject)) {
 						try {
 							publisherService.publish(workspace.getName(), pulledProject, "");
 							if (logger.isInfoEnabled()) {

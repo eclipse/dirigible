@@ -76,7 +76,8 @@ public class GitConnectorTest {
 				assertNotNull(textContent);
 				assertEquals("Test Content", textContent.trim());
 			} finally {
-				if (path.toFile().exists()) {
+				if (path.toFile()
+						.exists()) {
 					FileUtils.deleteDirectory(path.toFile());
 				}
 			}

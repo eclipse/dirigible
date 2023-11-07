@@ -85,11 +85,13 @@ public class ManagedDataSource implements DataSource {
 		Connection connection = originalDataSource.getConnection();
 
 		if (this.databaseName == null) {
-			this.databaseName = connection.getMetaData().getDatabaseProductName();
+			this.databaseName = connection	.getMetaData()
+											.getDatabaseProductName();
 		}
 
 		if (databaseName.equals(DATABASE_NAME_HDB)) {
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			Authentication authentication = SecurityContextHolder	.getContext()
+																	.getAuthentication();
 			String userName;
 			if (authentication != null) {
 				userName = authentication.getName();

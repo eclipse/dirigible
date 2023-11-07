@@ -53,16 +53,22 @@ public class AccessVerifier {
 		List<Access> existingSecurityAccesses = securityAccessService.getAll();
 		for (Access securityAccess : existingSecurityAccesses) {
 			if (scope.equalsIgnoreCase(securityAccess.getScope()) && path.startsWith(securityAccess.getPath())
-					&& (securityAccess.getMethod().equals("*") || method.equals(securityAccess.getMethod()))) {
+					&& (securityAccess	.getMethod()
+										.equals("*")
+							|| method.equals(securityAccess.getMethod()))) {
 				if (logger.isDebugEnabled()) {
 					logger.debug(String.format("URI [%s] with HTTP method [%s] is secured because of definition: %s", path, method,
 							securityAccess.getLocation()));
 				}
-				if ((currentSecurityAccess == null) || (securityAccess.getPath().length() > currentSecurityAccess.getPath().length())) {
+				if ((currentSecurityAccess == null) || (securityAccess	.getPath()
+																		.length() > currentSecurityAccess	.getPath()
+																											.length())) {
 					currentSecurityAccess = securityAccess;
 					securityAccesses.clear();
 					securityAccesses.add(securityAccess);
-				} else if (securityAccess.getPath().length() == currentSecurityAccess.getPath().length()) {
+				} else if (securityAccess	.getPath()
+											.length() == currentSecurityAccess	.getPath()
+																				.length()) {
 					securityAccesses.add(securityAccess);
 				}
 			}

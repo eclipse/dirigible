@@ -69,7 +69,9 @@ public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor 
 	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-		InsertBuilder insertBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).insert().into(tableModel.getTableName());
+		InsertBuilder insertBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
+												.insert()
+												.into(tableModel.getTableName());
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.isIdentity()) {
 				continue;
@@ -168,15 +170,18 @@ public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor 
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.isPrimaryKey() && (columnModel.getGenerated() != null)) {
 				long id = -1;
-				if (GenerationType.SEQUENCE.name().equals(columnModel.getGenerated())) {
+				if (GenerationType.SEQUENCE	.name()
+											.equals(columnModel.getGenerated())) {
 					PersistenceNextValueSequenceProcessor persistenceNextValueSequenceProcessor =
 							new PersistenceNextValueSequenceProcessor(getEntityManagerInterceptor());
 					id = persistenceNextValueSequenceProcessor.nextval(connection, tableModel);
-				} else if (GenerationType.TABLE.name().equals(columnModel.getGenerated())) {
+				} else if (GenerationType.TABLE	.name()
+												.equals(columnModel.getGenerated())) {
 					PersistenceNextValueIdentityProcessor persistenceNextValueIdentityProcessor =
 							new PersistenceNextValueIdentityProcessor(getEntityManagerInterceptor());
 					id = persistenceNextValueIdentityProcessor.nextval(connection, tableModel);
-				} else if (GenerationType.IDENTITY.name().equals(columnModel.getGenerated())) {
+				} else if (GenerationType.IDENTITY	.name()
+													.equals(columnModel.getGenerated())) {
 					return false;
 				} else {
 					throw new IllegalArgumentException(format("Generation Type: [{0}] not supported.", columnModel.getGenerated()));

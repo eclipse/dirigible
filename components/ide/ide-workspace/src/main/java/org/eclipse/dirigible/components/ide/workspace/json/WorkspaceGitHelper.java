@@ -71,7 +71,8 @@ public class WorkspaceGitHelper {
 					}
 					boolean haveGitDirectory = false;
 					for (File next : directory.listFiles()) {
-						if (next.exists() && next.isDirectory() && next.getName().equals(DOT_GIT)) {
+						if (next.exists() && next.isDirectory() && next	.getName()
+																		.equals(DOT_GIT)) {
 							haveGitDirectory = true;
 							break;
 						}
@@ -101,11 +102,17 @@ public class WorkspaceGitHelper {
 		project.setGit(true);
 
 		List<File> allFiles = Arrays.asList(rootFolder.listFiles());
-		List<File> folders = allFiles.stream().filter(e -> !e.isFile()).collect(Collectors.toList());
-		List<File> files = allFiles.stream().filter(e -> e.isFile()).collect(Collectors.toList());
+		List<File> folders = allFiles	.stream()
+										.filter(e -> !e.isFile())
+										.collect(Collectors.toList());
+		List<File> files = allFiles	.stream()
+									.filter(e -> e.isFile())
+									.collect(Collectors.toList());
 		for (File next : folders) {
-			if (!next.isFile() && !next.getName().equals(DOT_GIT)) {
-				project.getFolders().add(describeFolder(next));
+			if (!next.isFile() && !next	.getName()
+										.equals(DOT_GIT)) {
+				project	.getFolders()
+						.add(describeFolder(next));
 			}
 		}
 
@@ -113,7 +120,8 @@ public class WorkspaceGitHelper {
 			FileDescriptor file = new FileDescriptor();
 			file.setName(next.getName());
 			file.setPath(next.getPath());
-			project.getFiles().add(file);
+			project	.getFiles()
+					.add(file);
 		}
 
 		return project;
@@ -130,17 +138,23 @@ public class WorkspaceGitHelper {
 		folder.setName(rootFolder.getName());
 		folder.setPath(rootFolder.getPath());
 		List<File> allFiles = Arrays.asList(rootFolder.listFiles());
-		List<File> folders = allFiles.stream().filter(e -> !e.isFile()).collect(Collectors.toList());
-		List<File> files = allFiles.stream().filter(e -> e.isFile()).collect(Collectors.toList());
+		List<File> folders = allFiles	.stream()
+										.filter(e -> !e.isFile())
+										.collect(Collectors.toList());
+		List<File> files = allFiles	.stream()
+									.filter(e -> e.isFile())
+									.collect(Collectors.toList());
 		for (File next : folders) {
-			folder.getFolders().add(describeFolder(next));
+			folder	.getFolders()
+					.add(describeFolder(next));
 		}
 
 		for (File next : files) {
 			FileDescriptor file = new FileDescriptor();
 			file.setName(next.getName());
 			file.setPath(next.getPath());
-			folder.getFiles().add(file);
+			folder	.getFiles()
+					.add(file);
 		}
 
 		return folder;

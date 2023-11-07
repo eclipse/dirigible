@@ -106,8 +106,10 @@ public class OData2ODataMTransformer {
 				continue;
 			}
 
-			List<TableColumn> idColumns =
-					tableMetadata.getColumns().stream().filter(TableColumn::isPrimaryKey).collect(Collectors.toList());
+			List<TableColumn> idColumns = tableMetadata	.getColumns()
+														.stream()
+														.filter(TableColumn::isPrimaryKey)
+														.collect(Collectors.toList());
 			if (idColumns.isEmpty() && ISqlKeywords.METADATA_TABLE.equals(tableMetadata.getKind())) {
 				if (logger.isErrorEnabled()) {
 					logger.error("Table {} doesn't have primary keys {}, so it will be skipped.", entity.getTable(), entity.getName());
@@ -119,26 +121,29 @@ public class OData2ODataMTransformer {
 			ODataMetadataUtil.validateODataPropertyName(tableMetadata.getColumns(), entityProperties, entity.getName());
 			// Expose all Db columns in case no entity props are defined
 			if (entityProperties.isEmpty()) {
-				tableMetadata.getColumns().forEach(column -> {
-					String columnValue =
-							ODataDatabaseMetadataUtil.getPropertyNameFromDbColumnName(column.getName(), entityProperties, isPretty);
-					buff.append("\t\"")
-						.append(propertyNameEscaper.escape(columnValue))
-						.append("\": \"")
-						.append(column.getName())
-						.append("\",\n");
-				});
+				tableMetadata	.getColumns()
+								.forEach(column -> {
+									String columnValue = ODataDatabaseMetadataUtil.getPropertyNameFromDbColumnName(column.getName(),
+											entityProperties, isPretty);
+									buff.append("\t\"")
+										.append(propertyNameEscaper.escape(columnValue))
+										.append("\": \"")
+										.append(column.getName())
+										.append("\",\n");
+								});
 			} else {
 				// In case entity props are defined expose only them
 				entityProperties.forEach(prop -> {
 					List<TableColumn> dbColumnName = tableMetadata	.getColumns()
 																	.stream()
-																	.filter(x -> x.getName().equals(prop.getColumn()))
+																	.filter(x -> x	.getName()
+																					.equals(prop.getColumn()))
 																	.collect(Collectors.toList());
 					buff.append("\t\"")
 						.append(propertyNameEscaper.escape(prop.getName()))
 						.append("\": \"")
-						.append(dbColumnName.get(0).getName())
+						.append(dbColumnName.get(0)
+											.getName())
 						.append("\",\n");
 				});
 			}
@@ -154,118 +159,180 @@ public class OData2ODataMTransformer {
 						.append(parameter.getName())
 						.append("\",\n");
 				});
-				buff.append("\t\"_parameters_\" : [").append(String.join(",", parameterNames)).append("],\n");
+				buff.append("\t\"_parameters_\" : [")
+					.append(String.join(",", parameterNames))
+					.append("],\n");
 			}
 
 
 			// Process FK relations from DB if they exist
-			Map<String, List<TableConstraintForeignKey>> groupRelationsByToTableName =
-					tableMetadata	.getConstraints()
-									.getForeignKeys()
-									.stream()
-									.collect(Collectors.groupingBy(TableConstraintForeignKey::getReferencedTable));
+			Map<String, List<TableConstraintForeignKey>> groupRelationsByToTableName = tableMetadata.getConstraints()
+																									.getForeignKeys()
+																									.stream()
+																									.collect(Collectors.groupingBy(
+																											TableConstraintForeignKey::getReferencedTable));
 			// In case there is FK on DB side, but the entity and it's navigation are not defined in the .odata
 			// file -> then the relation will not be exposed
-			List<Map.Entry<String, List<TableConstraintForeignKey>>> relationsThatExistInOdataFile =
-					groupRelationsByToTableName.entrySet().stream().filter(x -> {
-						for (ODataEntity e : model.getEntities()) {
-							if (x.getKey().equals(e.getTable())) {
-								return true;
-							}
-						}
-						return false;
-					}).collect(Collectors.toList());
+			List<Map.Entry<String, List<TableConstraintForeignKey>>> relationsThatExistInOdataFile = groupRelationsByToTableName.entrySet()
+																																.stream()
+																																.filter(x -> {
+																																	for (ODataEntity e : model.getEntities()) {
+																																		if (x	.getKey()
+																																				.equals(e.getTable())) {
+																																			return true;
+																																		}
+																																	}
+																																	return false;
+																																})
+																																.collect(
+																																		Collectors.toList());
 
-			final List<String> assembleRefFromFK = relationsThatExistInOdataFile.stream().map(rel -> {
-				String fkElement = rel.getValue().stream().map(x -> "\"" + x.getColumns()[0] + "\"").collect(Collectors.joining(","));
-				ODataEntity toSetEntity = ODataMetadataUtil.getEntityByTableName(model, rel.getKey());
-				String dependentEntity = toSetEntity.getName();
-				return assembleOdataMRefSection(dependentEntity, fkElement, null, null);
-			}).collect(Collectors.toList());
+			final List<String> assembleRefFromFK = relationsThatExistInOdataFile.stream()
+																				.map(rel -> {
+																					String fkElement = rel	.getValue()
+																											.stream()
+																											.map(x -> "\""
+																													+ x.getColumns()[0]
+																													+ "\"")
+																											.collect(Collectors.joining(
+																													","));
+																					ODataEntity toSetEntity =
+																							ODataMetadataUtil.getEntityByTableName(model,
+																									rel.getKey());
+																					String dependentEntity = toSetEntity.getName();
+																					return assembleOdataMRefSection(dependentEntity,
+																							fkElement, null, null);
+																				})
+																				.collect(Collectors.toList());
 			if (!assembleRefFromFK.isEmpty()) {
-				buff.append(String.join(",\n", assembleRefFromFK)).append(",\n");
+				buff.append(String.join(",\n", assembleRefFromFK))
+					.append(",\n");
 			}
 
 
 			// Process Associations from .odata file
 			List<ODataAssociation> assWhereEntityIsFROMRole = model	.getAssociations()
 																	.stream()
-																	.filter(ass -> ass.getFrom().getEntity().equals(entity.getName()))
+																	.filter(ass -> ass	.getFrom()
+																						.getEntity()
+																						.equals(entity.getName()))
 																	.collect(Collectors.toList());
 			List<ODataAssociation> assWhereEntityIsTORole = model	.getAssociations()
 																	.stream()
-																	.filter(ass -> ass.getTo().getEntity().equals(entity.getName()))
+																	.filter(ass -> ass	.getTo()
+																						.getEntity()
+																						.equals(entity.getName()))
 																	.collect(Collectors.toList());
 
 			for (ODataAssociation oDataAssociation : assWhereEntityIsFROMRole) {
 				validateAssociationProperties(oDataAssociation, model);
 			}
-			List<String> assembleRefNav = assWhereEntityIsFROMRole.stream().map(association -> {
-				String fromRoleEntity = association.getFrom().getEntity();
-				String toRoleEntity = association.getTo().getEntity();
-				ODataEntity toSetEntity = ODataMetadataUtil.getEntity(model, toRoleEntity, association.getName());
-				String dependentEntity = toSetEntity.getName();
-				String fkElement =
-						association	.getFrom()
-									.getProperties()
-									.stream()
-									.map(x -> "\"" + ODataMetadataUtil.getEntityPropertyColumnByPropertyName(model, fromRoleEntity, x)
-											+ "\"")
-									.collect(Collectors.joining(","));
-				String mappingTableName = association.getFrom().getMappingTable().getMappingTableName();
-				String mappingTableJoinColumn = association.getFrom().getMappingTable().getMappingTableJoinColumn();
-				return checkRefSectionConsistency(buff, entity, groupRelationsByToTableName, assembleRefFromFK, toSetEntity,
-						dependentEntity, fkElement, mappingTableName, mappingTableJoinColumn);
-			}).filter(Objects::nonNull).collect(Collectors.toList());
+			List<String> assembleRefNav = assWhereEntityIsFROMRole	.stream()
+																	.map(association -> {
+																		String fromRoleEntity = association	.getFrom()
+																											.getEntity();
+																		String toRoleEntity = association	.getTo()
+																											.getEntity();
+																		ODataEntity toSetEntity = ODataMetadataUtil.getEntity(model,
+																				toRoleEntity, association.getName());
+																		String dependentEntity = toSetEntity.getName();
+																		String fkElement = association	.getFrom()
+																										.getProperties()
+																										.stream()
+																										.map(x -> "\""
+																												+ ODataMetadataUtil.getEntityPropertyColumnByPropertyName(
+																														model,
+																														fromRoleEntity, x)
+																												+ "\"")
+																										.collect(Collectors.joining(","));
+																		String mappingTableName = association	.getFrom()
+																												.getMappingTable()
+																												.getMappingTableName();
+																		String mappingTableJoinColumn = association	.getFrom()
+																													.getMappingTable()
+																													.getMappingTableJoinColumn();
+																		return checkRefSectionConsistency(buff, entity,
+																				groupRelationsByToTableName, assembleRefFromFK, toSetEntity,
+																				dependentEntity, fkElement, mappingTableName,
+																				mappingTableJoinColumn);
+																	})
+																	.filter(Objects::nonNull)
+																	.collect(Collectors.toList());
 			if (!assembleRefNav.isEmpty()) {
-				buff.append(String.join(",\n", assembleRefNav)).append(",\n");
+				buff.append(String.join(",\n", assembleRefNav))
+					.append(",\n");
 			}
 
 			for (ODataAssociation oDataAssociation : assWhereEntityIsTORole) {
 				validateAssociationProperties(oDataAssociation, model);
 			}
-			assembleRefNav = assWhereEntityIsTORole.stream().map(association -> {
-				String fromRoleEntity = association.getFrom().getEntity();
-				String toRoleEntity = association.getTo().getEntity();
-				ODataEntity fromSetEntity = ODataMetadataUtil.getEntity(model, fromRoleEntity, association.getName());
-				String principleEntity = fromSetEntity.getName();
-				String fkElement =
-						association	.getTo()
-									.getProperties()
-									.stream()
-									.map(x -> "\"" + ODataMetadataUtil.getEntityPropertyColumnByPropertyName(model, toRoleEntity, x) + "\"")
-									.collect(Collectors.joining(","));
-				String mappingTableName = association.getTo().getMappingTable().getMappingTableName();
-				String mappingTableJoinColumn = association.getTo().getMappingTable().getMappingTableJoinColumn();
-				return checkRefSectionConsistency(buff, entity, groupRelationsByToTableName, assembleRefFromFK, fromSetEntity,
-						principleEntity, fkElement, mappingTableName, mappingTableJoinColumn);
-			}).filter(Objects::nonNull).collect(Collectors.toList());
+			assembleRefNav = assWhereEntityIsTORole	.stream()
+													.map(association -> {
+														String fromRoleEntity = association	.getFrom()
+																							.getEntity();
+														String toRoleEntity = association	.getTo()
+																							.getEntity();
+														ODataEntity fromSetEntity =
+																ODataMetadataUtil.getEntity(model, fromRoleEntity, association.getName());
+														String principleEntity = fromSetEntity.getName();
+														String fkElement = association	.getTo()
+																						.getProperties()
+																						.stream()
+																						.map(x -> "\""
+																								+ ODataMetadataUtil.getEntityPropertyColumnByPropertyName(
+																										model, toRoleEntity, x)
+																								+ "\"")
+																						.collect(Collectors.joining(","));
+														String mappingTableName = association	.getTo()
+																								.getMappingTable()
+																								.getMappingTableName();
+														String mappingTableJoinColumn = association	.getTo()
+																									.getMappingTable()
+																									.getMappingTableJoinColumn();
+														return checkRefSectionConsistency(buff, entity, groupRelationsByToTableName,
+																assembleRefFromFK, fromSetEntity, principleEntity, fkElement,
+																mappingTableName, mappingTableJoinColumn);
+													})
+													.filter(Objects::nonNull)
+													.collect(Collectors.toList());
 			if (!assembleRefNav.isEmpty()) {
-				buff.append(String.join(",\n", assembleRefNav)).append(",\n");
+				buff.append(String.join(",\n", assembleRefNav))
+					.append(",\n");
 			}
 
-			if (entity.getKeyGenerated() != null && !entity.getKeyGenerated().isEmpty()) {
-				buff.append("\t\"keyGenerated\": \"").append(entity.getKeyGenerated()).append("\",\n");
+			if (entity.getKeyGenerated() != null && !entity	.getKeyGenerated()
+															.isEmpty()) {
+				buff.append("\t\"keyGenerated\": \"")
+					.append(entity.getKeyGenerated())
+					.append("\",\n");
 			}
 
-			if ("aggregate".equals(entity.getAnnotationsEntityType().get("sap:semantics"))) {
+			if ("aggregate".equals(entity	.getAnnotationsEntityType()
+											.get("sap:semantics"))) {
 				buff.append("\t\"aggregationType\" : ");
-				if (!entity.getAggregationsTypeAndColumn().isEmpty()) {
+				if (!entity	.getAggregationsTypeAndColumn()
+							.isEmpty()) {
 					buff.append("\"derived\",\n");
 					Map<String, String> aggregationsTypeAndColumn = entity.getAggregationsTypeAndColumn();
-					String aggregationProps =
-							aggregationsTypeAndColumn	.keySet()
-														.stream()
-														.map(key -> "\t\t\"" + key + "\": \"" + aggregationsTypeAndColumn.get(key) + "\"")
-														.collect(Collectors.joining(",\n", "\t\"aggregationProps\" : {\n", "\n\t},\n"));
+					String aggregationProps = aggregationsTypeAndColumn	.keySet()
+																		.stream()
+																		.map(key -> "\t\t\"" + key + "\": \""
+																				+ aggregationsTypeAndColumn.get(key) + "\"")
+																		.collect(Collectors.joining(",\n", "\t\"aggregationProps\" : {\n",
+																				"\n\t},\n"));
 					buff.append(aggregationProps);
 				} else {
 					buff.append("\"explicit\",\n");
 				}
 			}
 
-			String[] pks = idColumns.stream().map(TableColumn::getName).collect(Collectors.toList()).toArray(new String[] {});
-			buff.append("\t\"_pk_\" : \"").append(String.join(",", pks)).append("\"");
+			String[] pks = idColumns.stream()
+									.map(TableColumn::getName)
+									.collect(Collectors.toList())
+									.toArray(new String[] {});
+			buff.append("\t\"_pk_\" : \"")
+				.append(String.join(",", pks))
+				.append("\"");
 			buff.append("\n}");
 
 			result.add(buff.toString());
@@ -292,14 +359,17 @@ public class OData2ODataMTransformer {
 			ODataEntity toSetEntity, String principleEntity, String fkElement, String mappingTableName, String mappingTableJoinColumn) {
 		String refSection = assembleOdataMRefSection(principleEntity, fkElement, mappingTableName, mappingTableJoinColumn);
 		if (groupRelationsByToTableName.get(toSetEntity.getTable()) != null) {
-			List<String> match = assembleRefFromFK.stream().filter(el -> el.equals(refSection)).collect(Collectors.toList());
+			List<String> match = assembleRefFromFK	.stream()
+													.filter(el -> el.equals(refSection))
+													.collect(Collectors.toList());
 			if (match.isEmpty()) {
 				throw new OData2TransformerException(
 						String.format("There is inconsistency in odata file from table %s to table %s on joinColumns: %s",
 								entity.getTable(), principleEntity, fkElement));
 			}
 		}
-		if (!buff.toString().contains("_ref_" + principleEntity + "Type")) {
+		if (!buff	.toString()
+					.contains("_ref_" + principleEntity + "Type")) {
 			return refSection;
 		}
 		return null;
@@ -325,21 +395,30 @@ public class OData2ODataMTransformer {
 	 */
 	private void validateAssociationProperty(ODataAssociationEnd assEnd, OData model, ODataAssociation association) {
 		ODataEntity entity = ODataMetadataUtil.getEntity(model, assEnd.getEntity(), association.getName());
-		if (!entity.getProperties().isEmpty()) {
+		if (!entity	.getProperties()
+					.isEmpty()) {
 			ArrayList<String> invalidProps = new ArrayList<>();
-			assEnd.getProperties().forEach(assProp -> {
-				List<ODataProperty> consistentProps =
-						entity.getProperties().stream().filter(prop -> prop.getName().equals(assProp)).collect(Collectors.toList());
-				if (consistentProps.isEmpty()) {
-					invalidProps.add(assProp);
-				}
-			});
+			assEnd	.getProperties()
+					.forEach(assProp -> {
+						List<ODataProperty> consistentProps = entity.getProperties()
+																	.stream()
+																	.filter(prop -> prop.getName()
+																						.equals(assProp))
+																	.collect(Collectors.toList());
+						if (consistentProps.isEmpty()) {
+							invalidProps.add(assProp);
+						}
+					});
 			if (!invalidProps.isEmpty()) {
 				throw new OData2TransformerException(String.format(
 						"There is inconsistency for entity '%s'. OData entity properties definitions for %s do not match the association properties definition.",
-						assEnd.getEntity(), invalidProps.stream().map(String::valueOf).collect(Collectors.joining(","))));
+						assEnd.getEntity(), invalidProps.stream()
+														.map(String::valueOf)
+														.collect(Collectors.joining(","))));
 			}
-			if (assEnd.getProperties().size() > entity.getProperties().size()) {
+			if (assEnd	.getProperties()
+						.size() > entity.getProperties()
+										.size()) {
 				throw new OData2TransformerException(String.format(
 						"There is inconsistency for entity '%s'. The number of defined OData properties do not match the number of the association properties definition",
 						assEnd.getEntity()));

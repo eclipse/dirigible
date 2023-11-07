@@ -27,7 +27,11 @@ public class SelectRecordTest {
 	 */
 	@Test
 	public void selectStar() {
-		String sql = SqlFactory.getDefault().select().column("*").from("CUSTOMERS").build();
+		String sql = SqlFactory	.getDefault()
+								.select()
+								.column("*")
+								.from("CUSTOMERS")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT * FROM CUSTOMERS", sql);
@@ -38,7 +42,12 @@ public class SelectRecordTest {
 	 */
 	@Test
 	public void selectColumnsFromTable() {
-		String sql = SqlFactory.getDefault().select().column("FIRST_NAME").column("LAST_NAME").from("CUSTOMERS").build();
+		String sql = SqlFactory	.getDefault()
+								.select()
+								.column("FIRST_NAME")
+								.column("LAST_NAME")
+								.from("CUSTOMERS")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS", sql);
@@ -49,7 +58,12 @@ public class SelectRecordTest {
 	 */
 	@Test
 	public void selectColumnsFromTableAliases() {
-		String sql = SqlFactory.getDefault().select().column("c.FIRST_NAME").column("c.LAST_NAME").from("CUSTOMERS", "c").build();
+		String sql = SqlFactory	.getDefault()
+								.select()
+								.column("c.FIRST_NAME")
+								.column("c.LAST_NAME")
+								.from("CUSTOMERS", "c")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT c.FIRST_NAME, c.LAST_NAME FROM CUSTOMERS AS c", sql);
@@ -162,7 +176,13 @@ public class SelectRecordTest {
 	 */
 	@Test
 	public void selectDistinctColumnsFromTable() {
-		String sql = SqlFactory.getDefault().select().distinct().column("FIRST_NAME").column("LAST_NAME").from("CUSTOMERS").build();
+		String sql = SqlFactory	.getDefault()
+								.select()
+								.distinct()
+								.column("FIRST_NAME")
+								.column("LAST_NAME")
+								.from("CUSTOMERS")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT DISTINCT FIRST_NAME, LAST_NAME FROM CUSTOMERS", sql);
@@ -191,8 +211,13 @@ public class SelectRecordTest {
 	 */
 	@Test
 	public void selectColumnsFromTableGroupBy() {
-		String sql =
-				SqlFactory.getDefault().select().column("FIRST_NAME").column("LAST_NAME").from("CUSTOMERS").group("FIRST_NAME").build();
+		String sql = SqlFactory	.getDefault()
+								.select()
+								.column("FIRST_NAME")
+								.column("LAST_NAME")
+								.from("CUSTOMERS")
+								.group("FIRST_NAME")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS GROUP BY FIRST_NAME", sql);
@@ -203,7 +228,12 @@ public class SelectRecordTest {
 	 */
 	@Test
 	public void selectWhereSimple() {
-		String sql = SqlFactory.getDefault().select().column("*").from("CUSTOMERS").where("PRICE > ?").build();
+		String sql = SqlFactory	.getDefault()
+								.select()
+								.column("*")
+								.from("CUSTOMERS")
+								.where("PRICE > ?")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT * FROM CUSTOMERS WHERE (PRICE > ?)", sql);
@@ -214,7 +244,13 @@ public class SelectRecordTest {
 	 */
 	@Test
 	public void selectWhereAnd() {
-		String sql = SqlFactory.getDefault().select().column("*").from("CUSTOMERS").where("PRICE > ?").where("AMOUNT < ?").build();
+		String sql = SqlFactory	.getDefault()
+								.select()
+								.column("*")
+								.from("CUSTOMERS")
+								.where("PRICE > ?")
+								.where("AMOUNT < ?")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT * FROM CUSTOMERS WHERE (PRICE > ?) AND (AMOUNT < ?)", sql);
@@ -225,7 +261,12 @@ public class SelectRecordTest {
 	 */
 	@Test
 	public void selectWhereOr() {
-		String sql = SqlFactory.getDefault().select().column("*").from("CUSTOMERS").where("PRICE > ? OR AMOUNT < ?").build();
+		String sql = SqlFactory	.getDefault()
+								.select()
+								.column("*")
+								.from("CUSTOMERS")
+								.where("PRICE > ? OR AMOUNT < ?")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT * FROM CUSTOMERS WHERE (PRICE > ? OR AMOUNT < ?)", sql);
@@ -240,7 +281,11 @@ public class SelectRecordTest {
 								.select()
 								.column("*")
 								.from("CUSTOMERS")
-								.where(SqlFactory.getDefault().expression().and("PRICE > ?").or("AMOUNT < ?").build())
+								.where(SqlFactory	.getDefault()
+													.expression()
+													.and("PRICE > ?")
+													.or("AMOUNT < ?")
+													.build())
 								.build();
 
 		assertNotNull(sql);
@@ -252,7 +297,12 @@ public class SelectRecordTest {
 	 */
 	@Test
 	public void selectLimit() {
-		String sql = SqlFactory.getDefault().select().column("*").from("CUSTOMERS").limit(10).build();
+		String sql = SqlFactory	.getDefault()
+								.select()
+								.column("*")
+								.from("CUSTOMERS")
+								.limit(10)
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT * FROM CUSTOMERS LIMIT 10", sql);
@@ -263,7 +313,13 @@ public class SelectRecordTest {
 	 */
 	@Test
 	public void selectLimitOffset() {
-		String sql = SqlFactory.getDefault().select().column("*").from("CUSTOMERS").limit(10).offset(20).build();
+		String sql = SqlFactory	.getDefault()
+								.select()
+								.column("*")
+								.from("CUSTOMERS")
+								.limit(10)
+								.offset(20)
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT * FROM CUSTOMERS LIMIT 10 OFFSET 20", sql);
@@ -296,7 +352,11 @@ public class SelectRecordTest {
 								.select()
 								.column("COUNTRY")
 								.from("CUSTOMERS")
-								.union(SqlFactory.getDefault().select().column("COUNTRY").from("SUPPLIERS").build())
+								.union(SqlFactory	.getDefault()
+													.select()
+													.column("COUNTRY")
+													.from("SUPPLIERS")
+													.build())
 								.build();
 
 		assertNotNull(sql);
@@ -308,7 +368,10 @@ public class SelectRecordTest {
 	 */
 	@Test
 	public void selectStarOmitted() {
-		String sql = SqlFactory.getDefault().select().from("CUSTOMERS").build();
+		String sql = SqlFactory	.getDefault()
+								.select()
+								.from("CUSTOMERS")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT * FROM CUSTOMERS", sql);
@@ -321,7 +384,11 @@ public class SelectRecordTest {
 	public void selectStarCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().select().column("*").from("CUSTOMERS").build();
+			String sql = SqlFactory	.getDefault()
+									.select()
+									.column("*")
+									.from("CUSTOMERS")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("SELECT * FROM \"CUSTOMERS\"", sql);
@@ -337,7 +404,12 @@ public class SelectRecordTest {
 	public void selectStarAndColumnCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().select().column("*").column("FIRST_NAME").from("CUSTOMERS").build();
+			String sql = SqlFactory	.getDefault()
+									.select()
+									.column("*")
+									.column("FIRST_NAME")
+									.from("CUSTOMERS")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("SELECT *, \"FIRST_NAME\" FROM \"CUSTOMERS\"", sql);
@@ -353,7 +425,11 @@ public class SelectRecordTest {
 	public void selectCountCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().select().column("COUNT(*)").from("CUSTOMERS").build();
+			String sql = SqlFactory	.getDefault()
+									.select()
+									.column("COUNT(*)")
+									.from("CUSTOMERS")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("SELECT COUNT(*) FROM \"CUSTOMERS\"", sql);
@@ -369,7 +445,11 @@ public class SelectRecordTest {
 	public void selectColumnCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().select().column("FIRST_NAME").from("CUSTOMERS").build();
+			String sql = SqlFactory	.getDefault()
+									.select()
+									.column("FIRST_NAME")
+									.from("CUSTOMERS")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("SELECT \"FIRST_NAME\" FROM \"CUSTOMERS\"", sql);
@@ -385,7 +465,12 @@ public class SelectRecordTest {
 	public void selectColumnWithWhereCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().select().column("FIRST_NAME").from("CUSTOMERS").where("PRICE > ?").build();
+			String sql = SqlFactory	.getDefault()
+									.select()
+									.column("FIRST_NAME")
+									.from("CUSTOMERS")
+									.where("PRICE > ?")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("SELECT \"FIRST_NAME\" FROM \"CUSTOMERS\" WHERE (\"PRICE\" > ?)", sql);
@@ -401,7 +486,11 @@ public class SelectRecordTest {
 	public void selectComplexColumnCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().select().column("POWER(PRICE, QTY)").from("CUSTOMERS").build();
+			String sql = SqlFactory	.getDefault()
+									.select()
+									.column("POWER(PRICE, QTY)")
+									.from("CUSTOMERS")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("SELECT POWER(\"PRICE\", \"QTY\") FROM \"CUSTOMERS\"", sql);
@@ -417,7 +506,11 @@ public class SelectRecordTest {
 	public void selectComplexColumnsCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().select().column("(PRICE - QTY)").from("CUSTOMERS").build();
+			String sql = SqlFactory	.getDefault()
+									.select()
+									.column("(PRICE - QTY)")
+									.from("CUSTOMERS")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("SELECT (\"PRICE\" - \"QTY\") FROM \"CUSTOMERS\"", sql);
@@ -433,7 +526,11 @@ public class SelectRecordTest {
 	public void selectArtifactWithNamespaceAndSchemaNameCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().select().column("COUNT(*)").from("\"ShemaName\".\"projName.db::MySynonym\"").build();
+			String sql = SqlFactory	.getDefault()
+									.select()
+									.column("COUNT(*)")
+									.from("\"ShemaName\".\"projName.db::MySynonym\"")
+									.build();
 			assertNotNull(sql);
 			assertEquals("SELECT COUNT(*) FROM \"ShemaName\".\"projName.db::MySynonym\"", sql);
 		} finally {
@@ -448,7 +545,11 @@ public class SelectRecordTest {
 	public void selectArtifactWithNamespaceCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().select().column("COUNT(*)").from("projName::MySynonym").build();
+			String sql = SqlFactory	.getDefault()
+									.select()
+									.column("COUNT(*)")
+									.from("projName::MySynonym")
+									.build();
 			assertNotNull(sql);
 			assertEquals("SELECT COUNT(*) FROM \"projName::MySynonym\"", sql);
 		} finally {
@@ -463,7 +564,11 @@ public class SelectRecordTest {
 	public void selectFunctionCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().select().column("COS(0.0) c").from("DUMMY").build();
+			String sql = SqlFactory	.getDefault()
+									.select()
+									.column("COS(0.0) c")
+									.from("DUMMY")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("SELECT COS(0.0) \"c\" FROM \"DUMMY\"", sql);
@@ -479,7 +584,12 @@ public class SelectRecordTest {
 	public void selectColumnWithSpecialCharsCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().select().column("FIRST_NAME1$").from("CUSTOMERS").where("PRICE_BASIC1$ LIKE ?").build();
+			String sql = SqlFactory	.getDefault()
+									.select()
+									.column("FIRST_NAME1$")
+									.from("CUSTOMERS")
+									.where("PRICE_BASIC1$ LIKE ?")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("SELECT \"FIRST_NAME1$\" FROM \"CUSTOMERS\" WHERE (\"PRICE_BASIC1$\" LIKE ?)", sql);

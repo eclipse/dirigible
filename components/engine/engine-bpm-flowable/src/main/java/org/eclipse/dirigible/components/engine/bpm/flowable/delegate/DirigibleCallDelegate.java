@@ -130,9 +130,13 @@ public class DirigibleCallDelegate implements JavaDelegate {
 			Value value = runner.run(source);
 
 			if (task.hasExportedClassAndMethod()) {
-				value.getMember(task.getClassName()).newInstance().getMember(task.getMethodName()).executeVoid();
+				value	.getMember(task.getClassName())
+						.newInstance()
+						.getMember(task.getMethodName())
+						.executeVoid();
 			} else if (task.hasExportedMethod()) {
-				value.getMember(task.getMethodName()).executeVoid();
+				value	.getMember(task.getMethodName())
+						.executeVoid();
 			}
 
 		}

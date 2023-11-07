@@ -50,7 +50,9 @@ public class EtcdFacadeTest {
 	 * The Constant etcd.
 	 */
 	@RegisterExtension
-	public static final EtcdClusterExtension cluster = EtcdClusterExtension.builder().withNodes(1).build();
+	public static final EtcdClusterExtension cluster = EtcdClusterExtension	.builder()
+																			.withNodes(1)
+																			.build();
 
 	/**
 	 * Sets the up.
@@ -58,7 +60,9 @@ public class EtcdFacadeTest {
 	@Before
 	public void setUp() {
 		cluster.restart();
-		Configuration.set("DIRIGIBLE_ETCD_CLIENT_ENDPOINT", cluster.clientEndpoints().get(0).toString());
+		Configuration.set("DIRIGIBLE_ETCD_CLIENT_ENDPOINT", cluster	.clientEndpoints()
+																	.get(0)
+																	.toString());
 	}
 
 	/**
@@ -79,14 +83,21 @@ public class EtcdFacadeTest {
 		etcdClient.put(key, value);
 		Thread.sleep(500);
 
-		GetResponse getPutResponse = etcdClient.get(key).get();
-		assertEquals(getPutResponse.getKvs().get(0).getValue().toString(Charsets.UTF_8), value.toString(Charsets.UTF_8));
+		GetResponse getPutResponse = etcdClient	.get(key)
+												.get();
+		assertEquals(getPutResponse	.getKvs()
+									.get(0)
+									.getValue()
+									.toString(Charsets.UTF_8),
+				value.toString(Charsets.UTF_8));
 
 		etcdClient.delete(key);
 		Thread.sleep(500);
 
-		GetResponse getDelResponse = etcdClient.get(key).get();
-		assertTrue(getDelResponse.getKvs().isEmpty());
+		GetResponse getDelResponse = etcdClient	.get(key)
+												.get();
+		assertTrue(getDelResponse	.getKvs()
+									.isEmpty());
 	}
 
 	/**

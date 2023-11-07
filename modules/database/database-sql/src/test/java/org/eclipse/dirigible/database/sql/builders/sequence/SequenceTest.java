@@ -27,7 +27,10 @@ public class SequenceTest {
 	 */
 	@Test
 	public void createSequence() {
-		String sql = SqlFactory.getDefault().create().sequence("CUSTOMERS_SEQUENCE").build();
+		String sql = SqlFactory	.getDefault()
+								.create()
+								.sequence("CUSTOMERS_SEQUENCE")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE", sql);
@@ -38,7 +41,10 @@ public class SequenceTest {
 	 */
 	@Test
 	public void alterSequence() {
-		String sql = SqlFactory.getDefault().alter().sequence("CUSTOMERS_SEQUENCE").build();
+		String sql = SqlFactory	.getDefault()
+								.alter()
+								.sequence("CUSTOMERS_SEQUENCE")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("ALTER SEQUENCE CUSTOMERS_SEQUENCE", sql);
@@ -51,7 +57,10 @@ public class SequenceTest {
 	public void createSequenceCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().create().sequence("CUSTOMERS_SEQUENCE").build();
+			String sql = SqlFactory	.getDefault()
+									.create()
+									.sequence("CUSTOMERS_SEQUENCE")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("CREATE SEQUENCE \"CUSTOMERS_SEQUENCE\"", sql);
@@ -65,7 +74,10 @@ public class SequenceTest {
 	 */
 	@Test
 	public void dropSequnce() {
-		String sql = SqlFactory.getDefault().drop().sequence("CUSTOMERS_SEQUENCE").build();
+		String sql = SqlFactory	.getDefault()
+								.drop()
+								.sequence("CUSTOMERS_SEQUENCE")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("DROP SEQUENCE CUSTOMERS_SEQUENCE", sql);
@@ -78,7 +90,10 @@ public class SequenceTest {
 	public void dropSequnceCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().drop().sequence("CUSTOMERS_SEQUENCE").build();
+			String sql = SqlFactory	.getDefault()
+									.drop()
+									.sequence("CUSTOMERS_SEQUENCE")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("DROP SEQUENCE \"CUSTOMERS_SEQUENCE\"", sql);
@@ -92,7 +107,9 @@ public class SequenceTest {
 	 */
 	@Test
 	public void nextvalSequnce() {
-		String sql = SqlFactory.getDefault().nextval("CUSTOMERS_SEQUENCE").build();
+		String sql = SqlFactory	.getDefault()
+								.nextval("CUSTOMERS_SEQUENCE")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT NEXT VALUE FOR CUSTOMERS_SEQUENCE", sql);
@@ -105,7 +122,9 @@ public class SequenceTest {
 	public void nextvalSequnceCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().nextval("CUSTOMERS_SEQUENCE").build();
+			String sql = SqlFactory	.getDefault()
+									.nextval("CUSTOMERS_SEQUENCE")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("SELECT NEXT VALUE FOR \"CUSTOMERS_SEQUENCE\"", sql);

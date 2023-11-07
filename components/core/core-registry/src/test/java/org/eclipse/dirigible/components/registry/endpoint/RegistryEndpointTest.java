@@ -67,7 +67,9 @@ public class RegistryEndpointTest {
 
 	@Test
 	public void getResourceByPath() throws Exception {
-		mockMvc.perform(get("/services/core/registry/{path}", "a/test2.txt")).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/core/registry/{path}", "a/test2.txt"))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	@SpringBootApplication

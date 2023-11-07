@@ -82,7 +82,8 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(getFileExtension());
+		return file	.toString()
+					.endsWith(getFileExtension());
 	}
 
 	/**

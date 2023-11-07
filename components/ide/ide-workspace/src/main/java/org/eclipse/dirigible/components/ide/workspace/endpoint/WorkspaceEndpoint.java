@@ -109,7 +109,8 @@ public class WorkspaceEndpoint {
 		if (sourcePath.getSegments().length == 1) {
 			// a project is selected as a source
 			workspaceService.copyProject(sourceWorkspace, targetWorkspace, sourceProject, targetProject);
-			return ResponseEntity.created(workspaceService.getURI(targetWorkspace, targetProject, null)).build();
+			return ResponseEntity	.created(workspaceService.getURI(targetWorkspace, targetProject, null))
+									.build();
 		}
 
 		String targetFilePath = targetPath.constructPathFrom(1);
@@ -129,7 +130,8 @@ public class WorkspaceEndpoint {
 					targetFilePath + IRepositoryStructure.SEPARATOR, sourcePath.getLastSegment());
 		}
 
-		return ResponseEntity.created(workspaceService.getURI(targetWorkspace, null, content.getTarget())).build();
+		return ResponseEntity	.created(workspaceService.getURI(targetWorkspace, null, content.getTarget()))
+								.build();
 	}
 
 	/**
@@ -180,27 +182,40 @@ public class WorkspaceEndpoint {
 		for (int i = 0; i < sourceSelection.size(); i++) {
 
 			nodeToCopy = sourceSelection.get(i);
-			RepositoryPath sourcePath = new RepositoryPath(UrlFacade.decode(sourceSelection.get(i).getPath()));
+			RepositoryPath sourcePath = new RepositoryPath(UrlFacade.decode(sourceSelection	.get(i)
+																							.getPath()));
 			String sourceProject = sourcePath.getSegments()[1];
 
 			if (sourcePath.getSegments().length == 1) {
 				// a project is selected as a source
 				workspaceService.copyProject(sourceWorkspace, targetWorkspace, sourceProject, targetProject);
-				return ResponseEntity.created(workspaceService.getURI(targetWorkspace, targetProject, null)).build();
+				return ResponseEntity	.created(workspaceService.getURI(targetWorkspace, targetProject, null))
+										.build();
 			}
 
 			String targetFilePath = targetPath.constructPathFrom(2);
-			String relativePath = sourceSelection.get(i).getRelativePath();
+			String relativePath = sourceSelection	.get(i)
+													.getRelativePath();
 			if (targetFilePath.equals(targetPath.build())) {
 				targetFilePath = IRepository.SEPARATOR;
 			}
-			targetFilePath = targetFilePath.concat(IRepository.SEPARATOR).concat(nodeToCopy.getInternalPath()).replaceAll("^/+", "");
+			targetFilePath = targetFilePath	.concat(IRepository.SEPARATOR)
+											.concat(nodeToCopy.getInternalPath())
+											.replaceAll("^/+", "");
 
-			String fileOrFolder = sourceSelection.get(i).getNodeType();
-			String conflictResolution = sourceSelection.get(i).getResolution();
-			String relativePathToSourceFile = Paths.get(relativePath).getParent().toString();
-			String relativePathToTargetFile = Paths.get(targetFilePath).getParent().toString();
-			String fileOrFolderName = Paths.get(targetFilePath).getFileName().toString();
+			String fileOrFolder = sourceSelection	.get(i)
+													.getNodeType();
+			String conflictResolution = sourceSelection	.get(i)
+														.getResolution();
+			String relativePathToSourceFile = Paths	.get(relativePath)
+													.getParent()
+													.toString();
+			String relativePathToTargetFile = Paths	.get(targetFilePath)
+													.getParent()
+													.toString();
+			String fileOrFolderName = Paths	.get(targetFilePath)
+											.getFileName()
+											.toString();
 			String skipPath;
 
 			switch (fileOrFolder) {
@@ -212,13 +227,17 @@ public class WorkspaceEndpoint {
 								workspaceService.createFolder(targetWorkspace, targetProject, targetFilePath);
 								break;
 							case "skip":
-								skipPath = sourceSelection.get(i).getPath().concat(IRepository.SEPARATOR);
+								skipPath = sourceSelection	.get(i)
+															.getPath()
+															.concat(IRepository.SEPARATOR);
 								content.skipByPath(skipPath);
 								break;
 							default:
 								workspaceService.copyFolder(sourceWorkspace, targetWorkspace, sourceProject, relativePath, targetProject,
 										relativePathToTargetFile.concat(IRepository.SEPARATOR), fileOrFolderName);
-								skipPath = sourceSelection.get(i).getPath().concat(IRepository.SEPARATOR);
+								skipPath = sourceSelection	.get(i)
+															.getPath()
+															.concat(IRepository.SEPARATOR);
 								content.skipByPath(skipPath);
 
 						}
@@ -250,7 +269,8 @@ public class WorkspaceEndpoint {
 					throw new InputMismatchException();
 			}
 		}
-		return ResponseEntity.created(workspaceService.getURI(targetWorkspace, null, content.getTarget())).build();
+		return ResponseEntity	.created(workspaceService.getURI(targetWorkspace, null, content.getTarget()))
+								.build();
 	}
 
 	/**
@@ -289,7 +309,8 @@ public class WorkspaceEndpoint {
 		if (sourcePath.getSegments().length == 1) {
 			// a project is selected as a source
 			workspaceService.moveProject(workspace, sourceProject, targetProject);
-			return ResponseEntity.created(workspaceService.getURI(workspace, targetProject, null)).build();
+			return ResponseEntity	.created(workspaceService.getURI(workspace, targetProject, null))
+									.build();
 		}
 
 		String sourceFilePath = sourcePath.constructPathFrom(1);
@@ -306,7 +327,8 @@ public class WorkspaceEndpoint {
 		publisherService.unpublish(sourcePath.getPath());
 		publisherService.publish(workspace, targetPath.getPath(), "");
 
-		return ResponseEntity.created(workspaceService.getURI(workspace, null, content.getTarget())).build();
+		return ResponseEntity	.created(workspaceService.getURI(workspace, null, content.getTarget()))
+								.build();
 	}
 
 	/**
@@ -361,7 +383,8 @@ public class WorkspaceEndpoint {
 		if (sourcePath.getSegments().length == 1) {
 			// a project is selected as a source
 			workspaceService.linkProject(workspace, sourceProject, targetProject);
-			return ResponseEntity.created(workspaceService.getURI(workspace, sourceProject, null)).build();
+			return ResponseEntity	.created(workspaceService.getURI(workspace, sourceProject, null))
+									.build();
 		}
 		String error = "Invalid project name";
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);

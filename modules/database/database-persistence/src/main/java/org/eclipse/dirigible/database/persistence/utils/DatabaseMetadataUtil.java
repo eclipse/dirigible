@@ -145,8 +145,8 @@ public class DatabaseMetadataUtil {
 			iterateForeignKeys(tableMetadata, foreignKeys);
 		} else if (!IS_CASE_SENSETIVE) {
 			// Fallback for PostgreSQL
-			foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema,
-					normalizeTableName(tableMetadata.getTableName().toLowerCase()));
+			foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName()
+																															.toLowerCase()));
 			if (!foreignKeys.next()) {
 				return;
 			} else {
@@ -168,7 +168,8 @@ public class DatabaseMetadataUtil {
 					foreignKeys.getString(JDBC_FK_TABLE_NAME_PROPERTY), foreignKeys.getString(JDBC_PK_TABLE_NAME_PROPERTY),
 					foreignKeys.getString(JDBC_FK_COLUMN_NAME_PROPERTY), foreignKeys.getString(JDBC_PK_COLUMN_NAME_PROPERTY),
 					foreignKeys.getString(JDBC_FK_NAME_PROPERTY), foreignKeys.getString(JDBC_PK_NAME_PROPERTY));
-			tableMetadata.getRelations().add(relationMetadata);
+			tableMetadata	.getRelations()
+							.add(relationMetadata);
 		} while (foreignKeys.next());
 	}
 
@@ -189,8 +190,8 @@ public class DatabaseMetadataUtil {
 			iteratePrimaryKeys(tableMetadata, primaryKeys);
 		} else if (!IS_CASE_SENSETIVE) {
 			// Fallback for PostgreSQL
-			primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema,
-					normalizeTableName(tableMetadata.getTableName().toLowerCase()));
+			primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata	.getTableName()
+																															.toLowerCase()));
 			if (!primaryKeys.next()) {
 				return;
 			} else {
@@ -220,11 +221,13 @@ public class DatabaseMetadataUtil {
 	 * @param tableModel the table model
 	 */
 	public static void setColumnPrimaryKey(String columnName, PersistenceTableModel tableModel) {
-		tableModel.getColumns().forEach(column -> {
-			if (column.getName().equals(columnName)) {
-				column.setPrimaryKey(true);
-			}
-		});
+		tableModel	.getColumns()
+					.forEach(column -> {
+						if (column	.getName()
+									.equals(columnName)) {
+							column.setPrimaryKey(true);
+						}
+					});
 	}
 
 	/**
@@ -255,12 +258,14 @@ public class DatabaseMetadataUtil {
 					index = new PersistenceTableIndexModel();
 					index.setName(indexName);
 					index.setUnique(!indexes.getBoolean("NON_UNIQUE"));
-					tableMetadata.getIndices().add(index);
+					tableMetadata	.getIndices()
+									.add(index);
 					lastIndexName = indexName;
 				}
 				if (index != null) {
 					String columnName = indexes.getString("COLUMN_NAME");
-					index.getColumns().add(columnName);
+					index	.getColumns()
+							.add(columnName);
 				}
 			}
 		}
@@ -284,8 +289,9 @@ public class DatabaseMetadataUtil {
 			iterateFields(tableMetadata, columns);
 		} else if (!IS_CASE_SENSETIVE) {
 			// Fallback for PostgreSQL
-			columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern,
-					normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
+			columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata	.getTableName()
+																															.toLowerCase()),
+					null);
 			if (!columns.next()) {
 				throw new SQLException("Error in getting the information about the columns.");
 			} else {
@@ -351,8 +357,9 @@ public class DatabaseMetadataUtil {
 			iterateTables(tableMetadata, tables);
 		} else if (!IS_CASE_SENSETIVE) {
 			// Fallback for PostgreSQL
-			tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern,
-					normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
+			tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName()
+																														.toLowerCase()),
+					null);
 			if (!tables.next()) {
 				throw new SQLException("Error in getting the information about the tables.");
 			} else {

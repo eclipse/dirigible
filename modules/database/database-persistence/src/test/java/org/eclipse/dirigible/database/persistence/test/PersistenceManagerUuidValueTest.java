@@ -85,10 +85,12 @@ public class PersistenceManagerUuidValueTest extends AbstractPersistenceManagerT
 	 */
 	private void insertPojo(Connection connection, PersistenceManager<Task> persistenceManager) {
 		Task task = new Task();
-		String uuid = UUID.randomUUID().toString();
+		String uuid = UUID	.randomUUID()
+							.toString();
 		task.setId(uuid);
 		task.setSubject("Subject 1");
-		String uuidInserted = persistenceManager.insert(connection, task).toString();
+		String uuidInserted = persistenceManager.insert(connection, task)
+												.toString();
 		assertEquals(uuid, uuidInserted);
 	}
 

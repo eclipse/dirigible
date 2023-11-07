@@ -138,7 +138,8 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(getFileExtension());
+		return file	.toString()
+					.endsWith(getFileExtension());
 	}
 
 	/**
@@ -171,31 +172,35 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 		schema.setType(Schema.ARTEFACT_TYPE);
 		schema.updateKey();
 
-		schema.getTables().forEach(t -> {
-			t.setSchemaReference(schema);
-			// t.setSchema(schema.getName());
-			t.setConstraints(new TableConstraints(t));
-			TablesSynchronizer.assignParent(t);
-		});
-		schema.getViews().forEach(v -> v.setSchemaReference(schema));
+		schema	.getTables()
+				.forEach(t -> {
+					t.setSchemaReference(schema);
+					// t.setSchema(schema.getName());
+					t.setConstraints(new TableConstraints(t));
+					TablesSynchronizer.assignParent(t);
+				});
+		schema	.getViews()
+				.forEach(v -> v.setSchemaReference(schema));
 
 		try {
 			Schema maybe = getService().findByKey(schema.getKey());
 			if (maybe != null) {
 				schema.setId(maybe.getId());
-				schema.getTables().forEach(t -> {
-					Table m = getTableService().findByKey(schema.constructKey(Table.ARTEFACT_TYPE, location, t.getName()));
-					if (m != null) {
-						t.setId(m.getId());
-					}
-					TablesSynchronizer.reassignIds(t, m);
-				});
-				schema.getViews().forEach(v -> {
-					View m = getViewService().findByKey(schema.constructKey(View.ARTEFACT_TYPE, location, v.getName()));
-					if (m != null) {
-						v.setId(m.getId());
-					}
-				});
+				schema	.getTables()
+						.forEach(t -> {
+							Table m = getTableService().findByKey(schema.constructKey(Table.ARTEFACT_TYPE, location, t.getName()));
+							if (m != null) {
+								t.setId(m.getId());
+							}
+							TablesSynchronizer.reassignIds(t, m);
+						});
+				schema	.getViews()
+						.forEach(v -> {
+							View m = getViewService().findByKey(schema.constructKey(View.ARTEFACT_TYPE, location, v.getName()));
+							if (m != null) {
+								v.setId(m.getId());
+							}
+						});
 			}
 			Schema result = getService().save(schema);
 			return List.of(result);
@@ -248,18 +253,21 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	@Override
 	public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
 
-		try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
+		try (Connection connection = datasourcesManager	.getDefaultDataSource()
+														.getConnection()) {
 
 			Schema schema = null;
 			if (wrapper.getArtefact() instanceof Schema) {
 				schema = (Schema) wrapper.getArtefact();
 			} else {
-				throw new UnsupportedOperationException(String.format("Trying to process %s as Schema", wrapper.getArtefact().getClass()));
+				throw new UnsupportedOperationException(String.format("Trying to process %s as Schema", wrapper	.getArtefact()
+																												.getClass()));
 			}
 
 			switch (flow) {
 				case CREATE:
-					if (schema.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+					if (schema	.getLifecycle()
+								.equals(ArtefactLifecycle.NEW)) {
 						try {
 							executeSchemaCreate(connection, schema);
 							callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
@@ -272,7 +280,8 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 					}
 					break;
 				case UPDATE:
-					if (schema.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+					if (schema	.getLifecycle()
+								.equals(ArtefactLifecycle.MODIFIED)) {
 						executeSchemaUpdate(connection, schema);
 						callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
 					}
@@ -339,7 +348,8 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 		if (logger.isInfoEnabled()) {
 			logger.info("Processing Update Schema: " + schemaModel.getName());
 		}
-		if (SqlFactory.getNative(connection).existsSchema(connection, schemaModel.getName())) {
+		if (SqlFactory	.getNative(connection)
+						.existsSchema(connection, schemaModel.getName())) {
 			SchemaUpdateProcessor.execute(connection, schemaModel);
 		} else {
 			executeSchemaCreate(connection, schemaModel);
@@ -399,18 +409,26 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 		Schema result = new Schema();
 
 		JsonElement root = GsonHelper.parseJson(content);
-		JsonArray structures = root.getAsJsonObject().get("schema").getAsJsonObject().get("structures").getAsJsonArray();
+		JsonArray structures = root	.getAsJsonObject()
+									.get("schema")
+									.getAsJsonObject()
+									.get("structures")
+									.getAsJsonArray();
 		for (int i = 0; i < structures.size(); i++) {
-			JsonObject structure = structures.get(i).getAsJsonObject();
-			String type = structure.get("type").getAsString();
+			JsonObject structure = structures	.get(i)
+												.getAsJsonObject();
+			String type = structure	.get("type")
+									.getAsString();
 			if ("table".equalsIgnoreCase(type)) {
 				Table table = new Table();
 				setTableAttributes(location, result, structure, type, table);
-				result.getTables().add(table);
+				result	.getTables()
+						.add(table);
 			} else if ("view".equalsIgnoreCase(type)) {
 				View view = new View();
 				setViewAttributes(location, result, structure, type, view);
-				result.getViews().add(view);
+				result	.getViews()
+						.add(view);
 			} else if ("foreignKey".equalsIgnoreCase(type)) {
 				// skip for now
 			} else {
@@ -418,24 +436,38 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 			}
 		}
 		for (int i = 0; i < structures.size(); i++) {
-			JsonObject structure = structures.get(i).getAsJsonObject();
-			String type = structure.get("type").getAsString();
+			JsonObject structure = structures	.get(i)
+												.getAsJsonObject();
+			String type = structure	.get("type")
+									.getAsString();
 			if ("foreignKey".equals(type)) {
 				TableConstraintForeignKey foreignKey = new TableConstraintForeignKey();
-				foreignKey.setName(structure.get("name").getAsString());
-				foreignKey.setColumns(structure.get("columns").getAsString().split(","));
-				foreignKey.setReferencedTable(structure.get("referencedTable").getAsString());
-				foreignKey.setReferencedColumns(structure.get("referencedColumns").getAsString().split(","));
-				String tableName = structure.get("table").getAsString();
+				foreignKey.setName(structure.get("name")
+											.getAsString());
+				foreignKey.setColumns(structure	.get("columns")
+												.getAsString()
+												.split(","));
+				foreignKey.setReferencedTable(structure	.get("referencedTable")
+														.getAsString());
+				foreignKey.setReferencedColumns(structure	.get("referencedColumns")
+															.getAsString()
+															.split(","));
+				String tableName = structure.get("table")
+											.getAsString();
 				for (Table table : result.getTables()) {
-					if (table.getName().equals(tableName)) {
+					if (table	.getName()
+								.equals(tableName)) {
 						// add the foreign key
 						List<TableConstraintForeignKey> list = new ArrayList<TableConstraintForeignKey>();
-						if (table.getConstraints().getForeignKeys() != null) {
-							list.addAll(table.getConstraints().getForeignKeys());
+						if (table	.getConstraints()
+									.getForeignKeys() != null) {
+							list.addAll(table	.getConstraints()
+												.getForeignKeys());
 						}
 						list.add(foreignKey);
-						table.getConstraints().getForeignKeys().addAll(list);
+						table	.getConstraints()
+								.getForeignKeys()
+								.addAll(list);
 						// add the dependency for the topological sorting later
 						table.addDependency(location, foreignKey.getReferencedTable(), "TABLE");
 						break;
@@ -459,7 +491,8 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	 */
 	private static void setTableAttributes(String location, Schema result, JsonObject structure, String type, Table table) {
 		table.setLocation(location);
-		table.setName(structure.get("name").getAsString());
+		table.setName(structure	.get("name")
+								.getAsString());
 		table.setKind(type);
 		table.setType(Table.ARTEFACT_TYPE);
 		table.updateKey();
@@ -469,15 +502,18 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 			TableColumn columnModel = new TableColumn();
 			setColumnAttributes(column, columnModel);
 			columnModel.setTable(table);
-			table.getColumns().add(columnModel);
+			table	.getColumns()
+					.add(columnModel);
 		} else if (columnElement.isJsonArray()) {
 			JsonArray columns = columnElement.getAsJsonArray();
 			for (int j = 0; j < columns.size(); j++) {
-				JsonObject column = columns.get(j).getAsJsonObject();
+				JsonObject column = columns	.get(j)
+											.getAsJsonObject();
 				TableColumn columnModel = new TableColumn();
 				setColumnAttributes(column, columnModel);
 				columnModel.setTable(table);
-				table.getColumns().add(columnModel);
+				table	.getColumns()
+						.add(columnModel);
 			}
 		} else {
 			throw new IllegalArgumentException(
@@ -492,21 +528,38 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	 * @param columnModel the column model
 	 */
 	private static void setColumnAttributes(JsonObject column, TableColumn columnModel) {
-		columnModel.setName(column.get("name") != null && !column.get("name").isJsonNull() ? column.get("name").getAsString() : "unknown");
-		columnModel.setType(column.get("type") != null && !column.get("type").isJsonNull() ? column.get("type").getAsString() : "unknown");
-		columnModel.setLength(
-				column.get("length") != null && !column.get("length").isJsonNull() ? column.get("length").getAsString() : null);
-		columnModel.setPrimaryKey(
-				column.get("primaryKey") != null && !column.get("primaryKey").isJsonNull() ? column.get("primaryKey").getAsBoolean()
-						: false);
-		columnModel.setUnique(
-				column.get("unique") != null && !column.get("unique").isJsonNull() ? column.get("unique").getAsBoolean() : false);
-		columnModel.setNullable(
-				column.get("nullable") != null && !column.get("nullable").isJsonNull() ? column.get("nullable").getAsBoolean() : false);
-		columnModel.setDefaultValue(
-				column.get("defaultValue") != null && !column.get("defaultValue").isJsonNull() ? column.get("defaultValue").getAsString()
-						: null);
-		columnModel.setScale(column.get("scale") != null && !column.get("scale").isJsonNull() ? column.get("scale").getAsString() : null);
+		columnModel.setName(column.get("name") != null && !column	.get("name")
+																	.isJsonNull() ? column	.get("name")
+																							.getAsString()
+																			: "unknown");
+		columnModel.setType(column.get("type") != null && !column	.get("type")
+																	.isJsonNull() ? column	.get("type")
+																							.getAsString()
+																			: "unknown");
+		columnModel.setLength(column.get("length") != null && !column	.get("length")
+																		.isJsonNull() ? column	.get("length")
+																								.getAsString()
+																				: null);
+		columnModel.setPrimaryKey(column.get("primaryKey") != null && !column	.get("primaryKey")
+																				.isJsonNull() ? column	.get("primaryKey")
+																										.getAsBoolean()
+																						: false);
+		columnModel.setUnique(column.get("unique") != null && !column	.get("unique")
+																		.isJsonNull() ? column	.get("unique")
+																								.getAsBoolean()
+																				: false);
+		columnModel.setNullable(column.get("nullable") != null && !column	.get("nullable")
+																			.isJsonNull() ? column	.get("nullable")
+																									.getAsBoolean()
+																					: false);
+		columnModel.setDefaultValue(column.get("defaultValue") != null && !column	.get("defaultValue")
+																					.isJsonNull() ? column	.get("defaultValue")
+																											.getAsString()
+																							: null);
+		columnModel.setScale(column.get("scale") != null && !column	.get("scale")
+																	.isJsonNull() ? column	.get("scale")
+																							.getAsString()
+																			: null);
 	}
 
 	/**
@@ -520,10 +573,16 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	 */
 	private static void setViewAttributes(String location, Schema result, JsonObject structure, String type, View view) {
 		view.setLocation(location);
-		view.setName(structure.get("name").getAsString());
+		view.setName(structure	.get("name")
+								.getAsString());
 		view.setKind(type);
 		view.setType(View.ARTEFACT_TYPE);
-		view.setQuery(structure.get("columns").getAsJsonArray().get(0).getAsJsonObject().get("query").getAsString());
+		view.setQuery(structure	.get("columns")
+								.getAsJsonArray()
+								.get(0)
+								.getAsJsonObject()
+								.get("query")
+								.getAsString());
 		view.updateKey();
 	}
 

@@ -27,7 +27,10 @@ public class DropTableTypeTest {
 	 */
 	@Test
 	public void dropTableType() {
-		String sql = SqlFactory.getNative(new HanaSqlDialect()).drop().tableType("CUSTOMERS_STRUCTURE").build();
+		String sql = SqlFactory	.getNative(new HanaSqlDialect())
+								.drop()
+								.tableType("CUSTOMERS_STRUCTURE")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("DROP TYPE CUSTOMERS_STRUCTURE", sql);
@@ -40,7 +43,10 @@ public class DropTableTypeTest {
 	public void dropTableTypeCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getNative(new HanaSqlDialect()).drop().tableType("CUSTOMERS_STRUCTURE").build();
+			String sql = SqlFactory	.getNative(new HanaSqlDialect())
+									.drop()
+									.tableType("CUSTOMERS_STRUCTURE")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("DROP TYPE \"CUSTOMERS_STRUCTURE\"", sql);

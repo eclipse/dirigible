@@ -114,7 +114,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			}
 			try {
 				if ((columnModel.getEnumerated() != null) && (valueObject != null)) {
-					if (EnumType.valueOf(columnModel.getEnumerated()).equals(EnumType.ORDINAL)) {
+					if (EnumType.valueOf(columnModel.getEnumerated())
+								.equals(EnumType.ORDINAL)) {
 						valueObject = ((Enum) valueObject).ordinal();
 					} else {
 						// EnumType.STRING
@@ -143,12 +144,14 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		String dataType = columnModel.getType();
 		int dataLength = columnModel.getLength();
 		if (DataTypeUtils.isVarchar(dataType) || DataTypeUtils.isNvarchar(dataType) || DataTypeUtils.isChar(dataType)) {
-			if (valueObject != null && valueObject.toString().length() > dataLength) {
+			if (valueObject != null && valueObject	.toString()
+													.length() > dataLength) {
 				if (logger.isWarnEnabled()) {
 					logger.warn("String has been truncated to fit to the database column [{}] length [{}].", columnModel.getName(),
 							columnModel.getLength());
 				}
-				return valueObject.toString().substring(0, dataLength - 1);
+				return valueObject	.toString()
+									.substring(0, dataLength - 1);
 			}
 		}
 		return valueObject;
@@ -251,10 +254,13 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		} else if (DataTypeUtils.isChar(dataType)) {
 			if (value instanceof String) {
 				preparedStatement.setString(i, (String) value);
-			} else if ((value instanceof Character) || char.class.getCanonicalName().equals(value.getClass().getCanonicalName())) {
+			} else if ((value instanceof Character) || char.class	.getCanonicalName()
+																	.equals(value	.getClass()
+																					.getCanonicalName())) {
 				preparedStatement.setString(i, new String(new char[] {(char) value}));
 			} else {
-				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
+				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value	.getClass()
+																													.getName()));
 			}
 		} else if (DataTypeUtils.isDate(dataType)) {
 			preparedStatement.setDate(i, (Date) value);
@@ -274,7 +280,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			} else if (value instanceof BigInteger) {
 				preparedStatement.setLong(i, ((BigInteger) value).longValueExact());
 			} else {
-				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
+				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value	.getClass()
+																													.getName()));
 			}
 		} else if (DataTypeUtils.isReal(dataType)) {
 			preparedStatement.setFloat(i, (Float) value);
@@ -288,7 +295,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			} else if (value instanceof BigDecimal) {
 				preparedStatement.setBigDecimal(i, ((BigDecimal) value));
 			} else {
-				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
+				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value	.getClass()
+																													.getName()));
 			}
 		} else if (DataTypeUtils.isBlob(dataType)) {
 			byte[] bytes = (byte[]) value;
@@ -301,7 +309,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			} else if (value instanceof Integer || Integer.TYPE.isInstance(value)) {
 				preparedStatement.setBoolean(i, ((Integer) value == 1));
 			} else {
-				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
+				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value	.getClass()
+																													.getName()));
 			}
 		} else if (DataTypeUtils.isArray(dataType) && value instanceof List) {
 			for (Object element : ((List<?>) value)) {
@@ -352,15 +361,22 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		boolean oldAccessible = setAccessible(field);
 		try {
 			if (columnModel.getEnumerated() != null) {
-				if (EnumType.valueOf(columnModel.getEnumerated()).equals(EnumType.ORDINAL) && (value instanceof Integer)) {
-					if (field.getType().isEnum()) {
-						value = field.getType().getEnumConstants()[(Integer) value];
+				if (EnumType.valueOf(columnModel.getEnumerated())
+							.equals(EnumType.ORDINAL)
+						&& (value instanceof Integer)) {
+					if (field	.getType()
+								.isEnum()) {
+						value = field	.getType()
+										.getEnumConstants()[(Integer) value];
 					} else {
 						throw new IllegalStateException(
 								"The annotation @Enumerated is set to a field with a type, which is not an enum type.");
 					}
-				} else if (EnumType.valueOf(columnModel.getEnumerated()).equals(EnumType.STRING) && (value instanceof String)) {
-					if (field.getType().isEnum()) {
+				} else if (EnumType	.valueOf(columnModel.getEnumerated())
+									.equals(EnumType.STRING)
+						&& (value instanceof String)) {
+					if (field	.getType()
+								.isEnum()) {
 						value = Enum.valueOf((Class<Enum>) field.getType(), (String) value);
 					} else {
 						throw new IllegalStateException(
@@ -397,7 +413,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 * @return the object
 	 */
 	private Object floatAdaptation(Object value, Field field) {
-		if (field.getType().equals(float.class) || field.getType().equals(Float.class)) {
+		if (field	.getType()
+					.equals(float.class)
+				|| field.getType()
+						.equals(Float.class)) {
 			if (value instanceof Double) {
 				value = ((Double) value).floatValue();
 			} else if (value instanceof Float) {
@@ -415,7 +434,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 * @return the object
 	 */
 	private Object shortAdaptation(Object value, Field field) {
-		if (field.getType().equals(short.class) || field.getType().equals(Short.class)) {
+		if (field	.getType()
+					.equals(short.class)
+				|| field.getType()
+						.equals(Short.class)) {
 			if (value instanceof Long) {
 				value = ((Long) value).shortValue();
 			} else if (value instanceof Integer) {
@@ -435,7 +457,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 * @return the object
 	 */
 	private Object bigIntegerAdaptation(Object value, Field field) {
-		if (field.getType().equals(BigInteger.class)) {
+		if (field	.getType()
+					.equals(BigInteger.class)) {
 			if (value instanceof Long) {
 				value = BigInteger.valueOf(((Long) value));
 			}
@@ -451,7 +474,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 * @return the object
 	 */
 	private Object booleanAdaptation(Object value, Field field) {
-		if (field.getType().equals(boolean.class) || field.getType().equals(Boolean.class)) {
+		if (field	.getType()
+					.equals(boolean.class)
+				|| field.getType()
+						.equals(Boolean.class)) {
 			if (value instanceof Short) {
 				value = Boolean.valueOf(((Short) value) != 0);
 			} else if (value instanceof Integer) {
@@ -471,7 +497,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 * @return the object
 	 */
 	private Object charAdaptation(Object value, Field field) {
-		if (field.getType().equals(char.class) || field.getType().equals(Character.class)) {
+		if (field	.getType()
+					.equals(char.class)
+				|| field.getType()
+						.equals(Character.class)) {
 			if ((value instanceof String) && (((String) value).length() <= 1)) {
 				value = new Character(((String) value).charAt(0));
 			} else {
@@ -504,7 +533,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 * @return the object
 	 */
 	private Object intAdaptation(Object value, Field field) {
-		if (field.getType().equals(int.class) || field.getType().equals(Integer.class)) {
+		if (field	.getType()
+					.equals(int.class)
+				|| field.getType()
+						.equals(Integer.class)) {
 			if (value instanceof Long) {
 				value = ((Long) value).intValue();
 			}
@@ -520,7 +552,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 * @return the object
 	 */
 	private Object byteAdaptation(Object value, Field field) {
-		if (field.getType().equals(byte.class) || field.getType().equals(Byte.class)) {
+		if (field	.getType()
+					.equals(byte.class)
+				|| field.getType()
+						.equals(Byte.class)) {
 			if (value instanceof Integer) {
 				value = ((Integer) value).byteValue();
 			} else if (value instanceof Short) {
@@ -568,7 +603,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		Field field = null;
 		List<Field> fields = Arrays.asList(PersistenceAnnotationsParser.collectFields(clazz));
 		for (Field next : fields) {
-			if (next.getName().equals(fieldName)) {
+			if (next.getName()
+					.equals(fieldName)) {
 				field = next;
 				break;
 			}
@@ -625,7 +661,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 * @return the primary key model
 	 */
 	protected PersistenceTableColumnModel getPrimaryKeyModel(PersistenceTableModel tableModel) {
-		Optional<PersistenceTableColumnModel> optional = tableModel.getColumns().stream().filter(model -> model.isPrimaryKey()).findFirst();
+		Optional<PersistenceTableColumnModel> optional = tableModel	.getColumns()
+																	.stream()
+																	.filter(model -> model.isPrimaryKey())
+																	.findFirst();
 		return optional.orElse(null);
 	}
 

@@ -103,7 +103,8 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(getFileExtension());
+		return file	.toString()
+					.endsWith(getFileExtension());
 	}
 
 	/**
@@ -129,7 +130,9 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 	public List<Bpmn> parse(String location, byte[] content) throws ParseException {
 		Bpmn bpmn = new Bpmn();
 		bpmn.setLocation(location);
-		bpmn.setName(Paths.get(location).getFileName().toString());
+		bpmn.setName(Paths	.get(location)
+							.getFileName()
+							.toString());
 		bpmn.setType(Bpmn.ARTEFACT_TYPE);
 		bpmn.updateKey();
 		bpmn.setContent(content);
@@ -194,7 +197,8 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 			if (wrapper.getArtefact() instanceof Bpmn) {
 				bpmn = (Bpmn) wrapper.getArtefact();
 			} else {
-				throw new UnsupportedOperationException(String.format("Trying to process %s as BPMN", wrapper.getArtefact().getClass()));
+				throw new UnsupportedOperationException(String.format("Trying to process %s as BPMN", wrapper	.getArtefact()
+																												.getClass()));
 			}
 
 
@@ -288,10 +292,13 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 			ProcessEngine processEngine = (ProcessEngine) bpmProviderFlowable.getProcessEngine();
 			RepositoryService repositoryService = processEngine.getRepositoryService();
 
-			Deployment deployment =
-					repositoryService.createDeployment().key(bpmn.getLocation()).addBytes(bpmn.getLocation(), bpmn.getContent()).deploy();
-			List<ProcessDefinition> processDefinitions =
-					repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).list();
+			Deployment deployment = repositoryService	.createDeployment()
+														.key(bpmn.getLocation())
+														.addBytes(bpmn.getLocation(), bpmn.getContent())
+														.deploy();
+			List<ProcessDefinition> processDefinitions = repositoryService	.createProcessDefinitionQuery()
+																			.deploymentId(deployment.getId())
+																			.list();
 			if (processDefinitions.size() > 0) {
 				ProcessDefinition processDefinition = processDefinitions.get(0);
 				bpmn.setDeploymentId(processDefinition.getDeploymentId());
@@ -324,14 +331,18 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 			ProcessEngine processEngine = (ProcessEngine) bpmProviderFlowable.getProcessEngine();
 			RepositoryService repositoryService = processEngine.getRepositoryService();
 
-			List<Deployment> deployments = repositoryService.createDeploymentQuery().list();
+			List<Deployment> deployments = repositoryService.createDeploymentQuery()
+															.list();
 			for (Deployment deployment : deployments) {
 				if (logger.isTraceEnabled()) {
 					logger.trace(format("Deployment: [{0}] with key: [{1}]", deployment.getId(), deployment.getKey()));
 				}
-				if (bpmn.getLocation().equals(deployment.getKey())) {
-					List<ProcessDefinition> processDefinitions =
-							repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).active().list();
+				if (bpmn.getLocation()
+						.equals(deployment.getKey())) {
+					List<ProcessDefinition> processDefinitions = repositoryService	.createProcessDefinitionQuery()
+																					.deploymentId(deployment.getId())
+																					.active()
+																					.list();
 					if (processDefinitions.size() > 0) {
 						ProcessDefinition processDefinition = processDefinitions.get(0);
 						// repositoryService.suspendProcessDefinitionById(processDefinition.getId());
@@ -340,7 +351,9 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 																	.key(bpmn.getLocation())
 																	.addBytes(bpmn.getLocation(), bpmn.getContent())
 																	.deploy();
-						processDefinitions = repositoryService.createProcessDefinitionQuery().deploymentId(newDeployment.getId()).list();
+						processDefinitions = repositoryService	.createProcessDefinitionQuery()
+																.deploymentId(newDeployment.getId())
+																.list();
 						if (processDefinitions.size() > 0) {
 							processDefinition = processDefinitions.get(0);
 							bpmn.setDeploymentId(processDefinition.getDeploymentId());
@@ -381,12 +394,14 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 		ProcessEngine processEngine = (ProcessEngine) bpmProviderFlowable.getProcessEngine();
 		RepositoryService repositoryService = processEngine.getRepositoryService();
 
-		List<Deployment> deployments = repositoryService.createDeploymentQuery().list();
+		List<Deployment> deployments = repositoryService.createDeploymentQuery()
+														.list();
 		for (Deployment deployment : deployments) {
 			if (logger.isTraceEnabled()) {
 				logger.trace(format("Deployment: [{0}] with key: [{1}]", deployment.getId(), deployment.getKey()));
 			}
-			if (bpmn.getLocation().equals(deployment.getKey())) {
+			if (bpmn.getLocation()
+					.equals(deployment.getKey())) {
 				repositoryService.deleteDeployment(deployment.getId(), true);
 				if (logger.isInfoEnabled()) {
 					logger.info(format("Deleted deployment: [{0}] with key: [{1}] on the Flowable BPMN Engine.", deployment.getId(),

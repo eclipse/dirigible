@@ -45,7 +45,8 @@ public class ImageFacade {
 
 		int bufferedImageType = bufferedImage.getType();
 		BufferedImage buffer = new BufferedImage(width, height, bufferedImageType);
-		buffer.getGraphics().drawImage(scaledImage, 0, 0, null);
+		buffer	.getGraphics()
+				.drawImage(scaledImage, 0, 0, null);
 
 		ByteArrayOutputStream temp = new ByteArrayOutputStream();
 		javax.imageio.ImageIO.write(buffer, type, temp);

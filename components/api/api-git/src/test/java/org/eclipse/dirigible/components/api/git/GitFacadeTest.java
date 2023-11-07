@@ -100,7 +100,9 @@ public class GitFacadeTest {
 		GitFacade.commit(username, email, workspaceName, repository, message, true);
 		List<GitCommitInfo> history = GitFacade.getHistory(repository, workspaceName, projectName);
 		assertTrue(history.size() == 2);
-		assertTrue(history.get(0).getMessage().equals(message));
+		assertTrue(history	.get(0)
+							.getMessage()
+							.equals(message));
 		assertProjectJsonExists(project);
 
 		GitFacade.deleteRepository(workspaceName, repository);

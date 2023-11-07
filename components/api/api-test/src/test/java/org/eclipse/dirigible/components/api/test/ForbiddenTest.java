@@ -36,7 +36,9 @@ public class ForbiddenTest {
 
 	@Test
 	public void forbidden() throws Exception {
-		mockMvc.perform(get("/services/js/test/successful.js")).andDo(print()).andExpect(status().is4xxClientError());
+		mockMvc	.perform(get("/services/js/test/successful.js"))
+				.andDo(print())
+				.andExpect(status().is4xxClientError());
 	}
 
 	@SpringBootApplication

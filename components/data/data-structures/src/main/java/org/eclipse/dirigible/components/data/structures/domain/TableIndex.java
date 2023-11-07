@@ -97,7 +97,8 @@ public class TableIndex {
 		this.order = order;
 		this.columns = columns;
 		this.table = table;
-		this.table.getIndexes().add(this);
+		this.table	.getIndexes()
+					.add(this);
 	}
 
 	/**

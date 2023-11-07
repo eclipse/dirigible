@@ -202,7 +202,8 @@ public class Table extends Artefact {
 	 */
 	public TableColumn getColumn(String name) {
 		for (TableColumn c : columns) {
-			if (c.getName().equals(name)) {
+			if (c	.getName()
+					.equals(name)) {
 				return c;
 			}
 		}
@@ -237,7 +238,8 @@ public class Table extends Artefact {
 		final List<TableIndex> indexesList = indexes;
 		if (indexesList != null) {
 			for (TableIndex i : indexesList) {
-				if (i.getName().equals(name)) {
+				if (i	.getName()
+						.equals(name)) {
 					return i;
 				}
 			}

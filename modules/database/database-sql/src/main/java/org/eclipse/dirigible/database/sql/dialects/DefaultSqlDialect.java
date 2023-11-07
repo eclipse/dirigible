@@ -421,7 +421,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	 */
 	@Override
 	public boolean existsSchema(Connection connection, String schema) throws SQLException {
-		String sql = new SelectBuilder(this).column("*").schema("information_schema").from("schemata").where("schema_name = ?").build();
+		String sql = new SelectBuilder(this).column("*")
+											.schema("information_schema")
+											.from("schemata")
+											.where("schema_name = ?")
+											.build();
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setString(1, schema);
 		ResultSet resultSet = statement.executeQuery();
@@ -551,7 +555,8 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	@Override
 	public String getDatabaseName(Connection connection) {
 		try {
-			return connection.getMetaData().getDatabaseProductName();
+			return connection	.getMetaData()
+								.getDatabaseProductName();
 		} catch (Exception e) {
 			throw new SqlException("Cannot retrieve the database name", e);
 		}
@@ -650,7 +655,9 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	@Override
 	public String countQuery(String table) {
 		table = normalizeTableName(table);
-		String sql = new SelectBuilder(this).column("COUNT(*)").from(quoteTableName(table)).build();
+		String sql = new SelectBuilder(this).column("COUNT(*)")
+											.from(quoteTableName(table))
+											.build();
 		return sql;
 	}
 
@@ -662,7 +669,9 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	 */
 	@Override
 	public String allQuery(String table) {
-		String sql = new SelectBuilder(this).column("*").from(quoteTableName(table)).build();
+		String sql = new SelectBuilder(this).column("*")
+											.from(quoteTableName(table))
+											.build();
 		return sql;
 	}
 

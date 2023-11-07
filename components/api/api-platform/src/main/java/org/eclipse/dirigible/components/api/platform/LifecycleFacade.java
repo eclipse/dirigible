@@ -76,7 +76,9 @@ public class LifecycleFacade implements InitializingBean {
 	public static boolean publish(String user, String workspace, String project) {
 		boolean isSuccessfulPublishRequest = false;
 		try {
-			LifecycleFacade.get().getPublisherService().publish(user, workspace, project, "");
+			LifecycleFacade	.get()
+							.getPublisherService()
+							.publish(user, workspace, project, "");
 			isSuccessfulPublishRequest = true;
 		} catch (Exception e) {
 			// Do nothing
@@ -93,7 +95,9 @@ public class LifecycleFacade implements InitializingBean {
 	public static boolean unpublish(String project) {
 		boolean isSuccessfulUnpublishRequest = false;
 		try {
-			LifecycleFacade.get().getPublisherService().unpublish(project);
+			LifecycleFacade	.get()
+							.getPublisherService()
+							.unpublish(project);
 			isSuccessfulUnpublishRequest = true;
 		} catch (Exception e) {
 			// Do nothing

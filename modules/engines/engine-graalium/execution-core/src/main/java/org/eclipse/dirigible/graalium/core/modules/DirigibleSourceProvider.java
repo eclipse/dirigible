@@ -48,7 +48,8 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
 	 */
 	@Override
 	public Path getAbsoluteSourcePath(String projectName, String projectFileName) {
-		String projectFilePath = Path.of(projectName, projectFileName).toString();
+		String projectFilePath = Path	.of(projectName, projectFileName)
+										.toString();
 		String internalRepositoryRelativeSourcePath = getInternalRepositoryRelativeSourcePath(projectFilePath);
 		String absoluteSourcePathString = getRepository().getInternalResourcePath(internalRepositoryRelativeSourcePath.toString());
 		return Path.of(absoluteSourcePathString);
@@ -62,7 +63,8 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
 	 */
 	@Override
 	public Path getAbsoluteProjectPath(String projectName) {
-		String projectFilePath = Path.of(projectName).toString();
+		String projectFilePath = Path	.of(projectName)
+										.toString();
 		String internalRepositoryRelativeSourcePath = getInternalRepositoryRelativeSourcePath(projectFilePath);
 		String absoluteSourcePathString = getRepository().getInternalResourcePath(internalRepositoryRelativeSourcePath.toString());
 		return Path.of(absoluteSourcePathString);
@@ -75,7 +77,8 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
 	 * @return the internal repository relative source path
 	 */
 	protected String getInternalRepositoryRelativeSourcePath(String projectFilePath) {
-		return Path.of(IRepositoryStructure.PATH_REGISTRY_PUBLIC, projectFilePath).toString();
+		return Path	.of(IRepositoryStructure.PATH_REGISTRY_PUBLIC, projectFilePath)
+					.toString();
 	}
 
 	/**
@@ -142,7 +145,8 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
 	protected byte[] tryGetFromClassLoader(String repositoryAwareFilePathString, String filePathString) {
 		try {
 			var lookupPath = createLookupPath(filePathString);
-			try (InputStream bundled = this.getClass().getResourceAsStream(lookupPath)) {
+			try (InputStream bundled = this	.getClass()
+											.getResourceAsStream(lookupPath)) {
 				byte[] content = null;
 				if (bundled != null) {
 					content = bundled.readAllBytes();
@@ -179,7 +183,8 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
 	 * @return the path
 	 */
 	public Path unpackedToFileSystem(Path pathToUnpack, Path pathToLookup) {
-		try (InputStream bundled = this.getClass().getResourceAsStream("/META-INF/dirigible/" + pathToLookup.toString())) {
+		try (InputStream bundled = this	.getClass()
+										.getResourceAsStream("/META-INF/dirigible/" + pathToLookup.toString())) {
 			Files.createDirectories(pathToUnpack.getParent());
 			Files.createFile(pathToUnpack);
 			Files.copy(bundled, pathToUnpack, StandardCopyOption.REPLACE_EXISTING);

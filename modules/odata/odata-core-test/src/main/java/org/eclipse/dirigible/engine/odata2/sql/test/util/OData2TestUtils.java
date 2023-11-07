@@ -53,8 +53,10 @@ public class OData2TestUtils {
 			throws IOException, ODataException {
 		try (InputStream content = response.readEntity(InputStream.class)) {
 
-			ODataEntry entry = EntityProvider.readEntry(response.getMediaType().toString(), entitySet, content,
-					EntityProviderReadProperties.init().build());
+			ODataEntry entry = EntityProvider.readEntry(response.getMediaType()
+																.toString(),
+					entitySet, content, EntityProviderReadProperties.init()
+																	.build());
 			return entry;
 		}
 	}
@@ -73,8 +75,10 @@ public class OData2TestUtils {
 			throws IOException, ODataException {
 		try (InputStream content = response.readEntity(InputStream.class)) {
 
-			ODataFeed feed = EntityProvider.readFeed(response.getMediaType().toString(), entitySet, content,
-					EntityProviderReadProperties.init().build());
+			ODataFeed feed = EntityProvider.readFeed(response	.getMediaType()
+																.toString(),
+					entitySet, content, EntityProviderReadProperties.init()
+																	.build());
 			return feed;
 		}
 	}
@@ -93,7 +97,8 @@ public class OData2TestUtils {
 	public static ODataErrorContext retrieveODataErrorDocumentFromResponse(final Response response)
 			throws IOException, EntityProviderException {
 		try (InputStream content = response.readEntity(InputStream.class)) {
-			return EntityProvider.readErrorDocument(content, response.getMediaType().toString());
+			return EntityProvider.readErrorDocument(content, response	.getMediaType()
+																		.toString());
 		}
 	}
 
@@ -192,7 +197,8 @@ public class OData2TestUtils {
 			Pair<Boolean, String> result = null;
 			int j = 0;
 			do {
-				Map<String, Object> actualProperties = actualValueList.get(j++).getProperties();
+				Map<String, Object> actualProperties = actualValueList	.get(j++)
+																		.getProperties();
 				result = validateODataEntry(expectedProperties, actualProperties);
 			} while (!result.getFirst() && j < actualValueList.size());
 			if (!result.getFirst())
@@ -301,6 +307,7 @@ public class OData2TestUtils {
 	 * @return InputStream
 	 */
 	public static <T> InputStream stream(Class<T> clazz) {
-		return OData2TestUtils.class.getClassLoader().getResourceAsStream(resource(clazz));
+		return OData2TestUtils.class.getClassLoader()
+									.getResourceAsStream(resource(clazz));
 	}
 }

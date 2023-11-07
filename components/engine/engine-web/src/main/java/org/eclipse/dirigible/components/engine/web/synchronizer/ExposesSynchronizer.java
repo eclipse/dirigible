@@ -87,7 +87,8 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(FILE_NAME);
+		return file	.toString()
+					.endsWith(FILE_NAME);
 	}
 
 	/**
@@ -179,12 +180,14 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 		if (wrapper.getArtefact() instanceof Expose) {
 			expose = (Expose) wrapper.getArtefact();
 		} else {
-			throw new UnsupportedOperationException(String.format("Trying to process %s as Expose", wrapper.getArtefact().getClass()));
+			throw new UnsupportedOperationException(String.format("Trying to process %s as Expose", wrapper	.getArtefact()
+																											.getClass()));
 		}
 
 		switch (flow) {
 			case CREATE:
-				if (expose.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+				if (expose	.getLifecycle()
+							.equals(ArtefactLifecycle.NEW)) {
 					if (expose.getExposes() != null) {
 						ExposeManager.registerExposableProject(expose.getName(), expose.getExposes());
 					} else {
@@ -196,7 +199,8 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 				}
 				break;
 			case UPDATE:
-				if (expose.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+				if (expose	.getLifecycle()
+							.equals(ArtefactLifecycle.MODIFIED)) {
 					ExposeManager.unregisterProject(expose.getName());
 					if (expose.getExposes() != null) {
 						ExposeManager.registerExposableProject(expose.getName(), expose.getExposes());
@@ -209,7 +213,10 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 				}
 				break;
 			case DELETE:
-				if (expose.getLifecycle().equals(ArtefactLifecycle.CREATED) || expose.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+				if (expose	.getLifecycle()
+							.equals(ArtefactLifecycle.CREATED)
+						|| expose	.getLifecycle()
+									.equals(ArtefactLifecycle.UPDATED)) {
 					ExposeManager.unregisterProject(expose.getName());
 					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
 				}

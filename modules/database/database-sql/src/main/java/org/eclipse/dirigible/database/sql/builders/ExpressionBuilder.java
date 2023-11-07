@@ -85,9 +85,11 @@ public class ExpressionBuilder extends AbstractSqlBuilder {
 	protected String generateExpressions() {
 		StringBuilder snippet = new StringBuilder();
 		for (String expression : this.expressions) {
-			snippet.append(expression).append(SPACE);
+			snippet	.append(expression)
+					.append(SPACE);
 		}
-		return snippet.toString().substring(0, snippet.length() - 1);
+		return snippet	.toString()
+						.substring(0, snippet.length() - 1);
 	}
 
 	/**

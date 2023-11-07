@@ -124,15 +124,19 @@ public class DataSourceEndpoint extends BaseEndpoint {
 				new DataSource("API_" + datasourceParameter.getName(), datasourceParameter.getName(), "", datasourceParameter.getDriver(),
 						datasourceParameter.getUrl(), datasourceParameter.getUsername(), datasourceParameter.getPassword());
 
-		if (datasourceParameter.getParameters() != null && !datasourceParameter.getParameters().isEmpty()) {
+		if (datasourceParameter.getParameters() != null && !datasourceParameter	.getParameters()
+																				.isEmpty()) {
 			StringTokenizer tokenizer = new StringTokenizer(datasourceParameter.getParameters(), ",");
 			while (tokenizer.hasMoreTokens()) {
-				String token = tokenizer.nextToken().trim();
+				String token = tokenizer.nextToken()
+										.trim();
 				if (!token.isEmpty()) {
 					int index = token.indexOf('=');
 					if (index > 0) {
-						String name = token.substring(0, index).trim();
-						String value = token.substring(index + 1).trim();
+						String name = token	.substring(0, index)
+											.trim();
+						String value = token.substring(index + 1)
+											.trim();
 						datasource.addProperty(name, value);
 					}
 				}
@@ -141,7 +145,8 @@ public class DataSourceEndpoint extends BaseEndpoint {
 
 		datasource.updateKey();
 		datasource = datasourceService.save(datasource);
-		return ResponseEntity.created(new URI(BaseEndpoint.PREFIX_ENDPOINT_DATA + "sources/" + datasource.getId())).build();
+		return ResponseEntity	.created(new URI(BaseEndpoint.PREFIX_ENDPOINT_DATA + "sources/" + datasource.getId()))
+								.build();
 	}
 
 	/**
@@ -160,7 +165,8 @@ public class DataSourceEndpoint extends BaseEndpoint {
 		datasource.setId(id);
 		datasource.updateKey();
 		datasource = datasourceService.save(datasource);
-		return ResponseEntity.created(new URI(BaseEndpoint.PREFIX_ENDPOINT_DATA + "sources/" + datasource.getId())).build();
+		return ResponseEntity	.created(new URI(BaseEndpoint.PREFIX_ENDPOINT_DATA + "sources/" + datasource.getId()))
+								.build();
 	}
 
 	/**
@@ -174,7 +180,8 @@ public class DataSourceEndpoint extends BaseEndpoint {
 	public ResponseEntity<URI> deleteDataSource(@PathVariable("id") Long id) throws URISyntaxException {
 		DataSource datasource = datasourceService.findById(id);
 		datasourceService.delete(datasource);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity	.noContent()
+								.build();
 	}
 
 }

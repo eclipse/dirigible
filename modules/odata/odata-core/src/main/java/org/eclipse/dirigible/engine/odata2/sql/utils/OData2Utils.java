@@ -91,8 +91,11 @@ public class OData2Utils {
 		}
 
 		final StringBuilder nextLinkBuilder = new StringBuilder();
-		String requestUri =
-				percentEncodeNextLink(context.getPathInfo().getServiceRoot().relativize(context.getPathInfo().getRequestUri()).toString());
+		String requestUri = percentEncodeNextLink(context	.getPathInfo()
+															.getServiceRoot()
+															.relativize(context	.getPathInfo()
+																				.getRequestUri())
+															.toString());
 		nextLinkBuilder.append(requestUri);
 		nextLinkBuilder.append(requestUri.contains("?") ? "&" : "?");
 		nextLinkBuilder.append("$skiptoken=");
@@ -143,17 +146,19 @@ public class OData2Utils {
 		if (link == null) {
 			return null;
 		}
-		return link.replaceAll("\\$skiptoken=.+?(?:&|$)", "").replaceAll("\\$skip=.+?(?:&|$)", "").replaceFirst("(?:\\?|&)$", ""); // Remove
-																																	// potentially
-																																	// trailing
-																																	// "?"
-																																	// or
-																																	// "&"
-																																	// left
-																																	// over
-																																	// from
-																																	// remove
-																																	// actions
+		return link	.replaceAll("\\$skiptoken=.+?(?:&|$)", "")
+					.replaceAll("\\$skip=.+?(?:&|$)", "")
+					.replaceFirst("(?:\\?|&)$", ""); // Remove
+														// potentially
+														// trailing
+														// "?"
+														// or
+														// "&"
+														// left
+														// over
+														// from
+														// remove
+														// actions
 	}
 
 	/**
@@ -219,7 +224,9 @@ public class OData2Utils {
 		for (List<NavigationPropertySegment> expand : uriInfo.getExpand()) {
 			for (NavigationPropertySegment segment : expand) {
 				EdmEntitySet epxandEntity = segment.getTargetEntitySet();
-				if (epxandEntity.getEntityType().getName().equals(entityType.getName())) {
+				if (epxandEntity.getEntityType()
+								.getName()
+								.equals(entityType.getName())) {
 					return true;
 				}
 			}
@@ -334,7 +341,9 @@ public class OData2Utils {
 	public static String getKeyPredicateValueByPropertyName(String propertyName, List<KeyPredicate> keyPredicates) throws EdmException {
 		String keyPredicateValue = "";
 		for (KeyPredicate keyPredicate : keyPredicates) {
-			if (keyPredicate.getProperty().getName().equals(propertyName)) {
+			if (keyPredicate.getProperty()
+							.getName()
+							.equals(propertyName)) {
 				keyPredicateValue = keyPredicate.getLiteral();
 			}
 		}

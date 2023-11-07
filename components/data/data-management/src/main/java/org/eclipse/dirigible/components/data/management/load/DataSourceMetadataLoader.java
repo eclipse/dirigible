@@ -142,8 +142,9 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
 			iterateColumns(tableMetadata, columns);
 		} else if (!IS_CASE_SENSETIVE) {
 			// Fallback for PostgreSQL
-			columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern,
-					normalizeTableName(tableMetadata.getName().toLowerCase()), null);
+			columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata	.getName()
+																															.toLowerCase()),
+					null);
 			if (!columns.next()) {
 				throw new SQLException("Error in getting the information about the columns.");
 			} else {
@@ -184,8 +185,8 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
 			iteratePrimaryKeys(tableMetadata, primaryKeys);
 		} else if (!IS_CASE_SENSETIVE) {
 			// Fallback for PostgreSQL
-			primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema,
-					normalizeTableName(tableMetadata.getName().toLowerCase()));
+			primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata	.getName()
+																															.toLowerCase()));
 			if (!primaryKeys.next()) {
 				return;
 			} else {
@@ -214,11 +215,13 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
 	 * @param tableModel the table model
 	 */
 	public static void setColumnPrimaryKey(String columnName, Table tableModel) {
-		tableModel.getColumns().forEach(column -> {
-			if (column.getName().equals(columnName)) {
-				column.setPrimaryKey(true);
-			}
-		});
+		tableModel	.getColumns()
+					.forEach(column -> {
+						if (column	.getName()
+									.equals(columnName)) {
+							column.setPrimaryKey(true);
+						}
+					});
 	}
 
 	/**
@@ -238,8 +241,8 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
 			iterateForeignKeys(tableMetadata, foreignKeys);
 		} else if (!IS_CASE_SENSETIVE) {
 			// Fallback for PostgreSQL
-			foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema,
-					normalizeTableName(tableMetadata.getName().toLowerCase()));
+			foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName()
+																															.toLowerCase()));
 			if (!foreignKeys.next()) {
 				return;
 			} else {
@@ -353,8 +356,9 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
 			iterateTables(tableMetadata, tables);
 		} else if (!IS_CASE_SENSETIVE) {
 			// Fallback for PostgreSQL
-			tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern,
-					normalizeTableName(tableMetadata.getName().toLowerCase()), null);
+			tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName()
+																														.toLowerCase()),
+					null);
 			if (!tables.next()) {
 				throw new SQLException("Error in getting the information about the tables.");
 			} else {
@@ -457,7 +461,9 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
 	 */
 	public Set<String> getSchemas(DataSource dataSource) throws SQLException {
 		Set<String> result = new HashSet<>();
-		try (Connection connection = dataSource.getConnection(); ResultSet schemas = connection.getMetaData().getSchemas()) {
+		try (Connection connection = dataSource.getConnection();
+				ResultSet schemas = connection	.getMetaData()
+												.getSchemas()) {
 			while (schemas.next()) {
 				String schema = schemas.getString("TABLE_SCHEM");
 				result.add(schema);

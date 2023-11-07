@@ -101,7 +101,8 @@ public class Workspace extends Folder {
 	 */
 	public void copyProject(String sourceProject, String targetProject) {
 		ICollection collection = this.createCollection(sourceProject);
-		collection.copyTo(this.getCollection(targetProject).getPath());
+		collection.copyTo(this	.getCollection(targetProject)
+								.getPath());
 	}
 
 	/**
@@ -114,7 +115,10 @@ public class Workspace extends Folder {
 	 */
 	public void copyFolder(String sourceProject, String sourceFolderPath, String targetProject, String targetFolderPath) {
 		ICollection collection = this.createCollection(sourceProject);
-		collection.getCollection(sourceFolderPath).copyTo(this.getCollection(targetProject).getCollection(targetFolderPath).getPath());
+		collection	.getCollection(sourceFolderPath)
+					.copyTo(this.getCollection(targetProject)
+								.getCollection(targetFolderPath)
+								.getPath());
 	}
 
 	/**
@@ -127,7 +131,10 @@ public class Workspace extends Folder {
 	 */
 	public void copyFile(String sourceProject, String sourceFilePath, String targetProject, String targetFilePath) {
 		ICollection collection = this.createCollection(sourceProject);
-		collection.getResource(sourceFilePath).copyTo(this.getCollection(targetProject).getResource(targetFilePath).getPath());
+		collection	.getResource(sourceFilePath)
+					.copyTo(this.getCollection(targetProject)
+								.getResource(targetFilePath)
+								.getPath());
 	}
 
 	/**
@@ -138,7 +145,8 @@ public class Workspace extends Folder {
 	 */
 	public void moveProject(String sourceProject, String targetProject) {
 		ICollection collection = this.createCollection(sourceProject);
-		collection.moveTo(this.getCollection(targetProject).getPath());
+		collection.moveTo(this	.getCollection(targetProject)
+								.getPath());
 	}
 
 	/**
@@ -151,7 +159,10 @@ public class Workspace extends Folder {
 	 */
 	public void moveFolder(String sourceProject, String sourceFolderPath, String targetProject, String targetFolderPath) {
 		ICollection collection = this.createCollection(sourceProject);
-		collection.getCollection(sourceFolderPath).moveTo(this.getCollection(targetProject).getCollection(targetFolderPath).getPath());
+		collection	.getCollection(sourceFolderPath)
+					.moveTo(this.getCollection(targetProject)
+								.getCollection(targetFolderPath)
+								.getPath());
 	}
 
 	/**
@@ -164,7 +175,10 @@ public class Workspace extends Folder {
 	 */
 	public void moveFile(String sourceProject, String sourceFilePath, String targetProject, String targetFilePath) {
 		ICollection collection = this.createCollection(sourceProject);
-		collection.getResource(sourceFilePath).moveTo(this.getCollection(targetProject).getResource(targetFilePath).getPath());
+		collection	.getResource(sourceFilePath)
+					.moveTo(this.getCollection(targetProject)
+								.getResource(targetFilePath)
+								.getPath());
 	}
 
 	/**
@@ -175,7 +189,8 @@ public class Workspace extends Folder {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void linkProject(String sourceProject, String targetPath) throws IOException {
-		this.getRepository().linkPath(this.getPath() + IRepository.SEPARATOR + sourceProject, targetPath);
+		this.getRepository()
+			.linkPath(this.getPath() + IRepository.SEPARATOR + sourceProject, targetPath);
 
 	}
 

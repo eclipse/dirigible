@@ -67,7 +67,8 @@ public class CommitCommand {
 	 * @throws GitConnectorException in case of exception
 	 */
 	public void execute(final Workspace workspace, GitPushModel model) throws GitConnectorException {
-		if (model.getProjects().size() == 0) {
+		if (model	.getProjects()
+					.size() == 0) {
 			logger.warn("No repository is selected for the Commit action");
 		}
 		for (String repositoryName : model.getProjects()) {

@@ -132,7 +132,8 @@ public class ListenersManager {
 	 * @param listener the listener
 	 */
 	public void startListener(Listener listener) {
-		if (!LISTENERS.keySet().contains(listener.getLocation())) {
+		if (!LISTENERS	.keySet()
+						.contains(listener.getLocation())) {
 			IResource resource = getRepository().getResource(
 					IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + listener.getHandler());
 			if (!resource.exists()) {
@@ -183,7 +184,8 @@ public class ListenersManager {
 	 * @return true, if such listener is registered
 	 */
 	public boolean existsListener(String listenerLocation) {
-		return LISTENERS.keySet().contains(listenerLocation);
+		return LISTENERS.keySet()
+						.contains(listenerLocation);
 	}
 
 	/**

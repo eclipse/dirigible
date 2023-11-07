@@ -56,7 +56,8 @@ public class ProjectActionsPublisherHandler implements PublisherHandler {
 				beforePublishProject(workspace, project);
 			} else if (segments.length == 3) {
 				String workspace = path.getSegments()[2];
-				List<Project> projects = workspaceService.getWorkspace(workspace).getProjects();
+				List<Project> projects = workspaceService	.getWorkspace(workspace)
+															.getProjects();
 				for (Project project : projects) {
 					beforePublishProject(workspace, project.getName());
 				}

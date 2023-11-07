@@ -127,11 +127,17 @@ public class SQLSelectBuilderTest {
 		UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1, ps2), params);
 
 		SQLSelectBuilder q = builder.buildSelectCountQuery(uriInfo, null);
-		assertEquals("T0.STATUS = ? AND T0.LOGEND < ?", q.getWhereClause().getWhereClause());
-		assertFalse(q.getJoinWhereClauses().hasNext());
+		assertEquals("T0.STATUS = ? AND T0.LOGEND < ?", q	.getWhereClause()
+															.getWhereClause());
+		assertFalse(q	.getJoinWhereClauses()
+						.hasNext());
 
-		assertEquals("ERROR", q.getStatementParams().get(0).getValue());
-		assertTrue(q.getStatementParams().get(1).getValue() instanceof Calendar);
+		assertEquals("ERROR", q	.getStatementParams()
+								.get(0)
+								.getValue());
+		assertTrue(q.getStatementParams()
+					.get(1)
+					.getValue() instanceof Calendar);
 		assertEquals("SELECT COUNT(*) FROM MPLHEADER AS T0 WHERE T0.STATUS = ? AND T0.LOGEND < ?", q.buildSelect(context));
 	}
 
@@ -149,11 +155,17 @@ public class SQLSelectBuilderTest {
 		UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 
 		SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
-		assertEquals("T0.STATUS = ? AND T0.LOGEND < ?", q.getWhereClause().getWhereClause());
-		assertFalse(q.getJoinWhereClauses().hasNext());
+		assertEquals("T0.STATUS = ? AND T0.LOGEND < ?", q	.getWhereClause()
+															.getWhereClause());
+		assertFalse(q	.getJoinWhereClauses()
+						.hasNext());
 
-		assertEquals("ERROR", q.getStatementParams().get(0).getValue());
-		assertTrue(q.getStatementParams().get(1).getValue() instanceof Calendar);
+		assertEquals("ERROR", q	.getStatementParams()
+								.get(0)
+								.getValue());
+		assertTrue(q.getStatementParams()
+					.get(1)
+					.getValue() instanceof Calendar);
 		// the AlternateWebLink is mapped to MESSAGEID, therefore 2 times MESSAGEID
 		assertEquals("SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\", T0.LOGSTART AS \"LOGSTART_T0\", T0.LOGEND AS \"LOGEND_T0\", "
 				+ "T0.SENDER AS \"SENDER_T0\", T0.RECEIVER AS \"RECEIVER_T0\", T0.STATUS AS \"STATUS_T0\", T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" "
@@ -175,11 +187,17 @@ public class SQLSelectBuilderTest {
 		UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 
 		SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
-		assertEquals("T0.STATUS = ? AND T0.LOGEND < ?", q.getWhereClause().getWhereClause());
-		assertFalse(q.getJoinWhereClauses().hasNext());
+		assertEquals("T0.STATUS = ? AND T0.LOGEND < ?", q	.getWhereClause()
+															.getWhereClause());
+		assertFalse(q	.getJoinWhereClauses()
+						.hasNext());
 
-		assertEquals("ERROR", q.getStatementParams().get(0).getValue());
-		assertTrue(q.getStatementParams().get(1).getValue() instanceof Calendar);
+		assertEquals("ERROR", q	.getStatementParams()
+								.get(0)
+								.getValue());
+		assertTrue(q.getStatementParams()
+					.get(1)
+					.getValue() instanceof Calendar);
 		// the AlternateWebLink is mapped to MESSAGEID, therefore 2 times MESSAGEID
 		assertEquals(
 				"SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\", T0.LOGSTART AS \"LOGSTART_T0\", T0.LOGEND AS \"LOGEND_T0\", "
@@ -447,7 +465,8 @@ public class SQLSelectBuilderTest {
 
 		UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 		SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
-		int actualSkip = q.getSelectExpression().getSkip();
+		int actualSkip = q	.getSelectExpression()
+							.getSkip();
 
 		assertEquals(8, actualSkip);
 	}
@@ -465,7 +484,8 @@ public class SQLSelectBuilderTest {
 
 		UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 		SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
-		int actualSkip = q.getSelectExpression().getSkip();
+		int actualSkip = q	.getSelectExpression()
+							.getSkip();
 
 		assertEquals(5, actualSkip);
 	}
@@ -483,7 +503,8 @@ public class SQLSelectBuilderTest {
 
 		UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 		SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
-		int actualSkip = q.getSelectExpression().getSkip();
+		int actualSkip = q	.getSelectExpression()
+							.getSkip();
 
 		assertEquals(3, actualSkip);
 	}
@@ -500,7 +521,8 @@ public class SQLSelectBuilderTest {
 
 		UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 		SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
-		int actualSkip = q.getSelectExpression().getSkip();
+		int actualSkip = q	.getSelectExpression()
+							.getSkip();
 
 		assertEquals(SQLSelectClause.NOT_SET, actualSkip);
 	}
@@ -518,7 +540,8 @@ public class SQLSelectBuilderTest {
 
 		UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 		SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
-		int actualTop = q.getSelectExpression().getTop();
+		int actualTop = q	.getSelectExpression()
+							.getTop();
 
 		assertEquals(3, actualTop);
 		assertFalse(q.isServersidePaging());
@@ -536,7 +559,8 @@ public class SQLSelectBuilderTest {
 
 		UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 		SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
-		int actualTop = q.getSelectExpression().getTop();
+		int actualTop = q	.getSelectExpression()
+							.getTop();
 
 		assertEquals(SQLQueryBuilder.DEFAULT_SERVER_PAGING_SIZE, actualTop);
 		assertTrue(q.isServersidePaging());
@@ -555,7 +579,8 @@ public class SQLSelectBuilderTest {
 
 		UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 		SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
-		int actualTop = q.getSelectExpression().getTop();
+		int actualTop = q	.getSelectExpression()
+							.getTop();
 
 		assertEquals(SQLQueryBuilder.DEFAULT_SERVER_PAGING_SIZE, actualTop);
 		assertTrue(q.isServersidePaging());
@@ -596,21 +621,28 @@ public class SQLSelectBuilderTest {
 		SQLSelectBuilder q = builder.buildSelectEntityQuery(uriInfo, null);
 		SQLContext context = new SQLContext(DatabaseProduct.HANA);
 
-		List<String> selectSql = Arrays.asList(q.buildSelect(context).split("SELECT|FROM|WHERE"));
+		List<String> selectSql = Arrays.asList(q.buildSelect(context)
+												.split("SELECT|FROM|WHERE"));
 
-		List<String> selectedColumns = Arrays.asList(selectSql.get(1).trim().split(", "));;
+		List<String> selectedColumns = Arrays.asList(selectSql	.get(1)
+																.trim()
+																.split(", "));;
 		assertTrue(selectedColumns.contains("\"T0\".\"ID\" AS \"ID_T0\""));
 		assertTrue(selectedColumns.contains("\"T0\".\"NAME\" AS \"NAME_T0\""));
 		assertTrue(selectedColumns.contains("? AS CurrentEmployeeId_T0"));
 		assertTrue(selectedColumns.contains("? AS CurrentEmployeeName_T0"));
 
-		List<String> targetDbEntity = Arrays.asList(selectSql.get(2).split("\\(|\\)"));
-		String targetDbEntityName = targetDbEntity.get(0).trim();
+		List<String> targetDbEntity = Arrays.asList(selectSql	.get(2)
+																.split("\\(|\\)"));
+		String targetDbEntityName = targetDbEntity	.get(0)
+													.trim();
 		assertEquals("\"ENTITY6_TABLE\"", targetDbEntityName);
-		List<String> targetDbEntityParameters = Arrays.asList(targetDbEntity.get(1).split(", "));
+		List<String> targetDbEntityParameters = Arrays.asList(targetDbEntity.get(1)
+																			.split(", "));
 		assertTrue(targetDbEntityParameters.contains("placeholder.\"$$CurrentEmployeeId$$\" => ?"));
 		assertTrue(targetDbEntityParameters.contains("placeholder.\"$$CurrentEmployeeName$$\" => ?"));
-		String targetDbEntityAlias = targetDbEntity.get(2).trim();
+		String targetDbEntityAlias = targetDbEntity	.get(2)
+													.trim();
 		assertEquals("AS T0", targetDbEntityAlias);
 
 		String whereClause = selectSql.get(3);
@@ -632,21 +664,28 @@ public class SQLSelectBuilderTest {
 		SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
 		SQLContext context = new SQLContext(DatabaseProduct.HANA);
 
-		List<String> selectSql = Arrays.asList(q.buildSelect(context).split("SELECT|FROM|WHERE|ORDER BY|LIMIT"));
+		List<String> selectSql = Arrays.asList(q.buildSelect(context)
+												.split("SELECT|FROM|WHERE|ORDER BY|LIMIT"));
 
-		List<String> selectedColumns = Arrays.asList(selectSql.get(1).trim().split(", "));;
+		List<String> selectedColumns = Arrays.asList(selectSql	.get(1)
+																.trim()
+																.split(", "));;
 		assertTrue(selectedColumns.contains("\"T0\".\"ID\" AS \"ID_T0\""));
 		assertTrue(selectedColumns.contains("\"T0\".\"NAME\" AS \"NAME_T0\""));
 		assertTrue(selectedColumns.contains("? AS CurrentEmployeeId_T0"));
 		assertTrue(selectedColumns.contains("? AS CurrentEmployeeName_T0"));
 
-		List<String> targetDbEntity = Arrays.asList(selectSql.get(2).split("\\(|\\)"));
-		String targetDbEntityName = targetDbEntity.get(0).trim();
+		List<String> targetDbEntity = Arrays.asList(selectSql	.get(2)
+																.split("\\(|\\)"));
+		String targetDbEntityName = targetDbEntity	.get(0)
+													.trim();
 		assertEquals("\"ENTITY6_TABLE\"", targetDbEntityName);
-		List<String> targetDbEntityParameters = Arrays.asList(targetDbEntity.get(1).split(", "));
+		List<String> targetDbEntityParameters = Arrays.asList(targetDbEntity.get(1)
+																			.split(", "));
 		assertTrue(targetDbEntityParameters.contains("placeholder.\"$$CurrentEmployeeId$$\" => ?"));
 		assertTrue(targetDbEntityParameters.contains("placeholder.\"$$CurrentEmployeeName$$\" => ?"));
-		String targetDbEntityAlias = targetDbEntity.get(2).trim();
+		String targetDbEntityAlias = targetDbEntity	.get(2)
+													.trim();
 		assertEquals("AS T0", targetDbEntityAlias);
 
 		String whereClause = selectSql.get(3);
@@ -674,7 +713,8 @@ public class SQLSelectBuilderTest {
 		SQLDeleteBuilder deleteBuilder = builder.buildDeleteEntityQuery(uriInfo, mapKeys(uriInfo.getKeyPredicates()), null);
 		SQLContext context = new SQLContext();
 		String expected = "DELETE FROM ENTITY4_TABLE WHERE ID4_1=? AND ID4_2=?";
-		assertEquals(expected, deleteBuilder.build(context).sql());
+		assertEquals(expected, deleteBuilder.build(context)
+											.sql());
 	}
 
 	/**
@@ -697,12 +737,14 @@ public class SQLSelectBuilderTest {
 		SQLInsertBuilder insertBuilder = builder.buildInsertEntityQuery(uriInfo, entity, null);
 		SQLContext context = new SQLContext();
 		String expected = "INSERT INTO ENTITY4_TABLE (ID4_1,ID4_2) VALUES (?,?)";
-		assertEquals(expected, insertBuilder.build(context).sql());
+		assertEquals(expected, insertBuilder.build(context)
+											.sql());
 
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		SQLInsertBuilder insertBuilder2 = builder.buildInsertEntityQuery(uriInfo, entity, null);
 		expected = "INSERT INTO \"ENTITY4_TABLE\" (\"ID4_1\",\"ID4_2\") VALUES (?,?)";
-		assertEquals(expected, insertBuilder2.build(context).sql());
+		assertEquals(expected, insertBuilder2	.build(context)
+												.sql());
 	}
 
 	/**

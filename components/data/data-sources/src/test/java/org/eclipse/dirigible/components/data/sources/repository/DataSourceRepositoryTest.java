@@ -84,7 +84,9 @@ public class DataSourceRepositoryTest {
 	 */
 	@Test
 	public void getOne() {
-		Long id = datasourceRepository.findAll().get(0).getId();
+		Long id = datasourceRepository	.findAll()
+										.get(0)
+										.getId();
 		Optional<DataSource> optional = datasourceRepository.findById(id);
 		DataSource datasource = optional.isPresent() ? optional.get() : null;
 		assertNotNull(datasource);
@@ -93,8 +95,11 @@ public class DataSourceRepositoryTest {
 		assertEquals("SYSTEM", datasource.getCreatedBy());
 		assertNotNull(datasource.getCreatedAt());
 		assertNotNull(datasource.getProperties());
-		assertNotNull(datasource.getProperties().get(0));
-		assertEquals(datasource.getName() + "_1", datasource.getProperties().get(0).getName());
+		assertNotNull(datasource.getProperties()
+								.get(0));
+		assertEquals(datasource.getName() + "_1", datasource.getProperties()
+															.get(0)
+															.getName());
 	}
 
 	/**
@@ -104,7 +109,9 @@ public class DataSourceRepositoryTest {
 	 */
 	@Test
 	public void getReferenceUsingEntityManager() {
-		Long id = datasourceRepository.findAll().get(0).getId();
+		Long id = datasourceRepository	.findAll()
+										.get(0)
+										.getId();
 		DataSource datasource = entityManager.getReference(DataSource.class, id);
 		assertNotNull(datasource);
 		assertNotNull(datasource.getLocation());

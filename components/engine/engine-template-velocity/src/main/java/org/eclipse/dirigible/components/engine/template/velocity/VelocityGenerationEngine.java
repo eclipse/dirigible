@@ -118,7 +118,8 @@ public class VelocityGenerationEngine implements TemplateEngine {
 		if (parameters == null) {
 			return;
 		}
-		Iterator<Map.Entry<String, Object>> iterator = parameters.entrySet().iterator();
+		Iterator<Map.Entry<String, Object>> iterator = parameters	.entrySet()
+																	.iterator();
 		while (iterator.hasNext()) {
 			Map.Entry<String, Object> entry = iterator.next();
 			context.put(entry.getKey(), entry.getValue());

@@ -82,9 +82,12 @@ public final class SQLUpdateBuilderTest {
 
 		List<SQLStatementParam> params = expression.getStatementParams();
 		// the values must be ordered as the elements in the query
-		assertEquals("UpdateIt", params.get(0).getValue());
-		assertEquals("1", params.get(1).getValue());
-		assertEquals("2", params.get(2).getValue());
+		assertEquals("UpdateIt", params	.get(0)
+										.getValue());
+		assertEquals("1", params.get(1)
+								.getValue());
+		assertEquals("2", params.get(2)
+								.getValue());
 	}
 
 	/**
@@ -94,7 +97,9 @@ public final class SQLUpdateBuilderTest {
 	 * @throws ODataException the o data exception
 	 */
 	private SQLUpdateBuilder createUpdateExpression() throws ODataException {
-		EdmEntityType type = edm.getEntityType(Entity4.class.getPackage().getName(), Entity4.class.getSimpleName());
+		EdmEntityType type = edm.getEntityType(Entity4.class.getPackage()
+															.getName(),
+				Entity4.class.getSimpleName());
 		final Map<String, Object> keys = new HashMap<>();
 		keys.put("Id4_1", "1");
 		keys.put("Id4_2", "2");

@@ -86,7 +86,8 @@ public class GenerationEndpoint {
 		}
 
 		List<File> files = generationService.generateFile(workspace, project, path, parameters);
-		return ResponseEntity.created(workspaceService.getURI(workspace, project, path)).build();
+		return ResponseEntity	.created(workspaceService.getURI(workspace, project, path))
+								.build();
 	}
 
 }

@@ -26,7 +26,11 @@ public class UpdateTest {
 	 */
 	@Test
 	public void updateSimple() {
-		String sql = SqlFactory.getNative(new MySQLSqlDialect()).update().table("CUSTOMERS").set("FIRST_NAME", "'John'").build();
+		String sql = SqlFactory	.getNative(new MySQLSqlDialect())
+								.update()
+								.table("CUSTOMERS")
+								.set("FIRST_NAME", "'John'")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John'", sql);
@@ -75,8 +79,11 @@ public class UpdateTest {
 								.update()
 								.table("CUSTOMERS")
 								.set("FIRST_NAME", "'John'")
-								.set("SALARY",
-										SqlFactory.getNative(new MySQLSqlDialect()).select().column("MAX(SALARY)").from("BENEFITS").build())
+								.set("SALARY", SqlFactory	.getNative(new MySQLSqlDialect())
+															.select()
+															.column("MAX(SALARY)")
+															.from("BENEFITS")
+															.build())
 								.where("COMPANY = 'SAP'")
 								.build();
 

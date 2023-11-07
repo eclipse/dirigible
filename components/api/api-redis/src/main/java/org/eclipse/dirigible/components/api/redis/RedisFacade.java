@@ -37,7 +37,8 @@ public class RedisFacade {
 	 */
 	public static Jedis getClient() {
 
-		String[] splitUri = Configuration.get(DIRIGIBLE_REDIS_CLIENT_URI, CLIENT_URI).split(":");
+		String[] splitUri = Configuration	.get(DIRIGIBLE_REDIS_CLIENT_URI, CLIENT_URI)
+											.split(":");
 
 		String host = splitUri[0];
 		int port = Integer.parseInt(splitUri[1]);

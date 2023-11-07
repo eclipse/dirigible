@@ -173,7 +173,8 @@ public class UserFacade {
 		// WebSockets case
 		String userName = null;
 		try {
-			userName = session.getUserPrincipal().getName();
+			userName = session	.getUserPrincipal()
+								.getName();
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {
 				logger.error(e.getMessage());
@@ -264,7 +265,9 @@ public class UserFacade {
 				language = ANY_LANGUAGE;
 			}
 			List<Locale.LanguageRange> ranges = Locale.LanguageRange.parse(language);
-			return ranges == null || ranges.isEmpty() ? "" : ranges.get(0).getRange();
+			return ranges == null || ranges.isEmpty() ? ""
+					: ranges.get(0)
+							.getRange();
 		} else {
 			if (logger.isErrorEnabled()) {
 				logger.error(NO_VALID_REQUEST);

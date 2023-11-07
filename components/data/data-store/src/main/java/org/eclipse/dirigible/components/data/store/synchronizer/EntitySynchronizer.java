@@ -99,7 +99,8 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(getFileExtension());
+		return file	.toString()
+					.endsWith(getFileExtension());
 	}
 
 	/**
@@ -125,7 +126,9 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 	public List<Entity> parse(String location, byte[] content) throws ParseException {
 		Entity entity = new Entity();
 		entity.setLocation(location);
-		entity.setName(Paths.get(location).getFileName().toString());
+		entity.setName(Paths.get(location)
+							.getFileName()
+							.toString());
 		entity.setType(Entity.ARTEFACT_TYPE);
 		entity.updateKey();
 		entity.setContent(content);
@@ -188,19 +191,22 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 		if (wrapper.getArtefact() instanceof Entity) {
 			entity = (Entity) wrapper.getArtefact();
 		} else {
-			throw new UnsupportedOperationException(String.format("Trying to process %s as Entity", wrapper.getArtefact().getClass()));
+			throw new UnsupportedOperationException(String.format("Trying to process %s as Entity", wrapper	.getArtefact()
+																											.getClass()));
 		}
 
 		switch (flow) {
 			case CREATE:
-				if (entity.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+				if (entity	.getLifecycle()
+							.equals(ArtefactLifecycle.NEW)) {
 					dataStore.addMapping(entity.getKey(), prepareContent(entity));
 					dataStore.initialize();
 					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
 				}
 				break;
 			case UPDATE:
-				if (entity.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+				if (entity	.getLifecycle()
+							.equals(ArtefactLifecycle.MODIFIED)) {
 					dataStore.removeMapping(entity.getKey());
 					dataStore.addMapping(entity.getKey(), prepareContent(entity));
 					dataStore.initialize();
@@ -208,7 +214,10 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 				}
 				break;
 			case DELETE:
-				if (entity.getLifecycle().equals(ArtefactLifecycle.CREATED) || entity.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+				if (entity	.getLifecycle()
+							.equals(ArtefactLifecycle.CREATED)
+						|| entity	.getLifecycle()
+									.equals(ArtefactLifecycle.UPDATED)) {
 					dataStore.removeMapping(entity.getKey());
 					dataStore.initialize();
 					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");

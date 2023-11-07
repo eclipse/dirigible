@@ -28,6 +28,7 @@ public class Encrypter {
 	 * @return the string
 	 */
 	public String encrypt(String value) {
-		return Base64.getEncoder().encodeToString(value.getBytes(StandardCharsets.UTF_8));
+		return Base64	.getEncoder()
+						.encodeToString(value.getBytes(StandardCharsets.UTF_8));
 	}
 }

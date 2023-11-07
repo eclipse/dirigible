@@ -33,7 +33,8 @@ public class ExposeManager {
 	 * @return true if it is known
 	 */
 	public static boolean existExposableProject(String name) {
-		return EXPOSABLE_PROJECTS.keySet().contains(name);
+		return EXPOSABLE_PROJECTS	.keySet()
+									.contains(name);
 	}
 
 	/**

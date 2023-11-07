@@ -69,7 +69,10 @@ public class HanaDropTableTypeBuilder extends DropTableTypeBuilder {
 	 */
 	private void generateTableType(StringBuilder sql) {
 		String tableTypeName = (isCaseSensitive()) ? encapsulate(this.getTableType(), true) : this.getTableType();
-		sql.append(SPACE).append(KEYWORD_TABLE_TYPE).append(SPACE).append(tableTypeName);
+		sql	.append(SPACE)
+			.append(KEYWORD_TABLE_TYPE)
+			.append(SPACE)
+			.append(tableTypeName);
 	}
 
 	/**

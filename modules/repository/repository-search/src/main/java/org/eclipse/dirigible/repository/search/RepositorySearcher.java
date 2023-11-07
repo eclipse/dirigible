@@ -264,9 +264,14 @@ public class RepositorySearcher {
 			List<String> paths = repository.getAllResourcePaths();
 			for (String path : paths) {
 				IResource resource = repository.getResource(path);
-				if ((resource != null) && (resource.getInformation() != null) && (resource.getInformation().getModifiedAt() != null)) {
-					if (lastUpdated.before(resource.getInformation().getModifiedAt())) {
-						add(path, resource.getContent(), resource.getInformation().getModifiedAt().getTime(), null);
+				if ((resource != null) && (resource.getInformation() != null) && (resource	.getInformation()
+																							.getModifiedAt() != null)) {
+					if (lastUpdated.before(resource	.getInformation()
+													.getModifiedAt())) {
+						add(path, resource.getContent(), resource	.getInformation()
+																	.getModifiedAt()
+																	.getTime(),
+								null);
 					}
 				}
 			}

@@ -176,7 +176,8 @@ public class SQLOrderByClause implements SQLClause {
 			orderByClause.append(query.getSQLTableColumnAlias(entityType, prop)); // This gives the correct "order by" column name for Open
 																					// SQL
 		}
-		orderByClause.append(" ").append(orderBy.getSortOrder() == SortOrder.asc ? "ASC" : "DESC");
+		orderByClause	.append(" ")
+						.append(orderBy.getSortOrder() == SortOrder.asc ? "ASC" : "DESC");
 		return orderByClause.toString();
 	}
 }

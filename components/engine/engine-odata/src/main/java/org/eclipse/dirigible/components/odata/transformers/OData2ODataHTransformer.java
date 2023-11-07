@@ -38,18 +38,19 @@ public class OData2ODataHTransformer {
 			String namespace = model.getNamespace();
 			String name = entity.getName();
 
-			entity.getHandlers().forEach(handler -> {
-				ODataMetadataUtil.validateHandlerDefinitionMethod(handler.getMethod(), entity.getName());
-				ODataMetadataUtil.validateHandlerDefinitionTypes(handler.getType(), entity.getName());
+			entity	.getHandlers()
+					.forEach(handler -> {
+						ODataMetadataUtil.validateHandlerDefinitionMethod(handler.getMethod(), entity.getName());
+						ODataMetadataUtil.validateHandlerDefinitionTypes(handler.getType(), entity.getName());
 
-				ODataHandler handlerModel = new ODataHandler();
-				handlerModel.setNamespace(namespace);
-				handlerModel.setName(name + "Type");
-				handlerModel.setMethod(handler.getMethod());
-				handlerModel.setKind(handler.getType());
-				handlerModel.setHandler(handler.getHandler());
-				result.add(handlerModel);
-			});
+						ODataHandler handlerModel = new ODataHandler();
+						handlerModel.setNamespace(namespace);
+						handlerModel.setName(name + "Type");
+						handlerModel.setMethod(handler.getMethod());
+						handlerModel.setKind(handler.getType());
+						handlerModel.setHandler(handler.getHandler());
+						result.add(handlerModel);
+					});
 		}
 		return result;
 	}

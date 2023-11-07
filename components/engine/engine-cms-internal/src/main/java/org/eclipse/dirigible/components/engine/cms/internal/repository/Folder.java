@@ -48,7 +48,8 @@ public class Folder extends CmisObject {
 	public Folder(CmisSession session) throws IOException {
 		super(session, IRepository.SEPARATOR);
 		this.session = session;
-		this.repository = (IRepository) session.getCmisRepository().getInternalObject();
+		this.repository = (IRepository) session	.getCmisRepository()
+												.getInternalObject();
 		this.internalFolder = repository.getRoot();
 		this.rootFolder = true;
 	}
@@ -66,7 +67,8 @@ public class Folder extends CmisObject {
 			this.rootFolder = true;
 		}
 		this.session = session;
-		this.repository = (IRepository) session.getCmisRepository().getInternalObject();
+		this.repository = (IRepository) session	.getCmisRepository()
+												.getInternalObject();
 		this.internalFolder = internalCollection;
 	}
 
@@ -84,7 +86,8 @@ public class Folder extends CmisObject {
 			this.rootFolder = true;
 		}
 		this.session = session;
-		this.repository = (IRepository) session.getCmisRepository().getInternalObject();
+		this.repository = (IRepository) session	.getCmisRepository()
+												.getInternalObject();
 		this.internalFolder = this.repository.getCollection(id);
 	}
 
@@ -113,7 +116,8 @@ public class Folder extends CmisObject {
 	 * @return the path
 	 */
 	public String getPath() {
-		return this.getInternalEntity().getPath();
+		return this	.getInternalEntity()
+					.getPath();
 	}
 
 	/**

@@ -202,12 +202,16 @@ public class DataTransferService {
 			handler.tableTransferStarted(tableModel.getTableName());
 			try {
 
-				if (!SqlFactory.getNative(sourceConnection).existsTable(targetConnection, tableModel.getTableName())) {
+				if (!SqlFactory	.getNative(sourceConnection)
+								.existsTable(targetConnection, tableModel.getTableName())) {
 					PersistenceCreateTableProcessor createTableProcessor = new PersistenceCreateTableProcessor(null);
 					createTableProcessor.create(targetConnection, tableModel);
 				} else {
-					String countSQL =
-							SqlFactory.getNative(sourceConnection).select().column("count(*)").from(tableModel.getTableName()).build();
+					String countSQL = SqlFactory.getNative(sourceConnection)
+												.select()
+												.column("count(*)")
+												.from(tableModel.getTableName())
+												.build();
 					try (PreparedStatement pstmtTarget = targetConnection.prepareStatement(countSQL)) {
 						ResultSet rs = pstmtTarget.executeQuery();
 						while (rs.next()) {
@@ -220,7 +224,11 @@ public class DataTransferService {
 					}
 				}
 
-				String selectSQL = SqlFactory.getNative(sourceConnection).select().column("*").from(tableModel.getTableName()).build();
+				String selectSQL = SqlFactory	.getNative(sourceConnection)
+												.select()
+												.column("*")
+												.from(tableModel.getTableName())
+												.build();
 
 				handler.tableSelectSQL(selectSQL);
 
@@ -230,7 +238,9 @@ public class DataTransferService {
 					try (ResultSet rs = pstmtSource.executeQuery()) {
 						ResultSetMetaData resultSetMetaData = rs.getMetaData();
 
-						InsertBuilder insertBuilder = SqlFactory.getNative(targetConnection).insert().into(tableModel.getTableName());
+						InsertBuilder insertBuilder = SqlFactory.getNative(targetConnection)
+																.insert()
+																.into(tableModel.getTableName());
 						for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
 							String columnName = resultSetMetaData.getColumnName(i);
 							insertBuilder.column(columnName);

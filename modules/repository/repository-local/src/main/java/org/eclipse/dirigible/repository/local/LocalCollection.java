@@ -161,7 +161,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 			return true;
 		}
 		// String localPath = LocalWorkspaceMapper.getMappedName(getRepository(), repositoryPath);
-		return getRepository().getRepositoryDao().directoryExists(repositoryPath);
+		return getRepository()	.getRepositoryDao()
+								.directoryExists(repositoryPath);
 	}
 
 	/**

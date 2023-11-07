@@ -72,11 +72,12 @@ public class ActionsService {
 						"Actions section not found in the project descriptor file: " + project);
 			}
 
-			ProjectAction projectAction =
-					actions	.stream()
-							.filter(a -> a.getName().equals(action))
-							.findFirst()
-							.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Action not found: " + action));
+			ProjectAction projectAction = actions	.stream()
+													.filter(a -> a	.getName()
+																	.equals(action))
+													.findFirst()
+													.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+															"Action not found: " + action));
 
 			String workingDirectory =
 					LocalWorkspaceMapper.getMappedName((FileSystemRepository) projectObject.getRepository(), projectObject.getPath());
@@ -92,7 +93,10 @@ public class ActionsService {
 
 	private static CommandDescriptor getCommandForOS(ProjectAction projectAction) {
 		List<CommandDescriptor> commands = projectAction.getCommands();
-		return commands.stream().filter(CommandDescriptor::isCompatibleWithCurrentOS).findFirst().orElseThrow();
+		return commands	.stream()
+						.filter(CommandDescriptor::isCompatibleWithCurrentOS)
+						.findFirst()
+						.orElseThrow();
 	}
 
 	/**

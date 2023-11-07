@@ -51,7 +51,8 @@ public class WorkspacesServiceTest {
 		assertNotNull(workspace1);
 		assertNotNull(workspace1.getInternal());
 		assertEquals("TestWorkspace1", workspace1.getName());
-		assertEquals("/users/guest/TestWorkspace1", workspace1.getInternal().getPath());
+		assertEquals("/users/guest/TestWorkspace1", workspace1	.getInternal()
+																.getPath());
 		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
@@ -66,12 +67,14 @@ public class WorkspacesServiceTest {
 		assertNotNull(workspace1);
 		assertNotNull(workspace1.getInternal());
 		assertEquals("TestWorkspace1", workspace1.getName());
-		assertEquals("/users/guest/TestWorkspace1", workspace1.getInternal().getPath());
+		assertEquals("/users/guest/TestWorkspace1", workspace1	.getInternal()
+																.getPath());
 		Workspace workspace = workspaceService.getWorkspace("TestWorkspace1");
 		assertNotNull(workspace);
 		assertNotNull(workspace.getInternal());
 		assertEquals("TestWorkspace1", workspace.getName());
-		assertEquals("/users/guest/TestWorkspace1", workspace.getInternal().getPath());
+		assertEquals("/users/guest/TestWorkspace1", workspace	.getInternal()
+																.getPath());
 		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
@@ -89,10 +92,13 @@ public class WorkspacesServiceTest {
 		// assertEquals(2, workspaces.size());
 		Workspace worskapce3 = workspaces.get(0);
 		assertNotNull(worskapce3.getInternal());
-		if (worskapce3.getName().equals("TestWorkspace1")) {
-			assertEquals("/users/guest/TestWorkspace1", workspace1.getInternal().getPath());
+		if (worskapce3	.getName()
+						.equals("TestWorkspace1")) {
+			assertEquals("/users/guest/TestWorkspace1", workspace1	.getInternal()
+																	.getPath());
 		} else {
-			assertEquals("/users/guest/TestWorkspace2", workspace2.getInternal().getPath());
+			assertEquals("/users/guest/TestWorkspace2", workspace2	.getInternal()
+																	.getPath());
 		}
 		workspaceService.deleteWorkspace("TestWorkspace1");
 		workspaceService.deleteWorkspace("TestWorkspace2");
@@ -107,7 +113,8 @@ public class WorkspacesServiceTest {
 		assertNotNull(workspace1);
 		assertNotNull(workspace1.getInternal());
 		assertEquals("TestWorkspace1", workspace1.getName());
-		assertEquals("/users/guest/TestWorkspace1", workspace1.getInternal().getPath());
+		assertEquals("/users/guest/TestWorkspace1", workspace1	.getInternal()
+																.getPath());
 		workspaceService.deleteWorkspace("TestWorkspace1");
 		Workspace workspace2 = workspaceService.getWorkspace("TestWorkspace1");
 		assertNotNull(workspace2);

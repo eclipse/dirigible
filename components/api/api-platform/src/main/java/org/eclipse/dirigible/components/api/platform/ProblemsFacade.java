@@ -89,7 +89,9 @@ public class ProblemsFacade implements InitializingBean {
 	public static final void save(String location, String type, String line, String column, String cause, String expected, String category,
 			String module, String source, String program) {
 		Problem problem = new Problem(location, type, line, column, cause, expected, category, module, source, program);
-		ProblemsFacade.get().getProblemService().save(problem);
+		ProblemsFacade	.get()
+						.getProblemService()
+						.save(problem);
 	}
 
 	/**
@@ -100,10 +102,10 @@ public class ProblemsFacade implements InitializingBean {
 	 * @return the problem if any
 	 */
 	public static final Problem getArtefactSynchronizationProblem(Artefact artefact) {
-		List<Problem> results =
-				ProblemsFacade	.get()
-								.getProblemService()
-								.findByLocationAndTypeAndCategory(artefact.getLocation(), artefact.getType(), "Synchronization");
+		List<Problem> results = ProblemsFacade	.get()
+												.getProblemService()
+												.findByLocationAndTypeAndCategory(artefact.getLocation(), artefact.getType(),
+														"Synchronization");
 		return results.size() > 0 ? results.get(0) : null;
 	}
 
@@ -169,7 +171,9 @@ public class ProblemsFacade implements InitializingBean {
 	 * @return the string
 	 */
 	public static final String findProblem(Long id) {
-		return GsonHelper.toJson(ProblemsFacade.get().getProblemService().findById(id));
+		return GsonHelper.toJson(ProblemsFacade	.get()
+												.getProblemService()
+												.findById(id));
 	}
 
 	/**
@@ -178,7 +182,9 @@ public class ProblemsFacade implements InitializingBean {
 	 * @return the string
 	 */
 	public static final String fetchAllProblems() {
-		return GsonHelper.toJson(ProblemsFacade.get().getProblemService().getAll());
+		return GsonHelper.toJson(ProblemsFacade	.get()
+												.getProblemService()
+												.getAll());
 	}
 
 	/**
@@ -189,7 +195,9 @@ public class ProblemsFacade implements InitializingBean {
 	 * @return the string
 	 */
 	public static final String fetchProblemsBatch(String condition, int limit) {
-		return GsonHelper.toJson(ProblemsFacade.get().getProblemService().fetchProblemsBatch(condition, limit));
+		return GsonHelper.toJson(ProblemsFacade	.get()
+												.getProblemService()
+												.fetchProblemsBatch(condition, limit));
 	}
 
 	/**
@@ -198,7 +206,9 @@ public class ProblemsFacade implements InitializingBean {
 	 * @param id the id
 	 */
 	public static final void deleteProblem(Long id) {
-		ProblemsFacade.get().getProblemService().deleteById(id);
+		ProblemsFacade	.get()
+						.getProblemService()
+						.deleteById(id);
 	}
 
 	/**
@@ -207,7 +217,9 @@ public class ProblemsFacade implements InitializingBean {
 	 * @param ids the ids
 	 */
 	public static final void deleteMultipleProblemsById(List<Long> ids) {
-		ProblemsFacade.get().getProblemService().deleteAllByIds(ids);
+		ProblemsFacade	.get()
+						.getProblemService()
+						.deleteAllByIds(ids);
 	}
 
 	/**
@@ -216,14 +228,18 @@ public class ProblemsFacade implements InitializingBean {
 	 * @param status the status
 	 */
 	public static final void deleteAllByStatus(String status) {
-		ProblemsFacade.get().getProblemService().deleteAllByStatus(status);
+		ProblemsFacade	.get()
+						.getProblemService()
+						.deleteAllByStatus(status);
 	}
 
 	/**
 	 * Clear all problems.
 	 */
 	public static final void clearAllProblems() {
-		ProblemsFacade.get().getProblemService().deleteAll();
+		ProblemsFacade	.get()
+						.getProblemService()
+						.deleteAll();
 	}
 
 	/**
@@ -233,7 +249,9 @@ public class ProblemsFacade implements InitializingBean {
 	 * @param status the status
 	 */
 	public static final void updateStatus(Long id, String status) {
-		ProblemsFacade.get().getProblemService().updateStatusById(id, status);
+		ProblemsFacade	.get()
+						.getProblemService()
+						.updateStatusById(id, status);
 	}
 
 	/**
@@ -243,6 +261,8 @@ public class ProblemsFacade implements InitializingBean {
 	 * @param status the status
 	 */
 	public static final void updateStatusMultiple(List<Long> ids, String status) {
-		ProblemsFacade.get().getProblemService().updateStatusByIds(ids, status);
+		ProblemsFacade	.get()
+						.getProblemService()
+						.updateStatusByIds(ids, status);
 	}
 }

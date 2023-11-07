@@ -640,7 +640,8 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 												.executeRequest(GET);
 		assertEquals(200, response.getStatus());
 		ODataFeed resultFeed = retrieveODataFeed(response, "Drivers");
-		assertEquals(3, resultFeed.getEntries().size());
+		assertEquals(3, resultFeed	.getEntries()
+									.size());
 	}
 
 	/**
@@ -657,7 +658,8 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 												.executeRequest(GET);
 		assertEquals(200, response.getStatus());
 		ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
-		assertEquals(4, resultFeed.getEntries().size());
+		assertEquals(4, resultFeed	.getEntries()
+									.size());
 
 	}
 
@@ -675,7 +677,8 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 												.executeRequest(GET);
 		assertEquals(200, response.getStatus());
 		ODataFeed resultFeed = retrieveODataFeed(response, "Drivers");
-		assertEquals(3, resultFeed.getEntries().size());
+		assertEquals(3, resultFeed	.getEntries()
+									.size());
 
 	}
 
@@ -692,7 +695,9 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 												.accept("application/atom+xml")
 												.executeRequest(GET);
 		ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
-		Map<String, Object> properties = resultFeed.getEntries().get(0).getProperties();
+		Map<String, Object> properties = resultFeed	.getEntries()
+													.get(0)
+													.getProperties();
 		assertEquals(2, properties.size());
 		assertNotNull(properties.get("Make"));
 		assertNotNull(properties.get("Model"));
@@ -715,7 +720,8 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 		ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
 		List<ODataEntry> entries = resultFeed.getEntries();
 		assertEquals(7, entries.size());
-		Map<String, Object> firstCarProperties = entries.get(0).getProperties();
+		Map<String, Object> firstCarProperties = entries.get(0)
+														.getProperties();
 		assertEquals(3000.0, firstCarProperties.get("Price"));
 	}
 
@@ -736,7 +742,8 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 		ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
 		List<ODataEntry> entries = resultFeed.getEntries();
 		assertEquals(7, entries.size());
-		Map<String, Object> firstCarProperties = entries.get(0).getProperties();
+		Map<String, Object> firstCarProperties = entries.get(0)
+														.getProperties();
 		assertEquals(67000.0, firstCarProperties.get("Price"));
 	}
 
@@ -758,8 +765,12 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 		ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
 		List<ODataEntry> entries = resultFeed.getEntries();
 		assertEquals(2, entries.size());
-		assertEquals(67000.0, entries.get(0).getProperties().get("Price"));
-		assertEquals(4000.0, entries.get(1).getProperties().get("Price"));
+		assertEquals(67000.0, entries	.get(0)
+										.getProperties()
+										.get("Price"));
+		assertEquals(4000.0, entries.get(1)
+									.getProperties()
+									.get("Price"));
 
 	}
 
@@ -781,8 +792,12 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 		ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
 		List<ODataEntry> entries = resultFeed.getEntries();
 		assertEquals(1, entries.size());
-		assertEquals(4000.0, entries.get(0).getProperties().get("Price"));
-		assertEquals("Moskvitch", entries.get(0).getProperties().get("Make"));
+		assertEquals(4000.0, entries.get(0)
+									.getProperties()
+									.get("Price"));
+		assertEquals("Moskvitch", entries	.get(0)
+											.getProperties()
+											.get("Make"));
 	}
 
 	/**
@@ -803,7 +818,8 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 		ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
 		List<ODataEntry> entries = resultFeed.getEntries();
 		assertEquals(1, entries.size());
-		Map<String, Object> properties = entries.get(0).getProperties();
+		Map<String, Object> properties = entries.get(0)
+												.getProperties();
 		assertEquals("Moskvitch", properties.get("Make"));
 	}
 
@@ -876,12 +892,17 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 		assertEquals(200, response.getStatus());
 
 		ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
-		assertEquals(3, resultFeed.getEntries().size());
-		assertEquals(7, resultFeed.getEntries().get(0).getProperties().size());
+		assertEquals(3, resultFeed	.getEntries()
+									.size());
+		assertEquals(7, resultFeed	.getEntries()
+									.get(0)
+									.getProperties()
+									.size());
 
 		List<ODataEntry> entries = resultFeed.getEntries();
 		assertEquals("There shall be exactly 3 entries", 3, entries.size());
-		Map<String, Object> firstEntryProperties = entries.get(0).getProperties();
+		Map<String, Object> firstEntryProperties = entries	.get(0)
+															.getProperties();
 		assertEquals(1998, firstEntryProperties.get("Year"));
 		assertEquals("Ford", firstEntryProperties.get("Make"));
 		assertEquals("Focus", firstEntryProperties.get("Model"));
@@ -905,22 +926,30 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 
 		ODataEntry resultEntry = retrieveODataEntry(response, "Cars");
 
-		List<ODataEntry> drivers = ((ODataDeltaFeedImpl) (resultEntry.getProperties().get("Drivers"))).getEntries();
+		List<ODataEntry> drivers = ((ODataDeltaFeedImpl) (resultEntry	.getProperties()
+																		.get("Drivers"))).getEntries();
 		assertEquals(2, drivers.size());
-		Map<String, Object> firstDriverProperties = drivers.get(0).getProperties();
+		Map<String, Object> firstDriverProperties = drivers	.get(0)
+															.getProperties();
 		assertEquals("Johnny", firstDriverProperties.get("FirstName"));
-		Map<String, Object> secondDriverProperties = drivers.get(1).getProperties();
+		Map<String, Object> secondDriverProperties = drivers.get(1)
+															.getProperties();
 		assertEquals("Natalie", secondDriverProperties.get("FirstName"));
 
-		List<ODataEntry> owners = ((ODataDeltaFeedImpl) (resultEntry.getProperties().get("Owners"))).getEntries();
+		List<ODataEntry> owners = ((ODataDeltaFeedImpl) (resultEntry.getProperties()
+																	.get("Owners"))).getEntries();
 		assertEquals(4, owners.size());
-		Map<String, Object> firstOwnerProperties = owners.get(0).getProperties();
+		Map<String, Object> firstOwnerProperties = owners	.get(0)
+															.getProperties();
 		assertEquals("Johnny", firstOwnerProperties.get("FirstName"));
-		Map<String, Object> secondOwnerProperties = owners.get(1).getProperties();
+		Map<String, Object> secondOwnerProperties = owners	.get(1)
+															.getProperties();
 		assertEquals("Mihail", secondOwnerProperties.get("FirstName"));
-		Map<String, Object> thirdOwnerProperties = owners.get(2).getProperties();
+		Map<String, Object> thirdOwnerProperties = owners	.get(2)
+															.getProperties();
 		assertEquals("Morgan", thirdOwnerProperties.get("FirstName"));
-		Map<String, Object> fourthOwnerProperties = owners.get(3).getProperties();
+		Map<String, Object> fourthOwnerProperties = owners	.get(3)
+															.getProperties();
 		assertEquals("Grigor", fourthOwnerProperties.get("FirstName"));
 	}
 
@@ -939,24 +968,34 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 												.executeRequest(GET);
 
 		ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
-		assertEquals(1, resultFeed.getEntries().size());
-		ODataEntry resultEntry = resultFeed.getEntries().get(0);
-		List<ODataEntry> drivers = ((ODataDeltaFeedImpl) (resultEntry.getProperties().get("Drivers"))).getEntries();
+		assertEquals(1, resultFeed	.getEntries()
+									.size());
+		ODataEntry resultEntry = resultFeed	.getEntries()
+											.get(0);
+		List<ODataEntry> drivers = ((ODataDeltaFeedImpl) (resultEntry	.getProperties()
+																		.get("Drivers"))).getEntries();
 		assertEquals(2, drivers.size());
-		Map<String, Object> firstDriverProperties = drivers.get(0).getProperties();
+		Map<String, Object> firstDriverProperties = drivers	.get(0)
+															.getProperties();
 		assertEquals("Johnny", firstDriverProperties.get("FirstName"));
-		Map<String, Object> secondDriverProperties = drivers.get(1).getProperties();
+		Map<String, Object> secondDriverProperties = drivers.get(1)
+															.getProperties();
 		assertEquals("Natalie", secondDriverProperties.get("FirstName"));
 
-		List<ODataEntry> owners = ((ODataDeltaFeedImpl) (resultEntry.getProperties().get("Owners"))).getEntries();
+		List<ODataEntry> owners = ((ODataDeltaFeedImpl) (resultEntry.getProperties()
+																	.get("Owners"))).getEntries();
 		assertEquals(4, owners.size());
-		Map<String, Object> firstOwnerProperties = owners.get(0).getProperties();
+		Map<String, Object> firstOwnerProperties = owners	.get(0)
+															.getProperties();
 		assertEquals("Johnny", firstOwnerProperties.get("FirstName"));
-		Map<String, Object> secondOwnerProperties = owners.get(1).getProperties();
+		Map<String, Object> secondOwnerProperties = owners	.get(1)
+															.getProperties();
 		assertEquals("Mihail", secondOwnerProperties.get("FirstName"));
-		Map<String, Object> thirdOwnerProperties = owners.get(2).getProperties();
+		Map<String, Object> thirdOwnerProperties = owners	.get(2)
+															.getProperties();
 		assertEquals("Morgan", thirdOwnerProperties.get("FirstName"));
-		Map<String, Object> fourthOwnerProperties = owners.get(3).getProperties();
+		Map<String, Object> fourthOwnerProperties = owners	.get(3)
+															.getProperties();
 		assertEquals("Grigor", fourthOwnerProperties.get("FirstName"));
 	}
 
@@ -998,7 +1037,10 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 		List<ODataEntry> entries = resultFeed.getEntries();
 		assertEquals("The limit must work with expand, however we expect 3 entities because on of the cars has two drivers", 3,
 				entries.size());
-		Set<Object> uniqueEntities = entries.stream().map(oDataEntry -> oDataEntry.getProperties().get("Id")).collect(Collectors.toSet());
+		Set<Object> uniqueEntities = entries.stream()
+											.map(oDataEntry -> oDataEntry	.getProperties()
+																			.get("Id"))
+											.collect(Collectors.toSet());
 		assertEquals("The actual main entity set should be limited by the $top param and the count of all entities", 2,
 				uniqueEntities.size());
 	}
@@ -1024,17 +1066,22 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 		List<ODataEntry> entries = resultFeed.getEntries();
 		assertEquals("The limit must work with expand, however we expect 4 entities because on of the cars has two drivers", 4,
 				entries.size());
-		Set<Object> uniqueEntities = entries.stream().map(oDataEntry -> oDataEntry.getProperties().get("Id")).collect(Collectors.toSet());
+		Set<Object> uniqueEntities = entries.stream()
+											.map(oDataEntry -> oDataEntry	.getProperties()
+																			.get("Id"))
+											.collect(Collectors.toSet());
 		assertEquals("The actual main entity set should be limited by the $top param", 3, uniqueEntities.size());
 
-		Map<String, Object> firstEntryProperties = entries.get(0).getProperties();
+		Map<String, Object> firstEntryProperties = entries	.get(0)
+															.getProperties();
 		assertEquals(2021, firstEntryProperties.get("Year"));
 		assertEquals("BMW", firstEntryProperties.get("Make"));
 		assertEquals("530e", firstEntryProperties.get("Model"));
 
 		List<ODataEntry> drivers = ((ODataDeltaFeedImpl) (firstEntryProperties.get("Drivers"))).getEntries();
 		assertEquals(1, drivers.size());
-		Map<String, Object> firstDriverProperties = drivers.get(0).getProperties();
+		Map<String, Object> firstDriverProperties = drivers	.get(0)
+															.getProperties();
 		assertEquals("Zahari", firstDriverProperties.get("FirstName"));
 
 		Response responseAsc = OData2RequestBuilder	.createRequest(sf) //
@@ -1049,7 +1096,8 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 		ODataFeed resultFeedAsc = retrieveODataFeed(responseAsc, "Cars");
 		List<ODataEntry> entriesAsc = resultFeedAsc.getEntries();
 		assertEquals("The limit must work with expand", 3, entriesAsc.size());
-		Map<String, Object> firstEntryPropertiesAsc = entriesAsc.get(0).getProperties();
+		Map<String, Object> firstEntryPropertiesAsc = entriesAsc.get(0)
+																.getProperties();
 		assertEquals(1998, firstEntryPropertiesAsc.get("Year"));
 		assertEquals("Ford", firstEntryPropertiesAsc.get("Make"));
 		assertEquals("Focus", firstEntryPropertiesAsc.get("Model"));
@@ -1077,17 +1125,22 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 		List<ODataEntry> entries = resultFeed.getEntries();
 		assertEquals("The limit must work with expand, however we expect 4 entities because on of the cars has two drivers", 4,
 				entries.size());
-		Set<Object> uniqueEntities = entries.stream().map(oDataEntry -> oDataEntry.getProperties().get("Id")).collect(Collectors.toSet());
+		Set<Object> uniqueEntities = entries.stream()
+											.map(oDataEntry -> oDataEntry	.getProperties()
+																			.get("Id"))
+											.collect(Collectors.toSet());
 		assertEquals("The actual main entity set should be limited by the $top param", 3, uniqueEntities.size());
 
-		Map<String, Object> firstEntryProperties = entries.get(0).getProperties();
+		Map<String, Object> firstEntryProperties = entries	.get(0)
+															.getProperties();
 		assertEquals(2021, firstEntryProperties.get("Year"));
 		assertEquals("BMW", firstEntryProperties.get("Make"));
 		assertEquals("530e", firstEntryProperties.get("Model"));
 
 		List<ODataEntry> drivers = ((ODataDeltaFeedImpl) (firstEntryProperties.get("Drivers"))).getEntries();
 		assertEquals(1, drivers.size());
-		Map<String, Object> firstDriverProperties = drivers.get(0).getProperties();
+		Map<String, Object> firstDriverProperties = drivers	.get(0)
+															.getProperties();
 		assertEquals("Zahari", firstDriverProperties.get("FirstName"));
 	}
 
@@ -1107,38 +1160,74 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 		// System.out.println(IOUtils.toString((InputStream) response.getEntity())); //print the feed
 
 		ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
-		assertEquals(1, resultFeed.getEntries().size());
-		ODataEntry resultEntry = resultFeed.getEntries().get(0);
-		List<ODataEntry> drivers = ((ODataDeltaFeedImpl) (resultEntry.getProperties().get("Drivers"))).getEntries();
+		assertEquals(1, resultFeed	.getEntries()
+									.size());
+		ODataEntry resultEntry = resultFeed	.getEntries()
+											.get(0);
+		List<ODataEntry> drivers = ((ODataDeltaFeedImpl) (resultEntry	.getProperties()
+																		.get("Drivers"))).getEntries();
 		assertEquals(2, drivers.size());
-		assertEquals("Johnny", drivers.get(0).getProperties().get("FirstName"));
-		assertNull("No expand expected", drivers.get(0).getProperties().get("Addresses"));
+		assertEquals("Johnny", drivers	.get(0)
+										.getProperties()
+										.get("FirstName"));
+		assertNull("No expand expected", drivers.get(0)
+												.getProperties()
+												.get("Addresses"));
 
-		assertEquals("Natalie", drivers.get(1).getProperties().get("FirstName"));
-		assertNull("No expand expected", drivers.get(1).getProperties().get("Addresses"));
+		assertEquals("Natalie", drivers	.get(1)
+										.getProperties()
+										.get("FirstName"));
+		assertNull("No expand expected", drivers.get(1)
+												.getProperties()
+												.get("Addresses"));
 
 
-		List<ODataEntry> owners = ((ODataDeltaFeedImpl) (resultEntry.getProperties().get("Owners"))).getEntries();
+		List<ODataEntry> owners = ((ODataDeltaFeedImpl) (resultEntry.getProperties()
+																	.get("Owners"))).getEntries();
 		assertEquals(4, owners.size());
-		assertEquals("Johnny", owners.get(0).getProperties().get("FirstName"));
-		assertEquals(0, ((ODataDeltaFeedImpl) (owners.get(0).getProperties().get("Addresses"))).getEntries().size());
+		assertEquals("Johnny", owners	.get(0)
+										.getProperties()
+										.get("FirstName"));
+		assertEquals(0, ((ODataDeltaFeedImpl) (owners	.get(0)
+														.getProperties()
+														.get("Addresses")))	.getEntries()
+																			.size());
 
-		assertEquals("Mihail", owners.get(1).getProperties().get("FirstName"));
-		List<ODataEntry> secondOwnerAddresses = ((ODataDeltaFeedImpl) (owners.get(1).getProperties().get("Addresses"))).getEntries();
+		assertEquals("Mihail", owners	.get(1)
+										.getProperties()
+										.get("FirstName"));
+		List<ODataEntry> secondOwnerAddresses = ((ODataDeltaFeedImpl) (owners	.get(1)
+																				.getProperties()
+																				.get("Addresses"))).getEntries();
 		assertEquals(1, secondOwnerAddresses.size());
-		assertEquals("Frankfurt", secondOwnerAddresses.get(0).getProperties().get("City"));
+		assertEquals("Frankfurt", secondOwnerAddresses	.get(0)
+														.getProperties()
+														.get("City"));
 
-		assertEquals("Morgan", owners.get(2).getProperties().get("FirstName"));
-		List<ODataEntry> thirdOwnerAddresses = ((ODataDeltaFeedImpl) (owners.get(2).getProperties().get("Addresses"))).getEntries();
+		assertEquals("Morgan", owners	.get(2)
+										.getProperties()
+										.get("FirstName"));
+		List<ODataEntry> thirdOwnerAddresses = ((ODataDeltaFeedImpl) (owners.get(2)
+																			.getProperties()
+																			.get("Addresses"))).getEntries();
 		assertEquals(1, thirdOwnerAddresses.size());
-		assertEquals("Paris", thirdOwnerAddresses.get(0).getProperties().get("City"));
+		assertEquals("Paris", thirdOwnerAddresses	.get(0)
+													.getProperties()
+													.get("City"));
 
 		ODataEntry lastOwner = owners.get(owners.size() - 1);
-		List<ODataEntry> lastOwnerAddresses = ((ODataDeltaFeedImpl) (lastOwner.getProperties().get("Addresses"))).getEntries();
-		assertEquals("Grigor", lastOwner.getProperties().get("FirstName"));
-		assertEquals("Dimitrov", lastOwner.getProperties().get("LastName"));
+		List<ODataEntry> lastOwnerAddresses = ((ODataDeltaFeedImpl) (lastOwner	.getProperties()
+																				.get("Addresses"))).getEntries();
+		assertEquals("Grigor", lastOwner.getProperties()
+										.get("FirstName"));
+		assertEquals("Dimitrov", lastOwner	.getProperties()
+											.get("LastName"));
 		assertEquals(2, lastOwnerAddresses.size());
-		assertEquals("Monaco", lastOwnerAddresses.get(0).getProperties().get("City"));
-		assertEquals("Haskovo", lastOwnerAddresses.get(1).getProperties().get("City"));
+		assertEquals("Monaco", lastOwnerAddresses	.get(0)
+													.getProperties()
+													.get("City"));
+		assertEquals("Haskovo", lastOwnerAddresses	.get(1)
+													.getProperties()
+													.get("City"));
 	}
 }

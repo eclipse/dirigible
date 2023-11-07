@@ -42,7 +42,8 @@ public class LocalFile extends LocalObject {
 	 * @throws LocalRepositoryException the local repository exception
 	 */
 	public void delete() throws LocalRepositoryException {
-		getRepository().getRepositoryDao().removeFileByPath(getPath());
+		getRepository()	.getRepositoryDao()
+						.removeFileByPath(getPath());
 	}
 
 	/**
@@ -52,7 +53,8 @@ public class LocalFile extends LocalObject {
 	 * @throws LocalRepositoryException the local repository exception
 	 */
 	public void rename(String newPath) throws LocalRepositoryException {
-		getRepository().getRepositoryDao().renameFile(getPath(), newPath);
+		getRepository()	.getRepositoryDao()
+						.renameFile(getPath(), newPath);
 	}
 
 	/**
@@ -62,7 +64,8 @@ public class LocalFile extends LocalObject {
 	 * @throws LocalRepositoryException the local repository exception
 	 */
 	public void copyTo(String newPath) throws LocalRepositoryException {
-		getRepository().getRepositoryDao().copyFile(getPath(), newPath);
+		getRepository()	.getRepositoryDao()
+						.copyFile(getPath(), newPath);
 	}
 
 	/**
@@ -72,7 +75,8 @@ public class LocalFile extends LocalObject {
 	 * @throws LocalRepositoryException the local repository exception
 	 */
 	public byte[] getData() throws LocalRepositoryException {
-		return getRepository().getRepositoryDao().getFileContent(this);
+		return getRepository()	.getRepositoryDao()
+								.getFileContent(this);
 	}
 
 	/**
@@ -82,7 +86,8 @@ public class LocalFile extends LocalObject {
 	 * @throws LocalRepositoryException the local repository exception
 	 */
 	public void setData(byte[] content) throws LocalRepositoryException {
-		getRepository().getRepositoryDao().setFileContent(this, content);
+		getRepository()	.getRepositoryDao()
+						.setFileContent(this, content);
 	}
 
 	/**

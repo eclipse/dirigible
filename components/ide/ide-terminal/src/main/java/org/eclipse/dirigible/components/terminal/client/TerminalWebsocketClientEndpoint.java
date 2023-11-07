@@ -124,7 +124,8 @@ public class TerminalWebsocketClientEndpoint {
 	public void sendMessage(ByteBuffer message) {
 		synchronized (this.session) {
 			try {
-				this.session.getBasicRemote().sendBinary(message);
+				this.session.getBasicRemote()
+							.sendBinary(message);
 			} catch (IOException e) {
 				logger.error("[ws:terminal-client] " + e.getMessage(), e);
 			}

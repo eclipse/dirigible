@@ -108,14 +108,20 @@ public class TypeScriptFile {
 			allImports.add(fromStatement);
 		}
 
-		var relativeImports = allImports.stream().filter(x -> x.startsWith("./") || x.startsWith("../")).map(x -> {
-			try {
-				var importedModule = x.endsWith(".ts") ? x : x + ".ts";
-				return fileRepositoryPathParentDir.resolve(Path.of(importedModule)).toRealPath();
-			} catch (Exception e) {
-				return null;
-			}
-		}).filter(Objects::nonNull).map(x -> "/" + projectRepositoryPath.relativize(x)).collect(Collectors.toList());
+		var relativeImports = allImports.stream()
+										.filter(x -> x.startsWith("./") || x.startsWith("../"))
+										.map(x -> {
+											try {
+												var importedModule = x.endsWith(".ts") ? x : x + ".ts";
+												return fileRepositoryPathParentDir	.resolve(Path.of(importedModule))
+																					.toRealPath();
+											} catch (Exception e) {
+												return null;
+											}
+										})
+										.filter(Objects::nonNull)
+										.map(x -> "/" + projectRepositoryPath.relativize(x))
+										.collect(Collectors.toList());
 
 		return relativeImports;
 	}

@@ -85,7 +85,9 @@ public class ViewRepositoryTest {
 	 */
 	@Test
 	public void getOne() {
-		Long id = viewRepository.findAll().get(0).getId();
+		Long id = viewRepository.findAll()
+								.get(0)
+								.getId();
 		Optional<View> optional = viewRepository.findById(id);
 		View view = optional.isPresent() ? optional.get() : null;
 		assertNotNull(view);
@@ -104,7 +106,9 @@ public class ViewRepositoryTest {
 	 */
 	@Test
 	public void getReferenceUsingEntityManager() {
-		Long id = viewRepository.findAll().get(0).getId();
+		Long id = viewRepository.findAll()
+								.get(0)
+								.getId();
 		View view = entityManager.getReference(View.class, id);
 		assertNotNull(view);
 		assertNotNull(view.getLocation());

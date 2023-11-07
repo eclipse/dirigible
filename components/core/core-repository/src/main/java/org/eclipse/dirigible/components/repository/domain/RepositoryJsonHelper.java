@@ -31,19 +31,23 @@ public class RepositoryJsonHelper {
 	public static Repository traverseRepository(ICollection collection, String removePathPrefix, String addPathPrefix) {
 		Repository repositoryPojo = new Repository();
 		repositoryPojo.setName(collection.getName());
-		repositoryPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
+		repositoryPojo.setPath(addPathPrefix + collection	.getPath()
+															.substring(removePathPrefix.length()));
 		List<ICollection> collections = collection.getCollections();
 		for (ICollection childCollection : collections) {
-			repositoryPojo.getCollections().add(traverseCollection(childCollection, removePathPrefix, addPathPrefix));
+			repositoryPojo	.getCollections()
+							.add(traverseCollection(childCollection, removePathPrefix, addPathPrefix));
 		}
 
 		List<IResource> resources = collection.getResources();
 		for (IResource childResource : resources) {
 			Resource resourcePojo = new Resource();
 			resourcePojo.setName(childResource.getName());
-			resourcePojo.setPath(addPathPrefix + childResource.getPath().substring(removePathPrefix.length()));
+			resourcePojo.setPath(addPathPrefix + childResource	.getPath()
+																.substring(removePathPrefix.length()));
 			resourcePojo.setContentType(childResource.getContentType());
-			repositoryPojo.getResources().add(resourcePojo);
+			repositoryPojo	.getResources()
+							.add(resourcePojo);
 		}
 
 		return repositoryPojo;
@@ -60,19 +64,23 @@ public class RepositoryJsonHelper {
 	public static Registry traverseRegistry(ICollection collection, String removePathPrefix, String addPathPrefix) {
 		Registry registryPojo = new Registry();
 		registryPojo.setName(collection.getName());
-		registryPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
+		registryPojo.setPath(addPathPrefix + collection	.getPath()
+														.substring(removePathPrefix.length()));
 		List<ICollection> collections = collection.getCollections();
 		for (ICollection childCollection : collections) {
-			registryPojo.getCollections().add(traverseCollection(childCollection, removePathPrefix, addPathPrefix));
+			registryPojo.getCollections()
+						.add(traverseCollection(childCollection, removePathPrefix, addPathPrefix));
 		}
 
 		List<IResource> resources = collection.getResources();
 		for (IResource childResource : resources) {
 			Resource resourcePojo = new Resource();
 			resourcePojo.setName(childResource.getName());
-			resourcePojo.setPath(addPathPrefix + childResource.getPath().substring(removePathPrefix.length()));
+			resourcePojo.setPath(addPathPrefix + childResource	.getPath()
+																.substring(removePathPrefix.length()));
 			resourcePojo.setContentType(childResource.getContentType());
-			registryPojo.getResources().add(resourcePojo);
+			registryPojo.getResources()
+						.add(resourcePojo);
 		}
 
 		return registryPojo;
@@ -89,19 +97,23 @@ public class RepositoryJsonHelper {
 	public static Collection traverseCollection(ICollection collection, String removePathPrefix, String addPathPrefix) {
 		Collection collectionPojo = new Collection();
 		collectionPojo.setName(collection.getName());
-		collectionPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
+		collectionPojo.setPath(addPathPrefix + collection	.getPath()
+															.substring(removePathPrefix.length()));
 		List<ICollection> collections = collection.getCollections();
 		for (ICollection childCollection : collections) {
-			collectionPojo.getCollections().add(traverseCollection(childCollection, removePathPrefix, addPathPrefix));
+			collectionPojo	.getCollections()
+							.add(traverseCollection(childCollection, removePathPrefix, addPathPrefix));
 		}
 
 		List<IResource> resources = collection.getResources();
 		for (IResource childResource : resources) {
 			Resource resourcePojo = new Resource();
 			resourcePojo.setName(childResource.getName());
-			resourcePojo.setPath(addPathPrefix + childResource.getPath().substring(removePathPrefix.length()));
+			resourcePojo.setPath(addPathPrefix + childResource	.getPath()
+																.substring(removePathPrefix.length()));
 			resourcePojo.setContentType(childResource.getContentType());
-			collectionPojo.getResources().add(resourcePojo);
+			collectionPojo	.getResources()
+							.add(resourcePojo);
 		}
 
 		return collectionPojo;

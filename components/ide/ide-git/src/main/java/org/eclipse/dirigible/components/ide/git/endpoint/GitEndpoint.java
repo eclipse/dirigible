@@ -105,7 +105,8 @@ public class GitEndpoint {
 	public ResponseEntity<?> cloneRepository(@PathVariable("workspace") String workspace, @Valid @RequestBody GitCloneModel model)
 			throws GitConnectorException {
 		gitService.clone(workspace, model);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -120,7 +121,8 @@ public class GitEndpoint {
 	public ResponseEntity<?> pullProjects(@PathVariable("workspace") String workspace, @Valid @RequestBody GitPullModel model)
 			throws GitConnectorException {
 		gitService.pull(workspace, model);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -137,7 +139,8 @@ public class GitEndpoint {
 			@Valid @RequestBody GitPullModel model) throws GitConnectorException {
 		model.setProjects(Arrays.asList(project));
 		gitService.pull(workspace, model);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -152,7 +155,8 @@ public class GitEndpoint {
 	public ResponseEntity<?> pushProjects(@PathVariable("workspace") String workspace, @Valid @RequestBody GitPushModel model)
 			throws GitConnectorException {
 		gitService.push(workspace, model);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -169,7 +173,8 @@ public class GitEndpoint {
 			@Valid @RequestBody GitPushModel model) throws GitConnectorException {
 		model.setProjects(Arrays.asList(project));
 		gitService.push(workspace, model);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -184,7 +189,8 @@ public class GitEndpoint {
 	public ResponseEntity<?> resetProjects(@PathVariable("workspace") String workspace, @Valid @RequestBody GitResetModel model)
 			throws GitConnectorException {
 		gitService.reset(workspace, model);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -201,7 +207,8 @@ public class GitEndpoint {
 			@Valid @RequestBody GitResetModel model) throws GitConnectorException {
 		model.setProjects(Arrays.asList(project));
 		gitService.reset(workspace, model);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -218,7 +225,8 @@ public class GitEndpoint {
 			@PathVariable("repositoryName") String repositoryName, @Nullable @RequestParam("unpublish") boolean unpublish)
 			throws GitConnectorException {
 		gitService.delete(workspace, repositoryName, unpublish);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -235,7 +243,8 @@ public class GitEndpoint {
 			@Valid @RequestBody GitShareModel model) throws GitConnectorException {
 		model.setProject(project);
 		gitService.share(workspace, model);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -252,7 +261,8 @@ public class GitEndpoint {
 			@Valid @RequestBody GitCheckoutModel model) throws GitConnectorException {
 		model.setProject(project);
 		gitService.checkout(workspace, model);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -269,7 +279,8 @@ public class GitEndpoint {
 			@Valid @RequestBody GitPushModel model) throws GitConnectorException {
 		model.setProjects(Arrays.asList(project));
 		gitService.commit(workspace, model);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -284,7 +295,8 @@ public class GitEndpoint {
 	public ResponseEntity<?> updateProjectsDependencies(@PathVariable("workspace") String workspace,
 			@Valid @RequestBody GitUpdateDependenciesModel model) throws GitConnectorException {
 		gitService.updateDependencies(workspace, model);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -301,7 +313,8 @@ public class GitEndpoint {
 			@Valid @RequestBody GitUpdateDependenciesModel model) throws GitConnectorException {
 		model.setProjects(Arrays.asList(project));
 		gitService.updateDependencies(workspace, model);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 
@@ -339,7 +352,8 @@ public class GitEndpoint {
 			@PathVariable("branch") String branch)
 			throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
 		gitService.createLocalBranch(workspace, project, branch);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -360,7 +374,8 @@ public class GitEndpoint {
 			@PathVariable("branch") String branch)
 			throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
 		gitService.deleteLocalBranch(workspace, project, branch);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -397,7 +412,8 @@ public class GitEndpoint {
 			@PathVariable("branch") String branch, @Valid @RequestBody BaseGitModel model)
 			throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
 		gitService.createRemoteBranch(workspace, project, branch, model);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -419,7 +435,8 @@ public class GitEndpoint {
 			@PathVariable("branch") String branch, @Valid @RequestBody BaseGitModel model)
 			throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
 		gitService.deleteRemoteBranch(workspace, project, branch, model);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -500,10 +517,12 @@ public class GitEndpoint {
 	public ResponseEntity<?> addFileToIndex(@PathVariable("workspace") String workspace, @PathVariable("project") String project,
 			@Valid @RequestBody String paths) throws GitConnectorException {
 		if (paths == null || "".equals(paths)) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			return ResponseEntity	.status(HttpStatus.NOT_FOUND)
+									.build();
 		}
 		gitService.addFileToIndex(workspace, project, paths);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -519,10 +538,12 @@ public class GitEndpoint {
 	public ResponseEntity<?> revertToHeadRevision(@PathVariable("workspace") String workspace, @PathVariable("project") String project,
 			@Valid @RequestBody String paths) throws GitConnectorException {
 		if (paths == null || "".equals(paths)) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			return ResponseEntity	.status(HttpStatus.NOT_FOUND)
+									.build();
 		}
 		gitService.revertToHeadRevision(workspace, project, paths);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -538,10 +559,12 @@ public class GitEndpoint {
 	public ResponseEntity<?> removeFileFromIndex(@PathVariable("workspace") String workspace, @PathVariable("project") String project,
 			@Valid @RequestBody String paths) throws GitConnectorException {
 		if (paths == null || "".equals(paths)) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			return ResponseEntity	.status(HttpStatus.NOT_FOUND)
+									.build();
 		}
 		gitService.removeFileFromIndex(workspace, project, paths);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -577,7 +600,8 @@ public class GitEndpoint {
 	@PostMapping(value = {"/{project}/fetch-url"}, produces = {"application/json"})
 	public ResponseEntity<?> setFetchUrl(@PathVariable("workspace") String workspace, @PathVariable("project") String project,
 			@Valid @RequestBody JsonObject url) throws GitConnectorException, GitAPIException, URISyntaxException {
-		String newurl = url.get("url").getAsString();
+		String newurl = url	.get("url")
+							.getAsString();
 		gitService.setFetchUrl(workspace, project, newurl);
 		JsonObject res = new JsonObject();
 		res.addProperty("status", "success");
@@ -599,7 +623,8 @@ public class GitEndpoint {
 	@PostMapping(value = {"/{project}/push-url"}, produces = {"application/json"})
 	public ResponseEntity<?> setPushUrl(@PathVariable("workspace") String workspace, @PathVariable("project") String project,
 			@Valid @RequestBody JsonObject url) throws GitConnectorException, GitAPIException, URISyntaxException {
-		String newurl = url.get("url").getAsString();
+		String newurl = url	.get("url")
+							.getAsString();
 		gitService.setPushUrl(workspace, project, newurl);
 		JsonObject res = new JsonObject();
 		res.addProperty("status", "success");
@@ -620,7 +645,8 @@ public class GitEndpoint {
 	public ResponseEntity<?> getFileDiff(@PathVariable("workspace") String workspace, @PathVariable("repositoryName") String repositoryName,
 			@Nullable @RequestParam("path") String path) throws GitConnectorException {
 		if (path == null || "".equals(path)) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			return ResponseEntity	.status(HttpStatus.NOT_FOUND)
+									.build();
 		}
 		GitDiffModel diff = gitService.getFileDiff(workspace, repositoryName, path);
 		if (diff != null) {
@@ -662,7 +688,8 @@ public class GitEndpoint {
 	public ResponseEntity<?> importProjects(@PathVariable("workspace") String workspace, @PathVariable("repository") String repository)
 			throws GitConnectorException {
 		gitService.importProjects(workspace, repository);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 }

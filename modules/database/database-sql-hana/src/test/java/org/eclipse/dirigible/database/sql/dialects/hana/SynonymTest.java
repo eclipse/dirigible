@@ -57,7 +57,11 @@ public class SynonymTest {
 	 */
 	@Test
 	public void executeCreateSynonym() {
-		String sql = SqlFactory.getNative(new HanaSqlDialect()).create().synonym("CUSTOMERS_SEQUENCE").forSource("CUSTOMERS").build();
+		String sql = SqlFactory	.getNative(new HanaSqlDialect())
+								.create()
+								.synonym("CUSTOMERS_SEQUENCE")
+								.forSource("CUSTOMERS")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("CREATE SYNONYM CUSTOMERS_SEQUENCE FOR CUSTOMERS", sql);
@@ -69,7 +73,10 @@ public class SynonymTest {
 	 */
 	@Test
 	public void executeDropSynonym() {
-		String sql = SqlFactory.getNative(new HanaSqlDialect()).drop().synonym("CUSTOMERS_SEQUENCE").build();
+		String sql = SqlFactory	.getNative(new HanaSqlDialect())
+								.drop()
+								.synonym("CUSTOMERS_SEQUENCE")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("DROP SYNONYM CUSTOMERS_SEQUENCE", sql);
@@ -88,8 +95,8 @@ public class SynonymTest {
 		when(mockDatabaseMetaData.getTables(null, schema, synonymName, new String[] {ISqlKeywords.KEYWORD_SYNONYM})).thenReturn(
 				mockResultSet);
 		when(mockResultSet.next()).thenReturn(true);
-		boolean exist =
-				SqlFactory.getNative(new HanaSqlDialect()).exists(mockConnection, schema, synonymName, DatabaseArtifactTypes.SYNONYM);
+		boolean exist = SqlFactory	.getNative(new HanaSqlDialect())
+									.exists(mockConnection, schema, synonymName, DatabaseArtifactTypes.SYNONYM);
 		assertTrue(exist);
 	}
 
@@ -102,8 +109,8 @@ public class SynonymTest {
 	public void checkIfSynonymDoesNotExist() throws SQLException {
 		String synonymName = "namespace.path::MySynonym";
 		String schema = "MySchema";
-		boolean exist =
-				SqlFactory.getNative(new HanaSqlDialect()).exists(mockConnection, schema, synonymName, DatabaseArtifactTypes.SYNONYM);
+		boolean exist = SqlFactory	.getNative(new HanaSqlDialect())
+									.exists(mockConnection, schema, synonymName, DatabaseArtifactTypes.SYNONYM);
 		assertFalse(exist);
 	}
 

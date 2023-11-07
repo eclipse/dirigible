@@ -122,7 +122,9 @@ public class ExtensionsFacade implements InitializingBean {
 		if (logger.isTraceEnabled()) {
 			logger.trace("API - ExtensionsServiceFacade.getExtensionPoints() -> begin");
 		}
-		List<ExtensionPoint> extensionPointDefinitions = ExtensionsFacade.get().getExtensionPointService().getAll();
+		List<ExtensionPoint> extensionPointDefinitions = ExtensionsFacade	.get()
+																			.getExtensionPointService()
+																			.getAll();
 		String[] extensionPoints = new String[extensionPointDefinitions.size()];
 		int i = 0;
 		for (ExtensionPoint extensionPointDefinition : extensionPointDefinitions) {

@@ -132,7 +132,8 @@ public class PublisherService {
 			try {
 				next.beforePublish(sourceLocation);
 			} catch (Exception e) {
-				logger.error("{} failed on before publish.", next.getClass().getCanonicalName());
+				logger.error("{} failed on before publish.", next	.getClass()
+																	.getCanonicalName());
 				logger.error(e.getMessage(), e);
 			}
 		}
@@ -159,7 +160,8 @@ public class PublisherService {
 			try {
 				next.afterPublish(sourceLocation, targetLocation, afterPublishMetadata);
 			} catch (Exception e) {
-				logger.error("{} failed on after publish.", next.getClass().getCanonicalName());
+				logger.error("{} failed on after publish.", next.getClass()
+																.getCanonicalName());
 				logger.error(e.getMessage(), e);
 			}
 		}
@@ -176,7 +178,8 @@ public class PublisherService {
 			try {
 				next.beforeUnpublish(targetLocation);
 			} catch (Exception e) {
-				logger.error("{} failed on before unpublish.", next.getClass().getCanonicalName());
+				logger.error("{} failed on before unpublish.", next	.getClass()
+																	.getCanonicalName());
 				logger.error(e.getMessage(), e);
 			}
 		}
@@ -199,7 +202,8 @@ public class PublisherService {
 			try {
 				next.afterUnpublish(targetLocation);
 			} catch (Exception e) {
-				logger.error("{} failed on after unpublish.", next.getClass().getCanonicalName());
+				logger.error("{} failed on after unpublish.", next	.getClass()
+																	.getCanonicalName());
 				logger.error(e.getMessage(), e);
 			}
 		}
@@ -220,10 +224,12 @@ public class PublisherService {
 																						.append(IRepositoryStructure.SEPARATOR)
 																						.append(workspace);
 		if (project != null) {
-			relativePath.append(IRepositoryStructure.SEPARATOR).append(project);
+			relativePath.append(IRepositoryStructure.SEPARATOR)
+						.append(project);
 		}
 		if (path != null) {
-			relativePath.append(IRepositoryStructure.SEPARATOR).append(path);
+			relativePath.append(IRepositoryStructure.SEPARATOR)
+						.append(path);
 		}
 		return relativePath;
 	}

@@ -132,7 +132,8 @@ public final class SQLJoinClause implements SQLClause {
 
 		List<String> firstJoinColumns = getTargetJoinKeyForEntityType(target, start);
 		String firstJoinLeftTableAlias = query.getSQLTableAlias(target);
-		String firstJoinRightTable = query.getSQLMappingTableName(start, target).get(0);
+		String firstJoinRightTable = query	.getSQLMappingTableName(start, target)
+											.get(0);
 		String firstJoinRightTableAlias = query.getSQLTableAliasForManyToManyMappingTable(firstJoinRightTable);
 		List<String> firstJoinTargetKeys = query.getSQLMappingTableJoinColumn(target, start);
 
@@ -143,7 +144,8 @@ public final class SQLJoinClause implements SQLClause {
 		join.append(" ");
 
 		List<String> secondJoinColumns = query.getSQLMappingTableJoinColumn(start, target);
-		String secondJsonMappingTable = query.getSQLMappingTableName(target, start).get(0);
+		String secondJsonMappingTable = query	.getSQLMappingTableName(target, start)
+												.get(0);
 		String secondJoinLeftTableAlias = query.getSQLTableAliasForManyToManyMappingTable(secondJsonMappingTable);
 		String secondJoinRightTable = query.getSQLTableName(start);
 		String secondJoinRightTableAlias = query.getSQLTableAlias(start);
@@ -211,8 +213,10 @@ public final class SQLJoinClause implements SQLClause {
 	 * @throws EdmException the edm exception
 	 */
 	private void validateMappingTable() throws EdmException {
-		String firstJsonMappingTable = query.getSQLMappingTableName(start, target).get(0);
-		String secondJsonMappingTable = query.getSQLMappingTableName(target, start).get(0);
+		String firstJsonMappingTable = query.getSQLMappingTableName(start, target)
+											.get(0);
+		String secondJsonMappingTable = query	.getSQLMappingTableName(target, start)
+												.get(0);
 
 		if (!firstJsonMappingTable.equals(secondJsonMappingTable)) {
 			throw new IllegalArgumentException("OData manyToManyMappingTable name is different in both json files: " + ""
@@ -308,7 +312,8 @@ public final class SQLJoinClause implements SQLClause {
 	 */
 	private boolean needsJoinQuery(EdmStructuralType start, List<KeyPredicate> startPredicates, EdmStructuralType target) {
 		try {
-			if (start.getName().equals(target.getName())) {
+			if (start	.getName()
+						.equals(target.getName())) {
 				return false;
 			} else {
 				if (startPredicates == NO_PREDICATES_USED) {

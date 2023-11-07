@@ -103,7 +103,8 @@ public class FileSystemUtils {
 	 */
 	public static void saveFile(String workspacePath, byte[] content) throws FileNotFoundException, IOException {
 		createFoldersIfNecessary(workspacePath);
-		Path path = FileSystems.getDefault().getPath(FilenameUtils.normalize(workspacePath));
+		Path path = FileSystems	.getDefault()
+								.getPath(FilenameUtils.normalize(workspacePath));
 		if (content == null) {
 			content = new byte[] {};
 		}
@@ -120,9 +121,11 @@ public class FileSystemUtils {
 	 */
 	public static byte[] loadFile(String workspacePath) throws FileNotFoundException, IOException {
 		String normalizedPath = FilenameUtils.normalize(workspacePath);
-		Path path = FileSystems.getDefault().getPath(normalizedPath);
+		Path path = FileSystems	.getDefault()
+								.getPath(normalizedPath);
 		// if (Files.exists(path)) {
-		if (path.toFile().exists()) {
+		if (path.toFile()
+				.exists()) {
 			return Files.readAllBytes(path);
 		}
 		return null;
@@ -138,8 +141,10 @@ public class FileSystemUtils {
 	 */
 	public static void moveFile(String workspacePathOld, String workspacePathNew) throws FileNotFoundException, IOException {
 		createFoldersIfNecessary(workspacePathNew);
-		Path pathOld = FileSystems.getDefault().getPath(workspacePathOld);
-		Path pathNew = FileSystems.getDefault().getPath(workspacePathNew);
+		Path pathOld = FileSystems	.getDefault()
+									.getPath(workspacePathOld);
+		Path pathNew = FileSystems	.getDefault()
+									.getPath(workspacePathNew);
 		Files.move(pathOld, pathNew);
 	}
 
@@ -157,7 +162,8 @@ public class FileSystemUtils {
 		Path srcFile = fileSystem.getPath(srcPath);
 		Path destFile = fileSystem.getPath(destPath);
 		if (fileExists(destFile.toString())) {
-			String fileName = destFile.getFileName().toString();
+			String fileName = destFile	.getFileName()
+										.toString();
 			String destFilePath = destPath.substring(0, destPath.lastIndexOf(fileName));
 			String fileTitle = "";
 			String fileExt = "";
@@ -218,7 +224,8 @@ public class FileSystemUtils {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void removeFile(String workspacePath) throws FileNotFoundException, IOException {
-		Path path = FileSystems.getDefault().getPath(workspacePath);
+		Path path = FileSystems	.getDefault()
+								.getPath(workspacePath);
 		// logger.debug("Deleting file: " + file);
 
 		EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
@@ -228,7 +235,8 @@ public class FileSystemUtils {
 			public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
 
 				// if (Files.exists(dir)) {
-				if (dir.toFile().exists()) {
+				if (dir	.toFile()
+						.exists()) {
 					if (logger.isTraceEnabled()) {
 						logger.trace(String.format("Deleting directory: %s", dir));
 					}
@@ -251,7 +259,8 @@ public class FileSystemUtils {
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 				// if (Files.exists(file)) {
-				if (file.toFile().exists()) {
+				if (file.toFile()
+						.exists()) {
 					if (logger.isTraceEnabled()) {
 						logger.trace(String.format("Deleting file: %s", file));
 					}
@@ -329,7 +338,8 @@ public class FileSystemUtils {
 		int i = s.lastIndexOf('.');
 
 		if ((i >= 0) && (i < (s.length() - 1))) {
-			ext = s.substring(i + 1).toLowerCase();
+			ext = s	.substring(i + 1)
+					.toLowerCase();
 		}
 		return ext;
 	}
@@ -343,9 +353,11 @@ public class FileSystemUtils {
 	 */
 	public static String getOwner(String workspacePath) throws IOException {
 		String convertedPath = convertToWorkspacePath(workspacePath);
-		Path path = FileSystems.getDefault().getPath(convertedPath);
+		Path path = FileSystems	.getDefault()
+								.getPath(convertedPath);
 		if (new File(convertedPath).exists()) {
-			return Files.getOwner(path).getName();
+			return Files.getOwner(path)
+						.getName();
 		} else {
 			return "none";
 		}
@@ -360,9 +372,11 @@ public class FileSystemUtils {
 	 */
 	public static Date getModifiedAt(String workspacePath) throws IOException {
 		String convertedPath = convertToWorkspacePath(workspacePath);
-		Path path = FileSystems.getDefault().getPath(convertedPath);
+		Path path = FileSystems	.getDefault()
+								.getPath(convertedPath);
 		if (new File(convertedPath).exists()) {
-			return new Date(Files.getLastModifiedTime(path).toMillis());
+			return new Date(Files	.getLastModifiedTime(path)
+									.toMillis());
 		} else {
 			return new Date();
 		}
@@ -415,9 +429,12 @@ public class FileSystemUtils {
 		Path path;
 		try {
 			String normalizedPath = FilenameUtils.normalize(location);
-			path = FileSystems.getDefault().getPath(normalizedPath);
+			path = FileSystems	.getDefault()
+								.getPath(normalizedPath);
 			File file = path.toFile();
-			return file.exists() && file.getCanonicalFile().getName().equals(file.getName());
+			return file.exists() && file.getCanonicalFile()
+										.getName()
+										.equals(file.getName());
 		} catch (java.nio.file.InvalidPathException | IOException e) {
 			if (logger.isWarnEnabled()) {
 				logger.warn(e.getMessage());
@@ -458,11 +475,13 @@ public class FileSystemUtils {
 		Path path;
 		try {
 			String normalizedPath = FilenameUtils.normalize(location);
-			path = FileSystems.getDefault().getPath(normalizedPath);
+			path = FileSystems	.getDefault()
+								.getPath(normalizedPath);
 		} catch (java.nio.file.InvalidPathException e) {
 			return false;
 		}
-		return path.toFile().isDirectory();
+		return path	.toFile()
+					.isDirectory();
 	}
 
 	/**
@@ -497,10 +516,12 @@ public class FileSystemUtils {
 	 */
 	public static File forceCreateDirectory(String firstSegment, String... segments) throws IOException {
 		Path dir = Paths.get(firstSegment, segments);
-		if (dir.toFile().exists()) {
+		if (dir	.toFile()
+				.exists()) {
 			return dir.toFile();
 		}
-		return Files.createDirectories(dir).toFile();
+		return Files.createDirectories(dir)
+					.toFile();
 	}
 
 	/**
@@ -525,7 +546,8 @@ public class FileSystemUtils {
 	 */
 	public static File getDirectory(String firstSegment, String... segments) {
 		Path dir = Paths.get(firstSegment, segments);
-		if (dir.toFile().exists()) {
+		if (dir	.toFile()
+				.exists()) {
 			return dir.toFile();
 		}
 		return null;
@@ -572,7 +594,11 @@ public class FileSystemUtils {
 		if (gitRoot == null) {
 			return new ArrayList<String>();
 		}
-		return Arrays.asList(gitRoot.listFiles()).stream().filter(e -> !e.isFile()).map(e -> e.getName()).collect(Collectors.toList());
+		return Arrays	.asList(gitRoot.listFiles())
+						.stream()
+						.filter(e -> !e.isFile())
+						.map(e -> e.getName())
+						.collect(Collectors.toList());
 	}
 
 	/**
@@ -635,14 +661,19 @@ public class FileSystemUtils {
 	 * @return the file
 	 */
 	private static File checkSubfolder(File rootFolder, String repositoryName) {
-		if (rootFolder.getName().startsWith(PREFIX_DOT) || rootFolder.getName().equals(FOLDER_TARGET)) {
+		if (rootFolder	.getName()
+						.startsWith(PREFIX_DOT)
+				|| rootFolder	.getName()
+								.equals(FOLDER_TARGET)) {
 			return null;
 		}
-		if (rootFolder.getName().equals(repositoryName)) {
+		if (rootFolder	.getName()
+						.equals(repositoryName)) {
 			File[] rootFiles = rootFolder.listFiles();
 			for (File projectMaybe : rootFiles) {
 				if (projectMaybe.isFile()) {
-					if (projectMaybe.getName().equals(PROJECT_JSON)) {
+					if (projectMaybe.getName()
+									.equals(PROJECT_JSON)) {
 						return projectMaybe.getParentFile();
 					}
 				} else {
@@ -677,7 +708,9 @@ public class FileSystemUtils {
 	public static List<String> getGitRepositoryProjects(String user, String workspace, String repositoryName) {
 		List<File> projects = getGitRepositoryProjectsFiles(user, workspace, repositoryName);
 		if (projects != null) {
-			return projects.stream().map(e -> e.getName()).collect(Collectors.toList());
+			return projects	.stream()
+							.map(e -> e.getName())
+							.collect(Collectors.toList());
 		}
 		if (logger.isWarnEnabled()) {
 			logger.warn(String.format("Cannot enumerate the projects under a git folder for user, workspace and path: %s, %s, %s", user,
@@ -751,7 +784,8 @@ public class FileSystemUtils {
 		@Override
 		public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
 			File file = path.toFile();
-			if (file.exists() && file.isFile() && file.getName().equals(PROJECT_METADATA_FILE_NAME)) {
+			if (file.exists() && file.isFile() && file	.getName()
+														.equals(PROJECT_METADATA_FILE_NAME)) {
 				projects.add(file.getParentFile());
 			}
 			return CONTINUE;
@@ -791,7 +825,8 @@ public class FileSystemUtils {
 		 * @param pattern the pattern
 		 */
 		Finder(String pattern) {
-			matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern);
+			matcher = FileSystems	.getDefault()
+									.getPathMatcher("glob:" + pattern);
 		}
 
 		/**

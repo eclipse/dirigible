@@ -125,7 +125,8 @@ public class WorkspacesEndpoint {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, error);
 		}
 
-		return ResponseEntity.created(workspaceService.getURI(workspace, null, null)).build();
+		return ResponseEntity	.created(workspaceService.getURI(workspace, null, null))
+								.build();
 	}
 
 	/**
@@ -142,7 +143,8 @@ public class WorkspacesEndpoint {
 		}
 
 		workspaceService.deleteWorkspace(workspace);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity	.noContent()
+								.build();
 	}
 
 	// Project
@@ -204,7 +206,8 @@ public class WorkspacesEndpoint {
 
 		// publisherService.publish(workspace, project);
 
-		return ResponseEntity.created(workspaceService.getURI(workspace, project, null)).build();
+		return ResponseEntity	.created(workspaceService.getURI(workspace, project, null))
+								.build();
 	}
 
 	/**
@@ -231,7 +234,8 @@ public class WorkspacesEndpoint {
 		// publisherService.unpublish(project);
 
 		workspaceService.deleteProject(workspace, project);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity	.noContent()
+								.build();
 	}
 
 	// Folders and Files
@@ -330,7 +334,8 @@ public class WorkspacesEndpoint {
 			}
 
 			folder = workspaceService.createFolder(workspace, project, path);
-			return ResponseEntity.created(workspaceService.getURI(workspace, project, path)).build();
+			return ResponseEntity	.created(workspaceService.getURI(workspace, project, path))
+									.build();
 		}
 
 		File file = workspaceService.getFile(workspace, project, path);
@@ -346,7 +351,8 @@ public class WorkspacesEndpoint {
 
 		// publisherService.publish(workspace, project + "/" + path);
 
-		return ResponseEntity.created(workspaceService.getURI(workspace, project, path)).build();
+		return ResponseEntity	.created(workspaceService.getURI(workspace, project, path))
+								.build();
 	}
 
 	/**
@@ -468,13 +474,15 @@ public class WorkspacesEndpoint {
 			}
 
 			workspaceService.deleteFile(workspace, project, path);
-			return ResponseEntity.noContent().build();
+			return ResponseEntity	.noContent()
+									.build();
 		}
 		workspaceService.deleteFolder(workspace, project, path);
 
 		// publisherService.unpublish(project + "/" + path);
 
-		return ResponseEntity.noContent().build();
+		return ResponseEntity	.noContent()
+								.build();
 	}
 
 

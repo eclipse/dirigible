@@ -85,7 +85,10 @@ public class FtpUserManager implements UserManager {
 	 */
 	@Override
 	public String[] getAllUserNames() {
-		List<String> userNames = ftpUserRepository.findAll().stream().map(FtpUser::getUsername).collect(Collectors.toList());
+		List<String> userNames = ftpUserRepository	.findAll()
+													.stream()
+													.map(FtpUser::getUsername)
+													.collect(Collectors.toList());
 		return userNames.toArray(new String[0]);
 	}
 
@@ -110,7 +113,8 @@ public class FtpUserManager implements UserManager {
 		File home = new File(new File(root, user.getName()), "home");
 		Assert.isTrue(home.exists() || home.mkdirs(), "The home directory " + home.getAbsolutePath() + " must exist");
 		FtpUser ftpuser = new FtpUser(user.getName(), user.getPassword(), user.getEnabled(), user.getAuthorities(), user.getMaxIdleTime(),
-				user.getHomeDirectory(), user.getAuthorities().equals(adminAuthorities));
+				user.getHomeDirectory(), user	.getAuthorities()
+												.equals(adminAuthorities));
 		this.ftpUserRepository.save(ftpuser);
 	}
 
@@ -139,10 +143,12 @@ public class FtpUserManager implements UserManager {
 				"The given authentication must support username and password authentication");
 		UsernamePasswordAuthentication upw = (UsernamePasswordAuthentication) authentication;
 		String user = upw.getUsername();
-		return Optional.ofNullable(this.getUserByName(user)).filter(u -> {
-			String incomingPw = u.getPassword();
-			return encode(incomingPw).equalsIgnoreCase(u.getPassword());
-		}).orElseThrow(() -> new AuthenticationFailedException("Authentication has failed! Try your username and password."));
+		return Optional	.ofNullable(this.getUserByName(user))
+						.filter(u -> {
+							String incomingPw = u.getPassword();
+							return encode(incomingPw).equalsIgnoreCase(u.getPassword());
+						})
+						.orElseThrow(() -> new AuthenticationFailedException("Authentication has failed! Try your username and password."));
 	}
 
 	/**

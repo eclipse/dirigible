@@ -68,7 +68,8 @@ public class SQLGroupByClause implements SQLClause {
 				continue;
 			}
 
-			if (!groupByClause.toString().isEmpty()) {
+			if (!groupByClause	.toString()
+								.isEmpty()) {
 				groupByClause.append(", ");
 			}
 

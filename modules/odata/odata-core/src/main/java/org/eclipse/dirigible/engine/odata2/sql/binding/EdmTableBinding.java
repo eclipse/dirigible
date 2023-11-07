@@ -57,7 +57,8 @@ public class EdmTableBinding extends Mapping {
 		 */
 		public static DataStructureType getType(String value) {
 			for (DataStructureType type : DataStructureType.values()) {
-				if (type.toString().equals(value)) {
+				if (type.toString()
+						.equals(value)) {
 					return type;
 				}
 			}

@@ -81,7 +81,8 @@ public class DatabaseExportService {
 			try (Connection connection = dataSource.getConnection()) {
 				ISqlDialect dialect = SqlDialectFactory.getDialect(connection);
 				sql = dialect.allQuery(structureName);
-				productName = connection.getMetaData().getDatabaseProductName();
+				productName = connection.getMetaData()
+										.getDatabaseProductName();
 				if ("MongoDB".equals(productName)) {
 					dialect.exportData(connection, structure, output);
 					return;
@@ -108,7 +109,8 @@ public class DatabaseExportService {
 			String productName = null;
 			try (Connection connection = dataSource.getConnection()) {
 				ISqlDialect dialect = SqlDialectFactory.getDialect(connection);
-				productName = connection.getMetaData().getDatabaseProductName();
+				productName = connection.getMetaData()
+										.getDatabaseProductName();
 				if ("MongoDB".equals(productName)) {
 					return "json";
 				}
@@ -138,20 +140,29 @@ public class DatabaseExportService {
 				if (dataSource != null) {
 					String metadata = DatabaseMetadataHelper.getMetadataAsJson(dataSource);
 					JsonElement database = GsonHelper.parseJson(metadata);
-					JsonArray schemes = database.getAsJsonObject().get("schemas").getAsJsonArray();
+					JsonArray schemes = database.getAsJsonObject()
+												.get("schemas")
+												.getAsJsonArray();
 					for (int i = 0; i < schemes.size(); i++) {
-						JsonObject scheme = schemes.get(i).getAsJsonObject();
-						if (!scheme.get("name").getAsString().equalsIgnoreCase(schema)) {
+						JsonObject scheme = schemes	.get(i)
+													.getAsJsonObject();
+						if (!scheme	.get("name")
+									.getAsString()
+									.equalsIgnoreCase(schema)) {
 							continue;
 						}
-						JsonArray tables = scheme.get("tables").getAsJsonArray();
+						JsonArray tables = scheme	.get("tables")
+													.getAsJsonArray();
 						for (int j = 0; j < tables.size(); j++) {
-							JsonObject table = tables.get(j).getAsJsonObject();
-							String artifact = table.get("name").getAsString();
+							JsonObject table = tables	.get(j)
+														.getAsJsonObject();
+							String artifact = table	.get("name")
+													.getAsString();
 							String artifactName = "\"" + schema + "\".\"" + artifact + "\"";
 							String sql = "SELECT * FROM " + artifactName;
 							try (Connection connection = dataSource.getConnection()) {
-								sql = SqlDialectFactory.getDialect(connection).allQuery(artifactName);
+								sql = SqlDialectFactory	.getDialect(connection)
+														.allQuery(artifactName);
 							} catch (Exception e) {
 								logger.error(e.getMessage(), e);
 							}

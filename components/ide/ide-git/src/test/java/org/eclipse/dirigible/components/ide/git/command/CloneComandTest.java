@@ -133,7 +133,8 @@ public class CloneComandTest {
 			assertTrue(workspace1.exists());
 			List<Project> projects = workspace1.getProjects();
 			for (Project project : projects) {
-				if (project.getName().startsWith("sample_git_no_project_test")) {
+				if (project	.getName()
+							.startsWith("sample_git_no_project_test")) {
 					workspace1.delete();
 					return;
 				}

@@ -272,7 +272,10 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 	 */
 	protected void generateSequence(StringBuilder sql) {
 		String sequenceName = (isCaseSensitive()) ? encapsulate(this.sequence, true) : this.sequence;
-		sql.append(SPACE).append(KEYWORD_SEQUENCE).append(SPACE).append(sequenceName);
+		sql	.append(SPACE)
+			.append(KEYWORD_SEQUENCE)
+			.append(SPACE)
+			.append(sequenceName);
 	}
 
 
@@ -377,7 +380,10 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 	 * @param parameterValue the parameter value
 	 */
 	protected void generateSequenceParameter(StringBuilder sql, String parameterName, String parameterValue) {
-		sql.append(SPACE).append(parameterName).append(SPACE).append(parameterValue);
+		sql	.append(SPACE)
+			.append(parameterName)
+			.append(SPACE)
+			.append(parameterValue);
 	}
 
 }

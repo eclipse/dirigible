@@ -95,8 +95,12 @@ public class WebsocketsFacade {
 	 * @return the client
 	 */
 	public static final WebsocketClient getClient(String id) {
-		Optional<WebsocketClient> result =
-				CLIENTS.stream().parallel().filter(client -> client.getSession().getSessionId().equals(id)).findFirst();
+		Optional<WebsocketClient> result = CLIENTS	.stream()
+													.parallel()
+													.filter(client -> client.getSession()
+																			.getSessionId()
+																			.equals(id))
+													.findFirst();
 
 		return result.isPresent() ? result.get() : null;
 	}
@@ -108,7 +112,11 @@ public class WebsocketsFacade {
 	 * @return the client
 	 */
 	public static final WebsocketClient getClientByHandler(String handler) {
-		Optional<WebsocketClient> result = CLIENTS.stream().parallel().filter(client -> client.getHandler().equals(handler)).findFirst();
+		Optional<WebsocketClient> result = CLIENTS	.stream()
+													.parallel()
+													.filter(client -> client.getHandler()
+																			.equals(handler))
+													.findFirst();
 		return result.isPresent() ? result.get() : null;
 	}
 

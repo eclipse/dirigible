@@ -29,7 +29,10 @@ public class SetOfStringsToCsvConverter implements AttributeConverter<Set<String
 	 */
 	@Override
 	public String convertToDatabaseColumn(Set<String> attribute) {
-		return attribute == null ? null : attribute.stream().map(String::trim).collect(Collectors.joining(","));
+		return attribute == null ? null
+				: attribute	.stream()
+							.map(String::trim)
+							.collect(Collectors.joining(","));
 	}
 
 	/**
@@ -40,7 +43,10 @@ public class SetOfStringsToCsvConverter implements AttributeConverter<Set<String
 	 */
 	@Override
 	public Set<String> convertToEntityAttribute(String data) {
-		return data == null ? null : Arrays.stream(data.split(",")).map(String::trim).collect(Collectors.toSet());
+		return data == null ? null
+				: Arrays.stream(data.split(","))
+						.map(String::trim)
+						.collect(Collectors.toSet());
 	}
 
 }

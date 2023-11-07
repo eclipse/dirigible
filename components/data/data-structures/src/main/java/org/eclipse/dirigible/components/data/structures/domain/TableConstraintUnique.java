@@ -59,7 +59,8 @@ public class TableConstraintUnique extends TableConstraint {
 		super(name, modifiers, columns, constraints);
 		this.indexType = indexType;
 		this.order = order;
-		this.constraints.getUniqueIndexes().add(this);
+		this.constraints.getUniqueIndexes()
+						.add(this);
 	}
 
 	/**
@@ -131,7 +132,9 @@ public class TableConstraintUnique extends TableConstraint {
 	@Override
 	public String toString() {
 		return "TableConstraintUnique [id=" + id + ", indexType=" + indexType + ", order=" + order + ", name=" + name + ", modifiers="
-				+ modifiers + ", columns=" + columns + ", constraints.table=" + constraints.getTable().getName() + "]";
+				+ modifiers + ", columns=" + columns + ", constraints.table=" + constraints	.getTable()
+																							.getName()
+				+ "]";
 	}
 
 }

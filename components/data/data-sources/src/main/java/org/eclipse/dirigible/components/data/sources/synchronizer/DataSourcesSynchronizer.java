@@ -86,7 +86,8 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(getFileExtension());
+		return file	.toString()
+					.endsWith(getFileExtension());
 	}
 
 	/**
@@ -119,14 +120,16 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
 			DataSource maybe = getService().findByKey(datasource.getKey());
 			if (maybe != null) {
 				datasource.setId(maybe.getId());
-				datasource.getProperties().forEach(p -> {
-					DataSourceProperty m = maybe.getProperty(p.getName());
-					if (m != null) {
-						p.setId(m.getId());
-					}
-				});
+				datasource	.getProperties()
+							.forEach(p -> {
+								DataSourceProperty m = maybe.getProperty(p.getName());
+								if (m != null) {
+									p.setId(m.getId());
+								}
+							});
 			}
-			datasource.getProperties().forEach(p -> p.setDatasource(datasource));
+			datasource	.getProperties()
+						.forEach(p -> p.setDatasource(datasource));
 			DataSource result = getService().save(datasource);
 			return List.of(result);
 		} catch (Exception e) {
@@ -182,25 +185,29 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
 			if (wrapper.getArtefact() instanceof DataSource) {
 				datasource = (DataSource) wrapper.getArtefact();
 			} else {
-				throw new UnsupportedOperationException(
-						String.format("Trying to process %s as DataSource", wrapper.getArtefact().getClass()));
+				throw new UnsupportedOperationException(String.format("Trying to process %s as DataSource", wrapper	.getArtefact()
+																													.getClass()));
 			}
 
 
 			switch (flow) {
 				case CREATE:
-					if (datasource.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+					if (datasource	.getLifecycle()
+									.equals(ArtefactLifecycle.NEW)) {
 						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
 					}
 					break;
 				case UPDATE:
-					if (datasource.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+					if (datasource	.getLifecycle()
+									.equals(ArtefactLifecycle.MODIFIED)) {
 						callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
 					}
 					break;
 				case DELETE:
-					if (datasource.getLifecycle().equals(ArtefactLifecycle.CREATED)
-							|| datasource.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+					if (datasource	.getLifecycle()
+									.equals(ArtefactLifecycle.CREATED)
+							|| datasource	.getLifecycle()
+											.equals(ArtefactLifecycle.UPDATED)) {
 						callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
 					}
 					break;
@@ -224,7 +231,10 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
 	@Override
 	public void cleanup(DataSource datasource) {
 		try {
-			if (!datasource.getLocation().startsWith("API_") && !datasource.getLocation().startsWith("ENV_")) {
+			if (!datasource	.getLocation()
+							.startsWith("API_")
+					&& !datasource	.getLocation()
+									.startsWith("ENV_")) {
 				getService().delete(datasource);
 			}
 		} catch (Exception e) {

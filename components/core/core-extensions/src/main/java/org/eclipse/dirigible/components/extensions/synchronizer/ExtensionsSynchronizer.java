@@ -88,7 +88,8 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(getFileExtension());
+		return file	.toString()
+					.endsWith(getFileExtension());
 	}
 
 	/**
@@ -177,7 +178,8 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 		if (wrapper.getArtefact() instanceof Extension) {
 			extension = (Extension) wrapper.getArtefact();
 		} else {
-			throw new UnsupportedOperationException(String.format("Trying to process %s as Extension", wrapper.getArtefact().getClass()));
+			throw new UnsupportedOperationException(String.format("Trying to process %s as Extension", wrapper	.getArtefact()
+																												.getClass()));
 		}
 
 		switch (flow) {

@@ -126,7 +126,8 @@ public class DirigibleModuleESMProxyGenerator {
 		String api = module.getApi();
 		String dir = resolvePath(module, apiVersion);
 
-		sourceBuilder.append(EXPORT_PATTERN.replace(NAME_PLACEHOLDER, api).replace(PATH_PLACEHOLDER, dir));
+		sourceBuilder.append(EXPORT_PATTERN	.replace(NAME_PLACEHOLDER, api)
+											.replace(PATH_PLACEHOLDER, dir));
 		sourceBuilder.append(System.lineSeparator());
 		moduleNames.append(api);
 		moduleNames.append(',');
@@ -171,8 +172,9 @@ public class DirigibleModuleESMProxyGenerator {
 			return module.getPathDefault();
 		}
 
-		List<String> foundPaths =
-				Arrays.stream(module.getVersionedPaths()).filter(p -> p.contains(apiVersion)).collect(Collectors.toList());
+		List<String> foundPaths = Arrays.stream(module.getVersionedPaths())
+										.filter(p -> p.contains(apiVersion))
+										.collect(Collectors.toList());
 
 		if (foundPaths.size() != 1) {
 			StringBuilder message = new StringBuilder();

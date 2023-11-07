@@ -141,7 +141,10 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		StringBuilder snippet = new StringBuilder();
 		snippet.append(table);
 		if (alias != null) {
-			snippet.append(SPACE).append(KEYWORD_AS).append(SPACE).append(alias);
+			snippet	.append(SPACE)
+					.append(KEYWORD_AS)
+					.append(SPACE)
+					.append(alias);
 		}
 		this.tables.add(snippet.toString());
 		return this;
@@ -354,15 +357,31 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		String schemaName = (isCaseSensitive()) ? encapsulate(schema, true) : schema;
 		String tableName = (isCaseSensitive()) ? encapsulate(table, true) : table;
 		if (schema != null) {
-			snippet.append(type).append(SPACE).append(KEYWORD_JOIN).append(SPACE).append(schemaName).append(DOT).append(tableName);
+			snippet	.append(type)
+					.append(SPACE)
+					.append(KEYWORD_JOIN)
+					.append(SPACE)
+					.append(schemaName)
+					.append(DOT)
+					.append(tableName);
 		} else {
-			snippet.append(type).append(SPACE).append(KEYWORD_JOIN).append(SPACE).append(tableName);
+			snippet	.append(type)
+					.append(SPACE)
+					.append(KEYWORD_JOIN)
+					.append(SPACE)
+					.append(tableName);
 		}
 		if (alias != null) {
 			String aliasName = (isCaseSensitive()) ? encapsulate(alias) : alias;
-			snippet.append(SPACE).append(KEYWORD_AS).append(SPACE).append(aliasName);
+			snippet	.append(SPACE)
+					.append(KEYWORD_AS)
+					.append(SPACE)
+					.append(aliasName);
 		}
-		snippet.append(SPACE).append(KEYWORD_ON).append(SPACE).append(on);
+		snippet	.append(SPACE)
+				.append(KEYWORD_ON)
+				.append(SPACE)
+				.append(on);
 		this.joins.add(snippet.toString());
 		return this;
 	}
@@ -578,7 +597,10 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	 */
 	protected void generateUnion(StringBuilder sql) {
 		if (!unions.isEmpty()) {
-			sql.append(SPACE).append(KEYWORD_UNION).append(SPACE).append(traverseUnions());
+			sql	.append(SPACE)
+				.append(KEYWORD_UNION)
+				.append(SPACE)
+				.append(traverseUnions());
 		}
 	}
 
@@ -589,7 +611,10 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	 */
 	protected void generateHaving(StringBuilder sql) {
 		if (having != null) {
-			sql.append(SPACE).append(KEYWORD_HAVING).append(SPACE).append(this.having);
+			sql	.append(SPACE)
+				.append(KEYWORD_HAVING)
+				.append(SPACE)
+				.append(this.having);
 		}
 	}
 
@@ -600,7 +625,10 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	 */
 	protected void generateGroupBy(StringBuilder sql) {
 		if (!groups.isEmpty()) {
-			sql.append(SPACE).append(KEYWORD_GROUP_BY).append(SPACE).append(traverseGroups());
+			sql	.append(SPACE)
+				.append(KEYWORD_GROUP_BY)
+				.append(SPACE)
+				.append(traverseGroups());
 		}
 	}
 
@@ -611,7 +639,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	 */
 	protected void generateJoins(StringBuilder sql) {
 		if (!joins.isEmpty()) {
-			sql.append(SPACE).append(traverseJoins());
+			sql	.append(SPACE)
+				.append(traverseJoins());
 		}
 	}
 
@@ -621,7 +650,10 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	 * @param sql the sql
 	 */
 	protected void generateTables(StringBuilder sql) {
-		sql.append(SPACE).append(KEYWORD_FROM).append(SPACE).append(traverseTables());
+		sql	.append(SPACE)
+			.append(KEYWORD_FROM)
+			.append(SPACE)
+			.append(traverseTables());
 	}
 
 	/**
@@ -630,7 +662,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	 * @param sql the sql
 	 */
 	protected void generateColumns(StringBuilder sql) {
-		sql.append(SPACE).append(traverseColumns());
+		sql	.append(SPACE)
+			.append(traverseColumns());
 	}
 
 	/**
@@ -640,7 +673,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	 */
 	protected void generateDistinct(StringBuilder sql) {
 		if (distinct) {
-			sql.append(SPACE).append(KEYWORD_DISTINCT);
+			sql	.append(SPACE)
+				.append(KEYWORD_DISTINCT);
 		}
 	}
 
@@ -651,7 +685,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	 */
 	protected void generateForUpdate(StringBuilder sql) {
 		if (forUpdate) {
-			sql.append(SPACE).append(KEYWORD_FOR_UPDATE);
+			sql	.append(SPACE)
+				.append(KEYWORD_FOR_UPDATE);
 		}
 	}
 
@@ -665,9 +700,12 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 			StringBuilder snippet = new StringBuilder();
 			for (String column : this.columns) {
 				String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
-				snippet.append(columnName).append(COMMA).append(SPACE);
+				snippet	.append(columnName)
+						.append(COMMA)
+						.append(SPACE);
 			}
-			return snippet.toString().substring(0, snippet.length() - 2);
+			return snippet	.toString()
+							.substring(0, snippet.length() - 2);
 		}
 		return STAR;
 	}
@@ -683,12 +721,19 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 			String schemaName = (isCaseSensitive()) ? encapsulate(schema, true) : schema;
 			String tableName = (isCaseSensitive()) ? encapsulate(table, true) : table;
 			if (schema != null) {
-				snippet.append(schemaName).append(DOT).append(tableName).append(COMMA).append(SPACE);
+				snippet	.append(schemaName)
+						.append(DOT)
+						.append(tableName)
+						.append(COMMA)
+						.append(SPACE);
 			} else {
-				snippet.append(tableName).append(COMMA).append(SPACE);
+				snippet	.append(tableName)
+						.append(COMMA)
+						.append(SPACE);
 			}
 		}
-		return snippet.toString().substring(0, snippet.length() - 2);
+		return snippet	.toString()
+						.substring(0, snippet.length() - 2);
 	}
 
 	/**
@@ -699,9 +744,12 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	protected String traverseJoins() {
 		StringBuilder snippet = new StringBuilder();
 		for (String join : this.joins) {
-			snippet.append(join).append(COMMA).append(SPACE);
+			snippet	.append(join)
+					.append(COMMA)
+					.append(SPACE);
 		}
-		return snippet.toString().substring(0, snippet.length() - 2);
+		return snippet	.toString()
+						.substring(0, snippet.length() - 2);
 	}
 
 	/**
@@ -713,9 +761,12 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		StringBuilder snippet = new StringBuilder();
 		for (String group : this.groups) {
 			String groupName = (isCaseSensitive()) ? encapsulate(group) : group;
-			snippet.append(groupName).append(COMMA).append(SPACE);
+			snippet	.append(groupName)
+					.append(COMMA)
+					.append(SPACE);
 		}
-		return snippet.toString().substring(0, snippet.length() - 2);
+		return snippet	.toString()
+						.substring(0, snippet.length() - 2);
 	}
 
 	/**
@@ -727,9 +778,11 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		StringBuilder snippet = new StringBuilder();
 		for (String union : this.unions) {
 			String unionName = (isCaseSensitive()) ? encapsulate(union) : union;
-			snippet.append(unionName).append(SPACE);
+			snippet	.append(unionName)
+					.append(SPACE);
 		}
-		return snippet.toString().substring(0, snippet.length() - 1);
+		return snippet	.toString()
+						.substring(0, snippet.length() - 1);
 	}
 
 	/**

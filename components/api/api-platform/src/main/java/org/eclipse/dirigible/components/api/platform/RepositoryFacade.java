@@ -79,7 +79,9 @@ public class RepositoryFacade implements InitializingBean {
 	 * @return the resource
 	 */
 	public static IResource getResource(String path) {
-		return RepositoryFacade.get().getRepository().getResource(path);
+		return RepositoryFacade	.get()
+								.getRepository()
+								.getResource(path);
 	}
 
 	/**
@@ -105,7 +107,9 @@ public class RepositoryFacade implements InitializingBean {
 	 * @return the resource
 	 */
 	public static IResource createResourceNative(String path, byte[] content, String contentType) {
-		return RepositoryFacade.get().getRepository().createResource(path, content, ContentTypeHelper.isBinary(contentType), contentType);
+		return RepositoryFacade	.get()
+								.getRepository()
+								.createResource(path, content, ContentTypeHelper.isBinary(contentType), contentType);
 	}
 
 	/**
@@ -116,7 +120,9 @@ public class RepositoryFacade implements InitializingBean {
 	 * @return the resource
 	 */
 	public static IResource updateResource(String path, String content) {
-		IResource resource = RepositoryFacade.get().getRepository().getResource(path);
+		IResource resource = RepositoryFacade	.get()
+												.getRepository()
+												.getResource(path);
 		resource.setContent(content.getBytes());
 		return resource;
 	}
@@ -138,7 +144,10 @@ public class RepositoryFacade implements InitializingBean {
 	 * @param path the path
 	 */
 	public static void deleteResource(String path) {
-		RepositoryFacade.get().getRepository().getResource(path).delete();
+		RepositoryFacade.get()
+						.getRepository()
+						.getResource(path)
+						.delete();
 	}
 
 	/**
@@ -148,7 +157,9 @@ public class RepositoryFacade implements InitializingBean {
 	 * @return the collection
 	 */
 	public static ICollection getCollection(String path) {
-		return RepositoryFacade.get().getRepository().getCollection(path);
+		return RepositoryFacade	.get()
+								.getRepository()
+								.getCollection(path);
 	}
 
 	/**
@@ -158,7 +169,9 @@ public class RepositoryFacade implements InitializingBean {
 	 * @return the collection
 	 */
 	public static ICollection createCollection(String path) {
-		return RepositoryFacade.get().getRepository().createCollection(path);
+		return RepositoryFacade	.get()
+								.getRepository()
+								.createCollection(path);
 	}
 
 	/**
@@ -167,7 +180,10 @@ public class RepositoryFacade implements InitializingBean {
 	 * @param path the path
 	 */
 	public static void deleteCollection(String path) {
-		RepositoryFacade.get().getRepository().getCollection(path).delete();
+		RepositoryFacade.get()
+						.getRepository()
+						.getCollection(path)
+						.delete();
 	}
 
 	/**
@@ -179,6 +195,8 @@ public class RepositoryFacade implements InitializingBean {
 	 * @throws IOException in case of an error
 	 */
 	public static String find(String path, String pattern) throws IOException {
-		return GsonHelper.toJson(RepositoryFacade.get().getRepository().find(path, pattern));
+		return GsonHelper.toJson(RepositoryFacade	.get()
+													.getRepository()
+													.find(path, pattern));
 	}
 }

@@ -184,7 +184,8 @@ public class JobEmailProcessor {
 		if (emailRecipientsLine != null) {
 			emailRecipients = emailRecipientsLine.split(",");
 			for (String maybe : emailRecipients) {
-				if (!EmailValidator.getInstance().isValid(maybe)) {
+				if (!EmailValidator	.getInstance()
+									.isValid(maybe)) {
 					emailRecipients = null;
 					if (logger.isWarnEnabled()) {
 						logger.warn(DIRIGIBLE_SCHEDULER_EMAIL_RECIPIENTS + " contains invalid e-mail address: " + maybe);
@@ -253,7 +254,9 @@ public class JobEmailProcessor {
 	public void sendEmail(Job job, String emailSubject, String emailContent) {
 		try {
 			List<JobEmail> emailArtefacts = jobEmailService.findAllByJobName(job.getName());
-			String[] emails = emailArtefacts.stream().map(JobEmail::getEmail).toArray(String[]::new);
+			String[] emails = emailArtefacts.stream()
+											.map(JobEmail::getEmail)
+											.toArray(String[]::new);
 
 			if (emailSender != null && ((emailRecipients != null && emailRecipients.length > 0) || emails.length > 0)) {
 

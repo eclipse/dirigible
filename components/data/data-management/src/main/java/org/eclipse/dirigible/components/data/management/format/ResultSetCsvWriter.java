@@ -110,7 +110,10 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 			}
 		}
 
-		CSVFormat csvFormat = CSVFormat.DEFAULT.builder().setHeader(names.stream().toArray(String[]::new)).build();
+		CSVFormat csvFormat = CSVFormat.DEFAULT	.builder()
+												.setHeader(names.stream()
+																.toArray(String[]::new))
+												.build();
 		try {
 			try (final CSVPrinter printer = new CSVPrinter(sw, csvFormat)) {
 				count = 0;
@@ -129,7 +132,8 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 								if (stringify) {
 									value = "[BLOB]";
 								} else {
-									value = Base64.getEncoder().encodeToString(ba);
+									value = Base64	.getEncoder()
+													.encodeToString(ba);
 								}
 							}
 						} else if (dbt == Types.CLOB || dbt == Types.LONGVARCHAR) {
@@ -141,7 +145,8 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 								if (stringify) {
 									value = "[CLOB]";
 								} else {
-									value = Base64.getEncoder().encodeToString(ba);
+									value = Base64	.getEncoder()
+													.encodeToString(ba);
 								}
 							}
 						} else if (dbt == Types.OTHER) {

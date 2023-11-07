@@ -73,7 +73,9 @@ public class ListenerEndpointTest {
 
 	@Test
 	public void findAllExtensionPoints() throws Exception {
-		mockMvc.perform(get("/services/listeners")).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/listeners"))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 		// .andExpect(jsonPath("$.content[0].location").value("/a/b/c/l1.listener"));
 	}
 

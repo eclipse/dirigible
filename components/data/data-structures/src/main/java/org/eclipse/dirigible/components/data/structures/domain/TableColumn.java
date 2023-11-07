@@ -111,7 +111,8 @@ public class TableColumn {
 		this.scale = scale;
 		this.unique = unique;
 		this.table = table;
-		this.table.getColumns().add(this);
+		this.table	.getColumns()
+					.add(this);
 	}
 
 	/**

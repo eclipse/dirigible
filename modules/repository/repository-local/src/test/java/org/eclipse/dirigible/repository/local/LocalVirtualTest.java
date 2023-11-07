@@ -58,15 +58,19 @@ public class LocalVirtualTest {
 		try {
 			String content = "test1";
 
-			Files.createDirectories(Paths.get("target/linked/b").toAbsolutePath());
-			Files.createFile(Paths.get("target/linked/b/testB.txt").toAbsolutePath());
+			Files.createDirectories(Paths	.get("target/linked/b")
+											.toAbsolutePath());
+			Files.createFile(Paths	.get("target/linked/b/testB.txt")
+									.toAbsolutePath());
 
 			resourceA = repository.createResource("/a/testA.txt", content.getBytes(), false, //$NON-NLS-1$
 					"text/plain"); //$NON-NLS-1$
 			assertNotNull(resourceA);
 			assertTrue(resourceA.exists());
 
-			repository.linkPath("/a/b", Paths.get("target/linked/b").toAbsolutePath().toString());
+			repository.linkPath("/a/b", Paths	.get("target/linked/b")
+												.toAbsolutePath()
+												.toString());
 
 
 			resourceB = repository.getResource("/a/b/testB.txt"); //$NON-NLS-1$
@@ -91,7 +95,8 @@ public class LocalVirtualTest {
 					assertFalse(resourceB.exists());
 				}
 				repository.removeCollection("/a"); //$NON-NLS-1$
-				FileUtils.deleteDirectory(Paths.get("target/linked").toFile());
+				FileUtils.deleteDirectory(Paths	.get("target/linked")
+												.toFile());
 			} catch (Exception e) {
 				e.printStackTrace();
 				fail(e.getMessage());

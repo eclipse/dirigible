@@ -182,16 +182,19 @@ public class WorkspaceService {
 	 * @return the string builder
 	 */
 	private StringBuilder generateWorkspacePath(String workspace, String project, String path) {
-		StringBuilder relativePath =
-				new StringBuilder(IRepositoryStructure.PATH_USERS).append(IRepositoryStructure.SEPARATOR).append(UserFacade.getName());
+		StringBuilder relativePath = new StringBuilder(IRepositoryStructure.PATH_USERS)	.append(IRepositoryStructure.SEPARATOR)
+																						.append(UserFacade.getName());
 		if (workspace != null) {
-			relativePath.append(IRepositoryStructure.SEPARATOR).append(workspace);
+			relativePath.append(IRepositoryStructure.SEPARATOR)
+						.append(workspace);
 		}
 		if (project != null) {
-			relativePath.append(IRepositoryStructure.SEPARATOR).append(project);
+			relativePath.append(IRepositoryStructure.SEPARATOR)
+						.append(project);
 		}
 		if (path != null) {
-			relativePath.append(IRepositoryStructure.SEPARATOR).append(path);
+			relativePath.append(IRepositoryStructure.SEPARATOR)
+						.append(path);
 		}
 		return relativePath;
 	}
@@ -260,7 +263,8 @@ public class WorkspaceService {
 
 		Workspace workspaceObject = getWorkspace(workspace);
 		Project workspaceProject = workspaceObject.getProject(project);
-		String repositoryRootFolder = workspaceObject.getRepository().getParameter("REPOSITORY_ROOT_FOLDER");
+		String repositoryRootFolder = workspaceObject	.getRepository()
+														.getParameter("REPOSITORY_ROOT_FOLDER");
 
 		java.io.File projectFile = null;
 		if (isGitProject && repositoryRootFolder != null && workspaceProject.exists()) {
@@ -410,7 +414,8 @@ public class WorkspaceService {
 		Workspace workspaceObject = getWorkspace(workspace);
 		Project projectObject = workspaceObject.getProject(project);
 		File fileObject = projectObject.getFile(path);
-		fileObject.getInternal().setContent(content);
+		fileObject	.getInternal()
+					.setContent(content);
 		triggerOnSaveExtensions(workspace, project, path);
 		return fileObject;
 	}
@@ -438,12 +443,15 @@ public class WorkspaceService {
 	 * @throws URISyntaxException the URI syntax exception
 	 */
 	public URI getURI(String workspace, String project, String path) throws URISyntaxException {
-		StringBuilder relativePath = new StringBuilder(WORKSPACES_SERVICE_PREFIX).append(IRepositoryStructure.SEPARATOR).append(workspace);
+		StringBuilder relativePath = new StringBuilder(WORKSPACES_SERVICE_PREFIX)	.append(IRepositoryStructure.SEPARATOR)
+																					.append(workspace);
 		if (project != null) {
-			relativePath.append(IRepositoryStructure.SEPARATOR).append(project);
+			relativePath.append(IRepositoryStructure.SEPARATOR)
+						.append(project);
 		}
 		if (path != null) {
-			relativePath.append(IRepositoryStructure.SEPARATOR).append(path);
+			relativePath.append(IRepositoryStructure.SEPARATOR)
+						.append(path);
 		}
 		return new URI(UrlFacade.escape(relativePath.toString()));
 	}
@@ -536,12 +544,16 @@ public class WorkspaceService {
 			Project targetProjectObject = createProject(targetWorkspace, targetProject);
 			List<Pair<String, String>> allFilesFolders = getAllFilesFolders(sourceProjectObject, false);
 			for (Pair<String, String> path : allFilesFolders) {
-				if (path.getKey().equals("file")) {
-					String filePath = path.getValue().replace(basePath, "");
+				if (path.getKey()
+						.equals("file")) {
+					String filePath = path	.getValue()
+											.replace(basePath, "");
 					File sourceFile = sourceProjectObject.getFile(filePath);
 					targetProjectObject.createFile(filePath, sourceFile.getContent(), sourceFile.isBinary(), sourceFile.getContentType());
 				} else {
-					targetProjectObject.createFolder(path.getValue().replace(basePath + IRepository.SEPARATOR, "") + IRepository.SEPARATOR);
+					targetProjectObject.createFolder(path	.getValue()
+															.replace(basePath + IRepository.SEPARATOR, "")
+							+ IRepository.SEPARATOR);
 				}
 			}
 		}
@@ -583,14 +595,18 @@ public class WorkspaceService {
 			List<Pair<String, String>> allFilesFolders = getAllFilesFolders(baseFolder, false);
 			targetProjectObject.createFolder(targetFolderPath + IRepository.SEPARATOR);
 			for (Pair<String, String> path : allFilesFolders) {
-				if (path.getKey().equals("file")) {
-					String filePath = path.getValue().replace(basePath, "");
+				if (path.getKey()
+						.equals("file")) {
+					String filePath = path	.getValue()
+											.replace(basePath, "");
 					File sourceFile = baseFolder.getFile(filePath);
 					targetProjectObject.createFile(targetFolderPath + filePath, sourceFile.getContent(), sourceFile.isBinary(),
 							sourceFile.getContentType());
 				} else {
-					targetProjectObject.createFolder(targetFolderPath + IRepository.SEPARATOR
-							+ path.getValue().replace(basePath + IRepository.SEPARATOR, "") + IRepository.SEPARATOR);
+					targetProjectObject.createFolder(targetFolderPath + IRepository.SEPARATOR + path.getValue()
+																									.replace(basePath
+																											+ IRepository.SEPARATOR, "")
+							+ IRepository.SEPARATOR);
 				}
 			}
 		}
@@ -615,7 +631,8 @@ public class WorkspaceService {
 		} else { // This is a temporary workaround
 			Workspace sourceWorkspaceObject = getWorkspace(sourceWorkspace);
 			Workspace targetWorkspaceObject = getWorkspace(targetWorkspace);
-			File sourceFile = sourceWorkspaceObject.getProject(sourceProject).getFile(sourceFilePath);
+			File sourceFile = sourceWorkspaceObject	.getProject(sourceProject)
+													.getFile(sourceFilePath);
 			String baseTargetPath = "";
 			if (targetFilePath.endsWith(IRepository.SEPARATOR)) {
 				baseTargetPath = targetFilePath;

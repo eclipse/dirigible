@@ -64,7 +64,8 @@ public interface IRepository extends IRepositoryReader, IRepositoryWriter, IRepo
 	 * @return the internal resource path
 	 */
 	default String getInternalResourcePath(String resourcePath) {
-		throw new RepositoryException("Operation not supported for repository type: " + this.getClass().getName());
+		throw new RepositoryException("Operation not supported for repository type: " + this.getClass()
+																							.getName());
 	}
 
 	/**
@@ -73,6 +74,7 @@ public interface IRepository extends IRepositoryReader, IRepositoryWriter, IRepo
 	 * @return the repository path
 	 */
 	default String getRepositoryPath() {
-		throw new RepositoryException("Operation not supported for repository type: " + this.getClass().getName());
+		throw new RepositoryException("Operation not supported for repository type: " + this.getClass()
+																							.getName());
 	}
 }

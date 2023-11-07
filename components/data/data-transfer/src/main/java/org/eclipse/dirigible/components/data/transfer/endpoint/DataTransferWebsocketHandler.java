@@ -81,7 +81,8 @@ public class DataTransferWebsocketHandler extends TextWebSocketHandler {
 			logger.debug(String.format("[ws:ws:transfer] Session %s received message: %s.", session.getId(), message));
 		}
 		DataTransferCallbackHandler maybeHandler = HANDLERS.get(session.getId());
-		if (message != null && message.getPayload().startsWith("{")) {
+		if (message != null && message	.getPayload()
+										.startsWith("{")) {
 			// start
 
 			if (maybeHandler != null) {
@@ -114,15 +115,16 @@ public class DataTransferWebsocketHandler extends TextWebSocketHandler {
 
 				new Thread(new Runnable() {
 					public void run() {
-						reader.lines().forEach(line -> {
-							try {
-								session.sendMessage(new TextMessage(line));
-							} catch (IOException e) {
-								if (logger.isErrorEnabled()) {
-									logger.error(e.getMessage(), e);
-								}
-							}
-						});
+						reader	.lines()
+								.forEach(line -> {
+									try {
+										session.sendMessage(new TextMessage(line));
+									} catch (IOException e) {
+										if (logger.isErrorEnabled()) {
+											logger.error(e.getMessage(), e);
+										}
+									}
+								});
 					}
 				}).start();
 

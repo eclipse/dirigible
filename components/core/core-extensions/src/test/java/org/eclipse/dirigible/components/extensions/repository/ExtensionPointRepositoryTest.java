@@ -63,7 +63,9 @@ public class ExtensionPointRepositoryTest {
 
 	@Test
 	public void getOne() {
-		Long id = extensionPointRepository.findAll().get(0).getId();
+		Long id = extensionPointRepository	.findAll()
+											.get(0)
+											.getId();
 		Optional<ExtensionPoint> optional = extensionPointRepository.findById(id);
 		ExtensionPoint extensionPoint = optional.isPresent() ? optional.get() : null;
 		assertNotNull(extensionPoint);
@@ -76,7 +78,9 @@ public class ExtensionPointRepositoryTest {
 
 	@Test
 	public void getReferenceUsingEntityManager() {
-		Long id = extensionPointRepository.findAll().get(0).getId();
+		Long id = extensionPointRepository	.findAll()
+											.get(0)
+											.getId();
 		ExtensionPoint extensionPoint = entityManager.getReference(ExtensionPoint.class, id);
 		assertNotNull(extensionPoint);
 		assertNotNull(extensionPoint.getLocation());

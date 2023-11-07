@@ -63,7 +63,8 @@ public class WebsocketRepositoryTest {
 	public void getOne() {
 		List<Websocket> all = websocketRepository.findAll();
 		assertEquals(3, all.size());
-		Long id = all.get(0).getId();
+		Long id = all	.get(0)
+						.getId();
 		Optional<Websocket> optional = websocketRepository.findById(id);
 		Websocket websocket = optional.isPresent() ? optional.get() : null;
 		assertNotNull(websocket);
@@ -80,7 +81,9 @@ public class WebsocketRepositoryTest {
 
 	@Test
 	public void getReferenceUsingEntityManager() {
-		Long id = websocketRepository.findAll().get(0).getId();
+		Long id = websocketRepository	.findAll()
+										.get(0)
+										.getId();
 		Websocket websocket = entityManager.getReference(Websocket.class, id);
 		assertNotNull(websocket);
 		assertEquals("/a/b/c/w1.websocket", websocket.getLocation());

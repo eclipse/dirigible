@@ -218,7 +218,8 @@ public class DataSource extends Artefact {
 	 */
 	public DataSourceProperty getProperty(String name) {
 		for (DataSourceProperty p : properties) {
-			if (p.getName().equals(name)) {
+			if (p	.getName()
+					.equals(name)) {
 				return p;
 			}
 		}

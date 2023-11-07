@@ -59,7 +59,9 @@ public class FilesFacade {
 	 */
 	public static final boolean exists(String path) throws IOException {
 		// return Files.exists(Paths.get(path));
-		return Paths.get(path).toFile().exists();
+		return Paths.get(path)
+					.toFile()
+					.exists();
 	}
 
 	/**
@@ -170,7 +172,8 @@ public class FilesFacade {
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final String getParentPath(String path) throws IOException {
-		return new File(path).getParentFile().getPath(); // FIXME may throw NPE
+		return new File(path)	.getParentFile()
+								.getPath(); // FIXME may throw NPE
 	}
 
 	/**
@@ -240,7 +243,8 @@ public class FilesFacade {
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final long getLastModified(String path) throws IOException {
-		return Files.getLastModifiedTime(Paths.get(path)).toMillis();
+		return Files.getLastModifiedTime(Paths.get(path))
+					.toMillis();
 	}
 
 	/**
@@ -273,7 +277,8 @@ public class FilesFacade {
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final String getOwner(String path) throws IOException {
-		return Files.getOwner(Paths.get(path)).getName();
+		return Files.getOwner(Paths.get(path))
+					.getName();
 	}
 
 	/**
@@ -284,7 +289,10 @@ public class FilesFacade {
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final void setOwner(String path, String owner) throws IOException {
-		UserPrincipal userPrincipal = Paths.get(path).getFileSystem().getUserPrincipalLookupService().lookupPrincipalByName(owner);
+		UserPrincipal userPrincipal = Paths	.get(path)
+											.getFileSystem()
+											.getUserPrincipalLookupService()
+											.lookupPrincipalByName(owner);
 		Files.setOwner(Paths.get(path), userPrincipal);
 	}
 
@@ -415,7 +423,8 @@ public class FilesFacade {
 				public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
 
 					// if (Files.exists(dir)) {
-					if (dir.toFile().exists()) {
+					if (dir	.toFile()
+							.exists()) {
 						if (logger.isTraceEnabled()) {
 							logger.trace(String.format("Deleting directory: %s", dir));
 						}
@@ -438,7 +447,8 @@ public class FilesFacade {
 				@Override
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 					// if (Files.exists(file)) {
-					if (file.toFile().exists()) {
+					if (file.toFile()
+							.exists()) {
 						if (logger.isTraceEnabled()) {
 							logger.trace(String.format("Deleting file: %s", file));
 						}
@@ -475,7 +485,8 @@ public class FilesFacade {
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final String createTempFile(String prefix, String suffix) throws IOException {
-		return Files.createTempFile(prefix, suffix).toString();
+		return Files.createTempFile(prefix, suffix)
+					.toString();
 	}
 
 	/**
@@ -486,7 +497,8 @@ public class FilesFacade {
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final String createTempDirectory(String prefix) throws IOException {
-		return Files.createTempDirectory(prefix).toString();
+		return Files.createTempDirectory(prefix)
+					.toString();
 	}
 
 
@@ -531,10 +543,14 @@ public class FilesFacade {
 			@Override
 			public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) throws IOException {
 				if (!map.containsKey(dir)) {
-					currentFolder = new FolderObject(dir.getFileName().toString(), dir.toString(), "folder");
+					currentFolder = new FolderObject(dir.getFileName()
+														.toString(),
+							dir.toString(), "folder");
 					map.put(dir, currentFolder);
 					if (map.containsKey(dir.getParent())) {
-						map.get(dir.getParent()).getFolders().add(currentFolder);
+						map	.get(dir.getParent())
+							.getFolders()
+							.add(currentFolder);
 					}
 				}
 				if (root.isEmpty()) {
@@ -545,13 +561,17 @@ public class FilesFacade {
 
 			@Override
 			public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
-				FileObject fileObject = new FileObject(file.getFileName().toString(), file.toString(), "file");
-				currentFolder.getFiles().add(fileObject);
+				FileObject fileObject = new FileObject(file	.getFileName()
+															.toString(),
+						file.toString(), "file");
+				currentFolder	.getFiles()
+								.add(fileObject);
 				return FileVisitResult.CONTINUE;
 			}
 		});
 
-		return GsonHelper.toJson(root.iterator().next());
+		return GsonHelper.toJson(root	.iterator()
+										.next());
 	}
 
 	/**

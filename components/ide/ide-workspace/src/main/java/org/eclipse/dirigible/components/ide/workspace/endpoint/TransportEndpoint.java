@@ -119,7 +119,8 @@ public class TransportEndpoint {
 		} else {
 			transportService.importProjectInPath(path, is);
 		}
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -140,7 +141,9 @@ public class TransportEndpoint {
 			@Validated @RequestParam("file") MultipartFile file) throws RepositoryExportException, DecoderException, IOException {
 
 		String relativePath;
-		if (folder == null || folder.isEmpty() || folder.trim().isEmpty() || folder.equals("/"))
+		if (folder == null || folder.isEmpty() || folder.trim()
+														.isEmpty()
+				|| folder.equals("/"))
 			relativePath = "";
 		else {
 			UrlFacade decodedFolder = new UrlFacade();
@@ -148,7 +151,8 @@ public class TransportEndpoint {
 		}
 
 		transportService.importZipToPath(workspace, project, relativePath, file.getBytes(), true);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -176,7 +180,9 @@ public class TransportEndpoint {
 			httpHeaders.setContentDisposition(
 					ContentDisposition.parse("attachment; filename=\"" + workspace + "-" + pattern.format(new Date()) + ".zip\""));
 			return new ResponseEntity(zip, httpHeaders, HttpStatus.OK);
-		} else if (folder == null || folder.isEmpty() || folder.trim().isEmpty() || folder.equals("/"))
+		} else if (folder == null || folder.isEmpty() || folder	.trim()
+																.isEmpty()
+				|| folder.equals("/"))
 			zip = transportService.exportProject(workspace, project);
 		else
 			zip = transportService.exportFolder(workspace, project, folder);
@@ -200,7 +206,8 @@ public class TransportEndpoint {
 			throws RepositoryImportException, IOException {
 
 		transportService.importSnapshot(file.getBytes());
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -238,7 +245,9 @@ public class TransportEndpoint {
 			@Validated @RequestParam("file") MultipartFile file) throws RepositoryExportException, DecoderException, IOException {
 
 		String relativePath;
-		if (folder == null || folder.isEmpty() || folder.trim().isEmpty() || folder.equals("/"))
+		if (folder == null || folder.isEmpty() || folder.trim()
+														.isEmpty()
+				|| folder.equals("/"))
 			relativePath = "";
 		else {
 			UrlFacade decodedFolder = new UrlFacade();
@@ -248,7 +257,8 @@ public class TransportEndpoint {
 		InputStream in = file.getInputStream();
 		byte[] bytes = IOUtils.toByteArray(in);
 		transportService.importFileToPath(workspace, project, relativePath + IRepository.SEPARATOR + file.getOriginalFilename(), bytes);
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**

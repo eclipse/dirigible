@@ -61,7 +61,8 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
 
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(getFileExtension());
+		return file	.toString()
+					.endsWith(getFileExtension());
 	}
 
 	@Override
@@ -73,7 +74,9 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
 	public List<Camel> parse(String location, byte[] content) {
 		Camel camel = new Camel();
 		camel.setLocation(location);
-		camel.setName(Paths.get(location).getFileName().toString());
+		camel.setName(Paths	.get(location)
+							.getFileName()
+							.toString());
 		camel.setType(Camel.ARTEFACT_TYPE);
 		camel.updateKey();
 		camel.setContent(content);
@@ -116,7 +119,8 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
 			if (wrapper.getArtefact() instanceof Camel) {
 				camel = (Camel) wrapper.getArtefact();
 			} else {
-				throw new UnsupportedOperationException(String.format("Trying to process %s as Camel", wrapper.getArtefact().getClass()));
+				throw new UnsupportedOperationException(String.format("Trying to process %s as Camel", wrapper	.getArtefact()
+																												.getClass()));
 			}
 
 			switch (flow) {

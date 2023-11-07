@@ -117,7 +117,8 @@ public class RegistryAccessor {
 		if ((module == null) || "".equals(module.trim())) {
 			throw new RepositoryException("Module name cannot be empty or null.");
 		}
-		if (module.trim().endsWith(IRepositoryStructure.SEPARATOR)) {
+		if (module	.trim()
+					.endsWith(IRepositoryStructure.SEPARATOR)) {
 			throw new RepositoryException("Module name cannot point to a collection.");
 		}
 
@@ -230,7 +231,8 @@ public class RegistryAccessor {
 	 */
 	private String createResourcePath(String root, String module, String extension) {
 		StringBuilder buff = new StringBuilder().append(root);
-		if (!Character.toString(module.charAt(0)).equals(IRepository.SEPARATOR)) {
+		if (!Character	.toString(module.charAt(0))
+						.equals(IRepository.SEPARATOR)) {
 			buff.append(IRepository.SEPARATOR);
 		}
 		buff.append(module);

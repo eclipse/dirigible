@@ -186,14 +186,18 @@ public class BpmProviderFlowable implements BpmProvider {
 		String repositoryPath = IRepositoryStructure.PATH_REGISTRY_PUBLIC + location;
 		if (getRepository().hasResource(repositoryPath)) {
 			IResource resource = getRepository().getResource(repositoryPath);
-			deployment = repositoryService.createDeployment().addBytes(location + EXTENSION_BPMN20_XML, resource.getContent()).deploy();
+			deployment = repositoryService	.createDeployment()
+											.addBytes(location + EXTENSION_BPMN20_XML, resource.getContent())
+											.deploy();
 		} else {
 			InputStream in = BpmProviderFlowable.class.getResourceAsStream("/META-INF/dirigible" + location);
 			try {
 				if (in != null) {
 					try {
 						byte[] bytes = IOUtils.toByteArray(in);
-						deployment = repositoryService.createDeployment().addBytes(location + EXTENSION_BPMN20_XML, bytes).deploy();
+						deployment = repositoryService	.createDeployment()
+														.addBytes(location + EXTENSION_BPMN20_XML, bytes)
+														.deploy();
 					} catch (IOException e) {
 						throw new IllegalArgumentException(e);
 					}
@@ -251,7 +255,9 @@ public class BpmProviderFlowable implements BpmProvider {
 			if (logger.isErrorEnabled()) {
 				logger.error(e.getMessage(), e);
 			}
-			List<ProcessDefinition> processDefinitions = processEngine.getRepositoryService().createProcessDefinitionQuery().list();
+			List<ProcessDefinition> processDefinitions = processEngine	.getRepositoryService()
+																		.createProcessDefinitionQuery()
+																		.list();
 			logger.error("Available process definitions:");
 			for (ProcessDefinition processDefinition : processDefinitions) {
 				if (logger.isErrorEnabled()) {
@@ -278,7 +284,8 @@ public class BpmProviderFlowable implements BpmProvider {
 			logger.debug("Deleting a BPMN process instance by id: " + id);
 		}
 		try {
-			processEngine.getRuntimeService().deleteProcessInstance(id, reason);
+			processEngine	.getRuntimeService()
+							.deleteProcessInstance(id, reason);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Done deleting a BPMN process instance by id: " + id);
 			}
@@ -297,7 +304,8 @@ public class BpmProviderFlowable implements BpmProvider {
 	public String getTasks() {
 		List<TaskData> tasksData = new ArrayList<>();
 		TaskService taskService = getProcessEngine().getTaskService();
-		List<Task> tasks = taskService.createTaskQuery().list();
+		List<Task> tasks = taskService	.createTaskQuery()
+										.list();
 		for (Task task : tasks) {
 			TaskData taskData = new TaskData();
 			BeanUtils.copyProperties(task, taskData);

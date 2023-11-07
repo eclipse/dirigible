@@ -106,7 +106,9 @@ public class RepositoryZipImporter {
 					if (ifEntryIsAddedByMac(name)) {
 						continue;
 					}
-					name = Paths.get(FilenameUtils.normalize(name)).normalize().toString();
+					name = Paths.get(FilenameUtils.normalize(name))
+								.normalize()
+								.toString();
 					if (excludeRootFolderName && (parentFolder == null)) {
 						parentFolder = name;
 						if (logger.isDebugEnabled()) {
@@ -116,7 +118,9 @@ public class RepositoryZipImporter {
 					}
 
 					String entryName = getEntryName(entry, parentFolder, excludeRootFolderName);
-					entryName = Paths.get(FilenameUtils.normalize(entryName)).normalize().toString();
+					entryName = Paths	.get(FilenameUtils.normalize(entryName))
+										.normalize()
+										.toString();
 					entryName = entryName.replace('\\', '/');
 					if (logger.isDebugEnabled()) {
 						logger.debug("importZip entryName: " + entryName);
@@ -194,7 +198,9 @@ public class RepositoryZipImporter {
 	 * @return the entry name
 	 */
 	private static String getEntryName(ZipEntry entry, String parentFolder, boolean excludeParentFolder) {
-		return excludeParentFolder ? entry.getName().substring(parentFolder.length()) : entry.getName();
+		return excludeParentFolder ? entry	.getName()
+											.substring(parentFolder.length())
+				: entry.getName();
 	}
 
 	/**

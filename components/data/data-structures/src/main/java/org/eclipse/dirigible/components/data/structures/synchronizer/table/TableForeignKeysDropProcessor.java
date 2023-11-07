@@ -47,12 +47,19 @@ public class TableForeignKeysDropProcessor {
 		}
 
 		if (tableModel.getConstraints() != null) {
-			if (tableModel.getConstraints().getForeignKeys() != null && !tableModel.getConstraints().getForeignKeys().isEmpty()) {
+			if (tableModel	.getConstraints()
+							.getForeignKeys() != null
+					&& !tableModel	.getConstraints()
+									.getForeignKeys()
+									.isEmpty()) {
 				if (logger.isInfoEnabled()) {
 					logger.info("Processing Alter Table Create Foreign Keys Table: " + tableName);
 				}
-				AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection).alter().table(tableName);
-				for (TableConstraintForeignKey foreignKey : tableModel.getConstraints().getForeignKeys()) {
+				AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection)
+																.alter()
+																.table(tableName);
+				for (TableConstraintForeignKey foreignKey : tableModel	.getConstraints()
+																		.getForeignKeys()) {
 					String foreignKeyName = foreignKey.getName();
 					if (caseSensitive) {
 						foreignKeyName = "\"" + foreignKeyName + "\"";

@@ -130,7 +130,8 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 		if (name == null) {
 			return false;
 		}
-		return columnPattern.matcher(name).matches();
+		return columnPattern.matcher(name)
+							.matches();
 	}
 
 	/**
@@ -173,7 +174,8 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 		if (s == null) {
 			return false;
 		}
-		return numericPattern.matcher(s).matches();
+		return numericPattern	.matcher(s)
+								.matches();
 	}
 
 	/**

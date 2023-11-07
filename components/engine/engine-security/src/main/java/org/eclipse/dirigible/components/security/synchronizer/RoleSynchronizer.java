@@ -95,7 +95,8 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(getFileExtension());
+		return file	.toString()
+					.endsWith(getFileExtension());
 	}
 
 	/**

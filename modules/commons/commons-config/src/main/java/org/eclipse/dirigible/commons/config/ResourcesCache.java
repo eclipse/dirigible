@@ -100,7 +100,8 @@ public class ResourcesCache {
 		 * @return the string
 		 */
 		public String generateTag() {
-			return UUID.randomUUID().toString();
+			return UUID	.randomUUID()
+						.toString();
 		}
 
 		/**

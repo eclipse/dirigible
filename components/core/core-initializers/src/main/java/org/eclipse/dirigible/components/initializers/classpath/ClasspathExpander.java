@@ -69,7 +69,8 @@ public class ClasspathExpander {
 	 */
 	private void expandContent(String root) {
 		try {
-			Enumeration<URL> urls = ClasspathExpander.class.getClassLoader().getResources("META-INF");
+			Enumeration<URL> urls = ClasspathExpander.class	.getClassLoader()
+															.getResources("META-INF");
 
 			while (urls.hasMoreElements()) {
 				URL url = urls.nextElement();
@@ -78,7 +79,8 @@ public class ClasspathExpander {
 					if (urlConnection instanceof JarURLConnection) {
 						handleJarURLConnection(root, urlConnection);
 					} else {
-						Path dirPath = Path.of(url.toURI()).resolve(root);
+						Path dirPath = Path	.of(url.toURI())
+											.resolve(root);
 						handleLocalDirectory(dirPath);
 					}
 				} catch (URISyntaxException | IOException e) {
@@ -105,10 +107,12 @@ public class ClasspathExpander {
 			Enumeration<JarEntry> entries = jar.entries();
 			while (entries.hasMoreElements()) {
 				JarEntry entry = entries.nextElement();
-				if (entry.getName().startsWith(jarRoot)) {
+				if (entry	.getName()
+							.startsWith(jarRoot)) {
 					if (!entry.isDirectory()) {
 						byte[] content = IOUtils.toByteArray(jar.getInputStream(entry));
-						String registryPath = entry.getName().substring(jarRoot.length());
+						String registryPath = entry	.getName()
+													.substring(jarRoot.length());
 						repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepository.SEPARATOR + registryPath,
 								content);
 					}

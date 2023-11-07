@@ -68,11 +68,14 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	public ODataResponse beforeCreateEntity(PostUriInfo uriInfo, String requestContentType, String contentType, ODataEntry entry,
 			Map<Object, Object> context) throws ODataException {
 		try {
-			String namespace = uriInfo.getTargetType().getNamespace();
-			String name = uriInfo.getTargetType().getName();
+			String namespace = uriInfo	.getTargetType()
+										.getNamespace();
+			String name = uriInfo	.getTargetType()
+									.getName();
 			String method = ODataHandlerMethods.create.name();
 			String type = ODataHandlerTypes.before.name();
-			List<ODataHandler> handlers = ODataHandlerService.get().getByNamespaceNameMethodAndKind(namespace, name, method, type);
+			List<ODataHandler> handlers = ODataHandlerService	.get()
+																.getByNamespaceNameMethodAndKind(namespace, name, method, type);
 			context.put("uriInfo", uriInfo);
 			context.put("requestContentType", requestContentType);
 			context.put("contentType", contentType);
@@ -103,11 +106,14 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	public ODataResponse afterCreateEntity(PostUriInfo uriInfo, String requestContentType, String contentType, ODataEntry entry,
 			Map<Object, Object> context) throws ODataException {
 		try {
-			String namespace = uriInfo.getTargetType().getNamespace();
-			String name = uriInfo.getTargetType().getName();
+			String namespace = uriInfo	.getTargetType()
+										.getNamespace();
+			String name = uriInfo	.getTargetType()
+									.getName();
 			String method = ODataHandlerMethods.create.name();
 			String type = ODataHandlerTypes.after.name();
-			List<ODataHandler> handlers = ODataHandlerService.get().getByNamespaceNameMethodAndKind(namespace, name, method, type);
+			List<ODataHandler> handlers = ODataHandlerService	.get()
+																.getByNamespaceNameMethodAndKind(namespace, name, method, type);
 			context.put("uriInfo", uriInfo);
 			context.put("requestContentType", requestContentType);
 			context.put("contentType", contentType);
@@ -164,11 +170,14 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	public ODataResponse onCreateEntity(PostUriInfo uriInfo, InputStream content, String requestContentType, String contentType,
 			Map<Object, Object> context) throws ODataException {
 		try {
-			String namespace = uriInfo.getTargetType().getNamespace();
-			String name = uriInfo.getTargetType().getName();
+			String namespace = uriInfo	.getTargetType()
+										.getNamespace();
+			String name = uriInfo	.getTargetType()
+									.getName();
 			String method = ODataHandlerMethods.create.name();
 			String type = ODataHandlerTypes.on.name();
-			List<ODataHandler> handlers = ODataHandlerService.get().getByNamespaceNameMethodAndKind(namespace, name, method, type);
+			List<ODataHandler> handlers = ODataHandlerService	.get()
+																.getByNamespaceNameMethodAndKind(namespace, name, method, type);
 			context.put("uriInfo", uriInfo);
 			context.put("requestContentType", requestContentType);
 			context.put("contentType", contentType);
@@ -197,11 +206,14 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	@Override
 	public boolean forbidCreateEntity(PostUriInfo uriInfo, String requestContentType, String contentType) {
 		try {
-			String namespace = uriInfo.getTargetType().getNamespace();
-			String name = uriInfo.getTargetType().getName();
+			String namespace = uriInfo	.getTargetType()
+										.getNamespace();
+			String name = uriInfo	.getTargetType()
+									.getName();
 			String method = ODataHandlerMethods.create.name();
 			String type = ODataHandlerTypes.forbid.name();
-			List<ODataHandler> handlers = ODataHandlerService.get().getByNamespaceNameMethodAndKind(namespace, name, method, type);
+			List<ODataHandler> handlers = ODataHandlerService	.get()
+																.getByNamespaceNameMethodAndKind(namespace, name, method, type);
 			return handlers.size() > 0;
 		} catch (ODataException e) {
 			if (logger.isErrorEnabled()) {
@@ -227,11 +239,14 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	public ODataResponse beforeUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType, boolean merge, String contentType,
 			ODataEntry entry, Map<Object, Object> context) throws ODataException {
 		try {
-			String namespace = uriInfo.getTargetType().getNamespace();
-			String name = uriInfo.getTargetType().getName();
+			String namespace = uriInfo	.getTargetType()
+										.getNamespace();
+			String name = uriInfo	.getTargetType()
+									.getName();
 			String method = ODataHandlerMethods.update.name();
 			String type = ODataHandlerTypes.before.name();
-			List<ODataHandler> handlers = ODataHandlerService.get().getByNamespaceNameMethodAndKind(namespace, name, method, type);
+			List<ODataHandler> handlers = ODataHandlerService	.get()
+																.getByNamespaceNameMethodAndKind(namespace, name, method, type);
 			context.put("uriInfo", uriInfo);
 			context.put("requestContentType", requestContentType);
 			context.put("merge", merge);
@@ -264,11 +279,14 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	public ODataResponse afterUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType, boolean merge, String contentType,
 			ODataEntry entry, Map<Object, Object> context) throws ODataException {
 		try {
-			String namespace = uriInfo.getTargetType().getNamespace();
-			String name = uriInfo.getTargetType().getName();
+			String namespace = uriInfo	.getTargetType()
+										.getNamespace();
+			String name = uriInfo	.getTargetType()
+									.getName();
 			String method = ODataHandlerMethods.update.name();
 			String type = ODataHandlerTypes.after.name();
-			List<ODataHandler> handlers = ODataHandlerService.get().getByNamespaceNameMethodAndKind(namespace, name, method, type);
+			List<ODataHandler> handlers = ODataHandlerService	.get()
+																.getByNamespaceNameMethodAndKind(namespace, name, method, type);
 			context.put("uriInfo", uriInfo);
 			context.put("requestContentType", requestContentType);
 			context.put("merge", merge);
@@ -315,11 +333,14 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	public ODataResponse onUpdateEntity(PutMergePatchUriInfo uriInfo, InputStream content, String requestContentType, boolean merge,
 			String contentType, Map<Object, Object> context) throws ODataException {
 		try {
-			String namespace = uriInfo.getTargetType().getNamespace();
-			String name = uriInfo.getTargetType().getName();
+			String namespace = uriInfo	.getTargetType()
+										.getNamespace();
+			String name = uriInfo	.getTargetType()
+									.getName();
 			String method = ODataHandlerMethods.update.name();
 			String type = ODataHandlerTypes.on.name();
-			List<ODataHandler> handlers = ODataHandlerService.get().getByNamespaceNameMethodAndKind(namespace, name, method, type);
+			List<ODataHandler> handlers = ODataHandlerService	.get()
+																.getByNamespaceNameMethodAndKind(namespace, name, method, type);
 			context.put("uriInfo", uriInfo);
 			context.put("requestContentType", requestContentType);
 			context.put("merge", merge);
@@ -350,11 +371,14 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	@Override
 	public boolean forbidUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType, boolean merge, String contentType) {
 		try {
-			String namespace = uriInfo.getTargetType().getNamespace();
-			String name = uriInfo.getTargetType().getName();
+			String namespace = uriInfo	.getTargetType()
+										.getNamespace();
+			String name = uriInfo	.getTargetType()
+									.getName();
 			String method = ODataHandlerMethods.update.name();
 			String type = ODataHandlerTypes.forbid.name();
-			List<ODataHandler> handlers = ODataHandlerService.get().getByNamespaceNameMethodAndKind(namespace, name, method, type);
+			List<ODataHandler> handlers = ODataHandlerService	.get()
+																.getByNamespaceNameMethodAndKind(namespace, name, method, type);
 			return handlers.size() > 0;
 		} catch (ODataException e) {
 			if (logger.isErrorEnabled()) {
@@ -376,11 +400,14 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	@Override
 	public ODataResponse beforeDeleteEntity(DeleteUriInfo uriInfo, String contentType, Map<Object, Object> context) throws ODataException {
 		try {
-			String namespace = uriInfo.getTargetType().getNamespace();
-			String name = uriInfo.getTargetType().getName();
+			String namespace = uriInfo	.getTargetType()
+										.getNamespace();
+			String name = uriInfo	.getTargetType()
+									.getName();
 			String method = ODataHandlerMethods.delete.name();
 			String type = ODataHandlerTypes.before.name();
-			List<ODataHandler> handlers = ODataHandlerService.get().getByNamespaceNameMethodAndKind(namespace, name, method, type);
+			List<ODataHandler> handlers = ODataHandlerService	.get()
+																.getByNamespaceNameMethodAndKind(namespace, name, method, type);
 			context.put("uriInfo", uriInfo);
 			context.put("contentType", contentType);
 			executeHandlers(handlers, context);
@@ -406,11 +433,14 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	@Override
 	public ODataResponse afterDeleteEntity(DeleteUriInfo uriInfo, String contentType, Map<Object, Object> context) throws ODataException {
 		try {
-			String namespace = uriInfo.getTargetType().getNamespace();
-			String name = uriInfo.getTargetType().getName();
+			String namespace = uriInfo	.getTargetType()
+										.getNamespace();
+			String name = uriInfo	.getTargetType()
+									.getName();
 			String method = ODataHandlerMethods.delete.name();
 			String type = ODataHandlerTypes.after.name();
-			List<ODataHandler> handlers = ODataHandlerService.get().getByNamespaceNameMethodAndKind(namespace, name, method, type);
+			List<ODataHandler> handlers = ODataHandlerService	.get()
+																.getByNamespaceNameMethodAndKind(namespace, name, method, type);
 			context.put("uriInfo", uriInfo);
 			context.put("contentType", contentType);
 			executeHandlers(handlers, context);
@@ -434,11 +464,14 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	@Override
 	public boolean isUsingOnDeleteEntity(DeleteUriInfo uriInfo, String contentType) {
 		try {
-			String namespace = uriInfo.getTargetType().getNamespace();
-			String name = uriInfo.getTargetType().getName();
+			String namespace = uriInfo	.getTargetType()
+										.getNamespace();
+			String name = uriInfo	.getTargetType()
+									.getName();
 			String method = ODataHandlerMethods.delete.name();
 			String type = ODataHandlerTypes.on.name();
-			List<ODataHandler> handlers = ODataHandlerService.get().getByNamespaceNameMethodAndKind(namespace, name, method, type);
+			List<ODataHandler> handlers = ODataHandlerService	.get()
+																.getByNamespaceNameMethodAndKind(namespace, name, method, type);
 			return handlers.size() > 0;
 		} catch (ODataException e) {
 			if (logger.isErrorEnabled()) {
@@ -460,11 +493,14 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	@Override
 	public ODataResponse onDeleteEntity(DeleteUriInfo uriInfo, String contentType, Map<Object, Object> context) throws ODataException {
 		try {
-			String namespace = uriInfo.getTargetType().getNamespace();
-			String name = uriInfo.getTargetType().getName();
+			String namespace = uriInfo	.getTargetType()
+										.getNamespace();
+			String name = uriInfo	.getTargetType()
+									.getName();
 			String method = ODataHandlerMethods.delete.name();
 			String type = ODataHandlerTypes.on.name();
-			List<ODataHandler> handlers = ODataHandlerService.get().getByNamespaceNameMethodAndKind(namespace, name, method, type);
+			List<ODataHandler> handlers = ODataHandlerService	.get()
+																.getByNamespaceNameMethodAndKind(namespace, name, method, type);
 			context.put("uriInfo", uriInfo);
 			context.put("contentType", contentType);
 			String responseMessage = executeHandler(handlers, context);
@@ -490,11 +526,14 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	@Override
 	public boolean forbidDeleteEntity(DeleteUriInfo uriInfo, String contentType) {
 		try {
-			String namespace = uriInfo.getTargetType().getNamespace();
-			String name = uriInfo.getTargetType().getName();
+			String namespace = uriInfo	.getTargetType()
+										.getNamespace();
+			String name = uriInfo	.getTargetType()
+									.getName();
 			String method = ODataHandlerMethods.delete.name();
 			String type = ODataHandlerTypes.forbid.name();
-			List<ODataHandler> handlers = ODataHandlerService.get().getByNamespaceNameMethodAndKind(namespace, name, method, type);
+			List<ODataHandler> handlers = ODataHandlerService	.get()
+																.getByNamespaceNameMethodAndKind(namespace, name, method, type);
 			return handlers.size() > 0;
 		} catch (ODataException e) {
 			if (logger.isErrorEnabled()) {
@@ -597,9 +636,12 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	 */
 	private boolean isUsingEvent(UriInfo uriInfo, String method, String type) {
 		try {
-			String namespace = uriInfo.getTargetType().getNamespace();
-			String name = uriInfo.getTargetType().getName();
-			List<ODataHandler> handlers = ODataHandlerService.get().getByNamespaceNameMethodAndKind(namespace, name, method, type);
+			String namespace = uriInfo	.getTargetType()
+										.getNamespace();
+			String name = uriInfo	.getTargetType()
+									.getName();
+			List<ODataHandler> handlers = ODataHandlerService	.get()
+																.getByNamespaceNameMethodAndKind(namespace, name, method, type);
 			return handlers.size() > 0;
 		} catch (ODataException e) {
 			if (logger.isErrorEnabled()) {

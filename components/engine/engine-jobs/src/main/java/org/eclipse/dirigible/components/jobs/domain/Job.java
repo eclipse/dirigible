@@ -370,7 +370,8 @@ public class Job extends Artefact {
 	 */
 	public JobParameter getParameter(String name) {
 		for (JobParameter p : parameters) {
-			if (p.getName().equals(name)) {
+			if (p	.getName()
+					.equals(name)) {
 				return p;
 			}
 		}

@@ -86,7 +86,8 @@ public class PushCommand {
 	 * @throws GitConnectorException in case of exception
 	 */
 	public void execute(final Workspace workspace, GitPushModel model) throws GitConnectorException {
-		if (model.getProjects().size() == 0) {
+		if (model	.getProjects()
+					.size() == 0) {
 			logger.warn("No repository is selected for the Push action");
 		}
 		for (String repositoryName : model.getProjects()) {
@@ -146,7 +147,9 @@ public class PushCommand {
 					logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());
 				}
 			}
-			int numberOfConflictingFiles = gitConnector.status().getConflicting().size();
+			int numberOfConflictingFiles = gitConnector	.status()
+														.getConflicting()
+														.size();
 			if (numberOfConflictingFiles == 0) {
 
 				gitConnector.push(model.getUsername(), model.getPassword());

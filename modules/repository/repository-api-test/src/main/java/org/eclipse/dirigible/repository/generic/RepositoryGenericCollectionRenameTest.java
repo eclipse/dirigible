@@ -42,7 +42,8 @@ public class RepositoryGenericCollectionRenameTest {
 			collection = repository.createCollection("/testCollectionToBeRemoved1"); //$NON-NLS-1$
 			assertNotNull(collection);
 			assertTrue(collection.exists());
-			assertEquals(0, collection.getChildren().size());
+			assertEquals(0, collection	.getChildren()
+										.size());
 
 		} catch (Exception e) {
 			e.printStackTrace();

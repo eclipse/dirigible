@@ -28,7 +28,10 @@ public class SequenceTest {
 	@Test
 	public void createSequence() {
 		try {
-			String sql = SqlFactory.getNative(new SybaseSqlDialect()).create().sequence("CUSTOMERS_SEQUENCE").build();
+			String sql = SqlFactory	.getNative(new SybaseSqlDialect())
+									.create()
+									.sequence("CUSTOMERS_SEQUENCE")
+									.build();
 		} catch (Exception e) {
 			return;
 		}
@@ -41,7 +44,10 @@ public class SequenceTest {
 	 */
 	@Test
 	public void alterSequence() {
-		String sql = SqlFactory.getNative(new SybaseSqlDialect()).alter().sequence("CUSTOMERS_SEQUENCE").build();
+		String sql = SqlFactory	.getNative(new SybaseSqlDialect())
+								.alter()
+								.sequence("CUSTOMERS_SEQUENCE")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("ALTER SEQUENCE CUSTOMERS_SEQUENCE", sql);
@@ -53,7 +59,10 @@ public class SequenceTest {
 	@Test
 	public void dropSequnce() {
 		try {
-			String sql = SqlFactory.getNative(new SybaseSqlDialect()).drop().sequence("CUSTOMERS_SEQUENCE").build();
+			String sql = SqlFactory	.getNative(new SybaseSqlDialect())
+									.drop()
+									.sequence("CUSTOMERS_SEQUENCE")
+									.build();
 		} catch (Exception e) {
 			return;
 		}
@@ -67,7 +76,9 @@ public class SequenceTest {
 	@Test
 	public void nextvalSequnce() {
 		try {
-			String sql = SqlFactory.getNative(new SybaseSqlDialect()).nextval("CUSTOMERS_SEQUENCE").build();
+			String sql = SqlFactory	.getNative(new SybaseSqlDialect())
+									.nextval("CUSTOMERS_SEQUENCE")
+									.build();
 		} catch (Exception e) {
 			return;
 		}

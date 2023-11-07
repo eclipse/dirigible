@@ -116,7 +116,9 @@ public class Xml2Json {
 		if (doc.hasChildNodes()) {
 			traverseNode(doc, rootJson, null);
 		}
-		Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+		Gson gson = new GsonBuilder()	.setPrettyPrinting()
+										.disableHtmlEscaping()
+										.create();
 		String json = gson.toJson(rootJson);
 
 		return json;
@@ -136,7 +138,9 @@ public class Xml2Json {
 			Node childNode = childList.item(i);
 
 			if (childNode.getNodeType() == Node.TEXT_NODE) {
-				if (childNode.getNodeValue().trim().length() != 0) {
+				if (childNode	.getNodeValue()
+								.trim()
+								.length() != 0) {
 					// non empty text node reached, so add to the parent
 					processTextNode(parentNode, upperJson, childJson, childNode);
 				}
@@ -161,7 +165,8 @@ public class Xml2Json {
 							JsonElement existing = parentJson.get(childNode.getNodeName());
 							if (existing instanceof JsonPrimitive) {
 								// it is a primitive as expected
-								Iterator attrs = childJson.entrySet().iterator();
+								Iterator attrs = childJson	.entrySet()
+															.iterator();
 								if (attrs.hasNext()) {
 									// there are attributes, so reorganize the element to include the attributes and the
 									// value as property - #text
@@ -170,7 +175,8 @@ public class Xml2Json {
 							} else if (existing instanceof JsonArray) {
 								// already added and reorganized as an array, so take the last element of this type and
 								// add the attributes
-								Iterator attrs = childJson.entrySet().iterator();
+								Iterator attrs = childJson	.entrySet()
+															.iterator();
 								if (attrs.hasNext()) {
 									reorganizeAddAttributes(childNode, attrs);
 								}
@@ -205,7 +211,9 @@ public class Xml2Json {
 				}
 			} else if (childNode.getNodeType() == Node.CDATA_SECTION_NODE) {
 				// processTextNode(parentNode, upperJson, childJson, childNode);
-				String base64 = Base64.getEncoder().encodeToString(childNode.getNodeValue().getBytes(StandardCharsets.UTF_8));
+				String base64 = Base64	.getEncoder()
+										.encodeToString(childNode	.getNodeValue()
+																	.getBytes(StandardCharsets.UTF_8));
 				parentJson.addProperty(childNode.getNodeName(), base64);
 			} else {
 				if (logger.isErrorEnabled()) {
@@ -315,7 +323,11 @@ public class Xml2Json {
 			JsonObject objectJson = (JsonObject) reorganizedJson;
 			while (attrs.hasNext()) {
 				Entry entry = (Entry) attrs.next();
-				objectJson.addProperty(entry.getKey().toString(), entry.getValue().toString().replace(EQ, EMPTY));
+				objectJson.addProperty(entry.getKey()
+											.toString(),
+						entry	.getValue()
+								.toString()
+								.replace(EQ, EMPTY));
 			}
 		} else {
 			if (logger.isErrorEnabled()) {
@@ -339,7 +351,11 @@ public class Xml2Json {
 		objectJson.addProperty(ATTR_TEXT, ((JsonPrimitive) existing).getAsString());
 		while (attrs.hasNext()) {
 			Entry entry = (Entry) attrs.next();
-			objectJson.addProperty(entry.getKey().toString(), entry.getValue().toString().replace(EQ, EMPTY));
+			objectJson.addProperty(entry.getKey()
+										.toString(),
+					entry	.getValue()
+							.toString()
+							.replace(EQ, EMPTY));
 		}
 		parentJson.add(childNode.getNodeName(), objectJson);
 	}
@@ -379,32 +395,42 @@ public class Xml2Json {
 	 * @param buff the buff
 	 */
 	private static void serializeObjectAsXml(JsonObject objectJson, StringBuffer buff) {
-		Iterator elements = objectJson.entrySet().iterator();
+		Iterator elements = objectJson	.entrySet()
+										.iterator();
 		while (elements.hasNext()) {
 			Entry entry = (Entry) elements.next();
 			Object key = entry.getKey();
 			Object value = entry.getValue();
 			if (value instanceof JsonObject) {
-				buff.append(LT).append(key);
+				buff.append(LT)
+					.append(key);
 				serializeObjectAttributes((JsonObject) value, buff);
 				buff.append(GT);
 				serializeObjectAsXml((JsonObject) value, buff);
-				buff.append(LTS).append(key).append(GT);
+				buff.append(LTS)
+					.append(key)
+					.append(GT);
 			} else if (value instanceof JsonArray) {
 				serializeArrayAsXml(buff, key, value);
 			} else if (value instanceof JsonPrimitive) {
 				if (ATTR_TEXT.equals(key)) {
-					buff.append(value.toString().replace(EQ, EMPTY));
+					buff.append(value	.toString()
+										.replace(EQ, EMPTY));
 				} else if (ATTR_CDATA.equals(key)) {
 					buff.append(CDATA_OPEN)
-						.append(new String(Base64.getDecoder().decode(value.toString().replace(EQ, EMPTY)), StandardCharsets.UTF_8))
+						.append(new String(Base64	.getDecoder()
+													.decode(value	.toString()
+																	.replace(EQ, EMPTY)),
+								StandardCharsets.UTF_8))
 						.append(CDATA_CLOSE);
 				} else {
-					if (!key.toString().startsWith("-")) {
+					if (!key.toString()
+							.startsWith("-")) {
 						buff.append(LT)
 							.append(key.toString())
 							.append(GT)
-							.append(value.toString().replace(EQ, EMPTY))
+							.append(value	.toString()
+											.replace(EQ, EMPTY))
 							.append(LTS)
 							.append(key.toString())
 							.append(GT);
@@ -425,17 +451,21 @@ public class Xml2Json {
 	 * @param buff the buff
 	 */
 	private static void serializeObjectAttributes(JsonObject objectJson, StringBuffer buff) {
-		Iterator elements = objectJson.entrySet().iterator();
+		Iterator elements = objectJson	.entrySet()
+										.iterator();
 		while (elements.hasNext()) {
 			Entry entry = (Entry) elements.next();
 			Object key = entry.getKey();
 			Object value = entry.getValue();
 			if (value instanceof JsonPrimitive) {
-				if (key.toString().startsWith("-")) {
+				if (key	.toString()
+						.startsWith("-")) {
 					buff.append(SPACE)
-						.append(key.toString().substring(1))
+						.append(key	.toString()
+									.substring(1))
 						.append(ESQ)
-						.append(value.toString().replace(EQ, EMPTY))
+						.append(value	.toString()
+										.replace(EQ, EMPTY))
 						.append(EQ);
 				}
 			}
@@ -454,28 +484,38 @@ public class Xml2Json {
 		for (int i = 0; i < array.size(); i++) {
 			JsonElement elementJson = array.get(i);
 			if (elementJson instanceof JsonObject) {
-				buff.append(LT).append(key);
+				buff.append(LT)
+					.append(key);
 				serializeObjectAttributes((JsonObject) elementJson, buff);
 				buff.append(GT);
 				serializeObjectAsXml((JsonObject) elementJson, buff);
-				buff.append(LTS).append(key).append(GT);
+				buff.append(LTS)
+					.append(key)
+					.append(GT);
 			} else if (elementJson instanceof JsonArray) {
 				serializeArrayAsXml(buff, key, elementJson);
 			} else if (elementJson instanceof JsonPrimitive) {
 				JsonPrimitive elementPrimitive = (JsonPrimitive) elementJson;
 				if (ATTR_TEXT.equals(key)) {
-					buff.append(elementPrimitive.toString().replace(EQ, EMPTY));
+					buff.append(elementPrimitive.toString()
+												.replace(EQ, EMPTY));
 				} else if (ATTR_CDATA.equals(key)) {
 					buff.append(CDATA_OPEN)
-						.append(new String(Base64.getDecoder().decode(elementPrimitive.toString().replace(EQ, EMPTY)),
+						.append(new String(Base64	.getDecoder()
+													.decode(elementPrimitive.toString()
+																			.replace(EQ, EMPTY)),
 								StandardCharsets.UTF_8))
 						.append(CDATA_CLOSE);
 				} else {
 					// System.err.println("ERROR: content attributes must be #text");
-					buff.append(LT).append(key);
+					buff.append(LT)
+						.append(key);
 					buff.append(GT);
-					buff.append(elementPrimitive.toString().replace(EQ, EMPTY));
-					buff.append(LTS).append(key).append(GT);
+					buff.append(elementPrimitive.toString()
+												.replace(EQ, EMPTY));
+					buff.append(LTS)
+						.append(key)
+						.append(GT);
 				}
 			}
 		}
@@ -494,7 +534,8 @@ public class Xml2Json {
 	 */
 	public String prettyPrintXml(String xml)
 			throws TransformerFactoryConfigurationError, ParserConfigurationException, SAXException, IOException, TransformerException {
-		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		Transformer transformer = TransformerFactory.newInstance()
+													.newTransformer();
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 		StreamResult result = new StreamResult(new StringWriter());
@@ -504,7 +545,8 @@ public class Xml2Json {
 		Document doc = documentBuilder.parse(new InputSource(new StringReader(xml)));
 		DOMSource source = new DOMSource(doc);
 		transformer.transform(source, result);
-		return result.getWriter().toString();
+		return result	.getWriter()
+						.toString();
 	}
 
 	/**

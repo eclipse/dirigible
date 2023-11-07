@@ -54,7 +54,9 @@ public class CustomDataSourcesService {
 			}
 		}
 		if (logger.isDebugEnabled()) {
-			logger.debug(this.getClass().getCanonicalName() + " module initialized.");
+			logger.debug(this	.getClass()
+								.getCanonicalName()
+					+ " module initialized.");
 		}
 	}
 

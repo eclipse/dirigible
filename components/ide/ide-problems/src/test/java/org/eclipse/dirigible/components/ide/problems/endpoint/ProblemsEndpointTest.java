@@ -93,12 +93,16 @@ public class ProblemsEndpointTest {
 
 	@Test
 	public void getProblems() throws Exception {
-		mockMvc.perform(get("/services/ide/problems/")).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/ide/problems/"))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	@Test
 	public void getProblemsByCondition() throws Exception {
-		mockMvc.perform(get("/services/ide/problems/search?condition=co&limit=5")).andDo(print()).andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(get("/services/ide/problems/search?condition=co&limit=5"))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	public static Problem createProblem(String location, String type, String line, String column, String cause, String expected,

@@ -51,12 +51,19 @@ public class TableForeignKeysCreateProcessor {
 		}
 
 		if (tableModel.getConstraints() != null) {
-			if (tableModel.getConstraints().getForeignKeys() != null && !tableModel.getConstraints().getForeignKeys().isEmpty()) {
+			if (tableModel	.getConstraints()
+							.getForeignKeys() != null
+					&& !tableModel	.getConstraints()
+									.getForeignKeys()
+									.isEmpty()) {
 				if (logger.isInfoEnabled()) {
 					logger.info("Processing Alter Table Create Foreign Keys Table: " + tableName);
 				}
-				AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection).alter().table(tableName);
-				for (TableConstraintForeignKey foreignKey : tableModel.getConstraints().getForeignKeys()) {
+				AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection)
+																.alter()
+																.table(tableName);
+				for (TableConstraintForeignKey foreignKey : tableModel	.getConstraints()
+																		.getForeignKeys()) {
 
 					List<String> valsToHashFKName = new ArrayList<>(Arrays.asList(foreignKey.getColumns()));
 					valsToHashFKName.add(foreignKey.getReferencedTable());
@@ -104,7 +111,8 @@ public class TableForeignKeysCreateProcessor {
 		for (String val : values) {
 			hashedName.append(val);
 		}
-		return String.valueOf(hashedName.toString().hashCode());
+		return String.valueOf(hashedName.toString()
+										.hashCode());
 	}
 
 }

@@ -31,6 +31,7 @@ public class DirigibleModulesMetadata {
 	 * @return true, if is pure esm module
 	 */
 	static boolean isPureEsmModule(String module) {
-		return PURE_ESM_MODULES.stream().anyMatch(module::startsWith);
+		return PURE_ESM_MODULES	.stream()
+								.anyMatch(module::startsWith);
 	}
 }

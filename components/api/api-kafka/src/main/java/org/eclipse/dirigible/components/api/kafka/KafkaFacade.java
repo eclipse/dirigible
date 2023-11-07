@@ -94,7 +94,9 @@ public class KafkaFacade {
 		Producer<String, String> producer = null;
 
 		String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
-		String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers").toString() : bootstrapServer;
+		String server = map.get("bootstrap.servers") != null ? map	.get("bootstrap.servers")
+																	.toString()
+				: bootstrapServer;
 		if (server != null) {
 			producer = PRODUCERS.get(server);
 		}
@@ -149,7 +151,9 @@ public class KafkaFacade {
 		Producer<String, String> producer = null;
 
 		String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
-		String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers").toString() : bootstrapServer;
+		String server = map.get("bootstrap.servers") != null ? map	.get("bootstrap.servers")
+																	.toString()
+				: bootstrapServer;
 		if (server != null) {
 			producer = PRODUCERS.get(server);
 		}
@@ -184,7 +188,9 @@ public class KafkaFacade {
 
 		String location = null;
 		String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
-		String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers").toString() : bootstrapServer;
+		String server = map.get("bootstrap.servers") != null ? map	.get("bootstrap.servers")
+																	.toString()
+				: bootstrapServer;
 		location = createLocation(destination, server);
 		consumerRunner = CONSUMERS.get(location);
 
@@ -257,7 +263,9 @@ public class KafkaFacade {
 
 		String location = null;
 		String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
-		String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers").toString() : bootstrapServer;
+		String server = map.get("bootstrap.servers") != null ? map	.get("bootstrap.servers")
+																	.toString()
+				: bootstrapServer;
 		location = createLocation(destination, server);
 		consumerRunner = CONSUMERS.get(location);
 

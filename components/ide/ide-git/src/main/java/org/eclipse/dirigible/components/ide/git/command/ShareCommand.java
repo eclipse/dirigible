@@ -159,9 +159,11 @@ public class ShareCommand {
 				StringBuilder projectPathBuilder = new StringBuilder();
 				String[] projectPathSegments = new RepositoryPath(project.getPath()).getSegments();
 				for (int i = 0; i < projectPathSegments.length - 1; i++) {
-					projectPathBuilder.append(File.separator).append(projectPathSegments[i]);
+					projectPathBuilder	.append(File.separator)
+										.append(projectPathSegments[i]);
 				}
-				projectPathBuilder.append(File.separator).append(projectGitDirectory.getName());
+				projectPathBuilder	.append(File.separator)
+									.append(projectGitDirectory.getName());
 				projectPath = projectPathBuilder.toString();
 				publisherService.unpublish(project.getName());
 			} else {

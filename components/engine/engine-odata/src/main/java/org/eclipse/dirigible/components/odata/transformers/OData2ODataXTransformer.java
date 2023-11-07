@@ -92,8 +92,10 @@ public class OData2ODataXTransformer {
 				continue;
 			}
 
-			List<TableColumn> idColumns =
-					tableMetadata.getColumns().stream().filter(TableColumn::isPrimaryKey).collect(Collectors.toList());
+			List<TableColumn> idColumns = tableMetadata	.getColumns()
+														.stream()
+														.filter(TableColumn::isPrimaryKey)
+														.collect(Collectors.toList());
 
 			if (tableMetadata.getKind() == null || (idColumns.isEmpty() && ISqlKeywords.METADATA_TABLE.equals(tableMetadata.getKind()))) {
 				if (logger.isErrorEnabled()) {
@@ -113,13 +115,21 @@ public class OData2ODataXTransformer {
 			List<ODataParameter> entityParameters = entity.getParameters();
 			List<ODataProperty> entityProperties = entity.getProperties();
 
-			if (tableMetadata.getKind().equals(ISqlKeywords.METADATA_TABLE)) {
+			if (tableMetadata	.getKind()
+								.equals(ISqlKeywords.METADATA_TABLE)) {
 				ODataMetadataUtil.validateODataPropertyName(tableMetadata.getColumns(), entityProperties, entity.getName());
 			}
 
-			buff.append("\t<EntityType Name=\"").append(entity.getName()).append("Type").append("\"");
+			buff.append("\t<EntityType Name=\"")
+				.append(entity.getName())
+				.append("Type")
+				.append("\"");
 			entity	.getAnnotationsEntityType()
-					.forEach((key, value) -> buff.append(" ").append(key).append("=\"").append(value).append("\""));
+					.forEach((key, value) -> buff	.append(" ")
+													.append(key)
+													.append("=\"")
+													.append(value)
+													.append("\""));
 			buff.append(">\n");
 
 			List<TableColumn> entityOrigKeys = checkIfViewHasExposedOriginalKeysFromTable(tableMetadata, entity);
@@ -135,7 +145,9 @@ public class OData2ODataXTransformer {
 					entityOrigKeys.forEach(key -> {
 						String columnValue =
 								ODataDatabaseMetadataUtil.getPropertyNameFromDbColumnName(key.getName(), entityProperties, isPretty);
-						buff.append("\t\t\t<PropertyRef Name=\"").append(propertyNameEscaper.escape(columnValue)).append("\" />\n");
+						buff.append("\t\t\t<PropertyRef Name=\"")
+							.append(propertyNameEscaper.escape(columnValue))
+							.append("\" />\n");
 					});
 				} else {
 					// Local key was generated
@@ -148,7 +160,9 @@ public class OData2ODataXTransformer {
 				idColumns.forEach(column -> {
 					String nameValue =
 							ODataDatabaseMetadataUtil.getPropertyNameFromDbColumnName(column.getName(), entityProperties, isPretty);
-					buff.append("\t\t\t<PropertyRef Name=\"").append(propertyNameEscaper.escape(nameValue)).append("\" />\n");
+					buff.append("\t\t\t<PropertyRef Name=\"")
+						.append(propertyNameEscaper.escape(nameValue))
+						.append("\" />\n");
 				});
 			}
 			buff.append("\t\t</Key>\n");
@@ -187,30 +201,33 @@ public class OData2ODataXTransformer {
 
 			// Expose all Db columns in case no entity props are defined
 			if (entityProperties.isEmpty() && entityParameters.isEmpty()) {
-				tableMetadata.getColumns().forEach(column -> {
-					String columnValue =
-							ODataDatabaseMetadataUtil.getPropertyNameFromDbColumnName(column.getName(), entityProperties, isPretty);
-					buff.append("\t\t<Property Name=\"")
-						.append(propertyNameEscaper.escape(columnValue))
-						.append("\"")
-						.append(" Nullable=\"")
-						.append(ODataDatabaseMetadataUtil.isNullable(column, entityProperties))
-						.append("\"")
-						.append(" Type=\"")
-						.append(ODataDatabaseMetadataUtil.getType(column, entityProperties))
-						.append("\"");
-					buff.append("/>\n");
-				});
+				tableMetadata	.getColumns()
+								.forEach(column -> {
+									String columnValue = ODataDatabaseMetadataUtil.getPropertyNameFromDbColumnName(column.getName(),
+											entityProperties, isPretty);
+									buff.append("\t\t<Property Name=\"")
+										.append(propertyNameEscaper.escape(columnValue))
+										.append("\"")
+										.append(" Nullable=\"")
+										.append(ODataDatabaseMetadataUtil.isNullable(column, entityProperties))
+										.append("\"")
+										.append(" Type=\"")
+										.append(ODataDatabaseMetadataUtil.getType(column, entityProperties))
+										.append("\"");
+									buff.append("/>\n");
+								});
 			} else {
 				// In case entity props are defined expose only them
 				Table finalTableMetadata = tableMetadata;
 				entityProperties.forEach(prop -> {
 					List<TableColumn> dbColumn = finalTableMetadata	.getColumns()
 																	.stream()
-																	.filter(el -> el.getName().equals(prop.getColumn()))
+																	.filter(el -> el.getName()
+																					.equals(prop.getColumn()))
 																	.collect(Collectors.toList());
 					if (dbColumn.size() > 0) {
-						String columnValue = ODataDatabaseMetadataUtil.getPropertyNameFromDbColumnName(dbColumn.get(0).getName(),
+						String columnValue = ODataDatabaseMetadataUtil.getPropertyNameFromDbColumnName(dbColumn	.get(0)
+																												.getName(),
 								entityProperties, isPretty);
 						buff.append("\t\t<Property Name=\"")
 							.append(columnValue)
@@ -219,10 +236,16 @@ public class OData2ODataXTransformer {
 							.append(prop.isNullable())
 							.append("\"")
 							.append(" Type=\"")
-							.append(prop.getType() != null ? prop.getType() : dbColumn.get(0).getType())
+							.append(prop.getType() != null ? prop.getType()
+									: dbColumn	.get(0)
+												.getType())
 							.append("\"");
 						prop.getAnnotationsProperty()
-							.forEach((key, value) -> buff.append(" ").append(key).append("=\"").append(value).append("\""));
+							.forEach((key, value) -> buff	.append(" ")
+															.append(key)
+															.append("=\"")
+															.append(value)
+															.append("\""));
 						buff.append("/>\n");
 					} else {
 						throw new OData2TransformerException(String.format(
@@ -232,67 +255,81 @@ public class OData2ODataXTransformer {
 				});
 			}
 
-			entity.getNavigations().forEach(relation -> {
-				ODataAssociation association = ODataMetadataUtil.getAssociation(model, relation.getAssociation(), relation.getName());
-				String fromRole = association.getFrom().getEntity();
-				String toRole = association.getTo().getEntity();
-				buff.append("\t\t<NavigationProperty Name=\"")
-					.append(relation.getName())
-					.append("\"")
-					.append(" Relationship=\"")
-					.append(model.getNamespace())
-					.append(".")
-					.append(relation.getAssociation())
-					.append("Type\"")
-					.append(" FromRole=\"")
-					.append(fromRole)
-					.append("Principal")
-					.append("\"")
-					.append(" ToRole=\"")
-					.append(toRole)
-					.append("Dependent")
-					.append("\"");
-				relation.getAnnotationsNavigationProperty()
-						.forEach((key, value) -> buff.append(" ").append(key).append("=\"").append(value).append("\""));
-				buff.append("/>\n");
-			});
-
-			// Keep associations for later use
-			entity.getNavigations().forEach(relation -> {
-				ODataAssociation association = ODataMetadataUtil.getAssociation(model, relation.getAssociation(), relation.getName());
-				String fromRole = association.getFrom().getEntity();
-				String toRole = association.getTo().getEntity();
-				String fromMultiplicity = association.getFrom().getMultiplicity();
-				ODataMetadataUtil.validateMultiplicity(fromMultiplicity);
-				String toMultiplicity = association.getTo().getMultiplicity();
-				ODataMetadataUtil.validateMultiplicity(toMultiplicity);
-				associations.append("\t<Association Name=\"")
-							.append(relation.getAssociation())
-							.append("Type\">\n")
-							.append("\t\t<End Type=\"")
+			entity	.getNavigations()
+					.forEach(relation -> {
+						ODataAssociation association =
+								ODataMetadataUtil.getAssociation(model, relation.getAssociation(), relation.getName());
+						String fromRole = association	.getFrom()
+														.getEntity();
+						String toRole = association	.getTo()
+													.getEntity();
+						buff.append("\t\t<NavigationProperty Name=\"")
+							.append(relation.getName())
+							.append("\"")
+							.append(" Relationship=\"")
 							.append(model.getNamespace())
 							.append(".")
-							.append(fromRole)
+							.append(relation.getAssociation())
 							.append("Type\"")
-							.append(" Role=\"")
+							.append(" FromRole=\"")
 							.append(fromRole)
 							.append("Principal")
-							.append("\" Multiplicity=\"")
-							.append(fromMultiplicity)
-							.append("\"/>\n")
-							.append("\t\t<End Type=\"")
-							.append(model.getNamespace())
-							.append(".")
-							.append(toRole)
-							.append("Type\"")
-							.append(" Role=\"")
+							.append("\"")
+							.append(" ToRole=\"")
 							.append(toRole)
 							.append("Dependent")
-							.append("\" Multiplicity=\"")
-							.append(toMultiplicity)
-							.append("\"/>\n")
-							.append(" \t</Association>\n");
-			});
+							.append("\"");
+						relation.getAnnotationsNavigationProperty()
+								.forEach((key, value) -> buff	.append(" ")
+																.append(key)
+																.append("=\"")
+																.append(value)
+																.append("\""));
+						buff.append("/>\n");
+					});
+
+			// Keep associations for later use
+			entity	.getNavigations()
+					.forEach(relation -> {
+						ODataAssociation association =
+								ODataMetadataUtil.getAssociation(model, relation.getAssociation(), relation.getName());
+						String fromRole = association	.getFrom()
+														.getEntity();
+						String toRole = association	.getTo()
+													.getEntity();
+						String fromMultiplicity = association	.getFrom()
+																.getMultiplicity();
+						ODataMetadataUtil.validateMultiplicity(fromMultiplicity);
+						String toMultiplicity = association	.getTo()
+															.getMultiplicity();
+						ODataMetadataUtil.validateMultiplicity(toMultiplicity);
+						associations.append("\t<Association Name=\"")
+									.append(relation.getAssociation())
+									.append("Type\">\n")
+									.append("\t\t<End Type=\"")
+									.append(model.getNamespace())
+									.append(".")
+									.append(fromRole)
+									.append("Type\"")
+									.append(" Role=\"")
+									.append(fromRole)
+									.append("Principal")
+									.append("\" Multiplicity=\"")
+									.append(fromMultiplicity)
+									.append("\"/>\n")
+									.append("\t\t<End Type=\"")
+									.append(model.getNamespace())
+									.append(".")
+									.append(toRole)
+									.append("Type\"")
+									.append(" Role=\"")
+									.append(toRole)
+									.append("Dependent")
+									.append("\" Multiplicity=\"")
+									.append(toMultiplicity)
+									.append("\"/>\n")
+									.append(" \t</Association>\n");
+					});
 
 			// Keep entity sets for later use
 			entitySets	.append("\t\t<EntitySet Name=\"")
@@ -303,44 +340,56 @@ public class OData2ODataXTransformer {
 						.append(entity.getName())
 						.append("Type\"");
 			entity	.getAnnotationsEntitySet()
-					.forEach((key, value) -> entitySets.append(" ").append(key).append("=\"").append(value).append("\""));
+					.forEach((key, value) -> entitySets	.append(" ")
+														.append(key)
+														.append("=\"")
+														.append(value)
+														.append("\""));
 			entitySets.append("/>\n");
 
 			// Keep associations sets for later use
-			entity.getNavigations().forEach(relation -> {
-				ODataAssociation association = ODataMetadataUtil.getAssociation(model, relation.getAssociation(), relation.getName());
-				String fromRole = association.getFrom().getEntity();
-				String toRole = association.getTo().getEntity();
-				String fromSet = entity.getAlias();
-				ODataEntity toSetEntity = ODataMetadataUtil.getEntity(model, toRole, relation.getName());
-				String toSet = toSetEntity.getAlias();
-				associationsSets.append("\t<AssociationSet Name=\"")
-								.append(relation.getAssociation())
-								.append("\"")
-								.append(" Association=\"")
-								.append(model.getNamespace())
-								.append(".")
-								.append(relation.getAssociation())
-								.append("Type\"");
-				association	.getAnnotationsAssociationSet()
-							.forEach((key, value) -> associationsSets.append(" ").append(key).append("=\"").append(value).append("\""));
-				associationsSets.append(">\n");
-				associationsSets.append("\t\t\t<End Role=\"")
-								.append(fromRole)
-								.append("Principal")
-								.append("\"")
-								.append(" EntitySet=\"")
-								.append(fromSet)
-								.append("\"/>\n")
-								.append(" \t\t\t<End Role=\"")
-								.append(toRole)
-								.append("Dependent")
-								.append("\"")
-								.append(" EntitySet=\"")
-								.append(toSet)
-								.append("\"/>\n")
-								.append("\t\t\t</AssociationSet>\n");
-			});
+			entity	.getNavigations()
+					.forEach(relation -> {
+						ODataAssociation association =
+								ODataMetadataUtil.getAssociation(model, relation.getAssociation(), relation.getName());
+						String fromRole = association	.getFrom()
+														.getEntity();
+						String toRole = association	.getTo()
+													.getEntity();
+						String fromSet = entity.getAlias();
+						ODataEntity toSetEntity = ODataMetadataUtil.getEntity(model, toRole, relation.getName());
+						String toSet = toSetEntity.getAlias();
+						associationsSets.append("\t<AssociationSet Name=\"")
+										.append(relation.getAssociation())
+										.append("\"")
+										.append(" Association=\"")
+										.append(model.getNamespace())
+										.append(".")
+										.append(relation.getAssociation())
+										.append("Type\"");
+						association	.getAnnotationsAssociationSet()
+									.forEach((key, value) -> associationsSets	.append(" ")
+																				.append(key)
+																				.append("=\"")
+																				.append(value)
+																				.append("\""));
+						associationsSets.append(">\n");
+						associationsSets.append("\t\t\t<End Role=\"")
+										.append(fromRole)
+										.append("Principal")
+										.append("\"")
+										.append(" EntitySet=\"")
+										.append(fromSet)
+										.append("\"/>\n")
+										.append(" \t\t\t<End Role=\"")
+										.append(toRole)
+										.append("Dependent")
+										.append("\"")
+										.append(" EntitySet=\"")
+										.append(toSet)
+										.append("\"/>\n")
+										.append("\t\t\t</AssociationSet>\n");
+					});
 			buff.append("\t</EntityType>\n");
 		}
 		buff.append(associations);
@@ -365,7 +414,9 @@ public class OData2ODataXTransformer {
 	private List<TableColumn> checkIfViewHasExposedOriginalKeysFromTable(Table tableMetadata, ODataEntity entity) {
 		return tableMetadata.getColumns()
 							.stream()
-							.filter(el -> entity.getKeys().stream().anyMatch(x -> x.equals(el.getName())))
+							.filter(el -> entity.getKeys()
+												.stream()
+												.anyMatch(x -> x.equals(el.getName())))
 							.collect(Collectors.toList());
 	}
 }

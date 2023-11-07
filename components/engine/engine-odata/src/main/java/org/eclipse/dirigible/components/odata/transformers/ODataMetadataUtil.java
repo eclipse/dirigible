@@ -89,9 +89,11 @@ public class ODataMetadataUtil {
 	public static String getEntityPropertyColumnByPropertyName(OData model, String entityName, String propertyName) {
 		for (ODataEntity entity : model.getEntities()) {
 			if (entityName.equals(entity.getName())) {
-				if (!entity.getProperties().isEmpty()) {
+				if (!entity	.getProperties()
+							.isEmpty()) {
 					for (ODataProperty property : entity.getProperties()) {
-						if (property.getName().equals(propertyName)) {
+						if (property.getName()
+									.equals(propertyName)) {
 							return property.getColumn();
 						}
 					}
@@ -177,8 +179,10 @@ public class ODataMetadataUtil {
 		if (!entityProperties.isEmpty()) {
 			ArrayList<String> invalidProps = new ArrayList<>();
 			entityProperties.forEach(column -> {
-				List<TableColumn> consistentProps =
-						dbColumnNames.stream().filter(prop -> prop.getName().equals(column.getColumn())).collect(Collectors.toList());
+				List<TableColumn> consistentProps = dbColumnNames	.stream()
+																	.filter(prop -> prop.getName()
+																						.equals(column.getColumn()))
+																	.collect(Collectors.toList());
 				if (consistentProps.isEmpty()) {
 					invalidProps.add(column.getColumn());
 				}
@@ -186,7 +190,9 @@ public class ODataMetadataUtil {
 			if (!invalidProps.isEmpty()) {
 				throw new OData2TransformerException(String.format(
 						"There is inconsistency for entity '%s'. Odata column definitions for %s do not match the DB table column definition.",
-						entityName, invalidProps.stream().map(String::valueOf).collect(Collectors.joining(","))));
+						entityName, invalidProps.stream()
+												.map(String::valueOf)
+												.collect(Collectors.joining(","))));
 			}
 			if (entityProperties.size() > dbColumnNames.size()) {
 				throw new OData2TransformerException(String.format(

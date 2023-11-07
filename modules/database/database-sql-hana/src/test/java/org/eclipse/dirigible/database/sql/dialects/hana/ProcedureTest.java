@@ -55,8 +55,8 @@ public class ProcedureTest {
 		when(mockConnection.getMetaData()).thenReturn(mockDatabaseMetaData);
 		when(mockDatabaseMetaData.getProcedures(null, "MYSCHEMA", funcName)).thenReturn(mockResultSet);
 		when(mockResultSet.next()).thenReturn(true);
-		boolean exist =
-				SqlFactory.getNative(new HanaSqlDialect()).exists(mockConnection, "MYSCHEMA", funcName, DatabaseArtifactTypes.PROCEDURE);
+		boolean exist = SqlFactory	.getNative(new HanaSqlDialect())
+									.exists(mockConnection, "MYSCHEMA", funcName, DatabaseArtifactTypes.PROCEDURE);
 		assertTrue(exist);
 	}
 
@@ -71,8 +71,8 @@ public class ProcedureTest {
 		when(mockConnection.getMetaData()).thenReturn(mockDatabaseMetaData);
 		when(mockDatabaseMetaData.getProcedures(null, "MYSCHEMA", funcName)).thenReturn(mockResultSet);
 		when(mockResultSet.next()).thenReturn(false);
-		boolean exist =
-				SqlFactory.getNative(new HanaSqlDialect()).exists(mockConnection, "MYSCHEMA", funcName, DatabaseArtifactTypes.PROCEDURE);
+		boolean exist = SqlFactory	.getNative(new HanaSqlDialect())
+									.exists(mockConnection, "MYSCHEMA", funcName, DatabaseArtifactTypes.PROCEDURE);
 		assertFalse(exist);
 	}
 }

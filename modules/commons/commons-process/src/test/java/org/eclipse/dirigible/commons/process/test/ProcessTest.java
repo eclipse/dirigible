@@ -35,7 +35,8 @@ public class ProcessTest {
 
 		String[] args = null;
 
-		String os = System.getProperty("os.name").toLowerCase();
+		String os = System	.getProperty("os.name")
+							.toLowerCase();
 		if (os.indexOf("win") >= 0) {
 			// Windows Commands
 			args = new String[] {"cmd", "/c", "dir"}; // windows

@@ -27,7 +27,10 @@ public class DropTableTest {
 	 */
 	@Test
 	public void dropTable() {
-		String sql = SqlFactory.getDefault().drop().table("CUSTOMERS").build();
+		String sql = SqlFactory	.getDefault()
+								.drop()
+								.table("CUSTOMERS")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("DROP TABLE CUSTOMERS", sql);
@@ -40,7 +43,10 @@ public class DropTableTest {
 	public void dropTableCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().drop().table("CUSTOMERS").build();
+			String sql = SqlFactory	.getDefault()
+									.drop()
+									.table("CUSTOMERS")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("DROP TABLE \"CUSTOMERS\"", sql);

@@ -149,7 +149,10 @@ public class FtpUser implements User {
 	 */
 	@Override
 	public List<? extends Authority> getAuthorities(Class<? extends Authority> aClass) {
-		return this.authorities.stream().filter(a -> a.getClass().isAssignableFrom(aClass)).collect(Collectors.toList());
+		return this.authorities	.stream()
+								.filter(a -> a	.getClass()
+												.isAssignableFrom(aClass))
+								.collect(Collectors.toList());
 	}
 
 	/**

@@ -57,7 +57,8 @@ public class TableConstraintCheck extends TableConstraint {
 	public TableConstraintCheck(String name, String[] modifiers, String[] columns, TableConstraints constraints, String expression) {
 		super(name, modifiers, columns, constraints);
 		this.expression = expression;
-		this.constraints.getChecks().add(this);
+		this.constraints.getChecks()
+						.add(this);
 	}
 
 	/**
@@ -111,7 +112,9 @@ public class TableConstraintCheck extends TableConstraint {
 	@Override
 	public String toString() {
 		return "TableConstraintCheck [id=" + id + ", expression=" + expression + ", name=" + name + ", modifiers=" + modifiers
-				+ ", columns=" + columns + ", constraints.table=" + constraints.getTable().getName() + "]";
+				+ ", columns=" + columns + ", constraints.table=" + constraints	.getTable()
+																				.getName()
+				+ "]";
 	}
 
 

@@ -71,7 +71,10 @@ public class DatabaseDefinitionService {
 	 * @return the data sources
 	 */
 	public Set<String> getDataSourcesNames() {
-		return datasourceService.getAll().stream().map(DataSource::getName).collect(Collectors.toSet());
+		return datasourceService.getAll()
+								.stream()
+								.map(DataSource::getName)
+								.collect(Collectors.toSet());
 	}
 
 	/**

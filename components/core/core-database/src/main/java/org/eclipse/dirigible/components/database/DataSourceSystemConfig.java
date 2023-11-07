@@ -48,7 +48,9 @@ public class DataSourceSystemConfig {
 		dataSourceProperties.setUrl("jdbc:h2:file:./target/dirigible/h2/SystemDB");
 		dataSourceProperties.setUsername("sa");
 		dataSourceProperties.setPassword("");
-		return dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
+		return dataSourceProperties	.initializeDataSourceBuilder()
+									.type(HikariDataSource.class)
+									.build();
 	}
 
 	@Bean(name = "entityManagerFactory")

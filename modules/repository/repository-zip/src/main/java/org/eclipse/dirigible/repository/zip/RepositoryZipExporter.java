@@ -50,12 +50,14 @@ public class RepositoryZipExporter {
 				for (String relativeRoot : relativeRoots) {
 					ICollection collection = repository.getCollection(relativeRoot);
 					if (collection.exists()) {
-						traverseCollection(zipOutputStream, collection, relativeRoot.length() - collection.getName().length());
+						traverseCollection(zipOutputStream, collection, relativeRoot.length() - collection	.getName()
+																											.length());
 					} else {
 						IResource iResource = repository.getResource(relativeRoot);
 						if (iResource.exists()) {
-							ZipEntry zipEntry =
-									new ZipEntry(iResource.getPath().substring(relativeRoot.length() - iResource.getName().length()));
+							ZipEntry zipEntry = new ZipEntry(iResource	.getPath()
+																		.substring(relativeRoot.length() - iResource.getName()
+																													.length()));
 							zipOutputStream.putNextEntry(zipEntry);
 							zipOutputStream.write((iResource.getContent() == null ? new byte[] {} : iResource.getContent()));
 							zipOutputStream.closeEntry();
@@ -127,8 +129,11 @@ public class RepositoryZipExporter {
 			throws RepositoryExportException {
 		try {
 			ZipEntry zipEntry = null;
-			if (collection.getPath().length() >= substring) {
-				zipEntry = new ZipEntry(collection.getPath().substring(substring) + IRepository.SEPARATOR);
+			if (collection	.getPath()
+							.length() >= substring) {
+				zipEntry = new ZipEntry(collection	.getPath()
+													.substring(substring)
+						+ IRepository.SEPARATOR);
 				zipOutputStream.putNextEntry(zipEntry);
 				zipOutputStream.closeEntry();
 			}
@@ -140,7 +145,8 @@ public class RepositoryZipExporter {
 
 			List<IResource> resources = collection.getResources();
 			for (IResource iResource : resources) {
-				zipEntry = new ZipEntry(iResource.getPath().substring(substring));
+				zipEntry = new ZipEntry(iResource	.getPath()
+													.substring(substring));
 				zipOutputStream.putNextEntry(zipEntry);
 				zipOutputStream.write((iResource.getContent() == null ? new byte[] {} : iResource.getContent()));
 				zipOutputStream.closeEntry();

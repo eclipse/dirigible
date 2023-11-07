@@ -109,9 +109,11 @@ public class ResultSetMonospacedWriter extends AbstractResultSetWriter<String> {
 						displaySize = 256;
 					}
 					columnDescriptor.setDisplaySize(displaySize);
-					if (columnDescriptor.getDisplaySize() < columnDescriptor.getName().length()) {
-						columnDescriptor.setDisplaySize(columnDescriptor.getName().length());// make sure headers never get
-																								// truncated
+					if (columnDescriptor.getDisplaySize() < columnDescriptor.getName()
+																			.length()) {
+						columnDescriptor.setDisplaySize(columnDescriptor.getName()
+																		.length());// make sure headers never get
+																					// truncated
 					}
 
 					if (!columnHeaderDescriptors.contains(columnDescriptor)) {

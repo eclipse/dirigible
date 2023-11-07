@@ -66,7 +66,9 @@ public class FtpRepositoryTest {
 	@AfterEach
 	public void cleanup() {
 		// Delete test security roles
-		ftpUserRepository.findAll().stream().forEach(u -> ftpUserRepository.delete(u));
+		ftpUserRepository	.findAll()
+							.stream()
+							.forEach(u -> ftpUserRepository.delete(u));
 	}
 
 	/**
@@ -76,7 +78,9 @@ public class FtpRepositoryTest {
 	 */
 	@Test
 	public void getOne() {
-		Long id = ftpUserRepository.findAll().get(0).getId();
+		Long id = ftpUserRepository	.findAll()
+									.get(0)
+									.getId();
 		Optional<FtpUser> optional = ftpUserRepository.findById(id);
 		FtpUser ftpuser = optional.isPresent() ? optional.get() : null;
 		assertNotNull(ftpuser);
@@ -88,7 +92,9 @@ public class FtpRepositoryTest {
 	 */
 	@Test
 	public void findAllByUsername() {
-		Long id = ftpUserRepository.findAll().get(0).getId();
+		Long id = ftpUserRepository	.findAll()
+									.get(0)
+									.getId();
 		List<FtpUser> list = ftpUserRepository.findAllByUsername("user1");
 		FtpUser ftpuser = list.size() > 0 ? list.get(0) : null;
 		assertNotNull(ftpuser);
@@ -102,7 +108,10 @@ public class FtpRepositoryTest {
 	 */
 	@Test
 	public void getAllUsernames() {
-		List<String> list = ftpUserRepository.findAll().stream().map(FtpUser::getUsername).collect(Collectors.toList());
+		List<String> list = ftpUserRepository	.findAll()
+												.stream()
+												.map(FtpUser::getUsername)
+												.collect(Collectors.toList());
 		assertEquals(3, list.size());
 	}
 
@@ -113,7 +122,9 @@ public class FtpRepositoryTest {
 	 */
 	@Test
 	public void getReferenceUsingEntityManager() {
-		Long id = ftpUserRepository.findAll().get(0).getId();
+		Long id = ftpUserRepository	.findAll()
+									.get(0)
+									.getId();
 		FtpUser ftpuser = entityManager.getReference(FtpUser.class, id);
 		assertNotNull(ftpuser);
 		assertNotNull(ftpuser.getUsername());

@@ -54,7 +54,8 @@ public class WebsocketsSynchronizerTest {
 				"{\"location\":\"/control/control.websocket\",\"handler\":\"control/handler.js\",\"endpoint\":\"mywebsocket\",\"description\":\"Control Websocket\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:24:12+0000\"}";
 		List<Websocket> list = websocketsSynchronizer.parse("/test/test.websocket", content.getBytes());
 		assertNotNull(list);
-		assertEquals("/test/test.websocket", list.get(0).getLocation());
+		assertEquals("/test/test.websocket", list	.get(0)
+													.getLocation());
 	}
 
 	@SpringBootApplication

@@ -61,13 +61,14 @@ public class CamelProcessor {
 	}
 
 	private void addAllRoutes() {
-		camels.values().forEach(routesResource -> {
-			try {
-				loader.loadRoutes(routesResource);
-			} catch (Exception e) {
-				throw new CamelProcessorException(e);
-			}
-		});
+		camels	.values()
+				.forEach(routesResource -> {
+					try {
+						loader.loadRoutes(routesResource);
+					} catch (Exception e) {
+						throw new CamelProcessorException(e);
+					}
+				});
 	}
 
 	private void removeAllRoutes() {
@@ -83,13 +84,17 @@ public class CamelProcessor {
 
 	private void unregisterEndpoints() {
 		List<RequestMappingInfo> mappingsToRemove = new ArrayList<>();
-		camelMapping.getHandlerMethods().forEach((info, method) -> mappingsToRemove.add(info));
+		camelMapping.getHandlerMethods()
+					.forEach((info, method) -> mappingsToRemove.add(info));
 		mappingsToRemove.forEach(info -> camelMapping.unregisterMapping(info));
 	}
 
 	public Object invokeRoute(String routeId, Object payload, Map<String, Object> headers) {
 		try (FluentProducerTemplate producer = context.createFluentProducerTemplate();) {
-			return producer.withHeaders(headers).withBody(payload).to(routeId).request();
+			return producer	.withHeaders(headers)
+							.withBody(payload)
+							.to(routeId)
+							.request();
 		} catch (IOException e) {
 			throw new CamelProcessorException("Could not invoke route: " + routeId, e);
 		}

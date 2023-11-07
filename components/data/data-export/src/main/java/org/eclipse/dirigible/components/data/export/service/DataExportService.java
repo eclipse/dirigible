@@ -118,26 +118,35 @@ public class DataExportService {
 
 				String metadata = DatabaseMetadataHelper.getMetadataAsJson(dataSource);
 				JsonElement database = GsonHelper.parseJson(metadata);
-				JsonArray schemes = database.getAsJsonObject().get("schemas").getAsJsonArray();
+				JsonArray schemes = database.getAsJsonObject()
+											.get("schemas")
+											.getAsJsonArray();
 
 				workspace = WorkspaceFacade.createWorkspace(schema);
 				project = workspace.createProject(schema);
 
 				for (int i = 0; i < schemes.size(); i++) {
-					JsonObject scheme = schemes.get(i).getAsJsonObject();
-					if (!scheme.get("name").getAsString().equalsIgnoreCase(schema)) {
+					JsonObject scheme = schemes	.get(i)
+												.getAsJsonObject();
+					if (!scheme	.get("name")
+								.getAsString()
+								.equalsIgnoreCase(schema)) {
 						continue;
 					}
-					JsonArray tables = scheme.get("tables").getAsJsonArray();
+					JsonArray tables = scheme	.get("tables")
+												.getAsJsonArray();
 					for (int j = 0; j < tables.size(); j++) {
 						File file;
 						CsvFile csvFile = new CsvFile();
 
-						JsonObject table = tables.get(j).getAsJsonObject();
-						String artifact = table.get("name").getAsString();
+						JsonObject table = tables	.get(j)
+													.getAsJsonObject();
+						String artifact = table	.get("name")
+												.getAsString();
 						String sql = "SELECT * FROM \"" + schema + "\".\"" + artifact + "\"";
 						try (Connection connection = dataSource.getConnection()) {
-							sql = SqlDialectFactory.getDialect(connection).allQuery("\"" + schema + "\".\"" + artifact + "\"");
+							sql = SqlDialectFactory	.getDialect(connection)
+													.allQuery("\"" + schema + "\".\"" + artifact + "\"");
 						} catch (Exception e) {
 							logger.error(e.getMessage(), e);
 						}
@@ -145,7 +154,10 @@ public class DataExportService {
 						StringWriter sw = new StringWriter();
 						OutputStream output;
 						try {
-							output = WriterOutputStream.builder().setWriter(sw).setCharset(StandardCharsets.UTF_8).get();
+							output = WriterOutputStream	.builder()
+														.setWriter(sw)
+														.setCharset(StandardCharsets.UTF_8)
+														.get();
 						} catch (IOException e) {
 							throw new SQLException(e);
 						}
@@ -159,7 +171,8 @@ public class DataExportService {
 					}
 				}
 				JsonObject csvimContent = transformCsvFilesToJson(csvFiles);
-				project.createFile(schema + ".csvim", csvimContent.toString().getBytes());
+				project.createFile(schema + ".csvim", csvimContent	.toString()
+																	.getBytes());
 
 				logger.info(format("Created requested files in Project [{1}] in Workspace [{2}]", project.getName(), workspace.getName()));
 			}
@@ -194,7 +207,8 @@ public class DataExportService {
 					format("File with name [{0}] in Project [{1}] in Workspace [{2}] already exists and new metadata could not be exported",
 							schema + ".schema", schema, schema));
 			project = workspaceService.getProject(schema, schema);
-			file = project.find(schema + ".schema").get(0);
+			file = project	.find(schema + ".schema")
+							.get(0);
 		}
 		return file.getWorkspacePath();
 	}
@@ -244,7 +258,8 @@ public class DataExportService {
 		javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
 		if (dataSource != null) {
 			List<String> sorted = dataTransferSchemaTopologyService.sortTopologically(dataSource, schema);
-			return sorted.stream().collect(Collectors.joining("\n"));
+			return sorted	.stream()
+							.collect(Collectors.joining("\n"));
 		}
 		return "DataSource does not exist: " + datasource;
 	}

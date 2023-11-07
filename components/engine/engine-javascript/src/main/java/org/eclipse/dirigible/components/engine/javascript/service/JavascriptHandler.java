@@ -72,10 +72,12 @@ public class JavascriptHandler {
 			boolean debug) {
 		try {
 			if (UserRequestVerifier.isValid()) {
-				UserRequestVerifier.getRequest().setAttribute("dirigible-rest-resource-path", projectFilePathParam);
+				UserRequestVerifier	.getRequest()
+									.setAttribute("dirigible-rest-resource-path", projectFilePathParam);
 			}
 
-			String sourceFilePath = Path.of(projectName, projectFilePath).toString();
+			String sourceFilePath = Path.of(projectName, projectFilePath)
+										.toString();
 			String maybeJSCode = sourceProvider.getSource(sourceFilePath);
 			if (maybeJSCode == null) {
 				throw new IOException("JavaScript source code for project name '" + projectName + "' and file name '" + projectFilePath
@@ -86,10 +88,13 @@ public class JavascriptHandler {
 			try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner(parameters, debug, repository, sourceProvider)) {
 				Source source = runner.prepareSource(absoluteSourcePath);
 				runner	.getGraalJSInterceptor()
-						.onBeforeRun(sourceFilePath, absoluteSourcePath, source, runner.getCodeRunner().getGraalContext());
+						.onBeforeRun(sourceFilePath, absoluteSourcePath, source, runner	.getCodeRunner()
+																						.getGraalContext());
 				Value value = runner.run(source);
 				runner	.getGraalJSInterceptor()
-						.onAfterRun(sourceFilePath, absoluteSourcePath, source, runner.getCodeRunner().getGraalContext(), value);
+						.onAfterRun(sourceFilePath, absoluteSourcePath, source, runner	.getCodeRunner()
+																						.getGraalContext(),
+								value);
 				return transformValue(value);
 			}
 		} catch (Exception e) {
@@ -97,7 +102,8 @@ public class JavascriptHandler {
 				if (e.getMessage() == null) {
 					logger.error("Null object has been found");
 					return e.getMessage();
-				} else if (e.getMessage().contains("consider publish")) {
+				} else if (e.getMessage()
+							.contains("consider publish")) {
 					logger.error(e.getMessage());
 					return e.getMessage();
 				} else {
@@ -124,7 +130,11 @@ public class JavascriptHandler {
 		}
 		Path path = Path.of(filePath);
 		if (path.getNameCount() > 1) {
-			return handleRequest(path.getRoot().toString(), path.subpath(1, path.getNameCount() - 1).toString(), null, parameters, false);
+			return handleRequest(path	.getRoot()
+										.toString(),
+					path.subpath(1, path.getNameCount() - 1)
+						.toString(),
+					null, parameters, false);
 		}
 		throw new RuntimeException("Path to the file to be executed must contain a parent folder");
 	}

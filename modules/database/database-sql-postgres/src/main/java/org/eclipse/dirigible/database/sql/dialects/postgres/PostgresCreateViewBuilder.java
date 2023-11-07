@@ -81,9 +81,12 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
 		int midSqlStartIndex = builder.indexOf("FROM") - 1;
 		boolean isONClauseMissing = builder.indexOf("ON") - 1 < 0;
 		int midSqlEndIndex = (isONClauseMissing) ? midSqlStartIndex : (builder.indexOf("ON") - 1);
-		String preFROMsql = builder.substring(0, midSqlStartIndex).replaceAll("\"", "") + " ";
+		String preFROMsql = builder	.substring(0, midSqlStartIndex)
+									.replaceAll("\"", "")
+				+ " ";
 		String midSql = (isONClauseMissing) ? "" : (builder.substring(midSqlStartIndex, midSqlEndIndex) + " ");
-		String postONsql = builder.substring(midSqlEndIndex + 1).replaceAll("\"", "");
+		String postONsql = builder	.substring(midSqlEndIndex + 1)
+									.replaceAll("\"", "");
 		return preFROMsql + midSql + postONsql;
 	}
 
@@ -143,7 +146,12 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
 	 * @param sql the sql
 	 */
 	protected void generateAsValues(StringBuilder sql) {
-		sql.append(SPACE).append(KEYWORD_AS).append(SPACE).append(KEYWORD_VALUES).append(SPACE).append(this.values);
+		sql	.append(SPACE)
+			.append(KEYWORD_AS)
+			.append(SPACE)
+			.append(KEYWORD_VALUES)
+			.append(SPACE)
+			.append(this.values);
 	}
 
 }

@@ -95,7 +95,8 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 	@Override
 	public void run() {
 		if (this.handler != null) {
-			while (!this.stopped && !Thread.currentThread().isInterrupted()) {
+			while (!this.stopped && !Thread	.currentThread()
+											.isInterrupted()) {
 				receiveMessage();
 			}
 		}
@@ -146,7 +147,8 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 							Map<Object, Object> context = createMessagingContext();
 							context.put("message", escapeCodeString(((TextMessage) message).getText()));
 							RepositoryPath path = new RepositoryPath(DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE);
-							JavascriptService.get().handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+							JavascriptService	.get()
+												.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
 						} else {
 							throw new Exception(format("Invalid message [{0}] has been received in destination [{1}]", message, this.name));
 						}

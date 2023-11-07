@@ -45,11 +45,16 @@ public class ExportImportUtil {
 	 * @throws Exception the exception
 	 */
 	public static void exportCollection(MongoDBConnection connection, String collection, OutputStream output) throws Exception {
-		MongoCursor<Document> cursor = connection.getMongoDatabase().getCollection(collection).find().iterator();
+		MongoCursor<Document> cursor = connection	.getMongoDatabase()
+													.getCollection(collection)
+													.find()
+													.iterator();
 		try (Writer writer = new OutputStreamWriter(output)) {
 			writer.append("[");
 			while (cursor.hasNext()) {
-				writer.write(cursor.next().toJson() + (cursor.hasNext() ? "," : ""));
+				writer.write(cursor	.next()
+									.toJson()
+						+ (cursor.hasNext() ? "," : ""));
 			}
 			writer.append("]");
 		}
@@ -70,7 +75,8 @@ public class ExportImportUtil {
 		mapper.registerModule(new JavaTimeModule());
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-		try (JsonParser jsonParser = mapper.getFactory().createParser(input)) {
+		try (JsonParser jsonParser = mapper	.getFactory()
+											.createParser(input)) {
 
 			if (jsonParser.nextToken() != JsonToken.START_ARRAY) {
 				throw new IllegalStateException("Expected content to be an array");
@@ -78,8 +84,11 @@ public class ExportImportUtil {
 
 			while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
 				try {
-					Document document = Document.parse(jsonParser.readValueAsTree().toString());
-					connection.getMongoDatabase().getCollection(collection).insertOne(document);
+					Document document = Document.parse(jsonParser	.readValueAsTree()
+																	.toString());
+					connection	.getMongoDatabase()
+								.getCollection(collection)
+								.insertOne(document);
 				} catch (IOException e) {
 					logger.error(e.getMessage(), e);
 				}

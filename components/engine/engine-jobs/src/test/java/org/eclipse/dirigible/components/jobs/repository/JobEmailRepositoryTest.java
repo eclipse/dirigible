@@ -82,7 +82,9 @@ public class JobEmailRepositoryTest {
 	 */
 	@Test
 	public void getOne() {
-		Long id = jobEmailRepository.findAll().get(0).getId();
+		Long id = jobEmailRepository.findAll()
+									.get(0)
+									.getId();
 		Optional<JobEmail> optional = jobEmailRepository.findById(id);
 		JobEmail jobEmail = optional.isPresent() ? optional.get() : null;
 		assertNotNull(jobEmail);
@@ -104,7 +106,9 @@ public class JobEmailRepositoryTest {
 	 */
 	@Test
 	public void getReferenceUsingEntityManager() {
-		Long id = jobEmailRepository.findAll().get(0).getId();
+		Long id = jobEmailRepository.findAll()
+									.get(0)
+									.getId();
 		JobEmail extension = entityManager.getReference(JobEmail.class, id);
 		assertNotNull(extension);
 		assertNotNull(extension.getLocation());

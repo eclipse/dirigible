@@ -62,8 +62,9 @@ public class SynchronizationWalker {
 
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				synchronizationWalkerCallback.visitFile(file, attrs,
-						file.toString().substring(root.length()).replace(File.separator, IRepository.SEPARATOR));
+				synchronizationWalkerCallback.visitFile(file, attrs, file	.toString()
+																			.substring(root.length())
+																			.replace(File.separator, IRepository.SEPARATOR));
 				return FileVisitResult.CONTINUE;
 			}
 

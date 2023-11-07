@@ -304,7 +304,8 @@ public final class SQLSelectClause {
 				for (ArrayList<NavigationPropertySegment> contentExpands : expands) {
 					EdmStructuralType toEntityType = target;
 					for (NavigationPropertySegment contentExpand : contentExpands) {
-						EdmEntityType expandEntityType = contentExpand.getTargetEntitySet().getEntityType();
+						EdmEntityType expandEntityType = contentExpand	.getTargetEntitySet()
+																		.getEntityType();
 						Collection<EdmProperty> expandProperties = EdmUtils.getSelectedProperties(EMPTY_LIST, expandEntityType);
 						for (EdmProperty expandProperty : expandProperties) {
 							columnMapping.put(atColumn++, new EdmTarget(expandEntityType, expandProperty));
@@ -336,7 +337,8 @@ public final class SQLSelectClause {
 	 * @return the property from column mapping
 	 */
 	private EdmProperty getPropertyFromColumnMapping(final int columnIndex) {
-		return columnMapping.get(columnIndex).getEdmProperty();
+		return columnMapping.get(columnIndex)
+							.getEdmProperty();
 	}
 
 	/**
@@ -346,7 +348,8 @@ public final class SQLSelectClause {
 	 * @return the target type from column mapping
 	 */
 	private EdmStructuralType getTargetTypeFromColumnMapping(final int columnIndex) {
-		return columnMapping.get(columnIndex).getEdmTargetType();
+		return columnMapping.get(columnIndex)
+							.getEdmTargetType();
 	}
 
 	/**
@@ -398,7 +401,8 @@ public final class SQLSelectClause {
 			if (isSelectTarget(type)) {
 				boolean isView = EdmTableBinding.DataStructureType.VIEW == targetDataStructureType;
 				boolean isCalculationView = EdmTableBinding.DataStructureType.CALC_VIEW == targetDataStructureType;
-				boolean isHanaDatabase = context.getDatabaseProduct().equals(DatabaseProduct.HANA);
+				boolean isHanaDatabase = context.getDatabaseProduct()
+												.equals(DatabaseProduct.HANA);
 				if ((isView || (isCalculationView && isHanaDatabase)) && !this.parameters.isEmpty()) {
 					addInputParamsAsStatementParams(parameters);
 					tables.add(query.getSQLTableName(target) + buildTargetParameters() + " AS " + tableAlias);
@@ -416,7 +420,9 @@ public final class SQLSelectClause {
 	 * @return the string
 	 */
 	private String buildTargetParameters() {
-		return parameters.stream().map(this::createInputParameterPlaceholder).collect(Collectors.joining(", ", "(", ")"));
+		return parameters	.stream()
+							.map(this::createInputParameterPlaceholder)
+							.collect(Collectors.joining(", ", "(", ")"));
 	}
 
 	/**
@@ -427,7 +433,8 @@ public final class SQLSelectClause {
 	 */
 	private String createInputParameterPlaceholder(EdmTarget parameter) {
 		try {
-			String propertyName = parameter.getEdmProperty().getName();
+			String propertyName = parameter	.getEdmProperty()
+											.getName();
 			return "placeholder.\"$$" + propertyName + "$$\"" + " => " + " ?";
 		} catch (EdmException e) {
 			throw new IllegalArgumentException("Failed to create input parameter placeholder", e);
@@ -459,7 +466,8 @@ public final class SQLSelectClause {
 	 */
 	private boolean isSelectTarget(final EdmStructuralType target) {
 		// Always select the entity target
-		return fqn(query.getSelectExpression().getTarget()).equals(fqn(target));
+		return fqn(query.getSelectExpression()
+						.getTarget()).equals(fqn(target));
 	}
 
 	/**
@@ -475,7 +483,8 @@ public final class SQLSelectClause {
 
 			StringBuilder select = new StringBuilder();
 
-			Iterator<Integer> columnIterator = columnMapping.keySet().iterator();
+			Iterator<Integer> columnIterator = columnMapping.keySet()
+															.iterator();
 
 			if (query.hasKeyGeneratedPresent(target) && columnIterator.hasNext()) {
 				select.append("row_number() over() \"row_num\"");
@@ -490,7 +499,8 @@ public final class SQLSelectClause {
 				if (!(p instanceof EdmProperty))
 					throw new OData2Exception("You must map the column " + column + " to a EDM property! The current type of property "
 							+ propertyName + " is " + p, HttpStatusCodes.INTERNAL_SERVER_ERROR);
-				if (p.getType().getKind() == EdmTypeKind.SIMPLE) {
+				if (p	.getType()
+						.getKind() == EdmTypeKind.SIMPLE) {
 					EdmProperty prop = (EdmProperty) p;
 					if (query.hasAggregationTypePresent(target) && !query.isAggregationTypeExplicit(target)
 							&& query.isColumnContainedInAggregationProp(target, query.getPureSQLColumnName(target, prop))) {
@@ -505,11 +515,13 @@ public final class SQLSelectClause {
 						select.append(tableColumnForSelect(type, prop));
 					}
 				} else {
-					if (p.getType().getKind() == EdmTypeKind.COMPLEX) {
+					if (p	.getType()
+							.getKind() == EdmTypeKind.COMPLEX) {
 						EdmStructuralType st = (EdmStructuralType) p.getType();
 
 						query.join(st, type);
-						Iterator<String> prit = st.getPropertyNames().iterator();
+						Iterator<String> prit = st	.getPropertyNames()
+													.iterator();
 						while (prit.hasNext()) {
 							EdmProperty stProp = (EdmProperty) st.getProperty(prit.next());
 							select.append(tableColumnForSelect(st, stProp));
@@ -528,13 +540,14 @@ public final class SQLSelectClause {
 
 			addInputParamsAsStatementParams(parameters);
 
-			String inputParamsSelectColumns =
-					parameters	.stream()
-								.map(parameter -> "?" + " AS "
-										+ query.getSQLTableColumnAlias(parameter.getEdmTargetType(), parameter.getEdmProperty()))
-								.collect(Collectors.joining(", "));
+			String inputParamsSelectColumns = parameters.stream()
+														.map(parameter -> "?" + " AS "
+																+ query.getSQLTableColumnAlias(parameter.getEdmTargetType(),
+																		parameter.getEdmProperty()))
+														.collect(Collectors.joining(", "));
 
-			if (!inputParamsSelectColumns.isEmpty() && !select.toString().isEmpty()) {
+			if (!inputParamsSelectColumns.isEmpty() && !select	.toString()
+																.isEmpty()) {
 				select.append(", ");
 				select.append(inputParamsSelectColumns);
 			}
@@ -549,14 +562,15 @@ public final class SQLSelectClause {
 	 * @param parameters the parameters
 	 */
 	private void addInputParamsAsStatementParams(Collection<EdmTarget> parameters) {
-		parameters.stream().forEach(parameter -> {
-			try {
-				SQLStatementParam sqlStatementParam = createSqlStatementParam(parameter);
-				statementParams.add(sqlStatementParam);
-			} catch (EdmException e) {
-				throw new IllegalArgumentException("Failed to create SQL statement parameter", e);
-			}
-		});
+		parameters	.stream()
+					.forEach(parameter -> {
+						try {
+							SQLStatementParam sqlStatementParam = createSqlStatementParam(parameter);
+							statementParams.add(sqlStatementParam);
+						} catch (EdmException e) {
+							throw new IllegalArgumentException("Failed to create SQL statement parameter", e);
+						}
+					});
 	}
 
 	/**

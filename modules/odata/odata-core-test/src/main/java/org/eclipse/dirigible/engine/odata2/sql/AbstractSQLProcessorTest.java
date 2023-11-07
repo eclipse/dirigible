@@ -103,7 +103,8 @@ public abstract class AbstractSQLProcessorTest {
 	 */
 	private void initLiquibase(DataSource ds) throws SQLException {
 		try (Connection connection = ds.getConnection()) {
-			Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+			Database database = DatabaseFactory	.getInstance()
+												.findCorrectDatabaseImplementation(new JdbcConnection(connection));
 			Liquibase liquibase = new liquibase.Liquibase(getChangelogLocation(), new ClassLoaderResourceAccessor(), database);
 			liquibase.update(new Contexts(), new LabelExpression());
 		} catch (DatabaseException e) {
@@ -181,7 +182,8 @@ public abstract class AbstractSQLProcessorTest {
 					final HttpServletRequest servletRequest) throws IOException {
 
 				final ServletInputStream s = new DelegateServletInputStream(new ByteArrayInputStream(content.getBytes()));
-				expect(servletRequest.getInputStream()).andReturn(s).atLeastOnce();
+				expect(servletRequest.getInputStream())	.andReturn(s)
+														.atLeastOnce();
 			}
 
 		};
@@ -294,7 +296,8 @@ public abstract class AbstractSQLProcessorTest {
 	 * @throws ODataException the o data exception
 	 */
 	protected ODataFeed retrieveODataFeed(final Response response, final String entitySetName) throws IOException, ODataException {
-		EdmEntitySet entitySet = new EdmImplProv(edm).getDefaultEntityContainer().getEntitySet(entitySetName);
+		EdmEntitySet entitySet = new EdmImplProv(edm)	.getDefaultEntityContainer()
+														.getEntitySet(entitySetName);
 		return OData2TestUtils.retrieveODataFeedFromResponse(response, entitySet);
 	}
 
@@ -308,7 +311,8 @@ public abstract class AbstractSQLProcessorTest {
 	 * @throws ODataException the o data exception
 	 */
 	protected ODataEntry retrieveODataEntry(final Response response, final String entitySetName) throws IOException, ODataException {
-		EdmEntitySet entitySet = new EdmImplProv(edm).getDefaultEntityContainer().getEntitySet(entitySetName);
+		EdmEntitySet entitySet = new EdmImplProv(edm)	.getDefaultEntityContainer()
+														.getEntitySet(entitySetName);
 		return OData2TestUtils.retrieveODataEntryFromResponse(response, entitySet);
 	}
 

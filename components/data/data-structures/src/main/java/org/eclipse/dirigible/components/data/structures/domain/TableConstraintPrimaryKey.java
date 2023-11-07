@@ -39,7 +39,8 @@ public class TableConstraintPrimaryKey extends TableConstraint {
 	 */
 	public TableConstraintPrimaryKey(String name, String[] modifiers, String[] columns, TableConstraints constraints) {
 		super(name, modifiers, columns, constraints);
-		this.getConstraints().setPrimaryKey(this);
+		this.getConstraints()
+			.setPrimaryKey(this);
 	}
 
 	/**
@@ -75,7 +76,9 @@ public class TableConstraintPrimaryKey extends TableConstraint {
 	@Override
 	public String toString() {
 		return "TableConstraintPrimaryKey [id=" + id + ", name=" + name + ", modifiers=" + modifiers + ", columns=" + columns
-				+ ", constraints.table=" + constraints.getTable().getName() + "]";
+				+ ", constraints.table=" + constraints	.getTable()
+														.getName()
+				+ "]";
 	}
 
 }

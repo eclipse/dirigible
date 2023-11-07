@@ -84,7 +84,9 @@ public class JobLogRepositoryTest {
 	 */
 	@Test
 	public void getOne() {
-		Long id = jobLogRepository.findAll().get(0).getId();
+		Long id = jobLogRepository	.findAll()
+									.get(0)
+									.getId();
 		Optional<JobLog> optional = jobLogRepository.findById(id);
 		JobLog jobLog = optional.isPresent() ? optional.get() : null;
 		assertNotNull(jobLog);
@@ -109,7 +111,9 @@ public class JobLogRepositoryTest {
 	 */
 	@Test
 	public void getReferenceUsingEntityManager() {
-		Long id = jobLogRepository.findAll().get(0).getId();
+		Long id = jobLogRepository	.findAll()
+									.get(0)
+									.getId();
 		JobLog extension = entityManager.getReference(JobLog.class, id);
 		assertNotNull(extension);
 		assertNotNull(extension.getLocation());

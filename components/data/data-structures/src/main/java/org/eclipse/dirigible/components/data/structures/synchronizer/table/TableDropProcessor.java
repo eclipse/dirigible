@@ -50,8 +50,13 @@ public class TableDropProcessor {
 		if (logger.isInfoEnabled()) {
 			logger.info("Processing Drop Table: " + tableName);
 		}
-		if (SqlFactory.getNative(connection).existsTable(connection, tableName)) {
-			String sql = SqlFactory.getNative(connection).select().column("COUNT(*)").from(tableName).build();
+		if (SqlFactory	.getNative(connection)
+						.existsTable(connection, tableName)) {
+			String sql = SqlFactory	.getNative(connection)
+									.select()
+									.column("COUNT(*)")
+									.from(tableName)
+									.build();
 			PreparedStatement statement = connection.prepareStatement(sql);
 			try {
 				if (logger.isInfoEnabled()) {
@@ -82,14 +87,26 @@ public class TableDropProcessor {
 				}
 			}
 
-			if (tableModel.getConstraints().getForeignKeys() != null && !tableModel.getConstraints().getForeignKeys().isEmpty()) {
-				for (TableConstraintForeignKey foreignKeyModel : tableModel.getConstraints().getForeignKeys()) {
-					sql = SqlFactory.getNative(connection).drop().constraint(foreignKeyModel.getName()).fromTable(tableName).build();
+			if (tableModel	.getConstraints()
+							.getForeignKeys() != null
+					&& !tableModel	.getConstraints()
+									.getForeignKeys()
+									.isEmpty()) {
+				for (TableConstraintForeignKey foreignKeyModel : tableModel	.getConstraints()
+																			.getForeignKeys()) {
+					sql = SqlFactory.getNative(connection)
+									.drop()
+									.constraint(foreignKeyModel.getName())
+									.fromTable(tableName)
+									.build();
 					executeUpdate(connection, sql);
 				}
 			}
 
-			sql = SqlFactory.getNative(connection).drop().table(tableName).build();
+			sql = SqlFactory.getNative(connection)
+							.drop()
+							.table(tableName)
+							.build();
 			executeUpdate(connection, sql);
 		}
 	}

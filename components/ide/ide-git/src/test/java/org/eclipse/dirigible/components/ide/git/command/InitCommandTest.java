@@ -53,7 +53,8 @@ public class InitCommandTest {
 		String gitEnabled = System.getenv(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
 		if (gitEnabled != null) {
 			String user = UserFacade.getName();
-			if (GitFileUtils.getGitDirectory(user, "workspace1").exists()) {
+			if (GitFileUtils.getGitDirectory(user, "workspace1")
+							.exists()) {
 				GitFileUtils.deleteGitDirectory(user, "workspace1", "workspace-repo");
 			}
 			File gitRepo = GitFileUtils.createGitDirectory(user, "workspace1", "workspace-repo");

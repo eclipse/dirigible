@@ -126,7 +126,9 @@ public class LogsService {
 		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
 		List<Logger> loggers = loggerContext.getLoggerList();
 		for (Logger logger : loggers) {
-			LogInfo logInfo = new LogInfo(logger.getName(), logger.getLevel() == null ? "-" : logger.getLevel().toString());
+			LogInfo logInfo = new LogInfo(logger.getName(), logger.getLevel() == null ? "-"
+					: logger.getLevel()
+							.toString());
 			result.add(logInfo);
 		}
 		return result;

@@ -60,12 +60,16 @@ public class AccessRepositoryTest {
 	@AfterEach
 	public void cleanup() {
 		// Delete test security accesses
-		securityAccessRepository.findAll().stream().forEach(securityAccess -> securityAccessRepository.delete(securityAccess));
+		securityAccessRepository.findAll()
+								.stream()
+								.forEach(securityAccess -> securityAccessRepository.delete(securityAccess));
 	}
 
 	@Test
 	public void getOne() {
-		Long id = securityAccessRepository.findAll().get(0).getId();
+		Long id = securityAccessRepository	.findAll()
+											.get(0)
+											.getId();
 		Optional<Access> optional = securityAccessRepository.findById(id);
 		Access securityAccess = optional.isPresent() ? optional.get() : null;
 		assertNotNull(securityAccess);
@@ -77,7 +81,9 @@ public class AccessRepositoryTest {
 
 	@Test
 	public void getReferenceUsingEntityManager() {
-		Long id = securityAccessRepository.findAll().get(0).getId();
+		Long id = securityAccessRepository	.findAll()
+											.get(0)
+											.getId();
 		Access securityAccess = entityManager.getReference(Access.class, id);
 		assertNotNull(securityAccess);
 		assertNotNull(securityAccess.getLocation());

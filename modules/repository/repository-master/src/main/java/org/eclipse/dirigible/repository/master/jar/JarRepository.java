@@ -36,10 +36,13 @@ public class JarRepository extends ZipRepository {
 	 */
 	public JarRepository(String zip) throws LocalRepositoryException, IOException {
 
-		InputStream in = JarRepository.class.getClassLoader().getSystemResourceAsStream(zip);
+		InputStream in = JarRepository.class.getClassLoader()
+											.getSystemResourceAsStream(zip);
 		try {
 			if (in == null) {
-				in = JarRepository.class.getClassLoader().getParent().getResourceAsStream(zip);
+				in = JarRepository.class.getClassLoader()
+										.getParent()
+										.getResourceAsStream(zip);
 			}
 			if (in == null) {
 				in = JarRepository.class.getResourceAsStream(zip);

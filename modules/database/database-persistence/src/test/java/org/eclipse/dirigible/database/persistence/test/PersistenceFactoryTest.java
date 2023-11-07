@@ -37,7 +37,8 @@ public class PersistenceFactoryTest {
 		PersistenceTableModel persistenceModel = PersistenceFactory.createModel(customer);
 		assertEquals("CUSTOMERS", persistenceModel.getTableName());
 		assertEquals("FACTORY", persistenceModel.getSchemaName());
-		assertTrue(persistenceModel.getColumns().size() == 4);
+		assertTrue(persistenceModel	.getColumns()
+									.size() == 4);
 		PersistenceTableColumnModel persistenceCoulmnModelCustomerId = null;
 		for (PersistenceTableColumnModel persistenceCoulmnModel : persistenceModel.getColumns()) {
 			if ("CUSTOMER_ID".equals(persistenceCoulmnModel.getName())) {
@@ -61,7 +62,8 @@ public class PersistenceFactoryTest {
 			PersistenceTableModel persistenceModel = PersistenceFactory.createModel(json);
 			assertEquals("CUSTOMERS", persistenceModel.getTableName());
 			assertEquals("FACTORY", persistenceModel.getSchemaName());
-			assertTrue(persistenceModel.getColumns().size() == 4);
+			assertTrue(persistenceModel	.getColumns()
+										.size() == 4);
 			PersistenceTableColumnModel persistenceCoulmnModelCustomerId = null;
 			for (PersistenceTableColumnModel persistenceCoulmnModel : persistenceModel.getColumns()) {
 				if ("CUSTOMER_ID".equals(persistenceCoulmnModel.getName())) {

@@ -111,8 +111,10 @@ public class CommandService {
 		String result;
 
 		String commandSource = new String(getResourceContent(module), StandardCharsets.UTF_8);
-		String root = registryAccessor.getRepository().getParameter("REPOSITORY_ROOT_FOLDER");
-		String workingDirectory = root + getResource(module).getParent().getPath();
+		String root = registryAccessor	.getRepository()
+										.getParameter("REPOSITORY_ROOT_FOLDER");
+		String workingDirectory = root + getResource(module).getParent()
+															.getPath();
 
 		Command commandDefinition;
 		try {
@@ -126,7 +128,8 @@ public class CommandService {
 
 		commandDefinition.validate();
 
-		String commandLine = commandDefinition.getTargetCommand().getCommand();
+		String commandLine = commandDefinition	.getTargetCommand()
+												.getCommand();
 
 		result = executeCommandLine(workingDirectory, commandLine, commandDefinition.getSet(), commandDefinition.getUnset(), params);
 

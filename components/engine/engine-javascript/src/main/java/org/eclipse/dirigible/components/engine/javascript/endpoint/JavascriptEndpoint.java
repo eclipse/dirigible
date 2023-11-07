@@ -83,11 +83,16 @@ public class JavascriptEndpoint extends BaseEndpoint {
 
 	@GetMapping("/all-dts")
 	public List<Dts> getDTS() throws IOException {
-		Path dtsRoot = sourceProvider.getAbsoluteProjectPath("modules").resolve("dist").resolve("dts");
+		Path dtsRoot = sourceProvider	.getAbsoluteProjectPath("modules")
+										.resolve("dist")
+										.resolve("dts");
 
-		if (dtsRoot.toFile().exists()) {
+		if (dtsRoot	.toFile()
+					.exists()) {
 			try (var dtsTree = Files.walk(dtsRoot)) {
-				List<Dts> allDtsFilesContent = dtsTree.filter(Files::isRegularFile).map(dts -> Dts.fromDtsPath(dtsRoot, dts)).toList();
+				List<Dts> allDtsFilesContent = dtsTree	.filter(Files::isRegularFile)
+														.map(dts -> Dts.fromDtsPath(dtsRoot, dts))
+														.toList();
 				return allDtsFilesContent;
 			}
 		} else {
@@ -327,10 +332,13 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 */
 	public boolean isValid(String inputPath) {
 		String registryPath = getDirigibleWorkingDirectory().toString();
-		String normalizedInputPath = java.nio.file.Path.of(inputPath).normalize().toString();
+		String normalizedInputPath = java.nio.file.Path	.of(inputPath)
+														.normalize()
+														.toString();
 		File file = new File(registryPath, normalizedInputPath);
 		try {
-			return file.getCanonicalPath().startsWith(registryPath);
+			return file	.getCanonicalPath()
+						.startsWith(registryPath);
 		} catch (IOException e) {
 			return false;
 		}
@@ -356,7 +364,8 @@ public class JavascriptEndpoint extends BaseEndpoint {
 			String content = readAllText(dtsPath);
 			Path relativePath = dtsDirRoot.relativize(dtsPath);
 			String filePath = "file:///node_modules/@dirigible/" + relativePath;
-			String moduleName = ("@dirigible/" + relativePath).replace("index.d.ts", "").replace(".d.ts", "");
+			String moduleName = ("@dirigible/" + relativePath)	.replace("index.d.ts", "")
+																.replace(".d.ts", "");
 			return new Dts(content, moduleName, filePath);
 		}
 

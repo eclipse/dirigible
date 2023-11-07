@@ -171,7 +171,11 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 	 */
 	private void queryAll(Connection connection, PersistenceManager<Customer> persistenceManager) {
 
-		String sql = SqlFactory.getNative(connection).select().column("*").from("CUSTOMERS").build();
+		String sql = SqlFactory	.getNative(connection)
+								.select()
+								.column("*")
+								.from("CUSTOMERS")
+								.build();
 
 		List<Customer> list = persistenceManager.query(connection, Customer.class, sql);
 
@@ -197,7 +201,12 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 	 */
 	private void queryByName(Connection connection, PersistenceManager<Customer> persistenceManager) {
 
-		String sql = SqlFactory.getNative(connection).select().column("*").from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").build();
+		String sql = SqlFactory	.getNative(connection)
+								.select()
+								.column("*")
+								.from("CUSTOMERS")
+								.where("CUSTOMER_FIRST_NAME = ?")
+								.build();
 
 		List<Object> values = new ArrayList<Object>();
 		values.add("Jane");
@@ -220,7 +229,12 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 	 */
 	private void queryByNameVarArgs(Connection connection, PersistenceManager<Customer> persistenceManager) {
 
-		String sql = SqlFactory.getNative(connection).select().column("*").from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").build();
+		String sql = SqlFactory	.getNative(connection)
+								.select()
+								.column("*")
+								.from("CUSTOMERS")
+								.where("CUSTOMER_FIRST_NAME = ?")
+								.build();
 
 		List<Customer> list = persistenceManager.query(connection, Customer.class, sql, "Jane");
 
@@ -291,7 +305,11 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 
 		assertEquals("James", customer.getFirstName());
 
-		String sql = SqlFactory.getNative(connection).delete().from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").build();
+		String sql = SqlFactory	.getNative(connection)
+								.delete()
+								.from("CUSTOMERS")
+								.where("CUSTOMER_FIRST_NAME = ?")
+								.build();
 
 		int result = persistenceManager.execute(connection, sql, "James");
 

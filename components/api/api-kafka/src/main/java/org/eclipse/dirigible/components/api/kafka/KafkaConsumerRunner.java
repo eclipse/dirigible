@@ -97,7 +97,8 @@ public class KafkaConsumerRunner implements Runnable {
 						context.put("message", escapeCodeString(GsonHelper.toJson(record)));
 						try {
 							RepositoryPath path = new RepositoryPath(DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE);
-							JavascriptService.get().handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+							JavascriptService	.get()
+												.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
 						} catch (Exception e) {
 							if (logger.isErrorEnabled()) {
 								logger.error(e.getMessage(), e);

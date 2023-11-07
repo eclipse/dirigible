@@ -125,8 +125,10 @@ public class WikiService {
 		// uncomment to convert soft-breaks to hard breaks
 		options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");
 
-		Parser parser = Parser.builder(options).build();
-		HtmlRenderer renderer = HtmlRenderer.builder(options).build();
+		Parser parser = Parser	.builder(options)
+								.build();
+		HtmlRenderer renderer = HtmlRenderer.builder(options)
+											.build();
 
 		// You can re-use parser and renderer instances
 		Node document = parser.parse(content);
@@ -160,7 +162,8 @@ public class WikiService {
 	 */
 	private void storeGenerated(String path, String html) {
 		String target = generatePath(path);
-		registryAccessor.getRepository().createResource(target, html.getBytes());
+		registryAccessor.getRepository()
+						.createResource(target, html.getBytes());
 	}
 
 	/**
@@ -191,7 +194,8 @@ public class WikiService {
 	 */
 	public void removeGenerated(String path) {
 		String target = generatePath(path);
-		IResource resource = registryAccessor.getRepository().getResource(target);
+		IResource resource = registryAccessor	.getRepository()
+												.getResource(target);
 		if (resource.exists()) {
 			resource.delete();
 		}

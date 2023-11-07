@@ -67,19 +67,30 @@ public class JobsManager {
 				if (!JOB_GROUP_DEFINED.equals(jobDefinition.getGroup())) {
 					// internal jobs
 					Class<Job> jobClass = (Class<Job>) Class.forName(jobDefinition.getClazz());
-					job = newJob(jobClass).withIdentity(jobKey).withDescription(jobDefinition.getDescription()).build();
+					job = newJob(jobClass)	.withIdentity(jobKey)
+											.withDescription(jobDefinition.getDescription())
+											.build();
 				} else {
 					// user defined jobs
-					job = newJob(JobHandler.class).withIdentity(jobKey).withDescription(jobDefinition.getDescription()).build();
-					job.getJobDataMap().put(JobHandler.JOB_PARAMETER_HANDLER, jobDefinition.getHandler());
-					job.getJobDataMap().put(JobHandler.JOB_PARAMETER_ENGINE, jobDefinition.getEngine());
+					job = newJob(JobHandler.class)	.withIdentity(jobKey)
+													.withDescription(jobDefinition.getDescription())
+													.build();
+					job	.getJobDataMap()
+						.put(JobHandler.JOB_PARAMETER_HANDLER, jobDefinition.getHandler());
+					job	.getJobDataMap()
+						.put(JobHandler.JOB_PARAMETER_ENGINE, jobDefinition.getEngine());
 				}
 
 				Trigger trigger = null;
-				if (!jobDefinition.getExpression().equals("")) {
-					trigger = newTrigger().withIdentity(triggerKey).withSchedule(cronSchedule(jobDefinition.getExpression())).build();
+				if (!jobDefinition	.getExpression()
+									.equals("")) {
+					trigger = newTrigger()	.withIdentity(triggerKey)
+											.withSchedule(cronSchedule(jobDefinition.getExpression()))
+											.build();
 				} else {
-					trigger = newTrigger().withIdentity(triggerKey).startNow().build();
+					trigger = newTrigger()	.withIdentity(triggerKey)
+											.startNow()
+											.build();
 				}
 				scheduler.scheduleJob(job, trigger);
 
@@ -154,7 +165,9 @@ public class JobsManager {
 	public boolean existsJob(String name) throws Exception {
 		Set<TriggerKey> triggerKeys = listJobs();
 		for (TriggerKey triggerKey : triggerKeys) {
-			if (triggerKey.getName().equals(name) && JOB_GROUP_DEFINED.equals(triggerKey.getGroup())) {
+			if (triggerKey	.getName()
+							.equals(name)
+					&& JOB_GROUP_DEFINED.equals(triggerKey.getGroup())) {
 				return true;
 			}
 		}

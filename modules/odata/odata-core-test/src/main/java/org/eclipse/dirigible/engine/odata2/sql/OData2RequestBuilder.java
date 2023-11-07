@@ -224,7 +224,8 @@ public class OData2RequestBuilder {
 		//
 		final IAnswer<List<String>> getRequestHeaderAnswer = () -> headersMap.get(nameCapture.getValue());
 		//
-		expect(httpHeaders.getRequestHeader(capture(nameCapture))).andAnswer(getRequestHeaderAnswer).anyTimes();
+		expect(httpHeaders.getRequestHeader(capture(nameCapture)))	.andAnswer(getRequestHeaderAnswer)
+																	.anyTimes();
 		subLocatorParam.setHttpHeaders(httpHeaders);
 
 		// Mock ServletContext
@@ -238,18 +239,23 @@ public class OData2RequestBuilder {
 		expect(servletRequest.getServerName()).andReturn(HOST);
 		expect(servletRequest.getServerPort()).andReturn(PORT);
 		expect(servletRequest.getScheme()).andReturn(PROTOCOL);
-		expect(servletRequest.getRemoteUser()).andReturn("RemoteUser").anyTimes();
+		expect(servletRequest.getRemoteUser())	.andReturn("RemoteUser")
+												.anyTimes();
 		// needed for tests in it-op
-		expect(servletRequest.getHeader("x-forwarded-for")).andReturn("127.0.0.1").anyTimes();
+		expect(servletRequest.getHeader("x-forwarded-for"))	.andReturn("127.0.0.1")
+															.anyTimes();
 		StringBuilder pathSegmentsString = new StringBuilder();
 		for (String pathSegment : pathSegmentStringList) {
-			pathSegmentsString.append('/').append(pathSegment);
+			pathSegmentsString	.append('/')
+								.append(pathSegment);
 		}
 		expect(servletRequest.getRequestURL()).andReturn(new StringBuffer(absoluteServiceRoot() + pathSegmentsString));
-		expect(servletRequest.getRequestURI()).andReturn(RELATIVE_SERVICE_ROOT + pathSegmentsString).anyTimes();
+		expect(servletRequest.getRequestURI())	.andReturn(RELATIVE_SERVICE_ROOT + pathSegmentsString)
+												.anyTimes();
 		expect(servletRequest.getQueryString()).andReturn(createQueryString(queryParams));
 		getServletInputStream(method, easyMockSupport, servletRequest);
-		expect(servletRequest.getServletContext()).andReturn(servletContext).anyTimes();
+		expect(servletRequest.getServletContext())	.andReturn(servletContext)
+													.anyTimes();
 		enrichServletRequestMock(servletRequest);
 		subLocatorParam.setServletRequest(servletRequest);
 
@@ -341,7 +347,8 @@ public class OData2RequestBuilder {
 		final ServletInputStream contentInputStream = easyMockSupport.createMock(ServletInputStream.class); // NOSONAR mock doesn't have to
 																											// be closed
 		if (method.equals(POST) || method.equals(PUT)) {
-			expect(contentInputStream.available()).andReturn(0).anyTimes();
+			expect(contentInputStream.available())	.andReturn(0)
+													.anyTimes();
 			if (contentSize > 0) {
 				expect(contentInputStream.read(EasyMock.anyObject()))	.andReturn(contentSize)
 																		.times(1)
@@ -350,10 +357,12 @@ public class OData2RequestBuilder {
 																		.andReturn(0)
 																		.anyTimes();
 			} else {
-				expect(contentInputStream.read(EasyMock.anyObject())).andReturn(contentSize).times(1);
+				expect(contentInputStream.read(EasyMock.anyObject()))	.andReturn(contentSize)
+																		.times(1);
 			}
 		}
-		expect(servletRequest.getInputStream()).andReturn(contentInputStream).atLeastOnce();
+		expect(servletRequest.getInputStream())	.andReturn(contentInputStream)
+												.atLeastOnce();
 	}
 
 	/**
@@ -402,7 +411,9 @@ public class OData2RequestBuilder {
 				if (queryString.length() > 0) {
 					queryString.append('&');
 				}
-				queryString.append(entry.getKey()).append('=').append(paramValue);
+				queryString	.append(entry.getKey())
+							.append('=')
+							.append(paramValue);
 			}
 		}
 		return HttpUtils.pathEncode(queryString.toString());

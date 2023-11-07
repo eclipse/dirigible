@@ -125,7 +125,8 @@ public final class SQLUtils {
 	 * @return the timestamp
 	 */
 	public static Timestamp asTimeStamp(final Calendar calendar) {
-		return new Timestamp(calendar.getTime().getTime());
+		return new Timestamp(calendar	.getTime()
+										.getTime());
 	}
 
 	/**
@@ -135,7 +136,8 @@ public final class SQLUtils {
 	 * @return the time
 	 */
 	public static Time asTime(final Calendar calendar) {
-		return new Time(calendar.getTime().getTime());
+		return new Time(calendar.getTime()
+								.getTime());
 	}
 
 	/**
@@ -145,7 +147,8 @@ public final class SQLUtils {
 	 * @return the date
 	 */
 	public static Date asSQLDate(final Calendar calendar) {
-		return new Date(calendar.getTime().getTime());
+		return new Date(calendar.getTime()
+								.getTime());
 	}
 
 	/**
@@ -165,7 +168,8 @@ public final class SQLUtils {
 	 * @return the string
 	 */
 	public static String normalizeSQLExpression(final String expression) {
-		return expression.replaceAll("  ", " ").trim();
+		return expression	.replaceAll("  ", " ")
+							.trim();
 	}
 
 	/**
@@ -176,7 +180,9 @@ public final class SQLUtils {
 	 * @return the string
 	 */
 	public static String assertParametersCount(String sql, List<SQLStatementParam> params) {
-		long count = sql.chars().filter(ch -> ch == '?').count();
+		long count = sql.chars()
+						.filter(ch -> ch == '?')
+						.count();
 		if (count != params.size()) {
 			throw new IllegalStateException("The count of the ? symbols in the generated SQL " + sql
 					+ " does not match the existing params " + params + ". Make sure that the count is the same");
@@ -229,7 +235,8 @@ public final class SQLUtils {
 					Object literal = keyPredicate.getLiteral();
 
 					if (property.isSimple()) {
-						EdmSimpleType edmSimpleType = (EdmSimpleType) keyPredicate.getProperty().getType();
+						EdmSimpleType edmSimpleType = (EdmSimpleType) keyPredicate	.getProperty()
+																					.getType();
 						literal = evaluateDateTimeExpressions(literal, edmSimpleType);
 						ColumnInfo info = query.getSQLTableColumnInfo(type, property);
 						params.add(SQLWhereClause.param(literal, edmSimpleType, info));
@@ -244,7 +251,8 @@ public final class SQLUtils {
 
 			while (paramIterator.hasNext()) {
 				SQLStatementParam param = paramIterator.next();
-				whereClause.append(param.getSqlColumnName()).append(" = ?");
+				whereClause	.append(param.getSqlColumnName())
+							.append(" = ?");
 
 				if (paramIterator.hasNext()) {
 					whereClause.append(" AND ");
@@ -265,7 +273,8 @@ public final class SQLUtils {
 	 * @return the string
 	 */
 	public static String csvInBrackets(List<String> columnValues) {
-		return columnValues.stream().collect(Collectors.joining(",", "(", ")"));
+		return columnValues	.stream()
+							.collect(Collectors.joining(",", "(", ")"));
 	}
 
 	/**

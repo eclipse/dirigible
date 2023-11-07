@@ -141,8 +141,9 @@ public class SingleConnectionDataSource implements DataSource {
 	 * @return the non closable connection
 	 */
 	Connection getNonClosableConnection(Connection connection) {
-		return (Connection) Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class<?>[] {Connection.class},
-				new NonClosableConnection(connection));
+		return (Connection) Proxy.newProxyInstance(this	.getClass()
+														.getClassLoader(),
+				new Class<?>[] {Connection.class}, new NonClosableConnection(connection));
 	}
 
 

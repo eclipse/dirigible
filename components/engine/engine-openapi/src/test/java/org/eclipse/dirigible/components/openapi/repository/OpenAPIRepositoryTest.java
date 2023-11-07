@@ -59,7 +59,9 @@ public class OpenAPIRepositoryTest {
 
 	@Test
 	public void getOne() {
-		Long id = openAPIRepository.findAll().get(0).getId();
+		Long id = openAPIRepository	.findAll()
+									.get(0)
+									.getId();
 		Optional<OpenAPI> optional = openAPIRepository.findById(id);
 		OpenAPI openAPI = optional.isPresent() ? optional.get() : null;
 		assertNotNull(openAPI);
@@ -71,7 +73,9 @@ public class OpenAPIRepositoryTest {
 
 	@Test
 	public void getReferenceUsingEntityManager() {
-		Long id = openAPIRepository.findAll().get(0).getId();
+		Long id = openAPIRepository	.findAll()
+									.get(0)
+									.getId();
 		OpenAPI openAPI = entityManager.getReference(OpenAPI.class, id);
 		assertNotNull(openAPI);
 		assertNotNull(openAPI.getLocation());

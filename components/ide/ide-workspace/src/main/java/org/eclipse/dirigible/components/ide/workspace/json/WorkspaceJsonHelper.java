@@ -98,7 +98,8 @@ public class WorkspaceJsonHelper implements InitializingBean {
 	public static WorkspaceDescriptor describeWorkspace(ICollection collection, String removePathPrefix, String addPathPrefix) {
 		WorkspaceDescriptor workspacePojo = new WorkspaceDescriptor();
 		workspacePojo.setName(collection.getName());
-		workspacePojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
+		workspacePojo.setPath(addPathPrefix + collection.getPath()
+														.substring(removePathPrefix.length()));
 		List<ICollection> collections = collection.getCollections();
 		Map<String, ProjectStatus> projectStatusCache = new HashMap<String, ProjectStatus>();
 		for (ICollection childCollection : collections) {
@@ -121,10 +122,12 @@ public class WorkspaceJsonHelper implements InitializingBean {
 	public static WorkspaceDescriptor describeWorkspaceProjects(ICollection collection, String removePathPrefix, String addPathPrefix) {
 		WorkspaceDescriptor workspacePojo = new WorkspaceDescriptor();
 		workspacePojo.setName(collection.getName());
-		workspacePojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
+		workspacePojo.setPath(addPathPrefix + collection.getPath()
+														.substring(removePathPrefix.length()));
 		List<ICollection> collections = collection.getCollections();
 		for (ICollection childCollection : collections) {
-			workspacePojo.getProjects().add(describeProjectOnly(childCollection, removePathPrefix, addPathPrefix));
+			workspacePojo	.getProjects()
+							.add(describeProjectOnly(childCollection, removePathPrefix, addPathPrefix));
 		}
 
 		return workspacePojo;
@@ -158,19 +161,22 @@ public class WorkspaceJsonHelper implements InitializingBean {
 			Map<String, ProjectStatus> projectStatusCache) {
 		ProjectDescriptor projectPojo = new ProjectDescriptor();
 		projectPojo.setName(collection.getName());
-		projectPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
+		projectPojo.setPath(addPathPrefix + collection	.getPath()
+														.substring(removePathPrefix.length()));
 		RepositoryPath repositoryPath = new RepositoryPath(collection.getPath());
 
 		ProjectStatus status = getProjectStatus(workspace, collection, projectPojo, repositoryPath, projectStatusCache);
 
 		List<ICollection> collections = collection.getCollections();
 		for (ICollection childCollection : collections) {
-			projectPojo.getFolders().add(describeFolder(childCollection, removePathPrefix, addPathPrefix, status));
+			projectPojo	.getFolders()
+						.add(describeFolder(childCollection, removePathPrefix, addPathPrefix, status));
 		}
 
 		List<IResource> resources = collection.getResources();
 		for (IResource childResource : resources) {
-			projectPojo.getFiles().add(describeFile(childResource, removePathPrefix, addPathPrefix, status));
+			projectPojo	.getFiles()
+						.add(describeFile(childResource, removePathPrefix, addPathPrefix, status));
 		}
 
 		return projectPojo;
@@ -208,7 +214,9 @@ public class WorkspaceJsonHelper implements InitializingBean {
 		if (projectPojo.isGit()) {
 			String git = "";
 			try {
-				git = WorkspaceJsonHelper.get().getProjectStatusProvider().getProjectGitFolder(workspace, projectPojo.getName());
+				git = WorkspaceJsonHelper	.get()
+											.getProjectStatusProvider()
+											.getProjectGitFolder(workspace, projectPojo.getName());
 				if (git != null) {
 					git = findRootGit(git);
 				}
@@ -224,7 +232,9 @@ public class WorkspaceJsonHelper implements InitializingBean {
 			} else if (projectPojo.isGit()) {
 				status = WorkspaceJsonHelper.get()
 											.getProjectStatusProvider()
-											.getProjectStatus(collection.getParent().getName(), collection.getName());
+											.getProjectStatus(collection.getParent()
+																		.getName(),
+													collection.getName());
 				projectStatusCache.put(projectPojo.getGitName(), status);
 				status = remapPaths(projectPojo.getName(), git, status);
 			}
@@ -240,11 +250,17 @@ public class WorkspaceJsonHelper implements InitializingBean {
 	 * @return the string
 	 */
 	private static String findRootGit(String git) {
-		if (Paths.get(git, FileSystemUtils.DOT_GIT).toFile().exists()) {
-			return Paths.get(git).toString();
+		if (Paths	.get(git, FileSystemUtils.DOT_GIT)
+					.toFile()
+					.exists()) {
+			return Paths.get(git)
+						.toString();
 		}
-		if (Paths.get(git).toFile() != null) {
-			return findRootGit(Paths.get(git).toFile().getParent());
+		if (Paths	.get(git)
+					.toFile() != null) {
+			return findRootGit(Paths.get(git)
+									.toFile()
+									.getParent());
 		}
 		return "";
 	}
@@ -295,7 +311,8 @@ public class WorkspaceJsonHelper implements InitializingBean {
 	public static ProjectDescriptor describeProjectOnly(ICollection collection, String removePathPrefix, String addPathPrefix) {
 		ProjectDescriptor projectPojo = new ProjectDescriptor();
 		projectPojo.setName(collection.getName());
-		projectPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
+		projectPojo.setPath(addPathPrefix + collection	.getPath()
+														.substring(removePathPrefix.length()));
 		RepositoryPath repositoryPath = new RepositoryPath(collection.getPath());
 
 		Pair<Boolean, String> gitInfo = WorkspaceGitHelper.getGitAware(collection.getRepository(), repositoryPath.toString());
@@ -319,8 +336,9 @@ public class WorkspaceJsonHelper implements InitializingBean {
 		ProjectDescriptor projectPojo = getProjectForStatus(collection, removePathPrefix, addPathPrefix);
 		RepositoryPath repositoryPath = new RepositoryPath(removePathPrefix + projectPojo.getPath());
 
-		ProjectStatus status = getProjectStatus(workspace, collection.getRepository().getCollection(repositoryPath.toString()), projectPojo,
-				repositoryPath);
+		ProjectStatus status = getProjectStatus(workspace, collection	.getRepository()
+																		.getCollection(repositoryPath.toString()),
+				projectPojo, repositoryPath);
 		return describeFolder(collection, removePathPrefix, addPathPrefix, status);
 	}
 
@@ -333,7 +351,8 @@ public class WorkspaceJsonHelper implements InitializingBean {
 	 * @return the project for status
 	 */
 	private static ProjectDescriptor getProjectForStatus(ICollection collection, String removePathPrefix, String addPathPrefix) {
-		String path = collection.getPath().substring(removePathPrefix.length());
+		String path = collection.getPath()
+								.substring(removePathPrefix.length());
 		String[] paths = path.split(IRepositoryStructure.SEPARATOR);
 		String workspaceName = paths[1];
 		String projectName = paths[2];
@@ -356,13 +375,16 @@ public class WorkspaceJsonHelper implements InitializingBean {
 			ProjectStatus status) {
 		FolderDescriptor folderPojo = new FolderDescriptor();
 		folderPojo.setName(collection.getName());
-		folderPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
+		folderPojo.setPath(addPathPrefix + collection	.getPath()
+														.substring(removePathPrefix.length()));
 		if (status != null) {
 
 			try {
-				String path = new File(collection.getRepository().getInternalResourcePath(collection.getPath())).getCanonicalPath();
+				String path = new File(collection	.getRepository()
+													.getInternalResourcePath(collection.getPath())).getCanonicalPath();
 
-				if (status.getUntrackedFolders().contains(path)) {
+				if (status	.getUntrackedFolders()
+							.contains(path)) {
 					folderPojo.setStatus(Status.U.name());
 				}
 			} catch (IOException e) {
@@ -373,12 +395,14 @@ public class WorkspaceJsonHelper implements InitializingBean {
 		}
 		List<ICollection> collections = collection.getCollections();
 		for (ICollection childCollection : collections) {
-			folderPojo.getFolders().add(describeFolder(childCollection, removePathPrefix, addPathPrefix, status));
+			folderPojo	.getFolders()
+						.add(describeFolder(childCollection, removePathPrefix, addPathPrefix, status));
 		}
 
 		List<IResource> resources = collection.getResources();
 		for (IResource childResource : resources) {
-			folderPojo.getFiles().add(describeFile(childResource, removePathPrefix, addPathPrefix, status));
+			folderPojo	.getFiles()
+						.add(describeFile(childResource, removePathPrefix, addPathPrefix, status));
 		}
 
 		return folderPojo;
@@ -397,8 +421,9 @@ public class WorkspaceJsonHelper implements InitializingBean {
 		ProjectDescriptor projectPojo = getProjectForStatus(resource.getParent(), removePathPrefix, addPathPrefix);
 		RepositoryPath repositoryPath = new RepositoryPath(removePathPrefix + projectPojo.getPath());
 
-		ProjectStatus status =
-				getProjectStatus(workspace, resource.getRepository().getCollection(repositoryPath.toString()), projectPojo, repositoryPath);
+		ProjectStatus status = getProjectStatus(workspace, resource	.getRepository()
+																	.getCollection(repositoryPath.toString()),
+				projectPojo, repositoryPath);
 		return describeFile(resource, removePathPrefix, addPathPrefix, status);
 	}
 
@@ -414,23 +439,33 @@ public class WorkspaceJsonHelper implements InitializingBean {
 	public static FileDescriptor describeFile(IResource resource, String removePathPrefix, String addPathPrefix, ProjectStatus status) {
 		FileDescriptor resourcePojo = new FileDescriptor();
 		resourcePojo.setName(resource.getName());
-		resourcePojo.setPath(addPathPrefix + resource.getPath().substring(removePathPrefix.length()));
+		resourcePojo.setPath(addPathPrefix + resource	.getPath()
+														.substring(removePathPrefix.length()));
 		resourcePojo.setContentType(resource.getContentType());
 		if (status != null) {
 
 			try {
-				String path = new File(resource.getRepository().getInternalResourcePath(resource.getPath())).getCanonicalPath();
+				String path = new File(resource	.getRepository()
+												.getInternalResourcePath(resource.getPath())).getCanonicalPath();
 
-				if (status.getAdded().contains(path)) {
+				if (status	.getAdded()
+							.contains(path)) {
 					resourcePojo.setStatus(Status.A.name());
-				} else if (status.getChanged().contains(path) || status.getModified().contains(path)
-						|| status.getMissing().contains(path)) {
+				} else if (status	.getChanged()
+									.contains(path)
+						|| status	.getModified()
+									.contains(path)
+						|| status	.getMissing()
+									.contains(path)) {
 					resourcePojo.setStatus(Status.M.name());
-				} else if (status.getConflicting().contains(path)) {
+				} else if (status	.getConflicting()
+									.contains(path)) {
 					resourcePojo.setStatus(Status.C.name());
-				} else if (status.getRemoved().contains(path)) {
+				} else if (status	.getRemoved()
+									.contains(path)) {
 					resourcePojo.setStatus(Status.D.name());
-				} else if (status.getUntracked().contains(path)) {
+				} else if (status	.getUntracked()
+									.contains(path)) {
 					resourcePojo.setStatus(Status.U.name());
 				}
 			} catch (IOException e) {

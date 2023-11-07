@@ -66,31 +66,35 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
 
 		Consumer<Context.Builder> onBeforeContextCreatedListener = null;
 		Consumer<Context> onAfterContextCreatedListener = null;
-		if (DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS.iterator().hasNext()) {
-			DirigibleJavascriptHooksProvider dirigibleJavascriptHooksProvider = DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS.iterator().next();
+		if (DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS.iterator()
+												.hasNext()) {
+			DirigibleJavascriptHooksProvider dirigibleJavascriptHooksProvider = DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS.iterator()
+																													.next();
 			onBeforeContextCreatedListener = dirigibleJavascriptHooksProvider.getOnBeforeContextCreatedListener();
 			onAfterContextCreatedListener = dirigibleJavascriptHooksProvider.getOnAfterContextCreatedListener();
 		}
-		if (DIRIGIBLE_JAVASCRIPT_INTERCEPTORS.iterator().hasNext()) {
-			interceptor = DIRIGIBLE_JAVASCRIPT_INTERCEPTORS.iterator().next();
+		if (DIRIGIBLE_JAVASCRIPT_INTERCEPTORS	.iterator()
+												.hasNext()) {
+			interceptor = DIRIGIBLE_JAVASCRIPT_INTERCEPTORS	.iterator()
+															.next();
 		} else {
 			interceptor = new DirigibleJavascriptInterceptor(this);
 		}
 
-		codeRunner =
-				GraalJSCodeRunner	.newBuilder(workingDirectoryPath, cachePath)
-									.addJSPolyfill(new RequirePolyfill())
-									.addGlobalObject(new DirigibleContextGlobalObject(parameters))
-									.addGlobalObject(new DirigibleEngineTypeGlobalObject())
-									.addModuleResolver(new JavaModuleResolver(javaModulesESMProxiesCachePath))
-									.addModuleResolver(new DirigibleModuleResolver(coreModulesESMProxiesCachePath, sourceProvider))
-									.addModuleResolver(new DirigibleEsmModuleResolver(sourceProvider))
-									.waitForDebugger(debug && DirigibleJavascriptCodeRunner.shouldEnableDebug())
-									.addOnBeforeContextCreatedListener(onBeforeContextCreatedListener)
-									.addOnAfterContextCreatedListener(onAfterContextCreatedListener)
-									.setOnRealPathNotFound(p -> sourceProvider.unpackedToFileSystem(p, workingDirectoryPath.relativize(p)))
-									.setInterceptor(interceptor)
-									.build();
+		codeRunner = GraalJSCodeRunner	.newBuilder(workingDirectoryPath, cachePath)
+										.addJSPolyfill(new RequirePolyfill())
+										.addGlobalObject(new DirigibleContextGlobalObject(parameters))
+										.addGlobalObject(new DirigibleEngineTypeGlobalObject())
+										.addModuleResolver(new JavaModuleResolver(javaModulesESMProxiesCachePath))
+										.addModuleResolver(new DirigibleModuleResolver(coreModulesESMProxiesCachePath, sourceProvider))
+										.addModuleResolver(new DirigibleEsmModuleResolver(sourceProvider))
+										.waitForDebugger(debug && DirigibleJavascriptCodeRunner.shouldEnableDebug())
+										.addOnBeforeContextCreatedListener(onBeforeContextCreatedListener)
+										.addOnAfterContextCreatedListener(onAfterContextCreatedListener)
+										.setOnRealPathNotFound(
+												p -> sourceProvider.unpackedToFileSystem(p, workingDirectoryPath.relativize(p)))
+										.setInterceptor(interceptor)
+										.build();
 	}
 
 	/**
@@ -108,7 +112,8 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
 	 * @return true, if successful
 	 */
 	private static boolean shouldEnableDebug() {
-		return Configuration.get("DIRIGIBLE_GRAALIUM_ENABLE_DEBUG", Boolean.FALSE.toString()).equals(Boolean.TRUE.toString());
+		return Configuration.get("DIRIGIBLE_GRAALIUM_ENABLE_DEBUG", Boolean.FALSE.toString())
+							.equals(Boolean.TRUE.toString());
 	}
 
 	/**

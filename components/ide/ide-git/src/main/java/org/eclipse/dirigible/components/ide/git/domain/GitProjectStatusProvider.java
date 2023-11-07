@@ -71,7 +71,8 @@ public class GitProjectStatusProvider implements ProjectStatusProvider {
 	 */
 	@Override
 	public String getProjectGitFolder(String workspace, String project) throws IOException {
-		File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, project).getCanonicalFile();
+		File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, project)
+										.getCanonicalFile();
 		String git = gitDirectory.getCanonicalPath() + File.separator;
 		return git;
 	}

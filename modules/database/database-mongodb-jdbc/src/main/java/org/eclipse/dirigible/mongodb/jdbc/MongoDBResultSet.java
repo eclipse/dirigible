@@ -97,12 +97,17 @@ public class MongoDBResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	private void buildMetadata() throws SQLException {
-		this.metadata = new MongoDBResultSetMetaData(this.stmnt.getConnection().unwrap(MongoDBConnection.class).getCollectionName());
+		this.metadata = new MongoDBResultSetMetaData(this.stmnt	.getConnection()
+																.unwrap(MongoDBConnection.class)
+																.getCollectionName());
 		this.metadata.setColumnCount(this.currentDoc.size());
 		Set<Entry<String, BsonValue>> docEntries =
-				this.currentDoc.toBsonDocument(this.currentDoc.getClass(), MongoClient.getDefaultCodecRegistry()).entrySet();
+				this.currentDoc	.toBsonDocument(this.currentDoc.getClass(), MongoClient.getDefaultCodecRegistry())
+								.entrySet();
 		for (Entry<String, BsonValue> docEntry : docEntries) {
-			this.metadata.keys().put(docEntry.getKey(), docEntry.getValue().getBsonType());
+			this.metadata	.keys()
+							.put(docEntry.getKey(), docEntry.getValue()
+															.getBsonType());
 		}
 	}
 
@@ -223,7 +228,8 @@ public class MongoDBResultSet implements ResultSet {
 	@Override
 	public byte getByte(int columnIndex) throws SQLException {
 		String name = this.metadata.getColumnName(columnIndex - 1);
-		return this.currentDoc.getInteger(name).byteValue();
+		return this.currentDoc	.getInteger(name)
+								.byteValue();
 	}
 
 	/**
@@ -236,7 +242,8 @@ public class MongoDBResultSet implements ResultSet {
 	@Override
 	public short getShort(int columnIndex) throws SQLException {
 		String name = this.metadata.getColumnName(columnIndex - 1);
-		return this.currentDoc.getInteger(name).shortValue();
+		return this.currentDoc	.getInteger(name)
+								.shortValue();
 	}
 
 	/**
@@ -275,7 +282,8 @@ public class MongoDBResultSet implements ResultSet {
 	@Override
 	public float getFloat(int columnIndex) throws SQLException {
 		String name = this.metadata.getColumnName(columnIndex - 1);
-		return this.currentDoc.getDouble(name).floatValue();
+		return this.currentDoc	.getDouble(name)
+								.floatValue();
 	}
 
 	/**
@@ -327,7 +335,8 @@ public class MongoDBResultSet implements ResultSet {
 	@Override
 	public Date getDate(int columnIndex) throws SQLException {
 		String name = this.metadata.getColumnName(columnIndex - 1);
-		return new Date(this.currentDoc.getDate(name).getTime());
+		return new Date(this.currentDoc	.getDate(name)
+										.getTime());
 	}
 
 	/**
@@ -340,7 +349,8 @@ public class MongoDBResultSet implements ResultSet {
 	@Override
 	public Time getTime(int columnIndex) throws SQLException {
 		String name = this.metadata.getColumnName(columnIndex - 1);
-		return new Time(this.currentDoc.getDate(name).getTime());
+		return new Time(this.currentDoc	.getDate(name)
+										.getTime());
 	}
 
 	/**
@@ -353,7 +363,8 @@ public class MongoDBResultSet implements ResultSet {
 	@Override
 	public Timestamp getTimestamp(int columnIndex) throws SQLException {
 		String name = this.metadata.getColumnName(columnIndex - 1);
-		return new Timestamp(this.currentDoc.getDate(name).getTime());
+		return new Timestamp(this.currentDoc.getDate(name)
+											.getTime());
 	}
 
 	/**
@@ -510,7 +521,8 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public byte[] getBytes(String columnLabel) throws SQLException {
-		return Base64.getDecoder().decode(this.currentDoc.getString(columnLabel));
+		return Base64	.getDecoder()
+						.decode(this.currentDoc.getString(columnLabel));
 	}
 
 	/**
@@ -522,7 +534,8 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Date getDate(String columnLabel) throws SQLException {
-		return new Date(this.currentDoc.getDate(columnLabel).getTime());
+		return new Date(this.currentDoc	.getDate(columnLabel)
+										.getTime());
 	}
 
 	/**
@@ -534,7 +547,8 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Time getTime(String columnLabel) throws SQLException {
-		return new Time(this.currentDoc.getDate(columnLabel).getTime());
+		return new Time(this.currentDoc	.getDate(columnLabel)
+										.getTime());
 	}
 
 	/**
@@ -546,7 +560,8 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Timestamp getTimestamp(String columnLabel) throws SQLException {
-		return new Timestamp(this.currentDoc.getDate(columnLabel).getTime());
+		return new Timestamp(this.currentDoc.getDate(columnLabel)
+											.getTime());
 	}
 
 	/**

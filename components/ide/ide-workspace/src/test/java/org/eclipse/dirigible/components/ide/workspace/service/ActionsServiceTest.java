@@ -79,18 +79,21 @@ public class ActionsServiceTest {
 		assertNotNull(workspace1);
 		assertNotNull(workspace1.getInternal());
 		assertEquals("TestWorkspace1", workspace1.getName());
-		assertEquals("/users/guest/TestWorkspace1", workspace1.getInternal().getPath());
+		assertEquals("/users/guest/TestWorkspace1", workspace1	.getInternal()
+																.getPath());
 		Project project1 = workspaceService.createProject("TestWorkspace1", "TestProject1");
 		assertNotNull(project1);
 		assertNotNull(project1.getInternal());
 		assertEquals("TestProject1", project1.getName());
-		assertEquals("/users/guest/TestWorkspace1/TestProject1", project1.getInternal().getPath());
+		assertEquals("/users/guest/TestWorkspace1/TestProject1", project1	.getInternal()
+																			.getPath());
 		File projectJson = workspaceService.createFile("TestWorkspace1", "TestProject1", "project.json", PROJECT_JSON_CONTENT.getBytes(),
 				"application/json");
 		assertNotNull(projectJson);
 		assertNotNull(projectJson.getInternal());
 		assertEquals("project.json", projectJson.getName());
-		assertEquals("/users/guest/TestWorkspace1/TestProject1/project.json", projectJson.getInternal().getPath());
+		assertEquals("/users/guest/TestWorkspace1/TestProject1/project.json", projectJson	.getInternal()
+																							.getPath());
 		int result = actionsService.executeAction("TestWorkspace1", "TestProject1", "MyAction");
 		assertEquals(0, result);
 		workspaceService.deleteWorkspace("TestWorkspace1");
@@ -106,12 +109,14 @@ public class ActionsServiceTest {
 		assertNotNull(workspace1);
 		assertNotNull(workspace1.getInternal());
 		assertEquals("TestWorkspace1", workspace1.getName());
-		assertEquals("/users/guest/TestWorkspace1", workspace1.getInternal().getPath());
+		assertEquals("/users/guest/TestWorkspace1", workspace1	.getInternal()
+																.getPath());
 		Project project1 = workspaceService.createProject("TestWorkspace1", "TestProject1");
 		assertNotNull(project1);
 		assertNotNull(project1.getInternal());
 		assertEquals("TestProject1", project1.getName());
-		assertEquals("/users/guest/TestWorkspace1/TestProject1", project1.getInternal().getPath());
+		assertEquals("/users/guest/TestWorkspace1/TestProject1", project1	.getInternal()
+																			.getPath());
 		int result = actionsService.executeAction("TestWorkspace1", "TestProject1", "MyAction");
 		assertEquals(-1, result);
 		workspaceService.deleteWorkspace("TestWorkspace1");

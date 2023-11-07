@@ -55,25 +55,27 @@ public class SynchronizationWatcher {
 	public void initialize(String folder) throws IOException, InterruptedException {
 		logger.debug("Initializing the Registry file watcher...");
 
-		WatchService watchService = FileSystems.getDefault().newWatchService();
+		WatchService watchService = FileSystems	.getDefault()
+												.newWatchService();
 		Path path = Paths.get(folder);
 		path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE,
 				StandardWatchEventKinds.ENTRY_MODIFY);
 
-		Executors.newFixedThreadPool(1).submit(() -> {
-			WatchKey watchKey;
-			try {
-				while ((watchKey = watchService.take()) != null) {
-					List<WatchEvent<?>> events = watchKey.pollEvents();
-					if (!events.isEmpty()) {
-						modified.set(true);
-					}
-					watchKey.reset();
-				}
-			} catch (InterruptedException e) {
-				logger.error("Failed to take watch keys", e);
-			}
-		});
+		Executors	.newFixedThreadPool(1)
+					.submit(() -> {
+						WatchKey watchKey;
+						try {
+							while ((watchKey = watchService.take()) != null) {
+								List<WatchEvent<?>> events = watchKey.pollEvents();
+								if (!events.isEmpty()) {
+									modified.set(true);
+								}
+								watchKey.reset();
+							}
+						} catch (InterruptedException e) {
+							logger.error("Failed to take watch keys", e);
+						}
+					});
 
 		logger.debug("Done initializing the Registry file watcher.");
 	}

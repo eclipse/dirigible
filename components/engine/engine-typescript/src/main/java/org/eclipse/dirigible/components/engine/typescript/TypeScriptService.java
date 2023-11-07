@@ -129,7 +129,8 @@ public class TypeScriptService {
 		if (entryPath != null && !entryPath.equals("")) {
 			var tsFilePathString = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, projectName, entryPath).toString();
 			var tsFilePath = new File(repository.getInternalResourcePath(tsFilePathString)).toPath();
-			outDir = tsFilePath.getParent().toFile();
+			outDir = tsFilePath	.getParent()
+								.toFile();
 			tsFiles = Collections.singletonList(tsFilePath.toFile());
 		} else {
 			tsFiles = getTypeScriptFilesInDir(projectDir);
@@ -149,12 +150,15 @@ public class TypeScriptService {
 	private static void esbuild(File projectDir, File outDir, Collection<File> filesToCompile) {
 		var esbuildCommand = new ArrayList<String>();
 		esbuildCommand.add("esbuild");
-		esbuildCommand.addAll(filesToCompile.stream().map(Object::toString).toList());
+		esbuildCommand.addAll(filesToCompile.stream()
+											.map(Object::toString)
+											.toList());
 		esbuildCommand.add("--outdir=" + outDir);
 		esbuildCommand.add("--out-extension:.js=.mjs");
 		esbuildCommand.add("--sourcemap=inline");
 
-		var processBuilder = new ProcessBuilder(esbuildCommand).directory(projectDir).redirectErrorStream(true);
+		var processBuilder = new ProcessBuilder(esbuildCommand)	.directory(projectDir)
+																.redirectErrorStream(true);
 
 		try {
 			Process process = processBuilder.start();

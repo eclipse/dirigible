@@ -73,7 +73,8 @@ public class MailClient {
 			throws MessagingException, IOException {
 		Session session = getSession(this.properties);
 		SMTPTransport transport;
-		String transportProperty = properties.getProperty("mail.transport.protocol").toLowerCase();
+		String transportProperty = properties	.getProperty("mail.transport.protocol")
+												.toLowerCase();
 
 		switch (transportProperty) {
 			case SMTP_TRANSPORT:

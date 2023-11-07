@@ -42,8 +42,11 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
 	 */
 	@Override
 	protected void generateColumns(StringBuilder sql) {
-		if (!this.getColumns().isEmpty()) {
-			sql.append(OPEN).append(traverseColumns()).append(CLOSE);
+		if (!this	.getColumns()
+					.isEmpty()) {
+			sql	.append(OPEN)
+				.append(traverseColumns())
+				.append(CLOSE);
 		}
 	}
 
@@ -54,8 +57,11 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
 	 */
 	@Override
 	protected void generateColumnsForAlter(StringBuilder sql) {
-		if (!this.getColumns().isEmpty()) {
-			sql.append(OPEN).append(traverseColumnsForAlter()).append(CLOSE);
+		if (!this	.getColumns()
+					.isEmpty()) {
+			sql	.append(OPEN)
+				.append(traverseColumnsForAlter())
+				.append(CLOSE);
 		}
 	}
 
@@ -69,9 +75,14 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
 		StringBuilder snippet = new StringBuilder();
 		for (String[] column : this.getColumns()) {
 			String columnName = (isCaseSensitive()) ? encapsulate(column[0]) : column[0];
-			snippet.append(KEYWORD_DROP).append(SPACE).append(OPEN);
-			snippet.append(columnName).append(CLOSE).append(SPACE);
-			snippet.append(COMMA).append(SPACE);
+			snippet	.append(KEYWORD_DROP)
+					.append(SPACE)
+					.append(OPEN);
+			snippet	.append(columnName)
+					.append(CLOSE)
+					.append(SPACE);
+			snippet	.append(COMMA)
+					.append(SPACE);
 		}
 		return snippet.substring(0, snippet.length() - 2);
 	}
@@ -113,12 +124,15 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
 			}
 		}
 		// logic for indices
-		sql.append(SEMICOLON).append(SPACE);
-		if (!this.getUniqueIndices().isEmpty()) {
+		sql	.append(SEMICOLON)
+			.append(SPACE);
+		if (!this	.getUniqueIndices()
+					.isEmpty()) {
 			generateUniqueIndices(sql);
 		}
 
-		String generated = sql.toString().trim();
+		String generated = sql	.toString()
+								.trim();
 
 		if (logger.isTraceEnabled()) {
 			logger.trace("generated: " + generated);
@@ -155,9 +169,18 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
 		if (uniqueIndex != null) {
 			if (uniqueIndex.getName() != null) {
 				String uniqueIndexName = (isCaseSensitive()) ? encapsulate(uniqueIndex.getName()) : uniqueIndex.getName();
-				sql.append(KEYWORD_ADD).append(SPACE).append(KEYWORD_CONSTRAINT).append(SPACE).append(uniqueIndexName).append(SPACE);
+				sql	.append(KEYWORD_ADD)
+					.append(SPACE)
+					.append(KEYWORD_CONSTRAINT)
+					.append(SPACE)
+					.append(uniqueIndexName)
+					.append(SPACE);
 			}
-			sql.append(KEYWORD_UNIQUE).append(SPACE).append(OPEN).append(traverseNames(uniqueIndex.getColumns())).append(CLOSE);
+			sql	.append(KEYWORD_UNIQUE)
+				.append(SPACE)
+				.append(OPEN)
+				.append(traverseNames(uniqueIndex.getColumns()))
+				.append(CLOSE);
 		}
 	}
 }

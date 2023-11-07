@@ -97,7 +97,8 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(FILE_EXTENSION_ODATA);
+		return file	.toString()
+					.endsWith(FILE_EXTENSION_ODATA);
 	}
 
 	/**
@@ -200,14 +201,23 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
 		odata.setName(FilenameUtils.getBaseName(location));
 		odata.setContent(content);
 		odata.updateKey();
-		odata.getAssociations().forEach(association -> {
-			if (association.getFrom().getProperty() != null) {
-				association.getFrom().getProperties().add(association.getFrom().getProperty());
-			}
-			if (association.getTo().getProperty() != null) {
-				association.getTo().getProperties().add(association.getTo().getProperty());
-			}
-		});
+		odata	.getAssociations()
+				.forEach(association -> {
+					if (association	.getFrom()
+									.getProperty() != null) {
+						association	.getFrom()
+									.getProperties()
+									.add(association.getFrom()
+													.getProperty());
+					}
+					if (association	.getTo()
+									.getProperty() != null) {
+						association	.getTo()
+									.getProperties()
+									.add(association.getTo()
+													.getProperty());
+					}
+				});
 		return odata;
 	}
 
@@ -236,7 +246,8 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
 			if (wrapper.getArtefact() instanceof OData) {
 				odata = (OData) wrapper.getArtefact();
 			} else {
-				throw new UnsupportedOperationException(String.format("Trying to process %s as OData", wrapper.getArtefact().getClass()));
+				throw new UnsupportedOperationException(String.format("Trying to process %s as OData", wrapper	.getArtefact()
+																												.getClass()));
 			}
 
 			switch (flow) {

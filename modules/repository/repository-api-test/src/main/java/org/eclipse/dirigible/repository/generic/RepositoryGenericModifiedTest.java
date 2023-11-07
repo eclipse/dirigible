@@ -58,7 +58,8 @@ public class RepositoryGenericModifiedTest {
 			// assertEquals("guest1", resource.getInformation().getModifiedBy());
 			// assertEquals("nobody", resource.getInformation().getModifiedBy());
 
-			Date firstModified = resource.getInformation().getModifiedAt();
+			Date firstModified = resource	.getInformation()
+											.getModifiedAt();
 
 			resource = repository2.getResource("/testCollection/toBeModified.txt"); //$NON-NLS-1$
 			assertNotNull(resource);
@@ -70,7 +71,9 @@ public class RepositoryGenericModifiedTest {
 
 			// assertEquals("guest2", resource.getInformation().getModifiedBy());
 			// assertEquals("nobody", resource.getInformation().getModifiedBy());
-			boolean isAfter = resource.getInformation().getModifiedAt().after(firstModified);
+			boolean isAfter = resource	.getInformation()
+										.getModifiedAt()
+										.after(firstModified);
 			if (!isAfter) {
 				System.out.println("Warning: RepositoryGenericModifiedTest - Modified date check failed on Operating System (OS): "
 						+ System.getenv("os.name"));

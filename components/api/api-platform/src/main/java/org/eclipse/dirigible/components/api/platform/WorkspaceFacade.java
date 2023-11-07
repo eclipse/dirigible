@@ -79,7 +79,9 @@ public class WorkspaceFacade implements InitializingBean {
 	 * @return the workspace
 	 */
 	public static Workspace createWorkspace(String name) {
-		return WorkspaceFacade.get().getWorkspaceService().createWorkspace(name);
+		return WorkspaceFacade	.get()
+								.getWorkspaceService()
+								.createWorkspace(name);
 	}
 
 	/**
@@ -89,7 +91,9 @@ public class WorkspaceFacade implements InitializingBean {
 	 * @return the workspace
 	 */
 	public static Workspace getWorkspace(String name) {
-		return WorkspaceFacade.get().getWorkspaceService().getWorkspace(name);
+		return WorkspaceFacade	.get()
+								.getWorkspaceService()
+								.getWorkspace(name);
 	}
 
 	/**
@@ -99,7 +103,9 @@ public class WorkspaceFacade implements InitializingBean {
 	 */
 	public static String getWorkspacesNames() {
 		List<String> names = new ArrayList<String>();
-		for (Workspace workspace : WorkspaceFacade.get().getWorkspaceService().getWorkspaces()) {
+		for (Workspace workspace : WorkspaceFacade	.get()
+													.getWorkspaceService()
+													.getWorkspaces()) {
 			names.add(workspace.getName());
 		}
 		return GsonHelper.toJson(names);
@@ -111,7 +117,9 @@ public class WorkspaceFacade implements InitializingBean {
 	 * @param name the name
 	 */
 	public static void deleteWorkspace(String name) {
-		WorkspaceFacade.get().getWorkspaceService().deleteWorkspace(name);
+		WorkspaceFacade	.get()
+						.getWorkspaceService()
+						.deleteWorkspace(name);
 	}
 
 	/**

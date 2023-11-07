@@ -158,7 +158,9 @@ public class HttpRequestFacade {
 		if (request == null) {
 			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
-		return request.getAttribute(name) != null ? request.getAttribute(name).toString() : null;
+		return request.getAttribute(name) != null ? request	.getAttribute(name)
+															.toString()
+				: null;
 	}
 
 	/**
@@ -563,7 +565,8 @@ public class HttpRequestFacade {
 		if (request == null) {
 			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
-		return request.getRequestURL().toString();
+		return request	.getRequestURL()
+						.toString();
 	}
 
 	/**

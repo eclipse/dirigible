@@ -30,7 +30,9 @@ public class ConsoleLoggingAppender extends AppenderBase<ILoggingEvent> {
 	 */
 	@Override
 	protected void append(ILoggingEvent event) {
-		ConsoleLogRecord record = new ConsoleLogRecord(event.getLevel().toString(), event.getFormattedMessage(), event.getTimeStamp());
+		ConsoleLogRecord record = new ConsoleLogRecord(event.getLevel()
+															.toString(),
+				event.getFormattedMessage(), event.getTimeStamp());
 		ConsoleWebsocketHandler.distribute(record);
 	}
 

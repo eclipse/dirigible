@@ -86,7 +86,8 @@ public class DataExportServiceTest {
 		String filePath = dataExportService.exportMetadataAsProject("TestDB", "INFORMATION_SCHEMA");
 		Workspace workspace = workspaceService.getWorkspace("INFORMATION_SCHEMA");
 		Project project = workspace.getProject("INFORMATION_SCHEMA");
-		File file = project.getFiles().get(0);
+		File file = project	.getFiles()
+							.get(0);
 		assertEquals(file.getWorkspacePath(), filePath);
 	}
 

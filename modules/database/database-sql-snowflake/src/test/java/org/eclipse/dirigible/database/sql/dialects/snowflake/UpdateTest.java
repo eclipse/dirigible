@@ -26,7 +26,11 @@ public class UpdateTest {
 	 */
 	@Test
 	public void updateSimple() {
-		String sql = SqlFactory.getNative(new SnowflakeSqlDialect()).update().table("CUSTOMERS").set("FIRST_NAME", "'John'").build();
+		String sql = SqlFactory	.getNative(new SnowflakeSqlDialect())
+								.update()
+								.table("CUSTOMERS")
+								.set("FIRST_NAME", "'John'")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John'", sql);
@@ -71,15 +75,17 @@ public class UpdateTest {
 	 */
 	@Test
 	public void updateWhereSelect() {
-		String sql =
-				SqlFactory	.getNative(new SnowflakeSqlDialect())
-							.update()
-							.table("CUSTOMERS")
-							.set("FIRST_NAME", "'John'")
-							.set("SALARY",
-									SqlFactory.getNative(new SnowflakeSqlDialect()).select().column("MAX(SALARY)").from("BENEFITS").build())
-							.where("COMPANY = 'SNOWFLAKE'")
-							.build();
+		String sql = SqlFactory	.getNative(new SnowflakeSqlDialect())
+								.update()
+								.table("CUSTOMERS")
+								.set("FIRST_NAME", "'John'")
+								.set("SALARY", SqlFactory	.getNative(new SnowflakeSqlDialect())
+															.select()
+															.column("MAX(SALARY)")
+															.from("BENEFITS")
+															.build())
+								.where("COMPANY = 'SNOWFLAKE'")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', SALARY = SELECT MAX(SALARY) FROM BENEFITS WHERE (COMPANY = 'SNOWFLAKE')",

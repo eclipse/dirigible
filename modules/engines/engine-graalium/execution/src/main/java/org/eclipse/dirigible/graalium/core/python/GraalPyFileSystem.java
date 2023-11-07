@@ -93,7 +93,8 @@ public class GraalPyFileSystem implements FileSystem {
 	@Override
 	public Path toRealPath(Path path, LinkOption... linkOptions) throws IOException {
 		if (path.isAbsolute() && !path.startsWith(currentWorkingDirectoryPath)) {
-			path = currentWorkingDirectoryPath.resolve(path.toString().substring(1));
+			path = currentWorkingDirectoryPath.resolve(path	.toString()
+															.substring(1));
 		}
 		return path.toRealPath(linkOptions);
 	}

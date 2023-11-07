@@ -147,7 +147,8 @@ public abstract class LocalEntity implements IEntity {
 	 */
 	protected LocalObject getLocalObject() throws RepositoryReadException {
 		try {
-			return this.repository.getRepositoryDao().getObjectByPath(getPath());
+			return this.repository	.getRepositoryDao()
+									.getObjectByPath(getPath());
 		} catch (LocalRepositoryException ex) {
 			if (logger.isErrorEnabled()) {
 				logger.error(ex.getMessage(), ex);

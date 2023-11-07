@@ -62,7 +62,8 @@ public class SQLUtilsTest {
 	public void testSetStringParameter() throws SQLException {
 		String value = "TestValue";
 		executeSetParameter(value, new EdmString());
-		Mockito.verify(stmt).setString(1, value);
+		Mockito	.verify(stmt)
+				.setString(1, value);
 	}
 
 	/**
@@ -74,7 +75,8 @@ public class SQLUtilsTest {
 	public void testSetByteParameter() throws SQLException {
 		short value = 13;
 		executeSetParameter(value, new EdmByte());
-		Mockito.verify(stmt).setShort(1, value);
+		Mockito	.verify(stmt)
+				.setShort(1, value);
 	}
 
 	/**
@@ -86,7 +88,8 @@ public class SQLUtilsTest {
 	public void testSetInt16Parameter() throws SQLException {
 		short value = 16;
 		executeSetParameter(value, new EdmInt16());
-		Mockito.verify(stmt).setShort(1, value);
+		Mockito	.verify(stmt)
+				.setShort(1, value);
 	}
 
 	/**
@@ -98,7 +101,8 @@ public class SQLUtilsTest {
 	public void testSetInt32Parameter() throws SQLException {
 		int value = 36589;
 		executeSetParameter(value, new EdmInt32());
-		Mockito.verify(stmt).setInt(1, value);
+		Mockito	.verify(stmt)
+				.setInt(1, value);
 	}
 
 	/**
@@ -110,7 +114,8 @@ public class SQLUtilsTest {
 	public void testSetInt64Parameter() throws SQLException {
 		long value = 4684684L;
 		executeSetParameter(value, new EdmInt64());
-		Mockito.verify(stmt).setLong(1, value);
+		Mockito	.verify(stmt)
+				.setLong(1, value);
 	}
 
 	/**
@@ -122,7 +127,8 @@ public class SQLUtilsTest {
 	public void testSetDoubleParameter() throws SQLException {
 		double value = 458.32;
 		executeSetParameter(value, new EdmDouble());
-		Mockito.verify(stmt).setDouble(1, value);
+		Mockito	.verify(stmt)
+				.setDouble(1, value);
 	}
 
 	/**
@@ -134,7 +140,8 @@ public class SQLUtilsTest {
 	public void testSetBooleanParameter() throws SQLException {
 		boolean value = false;
 		executeSetParameter(value, new EdmBoolean());
-		Mockito.verify(stmt).setBoolean(1, value);
+		Mockito	.verify(stmt)
+				.setBoolean(1, value);
 	}
 
 	/**
@@ -146,7 +153,8 @@ public class SQLUtilsTest {
 	public void testSetDecimalParameter() throws SQLException {
 		BigDecimal value = BigDecimal.valueOf(1569863.3);
 		executeSetParameter(value, new EdmDecimal());
-		Mockito.verify(stmt).setBigDecimal(1, value);
+		Mockito	.verify(stmt)
+				.setBigDecimal(1, value);
 	}
 
 	/**
@@ -158,7 +166,8 @@ public class SQLUtilsTest {
 	public void testSetNullParameter() throws SQLException {
 		Object value = null;
 		executeSetParameter(value, new EdmNull());
-		Mockito.verify(stmt).setObject(1, value);
+		Mockito	.verify(stmt)
+				.setObject(1, value);
 	}
 
 	/**
@@ -170,7 +179,8 @@ public class SQLUtilsTest {
 	public void testSetGuidParameter() throws SQLException {
 		Object value = "2312312301231-123123j";
 		executeSetParameter(value, new EdmGuid());
-		Mockito.verify(stmt).setObject(1, value);
+		Mockito	.verify(stmt)
+				.setObject(1, value);
 	}
 
 	/**
@@ -182,7 +192,8 @@ public class SQLUtilsTest {
 	public void testSetSByteParameter() throws SQLException {
 		byte value = 12;
 		executeSetParameter(value, new EdmSByte());
-		Mockito.verify(stmt).setByte(1, value);
+		Mockito	.verify(stmt)
+				.setByte(1, value);
 	}
 
 	/**
@@ -194,7 +205,8 @@ public class SQLUtilsTest {
 	public void testSetSingleParameter() throws SQLException {
 		float value = 11;
 		executeSetParameter(value, new EdmSingle());
-		Mockito.verify(stmt).setFloat(1, value);
+		Mockito	.verify(stmt)
+				.setFloat(1, value);
 	}
 
 	/**
@@ -206,8 +218,10 @@ public class SQLUtilsTest {
 	public void testSetTimeParameter() throws SQLException {
 		Calendar value = new GregorianCalendar(2022, Calendar.FEBRUARY, 24);
 		executeSetParameter(value, new EdmTime());
-		Time expectedTime = new Time(value.getTime().getTime());
-		Mockito.verify(stmt).setTime(1, expectedTime);
+		Time expectedTime = new Time(value	.getTime()
+											.getTime());
+		Mockito	.verify(stmt)
+				.setTime(1, expectedTime);
 	}
 
 	/**
@@ -219,8 +233,10 @@ public class SQLUtilsTest {
 	public void testSetDateTimeParameter() throws SQLException {
 		Calendar value = new GregorianCalendar(2022, Calendar.MARCH, 3);
 		executeSetParameter(value, new EdmDateTime());
-		Timestamp expectedTimestamp = new Timestamp(value.getTime().getTime());
-		Mockito.verify(stmt).setTimestamp(1, expectedTimestamp);
+		Timestamp expectedTimestamp = new Timestamp(value	.getTime()
+															.getTime());
+		Mockito	.verify(stmt)
+				.setTimestamp(1, expectedTimestamp);
 	}
 
 	/**
@@ -232,8 +248,10 @@ public class SQLUtilsTest {
 	public void testSetDateTimeOffsetParameter() throws SQLException {
 		Calendar value = new GregorianCalendar(2022, Calendar.MARCH, 3);
 		executeSetParameter(value, new EdmDateTimeOffset());
-		Date expectedDate = new Date(value.getTime().getTime());
-		Mockito.verify(stmt).setDate(1, expectedDate);
+		Date expectedDate = new Date(value	.getTime()
+											.getTime());
+		Mockito	.verify(stmt)
+				.setDate(1, expectedDate);
 	}
 
 	/**

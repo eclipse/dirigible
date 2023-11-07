@@ -80,12 +80,15 @@ public class ZipRepository extends FileSystemRepository {
 			ZipEntry entry;
 			while ((entry = zipInputStream.getNextEntry()) != null) {
 				String name = entry.getName();
-				name = Paths.get(FilenameUtils.normalize(name)).normalize().toString();
+				name = Paths.get(FilenameUtils.normalize(name))
+							.normalize()
+							.toString();
 				File entryDestination = new File(folder, name);
 				if (entry.isDirectory()) {
 					FileUtils.forceMkdir(entryDestination.getCanonicalFile());
 				} else {
-					FileUtils.forceMkdir(entryDestination.getParentFile().getCanonicalFile());
+					FileUtils.forceMkdir(entryDestination	.getParentFile()
+															.getCanonicalFile());
 					OutputStream out = null;
 					try {
 						out = new FileOutputStream(entryDestination);

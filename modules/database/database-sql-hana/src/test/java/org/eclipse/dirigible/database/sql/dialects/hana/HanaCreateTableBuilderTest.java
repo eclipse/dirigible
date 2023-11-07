@@ -56,14 +56,14 @@ public class HanaCreateTableBuilderTest {
 	public void createTableCaseSensitiveGeneric() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql =
-					SqlFactory	.getDefault()
-								.create()
-								.table("myapp::test.customers")
-								.column("Id", DataType.INTEGER, Modifiers.PRIMARY_KEY, Modifiers.NOT_NULL, Modifiers.NON_UNIQUE)
-								.column("First_Name", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NOT_NULL, Modifiers.UNIQUE, "(20)")
-								.column("Last_Name", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(30)")
-								.build();
+			String sql = SqlFactory	.getDefault()
+									.create()
+									.table("myapp::test.customers")
+									.column("Id", DataType.INTEGER, Modifiers.PRIMARY_KEY, Modifiers.NOT_NULL, Modifiers.NON_UNIQUE)
+									.column("First_Name", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NOT_NULL, Modifiers.UNIQUE, "(20)")
+									.column("Last_Name", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE,
+											"(30)")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals(

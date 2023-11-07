@@ -82,7 +82,9 @@ public class DefinitionRepositoryTest {
 	 */
 	@Test
 	public void getOne() {
-		Long id = definitionRepository.findAll().get(0).getId();
+		Long id = definitionRepository	.findAll()
+										.get(0)
+										.getId();
 		Optional<Definition> optional = definitionRepository.findById(id);
 		Definition definition = optional.isPresent() ? optional.get() : null;
 		assertNotNull(definition);
@@ -101,7 +103,9 @@ public class DefinitionRepositoryTest {
 	 */
 	@Test
 	public void getReferenceUsingEntityManager() {
-		Long id = definitionRepository.findAll().get(0).getId();
+		Long id = definitionRepository	.findAll()
+										.get(0)
+										.getId();
 		Definition definition = entityManager.getReference(Definition.class, id);
 		assertNotNull(definition);
 		assertNotNull(definition.getLocation());

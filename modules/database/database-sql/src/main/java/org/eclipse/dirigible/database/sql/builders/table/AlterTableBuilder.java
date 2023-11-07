@@ -220,7 +220,9 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
 		}
 
 
-		String generated = sql.append(SEMICOLON).toString().trim();
+		String generated = sql	.append(SEMICOLON)
+								.toString()
+								.trim();
 
 		if (logger.isTraceEnabled()) {
 			logger.trace("generated: " + generated);
@@ -235,9 +237,14 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
 	 * @param sql the sql
 	 */
 	private void generateForeignKeyNamesForDrop(StringBuilder sql) {
-		if (!this.getForeignKeys().isEmpty()) {
-			sql.append(KEYWORD_DROP).append(SPACE).append(KEYWORD_CONSTRAINT).append(SPACE);
-			this.getForeignKeys().forEach(fk -> sql.append(fk.getName() + ", "));
+		if (!this	.getForeignKeys()
+					.isEmpty()) {
+			sql	.append(KEYWORD_DROP)
+				.append(SPACE)
+				.append(KEYWORD_CONSTRAINT)
+				.append(SPACE);
+			this.getForeignKeys()
+				.forEach(fk -> sql.append(fk.getName() + ", "));
 			sql.delete(sql.length() - 2, sql.length());
 		}
 	}
@@ -248,9 +255,14 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
 	 * @param sql the sql
 	 */
 	private void generateUniqueIndicesForDrop(StringBuilder sql) {
-		if (!this.getUniqueIndices().isEmpty()) {
-			sql.append(KEYWORD_DROP).append(SPACE).append(KEYWORD_CONSTRAINT).append(SPACE);
-			this.getUniqueIndices().forEach(ui -> sql.append(ui.getName() + ", "));
+		if (!this	.getUniqueIndices()
+					.isEmpty()) {
+			sql	.append(KEYWORD_DROP)
+				.append(SPACE)
+				.append(KEYWORD_CONSTRAINT)
+				.append(SPACE);
+			this.getUniqueIndices()
+				.forEach(ui -> sql.append(ui.getName() + ", "));
 			sql.delete(sql.length() - 2, sql.length());
 		}
 	}
@@ -311,9 +323,16 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
 		if (uniqueIndex != null) {
 			if (uniqueIndex.getName() != null) {
 				String uniqueIndexName = (isCaseSensitive()) ? encapsulate(uniqueIndex.getName()) : uniqueIndex.getName();
-				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(uniqueIndexName).append(SPACE);
+				sql	.append(KEYWORD_CONSTRAINT)
+					.append(SPACE)
+					.append(uniqueIndexName)
+					.append(SPACE);
 			}
-			sql.append(KEYWORD_UNIQUE).append(SPACE).append(OPEN).append(traverseNames(uniqueIndex.getColumns())).append(CLOSE);
+			sql	.append(KEYWORD_UNIQUE)
+				.append(SPACE)
+				.append(OPEN)
+				.append(traverseNames(uniqueIndex.getColumns()))
+				.append(CLOSE);
 		}
 	}
 

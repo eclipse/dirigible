@@ -87,15 +87,20 @@ public class SQLContext {
 		this.metadata = metadata;
 		this.odataContext = odataContext;
 		String dbProductName = getDatabaseName(metadata);
-		if (dbProductName.toLowerCase().contains("derby")) {
+		if (dbProductName	.toLowerCase()
+							.contains("derby")) {
 			databaseProduct = DatabaseProduct.DERBY;
-		} else if (dbProductName.toLowerCase().contains("adaptive server enterprise")) {
+		} else if (dbProductName.toLowerCase()
+								.contains("adaptive server enterprise")) {
 			databaseProduct = DatabaseProduct.SYBASE_ASE;
-		} else if (dbProductName.toLowerCase().contains("postgre")) {
+		} else if (dbProductName.toLowerCase()
+								.contains("postgre")) {
 			databaseProduct = DatabaseProduct.POSTGRE_SQL;
-		} else if (dbProductName.toLowerCase().contains("h2")) {
+		} else if (dbProductName.toLowerCase()
+								.contains("h2")) {
 			databaseProduct = DatabaseProduct.H2;
-		} else if (dbProductName.toLowerCase().contains("hdb")) {
+		} else if (dbProductName.toLowerCase()
+								.contains("hdb")) {
 			databaseProduct = DatabaseProduct.HANA;
 		} else
 			throw new OData2Exception("Unsupported database " + dbProductName, SERVICE_UNAVAILABLE);

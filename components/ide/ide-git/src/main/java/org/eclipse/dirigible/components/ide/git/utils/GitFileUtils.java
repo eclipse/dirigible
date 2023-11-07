@@ -226,8 +226,12 @@ public class GitFileUtils implements InitializingBean {
 	 */
 	public static void importProjectFromGitRepositoryToWorkspace(File gitRepositoryFile, String path) throws IOException {
 		// Skip already linked paths
-		if (!GitFileUtils.get().getRepository().isLinkedPath(path)) {
-			GitFileUtils.get().getRepository().linkPath(path, gitRepositoryFile.getCanonicalPath());
+		if (!GitFileUtils	.get()
+							.getRepository()
+							.isLinkedPath(path)) {
+			GitFileUtils.get()
+						.getRepository()
+						.linkPath(path, gitRepositoryFile.getCanonicalPath());
 		}
 	}
 
@@ -248,7 +252,8 @@ public class GitFileUtils implements InitializingBean {
 	 * @return the local absolute path
 	 */
 	public String getAbsolutePath(String path) {
-		if (GitFileUtils.get().getRepository() instanceof FileSystemRepository) {
+		if (GitFileUtils.get()
+						.getRepository() instanceof FileSystemRepository) {
 			String absolutePath = LocalWorkspaceMapper.getMappedName((FileSystemRepository) getRepository(), path);
 			return absolutePath;
 		}
@@ -284,7 +289,8 @@ public class GitFileUtils implements InitializingBean {
 			int startSegmentIndex = shareInRootFolder ? USER_WORKSPACE_PROJECT_SEGMENTS_COUNT : USER_WORKSPACE_SEGMENTS_COUNT;
 			String[] pathSegments = path.getSegments();
 			for (int i = startSegmentIndex; i < pathSegments.length; i++) {
-				resourcePath.append(File.separator).append(pathSegments[i]);
+				resourcePath.append(File.separator)
+							.append(pathSegments[i]);
 			}
 			File fileResource = new File(tempGitDirectory, resourcePath.toString());
 			FileUtils.forceMkdirParent(fileResource.getCanonicalFile());
@@ -294,7 +300,8 @@ public class GitFileUtils implements InitializingBean {
 			try {
 				in = new ByteArrayInputStream(file.getContent());
 				File outputFile = new File(tempGitDirectory, resourcePath.toString());
-				FileUtils.forceMkdir(outputFile.getParentFile().getCanonicalFile());
+				FileUtils.forceMkdir(outputFile	.getParentFile()
+												.getCanonicalFile());
 				boolean fileCreated = outputFile.createNewFile();
 				if (!fileCreated) {
 					throw new IOException("Error in creating the file: " + outputFile.getCanonicalPath());
@@ -326,7 +333,9 @@ public class GitFileUtils implements InitializingBean {
 	 */
 	public static String[] getValidProjectFolders(File gitRepository) throws IOException {
 		List<File> projects = FileSystemUtils.getGitRepositoryProjects(gitRepository);
-		List<String> projectsNames = projects.stream().map(e -> e.getName()).collect(Collectors.toList());
+		List<String> projectsNames = projects	.stream()
+												.map(e -> e.getName())
+												.collect(Collectors.toList());
 		return projectsNames.toArray(new String[] {});
 	}
 

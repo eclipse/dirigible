@@ -216,8 +216,11 @@ public class CsvimProcessor {
 
 			PreparedStatement preparedStatement = null;
 			try {
-				String createSequenceSql =
-						SqlFactory.getNative(connection).create().sequence(csvFile.getSequence()).start(sequenceStart).build();
+				String createSequenceSql = SqlFactory	.getNative(connection)
+														.create()
+														.sequence(csvFile.getSequence())
+														.start(sequenceStart)
+														.build();
 				preparedStatement = connection.prepareStatement(createSequenceSql);
 				preparedStatement.executeUpdate();
 			} catch (SQLException e) {
@@ -225,8 +228,11 @@ public class CsvimProcessor {
 					preparedStatement.close();
 				}
 				try {
-					String alterSequenceSql =
-							SqlFactory.getNative(connection).alter().sequence(csvFile.getSequence()).restartWith(sequenceStart).build();
+					String alterSequenceSql = SqlFactory.getNative(connection)
+														.alter()
+														.sequence(csvFile.getSequence())
+														.restartWith(sequenceStart)
+														.build();
 					preparedStatement = connection.prepareStatement(alterSequenceSql);
 					preparedStatement.executeUpdate();
 				} catch (SQLException e1) {
@@ -306,19 +312,30 @@ public class CsvimProcessor {
 	 * @throws Exception the exception
 	 */
 	private CSVFormat createCSVFormat(CsvFile csvFile) throws Exception {
-		if (csvFile.getDelimField() != null && (!csvFile.getDelimField().equals(",") && !csvFile.getDelimField().equals(";"))) {
+		if (csvFile.getDelimField() != null && (!csvFile.getDelimField()
+														.equals(",")
+				&& !csvFile	.getDelimField()
+							.equals(";"))) {
 			String errorMessage = "Only ';' or ',' characters are supported as delimiters for CSV files.";
 			CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
 			throw new Exception(errorMessage);
-		} else if (csvFile.getDelimEnclosing() != null && csvFile.getDelimEnclosing().length() > 1) {
+		} else if (csvFile.getDelimEnclosing() != null && csvFile	.getDelimEnclosing()
+																	.length() > 1) {
 			String errorMessage = "Delim enclosing should only contain one character.";
 			CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
 			throw new Exception(errorMessage);
 		}
 
-		char delimiter = Objects.isNull(csvFile.getDelimField()) ? ',' : csvFile.getDelimField().charAt(0);
-		char quote = Objects.isNull(csvFile.getDelimEnclosing()) ? '"' : csvFile.getDelimEnclosing().charAt(0);
-		CSVFormat csvFormat = CSVFormat.newFormat(delimiter).withIgnoreEmptyLines().withQuote(quote).withEscape('\\');
+		char delimiter = Objects.isNull(csvFile.getDelimField()) ? ','
+				: csvFile	.getDelimField()
+							.charAt(0);
+		char quote = Objects.isNull(csvFile.getDelimEnclosing()) ? '"'
+				: csvFile	.getDelimEnclosing()
+							.charAt(0);
+		CSVFormat csvFormat = CSVFormat	.newFormat(delimiter)
+										.withIgnoreEmptyLines()
+										.withQuote(quote)
+										.withEscape('\\');
 
 		boolean useHeader = !Objects.isNull(csvFile.getHeader()) && csvFile.getHeader();
 		if (useHeader) {
@@ -341,13 +358,18 @@ public class CsvimProcessor {
 		if (tableModel != null) {
 			List<ColumnMetadata> columnModels = tableModel.getColumns();
 			if (headerNames.size() > 0) {
-				ColumnMetadata found = columnModels.stream().filter(ColumnMetadata::isKey).findFirst().orElse(null);
+				ColumnMetadata found = columnModels	.stream()
+													.filter(ColumnMetadata::isKey)
+													.findFirst()
+													.orElse(null);
 				return found != null ? found.getName() : null;
 			}
 
 			for (int i = 0; i < columnModels.size(); i++) {
-				if (columnModels.get(i).isKey()) {
-					return columnModels.get(i).getName();
+				if (columnModels.get(i)
+								.isKey()) {
+					return columnModels	.get(i)
+										.getName();
 				}
 			}
 		}
@@ -383,10 +405,10 @@ public class CsvimProcessor {
 	private void insertCsvRecords(Connection connection, TableMetadata tableModel, List<CSVRecord> recordsToProcess,
 			List<String> headerNames, CsvFile csvFile) {
 		try {
-			List<CsvRecord> csvRecords =
-					recordsToProcess.stream()
-									.map(e -> new CsvRecord(e, tableModel, headerNames, csvFile.getDistinguishEmptyFromNull()))
-									.collect(Collectors.toList());
+			List<CsvRecord> csvRecords = recordsToProcess	.stream()
+															.map(e -> new CsvRecord(e, tableModel, headerNames,
+																	csvFile.getDistinguishEmptyFromNull()))
+															.collect(Collectors.toList());
 			csvProcessor.insert(connection, tableModel, csvRecords, headerNames, csvFile);
 		} catch (Exception e) {
 			String csvRecordValue = e.getMessage();
@@ -411,10 +433,10 @@ public class CsvimProcessor {
 	private void updateCsvRecords(Connection connection, TableMetadata tableModel, List<CSVRecord> recordsToProcess,
 			List<String> headerNames, String pkName, CsvFile csvFile) {
 		try {
-			List<CsvRecord> csvRecords =
-					recordsToProcess.stream()
-									.map(e -> new CsvRecord(e, tableModel, headerNames, csvFile.getDistinguishEmptyFromNull()))
-									.collect(Collectors.toList());
+			List<CsvRecord> csvRecords = recordsToProcess	.stream()
+															.map(e -> new CsvRecord(e, tableModel, headerNames,
+																	csvFile.getDistinguishEmptyFromNull()))
+															.collect(Collectors.toList());
 			csvProcessor.update(connection, tableModel, csvRecords, headerNames, pkName, csvFile);
 		} catch (SQLException e) {
 			String csvRecordValue = e.getMessage();
@@ -438,7 +460,10 @@ public class CsvimProcessor {
 		if (tableModel != null) {
 			List<ColumnMetadata> columnModels = tableModel.getColumns();
 			if (headerNames.size() > 0) {
-				ColumnMetadata found = columnModels.stream().filter(ColumnMetadata::isKey).findFirst().orElse(null);
+				ColumnMetadata found = columnModels	.stream()
+													.filter(ColumnMetadata::isKey)
+													.findFirst()
+													.orElse(null);
 				String pkColumnName = found != null ? found.getName() : null;
 				if (pkColumnName != null) {
 					int csvRecordPkValueIndex = headerNames.indexOf(pkColumnName);
@@ -449,7 +474,8 @@ public class CsvimProcessor {
 			}
 
 			for (int i = 0; i < csvRecord.size(); i++) {
-				boolean isColumnPk = columnModels.get(i).isKey();
+				boolean isColumnPk = columnModels	.get(i)
+													.isKey();
 				if (isColumnPk && !StringUtils.isEmpty(csvRecord.get(i))) {
 					return csvRecord.get(i);
 				}
@@ -470,7 +496,10 @@ public class CsvimProcessor {
 		if (tableModel != null) {
 			List<ColumnMetadata> columnModels = tableModel.getColumns();
 			if (headerNames.size() > 0) {
-				ColumnMetadata found = columnModels.stream().filter(ColumnMetadata::isKey).findFirst().orElse(null);
+				ColumnMetadata found = columnModels	.stream()
+													.filter(ColumnMetadata::isKey)
+													.findFirst()
+													.orElse(null);
 				String pkColumnName = found != null ? found.getName() : null;
 				return pkColumnName;
 			}
@@ -492,7 +521,11 @@ public class CsvimProcessor {
 			throws SQLException {
 		boolean exists = false;
 		SelectBuilder selectBuilder = new SelectBuilder(SqlFactory.deriveDialect(connection));
-		String sql = selectBuilder.distinct().column("1 " + pkNameForCSVRecord).from(tableName).where(pkNameForCSVRecord + " = ?").build();
+		String sql = selectBuilder	.distinct()
+									.column("1 " + pkNameForCSVRecord)
+									.from(tableName)
+									.where(pkNameForCSVRecord + " = ?")
+									.build();
 		try (PreparedStatement pstmt = connection.prepareCall(sql)) {
 			ResultSet rs;
 			try {
@@ -524,7 +557,9 @@ public class CsvimProcessor {
 	private boolean isEmptyTable(String tableName, Connection connection) throws SQLException {
 		boolean isEmpty = false;
 		SelectBuilder selectBuilder = new SelectBuilder(SqlFactory.deriveDialect(connection));
-		String sql = selectBuilder.column("COUNT(*)").from(tableName).build();
+		String sql = selectBuilder	.column("COUNT(*)")
+									.from(tableName)
+									.build();
 		try (PreparedStatement pstmt = connection.prepareCall(sql)) {
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {

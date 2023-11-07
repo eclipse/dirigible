@@ -39,8 +39,11 @@ public class JavaPackageProxyGenerator {
 	 * @return the classes in package
 	 */
 	private List<ClassName> getClassesInPackage(String packageName) {
-		try (ScanResult scanResult =
-				new ClassGraph().verbose().enableClassInfo().enableSystemJarsAndModules().acceptPackages(packageName).scan()) {
+		try (ScanResult scanResult = new ClassGraph()	.verbose()
+														.enableClassInfo()
+														.enableSystemJarsAndModules()
+														.acceptPackages(packageName)
+														.scan()) {
 
 			return scanResult	.getAllClasses()
 								.stream()

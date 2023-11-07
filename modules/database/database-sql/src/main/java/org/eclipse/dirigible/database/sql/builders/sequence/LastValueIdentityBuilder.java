@@ -76,7 +76,8 @@ public class LastValueIdentityBuilder extends AbstractQuerySqlBuilder {
 	 * @param sql the sql
 	 */
 	protected void generateLastValue(StringBuilder sql) {
-		sql.append(SPACE).append(KEYWORD_IDENTITY);
+		sql	.append(SPACE)
+			.append(KEYWORD_IDENTITY);
 	}
 
 }

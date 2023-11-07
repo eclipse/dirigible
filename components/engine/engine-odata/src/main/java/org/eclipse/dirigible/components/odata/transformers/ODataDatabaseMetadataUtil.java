@@ -138,7 +138,8 @@ public class ODataDatabaseMetadataUtil {
 	 * @return the data source
 	 */
 	protected synchronized DataSource getDataSource() {
-		return DataSourcesManager.get().getDefaultDataSource();
+		return DataSourcesManager	.get()
+									.getDefaultDataSource();
 	}
 
 	/**
@@ -197,8 +198,8 @@ public class ODataDatabaseMetadataUtil {
 				databaseMetadata.getImportedKeys(connection.getCatalog(), schemaName, normalizeTableName(tableMetadata.getName()));
 		if (!foreignKeys.isBeforeFirst() && !IS_CASE_SENSETIVE) {
 			// Fallback for PostgreSQL
-			foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schemaName,
-					normalizeTableName(tableMetadata.getName().toLowerCase()));
+			foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schemaName, normalizeTableName(tableMetadata.getName()
+																																.toLowerCase()));
 		}
 
 
@@ -245,8 +246,8 @@ public class ODataDatabaseMetadataUtil {
 				databaseMetadata.getPrimaryKeys(connection.getCatalog(), schemaName, normalizeTableName(tableMetadata.getName()));
 		if (!primaryKeys.isBeforeFirst() && !IS_CASE_SENSETIVE) {
 			// Fallback for PostgreSQL
-			primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schemaName,
-					normalizeTableName(tableMetadata.getName().toLowerCase()));
+			primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schemaName, normalizeTableName(tableMetadata	.getName()
+																																.toLowerCase()));
 		}
 
 		List<String> primaryKeyColumns = new ArrayList<>();
@@ -273,8 +274,9 @@ public class ODataDatabaseMetadataUtil {
 				databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName()), null);
 		if (!columns.isBeforeFirst() && !IS_CASE_SENSETIVE) {
 			// Fallback for PostgreSQL
-			columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern,
-					normalizeTableName(tableMetadata.getName().toLowerCase()), null);
+			columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata	.getName()
+																															.toLowerCase()),
+					null);
 		}
 
 		List<String> primaryKeys = getPrimaryKeys(databaseMetadata, connection, tableMetadata, schemaPattern);
@@ -318,7 +320,8 @@ public class ODataDatabaseMetadataUtil {
 	 */
 	public static boolean isPropColumnValidDBColumn(String propColumn, List<TableColumn> dbColumns) {
 		for (TableColumn next : dbColumns) {
-			if (next.getName().equals(propColumn)) {
+			if (next.getName()
+					.equals(propColumn)) {
 				return true;
 			}
 		}

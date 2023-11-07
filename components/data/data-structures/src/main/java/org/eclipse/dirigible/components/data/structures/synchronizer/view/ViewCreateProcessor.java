@@ -46,8 +46,13 @@ public class ViewCreateProcessor {
 		if (logger.isInfoEnabled()) {
 			logger.info("Processing Create View: " + viewName);
 		}
-		if (!SqlFactory.getNative(connection).existsTable(connection, viewName)) {
-			String sql = SqlFactory.getNative(connection).create().view(viewName).asSelect(viewModel.getQuery()).build();
+		if (!SqlFactory	.getNative(connection)
+						.existsTable(connection, viewName)) {
+			String sql = SqlFactory	.getNative(connection)
+									.create()
+									.view(viewName)
+									.asSelect(viewModel.getQuery())
+									.build();
 			if (logger.isInfoEnabled()) {
 				logger.info(sql);
 			}

@@ -89,7 +89,8 @@ public class DataImportService {
 		DataSource dataSource = datasourceManager.getDataSource(datasource);
 		try (Connection connection = dataSource.getConnection()) {
 			ISqlDialect dialect = SqlDialectFactory.getDialect(connection);
-			String productName = connection.getMetaData().getDatabaseProductName();
+			String productName = connection	.getMetaData()
+											.getDatabaseProductName();
 			if ("MongoDB".equals(productName)) {
 				dialect.importData(connection, table, is);
 				return;

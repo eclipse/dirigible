@@ -95,7 +95,9 @@ public class ExposeRepositoryTest {
 	 */
 	@Test
 	public void getOne() {
-		Long id = exposeRepository.findAll().get(0).getId();
+		Long id = exposeRepository	.findAll()
+									.get(0)
+									.getId();
 		Optional<Expose> optional = exposeRepository.findById(id);
 		Expose expose = optional.isPresent() ? optional.get() : null;
 		assertNotNull(expose);
@@ -115,7 +117,9 @@ public class ExposeRepositoryTest {
 	 */
 	@Test
 	public void getReferenceUsingEntityManager() {
-		Long id = exposeRepository.findAll().get(0).getId();
+		Long id = exposeRepository	.findAll()
+									.get(0)
+									.getId();
 		Expose expose = entityManager.getReference(Expose.class, id);
 		assertNotNull(expose);
 		assertNotNull(expose.getLocation());

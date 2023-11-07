@@ -63,7 +63,8 @@ public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, 
 	public static Map<String, ODataCallback> getCallbacks(final URI baseUri, final ExpandSelectTreeNode expandSelectTreeNode,
 			final List<ArrayList<NavigationPropertySegment>> expandList) {
 		Map<String, ODataCallback> callbacks = new HashMap<>();
-		for (String navigationPropertyName : expandSelectTreeNode.getLinks().keySet()) {
+		for (String navigationPropertyName : expandSelectTreeNode	.getLinks()
+																	.keySet()) {
 			callbacks.put(navigationPropertyName, new ExpandCallBack(baseUri, expandList));
 		}
 		return callbacks;
@@ -114,11 +115,12 @@ public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, 
 		final EdmEntitySet targetEntitySet = uriInfo.getTargetEntitySet();
 		final ExpandSelectTreeNode expandSelectTree = UriParser.createExpandSelectTree(uriInfo.getSelect(), uriInfo.getExpand());
 
-		EntityProviderWriteProperties writeProperties =
-				EntityProviderWriteProperties	.serviceRoot(context.getPathInfo().getServiceRoot())
-												.expandSelectTree(expandSelectTree)//
-												.callbacks(ExpandCallBack.getCallbacks(context, uriInfo, Collections.singletonList(entry)))
-												.build();
+		EntityProviderWriteProperties writeProperties = EntityProviderWriteProperties	.serviceRoot(context.getPathInfo()
+																											.getServiceRoot())
+																						.expandSelectTree(expandSelectTree)//
+																						.callbacks(ExpandCallBack.getCallbacks(context,
+																								uriInfo, Collections.singletonList(entry)))
+																						.build();
 
 		return EntityProvider.writeEntry(contentType, targetEntitySet, entry, writeProperties);
 	}
@@ -145,15 +147,16 @@ public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, 
 			entities.add(acc.renderForExpand());
 		}
 
-		EntityProviderWriteProperties feedProperties =
-				EntityProviderWriteProperties	.serviceRoot(context.getPathInfo().getServiceRoot())
-												.inlineCountType(uriInfo.getInlineCount())
-												.inlineCount(count)
-												.expandSelectTree(
-														UriParser.createExpandSelectTree(uriInfo.getSelect(), uriInfo.getExpand()))
-												.callbacks(ExpandCallBack.getCallbacks(context, uriInfo, entities))//
-												.nextLink(nextLink)
-												.build();
+		EntityProviderWriteProperties feedProperties = EntityProviderWriteProperties.serviceRoot(context.getPathInfo()
+																										.getServiceRoot())
+																					.inlineCountType(uriInfo.getInlineCount())
+																					.inlineCount(count)
+																					.expandSelectTree(UriParser.createExpandSelectTree(
+																							uriInfo.getSelect(), uriInfo.getExpand()))
+																					.callbacks(ExpandCallBack.getCallbacks(context, uriInfo,
+																							entities))//
+																					.nextLink(nextLink)
+																					.build();
 
 		List<Map<String, Object>> feedEntities = new ArrayList<>();
 		feedEntities.addAll(entities);
@@ -171,7 +174,8 @@ public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, 
 	 */
 	private static Map<String, ODataCallback> getCallbacks(ODataContext context, UriInfo uriInfo, List<Map<String, Object>> feedData)
 			throws ODataException {
-		return ExpandCallBack.getCallbacks(context.getPathInfo().getServiceRoot(), //
+		return ExpandCallBack.getCallbacks(context	.getPathInfo()
+													.getServiceRoot(), //
 				UriParser.createExpandSelectTree(uriInfo.getSelect(), uriInfo.getExpand()), //
 				uriInfo.getExpand());
 	}
@@ -220,7 +224,8 @@ public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, 
 			// the data must be a map, for each navigation property the data should be in an entry with key the
 			// FQN of the property
 			List<Map<String, Object>> navigationEntryData =
-					(List<Map<String, Object>>) entryData.get(OData2Utils.fqn(context.getNavigationProperty().getType()));
+					(List<Map<String, Object>>) entryData.get(OData2Utils.fqn(context	.getNavigationProperty()
+																						.getType()));
 			expandedPropertyFeed.setFeedData(navigationEntryData);
 			expandedPropertyFeed.setInlineProperties(getInlineEntityProviderProperties(context));
 		} catch (EdmException e) {

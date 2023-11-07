@@ -57,10 +57,10 @@ public class PersistenceDropSequenceProcessor extends AbstractPersistenceProcess
 	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-		DropSequenceBuilder dropSequenceBuilder =
-				SqlFactory	.getNative(SqlFactory.deriveDialect(connection))
-							.drop()
-							.sequence(tableModel.getTableName() + ISqlKeywords.UNDERSCROE + ISqlKeywords.KEYWORD_SEQUENCE);
+		DropSequenceBuilder dropSequenceBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
+															.drop()
+															.sequence(tableModel.getTableName() + ISqlKeywords.UNDERSCROE
+																	+ ISqlKeywords.KEYWORD_SEQUENCE);
 
 		String sql = dropSequenceBuilder.toString();
 		if (logger.isTraceEnabled()) {

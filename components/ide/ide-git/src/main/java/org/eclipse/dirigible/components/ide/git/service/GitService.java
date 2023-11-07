@@ -602,7 +602,8 @@ public class GitService {
 					filePath = path.substring(projectLocation.length());
 				} else {
 					File gitRepo = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repositoryName);
-					boolean isRootProject = gitRepo.getCanonicalPath().equals(project.getCanonicalPath());
+					boolean isRootProject = gitRepo	.getCanonicalPath()
+													.equals(project.getCanonicalPath());
 					if (!isRootProject || path.startsWith(project.getName())) {
 						filePath = path.substring(path.indexOf("/") + 1);
 					} else {
@@ -641,7 +642,8 @@ public class GitService {
 		List<File> projects = GitFileUtils.getGitRepositoryProjectsFiles(workspace, repositoryName);
 		File project = null;
 		for (File next : projects) {
-			if (next.exists() && next.getName().equals(projectName)) {
+			if (next.exists() && next	.getName()
+										.equals(projectName)) {
 				project = next;
 				break;
 			}
@@ -671,7 +673,8 @@ public class GitService {
 			String path = projectPath.substring(projectPath.indexOf(DOT_GIT) + DOT_GIT.length() + IRepository.SEPARATOR.length());
 			String[] tokens = path.split(IRepository.SEPARATOR);
 			for (int i = 3; i < tokens.length; i++) {
-				projectLocation.append(tokens[i]).append(IRepository.SEPARATOR);
+				projectLocation	.append(tokens[i])
+								.append(IRepository.SEPARATOR);
 			}
 		}
 		return projectLocation.toString();
@@ -761,7 +764,11 @@ public class GitService {
 				File gitDirectoryFile = getGitRepository(workspace, repositoryName);
 				if (gitDirectoryFile != null) {
 					String gitDirectory = gitDirectoryFile.getCanonicalPath();
-					if (Paths.get(Paths.get(gitDirectory).toString(), DOT_GIT).toFile().exists()) {
+					if (Paths	.get(Paths	.get(gitDirectory)
+											.toString(),
+										DOT_GIT)
+								.toFile()
+								.exists()) {
 						IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory);
 						return gitConnector;
 					} else {

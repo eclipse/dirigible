@@ -26,7 +26,10 @@ public class DropViewTest {
 	 */
 	@Test
 	public void dropView() {
-		String sql = SqlFactory.getNative(new MySQLSqlDialect()).drop().view("CUSTOMERS_VIEW").build();
+		String sql = SqlFactory	.getNative(new MySQLSqlDialect())
+								.drop()
+								.view("CUSTOMERS_VIEW")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("DROP VIEW CUSTOMERS_VIEW", sql);

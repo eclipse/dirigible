@@ -140,7 +140,8 @@ public class Csvim extends Artefact {
 	public CsvFile getFileByLocation(String location) {
 		if (files != null) {
 			for (CsvFile cf : files) {
-				if (cf.getLocation().equals(location)) {
+				if (cf	.getLocation()
+						.equals(location)) {
 					return cf;
 				}
 			}

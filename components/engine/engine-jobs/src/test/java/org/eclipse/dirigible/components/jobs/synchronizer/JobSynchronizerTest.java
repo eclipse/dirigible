@@ -115,7 +115,8 @@ public class JobSynchronizerTest {
 				"{\"expression\":\"0/1 * * * * ?\",\"group\":\"dirigible-defined\",\"handler\":\"test/handler.js\",\"description\":\"Control Job\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
 		List<Job> list = jobSynchronizer.parse("/test/control.job", content.getBytes());
 		assertNotNull(list);
-		assertEquals("/test/control.job", list.get(0).getLocation());
+		assertEquals("/test/control.job", list	.get(0)
+												.getLocation());
 	}
 
 	/**

@@ -81,7 +81,8 @@ public class TransportService {
 		if (override == null)
 			override = true;
 		Workspace workspace = getWorkspace(workspaceName);
-		String projectPath = workspace.getProject(projectName).getPath();
+		String projectPath = workspace	.getProject(projectName)
+										.getPath();
 		String importPath = projectPath + IRepositoryStructure.SEPARATOR + pathInProject;
 		getRepository().importZip(content, importPath, override, false, null);
 	}
@@ -217,10 +218,12 @@ public class TransportService {
 	 */
 	public void importFileToPath(String workspaceName, String projectName, String pathInProject, byte[] content) {
 		Workspace workspace = getWorkspace(workspaceName);
-		String projectPath = workspace.getProject(projectName).getPath();
+		String projectPath = workspace	.getProject(projectName)
+										.getPath();
 		String importPath = projectPath + IRepositoryStructure.SEPARATOR + pathInProject;
 		if (getRepository().hasResource(importPath)) {
-			getRepository().getResource(importPath).setContent(content);
+			getRepository()	.getResource(importPath)
+							.setContent(content);
 		} else {
 			getRepository().createResource(importPath, content);
 		}

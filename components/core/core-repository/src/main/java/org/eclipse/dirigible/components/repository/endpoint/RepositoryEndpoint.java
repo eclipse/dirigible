@@ -95,8 +95,10 @@ public class RepositoryEndpoint {
 
 		if (path.endsWith(IRepositoryStructure.SEPARATOR)) {
 			ICollection collection = repositoryService.createCollection(path);
-			return ResponseEntity.created(
-					repositoryService.getURI(RepositoryService.escape(collection.getPath() + IRepositoryStructure.SEPARATOR))).build();
+			return ResponseEntity	.created(
+											repositoryService.getURI(
+													RepositoryService.escape(collection.getPath() + IRepositoryStructure.SEPARATOR)))
+									.build();
 		}
 
 		IResource resource = repositoryService.getResource(path);
@@ -105,7 +107,8 @@ public class RepositoryEndpoint {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
 		}
 		resource = repositoryService.createResource(path, content);
-		return ResponseEntity.created(repositoryService.getURI(RepositoryService.escape(resource.getPath()))).build();
+		return ResponseEntity	.created(repositoryService.getURI(RepositoryService.escape(resource.getPath())))
+								.build();
 	}
 
 	/**
@@ -124,7 +127,8 @@ public class RepositoryEndpoint {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, message);
 		}
 		resource = repositoryService.updateResource(path, content);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity	.noContent()
+								.build();
 	}
 
 	/**
@@ -138,7 +142,8 @@ public class RepositoryEndpoint {
 
 		if (path.endsWith(IRepositoryStructure.SEPARATOR)) {
 			repositoryService.deleteCollection(path);
-			ResponseEntity.noContent().build();
+			ResponseEntity	.noContent()
+							.build();
 		}
 
 		IResource resource = repositoryService.getResource(path);
@@ -146,13 +151,15 @@ public class RepositoryEndpoint {
 			ICollection collection = repositoryService.getCollection(path);
 			if (collection.exists()) {
 				repositoryService.deleteCollection(path);
-				return ResponseEntity.noContent().build();
+				return ResponseEntity	.noContent()
+										.build();
 			}
 			String message = format("Collection or Resource at location {0} does not exist", path);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, message);
 		}
 		repositoryService.deleteResource(path);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity	.noContent()
+								.build();
 	}
 
 }

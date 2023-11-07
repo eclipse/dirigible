@@ -350,7 +350,8 @@ public class Folder implements ICollection {
 	 */
 	public Folder createFolder(String path) {
 		String fullPath = constructPath(path);
-		ICollection collection = this.getRepository().createCollection(fullPath);
+		ICollection collection = this	.getRepository()
+										.createCollection(fullPath);
 		return new Folder(collection);
 	}
 
@@ -362,7 +363,8 @@ public class Folder implements ICollection {
 	 */
 	public Folder getFolder(String path) {
 		String fullPath = constructPath(path);
-		ICollection collection = this.getRepository().getCollection(fullPath);
+		ICollection collection = this	.getRepository()
+										.getCollection(fullPath);
 		return new Folder(collection);
 	}
 
@@ -374,7 +376,8 @@ public class Folder implements ICollection {
 	 */
 	public boolean existsFolder(String path) {
 		String fullPath = constructPath(path);
-		ICollection collection = this.getRepository().getCollection(fullPath);
+		ICollection collection = this	.getRepository()
+										.getCollection(fullPath);
 		return collection.exists();
 	}
 
@@ -399,7 +402,8 @@ public class Folder implements ICollection {
 	 */
 	public void deleteFolder(String path) {
 		String fullPath = constructPath(path);
-		this.getRepository().removeCollection(fullPath);
+		this.getRepository()
+			.removeCollection(fullPath);
 	}
 
 	/**
@@ -411,7 +415,8 @@ public class Folder implements ICollection {
 	 */
 	public File createFile(String path, byte[] content) {
 		String fullPath = constructPath(path);
-		IResource resource = this.getRepository().createResource(fullPath, content);
+		IResource resource = this	.getRepository()
+									.createResource(fullPath, content);
 		return new File(resource);
 	}
 
@@ -426,7 +431,8 @@ public class Folder implements ICollection {
 	 */
 	public File createFile(String path, byte[] content, boolean isBinary, String contentType) {
 		String fullPath = constructPath(path);
-		IResource resource = this.getRepository().createResource(fullPath, content, isBinary, contentType);
+		IResource resource = this	.getRepository()
+									.createResource(fullPath, content, isBinary, contentType);
 		return new File(resource);
 	}
 
@@ -438,7 +444,8 @@ public class Folder implements ICollection {
 	 */
 	public File getFile(String path) {
 		String fullPath = constructPath(path);
-		IResource resource = this.getRepository().getResource(fullPath);
+		IResource resource = this	.getRepository()
+									.getResource(fullPath);
 		return new File(resource);
 	}
 
@@ -450,7 +457,8 @@ public class Folder implements ICollection {
 	 */
 	public boolean existsFile(String path) {
 		String fullPath = constructPath(path);
-		IResource resource = this.getRepository().getResource(fullPath);
+		IResource resource = this	.getRepository()
+									.getResource(fullPath);
 		return resource.exists();
 	}
 
@@ -475,7 +483,8 @@ public class Folder implements ICollection {
 	 */
 	public void deleteFile(String path) {
 		String fullPath = constructPath(path);
-		this.getRepository().removeResource(fullPath);
+		this.getRepository()
+			.removeResource(fullPath);
 	}
 
 	/**
@@ -497,11 +506,13 @@ public class Folder implements ICollection {
 	public List<File> search(String term) {
 		List<File> files = new ArrayList<File>();
 		try {
-			List<IEntity> entities = this.getRepository().searchText(term);
+			List<IEntity> entities = this	.getRepository()
+											.searchText(term);
 			for (IEntity entity : entities) {
 				if (entity instanceof IResource) {
 					IResource resource = (IResource) entity;
-					if (resource.getPath().startsWith(this.getPath())) {
+					if (resource.getPath()
+								.startsWith(this.getPath())) {
 						if (resource.exists()) {
 							files.add(new File(resource));
 						}
@@ -523,11 +534,14 @@ public class Folder implements ICollection {
 	public List<File> find(String pattern) {
 		List<File> files = new ArrayList<File>();
 		try {
-			List<String> entities = this.getRepository().find(this.getPath(), pattern);
+			List<String> entities = this.getRepository()
+										.find(this.getPath(), pattern);
 
 			for (String entity : entities) {
-				IResource resource = this.getRepository().getResource(entity);
-				if (resource.getPath().startsWith(this.getPath())) {
+				IResource resource = this	.getRepository()
+											.getResource(entity);
+				if (resource.getPath()
+							.startsWith(this.getPath())) {
 					if (resource.exists()) {
 						files.add(new File(resource));
 					}

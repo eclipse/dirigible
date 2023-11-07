@@ -84,8 +84,8 @@ public class RegistryService {
 	 * @return the string builder
 	 */
 	private StringBuilder generateRegistryPath(String path) {
-		StringBuilder registryPath =
-				new StringBuilder(IRepositoryStructure.PATH_REGISTRY_PUBLIC).append(IRepositoryStructure.SEPARATOR).append(path);
+		StringBuilder registryPath = new StringBuilder(IRepositoryStructure.PATH_REGISTRY_PUBLIC)	.append(IRepositoryStructure.SEPARATOR)
+																									.append(path);
 		return registryPath;
 	}
 

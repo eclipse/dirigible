@@ -55,8 +55,8 @@ public class FunctionTest {
 		when(mockConnection.getMetaData()).thenReturn(mockDatabaseMetaData);
 		when(mockDatabaseMetaData.getFunctions(null, "MYSCHEMA", funcName)).thenReturn(mockResultSet);
 		when(mockResultSet.next()).thenReturn(true);
-		boolean exist =
-				SqlFactory.getNative(new HanaSqlDialect()).exists(mockConnection, "MYSCHEMA", funcName, DatabaseArtifactTypes.FUNCTION);
+		boolean exist = SqlFactory	.getNative(new HanaSqlDialect())
+									.exists(mockConnection, "MYSCHEMA", funcName, DatabaseArtifactTypes.FUNCTION);
 		assertTrue(exist);
 	}
 
@@ -71,8 +71,8 @@ public class FunctionTest {
 		when(mockConnection.getMetaData()).thenReturn(mockDatabaseMetaData);
 		when(mockDatabaseMetaData.getFunctions(null, "MYSCHEMA", funcName)).thenReturn(mockResultSet);
 		when(mockResultSet.next()).thenReturn(false);
-		boolean exist =
-				SqlFactory.getNative(new HanaSqlDialect()).exists(mockConnection, "MYSCHEMA", funcName, DatabaseArtifactTypes.FUNCTION);
+		boolean exist = SqlFactory	.getNative(new HanaSqlDialect())
+									.exists(mockConnection, "MYSCHEMA", funcName, DatabaseArtifactTypes.FUNCTION);
 		assertFalse(exist);
 	}
 

@@ -73,7 +73,9 @@ public class WikiEndpointTest {
 	@Test
 	public void process() throws Exception {
 		String registyrFolder = synchronizationProcessor.getRegistryFolder();
-		Paths.get(registyrFolder, "demo").toFile().mkdirs();
+		Paths	.get(registyrFolder, "demo")
+				.toFile()
+				.mkdirs();
 		Files.writeString(Paths.get(registyrFolder, "demo", "hello.md"), "Hello\n===", StandardOpenOption.CREATE);
 		try {
 			synchronizationProcessor.processSynchronizers();
@@ -82,7 +84,8 @@ public class WikiEndpointTest {
 					.andExpect(content().string(containsString("<h1>Hello</h1>")))
 					.andExpect(status().is2xxSuccessful());
 		} finally {
-			FileUtils.deleteDirectory(Paths.get(registyrFolder, "demo").toFile());
+			FileUtils.deleteDirectory(Paths	.get(registyrFolder, "demo")
+											.toFile());
 			synchronizationProcessor.processSynchronizers();
 		}
 	}

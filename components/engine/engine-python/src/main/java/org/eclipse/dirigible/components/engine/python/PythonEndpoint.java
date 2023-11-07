@@ -157,7 +157,8 @@ public class PythonEndpoint extends BaseEndpoint {
 
 	private static Path getAbsolutePathIfValidProjectFile(String projectName, String projectFilePath) {
 		var sourceProvider = new DirigibleSourceProvider();
-		String sourceFilePath = Path.of(projectName, projectFilePath).toString();
+		String sourceFilePath = Path.of(projectName, projectFilePath)
+									.toString();
 		String maybePythonCode = sourceProvider.getSource(sourceFilePath);
 		if (maybePythonCode == null) {
 			throw new RuntimeException("Python source code for project name '" + projectName + "' and file name '" + projectFilePath
@@ -169,10 +170,14 @@ public class PythonEndpoint extends BaseEndpoint {
 
 	private boolean isNotValid(String inputPath) {
 		String registryPath = getDirigibleWorkingDirectory().toString();
-		String normalizedInputPath = Path.of(inputPath).normalize().toString();
+		String normalizedInputPath = Path	.of(inputPath)
+											.normalize()
+											.toString();
 		File file = new File(registryPath, normalizedInputPath);
 		try {
-			return !file.toPath().normalize().startsWith(registryPath);
+			return !file.toPath()
+						.normalize()
+						.startsWith(registryPath);
 		} catch (Exception e) {
 			return true;
 		}
@@ -185,7 +190,8 @@ public class PythonEndpoint extends BaseEndpoint {
 
 	private Path getDirigiblePythonModulesDirectory() {
 		String publicRegistryPath = repository.getInternalResourcePath(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
-		return Path.of(publicRegistryPath).resolve("python-modules");
+		return Path	.of(publicRegistryPath)
+					.resolve("python-modules");
 	}
 
 	private String normalizePath(String path) {

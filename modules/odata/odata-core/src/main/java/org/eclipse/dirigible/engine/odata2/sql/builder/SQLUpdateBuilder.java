@@ -99,7 +99,8 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 				builder.append("UPDATE ");
 				builder.append(getTargetTableName());
 				builder.append(" SET ");
-				builder.append(buildColumnList()).append(" WHERE ");
+				builder	.append(buildColumnList())
+						.append(" WHERE ");
 
 				SQLWhereClause where = new SQLWhereClause(buildWhereClauseForKeys());
 				where.and(getWhereClause()); // the interceptor added where clause
@@ -229,7 +230,9 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 	 * @return the string
 	 */
 	protected String buildColumnList() {
-		return csv(nonKeyColumnNames.stream().map(n -> n + "=?").collect(Collectors.toList()));
+		return csv(nonKeyColumnNames.stream()
+									.map(n -> n + "=?")
+									.collect(Collectors.toList()));
 	}
 
 	/**

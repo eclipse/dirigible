@@ -97,7 +97,8 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(getFileExtension());
+		return file	.toString()
+					.endsWith(getFileExtension());
 	}
 
 	/**

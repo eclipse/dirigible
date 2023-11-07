@@ -73,7 +73,8 @@ public class ProjectMetadataManager {
 	 * @return true if it's "project.json" file
 	 */
 	public static boolean isProjectMetadata(java.io.File file) {
-		return file.exists() && file.isFile() && file.getName().equals(ProjectMetadata.PROJECT_METADATA_FILE_NAME);
+		return file.exists() && file.isFile() && file	.getName()
+														.equals(ProjectMetadata.PROJECT_METADATA_FILE_NAME);
 	}
 
 	/**

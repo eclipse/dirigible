@@ -52,7 +52,9 @@ public class RabbitMQFacadeTest {
 		logCaptor.setLogLevelToInfo();
 
 		RabbitMQFacade.send(queue, message);
-		assertEquals(logCaptor.getInfoLogs().get(0), "Sent: " + "'" + message + "'" + " to [" + queue + "]");
+		assertEquals(logCaptor	.getInfoLogs()
+								.get(0),
+				"Sent: " + "'" + message + "'" + " to [" + queue + "]");
 
 	}
 
@@ -61,9 +63,13 @@ public class RabbitMQFacadeTest {
 		logCaptor.setLogLevelToInfo();
 
 		RabbitMQFacade.startListening(queue, "rabbitmq/test-handler");
-		assertEquals(logCaptor.getInfoLogs().get(0), "RabbitMQ receiver created for [" + queue + "]");
+		assertEquals(logCaptor	.getInfoLogs()
+								.get(0),
+				"RabbitMQ receiver created for [" + queue + "]");
 
 		RabbitMQFacade.stopListening(queue, "rabbitmq/test-handler");
-		assertEquals(logCaptor.getInfoLogs().get(1), "RabbitMQ receiver stopped for [" + queue + "]");
+		assertEquals(logCaptor	.getInfoLogs()
+								.get(1),
+				"RabbitMQ receiver stopped for [" + queue + "]");
 	}
 }

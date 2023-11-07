@@ -73,7 +73,12 @@ public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBu
 			tableType = METADATA_GLOBAL_TEMPORARY_COLUMN;
 		}
 
-		sql.append(SPACE).append(tableType).append(SPACE).append(KEYWORD_TABLE).append(SPACE).append(tableName);
+		sql	.append(SPACE)
+			.append(tableType)
+			.append(SPACE)
+			.append(KEYWORD_TABLE)
+			.append(SPACE)
+			.append(tableName);
 	}
 
 	/**

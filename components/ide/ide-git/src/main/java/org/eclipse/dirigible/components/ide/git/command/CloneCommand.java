@@ -272,7 +272,8 @@ public class CloneCommand {
 			for (String projectName : clonedProjects) {
 				List<Project> projects = workspace.getProjects();
 				for (Project project : projects) {
-					if (project.getName().equals(projectName)) {
+					if (project	.getName()
+								.equals(projectName)) {
 						try {
 							publisherService.publish(generateWorkspacePath(workspace.getName()), projectName, "");
 							if (logger.isInfoEnabled()) {

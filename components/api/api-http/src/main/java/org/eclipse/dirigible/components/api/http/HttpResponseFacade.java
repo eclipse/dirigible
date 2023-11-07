@@ -68,7 +68,8 @@ public class HttpResponseFacade {
 			throw new InvalidStateException(NO_VALID_RESPONSE);
 		}
 		try {
-			response.getOutputStream().print(text);
+			response.getOutputStream()
+					.print(text);
 		} catch (IOException e) {
 			if (logger.isErrorEnabled()) {
 				logger.error(e.getMessage(), e);
@@ -134,7 +135,8 @@ public class HttpResponseFacade {
 			throw new InvalidStateException(NO_VALID_RESPONSE);
 		}
 		try {
-			response.getOutputStream().println(text);
+			response.getOutputStream()
+					.println(text);
 		} catch (IOException e) {
 			if (logger.isErrorEnabled()) {
 				logger.error(e.getMessage(), e);
@@ -200,7 +202,8 @@ public class HttpResponseFacade {
 			throw new InvalidStateException(NO_VALID_RESPONSE);
 		}
 		try {
-			response.getOutputStream().write(bytes);
+			response.getOutputStream()
+					.write(bytes);
 		} catch (IOException e) {
 			if (logger.isErrorEnabled()) {
 				logger.error(e.getMessage(), e);
@@ -220,7 +223,8 @@ public class HttpResponseFacade {
 		}
 		try {
 			byte[] bytes = BytesHelper.jsonToBytes(input);
-			response.getOutputStream().write(bytes);
+			response.getOutputStream()
+					.write(bytes);
 		} catch (IOException e) {
 			if (logger.isErrorEnabled()) {
 				logger.error(e.getMessage(), e);
@@ -263,7 +267,8 @@ public class HttpResponseFacade {
 			throw new InvalidStateException(NO_VALID_RESPONSE);
 		}
 		try {
-			response.getOutputStream().flush();
+			response.getOutputStream()
+					.flush();
 		} catch (IOException e) {
 			if (logger.isErrorEnabled()) {
 				logger.error(e.getMessage(), e);
@@ -280,7 +285,8 @@ public class HttpResponseFacade {
 			throw new InvalidStateException(NO_VALID_RESPONSE);
 		}
 		try {
-			response.getOutputStream().close();
+			response.getOutputStream()
+					.close();
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -595,7 +601,8 @@ public class HttpResponseFacade {
 		if (response == null) {
 			throw new InvalidStateException(NO_VALID_RESPONSE);
 		}
-		return GsonHelper.toJson(response.getHeaders(name).toArray());
+		return GsonHelper.toJson(response	.getHeaders(name)
+											.toArray());
 	}
 
 	/**
@@ -608,7 +615,8 @@ public class HttpResponseFacade {
 		if (response == null) {
 			throw new InvalidStateException(NO_VALID_RESPONSE);
 		}
-		return GsonHelper.toJson(response.getHeaderNames().toArray());
+		return GsonHelper.toJson(response	.getHeaderNames()
+											.toArray());
 	}
 
 	/**

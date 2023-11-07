@@ -93,7 +93,9 @@ public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor 
 	 * @return the string
 	 */
 	protected String generateScriptDeleteAll(Connection connection, PersistenceTableModel tableModel) {
-		DeleteBuilder deleteBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).delete().from(tableModel.getTableName());
+		DeleteBuilder deleteBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
+												.delete()
+												.from(tableModel.getTableName());
 		String sql = deleteBuilder.toString();
 		if (logger.isTraceEnabled()) {
 			logger.trace(sql);

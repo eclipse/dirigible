@@ -27,7 +27,10 @@ public class SequenceTest {
 	 */
 	@Test
 	public void createSequence() {
-		String sql = SqlFactory.getNative(new SnowflakeSqlDialect()).create().sequence("CUSTOMERS_SEQUENCE").build();
+		String sql = SqlFactory	.getNative(new SnowflakeSqlDialect())
+								.create()
+								.sequence("CUSTOMERS_SEQUENCE")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE", sql);
@@ -38,7 +41,10 @@ public class SequenceTest {
 	 */
 	@Test
 	public void alterSequence() {
-		String sql = SqlFactory.getNative(new SnowflakeSqlDialect()).alter().sequence("CUSTOMERS_SEQUENCE").build();
+		String sql = SqlFactory	.getNative(new SnowflakeSqlDialect())
+								.alter()
+								.sequence("CUSTOMERS_SEQUENCE")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("ALTER SEQUENCE CUSTOMERS_SEQUENCE", sql);
@@ -49,7 +55,10 @@ public class SequenceTest {
 	 */
 	@Test
 	public void dropSequnce() {
-		String sql = SqlFactory.getNative(new SnowflakeSqlDialect()).drop().sequence("CUSTOMERS_SEQUENCE").build();
+		String sql = SqlFactory	.getNative(new SnowflakeSqlDialect())
+								.drop()
+								.sequence("CUSTOMERS_SEQUENCE")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("DROP SEQUENCE CUSTOMERS_SEQUENCE", sql);
@@ -60,7 +69,9 @@ public class SequenceTest {
 	 */
 	@Test
 	public void nextvalSequnce() {
-		String sql = SqlFactory.getNative(new SnowflakeSqlDialect()).nextval("CUSTOMERS_SEQUENCE").build();
+		String sql = SqlFactory	.getNative(new SnowflakeSqlDialect())
+								.nextval("CUSTOMERS_SEQUENCE")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("SELECT CUSTOMERS_SEQUENCE.NEXTVAL FROM DUAL", sql);

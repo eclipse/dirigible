@@ -26,7 +26,8 @@ public class UuidFacade {
 	 * @return the string
 	 */
 	public static final String random() {
-		return UUID.randomUUID().toString();
+		return UUID	.randomUUID()
+					.toString();
 	}
 
 	/**

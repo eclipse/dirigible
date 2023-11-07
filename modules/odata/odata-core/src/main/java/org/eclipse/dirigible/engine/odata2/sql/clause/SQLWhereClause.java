@@ -150,7 +150,8 @@ public final class SQLWhereClause implements SQLClause {
 	 */
 	private SQLWhereClause append(final String appendPredicate, final SQLWhereClause... whereClauses) {
 		boolean useBraces = whereClauses.length > 1;
-		Iterator<SQLWhereClause> it = Arrays.asList(whereClauses).iterator();
+		Iterator<SQLWhereClause> it = Arrays.asList(whereClauses)
+											.iterator();
 		if (useBraces) {
 			this.whereClause.append(appendPredicate);
 			this.whereClause.append(OPEN_BRACKET);

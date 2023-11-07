@@ -81,7 +81,9 @@ public class HttpSessionFacade {
 	public static final String getAttribute(String arg0) {
 		HttpSession session = getSession();
 		if (session != null) {
-			return session.getAttribute(arg0) != null ? session.getAttribute(arg0).toString() : null;
+			return session.getAttribute(arg0) != null ? session	.getAttribute(arg0)
+																.toString()
+					: null;
 		}
 		return null;
 	}
@@ -94,7 +96,8 @@ public class HttpSessionFacade {
 	public static final String[] getAttributeNames() {
 		HttpSession session = getSession();
 		if (session != null) {
-			return Collections.list(session.getAttributeNames()).toArray(new String[] {});
+			return Collections	.list(session.getAttributeNames())
+								.toArray(new String[] {});
 		}
 		return null;
 	}
@@ -107,7 +110,8 @@ public class HttpSessionFacade {
 	public static final String getAttributeNamesJson() {
 		HttpSession session = getSession();
 		if (session != null) {
-			String[] array = Collections.list(session.getAttributeNames()).toArray(new String[] {});
+			String[] array = Collections.list(session.getAttributeNames())
+										.toArray(new String[] {});
 			return GsonHelper.toJson(array);
 		}
 		return null;

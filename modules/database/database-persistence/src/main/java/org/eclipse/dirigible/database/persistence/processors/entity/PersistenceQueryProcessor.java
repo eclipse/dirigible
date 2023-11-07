@@ -74,7 +74,10 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	 * @return the string
 	 */
 	protected String generateScriptFind(Connection connection, PersistenceTableModel tableModel) {
-		SelectBuilder selectBuilder = SqlFactory.getNative(connection).select().column("*").from(tableModel.getTableName());
+		SelectBuilder selectBuilder = SqlFactory.getNative(connection)
+												.select()
+												.column("*")
+												.from(tableModel.getTableName());
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.isPrimaryKey()) {
 				selectBuilder.where(new StringBuilder()	.append(columnModel.getName())
@@ -101,7 +104,10 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	 * @return the string
 	 */
 	protected String generateScriptLock(Connection connection, PersistenceTableModel tableModel) {
-		SelectBuilder selectBuilder = SqlFactory.getNative(connection).select().column("*").from(tableModel.getTableName());
+		SelectBuilder selectBuilder = SqlFactory.getNative(connection)
+												.select()
+												.column("*")
+												.from(tableModel.getTableName());
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.isPrimaryKey()) {
 				selectBuilder.where(new StringBuilder()	.append(columnModel.getName())
@@ -129,7 +135,10 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	 * @return the string
 	 */
 	protected String generateScriptFindAll(Connection connection, PersistenceTableModel tableModel) {
-		SelectBuilder selectBuilder = SqlFactory.getNative(connection).select().column("*").from(tableModel.getTableName());
+		SelectBuilder selectBuilder = SqlFactory.getNative(connection)
+												.select()
+												.column("*")
+												.from(tableModel.getTableName());
 		String sql = selectBuilder.toString();
 		if (logger.isTraceEnabled()) {
 			logger.trace(sql);

@@ -101,8 +101,8 @@ class OpenAPISynchronizerTest {
 	 */
 	@Test
 	public void testIsAcceptedArtefact() {
-		assertTrue(openAPISynchronizer.isAccepted(
-				OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test.openapi", "test", "description").getType()));
+		assertTrue(openAPISynchronizer.isAccepted(OpenAPIRepositoryTest	.createOpenAPI("/a/b/c/test.openapi", "test", "description")
+																		.getType()));
 	}
 
 	/**
@@ -112,10 +112,12 @@ class OpenAPISynchronizerTest {
 	 */
 	@Test
 	public void testLoad() throws IOException, ParseException {
-		byte[] content = OpenAPISynchronizer.class.getResourceAsStream("/META-INF/dirigible/test/test.openapi").readAllBytes();
+		byte[] content = OpenAPISynchronizer.class	.getResourceAsStream("/META-INF/dirigible/test/test.openapi")
+													.readAllBytes();
 		List<OpenAPI> list = openAPISynchronizer.parse("/META-INF/dirigible/test/test.openapi", content);
 		assertNotNull(list);
-		assertEquals("/META-INF/dirigible/test/test.openapi", list.get(0).getLocation());
+		assertEquals("/META-INF/dirigible/test/test.openapi", list	.get(0)
+																	.getLocation());
 	}
 
 	/**

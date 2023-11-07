@@ -57,7 +57,8 @@ public class SftpServerConfiguration {
 				(u, p, session) -> u.equals(new String(new Base64().decode(username.getBytes()), StandardCharsets.UTF_8).trim())
 						&& p.equals(new String(new Base64().decode(password.getBytes()), StandardCharsets.UTF_8).trim()));
 		String defaultHome = new File(REPOSITORY_ROOT).getCanonicalPath();
-		sshd.setFileSystemFactory(new VirtualFileSystemFactory(FileSystems.getDefault().getPath(defaultHome)));
+		sshd.setFileSystemFactory(new VirtualFileSystemFactory(FileSystems	.getDefault()
+																			.getPath(defaultHome)));
 		sshd.start();
 		logger.info("SFTP server started at: " + defaultHome);
 		return sshd;

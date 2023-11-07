@@ -62,7 +62,8 @@ public class EncryptionBeanPostProcessor implements BeanPostProcessor {
 		if (bean instanceof EntityManagerFactory) {
 			HibernateEntityManagerFactory hibernateEntityManagerFactory = (HibernateEntityManagerFactory) bean;
 			SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) hibernateEntityManagerFactory.getSessionFactory();
-			EventListenerRegistry registry = sessionFactoryImpl.getServiceRegistry().getService(EventListenerRegistry.class);
+			EventListenerRegistry registry = sessionFactoryImpl	.getServiceRegistry()
+																.getService(EventListenerRegistry.class);
 			registry.appendListeners(EventType.PRE_LOAD, encryptionListener);
 			registry.appendListeners(EventType.PRE_INSERT, encryptionListener);
 			registry.appendListeners(EventType.PRE_UPDATE, encryptionListener);

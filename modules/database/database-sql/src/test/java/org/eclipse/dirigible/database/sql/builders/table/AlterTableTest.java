@@ -44,7 +44,12 @@ public class AlterTableTest {
 	 */
 	@Test
 	public void alterAddTableTypeSafe() {
-		String sql = SqlFactory.getDefault().alter().table("CUSTOMERS").add().columnVarchar("FIRST_NAME", 20, false, true, false).build();
+		String sql = SqlFactory	.getDefault()
+								.alter()
+								.table("CUSTOMERS")
+								.add()
+								.columnVarchar("FIRST_NAME", 20, false, true, false)
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("ALTER TABLE CUSTOMERS ADD FIRST_NAME VARCHAR (20) ;", sql);
@@ -71,7 +76,12 @@ public class AlterTableTest {
 	 */
 	@Test
 	public void alterDropTableTypeSafe() {
-		String sql = SqlFactory.getDefault().alter().table("CUSTOMERS").drop().columnVarchar("FIRST_NAME", 20, false, true, true).build();
+		String sql = SqlFactory	.getDefault()
+								.alter()
+								.table("CUSTOMERS")
+								.drop()
+								.columnVarchar("FIRST_NAME", 20, false, true, true)
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("ALTER TABLE CUSTOMERS DROP COLUMN FIRST_NAME ;", sql);

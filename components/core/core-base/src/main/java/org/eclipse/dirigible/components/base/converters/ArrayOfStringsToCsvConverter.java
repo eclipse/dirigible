@@ -28,7 +28,11 @@ public class ArrayOfStringsToCsvConverter implements AttributeConverter<String[]
 	 */
 	@Override
 	public String convertToDatabaseColumn(String[] attribute) {
-		return attribute == null ? null : Arrays.asList(attribute).stream().map(String::trim).collect(Collectors.joining(","));
+		return attribute == null ? null
+				: Arrays.asList(attribute)
+						.stream()
+						.map(String::trim)
+						.collect(Collectors.joining(","));
 	}
 
 	/**
@@ -40,7 +44,11 @@ public class ArrayOfStringsToCsvConverter implements AttributeConverter<String[]
 	@Override
 	public String[] convertToEntityAttribute(String data) {
 		return data == null ? null
-				: Arrays.stream(data.split(",")).map(String::trim).collect(Collectors.toList()).stream().toArray(String[]::new);
+				: Arrays.stream(data.split(","))
+						.map(String::trim)
+						.collect(Collectors.toList())
+						.stream()
+						.toArray(String[]::new);
 	}
 
 }

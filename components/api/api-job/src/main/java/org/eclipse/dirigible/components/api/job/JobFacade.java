@@ -97,7 +97,9 @@ public class JobFacade implements InitializingBean {
 	 * @return the jobs
 	 */
 	public static String getJobs() {
-		return GsonHelper.toJson(JobFacade.get().getJobService().getAll());
+		return GsonHelper.toJson(JobFacade	.get()
+											.getJobService()
+											.getAll());
 	}
 
 	/**
@@ -107,7 +109,9 @@ public class JobFacade implements InitializingBean {
 	 * @return the job
 	 */
 	public static String getJob(String name) {
-		return GsonHelper.toJson(JobFacade.get().getJobService().findByName(name));
+		return GsonHelper.toJson(JobFacade	.get()
+											.getJobService()
+											.findByName(name));
 	}
 
 	/**
@@ -118,7 +122,9 @@ public class JobFacade implements InitializingBean {
 	 * @throws Exception the exception
 	 */
 	public static String enable(String name) throws Exception {
-		return GsonHelper.toJson(JobFacade.get().getJobService().enable(name));
+		return GsonHelper.toJson(JobFacade	.get()
+											.getJobService()
+											.enable(name));
 	}
 
 	/**
@@ -129,7 +135,9 @@ public class JobFacade implements InitializingBean {
 	 * @throws Exception the exception
 	 */
 	public static String disable(String name) throws Exception {
-		return GsonHelper.toJson(JobFacade.get().getJobService().disable(name));
+		return GsonHelper.toJson(JobFacade	.get()
+											.getJobService()
+											.disable(name));
 	}
 
 	/**
@@ -143,7 +151,9 @@ public class JobFacade implements InitializingBean {
 	public static boolean trigger(String name, String parameters) throws Exception {
 		@SuppressWarnings("unchecked")
 		Map<String, String> parametersMap = GsonHelper.fromJson(parameters, Map.class);
-		return JobFacade.get().getJobService().trigger(name, parametersMap);
+		return JobFacade.get()
+						.getJobService()
+						.trigger(name, parametersMap);
 	}
 
 	/**
@@ -154,10 +164,14 @@ public class JobFacade implements InitializingBean {
 	 * @throws Exception the scheduler exception
 	 */
 	public static void log(String name, String message) throws Exception {
-		Job job = JobFacade.get().getJobService().findByName(name);
+		Job job = JobFacade	.get()
+							.getJobService()
+							.findByName(name);
 		if (job != null) {
 			String handler = job.getHandler();
-			JobFacade.get().getJobLogService().jobLogged(name, handler, message);
+			JobFacade	.get()
+						.getJobLogService()
+						.jobLogged(name, handler, message);
 		} else {
 			String error = format("Job with name {0} does not exist, hence cannot be used to log messages", name);
 			throw new Exception(error);
@@ -172,10 +186,14 @@ public class JobFacade implements InitializingBean {
 	 * @throws Exception the scheduler exception
 	 */
 	public static void error(String name, String message) throws Exception {
-		Job job = JobFacade.get().getJobService().findByName(name);
+		Job job = JobFacade	.get()
+							.getJobService()
+							.findByName(name);
 		if (job != null) {
 			String handler = job.getHandler();
-			JobFacade.get().getJobLogService().jobLoggedError(name, handler, message);
+			JobFacade	.get()
+						.getJobLogService()
+						.jobLoggedError(name, handler, message);
 		} else {
 			String error = format("Job with name {0} does not exist, hence cannot be used to log messages", name);
 			throw new Exception(error);
@@ -190,10 +208,14 @@ public class JobFacade implements InitializingBean {
 	 * @throws Exception the scheduler exception
 	 */
 	public static void warn(String name, String message) throws Exception {
-		Job job = JobFacade.get().getJobService().findByName(name);
+		Job job = JobFacade	.get()
+							.getJobService()
+							.findByName(name);
 		if (job != null) {
 			String handler = job.getHandler();
-			JobFacade.get().getJobLogService().jobLoggedWarning(name, handler, message);
+			JobFacade	.get()
+						.getJobLogService()
+						.jobLoggedWarning(name, handler, message);
 		} else {
 			String error = format("Job with name {0} does not exist, hence cannot be used to log messages", name);
 			throw new Exception(error);
@@ -208,10 +230,14 @@ public class JobFacade implements InitializingBean {
 	 * @throws Exception the scheduler exception
 	 */
 	public static void info(String name, String message) throws Exception {
-		Job job = JobFacade.get().getJobService().findByName(name);
+		Job job = JobFacade	.get()
+							.getJobService()
+							.findByName(name);
 		if (job != null) {
 			String handler = job.getHandler();
-			JobFacade.get().getJobLogService().jobLoggedInfo(name, handler, message);
+			JobFacade	.get()
+						.getJobLogService()
+						.jobLoggedInfo(name, handler, message);
 		} else {
 			String error = format("Job with name {0} does not exist, hence cannot be used to log messages", name);
 			throw new Exception(error);

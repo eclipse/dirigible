@@ -62,7 +62,9 @@ public class DataTransferSchemaTopologyService {
 
 		tables = sortTables(tables);
 
-		return tables.stream().map(PersistenceTableModel::getTableName).collect(Collectors.toList());
+		return tables	.stream()
+						.map(PersistenceTableModel::getTableName)
+						.collect(Collectors.toList());
 	}
 
 	/**

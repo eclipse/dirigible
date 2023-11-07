@@ -63,7 +63,9 @@ public class ExtensionRepositoryTest {
 
 	@Test
 	public void getOne() {
-		Long id = extensionRepository.findAll().get(0).getId();
+		Long id = extensionRepository	.findAll()
+										.get(0)
+										.getId();
 		Optional<Extension> optional = extensionRepository.findById(id);
 		Extension extension = optional.isPresent() ? optional.get() : null;
 		assertNotNull(extension);
@@ -76,7 +78,9 @@ public class ExtensionRepositoryTest {
 
 	@Test
 	public void getReferenceUsingEntityManager() {
-		Long id = extensionRepository.findAll().get(0).getId();
+		Long id = extensionRepository	.findAll()
+										.get(0)
+										.getId();
 		Extension extension = entityManager.getReference(Extension.class, id);
 		assertNotNull(extension);
 		assertNotNull(extension.getLocation());

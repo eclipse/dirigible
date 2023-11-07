@@ -33,7 +33,11 @@ public class CreateViewTest extends CreateTableTest {
 								.column("ID")
 								.column("FIRST_NAME")
 								.column("LAST_NAME")
-								.asSelect(SqlFactory.getDefault().select().column("*").from("CUSTOMERS").build())
+								.asSelect(SqlFactory.getDefault()
+													.select()
+													.column("*")
+													.from("CUSTOMERS")
+													.build())
 								.build();
 
 		assertNotNull(sql);

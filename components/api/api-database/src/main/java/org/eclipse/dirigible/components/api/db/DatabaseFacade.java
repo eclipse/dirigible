@@ -121,7 +121,9 @@ public class DatabaseFacade implements InitializingBean {
 	 * @return the data sources
 	 */
 	public static final String getDataSources() {
-		return GsonHelper.toJson(DatabaseFacade.get().getDatabaseDefinitionService().getDataSourcesNames());
+		return GsonHelper.toJson(DatabaseFacade	.get()
+												.getDatabaseDefinitionService()
+												.getDataSourcesNames());
 	}
 
 	/**
@@ -130,7 +132,9 @@ public class DatabaseFacade implements InitializingBean {
 	 * @return the default data source
 	 */
 	public static final DataSource getDefaultDataSource() {
-		return DatabaseFacade.get().getDataSourcesManager().getDefaultDataSource();
+		return DatabaseFacade	.get()
+								.getDataSourcesManager()
+								.getDefaultDataSource();
 	}
 
 	/**
@@ -208,9 +212,13 @@ public class DatabaseFacade implements InitializingBean {
 	private static DataSource getDataSource(String datasourceName) {
 		DataSource dataSource = null;
 		if (datasourceName == null) {
-			dataSource = DatabaseFacade.get().getDataSourcesManager().getDefaultDataSource();
+			dataSource = DatabaseFacade	.get()
+										.getDataSourcesManager()
+										.getDefaultDataSource();
 		} else {
-			dataSource = DatabaseFacade.get().getDataSourcesManager().getDataSource(datasourceName);
+			dataSource = DatabaseFacade	.get()
+										.getDataSourcesManager()
+										.getDataSource(datasourceName);
 		}
 		return dataSource;
 	}
@@ -244,7 +252,10 @@ public class DatabaseFacade implements InitializingBean {
 				StringWriter sw = new StringWriter();
 				OutputStream output;
 				try {
-					output = WriterOutputStream.builder().setWriter(sw).setCharset(StandardCharsets.UTF_8).get();
+					output = WriterOutputStream	.builder()
+												.setWriter(sw)
+												.setCharset(StandardCharsets.UTF_8)
+												.get();
 				} catch (IOException e) {
 					throw new Exception(e);
 				}
@@ -362,11 +373,14 @@ public class DatabaseFacade implements InitializingBean {
 			while (iterator.hasNext()) {
 				JsonElement parameterElement = iterator.next();
 				if (parameterElement.isJsonPrimitive()) {
-					if (parameterElement.getAsJsonPrimitive().isBoolean()) {
+					if (parameterElement.getAsJsonPrimitive()
+										.isBoolean()) {
 						preparedStatement.setBoolean(i++, parameterElement.getAsBoolean());
-					} else if (parameterElement.getAsJsonPrimitive().isString()) {
+					} else if (parameterElement	.getAsJsonPrimitive()
+												.isString()) {
 						preparedStatement.setString(i++, parameterElement.getAsString());
-					} else if (parameterElement.getAsJsonPrimitive().isNumber()) {
+					} else if (parameterElement	.getAsJsonPrimitive()
+												.isNumber()) {
 						boolean isNumberParameterSet = false;
 						int numberIndex = i++;
 						try {
@@ -401,7 +415,8 @@ public class DatabaseFacade implements InitializingBean {
 							}
 						}
 						if (!isNumberParameterSet) {
-							preparedStatement.setObject(numberIndex, parameterElement.getAsNumber().toString());
+							preparedStatement.setObject(numberIndex, parameterElement	.getAsNumber()
+																						.toString());
 						}
 					} else {
 						throw new IllegalArgumentException("Parameter type unkown");
@@ -411,173 +426,230 @@ public class DatabaseFacade implements InitializingBean {
 					JsonElement typeElement = jsonObject.get("type");
 					JsonElement valueElement = jsonObject.get("value");
 
-					if (typeElement.isJsonPrimitive() && typeElement.getAsJsonPrimitive().isString()) {
-						String dataType = typeElement.getAsJsonPrimitive().getAsString();
+					if (typeElement.isJsonPrimitive() && typeElement.getAsJsonPrimitive()
+																	.isString()) {
+						String dataType = typeElement	.getAsJsonPrimitive()
+														.getAsString();
 
 						if (valueElement.isJsonNull()) {
 							Integer sqlType = DataTypeUtils.getSqlTypeByDataType(dataType);
 							preparedStatement.setNull(i++, sqlType);
 						} else if (DataTypeUtils.isVarchar(dataType)) {
-							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								String value = valueElement.getAsJsonPrimitive().getAsString();
+							if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																				.isString()) {
+								String value = valueElement	.getAsJsonPrimitive()
+															.getAsString();
 								preparedStatement.setString(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type VARCHAR");
 							}
 						} else if (DataTypeUtils.isNvarchar(dataType)) {
-							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								String value = valueElement.getAsJsonPrimitive().getAsString();
+							if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																				.isString()) {
+								String value = valueElement	.getAsJsonPrimitive()
+															.getAsString();
 								preparedStatement.setString(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type VARCHAR");
 							}
 						} else if (DataTypeUtils.isChar(dataType)) {
-							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								String value = valueElement.getAsJsonPrimitive().getAsString();
+							if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																				.isString()) {
+								String value = valueElement	.getAsJsonPrimitive()
+															.getAsString();
 								preparedStatement.setString(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type CHAR");
 							}
 						} else if (DataTypeUtils.isDate(dataType)) {
-							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isNumber()) {
-								Date value = new Date(valueElement.getAsJsonPrimitive().getAsLong());
+							if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																				.isNumber()) {
+								Date value = new Date(valueElement	.getAsJsonPrimitive()
+																	.getAsLong());
 								preparedStatement.setDate(i++, value);
-							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
+							} else if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																						.isString()) {
 								Date value = null;
 								try {
-									value = new Date(Long.parseLong(valueElement.getAsJsonPrimitive().getAsString()));
+									value = new Date(Long.parseLong(valueElement.getAsJsonPrimitive()
+																				.getAsString()));
 								} catch (NumberFormatException e) {
 									// assume date string in ISO format e.g. 2018-05-22T21:00:00.000Z
-									value = new Date(
-											javax.xml.bind.DatatypeConverter.parseDateTime(valueElement.getAsJsonPrimitive().getAsString())
-																			.getTime()
-																			.getTime());
+									value = new Date(javax.xml.bind.DatatypeConverter	.parseDateTime(valueElement	.getAsJsonPrimitive()
+																													.getAsString())
+																						.getTime()
+																						.getTime());
 								}
 								preparedStatement.setDate(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type DATE");
 							}
 						} else if (DataTypeUtils.isTime(dataType)) {
-							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isNumber()) {
-								Time value = new Time(valueElement.getAsJsonPrimitive().getAsLong());
+							if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																				.isNumber()) {
+								Time value = new Time(valueElement	.getAsJsonPrimitive()
+																	.getAsLong());
 								preparedStatement.setTime(i++, value);
-							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
+							} else if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																						.isString()) {
 								Time value = null;
 								try {
-									value = new Time(Long.parseLong(valueElement.getAsJsonPrimitive().getAsString()));
+									value = new Time(Long.parseLong(valueElement.getAsJsonPrimitive()
+																				.getAsString()));
 								} catch (NumberFormatException e) {
 									// assume XSDTime
-									value = new Time(
-											javax.xml.bind.DatatypeConverter.parseTime(valueElement.getAsJsonPrimitive().getAsString())
-																			.getTime()
-																			.getTime());
+									value = new Time(javax.xml.bind.DatatypeConverter	.parseTime(valueElement	.getAsJsonPrimitive()
+																												.getAsString())
+																						.getTime()
+																						.getTime());
 								}
 								preparedStatement.setTime(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type TIME");
 							}
 						} else if (DataTypeUtils.isTimestamp(dataType)) {
-							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isNumber()) {
-								Timestamp value = new Timestamp(valueElement.getAsJsonPrimitive().getAsLong());
+							if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																				.isNumber()) {
+								Timestamp value = new Timestamp(valueElement.getAsJsonPrimitive()
+																			.getAsLong());
 								preparedStatement.setTimestamp(i++, value);
-							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
+							} else if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																						.isString()) {
 								Timestamp value = null;
 								try {
-									value = new Timestamp(Long.parseLong(valueElement.getAsJsonPrimitive().getAsString()));
+									value = new Timestamp(Long.parseLong(valueElement	.getAsJsonPrimitive()
+																						.getAsString()));
 								} catch (NumberFormatException e) {
 									// assume date string in ISO format e.g. 2018-05-22T21:00:00.000Z
-									value = new Timestamp(
-											javax.xml.bind.DatatypeConverter.parseDateTime(valueElement.getAsJsonPrimitive().getAsString())
-																			.getTime()
-																			.getTime());
+									value = new Timestamp(javax.xml.bind.DatatypeConverter	.parseDateTime(valueElement	.getAsJsonPrimitive()
+																														.getAsString())
+																							.getTime()
+																							.getTime());
 								}
 								preparedStatement.setTimestamp(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type TIMESTAMP");
 							}
 						} else if (DataTypeUtils.isInteger(dataType)) {
-							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isNumber()) {
-								Integer value = valueElement.getAsJsonPrimitive().getAsInt();
+							if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																				.isNumber()) {
+								Integer value = valueElement.getAsJsonPrimitive()
+															.getAsInt();
 								preparedStatement.setInt(i++, value);
-							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								Integer value = Integer.parseInt(valueElement.getAsJsonPrimitive().getAsString());
+							} else if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																						.isString()) {
+								Integer value = Integer.parseInt(valueElement	.getAsJsonPrimitive()
+																				.getAsString());
 								preparedStatement.setInt(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type INTEGER");
 							}
 						} else if (DataTypeUtils.isTinyint(dataType)) {
-							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isNumber()) {
-								byte value = (byte) valueElement.getAsJsonPrimitive().getAsInt();
+							if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																				.isNumber()) {
+								byte value = (byte) valueElement.getAsJsonPrimitive()
+																.getAsInt();
 								preparedStatement.setByte(i++, value);
-							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								byte value = (byte) Integer.parseInt(valueElement.getAsJsonPrimitive().getAsString());
+							} else if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																						.isString()) {
+								byte value = (byte) Integer.parseInt(valueElement	.getAsJsonPrimitive()
+																					.getAsString());
 								preparedStatement.setByte(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type TINYINT");
 							}
 						} else if (DataTypeUtils.isSmallint(dataType)) {
-							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isNumber()) {
-								short value = (short) valueElement.getAsJsonPrimitive().getAsInt();
+							if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																				.isNumber()) {
+								short value = (short) valueElement	.getAsJsonPrimitive()
+																	.getAsInt();
 								preparedStatement.setShort(i++, value);
-							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								short value = (short) Integer.parseInt(valueElement.getAsJsonPrimitive().getAsString());
+							} else if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																						.isString()) {
+								short value = (short) Integer.parseInt(valueElement	.getAsJsonPrimitive()
+																					.getAsString());
 								preparedStatement.setShort(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type SHORT");
 							}
 						} else if (DataTypeUtils.isBigint(dataType)) {
-							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isNumber()) {
-								Long value = valueElement.getAsJsonPrimitive().getAsBigInteger().longValue();
+							if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																				.isNumber()) {
+								Long value = valueElement	.getAsJsonPrimitive()
+															.getAsBigInteger()
+															.longValue();
 								preparedStatement.setLong(i++, value);
-							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								Long value = Long.parseLong(valueElement.getAsJsonPrimitive().getAsString());
+							} else if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																						.isString()) {
+								Long value = Long.parseLong(valueElement.getAsJsonPrimitive()
+																		.getAsString());
 								preparedStatement.setLong(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type LONG");
 							}
 						} else if (DataTypeUtils.isReal(dataType)) {
-							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isNumber()) {
-								Float value = valueElement.getAsJsonPrimitive().getAsNumber().floatValue();
+							if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																				.isNumber()) {
+								Float value = valueElement	.getAsJsonPrimitive()
+															.getAsNumber()
+															.floatValue();
 								preparedStatement.setFloat(i++, value);
-							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								Float value = Float.parseFloat(valueElement.getAsJsonPrimitive().getAsString());
+							} else if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																						.isString()) {
+								Float value = Float.parseFloat(valueElement	.getAsJsonPrimitive()
+																			.getAsString());
 								preparedStatement.setFloat(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type REAL");
 							}
 						} else if (DataTypeUtils.isDouble(dataType)) {
-							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isNumber()) {
-								Double value = valueElement.getAsJsonPrimitive().getAsNumber().doubleValue();
+							if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																				.isNumber()) {
+								Double value = valueElement	.getAsJsonPrimitive()
+															.getAsNumber()
+															.doubleValue();
 								preparedStatement.setDouble(i++, value);
-							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								Double value = Double.parseDouble(valueElement.getAsJsonPrimitive().getAsString());
+							} else if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																						.isString()) {
+								Double value = Double.parseDouble(valueElement	.getAsJsonPrimitive()
+																				.getAsString());
 								preparedStatement.setDouble(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type DOUBLE");
 							}
 						} else if (DataTypeUtils.isDecimal(dataType)) {
-							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isNumber()) {
-								Double value = valueElement.getAsJsonPrimitive().getAsNumber().doubleValue();
+							if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																				.isNumber()) {
+								Double value = valueElement	.getAsJsonPrimitive()
+															.getAsNumber()
+															.doubleValue();
 								preparedStatement.setDouble(i++, value);
-							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								Double value = Double.parseDouble(valueElement.getAsJsonPrimitive().getAsString());
+							} else if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																						.isString()) {
+								Double value = Double.parseDouble(valueElement	.getAsJsonPrimitive()
+																				.getAsString());
 								preparedStatement.setDouble(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type DECIMAL");
 							}
 						} else if (DataTypeUtils.isBoolean(dataType)) {
-							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isNumber()) {
-								Boolean value = valueElement.getAsJsonPrimitive().getAsBoolean();
+							if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																				.isNumber()) {
+								Boolean value = valueElement.getAsJsonPrimitive()
+															.getAsBoolean();
 								preparedStatement.setBoolean(i++, value);
-							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								Boolean value = Boolean.parseBoolean(valueElement.getAsJsonPrimitive().getAsString());
+							} else if (valueElement.isJsonPrimitive() && valueElement	.getAsJsonPrimitive()
+																						.isString()) {
+								Boolean value = Boolean.parseBoolean(valueElement	.getAsJsonPrimitive()
+																					.getAsString());
 								preparedStatement.setBoolean(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type BOOLEAN");
 							}
 						} else if (DataTypeUtils.isBlob(dataType)) {
 							if (valueElement.isJsonArray()) {
-								byte[] bytes = BytesHelper.jsonToBytes(valueElement.getAsJsonArray().toString());
+								byte[] bytes = BytesHelper.jsonToBytes(valueElement	.getAsJsonArray()
+																					.toString());
 								preparedStatement.setBinaryStream(i, new ByteArrayInputStream(bytes), bytes.length);
 							}
 						} else {
@@ -699,7 +771,9 @@ public class DatabaseFacade implements InitializingBean {
 	 * @throws SQLException the SQL exception
 	 */
 	private static long getNextVal(String sequence, Connection connection) throws SQLException {
-		String sql = SqlFactory.getNative(connection).nextval(sequence).build();
+		String sql = SqlFactory	.getNative(connection)
+								.nextval(sequence)
+								.build();
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
 		try {
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -726,7 +800,11 @@ public class DatabaseFacade implements InitializingBean {
 	private static void createSequenceInternal(String sequence, Integer sequenceStart, Connection connection, String tableName)
 			throws SQLException {
 		if (sequenceStart == null && tableName != null) {
-			String countSql = SqlFactory.getNative(connection).select().column("count(*)").from(tableName).build();
+			String countSql = SqlFactory.getNative(connection)
+										.select()
+										.column("count(*)")
+										.from(tableName)
+										.build();
 			PreparedStatement countPreparedStatement = null;
 			try {
 				countPreparedStatement = connection.prepareStatement(countSql);
@@ -744,7 +822,11 @@ public class DatabaseFacade implements InitializingBean {
 			}
 		}
 
-		String sql = SqlFactory.getNative(connection).create().sequence(sequence).start(sequenceStart).build();
+		String sql = SqlFactory	.getNative(connection)
+								.create()
+								.sequence(sequence)
+								.start(sequenceStart)
+								.build();
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
 		try {
 			preparedStatement.executeUpdate();
@@ -817,7 +899,10 @@ public class DatabaseFacade implements InitializingBean {
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
-			String sql = SqlFactory.getNative(connection).drop().sequence(sequence).build();
+			String sql = SqlFactory	.getNative(connection)
+									.drop()
+									.sequence(sequence)
+									.build();
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			try {
 				preparedStatement.executeUpdate();

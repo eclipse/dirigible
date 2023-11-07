@@ -261,14 +261,17 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 		ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
 		RepositoryService repositoryService = processEngine.getRepositoryService();
 
-		ProcessDefinition process =
-				repositoryService.createProcessDefinitionQuery().processDefinitionKey(processDefinitionKey).latestVersion().singleResult();
+		ProcessDefinition process = repositoryService	.createProcessDefinitionQuery()
+														.processDefinitionKey(processDefinitionKey)
+														.latestVersion()
+														.singleResult();
 
 		if (process != null) {
 			String deploymentId = process.getDeploymentId();
 			String diagramResourceName = process.getDiagramResourceName();
 
-			byte[] imageBytes = repositoryService.getResourceAsStream(deploymentId, diagramResourceName).readAllBytes();
+			byte[] imageBytes = repositoryService	.getResourceAsStream(deploymentId, diagramResourceName)
+													.readAllBytes();
 
 			return ResponseEntity.ok(imageBytes);
 		}

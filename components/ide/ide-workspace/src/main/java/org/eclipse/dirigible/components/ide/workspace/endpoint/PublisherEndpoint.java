@@ -63,7 +63,8 @@ public class PublisherEndpoint {
 			@PathVariable("path") String path) throws URISyntaxException {
 
 		if (Boolean.parseBoolean(Configuration.get(PublisherService.DIRIGIBLE_PUBLISH_DISABLED, Boolean.FALSE.toString()))) {
-			return ResponseEntity.ok().build();
+			return ResponseEntity	.ok()
+									.build();
 		}
 
 		if (!workspaceService.existsWorkspace(workspace)) {
@@ -73,7 +74,8 @@ public class PublisherEndpoint {
 
 		publisherService.publish(workspace, project, path);
 
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 	/**
@@ -89,7 +91,8 @@ public class PublisherEndpoint {
 			throws URISyntaxException {
 
 		if (Boolean.parseBoolean(Configuration.get(PublisherService.DIRIGIBLE_PUBLISH_DISABLED, Boolean.FALSE.toString()))) {
-			return ResponseEntity.ok().build();
+			return ResponseEntity	.ok()
+									.build();
 		}
 
 		if (!workspaceService.existsWorkspace(workspace)) {
@@ -99,7 +102,8 @@ public class PublisherEndpoint {
 
 		publisherService.unpublish(path);
 
-		return ResponseEntity.ok().build();
+		return ResponseEntity	.ok()
+								.build();
 	}
 
 }

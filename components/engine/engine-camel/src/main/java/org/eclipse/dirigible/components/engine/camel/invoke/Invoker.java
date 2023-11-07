@@ -37,7 +37,8 @@ public class Invoker {
 	}
 
 	public void invoke(Message camelMessage) {
-		String resourcePath = (String) camelMessage.getExchange().getProperty("resource");
+		String resourcePath = (String) camelMessage	.getExchange()
+													.getProperty("resource");
 		RepositoryPath path = new RepositoryPath(resourcePath);
 
 		String messageBody = camelMessage.getBody(String.class);

@@ -183,19 +183,29 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 							.flatMap(Stream::of)
 							.toArray(String[]::new);
 		} else {
-			column = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
+			column = Stream	.of(definition, args)
+							.flatMap(Stream::of)
+							.toArray(String[]::new);
 		}
 		if (!isNullable) {
-			column = Stream.of(column, new String[] {getDialect().getNotNullArgument()}).flatMap(Stream::of).toArray(String[]::new);
+			column = Stream	.of(column, new String[] {getDialect().getNotNullArgument()})
+							.flatMap(Stream::of)
+							.toArray(String[]::new);
 		}
 		if (isPrimaryKey) {
-			column = Stream.of(column, new String[] {getDialect().getPrimaryKeyArgument()}).flatMap(Stream::of).toArray(String[]::new);
+			column = Stream	.of(column, new String[] {getDialect().getPrimaryKeyArgument()})
+							.flatMap(Stream::of)
+							.toArray(String[]::new);
 		}
 		if (isUnique && !isPrimaryKey) {
-			column = Stream.of(column, new String[] {getDialect().getUniqueArgument()}).flatMap(Stream::of).toArray(String[]::new);
+			column = Stream	.of(column, new String[] {getDialect().getUniqueArgument()})
+							.flatMap(Stream::of)
+							.toArray(String[]::new);
 		}
 		if (isFuzzyIndexEnabled) {
-			column = Stream.of(column, new String[] {getDialect().getFuzzySearchIndex()}).flatMap(Stream::of).toArray(String[]::new);
+			column = Stream	.of(column, new String[] {getDialect().getFuzzySearchIndex()})
+							.flatMap(Stream::of)
+							.toArray(String[]::new);
 		}
 
 		this.columns.add(column);
@@ -539,7 +549,9 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	public TABLE_BUILDER columnVarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
 			Boolean isIdentity, String... args) {
 		String[] definition = new String[] {OPEN + length + CLOSE};
-		String[] coulmn = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
+		String[] coulmn = Stream.of(definition, args)
+								.flatMap(Stream::of)
+								.toArray(String[]::new);
 		return this.column(name, DataType.VARCHAR, isPrimaryKey, isNullable, isUnique, isIdentity, false, coulmn);
 	}
 
@@ -641,7 +653,9 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	public TABLE_BUILDER columnNvarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
 			Boolean isIdentity, String... args) {
 		String[] definition = new String[] {OPEN + length + CLOSE};
-		String[] coulmn = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
+		String[] coulmn = Stream.of(definition, args)
+								.flatMap(Stream::of)
+								.toArray(String[]::new);
 		return this.column(name, DataType.NVARCHAR, isPrimaryKey, isNullable, isUnique, isIdentity, false, coulmn);
 	}
 
@@ -744,7 +758,9 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	public TABLE_BUILDER columnChar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity,
 			String... args) {
 		String[] definition = new String[] {OPEN + length + CLOSE};
-		String[] coulmn = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
+		String[] coulmn = Stream.of(definition, args)
+								.flatMap(Stream::of)
+								.toArray(String[]::new);
 		return this.column(name, DataType.CHAR, isPrimaryKey, isNullable, isUnique, isIdentity, false, coulmn);
 	}
 
@@ -1696,7 +1712,9 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	public TABLE_BUILDER columnDecimal(String name, int length, int scale, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
 			Boolean isIdentity, String... args) {
 		String[] definition = new String[] {OPEN + length + "," + scale + CLOSE};
-		String[] column = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
+		String[] column = Stream.of(definition, args)
+								.flatMap(Stream::of)
+								.toArray(String[]::new);
 		return this.column(name, DataType.DECIMAL, isPrimaryKey, isNullable, isUnique, isIdentity, false, column);
 	}
 
@@ -1869,7 +1887,10 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	 */
 	protected void generateTable(StringBuilder sql) {
 		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
-		sql.append(SPACE).append(KEYWORD_TABLE).append(SPACE).append(tableName);
+		sql	.append(SPACE)
+			.append(KEYWORD_TABLE)
+			.append(SPACE)
+			.append(tableName);
 	}
 
 	/**
@@ -1878,7 +1899,8 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	 * @param sql the sql
 	 */
 	protected void generateColumns(StringBuilder sql) {
-		if (!this.getColumns().isEmpty()) {
+		if (!this	.getColumns()
+					.isEmpty()) {
 			sql.append(traverseColumns());
 		}
 	}
@@ -1889,7 +1911,8 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	 * @param sql the sql
 	 */
 	protected void generateColumnNamesForDrop(StringBuilder sql) {
-		if (!this.getColumns().isEmpty()) {
+		if (!this	.getColumns()
+					.isEmpty()) {
 			sql.append(traverseColumnNamesForDrop());
 		}
 	}
@@ -1900,7 +1923,8 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	 * @param sql the sql
 	 */
 	protected void generateColumnsForAlter(StringBuilder sql) {
-		if (!this.getColumns().isEmpty()) {
+		if (!this	.getColumns()
+					.isEmpty()) {
 			sql.append(traverseColumnsForAlter());
 		}
 	}
@@ -1912,10 +1936,10 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	 */
 	protected String traverseColumns() {
 
-		List<String[]> allPrimaryKeys =
-				this.columns.stream()
-							.filter(el -> Arrays.stream(el).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
-							.collect(Collectors.toList());
+		List<String[]> allPrimaryKeys = this.columns.stream()
+													.filter(el -> Arrays.stream(el)
+																		.anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
+													.collect(Collectors.toList());
 		boolean isCompositeKey = allPrimaryKeys.size() > 1;
 
 		return getTraversedColumnsSnippet(isCompositeKey, this.columns);
@@ -1927,16 +1951,20 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	 * @return the string
 	 */
 	protected String traverseColumnsForAlter() {
-		List<String[]> allPrimaryKeys =
-				this.columns.stream()
-							.filter(el -> Arrays.stream(el).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
-							.collect(Collectors.toList());
-		List<String[]> columnsToAlter =
-				this.columns.stream()
-							.map(columnArr -> (Arrays.stream(columnArr).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
-									? Arrays.stream(columnArr).filter(x -> !x.contains(KEYWORD_PRIMARY)).toArray(String[]::new)
-									: columnArr)
-							.collect(Collectors.toList());
+		List<String[]> allPrimaryKeys = this.columns.stream()
+													.filter(el -> Arrays.stream(el)
+																		.anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
+													.collect(Collectors.toList());
+		List<String[]> columnsToAlter = this.columns.stream()
+													.map(columnArr -> (Arrays	.stream(columnArr)
+																				.anyMatch(x -> x.equals(
+																						getDialect().getPrimaryKeyArgument())))
+																								? Arrays.stream(columnArr)
+																										.filter(x -> !x.contains(
+																												KEYWORD_PRIMARY))
+																										.toArray(String[]::new)
+																								: columnArr)
+													.collect(Collectors.toList());
 		boolean isCompositeKey = allPrimaryKeys.size() > 1;
 
 		return getTraversedColumnsSnippet(isCompositeKey, columnsToAlter);
@@ -1951,9 +1979,14 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 		StringBuilder snippet = new StringBuilder();
 		for (String[] column : this.columns) {
 			String columnName = (isCaseSensitive()) ? encapsulate(column[0]) : column[0];
-			snippet.append(KEYWORD_DROP).append(SPACE).append(KEYWORD_COLUMN).append(SPACE);
-			snippet.append(columnName).append(SPACE);
-			snippet.append(COMMA).append(SPACE);
+			snippet	.append(KEYWORD_DROP)
+					.append(SPACE)
+					.append(KEYWORD_COLUMN)
+					.append(SPACE);
+			snippet	.append(columnName)
+					.append(SPACE);
+			snippet	.append(COMMA)
+					.append(SPACE);
 		}
 		return snippet.substring(0, snippet.length() - 2);
 	}
@@ -1973,16 +2006,19 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 			for (String arg : column) {
 				if (first) {
 					String columnName = (isCaseSensitive()) ? encapsulate(arg) : arg;
-					snippet.append(columnName).append(SPACE);
+					snippet	.append(columnName)
+							.append(SPACE);
 					first = false;
 					continue;
 				}
 				if (isCompositeKey && arg.equals(getDialect().getPrimaryKeyArgument())) {
 					continue;
 				}
-				snippet.append(arg).append(SPACE);
+				snippet	.append(arg)
+						.append(SPACE);
 			}
-			snippet.append(COMMA).append(SPACE);
+			snippet	.append(COMMA)
+					.append(SPACE);
 		}
 		return snippet.substring(0, snippet.length() - 2);
 	}
@@ -1998,7 +2034,10 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 		snippet.append(SPACE);
 		for (String column : names) {
 			String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
-			snippet.append(columnName).append(SPACE).append(COMMA).append(SPACE);
+			snippet	.append(columnName)
+					.append(SPACE)
+					.append(COMMA)
+					.append(SPACE);
 		}
 		return snippet.substring(0, snippet.length() - 2);
 	}

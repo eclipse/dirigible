@@ -125,7 +125,8 @@ public class GraalJSFileSystem implements FileSystem {
 	@Override
 	public Path toRealPath(Path path, LinkOption... linkOptions) throws IOException {
 		if (path.isAbsolute() && !path.startsWith(currentWorkingDirectoryPath)) {
-			path = currentWorkingDirectoryPath.resolve(path.toString().substring(1));
+			path = currentWorkingDirectoryPath.resolve(path	.toString()
+															.substring(1));
 		}
 
 		String pathString = path.toString();
@@ -134,7 +135,8 @@ public class GraalJSFileSystem implements FileSystem {
 			// mainly found when dealing with TS imports
 			for (String supportedImportFromExtension : SUPPORTED_IMPORT_FROM_EXTENSIONS) {
 				var fileWithExtensionPath = Path.of(pathString + supportedImportFromExtension);
-				if (fileWithExtensionPath.toFile().exists()) {
+				if (fileWithExtensionPath	.toFile()
+											.exists()) {
 					path = fileWithExtensionPath;
 				}
 			}
@@ -148,7 +150,8 @@ public class GraalJSFileSystem implements FileSystem {
 			return path.toRealPath(linkOptions);
 		} catch (IOException initial) {
 			try {
-				return onRealPathNotFound.apply(path).toRealPath(linkOptions);
+				return onRealPathNotFound	.apply(path)
+											.toRealPath(linkOptions);
 			} catch (IOException e) {
 				e.addSuppressed(initial);
 				throw e;

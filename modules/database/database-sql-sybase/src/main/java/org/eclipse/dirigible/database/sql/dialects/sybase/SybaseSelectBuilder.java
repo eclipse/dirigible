@@ -44,10 +44,18 @@ public class SybaseSelectBuilder extends SelectBuilder {
 	@Override
 	protected void generateLimitAndOffset(StringBuilder sql, int limit, int offset) {
 		if (limit > -1) {
-			sql.append(SPACE).append(KEYWORD_ROWS).append(SPACE).append(KEYWORD_LIMIT).append(SPACE).append(limit);
+			sql	.append(SPACE)
+				.append(KEYWORD_ROWS)
+				.append(SPACE)
+				.append(KEYWORD_LIMIT)
+				.append(SPACE)
+				.append(limit);
 		}
 		if (offset > -1) {
-			sql.append(SPACE).append(KEYWORD_OFFSET).append(SPACE).append(offset);
+			sql	.append(SPACE)
+				.append(KEYWORD_OFFSET)
+				.append(SPACE)
+				.append(offset);
 		}
 	}
 

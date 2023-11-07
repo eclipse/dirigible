@@ -199,7 +199,8 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String getColumnLabel(int column) throws SQLException {
-		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap.entrySet().toArray()[column - 1];
+		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap	.entrySet()
+																				.toArray()[column - 1];
 		return entry.getKey();
 	}
 
@@ -213,7 +214,8 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String getColumnName(int column) throws SQLException {
-		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap.entrySet().toArray()[column - 1];
+		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap	.entrySet()
+																				.toArray()[column - 1];
 		return entry.getKey();
 	}
 
@@ -286,7 +288,8 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
 	 */
 	@Override
 	public int getColumnType(int column) throws SQLException {
-		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap.entrySet().toArray()[column - 1];
+		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap	.entrySet()
+																				.toArray()[column - 1];
 		// return entries[column-1].getValue().getValue();//TODO: this returns the BSON type ordinal. What
 		// we need is a mapping to SQL types ordinals.
 		return this.getSqlType(entry.getValue());
@@ -302,7 +305,8 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String getColumnTypeName(int column) throws SQLException {
-		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap.entrySet().toArray()[column - 1];
+		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap	.entrySet()
+																				.toArray()[column - 1];
 		// return entries[column-1].getValue().toString();// return MongoDB specific datatype name.
 		return this.getSqlTypeName(entry.getValue());
 	}
@@ -352,8 +356,10 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
 	 */
 	@Override
 	public String getColumnClassName(int column) throws SQLException {
-		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap.entrySet().toArray()[column - 1];
-		return this.bsonTojavaTypeMap.get(entry.getValue()).getCanonicalName();
+		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap	.entrySet()
+																				.toArray()[column - 1];
+		return this.bsonTojavaTypeMap	.get(entry.getValue())
+										.getCanonicalName();
 	}
 
 	/**

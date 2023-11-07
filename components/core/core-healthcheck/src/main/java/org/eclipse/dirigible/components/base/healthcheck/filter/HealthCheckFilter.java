@@ -62,7 +62,8 @@ public class HealthCheckFilter implements Filter {
 		boolean isTheme = isThemeRequest(path);
 		if (!isResources && !isHealthCheck && !isOps && !isWebJars && !isTheme) {
 			HealthCheckStatus healthStatus = HealthCheckStatus.getInstance();
-			if (healthStatus.getStatus().equals(HealthCheckStatus.Status.Ready)) {
+			if (healthStatus.getStatus()
+							.equals(HealthCheckStatus.Status.Ready)) {
 				chain.doFilter(request, response);
 				return;
 			}
@@ -96,7 +97,8 @@ public class HealthCheckFilter implements Filter {
 		String path = httpRequest.getPathInfo();
 		if (path == null) {
 			path = httpRequest.getServletPath();
-			path = path.replace("/services", "").replace("/public", "");
+			path = path	.replace("/services", "")
+						.replace("/public", "");
 		}
 		return path;
 	}

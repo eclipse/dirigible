@@ -149,8 +149,9 @@ public class EdmTableBindingFactoryTest {
 	public void testGetJoinColumnEntity2() throws Exception {
 		try (InputStream stream = stream(Entity1.class)) {
 			EdmTableBinding config = new EdmTableBindingFactory().createTableBinding(stream);
-			assertEquals(Arrays.asList("ID"),
-					config.getJoinColumnTo(edm.getEntityType(Entity2.class.getPackage().getName(), Entity2.class.getSimpleName())));
+			assertEquals(Arrays.asList("ID"), config.getJoinColumnTo(edm.getEntityType(Entity2.class.getPackage()
+																									.getName(),
+					Entity2.class.getSimpleName())));
 		}
 	}
 

@@ -102,7 +102,10 @@ public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(FILE_EXTENSION_CONFLUENCE) && file.toString().indexOf("webjars") == -1;
+		return file	.toString()
+					.endsWith(FILE_EXTENSION_CONFLUENCE)
+				&& file	.toString()
+						.indexOf("webjars") == -1;
 	}
 
 	/**
@@ -129,7 +132,9 @@ public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<
 		Confluence wiki = new Confluence();
 		Configuration.configureObject(wiki);
 		wiki.setLocation(location);
-		wiki.setName(Paths.get(location).getFileName().toString());
+		wiki.setName(Paths	.get(location)
+							.getFileName()
+							.toString());
 		wiki.setType(Confluence.ARTEFACT_TYPE);
 		wiki.updateKey();
 		wiki.setContent(content);
@@ -192,7 +197,8 @@ public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<
 		if (wrapper.getArtefact() instanceof Confluence) {
 			wiki = (Confluence) wrapper.getArtefact();
 		} else {
-			throw new UnsupportedOperationException(String.format("Trying to process %s as Confluence", wrapper.getArtefact().getClass()));
+			throw new UnsupportedOperationException(String.format("Trying to process %s as Confluence", wrapper	.getArtefact()
+																												.getClass()));
 		}
 
 		switch (flow) {

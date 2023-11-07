@@ -85,7 +85,8 @@ public class ProblemEndpoint extends BaseEndpoint {
 	public ResponseEntity<?> updateStatus(@Validated @PathVariable("status") String status, @Nullable List<Long> selectedIds)
 			throws Exception {
 		problemService.updateStatusByIds(selectedIds, status);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity	.noContent()
+								.build();
 	}
 
 	/**
@@ -98,7 +99,8 @@ public class ProblemEndpoint extends BaseEndpoint {
 	@DeleteMapping(value = "/delete/{status}", produces = "application/json")
 	public ResponseEntity<?> deleteProblemsByStatus(@Validated @PathVariable("status") String status) throws Exception {
 		problemService.deleteAllByStatus(status);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity	.noContent()
+								.build();
 	}
 
 	/**
@@ -110,7 +112,8 @@ public class ProblemEndpoint extends BaseEndpoint {
 	@DeleteMapping(value = "/clear", produces = "application/json")
 	public ResponseEntity<?> clearProblems() throws Exception {
 		problemService.deleteAll();
-		return ResponseEntity.noContent().build();
+		return ResponseEntity	.noContent()
+								.build();
 	}
 
 	/**
@@ -123,7 +126,8 @@ public class ProblemEndpoint extends BaseEndpoint {
 	@PostMapping(value = "/delete/selected", produces = "application/json", consumes = "application/json")
 	public ResponseEntity<?> deleteMultipleProblems(@Nullable List<Long> selectedIds) throws Exception {
 		problemService.deleteAllByIds(selectedIds);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity	.noContent()
+								.build();
 	}
 
 }

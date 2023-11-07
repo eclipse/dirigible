@@ -84,7 +84,8 @@ public class ZipProcessor {
 			ZipEntry zipEntry = zis.getNextEntry();
 
 			while (zipEntry != null) {
-				boolean isDirectory = zipEntry.getName().endsWith(File.separator);
+				boolean isDirectory = zipEntry	.getName()
+												.endsWith(File.separator);
 				Path newPath = zipSlipProtect(zipEntry, target);
 				if (isDirectory) {
 					Files.createDirectories(newPath);
@@ -115,7 +116,8 @@ public class ZipProcessor {
 		try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipPath.toFile()))) {
 			Files.walkFileTree(sourceFolderPath, new SimpleFileVisitor<Path>() {
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-					zos.putNextEntry(new ZipEntry(sourceFolderPath.relativize(file).toString()));
+					zos.putNextEntry(new ZipEntry(sourceFolderPath	.relativize(file)
+																	.toString()));
 					Files.copy(file, zos);
 					zos.closeEntry();
 					return FileVisitResult.CONTINUE;

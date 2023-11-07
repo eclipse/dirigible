@@ -27,7 +27,11 @@ public class UpdateRecordsTest {
 	 */
 	@Test
 	public void updateSimple() {
-		String sql = SqlFactory.getDefault().update().table("CUSTOMERS").set("FIRST_NAME", "'John'").build();
+		String sql = SqlFactory	.getDefault()
+								.update()
+								.table("CUSTOMERS")
+								.set("FIRST_NAME", "'John'")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John'", sql);
@@ -41,7 +45,11 @@ public class UpdateRecordsTest {
 	public void updateSimpleCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault().update().table("CUSTOMERS").set("FIRST_NAME", "'John'").build();
+			String sql = SqlFactory	.getDefault()
+									.update()
+									.table("CUSTOMERS")
+									.set("FIRST_NAME", "'John'")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John'", sql);
@@ -55,7 +63,12 @@ public class UpdateRecordsTest {
 	 */
 	@Test
 	public void updateValues() {
-		String sql = SqlFactory.getDefault().update().table("CUSTOMERS").set("FIRST_NAME", "'John'").set("LAST_NAME", "'Smith'").build();
+		String sql = SqlFactory	.getDefault()
+								.update()
+								.table("CUSTOMERS")
+								.set("FIRST_NAME", "'John'")
+								.set("LAST_NAME", "'Smith'")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith'", sql);
@@ -68,8 +81,12 @@ public class UpdateRecordsTest {
 	public void updateValuesCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql =
-					SqlFactory.getDefault().update().table("CUSTOMERS").set("FIRST_NAME", "'John'").set("LAST_NAME", "'Smith'").build();
+			String sql = SqlFactory	.getDefault()
+									.update()
+									.table("CUSTOMERS")
+									.set("FIRST_NAME", "'John'")
+									.set("LAST_NAME", "'Smith'")
+									.build();
 
 			assertNotNull(sql);
 			assertEquals("UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"LAST_NAME\" = 'Smith'", sql);
@@ -130,7 +147,11 @@ public class UpdateRecordsTest {
 								.update()
 								.table("CUSTOMERS")
 								.set("FIRST_NAME", "'John'")
-								.set("SALARY", SqlFactory.getDefault().select().column("MAX(SALARY)").from("BENEFITS").build())
+								.set("SALARY", SqlFactory	.getDefault()
+															.select()
+															.column("MAX(SALARY)")
+															.from("BENEFITS")
+															.build())
 								.where("COMPANY = 'SAP'")
 								.build();
 
@@ -149,7 +170,11 @@ public class UpdateRecordsTest {
 									.update()
 									.table("CUSTOMERS")
 									.set("FIRST_NAME", "'John'")
-									.set("SALARY", SqlFactory.getDefault().select().column("MAX(SALARY)").from("BENEFITS").build())
+									.set("SALARY", SqlFactory	.getDefault()
+																.select()
+																.column("MAX(SALARY)")
+																.from("BENEFITS")
+																.build())
 									.where("COMPANY = 'SAP'")
 									.build();
 
@@ -167,14 +192,18 @@ public class UpdateRecordsTest {
 	 */
 	@Test
 	public void updateWhereExpr() {
-		String sql =
-				SqlFactory	.getDefault()
-							.update()
-							.table("CUSTOMERS")
-							.set("FIRST_NAME", "'John'")
-							.set("LAST_NAME", "'Smith'")
-							.where(SqlFactory.getDefault().expression().and("PRICE > ?").or("AMOUNT < ?").and("COMPANY = 'SAP'").build())
-							.build();
+		String sql = SqlFactory	.getDefault()
+								.update()
+								.table("CUSTOMERS")
+								.set("FIRST_NAME", "'John'")
+								.set("LAST_NAME", "'Smith'")
+								.where(SqlFactory	.getDefault()
+													.expression()
+													.and("PRICE > ?")
+													.or("AMOUNT < ?")
+													.and("COMPANY = 'SAP'")
+													.build())
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith' WHERE (PRICE > ? OR AMOUNT < ? AND COMPANY = 'SAP')",

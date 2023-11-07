@@ -26,7 +26,10 @@ public class DeleteTest {
 	 */
 	@Test
 	public void deleteSimple() {
-		String sql = SqlFactory.getNative(new PostgresSqlDialect()).delete().from("CUSTOMERS").build();
+		String sql = SqlFactory	.getNative(new PostgresSqlDialect())
+								.delete()
+								.from("CUSTOMERS")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("DELETE FROM CUSTOMERS", sql);
@@ -37,8 +40,12 @@ public class DeleteTest {
 	 */
 	@Test
 	public void deleteWhere() {
-		String sql =
-				SqlFactory.getNative(new PostgresSqlDialect()).delete().from("CUSTOMERS").where("AGE > ?").where("COMPANY = 'SAP'").build();
+		String sql = SqlFactory	.getNative(new PostgresSqlDialect())
+								.delete()
+								.from("CUSTOMERS")
+								.where("AGE > ?")
+								.where("COMPANY = 'SAP'")
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("DELETE FROM CUSTOMERS WHERE (AGE > ?) AND (COMPANY = 'SAP')", sql);

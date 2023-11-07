@@ -60,7 +60,8 @@ public class ListenerRepositoryTest {
 	public void getOne() {
 		List<Listener> all = listenerRepository.findAll();
 		assertEquals(3, all.size());
-		Long id = all.get(0).getId();
+		Long id = all	.get(0)
+						.getId();
 		Optional<Listener> optional = listenerRepository.findById(id);
 		Listener listener = optional.isPresent() ? optional.get() : null;
 		assertNotNull(listener);
@@ -75,7 +76,9 @@ public class ListenerRepositoryTest {
 
 	@Test
 	public void getReferenceUsingEntityManager() {
-		Long id = listenerRepository.findAll().get(0).getId();
+		Long id = listenerRepository.findAll()
+									.get(0)
+									.getId();
 		Listener listener = entityManager.getReference(Listener.class, id);
 		assertNotNull(listener);
 		assertEquals("/a/b/c/l1.listener", listener.getLocation());

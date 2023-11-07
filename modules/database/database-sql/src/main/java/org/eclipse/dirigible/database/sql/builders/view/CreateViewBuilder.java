@@ -156,7 +156,10 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	 */
 	protected void generateView(StringBuilder sql) {
 		String viewName = (isCaseSensitive()) ? encapsulate(this.getView(), true) : this.getView();
-		sql.append(SPACE).append(KEYWORD_VIEW).append(SPACE).append(viewName);
+		sql	.append(SPACE)
+			.append(KEYWORD_VIEW)
+			.append(SPACE)
+			.append(viewName);
 	}
 
 	/**
@@ -166,7 +169,10 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	 */
 	protected void generateColumns(StringBuilder sql) {
 		if (!this.columns.isEmpty()) {
-			sql.append(SPACE).append(OPEN).append(traverseColumns()).append(CLOSE);
+			sql	.append(SPACE)
+				.append(OPEN)
+				.append(traverseColumns())
+				.append(CLOSE);
 		}
 	}
 
@@ -180,10 +186,13 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 		snippet.append(SPACE);
 		for (String column : this.columns) {
 			String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
-			snippet.append(columnName).append(SPACE);
-			snippet.append(COMMA).append(SPACE);
+			snippet	.append(columnName)
+					.append(SPACE);
+			snippet	.append(COMMA)
+					.append(SPACE);
 		}
-		return snippet.toString().substring(0, snippet.length() - 2);
+		return snippet	.toString()
+						.substring(0, snippet.length() - 2);
 	}
 
 	/**
@@ -192,7 +201,10 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	 * @param sql the sql
 	 */
 	protected void generateAsSelect(StringBuilder sql) {
-		sql.append(SPACE).append(KEYWORD_AS).append(SPACE).append(this.select);
+		sql	.append(SPACE)
+			.append(KEYWORD_AS)
+			.append(SPACE)
+			.append(this.select);
 	}
 
 }

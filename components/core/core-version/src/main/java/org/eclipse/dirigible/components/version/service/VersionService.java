@@ -75,9 +75,12 @@ public class VersionService {
 		version.setRepositoryProvider(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_PROVIDER, "local"));
 		// version.setDatabaseProvider(Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER));
 
-		List<String> enginesNames = engines.stream().map(Engine::getName).collect(Collectors.toList());
+		List<String> enginesNames = engines	.stream()
+											.map(Engine::getName)
+											.collect(Collectors.toList());
 		Collections.sort(enginesNames);
-		version.getEngines().addAll(enginesNames);
+		version	.getEngines()
+				.addAll(enginesNames);
 
 		return version;
 	}

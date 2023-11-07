@@ -159,13 +159,16 @@ public class PersistenceAnnotationsParser {
 			}
 			String type = column.columnDefinition();
 			if (type == null) {
-				type = DataTypeUtils.getDatabaseTypeNameByJavaType(field.getType().getClass());
+				type = DataTypeUtils.getDatabaseTypeNameByJavaType(field.getType()
+																		.getClass());
 			}
 			int length = column.length();
-			if ((length == 0) && (DataTypeUtils.getDatabaseTypeByJavaType(field.getType().getClass()) == Types.VARCHAR)) {
+			if ((length == 0) && (DataTypeUtils.getDatabaseTypeByJavaType(field	.getType()
+																				.getClass()) == Types.VARCHAR)) {
 				length = DataTypeUtils.VARCHAR_DEFAULT_LENGTH;
 			}
-			if ((length == 0) && (DataTypeUtils.getDatabaseTypeByJavaType(field.getType().getClass()) == Types.DECIMAL)) {
+			if ((length == 0) && (DataTypeUtils.getDatabaseTypeByJavaType(field	.getType()
+																				.getClass()) == Types.DECIMAL)) {
 				length = DataTypeUtils.DECIMAL_DEFAULT_LENGTH;
 			}
 			boolean unique = column.unique();
@@ -184,8 +187,8 @@ public class PersistenceAnnotationsParser {
 					if (!GenerationType.SEQUENCE.equals(generatedValue.strategy())
 							&& !GenerationType.TABLE.equals(generatedValue.strategy())
 							&& !GenerationType.IDENTITY.equals(generatedValue.strategy())) {
-						throw new IllegalArgumentException(
-								format("Generation Type: [{0}] not supported.", generatedValue.strategy().name()));
+						throw new IllegalArgumentException(format("Generation Type: [{0}] not supported.", generatedValue	.strategy()
+																															.name()));
 					}
 					if (GenerationType.IDENTITY.equals(generatedValue.strategy())) {
 						if (DataTypeUtils.isBigint(type) || DataTypeUtils.isVarchar(type) || DataTypeUtils.isNvarchar(type)
@@ -196,7 +199,8 @@ public class PersistenceAnnotationsParser {
 									"Identity columns must of type CHAR, VARCHAR, NVARCHAR, INTEGER, BIGINT or DECIMAL");
 						}
 					}
-					generated = generatedValue.strategy().name();
+					generated = generatedValue	.strategy()
+												.name();
 				}
 			}
 
@@ -217,7 +221,8 @@ public class PersistenceAnnotationsParser {
 
 			PersistenceTableColumnModel persistenceTableColumnModel = new PersistenceTableColumnModel(field.getName(), column.name(), type,
 					length, column.nullable(), primaryKey, column.scale(), generated, unique, identity, enumerated);
-			persistenceModel.getColumns().add(persistenceTableColumnModel);
+			persistenceModel.getColumns()
+							.add(persistenceTableColumnModel);
 		}
 
 	}

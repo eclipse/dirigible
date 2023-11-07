@@ -191,10 +191,12 @@ public class DestinationsFacade {
 		}
 		Object connectivityService = lookupConnectivityConfiguration();
 		if (connectivityService != null) {
-			Method configurationMethod = connectivityService.getClass().getMethod("getConfiguration", String.class);
+			Method configurationMethod = connectivityService.getClass()
+															.getMethod("getConfiguration", String.class);
 			Object destinationConfiguration = configurationMethod.invoke(connectivityService, destinationName);
 			if (destinationConfiguration != null) {
-				Method propertiesMethod = destinationConfiguration.getClass().getMethod("getAllProperties");
+				Method propertiesMethod = destinationConfiguration	.getClass()
+																	.getMethod("getAllProperties");
 				Map destinationProperties = (Map) propertiesMethod.invoke(destinationConfiguration);
 				if (logger.isDebugEnabled()) {
 					logger.debug(String.format("Destination Properties: %s", destinationProperties.toString()));
