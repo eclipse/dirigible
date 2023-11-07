@@ -14,14 +14,14 @@ package org.eclipse.dirigible.components.ide.workspace.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.process.Piper;
 import org.eclipse.dirigible.commons.process.ProcessUtils;
+import org.eclipse.dirigible.components.command.CommandDescriptor;
 import org.eclipse.dirigible.components.base.helpers.logging.LoggingOutputStream;
-import org.eclipse.dirigible.components.base.project.ProjectAction;
-import org.eclipse.dirigible.components.base.project.ProjectMetadata;
+import org.eclipse.dirigible.components.project.ProjectAction;
+import org.eclipse.dirigible.components.project.ProjectMetadata;
 import org.eclipse.dirigible.components.ide.workspace.domain.File;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
@@ -38,20 +38,24 @@ import org.springframework.web.server.ResponseStatusException;
  */
 @Service
 public class ActionsService {
-	
-	/** The Constant logger. */
+
+	/**
+	 * The Constant logger.
+	 */
 	private static final Logger logger = LoggerFactory.getLogger(ActionsService.class);
-	
-	/** The workspace service. */
-    @Autowired
-    private WorkspaceService workspaceService;
-	
+
+	/**
+	 * The workspace service.
+	 */
+	@Autowired
+	private WorkspaceService workspaceService;
+
 	/**
 	 * Execute action.
 	 *
 	 * @param workspace the workspace
-	 * @param project the project
-	 * @param action the action
+	 * @param project   the project
+	 * @param action    the action
 	 * @return the int
 	 */
 	public int executeAction(String workspace, String project, String action) {
@@ -67,40 +71,49 @@ public class ActionsService {
 			if (actions == null) {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Actions section not found in the project descriptor file: " + project);
 			}
-			Optional<ProjectAction> actionCommand = actions.stream().filter(a -> a.getName().equals(action)).findFirst();
-			if (actionCommand.isPresent()) {
-				String workingDirectory = LocalWorkspaceMapper.getMappedName((FileSystemRepository) projectObject.getRepository(), projectObject.getPath());
-				int result = executeCommandLine(workingDirectory, actionCommand.get().getCommand());
-				logger.debug("Executed project action: " + action);
-				return result;
-			} else {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Action not found: " + action);
-			}
-		} catch(Exception e ) {
-			String error = "Malformed project file: " + project + " (" + e.getMessage() + ")";
-			logger.error(error);
-			logger.trace(e.getMessage(), e);
-			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, error);
+
+			ProjectAction projectAction = actions
+					.stream()
+					.filter(a -> a.getName().equals(action))
+					.findFirst()
+					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Action not found: " + action));
+
+			String workingDirectory = LocalWorkspaceMapper.getMappedName((FileSystemRepository) projectObject.getRepository(), projectObject.getPath());
+			CommandDescriptor commandDescriptor = getCommandForOS(projectAction);
+			return executeCommandLine(workingDirectory, commandDescriptor.getCommand());
+		} catch (Exception e) {
+			String errorMessage = "Malformed project file: " + project + " (" + e.getMessage() + ")";
+			logger.error(errorMessage, e);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
 		}
-		
+
 	}
-	
+
+	private static CommandDescriptor getCommandForOS(ProjectAction projectAction) {
+		List<CommandDescriptor> commands = projectAction.getCommands();
+		return commands
+				.stream()
+				.filter(CommandDescriptor::isCompatibleWithCurrentOS)
+				.findFirst()
+				.orElseThrow();
+	}
+
 	/**
 	 * List actions.
 	 *
 	 * @param workspace the workspace
-	 * @param project the project
+	 * @param project   the project
 	 * @return the string
 	 */
 	public String listActions(String workspace, String project) {
 		return GsonHelper.toJson(listRegisteredActions(workspace, project));
 	}
-		
+
 	/**
 	 * List actions.
 	 *
 	 * @param workspace the workspace
-	 * @param project the project
+	 * @param project   the project
 	 * @return the list of actions
 	 */
 	public List<ProjectAction> listRegisteredActions(String workspace, String project) {
@@ -114,7 +127,7 @@ public class ActionsService {
 			List<ProjectAction> actions = projectJson.getActions();
 			if (actions == null) {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Actions section not found in the project descriptor file: " + project);
-			}			
+			}
 			return actions;
 		} catch (Exception e) {
 			String error = "Malformed project file: " + project + " (" + e.getMessage() + ")";
@@ -123,12 +136,12 @@ public class ActionsService {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, error);
 		}
 	}
-	
+
 	/**
 	 * Execute command line.
 	 *
 	 * @param workingDirectory the working directory
-	 * @param commandLine the command line
+	 * @param commandLine      the command line
 	 * @return the int
 	 * @throws Exception the exception
 	 */
@@ -138,7 +151,9 @@ public class ActionsService {
 		try {
 			args = ProcessUtils.translateCommandline(commandLine);
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 			throw new Exception(e);
 		}
 
@@ -148,7 +163,7 @@ public class ActionsService {
 			processBuilder.directory(new java.io.File(workingDirectory));
 
 			processBuilder.redirectErrorStream(true);
-			
+
 			Process process = ProcessUtils.startProcess(args, processBuilder);
 			Piper pipe = new Piper(process.getInputStream(), new LoggingOutputStream(logger, LoggingOutputStream.LogLevel.INFO));
 			new Thread(pipe).start();
@@ -170,11 +185,15 @@ public class ActionsService {
 				} while (!deadYet);
 
 			} catch (Exception e) {
-				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+				if (logger.isErrorEnabled()) {
+					logger.error(e.getMessage(), e);
+				}
 				throw new IOException(e);
 			}
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 			throw new Exception(e);
 		}
 		return result;

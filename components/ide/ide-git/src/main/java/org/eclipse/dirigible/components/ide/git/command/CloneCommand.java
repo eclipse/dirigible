@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.dirigible.components.api.security.UserFacade;
-import org.eclipse.dirigible.components.base.project.ProjectMetadataDependency;
+import org.eclipse.dirigible.components.project.ProjectMetadataDependency;
 import org.eclipse.dirigible.components.ide.git.domain.GitConnectorException;
 import org.eclipse.dirigible.components.ide.git.domain.GitConnectorFactory;
 import org.eclipse.dirigible.components.ide.git.model.GitCloneModel;
