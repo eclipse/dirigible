@@ -1,0 +1,17 @@
+{
+    "guid": "modules",
+    "actions": [{
+        "name": "Build source",
+        "commands": [
+            {
+                "os": "unix",
+                "command": "sh ./build-source.sh"
+            },
+            {
+                "os": "windows",
+                "command": "CMD /c build.bat"
+            }
+        ],
+        "publish": true
+    }]
+}

@@ -1,4 +1,0 @@
-{
-    "guid": "modules",
-    "build": "sh ./build-source.sh"
-}

@@ -40,31 +40,48 @@ Example:
 
 ##### Specify a collection to query
 
-	stmt.executeQuery(‘{find:"testCollection"}’);
+	‘{find:"testCollection"}’
 
 ##### Specify a count of a collection
 
-	stmt.executeQuery(‘{count:"testCollection"}’);
+	‘{count:"testCollection"}’
 	
 ##### Specify a create collection
 
-	stmt.executeUpdate(‘{create:"testCollection"}’);
+	‘{create:"testCollection"}’
 	
 ##### Specify a drop of a collection
 
-	stmt.executeUpdate(‘{drop:"testCollection"}’);
+	‘{drop:"testCollection"}’
 	
 ##### Insert documents
 
-	stmt.executeUpdate(‘{insert: "testCollection", documents: [ {"name":"foo", "age": 1}, {"name":"bar", "age": 2}, {"name":"mix", "age": 3}]}’);
+	‘{insert: "testCollection", documents: [
+		{"name":"foo", "age": 1},
+		{"name":"bar", "age": 2},
+		{"name":"mix", "age": 3}
+	]}’
 	
-##### Find document
+##### Find document(s)
 
-	stmt.executeUpdate(‘{ find: "testCollection",filter: {"name": "foo"} }’);
+	‘{ find: "testCollection",filter: {"name": "foo"} }’
 	
-##### Update documents
+##### Update document(s)
 
-	stmt.executeUpdate(‘{delete: "testCollection", deletes: [{ q: {"name": "foo2"}, limit: 0}]}’);
+	‘update: {"update":"testCollection",
+	    	"updates":[
+	        {
+	            q:{"name":"foo"},
+	            u:{$set:{"name":"foo2"}}
+	        }
+	    ]
+	}‘
+
+##### Delete document(s)
+
+	‘{delete: "testCollection", deletes: [
+		{ q: {"name": "foo2"}, limit: 0}
+	]}’
 	
     
 	

@@ -82,13 +82,15 @@ git config --system core.longpaths true
 
         mvn clean install
 
+   > If you are using Windows, make sure that you open the terminal as Administrator otherwise the tests will fail
+
  - Quick build with tests:
 
-        mvn -T 1C clean install -Dmaven.javadoc.skip=true -Dlicense.skip=true
+        mvn -T 1C clean install -D maven.javadoc.skip=true -D license.skip=true
 
  - If you don't want to trigger license updates:
 
-        mvn clean install -Dlicense.skip=true
+        mvn clean install -D license.skip=true
 
  - If you have a multi-core system, enable threads:
 
@@ -96,15 +98,15 @@ git config --system core.longpaths true
 
  - If you don't need to run tests, you can add the following argument:
 
-        mvn clean install -DskipTests
+        mvn clean install -D skipTests
 
  - If you don't need to compile and run tests:
 
-        mvn clean install -Dmaven.test.skip=true -DskipTests
+        mvn clean install -D maven.test.skip=true -D skipTests
 
  - If you want to do a fast build, with no tests, javadocs and license updates:
 
-        mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests -Dmaven.javadoc.skip=true -Dlicense.skip=true
+        mvn -T 1C clean install -D maven.test.skip=true -D skipTests -D maven.javadoc.skip=true -D license.skip=true
 
 > The build should pass successfully.
 
@@ -132,18 +134,17 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
         java -jar build/application/target/dirigible-application-*.jar
 
-2. In case you want to debug the application run:
+   > for Windows
+   
+        java -jar build/application/target/$((Get-ChildItem dirigible-application-*.jar -recurse -File | Sort-Object LastWriteTime | Select -Last 1).BaseName).jar
+
+3. In case you want to debug the application run:
 
         java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -jar build/application/target/dirigible-application-*.jar
 
-3. Open a web browser and go to:
-
-        http://localhost:8080
-
-4. Login with dirigible/dirigible.
-5. REST API description in an OpenAPI format can be found at:
-
-	http://localhost:8080/swagger-ui/index.html
+4. Open a web browser and go to: [http://localhost:8080](http://localhost:8080 "http://localhost:8080")
+5. Login with user: `admin` and password `admin`
+6. REST API description in an OpenAPI format can be found at: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html "http://localhost:8080/swagger-ui/index.html")
 
 
 #### Docker
