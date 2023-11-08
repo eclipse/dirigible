@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders.synonym;
 
@@ -21,113 +20,116 @@ import org.slf4j.LoggerFactory;
  */
 public class CreateSynonymBuilder extends AbstractCreateSqlBuilder {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(CreateSynonymBuilder.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(CreateSynonymBuilder.class);
 
-	/** The synonym. */
-	private String synonym = null;
-	
-	/** The source. */
-	private String source = null;
+    /** The synonym. */
+    private String synonym = null;
+
+    /** The source. */
+    private String source = null;
 
 
-	/**
-	 * Instantiates a new creates the synonym builder.
-	 *
-	 * @param dialect
-	 *            the dialect
-	 * @param synonym
-	 *            the synonym
-	 */
-	public CreateSynonymBuilder(ISqlDialect dialect, String synonym) {
-		super(dialect);
-		this.synonym = synonym;
-	}
+    /**
+     * Instantiates a new creates the synonym builder.
+     *
+     * @param dialect the dialect
+     * @param synonym the synonym
+     */
+    public CreateSynonymBuilder(ISqlDialect dialect, String synonym) {
+        super(dialect);
+        this.synonym = synonym;
+    }
 
-	/**
-	 * Source.
-	 *
-	 * @param source
-	 *            the source
-	 * @return the creates the synonym builder
-	 */
-	public CreateSynonymBuilder forSource(String source) {
-		if (logger.isTraceEnabled()) {logger.trace("source: " + source);}
-		this.source = source;
-		return this;
-	}
+    /**
+     * Source.
+     *
+     * @param source the source
+     * @return the creates the synonym builder
+     */
+    public CreateSynonymBuilder forSource(String source) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("source: " + source);
+        }
+        this.source = source;
+        return this;
+    }
 
-	/**
-	 * Generate.
-	 *
-	 * @return the string
-	 */
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-	 */
-	@Override
-	public String generate() {
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
+     */
+    @Override
+    public String generate() {
 
-		StringBuilder sql = new StringBuilder();
+        StringBuilder sql = new StringBuilder();
 
-		// CREATE
-		generateCreate(sql);
+        // CREATE
+        generateCreate(sql);
 
-		// SYNONYM
-		generateSynonym(sql);
+        // SYNONYM
+        generateSynonym(sql);
 
-		// Source
-		generateSource(sql);
+        // Source
+        generateSource(sql);
 
-		String generated = sql.toString();
+        String generated = sql.toString();
 
-		if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
+        if (logger.isTraceEnabled()) {
+            logger.trace("generated: " + generated);
+        }
 
-		return generated;
-	}
+        return generated;
+    }
 
-	/**
-	 * Generate synonym.
-	 *
-	 * @param sql
-	 *            the sql
-	 */
-	protected void generateSynonym(StringBuilder sql) {
-		String synonymName = (isCaseSensitive()) ? encapsulate(this.getSynonym(), true) : this.getSynonym();
-		sql.append(SPACE)/*.append(KEYWORD_PUBLIC).append(SPACE)*/.append(KEYWORD_SYNONYM).append(SPACE).append(synonymName);
-	}
+    /**
+     * Generate synonym.
+     *
+     * @param sql the sql
+     */
+    protected void generateSynonym(StringBuilder sql) {
+        String synonymName = (isCaseSensitive()) ? encapsulate(this.getSynonym(), true) : this.getSynonym();
+        sql.append(SPACE)
+           /* .append(KEYWORD_PUBLIC).append(SPACE) */.append(KEYWORD_SYNONYM)
+           .append(SPACE)
+           .append(synonymName);
+    }
 
-	/**
-	 * Generate start.
-	 *
-	 * @param sql
-	 *            the sql
-	 */
-	protected void generateSource(StringBuilder sql) {
-		String sourceName = (isCaseSensitive()) ? encapsulate(this.getSource(), true) : this.getSource();
-		 sql.append(SPACE)
-			 .append(KEYWORD_FOR)
-			 .append(SPACE)
-			 .append(sourceName);
-	}
+    /**
+     * Generate start.
+     *
+     * @param sql the sql
+     */
+    protected void generateSource(StringBuilder sql) {
+        String sourceName = (isCaseSensitive()) ? encapsulate(this.getSource(), true) : this.getSource();
+        sql.append(SPACE)
+           .append(KEYWORD_FOR)
+           .append(SPACE)
+           .append(sourceName);
+    }
 
-	/**
-	 * Gets the synonym.
-	 *
-	 * @return the synonym
-	 */
-	public String getSynonym() {
-		return synonym;
-	}
-	
-	/**
-	 * Gets the source.
-	 *
-	 * @return the source
-	 */
-	public String getSource() {
-		return source;
-	}
+    /**
+     * Gets the synonym.
+     *
+     * @return the synonym
+     */
+    public String getSynonym() {
+        return synonym;
+    }
+
+    /**
+     * Gets the source.
+     *
+     * @return the source
+     */
+    public String getSource() {
+        return source;
+    }
 
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.graalium.core.modules;
 
@@ -23,9 +22,14 @@ import java.util.regex.Pattern;
  * The Class DirigibleEsmModuleResolver.
  */
 public class DirigibleEsmModuleResolver implements ModuleResolver {
-    
+
     /** The Constant DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN. */
-    private static final Pattern DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN = Pattern.compile("(@dirigible)/(\\w+)(?:/(.+))?"); // e.g. @dirigible/core/module/submodule  => $1=dirigible $2=core $3=module/submodule
+    private static final Pattern DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN = Pattern.compile("(@dirigible)/(\\w+)(?:/(.+))?"); // e.g.
+                                                                                                                             // @dirigible/core/module/submodule
+                                                                                                                             // =>
+                                                                                                                             // $1=dirigible
+                                                                                                                             // $2=core
+                                                                                                                             // $3=module/submodule
 
     /** The source provider. */
     private final JavascriptSourceProvider sourceProvider;
@@ -69,10 +73,10 @@ public class DirigibleEsmModuleResolver implements ModuleResolver {
         boolean hasDirigibleModuleFile = !StringUtils.isEmpty(dirigibleModuleFile);
 
         Path dirigibleModulePath = sourceProvider.getAbsoluteProjectPath("modules")
-                .resolve("dist")
-                .resolve("esm")
-                .resolve(dirigibleModuleDir)
-                .resolve(hasDirigibleModuleFile ? dirigibleModuleFile + ".mjs" : "index.mjs");
+                                                 .resolve("dist")
+                                                 .resolve("esm")
+                                                 .resolve(dirigibleModuleDir)
+                                                 .resolve(hasDirigibleModuleFile ? dirigibleModuleFile + ".mjs" : "index.mjs");
         return dirigibleModulePath;
     }
 }

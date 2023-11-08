@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.mapping;
 
@@ -27,14 +26,14 @@ import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
  * The Class DefaultEdmTableMappingProvider.
  */
 public class DefaultEdmTableMappingProvider implements EdmTableBindingProvider {
-    
+
     /** The bindings. */
     private final Map<String, EdmTableBinding> bindings;
-    
+
     /** The mapping not found msg. */
     private final String MAPPING_NOT_FOUND_MSG = "Invalid table mapping configuration for entity %s";
 
-  
+
     /**
      * Instantiates a new default edm table mapping provider.
      *
@@ -53,22 +52,23 @@ public class DefaultEdmTableMappingProvider implements EdmTableBindingProvider {
      * @param resources the resources
      * @throws ODataException the o data exception
      */
-    protected void fillBindings(String... resources)  throws ODataException {
+    protected void fillBindings(String... resources) throws ODataException {
         EdmTableBindingFactory tableBindingFactory = new EdmTableBindingFactory();
 
         for (String resource : resources) {
-            EdmTableBinding binding = loadEdmTableBinding(tableBindingFactory, DefaultEdmTableMappingProvider.class.getClassLoader(), resource);
+            EdmTableBinding binding =
+                    loadEdmTableBinding(tableBindingFactory, DefaultEdmTableMappingProvider.class.getClassLoader(), resource);
             String fqn = binding.getEdmFullyQualifedName();
             bindings.put(fqn, binding);
         }
     }
-    
+
     /**
      * Gets the bindings.
      *
      * @return the bindings
      */
-    protected Map<String, EdmTableBinding> getBindings(){
+    protected Map<String, EdmTableBinding> getBindings() {
         return bindings;
     }
 
@@ -99,7 +99,7 @@ public class DefaultEdmTableMappingProvider implements EdmTableBindingProvider {
             throw new IllegalArgumentException(String.format(MAPPING_NOT_FOUND_MSG, resource));
         }
     }
-    
+
     /**
      * Load edm table binding.
      *
@@ -109,7 +109,7 @@ public class DefaultEdmTableMappingProvider implements EdmTableBindingProvider {
      */
     public EdmTableBinding loadEdmTableBinding(EdmTableBindingFactory tableBindingFactory, String resource) {
         try {
-        	return tableBindingFactory.createTableBinding(new ByteArrayInputStream(resource.getBytes()));
+            return tableBindingFactory.createTableBinding(new ByteArrayInputStream(resource.getBytes()));
         } catch (Exception e) {
             throw new IllegalArgumentException(String.format(MAPPING_NOT_FOUND_MSG, resource));
         }

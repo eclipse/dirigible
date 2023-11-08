@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.sources.endpoint;
 
@@ -51,28 +50,28 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class DataSourceEndpointTest {
-	
-	/** The entity manager. */
-	@Autowired
-	private EntityManager entityManager;
-	
-	/** The datasource service. */
-	@Autowired
-	private DataSourceService datasourceService;
-	
-	/** The datasource repository. */
-	@Autowired
-	private DataSourceRepository datasourceRepository;
-	
-	/** The test data source. */
-	private DataSource testDataSource;
-	
-	/** The mock mvc. */
-	@Autowired
+
+    /** The entity manager. */
+    @Autowired
+    private EntityManager entityManager;
+
+    /** The datasource service. */
+    @Autowired
+    private DataSourceService datasourceService;
+
+    /** The datasource repository. */
+    @Autowired
+    private DataSourceRepository datasourceRepository;
+
+    /** The test data source. */
+    private DataSource testDataSource;
+
+    /** The mock mvc. */
+    @Autowired
     private MockMvc mockMvc;
 
     /** The wac. */
@@ -82,122 +81,124 @@ public class DataSourceEndpointTest {
     /** The spring security filter chain. */
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
-	
-	/**
-	 * Setup.
-	 *
-	 * @throws Exception the exception
-	 */
-	@BeforeEach
+
+    /**
+     * Setup.
+     *
+     * @throws Exception the exception
+     */
+    @BeforeEach
     public void setup() throws Exception {
-		
-		cleanup();
 
-    	// create test DataSources
-		datasourceService.save(DataSourceRepositoryTest.createDataSource(datasourceRepository, "/a/b/c/ds1.datasource", "ds1", "description", ""));
-		datasourceService.save(DataSourceRepositoryTest.createDataSource(datasourceRepository, "/a/b/c/ds2.datasource", "ds2", "description", ""));
-		datasourceService.save(DataSourceRepositoryTest.createDataSource(datasourceRepository, "/a/b/c/ds3.datasource", "ds3", "description", ""));
-		datasourceService.save(DataSourceRepositoryTest.createDataSource(datasourceRepository, "/a/b/c/ds4.datasource", "ds4", "description", ""));
-		datasourceService.save(DataSourceRepositoryTest.createDataSource(datasourceRepository, "/a/b/c/ds5.datasource", "ds5", "description", ""));
-		
-		Page<DataSource> datasources = datasourceService.getPages(PageRequest.of(0, BaseEndpoint.DEFAULT_PAGE_SIZE));
-		assertNotNull(datasources);
-		assertEquals(5L, datasources.getTotalElements());
-		
-		testDataSource = datasources.getContent().get(0);
-		
-		entityManager.refresh(testDataSource);
+        cleanup();
+
+        // create test DataSources
+        datasourceService.save(
+                DataSourceRepositoryTest.createDataSource(datasourceRepository, "/a/b/c/ds1.datasource", "ds1", "description", ""));
+        datasourceService.save(
+                DataSourceRepositoryTest.createDataSource(datasourceRepository, "/a/b/c/ds2.datasource", "ds2", "description", ""));
+        datasourceService.save(
+                DataSourceRepositoryTest.createDataSource(datasourceRepository, "/a/b/c/ds3.datasource", "ds3", "description", ""));
+        datasourceService.save(
+                DataSourceRepositoryTest.createDataSource(datasourceRepository, "/a/b/c/ds4.datasource", "ds4", "description", ""));
+        datasourceService.save(
+                DataSourceRepositoryTest.createDataSource(datasourceRepository, "/a/b/c/ds5.datasource", "ds5", "description", ""));
+
+        Page<DataSource> datasources = datasourceService.getPages(PageRequest.of(0, BaseEndpoint.DEFAULT_PAGE_SIZE));
+        assertNotNull(datasources);
+        assertEquals(5L, datasources.getTotalElements());
+
+        testDataSource = datasources.getContent()
+                                    .get(0);
+
+        entityManager.refresh(testDataSource);
     }
-	
-	/**
-	 * Cleanup.
-	 *
-	 * @throws Exception the exception
-	 */
-	@AfterEach
+
+    /**
+     * Cleanup.
+     *
+     * @throws Exception the exception
+     */
+    @AfterEach
     public void cleanup() throws Exception {
-		datasourceRepository.deleteAll();
+        datasourceRepository.deleteAll();
     }
 
-	/**
-	 * Find all data sources.
-	 */
-	@Test
-	public void findAllDataSources() {
-		Integer size = 10;
-		Integer page = 0;
-		Pageable pageable = PageRequest.of(page, size);
-		assertNotNull(datasourceService.getPages(pageable));
-	}
-	
-	/**
-	 * Gets the data source by id.
-	 *
-	 * @return the data source by id
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void getDataSourceById() throws Exception {
-		Long id = testDataSource.getId();
+    /**
+     * Find all data sources.
+     */
+    @Test
+    public void findAllDataSources() {
+        Integer size = 10;
+        Integer page = 0;
+        Pageable pageable = PageRequest.of(page, size);
+        assertNotNull(datasourceService.getPages(pageable));
+    }
 
-		mockMvc.perform(get("/services/data/sources/{id}", id))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful())
-		;
-	}
-	
-	/**
-	 * Gets the data source by name.
-	 *
-	 * @return the data source by name
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void getDataSourceByName() throws Exception {
-		String name = testDataSource.getName();
+    /**
+     * Gets the data source by id.
+     *
+     * @return the data source by id
+     * @throws Exception the exception
+     */
+    @Test
+    public void getDataSourceById() throws Exception {
+        Long id = testDataSource.getId();
 
-		mockMvc.perform(get("/services/data/sources/search?name={name}", name))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful())
-		;
-	}
-	
-	/**
-	 * Gets the pages data sources.
-	 *
-	 * @return the pages data sources
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void getPagesDataSources() throws Exception {
-		String name = testDataSource.getName();
+        mockMvc.perform(get("/services/data/sources/{id}", id))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+    }
 
-		mockMvc.perform(get("/services/data/sources/pages", name))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful())
-		;
-	}
-	
-	/**
-	 * Gets the all data sources.
-	 *
-	 * @return the all data sources
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void getAllDataSources() throws Exception {
-		String name = testDataSource.getName();
+    /**
+     * Gets the data source by name.
+     *
+     * @return the data source by name
+     * @throws Exception the exception
+     */
+    @Test
+    public void getDataSourceByName() throws Exception {
+        String name = testDataSource.getName();
 
-		mockMvc.perform(get("/services/data/sources", name))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful())
-		;
-	}
+        mockMvc.perform(get("/services/data/sources/search?name={name}", name))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+    }
 
-	/**
-	 * The Class TestConfiguration.
-	 */
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+    /**
+     * Gets the pages data sources.
+     *
+     * @return the pages data sources
+     * @throws Exception the exception
+     */
+    @Test
+    public void getPagesDataSources() throws Exception {
+        String name = testDataSource.getName();
+
+        mockMvc.perform(get("/services/data/sources/pages", name))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+    }
+
+    /**
+     * Gets the all data sources.
+     *
+     * @return the all data sources
+     * @throws Exception the exception
+     */
+    @Test
+    public void getAllDataSources() throws Exception {
+        String name = testDataSource.getName();
+
+        mockMvc.perform(get("/services/data/sources", name))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+    }
+
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 }

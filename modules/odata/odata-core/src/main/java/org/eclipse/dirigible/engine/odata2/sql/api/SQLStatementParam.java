@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.api;
 
@@ -22,10 +21,10 @@ public class SQLStatementParam {
 
     /** The value. */
     private final Object value;
-    
+
     /** The edm type. */
     private final EdmType edmType;
-    
+
     /** The column info. */
     private final EdmTableBinding.ColumnInfo columnInfo;
 
@@ -33,15 +32,15 @@ public class SQLStatementParam {
      * The Enum TemporalType.
      */
     public enum TemporalType {
-        
+
         /** The date. */
-        DATE, 
- /** The time. */
- TIME, 
- /** The timestamp. */
- TIMESTAMP
+        DATE,
+        /** The time. */
+        TIME,
+        /** The timestamp. */
+        TIMESTAMP
     }
-    
+
     /**
      * Instantiates a new SQL statement param.
      *
@@ -85,11 +84,14 @@ public class SQLStatementParam {
      */
     public TemporalType getTemporalType() {
         EdmType edmType = getEdmType();
-        if (EdmSimpleTypeKind.DateTime.getEdmSimpleTypeInstance().equals(edmType)) {
+        if (EdmSimpleTypeKind.DateTime.getEdmSimpleTypeInstance()
+                                      .equals(edmType)) {
             return TemporalType.TIMESTAMP;
-        } else if (EdmSimpleTypeKind.Time.getEdmSimpleTypeInstance().equals(edmType)) {
+        } else if (EdmSimpleTypeKind.Time.getEdmSimpleTypeInstance()
+                                         .equals(edmType)) {
             return TemporalType.TIME;
-        } else if (EdmSimpleTypeKind.DateTimeOffset.getEdmSimpleTypeInstance().equals(edmType)) {
+        } else if (EdmSimpleTypeKind.DateTimeOffset.getEdmSimpleTypeInstance()
+                                                   .equals(edmType)) {
             return TemporalType.DATE;
         } else {
             return null;
@@ -101,56 +103,72 @@ public class SQLStatementParam {
      *
      * @return the edm simple kind
      */
-    public EdmSimpleTypeKind getEdmSimpleKind(){
-        if(EdmSimpleTypeKind.String.getEdmSimpleTypeInstance().equals(edmType)){
+    public EdmSimpleTypeKind getEdmSimpleKind() {
+        if (EdmSimpleTypeKind.String.getEdmSimpleTypeInstance()
+                                    .equals(edmType)) {
             return EdmSimpleTypeKind.String;
         }
-        if(EdmSimpleTypeKind.Int16.getEdmSimpleTypeInstance().equals(edmType)){
+        if (EdmSimpleTypeKind.Int16.getEdmSimpleTypeInstance()
+                                   .equals(edmType)) {
             return EdmSimpleTypeKind.Int16;
         }
-        if(EdmSimpleTypeKind.Int32.getEdmSimpleTypeInstance().equals(edmType)){
+        if (EdmSimpleTypeKind.Int32.getEdmSimpleTypeInstance()
+                                   .equals(edmType)) {
             return EdmSimpleTypeKind.Int32;
         }
-        if(EdmSimpleTypeKind.Int64.getEdmSimpleTypeInstance().equals(edmType)){
+        if (EdmSimpleTypeKind.Int64.getEdmSimpleTypeInstance()
+                                   .equals(edmType)) {
             return EdmSimpleTypeKind.Int64;
         }
-        if(EdmSimpleTypeKind.Double.getEdmSimpleTypeInstance().equals(edmType)){
+        if (EdmSimpleTypeKind.Double.getEdmSimpleTypeInstance()
+                                    .equals(edmType)) {
             return EdmSimpleTypeKind.Double;
         }
-        if(EdmSimpleTypeKind.Decimal.getEdmSimpleTypeInstance().equals(edmType)){
+        if (EdmSimpleTypeKind.Decimal.getEdmSimpleTypeInstance()
+                                     .equals(edmType)) {
             return EdmSimpleTypeKind.Decimal;
         }
-        if(EdmSimpleTypeKind.Boolean.getEdmSimpleTypeInstance().equals(edmType)){
+        if (EdmSimpleTypeKind.Boolean.getEdmSimpleTypeInstance()
+                                     .equals(edmType)) {
             return EdmSimpleTypeKind.Boolean;
         }
-        if(EdmSimpleTypeKind.DateTime.getEdmSimpleTypeInstance().equals(edmType)){
+        if (EdmSimpleTypeKind.DateTime.getEdmSimpleTypeInstance()
+                                      .equals(edmType)) {
             return EdmSimpleTypeKind.DateTime;
         }
-        if(EdmSimpleTypeKind.DateTimeOffset.getEdmSimpleTypeInstance().equals(edmType)){
+        if (EdmSimpleTypeKind.DateTimeOffset.getEdmSimpleTypeInstance()
+                                            .equals(edmType)) {
             return EdmSimpleTypeKind.DateTimeOffset;
         }
-        if(EdmSimpleTypeKind.Time.getEdmSimpleTypeInstance().equals(edmType)){
+        if (EdmSimpleTypeKind.Time.getEdmSimpleTypeInstance()
+                                  .equals(edmType)) {
             return EdmSimpleTypeKind.Time;
         }
-        if(EdmSimpleTypeKind.Guid.getEdmSimpleTypeInstance().equals(edmType)){
+        if (EdmSimpleTypeKind.Guid.getEdmSimpleTypeInstance()
+                                  .equals(edmType)) {
             return EdmSimpleTypeKind.Guid;
         }
-        if(EdmSimpleTypeKind.Binary.getEdmSimpleTypeInstance().equals(edmType)){
+        if (EdmSimpleTypeKind.Binary.getEdmSimpleTypeInstance()
+                                    .equals(edmType)) {
             return EdmSimpleTypeKind.Binary;
         }
-        if(EdmSimpleTypeKind.SByte.getEdmSimpleTypeInstance().equals(edmType)){
+        if (EdmSimpleTypeKind.SByte.getEdmSimpleTypeInstance()
+                                   .equals(edmType)) {
             return EdmSimpleTypeKind.SByte;
         }
-        if(EdmSimpleTypeKind.Single.getEdmSimpleTypeInstance().equals(edmType)){
+        if (EdmSimpleTypeKind.Single.getEdmSimpleTypeInstance()
+                                    .equals(edmType)) {
             return EdmSimpleTypeKind.Single;
         }
-        if(edmType instanceof EdmNull){
+        if (edmType instanceof EdmNull) {
             return EdmSimpleTypeKind.Null;
         }
-        if(EdmSimpleTypeKind.Byte.getEdmSimpleTypeInstance().equals(edmType)){
+        if (EdmSimpleTypeKind.Byte.getEdmSimpleTypeInstance()
+                                  .equals(edmType)) {
             return EdmSimpleTypeKind.Byte;
         }
-        if(EdmSimpleTypeKind.Int32.getEdmSimpleTypeInstance().isCompatible((EdmSimpleType) edmType)){
+        if (EdmSimpleTypeKind.Int32.getEdmSimpleTypeInstance()
+                                   .isCompatible((EdmSimpleType) edmType)) {
             return EdmSimpleTypeKind.Int32;
         }
 
@@ -172,7 +190,7 @@ public class SQLStatementParam {
      * @return the sql type
      */
     public String getSqlType() {
-        return columnInfo == null ? null: columnInfo.getJdbcType();
+        return columnInfo == null ? null : columnInfo.getJdbcType();
     }
 
     /**
@@ -181,7 +199,7 @@ public class SQLStatementParam {
      * @return the sql column name
      */
     public String getSqlColumnName() {
-        return columnInfo == null ? null: columnInfo.getColumnName();
+        return columnInfo == null ? null : columnInfo.getColumnName();
     }
 
     /**

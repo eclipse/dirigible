@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.websockets.repository;
 
@@ -47,9 +46,9 @@ public class WebsocketRepositoryTest {
 
     @BeforeEach
     public void setup() {
-    	
-    	cleanup();
-    	
+
+        cleanup();
+
         websocketRepository.save(new Websocket("/a/b/c/w1.websocket", "name1", "description", "endpoint1", "handler1", "engine1"));
         websocketRepository.save(new Websocket("/a/b/c/w2.websocket", "name2", "description", "endpoint2", "handler2", "engine2"));
         websocketRepository.save(new Websocket("/a/b/c/w3.websocket", "name3", "description", "endpoint3", "handler3", "engine3"));
@@ -64,7 +63,8 @@ public class WebsocketRepositoryTest {
     public void getOne() {
         List<Websocket> all = websocketRepository.findAll();
         assertEquals(3, all.size());
-        Long id = all.get(0).getId();
+        Long id = all.get(0)
+                     .getId();
         Optional<Websocket> optional = websocketRepository.findById(id);
         Websocket websocket = optional.isPresent() ? optional.get() : null;
         assertNotNull(websocket);
@@ -81,7 +81,9 @@ public class WebsocketRepositoryTest {
 
     @Test
     public void getReferenceUsingEntityManager() {
-        Long id = websocketRepository.findAll().get(0).getId();
+        Long id = websocketRepository.findAll()
+                                     .get(0)
+                                     .getId();
         Websocket websocket = entityManager.getReference(Websocket.class, id);
         assertNotNull(websocket);
         assertEquals("/a/b/c/w1.websocket", websocket.getLocation());

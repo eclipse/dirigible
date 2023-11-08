@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.clause;
 
@@ -39,7 +38,7 @@ public class SQLOrderByClauseTest {
 
     /** The edm. */
     EdmImplProv edm;
-    
+
     /** The table mapping provider. */
     EdmTableBindingProvider tableMappingProvider;
 
@@ -100,8 +99,11 @@ public class SQLOrderByClauseTest {
      */
     @Test
     public void testOrderByWithNoOrderBy() throws Exception {
-        OrderByExpression orderBy = UriParser.parse(edm, new ArrayList<>(), new HashMap<>()).getOrderBy();
-        EdmEntityType type = edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName());
+        OrderByExpression orderBy = UriParser.parse(edm, new ArrayList<>(), new HashMap<>())
+                                             .getOrderBy();
+        EdmEntityType type = edm.getEntityType(Entity1.class.getPackage()
+                                                            .getName(),
+                Entity1.class.getSimpleName());
         SQLSelectBuilder noop = new SQLSelectBuilder(tableMappingProvider);
         SQLOrderByClause sqlOrderBy = new SQLOrderByClause(noop, type, orderBy);
 
@@ -116,9 +118,12 @@ public class SQLOrderByClauseTest {
      */
     private SQLOrderByClause createOrderByExpression(final String expression) {
         try {
-            OrderByExpression orderBy = UriParser.parseOrderBy(edm, edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName()),
-                    expression);
-            EdmEntityType type = edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName());
+            OrderByExpression orderBy = UriParser.parseOrderBy(edm, edm.getEntityType(Entity1.class.getPackage()
+                                                                                                   .getName(),
+                    Entity1.class.getSimpleName()), expression);
+            EdmEntityType type = edm.getEntityType(Entity1.class.getPackage()
+                                                                .getName(),
+                    Entity1.class.getSimpleName());
             SQLSelectBuilder noop = new SQLSelectBuilder(tableMappingProvider);
             return new SQLOrderByClause(noop, type, orderBy);
         } catch (Throwable t) {

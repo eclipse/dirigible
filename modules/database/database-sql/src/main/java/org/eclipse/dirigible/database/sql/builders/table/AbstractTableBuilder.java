@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders.table;
 
@@ -34,7 +33,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(AbstractTableBuilder.class);
-    
+
     /** The Constant OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR. */
     private static final String OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR = "Operation not supported for this Database type!";
 
@@ -48,7 +47,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * Instantiates a new creates the table builder.
      *
      * @param dialect the dialect
-     * @param table   the table
+     * @param table the table
      */
     public AbstractTableBuilder(ISqlDialect dialect, String table) {
         super(dialect);
@@ -110,7 +109,8 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @param referencedColumns the referenced columns
      * @return the table builder
      */
-    public TABLE_BUILDER foreignKey(String name, String[] columns, String referencedTable, String referencedTableSchema, String[] referencedColumns) {
+    public TABLE_BUILDER foreignKey(String name, String[] columns, String referencedTable, String referencedTableSchema,
+            String[] referencedColumns) {
         throw new IllegalStateException(OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR);
     }
 
@@ -124,7 +124,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     public TABLE_BUILDER check(String name, String expression) {
         throw new IllegalStateException(OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR);
     }
-    
+
     /**
      * Index.
      *
@@ -159,38 +159,53 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param isIdentity   the is identity
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param isIdentity the is identity
      * @param isFuzzyIndexEnabled the is fuzzy index enabled
-     * @param args         the args
+     * @param args the args
      * @return the creates the table builder
      */
-    public TABLE_BUILDER column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity, Boolean isFuzzyIndexEnabled,
-                                String... args) {
-    	if (logger.isTraceEnabled()) {logger.trace("column: " + name + ", type: " + (type != null ? type.name() : null) + ", isPrimaryKey: " + isPrimaryKey + ", isNullable: "
-                + isNullable + ", isUnique: " + isUnique + ", isIdentity: " + isIdentity + ", args: " + Arrays.toString(args));}
-        String[] definition = new String[]{name, getDialect().getDataTypeName(type)};
+    public TABLE_BUILDER column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity,
+            Boolean isFuzzyIndexEnabled, String... args) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("column: " + name + ", type: " + (type != null ? type.name() : null) + ", isPrimaryKey: " + isPrimaryKey
+                    + ", isNullable: " + isNullable + ", isUnique: " + isUnique + ", isIdentity: " + isIdentity + ", args: "
+                    + Arrays.toString(args));
+        }
+        String[] definition = new String[] {name, getDialect().getDataTypeName(type)};
         String[] column;
         if (isIdentity) {
-            column = Stream.of(definition, args, new String[]{getDialect().getIdentityArgument()}).flatMap(Stream::of).toArray(String[]::new);
+            column = Stream.of(definition, args, new String[] {getDialect().getIdentityArgument()})
+                           .flatMap(Stream::of)
+                           .toArray(String[]::new);
         } else {
-            column = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
+            column = Stream.of(definition, args)
+                           .flatMap(Stream::of)
+                           .toArray(String[]::new);
         }
         if (!isNullable) {
-            column = Stream.of(column, new String[]{getDialect().getNotNullArgument()}).flatMap(Stream::of).toArray(String[]::new);
+            column = Stream.of(column, new String[] {getDialect().getNotNullArgument()})
+                           .flatMap(Stream::of)
+                           .toArray(String[]::new);
         }
         if (isPrimaryKey) {
-            column = Stream.of(column, new String[]{getDialect().getPrimaryKeyArgument()}).flatMap(Stream::of).toArray(String[]::new);
+            column = Stream.of(column, new String[] {getDialect().getPrimaryKeyArgument()})
+                           .flatMap(Stream::of)
+                           .toArray(String[]::new);
         }
         if (isUnique && !isPrimaryKey) {
-            column = Stream.of(column, new String[]{getDialect().getUniqueArgument()}).flatMap(Stream::of).toArray(String[]::new);
+            column = Stream.of(column, new String[] {getDialect().getUniqueArgument()})
+                           .flatMap(Stream::of)
+                           .toArray(String[]::new);
         }
-        if (isFuzzyIndexEnabled){
-            column = Stream.of(column, new String[]{getDialect().getFuzzySearchIndex()}).flatMap(Stream::of).toArray(String[]::new);
+        if (isFuzzyIndexEnabled) {
+            column = Stream.of(column, new String[] {getDialect().getFuzzySearchIndex()})
+                           .flatMap(Stream::of)
+                           .toArray(String[]::new);
         }
 
         this.columns.add(column);
@@ -200,28 +215,29 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column.
      *
-     * @param name                the name
-     * @param type                the type
-     * @param isPrimaryKey        the is primary key
-     * @param isNullable          the is nullable
-     * @param isUnique            the is unique
+     * @param name the name
+     * @param type the type
+     * @param isPrimaryKey the is primary key
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @param isFuzzyIndexEnabled the is fuzzy index enabled
-     * @param args                the args
+     * @param args the args
      * @return the creates the table builder
      */
-    public TABLE_BUILDER column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isFuzzyIndexEnabled, String... args) {
+    public TABLE_BUILDER column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
+            Boolean isFuzzyIndexEnabled, String... args) {
         return column(name, type, isPrimaryKey, isNullable, isUnique, false, isFuzzyIndexEnabled, args);
     }
 
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -231,40 +247,40 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return column(name, type, isPrimaryKey, isNullable, isUnique, new String[]{});
+        return column(name, type, isPrimaryKey, isNullable, isUnique, new String[] {});
     }
 
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable) {
-        return column(name, type, isPrimaryKey, isNullable, false, new String[]{});
+        return column(name, type, isPrimaryKey, isNullable, false, new String[] {});
     }
 
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, DataType type, Boolean isPrimaryKey) {
-        return column(name, type, isPrimaryKey, true, false, new String[]{});
+        return column(name, type, isPrimaryKey, true, false, new String[] {});
     }
 
     /**
@@ -275,18 +291,18 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, DataType type) {
-        return column(name, type, false, true, false, new String[]{});
+        return column(name, type, false, true, false, new String[] {});
     }
 
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, int type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -296,40 +312,40 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, int type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return column(name, DataType.values()[type], isPrimaryKey, isNullable, isUnique, new String[]{});
+        return column(name, DataType.values()[type], isPrimaryKey, isNullable, isUnique, new String[] {});
     }
 
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, int type, Boolean isPrimaryKey, Boolean isNullable) {
-        return column(name, DataType.values()[type], isPrimaryKey, isNullable, false, new String[]{});
+        return column(name, DataType.values()[type], isPrimaryKey, isNullable, false, new String[] {});
     }
 
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, int type, Boolean isPrimaryKey) {
-        return column(name, DataType.values()[type], isPrimaryKey, true, false, new String[]{});
+        return column(name, DataType.values()[type], isPrimaryKey, true, false, new String[] {});
     }
 
     /**
@@ -340,18 +356,18 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, int type) {
-        return column(name, DataType.values()[type], false, true, false, new String[]{});
+        return column(name, DataType.values()[type], false, true, false, new String[] {});
     }
 
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, int type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -361,12 +377,12 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, Double type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -376,40 +392,40 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, Double type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return column(name, DataType.values()[type.intValue()], isPrimaryKey, isNullable, isUnique, new String[]{});
+        return column(name, DataType.values()[type.intValue()], isPrimaryKey, isNullable, isUnique, new String[] {});
     }
 
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, Double type, Boolean isPrimaryKey, Boolean isNullable) {
-        return column(name, DataType.values()[type.intValue()], isPrimaryKey, isNullable, false, new String[]{});
+        return column(name, DataType.values()[type.intValue()], isPrimaryKey, isNullable, false, new String[] {});
     }
 
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, Double type, Boolean isPrimaryKey) {
-        return column(name, DataType.values()[type.intValue()], isPrimaryKey, true, false, new String[]{});
+        return column(name, DataType.values()[type.intValue()], isPrimaryKey, true, false, new String[] {});
     }
 
     /**
@@ -420,18 +436,18 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, Double type) {
-        return column(name, DataType.values()[type.intValue()], false, true, false, new String[]{});
+        return column(name, DataType.values()[type.intValue()], false, true, false, new String[] {});
     }
 
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, Double type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -441,12 +457,12 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, String type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -456,40 +472,40 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, String type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return column(name, DataType.valueOfByName(type), isPrimaryKey, isNullable, isUnique, new String[]{});
+        return column(name, DataType.valueOfByName(type), isPrimaryKey, isNullable, isUnique, new String[] {});
     }
 
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, String type, Boolean isPrimaryKey, Boolean isNullable) {
-        return column(name, DataType.valueOfByName(type), isPrimaryKey, isNullable, false, new String[]{});
+        return column(name, DataType.valueOfByName(type), isPrimaryKey, isNullable, false, new String[] {});
     }
 
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, String type, Boolean isPrimaryKey) {
-        return column(name, DataType.valueOfByName(type), isPrimaryKey, true, false, new String[]{});
+        return column(name, DataType.valueOfByName(type), isPrimaryKey, true, false, new String[] {});
     }
 
     /**
@@ -500,18 +516,18 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, String type) {
-        return column(name, DataType.valueOfByName(type), false, true, false, new String[]{});
+        return column(name, DataType.valueOfByName(type), false, true, false, new String[] {});
     }
 
     /**
      * Column.
      *
-     * @param name         the name
-     * @param type         the type
+     * @param name the name
+     * @param type the type
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, String type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -521,62 +537,65 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column varchar.
      *
-     * @param name         the name
-     * @param length       the length
+     * @param name the name
+     * @param length the length
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param isIdentity   the is identity
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param isIdentity the is identity
+     * @param args the args
      * @return the creates the table builder
      */
-    public TABLE_BUILDER columnVarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity,
-                                       String... args) {
-        String[] definition = new String[]{OPEN + length + CLOSE};
-        String[] coulmn = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
+    public TABLE_BUILDER columnVarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
+            Boolean isIdentity, String... args) {
+        String[] definition = new String[] {OPEN + length + CLOSE};
+        String[] coulmn = Stream.of(definition, args)
+                                .flatMap(Stream::of)
+                                .toArray(String[]::new);
         return this.column(name, DataType.VARCHAR, isPrimaryKey, isNullable, isUnique, isIdentity, false, coulmn);
     }
 
     /**
      * Column varchar.
      *
-     * @param name         the name
-     * @param length       the length
+     * @param name the name
+     * @param length the length
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param isIdentity   the is identity
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param isIdentity the is identity
+     * @param args the args
      * @return the creates the table builder
      */
-    public TABLE_BUILDER columnVarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity,
-                                       String args) {
+    public TABLE_BUILDER columnVarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
+            Boolean isIdentity, String args) {
         return columnVarchar(name, length, isPrimaryKey, isNullable, isUnique, isIdentity, splitValues(args));
     }
 
     /**
      * Column varchar.
      *
-     * @param name         the name
-     * @param length       the length
+     * @param name the name
+     * @param length the length
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param isIdentity   the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param isIdentity the is unique
      * @return the creates the table builder
      */
-    public TABLE_BUILDER columnVarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity) {
-        return columnVarchar(name, length, isPrimaryKey, isNullable, isUnique, isIdentity, new String[]{});
+    public TABLE_BUILDER columnVarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
+            Boolean isIdentity) {
+        return columnVarchar(name, length, isPrimaryKey, isNullable, isUnique, isIdentity, new String[] {});
     }
 
     /**
      * Column varchar.
      *
-     * @param name         the name
-     * @param length       the length
+     * @param name the name
+     * @param length the length
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnVarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -586,10 +605,10 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column varchar.
      *
-     * @param name         the name
-     * @param length       the length
+     * @param name the name
+     * @param length the length
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnVarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable) {
@@ -599,8 +618,8 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column varchar.
      *
-     * @param name         the name
-     * @param length       the length
+     * @param name the name
+     * @param length the length
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
@@ -611,7 +630,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column varchar.
      *
-     * @param name   the name
+     * @param name the name
      * @param length the length
      * @return the creates the table builder
      */
@@ -622,62 +641,65 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column nvarchar.
      *
-     * @param name         the name
-     * @param length       the length
+     * @param name the name
+     * @param length the length
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param isIdentity   the is identity
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param isIdentity the is identity
+     * @param args the args
      * @return the creates the table builder
      */
-    public TABLE_BUILDER columnNvarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity,
-                                        String... args) {
-        String[] definition = new String[]{OPEN + length + CLOSE};
-        String[] coulmn = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
+    public TABLE_BUILDER columnNvarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
+            Boolean isIdentity, String... args) {
+        String[] definition = new String[] {OPEN + length + CLOSE};
+        String[] coulmn = Stream.of(definition, args)
+                                .flatMap(Stream::of)
+                                .toArray(String[]::new);
         return this.column(name, DataType.NVARCHAR, isPrimaryKey, isNullable, isUnique, isIdentity, false, coulmn);
     }
 
     /**
      * Column nvarchar.
      *
-     * @param name         the name
-     * @param length       the length
+     * @param name the name
+     * @param length the length
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param isIdentity   the is identity
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param isIdentity the is identity
+     * @param args the args
      * @return the creates the table builder
      */
-    public TABLE_BUILDER columnNvarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity,
-                                        String args) {
+    public TABLE_BUILDER columnNvarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
+            Boolean isIdentity, String args) {
         return columnNvarchar(name, length, isPrimaryKey, isNullable, isUnique, isIdentity, splitValues(args));
     }
 
     /**
      * Column nvarchar.
      *
-     * @param name         the name
-     * @param length       the length
+     * @param name the name
+     * @param length the length
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param isIdentity   the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param isIdentity the is unique
      * @return the creates the table builder
      */
-    public TABLE_BUILDER columnNvarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity) {
-        return columnNvarchar(name, length, isPrimaryKey, isNullable, isUnique, isIdentity, new String[]{});
+    public TABLE_BUILDER columnNvarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
+            Boolean isIdentity) {
+        return columnNvarchar(name, length, isPrimaryKey, isNullable, isUnique, isIdentity, new String[] {});
     }
 
     /**
      * Column nvarchar.
      *
-     * @param name         the name
-     * @param length       the length
+     * @param name the name
+     * @param length the length
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnNvarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -687,10 +709,10 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column nvarchar.
      *
-     * @param name         the name
-     * @param length       the length
+     * @param name the name
+     * @param length the length
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnNvarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable) {
@@ -700,8 +722,8 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column nvarchar.
      *
-     * @param name         the name
-     * @param length       the length
+     * @param name the name
+     * @param length the length
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
@@ -712,7 +734,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column nvarchar.
      *
-     * @param name   the name
+     * @param name the name
      * @param length the length
      * @return the creates the table builder
      */
@@ -724,31 +746,33 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column char.
      *
-     * @param name         the name
-     * @param length       the length
+     * @param name the name
+     * @param length the length
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param isIdentity   the is identity
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param isIdentity the is identity
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnChar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity,
-                                    String... args) {
-        String[] definition = new String[]{OPEN + length + CLOSE};
-        String[] coulmn = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
+            String... args) {
+        String[] definition = new String[] {OPEN + length + CLOSE};
+        String[] coulmn = Stream.of(definition, args)
+                                .flatMap(Stream::of)
+                                .toArray(String[]::new);
         return this.column(name, DataType.CHAR, isPrimaryKey, isNullable, isUnique, isIdentity, false, coulmn);
     }
 
     /**
      * Column char.
      *
-     * @param name         the name
-     * @param length       the length
+     * @param name the name
+     * @param length the length
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnChar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -758,11 +782,11 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column char.
      *
-     * @param name         the name
-     * @param length       the length
+     * @param name the name
+     * @param length the length
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnChar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -772,10 +796,10 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column char.
      *
-     * @param name         the name
-     * @param length       the length
+     * @param name the name
+     * @param length the length
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnChar(String name, int length, Boolean isPrimaryKey, Boolean isNullable) {
@@ -785,8 +809,8 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column char.
      *
-     * @param name         the name
-     * @param length       the length
+     * @param name the name
+     * @param length the length
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
@@ -797,7 +821,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column char.
      *
-     * @param name   the name
+     * @param name the name
      * @param length the length
      * @return the creates the table builder
      */
@@ -808,11 +832,11 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column date.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnDate(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -822,11 +846,11 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column date.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnDate(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -836,37 +860,37 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column date.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnDate(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return columnDate(name, isPrimaryKey, isNullable, isUnique, new String[]{});
+        return columnDate(name, isPrimaryKey, isNullable, isUnique, new String[] {});
     }
 
     /**
      * Column date.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnDate(String name, Boolean isPrimaryKey, Boolean isNullable) {
-        return columnDate(name, isPrimaryKey, isNullable, false, new String[]{});
+        return columnDate(name, isPrimaryKey, isNullable, false, new String[] {});
     }
 
     /**
      * Column date.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnDate(String name, Boolean isPrimaryKey) {
-        return columnDate(name, isPrimaryKey, true, false, new String[]{});
+        return columnDate(name, isPrimaryKey, true, false, new String[] {});
     }
 
     /**
@@ -876,17 +900,17 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnDate(String name) {
-        return columnDate(name, false, true, false, new String[]{});
+        return columnDate(name, false, true, false, new String[] {});
     }
 
     /**
      * Column time.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnTime(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -896,11 +920,11 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column time.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnTime(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -910,37 +934,37 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column time.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnTime(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return columnTime(name, isPrimaryKey, isNullable, isUnique, new String[]{});
+        return columnTime(name, isPrimaryKey, isNullable, isUnique, new String[] {});
     }
 
     /**
      * Column time.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnTime(String name, Boolean isPrimaryKey, Boolean isNullable) {
-        return columnTime(name, isPrimaryKey, isNullable, false, new String[]{});
+        return columnTime(name, isPrimaryKey, isNullable, false, new String[] {});
     }
 
     /**
      * Column time.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnTime(String name, Boolean isPrimaryKey) {
-        return columnTime(name, isPrimaryKey, true, false, new String[]{});
+        return columnTime(name, isPrimaryKey, true, false, new String[] {});
     }
 
     /**
@@ -950,17 +974,17 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnTime(String name) {
-        return columnTime(name, false, true, false, new String[]{});
+        return columnTime(name, false, true, false, new String[] {});
     }
 
     /**
      * Column timestamp.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnTimestamp(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -970,11 +994,11 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column timestamp.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnTimestamp(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -984,37 +1008,37 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column timestamp.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnTimestamp(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return columnTimestamp(name, isPrimaryKey, isNullable, isUnique, new String[]{});
+        return columnTimestamp(name, isPrimaryKey, isNullable, isUnique, new String[] {});
     }
 
     /**
      * Column timestamp.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnTimestamp(String name, Boolean isPrimaryKey, Boolean isNullable) {
-        return columnTimestamp(name, isPrimaryKey, isNullable, false, new String[]{});
+        return columnTimestamp(name, isPrimaryKey, isNullable, false, new String[] {});
     }
 
     /**
      * Column timestamp.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnTimestamp(String name, Boolean isPrimaryKey) {
-        return columnTimestamp(name, isPrimaryKey, true, false, new String[]{});
+        return columnTimestamp(name, isPrimaryKey, true, false, new String[] {});
     }
 
     /**
@@ -1024,48 +1048,48 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnTimestamp(String name) {
-        return columnTimestamp(name, false, true, false, new String[]{});
+        return columnTimestamp(name, false, true, false, new String[] {});
     }
 
     /**
      * Column integer.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param isIdentity   the is identity
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param isIdentity the is identity
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnInteger(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity,
-                                       String... args) {
+            String... args) {
         return this.column(name, DataType.INTEGER, isPrimaryKey, isNullable, isUnique, isIdentity, false, args);
     }
 
     /**
      * Column integer.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param isIdentity   the is identity
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param isIdentity the is identity
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnInteger(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity,
-                                       String args) {
+            String args) {
         return columnInteger(name, isPrimaryKey, isNullable, isUnique, isIdentity, splitValues(args));
     }
 
     /**
      * Column integer.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnInteger(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -1075,9 +1099,9 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column integer.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnInteger(String name, Boolean isPrimaryKey, Boolean isNullable) {
@@ -1087,7 +1111,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column integer.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
@@ -1108,11 +1132,11 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column tinyint.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnTinyint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -1122,11 +1146,11 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column tinyint.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnTinyint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -1136,37 +1160,37 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column tinyint.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnTinyint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return columnTinyint(name, isPrimaryKey, isNullable, isUnique, new String[]{});
+        return columnTinyint(name, isPrimaryKey, isNullable, isUnique, new String[] {});
     }
 
     /**
      * Column tinyint.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnTinyint(String name, Boolean isPrimaryKey, Boolean isNullable) {
-        return columnTinyint(name, isPrimaryKey, isNullable, false, new String[]{});
+        return columnTinyint(name, isPrimaryKey, isNullable, false, new String[] {});
     }
 
     /**
      * Column tinyint.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnTinyint(String name, Boolean isPrimaryKey) {
-        return columnTinyint(name, isPrimaryKey, true, false, new String[]{});
+        return columnTinyint(name, isPrimaryKey, true, false, new String[] {});
     }
 
     /**
@@ -1176,47 +1200,48 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnTinyint(String name) {
-        return columnTinyint(name, false, true, false, new String[]{});
+        return columnTinyint(name, false, true, false, new String[] {});
     }
 
     /**
      * Column bigint.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param isIdentity   the is identity
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param isIdentity the is identity
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnBigint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity,
-                                      String... args) {
+            String... args) {
         return this.column(name, DataType.BIGINT, isPrimaryKey, isNullable, isUnique, isIdentity, false, args);
     }
 
     /**
      * Column bigint.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param isIdentity   the is identity
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param isIdentity the is identity
+     * @param args the args
      * @return the creates the table builder
      */
-    public TABLE_BUILDER columnBigint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity, String args) {
+    public TABLE_BUILDER columnBigint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity,
+            String args) {
         return columnBigint(name, isPrimaryKey, isNullable, isUnique, isIdentity, splitValues(args));
     }
 
     /**
      * Column bigint.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnBigint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -1226,9 +1251,9 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column bigint.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnBigint(String name, Boolean isPrimaryKey, Boolean isNullable) {
@@ -1238,7 +1263,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column bigint.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
@@ -1259,11 +1284,11 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column smallint.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnSmallint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -1273,11 +1298,11 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column smallint.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnSmallint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -1287,37 +1312,37 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column smallint.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnSmallint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return columnSmallint(name, isPrimaryKey, isNullable, isUnique, new String[]{});
+        return columnSmallint(name, isPrimaryKey, isNullable, isUnique, new String[] {});
     }
 
     /**
      * Column smallint.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnSmallint(String name, Boolean isPrimaryKey, Boolean isNullable) {
-        return columnSmallint(name, isPrimaryKey, isNullable, false, new String[]{});
+        return columnSmallint(name, isPrimaryKey, isNullable, false, new String[] {});
     }
 
     /**
      * Column smallint.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnSmallint(String name, Boolean isPrimaryKey) {
-        return columnSmallint(name, isPrimaryKey, true, false, new String[]{});
+        return columnSmallint(name, isPrimaryKey, true, false, new String[] {});
     }
 
     /**
@@ -1327,17 +1352,17 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnSmallint(String name) {
-        return columnSmallint(name, false, true, false, new String[]{});
+        return columnSmallint(name, false, true, false, new String[] {});
     }
 
     /**
      * Column real.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnReal(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -1347,11 +1372,11 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column real.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnReal(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -1361,37 +1386,37 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column real.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnReal(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return columnReal(name, isPrimaryKey, isNullable, isUnique, new String[]{});
+        return columnReal(name, isPrimaryKey, isNullable, isUnique, new String[] {});
     }
 
     /**
      * Column real.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnReal(String name, Boolean isPrimaryKey, Boolean isNullable) {
-        return columnReal(name, isPrimaryKey, isNullable, false, new String[]{});
+        return columnReal(name, isPrimaryKey, isNullable, false, new String[] {});
     }
 
     /**
      * Column real.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnReal(String name, Boolean isPrimaryKey) {
-        return columnReal(name, isPrimaryKey, true, false, new String[]{});
+        return columnReal(name, isPrimaryKey, true, false, new String[] {});
     }
 
     /**
@@ -1401,17 +1426,17 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnReal(String name) {
-        return columnSmallint(name, false, true, false, new String[]{});
+        return columnSmallint(name, false, true, false, new String[] {});
     }
 
     /**
      * Column float.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnFloat(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -1421,11 +1446,11 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column float.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnFloat(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -1435,37 +1460,37 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column float.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnFloat(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return columnReal(name, isPrimaryKey, isNullable, isUnique, new String[]{});
+        return columnReal(name, isPrimaryKey, isNullable, isUnique, new String[] {});
     }
 
     /**
      * Column float.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnFloat(String name, Boolean isPrimaryKey, Boolean isNullable) {
-        return columnReal(name, isPrimaryKey, isNullable, false, new String[]{});
+        return columnReal(name, isPrimaryKey, isNullable, false, new String[] {});
     }
 
     /**
      * Column float.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnFloat(String name, Boolean isPrimaryKey) {
-        return columnReal(name, isPrimaryKey, true, false, new String[]{});
+        return columnReal(name, isPrimaryKey, true, false, new String[] {});
     }
 
     /**
@@ -1475,17 +1500,17 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnFloat(String name) {
-        return columnSmallint(name, false, true, false, new String[]{});
+        return columnSmallint(name, false, true, false, new String[] {});
     }
 
     /**
      * Column double.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnDouble(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -1495,11 +1520,11 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column double.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnDouble(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -1509,37 +1534,37 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column double.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnDouble(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return columnDouble(name, isPrimaryKey, isNullable, isUnique, new String[]{});
+        return columnDouble(name, isPrimaryKey, isNullable, isUnique, new String[] {});
     }
 
     /**
      * Column double.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnDouble(String name, Boolean isPrimaryKey, Boolean isNullable) {
-        return columnDouble(name, isPrimaryKey, isNullable, false, new String[]{});
+        return columnDouble(name, isPrimaryKey, isNullable, false, new String[] {});
     }
 
     /**
      * Column double.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnDouble(String name, Boolean isPrimaryKey) {
-        return columnDouble(name, isPrimaryKey, true, false, new String[]{});
+        return columnDouble(name, isPrimaryKey, true, false, new String[] {});
     }
 
     /**
@@ -1549,17 +1574,17 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnDouble(String name) {
-        return columnSmallint(name, false, true, false, new String[]{});
+        return columnSmallint(name, false, true, false, new String[] {});
     }
 
     /**
      * Column boolean.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnBoolean(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -1569,11 +1594,11 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column boolean.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnBoolean(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -1583,37 +1608,37 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column boolean.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnBoolean(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return columnBoolean(name, isPrimaryKey, isNullable, isUnique, new String[]{});
+        return columnBoolean(name, isPrimaryKey, isNullable, isUnique, new String[] {});
     }
 
     /**
      * Column boolean.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnBoolean(String name, Boolean isPrimaryKey, Boolean isNullable) {
-        return columnBoolean(name, isPrimaryKey, isNullable, false, new String[]{});
+        return columnBoolean(name, isPrimaryKey, isNullable, false, new String[] {});
     }
 
     /**
      * Column boolean.
      *
-     * @param name         the name
+     * @param name the name
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnBoolean(String name, Boolean isPrimaryKey) {
-        return columnBoolean(name, isPrimaryKey, true, false, new String[]{});
+        return columnBoolean(name, isPrimaryKey, true, false, new String[] {});
     }
 
     /**
@@ -1623,15 +1648,15 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnBoolean(String name) {
-        return columnBoolean(name, false, true, false, new String[]{});
+        return columnBoolean(name, false, true, false, new String[] {});
     }
 
     /**
      * Column blob.
      *
-     * @param name       the name
+     * @param name the name
      * @param isNullable the is nullable
-     * @param args       the args
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnBlob(String name, Boolean isNullable, String... args) {
@@ -1641,9 +1666,9 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column blob.
      *
-     * @param name       the name
+     * @param name the name
      * @param isNullable the is nullable
-     * @param args       the args
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnBlob(String name, Boolean isNullable, String args) {
@@ -1653,12 +1678,12 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column blob.
      *
-     * @param name       the name
+     * @param name the name
      * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnBlob(String name, Boolean isNullable) {
-        return columnBlob(name, isNullable, new String[]{});
+        return columnBlob(name, isNullable, new String[] {});
     }
 
     /**
@@ -1668,56 +1693,58 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnBlob(String name) {
-        return columnBlob(name, false, new String[]{});
+        return columnBlob(name, false, new String[] {});
     }
 
     /**
      * Column decimal.
      *
-     * @param name         the name
-     * @param length    the length
-     * @param scale        the scale
+     * @param name the name
+     * @param length the length
+     * @param scale the scale
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param isIdentity   the is identity
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param isIdentity the is identity
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnDecimal(String name, int length, int scale, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
-                                       Boolean isIdentity, String... args) {
-        String[] definition = new String[]{OPEN + length + "," + scale + CLOSE};
-        String[] column = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
+            Boolean isIdentity, String... args) {
+        String[] definition = new String[] {OPEN + length + "," + scale + CLOSE};
+        String[] column = Stream.of(definition, args)
+                                .flatMap(Stream::of)
+                                .toArray(String[]::new);
         return this.column(name, DataType.DECIMAL, isPrimaryKey, isNullable, isUnique, isIdentity, false, column);
     }
 
     /**
      * Column decimal.
      *
-     * @param name         the name
-     * @param length    the length
-     * @param scale        the scale
+     * @param name the name
+     * @param length the length
+     * @param scale the scale
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
-     * @param isIdentity   the is identity
-     * @param args         the args
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
+     * @param isIdentity the is identity
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnDecimal(String name, int length, int scale, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
-                                       Boolean isIdentity, String args) {
+            Boolean isIdentity, String args) {
         return columnDecimal(name, length, scale, isPrimaryKey, isNullable, isUnique, isIdentity, splitValues(args));
     }
 
     /**
      * Column decimal.
      *
-     * @param name         the name
-     * @param length    the length
-     * @param scale        the scale
+     * @param name the name
+     * @param length the length
+     * @param scale the scale
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
-     * @param isUnique     the is unique
+     * @param isNullable the is nullable
+     * @param isUnique the is unique
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnDecimal(String name, int length, int scale, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -1727,11 +1754,11 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column decimal.
      *
-     * @param name         the name
-     * @param length    the length
-     * @param scale        the scale
+     * @param name the name
+     * @param length the length
+     * @param scale the scale
      * @param isPrimaryKey the is primary key
-     * @param isNullable   the is nullable
+     * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnDecimal(String name, int length, int scale, Boolean isPrimaryKey, Boolean isNullable) {
@@ -1741,9 +1768,9 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column decimal.
      *
-     * @param name         the name
-     * @param length    the length
-     * @param scale        the scale
+     * @param name the name
+     * @param length the length
+     * @param scale the scale
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
@@ -1754,9 +1781,9 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column decimal.
      *
-     * @param name      the name
+     * @param name the name
      * @param length the length
-     * @param scale     the scale
+     * @param scale the scale
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnDecimal(String name, int length, int scale) {
@@ -1766,9 +1793,9 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column bit.
      *
-     * @param name       the name
+     * @param name the name
      * @param isNullable the is nullable
-     * @param args       the args
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnBit(String name, Boolean isNullable, String... args) {
@@ -1778,9 +1805,9 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column bit.
      *
-     * @param name       the name
+     * @param name the name
      * @param isNullable the is nullable
-     * @param args       the args
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnBit(String name, Boolean isNullable, String args) {
@@ -1790,12 +1817,12 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column bit.
      *
-     * @param name       the name
+     * @param name the name
      * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnBit(String name, Boolean isNullable) {
-        return columnBit(name, isNullable, new String[]{});
+        return columnBit(name, isNullable, new String[] {});
     }
 
     /**
@@ -1805,15 +1832,15 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnBit(String name) {
-        return columnBit(name, false, new String[]{});
+        return columnBit(name, false, new String[] {});
     }
 
     /**
      * Column varbinary.
      *
-     * @param name       the name
+     * @param name the name
      * @param isNullable the is nullable
-     * @param args       the args
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnVarbinary(String name, Boolean isNullable, String... args) {
@@ -1823,9 +1850,9 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column varbinary.
      *
-     * @param name       the name
+     * @param name the name
      * @param isNullable the is nullable
-     * @param args       the args
+     * @param args the args
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnVarbinary(String name, Boolean isNullable, String args) {
@@ -1835,12 +1862,12 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     /**
      * Column varbinary.
      *
-     * @param name       the name
+     * @param name the name
      * @param isNullable the is nullable
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnVarbinary(String name, Boolean isNullable) {
-        return columnBlob(name, isNullable, new String[]{});
+        return columnBlob(name, isNullable, new String[] {});
     }
 
     /**
@@ -1850,7 +1877,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnVarbinary(String name) {
-        return columnBlob(name, false, new String[]{});
+        return columnBlob(name, false, new String[] {});
     }
 
     /**
@@ -1860,7 +1887,10 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      */
     protected void generateTable(StringBuilder sql) {
         String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
-        sql.append(SPACE).append(KEYWORD_TABLE).append(SPACE).append(tableName);
+        sql.append(SPACE)
+           .append(KEYWORD_TABLE)
+           .append(SPACE)
+           .append(tableName);
     }
 
     /**
@@ -1869,7 +1899,8 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @param sql the sql
      */
     protected void generateColumns(StringBuilder sql) {
-        if (!this.getColumns().isEmpty()) {
+        if (!this.getColumns()
+                 .isEmpty()) {
             sql.append(traverseColumns());
         }
     }
@@ -1880,7 +1911,8 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @param sql the sql
      */
     protected void generateColumnNamesForDrop(StringBuilder sql) {
-        if (!this.getColumns().isEmpty()) {
+        if (!this.getColumns()
+                 .isEmpty()) {
             sql.append(traverseColumnNamesForDrop());
         }
     }
@@ -1891,7 +1923,8 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @param sql the sql
      */
     protected void generateColumnsForAlter(StringBuilder sql) {
-        if (!this.getColumns().isEmpty()) {
+        if (!this.getColumns()
+                 .isEmpty()) {
             sql.append(traverseColumnsForAlter());
         }
     }
@@ -1903,10 +1936,13 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      */
     protected String traverseColumns() {
 
-        List<String[]> allPrimaryKeys = this.columns.stream().filter(el -> Arrays.stream(el).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument()))).collect(Collectors.toList());
+        List<String[]> allPrimaryKeys = this.columns.stream()
+                                                    .filter(el -> Arrays.stream(el)
+                                                                        .anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
+                                                    .collect(Collectors.toList());
         boolean isCompositeKey = allPrimaryKeys.size() > 1;
 
-        return getTraversedColumnsSnippet(isCompositeKey,this.columns);
+        return getTraversedColumnsSnippet(isCompositeKey, this.columns);
     }
 
     /**
@@ -1914,14 +1950,18 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      *
      * @return the string
      */
-    protected String traverseColumnsForAlter(){
+    protected String traverseColumnsForAlter() {
         List<String[]> allPrimaryKeys = this.columns.stream()
-                                                    .filter(el -> Arrays.stream(el).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
+                                                    .filter(el -> Arrays.stream(el)
+                                                                        .anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
                                                     .collect(Collectors.toList());
         List<String[]> columnsToAlter = this.columns.stream()
-                                                    .map(columnArr -> (Arrays.stream(columnArr).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
-                                                                        ? Arrays.stream(columnArr).filter(x -> !x.contains(KEYWORD_PRIMARY)).toArray(String[]::new)
-                                                                        : columnArr)
+                                                    .map(columnArr -> (Arrays.stream(columnArr)
+                                                                             .anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
+                                                                                     ? Arrays.stream(columnArr)
+                                                                                             .filter(x -> !x.contains(KEYWORD_PRIMARY))
+                                                                                             .toArray(String[]::new)
+                                                                                     : columnArr)
                                                     .collect(Collectors.toList());
         boolean isCompositeKey = allPrimaryKeys.size() > 1;
 
@@ -1937,9 +1977,14 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
         StringBuilder snippet = new StringBuilder();
         for (String[] column : this.columns) {
             String columnName = (isCaseSensitive()) ? encapsulate(column[0]) : column[0];
-            snippet.append(KEYWORD_DROP).append(SPACE).append(KEYWORD_COLUMN).append(SPACE);
-            snippet.append(columnName).append(SPACE);
-            snippet.append(COMMA).append(SPACE);
+            snippet.append(KEYWORD_DROP)
+                   .append(SPACE)
+                   .append(KEYWORD_COLUMN)
+                   .append(SPACE);
+            snippet.append(columnName)
+                   .append(SPACE);
+            snippet.append(COMMA)
+                   .append(SPACE);
         }
         return snippet.substring(0, snippet.length() - 2);
     }
@@ -1959,19 +2004,23 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
             for (String arg : column) {
                 if (first) {
                     String columnName = (isCaseSensitive()) ? encapsulate(arg) : arg;
-                    snippet.append(columnName).append(SPACE);
+                    snippet.append(columnName)
+                           .append(SPACE);
                     first = false;
                     continue;
                 }
                 if (isCompositeKey && arg.equals(getDialect().getPrimaryKeyArgument())) {
                     continue;
                 }
-                snippet.append(arg).append(SPACE);
+                snippet.append(arg)
+                       .append(SPACE);
             }
-            snippet.append(COMMA).append(SPACE);
+            snippet.append(COMMA)
+                   .append(SPACE);
         }
         return snippet.substring(0, snippet.length() - 2);
     }
+
     /**
      * Traverse column names.
      *
@@ -1983,7 +2032,10 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
         snippet.append(SPACE);
         for (String column : names) {
             String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
-            snippet.append(columnName).append(SPACE).append(COMMA).append(SPACE);
+            snippet.append(columnName)
+                   .append(SPACE)
+                   .append(COMMA)
+                   .append(SPACE);
         }
         return snippet.substring(0, snippet.length() - 2);
     }
@@ -1995,7 +2047,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the string[]
      */
     protected String[] splitValues(String columns) {
-        String[] array = new String[]{};
+        String[] array = new String[] {};
         if (columns != null) {
             array = columns.split(",");
         }

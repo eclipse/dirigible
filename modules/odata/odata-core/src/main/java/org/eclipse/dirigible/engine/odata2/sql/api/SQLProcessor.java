@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.api;
 
@@ -27,11 +26,11 @@ import java.util.Map;
  */
 public interface SQLProcessor extends ODataProcessor {
 
-	/**
-	 * Getter for the default data source.
-	 *
-	 * @return the default data source
-	 */
+    /**
+     * Getter for the default data source.
+     *
+     * @return the default data source
+     */
     DataSource getDataSource();
 
 
@@ -41,29 +40,25 @@ public interface SQLProcessor extends ODataProcessor {
      * @return the default sql builder
      */
     SQLQueryBuilder getSQLQueryBuilder();
-    
+
     /**
-     * This callback method can be used to customize the property value that is
-     * being written. The default implementation returns the provided value.
-     * Note that this method is dependent on the sequence of the property in the
-     * entity. If this property depends on other properties
+     * This callback method can be used to customize the property value that is being written. The
+     * default implementation returns the provided value. Note that this method is dependent on the
+     * sequence of the property in the entity. If this property depends on other properties
      *
      * @param entityType edm entity type
-     * @param property            EDM property of the model that is currently being filled with
-     *            data.
-     * @param entityInstance            The EDM instance which will is being populated with the DB
-     *            data
-     * @param value            The DB value of the property. <code>null</code> if the
-     *            property is not mapped to DB.
-     * @return the customized property value. If you do not customize then just
-     *         return the <code>value</code>
+     * @param property EDM property of the model that is currently being filled with data.
+     * @param entityInstance The EDM instance which will is being populated with the DB data
+     * @param value The DB value of the property. <code>null</code> if the property is not mapped to DB.
+     * @return the customized property value. If you do not customize then just return the
+     *         <code>value</code>
      * @throws EdmException in case of an error
      * @throws SQLException the SQL exception
      * @throws IOException Signals that an I/O exception has occurred.
      */
     Object onCustomizePropertyValue(EdmStructuralType entityType, EdmProperty property, Object entityInstance, Object value)
             throws EdmException, SQLException, IOException;
-    
+
 
     /**
      * On customize expanded navigaton property.

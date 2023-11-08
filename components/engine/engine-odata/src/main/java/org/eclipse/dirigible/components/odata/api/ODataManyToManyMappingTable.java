@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.api;
 
@@ -19,11 +18,11 @@ import com.google.gson.annotations.Expose;
 public class ODataManyToManyMappingTable {
 
     /** The mapping table name. */
-	@Expose
+    @Expose
     private String mappingTableName;
 
     /** The mapping table join column. */
-	@Expose
+    @Expose
     private String mappingTableJoinColumn;
 
     /**
@@ -62,15 +61,15 @@ public class ODataManyToManyMappingTable {
         this.mappingTableJoinColumn = mappingTableJoinColumn;
     }
 
-	/**
-	 * To string.
-	 *
-	 * @return the string
-	 */
-	@Override
-	public String toString() {
-		return "ODataManyToManyMappingTable [mappingTableName=" + mappingTableName + ", mappingTableJoinColumn="
-				+ mappingTableJoinColumn + "]";
-	}
-    
+    /**
+     * To string.
+     *
+     * @return the string
+     */
+    @Override
+    public String toString() {
+        return "ODataManyToManyMappingTable [mappingTableName=" + mappingTableName + ", mappingTableJoinColumn=" + mappingTableJoinColumn
+                + "]";
+    }
+
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.base.artefact;
 
@@ -62,76 +61,76 @@ public abstract class Auditable<U> {
     @Expose
     protected Date updatedAt;
 
-	/**
-	 * Gets the created by.
-	 *
-	 * @return the createdBy
-	 */
-	public U getCreatedBy() {
-		return createdBy;
-	}
+    /**
+     * Gets the created by.
+     *
+     * @return the createdBy
+     */
+    public U getCreatedBy() {
+        return createdBy;
+    }
 
-	/**
-	 * Sets the created by.
-	 *
-	 * @param createdBy the createdBy to set
-	 */
-	public void setCreatedBy(U createdBy) {
-		this.createdBy = createdBy;
-	}
+    /**
+     * Sets the created by.
+     *
+     * @param createdBy the createdBy to set
+     */
+    public void setCreatedBy(U createdBy) {
+        this.createdBy = createdBy;
+    }
 
-	/**
-	 * Gets the created at.
-	 *
-	 * @return the createdAt
-	 */
-	public Date getCreatedAt() {
-		return createdAt;
-	}
+    /**
+     * Gets the created at.
+     *
+     * @return the createdAt
+     */
+    public Date getCreatedAt() {
+        return createdAt;
+    }
 
-	/**
-	 * Sets the created at.
-	 *
-	 * @param createdAt the createdAt to set
-	 */
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
+    /**
+     * Sets the created at.
+     *
+     * @param createdAt the createdAt to set
+     */
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
 
-	/**
-	 * Gets the updated by.
-	 *
-	 * @return the updatedBy
-	 */
-	public U getUpdatedBy() {
-		return updatedBy;
-	}
+    /**
+     * Gets the updated by.
+     *
+     * @return the updatedBy
+     */
+    public U getUpdatedBy() {
+        return updatedBy;
+    }
 
-	/**
-	 * Sets the updated by.
-	 *
-	 * @param updatedBy the updatedBy to set
-	 */
-	public void setUpdatedBy(U updatedBy) {
-		this.updatedBy = updatedBy;
-	}
+    /**
+     * Sets the updated by.
+     *
+     * @param updatedBy the updatedBy to set
+     */
+    public void setUpdatedBy(U updatedBy) {
+        this.updatedBy = updatedBy;
+    }
 
-	/**
-	 * Gets the updated at.
-	 *
-	 * @return the updatedAt
-	 */
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
+    /**
+     * Gets the updated at.
+     *
+     * @return the updatedAt
+     */
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
 
-	/**
-	 * Sets the updated at.
-	 *
-	 * @param updatedAt the updatedAt to set
-	 */
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-    
+    /**
+     * Sets the updated at.
+     *
+     * @param updatedAt the updatedAt to set
+     */
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
 }

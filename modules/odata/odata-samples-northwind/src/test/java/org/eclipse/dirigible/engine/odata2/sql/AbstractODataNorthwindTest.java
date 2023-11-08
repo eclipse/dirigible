@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql;
 
@@ -46,76 +45,78 @@ import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Territory;
  */
 public abstract class AbstractODataNorthwindTest extends AbstractSQLProcessorTest {
 
-	/**
-	 * Gets the changelog location.
-	 *
-	 * @return the changelog location
-	 */
-	@Override
-	protected String getChangelogLocation() {
-		return "liquibase" + File.separator + "changelog-northwind.xml";
-	}
+    /**
+     * Gets the changelog location.
+     *
+     * @return the changelog location
+     */
+    @Override
+    protected String getChangelogLocation() {
+        return "liquibase" + File.separator + "changelog-northwind.xml";
+    }
 
-	/**
-	 * Gets the o data entities.
-	 *
-	 * @return the o data entities
-	 */
-	@Override
-	protected Class<?>[] getODataEntities() {
-		Class<?>[] classes = { //
-				Category.class, //
-				CustomerDemographic.class, //
-				Customer.class, //
-				Employee.class, //
-				OrderDetail.class, //
-				Order.class, //
-				Product.class, //
-				Region.class, //
-				Shipper.class, //
-				Supplier.class, //
-				Territory.class, //
-				Invoice.class, //
-				AlphabeticalListOfProduct.class, //
-				CategorySalesFor1997.class, //
-				CurrentProductList.class, //
-				CustomerAndSuppliersByCity.class, //
-				OrderDetailsExtended.class, //
-				OrderSubtotal.class, //
-				OrdersQry.class, //
-				ProductSalesFor1997.class, //
-				ProductsAboveAveragePrice.class, //
-				ProductsByCategory.class, //
-				SalesByCategory.class, //
-				SalesTotalsByAmounts.class, //
-				SummaryOfSalesByQuarters.class, //
-				SummaryOfSalesByYears.class //
-		};
-		return classes;
-	}
+    /**
+     * Gets the o data entities.
+     *
+     * @return the o data entities
+     */
+    @Override
+    protected Class<?>[] getODataEntities() {
+        Class<?>[] classes = { //
+                Category.class, //
+                CustomerDemographic.class, //
+                Customer.class, //
+                Employee.class, //
+                OrderDetail.class, //
+                Order.class, //
+                Product.class, //
+                Region.class, //
+                Shipper.class, //
+                Supplier.class, //
+                Territory.class, //
+                Invoice.class, //
+                AlphabeticalListOfProduct.class, //
+                CategorySalesFor1997.class, //
+                CurrentProductList.class, //
+                CustomerAndSuppliersByCity.class, //
+                OrderDetailsExtended.class, //
+                OrderSubtotal.class, //
+                OrdersQry.class, //
+                ProductSalesFor1997.class, //
+                ProductsAboveAveragePrice.class, //
+                ProductsByCategory.class, //
+                SalesByCategory.class, //
+                SalesTotalsByAmounts.class, //
+                SummaryOfSalesByQuarters.class, //
+                SummaryOfSalesByYears.class //
+        };
+        return classes;
+    }
 
-	/**
-	 * Load expected metadata.
-	 *
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	protected String loadExpectedMetadata() throws IOException {
-		return loadExpectedData("metadata.xml");
-	}
+    /**
+     * Load expected metadata.
+     *
+     * @return the string
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    protected String loadExpectedMetadata() throws IOException {
+        return loadExpectedData("metadata.xml");
+    }
 
-	/**
-	 * Load expected data.
-	 *
-	 * @param fileName the file name
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	protected String loadExpectedData(String fileName) throws IOException {
-		String data = loadResource(fileName);
-		return data //
-				.replaceAll("\r\n", "") //
-				.replaceAll("\n", "") //
-				.replaceAll("[^\\S\\r]{2,}", "").replaceAll(": ", ":").replaceAll(" />", "/>");
-	}
+    /**
+     * Load expected data.
+     *
+     * @param fileName the file name
+     * @return the string
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    protected String loadExpectedData(String fileName) throws IOException {
+        String data = loadResource(fileName);
+        return data //
+                   .replaceAll("\r\n", "") //
+                   .replaceAll("\n", "") //
+                   .replaceAll("[^\\S\\r]{2,}", "")
+                   .replaceAll(": ", ":")
+                   .replaceAll(" />", "/>");
+    }
 }

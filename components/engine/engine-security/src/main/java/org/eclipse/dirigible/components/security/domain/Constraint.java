@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.security.domain;
 
@@ -24,25 +23,25 @@ public class Constraint {
     /**
      * The scope.
      */
-	@Expose
+    @Expose
     private String scope;
 
     /**
      * The path.
      */
-	@Expose
+    @Expose
     private String path;
 
     /**
      * The method.
      */
-	@Expose
+    @Expose
     private String method;
 
     /**
      * The roles.
      */
-	@Expose
+    @Expose
     private List<String> roles = new ArrayList<String>();
 
     /**
@@ -108,9 +107,9 @@ public class Constraint {
         return roles;
     }
 
-	@Override
-	public String toString() {
-		return "Constraint [scope=" + scope + ", path=" + path + ", method=" + method + ", roles=" + roles + "]";
-	}
-	
+    @Override
+    public String toString() {
+        return "Constraint [scope=" + scope + ", path=" + path + ", method=" + method + ", roles=" + roles + "]";
+    }
+
 }

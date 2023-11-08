@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.listeners.service;
 
@@ -90,7 +89,7 @@ public class ListenerService implements ArtefactService<Listener> {
             throw new IllegalArgumentException("Listener with name does not exist: " + name);
         }
     }
-    
+
     /**
      * Find by location.
      *
@@ -100,13 +99,13 @@ public class ListenerService implements ArtefactService<Listener> {
     @Override
     @Transactional(readOnly = true)
     public List<Listener> findByLocation(String location) {
-    	Listener filter = new Listener();
+        Listener filter = new Listener();
         filter.setLocation(location);
         Example<Listener> example = Example.of(filter);
         List<Listener> list = listenerRepository.findAll(example);
         return list;
     }
-    
+
     /**
      * Find by key.
      *
@@ -116,7 +115,7 @@ public class ListenerService implements ArtefactService<Listener> {
     @Override
     @Transactional(readOnly = true)
     public Listener findByKey(String key) {
-    	Listener filter = new Listener();
+        Listener filter = new Listener();
         filter.setKey(key);
         filter.setKind(null);
         Example<Listener> example = Example.of(filter);

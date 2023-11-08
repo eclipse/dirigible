@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.graalium.core.python;
 
@@ -25,12 +24,7 @@ import org.graalvm.polyglot.Value;
 public class GraalPyCodeRunner implements CodeRunner<Source, Value> {
     private final Context context;
 
-    public GraalPyCodeRunner(
-            Path workingDirectoryPath,
-            Path projectDirectoryPath,
-            Path pythonModulesPath,
-            boolean debug
-    ) {
+    public GraalPyCodeRunner(Path workingDirectoryPath, Path projectDirectoryPath, Path pythonModulesPath, boolean debug) {
         var engine = debug ? EngineCreator.getOrCreateDebuggableEngine() : EngineCreator.getOrCreateEngine();
         var fs = new GraalPyFileSystem(workingDirectoryPath, FileSystems.getDefault());
         context = new ContextCreator(engine, workingDirectoryPath, projectDirectoryPath, pythonModulesPath, fs).createContext();
@@ -39,7 +33,8 @@ public class GraalPyCodeRunner implements CodeRunner<Source, Value> {
     @Override
     public Source prepareSource(Path codeFilePath) {
         try {
-            return Source.newBuilder("python", codeFilePath.toFile()).build();
+            return Source.newBuilder("python", codeFilePath.toFile())
+                         .build();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

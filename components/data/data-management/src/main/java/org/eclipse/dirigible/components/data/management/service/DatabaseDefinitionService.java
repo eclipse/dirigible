@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.management.service;
 
@@ -37,104 +36,108 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DatabaseDefinitionService {
-	
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(DatabaseDefinitionService.class);
-	
-	/** The data sources manager. */
-	private final DataSourcesManager datasourceManager;
-	
-	/** The data loader. */
-	private final DataSourceMetadataLoader datasourceMetadataLoader;
-	
-	/** The data sources service. */
-	private final DataSourceService datasourceService;
-	
 
-	/**
-	 * Instantiates a new data source endpoint.
-	 *
-	 * @param datasourceManager the datasource manager
-	 * @param datasourceMetadataLoader the datasource metadata loader
-	 * @param datasourceService the datasource service
-	 */
-	@Autowired
-	public DatabaseDefinitionService(DataSourcesManager datasourceManager, DataSourceMetadataLoader datasourceMetadataLoader, DataSourceService datasourceService) {
-		this.datasourceManager = datasourceManager;
-		this.datasourceMetadataLoader = datasourceMetadataLoader;
-		this.datasourceService = datasourceService;
-	}
-	
-	/**
-	 * Gets the data sources.
-	 *
-	 * @return the data sources
-	 */
-	public Set<String> getDataSourcesNames() {
-		return datasourceService.getAll().stream().map(DataSource::getName).collect(Collectors.toSet());
-	}
-	
-	/**
-	 * Gets the schemas.
-	 *
-	 * @param datasource the datasource
-	 * @return the schemas
-	 * @throws SQLException the SQL exception
-	 */
-	public Set<String> getSchemasNames(String datasource) throws SQLException {
-		javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
-		Set<String> schemas = datasourceMetadataLoader.getSchemas(dataSource);
-		return schemas;
-	}
-	
-	/**
-	 * Gets the schema metadata.
-	 *
-	 * @param datasource the datasource
-	 * @param schema the schema
-	 * @return the schema metadata
-	 * @throws SQLException the SQL exception
-	 */
-	public String loadSchemaMetadata(String datasource, String schema) throws SQLException {
-		javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
-		List<Table> model = datasourceMetadataLoader.loadSchemaMetadata(schema, dataSource);
-		model.forEach(m -> {
-			m.setType(m.getKind());
-			if (ISqlKeywords.METADATA_TABLE_STRUCTURES.contains(m.getType())){
-				m.setType(ISqlKeywords.METADATA_TABLE);
-			}
-		});
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseDefinitionService.class);
 
-		JsonArray structureArray = new JsonArray();
-		for(Table m : model){
-			structureArray.add(JsonHelper.fromJson(JsonHelper.toJson(m), JsonElement.class));
-		}
+    /** The data sources manager. */
+    private final DataSourcesManager datasourceManager;
 
-		JsonObject schemaObject = new JsonObject();
-		schemaObject.add("structures", structureArray);
+    /** The data loader. */
+    private final DataSourceMetadataLoader datasourceMetadataLoader;
 
-		JsonObject json = new JsonObject();
-		json.add("schema", schemaObject);
+    /** The data sources service. */
+    private final DataSourceService datasourceService;
 
-		return JsonHelper.toJson(json);
-	}
 
-	/**
-	 * Gets the structure metadata.
-	 *
-	 * @param datasource the datasource
-	 * @param schema the schema
-	 * @param structure the structure
-	 * @return the structure metadata
-	 * @throws SQLException the SQL exception
-	 */
-	public String loadStructureMetadata(String datasource, String schema, String structure) throws SQLException {
-		javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
-		Table model = datasourceMetadataLoader.loadTableMetadata(schema, structure, dataSource);
-		if (model != null) {
-			return JsonHelper.toJson(model);
-		}
-		return null;
-	}
+    /**
+     * Instantiates a new data source endpoint.
+     *
+     * @param datasourceManager the datasource manager
+     * @param datasourceMetadataLoader the datasource metadata loader
+     * @param datasourceService the datasource service
+     */
+    @Autowired
+    public DatabaseDefinitionService(DataSourcesManager datasourceManager, DataSourceMetadataLoader datasourceMetadataLoader,
+            DataSourceService datasourceService) {
+        this.datasourceManager = datasourceManager;
+        this.datasourceMetadataLoader = datasourceMetadataLoader;
+        this.datasourceService = datasourceService;
+    }
+
+    /**
+     * Gets the data sources.
+     *
+     * @return the data sources
+     */
+    public Set<String> getDataSourcesNames() {
+        return datasourceService.getAll()
+                                .stream()
+                                .map(DataSource::getName)
+                                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Gets the schemas.
+     *
+     * @param datasource the datasource
+     * @return the schemas
+     * @throws SQLException the SQL exception
+     */
+    public Set<String> getSchemasNames(String datasource) throws SQLException {
+        javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
+        Set<String> schemas = datasourceMetadataLoader.getSchemas(dataSource);
+        return schemas;
+    }
+
+    /**
+     * Gets the schema metadata.
+     *
+     * @param datasource the datasource
+     * @param schema the schema
+     * @return the schema metadata
+     * @throws SQLException the SQL exception
+     */
+    public String loadSchemaMetadata(String datasource, String schema) throws SQLException {
+        javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
+        List<Table> model = datasourceMetadataLoader.loadSchemaMetadata(schema, dataSource);
+        model.forEach(m -> {
+            m.setType(m.getKind());
+            if (ISqlKeywords.METADATA_TABLE_STRUCTURES.contains(m.getType())) {
+                m.setType(ISqlKeywords.METADATA_TABLE);
+            }
+        });
+
+        JsonArray structureArray = new JsonArray();
+        for (Table m : model) {
+            structureArray.add(JsonHelper.fromJson(JsonHelper.toJson(m), JsonElement.class));
+        }
+
+        JsonObject schemaObject = new JsonObject();
+        schemaObject.add("structures", structureArray);
+
+        JsonObject json = new JsonObject();
+        json.add("schema", schemaObject);
+
+        return JsonHelper.toJson(json);
+    }
+
+    /**
+     * Gets the structure metadata.
+     *
+     * @param datasource the datasource
+     * @param schema the schema
+     * @param structure the structure
+     * @return the structure metadata
+     * @throws SQLException the SQL exception
+     */
+    public String loadStructureMetadata(String datasource, String schema, String structure) throws SQLException {
+        javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
+        Table model = datasourceMetadataLoader.loadTableMetadata(schema, structure, dataSource);
+        if (model != null) {
+            return JsonHelper.toJson(model);
+        }
+        return null;
+    }
 
 }

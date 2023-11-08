@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
@@ -28,46 +27,46 @@ public class SQLContext {
      * The Enum DatabaseProduct.
      */
     public enum DatabaseProduct {
-        
+
         /** The derby. */
-        DERBY(false), 
- /** The sybase ase. */
- SYBASE_ASE(false), 
- /** The postgre sql. */
- POSTGRE_SQL(true), 
- /** The h2. */
- H2(false), 
- /** The hana. */
- HANA(true);
+        DERBY(false),
+        /** The sybase ase. */
+        SYBASE_ASE(false),
+        /** The postgre sql. */
+        POSTGRE_SQL(true),
+        /** The h2. */
+        H2(false),
+        /** The hana. */
+        HANA(true);
 
         /** The case sensitive. */
         private boolean caseSensitive;
-        
+
         /**
          * Instantiates a new database product.
          *
          * @param caseSensitive the case sensitive
          */
-        DatabaseProduct (boolean caseSensitive){
+        DatabaseProduct(boolean caseSensitive) {
             this.caseSensitive = caseSensitive;
         }
-        
+
         /**
          * Checks if is case sensitive.
          *
          * @return true, if is case sensitive
          */
-        public boolean isCaseSensitive(){
+        public boolean isCaseSensitive() {
             return caseSensitive;
         }
     }
 
     /** The database product. */
     private final DatabaseProduct databaseProduct;
-    
+
     /** The odata context. */
     private ODataContext odataContext;
-    
+
     /** The metadata. */
     private DatabaseMetaData metadata;
 
@@ -88,15 +87,20 @@ public class SQLContext {
         this.metadata = metadata;
         this.odataContext = odataContext;
         String dbProductName = getDatabaseName(metadata);
-        if (dbProductName.toLowerCase().contains("derby")) {
+        if (dbProductName.toLowerCase()
+                         .contains("derby")) {
             databaseProduct = DatabaseProduct.DERBY;
-        } else if (dbProductName.toLowerCase().contains("adaptive server enterprise")) {
+        } else if (dbProductName.toLowerCase()
+                                .contains("adaptive server enterprise")) {
             databaseProduct = DatabaseProduct.SYBASE_ASE;
-        } else if (dbProductName.toLowerCase().contains("postgre")) {
+        } else if (dbProductName.toLowerCase()
+                                .contains("postgre")) {
             databaseProduct = DatabaseProduct.POSTGRE_SQL;
-        } else if (dbProductName.toLowerCase().contains("h2")) {
+        } else if (dbProductName.toLowerCase()
+                                .contains("h2")) {
             databaseProduct = DatabaseProduct.H2;
-        } else if (dbProductName.toLowerCase().contains("hdb")) {
+        } else if (dbProductName.toLowerCase()
+                                .contains("hdb")) {
             databaseProduct = DatabaseProduct.HANA;
         } else
             throw new OData2Exception("Unsupported database " + dbProductName, SERVICE_UNAVAILABLE);

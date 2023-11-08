@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.bpm.flowable.service;
 
@@ -54,315 +53,325 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @Service
 public class BpmService {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(BpmService.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(BpmService.class);
 
-	/** The workspace service. */
-	private WorkspaceService workspaceService;
-	
-	/** The bpm provider flowable. */
-	private BpmProviderFlowable bpmProviderFlowable;
-	
-	/**
-	 * Instantiates a new bpm service.
-	 *
-	 * @param workspaceService the workspace service
-	 * @param bpmProviderFlowable the bpm provider flowable
-	 */
-	@Autowired
-	public BpmService(WorkspaceService workspaceService, BpmProviderFlowable bpmProviderFlowable) {
-		this.workspaceService = workspaceService;
-		this.bpmProviderFlowable = bpmProviderFlowable;
-	}
-	
-	/**
-	 * Gets the workspace service.
-	 *
-	 * @return the workspace service
-	 */
-	public WorkspaceService getWorkspaceService() {
-		return workspaceService;
-	}
-	
-	/**
-	 * Gets the bpm provider flowable.
-	 *
-	 * @return the bpm provider flowable
-	 */
-	public BpmProviderFlowable getBpmProviderFlowable() {
-		return bpmProviderFlowable;
-	}
+    /** The workspace service. */
+    private WorkspaceService workspaceService;
 
-	/**
-	 * Gets the model.
-	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
-	 * @return the model
-	 * @throws JsonProcessingException the json processing exception
-	 */
-	public ObjectNode getModel(String workspace, String project, String path) throws JsonProcessingException {
-		BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
-		File file = getWorkspaceService().getWorkspace(workspace).getProject(project).getFile(path);
-		if (file.exists()) {
-			BpmnModel bpmnModel = bpmnXMLConverter.convertToBpmnModel(new InputStreamSource(new ByteArrayInputStream(file.getContent())), true, true);
-			BpmnJsonConverter bpmnJsonConverter = new BpmnJsonConverter();
-			ObjectNode objectNode = bpmnJsonConverter.convertToJson(bpmnModel);
-			ObjectMapper objectMapper = new ObjectMapper();
-			ObjectNode rootNode = JsonNodeFactory.instance.objectNode();
-			rootNode.set("model", objectNode);
-			rootNode.set("modelId", JsonNodeFactory.instance.textNode(workspace + IRepository.SEPARATOR + project + IRepository.SEPARATOR + path));
-			rootNode.set("name", JsonNodeFactory.instance.textNode(bpmnModel.getProcesses().get(0).getName()));
-			rootNode.set("key", JsonNodeFactory.instance.textNode(bpmnModel.getProcesses().get(0).getId()));
-			rootNode.set("description", JsonNodeFactory.instance.textNode(bpmnModel.getProcesses().get(0).getDocumentation()));
-			rootNode.set("lastUpdated", JsonNodeFactory.instance.textNode(file.getInformation().getModifiedAt() + ""));
-			rootNode.set("lastUpdatedBy", JsonNodeFactory.instance.textNode(file.getInformation().getModifiedBy()));
-//			String json = objectMapper.writeValueAsString(rootNode);
-//			return json;
-			return rootNode;
-		} else {
-			throw new RepositoryNotFoundException(format("The requested BPMN file does not exist in workspace: [{0}], project: [{1}] and path: [{2}]", workspace, project, path));
-		}
-	}
-	
-	/**
-	 * Save model.
-	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
-	 * @param payload the payload
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public void saveModel(String workspace, String project, String path, String payload) throws IOException {
-		ObjectMapper objectMapper = new ObjectMapper();
-		JsonNode modelNode = objectMapper.readTree(payload);
+    /** The bpm provider flowable. */
+    private BpmProviderFlowable bpmProviderFlowable;
+
+    /**
+     * Instantiates a new bpm service.
+     *
+     * @param workspaceService the workspace service
+     * @param bpmProviderFlowable the bpm provider flowable
+     */
+    @Autowired
+    public BpmService(WorkspaceService workspaceService, BpmProviderFlowable bpmProviderFlowable) {
+        this.workspaceService = workspaceService;
+        this.bpmProviderFlowable = bpmProviderFlowable;
+    }
+
+    /**
+     * Gets the workspace service.
+     *
+     * @return the workspace service
+     */
+    public WorkspaceService getWorkspaceService() {
+        return workspaceService;
+    }
+
+    /**
+     * Gets the bpm provider flowable.
+     *
+     * @return the bpm provider flowable
+     */
+    public BpmProviderFlowable getBpmProviderFlowable() {
+        return bpmProviderFlowable;
+    }
+
+    /**
+     * Gets the model.
+     *
+     * @param workspace the workspace
+     * @param project the project
+     * @param path the path
+     * @return the model
+     * @throws JsonProcessingException the json processing exception
+     */
+    public ObjectNode getModel(String workspace, String project, String path) throws JsonProcessingException {
+        BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
+        File file = getWorkspaceService().getWorkspace(workspace)
+                                         .getProject(project)
+                                         .getFile(path);
+        if (file.exists()) {
+            BpmnModel bpmnModel =
+                    bpmnXMLConverter.convertToBpmnModel(new InputStreamSource(new ByteArrayInputStream(file.getContent())), true, true);
+            BpmnJsonConverter bpmnJsonConverter = new BpmnJsonConverter();
+            ObjectNode objectNode = bpmnJsonConverter.convertToJson(bpmnModel);
+            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectNode rootNode = JsonNodeFactory.instance.objectNode();
+            rootNode.set("model", objectNode);
+            rootNode.set("modelId",
+                    JsonNodeFactory.instance.textNode(workspace + IRepository.SEPARATOR + project + IRepository.SEPARATOR + path));
+            rootNode.set("name", JsonNodeFactory.instance.textNode(bpmnModel.getProcesses()
+                                                                            .get(0)
+                                                                            .getName()));
+            rootNode.set("key", JsonNodeFactory.instance.textNode(bpmnModel.getProcesses()
+                                                                           .get(0)
+                                                                           .getId()));
+            rootNode.set("description", JsonNodeFactory.instance.textNode(bpmnModel.getProcesses()
+                                                                                   .get(0)
+                                                                                   .getDocumentation()));
+            rootNode.set("lastUpdated", JsonNodeFactory.instance.textNode(file.getInformation()
+                                                                              .getModifiedAt()
+                    + ""));
+            rootNode.set("lastUpdatedBy", JsonNodeFactory.instance.textNode(file.getInformation()
+                                                                                .getModifiedBy()));
+            // String json = objectMapper.writeValueAsString(rootNode);
+            // return json;
+            return rootNode;
+        } else {
+            throw new RepositoryNotFoundException(
+                    format("The requested BPMN file does not exist in workspace: [{0}], project: [{1}] and path: [{2}]", workspace, project,
+                            path));
+        }
+    }
+
+    /**
+     * Save model.
+     *
+     * @param workspace the workspace
+     * @param project the project
+     * @param path the path
+     * @param payload the payload
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public void saveModel(String workspace, String project, String path, String payload) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode modelNode = objectMapper.readTree(payload);
         BpmnJsonConverter bpmnJsonConverter = new BpmnJsonConverter();
-		BpmnModel bpmnModel = bpmnJsonConverter.convertToBpmnModel(modelNode);
+        BpmnModel bpmnModel = bpmnJsonConverter.convertToBpmnModel(modelNode);
         BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
         byte[] bytes = bpmnXMLConverter.convertToXML(bpmnModel);
-        File file = getWorkspaceService().getWorkspace(workspace).getProject(project).getFile(path);
+        File file = getWorkspaceService().getWorkspace(workspace)
+                                         .getProject(project)
+                                         .getFile(path);
         if (!file.exists()) {
-        	file.create();
+            file.create();
         }
         file.setContent(bytes);
-	}
-	
-	/**
-	 * Gets the stencil set.
-	 *
-	 * @return the stencil set
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public JsonNode getStencilSet() throws IOException {
-		InputStream in = BpmService.class.getResourceAsStream("/stencilset_bpmn.json");
-		try {
-			byte[] content = IOUtils.toByteArray(in);
-			ObjectMapper objectMapper = new ObjectMapper();
-			JsonNode modelNode = objectMapper.readTree(content);
-//			return new String(content, StandardCharsets.UTF_8);
-			return modelNode;
-		} finally {
-			if (in != null) {
-				in.close();
-			}
-		}
-	}
-	
-	/**
-	 * Gets the process definitions.
-	 *
-	 * @return the process definitions
-	 */
-	public List<ProcessDefinitionData> getProcessDefinitions() {
-		ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
+    }
 
-		List<ProcessDefinition> processDefinitions = processEngine
-				.getRepositoryService()
-				.createProcessDefinitionQuery()
-				.list();
-		
-		List<ProcessDefinitionData> results = new ArrayList<ProcessDefinitionData>();
-		for (ProcessDefinition processDefinition : processDefinitions) {
-			ProcessDefinitionData processDefinitionData = mapProcessDefinition(processDefinition);
-			results.add(processDefinitionData);
-		}
-		return results;
-	}
+    /**
+     * Gets the stencil set.
+     *
+     * @return the stencil set
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public JsonNode getStencilSet() throws IOException {
+        InputStream in = BpmService.class.getResourceAsStream("/stencilset_bpmn.json");
+        try {
+            byte[] content = IOUtils.toByteArray(in);
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode modelNode = objectMapper.readTree(content);
+            // return new String(content, StandardCharsets.UTF_8);
+            return modelNode;
+        } finally {
+            if (in != null) {
+                in.close();
+            }
+        }
+    }
 
-	/**
-	 * Gets the process definition by key.
-	 *
-	 * @param key the key
-	 * @return the process definition by key
-	 */
-	public ProcessDefinitionData getProcessDefinitionByKey(String key) {
-		ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
+    /**
+     * Gets the process definitions.
+     *
+     * @return the process definitions
+     */
+    public List<ProcessDefinitionData> getProcessDefinitions() {
+        ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
 
-		List<ProcessDefinition> processDefinitions = processEngine
-				.getRepositoryService()
-				.createProcessDefinitionQuery()
-				.processDefinitionKey(key)
-				.list();
-		
-		for (ProcessDefinition processDefinition : processDefinitions) {
-			ProcessDefinitionData processDefinitionData = mapProcessDefinition(processDefinition);
-			return processDefinitionData;
-		}
-		return null;
-	}
-	
-	/**
-	 * Gets the process definition by id.
-	 *
-	 * @param id the id
-	 * @return the process definition by id
-	 */
-	public ProcessDefinitionData getProcessDefinitionById(String id) {
-		ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
+        List<ProcessDefinition> processDefinitions = processEngine.getRepositoryService()
+                                                                  .createProcessDefinitionQuery()
+                                                                  .list();
 
-		List<ProcessDefinition> processDefinitions = processEngine
-				.getRepositoryService()
-				.createProcessDefinitionQuery()
-				.processDefinitionId(id)
-				.list();
-		
-		for (ProcessDefinition processDefinition : processDefinitions) {
-			ProcessDefinitionData processDefinitionData = mapProcessDefinition(processDefinition);
-			return processDefinitionData;
-		}
-		return null;
-	}
-	
-	/**
-	 * Gets the process instances.
-	 *
-	 * @return the process instances
-	 */
-	public List<ProcessInstanceData> getProcessInstances() {
-		ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
-		
-		List<ProcessInstance> processInstances = processEngine
-				.getRuntimeService()
-				.createProcessInstanceQuery()
-				.list();
-		
-		List<ProcessInstanceData> results = new ArrayList<ProcessInstanceData>();
-		for (ProcessInstance processInstance : processInstances) {
-			ProcessInstanceData processInstanceData = mapProcessInstance(processInstance);
-			results.add(processInstanceData);
-		}
-		return results;
-	}
-	
-	/**
-	 * Gets the process instance by key.
-	 *
-	 * @param key the key
-	 * @return the process instance
-	 */
-	public List<ProcessInstanceData> getProcessInstanceByKey(String key) {
-		ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
-		
-		List<ProcessInstance> processInstances = processEngine
-				.getRuntimeService()
-				.createProcessInstanceQuery()
-				.processDefinitionKey(key)
-				.list();
-		
-		List<ProcessInstanceData> results = new ArrayList<ProcessInstanceData>();
-		for (ProcessInstance processInstance : processInstances) {
-			ProcessInstanceData processInstanceData = mapProcessInstance(processInstance);
-			results.add(processInstanceData);
-		}
-		return results;
-	}
-	
-	/**
-	 * Gets the process instance by key.
-	 *
-	 * @param id the id
-	 * @return the process instance
-	 */
-	public ProcessInstanceData getProcessInstanceById(String id) {
-		ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
-		
-		List<ProcessInstance> processInstances = processEngine
-				.getRuntimeService()
-				.createProcessInstanceQuery()
-				.processInstanceId(id)
-				.list();
-		
-		for (ProcessInstance processInstance : processInstances) {
-			ProcessInstanceData processInstanceData = mapProcessInstance(processInstance);
-			return processInstanceData;
-		}
-		return null;
-	}
-	
-	/**
-	 * Gets the process instance by key.
-	 *
-	 * @param businessKey the business key
-	 * @return the process instance
-	 */
-	public List<ProcessInstanceData> getProcessInstanceByBusinessKey(String businessKey) {
-		ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
-		
-		List<ProcessInstance> processInstances = processEngine
-				.getRuntimeService()
-				.createProcessInstanceQuery()
-				.processInstanceBusinessKey(businessKey)
-				.list();
-		
-		List<ProcessInstanceData> results = new ArrayList<ProcessInstanceData>();
-		for (ProcessInstance processInstance : processInstances) {
-			ProcessInstanceData processInstanceData = mapProcessInstance(processInstance);
-			results.add(processInstanceData);
-		}
-		return results;
-	}
-	
-	/**
-	 * Map process definition.
-	 *
-	 * @param processDefinition the process definition
-	 * @return the process definition data
-	 */
-	private ProcessDefinitionData mapProcessDefinition(ProcessDefinition processDefinition) {
-		ProcessDefinitionData processDefinitionData = new ProcessDefinitionData();
-		processDefinitionData.setCategory(processDefinition.getCategory());
-		processDefinitionData.setDeploymentId(processDefinition.getDeploymentId());
-		processDefinitionData.setDiagram(processDefinition.getDiagramResourceName());
-		processDefinitionData.setId(processDefinition.getId());
-		processDefinitionData.setKey(processDefinition.getKey());
-		processDefinitionData.setName(processDefinition.getName());
-		processDefinitionData.setResourceName(processDefinition.getResourceName());
-		processDefinitionData.setTennantId(processDefinition.getTenantId());
-		processDefinitionData.setVersion(processDefinition.getVersion());
-		return processDefinitionData;
-	}
-	
-	/**
-	 * Map process instance.
-	 *
-	 * @param processInstance the process instance
-	 * @return the process instance data
-	 */
-	private ProcessInstanceData mapProcessInstance(ProcessInstance processInstance) {
-		ProcessInstanceData processInstanceData = new ProcessInstanceData();
-		processInstanceData.setBusinessKey(processInstance.getBusinessKey());
-		processInstanceData.setBusinessStatus(processInstance.getBusinessStatus());
-		processInstanceData.setDeploymentId(processInstance.getDeploymentId());
-		processInstanceData.setId(processInstance.getId());
-		processInstanceData.setName(processInstance.getName());
-		processInstanceData.setProcessDefinitionId(processInstance.getProcessDefinitionId());
-		processInstanceData.setProcessDefinitionKey(processInstance.getProcessDefinitionKey());
-		processInstanceData.setProcessDefinitionName(processInstance.getProcessDefinitionName());
-		processInstanceData.setProcessDefinitionVersion(processInstance.getProcessDefinitionVersion());
-		processInstanceData.setTenantId(processInstance.getTenantId());
-		return processInstanceData;
-	}
+        List<ProcessDefinitionData> results = new ArrayList<ProcessDefinitionData>();
+        for (ProcessDefinition processDefinition : processDefinitions) {
+            ProcessDefinitionData processDefinitionData = mapProcessDefinition(processDefinition);
+            results.add(processDefinitionData);
+        }
+        return results;
+    }
+
+    /**
+     * Gets the process definition by key.
+     *
+     * @param key the key
+     * @return the process definition by key
+     */
+    public ProcessDefinitionData getProcessDefinitionByKey(String key) {
+        ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
+
+        List<ProcessDefinition> processDefinitions = processEngine.getRepositoryService()
+                                                                  .createProcessDefinitionQuery()
+                                                                  .processDefinitionKey(key)
+                                                                  .list();
+
+        for (ProcessDefinition processDefinition : processDefinitions) {
+            ProcessDefinitionData processDefinitionData = mapProcessDefinition(processDefinition);
+            return processDefinitionData;
+        }
+        return null;
+    }
+
+    /**
+     * Gets the process definition by id.
+     *
+     * @param id the id
+     * @return the process definition by id
+     */
+    public ProcessDefinitionData getProcessDefinitionById(String id) {
+        ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
+
+        List<ProcessDefinition> processDefinitions = processEngine.getRepositoryService()
+                                                                  .createProcessDefinitionQuery()
+                                                                  .processDefinitionId(id)
+                                                                  .list();
+
+        for (ProcessDefinition processDefinition : processDefinitions) {
+            ProcessDefinitionData processDefinitionData = mapProcessDefinition(processDefinition);
+            return processDefinitionData;
+        }
+        return null;
+    }
+
+    /**
+     * Gets the process instances.
+     *
+     * @return the process instances
+     */
+    public List<ProcessInstanceData> getProcessInstances() {
+        ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
+
+        List<ProcessInstance> processInstances = processEngine.getRuntimeService()
+                                                              .createProcessInstanceQuery()
+                                                              .list();
+
+        List<ProcessInstanceData> results = new ArrayList<ProcessInstanceData>();
+        for (ProcessInstance processInstance : processInstances) {
+            ProcessInstanceData processInstanceData = mapProcessInstance(processInstance);
+            results.add(processInstanceData);
+        }
+        return results;
+    }
+
+    /**
+     * Gets the process instance by key.
+     *
+     * @param key the key
+     * @return the process instance
+     */
+    public List<ProcessInstanceData> getProcessInstanceByKey(String key) {
+        ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
+
+        List<ProcessInstance> processInstances = processEngine.getRuntimeService()
+                                                              .createProcessInstanceQuery()
+                                                              .processDefinitionKey(key)
+                                                              .list();
+
+        List<ProcessInstanceData> results = new ArrayList<ProcessInstanceData>();
+        for (ProcessInstance processInstance : processInstances) {
+            ProcessInstanceData processInstanceData = mapProcessInstance(processInstance);
+            results.add(processInstanceData);
+        }
+        return results;
+    }
+
+    /**
+     * Gets the process instance by key.
+     *
+     * @param id the id
+     * @return the process instance
+     */
+    public ProcessInstanceData getProcessInstanceById(String id) {
+        ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
+
+        List<ProcessInstance> processInstances = processEngine.getRuntimeService()
+                                                              .createProcessInstanceQuery()
+                                                              .processInstanceId(id)
+                                                              .list();
+
+        for (ProcessInstance processInstance : processInstances) {
+            ProcessInstanceData processInstanceData = mapProcessInstance(processInstance);
+            return processInstanceData;
+        }
+        return null;
+    }
+
+    /**
+     * Gets the process instance by key.
+     *
+     * @param businessKey the business key
+     * @return the process instance
+     */
+    public List<ProcessInstanceData> getProcessInstanceByBusinessKey(String businessKey) {
+        ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
+
+        List<ProcessInstance> processInstances = processEngine.getRuntimeService()
+                                                              .createProcessInstanceQuery()
+                                                              .processInstanceBusinessKey(businessKey)
+                                                              .list();
+
+        List<ProcessInstanceData> results = new ArrayList<ProcessInstanceData>();
+        for (ProcessInstance processInstance : processInstances) {
+            ProcessInstanceData processInstanceData = mapProcessInstance(processInstance);
+            results.add(processInstanceData);
+        }
+        return results;
+    }
+
+    /**
+     * Map process definition.
+     *
+     * @param processDefinition the process definition
+     * @return the process definition data
+     */
+    private ProcessDefinitionData mapProcessDefinition(ProcessDefinition processDefinition) {
+        ProcessDefinitionData processDefinitionData = new ProcessDefinitionData();
+        processDefinitionData.setCategory(processDefinition.getCategory());
+        processDefinitionData.setDeploymentId(processDefinition.getDeploymentId());
+        processDefinitionData.setDiagram(processDefinition.getDiagramResourceName());
+        processDefinitionData.setId(processDefinition.getId());
+        processDefinitionData.setKey(processDefinition.getKey());
+        processDefinitionData.setName(processDefinition.getName());
+        processDefinitionData.setResourceName(processDefinition.getResourceName());
+        processDefinitionData.setTennantId(processDefinition.getTenantId());
+        processDefinitionData.setVersion(processDefinition.getVersion());
+        return processDefinitionData;
+    }
+
+    /**
+     * Map process instance.
+     *
+     * @param processInstance the process instance
+     * @return the process instance data
+     */
+    private ProcessInstanceData mapProcessInstance(ProcessInstance processInstance) {
+        ProcessInstanceData processInstanceData = new ProcessInstanceData();
+        processInstanceData.setBusinessKey(processInstance.getBusinessKey());
+        processInstanceData.setBusinessStatus(processInstance.getBusinessStatus());
+        processInstanceData.setDeploymentId(processInstance.getDeploymentId());
+        processInstanceData.setId(processInstance.getId());
+        processInstanceData.setName(processInstance.getName());
+        processInstanceData.setProcessDefinitionId(processInstance.getProcessDefinitionId());
+        processInstanceData.setProcessDefinitionKey(processInstance.getProcessDefinitionKey());
+        processInstanceData.setProcessDefinitionName(processInstance.getProcessDefinitionName());
+        processInstanceData.setProcessDefinitionVersion(processInstance.getProcessDefinitionVersion());
+        processInstanceData.setTenantId(processInstance.getTenantId());
+        return processInstanceData;
+    }
 
 }

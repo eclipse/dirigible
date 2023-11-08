@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.anonymize.endpoint;
 
@@ -39,67 +38,66 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_DATA + "anonymize")
 public class DataAnonymizeEndpoint {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(DataAnonymizeEndpoint.class);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(DataAnonymizeEndpoint.class);
 
-	/** The data anonymize service. */
-	private DataAnonymizeService dataAnonymizeService;
-	
-	/** The database metadata service. */
-	private DatabaseMetadataService databaseMetadataService;
+    /** The data anonymize service. */
+    private DataAnonymizeService dataAnonymizeService;
 
-	/**
-	 * Instantiates a new data anonymize endpoint.
-	 *
-	 * @param dataAnonymizeService     the database anonymize service
-	 * @param databaseMetadataService   the database metadata service
-	 */
-	@Autowired
-	public DataAnonymizeEndpoint(DataAnonymizeService dataAnonymizeService, DatabaseMetadataService databaseMetadataService) {
-		this.dataAnonymizeService = dataAnonymizeService;
-		this.databaseMetadataService = databaseMetadataService;
-	}
-	
-	/**
-	 * Gets the data export anonymize service.
-	 *
-	 * @return the data export anonymize service
-	 */
-	public DataAnonymizeService getDataAnonymizeService() {
-		return dataAnonymizeService;
-	}
-	
-	/**
-	 * Gets the database metadata service.
-	 *
-	 * @return the database metadata service
-	 */
-	public DatabaseMetadataService getDatabaseMetadataService() {
-		return databaseMetadataService;
-	}
+    /** The database metadata service. */
+    private DatabaseMetadataService databaseMetadataService;
 
-	
-	/**
-	 * Execute artifact export.
-	 *
-	 * @param content the content
-	 * @return the response
-	 * @throws SQLException the SQL exception
-	 */
-	@PostMapping(value = "column", produces = "application/json")
-	public ResponseEntity anonymizeColumn(@Valid @RequestBody DataAnonymizeParameters content) throws SQLException {
+    /**
+     * Instantiates a new data anonymize endpoint.
+     *
+     * @param dataAnonymizeService the database anonymize service
+     * @param databaseMetadataService the database metadata service
+     */
+    @Autowired
+    public DataAnonymizeEndpoint(DataAnonymizeService dataAnonymizeService, DatabaseMetadataService databaseMetadataService) {
+        this.dataAnonymizeService = dataAnonymizeService;
+        this.databaseMetadataService = databaseMetadataService;
+    }
 
-		if (!databaseMetadataService.existsDataSourceMetadata(content.getDatasource())) {
-			String error = format("Datasource {0} does not exist.", content.getDatasource());
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
-		}
-		
-		dataAnonymizeService.anonymizeColumn(
-						content.getDatasource(), content.getSchema(), 
-						content.getTable(), content.getColumn(), 
-						content.getPrimaryKey(), content.getType());
-		
-		return ResponseEntity.ok().build();
-	}
+    /**
+     * Gets the data export anonymize service.
+     *
+     * @return the data export anonymize service
+     */
+    public DataAnonymizeService getDataAnonymizeService() {
+        return dataAnonymizeService;
+    }
+
+    /**
+     * Gets the database metadata service.
+     *
+     * @return the database metadata service
+     */
+    public DatabaseMetadataService getDatabaseMetadataService() {
+        return databaseMetadataService;
+    }
+
+
+    /**
+     * Execute artifact export.
+     *
+     * @param content the content
+     * @return the response
+     * @throws SQLException the SQL exception
+     */
+    @PostMapping(value = "column", produces = "application/json")
+    public ResponseEntity anonymizeColumn(@Valid @RequestBody DataAnonymizeParameters content) throws SQLException {
+
+        if (!databaseMetadataService.existsDataSourceMetadata(content.getDatasource())) {
+            String error = format("Datasource {0} does not exist.", content.getDatasource());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
+        }
+
+        dataAnonymizeService.anonymizeColumn(content.getDatasource(), content.getSchema(), content.getTable(), content.getColumn(),
+                content.getPrimaryKey(), content.getType());
+
+        return ResponseEntity.ok()
+                             .build();
+    }
 
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.wiki.service;
 
@@ -45,7 +44,7 @@ public class MarkdownService implements ArtefactService<Markdown> {
 
     /**
      * Instantiates a new markdown service.
-     * 
+     *
      * @param repository the repository
      */
     @Autowired
@@ -121,7 +120,7 @@ public class MarkdownService implements ArtefactService<Markdown> {
     @Override
     @Transactional(readOnly = true)
     public Markdown findByName(String name) {
-    	Markdown filter = new Markdown();
+        Markdown filter = new Markdown();
         filter.setName(name);
         Example<Markdown> example = Example.of(filter);
         Optional<Markdown> markdown = markdownRepository.findOne(example);
@@ -131,7 +130,7 @@ public class MarkdownService implements ArtefactService<Markdown> {
             throw new IllegalArgumentException("Markdown with name does not exist: " + name);
         }
     }
-    
+
     /**
      * Find by location.
      *
@@ -141,13 +140,13 @@ public class MarkdownService implements ArtefactService<Markdown> {
     @Override
     @Transactional(readOnly = true)
     public List<Markdown> findByLocation(String location) {
-    	Markdown filter = new Markdown();
+        Markdown filter = new Markdown();
         filter.setLocation(location);
         Example<Markdown> example = Example.of(filter);
         List<Markdown> list = markdownRepository.findAll(example);
         return list;
     }
-    
+
     /**
      * Find by key.
      *
@@ -157,7 +156,7 @@ public class MarkdownService implements ArtefactService<Markdown> {
     @Override
     @Transactional(readOnly = true)
     public Markdown findByKey(String key) {
-    	Markdown filter = new Markdown();
+        Markdown filter = new Markdown();
         filter.setKey(key);
         Example<Markdown> example = Example.of(filter);
         Optional<Markdown> markdown = markdownRepository.findOne(example);
@@ -185,6 +184,6 @@ public class MarkdownService implements ArtefactService<Markdown> {
      */
     @Override
     public void delete(Markdown markdown) {
-    	markdownRepository.delete(markdown);
+        markdownRepository.delete(markdown);
     }
 }

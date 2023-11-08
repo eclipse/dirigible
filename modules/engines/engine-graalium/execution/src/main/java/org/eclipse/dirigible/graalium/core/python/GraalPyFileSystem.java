@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.graalium.core.python;
 
@@ -39,12 +38,9 @@ public class GraalPyFileSystem implements FileSystem {
      * Instantiates a new graal JS file system.
      *
      * @param currentWorkingDirectoryPath the current working directory path
-     * @param delegateFileSystem          the file system to delegate to
+     * @param delegateFileSystem the file system to delegate to
      */
-    public GraalPyFileSystem(
-            Path currentWorkingDirectoryPath,
-            java.nio.file.FileSystem delegateFileSystem
-    ) {
+    public GraalPyFileSystem(Path currentWorkingDirectoryPath, java.nio.file.FileSystem delegateFileSystem) {
         this.currentWorkingDirectoryPath = currentWorkingDirectoryPath;
         this.delegateFileSystemProvider = delegateFileSystem.provider();
     }
@@ -89,7 +85,7 @@ public class GraalPyFileSystem implements FileSystem {
     /**
      * To real path.
      *
-     * @param path        the path
+     * @param path the path
      * @param linkOptions the link options
      * @return the path
      * @throws IOException Signals that an I/O exception has occurred.
@@ -97,7 +93,8 @@ public class GraalPyFileSystem implements FileSystem {
     @Override
     public Path toRealPath(Path path, LinkOption... linkOptions) throws IOException {
         if (path.isAbsolute() && !path.startsWith(currentWorkingDirectoryPath)) {
-            path = currentWorkingDirectoryPath.resolve(path.toString().substring(1));
+            path = currentWorkingDirectoryPath.resolve(path.toString()
+                                                           .substring(1));
         }
         return path.toRealPath(linkOptions);
     }
@@ -105,9 +102,9 @@ public class GraalPyFileSystem implements FileSystem {
     /**
      * New byte channel.
      *
-     * @param path    the path
+     * @param path the path
      * @param options the options
-     * @param attrs   the attrs
+     * @param attrs the attrs
      * @return the seekable byte channel
      * @throws IOException Signals that an I/O exception has occurred.
      */
@@ -119,8 +116,8 @@ public class GraalPyFileSystem implements FileSystem {
     /**
      * Check access.
      *
-     * @param path        the path
-     * @param modes       the modes
+     * @param path the path
+     * @param modes the modes
      * @param linkOptions the link options
      * @throws IOException Signals that an I/O exception has occurred.
      */
@@ -131,14 +128,15 @@ public class GraalPyFileSystem implements FileSystem {
         } else if (modes.isEmpty()) {
             delegateFileSystemProvider.readAttributes(path, "isRegularFile", LinkOption.NOFOLLOW_LINKS);
         } else {
-            throw new UnsupportedOperationException("CheckAccess for NIO Provider is unsupported with non empty AccessMode and NOFOLLOW_LINKS.");
+            throw new UnsupportedOperationException(
+                    "CheckAccess for NIO Provider is unsupported with non empty AccessMode and NOFOLLOW_LINKS.");
         }
     }
 
     /**
      * Creates the directory.
      *
-     * @param dir   the dir
+     * @param dir the dir
      * @param attrs the attrs
      * @throws IOException Signals that an I/O exception has occurred.
      */
@@ -161,8 +159,8 @@ public class GraalPyFileSystem implements FileSystem {
     /**
      * Copy.
      *
-     * @param source  the source
-     * @param target  the target
+     * @param source the source
+     * @param target the target
      * @param options the options
      * @throws IOException Signals that an I/O exception has occurred.
      */
@@ -174,8 +172,8 @@ public class GraalPyFileSystem implements FileSystem {
     /**
      * Move.
      *
-     * @param source  the source
-     * @param target  the target
+     * @param source the source
+     * @param target the target
      * @param options the options
      * @throws IOException Signals that an I/O exception has occurred.
      */
@@ -187,7 +185,7 @@ public class GraalPyFileSystem implements FileSystem {
     /**
      * New directory stream.
      *
-     * @param dir    the dir
+     * @param dir the dir
      * @param filter the filter
      * @return the directory stream
      * @throws IOException Signals that an I/O exception has occurred.
@@ -200,7 +198,7 @@ public class GraalPyFileSystem implements FileSystem {
     /**
      * Creates the link.
      *
-     * @param link     the link
+     * @param link the link
      * @param existing the existing
      * @throws IOException Signals that an I/O exception has occurred.
      */
@@ -212,9 +210,9 @@ public class GraalPyFileSystem implements FileSystem {
     /**
      * Creates the symbolic link.
      *
-     * @param link   the link
+     * @param link the link
      * @param target the target
-     * @param attrs  the attrs
+     * @param attrs the attrs
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @Override
@@ -237,9 +235,9 @@ public class GraalPyFileSystem implements FileSystem {
     /**
      * Read attributes.
      *
-     * @param path       the path
+     * @param path the path
      * @param attributes the attributes
-     * @param options    the options
+     * @param options the options
      * @return the map
      * @throws IOException Signals that an I/O exception has occurred.
      */
@@ -251,10 +249,10 @@ public class GraalPyFileSystem implements FileSystem {
     /**
      * Sets the attribute.
      *
-     * @param path      the path
+     * @param path the path
      * @param attribute the attribute
-     * @param value     the value
-     * @param options   the options
+     * @param value the value
+     * @param options the options
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @Override
@@ -290,8 +288,8 @@ public class GraalPyFileSystem implements FileSystem {
     /**
      * Checks if is same file.
      *
-     * @param path1   the path 1
-     * @param path2   the path 2
+     * @param path1 the path 1
+     * @param path2 the path 2
      * @param options the options
      * @return true, if is same file
      * @throws IOException Signals that an I/O exception has occurred.

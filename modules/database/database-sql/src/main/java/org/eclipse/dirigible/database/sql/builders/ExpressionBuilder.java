@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders;
 
@@ -21,85 +20,85 @@ import org.eclipse.dirigible.database.sql.ISqlDialect;
  */
 public class ExpressionBuilder extends AbstractSqlBuilder {
 
-	/** The expressions. */
-	private List<String> expressions = new ArrayList<String>();
+    /** The expressions. */
+    private List<String> expressions = new ArrayList<String>();
 
-	/**
-	 * Instantiates a new expression builder.
-	 *
-	 * @param dialect
-	 *            the dialect
-	 */
-	public ExpressionBuilder(ISqlDialect dialect) {
-		super(dialect);
-	}
+    /**
+     * Instantiates a new expression builder.
+     *
+     * @param dialect the dialect
+     */
+    public ExpressionBuilder(ISqlDialect dialect) {
+        super(dialect);
+    }
 
-	/**
-	 * And.
-	 *
-	 * @param name
-	 *            the name
-	 * @return the expression builder
-	 */
-	public ExpressionBuilder and(String name) {
-		if (this.expressions.isEmpty()) {
-			this.expressions.add(name);
-		} else {
-			this.expressions.add(KEYWORD_AND + SPACE + name);
-		}
-		return this;
-	}
+    /**
+     * And.
+     *
+     * @param name the name
+     * @return the expression builder
+     */
+    public ExpressionBuilder and(String name) {
+        if (this.expressions.isEmpty()) {
+            this.expressions.add(name);
+        } else {
+            this.expressions.add(KEYWORD_AND + SPACE + name);
+        }
+        return this;
+    }
 
-	/**
-	 * Or.
-	 *
-	 * @param name
-	 *            the name
-	 * @return the expression builder
-	 */
-	public ExpressionBuilder or(String name) {
-		if (this.expressions.isEmpty()) {
-			this.expressions.add(name);
-		} else {
-			this.expressions.add(KEYWORD_OR + SPACE + name);
-		}
-		return this;
-	}
+    /**
+     * Or.
+     *
+     * @param name the name
+     * @return the expression builder
+     */
+    public ExpressionBuilder or(String name) {
+        if (this.expressions.isEmpty()) {
+            this.expressions.add(name);
+        } else {
+            this.expressions.add(KEYWORD_OR + SPACE + name);
+        }
+        return this;
+    }
 
-	/**
-	 * Generate.
-	 *
-	 * @return the string
-	 */
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-	 */
-	@Override
-	public String generate() {
-		return generateExpressions();
-	}
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
+     */
+    @Override
+    public String generate() {
+        return generateExpressions();
+    }
 
-	/**
-	 * Generate expressions.
-	 *
-	 * @return the string
-	 */
-	protected String generateExpressions() {
-		StringBuilder snippet = new StringBuilder();
-		for (String expression : this.expressions) {
-			snippet.append(expression).append(SPACE);
-		}
-		return snippet.toString().substring(0, snippet.length() - 1);
-	}
+    /**
+     * Generate expressions.
+     *
+     * @return the string
+     */
+    protected String generateExpressions() {
+        StringBuilder snippet = new StringBuilder();
+        for (String expression : this.expressions) {
+            snippet.append(expression)
+                   .append(SPACE);
+        }
+        return snippet.toString()
+                      .substring(0, snippet.length() - 1);
+    }
 
-	/**
-	 * Gets the expressions.
-	 *
-	 * @return the expressions
-	 */
-	public List<String> getExpressions() {
-		return expressions;
-	}
+    /**
+     * Gets the expressions.
+     *
+     * @return the expressions
+     */
+    public List<String> getExpressions() {
+        return expressions;
+    }
 
 }

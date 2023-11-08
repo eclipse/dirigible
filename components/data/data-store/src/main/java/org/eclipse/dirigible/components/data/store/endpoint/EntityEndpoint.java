@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.store.endpoint;
 
@@ -38,71 +37,71 @@ import io.swagger.v3.oas.annotations.Parameter;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_DATA + "entities")
 public class EntityEndpoint extends BaseEndpoint {
 
-	/** The entity service. */
-	private final EntityService entityService;
+    /** The entity service. */
+    private final EntityService entityService;
 
-	/**
-	 * Instantiates a new entity endpoint.
-	 *
-	 * @param entityService the entity service
-	 */
-	@Autowired
-	public EntityEndpoint(EntityService entityService) {
-		this.entityService = entityService;
-	}
+    /**
+     * Instantiates a new entity endpoint.
+     *
+     * @param entityService the entity service
+     */
+    @Autowired
+    public EntityEndpoint(EntityService entityService) {
+        this.entityService = entityService;
+    }
 
-	/**
-	 * Find all.
-	 *
-	 * @param size the size
-	 * @param page the page
-	 * @return the page
-	 */
-	@GetMapping("/pages")
-	public Page<Entity> findAll(
-			@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
-			@Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
-		if (size == null) {
-			size = DEFAULT_PAGE_SIZE;
-		}
-		if (page == null) {
-			page = 0;
-		}
-		Pageable pageable = PageRequest.of(page, size);
-		Page<Entity> entities = entityService.getPages(pageable);
-		return entities;
-	}
+    /**
+     * Find all.
+     *
+     * @param size the size
+     * @param page the page
+     * @return the page
+     */
+    @GetMapping("/pages")
+    public Page<Entity> findAll(
+            @Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
+            @Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
+        if (size == null) {
+            size = DEFAULT_PAGE_SIZE;
+        }
+        if (page == null) {
+            page = 0;
+        }
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Entity> entities = entityService.getPages(pageable);
+        return entities;
+    }
 
-	/**
-	 * Gets the.
-	 *
-	 * @param id the id
-	 * @return the response entity
-	 */
-	@GetMapping("/{id}")
-	public ResponseEntity<Entity> get(@PathVariable("id") Long id) {
-		return ResponseEntity.ok(entityService.findById(id));
-	}
-	
-	/**
-	 * Find by name.
-	 *
-	 * @param name the name
-	 * @return the response entity
-	 */
-	@GetMapping("/search")
-	public ResponseEntity<Entity> findByName(@RequestParam("name") String name) {
-		return ResponseEntity.ok(entityService.findByName(name));
-	}
-	
-	/**
-	 * Gets the all.
-	 *
-	 * @return the all
-	 */
-	@GetMapping
-	public ResponseEntity<List<Entity>> getAll() {
-		return ResponseEntity.ok(entityService.getAll());
-	}
+    /**
+     * Gets the.
+     *
+     * @param id the id
+     * @return the response entity
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Entity> get(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(entityService.findById(id));
+    }
+
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the response entity
+     */
+    @GetMapping("/search")
+    public ResponseEntity<Entity> findByName(@RequestParam("name") String name) {
+        return ResponseEntity.ok(entityService.findByName(name));
+    }
+
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
+    @GetMapping
+    public ResponseEntity<List<Entity>> getAll() {
+        return ResponseEntity.ok(entityService.getAll());
+    }
 
 }

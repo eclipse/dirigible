@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.clause;
 
@@ -39,16 +38,16 @@ public class SQLOrderByClause implements SQLClause {
 
     /** The Constant EMPTY_STRING. */
     private static final String EMPTY_STRING = "";
-    
+
     /** The order by expression. */
     private final OrderByExpression orderByExpression;
-    
+
     /** The query. */
     private final SQLSelectBuilder query;
-    
+
     /** The entity type. */
     private final EdmEntityType entityType;
-    
+
     /** The log. */
     private final Logger LOG = LoggerFactory.getLogger(SQLOrderByClause.class);
 
@@ -59,7 +58,8 @@ public class SQLOrderByClause implements SQLClause {
      * @param orderByEntityType the order by entity type
      * @param orderByExpression the order by expression
      */
-    public SQLOrderByClause(final SQLSelectBuilder query, final EdmEntityType orderByEntityType, final OrderByExpression orderByExpression) {
+    public SQLOrderByClause(final SQLSelectBuilder query, final EdmEntityType orderByEntityType,
+            final OrderByExpression orderByExpression) {
         this.orderByExpression = orderByExpression;
         this.query = query;
         this.entityType = orderByEntityType;
@@ -95,8 +95,7 @@ public class SQLOrderByClause implements SQLClause {
      * @return the default expression
      * @throws EdmException the edm exception
      */
-    private String getDefaultExpression(SQLContext context)
-            throws EdmException {
+    private String getDefaultExpression(SQLContext context) throws EdmException {
         List<String> keyPropertyNames = entityType.getKeyPropertyNames();
         if (null == keyPropertyNames || keyPropertyNames.isEmpty()) {
             return EMPTY_STRING;
@@ -106,8 +105,7 @@ public class SQLOrderByClause implements SQLClause {
         OrderByParserImpl orderByParser = new OrderByParserImpl(entityType);
         OrderByExpression orderExpression;
         try {
-            orderExpression = orderByParser.parseOrderByString(
-                    defaultOrderByExpression);
+            orderExpression = orderByParser.parseOrderByString(defaultOrderByExpression);
         } catch (ExpressionParserException | ExpressionParserInternalError e) {
             throw new IllegalStateException("Failed to parse default OrderBy expression.", e);
         }
@@ -161,7 +159,8 @@ public class SQLOrderByClause implements SQLClause {
             throw new OData2Exception("Not Implemented", INTERNAL_SERVER_ERROR);
         }
         if (query.isTransientType(entityType, prop)) {
-            // Unable to sort with a transient property in the list. This changes the semantic of order by and the result of the select
+            // Unable to sort with a transient property in the list. This changes the semantic of order by and
+            // the result of the select
             LOG.error("Unmapped property {}! Unable to use an order by expression for properties that are not mapped to the DB.",
                     prop.getName());
             throw new OData2Exception(INTERNAL_SERVER_ERROR);
@@ -174,9 +173,11 @@ public class SQLOrderByClause implements SQLClause {
                 orderByClause.append(query.getSQLTableColumn(entityType, prop));
             }
         } else {
-            orderByClause.append(query.getSQLTableColumnAlias(entityType, prop)); // This gives the correct "order by" column name for Open SQL
+            orderByClause.append(query.getSQLTableColumnAlias(entityType, prop)); // This gives the correct "order by" column name for Open
+                                                                                  // SQL
         }
-        orderByClause.append(" ").append(orderBy.getSortOrder() == SortOrder.asc ? "ASC" : "DESC");
+        orderByClause.append(" ")
+                     .append(orderBy.getSortOrder() == SortOrder.asc ? "ASC" : "DESC");
         return orderByClause.toString();
     }
 }

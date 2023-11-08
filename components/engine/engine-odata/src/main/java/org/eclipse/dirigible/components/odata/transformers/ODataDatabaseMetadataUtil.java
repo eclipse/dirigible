@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.transformers;
 
@@ -139,8 +138,9 @@ public class ODataDatabaseMetadataUtil {
      * @return the data source
      */
     protected synchronized DataSource getDataSource() {
-		return DataSourcesManager.get().getDefaultDataSource();
-	}
+        return DataSourcesManager.get()
+                                 .getDefaultDataSource();
+    }
 
     /**
      * Gets the table metadata.
@@ -162,12 +162,12 @@ public class ODataDatabaseMetadataUtil {
      * @throws SQLException the SQL exception
      */
     public Table getTableMetadata(String tableName, String schemaName) throws SQLException {
-    	if (tableName == null) {
-    		throw new SQLException("Table name cannot be null while querying for the table metadata");
-    	}
+        if (tableName == null) {
+            throw new SQLException("Table name cannot be null while querying for the table metadata");
+        }
         Table tableMetadata = new Table();
-    	tableMetadata.setName(tableName);
-    	tableMetadata.setSchema(schemaName);
+        tableMetadata.setName(tableName);
+        tableMetadata.setSchema(schemaName);
         try (Connection connection = getDataSource().getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();
             String artifactType = getArtifactType(databaseMetadata, connection, tableName, schemaName);
@@ -192,24 +192,22 @@ public class ODataDatabaseMetadataUtil {
      * @return the foreign keys
      * @throws SQLException the SQL exception
      */
-    private void getForeignKeys(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schemaName) throws SQLException {
-        ResultSet foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schemaName, normalizeTableName(tableMetadata.getName()));
+    private void getForeignKeys(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schemaName)
+            throws SQLException {
+        ResultSet foreignKeys =
+                databaseMetadata.getImportedKeys(connection.getCatalog(), schemaName, normalizeTableName(tableMetadata.getName()));
         if (!foreignKeys.isBeforeFirst() && !IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
-            foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schemaName, normalizeTableName(tableMetadata.getName().toLowerCase()));
+            foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schemaName, normalizeTableName(tableMetadata.getName()
+                                                                                                                                .toLowerCase()));
         }
 
 
         while (foreignKeys.next()) {
-        	TableConstraintForeignKey relationMetadata = new TableConstraintForeignKey(
-    				foreignKeys.getString(JDBC_FK_NAME_PROPERTY),
-    				new String[] {},
-    				new String[] {foreignKeys.getString(JDBC_FK_COLUMN_NAME_PROPERTY)},
-    				foreignKeys.getString(JDBC_PK_TABLE_NAME_PROPERTY),
-                    foreignKeys.getString(JDBC_PK_SCHEMA_NAME_PROPERTY),
-    				new String[] {foreignKeys.getString(JDBC_PK_COLUMN_NAME_PROPERTY)},
-                    tableMetadata.getConstraints()
-            );
+            TableConstraintForeignKey relationMetadata = new TableConstraintForeignKey(foreignKeys.getString(JDBC_FK_NAME_PROPERTY),
+                    new String[] {}, new String[] {foreignKeys.getString(JDBC_FK_COLUMN_NAME_PROPERTY)},
+                    foreignKeys.getString(JDBC_PK_TABLE_NAME_PROPERTY), foreignKeys.getString(JDBC_PK_SCHEMA_NAME_PROPERTY),
+                    new String[] {foreignKeys.getString(JDBC_PK_COLUMN_NAME_PROPERTY)}, tableMetadata.getConstraints());
 
         }
     }
@@ -221,11 +219,11 @@ public class ODataDatabaseMetadataUtil {
      * @return the string
      */
     public String convertSqlTypeToOdataEdmType(String sqlType) {
-    	if (sqlType == null) {
-    		throw new IllegalArgumentException("SQL type cannot be null while converting to EDM type");
-    	}
+        if (sqlType == null) {
+            throw new IllegalArgumentException("SQL type cannot be null while converting to EDM type");
+        }
         String edmColumnType = SQL_TO_ODATA_EDM_TYPES.get(sqlType.toUpperCase());
-        if(null != edmColumnType) {
+        if (null != edmColumnType) {
             return edmColumnType;
         }
 
@@ -242,11 +240,14 @@ public class ODataDatabaseMetadataUtil {
      * @return the primary keys
      * @throws SQLException the SQL exception
      */
-    private List<String> getPrimaryKeys(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schemaName) throws SQLException {
-        ResultSet primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schemaName, normalizeTableName(tableMetadata.getName()));
+    private List<String> getPrimaryKeys(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schemaName)
+            throws SQLException {
+        ResultSet primaryKeys =
+                databaseMetadata.getPrimaryKeys(connection.getCatalog(), schemaName, normalizeTableName(tableMetadata.getName()));
         if (!primaryKeys.isBeforeFirst() && !IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
-            primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schemaName, normalizeTableName(tableMetadata.getName().toLowerCase()));
+            primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schemaName, normalizeTableName(tableMetadata.getName()
+                                                                                                                               .toLowerCase()));
         }
 
         List<String> primaryKeyColumns = new ArrayList<>();
@@ -267,32 +268,28 @@ public class ODataDatabaseMetadataUtil {
      * @return the columns
      * @throws SQLException the SQL exception
      */
-    private void getColumns(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schemaPattern) throws SQLException {
-        ResultSet columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName()), null);
+    private void getColumns(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schemaPattern)
+            throws SQLException {
+        ResultSet columns =
+                databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName()), null);
         if (!columns.isBeforeFirst() && !IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
-            columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName().toLowerCase()), null);
+            columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName()
+                                                                                                                          .toLowerCase()),
+                    null);
         }
 
         List<String> primaryKeys = getPrimaryKeys(databaseMetadata, connection, tableMetadata, schemaPattern);
 
         Set<String> uniqueColumns = new HashSet<>();
         while (columns.next()) {
-        	String columnName = columns.getString(JDBC_COLUMN_NAME_PROPERTY);
+            String columnName = columns.getString(JDBC_COLUMN_NAME_PROPERTY);
             if (!uniqueColumns.contains(columnName)) {
                 uniqueColumns.add(columnName);
                 String columnType = convertSqlTypeToOdataEdmType(columns.getString(JDBC_COLUMN_TYPE_PROPERTY));
-                new TableColumn(
-                    columnName,
-                    columnType,
-                    columns.getInt(JDBC_COLUMN_SIZE_PROPERTY) + "",
-                    columns.getBoolean(JDBC_COLUMN_NULLABLE_PROPERTY),
-                    primaryKeys.contains(columnName),
-                    null,
-                    columns.getInt(JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY) + "",
-                    false,
-                    tableMetadata
-                );
+                new TableColumn(columnName, columnType, columns.getInt(JDBC_COLUMN_SIZE_PROPERTY) + "",
+                        columns.getBoolean(JDBC_COLUMN_NULLABLE_PROPERTY), primaryKeys.contains(columnName), null,
+                        columns.getInt(JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY) + "", false, tableMetadata);
             }
         }
     }
@@ -323,7 +320,8 @@ public class ODataDatabaseMetadataUtil {
      */
     public static boolean isPropColumnValidDBColumn(String propColumn, List<TableColumn> dbColumns) {
         for (TableColumn next : dbColumns) {
-            if (next.getName().equals(propColumn)) {
+            if (next.getName()
+                    .equals(propColumn)) {
                 return true;
             }
         }
@@ -399,26 +397,28 @@ public class ODataDatabaseMetadataUtil {
      * @return the artifact type
      * @throws SQLException the SQL exception
      */
-    public String getArtifactType(DatabaseMetaData databaseMetadata, Connection connection, String artifactName, String schemaPattern) throws SQLException {
+    public String getArtifactType(DatabaseMetaData databaseMetadata, Connection connection, String artifactName, String schemaPattern)
+            throws SQLException {
         ResultSet tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(artifactName), null);
         if (!tables.isBeforeFirst() && !IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
-            tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(artifactName.toLowerCase()), null);
+            tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(artifactName.toLowerCase()),
+                    null);
         }
 
         return tables.next() ? tables.getString("TABLE_TYPE") : null;
     }
 
     /**
-     * Find schema of a given artifact name.
-     * The searchable artifacts are TABLE, VIEW, CALC_VIEW
+     * Find schema of a given artifact name. The searchable artifacts are TABLE, VIEW, CALC_VIEW
      *
      * @param artifactName name of the artifact
      * @return of a given artifact name
      * @throws SQLException SQLException
      */
     public String getOdataArtifactTypeSchema(String artifactName) throws SQLException {
-        return getArtifactSchema(artifactName, new String[]{ISqlKeywords.METADATA_TABLE, ISqlKeywords.METADATA_VIEW, ISqlKeywords.METADATA_CALC_VIEW});
+        return getArtifactSchema(artifactName,
+                new String[] {ISqlKeywords.METADATA_TABLE, ISqlKeywords.METADATA_VIEW, ISqlKeywords.METADATA_CALC_VIEW});
     }
 
     /**

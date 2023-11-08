@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.workspace.endpoint;
 
@@ -21,31 +20,31 @@ import org.eclipse.dirigible.components.ide.workspace.domain.ProjectStatusProvid
  */
 public class DummyProjectStatusProvider implements ProjectStatusProvider {
 
-	/**
-	 * Gets the project status.
-	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @return the project status
-	 */
-	@Override
-	public ProjectStatus getProjectStatus(String workspace, String project) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    /**
+     * Gets the project status.
+     *
+     * @param workspace the workspace
+     * @param project the project
+     * @return the project status
+     */
+    @Override
+    public ProjectStatus getProjectStatus(String workspace, String project) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	/**
-	 * Gets the project git folder.
-	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @return the project git folder
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	@Override
-	public String getProjectGitFolder(String workspace, String project) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    /**
+     * Gets the project git folder.
+     *
+     * @param workspace the workspace
+     * @param project the project
+     * @return the project git folder
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @Override
+    public String getProjectGitFolder(String workspace, String project) throws IOException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

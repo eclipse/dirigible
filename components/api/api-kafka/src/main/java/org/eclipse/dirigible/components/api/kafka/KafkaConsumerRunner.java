@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.kafka;
 
@@ -83,32 +82,46 @@ public class KafkaConsumerRunner implements Runnable {
     @Override
     public void run() {
         try {
-            if (logger.isInfoEnabled()) {logger.info("Starting a Kafka listener for {} ...", this.name);}
+            if (logger.isInfoEnabled()) {
+                logger.info("Starting a Kafka listener for {} ...", this.name);
+            }
             consumer.subscribe(Arrays.asList(this.name));
             while (!stopped.get()) {
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(this.timeout));
                 for (ConsumerRecord<String, String> record : records) {
-                    if (logger.isTraceEnabled()) {logger.trace(format("Start processing a received record in [{0}] by [{1}] ...", this.name, this.handler));}
+                    if (logger.isTraceEnabled()) {
+                        logger.trace(format("Start processing a received record in [{0}] by [{1}] ...", this.name, this.handler));
+                    }
                     if (this.handler != null) {
                         Map<Object, Object> context = createMessagingContext();
                         context.put("message", escapeCodeString(GsonHelper.toJson(record)));
                         try {
                             RepositoryPath path = new RepositoryPath(DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE);
-                            JavascriptService.get().handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+                            JavascriptService.get()
+                                             .handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
                         } catch (Exception e) {
-                            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+                            if (logger.isErrorEnabled()) {
+                                logger.error(e.getMessage(), e);
+                            }
                             try {
                                 context.put("error", escapeCodeString(e.getMessage()));
                                 RepositoryPath path = new RepositoryPath(DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR);
                                 javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
                             } catch (Exception es) {
-                                if (logger.isErrorEnabled()) {logger.error(es.getMessage(), es);}
+                                if (logger.isErrorEnabled()) {
+                                    logger.error(es.getMessage(), es);
+                                }
                             }
                         }
                     } else {
-                        if (logger.isInfoEnabled()) {logger.info(String.format("[Kafka Consumer] %s -  offset = %d, key = %s, value = %s%n", this.name, record.offset(), record.key(), record.value()));}
+                        if (logger.isInfoEnabled()) {
+                            logger.info(String.format("[Kafka Consumer] %s -  offset = %d, key = %s, value = %s%n", this.name,
+                                    record.offset(), record.key(), record.value()));
+                        }
                     }
-                    if (logger.isTraceEnabled()) {logger.trace(format("Done processing the received record in [{0}] by [{1}]", this.name, this.handler));}
+                    if (logger.isTraceEnabled()) {
+                        logger.trace(format("Done processing the received record in [{0}] by [{1}]", this.name, this.handler));
+                    }
                 }
 
             }
@@ -143,8 +156,7 @@ public class KafkaConsumerRunner implements Runnable {
     /**
      * Escape code string.
      *
-     * @param raw
-     *            the raw
+     * @param raw the raw
      * @return the string
      */
     private String escapeCodeString(String raw) {

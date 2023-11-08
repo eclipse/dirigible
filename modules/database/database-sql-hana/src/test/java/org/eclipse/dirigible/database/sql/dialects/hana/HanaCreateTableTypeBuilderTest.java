@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
@@ -32,15 +31,17 @@ public class HanaCreateTableTypeBuilderTest {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
         try {
             String sql = SqlFactory.getNative(new HanaSqlDialect())
-                    .create()
-                    .tableType("CUSTOMERS_STRUCTURE")
-                    .column("CATEGORY_ID", DataType.INTEGER)
-                    .column("NAME", DataType.VARCHAR, "255")
-                    .column("TYPES", DataType.VARCHAR, true, false, "220")
-                    .build();
+                                   .create()
+                                   .tableType("CUSTOMERS_STRUCTURE")
+                                   .column("CATEGORY_ID", DataType.INTEGER)
+                                   .column("NAME", DataType.VARCHAR, "255")
+                                   .column("TYPES", DataType.VARCHAR, true, false, "220")
+                                   .build();
 
             assertNotNull(sql);
-            assertEquals("CREATE TYPE \"CUSTOMERS_STRUCTURE\" AS TABLE ( \"CATEGORY_ID\" INTEGER , \"NAME\" VARCHAR (255) , \"TYPES\" VARCHAR (220) NOT NULL PRIMARY KEY )", sql);
+            assertEquals(
+                    "CREATE TYPE \"CUSTOMERS_STRUCTURE\" AS TABLE ( \"CATEGORY_ID\" INTEGER , \"NAME\" VARCHAR (255) , \"TYPES\" VARCHAR (220) NOT NULL PRIMARY KEY )",
+                    sql);
         } finally {
             Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
         }
@@ -52,15 +53,17 @@ public class HanaCreateTableTypeBuilderTest {
     @Test
     public void executeCreateTableType() {
         String sql = SqlFactory.getNative(new HanaSqlDialect())
-                .create()
-                .tableType("CUSTOMERS_STRUCTURE")
-                .column("CATEGORY_ID" , DataType.INTEGER)
-                .column("NAME" , DataType.VARCHAR, "255")
-                .column("TYPES", DataType.VARCHAR, true, false, "220")
-                .build();
+                               .create()
+                               .tableType("CUSTOMERS_STRUCTURE")
+                               .column("CATEGORY_ID", DataType.INTEGER)
+                               .column("NAME", DataType.VARCHAR, "255")
+                               .column("TYPES", DataType.VARCHAR, true, false, "220")
+                               .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE TYPE CUSTOMERS_STRUCTURE AS TABLE ( CATEGORY_ID INTEGER , NAME VARCHAR (255) , TYPES VARCHAR (220) NOT NULL PRIMARY KEY )", sql);
+        assertEquals(
+                "CREATE TYPE CUSTOMERS_STRUCTURE AS TABLE ( CATEGORY_ID INTEGER , NAME VARCHAR (255) , TYPES VARCHAR (220) NOT NULL PRIMARY KEY )",
+                sql);
     }
 
     /**
@@ -71,15 +74,17 @@ public class HanaCreateTableTypeBuilderTest {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
         try {
             String sql = SqlFactory.getNative(new HanaSqlDialect())
-                    .create()
-                    .tableType("CUSTOMERS_STRUCTURE")
-                    .column("CATEGORY_ID", DataType.INTEGER)
-                    .column("NAME", DataType.VARCHAR, true, false, "255")
-                    .column("TYPES", DataType.VARCHAR, true, false, "220")
-                    .build();
+                                   .create()
+                                   .tableType("CUSTOMERS_STRUCTURE")
+                                   .column("CATEGORY_ID", DataType.INTEGER)
+                                   .column("NAME", DataType.VARCHAR, true, false, "255")
+                                   .column("TYPES", DataType.VARCHAR, true, false, "220")
+                                   .build();
 
             assertNotNull(sql);
-            assertEquals("CREATE TYPE \"CUSTOMERS_STRUCTURE\" AS TABLE ( \"CATEGORY_ID\" INTEGER , \"NAME\" VARCHAR (255) NOT NULL , \"TYPES\" VARCHAR (220) NOT NULL , PRIMARY KEY(NAME , TYPES) )", sql);
+            assertEquals(
+                    "CREATE TYPE \"CUSTOMERS_STRUCTURE\" AS TABLE ( \"CATEGORY_ID\" INTEGER , \"NAME\" VARCHAR (255) NOT NULL , \"TYPES\" VARCHAR (220) NOT NULL , PRIMARY KEY(NAME , TYPES) )",
+                    sql);
         } finally {
             Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
         }

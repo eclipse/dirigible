@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence.model;
 
@@ -27,18 +26,17 @@ public class PersistenceTableRelationModel {
 
     /** The pk column name. */
     private String pkColumnName;
-    
+
     /** The fk name. */
     private String fkName;
-    
+
     /** The pk name. */
     private String pkName;
 
     /**
      * Instantiates a new persistence table relation model.
      */
-    public PersistenceTableRelationModel() {
-    }
+    public PersistenceTableRelationModel() {}
 
     /**
      * Instantiates a new persistence table relation model.
@@ -50,7 +48,8 @@ public class PersistenceTableRelationModel {
      * @param fkName the fk name
      * @param pkName the pk name
      */
-    public PersistenceTableRelationModel(String fromTableName, String toTableName, String fkColumnName, String pkColumnName, String fkName, String pkName) {
+    public PersistenceTableRelationModel(String fromTableName, String toTableName, String fkColumnName, String pkColumnName, String fkName,
+            String pkName) {
         this.fromTableName = fromTableName;
         this.toTableName = toTableName;
         this.fkColumnName = fkColumnName;
@@ -132,7 +131,7 @@ public class PersistenceTableRelationModel {
     public void setPkColumnName(String pkColumnName) {
         this.pkColumnName = pkColumnName;
     }
-    
+
     /**
      * Gets the name of the foreign key.
      *

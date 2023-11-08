@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.metadata.endpoint;
 
@@ -41,21 +40,21 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class DatabaseMetadataEndpointTest {
-	
-	/** The datasource repository. */
-	@Autowired
-	private DataSourceRepository datasourceRepository;
-	
-	/** The datasources manager. */
-	@Autowired
+
+    /** The datasource repository. */
+    @Autowired
+    private DataSourceRepository datasourceRepository;
+
+    /** The datasources manager. */
+    @Autowired
     private DataSourcesManager datasourcesManager;
-	
-	/** The mock mvc. */
-	@Autowired
+
+    /** The mock mvc. */
+    @Autowired
     private MockMvc mockMvc;
 
     /** The wac. */
@@ -65,36 +64,34 @@ public class DatabaseMetadataEndpointTest {
     /** The spring security filter chain. */
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
-	
-	/**
-	 * Setup.
-	 */
-	@BeforeEach
+
+    /**
+     * Setup.
+     */
+    @BeforeEach
     public void setup() {
-		DataSource datasource = new DataSource("/test/TestDB.datasource", "TestDB", "", "org.h2.Driver", "jdbc:h2:~/test", "sa", "");
-		datasourceRepository.save(datasource);
+        DataSource datasource = new DataSource("/test/TestDB.datasource", "TestDB", "", "org.h2.Driver", "jdbc:h2:~/test", "sa", "");
+        datasourceRepository.save(datasource);
     }
-	
-	/**
-	 * Gets the data source by name.
-	 *
-	 * @return the data source by name
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void getDataSourceByName() throws Exception {
 
-		mockMvc.perform(get("/services/data/metadata/{name}/{schema}/{structure}", 
-				"TestDB", "INFORMATION_SCHEMA", "INDEXES"))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful())
-		;
-	}
+    /**
+     * Gets the data source by name.
+     *
+     * @return the data source by name
+     * @throws Exception the exception
+     */
+    @Test
+    public void getDataSourceByName() throws Exception {
 
-	/**
-	 * The Class TestConfiguration.
-	 */
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+        mockMvc.perform(get("/services/data/metadata/{name}/{schema}/{structure}", "TestDB", "INFORMATION_SCHEMA", "INDEXES"))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+    }
+
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence.model;
 
@@ -39,7 +38,7 @@ public class PersistenceTableModel {
 
     /** The relations. */
     private List<PersistenceTableRelationModel> relations = new ArrayList<>();
-    
+
     /** The relations. */
     private List<PersistenceTableIndexModel> indices = new ArrayList<>();
 
@@ -51,7 +50,8 @@ public class PersistenceTableModel {
      * @param relations the relations
      * @param indices the indices
      */
-    public PersistenceTableModel(String tableName, List<PersistenceTableColumnModel> columns, List<PersistenceTableRelationModel> relations, List<PersistenceTableIndexModel> indices) {
+    public PersistenceTableModel(String tableName, List<PersistenceTableColumnModel> columns, List<PersistenceTableRelationModel> relations,
+            List<PersistenceTableIndexModel> indices) {
         this.tableName = tableName;
         this.columns = columns;
         this.relations = relations;
@@ -61,8 +61,7 @@ public class PersistenceTableModel {
     /**
      * Instantiates a new persistence table model.
      */
-    public PersistenceTableModel() {
-    }
+    public PersistenceTableModel() {}
 
     /**
      * Gets the table type.
@@ -173,24 +172,24 @@ public class PersistenceTableModel {
     public void setRelations(List<PersistenceTableRelationModel> relations) {
         this.relations = relations;
     }
-    
-    /**
-	 * Gets the indices.
-	 *
-	 * @return the indices
-	 */
-	public List<PersistenceTableIndexModel> getIndices() {
-		return indices;
-	}
 
-	/**
-	 * Sets the indices.
-	 *
-	 * @param indices the new indices
-	 */
-	public void setIndices(List<PersistenceTableIndexModel> indices) {
-		this.indices = indices;
-	}
+    /**
+     * Gets the indices.
+     *
+     * @return the indices
+     */
+    public List<PersistenceTableIndexModel> getIndices() {
+        return indices;
+    }
+
+    /**
+     * Sets the indices.
+     *
+     * @param indices the new indices
+     */
+    public void setIndices(List<PersistenceTableIndexModel> indices) {
+        this.indices = indices;
+    }
 
     /**
      * Equals.
@@ -200,12 +199,12 @@ public class PersistenceTableModel {
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         PersistenceTableModel that = (PersistenceTableModel) o;
-        return Objects.equals(className, that.className) &&
-                tableName.equals(that.tableName) &&
-                Objects.equals(schemaName, that.schemaName);
+        return Objects.equals(className, that.className) && tableName.equals(that.tableName) && Objects.equals(schemaName, that.schemaName);
     }
 
     /**
@@ -218,5 +217,5 @@ public class PersistenceTableModel {
         return Objects.hash(className, tableName, schemaName);
     }
 
-	
+
 }

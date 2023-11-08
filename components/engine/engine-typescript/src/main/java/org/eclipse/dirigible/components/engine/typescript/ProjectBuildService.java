@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.typescript;
 
@@ -59,7 +58,7 @@ public class ProjectBuildService {
     /**
      * Instantiates a new project build service.
      *
-     * @param repository        the repository
+     * @param repository the repository
      * @param typeScriptService the type script service
      */
     @Autowired
@@ -80,16 +79,14 @@ public class ProjectBuildService {
     /**
      * Builds the project.
      *
-     * @param project          the project
+     * @param project the project
      * @param projectEntryPath the project entry path
      */
     public void build(String project, String projectEntryPath) {
         try {
-            getProjectJson(project)
-                    .ifPresentOrElse(
-                            projectMetadata ->getPublishCommand(projectMetadata).ifPresent(command -> buildWithCommand(project, command)),
-                            () -> maybeBuildTypeScript(project, projectEntryPath)
-                    );
+            getProjectJson(project).ifPresentOrElse(
+                    projectMetadata -> getPublishCommand(projectMetadata).ifPresent(command -> buildWithCommand(project, command)),
+                    () -> maybeBuildTypeScript(project, projectEntryPath));
         } catch (Exception e) {
             var errorMessage = "Failed to build project: " + project + " with entry path: " + projectEntryPath;
             LOGGER.error(errorMessage, e);
@@ -102,22 +99,19 @@ public class ProjectBuildService {
             return Optional.empty();
         }
 
-        return actions
-                .stream()
-                .filter(ProjectAction::isPublish)
-                .findFirst()
-                .flatMap(action ->
-                        action.getCommands()
-                                .stream()
-                                .filter(CommandDescriptor::isCompatibleWithCurrentOS)
-                                .findFirst()
-                );
+        return actions.stream()
+                      .filter(ProjectAction::isPublish)
+                      .findFirst()
+                      .flatMap(action -> action.getCommands()
+                                               .stream()
+                                               .filter(CommandDescriptor::isCompatibleWithCurrentOS)
+                                               .findFirst());
     }
 
     /**
      * Maybe build type script.
      *
-     * @param project          the project
+     * @param project the project
      * @param projectEntryPath the project entry path
      */
     private void maybeBuildTypeScript(String project, String projectEntryPath) {
@@ -129,7 +123,7 @@ public class ProjectBuildService {
     /**
      * Builds the with command.
      *
-     * @param project      the project
+     * @param project the project
      * @param buildCommand the build command
      */
     private void buildWithCommand(String project, CommandDescriptor buildCommand) {
@@ -140,7 +134,9 @@ public class ProjectBuildService {
         try {
             var processExecutor = ProcessExecutor.create();
             Future<ProcessResult<OutputsPair>> outputFuture = processExecutor.executeProcess(buildCommand.getCommand(), env, options);
-            String output = outputFuture.get().getProcessOutputs().getStandardOutput();
+            String output = outputFuture.get()
+                                        .getProcessOutputs()
+                                        .getStandardOutput();
             LOGGER.info(output);
         } catch (ExecutionException | InterruptedException e) {
             LOGGER.error("Could not run command: " + buildCommand, e);
@@ -156,7 +152,8 @@ public class ProjectBuildService {
     private Optional<ProjectMetadata> getProjectJson(String project) {
         Path projectJsonPath = getProjectPath(project).resolve("project.json");
 
-        if (!projectJsonPath.toFile().exists()) {
+        if (!projectJsonPath.toFile()
+                            .exists()) {
             return Optional.empty();
         }
 

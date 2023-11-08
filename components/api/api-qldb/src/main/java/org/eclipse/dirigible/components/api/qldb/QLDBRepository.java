@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.qldb;
 
@@ -28,7 +27,8 @@ import java.util.stream.StreamSupport;
 
 public class QLDBRepository {
     public static final String DOCUMENT_ID_FIELD = "documentId";
-    private static final IonSystem ION_SYSTEM = IonSystemBuilder.standard().build();
+    private static final IonSystem ION_SYSTEM = IonSystemBuilder.standard()
+                                                                .build();
     private final String tableName;
     private final String ledgerName;
     private final QldbDriver qldbDriver;
@@ -37,22 +37,19 @@ public class QLDBRepository {
         this.ledgerName = ledgerName;
         this.tableName = tableName;
         this.qldbDriver = QldbDriver.builder()
-                .ledger(ledgerName)
-                .transactionRetryPolicy(RetryPolicy
-                        .builder()
-                        .maxRetries(3)
-                        .build())
-                .sessionClientBuilder(QldbSessionClient.builder())
-                .build();
+                                    .ledger(ledgerName)
+                                    .transactionRetryPolicy(RetryPolicy.builder()
+                                                                       .maxRetries(3)
+                                                                       .build())
+                                    .sessionClientBuilder(QldbSessionClient.builder())
+                                    .build();
     }
 
     public void createTable() {
-         qldbDriver.execute(
-                txn -> {
-                    txn.execute("CREATE TABLE " + tableName);
-                    txn.execute("CREATE INDEX ON " + tableName + "(id)");
-                }
-        );
+        qldbDriver.execute(txn -> {
+            txn.execute("CREATE TABLE " + tableName);
+            txn.execute("CREATE INDEX ON " + tableName + "(id)");
+        });
     }
 
     public void dropTable() {
@@ -66,7 +63,8 @@ public class QLDBRepository {
             IonValue ionEntry = serialize(entry);
             String insertIntoStatement = buildInsertIntoSqlStatement();
             Result result = txn.execute(insertIntoStatement, ionEntry);
-            String documentId = getIdFromIonValue(result.iterator().next());
+            String documentId = getIdFromIonValue(result.iterator()
+                                                        .next());
             Map<String, Object> createdEntry = deserialize(ionEntry);
             createdEntry.put(DOCUMENT_ID_FIELD, documentId);
             return createdEntry;
@@ -97,8 +95,8 @@ public class QLDBRepository {
 
     private List<Map<String, Object>> ionValuesToList(Result ionValues) {
         return StreamSupport.stream(ionValues.spliterator(), false)
-                .map(this::deserialize)
-                .collect(Collectors.toList());
+                            .map(this::deserialize)
+                            .collect(Collectors.toList());
     }
 
     public Map<String, Object> getById(String id) {
@@ -155,7 +153,8 @@ public class QLDBRepository {
             IonValue ionId = stringToIonValue(entryId);
             String deleteStatement = buildDeleteSqlStatement();
             Result result = txn.execute(deleteStatement, ionId);
-            return getIdFromIonValue(result.iterator().next());
+            return getIdFromIonValue(result.iterator()
+                                           .next());
         });
     }
 
@@ -190,7 +189,9 @@ public class QLDBRepository {
 
     private IonValue serialize(Object entry) {
         try {
-            return IonObjectMapper.builder().build().writeValueAsIonValue(entry);
+            return IonObjectMapper.builder()
+                                  .build()
+                                  .writeValueAsIonValue(entry);
         } catch (IOException e) {
             throw new QLDBRepositoryException("Could not serialize entry to IonValue", e);
         }
@@ -199,7 +200,9 @@ public class QLDBRepository {
     @SuppressWarnings("unchecked")
     private Map<String, Object> deserialize(IonValue entry) {
         try {
-            return IonObjectMapper.builder().build().readValue(entry, Map.class);
+            return IonObjectMapper.builder()
+                                  .build()
+                                  .readValue(entry, Map.class);
         } catch (IOException e) {
             throw new QLDBRepositoryException("Could not deserialize IonValue to Map<String, Object>", e);
         }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.clause;
 
@@ -35,39 +34,38 @@ public final class SQLJoinClause implements SQLClause {
 
     /** The Constant NO_PREDICATES_USED. */
     private static final List<KeyPredicate> NO_PREDICATES_USED = Collections.emptyList();
-    
+
     /** The Constant DOUBLE_QUOTES. */
     private static final String DOUBLE_QUOTES = "\"";
 
     /** The start. */
     private final EdmStructuralType start;
-    
+
     /** The target. */
     private final EdmStructuralType target;
-    
+
     /** The start fqn. */
     private final String startFqn;
-    
+
     /** The target fqn. */
     private final String targetFqn;
-    
+
     /** The join type. */
     private final JoinType joinType;
 
     /**
-     * The left join should be used for expands - we would like to get the
-     * properties of an entity even if the expand (lik) or complex type is
-     * empty.
+     * The left join should be used for expands - we would like to get the properties of an entity even
+     * if the expand (lik) or complex type is empty.
      */
     public enum JoinType {
-        
+
         /** The left. */
         LEFT
     }
 
     /** The query. */
     private final SQLSelectBuilder query;
-    
+
     /** The key predicates. */
     private List<KeyPredicate> keyPredicates = NO_PREDICATES_USED;
 
@@ -114,9 +112,9 @@ public final class SQLJoinClause implements SQLClause {
 
         } else {
 
-            throw new IllegalArgumentException("Missing manyToManyMappingTable definition in the following json file: " +
-                    "" + (hasFirstJsonMappingTable ? target.getName() : start.getName()) +
-                    ". Both json files need to point to the mapping table");
+            throw new IllegalArgumentException("Missing manyToManyMappingTable definition in the following json file: " + ""
+                    + (hasFirstJsonMappingTable ? target.getName() : start.getName())
+                    + ". Both json files need to point to the mapping table");
         }
 
         return join.toString();
@@ -134,25 +132,27 @@ public final class SQLJoinClause implements SQLClause {
 
         List<String> firstJoinColumns = getTargetJoinKeyForEntityType(target, start);
         String firstJoinLeftTableAlias = query.getSQLTableAlias(target);
-        String firstJoinRightTable = query.getSQLMappingTableName(start, target).get(0);
+        String firstJoinRightTable = query.getSQLMappingTableName(start, target)
+                                          .get(0);
         String firstJoinRightTableAlias = query.getSQLTableAliasForManyToManyMappingTable(firstJoinRightTable);
         List<String> firstJoinTargetKeys = query.getSQLMappingTableJoinColumn(target, start);
 
-        buildJoinClause(firstJoinColumns, firstJoinLeftTableAlias, firstJoinRightTable, firstJoinRightTableAlias,
-                firstJoinTargetKeys, join);
+        buildJoinClause(firstJoinColumns, firstJoinLeftTableAlias, firstJoinRightTable, firstJoinRightTableAlias, firstJoinTargetKeys,
+                join);
 
         // Only needed when adding a second join statement
         join.append(" ");
 
         List<String> secondJoinColumns = query.getSQLMappingTableJoinColumn(start, target);
-        String secondJsonMappingTable = query.getSQLMappingTableName(target, start).get(0);
+        String secondJsonMappingTable = query.getSQLMappingTableName(target, start)
+                                             .get(0);
         String secondJoinLeftTableAlias = query.getSQLTableAliasForManyToManyMappingTable(secondJsonMappingTable);
         String secondJoinRightTable = query.getSQLTableName(start);
         String secondJoinRightTableAlias = query.getSQLTableAlias(start);
         List<String> secondJoinTargetKeys = getTargetJoinKeyForEntityType(start, target);
 
-        buildJoinClause(secondJoinColumns, secondJoinLeftTableAlias, secondJoinRightTable, secondJoinRightTableAlias,
-                secondJoinTargetKeys, join);
+        buildJoinClause(secondJoinColumns, secondJoinLeftTableAlias, secondJoinRightTable, secondJoinRightTableAlias, secondJoinTargetKeys,
+                join);
     }
 
     /**
@@ -182,8 +182,8 @@ public final class SQLJoinClause implements SQLClause {
      * @param join the join
      * @throws EdmException the edm exception
      */
-    private void buildJoinClause(List<String> joinColumns, String leftTableAlias, String rightTable,
-                                 String rightTableAlias, List<String> targetKeys, StringBuilder join) throws EdmException {
+    private void buildJoinClause(List<String> joinColumns, String leftTableAlias, String rightTable, String rightTableAlias,
+            List<String> targetKeys, StringBuilder join) throws EdmException {
         boolean caseSensitive = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
 
         join.append(joinType.toString());
@@ -202,7 +202,8 @@ public final class SQLJoinClause implements SQLClause {
             join.append(getValue(caseSensitive, leftTableAlias));
             join.append(".");
             join.append(getValue(caseSensitive, joinColumns.get(i)));
-            if (i < targetKeys.size() - 1) join.append(" AND ");
+            if (i < targetKeys.size() - 1)
+                join.append(" AND ");
         }
     }
 
@@ -212,13 +213,14 @@ public final class SQLJoinClause implements SQLClause {
      * @throws EdmException the edm exception
      */
     private void validateMappingTable() throws EdmException {
-        String firstJsonMappingTable = query.getSQLMappingTableName(start, target).get(0);
-        String secondJsonMappingTable = query.getSQLMappingTableName(target, start).get(0);
+        String firstJsonMappingTable = query.getSQLMappingTableName(start, target)
+                                            .get(0);
+        String secondJsonMappingTable = query.getSQLMappingTableName(target, start)
+                                             .get(0);
 
         if (!firstJsonMappingTable.equals(secondJsonMappingTable)) {
-            throw new IllegalArgumentException("OData manyToManyMappingTable name is different in both json files: " +
-                    "" + (target.getName()) + " and " + (start.getName()) +
-                    ". Both json files need to point to the same mapping table");
+            throw new IllegalArgumentException("OData manyToManyMappingTable name is different in both json files: " + ""
+                    + (target.getName()) + " and " + (start.getName()) + ". Both json files need to point to the same mapping table");
         }
     }
 
@@ -310,17 +312,19 @@ public final class SQLJoinClause implements SQLClause {
      */
     private boolean needsJoinQuery(EdmStructuralType start, List<KeyPredicate> startPredicates, EdmStructuralType target) {
         try {
-            if (start.getName().equals(target.getName())) {
+            if (start.getName()
+                     .equals(target.getName())) {
                 return false;
             } else {
                 if (startPredicates == NO_PREDICATES_USED) {
                     return true;
                 } else {
-                    return ((startPredicates != null && !startPredicates.isEmpty()) && hasKeyPredicatesNonParameterProperty(start, startPredicates)) ? true : false;
+                    return ((startPredicates != null && !startPredicates.isEmpty())
+                            && hasKeyPredicatesNonParameterProperty(start, startPredicates)) ? true : false;
                 }
             }
         } catch (EdmException e) {
-            throw new RuntimeException(e);//should never happen
+            throw new RuntimeException(e);// should never happen
         }
     }
 

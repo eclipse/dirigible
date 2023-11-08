@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql;
 
@@ -52,15 +51,15 @@ import static org.junit.Assert.*;
  */
 public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
 
-	/**
-	 * Gets the o data entities.
-	 *
-	 * @return the o data entities
-	 */
-	@Override
-	protected Class<?>[] getODataEntities() {
-		return new Class[] {Car.class, Driver.class, Owner.class, Address.class};
-	}
+    /**
+     * Gets the o data entities.
+     *
+     * @return the o data entities
+     */
+    @Override
+    protected Class<?>[] getODataEntities() {
+        return new Class[] {Car.class, Driver.class, Owner.class, Address.class};
+    }
 
 
     /**
@@ -81,10 +80,14 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
     @Test
     public void testExecuteMetadataRequestInBatch() throws Exception {
         List<BatchPart> batch = new ArrayList<>();
-        BatchPart request = BatchQueryPart.method(ODataHttpMethod.GET.name()).uri("$metadata").build();
+        BatchPart request = BatchQueryPart.method(ODataHttpMethod.GET.name())
+                                          .uri("$metadata")
+                                          .build();
         batch.add(request);
-        ODataResponse res = OData2RequestBuilder.createRequest(sf).executeBatchRequest(batch);
-        assertEquals(202, res.getStatus().getStatusCode()); //Accepted
+        ODataResponse res = OData2RequestBuilder.createRequest(sf)
+                                                .executeBatchRequest(batch);
+        assertEquals(202, res.getStatus()
+                             .getStatusCode()); // Accepted
         String responseEntity = IOUtils.toString(res.getEntityAsStream());
         String boundary = getBoundary(responseEntity);
 
@@ -93,7 +96,9 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
         for (BatchSingleResponse response : responses) {
             assertEquals("200", response.getStatusCode());
             assertEquals("OK", response.getStatusInfo());
-            assertTrue(response.getBody().startsWith("<?xml version='1.0' encoding='UTF-8'?><edmx:Edmx xmlns:edmx=\"http://schemas.microsoft.com/ado/2007/06/edmx\" Version=\"1.0\"><edmx:DataServices"));
+            assertTrue(response.getBody()
+                               .startsWith(
+                                       "<?xml version='1.0' encoding='UTF-8'?><edmx:Edmx xmlns:edmx=\"http://schemas.microsoft.com/ado/2007/06/edmx\" Version=\"1.0\"><edmx:DataServices"));
         }
     }
 
@@ -121,29 +126,32 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
         changeSetHeaders.put("Accept", "application/json");
         String body = "/9j/4AAQSkZJRgABAQEBLAEsAAD/4RM0RXhpZgAATU0AKgAAAAgABwESAAMAAAABAAEA";
         BatchChangeSetPart changeRequest = BatchChangeSetPart.method(PUT.toString())
-                .uri("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')")
-                .body(content.replaceAll("XXXXXXXXX", "639cac17-4cfd-4d94-b5d0-111fd5488423"))
-                .headers(changeSetHeaders)
-                .contentId("1")
-                .build();
-        BatchChangeSet changeSet = BatchChangeSet.newBuilder().build();
+                                                             .uri("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')")
+                                                             .body(content.replaceAll("XXXXXXXXX", "639cac17-4cfd-4d94-b5d0-111fd5488423"))
+                                                             .headers(changeSetHeaders)
+                                                             .contentId("1")
+                                                             .build();
+        BatchChangeSet changeSet = BatchChangeSet.newBuilder()
+                                                 .build();
         changeSet.add(changeRequest);
 
         changeSetHeaders = new HashMap<>();
         changeSetHeaders.put("content-type", "application/json;odata=verbose");
         changeSetHeaders.put("Accept", "application/json");
         BatchChangeSetPart changeRequest2 = BatchChangeSetPart.method(PUT.toString())
-                .uri("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')")
-                .body(content.replaceAll("XXXXXXXXX", "3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5"))
-                .headers(changeSetHeaders)
-                .contentId("2")
-                .build();
+                                                              .uri("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')")
+                                                              .body(content.replaceAll("XXXXXXXXX", "3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5"))
+                                                              .headers(changeSetHeaders)
+                                                              .contentId("2")
+                                                              .build();
         changeSet.add(changeRequest2);
         batch.add(changeSet);
 
 
-        ODataResponse res = OData2RequestBuilder.createRequest(sf).executeBatchRequest(batch);
-        assertEquals(202, res.getStatus().getStatusCode()); //Accepted
+        ODataResponse res = OData2RequestBuilder.createRequest(sf)
+                                                .executeBatchRequest(batch);
+        assertEquals(202, res.getStatus()
+                             .getStatusCode()); // Accepted
         String responseEntity = IOUtils.toString(res.getEntityAsStream());
         String boundary = getBoundary(responseEntity);
 
@@ -181,30 +189,36 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
         changeSetHeaders.put("Accept", "application/json");
         String body = "/9j/4AAQSkZJRgABAQEBLAEsAAD/4RM0RXhpZgAATU0AKgAAAAgABwESAAMAAAABAAEA";
         BatchChangeSetPart changeRequest = BatchChangeSetPart.method(PUT.toString())
-                .uri("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')")
-                .body(content.replaceAll("XXXXXXXXX", "639cac17-4cfd-4d94-b5d0-111fd5488423"))
-                .headers(changeSetHeaders)
-                .contentId("1")
-                .build();
-        BatchChangeSet changeSet = BatchChangeSet.newBuilder().build();
+                                                             .uri("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')")
+                                                             .body(content.replaceAll("XXXXXXXXX", "639cac17-4cfd-4d94-b5d0-111fd5488423"))
+                                                             .headers(changeSetHeaders)
+                                                             .contentId("1")
+                                                             .build();
+        BatchChangeSet changeSet = BatchChangeSet.newBuilder()
+                                                 .build();
         changeSet.add(changeRequest);
 
         changeSetHeaders = new HashMap<>();
         changeSetHeaders.put("content-type", "application/json;odata=verbose");
         changeSetHeaders.put("Accept", "application/json");
         BatchChangeSetPart invalidPriceChangeSet = BatchChangeSetPart.method(PUT.toString())
-                .uri("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')")
-                .body(content.replaceAll("123456789.0", "BOOM")//Simulate error by setting invalid price
-                        .replaceAll("XXXXXXXXX", "3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5"))
-                .headers(changeSetHeaders)
-                .contentId("2")
-                .build();
+                                                                     .uri("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')")
+                                                                     .body(content.replaceAll("123456789.0", "BOOM")// Simulate error
+                                                                                                                    // by setting
+                                                                                                                    // invalid price
+                                                                                  .replaceAll("XXXXXXXXX",
+                                                                                          "3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5"))
+                                                                     .headers(changeSetHeaders)
+                                                                     .contentId("2")
+                                                                     .build();
         changeSet.add(invalidPriceChangeSet);
         batch.add(changeSet);
 
 
-        ODataResponse res = OData2RequestBuilder.createRequest(sf).executeBatchRequest(batch);
-        assertEquals(202, res.getStatus().getStatusCode()); //Accepted
+        ODataResponse res = OData2RequestBuilder.createRequest(sf)
+                                                .executeBatchRequest(batch);
+        assertEquals(202, res.getStatus()
+                             .getStatusCode()); // Accepted
         String responseEntity = IOUtils.toString(res.getEntityAsStream());
         String boundary = getBoundary(responseEntity);
 
@@ -238,23 +252,28 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
 
         List<BatchPart> batch = new ArrayList<>();
 
-        BatchChangeSet changeSet = BatchChangeSet.newBuilder().build();
+        BatchChangeSet changeSet = BatchChangeSet.newBuilder()
+                                                 .build();
 
         Map<String, String> changeSetHeaders = new HashMap<>();
         changeSetHeaders.put("content-type", "application/json;odata=verbose");
         changeSetHeaders.put("Accept", "application/json");
         BatchChangeSetPart invalidPriceChangeSet = BatchChangeSetPart.method(PUT.toString())
-                .uri("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')")
-                .body(content.replaceAll("123456789.0", "BOOM"))//Simulate error by setting invalid price
-                .headers(changeSetHeaders)
-                .contentId("1")
-                .build();
+                                                                     .uri("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')")
+                                                                     .body(content.replaceAll("123456789.0", "BOOM"))// Simulate error by
+                                                                                                                     // setting invalid
+                                                                                                                     // price
+                                                                     .headers(changeSetHeaders)
+                                                                     .contentId("1")
+                                                                     .build();
         changeSet.add(invalidPriceChangeSet);
         batch.add(changeSet);
 
 
-        ODataResponse res = OData2RequestBuilder.createRequest(sf).executeBatchRequest(batch);
-        assertEquals(202, res.getStatus().getStatusCode()); //Accepted
+        ODataResponse res = OData2RequestBuilder.createRequest(sf)
+                                                .executeBatchRequest(batch);
+        assertEquals(202, res.getStatus()
+                             .getStatusCode()); // Accepted
         String responseEntity = IOUtils.toString(res.getEntityAsStream());
         String boundary = getBoundary(responseEntity);
 
@@ -268,11 +287,12 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
         assertCarHasPrice("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')", 7000.0);
 
         Response response = modifyingRequestBuilder(sf, content)//
-                .segments("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')") //
-                .accept("application/json")//
-                .content(content)//
-                .param("content-type", "application/json")//
-                .contentSize(content.length()).executeRequest(PUT);
+                                                                .segments("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')") //
+                                                                .accept("application/json")//
+                                                                .content(content)//
+                                                                .param("content-type", "application/json")//
+                                                                .contentSize(content.length())
+                                                                .executeRequest(PUT);
 
         assertCarHasPrice("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')", 123456789.0);
 

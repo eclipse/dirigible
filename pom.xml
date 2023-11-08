@@ -99,6 +99,26 @@
 			<build>
 				<plugins>
 					<plugin>
+						<groupId>net.revelc.code.formatter</groupId>
+						<artifactId>formatter-maven-plugin</artifactId>
+						<version>2.23.0</version>
+						<configuration>
+							<configFile>${formatter.location}</configFile>
+							<compilerSource>${formatter.java.version}</compilerSource>
+							<compilerCompliance>${formatter.java.version}</compilerCompliance>
+							<compilerTargetPlatform>${formatter.java.version}</compilerTargetPlatform>
+						</configuration>
+				        <executions>
+							<execution>
+							<id>validate-java-code-formatting</id>
+							<phase>validate</phase>
+							<goals>
+								<goal>validate</goal>
+							</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-compiler-plugin</artifactId>
 						<version>${maven.compiler.plugin.version}</version>
@@ -193,6 +213,7 @@
 								<exclude>**/src/main/resources/META-INF/dirigible/template-mobile-hello-world/node_modules/**</exclude>
 								<exclude>**/src/main/resources/META-INF/dirigible/utils/jsonpath.js</exclude>
 							</excludes>
+							<skipExistingHeaders>true</skipExistingHeaders>
 						</configuration>
 						<dependencies>
 							<dependency>
@@ -673,6 +694,10 @@
 		<content.output.directory>${basedir}/src/main/resources/META-INF/dirigible/${content.project.name}</content.output.directory>
 
 		<license.header.location>licensing-header.txt</license.header.location>
+		
+		<parent.pom.folder>./</parent.pom.folder>
+		<formatter.location>${parent.pom.folder}/dirigible-formatter.xml</formatter.location>
+		<formatter.java.version>${java.version}</formatter.java.version>
 	</properties>
 
 </project>

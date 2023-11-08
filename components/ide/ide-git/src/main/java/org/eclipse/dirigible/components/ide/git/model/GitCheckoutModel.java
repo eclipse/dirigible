@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.git.model;
 
@@ -17,46 +16,46 @@ package org.eclipse.dirigible.components.ide.git.model;
  */
 public class GitCheckoutModel extends BaseGitModel {
 
-	/** The project. */
-	private String project;
-	
-	/** The publish. */
-	private boolean publish;
+    /** The project. */
+    private String project;
 
-	/**
-	 * Gets the project.
-	 *
-	 * @return the project
-	 */
-	public String getProject() {
-		return project;
-	}
+    /** The publish. */
+    private boolean publish;
 
-	/**
-	 * Sets the project.
-	 *
-	 * @param project the new project
-	 */
-	public void setProject(String project) {
-		this.project = project;
-	}
-	
-	/**
-	 * Checks if is publish.
-	 *
-	 * @return true, if is publish
-	 */
-	public boolean isPublish() {
-		return publish;
-	}
+    /**
+     * Gets the project.
+     *
+     * @return the project
+     */
+    public String getProject() {
+        return project;
+    }
 
-	/**
-	 * Sets the publish.
-	 *
-	 * @param publish the new publish
-	 */
-	public void setPublish(boolean publish) {
-		this.publish = publish;
-	}
+    /**
+     * Sets the project.
+     *
+     * @param project the new project
+     */
+    public void setProject(String project) {
+        this.project = project;
+    }
+
+    /**
+     * Checks if is publish.
+     *
+     * @return true, if is publish
+     */
+    public boolean isPublish() {
+        return publish;
+    }
+
+    /**
+     * Sets the publish.
+     *
+     * @param publish the new publish
+     */
+    public void setPublish(boolean publish) {
+        this.publish = publish;
+    }
 
 }

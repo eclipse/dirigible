@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 
 package org.eclipse.dirigible.components.data.csvim.synchronizer;
@@ -101,13 +100,14 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
     /**
      * Instantiates a new csvim synchronizer.
      *
-     * @param csvimService       the csvimsyncrhonizer service
-     * @param csvService         the csvsyncrhonizer service
+     * @param csvimService the csvimsyncrhonizer service
+     * @param csvService the csvsyncrhonizer service
      * @param datasourcesManager the datasources manager
      * @param csvimProcessor the csvim processor
      */
     @Autowired
-    public CsvimSynchronizer(CsvimService csvimService, CsvService csvService, DataSourcesManager datasourcesManager, CsvimProcessor csvimProcessor) {
+    public CsvimSynchronizer(CsvimService csvimService, CsvService csvService, DataSourcesManager datasourcesManager,
+            CsvimProcessor csvimProcessor) {
         this.csvimService = csvimService;
         this.csvService = csvService;
         this.datasourcesManager = datasourcesManager;
@@ -127,13 +127,14 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
     /**
      * Checks if is accepted.
      *
-     * @param file  the file
+     * @param file the file
      * @param attrs the attrs
      * @return true, if is accepted
      */
     @Override
     public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString().endsWith(getFileExtension());
+        return file.toString()
+                   .endsWith(getFileExtension());
     }
 
     /**
@@ -151,7 +152,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
      * Load.
      *
      * @param location the location
-     * @param content  the content
+     * @param content the content
      * @return the csvim
      * @throws ParseException the parse exception
      */
@@ -164,33 +165,41 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
         csvim.setType(Csvim.ARTEFACT_TYPE);
         csvim.updateKey();
         if (csvim.getFiles() != null) {
-            csvim.getFiles().forEach(cf -> {
-                cf.setCsvim(csvim);
-                cf.setLocation(csvim.getLocation() + "/" + cf.getFile());
-                cf.setType(CsvFile.ARTEFACT_TYPE);
-                cf.setName(cf.getFile());
-                cf.updateKey();
-            });
+            csvim.getFiles()
+                 .forEach(cf -> {
+                     cf.setCsvim(csvim);
+                     cf.setLocation(csvim.getLocation() + "/" + cf.getFile());
+                     cf.setType(CsvFile.ARTEFACT_TYPE);
+                     cf.setName(cf.getFile());
+                     cf.updateKey();
+                 });
         }
 
         try {
             Csvim maybe = getService().findByKey(csvim.getKey());
             if (maybe != null) {
                 csvim.setId(maybe.getId());
-                csvim.getFiles().forEach(cf -> {
-                    CsvFile csvFile = maybe.getFileByLocation(cf.getLocation());
-                    if (csvFile != null) {
-                        cf.setId(csvFile.getId());
-                    }
-                });
+                csvim.getFiles()
+                     .forEach(cf -> {
+                         CsvFile csvFile = maybe.getFileByLocation(cf.getLocation());
+                         if (csvFile != null) {
+                             cf.setId(csvFile.getId());
+                         }
+                     });
             }
 
             Csvim result = getService().save(csvim);
             return List.of(result);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-            if (logger.isErrorEnabled()) {logger.error("csvim: {}", csvim);}
-            if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
+            if (logger.isErrorEnabled()) {
+                logger.error("csvim: {}", csvim);
+            }
+            if (logger.isErrorEnabled()) {
+                logger.error("content: {}", new String(content));
+            }
             throw new ParseException(e.getMessage(), 0);
         }
     }
@@ -209,9 +218,9 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
     /**
      * Sets the status.
      *
-     * @param artefact  the artefact
+     * @param artefact the artefact
      * @param lifecycle the lifecycle
-     * @param error     the error
+     * @param error the error
      */
     @Override
     public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
@@ -224,35 +233,41 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
      * Complete.
      *
      * @param wrapper the wrapper
-     * @param flow    the flow
+     * @param flow the flow
      * @return true, if successful
      */
     @Override
     public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-        try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
+        try (Connection connection = datasourcesManager.getDefaultDataSource()
+                                                       .getConnection()) {
             Csvim csvim;
             if (wrapper.getArtefact() instanceof Csvim) {
                 csvim = (Csvim) wrapper.getArtefact();
             } else {
-                throw new UnsupportedOperationException(String.format("Trying to process %s as Csvim", wrapper.getArtefact().getClass()));
+                throw new UnsupportedOperationException(String.format("Trying to process %s as Csvim", wrapper.getArtefact()
+                                                                                                              .getClass()));
             }
 
             switch (flow) {
                 case CREATE:
-                    if (csvim.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+                    if (csvim.getLifecycle()
+                             .equals(ArtefactLifecycle.NEW)) {
                         importCsvim(csvim, connection);
                         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
                     }
                     break;
                 case UPDATE:
-                    if (csvim.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+                    if (csvim.getLifecycle()
+                             .equals(ArtefactLifecycle.MODIFIED)) {
                         updateCsvim(csvim, connection);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     }
                     break;
                 case DELETE:
-                    if (csvim.getLifecycle().equals(ArtefactLifecycle.CREATED)
-                            || csvim.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+                    if (csvim.getLifecycle()
+                             .equals(ArtefactLifecycle.CREATED)
+                            || csvim.getLifecycle()
+                                    .equals(ArtefactLifecycle.UPDATED)) {
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
                     }
                     break;
@@ -278,7 +293,8 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
      */
     @Override
     public void cleanup(Csvim csvim) {
-        try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
+        try (Connection connection = datasourcesManager.getDefaultDataSource()
+                                                       .getConnection()) {
             List<Csvim> csvims = csvimService.getAll();
             for (Csvim c : csvims) {
                 if (!CSVIM_SYNCHRONIZED.contains(c.getLocation())) {
@@ -340,7 +356,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
     /**
      * Execute csvim.
      *
-     * @param csvim      the csvim
+     * @param csvim the csvim
      * @param connection the connection
      * @throws Exception the exception
      */
@@ -389,7 +405,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
     /**
      * Update csvim.
      *
-     * @param csvim      the csvim
+     * @param csvim the csvim
      * @param connection the connection
      * @throws Exception the exception
      */

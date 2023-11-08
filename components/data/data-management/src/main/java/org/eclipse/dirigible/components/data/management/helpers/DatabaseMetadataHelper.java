@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.management.helpers;
 
@@ -77,15 +76,15 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
     /**
      * List schemas.
      *
-     * @param connection       the connection
-     * @param catalogName      the catalog name
+     * @param connection the connection
+     * @param catalogName the catalog name
      * @param schemaNameFilter the schema name filter
-     * @param nameFilter       the name filter
+     * @param nameFilter the name filter
      * @return the list
      * @throws SQLException the SQL exception
      */
     public static List<SchemaMetadata> listSchemas(Connection connection, String catalogName, Filter<String> schemaNameFilter,
-                                                   Filter<String> nameFilter) throws SQLException {
+            Filter<String> nameFilter) throws SQLException {
 
         ISqlDialect sqlDialect = getDialect(connection);
 
@@ -117,8 +116,10 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
             }
         }
 
-        if (sqlDialect.getDatabaseType(connection).equals(DatabaseType.NOSQL.getName())) {
-        	result.forEach(s -> s.setKind(DatabaseType.NOSQL.getName().toLowerCase()));
+        if (sqlDialect.getDatabaseType(connection)
+                      .equals(DatabaseType.NOSQL.getName())) {
+            result.forEach(s -> s.setKind(DatabaseType.NOSQL.getName()
+                                                            .toLowerCase()));
         }
         return result;
     }
@@ -126,16 +127,16 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
     /**
      * Filter schemas.
      *
-     * @param connection       the connection
-     * @param catalogName      the catalog name
+     * @param connection the connection
+     * @param catalogName the catalog name
      * @param schemaNameFilter the schema name filter
-     * @param nameFilter       the name filter
-     * @param result           the result
-     * @param rs               the rs
+     * @param nameFilter the name filter
+     * @param result the result
+     * @param rs the rs
      * @throws SQLException the SQL exception
      */
-    private static void filterSchemas(Connection connection, String catalogName, Filter<String> schemaNameFilter,
-                                      Filter<String> nameFilter, List<SchemaMetadata> result, ResultSet rs) throws SQLException {
+    private static void filterSchemas(Connection connection, String catalogName, Filter<String> schemaNameFilter, Filter<String> nameFilter,
+            List<SchemaMetadata> result, ResultSet rs) throws SQLException {
         if (rs != null) {
             while (rs.next()) {
                 String schemeName = rs.getString(1); // TABLE_SCHEM or TABLE_CAT
@@ -151,15 +152,15 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
     /**
      * List tables.
      *
-     * @param connection      the connection
-     * @param catalogName     the catalog name
-     * @param schemeName      the scheme name
+     * @param connection the connection
+     * @param catalogName the catalog name
+     * @param schemeName the scheme name
      * @param tableNameFilter the table name filter
      * @return the list
      * @throws SQLException the SQL exception
      */
-    public static List<TableMetadata> listTables(Connection connection, String catalogName, String schemeName, Filter<String> tableNameFilter)
-            throws SQLException {
+    public static List<TableMetadata> listTables(Connection connection, String catalogName, String schemeName,
+            Filter<String> tableNameFilter) throws SQLException {
 
         DatabaseMetaData dmd = connection.getMetaData();
 
@@ -196,15 +197,15 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
     /**
      * List procedures.
      *
-     * @param connection          the connection
-     * @param catalogName         the catalog name
-     * @param schemeName          the scheme name
+     * @param connection the connection
+     * @param catalogName the catalog name
+     * @param schemeName the scheme name
      * @param procedureNameFilter the procedure name filter
      * @return the list
      * @throws SQLException the SQL exception
      */
-    public static List<ProcedureMetadata> listProcedures(Connection connection, String catalogName, String schemeName, Filter<String> procedureNameFilter)
-            throws SQLException {
+    public static List<ProcedureMetadata> listProcedures(Connection connection, String catalogName, String schemeName,
+            Filter<String> procedureNameFilter) throws SQLException {
 
         DatabaseMetaData dmd = connection.getMetaData();
 
@@ -227,7 +228,8 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
                 if ((procedureNameFilter != null) && !procedureNameFilter.accepts(procedureName)) {
                     continue;
                 }
-                result.add(new ProcedureMetadata(procedureName, procedureType, procedureRemarks, connection, catalogName, schemeName, false));
+                result.add(
+                        new ProcedureMetadata(procedureName, procedureType, procedureRemarks, connection, catalogName, schemeName, false));
             }
         } finally {
             if (rs != null) {
@@ -241,15 +243,15 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
     /**
      * List functions.
      *
-     * @param connection         the connection
-     * @param catalogName        the catalog name
-     * @param schemeName         the scheme name
+     * @param connection the connection
+     * @param catalogName the catalog name
+     * @param schemeName the scheme name
      * @param functionNameFilter the function name filter
      * @return the list
      * @throws SQLException the SQL exception
      */
-    public static List<FunctionMetadata> listFunctions(Connection connection, String catalogName, String schemeName, Filter<String> functionNameFilter)
-            throws SQLException {
+    public static List<FunctionMetadata> listFunctions(Connection connection, String catalogName, String schemeName,
+            Filter<String> functionNameFilter) throws SQLException {
 
         DatabaseMetaData dmd = connection.getMetaData();
 
@@ -287,10 +289,10 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
     /**
      * Describe table.
      *
-     * @param connection  the connection
+     * @param connection the connection
      * @param catalogName the catalog name
-     * @param schemeName  the scheme name
-     * @param tableName   the table name
+     * @param schemeName the scheme name
+     * @param tableName the table name
      * @return the TableMetadata
      * @throws SQLException the SQL exception
      */
@@ -325,9 +327,9 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
     /**
      * Describe procedure.
      *
-     * @param connection    the connection
-     * @param catalogName   the catalog name
-     * @param schemeName    the scheme name
+     * @param connection the connection
+     * @param catalogName the catalog name
+     * @param schemeName the scheme name
      * @param procedureName the procedure name
      * @return the ProcedureMetadata
      * @throws SQLException the SQL exception
@@ -363,9 +365,9 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
     /**
      * Describe function.
      *
-     * @param connection   the connection
-     * @param catalogName  the catalog name
-     * @param schemeName   the scheme name
+     * @param connection the connection
+     * @param catalogName the catalog name
+     * @param schemeName the scheme name
      * @param functionName the function name
      * @return the FunctionMetadata
      * @throws SQLException the SQL exception
@@ -406,12 +408,12 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         /**
          * On column.
          *
-         * @param name       the name
-         * @param type       the type
-         * @param size       the size
+         * @param name the name
+         * @param type the type
+         * @param size the size
          * @param isNullable the is nullable
-         * @param isKey      the is key
-         * @param scale      the scale
+         * @param isKey the is key
+         * @param scale the scale
          */
         void onColumn(String name, String type, String size, boolean isNullable, boolean isKey, int scale);
     }
@@ -424,17 +426,18 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         /**
          * Procedure column callback.
          *
-         * @param name      name
-         * @param kind      kind
-         * @param type      type
+         * @param name name
+         * @param kind kind
+         * @param type type
          * @param precision precision
-         * @param length    length
-         * @param scale     scale
-         * @param radix     radix
-         * @param nullable  nullable
-         * @param remarks   remarks
+         * @param length length
+         * @param scale scale
+         * @param radix radix
+         * @param nullable nullable
+         * @param remarks remarks
          */
-        void onProcedureColumn(String name, int kind, String type, int precision, int length, int scale, int radix, boolean nullable, String remarks);
+        void onProcedureColumn(String name, int kind, String type, int precision, int length, int scale, int radix, boolean nullable,
+                String remarks);
     }
 
     /**
@@ -445,17 +448,18 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         /**
          * Function column callback.
          *
-         * @param name      name
-         * @param kind      kind
-         * @param type      type
+         * @param name name
+         * @param kind kind
+         * @param type type
          * @param precision precision
-         * @param length    length
-         * @param scale     scale
-         * @param radix     radix
-         * @param nullable  nullable
-         * @param remarks   remarks
+         * @param length length
+         * @param scale scale
+         * @param radix radix
+         * @param nullable nullable
+         * @param remarks remarks
          */
-        void onFunctionColumn(String name, int kind, String type, int precision, int length, int scale, int radix, boolean nullable, String remarks);
+        void onFunctionColumn(String name, int kind, String type, int precision, int length, int scale, int radix, boolean nullable,
+                String remarks);
     }
 
     /**
@@ -466,34 +470,34 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         /**
          * On index.
          *
-         * @param indexName       the index name
-         * @param indexType       the index type
-         * @param columnName      the column name
-         * @param isNonUnique     the is non unique
-         * @param indexQualifier  the index qualifier
+         * @param indexName the index name
+         * @param indexType the index type
+         * @param columnName the column name
+         * @param isNonUnique the is non unique
+         * @param indexQualifier the index qualifier
          * @param ordinalPosition the ordinal position
-         * @param sortOrder       the sort order
-         * @param cardinality     the cardinality
-         * @param pagesIndex      the pages index
+         * @param sortOrder the sort order
+         * @param cardinality the cardinality
+         * @param pagesIndex the pages index
          * @param filterCondition the filter condition
          */
-        void onIndex(String indexName, String indexType, String columnName, boolean isNonUnique, String indexQualifier, String ordinalPosition,
-                     String sortOrder, String cardinality, String pagesIndex, String filterCondition);
+        void onIndex(String indexName, String indexType, String columnName, boolean isNonUnique, String indexQualifier,
+                String ordinalPosition, String sortOrder, String cardinality, String pagesIndex, String filterCondition);
     }
 
     /**
      * Iterate table definition.
      *
-     * @param connection              the connection
-     * @param catalogName             the catalog name
-     * @param schemaName              the schema name
-     * @param tableName               the table name
+     * @param connection the connection
+     * @param catalogName the catalog name
+     * @param schemaName the schema name
+     * @param tableName the table name
      * @param columnsIteratorCallback the columns iterator callback
      * @param indicesIteratorCallback the indices iterator callback
      * @throws SQLException the SQL exception
      */
     public static void iterateTableDefinition(Connection connection, String catalogName, String schemaName, String tableName,
-                                              ColumnsIteratorCallback columnsIteratorCallback, IndicesIteratorCallback indicesIteratorCallback) throws SQLException {
+            ColumnsIteratorCallback columnsIteratorCallback, IndicesIteratorCallback indicesIteratorCallback) throws SQLException {
 
         DatabaseMetaData dmd = connection.getMetaData();
 
@@ -527,10 +531,10 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
             }
             while (indexes.next()) {
                 if (indicesIteratorCallback != null) {
-                    indicesIteratorCallback.onIndex(indexes.getString(INDEX_NAME), indexes.getString(TYPE_INDEX), indexes.getString(COLUMN_NAME),
-                            indexes.getBoolean(NON_UNIQUE), indexes.getString(INDEX_QUALIFIER), indexes.getShort(ORDINAL_POSITION) + EMPTY,
-                            indexes.getString(ASC_OR_DESC), indexes.getInt(CARDINALITY) + EMPTY, indexes.getInt(PAGES_INDEX) + EMPTY,
-                            indexes.getString(FILTER_CONDITION));
+                    indicesIteratorCallback.onIndex(indexes.getString(INDEX_NAME), indexes.getString(TYPE_INDEX),
+                            indexes.getString(COLUMN_NAME), indexes.getBoolean(NON_UNIQUE), indexes.getString(INDEX_QUALIFIER),
+                            indexes.getShort(ORDINAL_POSITION) + EMPTY, indexes.getString(ASC_OR_DESC), indexes.getInt(CARDINALITY) + EMPTY,
+                            indexes.getInt(PAGES_INDEX) + EMPTY, indexes.getString(FILTER_CONDITION));
                 }
             }
         } finally {
@@ -543,19 +547,20 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
     /**
      * Iterate procedure definition.
      *
-     * @param connection                       the connection
-     * @param catalogName                      the catalog name
-     * @param schemaName                       the schema name
-     * @param procedureName                    the procedure name
+     * @param connection the connection
+     * @param catalogName the catalog name
+     * @param schemaName the schema name
+     * @param procedureName the procedure name
      * @param procedureColumnsIteratorCallback the procedure columns iterator callback
      * @throws SQLException the SQL exception
      */
     public static void iterateProcedureDefinition(Connection connection, String catalogName, String schemaName, String procedureName,
-                                                  ProcedureColumnsIteratorCallback procedureColumnsIteratorCallback) throws SQLException {
+            ProcedureColumnsIteratorCallback procedureColumnsIteratorCallback) throws SQLException {
 
         DatabaseMetaData dmd = connection.getMetaData();
 
-        ResultSet columns = dmd.getProcedureColumns(catalogName, schemaName, DatabaseNameNormalizer.normalizeTableName(procedureName), null);
+        ResultSet columns =
+                dmd.getProcedureColumns(catalogName, schemaName, DatabaseNameNormalizer.normalizeTableName(procedureName), null);
         if (columns == null) {
             throw new SQLException("DatabaseMetaData.getProcedureColumns returns null");
         }
@@ -566,8 +571,9 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
             while (columns.next()) {
                 if (procedureColumnsIteratorCallback != null) {
                     String cname = columns.getString(COLUMN_NAME);
-                    procedureColumnsIteratorCallback.onProcedureColumn(cname, columns.getInt(COLUMN_TYPE), columns.getString(TYPE_NAME), columns.getInt(PRECISION),
-                            columns.getInt(LENGTH), columns.getInt(SCALE), columns.getInt(RADIX), columns.getBoolean(NULLABLE), columns.getString(REMARKS));
+                    procedureColumnsIteratorCallback.onProcedureColumn(cname, columns.getInt(COLUMN_TYPE), columns.getString(TYPE_NAME),
+                            columns.getInt(PRECISION), columns.getInt(LENGTH), columns.getInt(SCALE), columns.getInt(RADIX),
+                            columns.getBoolean(NULLABLE), columns.getString(REMARKS));
                 }
             }
 
@@ -579,15 +585,15 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
     /**
      * Iterate function definition.
      *
-     * @param connection                      the connection
-     * @param catalogName                     the catalog name
-     * @param schemaName                      the schema name
-     * @param functionName                    the function name
+     * @param connection the connection
+     * @param catalogName the catalog name
+     * @param schemaName the schema name
+     * @param functionName the function name
      * @param functionColumnsIteratorCallback the function columns iterator callback
      * @throws SQLException the SQL exception
      */
     public static void iterateFunctionDefinition(Connection connection, String catalogName, String schemaName, String functionName,
-                                                 FunctionColumnsIteratorCallback functionColumnsIteratorCallback) throws SQLException {
+            FunctionColumnsIteratorCallback functionColumnsIteratorCallback) throws SQLException {
 
         DatabaseMetaData dmd = connection.getMetaData();
 
@@ -602,8 +608,9 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
             while (columns.next()) {
                 if (functionColumnsIteratorCallback != null) {
                     String cname = columns.getString(COLUMN_NAME);
-                    functionColumnsIteratorCallback.onFunctionColumn(cname, columns.getInt(COLUMN_TYPE), columns.getString(TYPE_NAME), columns.getInt(PRECISION),
-                            columns.getInt(LENGTH), columns.getInt(SCALE), columns.getInt(RADIX), columns.getBoolean(NULLABLE), columns.getString(REMARKS));
+                    functionColumnsIteratorCallback.onFunctionColumn(cname, columns.getInt(COLUMN_TYPE), columns.getString(TYPE_NAME),
+                            columns.getInt(PRECISION), columns.getInt(LENGTH), columns.getInt(SCALE), columns.getInt(RADIX),
+                            columns.getBoolean(NULLABLE), columns.getString(REMARKS));
                 }
             }
 
@@ -631,7 +638,7 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
      * Gets the schema metadata as json.
      *
      * @param dataSource the data source
-     * @param schema     the schema
+     * @param schema the schema
      * @return the schema metadata as json
      * @throws SQLException the SQL exception
      */
@@ -647,8 +654,8 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
      * Gets the metadata as json.
      *
      * @param dataSource the data source
-     * @param schema     the schema name
-     * @param table      the table name
+     * @param schema the schema name
+     * @param table the table name
      * @return the metadata as json
      * @throws SQLException the SQL exception
      */
@@ -656,14 +663,16 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         Connection connection = null;
         try {
             connection = dataSource.getConnection();
-            if (SqlFactory.deriveDialect(connection).getDatabaseType(connection).equals(DatabaseType.NOSQL.getName())) {
-            	NoSQLTableMetadata noSQLTableMetadata = describeNoSQL(connection, null, schema, table);
-            	String json = GsonHelper.toJson(noSQLTableMetadata);
-	            return json;
+            if (SqlFactory.deriveDialect(connection)
+                          .getDatabaseType(connection)
+                          .equals(DatabaseType.NOSQL.getName())) {
+                NoSQLTableMetadata noSQLTableMetadata = describeNoSQL(connection, null, schema, table);
+                String json = GsonHelper.toJson(noSQLTableMetadata);
+                return json;
             } else {
-	            TableMetadata tableMetadata = describeTable(connection, null, schema, table);
-	            String json = GsonHelper.toJson(tableMetadata);
-	            return json;
+                TableMetadata tableMetadata = describeTable(connection, null, schema, table);
+                String json = GsonHelper.toJson(tableMetadata);
+                return json;
             }
         } finally {
             if (connection != null) {
@@ -688,8 +697,9 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
      * @return the no SQL table metadata
      * @throws SQLException the SQL exception
      */
-    private static NoSQLTableMetadata describeNoSQL(Connection connection, String catalogName, String schemeName, String tableName) throws SQLException {
-    	DatabaseMetaData dmd = connection.getMetaData();
+    private static NoSQLTableMetadata describeNoSQL(Connection connection, String catalogName, String schemeName, String tableName)
+            throws SQLException {
+        DatabaseMetaData dmd = connection.getMetaData();
 
         ISqlDialect sqlDialect = getDialect(connection);
 
@@ -712,14 +722,14 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
             }
         }
         return null;
-	}
+    }
 
-	/**
+    /**
      * Gets the metadata as json.
      *
      * @param dataSource the data source
-     * @param schema     the schema name
-     * @param procedure  the procedure name
+     * @param schema the schema name
+     * @param procedure the procedure name
      * @return the metadata as json
      * @throws SQLException the SQL exception
      */
@@ -747,8 +757,8 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
      * Gets the metadata as json.
      *
      * @param dataSource the data source
-     * @param schema     the schema name
-     * @param function   the function name
+     * @param schema the schema name
+     * @param function the function name
      * @return the metadata as json
      * @throws SQLException the SQL exception
      */
@@ -802,13 +812,13 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
      * Gets the table schema.
      *
      * @param connection the connection
-     * @param tableName  the table name
+     * @param tableName the table name
      * @return the table schema
      * @throws SQLException the SQL exception
      */
     public static String getTableSchema(Connection connection, String tableName) throws SQLException {
         DatabaseMetaData databaseMetaData = connection.getMetaData();
-        ResultSet rs = databaseMetaData.getTables(connection.getCatalog(), null, tableName, new String[]{ISqlKeywords.KEYWORD_TABLE});
+        ResultSet rs = databaseMetaData.getTables(connection.getCatalog(), null, tableName, new String[] {ISqlKeywords.KEYWORD_TABLE});
         if (rs.next()) {
             return rs.getString("TABLE_SCHEM");
         }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.websockets.domain;
 
@@ -58,8 +57,7 @@ public class Websocket extends Artefact {
      * @param handler the handler
      * @param engine the engine
      */
-    public Websocket(String location, String name, String description,
-                     String endpoint, String handler, String engine) {
+    public Websocket(String location, String name, String description, String endpoint, String handler, String engine) {
         super(location, name, ARTEFACT_TYPE, description, null);
         this.endpoint = endpoint;
         this.handler = handler;
@@ -153,21 +151,9 @@ public class Websocket extends Artefact {
      */
     @Override
     public String toString() {
-        return "Websocket {" +
-                "id=" + id +
-                ", endpoint='" + endpoint + '\'' +
-                ", handler='" + handler + '\'' +
-                ", engine='" + engine + '\'' +
-                ", location='" + location + '\'' +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", description='" + description + '\'' +
-                ", key='" + key + '\'' +
-                ", dependencies='" + dependencies + '\'' +
-                ", createdBy=" + createdBy +
-                ", createdAt=" + createdAt +
-                ", updatedBy=" + updatedBy +
-                ", updatedAt=" + updatedAt +
-                '}';
+        return "Websocket {" + "id=" + id + ", endpoint='" + endpoint + '\'' + ", handler='" + handler + '\'' + ", engine='" + engine + '\''
+                + ", location='" + location + '\'' + ", name='" + name + '\'' + ", type='" + type + '\'' + ", description='" + description
+                + '\'' + ", key='" + key + '\'' + ", dependencies='" + dependencies + '\'' + ", createdBy=" + createdBy + ", createdAt="
+                + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + '}';
     }
 }

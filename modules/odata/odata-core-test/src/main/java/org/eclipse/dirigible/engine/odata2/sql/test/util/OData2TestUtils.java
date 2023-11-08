@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.test.util;
 
@@ -38,18 +37,14 @@ public class OData2TestUtils {
     /**
      * Instantiates a new o data 2 test utils.
      */
-    private OData2TestUtils() {
-    }
+    private OData2TestUtils() {}
 
     /**
-     * Helper method to retrieve the {@link ODataEntry} from the response object
-     * returned by OData2RequestBuilder#executeRequest().
-     * 
-     * @param response
-     *            the response returned by
-     *            OData2RequestBuilder#executeRequest()
-     * @param entitySet
-     *            the EdmEntitySet used to parse the response
+     * Helper method to retrieve the {@link ODataEntry} from the response object returned by
+     * OData2RequestBuilder#executeRequest().
+     *
+     * @param response the response returned by OData2RequestBuilder#executeRequest()
+     * @param entitySet the EdmEntitySet used to parse the response
      * @return the ODataEntry
      * @throws IOException in case of error
      * @throws ODataException in case of error
@@ -58,21 +53,20 @@ public class OData2TestUtils {
             throws IOException, ODataException {
         try (InputStream content = response.readEntity(InputStream.class)) {
 
-            ODataEntry entry = EntityProvider.readEntry(response.getMediaType().toString(), entitySet, content,
-                    EntityProviderReadProperties.init().build());
+            ODataEntry entry = EntityProvider.readEntry(response.getMediaType()
+                                                                .toString(),
+                    entitySet, content, EntityProviderReadProperties.init()
+                                                                    .build());
             return entry;
         }
     }
 
     /**
-     * Helper method to retrieve the ODataFeed from the response object
-     * returned by OData2RequestBuilder#executeRequest().
-     * 
-     * @param response
-     *            the response returned by
-     *            OData2RequestBuilder#executeRequest()
-     * @param entitySet
-     *            the EdmEntitySet used to parse the response
+     * Helper method to retrieve the ODataFeed from the response object returned by
+     * OData2RequestBuilder#executeRequest().
+     *
+     * @param response the response returned by OData2RequestBuilder#executeRequest()
+     * @param entitySet the EdmEntitySet used to parse the response
      * @return the ODataFeed
      * @throws IOException in case of error
      * @throws ODataException in case of error
@@ -81,51 +75,46 @@ public class OData2TestUtils {
             throws IOException, ODataException {
         try (InputStream content = response.readEntity(InputStream.class)) {
 
-            ODataFeed feed = EntityProvider.readFeed(response.getMediaType().toString(), entitySet, content,
-                    EntityProviderReadProperties.init().build());
+            ODataFeed feed = EntityProvider.readFeed(response.getMediaType()
+                                                             .toString(),
+                    entitySet, content, EntityProviderReadProperties.init()
+                                                                    .build());
             return feed;
         }
     }
 
     /**
-     * Helper method to retrieve the ODataErrorContext representing the
-     * error response to a failed call to an OData API from the response object
-     * returned by OData2RequestBuilder#executeRequest().
-     * 
-     * @param response
-     *            the object containing the error response
-     * @return the ODataErrorContext representing the content of the returned
-     *         error document. <b>NOTE:</b> The used parser does not parse the
-     *         message's locale so it will always be <code>null</code>.
+     * Helper method to retrieve the ODataErrorContext representing the error response to a failed call
+     * to an OData API from the response object returned by OData2RequestBuilder#executeRequest().
+     *
+     * @param response the object containing the error response
+     * @return the ODataErrorContext representing the content of the returned error document.
+     *         <b>NOTE:</b> The used parser does not parse the message's locale so it will always be
+     *         <code>null</code>.
      * @throws IOException in case of error
      * @throws EntityProviderException in case of error
      */
     public static ODataErrorContext retrieveODataErrorDocumentFromResponse(final Response response)
             throws IOException, EntityProviderException {
         try (InputStream content = response.readEntity(InputStream.class)) {
-            return EntityProvider.readErrorDocument(content, response.getMediaType().toString());
+            return EntityProvider.readErrorDocument(content, response.getMediaType()
+                                                                     .toString());
         }
     }
 
     /**
-     * Validates an ODataFeed against a list of Maps, which represents
-     * the expected properties of each entry. The expected properties define
-     * only a minimal set of properties, which have to be contained in the
-     * ODataEntrys. The ODataEntrys can contain more entries.
-     * The properties of the entries itself can contain entries or maps, which
-     * are validated recursively. The validation is independent of the order of
-     * the entries. The result is returned as a {@link Pair}, where the first
-     * member gives the result of the validation as an Boolean value and the
-     * second the reason, if the validation has failed.
-     * 
-     * @param expectedEntries
-     *            a list of maps which represent the expected properties of the
-     *            ODataEntrys
-     * @param oDataFeed
-     *            an ODataFeed, which shall be validated
-     * @return a Pair where the first member is true or false
-     *         depending on the result of the validation and the second gives
-     *         the reason, if the validation has failed
+     * Validates an ODataFeed against a list of Maps, which represents the expected properties of each
+     * entry. The expected properties define only a minimal set of properties, which have to be
+     * contained in the ODataEntrys. The ODataEntrys can contain more entries. The properties of the
+     * entries itself can contain entries or maps, which are validated recursively. The validation is
+     * independent of the order of the entries. The result is returned as a {@link Pair}, where the
+     * first member gives the result of the validation as an Boolean value and the second the reason, if
+     * the validation has failed.
+     *
+     * @param expectedEntries a list of maps which represent the expected properties of the ODataEntrys
+     * @param oDataFeed an ODataFeed, which shall be validated
+     * @return a Pair where the first member is true or false depending on the result of the validation
+     *         and the second gives the reason, if the validation has failed
      */
     public static Pair<Boolean, String> validateODataFeed(final List<Map<String, Object>> expectedEntries, final ODataFeed oDataFeed) {
         List<ODataEntry> actualEntries = oDataFeed.getEntries();
@@ -133,21 +122,15 @@ public class OData2TestUtils {
     }
 
     /**
-     * Validates an ODataEntry against a map of expected properties
-     * (key/value pairs). The properties of the entry itself can contain entries
-     * or maps, which are validated recursively. The result is returned as a
-     * Pair, where the first member gives the result of the validation
-     * as an Boolean value and the second the reason, if the validation has
-     * failed.
-     * 
-     * @param expectedProperties
-     *            a map which represent the expected properties of the
-     *            ODataEntry
-     * @param oDataEntry
-     *            an ODataEntry, which shall be validated
-     * @return a Pair, where the first member is true or false
-     *         depending on the result of the validation and the second gives
-     *         the reason, if the validation has failed
+     * Validates an ODataEntry against a map of expected properties (key/value pairs). The properties of
+     * the entry itself can contain entries or maps, which are validated recursively. The result is
+     * returned as a Pair, where the first member gives the result of the validation as an Boolean value
+     * and the second the reason, if the validation has failed.
+     *
+     * @param expectedProperties a map which represent the expected properties of the ODataEntry
+     * @param oDataEntry an ODataEntry, which shall be validated
+     * @return a Pair, where the first member is true or false depending on the result of the validation
+     *         and the second gives the reason, if the validation has failed
      */
     public static Pair<Boolean, String> validateODataEntry(final Map<String, Object> expectedProperties, final ODataEntry oDataEntry) {
         Map<String, Object> actualProperties = oDataEntry.getProperties();
@@ -214,7 +197,8 @@ public class OData2TestUtils {
             Pair<Boolean, String> result = null;
             int j = 0;
             do {
-                Map<String, Object> actualProperties = actualValueList.get(j++).getProperties();
+                Map<String, Object> actualProperties = actualValueList.get(j++)
+                                                                      .getProperties();
                 result = validateODataEntry(expectedProperties, actualProperties);
             } while (!result.getFirst() && j < actualValueList.size());
             if (!result.getFirst())
@@ -295,15 +279,15 @@ public class OData2TestUtils {
      * @return array
      */
     @SuppressWarnings("rawtypes")
-    public static String[] resources( Class ... classes) {
+    public static String[] resources(Class... classes) {
         List<String> resources = new ArrayList<>();
         for (Class clazzz : classes) {
             resources.add("META-INF/" + clazzz.getSimpleName() + ".json");
         }
         return resources.toArray(new String[resources.size()]);
     }
-    
-    
+
+
     /**
      * Resource.
      *
@@ -323,6 +307,7 @@ public class OData2TestUtils {
      * @return InputStream
      */
     public static <T> InputStream stream(Class<T> clazz) {
-        return OData2TestUtils.class.getClassLoader().getResourceAsStream(resource(clazz));
+        return OData2TestUtils.class.getClassLoader()
+                                    .getResourceAsStream(resource(clazz));
     }
 }

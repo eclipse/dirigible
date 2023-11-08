@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.jobs.repository;
 
@@ -36,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class JobEmailRepositoryTest {
@@ -58,11 +57,11 @@ public class JobEmailRepositoryTest {
     public void setup() throws Exception {
         cleanup();
         // create test JobEmails
-       createJobEmail(jobEmailRepository, "/a/b/c/jobEmail1.jobEmail","jobEmail1", "description", null, "job1", "email1");
-       createJobEmail(jobEmailRepository, "/a/b/c/jobEmail2.jobEmail","jobEmail2", "description", null, "job2", "email2");
-       createJobEmail(jobEmailRepository, "/a/b/c/jobEmail3.jobEmail","jobEmail3", "description", null, "job3", "email3");
-       createJobEmail(jobEmailRepository, "/a/b/c/jobEmail4.jobEmail","jobEmail4", "description", null, "job4", "email4");
-       createJobEmail(jobEmailRepository, "/a/b/c/jobEmail5.jobEmail","jobEmail5", "description", null, "job5", "email5");
+        createJobEmail(jobEmailRepository, "/a/b/c/jobEmail1.jobEmail", "jobEmail1", "description", null, "job1", "email1");
+        createJobEmail(jobEmailRepository, "/a/b/c/jobEmail2.jobEmail", "jobEmail2", "description", null, "job2", "email2");
+        createJobEmail(jobEmailRepository, "/a/b/c/jobEmail3.jobEmail", "jobEmail3", "description", null, "job3", "email3");
+        createJobEmail(jobEmailRepository, "/a/b/c/jobEmail4.jobEmail", "jobEmail4", "description", null, "job4", "email4");
+        createJobEmail(jobEmailRepository, "/a/b/c/jobEmail5.jobEmail", "jobEmail5", "description", null, "job5", "email5");
     }
 
     /**
@@ -83,7 +82,9 @@ public class JobEmailRepositoryTest {
      */
     @Test
     public void getOne() {
-        Long id = jobEmailRepository.findAll().get(0).getId();
+        Long id = jobEmailRepository.findAll()
+                                    .get(0)
+                                    .getId();
         Optional<JobEmail> optional = jobEmailRepository.findById(id);
         JobEmail jobEmail = optional.isPresent() ? optional.get() : null;
         assertNotNull(jobEmail);
@@ -105,7 +106,9 @@ public class JobEmailRepositoryTest {
      */
     @Test
     public void getReferenceUsingEntityManager() {
-        Long id = jobEmailRepository.findAll().get(0).getId();
+        Long id = jobEmailRepository.findAll()
+                                    .get(0)
+                                    .getId();
         JobEmail extension = entityManager.getReference(JobEmail.class, id);
         assertNotNull(extension);
         assertNotNull(extension.getLocation());
@@ -122,7 +125,8 @@ public class JobEmailRepositoryTest {
      * @param jobName the name
      * @param email the email
      */
-    public static void createJobEmail(JobEmailRepository jobEmailRepository, String location, String name, String description, Set<String> dependencies, String jobName, String email){
+    public static void createJobEmail(JobEmailRepository jobEmailRepository, String location, String name, String description,
+            Set<String> dependencies, String jobName, String email) {
         JobEmail jobEmail = new JobEmail(location, name, description, dependencies, jobName, email);
         jobEmailRepository.save(jobEmail);
     }

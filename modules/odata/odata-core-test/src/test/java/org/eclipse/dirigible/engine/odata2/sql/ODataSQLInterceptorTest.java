@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql;
 
@@ -58,50 +57,52 @@ import liquibase.resource.ClassLoaderResourceAccessor;
  */
 public class ODataSQLInterceptorTest extends AbstractSQLProcessorTest {
 
-	/**
-	 * Gets the o data entities.
-	 *
-	 * @return the o data entities
-	 */
-	@Override
-	protected Class<?>[] getODataEntities() {
-		Class<?> [] classes = {Car.class, Driver.class, Owner.class, Address.class};
-		return classes;
-	}
+    /**
+     * Gets the o data entities.
+     *
+     * @return the o data entities
+     */
+    @Override
+    protected Class<?>[] getODataEntities() {
+        Class<?>[] classes = {Car.class, Driver.class, Owner.class, Address.class};
+        return classes;
+    }
 
-//    /**
-//     * Test SQL interceptor read entity.
-//     *
-//     * @throws Exception the exception
-//     */
-//    @Test
-//    public void testSQLInterceptorReadEntity() throws Exception {
-//        sf.addInterceptors(Collections.singletonList(new SQLInterceptor(){
-//            @Override
-//            public SQLSelectBuilder onRead(SQLSelectBuilder query, UriInfo uriInfo, ODataContext context) throws ODataException {
-//                EdmEntityType et = uriInfo.getTargetEntitySet().getEntityType();
-//                EdmProperty prop = (EdmProperty) et.getProperty("Make");
-//                String sql = query.getSQLTableColumn(et, prop) + "=?";
-//                SQLStatementParam param = new SQLStatementParam("BMW", prop, query.getSQLTableColumnInfo(et, prop));
-//                SQLWhereClause wc = new SQLWhereClause(sql, param);
-//                query.getWhereClause().and(wc);
-//                return query;
-//            }
-//
-//        }));
-//        Response response = OData2RequestBuilder.createRequest(sf) //
-//                .segments("Cars") //
-//                .param("$top", "10") //
-//                .executeRequest(GET);
-//        assertEquals(200, response.getStatus());
-//        ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
-//        List<ODataEntry> entries = resultFeed.getEntries();
-//        assertEquals("The interceptor has to add a condition where we get a filter", 1, entries.size());
-//        for (ODataEntry entry: entries){
-//            Map<String, Object> props = entry.getProperties();
-//            assertEquals("BMW", props.get("Make"));
-//        }
-//    }
+    // /**
+    // * Test SQL interceptor read entity.
+    // *
+    // * @throws Exception the exception
+    // */
+    // @Test
+    // public void testSQLInterceptorReadEntity() throws Exception {
+    // sf.addInterceptors(Collections.singletonList(new SQLInterceptor(){
+    // @Override
+    // public SQLSelectBuilder onRead(SQLSelectBuilder query, UriInfo uriInfo, ODataContext context)
+    // throws ODataException {
+    // EdmEntityType et = uriInfo.getTargetEntitySet().getEntityType();
+    // EdmProperty prop = (EdmProperty) et.getProperty("Make");
+    // String sql = query.getSQLTableColumn(et, prop) + "=?";
+    // SQLStatementParam param = new SQLStatementParam("BMW", prop, query.getSQLTableColumnInfo(et,
+    // prop));
+    // SQLWhereClause wc = new SQLWhereClause(sql, param);
+    // query.getWhereClause().and(wc);
+    // return query;
+    // }
+    //
+    // }));
+    // Response response = OData2RequestBuilder.createRequest(sf) //
+    // .segments("Cars") //
+    // .param("$top", "10") //
+    // .executeRequest(GET);
+    // assertEquals(200, response.getStatus());
+    // ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
+    // List<ODataEntry> entries = resultFeed.getEntries();
+    // assertEquals("The interceptor has to add a condition where we get a filter", 1, entries.size());
+    // for (ODataEntry entry: entries){
+    // Map<String, Object> props = entry.getProperties();
+    // assertEquals("BMW", props.get("Make"));
+    // }
+    // }
 
 
     /**
@@ -111,13 +112,15 @@ public class ODataSQLInterceptorTest extends AbstractSQLProcessorTest {
      */
     @Test
     public void testSQLInterceptorCreateEntity() throws Exception {
-        sf.addInterceptors(Collections.singletonList(new SQLInterceptor(){
+        sf.addInterceptors(Collections.singletonList(new SQLInterceptor() {
 
             @Override
             public SQLInsertBuilder onCreate(SQLInsertBuilder query, PostUriInfo uriInfo, ODataContext context) throws ODataException {
                 ODataEntry entry = query.getEntry();
-                entry.getProperties().put("FirstName", "Dan");
-                entry.getProperties().put("LastName", "Kolov");
+                entry.getProperties()
+                     .put("FirstName", "Dan");
+                entry.getProperties()
+                     .put("LastName", "Kolov");
                 return query;
             }
         }));
@@ -137,15 +140,16 @@ public class ODataSQLInterceptorTest extends AbstractSQLProcessorTest {
 
         System.out.println(content);
         Response createResponse = modifyingRequestBuilder(sf, content)//
-                .segments("Drivers") //
-                .accept("application/json")//
-                .param("content-type", "application/json") //
-                .content(content)//
-                .contentSize(content.length()).executeRequest(POST);
+                                                                      .segments("Drivers") //
+                                                                      .accept("application/json")//
+                                                                      .param("content-type", "application/json") //
+                                                                      .content(content)//
+                                                                      .contentSize(content.length())
+                                                                      .executeRequest(POST);
 
         assertEquals(201, createResponse.getStatus());
         String createResponseStr = IOUtils.toString((InputStream) createResponse.getEntity());
-        //System.out.println(createResponseStr);
+        // System.out.println(createResponseStr);
 
         assertTrue(createResponseStr.contains("Dan"));
         assertTrue(createResponseStr.contains("Kolov"));
@@ -161,29 +165,32 @@ public class ODataSQLInterceptorTest extends AbstractSQLProcessorTest {
      */
     @Test
     public void testSQLInterceptorDeleteEntity() throws Exception {
-        sf.addInterceptors(Collections.singletonList(new SQLInterceptor(){
+        sf.addInterceptors(Collections.singletonList(new SQLInterceptor() {
 
             @Override
             public SQLDeleteBuilder onDelete(SQLDeleteBuilder query, DeleteUriInfo uriInfo, ODataContext context) {
                 Map<String, Object> deleteKeys = query.getDeleteKeys();
-                deleteKeys.put("Id", "7990d49f-cfaf-48ab-8c6f-adbe7aaa069e" );
+                deleteKeys.put("Id", "7990d49f-cfaf-48ab-8c6f-adbe7aaa069e");
                 return query;
             }
         }));
 
         Response getCar = OData2RequestBuilder.createRequest(sf) //
-                .segments("Drivers('695796c4-09a1-11ec-9a03-0242ac130006')") //
-                .accept("application/json").executeRequest(GET);
+                                              .segments("Drivers('695796c4-09a1-11ec-9a03-0242ac130006')") //
+                                              .accept("application/json")
+                                              .executeRequest(GET);
         assertEquals(200, getCar.getStatus());
 
         Response deleteCar = OData2RequestBuilder.createRequest(sf) //
-                .segments("Drivers('695796c4-09a1-11ec-9a03-0242ac130006')") //
-                .accept("application/json").executeRequest(DELETE);
+                                                 .segments("Drivers('695796c4-09a1-11ec-9a03-0242ac130006')") //
+                                                 .accept("application/json")
+                                                 .executeRequest(DELETE);
         assertEquals(204, deleteCar.getStatus());
 
         Response getDeletedCar = OData2RequestBuilder.createRequest(sf) //
-                .segments("Drivers('695796c4-09a1-11ec-9a03-0242ac130006')") //
-                .accept("application/json").executeRequest(GET);
+                                                     .segments("Drivers('695796c4-09a1-11ec-9a03-0242ac130006')") //
+                                                     .accept("application/json")
+                                                     .executeRequest(GET);
         assertEquals(200, getDeletedCar.getStatus());
     }
 
@@ -194,19 +201,21 @@ public class ODataSQLInterceptorTest extends AbstractSQLProcessorTest {
      */
     @Test
     public void testSQLInterceptorPatchEntity() throws Exception {
-        sf.addInterceptors(Collections.singletonList(new SQLInterceptor(){
+        sf.addInterceptors(Collections.singletonList(new SQLInterceptor() {
 
             @Override
             public SQLUpdateBuilder onUpdate(SQLUpdateBuilder query, PutMergePatchUriInfo uriInfo, ODataContext context) {
                 ODataEntry entry = query.getUpdateEntry();
-                entry.getProperties().put("Price", "10000000");
+                entry.getProperties()
+                     .put("Price", "10000000");
                 return query;
             }
         }));
 
         Response existingCar = OData2RequestBuilder.createRequest(sf) //
-                .segments("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')") //
-                .accept("application/json").executeRequest(GET);
+                                                   .segments("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')") //
+                                                   .accept("application/json")
+                                                   .executeRequest(GET);
         assertEquals(200, existingCar.getStatus());
 
         String content = "{" //
@@ -218,16 +227,18 @@ public class ODataSQLInterceptorTest extends AbstractSQLProcessorTest {
                 + " }" + "}";
 
         Response response = modifyingRequestBuilder(sf, content)//
-                .segments("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')") //
-                .accept("application/json")//
-                .content(content)//
-                .param("content-type", "application/json")//
-                .contentSize(content.length()).executeRequest(PATCH);
+                                                                .segments("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')") //
+                                                                .accept("application/json")//
+                                                                .content(content)//
+                                                                .param("content-type", "application/json")//
+                                                                .contentSize(content.length())
+                                                                .executeRequest(PATCH);
         assertEquals(204, response.getStatus());
 
         existingCar = OData2RequestBuilder.createRequest(sf) //
-                .segments("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')") //
-                .accept("application/json").executeRequest(GET);
+                                          .segments("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')") //
+                                          .accept("application/json")
+                                          .executeRequest(GET);
         assertEquals(200, existingCar.getStatus());
         ODataEntry resultEntry = retrieveODataEntry(existingCar, "Cars");
         Map<String, Object> properties = resultEntry.getProperties();

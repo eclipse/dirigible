@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.openapi.synchronizer;
 
@@ -83,7 +82,8 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
      */
     @Override
     public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString().endsWith(getFileExtension());
+        return file.toString()
+                   .endsWith(getFileExtension());
     }
 
     /**
@@ -103,7 +103,7 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException 
+     * @throws ParseException
      */
     @Override
     public List<OpenAPI> parse(String location, byte[] content) throws ParseException {
@@ -115,44 +115,50 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
         openAPI.setType(OpenAPI.ARTEFACT_TYPE);
         openAPI.updateKey();
         try {
-        	OpenAPI maybe = getService().findByKey(openAPI.getKey());
-			if (maybe != null) {
-				openAPI.setId(maybe.getId());
-			}
-			openAPI = getService().save(openAPI);
+            OpenAPI maybe = getService().findByKey(openAPI.getKey());
+            if (maybe != null) {
+                openAPI.setId(maybe.getId());
+            }
+            openAPI = getService().save(openAPI);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-            if (logger.isErrorEnabled()) {logger.error("openAPI: {}", openAPI);}
-            if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
+            if (logger.isErrorEnabled()) {
+                logger.error("openAPI: {}", openAPI);
+            }
+            if (logger.isErrorEnabled()) {
+                logger.error("content: {}", new String(content));
+            }
             throw new ParseException(e.getMessage(), 0);
         }
         return List.of(openAPI);
     }
-    
+
     /**
-	 * Retrieve.
-	 *
-	 * @param location the location
-	 * @return the list
-	 */
-	@Override
-	public List<OpenAPI> retrieve(String location) {
-		return getService().getAll();
-	}
-	
-	/**
-	 * Sets the status.
-	 *
-	 * @param artefact the artefact
-	 * @param lifecycle the lifecycle
-	 * @param error the error
-	 */
-	@Override
-	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
-		artefact.setLifecycle(lifecycle);
-		artefact.setError(error);
-		getService().save((OpenAPI) artefact);
-	}
+     * Retrieve.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    public List<OpenAPI> retrieve(String location) {
+        return getService().getAll();
+    }
+
+    /**
+     * Sets the status.
+     *
+     * @param artefact the artefact
+     * @param lifecycle the lifecycle
+     * @param error the error
+     */
+    @Override
+    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+        artefact.setLifecycle(lifecycle);
+        artefact.setError(error);
+        getService().save((OpenAPI) artefact);
+    }
 
     /**
      * Gets the service.
@@ -174,7 +180,9 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
         try {
             getService().delete(openAPI);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
             callback.addError(e.getMessage());
             callback.registerState(this, openAPI, ArtefactLifecycle.DELETED, e.getMessage());
         }
@@ -202,24 +210,24 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
     public void setCallback(SynchronizerCallback callback) {
         this.callback = callback;
     }
-    
+
     /**
      * Gets the file extension.
      *
      * @return the file extension
      */
     @Override
-	public String getFileExtension() {
-		return FILE_EXTENSION_OPENAPI;
-	}
+    public String getFileExtension() {
+        return FILE_EXTENSION_OPENAPI;
+    }
 
-	/**
-	 * Gets the artefact type.
-	 *
-	 * @return the artefact type
-	 */
-	@Override
-	public String getArtefactType() {
-		return OpenAPI.ARTEFACT_TYPE;
-	}
+    /**
+     * Gets the artefact type.
+     *
+     * @return the artefact type
+     */
+    @Override
+    public String getArtefactType() {
+        return OpenAPI.ARTEFACT_TYPE;
+    }
 }

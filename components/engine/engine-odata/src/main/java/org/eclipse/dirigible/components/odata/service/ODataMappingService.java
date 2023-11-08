@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.service;
 
@@ -31,30 +30,30 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class ODataMappingService implements ArtefactService<ODataMapping>, InitializingBean {
-	
-	/** The instance. */
-	private static ODataMappingService INSTANCE;
-	
-	/**
-	 * After properties set.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;		
-	}
-	
-	/**
-	 * Gets the.
-	 *
-	 * @return the o data mapping service
-	 */
-	public static ODataMappingService get() {
+
+    /** The instance. */
+    private static ODataMappingService INSTANCE;
+
+    /**
+     * After properties set.
+     *
+     * @throws Exception the exception
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        INSTANCE = this;
+    }
+
+    /**
+     * Gets the.
+     *
+     * @return the o data mapping service
+     */
+    public static ODataMappingService get() {
         return INSTANCE;
     }
-	
-	/** The ODataMapping repository. */
+
+    /** The ODataMapping repository. */
     @Autowired
     private ODataMappingRepository odataMappingRepository;
 
@@ -103,7 +102,7 @@ public class ODataMappingService implements ArtefactService<ODataMapping>, Initi
      */
     @Override
     public ODataMapping findByName(String name) {
-    	ODataMapping filter = new ODataMapping();
+        ODataMapping filter = new ODataMapping();
         filter.setName(name);
         Example<ODataMapping> example = Example.of(filter);
         Optional<ODataMapping> odataMapping = odataMappingRepository.findOne(example);
@@ -113,7 +112,7 @@ public class ODataMappingService implements ArtefactService<ODataMapping>, Initi
             throw new IllegalArgumentException("OData Mapping with name does not exist: " + name);
         }
     }
-    
+
     /**
      * Find by location.
      *
@@ -123,13 +122,13 @@ public class ODataMappingService implements ArtefactService<ODataMapping>, Initi
     @Override
     @Transactional(readOnly = true)
     public List<ODataMapping> findByLocation(String location) {
-    	ODataMapping filter = new ODataMapping();
+        ODataMapping filter = new ODataMapping();
         filter.setLocation(location);
         Example<ODataMapping> example = Example.of(filter);
         List<ODataMapping> list = odataMappingRepository.findAll(example);
         return list;
     }
-    
+
     /**
      * Find by key.
      *
@@ -139,7 +138,7 @@ public class ODataMappingService implements ArtefactService<ODataMapping>, Initi
     @Override
     @Transactional(readOnly = true)
     public ODataMapping findByKey(String key) {
-    	ODataMapping filter = new ODataMapping();
+        ODataMapping filter = new ODataMapping();
         filter.setKey(key);
         Example<ODataMapping> example = Example.of(filter);
         Optional<ODataMapping> odataMapping = odataMappingRepository.findOne(example);
@@ -167,16 +166,16 @@ public class ODataMappingService implements ArtefactService<ODataMapping>, Initi
      */
     @Override
     public void delete(ODataMapping odataMapping) {
-    	odataMappingRepository.delete(odataMapping);
+        odataMappingRepository.delete(odataMapping);
     }
-    
+
     /**
      * Removes the mapping.
      *
      * @param location the location
      */
     public void removeMappings(String location) {
-    	ODataMapping filter = new ODataMapping();
+        ODataMapping filter = new ODataMapping();
         filter.setLocation(location);
         Example<ODataMapping> example = Example.of(filter);
         odataMappingRepository.deleteAll(odataMappingRepository.findAll(example));

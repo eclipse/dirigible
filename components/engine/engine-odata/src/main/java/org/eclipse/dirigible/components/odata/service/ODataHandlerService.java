@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.service;
 
@@ -31,30 +30,30 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class ODataHandlerService implements ArtefactService<ODataHandler>, InitializingBean {
-	
-	/** The instance. */
-	private static ODataHandlerService INSTANCE;
-	
-	/**
-	 * After properties set.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;		
-	}
-	
-	/**
-	 * Gets the.
-	 *
-	 * @return the o data handler service
-	 */
-	public static ODataHandlerService get() {
+
+    /** The instance. */
+    private static ODataHandlerService INSTANCE;
+
+    /**
+     * After properties set.
+     *
+     * @throws Exception the exception
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        INSTANCE = this;
+    }
+
+    /**
+     * Gets the.
+     *
+     * @return the o data handler service
+     */
+    public static ODataHandlerService get() {
         return INSTANCE;
     }
-	
-	/** The ODataHandler repository. */
+
+    /** The ODataHandler repository. */
     @Autowired
     private ODataHandlerRepository odataHandlerRepository;
 
@@ -103,7 +102,7 @@ public class ODataHandlerService implements ArtefactService<ODataHandler>, Initi
      */
     @Override
     public ODataHandler findByName(String name) {
-    	ODataHandler filter = new ODataHandler();
+        ODataHandler filter = new ODataHandler();
         filter.setName(name);
         Example<ODataHandler> example = Example.of(filter);
         Optional<ODataHandler> odataHandler = odataHandlerRepository.findOne(example);
@@ -113,7 +112,7 @@ public class ODataHandlerService implements ArtefactService<ODataHandler>, Initi
             throw new IllegalArgumentException("OData Handler with name does not exist: " + name);
         }
     }
-    
+
     /**
      * Find by location.
      *
@@ -123,13 +122,13 @@ public class ODataHandlerService implements ArtefactService<ODataHandler>, Initi
     @Override
     @Transactional(readOnly = true)
     public List<ODataHandler> findByLocation(String location) {
-    	ODataHandler filter = new ODataHandler();
+        ODataHandler filter = new ODataHandler();
         filter.setLocation(location);
         Example<ODataHandler> example = Example.of(filter);
         List<ODataHandler> list = odataHandlerRepository.findAll(example);
         return list;
     }
-    
+
     /**
      * Find by key.
      *
@@ -139,7 +138,7 @@ public class ODataHandlerService implements ArtefactService<ODataHandler>, Initi
     @Override
     @Transactional(readOnly = true)
     public ODataHandler findByKey(String key) {
-    	ODataHandler filter = new ODataHandler();
+        ODataHandler filter = new ODataHandler();
         filter.setKey(key);
         Example<ODataHandler> example = Example.of(filter);
         Optional<ODataHandler> odataHandler = odataHandlerRepository.findOne(example);
@@ -167,38 +166,38 @@ public class ODataHandlerService implements ArtefactService<ODataHandler>, Initi
      */
     @Override
     public void delete(ODataHandler odataHandler) {
-    	odataHandlerRepository.delete(odataHandler);
+        odataHandlerRepository.delete(odataHandler);
     }
-    
+
     /**
      * Removes the handler.
      *
      * @param location the location
      */
     public void removeHandlers(String location) {
-    	ODataHandler filter = new ODataHandler();
+        ODataHandler filter = new ODataHandler();
         filter.setLocation(location);
         Example<ODataHandler> example = Example.of(filter);
         odataHandlerRepository.deleteAll(odataHandlerRepository.findAll(example));
     }
 
-	/**
-	 * Gets the by namespace name method and kind.
-	 *
-	 * @param namespace the namespace
-	 * @param name the name
-	 * @param method the method
-	 * @param kind the kind
-	 * @return the by namespace name method and kind
-	 */
-	public List<ODataHandler> getByNamespaceNameMethodAndKind(String namespace, String name, String method, String kind) {
-		ODataHandler filter = new ODataHandler();
+    /**
+     * Gets the by namespace name method and kind.
+     *
+     * @param namespace the namespace
+     * @param name the name
+     * @param method the method
+     * @param kind the kind
+     * @return the by namespace name method and kind
+     */
+    public List<ODataHandler> getByNamespaceNameMethodAndKind(String namespace, String name, String method, String kind) {
+        ODataHandler filter = new ODataHandler();
         filter.setNamespace(namespace);
         filter.setName(name);
         filter.setMethod(method);
         filter.setKind(kind);
         Example<ODataHandler> example = Example.of(filter);
         return odataHandlerRepository.findAll(example);
-	}
+    }
 
 }

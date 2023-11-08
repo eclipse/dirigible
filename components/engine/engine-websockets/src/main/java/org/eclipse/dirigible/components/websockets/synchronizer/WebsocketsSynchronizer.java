@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.websockets.synchronizer;
 
@@ -45,10 +44,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Order(SynchronizersOrder.WEBSOCKET)
 public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<Websocket> {
-    
+
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(WebsocketsSynchronizer.class);
-    
+
     /** The Constant FILE_EXTENSION_WEBSOCKET. */
     private static final String FILE_EXTENSION_WEBSOCKET = ".websocket";
 
@@ -68,7 +67,8 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
      */
     @Override
     public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString().endsWith(getFileExtension());
+        return file.toString()
+                   .endsWith(getFileExtension());
     }
 
     /**
@@ -88,7 +88,7 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException 
+     * @throws ParseException
      */
     @Override
     public List<Websocket> parse(String location, byte[] content) throws ParseException {
@@ -99,11 +99,11 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
         websocket.setType(Websocket.ARTEFACT_TYPE);
         websocket.updateKey();
         try {
-        	Websocket maybe = getService().findByKey(websocket.getKey());
-			if (maybe != null) {
-				websocket.setId(maybe.getId());
-			}
-			websocket = getService().save(websocket);
+            Websocket maybe = getService().findByKey(websocket.getKey());
+            if (maybe != null) {
+                websocket.setId(maybe.getId());
+            }
+            websocket = getService().save(websocket);
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {
                 logger.error(e.getMessage(), e);
@@ -114,31 +114,31 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
         }
         return List.of(websocket);
     }
-    
+
     /**
-	 * Retrieve.
-	 *
-	 * @param location the location
-	 * @return the list
-	 */
-	@Override
-	public List<Websocket> retrieve(String location) {
-		return getService().getAll();
-	}
-	
-	/**
-	 * Sets the status.
-	 *
-	 * @param artefact the artefact
-	 * @param lifecycle the lifecycle
-	 * @param error the error
-	 */
-	@Override
-	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
-		artefact.setLifecycle(lifecycle);
-		artefact.setError(error);
-		getService().save((Websocket) artefact);
-	}
+     * Retrieve.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    public List<Websocket> retrieve(String location) {
+        return getService().getAll();
+    }
+
+    /**
+     * Sets the status.
+     *
+     * @param artefact the artefact
+     * @param lifecycle the lifecycle
+     * @param error the error
+     */
+    @Override
+    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+        artefact.setLifecycle(lifecycle);
+        artefact.setError(error);
+        getService().save((Websocket) artefact);
+    }
 
     /**
      * Complete.
@@ -163,12 +163,14 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
         try {
             getService().delete(websocket);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
             callback.addError(e.getMessage());
             callback.registerState(this, websocket, ArtefactLifecycle.DELETED, e.getMessage());
         }
     }
-    
+
     /**
      * Gets the service.
      *
@@ -188,24 +190,24 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
     public void setCallback(SynchronizerCallback callback) {
         this.callback = callback;
     }
-    
+
     /**
      * Gets the file extension.
      *
      * @return the file extension
      */
     @Override
-	public String getFileExtension() {
-		return FILE_EXTENSION_WEBSOCKET;
-	}
+    public String getFileExtension() {
+        return FILE_EXTENSION_WEBSOCKET;
+    }
 
-	/**
-	 * Gets the artefact type.
-	 *
-	 * @return the artefact type
-	 */
-	@Override
-	public String getArtefactType() {
-		return Websocket.ARTEFACT_TYPE;
-	}
+    /**
+     * Gets the artefact type.
+     *
+     * @return the artefact type
+     */
+    @Override
+    public String getArtefactType() {
+        return Websocket.ARTEFACT_TYPE;
+    }
 }

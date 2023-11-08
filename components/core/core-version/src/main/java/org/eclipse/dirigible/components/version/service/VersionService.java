@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.version.service;
 
@@ -50,11 +49,11 @@ public class VersionService {
 
     /** The Constant DIRIGIBLE_INSTANCE_NAME. */
     private static final String DIRIGIBLE_INSTANCE_NAME = "DIRIGIBLE_INSTANCE_NAME";
-    
+
     private List<Engine> engines;
-    
+
     public VersionService(List<Engine> engines) {
-    	this.engines = engines;
+        this.engines = engines;
     }
 
     /**
@@ -74,12 +73,15 @@ public class VersionService {
         version.setProductType(properties.getProperty(DIRIGIBLE_PRODUCT_TYPE));
         version.setInstanceName(properties.getProperty(DIRIGIBLE_INSTANCE_NAME));
         version.setRepositoryProvider(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_PROVIDER, "local"));
-//        version.setDatabaseProvider(Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER));
-        
-        List<String> enginesNames = engines.stream().map(Engine::getName).collect(Collectors.toList());
+        // version.setDatabaseProvider(Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER));
+
+        List<String> enginesNames = engines.stream()
+                                           .map(Engine::getName)
+                                           .collect(Collectors.toList());
         Collections.sort(enginesNames);
-		version.getEngines().addAll(enginesNames);
-        
+        version.getEngines()
+               .addAll(enginesNames);
+
         return version;
     }
 }

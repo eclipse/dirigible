@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.entities.northwind;
 
@@ -24,26 +23,26 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 @EdmEntitySet(name = "Products_by_Categories", container = "NorthwindEntities")
 public class ProductsByCategory {
 
-	/** The category name. */
-	@EdmKey
-	@EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 15))
-	private String categoryName;
+    /** The category name. */
+    @EdmKey
+    @EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 15))
+    private String categoryName;
 
-	/** The product name. */
-	@EdmKey
-	@EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 40))
-	private String productName;
+    /** The product name. */
+    @EdmKey
+    @EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 40))
+    private String productName;
 
-	/** The quantity per unit. */
-	@EdmProperty(facets = @EdmFacets(maxLength = 20))
-	private String quantityPerUnit;
+    /** The quantity per unit. */
+    @EdmProperty(facets = @EdmFacets(maxLength = 20))
+    private String quantityPerUnit;
 
-	/** The units in stock. */
-	@EdmProperty
-	private Short unitsInStock;
+    /** The units in stock. */
+    @EdmProperty
+    private Short unitsInStock;
 
-	/** The discontinued. */
-	@EdmKey
-	@EdmProperty(facets = @EdmFacets(nullable = false))
-	private Boolean discontinued;
+    /** The discontinued. */
+    @EdmKey
+    @EdmProperty(facets = @EdmFacets(nullable = false))
+    private Boolean discontinued;
 }

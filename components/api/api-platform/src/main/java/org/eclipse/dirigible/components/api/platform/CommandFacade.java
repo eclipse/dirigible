@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.platform;
 
@@ -40,31 +39,24 @@ public class CommandFacade {
      * @throws ExecutionException the execution exception
      * @throws InterruptedException the interrupted exception
      */
-    public static String execute(
-            String command,
-            Map<String, String> add,
-            List<String> remove
-    ) throws ExecutionException, InterruptedException {
+    public static String execute(String command, Map<String, String> add, List<String> remove)
+            throws ExecutionException, InterruptedException {
         return execute(command, add, remove, new ProcessExecutionOptions());
     }
-	
-	/**
-	 * Execute service module.
-	 *
-	 * @param command the command line code
-	 * @param add the add
-	 * @param remove the remove
+
+    /**
+     * Execute service module.
+     *
+     * @param command the command line code
+     * @param add the add
+     * @param remove the remove
      * @param processExecutionOptionsJson options for the process execution
-	 * @return the output of the command
-	 * @throws ExecutionException the execution exception
-	 * @throws InterruptedException the interrupted exception
-	 */
-    public static String execute(
-            String command,
-            Map<String, String> add,
-            List<String> remove,
-            String processExecutionOptionsJson
-    ) throws ExecutionException, InterruptedException {
+     * @return the output of the command
+     * @throws ExecutionException the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
+    public static String execute(String command, Map<String, String> add, List<String> remove, String processExecutionOptionsJson)
+            throws ExecutionException, InterruptedException {
         ProcessExecutionOptions options = GsonHelper.fromJson(processExecutionOptionsJson, ProcessExecutionOptions.class);
         return execute(command, add, remove, options);
     }
@@ -80,17 +72,15 @@ public class CommandFacade {
      * @throws ExecutionException the execution exception
      * @throws InterruptedException the interrupted exception
      */
-    public static String execute(
-            String command,
-            Map<String, String> add,
-            List<String> remove,
-            ProcessExecutionOptions processExecutionOptions
-    ) throws ExecutionException, InterruptedException {
+    public static String execute(String command, Map<String, String> add, List<String> remove,
+            ProcessExecutionOptions processExecutionOptions) throws ExecutionException, InterruptedException {
         Map<String, String> environmentVariablesToUse = createEnvironmentVariables(add, remove);
         ProcessExecutor<OutputsPair> processExecutor = ProcessExecutor.create();
-        Future<ProcessResult<OutputsPair>> outputFuture = processExecutor.executeProcess(command, environmentVariablesToUse, processExecutionOptions);
+        Future<ProcessResult<OutputsPair>> outputFuture =
+                processExecutor.executeProcess(command, environmentVariablesToUse, processExecutionOptions);
         ProcessResult<OutputsPair> output = outputFuture.get();
-        return output.getProcessOutputs().getStandardOutput();
+        return output.getProcessOutputs()
+                     .getStandardOutput();
     }
 
     /**
@@ -107,7 +97,7 @@ public class CommandFacade {
 
         Map<String, String> environmentVariables = new HashMap<>(add);
         if (remove != null) {
-        	remove.forEach(environmentVariables.keySet()::remove);
+            remove.forEach(environmentVariables.keySet()::remove);
         }
 
         return environmentVariables;

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.csvim.domain;
 
@@ -55,13 +54,12 @@ public class CsvRecord {
     /**
      * Instantiates a new csv record definition.
      *
-     * @param csvRecord                the csv record
-     * @param table                    the table metadata model
-     * @param headerNames              the header names
+     * @param csvRecord the csv record
+     * @param table the table metadata model
+     * @param headerNames the header names
      * @param distinguishEmptyFromNull the distinguish empty from null
      */
-    public CsvRecord(CSVRecord csvRecord, TableMetadata table, List<String> headerNames,
-                     boolean distinguishEmptyFromNull) {
+    public CsvRecord(CSVRecord csvRecord, TableMetadata table, List<String> headerNames, boolean distinguishEmptyFromNull) {
         this.csvRecord = csvRecord;
         this.table = table;
         this.headerNames = headerNames;
@@ -90,7 +88,11 @@ public class CsvRecord {
      */
     public String getPkColumnName() {
         if (pkColumnName == null) {
-        	ColumnMetadata found = table.getColumns().stream().filter(c -> c.isKey()).findFirst().orElse(null);
+            ColumnMetadata found = table.getColumns()
+                                        .stream()
+                                        .filter(c -> c.isKey())
+                                        .findFirst()
+                                        .orElse(null);
             pkColumnName = found != null ? found.getName() : null;
         }
 

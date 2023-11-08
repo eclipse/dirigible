@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.platform;
 
@@ -28,50 +27,50 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ProblemsFacade implements InitializingBean {
-	
-	/** The instance. */
-	private static ProblemsFacade INSTANCE;
+
+    /** The instance. */
+    private static ProblemsFacade INSTANCE;
 
     private static final Logger logger = LoggerFactory.getLogger(ProblemsFacade.class);
 
-	/** The problem service. */
-	private ProblemService problemService;
-	
-	/**
-	 * Instantiates a new problem facade.
-	 *
-	 * @param problemService the problem service
-	 */
-	@Autowired
-	public ProblemsFacade(ProblemService problemService) {
-		this.problemService = problemService;
-	}
-	
-	/**
-	 * After properties set.
-	 */
-	@Override
-	public void afterPropertiesSet() {
-		INSTANCE = this;		
-	}
-	
-	/**
-	 * Gets the instance.
-	 *
-	 * @return the problem facade
-	 */
-	public static ProblemsFacade get() {
+    /** The problem service. */
+    private ProblemService problemService;
+
+    /**
+     * Instantiates a new problem facade.
+     *
+     * @param problemService the problem service
+     */
+    @Autowired
+    public ProblemsFacade(ProblemService problemService) {
+        this.problemService = problemService;
+    }
+
+    /**
+     * After properties set.
+     */
+    @Override
+    public void afterPropertiesSet() {
+        INSTANCE = this;
+    }
+
+    /**
+     * Gets the instance.
+     *
+     * @return the problem facade
+     */
+    public static ProblemsFacade get() {
         return INSTANCE;
     }
-	
-	/**
-	 * Gets the problem service.
-	 *
-	 * @return the problem service
-	 */
-	public ProblemService getProblemService() {
-		return problemService;
-	}
+
+    /**
+     * Gets the problem service.
+     *
+     * @return the problem service
+     */
+    public ProblemService getProblemService() {
+        return problemService;
+    }
 
     /**
      * Save.
@@ -87,21 +86,26 @@ public class ProblemsFacade implements InitializingBean {
      * @param source the source
      * @param program the program
      */
-    public static final void save(String location, String type, String line, String column, String cause, String expected,
-                                  String category, String module, String source, String program) {
-    	Problem problem = new Problem(location, type, line, column, cause, expected, category, module, source, program);
-    	ProblemsFacade.get().getProblemService().save(problem);
+    public static final void save(String location, String type, String line, String column, String cause, String expected, String category,
+            String module, String source, String program) {
+        Problem problem = new Problem(location, type, line, column, cause, expected, category, module, source, program);
+        ProblemsFacade.get()
+                      .getProblemService()
+                      .save(problem);
     }
 
     /**
      * Get Artefact Synchronization Problem.
      *
      * @param artefact the artefact
-     * 
+     *
      * @return the problem if any
      */
     public static final Problem getArtefactSynchronizationProblem(Artefact artefact) {
-        List<Problem> results = ProblemsFacade.get().getProblemService().findByLocationAndTypeAndCategory(artefact.getLocation(), artefact.getType(), "Synchronization");
+        List<Problem> results = ProblemsFacade.get()
+                                              .getProblemService()
+                                              .findByLocationAndTypeAndCategory(artefact.getLocation(), artefact.getType(),
+                                                      "Synchronization");
         return results.size() > 0 ? results.get(0) : null;
     }
 
@@ -122,7 +126,9 @@ public class ProblemsFacade implements InitializingBean {
      * @param errorMessage the errorMessage
      */
     public static final void updateArtefactSynchronizationProblem(Artefact artefact, String errorMessage) {
-        ProblemsFacade.get().getProblemService().updateCauseByLocationAndTypeAndCategory(errorMessage, artefact.getLocation(), artefact.getType(), "Synchronization");
+        ProblemsFacade.get()
+                      .getProblemService()
+                      .updateCauseByLocationAndTypeAndCategory(errorMessage, artefact.getLocation(), artefact.getType(), "Synchronization");
     }
 
     /**
@@ -140,7 +146,9 @@ public class ProblemsFacade implements InitializingBean {
                 ProblemsFacade.saveArtefactSynchronizationProblem(artefact, errorMessage);
             }
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) { logger.error("Error occurred while upserting artefact synchronization problem", e); }
+            if (logger.isErrorEnabled()) {
+                logger.error("Error occurred while upserting artefact synchronization problem", e);
+            }
         }
     }
 
@@ -150,7 +158,9 @@ public class ProblemsFacade implements InitializingBean {
      * @param artefact the artefact
      */
     public static final void deleteArtefactSynchronizationProblem(Artefact artefact) {
-        ProblemsFacade.get().getProblemService().deleteByLocationAndTypeAndCategory(artefact.getLocation(), artefact.getType(), "Synchronization");
+        ProblemsFacade.get()
+                      .getProblemService()
+                      .deleteByLocationAndTypeAndCategory(artefact.getLocation(), artefact.getType(), "Synchronization");
     }
 
     /**
@@ -160,7 +170,9 @@ public class ProblemsFacade implements InitializingBean {
      * @return the string
      */
     public static final String findProblem(Long id) {
-        return GsonHelper.toJson(ProblemsFacade.get().getProblemService().findById(id));
+        return GsonHelper.toJson(ProblemsFacade.get()
+                                               .getProblemService()
+                                               .findById(id));
     }
 
     /**
@@ -169,7 +181,9 @@ public class ProblemsFacade implements InitializingBean {
      * @return the string
      */
     public static final String fetchAllProblems() {
-        return GsonHelper.toJson(ProblemsFacade.get().getProblemService().getAll());
+        return GsonHelper.toJson(ProblemsFacade.get()
+                                               .getProblemService()
+                                               .getAll());
     }
 
     /**
@@ -180,7 +194,9 @@ public class ProblemsFacade implements InitializingBean {
      * @return the string
      */
     public static final String fetchProblemsBatch(String condition, int limit) {
-        return GsonHelper.toJson(ProblemsFacade.get().getProblemService().fetchProblemsBatch(condition, limit));
+        return GsonHelper.toJson(ProblemsFacade.get()
+                                               .getProblemService()
+                                               .fetchProblemsBatch(condition, limit));
     }
 
     /**
@@ -189,7 +205,9 @@ public class ProblemsFacade implements InitializingBean {
      * @param id the id
      */
     public static final void deleteProblem(Long id) {
-    	ProblemsFacade.get().getProblemService().deleteById(id);
+        ProblemsFacade.get()
+                      .getProblemService()
+                      .deleteById(id);
     }
 
     /**
@@ -198,7 +216,9 @@ public class ProblemsFacade implements InitializingBean {
      * @param ids the ids
      */
     public static final void deleteMultipleProblemsById(List<Long> ids) {
-    	ProblemsFacade.get().getProblemService().deleteAllByIds(ids);
+        ProblemsFacade.get()
+                      .getProblemService()
+                      .deleteAllByIds(ids);
     }
 
     /**
@@ -207,14 +227,18 @@ public class ProblemsFacade implements InitializingBean {
      * @param status the status
      */
     public static final void deleteAllByStatus(String status) {
-    	ProblemsFacade.get().getProblemService().deleteAllByStatus(status);
+        ProblemsFacade.get()
+                      .getProblemService()
+                      .deleteAllByStatus(status);
     }
 
     /**
      * Clear all problems.
      */
     public static final void clearAllProblems() {
-    	ProblemsFacade.get().getProblemService().deleteAll();
+        ProblemsFacade.get()
+                      .getProblemService()
+                      .deleteAll();
     }
 
     /**
@@ -224,7 +248,9 @@ public class ProblemsFacade implements InitializingBean {
      * @param status the status
      */
     public static final void updateStatus(Long id, String status) {
-    	ProblemsFacade.get().getProblemService().updateStatusById(id, status);
+        ProblemsFacade.get()
+                      .getProblemService()
+                      .updateStatusById(id, status);
     }
 
     /**
@@ -234,6 +260,8 @@ public class ProblemsFacade implements InitializingBean {
      * @param status the status
      */
     public static final void updateStatusMultiple(List<Long> ids, String status) {
-    	ProblemsFacade.get().getProblemService().updateStatusByIds(ids, status);
+        ProblemsFacade.get()
+                      .getProblemService()
+                      .updateStatusByIds(ids, status);
     }
 }

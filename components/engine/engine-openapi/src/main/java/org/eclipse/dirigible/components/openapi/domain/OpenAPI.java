@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.openapi.domain;
 
@@ -61,15 +60,15 @@ public class OpenAPI extends Artefact {
     public Long getId() {
         return id;
     }
-    
+
     /**
      * Sets the id.
      *
      * @param id to set
      */
     public void setId(Long id) {
-		this.id = id;
-	}
+        this.id = id;
+    }
 
     /**
      * To string.
@@ -78,18 +77,8 @@ public class OpenAPI extends Artefact {
      */
     @Override
     public String toString() {
-        return "OpenAPI{" +
-                "id=" + id +
-                ", location='" + location + '\'' +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", description='" + description + '\'' +
-                ", key='" + key + '\'' +
-                ", dependencies='" + dependencies + '\'' +
-                ", createdBy=" + createdBy +
-                ", createdAt=" + createdAt +
-                ", updatedBy=" + updatedBy +
-                ", updatedAt=" + updatedAt +
-                '}';
+        return "OpenAPI{" + "id=" + id + ", location='" + location + '\'' + ", name='" + name + '\'' + ", type='" + type + '\''
+                + ", description='" + description + '\'' + ", key='" + key + '\'' + ", dependencies='" + dependencies + '\''
+                + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + '}';
     }
 }

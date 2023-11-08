@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.security.synchronizer;
 
@@ -64,19 +63,19 @@ class SecurityRoleSynchronizerTest {
      */
     @BeforeEach
     public void setup() {
-    	
-    	cleanup();
-    	
+
+        cleanup();
+
         try {
-			// Create test security accesses
-			roleRepository.save(createSecurityRole("/a/b/c/test1.access", "test1", "description"));
-			roleRepository.save(createSecurityRole("/a/b/c/test2.access", "test2", "description"));
-			roleRepository.save(createSecurityRole("/a/b/c/test3.access", "test3", "description"));
-			roleRepository.save(createSecurityRole("/a/b/c/test4.access", "test4", "description"));
-			roleRepository.save(createSecurityRole("/a/b/c/test5.access", "test5", "description"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+            // Create test security accesses
+            roleRepository.save(createSecurityRole("/a/b/c/test1.access", "test1", "description"));
+            roleRepository.save(createSecurityRole("/a/b/c/test2.access", "test2", "description"));
+            roleRepository.save(createSecurityRole("/a/b/c/test3.access", "test3", "description"));
+            roleRepository.save(createSecurityRole("/a/b/c/test4.access", "test4", "description"));
+            roleRepository.save(createSecurityRole("/a/b/c/test5.access", "test5", "description"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -106,15 +105,17 @@ class SecurityRoleSynchronizerTest {
 
     /**
      * Load the artefact.
-     * @throws ParseException 
+     *
+     * @throws ParseException
      */
     @Test
     public void testLoad() throws IOException, ParseException {
-        byte[] content =
-                SecurityRoleSynchronizerTest.class.getResourceAsStream("/META-INF/dirigible/test/test.role").readAllBytes();
+        byte[] content = SecurityRoleSynchronizerTest.class.getResourceAsStream("/META-INF/dirigible/test/test.role")
+                                                           .readAllBytes();
         List<Role> list = roleSynchronizer.parse("/META-INF/dirigible/test/test.role", content);
         assertNotNull(list);
-        assertEquals("/META-INF/dirigible/test/test.role", list.get(0).getLocation());
+        assertEquals("/META-INF/dirigible/test/test.role", list.get(0)
+                                                               .getLocation());
     }
 
     /**

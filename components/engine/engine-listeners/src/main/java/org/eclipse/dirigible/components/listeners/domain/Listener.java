@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.listeners.domain;
 
@@ -23,10 +22,10 @@ import javax.persistence.*;
 @Entity
 @Table(name = "DIRIGIBLE_LISTENERS")
 public class Listener extends Artefact {
-    
+
     /** The Constant ARTEFACT_TYPE. */
     public static final String ARTEFACT_TYPE = "listener";
-    
+
     /** The id. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +36,7 @@ public class Listener extends Artefact {
     @Column(name = "LISTENER_HANDLER", columnDefinition = "VARCHAR", nullable = false, length = 255)
     @Expose
     private String handler;
-    
+
     /** The handler. */
     @Column(name = "LISTENER_KIND", columnDefinition = "CHAR", nullable = false, length = 1)
     @Expose
@@ -61,8 +60,7 @@ public class Listener extends Artefact {
     /**
      * Instantiates a new listener.
      */
-    public Listener() {
-    }
+    public Listener() {}
 
     /**
      * Gets the id.
@@ -99,24 +97,24 @@ public class Listener extends Artefact {
     public void setHandler(String handler) {
         this.handler = handler;
     }
-    
+
     /**
      * Gets the kind.
      *
      * @return the kind
      */
     public Character getKind() {
-		return kind;
-	}
-    
+        return kind;
+    }
+
     /**
      * Sets the kind.
      *
      * @param kind the new kind
      */
     public void setKind(Character kind) {
-		this.kind = kind;
-	}
+        this.kind = kind;
+    }
 
     /**
      * To string.
@@ -125,20 +123,9 @@ public class Listener extends Artefact {
      */
     @Override
     public String toString() {
-        return "Listener{" +
-                "id=" + id +
-                ", handler='" + handler + '\'' +
-                ", kind='" + kind + '\'' +
-                ", location='" + location + '\'' +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", description='" + description + '\'' +
-                ", key='" + key + '\'' +
-                ", dependencies='" + dependencies + '\'' +
-                ", createdBy=" + createdBy +
-                ", createdAt=" + createdAt +
-                ", updatedBy=" + updatedBy +
-                ", updatedAt=" + updatedAt +
-                '}';
+        return "Listener{" + "id=" + id + ", handler='" + handler + '\'' + ", kind='" + kind + '\'' + ", location='" + location + '\''
+                + ", name='" + name + '\'' + ", type='" + type + '\'' + ", description='" + description + '\'' + ", key='" + key + '\''
+                + ", dependencies='" + dependencies + '\'' + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy="
+                + updatedBy + ", updatedAt=" + updatedAt + '}';
     }
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.utils;
 
@@ -35,8 +34,8 @@ public class SingleConnectionDataSource implements DataSource {
      *
      * @param connection the connection
      */
-    public SingleConnectionDataSource(Connection connection){
-       this.nonClosableConnection = getNonClosableConnection(connection);
+    public SingleConnectionDataSource(Connection connection) {
+        this.nonClosableConnection = getNonClosableConnection(connection);
     }
 
     /**
@@ -57,7 +56,7 @@ public class SingleConnectionDataSource implements DataSource {
      * @return the connection
      */
     @Override
-    public Connection getConnection(String username, String password){
+    public Connection getConnection(String username, String password) {
         return nonClosableConnection;
     }
 
@@ -142,10 +141,9 @@ public class SingleConnectionDataSource implements DataSource {
      * @return the non closable connection
      */
     Connection getNonClosableConnection(Connection connection) {
-        return (Connection) Proxy.newProxyInstance(
-                this.getClass().getClassLoader(),
-                new Class<?>[] {Connection.class},
-                new NonClosableConnection(connection));
+        return (Connection) Proxy.newProxyInstance(this.getClass()
+                                                       .getClassLoader(),
+                new Class<?>[] {Connection.class}, new NonClosableConnection(connection));
     }
 
 

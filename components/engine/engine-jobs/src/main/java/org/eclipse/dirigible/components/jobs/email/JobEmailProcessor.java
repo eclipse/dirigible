@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.jobs.email;
 
@@ -44,11 +43,11 @@ public class JobEmailProcessor {
     /** The registry accessor. */
     @Autowired
     private RegistryAccessor registryAccessor;
-    
+
     /** The job service. */
     @Autowired
     private JobEmailService jobEmailService;
-    
+
     /** The generation engines manager. */
     @Autowired
     private TemplateEnginesManager generationEnginesManager;
@@ -99,7 +98,7 @@ public class JobEmailProcessor {
     private static final String DIRIGIBLE_SCHEDULER_EMAIL_URL_PORT = "DIRIGIBLE_SCHEDULER_EMAIL_URL_PORT";
 
     /** The logs retantion in hours. */
-    private static int logsRetantionInHours = 24*7;
+    private static int logsRetantionInHours = 24 * 7;
 
     /** The email sender. */
     private static String emailSender = null;
@@ -169,10 +168,14 @@ public class JobEmailProcessor {
 
     static {
         try {
-            logsRetantionInHours = Integer.parseInt(Configuration.get(DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD, logsRetantionInHours + ""));
+            logsRetantionInHours =
+                    Integer.parseInt(Configuration.get(DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD, logsRetantionInHours + ""));
         } catch (Throwable e) {
-            if (logger.isWarnEnabled()) {logger.warn(DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD + " is not correctly set, so it will be backed up to a week timeframe (24x7)");}
-            logsRetantionInHours = 24*7;
+            if (logger.isWarnEnabled()) {
+                logger.warn(DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD
+                        + " is not correctly set, so it will be backed up to a week timeframe (24x7)");
+            }
+            logsRetantionInHours = 24 * 7;
         }
 
         emailSender = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_SENDER);
@@ -181,9 +184,12 @@ public class JobEmailProcessor {
         if (emailRecipientsLine != null) {
             emailRecipients = emailRecipientsLine.split(",");
             for (String maybe : emailRecipients) {
-                if (!EmailValidator.getInstance().isValid(maybe)) {
+                if (!EmailValidator.getInstance()
+                                   .isValid(maybe)) {
                     emailRecipients = null;
-                    if (logger.isWarnEnabled()) {logger.warn(DIRIGIBLE_SCHEDULER_EMAIL_RECIPIENTS + " contains invalid e-mail address: " + maybe);}
+                    if (logger.isWarnEnabled()) {
+                        logger.warn(DIRIGIBLE_SCHEDULER_EMAIL_RECIPIENTS + " contains invalid e-mail address: " + maybe);
+                    }
                     break;
                 }
             }
@@ -216,21 +222,25 @@ public class JobEmailProcessor {
 
         TemplateEngine generationEngine = generationEnginesManager.getTemplateEngine("mustache");
         if (generationEngine != null) {
-	        Map<String, Object> parameters = new HashMap<String, Object>();
-	        parameters.put("job.name", job.getName());
-	        parameters.put("job.message", job.getMessage());
-	        parameters.put("job.scheme", emailUrlScheme);
-	        parameters.put("job.host", emailUrlHost);
-	        parameters.put("job.port", emailUrlPort);
-	        try {
-	            byte[] generated = generationEngine.generate(parameters, "~/temp", template);
-	            return new String(generated, StandardCharsets.UTF_8);
-	        } catch (IOException e) {
-	            if (logger.isErrorEnabled()) {logger.error("Error on generating the e-mail body: " + e.getMessage(),e);}
-	            return null;
-	        }
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("job.name", job.getName());
+            parameters.put("job.message", job.getMessage());
+            parameters.put("job.scheme", emailUrlScheme);
+            parameters.put("job.host", emailUrlHost);
+            parameters.put("job.port", emailUrlPort);
+            try {
+                byte[] generated = generationEngine.generate(parameters, "~/temp", template);
+                return new String(generated, StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                if (logger.isErrorEnabled()) {
+                    logger.error("Error on generating the e-mail body: " + e.getMessage(), e);
+                }
+                return null;
+            }
         }
-        if (logger.isErrorEnabled()) {logger.error("Error on generating the e-mail body, because no template engine has been registered in this instance.");}
+        if (logger.isErrorEnabled()) {
+            logger.error("Error on generating the e-mail body, because no template engine has been registered in this instance.");
+        }
         return null;
     }
 
@@ -243,29 +253,34 @@ public class JobEmailProcessor {
      */
     public void sendEmail(Job job, String emailSubject, String emailContent) {
         try {
-        	List<JobEmail> emailArtefacts = jobEmailService.findAllByJobName(job.getName());
-			String[] emails = emailArtefacts.stream().map(JobEmail::getEmail).toArray(String[]::new);
-			
-            if (emailSender != null 
-            		&& ((emailRecipients != null && emailRecipients.length > 0)
-                    || emails.length > 0)) {
+            List<JobEmail> emailArtefacts = jobEmailService.findAllByJobName(job.getName());
+            String[] emails = emailArtefacts.stream()
+                                            .map(JobEmail::getEmail)
+                                            .toArray(String[]::new);
+
+            if (emailSender != null && ((emailRecipients != null && emailRecipients.length > 0) || emails.length > 0)) {
 
                 List<Map> parts = new ArrayList<Map>();
-                Map<String, String> map  = new HashMap<>();
+                Map<String, String> map = new HashMap<>();
                 map.put("contentType", ContentTypeHelper.TEXT_PLAIN);
                 map.put("type", "text");
                 map.put("text", emailContent);
                 parts.add(map);
-                MailFacade.getInstance().send(emailSender, emails.length > 0 ? emails : emailRecipients, null, null,
-                        String.format(emailSubject, job.getName()), parts);
-                //		String from, String[] to, String[] cc, String[] bcc, String subject, List<Map> parts
+                MailFacade.getInstance()
+                          .send(emailSender, emails.length > 0 ? emails : emailRecipients, null, null,
+                                  String.format(emailSubject, job.getName()), parts);
+                // String from, String[] to, String[] cc, String[] bcc, String subject, List<Map> parts
             } else {
                 if (emailRecipientsLine != null) {
-                    if (logger.isErrorEnabled()) {logger.error("DIRIGIBLE_SCHEDULER_EMAIL_* environment variables are not set correctly");}
+                    if (logger.isErrorEnabled()) {
+                        logger.error("DIRIGIBLE_SCHEDULER_EMAIL_* environment variables are not set correctly");
+                    }
                 }
             }
         } catch (MessagingException | IOException e) {
-            if (logger.isErrorEnabled()) {logger.error("Sending an e-mail failed with: " + e.getMessage(), e);}
+            if (logger.isErrorEnabled()) {
+                logger.error("Sending an e-mail failed with: " + e.getMessage(), e);
+            }
         }
     }
 

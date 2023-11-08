@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.graalium.core.modules;
 
@@ -29,47 +28,46 @@ public class DirigibleModuleESMProxyGenerator {
 
     /** The Constant NAME_PLACEHOLDER. */
     private static final String NAME_PLACEHOLDER = "<name_placeholder>";
-    
+
     /** The Constant PATH_PLACEHOLDER. */
     private static final String PATH_PLACEHOLDER = "<path_placeholder>";
-    
+
     /** The Constant NAMES_LIST_PLACEHOLDER. */
     private static final String NAMES_LIST_PLACEHOLDER = "<names_list_placeholder>";
 
     /** The Constant DEFAULT_EXPORT_PATTERN. */
     private static final String DEFAULT_EXPORT_PATTERN = "export default { " + NAMES_LIST_PLACEHOLDER + " }";
-    
+
     /** The Constant EXPORT_PATTERN. */
-    private static final String EXPORT_PATTERN =
-            "export const " + NAME_PLACEHOLDER + " = dirigibleRequire('" + PATH_PLACEHOLDER + "');";
+    private static final String EXPORT_PATTERN = "export const " + NAME_PLACEHOLDER + " = dirigibleRequire('" + PATH_PLACEHOLDER + "');";
 
     /** The Constant DECONSTRUCTED_EXPORT_PATTERN. */
     private static final String DECONSTRUCTED_EXPORT_PATTERN =
             "export const { " + NAMES_LIST_PLACEHOLDER + " } = dirigibleRequire('" + PATH_PLACEHOLDER + "');";
-    
+
     /** The gson. */
     private final Gson gson = new Gson();
-    
+
     /** The dirigible source provider. */
     private JavascriptSourceProvider dirigibleSourceProvider;
-    
+
     /**
      * Instantiates a new dirigible module ESM proxy generator.
      *
      * @param dirigibleSourceProvider the dirigible source provider
      */
     public DirigibleModuleESMProxyGenerator(JavascriptSourceProvider dirigibleSourceProvider) {
-    	this.dirigibleSourceProvider = dirigibleSourceProvider;
+        this.dirigibleSourceProvider = dirigibleSourceProvider;
     }
-    
+
     /**
      * Gets the source provider.
      *
      * @return the source provider
      */
     public JavascriptSourceProvider getSourceProvider() {
-		return dirigibleSourceProvider;
-	}
+        return dirigibleSourceProvider;
+    }
 
     /**
      * Generate.
@@ -123,18 +121,13 @@ public class DirigibleModuleESMProxyGenerator {
      * @param moduleNames the module names
      * @param apiVersion the api version
      */
-    private static void writeExportedCJSModule(
-            StringBuilder sourceBuilder,
-            DirigibleModule module,
-            StringBuilder moduleNames,
-            String apiVersion
-    ) {
+    private static void writeExportedCJSModule(StringBuilder sourceBuilder, DirigibleModule module, StringBuilder moduleNames,
+            String apiVersion) {
         String api = module.getApi();
         String dir = resolvePath(module, apiVersion);
 
-        sourceBuilder.append(EXPORT_PATTERN
-                .replace(NAME_PLACEHOLDER, api)
-                .replace(PATH_PLACEHOLDER, dir));
+        sourceBuilder.append(EXPORT_PATTERN.replace(NAME_PLACEHOLDER, api)
+                                           .replace(PATH_PLACEHOLDER, dir));
         sourceBuilder.append(System.lineSeparator());
         moduleNames.append(api);
         moduleNames.append(',');
@@ -147,17 +140,12 @@ public class DirigibleModuleESMProxyGenerator {
      * @param module the module
      * @param apiVersion the api version
      */
-    private static void writeDeconstructedExportedCJSModule(
-            StringBuilder sourceBuilder,
-            DirigibleModule module,
-            String apiVersion
-    ) {
+    private static void writeDeconstructedExportedCJSModule(StringBuilder sourceBuilder, DirigibleModule module, String apiVersion) {
         List<String> deconstructs = module.getDeconstruct();
         String dir = resolvePath(module, apiVersion);
 
-        sourceBuilder.append(DECONSTRUCTED_EXPORT_PATTERN
-                .replace(NAMES_LIST_PLACEHOLDER, String.join(", ", deconstructs))
-                .replace(PATH_PLACEHOLDER, dir));
+        sourceBuilder.append(DECONSTRUCTED_EXPORT_PATTERN.replace(NAMES_LIST_PLACEHOLDER, String.join(", ", deconstructs))
+                                                         .replace(PATH_PLACEHOLDER, dir));
         sourceBuilder.append(System.lineSeparator());
     }
 
@@ -185,8 +173,8 @@ public class DirigibleModuleESMProxyGenerator {
         }
 
         List<String> foundPaths = Arrays.stream(module.getVersionedPaths())
-                .filter(p -> p.contains(apiVersion))
-                .collect(Collectors.toList());
+                                        .filter(p -> p.contains(apiVersion))
+                                        .collect(Collectors.toList());
 
         if (foundPaths.size() != 1) {
             StringBuilder message = new StringBuilder();

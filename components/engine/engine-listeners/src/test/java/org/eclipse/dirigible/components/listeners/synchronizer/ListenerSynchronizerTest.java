@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.listeners.synchronizer;
 
@@ -30,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 public class ListenerSynchronizerTest {
     @Autowired
@@ -56,10 +55,12 @@ public class ListenerSynchronizerTest {
 
     @Test
     public void load() throws ParseException {
-        String content = "{\"location\":\"/control/control.listener\",\"name\":\"/control/control\",\"kind\":\"Q\",\"handler\":\"control/handler.js\",\"description\":\"Control Listener\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
+        String content =
+                "{\"location\":\"/control/control.listener\",\"name\":\"/control/control\",\"kind\":\"Q\",\"handler\":\"control/handler.js\",\"description\":\"Control Listener\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
         List<Listener> list = listenerSynchronizer.parse("/test/test.listener", content.getBytes());
         assertNotNull(list);
-        assertEquals("/test/test.listener", list.get(0).getLocation());
+        assertEquals("/test/test.listener", list.get(0)
+                                                .getLocation());
     }
 
     @SpringBootApplication

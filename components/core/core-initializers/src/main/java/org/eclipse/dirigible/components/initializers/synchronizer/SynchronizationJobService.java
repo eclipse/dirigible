@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.initializers.synchronizer;
 
@@ -31,31 +30,35 @@ public class SynchronizationJobService {
 
     /** The count. */
     private AtomicInteger count = new AtomicInteger();
-    
-    /** The synchronization processor. */
-	private final SynchronizationProcessor synchronizationProcessor;
 
-	/**
-	 * Instantiates a new synchronizers initializer.
-	 *
-	 * @param synchronizationProcessor the synchronization processor
-	 */
-	@Autowired
-	public SynchronizationJobService(SynchronizationProcessor synchronizationProcessor) {
-		this.synchronizationProcessor = synchronizationProcessor;
-	}
+    /** The synchronization processor. */
+    private final SynchronizationProcessor synchronizationProcessor;
+
+    /**
+     * Instantiates a new synchronizers initializer.
+     *
+     * @param synchronizationProcessor the synchronization processor
+     */
+    @Autowired
+    public SynchronizationJobService(SynchronizationProcessor synchronizationProcessor) {
+        this.synchronizationProcessor = synchronizationProcessor;
+    }
 
     /**
      * Execute synchronization job.
      */
     public void executeSynchronizationJob() {
 
-    	if (logger.isDebugEnabled()) {logger.debug("Synchronization started...");}
+        if (logger.isDebugEnabled()) {
+            logger.debug("Synchronization started...");
+        }
         try {
-        	synchronizationProcessor.processSynchronizers();
+            synchronizationProcessor.processSynchronizers();
         } finally {
             count.incrementAndGet();
-            if (logger.isDebugEnabled()) {logger.debug("Synchronization finished.");}
+            if (logger.isDebugEnabled()) {
+                logger.debug("Synchronization finished.");
+            }
         }
     }
 
@@ -67,5 +70,5 @@ public class SynchronizationJobService {
     public int getNumberOfInvocations() {
         return count.get();
     }
-    
+
 }

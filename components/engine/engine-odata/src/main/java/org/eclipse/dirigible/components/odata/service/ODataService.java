@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.service;
 
@@ -31,30 +30,30 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class ODataService implements ArtefactService<OData>, InitializingBean {
-	
-	/** The instance. */
-	private static ODataService INSTANCE;
-	
-	/**
-	 * After properties set.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;		
-	}
-	
-	/**
-	 * Gets the.
-	 *
-	 * @return the o data service
-	 */
-	public static ODataService get() {
+
+    /** The instance. */
+    private static ODataService INSTANCE;
+
+    /**
+     * After properties set.
+     *
+     * @throws Exception the exception
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        INSTANCE = this;
+    }
+
+    /**
+     * Gets the.
+     *
+     * @return the o data service
+     */
+    public static ODataService get() {
         return INSTANCE;
     }
-	
-	/** The OData repository. */
+
+    /** The OData repository. */
     @Autowired
     private ODataRepository odataRepository;
 
@@ -103,7 +102,7 @@ public class ODataService implements ArtefactService<OData>, InitializingBean {
      */
     @Override
     public OData findByName(String name) {
-    	OData filter = new OData();
+        OData filter = new OData();
         filter.setName(name);
         Example<OData> example = Example.of(filter);
         Optional<OData> odata = odataRepository.findOne(example);
@@ -113,7 +112,7 @@ public class ODataService implements ArtefactService<OData>, InitializingBean {
             throw new IllegalArgumentException("OData with name does not exist: " + name);
         }
     }
-    
+
     /**
      * Find by location.
      *
@@ -123,13 +122,13 @@ public class ODataService implements ArtefactService<OData>, InitializingBean {
     @Override
     @Transactional(readOnly = true)
     public List<OData> findByLocation(String location) {
-    	OData filter = new OData();
+        OData filter = new OData();
         filter.setLocation(location);
         Example<OData> example = Example.of(filter);
         List<OData> list = odataRepository.findAll(example);
         return list;
     }
-    
+
     /**
      * Find by key.
      *
@@ -139,7 +138,7 @@ public class ODataService implements ArtefactService<OData>, InitializingBean {
     @Override
     @Transactional(readOnly = true)
     public OData findByKey(String key) {
-    	OData filter = new OData();
+        OData filter = new OData();
         filter.setKey(key);
         Example<OData> example = Example.of(filter);
         Optional<OData> odata = odataRepository.findOne(example);
@@ -167,7 +166,7 @@ public class ODataService implements ArtefactService<OData>, InitializingBean {
      */
     @Override
     public void delete(OData odata) {
-    	odataRepository.delete(odata);
+        odataRepository.delete(odata);
     }
 
 }

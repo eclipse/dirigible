@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.transformers;
 
@@ -43,7 +42,8 @@ public class ODataMetadataUtil {
                 return entity;
             }
         }
-        throw new IllegalArgumentException(String.format("There is no entity with name: %s, referenced by the navigation: %s", name, navigation));
+        throw new IllegalArgumentException(
+                String.format("There is no entity with name: %s, referenced by the navigation: %s", name, navigation));
     }
 
     /**
@@ -77,7 +77,7 @@ public class ODataMetadataUtil {
         }
         throw new IllegalArgumentException(String.format("There is no entity with name: %s defined in the model", entityName));
     }
-    
+
     /**
      * Gets the entity property column by property name.
      *
@@ -89,18 +89,21 @@ public class ODataMetadataUtil {
     public static String getEntityPropertyColumnByPropertyName(OData model, String entityName, String propertyName) {
         for (ODataEntity entity : model.getEntities()) {
             if (entityName.equals(entity.getName())) {
-            	if (!entity.getProperties().isEmpty()) {
-	            	for (ODataProperty property : entity.getProperties()) {
-	            		if (property.getName().equals(propertyName)) {
-	            			return property.getColumn();
-	            		}
-	            	}
-            	} else {
-            		return propertyName;
-            	}
+                if (!entity.getProperties()
+                           .isEmpty()) {
+                    for (ODataProperty property : entity.getProperties()) {
+                        if (property.getName()
+                                    .equals(propertyName)) {
+                            return property.getColumn();
+                        }
+                    }
+                } else {
+                    return propertyName;
+                }
             }
         }
-        throw new IllegalArgumentException(String.format("There is no entity with name: %s and property with name: %s defined in the model", entityName, propertyName));
+        throw new IllegalArgumentException(String.format("There is no entity with name: %s and property with name: %s defined in the model",
+                entityName, propertyName));
     }
 
     /**
@@ -117,7 +120,8 @@ public class ODataMetadataUtil {
                 return association;
             }
         }
-        throw new IllegalArgumentException(String.format("There is no association with name: %s, referenced by the navigation: %s", name, navigation));
+        throw new IllegalArgumentException(
+                String.format("There is no association with name: %s, referenced by the navigation: %s", name, navigation));
     }
 
     /**
@@ -129,7 +133,7 @@ public class ODataMetadataUtil {
         try {
             EdmMultiplicity.fromLiteral(actualValue);
         } catch (IllegalArgumentException ex) {
-            throw new IllegalArgumentException(String.format("Unsupported multiplicity value: %s",actualValue));
+            throw new IllegalArgumentException(String.format("Unsupported multiplicity value: %s", actualValue));
         }
     }
 
@@ -143,7 +147,8 @@ public class ODataMetadataUtil {
         try {
             ODataHandlerTypes.fromValue(actualValue);
         } catch (IllegalArgumentException ex) {
-            throw new OData2TransformerException(String.format("There is inconsistency in odata file for entity %s on handler definition: %s", entityName, actualValue));
+            throw new OData2TransformerException(
+                    String.format("There is inconsistency in odata file for entity %s on handler definition: %s", entityName, actualValue));
         }
     }
 
@@ -157,31 +162,42 @@ public class ODataMetadataUtil {
         try {
             ODataHandlerMethods.fromValue(actualValue);
         } catch (IllegalArgumentException ex) {
-            throw new OData2TransformerException(String.format("There is inconsistency in odata file for entity %s on handler definition: %s", entityName, actualValue));
+            throw new OData2TransformerException(
+                    String.format("There is inconsistency in odata file for entity %s on handler definition: %s", entityName, actualValue));
         }
     }
 
     /**
-     * Check if the provided ODataProperty column is the same as the one defined in the DB for the given entity.
+     * Check if the provided ODataProperty column is the same as the one defined in the DB for the given
+     * entity.
      *
-     * @param dbColumnNames          db artifact column name
-     * @param entityProperties          list of entity properties
-     * @param entityName           name of entity
+     * @param dbColumnNames db artifact column name
+     * @param entityProperties list of entity properties
+     * @param entityName name of entity
      */
     public static void validateODataPropertyName(List<TableColumn> dbColumnNames, List<ODataProperty> entityProperties, String entityName) {
         if (!entityProperties.isEmpty()) {
             ArrayList<String> invalidProps = new ArrayList<>();
             entityProperties.forEach(column -> {
-                List<TableColumn> consistentProps = dbColumnNames.stream().filter(prop -> prop.getName().equals(column.getColumn())).collect(Collectors.toList());
+                List<TableColumn> consistentProps = dbColumnNames.stream()
+                                                                 .filter(prop -> prop.getName()
+                                                                                     .equals(column.getColumn()))
+                                                                 .collect(Collectors.toList());
                 if (consistentProps.isEmpty()) {
                     invalidProps.add(column.getColumn());
                 }
             });
             if (!invalidProps.isEmpty()) {
-                throw new OData2TransformerException(String.format("There is inconsistency for entity '%s'. Odata column definitions for %s do not match the DB table column definition.", entityName, invalidProps.stream().map(String::valueOf).collect(Collectors.joining(","))));
+                throw new OData2TransformerException(String.format(
+                        "There is inconsistency for entity '%s'. Odata column definitions for %s do not match the DB table column definition.",
+                        entityName, invalidProps.stream()
+                                                .map(String::valueOf)
+                                                .collect(Collectors.joining(","))));
             }
             if (entityProperties.size() > dbColumnNames.size()) {
-                throw new OData2TransformerException(String.format("There is inconsistency for entity '%s'. The number of defined odata columns do not match the number of DB table columns", entityName));
+                throw new OData2TransformerException(String.format(
+                        "There is inconsistency for entity '%s'. The number of defined odata columns do not match the number of DB table columns",
+                        entityName));
             }
         }
     }

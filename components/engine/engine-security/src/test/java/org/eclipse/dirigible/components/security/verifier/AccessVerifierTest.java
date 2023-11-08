@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.security.verifier;
 
@@ -51,16 +50,16 @@ class AccessVerifierTest {
 
     @BeforeEach
     public void setup() {
-    	
-    	cleanup();
-    	
+
+        cleanup();
+
         // Create test security roles and accesses
         securityRoleRepository.save(createSecurityRole("/a/b/c/test1.role", "test1", "description"));
         securityRoleRepository.save(createSecurityRole("/a/b/c/test2.role", "test2", "description"));
-        securityAccessRepository.save(createSecurityAccess("/a/b/c/test.access", "test1", "description", "HTTP", "/a" +
-                "/b/c/test.txt", "GET", "test1"));
-        securityAccessRepository.save(createSecurityAccess("/a/b/c/test.access", "test2", "description", "HTTP", "/a" +
-                "/b/c/test.txt", "GET", "test2"));
+        securityAccessRepository.save(
+                createSecurityAccess("/a/b/c/test.access", "test1", "description", "HTTP", "/a" + "/b/c/test.txt", "GET", "test1"));
+        securityAccessRepository.save(
+                createSecurityAccess("/a/b/c/test.access", "test2", "description", "HTTP", "/a" + "/b/c/test.txt", "GET", "test2"));
     }
 
     @AfterEach
@@ -72,12 +71,10 @@ class AccessVerifierTest {
 
     @Test
     void testGetMatchingSecurityAccesses() {
-        List<Access> matchingSecurityAccesses =
-                securityAccessVerifier.getMatchingSecurityAccesses("HTTP", "/a/b/c", "GET");
+        List<Access> matchingSecurityAccesses = securityAccessVerifier.getMatchingSecurityAccesses("HTTP", "/a/b/c", "GET");
         assertTrue(matchingSecurityAccesses.isEmpty());
 
-        matchingSecurityAccesses = securityAccessVerifier.getMatchingSecurityAccesses("HTTP",
-                "/a/b/c/test.txt", "GET");
+        matchingSecurityAccesses = securityAccessVerifier.getMatchingSecurityAccesses("HTTP", "/a/b/c/test.txt", "GET");
         assertFalse(matchingSecurityAccesses.isEmpty());
         assertEquals(2, matchingSecurityAccesses.size());
     }

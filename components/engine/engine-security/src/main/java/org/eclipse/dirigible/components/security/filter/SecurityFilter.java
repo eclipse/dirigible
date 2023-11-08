@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.security.filter;
 
@@ -53,12 +52,12 @@ public class SecurityFilter implements Filter {
      * The Constant SKIP_PATH_ANGULAR_ARIA.
      */
     private static final String SKIP_PATH_ANGULAR_ARIA = "/services/js/resources-core/services/angular-aria.min.js.map";
-    
+
     /**
      * The Constant SKIP_PATH_SPLIT_JS.
      */
     private static final String SKIP_PATH_SPLIT_JS = "/services/js/resources-core/services/split.min.js.map";
-    
+
     /**
      * The Constant PATH_WEB_RESOURCES.
      */
@@ -99,6 +98,7 @@ public class SecurityFilter implements Filter {
      */
     /*
      * (non-Javadoc)
+     *
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
     @Override
@@ -113,14 +113,15 @@ public class SecurityFilter implements Filter {
     /**
      * Do filter.
      *
-     * @param request  the request
+     * @param request the request
      * @param response the response
-     * @param chain    the chain
+     * @param chain the chain
      * @throws ServletException the servlet exception
-     * @throws IOException      Signals that an I/O exception has occurred.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     /*
      * (non-Javadoc)
+     *
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
      * javax.servlet.FilterChain)
      */
@@ -130,8 +131,7 @@ public class SecurityFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
-        String path = httpServletRequest.getPathInfo() != null ? httpServletRequest.getPathInfo() :
-                IRepositoryStructure.SEPARATOR;
+        String path = httpServletRequest.getPathInfo() != null ? httpServletRequest.getPathInfo() : IRepositoryStructure.SEPARATOR;
         if (!path.startsWith(PATH_WEB_RESOURCES)) {
             for (String prefix : SECURED_PREFIXES) {
                 if (path.startsWith(prefix)) {
@@ -144,8 +144,7 @@ public class SecurityFilter implements Filter {
             boolean isInRole = false;
             Principal principal = httpServletRequest.getUserPrincipal();
 
-            List<Access> securityAccesses =
-                    securityAccessVerifier.getMatchingSecurityAccesses(CONSTRAINT_SCOPE_HTTP, path, method);
+            List<Access> securityAccesses = securityAccessVerifier.getMatchingSecurityAccesses(CONSTRAINT_SCOPE_HTTP, path, method);
             if (!securityAccesses.isEmpty()) {
 
                 if (principal == null && !Configuration.isJwtModeEnabled()) {
@@ -163,14 +162,15 @@ public class SecurityFilter implements Filter {
                     }
                 } else {
                     for (Access securityAccess : securityAccesses) {
-                        if (ROLE_PUBLIC.equalsIgnoreCase(securityAccess.getRole()) || UserRequestVerifier.isUserInRole(securityAccess.getRole())) {
+                        if (ROLE_PUBLIC.equalsIgnoreCase(securityAccess.getRole())
+                                || UserRequestVerifier.isUserInRole(securityAccess.getRole())) {
                             isInRole = true;
                             break;
                         }
                     }
                     if (!isInRole) {
-                        forbidden(path, "The logged in user does not have any of the required roles for the requested" +
-                                " URI", httpServletResponse);
+                        forbidden(path, "The logged in user does not have any of the required roles for the requested" + " URI",
+                                httpServletResponse);
                         return;
                     }
                 }
@@ -185,7 +185,7 @@ public class SecurityFilter implements Filter {
         if (SKIP_PATH_ANGULAR_ARIA.equals(((HttpServletRequest) request).getServletPath())) {
             return;
         }
-        
+
         if (SKIP_PATH_SPLIT_JS.equals(((HttpServletRequest) request).getServletPath())) {
             return;
         }
@@ -206,7 +206,8 @@ public class SecurityFilter implements Filter {
         if (logger.isWarnEnabled()) {
             logger.warn(error);
         }
-        response.sendError(HttpServletResponse.SC_FORBIDDEN, HtmlEscapers.htmlEscaper().escape(error));
+        response.sendError(HttpServletResponse.SC_FORBIDDEN, HtmlEscapers.htmlEscaper()
+                                                                         .escape(error));
     }
 
     /**
@@ -214,6 +215,7 @@ public class SecurityFilter implements Filter {
      */
     /*
      * (non-Javadoc)
+     *
      * @see javax.servlet.Filter#destroy()
      */
     @Override

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders.sequence;
 
@@ -19,7 +18,7 @@ import org.slf4j.LoggerFactory;
  * The Class AlterSequenceBuilder.
  */
 public class AlterSequenceBuilder extends CreateSequenceBuilder {
-    
+
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(AlterSequenceBuilder.class);
 
@@ -33,7 +32,9 @@ public class AlterSequenceBuilder extends CreateSequenceBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder restartWith(Integer restartWith) {
-        if (logger.isTraceEnabled()) {logger.trace("restartWith: " + restartWith);}
+        if (logger.isTraceEnabled()) {
+            logger.trace("restartWith: " + restartWith);
+        }
         this.restartWith = restartWith;
         return this;
     }
@@ -81,30 +82,32 @@ public class AlterSequenceBuilder extends CreateSequenceBuilder {
         // INCREMENT_BY
         generateIncrement(sql);
 
-        //MAXVALUE
+        // MAXVALUE
         generateMaxvalue(sql);
 
-        //NO MAXVALUE
+        // NO MAXVALUE
         generateNomaxvalue(sql);
 
-        //MINVALUE
+        // MINVALUE
         generateMinvalue(sql);
 
-        //NO MINVALUE
+        // NO MINVALUE
         generateNominvalue(sql);
 
-        //CYCLE
+        // CYCLE
         generateCycle(sql);
 
-        //RESET BY
+        // RESET BY
         generateResetBy(sql);
 
-        //RESTART WITH
+        // RESTART WITH
         generateRestartWith(sql);
 
         String generated = sql.toString();
 
-        if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
+        if (logger.isTraceEnabled()) {
+            logger.trace("generated: " + generated);
+        }
 
         return generated;
     }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.export.service;
 
@@ -77,7 +76,7 @@ public class DataExportService {
      * The database execution service.
      */
     private final DatabaseDefinitionService databaseDefinitionService;
-    
+
     /**
      * The data transfer schema topology service.
      */
@@ -86,15 +85,16 @@ public class DataExportService {
     /**
      * Instantiates a new data export service.
      *
-     * @param datasourceManager         the datasource manager
-     * @param workspaceService          the workspace service
-     * @param databaseExecutionService  the database execution service
+     * @param datasourceManager the datasource manager
+     * @param workspaceService the workspace service
+     * @param databaseExecutionService the database execution service
      * @param databaseDefinitionService the database definition service
      * @param dataTransferSchemaTopologyService the data transfer schema topology service
      */
     @Autowired
-    public DataExportService(DataSourcesManager datasourceManager, WorkspaceService workspaceService, DatabaseExecutionService databaseExecutionService,
-    		DatabaseDefinitionService databaseDefinitionService, DataTransferSchemaTopologyService dataTransferSchemaTopologyService) {
+    public DataExportService(DataSourcesManager datasourceManager, WorkspaceService workspaceService,
+            DatabaseExecutionService databaseExecutionService, DatabaseDefinitionService databaseDefinitionService,
+            DataTransferSchemaTopologyService dataTransferSchemaTopologyService) {
         this.datasourceManager = datasourceManager;
         this.workspaceService = workspaceService;
         this.databaseExecutionService = databaseExecutionService;
@@ -106,7 +106,7 @@ public class DataExportService {
      * Export schema in csvs.
      *
      * @param datasource the datasource
-     * @param schema     the schema
+     * @param schema the schema
      */
     public void exportSchemaInCsvs(String datasource, String schema) {
         try {
@@ -118,38 +118,50 @@ public class DataExportService {
 
                 String metadata = DatabaseMetadataHelper.getMetadataAsJson(dataSource);
                 JsonElement database = GsonHelper.parseJson(metadata);
-                JsonArray schemes = database.getAsJsonObject().get("schemas").getAsJsonArray();
+                JsonArray schemes = database.getAsJsonObject()
+                                            .get("schemas")
+                                            .getAsJsonArray();
 
                 workspace = WorkspaceFacade.createWorkspace(schema);
                 project = workspace.createProject(schema);
 
                 for (int i = 0; i < schemes.size(); i++) {
-                    JsonObject scheme = schemes.get(i).getAsJsonObject();
-                    if (!scheme.get("name").getAsString().equalsIgnoreCase(schema)) {
+                    JsonObject scheme = schemes.get(i)
+                                               .getAsJsonObject();
+                    if (!scheme.get("name")
+                               .getAsString()
+                               .equalsIgnoreCase(schema)) {
                         continue;
                     }
-                    JsonArray tables = scheme.get("tables").getAsJsonArray();
+                    JsonArray tables = scheme.get("tables")
+                                             .getAsJsonArray();
                     for (int j = 0; j < tables.size(); j++) {
                         File file;
                         CsvFile csvFile = new CsvFile();
 
-                        JsonObject table = tables.get(j).getAsJsonObject();
-                        String artifact = table.get("name").getAsString();
+                        JsonObject table = tables.get(j)
+                                                 .getAsJsonObject();
+                        String artifact = table.get("name")
+                                               .getAsString();
                         String sql = "SELECT * FROM \"" + schema + "\".\"" + artifact + "\"";
-                        try(Connection connection = dataSource.getConnection()) {
-                        	sql = SqlDialectFactory.getDialect(connection).allQuery("\"" + schema + "\".\"" + artifact + "\"");
+                        try (Connection connection = dataSource.getConnection()) {
+                            sql = SqlDialectFactory.getDialect(connection)
+                                                   .allQuery("\"" + schema + "\".\"" + artifact + "\"");
                         } catch (Exception e) {
-                        	logger.error(e.getMessage(), e);
-            			}
-                        
+                            logger.error(e.getMessage(), e);
+                        }
+
                         StringWriter sw = new StringWriter();
-        				OutputStream output;
-        				try {
-        					output = WriterOutputStream.builder().setWriter(sw).setCharset(StandardCharsets.UTF_8).get();
-        				} catch (IOException e) {
-        					throw new SQLException(e);
-        				}
-        				databaseExecutionService.executeStatement(dataSource, sql, true, false, true, false, output);
+                        OutputStream output;
+                        try {
+                            output = WriterOutputStream.builder()
+                                                       .setWriter(sw)
+                                                       .setCharset(StandardCharsets.UTF_8)
+                                                       .get();
+                        } catch (IOException e) {
+                            throw new SQLException(e);
+                        }
+                        databaseExecutionService.executeStatement(dataSource, sql, true, false, true, false, output);
                         String tableExport = sw.toString();
 
                         file = project.createFile(schema + "." + artifact + ".csv", tableExport.getBytes());
@@ -159,7 +171,8 @@ public class DataExportService {
                     }
                 }
                 JsonObject csvimContent = transformCsvFilesToJson(csvFiles);
-                project.createFile(schema + ".csvim", csvimContent.toString().getBytes());
+                project.createFile(schema + ".csvim", csvimContent.toString()
+                                                                  .getBytes());
 
                 logger.info(format("Created requested files in Project [{1}] in Workspace [{2}]", project.getName(), workspace.getName()));
             }
@@ -174,7 +187,7 @@ public class DataExportService {
      * Export metadata as project.
      *
      * @param datasource the datasource
-     * @param schema     the schema
+     * @param schema the schema
      * @return the workspace path of the file
      * @throws SQLException the SQL exception
      */
@@ -187,11 +200,15 @@ public class DataExportService {
             workspace = WorkspaceFacade.createWorkspace(schema);
             project = workspace.createProject(schema);
             file = project.createFile(schema + ".schema", schemaMetadata.getBytes());
-            logger.info(format("Created file [{0}] in Project [{1}] in Workspace [{2}]", file.getName(), project.getName(), workspace.getName()));
+            logger.info(format("Created file [{0}] in Project [{1}] in Workspace [{2}]", file.getName(), project.getName(),
+                    workspace.getName()));
         } else {
-            logger.warn(format("File with name [{0}] in Project [{1}] in Workspace [{2}] already exists and new metadata could not be exported", schema + ".schema", schema, schema));
+            logger.warn(
+                    format("File with name [{0}] in Project [{1}] in Workspace [{2}] already exists and new metadata could not be exported",
+                            schema + ".schema", schema, schema));
             project = workspaceService.getProject(schema, schema);
-            file = project.find(schema + ".schema").get(0);
+            file = project.find(schema + ".schema")
+                          .get(0);
         }
         return file.getWorkspacePath();
     }
@@ -212,8 +229,8 @@ public class DataExportService {
     /**
      * Sets the csv file fields.
      *
-     * @param csvFile  the csvFile
-     * @param schema   the schema
+     * @param csvFile the csvFile
+     * @param schema the schema
      * @param artefact the artefact
      * @param filePath the filePath
      */
@@ -228,20 +245,21 @@ public class DataExportService {
         csvFile.setDistinguishEmptyFromNull(true);
 
     }
-    
+
     /**
      * Export metadata as project.
      *
      * @param datasource the datasource
-     * @param schema     the schema
+     * @param schema the schema
      * @return the workspace path of the file
      * @throws SQLException the SQL exception
      */
     public String exportSchemaTopology(String datasource, String schema) throws SQLException {
-    	javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
+        javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
         if (dataSource != null) {
-        	List<String> sorted = dataTransferSchemaTopologyService.sortTopologically(dataSource, schema);
-        	return sorted.stream().collect(Collectors.joining("\n"));
+            List<String> sorted = dataTransferSchemaTopologyService.sortTopologically(dataSource, schema);
+            return sorted.stream()
+                         .collect(Collectors.joining("\n"));
         }
         return "DataSource does not exist: " + datasource;
     }

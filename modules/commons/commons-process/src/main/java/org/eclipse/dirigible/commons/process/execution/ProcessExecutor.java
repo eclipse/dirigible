@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.commons.process.execution;
 
@@ -56,7 +55,8 @@ public abstract class ProcessExecutor<TOut> {
      * @param environmentVariables the environment variables
      * @return the future
      */
-    public Future<ProcessResult<TOut>> executeProcess(String path, Map<String, String> environmentVariables, ProcessExecutionOptions options) {
+    public Future<ProcessResult<TOut>> executeProcess(String path, Map<String, String> environmentVariables,
+            ProcessExecutionOptions options) {
         try {
             Pair<String, String[]> executableAndArgs = toExecutableAndArgs(path);
             CommandLine commandLine = new CommandLine(executableAndArgs.getLeft());
@@ -84,7 +84,7 @@ public abstract class ProcessExecutor<TOut> {
     private static Pair<String, String[]> toExecutableAndArgs(String path) {
         String[] parts = Commandline.translateCommandline(path);
         String executable = parts[0];
-        String[] arguments = parts.length > 1 ? Arrays.copyOfRange(parts, 1, parts.length) : new String[]{};
+        String[] arguments = parts.length > 1 ? Arrays.copyOfRange(parts, 1, parts.length) : new String[] {};
         return Pair.of(executable, arguments);
     }
 
@@ -97,7 +97,8 @@ public abstract class ProcessExecutor<TOut> {
      * @return the future
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public abstract Future<ProcessResult<TOut>> executeProcess(CommandLine commandLine, DefaultExecutor executor, Map<String, String> environmentVariables) throws IOException;
+    public abstract Future<ProcessResult<TOut>> executeProcess(CommandLine commandLine, DefaultExecutor executor,
+            Map<String, String> environmentVariables) throws IOException;
 
     /**
      * Execute.
@@ -108,7 +109,8 @@ public abstract class ProcessExecutor<TOut> {
      * @return the process execution future
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    protected ProcessExecutionFuture execute(DefaultExecutor executor, CommandLine commandLine, Map<String, String> environmentVariables) throws IOException {
+    protected ProcessExecutionFuture execute(DefaultExecutor executor, CommandLine commandLine, Map<String, String> environmentVariables)
+            throws IOException {
         ProcessExecutionFuture processExecutionFuture = new ProcessExecutionFuture();
         executor.execute(commandLine, environmentVariables, processExecutionFuture);
         return processExecutionFuture;

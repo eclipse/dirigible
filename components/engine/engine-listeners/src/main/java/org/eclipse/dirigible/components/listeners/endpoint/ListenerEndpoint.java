@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.listeners.endpoint;
 
@@ -37,7 +36,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_SECURED + "listeners")
 public class ListenerEndpoint {
-    
+
     /** The listener service. */
     @Autowired
     private ListenerService listenerService;
@@ -64,18 +63,18 @@ public class ListenerEndpoint {
         Page<Listener> listeners = listenerService.getPages(pageable);
         return listeners;
     }
-    
+
     /**
-	 * Gets the.
-	 *
-	 * @param id the id
-	 * @return the response entity
-	 */
-	@GetMapping("/{id}")
-	public ResponseEntity<Listener> get(@PathVariable("id") Long id) {
-		return ResponseEntity.ok(listenerService.findById(id));
-	}
-    
+     * Gets the.
+     *
+     * @param id the id
+     * @return the response entity
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Listener> get(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(listenerService.findById(id));
+    }
+
     /**
      * Find by name.
      *
@@ -95,7 +94,7 @@ public class ListenerEndpoint {
      * @return the response entity
      */
     @GetMapping()
-    public ResponseEntity<List<Listener>> listJobs(){
+    public ResponseEntity<List<Listener>> listJobs() {
         return ResponseEntity.ok(listenerService.getAll());
     }
 }

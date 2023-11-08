@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.workspace.service;
 
@@ -51,14 +50,14 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class WorkspaceService {
-	
-	/** The Constant logger. */
+
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(WorkspaceService.class);
-    
+
     /** The Constant DEFAULT_WORKSPACE_NAME. */
-	private static final String DEFAULT_WORKSPACE_NAME = "workspace";
-	
-	/** The Constant EXTENSION_PARAMETER_PATH. */
+    private static final String DEFAULT_WORKSPACE_NAME = "workspace";
+
+    /** The Constant EXTENSION_PARAMETER_PATH. */
     private static final String EXTENSION_PARAMETER_PATH = "path";
 
     /** The Constant EXTENSION_PARAMETER_PROJECT. */
@@ -72,128 +71,135 @@ public class WorkspaceService {
 
     /** The Constant WORKSPACES_SERVICE_PREFIX. */
     private static final String WORKSPACES_SERVICE_PREFIX = "ide/workspaces";
-	
-	/** The repository. */
-	private final IRepository repository;
-	
-	/** The javascript service. */
-	private final JavascriptService javascriptService;
-	
-	/**
-	 * Instantiates a new workspace service.
-	 *
-	 * @param repository the repository
-	 * @param javascriptService the javascript service
-	 */
-	@Autowired
-	public WorkspaceService(IRepository repository, JavascriptService javascriptService) {
-		this.repository = repository;
-		this.javascriptService = javascriptService;
-	}
-	
-	/**
-	 * Gets the repository.
-	 *
-	 * @return the repository
-	 */
-	protected IRepository getRepository() {
-		return repository;
-	}
-	
-	/**
-	 * Gets the javascript service.
-	 *
-	 * @return the javascript service
-	 */
-	public JavascriptService getJavascriptService() {
-		return javascriptService;
-	}
-	
-	// Workspace
 
-	/**
-	 * Creates the workspace.
-	 *
-	 * @param name the name
-	 * @return the i workspace
-	 */
-	public Workspace createWorkspace(String name) {
-		ICollection collection = getWorkspace(name);
-		collection.create();
-		if (logger.isInfoEnabled()) {logger.info("Workspace created [{}]", collection.getPath());}
-		return new Workspace(collection);
-	}
+    /** The repository. */
+    private final IRepository repository;
 
-	/**
-	 * Gets the workspace.
-	 *
-	 * @param name the name
-	 * @return the workspace
-	 */
-	public Workspace getWorkspace(String name) {
-		StringBuilder workspacePath = generateWorkspacePath(name, null, null);
-		ICollection collection = getRepository().getCollection(workspacePath.toString());
-		return new Workspace(collection);
-	}
+    /** The javascript service. */
+    private final JavascriptService javascriptService;
 
-	/**
-	 * Gets the workspaces.
-	 *
-	 * @return the workspaces
-	 */
-	public List<Workspace> getWorkspaces() {
-		StringBuilder workspacePath = generateWorkspacePath(null, null, null);
-		ICollection root = getRepository().getCollection(workspacePath.toString());
-		List<Workspace> workspaces = new ArrayList<Workspace>();
-		if (!root.exists()) {
-			root.create();
-		}
-		List<ICollection> collections = root.getCollections();
-		for (ICollection collection : collections) {
-			workspaces.add(new Workspace(collection));
-		}
-		if (workspaces.isEmpty()) {
-			ICollection collection = root.createCollection(DEFAULT_WORKSPACE_NAME);
-			workspaces.add(new Workspace(collection));
-		}
-		return workspaces;
-	}
+    /**
+     * Instantiates a new workspace service.
+     *
+     * @param repository the repository
+     * @param javascriptService the javascript service
+     */
+    @Autowired
+    public WorkspaceService(IRepository repository, JavascriptService javascriptService) {
+        this.repository = repository;
+        this.javascriptService = javascriptService;
+    }
 
-	/**
-	 * Delete workspace.
-	 *
-	 * @param name the name
-	 */
-	public void deleteWorkspace(String name) {
-		ICollection collection = getWorkspace(name);
-		collection.delete();
-		if (logger.isInfoEnabled()) {logger.info("Workspace deleted [{}]", collection.getPath());}
-	}
+    /**
+     * Gets the repository.
+     *
+     * @return the repository
+     */
+    protected IRepository getRepository() {
+        return repository;
+    }
 
-	/**
-	 * Generate workspace path.
-	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
-	 * @return the string builder
-	 */
-	private StringBuilder generateWorkspacePath(String workspace, String project, String path) {
-		StringBuilder relativePath = new StringBuilder(IRepositoryStructure.PATH_USERS).append(IRepositoryStructure.SEPARATOR)
-				.append(UserFacade.getName());
-		if (workspace != null) {
-			relativePath.append(IRepositoryStructure.SEPARATOR).append(workspace);
-		}
-		if (project != null) {
-			relativePath.append(IRepositoryStructure.SEPARATOR).append(project);
-		}
-		if (path != null) {
-			relativePath.append(IRepositoryStructure.SEPARATOR).append(path);
-		}
-		return relativePath;
-	}
-	
-	/**
+    /**
+     * Gets the javascript service.
+     *
+     * @return the javascript service
+     */
+    public JavascriptService getJavascriptService() {
+        return javascriptService;
+    }
+
+    // Workspace
+
+    /**
+     * Creates the workspace.
+     *
+     * @param name the name
+     * @return the i workspace
+     */
+    public Workspace createWorkspace(String name) {
+        ICollection collection = getWorkspace(name);
+        collection.create();
+        if (logger.isInfoEnabled()) {
+            logger.info("Workspace created [{}]", collection.getPath());
+        }
+        return new Workspace(collection);
+    }
+
+    /**
+     * Gets the workspace.
+     *
+     * @param name the name
+     * @return the workspace
+     */
+    public Workspace getWorkspace(String name) {
+        StringBuilder workspacePath = generateWorkspacePath(name, null, null);
+        ICollection collection = getRepository().getCollection(workspacePath.toString());
+        return new Workspace(collection);
+    }
+
+    /**
+     * Gets the workspaces.
+     *
+     * @return the workspaces
+     */
+    public List<Workspace> getWorkspaces() {
+        StringBuilder workspacePath = generateWorkspacePath(null, null, null);
+        ICollection root = getRepository().getCollection(workspacePath.toString());
+        List<Workspace> workspaces = new ArrayList<Workspace>();
+        if (!root.exists()) {
+            root.create();
+        }
+        List<ICollection> collections = root.getCollections();
+        for (ICollection collection : collections) {
+            workspaces.add(new Workspace(collection));
+        }
+        if (workspaces.isEmpty()) {
+            ICollection collection = root.createCollection(DEFAULT_WORKSPACE_NAME);
+            workspaces.add(new Workspace(collection));
+        }
+        return workspaces;
+    }
+
+    /**
+     * Delete workspace.
+     *
+     * @param name the name
+     */
+    public void deleteWorkspace(String name) {
+        ICollection collection = getWorkspace(name);
+        collection.delete();
+        if (logger.isInfoEnabled()) {
+            logger.info("Workspace deleted [{}]", collection.getPath());
+        }
+    }
+
+    /**
+     * Generate workspace path.
+     *
+     * @param workspace the workspace
+     * @param project the project
+     * @param path the path
+     * @return the string builder
+     */
+    private StringBuilder generateWorkspacePath(String workspace, String project, String path) {
+        StringBuilder relativePath = new StringBuilder(IRepositoryStructure.PATH_USERS).append(IRepositoryStructure.SEPARATOR)
+                                                                                       .append(UserFacade.getName());
+        if (workspace != null) {
+            relativePath.append(IRepositoryStructure.SEPARATOR)
+                        .append(workspace);
+        }
+        if (project != null) {
+            relativePath.append(IRepositoryStructure.SEPARATOR)
+                        .append(project);
+        }
+        if (path != null) {
+            relativePath.append(IRepositoryStructure.SEPARATOR)
+                        .append(path);
+        }
+        return relativePath;
+    }
+
+    /**
      * List workspaces.
      *
      * @return the list
@@ -201,7 +207,7 @@ public class WorkspaceService {
     public List<Workspace> listWorkspaces() {
         return getWorkspaces();
     }
-    
+
     /**
      * Exists workspace.
      *
@@ -212,7 +218,7 @@ public class WorkspaceService {
         Workspace workspaceObject = getWorkspace(workspace);
         return workspaceObject.exists();
     }
-    
+
     // Project
 
     /**
@@ -257,7 +263,8 @@ public class WorkspaceService {
 
         Workspace workspaceObject = getWorkspace(workspace);
         Project workspaceProject = workspaceObject.getProject(project);
-        String repositoryRootFolder = workspaceObject.getRepository().getParameter("REPOSITORY_ROOT_FOLDER");
+        String repositoryRootFolder = workspaceObject.getRepository()
+                                                     .getParameter("REPOSITORY_ROOT_FOLDER");
 
         java.io.File projectFile = null;
         if (isGitProject && repositoryRootFolder != null && workspaceProject.exists()) {
@@ -276,7 +283,7 @@ public class WorkspaceService {
      * Exists project.
      *
      * @param workspace the workspace
-     * @param project   the project
+     * @param project the project
      * @return true, if successful
      */
     public boolean existsProject(String workspace, String project) {
@@ -407,7 +414,8 @@ public class WorkspaceService {
         Workspace workspaceObject = getWorkspace(workspace);
         Project projectObject = workspaceObject.getProject(project);
         File fileObject = projectObject.getFile(path);
-        fileObject.getInternal().setContent(content);
+        fileObject.getInternal()
+                  .setContent(content);
         triggerOnSaveExtensions(workspace, project, path);
         return fileObject;
     }
@@ -435,12 +443,15 @@ public class WorkspaceService {
      * @throws URISyntaxException the URI syntax exception
      */
     public URI getURI(String workspace, String project, String path) throws URISyntaxException {
-        StringBuilder relativePath = new StringBuilder(WORKSPACES_SERVICE_PREFIX).append(IRepositoryStructure.SEPARATOR).append(workspace);
+        StringBuilder relativePath = new StringBuilder(WORKSPACES_SERVICE_PREFIX).append(IRepositoryStructure.SEPARATOR)
+                                                                                 .append(workspace);
         if (project != null) {
-            relativePath.append(IRepositoryStructure.SEPARATOR).append(project);
+            relativePath.append(IRepositoryStructure.SEPARATOR)
+                        .append(project);
         }
         if (path != null) {
-            relativePath.append(IRepositoryStructure.SEPARATOR).append(path);
+            relativePath.append(IRepositoryStructure.SEPARATOR)
+                        .append(path);
         }
         return new URI(UrlFacade.escape(relativePath.toString()));
     }
@@ -465,7 +476,7 @@ public class WorkspaceService {
      */
     public ProjectDescriptor renderProjectTree(String workspace, Project project) {
         return WorkspaceJsonHelper.describeProject(workspace, project,
-        		IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
+                IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
     }
 
     /**
@@ -477,7 +488,7 @@ public class WorkspaceService {
      */
     public FolderDescriptor renderFolderTree(String workspace, Folder folder) {
         return WorkspaceJsonHelper.describeFolder(workspace, folder,
-        		IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
+                IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
     }
 
     /**
@@ -489,7 +500,7 @@ public class WorkspaceService {
      */
     public FileDescriptor renderFileDescription(String workspace, File file) {
         return WorkspaceJsonHelper.describeFile(workspace, file,
-        		IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
+                IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
     }
 
     /**
@@ -518,12 +529,7 @@ public class WorkspaceService {
         if (existsProject(targetWorkspace, targetProject)) {
             int inc = 1;
             String projectName = targetProject + " (copy " + inc + ")";
-            while (
-                    existsProject(
-                            targetWorkspace,
-                            projectName
-                    )
-            ) {
+            while (existsProject(targetWorkspace, projectName)) {
                 projectName = targetProject + " (copy " + ++inc + ")";
             }
             targetProject = projectName;
@@ -538,21 +544,16 @@ public class WorkspaceService {
             Project targetProjectObject = createProject(targetWorkspace, targetProject);
             List<Pair<String, String>> allFilesFolders = getAllFilesFolders(sourceProjectObject, false);
             for (Pair<String, String> path : allFilesFolders) {
-                if (path.getKey().equals("file")) {
-                    String filePath = path.getValue().replace(basePath, "");
+                if (path.getKey()
+                        .equals("file")) {
+                    String filePath = path.getValue()
+                                          .replace(basePath, "");
                     File sourceFile = sourceProjectObject.getFile(filePath);
-                    targetProjectObject.createFile(
-                            filePath,
-                            sourceFile.getContent(),
-                            sourceFile.isBinary(),
-                            sourceFile.getContentType()
-                    );
+                    targetProjectObject.createFile(filePath, sourceFile.getContent(), sourceFile.isBinary(), sourceFile.getContentType());
                 } else {
-                    targetProjectObject.createFolder(
-                            path.getValue().replace(
-                                    basePath + IRepository.SEPARATOR, ""
-                            ) + IRepository.SEPARATOR
-                    );
+                    targetProjectObject.createFolder(path.getValue()
+                                                         .replace(basePath + IRepository.SEPARATOR, "")
+                            + IRepository.SEPARATOR);
                 }
             }
         }
@@ -569,18 +570,14 @@ public class WorkspaceService {
      * @param targetBasePath the target folder path
      * @param targetFolderName the target folder name
      */
-    public void copyFolder(String sourceWorkspace, String targetWorkspace, String sourceProject, String sourceFolderPath, String targetProject, String targetBasePath, String targetFolderName) {
+    public void copyFolder(String sourceWorkspace, String targetWorkspace, String sourceProject, String sourceFolderPath,
+            String targetProject, String targetBasePath, String targetFolderName) {
         String targetFolderPath = targetBasePath + targetFolderName;
-        if (existsFolder(targetWorkspace, targetProject, targetFolderPath) || existsFile(targetWorkspace, targetProject, targetFolderPath)) {
+        if (existsFolder(targetWorkspace, targetProject, targetFolderPath)
+                || existsFile(targetWorkspace, targetProject, targetFolderPath)) {
             int inc = 1;
             String folderName = targetFolderName + " (copy " + inc + ")";
-            while (
-                    existsFolder(
-                            targetWorkspace,
-                            targetProject,
-                            targetBasePath + folderName
-                    )
-            ) {
+            while (existsFolder(targetWorkspace, targetProject, targetBasePath + folderName)) {
                 folderName = targetFolderName + " (copy " + ++inc + ")";
             }
             targetFolderPath = targetBasePath + folderName;
@@ -598,21 +595,18 @@ public class WorkspaceService {
             List<Pair<String, String>> allFilesFolders = getAllFilesFolders(baseFolder, false);
             targetProjectObject.createFolder(targetFolderPath + IRepository.SEPARATOR);
             for (Pair<String, String> path : allFilesFolders) {
-                if (path.getKey().equals("file")) {
-                    String filePath = path.getValue().replace(basePath, "");
+                if (path.getKey()
+                        .equals("file")) {
+                    String filePath = path.getValue()
+                                          .replace(basePath, "");
                     File sourceFile = baseFolder.getFile(filePath);
-                    targetProjectObject.createFile(
-                            targetFolderPath + filePath,
-                            sourceFile.getContent(),
-                            sourceFile.isBinary(),
-                            sourceFile.getContentType()
-                    );
+                    targetProjectObject.createFile(targetFolderPath + filePath, sourceFile.getContent(), sourceFile.isBinary(),
+                            sourceFile.getContentType());
                 } else {
-                    targetProjectObject.createFolder(
-                            targetFolderPath + IRepository.SEPARATOR + path.getValue().replace(
-                                    basePath + IRepository.SEPARATOR, ""
-                            ) + IRepository.SEPARATOR
-                    );
+                    targetProjectObject.createFolder(targetFolderPath + IRepository.SEPARATOR + path.getValue()
+                                                                                                    .replace(basePath
+                                                                                                            + IRepository.SEPARATOR, "")
+                            + IRepository.SEPARATOR);
                 }
             }
         }
@@ -628,14 +622,17 @@ public class WorkspaceService {
      * @param targetProject the target project
      * @param targetFilePath the target file path
      */
-    public void copyFile(String sourceWorkspace, String targetWorkspace, String sourceProject, String sourceFilePath, String targetProject, String targetFilePath) {
-        if (sourceWorkspace.equals(targetWorkspace) && !existsFile(targetWorkspace, targetProject, targetFilePath) && !existsFolder(targetWorkspace, targetProject, targetFilePath)) {
+    public void copyFile(String sourceWorkspace, String targetWorkspace, String sourceProject, String sourceFilePath, String targetProject,
+            String targetFilePath) {
+        if (sourceWorkspace.equals(targetWorkspace) && !existsFile(targetWorkspace, targetProject, targetFilePath)
+                && !existsFolder(targetWorkspace, targetProject, targetFilePath)) {
             Workspace workspaceObject = getWorkspace(targetWorkspace);
             workspaceObject.copyFile(sourceProject, sourceFilePath, targetProject, targetFilePath);
         } else { // This is a temporary workaround
             Workspace sourceWorkspaceObject = getWorkspace(sourceWorkspace);
             Workspace targetWorkspaceObject = getWorkspace(targetWorkspace);
-            File sourceFile = sourceWorkspaceObject.getProject(sourceProject).getFile(sourceFilePath);
+            File sourceFile = sourceWorkspaceObject.getProject(sourceProject)
+                                                   .getFile(sourceFilePath);
             String baseTargetPath = "";
             if (targetFilePath.endsWith(IRepository.SEPARATOR)) {
                 baseTargetPath = targetFilePath;
@@ -644,7 +641,8 @@ public class WorkspaceService {
                 baseTargetPath = IRepository.SEPARATOR + targetFilePath;
                 targetFilePath += IRepository.SEPARATOR + sourceFile.getName();
             }
-            if (existsFile(targetWorkspace, targetProject, targetFilePath) || existsFolder(targetWorkspace, targetProject, targetFilePath)) {
+            if (existsFile(targetWorkspace, targetProject, targetFilePath)
+                    || existsFolder(targetWorkspace, targetProject, targetFilePath)) {
                 String fileName = sourceFile.getName();
                 String fileTitle = "";
                 String fileExt = "";
@@ -656,23 +654,13 @@ public class WorkspaceService {
                 }
                 int inc = 1;
                 fileName = fileTitle + " (copy " + inc + ")" + fileExt;
-                while (
-                        existsFile(
-                                targetWorkspace,
-                                targetProject,
-                                baseTargetPath + IRepository.SEPARATOR + fileName
-                        )
-                ) {
+                while (existsFile(targetWorkspace, targetProject, baseTargetPath + IRepository.SEPARATOR + fileName)) {
                     fileName = fileTitle + " (copy " + ++inc + ")" + fileExt;
                 }
                 targetFilePath = baseTargetPath + IRepository.SEPARATOR + fileName;
             }
-            targetWorkspaceObject.getProject(targetProject).createFile(
-                    targetFilePath,
-                    sourceFile.getContent(),
-                    sourceFile.isBinary(),
-                    sourceFile.getContentType()
-            );
+            targetWorkspaceObject.getProject(targetProject)
+                                 .createFile(targetFilePath, sourceFile.getContent(), sourceFile.isBinary(), sourceFile.getContentType());
         }
     }
 
@@ -777,18 +765,27 @@ public class WorkspaceService {
             String[] modules = ExtensionsFacade.getExtensions(EXTENSION_POINT_IDE_WORKSPACE_ON_SAVE);
             for (String module : modules) {
                 try {
-                	if (logger.isTraceEnabled()) {logger.trace("Workspace On Save Extension: {} triggered...", module);}
-                	if (module != null) {
-                		RepositoryPath repositoryPath = new RepositoryPath(module);
-                		javascriptService.handleRequest(repositoryPath.getSegments()[0], repositoryPath.constructPathFrom(1), "", context, false);
-                	}
-                    if (logger.isTraceEnabled()) {logger.trace("Workspace On Save Extension: {} finshed.", module);}
+                    if (logger.isTraceEnabled()) {
+                        logger.trace("Workspace On Save Extension: {} triggered...", module);
+                    }
+                    if (module != null) {
+                        RepositoryPath repositoryPath = new RepositoryPath(module);
+                        javascriptService.handleRequest(repositoryPath.getSegments()[0], repositoryPath.constructPathFrom(1), "", context,
+                                false);
+                    }
+                    if (logger.isTraceEnabled()) {
+                        logger.trace("Workspace On Save Extension: {} finshed.", module);
+                    }
                 } catch (Exception | Error e) {
-                	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+                    if (logger.isErrorEnabled()) {
+                        logger.error(e.getMessage(), e);
+                    }
                 }
             }
         } catch (Exception e) {
-        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
         }
     }
 

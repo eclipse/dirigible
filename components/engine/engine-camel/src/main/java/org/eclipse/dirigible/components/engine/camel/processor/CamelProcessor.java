@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.camel.processor;
 
@@ -42,8 +41,7 @@ public class CamelProcessor {
     private final Map<Long, Resource> camels = new HashMap<>();
 
     @Autowired
-    public CamelProcessor(CamelContext context,
-                          @Qualifier("platformHttpEngineRequestMapping") RequestMappingHandlerMapping camelMapping) {
+    public CamelProcessor(CamelContext context, @Qualifier("platformHttpEngineRequestMapping") RequestMappingHandlerMapping camelMapping) {
         this.context = context.adapt(SpringBootCamelContext.class);
         this.camelMapping = camelMapping;
         loader = this.context.getRoutesLoader();
@@ -63,13 +61,14 @@ public class CamelProcessor {
     }
 
     private void addAllRoutes() {
-        camels.values().forEach(routesResource -> {
-            try {
-                loader.loadRoutes(routesResource);
-            } catch (Exception e) {
-                throw new CamelProcessorException(e);
-            }
-        });
+        camels.values()
+              .forEach(routesResource -> {
+                  try {
+                      loader.loadRoutes(routesResource);
+                  } catch (Exception e) {
+                      throw new CamelProcessorException(e);
+                  }
+              });
     }
 
     private void removeAllRoutes() {
@@ -85,17 +84,17 @@ public class CamelProcessor {
 
     private void unregisterEndpoints() {
         List<RequestMappingInfo> mappingsToRemove = new ArrayList<>();
-        camelMapping.getHandlerMethods().forEach((info, method) -> mappingsToRemove.add(info));
+        camelMapping.getHandlerMethods()
+                    .forEach((info, method) -> mappingsToRemove.add(info));
         mappingsToRemove.forEach(info -> camelMapping.unregisterMapping(info));
     }
 
     public Object invokeRoute(String routeId, Object payload, Map<String, Object> headers) {
         try (FluentProducerTemplate producer = context.createFluentProducerTemplate();) {
-            return producer
-                    .withHeaders(headers)
-                    .withBody(payload)
-                    .to(routeId)
-                    .request();
+            return producer.withHeaders(headers)
+                           .withBody(payload)
+                           .to(routeId)
+                           .request();
         } catch (IOException e) {
             throw new CamelProcessorException("Could not invoke route: " + routeId, e);
         }

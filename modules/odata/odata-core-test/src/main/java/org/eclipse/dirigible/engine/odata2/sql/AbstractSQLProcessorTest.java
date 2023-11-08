@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql;
 
@@ -61,13 +60,12 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 /*
  * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 public abstract class AbstractSQLProcessorTest {
 
@@ -97,39 +95,40 @@ public abstract class AbstractSQLProcessorTest {
         initLiquibase(ds);
     }
 
-	/**
-	 * Inits the liquibase.
-	 *
-	 * @param ds the ds
-	 * @throws SQLException the SQL exception
-	 */
-	private void initLiquibase(DataSource ds) throws SQLException {
-		try (Connection connection = ds.getConnection()) {
-			Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
-			Liquibase liquibase = new liquibase.Liquibase(getChangelogLocation(), new ClassLoaderResourceAccessor(), database);
-			liquibase.update(new Contexts(), new LabelExpression());
-		} catch (DatabaseException e) {
-			throw new SQLException("Unable to initilize liquibase", e);
-		} catch (LiquibaseException e) {
-			throw new SQLException("Unable to load the liquibase resources", e);
-		}
-	}
+    /**
+     * Inits the liquibase.
+     *
+     * @param ds the ds
+     * @throws SQLException the SQL exception
+     */
+    private void initLiquibase(DataSource ds) throws SQLException {
+        try (Connection connection = ds.getConnection()) {
+            Database database = DatabaseFactory.getInstance()
+                                               .findCorrectDatabaseImplementation(new JdbcConnection(connection));
+            Liquibase liquibase = new liquibase.Liquibase(getChangelogLocation(), new ClassLoaderResourceAccessor(), database);
+            liquibase.update(new Contexts(), new LabelExpression());
+        } catch (DatabaseException e) {
+            throw new SQLException("Unable to initilize liquibase", e);
+        } catch (LiquibaseException e) {
+            throw new SQLException("Unable to load the liquibase resources", e);
+        }
+    }
 
-	/**
-	 * Gets the changelog location.
-	 *
-	 * @return the changelog location
-	 */
-	protected String getChangelogLocation() {
-		return "liquibase/changelog.xml";
-	}
+    /**
+     * Gets the changelog location.
+     *
+     * @return the changelog location
+     */
+    protected String getChangelogLocation() {
+        return "liquibase/changelog.xml";
+    }
 
-	/**
-	 * Gets the o data entities.
-	 *
-	 * @return the o data entities
-	 */
-	protected abstract Class<?>[] getODataEntities();
+    /**
+     * Gets the o data entities.
+     *
+     * @return the o data entities
+     */
+    protected abstract Class<?>[] getODataEntities();
 
     /**
      * Clear db.
@@ -166,8 +165,8 @@ public abstract class AbstractSQLProcessorTest {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     protected String loadResource(String fileName) throws IOException {
-		return IOUtils.toString(AbstractSQLProcessorTest.class.getResourceAsStream(fileName), Charset.defaultCharset());
-	}
+        return IOUtils.toString(AbstractSQLProcessorTest.class.getResourceAsStream(fileName), Charset.defaultCharset());
+    }
 
     /**
      * Modifying request builder.
@@ -180,10 +179,11 @@ public abstract class AbstractSQLProcessorTest {
         OData2RequestBuilder builder = new OData2RequestBuilder() {
             @Override
             protected void getServletInputStream(final ODataHttpMethod method, final EasyMockSupport easyMockSupport,
-                                                 final HttpServletRequest servletRequest) throws IOException {
+                    final HttpServletRequest servletRequest) throws IOException {
 
                 final ServletInputStream s = new DelegateServletInputStream(new ByteArrayInputStream(content.getBytes()));
-                expect(servletRequest.getInputStream()).andReturn(s).atLeastOnce();
+                expect(servletRequest.getInputStream()).andReturn(s)
+                                                       .atLeastOnce();
             }
 
         };
@@ -282,8 +282,7 @@ public abstract class AbstractSQLProcessorTest {
          * @param readListener the new read listener
          */
         @Override
-        public void setReadListener(ReadListener readListener) {
-        }
+        public void setReadListener(ReadListener readListener) {}
 
     }
 
@@ -297,7 +296,8 @@ public abstract class AbstractSQLProcessorTest {
      * @throws ODataException the o data exception
      */
     protected ODataFeed retrieveODataFeed(final Response response, final String entitySetName) throws IOException, ODataException {
-        EdmEntitySet entitySet = new EdmImplProv(edm).getDefaultEntityContainer().getEntitySet(entitySetName);
+        EdmEntitySet entitySet = new EdmImplProv(edm).getDefaultEntityContainer()
+                                                     .getEntitySet(entitySetName);
         return OData2TestUtils.retrieveODataFeedFromResponse(response, entitySet);
     }
 
@@ -311,7 +311,8 @@ public abstract class AbstractSQLProcessorTest {
      * @throws ODataException the o data exception
      */
     protected ODataEntry retrieveODataEntry(final Response response, final String entitySetName) throws IOException, ODataException {
-        EdmEntitySet entitySet = new EdmImplProv(edm).getDefaultEntityContainer().getEntitySet(entitySetName);
+        EdmEntitySet entitySet = new EdmImplProv(edm).getDefaultEntityContainer()
+                                                     .getEntitySet(entitySetName);
         return OData2TestUtils.retrieveODataEntryFromResponse(response, entitySet);
     }
 
@@ -325,12 +326,13 @@ public abstract class AbstractSQLProcessorTest {
      */
     public void assertCarHasPrice(String segment, double expectedPrice) throws IOException, ODataException {
         Response existingCar = OData2RequestBuilder.createRequest(sf) //
-                .segments(segment) //
-                .accept("application/json").executeRequest(GET);
+                                                   .segments(segment) //
+                                                   .accept("application/json")
+                                                   .executeRequest(GET);
 
         assertEquals(200, existingCar.getStatus());
-        ODataEntry resultEntry  = retrieveODataEntry(existingCar, "Cars");
-        Map<String, Object> properties  = resultEntry.getProperties();
+        ODataEntry resultEntry = retrieveODataEntry(existingCar, "Cars");
+        Map<String, Object> properties = resultEntry.getProperties();
         assertEquals(expectedPrice, properties.get("Price"));
     }
 }

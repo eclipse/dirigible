@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.graalium.core.graal;
 
@@ -20,8 +19,7 @@ import java.io.PrintStream;
 
 public class Logging {
 
-    private Logging() {
-    }
+    private Logging() {}
 
     private static final Logger SYS_OUT_LOGGER = LoggerFactory.getLogger("app.out");
     private static final Logger SYS_ERR_LOGGER = LoggerFactory.getLogger("app.err");
@@ -65,10 +63,9 @@ public class Logging {
         protected byte[] buf;
 
         /**
-         * The number of valid bytes in the buffer. This value is always in the
-         * range <code>0</code> through <code>buf.length</code>; elements
-         * <code>buf[0]</code> through <code>buf[count-1]</code> contain valid byte
-         * data.
+         * The number of valid bytes in the buffer. This value is always in the range <code>0</code> through
+         * <code>buf.length</code>; elements <code>buf[0]</code> through <code>buf[count-1]</code> contain
+         * valid byte data.
          */
         protected int count;
 
@@ -92,7 +89,7 @@ public class Logging {
         /**
          * Creates the GraalJS to flush to the given category.
          *
-         * @param logger  the Logger to write to
+         * @param logger the Logger to write to
          * @param isError the if true write to error, else info
          * @throws IllegalArgumentException in case of error
          */
@@ -109,10 +106,9 @@ public class Logging {
         }
 
         /**
-         * Closes this output stream and releases any system resources
-         * associated with this stream. The general contract of
-         * <code>close</code> is that it closes the output stream. A closed
-         * stream cannot perform output operations and cannot be reopened.
+         * Closes this output stream and releases any system resources associated with this stream. The
+         * general contract of <code>close</code> is that it closes the output stream. A closed stream
+         * cannot perform output operations and cannot be reopened.
          */
         @Override
         public void close() {
@@ -121,11 +117,9 @@ public class Logging {
         }
 
         /**
-         * Writes the specified byte to this output stream. The general contract
-         * for <code>write</code> is that one byte is written to the output
-         * stream. The byte to be written is the eight low-order bits of the
-         * argument <code>b</code>. The 24 high-order bits of <code>b</code> are
-         * ignored.
+         * Writes the specified byte to this output stream. The general contract for <code>write</code> is
+         * that one byte is written to the output stream. The byte to be written is the eight low-order bits
+         * of the argument <code>b</code>. The 24 high-order bits of <code>b</code> are ignored.
          *
          * @param b the <code>byte</code> to write
          * @throws IOException Signals that an I/O exception has occurred.
@@ -155,11 +149,10 @@ public class Logging {
         }
 
         /**
-         * Flushes this output stream and forces any buffered output bytes to be
-         * written out. The general contract of <code>flush</code> is that
-         * calling it is an indication that, if any bytes previously written
-         * have been buffered by the implementation of the output stream, such
-         * bytes should immediately be written to their intended destination.
+         * Flushes this output stream and forces any buffered output bytes to be written out. The general
+         * contract of <code>flush</code> is that calling it is an indication that, if any bytes previously
+         * written have been buffered by the implementation of the output stream, such bytes should
+         * immediately be written to their intended destination.
          */
         @Override
         public void flush() {
@@ -169,8 +162,8 @@ public class Logging {
             }
 
             if (count == LINE_SEPERATOR.length()) {
-                if (((char) buf[0]) == LINE_SEPERATOR.charAt(0) && ((count == 1) ||
-                        ((count == 2) && ((char) buf[1]) == LINE_SEPERATOR.charAt(1)))) {
+                if (((char) buf[0]) == LINE_SEPERATOR.charAt(0)
+                        && ((count == 1) || ((count == 2) && ((char) buf[1]) == LINE_SEPERATOR.charAt(1)))) {
                     reset();
                     return;
                 }

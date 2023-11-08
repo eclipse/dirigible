@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 
 package org.eclipse.dirigible.components.api.kafka;
@@ -82,9 +81,9 @@ public class KafkaFacade {
      * Send a key-value pair to a topic.
      *
      * @param destination the destination
-     * @param key     the key
-     * @param value   the value
-     * @param configuration   the configuration
+     * @param key the key
+     * @param value the value
+     * @param configuration the configuration
      */
     public static final void send(String destination, String key, String value, String configuration) {
         if (configuration == null) {
@@ -95,7 +94,9 @@ public class KafkaFacade {
         Producer<String, String> producer = null;
 
         String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
-        String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers").toString() : bootstrapServer;
+        String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers")
+                                                                  .toString()
+                : bootstrapServer;
         if (server != null) {
             producer = PRODUCERS.get(server);
         }
@@ -126,12 +127,14 @@ public class KafkaFacade {
             }
             producer = new KafkaProducer<>(props);
             PRODUCERS.put(server, producer);
-            if (logger.isInfoEnabled()) {logger.info("Kafka Producer [{}] created.", server);}
+            if (logger.isInfoEnabled()) {
+                logger.info("Kafka Producer [{}] created.", server);
+            }
         }
 
         producer.send(new ProducerRecord<String, String>(destination, key, value));
 
-        //producer.close();
+        // producer.close();
     }
 
     /**
@@ -148,7 +151,9 @@ public class KafkaFacade {
         Producer<String, String> producer = null;
 
         String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
-        String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers").toString() : bootstrapServer;
+        String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers")
+                                                                  .toString()
+                : bootstrapServer;
         if (server != null) {
             producer = PRODUCERS.get(server);
         }
@@ -157,7 +162,9 @@ public class KafkaFacade {
             producer.close();
             PRODUCERS.remove(server);
         } else {
-            if (logger.isWarnEnabled()) {logger.warn("Kafka Producer [{}] has not been started yet.", server);}
+            if (logger.isWarnEnabled()) {
+                logger.warn("Kafka Producer [{}] has not been started yet.", server);
+            }
         }
     }
 
@@ -181,7 +188,9 @@ public class KafkaFacade {
 
         String location = null;
         String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
-        String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers").toString() : bootstrapServer;
+        String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers")
+                                                                  .toString()
+                : bootstrapServer;
         location = createLocation(destination, server);
         consumerRunner = CONSUMERS.get(location);
 
@@ -205,7 +214,8 @@ public class KafkaFacade {
             }
             if (props.get("auto.commit.interval.ms") == null) {
                 // autocommit interval 1000
-                String autoCommitInterval = Configuration.get(DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL, DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL_DEFAULT);
+                String autoCommitInterval =
+                        Configuration.get(DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL, DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL_DEFAULT);
                 props.put("auto.commit.interval.ms", autoCommitInterval);
             }
             if (props.get("key.deserializer") == null) {
@@ -226,9 +236,13 @@ public class KafkaFacade {
             consumerThread.setDaemon(false);
             consumerThread.start();
             CONSUMERS.put(location, consumerRunner);
-            if (logger.isInfoEnabled()) {logger.info("Kafka Consumer [{}] created.", location);}
+            if (logger.isInfoEnabled()) {
+                logger.info("Kafka Consumer [{}] created.", location);
+            }
         } else {
-            if (logger.isWarnEnabled()) {logger.warn("Kafka Consumer [{}] has already been started.", location);}
+            if (logger.isWarnEnabled()) {
+                logger.warn("Kafka Consumer [{}] has already been started.", location);
+            }
         }
     }
 
@@ -249,7 +263,9 @@ public class KafkaFacade {
 
         String location = null;
         String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
-        String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers").toString() : bootstrapServer;
+        String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers")
+                                                                  .toString()
+                : bootstrapServer;
         location = createLocation(destination, server);
         consumerRunner = CONSUMERS.get(location);
 
@@ -257,7 +273,9 @@ public class KafkaFacade {
             consumerRunner.stop();
             CONSUMERS.remove(location);
         } else {
-            if (logger.isWarnEnabled()) {logger.warn("Kafka Consumer [" + location + "] has not been started yet.");}
+            if (logger.isWarnEnabled()) {
+                logger.warn("Kafka Consumer [" + location + "] has not been started yet.");
+            }
         }
     }
 

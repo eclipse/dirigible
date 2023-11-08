@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
@@ -31,16 +30,16 @@ import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
  * The Class SQLDeleteBuilder.
  */
 public class SQLDeleteBuilder extends AbstractQueryBuilder {
-    
+
     /** The delete keys column names. */
     private final List<String> deleteKeysColumnNames = new ArrayList<>();
-    
+
     /** The delete keys. */
     private Map<String, Object> deleteKeys;
-    
+
     /** The target. */
     private EdmEntityType target;
-    
+
     /** The table name. */
     private String tableName;
 
@@ -103,7 +102,7 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
     protected String buildFrom() throws EdmException {
         grantTableAliasForStructuralTypeInQuery(target);
 
-        for (EdmProperty deleteProperty : target.getKeyProperties()) { //we iterate first the own properties of the type
+        for (EdmProperty deleteProperty : target.getKeyProperties()) { // we iterate first the own properties of the type
             if (deleteKeys.containsKey(deleteProperty.getName())) {
                 String columnName = getSQLTableColumnNoAlias(target, deleteProperty);
                 deleteKeysColumnNames.add(getSQLTableColumnNoAlias(target, deleteProperty));
@@ -135,7 +134,7 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
      */
     private String buildDeleteFrom() {
         StringBuilder from = new StringBuilder();
-        for (Iterator<String> it = getTablesAliasesForEntitiesInQuery(); it.hasNext(); ) {
+        for (Iterator<String> it = getTablesAliasesForEntitiesInQuery(); it.hasNext();) {
             String tableAlias = it.next();
             EdmStructuralType target = getEntityInQueryForAlias(tableAlias);
             if (isDeleteTarget(target)) {
@@ -153,7 +152,7 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
      * @return true, if is delete target
      */
     private boolean isDeleteTarget(final EdmStructuralType target) {
-        //always select the entity target
+        // always select the entity target
         return fqn(getTarget()).equals(fqn(target));
     }
 
@@ -184,14 +183,14 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
 
             @Override
             public String sql() throws EdmException {
-                //TODO make immutable
+                // TODO make immutable
                 StringBuilder builder = new StringBuilder();
                 builder.append("DELETE ");
                 builder.append(" FROM ");
                 builder.append(getTargetTableName());
 
                 SQLWhereClause where = new SQLWhereClause(buildDeleteWhereClauseOnKeys(context));
-                where.and(getWhereClause()); //add any update where clause set by the interceptors
+                where.and(getWhereClause()); // add any update where clause set by the interceptors
 
                 builder.append(" WHERE ");
                 builder.append(where.getWhereClause());

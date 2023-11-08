@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
@@ -43,10 +42,10 @@ public class SQLSelectBuilderComplexTypeTest {
 
     /** The provider. */
     AnnotationEdmProvider provider;
-    
+
     /** The uri parser. */
     UriParser uriParser;
-    
+
     /** The builder. */
     SQLQueryBuilder builder;
 
@@ -84,10 +83,11 @@ public class SQLSelectBuilderComplexTypeTest {
 
         SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext();
-        String expected = "SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\" " +
-                "FROM ENTITY3_TABLE AS T0 " +
-                "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " +
-                "ORDER BY T0.ID ASC FETCH FIRST 1000 ROWS ONLY";
+        String expected =
+                "SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\" "
+                        + "FROM ENTITY3_TABLE AS T0 "
+                        + "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN "
+                        + "ORDER BY T0.ID ASC FETCH FIRST 1000 ROWS ONLY";
         assertEquals(expected, q.buildSelect(context));
     }
 
@@ -106,10 +106,11 @@ public class SQLSelectBuilderComplexTypeTest {
 
         SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext();
-        String expected = "SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\" " +
-                "FROM ENTITY3_TABLE AS T0 " +
-                "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " +
-                "WHERE T1.CT_ID = ? ORDER BY T0.ID ASC FETCH FIRST 1000 ROWS ONLY";
+        String expected =
+                "SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\" "
+                        + "FROM ENTITY3_TABLE AS T0 "
+                        + "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN "
+                        + "WHERE T1.CT_ID = ? ORDER BY T0.ID ASC FETCH FIRST 1000 ROWS ONLY";
         assertEquals(expected, q.buildSelect(context));
     }
 
@@ -128,11 +129,11 @@ public class SQLSelectBuilderComplexTypeTest {
 
         SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext();
-        String expected = "SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\" " +
-                "FROM ENTITY3_TABLE AS T0 " +
-                "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " +
-                "WHERE T1.CT_ID = ? AND T0.ID = ? " +
-                "ORDER BY T0.ID ASC FETCH FIRST 1000 ROWS ONLY";
+        String expected =
+                "SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\" "
+                        + "FROM ENTITY3_TABLE AS T0 "
+                        + "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN "
+                        + "WHERE T1.CT_ID = ? AND T0.ID = ? " + "ORDER BY T0.ID ASC FETCH FIRST 1000 ROWS ONLY";
         assertEquals(expected, q.buildSelect(context));
     }
 
@@ -151,11 +152,11 @@ public class SQLSelectBuilderComplexTypeTest {
 
         SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext();
-        String expected = "SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\" " +
-                "FROM ENTITY3_TABLE AS T0 " +
-                "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " +
-                "WHERE (T1.CT_ID = ? OR T0.ID = ?) AND T0.ID = ? " +
-                "ORDER BY T0.ID ASC FETCH FIRST 1000 ROWS ONLY";
+        String expected =
+                "SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\" "
+                        + "FROM ENTITY3_TABLE AS T0 "
+                        + "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN "
+                        + "WHERE (T1.CT_ID = ? OR T0.ID = ?) AND T0.ID = ? " + "ORDER BY T0.ID ASC FETCH FIRST 1000 ROWS ONLY";
         assertEquals(expected, q.buildSelect(context));
     }
 
@@ -174,10 +175,9 @@ public class SQLSelectBuilderComplexTypeTest {
 
         SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext();
-        String expected = "SELECT T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\", T0.ID AS \"ID_T0\" " +
-                "FROM ENTITY3_TABLE AS T0 " +
-                "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " +
-                "ORDER BY T0.ID ASC FETCH FIRST 1000 ROWS ONLY";
+        String expected = "SELECT T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\", T0.ID AS \"ID_T0\" "
+                + "FROM ENTITY3_TABLE AS T0 " + "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN "
+                + "ORDER BY T0.ID ASC FETCH FIRST 1000 ROWS ONLY";
         assertEquals(expected, q.buildSelect(context));
     }
 
@@ -187,8 +187,8 @@ public class SQLSelectBuilderComplexTypeTest {
      * @throws Exception the exception
      */
     /*
-     * OData Specification 2.0/3.0: Negative test: It is not supported to use
-     * single properties of a complex type within a $select clause
+     * OData Specification 2.0/3.0: Negative test: It is not supported to use single properties of a
+     * complex type within a $select clause
      */
     @Test(expected = UriSyntaxException.class)
     @SuppressWarnings("unchecked")

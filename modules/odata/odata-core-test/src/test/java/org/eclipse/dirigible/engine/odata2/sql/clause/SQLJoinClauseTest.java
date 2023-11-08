@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.clause;
 
@@ -38,19 +37,19 @@ import static org.junit.Assert.assertEquals;
  * The Class SQLJoinClauseTest.
  */
 public class SQLJoinClauseTest {
-    
+
     /** The provider. */
     AnnotationEdmProvider provider;
-    
+
     /** The edm. */
     EdmImplProv edm;
-    
+
     /** The builder. */
     SQLQueryBuilder builder;
-    
+
     /** The context. */
     SQLContext context;
-    
+
     /** The table mapping provider. */
     EdmTableBindingProvider tableMappingProvider;
 
@@ -102,15 +101,19 @@ public class SQLJoinClauseTest {
      */
     public void testSimpleJoin(boolean caseSensitiveNames, String expectedJoinStatement) throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", String.valueOf(caseSensitiveNames));
-        EdmEntityType mpl = edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName());
-        EdmEntityType uda = edm.getEntityType(Entity2.class.getPackage().getName(), Entity2.class.getSimpleName());
+        EdmEntityType mpl = edm.getEntityType(Entity1.class.getPackage()
+                                                           .getName(),
+                Entity1.class.getSimpleName());
+        EdmEntityType uda = edm.getEntityType(Entity2.class.getPackage()
+                                                           .getName(),
+                Entity2.class.getSimpleName());
         SQLSelectBuilder noop = new SQLSelectBuilder(tableMappingProvider);
 
         SQLJoinClause join = new SQLJoinClause(noop, mpl, uda);
-        //the start condition will be registered as T0 of from and T1 for to
+        // the start condition will be registered as T0 of from and T1 for to
         SQLQueryTestUtils.grantTableAliasForStructuralTypeInQuery(noop, mpl);
         SQLQueryTestUtils.grantTableAliasForStructuralTypeInQuery(noop, uda);
-        //Use the left join to tolerate null elements
+        // Use the left join to tolerate null elements
         assertEquals(expectedJoinStatement, join.evaluate(context));
 
     }
@@ -122,8 +125,12 @@ public class SQLJoinClauseTest {
      */
     @Test
     public void testSimpleJoinFlippedBecauseOfMapping() throws Exception {
-        EdmEntityType mpl = edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName());
-        EdmEntityType uda = edm.getEntityType(Entity2.class.getPackage().getName(), Entity2.class.getSimpleName());
+        EdmEntityType mpl = edm.getEntityType(Entity1.class.getPackage()
+                                                           .getName(),
+                Entity1.class.getSimpleName());
+        EdmEntityType uda = edm.getEntityType(Entity2.class.getPackage()
+                                                           .getName(),
+                Entity2.class.getSimpleName());
         SQLSelectBuilder noop = new SQLSelectBuilder(tableMappingProvider);
 
         SQLJoinClause join = new SQLJoinClause(noop, uda, mpl);
@@ -138,7 +145,9 @@ public class SQLJoinClauseTest {
      */
     @Test
     public void testNoNeedForJoin_fromAndToAreTheSame() throws Exception {
-        EdmEntityType from = edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName());
+        EdmEntityType from = edm.getEntityType(Entity1.class.getPackage()
+                                                            .getName(),
+                Entity1.class.getSimpleName());
         SQLSelectBuilder noop = new SQLSelectBuilder(tableMappingProvider);
         SQLJoinClause join = new SQLJoinClause(noop, from, from);
         assertEquals("", join.evaluate(context));

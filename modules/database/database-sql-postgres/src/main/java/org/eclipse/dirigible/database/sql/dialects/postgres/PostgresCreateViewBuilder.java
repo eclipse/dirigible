@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.dialects.postgres;
 
@@ -26,7 +25,7 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
      * Instantiates a new PostgreSQL create view builder.
      *
      * @param dialect the dialect
-     * @param view    the view
+     * @param view the view
      */
     public PostgresCreateViewBuilder(ISqlDialect dialect, String view) {
         super(dialect, view);
@@ -40,6 +39,7 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
      */
     /*
      * (non-Javadoc)
+     *
      * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#column(java.lang.String)
      */
     @Override
@@ -56,7 +56,9 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
      */
     /*
      * (non-Javadoc)
-     * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#asSelect(java.lang.String)
+     *
+     * @see
+     * org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#asSelect(java.lang.String)
      */
     @Override
     public PostgresCreateViewBuilder asSelect(String select) {
@@ -78,14 +80,13 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
         StringBuilder builder = new StringBuilder(select);
         int midSqlStartIndex = builder.indexOf("FROM") - 1;
         boolean isONClauseMissing = builder.indexOf("ON") - 1 < 0;
-        int midSqlEndIndex = (isONClauseMissing)
-                ? midSqlStartIndex
-                : (builder.indexOf("ON") - 1);
-        String preFROMsql = builder
-                .substring(0, midSqlStartIndex)
-                .replaceAll("\"", "") + " ";
+        int midSqlEndIndex = (isONClauseMissing) ? midSqlStartIndex : (builder.indexOf("ON") - 1);
+        String preFROMsql = builder.substring(0, midSqlStartIndex)
+                                   .replaceAll("\"", "")
+                + " ";
         String midSql = (isONClauseMissing) ? "" : (builder.substring(midSqlStartIndex, midSqlEndIndex) + " ");
-        String postONsql = builder.substring(midSqlEndIndex + 1).replaceAll("\"", "");
+        String postONsql = builder.substring(midSqlEndIndex + 1)
+                                  .replaceAll("\"", "");
         return preFROMsql + midSql + postONsql;
     }
 
@@ -110,6 +111,7 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
      */
     /*
      * (non-Javadoc)
+     *
      * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#generate()
      */
     @Override
@@ -144,7 +146,12 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
      * @param sql the sql
      */
     protected void generateAsValues(StringBuilder sql) {
-        sql.append(SPACE).append(KEYWORD_AS).append(SPACE).append(KEYWORD_VALUES).append(SPACE).append(this.values);
+        sql.append(SPACE)
+           .append(KEYWORD_AS)
+           .append(SPACE)
+           .append(KEYWORD_VALUES)
+           .append(SPACE)
+           .append(this.values);
     }
 
 }

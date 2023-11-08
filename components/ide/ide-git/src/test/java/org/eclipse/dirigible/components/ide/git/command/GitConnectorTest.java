@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.git.command;
 
@@ -45,50 +44,51 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 public class GitConnectorTest {
 
-	/** The Constant DIRIGIBLE_TEST_GIT_ENABLED. */
-	public static final String DIRIGIBLE_TEST_GIT_ENABLED = "DIRIGIBLE_TEST_GIT_ENABLED";
+    /** The Constant DIRIGIBLE_TEST_GIT_ENABLED. */
+    public static final String DIRIGIBLE_TEST_GIT_ENABLED = "DIRIGIBLE_TEST_GIT_ENABLED";
 
-	/**
-	 * Clone repository.
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws InvalidRemoteException the invalid remote exception
-	 * @throws TransportException the transport exception
-	 * @throws GitAPIException the git API exception
-	 */
-	@Test
-	public void cloneRepository() throws IOException, InvalidRemoteException, TransportException, GitAPIException {
-		String gitEnabled = System.getProperty(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
-		if (gitEnabled != null) {
-			Path path = Files.createDirectory(Paths.get("target/dirigible/git"));
-			try {
-				// clone repository
-				IGitConnector gitConnector = GitConnectorFactory.cloneRepository(path.toString(),
-						"https://github.com/dirigiblelabs/sample_git_test.git", null, null, IGitConnector.GIT_MASTER);
-				Status status = gitConnector.status();
-				assertTrue(status.isClean());
-				File textFile = new File(path.toString() + File.separator + "test.txt");
-				assertNotNull(textFile);
-				String textContent = FileUtils.readFileToString(textFile, "UTF-8");
-				assertNotNull(textContent);
-				assertEquals("Test Content", textContent.trim());
-			} finally {
-				if (path.toFile().exists()) {
-					FileUtils.deleteDirectory(path.toFile());
-				}
-			}
-		}
-	}
-	
-	/**
-	 * The Class TestConfiguration.
-	 */
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+    /**
+     * Clone repository.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws InvalidRemoteException the invalid remote exception
+     * @throws TransportException the transport exception
+     * @throws GitAPIException the git API exception
+     */
+    @Test
+    public void cloneRepository() throws IOException, InvalidRemoteException, TransportException, GitAPIException {
+        String gitEnabled = System.getProperty(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
+        if (gitEnabled != null) {
+            Path path = Files.createDirectory(Paths.get("target/dirigible/git"));
+            try {
+                // clone repository
+                IGitConnector gitConnector = GitConnectorFactory.cloneRepository(path.toString(),
+                        "https://github.com/dirigiblelabs/sample_git_test.git", null, null, IGitConnector.GIT_MASTER);
+                Status status = gitConnector.status();
+                assertTrue(status.isClean());
+                File textFile = new File(path.toString() + File.separator + "test.txt");
+                assertNotNull(textFile);
+                String textContent = FileUtils.readFileToString(textFile, "UTF-8");
+                assertNotNull(textContent);
+                assertEquals("Test Content", textContent.trim());
+            } finally {
+                if (path.toFile()
+                        .exists()) {
+                    FileUtils.deleteDirectory(path.toFile());
+                }
+            }
+        }
+    }
+
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 
 }

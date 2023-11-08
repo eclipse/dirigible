@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.local;
 
@@ -21,41 +20,43 @@ import org.junit.Before;
  */
 public class LocalSearchTest extends RepositoryGenericSearchTest {
 
-	/**
-	 * Sets the up.
-	 */
-	@Before
-	public void setUp() {
-		try {
-			repository = new LocalRepository("target");
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
+    /**
+     * Sets the up.
+     */
+    @Before
+    public void setUp() {
+        try {
+            repository = new LocalRepository("target");
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
 
-	/**
-	 * Test search path.
-	 */
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest#testSearchPath()
-	 */
-	@Override
-	public void testSearchPath() {
-		super.testSearchPath();
-	}
+    /**
+     * Test search path.
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest#testSearchPath()
+     */
+    @Override
+    public void testSearchPath() {
+        super.testSearchPath();
+    }
 
-	/**
-	 * Test search text.
-	 */
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest#testSearchText()
-	 */
-	@Override
-	public void testSearchText() {
-		super.testSearchText();
-	}
+    /**
+     * Test search text.
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest#testSearchText()
+     */
+    @Override
+    public void testSearchText() {
+        super.testSearchText();
+    }
 
 }

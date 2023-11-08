@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.graalium.core.javascript;
 
@@ -73,25 +72,13 @@ public class GraalJSCodeRunner implements CodeRunner<Source, Value> {
         Engine graalEngine = builder.waitForDebugger ? EngineCreator.getOrCreateDebuggableEngine() : EngineCreator.getOrCreateEngine();
         DownloadableModuleResolver downloadableModuleResolver = new DownloadableModuleResolver(builder.dependenciesCachePath);
 
-        GraalJSFileSystem graalJSFileSystem = new GraalJSFileSystem(
-                currentWorkingDirectoryPath,
-                builder.moduleResolvers,
-                downloadableModuleResolver,
-                builder.onRealPathNotFound,
-                builder.delegateFileSystem
-        );
+        GraalJSFileSystem graalJSFileSystem = new GraalJSFileSystem(currentWorkingDirectoryPath, builder.moduleResolvers,
+                downloadableModuleResolver, builder.onRealPathNotFound, builder.delegateFileSystem);
 
         graalJSSourceCreator = new GraalJSSourceCreator(builder.jsModuleType);
         graalJSInterceptor = builder.interceptor;
-        graalContext = new ContextCreator(
-                graalEngine,
-                currentWorkingDirectoryPath,
-                currentWorkingDirectoryPath,
-                null,
-                onBeforeContextCreatedHook,
-                onAfterContextCreatedHook,
-                graalJSFileSystem
-        ).createContext();
+        graalContext = new ContextCreator(graalEngine, currentWorkingDirectoryPath, currentWorkingDirectoryPath, null,
+                onBeforeContextCreatedHook, onAfterContextCreatedHook, graalJSFileSystem).createContext();
 
         registerGlobalObjects(graalContext, builder.globalObjects);
         registerPolyfills(graalContext, builder.jsPolyfills);
@@ -112,7 +99,8 @@ public class GraalJSCodeRunner implements CodeRunner<Source, Value> {
      * @param onBeforeContextCreatedListeners the on before context created listeners
      * @return the consumer
      */
-    private static Consumer<Context.Builder> provideOnBeforeContextCreatedHook(List<Consumer<Context.Builder>> onBeforeContextCreatedListeners) {
+    private static Consumer<Context.Builder> provideOnBeforeContextCreatedHook(
+            List<Consumer<Context.Builder>> onBeforeContextCreatedListeners) {
         return contextBuilder -> onBeforeContextCreatedListeners.forEach(x -> x.accept(contextBuilder));
     }
 
@@ -129,7 +117,7 @@ public class GraalJSCodeRunner implements CodeRunner<Source, Value> {
     /**
      * Register global objects.
      *
-     * @param context       the context
+     * @param context the context
      * @param globalObjects the global objects
      */
     private static void registerGlobalObjects(Context context, List<GlobalObject> globalObjects) {
@@ -140,14 +128,13 @@ public class GraalJSCodeRunner implements CodeRunner<Source, Value> {
     /**
      * Register polyfills.
      *
-     * @param context     the context
+     * @param context the context
      * @param jsPolyfills the js polyfills
      */
     private void registerPolyfills(Context context, List<JavascriptPolyfill> jsPolyfills) {
-        jsPolyfills
-                .stream()
-                .map(polyfill -> graalJSSourceCreator.createInternalSource(polyfill.getSource(), polyfill.getFileName()))
-                .forEach(context::eval);
+        jsPolyfills.stream()
+                   .map(polyfill -> graalJSSourceCreator.createInternalSource(polyfill.getSource(), polyfill.getFileName()))
+                   .forEach(context::eval);
     }
 
     /**
@@ -246,7 +233,7 @@ public class GraalJSCodeRunner implements CodeRunner<Source, Value> {
      * New builder.
      *
      * @param currentWorkingDirectoryPath the current working directory path
-     * @param cachesPath                  the caches path
+     * @param cachesPath the caches path
      * @return the builder
      */
     public static Builder newBuilder(Path currentWorkingDirectoryPath, Path cachesPath) {
@@ -332,7 +319,7 @@ public class GraalJSCodeRunner implements CodeRunner<Source, Value> {
          * Instantiates a new builder.
          *
          * @param workingDirectoryPath the working directory path
-         * @param cachesPath           the caches path
+         * @param cachesPath the caches path
          */
         public Builder(Path workingDirectoryPath, Path cachesPath) {
             this.workingDirectoryPath = workingDirectoryPath;
@@ -432,8 +419,8 @@ public class GraalJSCodeRunner implements CodeRunner<Source, Value> {
         }
 
         /**
-         * Sets a callback to invoke when a Path's toRealPath fails in GraalJS' FileSystem.
-         * This callback should return another Path if it could be constructed or throw an exception
+         * Sets a callback to invoke when a Path's toRealPath fails in GraalJS' FileSystem. This callback
+         * should return another Path if it could be constructed or throw an exception
          *
          * @param onRealPathNotFound the callback to invoke
          * @return the builder
@@ -474,9 +461,7 @@ public class GraalJSCodeRunner implements CodeRunner<Source, Value> {
          * @throws IllegalStateException the illegal state exception
          */
         public GraalJSCodeRunner build() throws IllegalStateException {
-            if (workingDirectoryPath == null
-                    || dependenciesCachePath == null
-            ) {
+            if (workingDirectoryPath == null || dependenciesCachePath == null) {
                 throw new RuntimeException("Please, provide all folder paths!");
             }
 

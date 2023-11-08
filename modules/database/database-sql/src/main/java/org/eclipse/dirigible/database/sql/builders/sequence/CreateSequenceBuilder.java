@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders.sequence;
 
@@ -99,7 +98,9 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder start(Integer start) {
-    	if (logger.isTraceEnabled()) {logger.trace("start: " + start);}
+        if (logger.isTraceEnabled()) {
+            logger.trace("start: " + start);
+        }
         this.start = start;
         return this;
     }
@@ -111,7 +112,9 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder increment(int increment) {
-    	if (logger.isTraceEnabled()) {logger.trace("increment: " + increment);}
+        if (logger.isTraceEnabled()) {
+            logger.trace("increment: " + increment);
+        }
         this.increment = increment;
         return this;
     }
@@ -123,7 +126,9 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder maxvalue(Integer maxvalue) {
-    	if (logger.isTraceEnabled()) {logger.trace("maxvalue: " + maxvalue);}
+        if (logger.isTraceEnabled()) {
+            logger.trace("maxvalue: " + maxvalue);
+        }
         this.maxvalue = maxvalue;
         return this;
     }
@@ -135,7 +140,9 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder nomaxvalue(Boolean nomaxvalue) {
-    	if (logger.isTraceEnabled()) {logger.trace("nomaxvalue: " + nomaxvalue);}
+        if (logger.isTraceEnabled()) {
+            logger.trace("nomaxvalue: " + nomaxvalue);
+        }
         this.nomaxvalue = nomaxvalue;
         return this;
     }
@@ -147,7 +154,9 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder minvalue(Integer minvalue) {
-    	if (logger.isTraceEnabled()) {logger.trace("minvalue: " + minvalue);}
+        if (logger.isTraceEnabled()) {
+            logger.trace("minvalue: " + minvalue);
+        }
         this.minvalue = minvalue;
         return this;
     }
@@ -159,7 +168,9 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder nominvalue(Boolean nominvalue) {
-    	if (logger.isTraceEnabled()) {logger.trace("nominvalue: " + nominvalue);}
+        if (logger.isTraceEnabled()) {
+            logger.trace("nominvalue: " + nominvalue);
+        }
         this.nominvalue = nominvalue;
         return this;
     }
@@ -171,7 +182,9 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder cycles(Boolean cycles) {
-    	if (logger.isTraceEnabled()) {logger.trace("cycles: " + cycles);}
+        if (logger.isTraceEnabled()) {
+            logger.trace("cycles: " + cycles);
+        }
         this.cycles = cycles;
         return this;
     }
@@ -183,7 +196,9 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder resetBy(String resetBy) {
-    	if (logger.isTraceEnabled()) {logger.trace("resetBy: " + resetBy);}
+        if (logger.isTraceEnabled()) {
+            logger.trace("resetBy: " + resetBy);
+        }
         this.resetBy = resetBy;
         return this;
     }
@@ -195,7 +210,9 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder publicc(Boolean publicc) {
-    	if (logger.isTraceEnabled()) {logger.trace("public: " + publicc);}
+        if (logger.isTraceEnabled()) {
+            logger.trace("public: " + publicc);
+        }
         this.publicc = publicc;
         return this;
     }
@@ -221,27 +238,29 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
         // INCREMENT_BY
         generateIncrement(sql);
 
-        //MAXVALUE
+        // MAXVALUE
         generateMaxvalue(sql);
 
-        //NO MAXVALUE
+        // NO MAXVALUE
         generateNomaxvalue(sql);
 
-        //MINVALUE
+        // MINVALUE
         generateMinvalue(sql);
 
-        //NO MINVALUE
+        // NO MINVALUE
         generateNominvalue(sql);
 
-        //CYCLE
+        // CYCLE
         generateCycle(sql);
 
-        //RESET BY
+        // RESET BY
         generateResetBy(sql);
 
         String generated = sql.toString();
 
-        if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
+        if (logger.isTraceEnabled()) {
+            logger.trace("generated: " + generated);
+        }
 
         return generated;
     }
@@ -253,7 +272,10 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      */
     protected void generateSequence(StringBuilder sql) {
         String sequenceName = (isCaseSensitive()) ? encapsulate(this.sequence, true) : this.sequence;
-        sql.append(SPACE).append(KEYWORD_SEQUENCE).append(SPACE).append(sequenceName);
+        sql.append(SPACE)
+           .append(KEYWORD_SEQUENCE)
+           .append(SPACE)
+           .append(sequenceName);
     }
 
 
@@ -359,9 +381,9 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      */
     protected void generateSequenceParameter(StringBuilder sql, String parameterName, String parameterValue) {
         sql.append(SPACE)
-                .append(parameterName)
-                .append(SPACE)
-                .append(parameterValue);
+           .append(parameterName)
+           .append(SPACE)
+           .append(parameterValue);
     }
 
 }

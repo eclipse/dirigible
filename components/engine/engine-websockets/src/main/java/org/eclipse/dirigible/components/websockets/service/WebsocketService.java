@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.websockets.service;
 
@@ -94,7 +93,7 @@ public class WebsocketService implements ArtefactService<Websocket> {
             throw new IllegalArgumentException("Websocket with name does not exist: " + name);
         }
     }
-    
+
     /**
      * Find by location.
      *
@@ -104,13 +103,13 @@ public class WebsocketService implements ArtefactService<Websocket> {
     @Override
     @Transactional(readOnly = true)
     public List<Websocket> findByLocation(String location) {
-    	Websocket filter = new Websocket();
+        Websocket filter = new Websocket();
         filter.setLocation(location);
         Example<Websocket> example = Example.of(filter);
         List<Websocket> list = websocketRepository.findAll(example);
         return list;
     }
-    
+
     /**
      * Find by endpoint.
      *
@@ -129,7 +128,7 @@ public class WebsocketService implements ArtefactService<Websocket> {
             throw new IllegalArgumentException("Websocket for endpoint does not exist: " + endpoint);
         }
     }
-    
+
     /**
      * Find by key.
      *
@@ -139,7 +138,7 @@ public class WebsocketService implements ArtefactService<Websocket> {
     @Override
     @Transactional(readOnly = true)
     public Websocket findByKey(String key) {
-    	Websocket filter = new Websocket();
+        Websocket filter = new Websocket();
         filter.setKey(key);
         Example<Websocket> example = Example.of(filter);
         Optional<Websocket> websocket = websocketRepository.findOne(example);

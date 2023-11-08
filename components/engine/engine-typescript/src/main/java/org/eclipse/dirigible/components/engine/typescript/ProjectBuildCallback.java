@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.typescript;
 
@@ -33,13 +32,13 @@ import java.util.function.Consumer;
  */
 @Component
 public class ProjectBuildCallback implements PublisherHandler, Initializer {
-	
-	/** The Constant LOGGER. */
+
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectBuildCallback.class);
 
     /** The project build service. */
     private final ProjectBuildService projectBuildService;
-    
+
     /** The repository. */
     private final IRepository repository;
 
@@ -65,15 +64,15 @@ public class ProjectBuildCallback implements PublisherHandler, Initializer {
     @Override
     public void afterPublish(String workspaceLocation, String registryLocation, AfterPublishMetadata metadata) {
         try {
-			String project = metadata.projectName();
-			if (StringUtils.isEmpty(project)) {
-			    initialize();
-			} else {
-			    projectBuildService.build(metadata.projectName(), metadata.entryPath());
-			}
-		} catch (Exception e) {
+            String project = metadata.projectName();
+            if (StringUtils.isEmpty(project)) {
+                initialize();
+            } else {
+                projectBuildService.build(metadata.projectName(), metadata.entryPath());
+            }
+        } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
-		}
+        }
     }
 
     /**
@@ -81,16 +80,16 @@ public class ProjectBuildCallback implements PublisherHandler, Initializer {
      */
     @Override
     public void initialize() {
-    	Path registryPath = registryPath();
-		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(registryPath)) {
+        Path registryPath = registryPath();
+        try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(registryPath)) {
             for (Path projectPath : directoryStream) {
                 File projectDir = projectPath.toFile();
                 if (projectDir.isDirectory()) {
-                	try {
-						projectBuildService.build(projectDir.getName());
-					} catch (Exception e) {
+                    try {
+                        projectBuildService.build(projectDir.getName());
+                    } catch (Exception e) {
                         LOGGER.error(e.getMessage(), e);
-					}
+                    }
                 }
             }
         } catch (IOException e) {

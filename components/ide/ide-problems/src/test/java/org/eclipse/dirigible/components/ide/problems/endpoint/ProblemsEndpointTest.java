@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.problems.endpoint;
 
@@ -44,21 +43,21 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class ProblemsEndpointTest {
-	
-	@Autowired
-	private EntityManager entityManager;
-	
-	@Autowired
-	private ProblemService problemService;
-	
-	@Autowired
-	private ProblemRepository problemRepository;
-	
-	@Autowired
+
+    @Autowired
+    private EntityManager entityManager;
+
+    @Autowired
+    private ProblemService problemService;
+
+    @Autowired
+    private ProblemRepository problemRepository;
+
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
@@ -66,56 +65,53 @@ public class ProblemsEndpointTest {
 
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
-	
-	@BeforeEach
+
+    @BeforeEach
     public void setup() throws Exception {
-		
-		cleanup();
-		
-		problemService.save(createProblem("location1", "type1", "line1", "column1", "cause1", "expected1",
-				"category1", "module1", "source1", "program1"));
-		problemService.save(createProblem("location2", "type2", "line2", "column2", "cause2", "expected2",
-				"category2", "module2", "source2", "program2"));
+
+        cleanup();
+
+        problemService.save(createProblem("location1", "type1", "line1", "column1", "cause1", "expected1", "category1", "module1",
+                "source1", "program1"));
+        problemService.save(createProblem("location2", "type2", "line2", "column2", "cause2", "expected2", "category2", "module2",
+                "source2", "program2"));
 
     }
-	
-	@AfterEach
+
+    @AfterEach
     public void cleanup() throws Exception {
-		
+
     }
 
-	@Test
-	public void findAllProblems() {
-		Integer size = 10;
-		Integer page = 0;
-		Pageable pageable = PageRequest.of(page, size);
-		assertNotNull(problemService.getPages(pageable));
-	}
-	
-	@Test
-	public void getProblems() throws Exception {
-		mockMvc.perform(get("/services/ide/problems/"))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful())
-		;
-	}
-	
-	@Test
-	public void getProblemsByCondition() throws Exception {
-		mockMvc.perform(get("/services/ide/problems/search?condition=co&limit=5"))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful())
-		;
-	}
-	
-	public static Problem createProblem(String location, String type, String line, String column, String cause, String expected,
-			String category, String module, String source, String program) {
-		Problem problem = new Problem(location, type, line, column, cause, expected,
-				category, module, source, program);
-		return problem;
-	}
+    @Test
+    public void findAllProblems() {
+        Integer size = 10;
+        Integer page = 0;
+        Pageable pageable = PageRequest.of(page, size);
+        assertNotNull(problemService.getPages(pageable));
+    }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+    @Test
+    public void getProblems() throws Exception {
+        mockMvc.perform(get("/services/ide/problems/"))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    public void getProblemsByCondition() throws Exception {
+        mockMvc.perform(get("/services/ide/problems/search?condition=co&limit=5"))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+    }
+
+    public static Problem createProblem(String location, String type, String line, String column, String cause, String expected,
+            String category, String module, String source, String program) {
+        Problem problem = new Problem(location, type, line, column, cause, expected, category, module, source, program);
+        return problem;
+    }
+
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 }

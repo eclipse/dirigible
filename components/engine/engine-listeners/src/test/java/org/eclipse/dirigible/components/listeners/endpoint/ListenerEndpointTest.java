@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.listeners.endpoint;
 
@@ -59,9 +58,9 @@ public class ListenerEndpointTest {
 
     @BeforeEach
     public void setup() {
-    	
-    	cleanup();
-    	
+
+        cleanup();
+
         listenerService.save(new Listener("/a/b/c/l1.listener", "name1", "description", "handler1", 'Q'));
         listenerService.save(new Listener("/a/b/c/l2.listener", "name2", "description", "handler2", 'Q'));
         listenerService.save(new Listener("/a/b/c/l3.listener", "name3", "description", "handler3", 'Q'));
@@ -75,9 +74,9 @@ public class ListenerEndpointTest {
     @Test
     public void findAllExtensionPoints() throws Exception {
         mockMvc.perform(get("/services/listeners"))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
-                //.andExpect(jsonPath("$.content[0].location").value("/a/b/c/l1.listener"));
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+        // .andExpect(jsonPath("$.content[0].location").value("/a/b/c/l1.listener"));
     }
 
     @SpringBootApplication

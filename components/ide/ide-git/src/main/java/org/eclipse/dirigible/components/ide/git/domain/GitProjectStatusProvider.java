@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.git.domain;
 
@@ -26,53 +25,56 @@ import org.springframework.beans.factory.annotation.Autowired;
  * The Class GitProjectStatusProvider.
  */
 public class GitProjectStatusProvider implements ProjectStatusProvider {
-	
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(GitProjectStatusProvider.class);
-	
-	/** The status command. */
-	private StatusCommand statusCommand;
-	
-	/**
-	 * Instantiates a new git project status provider.
-	 *
-	 * @param statusCommand the status command
-	 */
-	@Autowired
-	public GitProjectStatusProvider(StatusCommand statusCommand) {
-		this.statusCommand = statusCommand;
-	}
 
-	/**
-	 * Gets the project status.
-	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @return the project status
-	 */
-	@Override
-	public ProjectStatus getProjectStatus(String workspace, String project) {
-		try {
-			return statusCommand.execute(workspace, project);
-		} catch (GitConnectorException e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-		}
-		return null;
-	}
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(GitProjectStatusProvider.class);
 
-	/**
-	 * Gets the project git folder.
-	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @return the project git folder
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	@Override
-	public String getProjectGitFolder(String workspace, String project) throws IOException {
-		File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, project).getCanonicalFile();
-		String git = gitDirectory.getCanonicalPath() + File.separator;
-		return git;
-	}
+    /** The status command. */
+    private StatusCommand statusCommand;
+
+    /**
+     * Instantiates a new git project status provider.
+     *
+     * @param statusCommand the status command
+     */
+    @Autowired
+    public GitProjectStatusProvider(StatusCommand statusCommand) {
+        this.statusCommand = statusCommand;
+    }
+
+    /**
+     * Gets the project status.
+     *
+     * @param workspace the workspace
+     * @param project the project
+     * @return the project status
+     */
+    @Override
+    public ProjectStatus getProjectStatus(String workspace, String project) {
+        try {
+            return statusCommand.execute(workspace, project);
+        } catch (GitConnectorException e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Gets the project git folder.
+     *
+     * @param workspace the workspace
+     * @param project the project
+     * @return the project git folder
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @Override
+    public String getProjectGitFolder(String workspace, String project) throws IOException {
+        File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, project)
+                                        .getCanonicalFile();
+        String git = gitDirectory.getCanonicalPath() + File.separator;
+        return git;
+    }
 
 }

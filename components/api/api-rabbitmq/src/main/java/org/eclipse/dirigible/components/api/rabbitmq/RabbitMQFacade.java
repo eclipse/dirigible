@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.rabbitmq;
 
@@ -66,7 +65,7 @@ public class RabbitMQFacade extends Thread {
     /**
      * Send message to given queue.
      *
-     * @param queue   the queue being used
+     * @param queue the queue being used
      * @param message the message to be delivered
      */
     public static void send(String queue, String message) {
@@ -89,7 +88,7 @@ public class RabbitMQFacade extends Thread {
     /**
      * Start listening given queue and destination.
      *
-     * @param queue   the queue being used
+     * @param queue the queue being used
      * @param handler the destination for the message
      */
     public static final void startListening(String queue, String handler) {
@@ -121,7 +120,7 @@ public class RabbitMQFacade extends Thread {
     /**
      * Stop listening on given queue and destination.
      *
-     * @param queue   the queue being used
+     * @param queue the queue being used
      * @param handler the destination for the message
      */
     public static final void stopListening(String queue, String handler) {
@@ -149,7 +148,8 @@ public class RabbitMQFacade extends Thread {
      * @return the connection
      */
     private static Connection connect() {
-        String[] splitUri = Configuration.get(DIRIGIBLE_RABBITMQ_CLIENT_URI, RABBITMQ_CLIENT).split(":");
+        String[] splitUri = Configuration.get(DIRIGIBLE_RABBITMQ_CLIENT_URI, RABBITMQ_CLIENT)
+                                         .split(":");
         String host = splitUri[0];
         int port = Integer.parseInt(splitUri[1]);
 
@@ -192,7 +192,7 @@ public class RabbitMQFacade extends Thread {
     /**
      * Create internal identifier for a consumer.
      *
-     * @param queue   the queue being used
+     * @param queue the queue being used
      * @param handler the destination for the message
      * @return the identifier
      */

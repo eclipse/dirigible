@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.jobs.domain;
 
@@ -64,7 +63,7 @@ public class JobLog extends Artefact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "JOBLOG_ID", nullable = false)
     private Long id;
-    
+
     /** The job name. */
     @Column(name = "JOBLOG_JOB_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
     @Expose
@@ -90,7 +89,7 @@ public class JobLog extends Artefact {
     @Expose
     private Timestamp finishedAt;
 
-    /**  The status. */
+    /** The status. */
     @Column(name = "JOBLOG_STATUS", columnDefinition = "SMALLINT", nullable = false)
     @Expose
     private Short status;
@@ -123,8 +122,8 @@ public class JobLog extends Artefact {
      * @param status the status
      * @param message the message
      */
-    public JobLog(String location, String name, String description, Set<String> dependencies, String jobName, String handler, 
-    		Timestamp triggeredAt, Long triggeredId, Timestamp finishedAt, Short status, String message) {
+    public JobLog(String location, String name, String description, Set<String> dependencies, String jobName, String handler,
+            Timestamp triggeredAt, Long triggeredId, Timestamp finishedAt, Short status, String message) {
         super(location, name, ARTEFACT_TYPE, description, dependencies);
         this.jobName = jobName;
         this.handler = handler;
@@ -152,24 +151,24 @@ public class JobLog extends Artefact {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     /**
      * Gets the job name.
      *
      * @return the job name
      */
     public String getJobName() {
-		return jobName;
-	}
-    
+        return jobName;
+    }
+
     /**
      * Sets the job name.
      *
      * @param jobName the new job id
      */
     public void setJobName(String jobName) {
-		this.jobName = jobName;
-	}
+        this.jobName = jobName;
+    }
 
     /**
      * Gets the handler.
@@ -286,25 +285,9 @@ public class JobLog extends Artefact {
      */
     @Override
     public String toString() {
-        return "JobLog{" +
-                "id=" + id +
-                ", jobName=" + jobName +
-                ", handler=" + handler +
-                ", triggeredAt=" + triggeredAt +
-                ", triggeredId=" + triggeredId +
-                ", finishedAt=" + finishedAt +
-                ", status=" + status +
-                ", message=" + message +
-                ", location=" + location +
-                ", name=" + name +
-                ", type=" + type +
-                ", description=" + description +
-                ", key=" + key +
-                ", dependencies=" + dependencies +
-                ", createdBy=" + createdBy +
-                ", createdAt=" + createdAt +
-                ", updatedBy=" + updatedBy +
-                ", updatedAt=" + updatedAt +
-                '}';
+        return "JobLog{" + "id=" + id + ", jobName=" + jobName + ", handler=" + handler + ", triggeredAt=" + triggeredAt + ", triggeredId="
+                + triggeredId + ", finishedAt=" + finishedAt + ", status=" + status + ", message=" + message + ", location=" + location
+                + ", name=" + name + ", type=" + type + ", description=" + description + ", key=" + key + ", dependencies=" + dependencies
+                + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + '}';
     }
 }

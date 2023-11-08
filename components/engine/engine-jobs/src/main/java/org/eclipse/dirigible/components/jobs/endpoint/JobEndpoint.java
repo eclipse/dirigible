@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.jobs.endpoint;
 
@@ -52,16 +51,16 @@ public class JobEndpoint extends BaseEndpoint {
     /** The job service. */
     @Autowired
     private JobService jobService;
-    
+
     /** The job log service. */
     @Autowired
     private JobLogService jobLogService;
-    
+
     /** The job email service. */
     @Autowired
     private JobEmailService jobEmailService;
-    
-    
+
+
 
     /**
      * Find all.
@@ -71,8 +70,7 @@ public class JobEndpoint extends BaseEndpoint {
      * @return the page
      */
     @GetMapping("/pages")
-    public Page<Job> findAll(
-            @Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
+    public Page<Job> findAll(@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
             @Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
 
         if (size == null) {
@@ -106,7 +104,7 @@ public class JobEndpoint extends BaseEndpoint {
      * @return the response entity
      */
     @GetMapping
-    public ResponseEntity<List<Job>> listJobs(){
+    public ResponseEntity<List<Job>> listJobs() {
         return ResponseEntity.ok(jobService.getAll());
     }
 
@@ -118,8 +116,7 @@ public class JobEndpoint extends BaseEndpoint {
      * @throws Exception the exception
      */
     @PostMapping("enable/{name}")
-    public ResponseEntity<Job> enableJob(@PathVariable("name") String name) throws Exception
-    {
+    public ResponseEntity<Job> enableJob(@PathVariable("name") String name) throws Exception {
         return ResponseEntity.ok(jobService.enable(IRepository.SEPARATOR + name));
     }
 
@@ -131,11 +128,10 @@ public class JobEndpoint extends BaseEndpoint {
      * @throws Exception the exception
      */
     @PostMapping("disable/{name}")
-    public ResponseEntity<Job> disableJob(@PathVariable("name") String name) throws Exception
-    {
+    public ResponseEntity<Job> disableJob(@PathVariable("name") String name) throws Exception {
         return ResponseEntity.ok(jobService.disable(IRepository.SEPARATOR + name));
     }
-    
+
     /**
      * List job logs.
      *
@@ -143,10 +139,10 @@ public class JobEndpoint extends BaseEndpoint {
      * @return the response entity
      */
     @GetMapping(value = "/logs/{*job}", produces = "application/json")
-    public ResponseEntity<List<JobLog>> listJobLogs(@PathVariable("job") String job){
+    public ResponseEntity<List<JobLog>> listJobLogs(@PathVariable("job") String job) {
         return ResponseEntity.ok(jobLogService.findByJob(job));
     }
-    
+
     /**
      * Clear job logs.
      *
@@ -154,11 +150,12 @@ public class JobEndpoint extends BaseEndpoint {
      * @return the response entity
      */
     @GetMapping(value = "/clear/{*job}", produces = "application/json")
-    public ResponseEntity<?> clearJobLogs(@PathVariable("job") String job){
-    	jobLogService.deleteAllByJobName(job);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> clearJobLogs(@PathVariable("job") String job) {
+        jobLogService.deleteAllByJobName(job);
+        return ResponseEntity.noContent()
+                             .build();
     }
-    
+
     /**
      * List job parameters.
      *
@@ -166,28 +163,30 @@ public class JobEndpoint extends BaseEndpoint {
      * @return the response entity
      */
     @GetMapping(value = "/parameters/{*job}", produces = "application/json")
-    public ResponseEntity<List<JobParameter>> getJobParameters(@PathVariable("job") String job){
-        return ResponseEntity.ok(jobService.findByName(job).getParameters());
+    public ResponseEntity<List<JobParameter>> getJobParameters(@PathVariable("job") String job) {
+        return ResponseEntity.ok(jobService.findByName(job)
+                                           .getParameters());
     }
-    
+
     /**
      * Trigger job.
      *
      * @param job the job
      * @param parameters the parameters
      * @return the response entity
-     * @throws Exception in case of an error 
+     * @throws Exception in case of an error
      */
     @PostMapping(value = "/trigger/{*job}", produces = "application/json")
-    public ResponseEntity<?> triggerJob(@PathVariable("job") String job, @Valid @RequestBody List<NameValuePair> parameters) throws Exception {
-    	Map<String, String> parametersMap = new HashMap<String, String>();
-		
-		for (NameValuePair pair : parameters) {
-			parametersMap.put(pair.getName(), pair.getValue());
-		}
+    public ResponseEntity<?> triggerJob(@PathVariable("job") String job, @Valid @RequestBody List<NameValuePair> parameters)
+            throws Exception {
+        Map<String, String> parametersMap = new HashMap<String, String>();
+
+        for (NameValuePair pair : parameters) {
+            parametersMap.put(pair.getName(), pair.getValue());
+        }
         return ResponseEntity.ok(jobService.trigger(job, parametersMap));
     }
-    
+
     /**
      * List job emails.
      *
@@ -195,10 +194,10 @@ public class JobEndpoint extends BaseEndpoint {
      * @return the response entity
      */
     @GetMapping(value = "/emails/{*job}", produces = "application/json")
-    public ResponseEntity<List<JobEmail>> getJobEmails(@PathVariable("job") String job){
+    public ResponseEntity<List<JobEmail>> getJobEmails(@PathVariable("job") String job) {
         return ResponseEntity.ok(jobEmailService.findAllByJobName(job));
     }
-    
+
     /**
      * Add job email.
      *
@@ -207,20 +206,21 @@ public class JobEndpoint extends BaseEndpoint {
      * @return the response entity
      */
     @PostMapping(value = "/emailadd/{*job}", produces = "application/json")
-    public ResponseEntity<?> addJobEmails(@PathVariable("job") String job, @Valid @RequestBody String email){
-    	
-    	if (email != null && email.indexOf(',') > -1) {
-			String[] emails = email.split(",");
-			for (String e : emails) {
-				jobEmailService.addEmail(job, e);
-			}
-		} else {
-			jobEmailService.addEmail(job, email);
-		}
-		
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> addJobEmails(@PathVariable("job") String job, @Valid @RequestBody String email) {
+
+        if (email != null && email.indexOf(',') > -1) {
+            String[] emails = email.split(",");
+            for (String e : emails) {
+                jobEmailService.addEmail(job, e);
+            }
+        } else {
+            jobEmailService.addEmail(job, email);
+        }
+
+        return ResponseEntity.ok()
+                             .build();
     }
-    
+
     /**
      * Remove job email.
      *
@@ -228,11 +228,12 @@ public class JobEndpoint extends BaseEndpoint {
      * @return the response entity
      */
     @PostMapping(value = "/emailremove/{id}", produces = "application/json")
-    public ResponseEntity<?> removeJobEmail(@PathVariable("job") Long id){
-    	
-		jobEmailService.removeEmail(id);
-		
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> removeJobEmail(@PathVariable("job") Long id) {
+
+        jobEmailService.removeEmail(id);
+
+        return ResponseEntity.ok()
+                             .build();
     }
 
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.initializers.scheduler;
 
@@ -43,12 +42,12 @@ import org.springframework.scheduling.quartz.SpringBeanJobFactory;
  */
 @Configuration
 public class SystemScheduler {
-	
-	/** The Constant DIRIGIBLE_SYNCHRONIZER_FREQUENCY. */
-	private static final String DIRIGIBLE_SYNCHRONIZER_FREQUENCY = "DIRIGIBLE_SYNCHRONIZER_FREQUENCY";
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(SystemScheduler.class);
+    /** The Constant DIRIGIBLE_SYNCHRONIZER_FREQUENCY. */
+    private static final String DIRIGIBLE_SYNCHRONIZER_FREQUENCY = "DIRIGIBLE_SYNCHRONIZER_FREQUENCY";
+
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(SystemScheduler.class);
 
     /** The application context. */
     @Autowired
@@ -122,7 +121,7 @@ public class SystemScheduler {
         propertiesFactoryBean.afterPropertiesSet();
         return propertiesFactoryBean.getObject();
     }
-    
+
     /**
      * Job detail.
      *
@@ -131,10 +130,11 @@ public class SystemScheduler {
     @Bean
     public JobDetail jobDetail() {
 
-        return newJob().ofType(SynchronizationJob.class).storeDurably()
-        		.withIdentity(JobKey.jobKey("SynchronizationJobDetail"))
-        		.withDescription("Invoke Synchronization Job service...")
-        		.build();
+        return newJob().ofType(SynchronizationJob.class)
+                       .storeDurably()
+                       .withIdentity(JobKey.jobKey("SynchronizationJobDetail"))
+                       .withDescription("Invoke Synchronization Job service...")
+                       .build();
     }
 
     /**
@@ -146,14 +146,16 @@ public class SystemScheduler {
     @Bean
     public Trigger trigger(JobDetail job) {
 
-    	String frequency = org.eclipse.dirigible.commons.config.Configuration.get(
-    			DIRIGIBLE_SYNCHRONIZER_FREQUENCY, "10");
+        String frequency = org.eclipse.dirigible.commons.config.Configuration.get(DIRIGIBLE_SYNCHRONIZER_FREQUENCY, "10");
         int frequencyInSec = Integer.parseInt(frequency);
         logger.info("Configuring trigger to fire every {} seconds", frequencyInSec);
 
-        return newTrigger().forJob(job).withIdentity(TriggerKey.triggerKey("SynchronizationJobTrigger"))
-        		.withDescription("Synchronization trigger")
-        		.withSchedule(simpleSchedule().withIntervalInSeconds(frequencyInSec).repeatForever()).build();
+        return newTrigger().forJob(job)
+                           .withIdentity(TriggerKey.triggerKey("SynchronizationJobTrigger"))
+                           .withDescription("Synchronization trigger")
+                           .withSchedule(simpleSchedule().withIntervalInSeconds(frequencyInSec)
+                                                         .repeatForever())
+                           .build();
     }
 
 }

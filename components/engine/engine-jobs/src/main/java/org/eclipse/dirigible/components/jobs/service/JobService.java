@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.jobs.service;
 
@@ -38,20 +37,20 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class JobService implements ArtefactService<Job>  {
+public class JobService implements ArtefactService<Job> {
 
     /** The job repository. */
     @Autowired
     private JobRepository jobRepository;
-    
+
     /** The job email service. */
     @Autowired
     private JobEmailProcessor jobEmailProcessor;
-    
+
     /** The javascript service. */
     @Autowired
     private JavascriptService javascriptService;
-    
+
     @Autowired
     private JobsManager jobsManager;
 
@@ -106,7 +105,7 @@ public class JobService implements ArtefactService<Job>  {
     public Job findByName(String name) {
         Job filter = new Job();
         if (name != null && name.startsWith("/")) {
-        	name = name.substring(1);
+            name = name.substring(1);
         }
         filter.setName(name);
         filter.setEnabled(null);
@@ -119,7 +118,7 @@ public class JobService implements ArtefactService<Job>  {
             throw new IllegalArgumentException("Job with name does not exist: " + name);
         }
     }
-    
+
     /**
      * Find by location.
      *
@@ -129,13 +128,13 @@ public class JobService implements ArtefactService<Job>  {
     @Override
     @Transactional(readOnly = true)
     public List<Job> findByLocation(String location) {
-    	Job filter = new Job();
+        Job filter = new Job();
         filter.setLocation(location);
         Example<Job> example = Example.of(filter);
         List<Job> list = jobRepository.findAll(example);
         return list;
     }
-    
+
     /**
      * Find by key.
      *
@@ -145,7 +144,7 @@ public class JobService implements ArtefactService<Job>  {
     @Override
     @Transactional(readOnly = true)
     public Job findByKey(String key) {
-    	Job filter = new Job();
+        Job filter = new Job();
         filter.setKey(key);
         filter.setEnabled(null);
         filter.setStatus(null);
@@ -165,21 +164,23 @@ public class JobService implements ArtefactService<Job>  {
      */
     @Override
     public Job save(Job job) {
-    	Job existing = null;
-		try {
-			existing = findByName(job.getName());
-		} catch (Exception e) {
-			// ignore if does not exist yet
-		}
-		if (existing != null) {
-			if (existing.isEnabled() && !job.isEnabled()) {
-				String content = jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateDisable, jobEmailProcessor.EMAIL_TEMPLATE_DISABLE);
-				jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectDisable, content);
-			} else if (!existing.isEnabled() && job.isEnabled()) {
-				String content = jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateEnable, jobEmailProcessor.EMAIL_TEMPLATE_ENABLE);
-				jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectEnable, content);
-			}
-		}
+        Job existing = null;
+        try {
+            existing = findByName(job.getName());
+        } catch (Exception e) {
+            // ignore if does not exist yet
+        }
+        if (existing != null) {
+            if (existing.isEnabled() && !job.isEnabled()) {
+                String content = jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateDisable,
+                        jobEmailProcessor.EMAIL_TEMPLATE_DISABLE);
+                jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectDisable, content);
+            } else if (!existing.isEnabled() && job.isEnabled()) {
+                String content =
+                        jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateEnable, jobEmailProcessor.EMAIL_TEMPLATE_ENABLE);
+                jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectEnable, content);
+            }
+        }
         return jobRepository.saveAndFlush(job);
     }
 
@@ -198,7 +199,7 @@ public class JobService implements ArtefactService<Job>  {
      *
      * @param name the name
      * @return the job
-     * @throws Exception 
+     * @throws Exception
      */
     public Job enable(String name) throws Exception {
         Job job = findByName(name);
@@ -212,7 +213,7 @@ public class JobService implements ArtefactService<Job>  {
      *
      * @param name the name
      * @return the job
-     * @throws Exception 
+     * @throws Exception
      */
     public Job disable(String name) throws Exception {
         Job job = findByName(name);
@@ -220,7 +221,7 @@ public class JobService implements ArtefactService<Job>  {
         jobsManager.unscheduleJob(job.getName(), job.getGroup());
         return jobRepository.saveAndFlush(job);
     }
-    
+
     /**
      * Trigger.
      *
@@ -229,37 +230,37 @@ public class JobService implements ArtefactService<Job>  {
      * @return true, if successful
      * @throws Exception the exception
      */
-	public boolean trigger(String name, Map<String, String> parametersMap) throws Exception {
-			Job job = findByName(name);
-			if (job != null) {
-				Map<String, String> memento = new HashMap<String, String>();
-				try {
-					for (Map.Entry<String, String> entry : parametersMap.entrySet()) {
-						memento.put(entry.getKey(), Configuration.get(entry.getKey()));
-						Configuration.set(entry.getKey(), entry.getValue());
-					}
-					
-					// String engine = job.getEngine();
-					String handler = job.getHandler();
-					try {
-						Map<Object, Object> context = new HashMap<>();
-				    	context.put("handler", handler);
-				    	RepositoryPath path = new RepositoryPath(handler);
-						javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
-					} catch (Exception e) {
-						throw new Exception(e);
-					}
-				} finally {
-					for (Map.Entry<String, String> entry : memento.entrySet()) {
-						Configuration.set(entry.getKey(), entry.getValue());
-					}
-				}
-			} else {
-				String error = format("Job with name {0} does not exist, hence cannot be triggered", name);
-				throw new Exception(error);
-			}
-			
-	        return true;
-	}
-	
+    public boolean trigger(String name, Map<String, String> parametersMap) throws Exception {
+        Job job = findByName(name);
+        if (job != null) {
+            Map<String, String> memento = new HashMap<String, String>();
+            try {
+                for (Map.Entry<String, String> entry : parametersMap.entrySet()) {
+                    memento.put(entry.getKey(), Configuration.get(entry.getKey()));
+                    Configuration.set(entry.getKey(), entry.getValue());
+                }
+
+                // String engine = job.getEngine();
+                String handler = job.getHandler();
+                try {
+                    Map<Object, Object> context = new HashMap<>();
+                    context.put("handler", handler);
+                    RepositoryPath path = new RepositoryPath(handler);
+                    javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+                } catch (Exception e) {
+                    throw new Exception(e);
+                }
+            } finally {
+                for (Map.Entry<String, String> entry : memento.entrySet()) {
+                    Configuration.set(entry.getKey(), entry.getValue());
+                }
+            }
+        } else {
+            String error = format("Job with name {0} does not exist, hence cannot be triggered", name);
+            throw new Exception(error);
+        }
+
+        return true;
+    }
+
 }

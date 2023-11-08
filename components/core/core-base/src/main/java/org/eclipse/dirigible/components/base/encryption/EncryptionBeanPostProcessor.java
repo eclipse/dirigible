@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.base.encryption;
 
@@ -29,7 +28,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EncryptionBeanPostProcessor implements BeanPostProcessor {
-    
+
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(EncryptionBeanPostProcessor.class);
 
@@ -63,7 +62,8 @@ public class EncryptionBeanPostProcessor implements BeanPostProcessor {
         if (bean instanceof EntityManagerFactory) {
             HibernateEntityManagerFactory hibernateEntityManagerFactory = (HibernateEntityManagerFactory) bean;
             SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) hibernateEntityManagerFactory.getSessionFactory();
-            EventListenerRegistry registry = sessionFactoryImpl.getServiceRegistry().getService(EventListenerRegistry.class);
+            EventListenerRegistry registry = sessionFactoryImpl.getServiceRegistry()
+                                                               .getService(EventListenerRegistry.class);
             registry.appendListeners(EventType.PRE_LOAD, encryptionListener);
             registry.appendListeners(EventType.PRE_INSERT, encryptionListener);
             registry.appendListeners(EventType.PRE_UPDATE, encryptionListener);

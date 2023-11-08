@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.structures.endpoint;
 
@@ -36,71 +35,70 @@ import io.swagger.v3.oas.annotations.Parameter;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_DATA + "tables")
 public class TableEndpoint extends BaseEndpoint {
 
-	/** The table service. */
-	private final TableService tableService;
+    /** The table service. */
+    private final TableService tableService;
 
-	/**
-	 * Instantiates a new table endpoint.
-	 *
-	 * @param tableService the table service
-	 */
-	@Autowired
-	public TableEndpoint(TableService tableService) {
-		this.tableService = tableService;
-	}
+    /**
+     * Instantiates a new table endpoint.
+     *
+     * @param tableService the table service
+     */
+    @Autowired
+    public TableEndpoint(TableService tableService) {
+        this.tableService = tableService;
+    }
 
-	/**
-	 * Find all.
-	 *
-	 * @param size the size
-	 * @param page the page
-	 * @return the page
-	 */
-	@GetMapping("/pages")
-	public Page<Table> findAll(
-			@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
-			@Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
-		if (size == null) {
-			size = DEFAULT_PAGE_SIZE;
-		}
-		if (page == null) {
-			page = 0;
-		}
-		Pageable pageable = PageRequest.of(page, size);
-		Page<Table> tables = tableService.getPages(pageable);
-		return tables;
-	}
+    /**
+     * Find all.
+     *
+     * @param size the size
+     * @param page the page
+     * @return the page
+     */
+    @GetMapping("/pages")
+    public Page<Table> findAll(@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
+            @Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
+        if (size == null) {
+            size = DEFAULT_PAGE_SIZE;
+        }
+        if (page == null) {
+            page = 0;
+        }
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Table> tables = tableService.getPages(pageable);
+        return tables;
+    }
 
-	/**
-	 * Gets the.
-	 *
-	 * @param id the id
-	 * @return the response entity
-	 */
-	@GetMapping("/{id}")
-	public ResponseEntity<Table> get(@PathVariable("id") Long id) {
-		return ResponseEntity.ok(tableService.findById(id));
-	}
-	
-	/**
-	 * Find by name.
-	 *
-	 * @param name the name
-	 * @return the response entity
-	 */
-	@GetMapping("/search")
-	public ResponseEntity<Table> findByName(@RequestParam("name") String name) {
-		return ResponseEntity.ok(tableService.findByName(name));
-	}
-	
-	/**
-	 * Gets the all.
-	 *
-	 * @return the all
-	 */
-	@GetMapping
-	public ResponseEntity<List<Table>> getAll() {
-		return ResponseEntity.ok(tableService.getAll());
-	}
+    /**
+     * Gets the.
+     *
+     * @param id the id
+     * @return the response entity
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Table> get(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(tableService.findById(id));
+    }
+
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the response entity
+     */
+    @GetMapping("/search")
+    public ResponseEntity<Table> findByName(@RequestParam("name") String name) {
+        return ResponseEntity.ok(tableService.findByName(name));
+    }
+
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
+    @GetMapping
+    public ResponseEntity<List<Table>> getAll() {
+        return ResponseEntity.ok(tableService.getAll());
+    }
 
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.csvim.domain;
 
@@ -70,7 +69,8 @@ public class Csv extends Artefact {
      * @param imported the imported
      * @param content the content
      */
-    public Csv(String location, String name, String type, String description, Set<String> dependencies, Long id, boolean imported, byte[] content) {
+    public Csv(String location, String name, String type, String description, Set<String> dependencies, Long id, boolean imported,
+            byte[] content) {
         super(location, name, type, description, dependencies);
         this.id = id;
         this.imported = imported;
@@ -186,21 +186,10 @@ public class Csv extends Artefact {
      */
     @Override
     public String toString() {
-        return "Csv{" +
-                "id=" + id +
-                ", imported=" + imported +
-                ", content=" + Arrays.toString(content) +
-                ", location='" + location + '\'' +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", description='" + description + '\'' +
-                ", key='" + key + '\'' +
-                ", dependencies='" + dependencies + '\'' +
-                ", createdBy=" + createdBy +
-                ", createdAt=" + createdAt +
-                ", updatedBy=" + updatedBy +
-                ", updatedAt=" + updatedAt +
-                '}';
+        return "Csv{" + "id=" + id + ", imported=" + imported + ", content=" + Arrays.toString(content) + ", location='" + location + '\''
+                + ", name='" + name + '\'' + ", type='" + type + '\'' + ", description='" + description + '\'' + ", key='" + key + '\''
+                + ", dependencies='" + dependencies + '\'' + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy="
+                + updatedBy + ", updatedAt=" + updatedAt + '}';
     }
 
     /**
@@ -211,13 +200,17 @@ public class Csv extends Artefact {
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         Csv csv = (Csv) o;
 
-        if (imported != csv.imported) return false;
-        if (!Objects.equals(id, csv.id)) return false;
+        if (imported != csv.imported)
+            return false;
+        if (!Objects.equals(id, csv.id))
+            return false;
         return Arrays.equals(content, csv.content);
     }
 

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.jobs.endpoint;
 
@@ -55,7 +54,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class JobEndpointTest {
@@ -91,18 +90,19 @@ public class JobEndpointTest {
     @BeforeEach
     public void setup() throws Exception {
         // create test Job
-        createJob(jobService, "job1", "test_group1", "org....", "test-handler.js", "engine1", "description",
-                "0/1 * * * * ?", false, Collections.emptyList(),"/a/b/c/j1.job",null);
-        createJob(jobService, "job2", "test_group2", "org....", "test-handler.js", "engine2", "description",
-                "0/1 * * * * ?", false, Collections.emptyList(),"/a/b/c/j2.job",null);
-        createJob(jobService, "job3", "test_group3", "org....", "test-handler.js", "engine3", "description",
-                "0/1 * * * * ?", false, Collections.emptyList(),"/a/b/c/j3.job",null);
+        createJob(jobService, "job1", "test_group1", "org....", "test-handler.js", "engine1", "description", "0/1 * * * * ?", false,
+                Collections.emptyList(), "/a/b/c/j1.job", null);
+        createJob(jobService, "job2", "test_group2", "org....", "test-handler.js", "engine2", "description", "0/1 * * * * ?", false,
+                Collections.emptyList(), "/a/b/c/j2.job", null);
+        createJob(jobService, "job3", "test_group3", "org....", "test-handler.js", "engine3", "description", "0/1 * * * * ?", false,
+                Collections.emptyList(), "/a/b/c/j3.job", null);
 
         Page<Job> job = jobService.getPages(PageRequest.of(0, BaseEndpoint.DEFAULT_PAGE_SIZE));
         assertNotNull(job);
         assertEquals(3L, job.getTotalElements());
 
-        testJob = job.getContent().get(0);
+        testJob = job.getContent()
+                     .get(0);
 
         entityManager.refresh(testJob);
 
@@ -118,36 +118,36 @@ public class JobEndpointTest {
     @Test
     public void findAllExtensionPoints() throws Exception {
         mockMvc.perform(get("/services/jobs"))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
-                //.andExpect(jsonPath("$.content[0].location").value("/a/b/c/j1.job"));
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+        // .andExpect(jsonPath("$.content[0].location").value("/a/b/c/j1.job"));
     }
 
     /** Gets all extension points */
     @Test
     public void getAllExtensionPoints() throws Exception {
         mockMvc.perform(get("/services/jobs/pages"))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
     }
 
-    /** Enables the job by name*/
+    /** Enables the job by name */
     @Test
     public void enableJob() throws Exception {
-        //TODO
+        // TODO
         mockMvc.perform(put("/services/jobs/enable/{name}", testJob.getName()))
-                .andDo(print());
-                //.andExpect(status().is2xxSuccessful());
+               .andDo(print());
+        // .andExpect(status().is2xxSuccessful());
 
     }
 
-    /** Disables the job by name*/
+    /** Disables the job by name */
     @Test
     public void disableJob() throws Exception {
-        //TODO
+        // TODO
         mockMvc.perform(put("/services/jobs/disable/{name}", testJob.getName()))
-                .andDo(print());
-                //.andExpect(status().is2xxSuccessful());
+               .andDo(print());
+        // .andExpect(status().is2xxSuccessful());
 
     }
 
@@ -167,9 +167,9 @@ public class JobEndpointTest {
      * @param location the job location
      * @param dependencies the dependencies
      */
-    public static void createJob(JobService jobService, String name, String group, String clazz, String handler,
-                                 String engine, String description, String expression, boolean singleton,
-                                 List<JobParameter> parameters, String location, Set<String> dependencies){
+    public static void createJob(JobService jobService, String name, String group, String clazz, String handler, String engine,
+            String description, String expression, boolean singleton, List<JobParameter> parameters, String location,
+            Set<String> dependencies) {
         Job job = new Job(name, group, clazz, handler, engine, description, expression, singleton, parameters, location, dependencies);
         jobService.save(job);
     }

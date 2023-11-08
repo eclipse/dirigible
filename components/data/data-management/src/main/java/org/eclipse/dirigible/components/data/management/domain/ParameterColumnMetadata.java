@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.management.domain;
 
@@ -16,220 +15,220 @@ package org.eclipse.dirigible.components.data.management.domain;
  */
 public class ParameterColumnMetadata {
 
-	/** The name. */
-	private String name;
+    /** The name. */
+    private String name;
 
-	/** The kind. */
-	private int kind;
+    /** The kind. */
+    private int kind;
 
-	/** The type. */
-	private String type;
+    /** The type. */
+    private String type;
 
-	/** The precision. */
-	private int precision;
+    /** The precision. */
+    private int precision;
 
-	/** The length. */
-	private int length;
-	
-	/** The scale. */
-	private int scale;
-	
-	/** The radix. */
-	private int radix;
-	
-	/** The nullable. */
-	private boolean nullable;
+    /** The length. */
+    private int length;
 
-	/** The remarks. */
-	private String remarks;
+    /** The scale. */
+    private int scale;
 
-	/**
-	 * Procedure Column Metadata.
-	 *
-	 * @param name name
-	 * @param kind kind
-	 * @param type type
-	 * @param precision precision
-	 * @param length length
-	 * @param scale scale
-	 * @param radix radix
-	 * @param nullable nullable
-	 * @param remarks remarks
-	 */
-	public ParameterColumnMetadata(String name, int kind, String type, int precision, int length, int scale, int radix,
-			boolean nullable, String remarks) {
-		super();
-		this.name = name;
-		this.kind = kind;
-		this.type = type;
-		this.precision = precision;
-		this.length = length;
-		this.scale = scale;
-		this.radix = radix;
-		this.nullable = nullable;
-		this.remarks = remarks;
-	}
+    /** The radix. */
+    private int radix;
 
-	/**
-	 * Get the metadata name.
-	 *
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+    /** The nullable. */
+    private boolean nullable;
 
-	/**
-	 * Set the metadata name.
-	 *
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /** The remarks. */
+    private String remarks;
 
-	/**
-	 * Get the metadata kind.
-	 *
-	 * @return the kind
-	 */
-	public int getKind() {
-		return kind;
-	}
+    /**
+     * Procedure Column Metadata.
+     *
+     * @param name name
+     * @param kind kind
+     * @param type type
+     * @param precision precision
+     * @param length length
+     * @param scale scale
+     * @param radix radix
+     * @param nullable nullable
+     * @param remarks remarks
+     */
+    public ParameterColumnMetadata(String name, int kind, String type, int precision, int length, int scale, int radix, boolean nullable,
+            String remarks) {
+        super();
+        this.name = name;
+        this.kind = kind;
+        this.type = type;
+        this.precision = precision;
+        this.length = length;
+        this.scale = scale;
+        this.radix = radix;
+        this.nullable = nullable;
+        this.remarks = remarks;
+    }
 
-	/**
-	 * Set the metadata kind.
-	 *
-	 * @param kind the kind to set
-	 */
-	public void setKind(int kind) {
-		this.kind = kind;
-	}
+    /**
+     * Get the metadata name.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * Get the metadata type.
-	 *
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
-	}
+    /**
+     * Set the metadata name.
+     *
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * Set the metadata type.
-	 *
-	 * @param type the type to set
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
+    /**
+     * Get the metadata kind.
+     *
+     * @return the kind
+     */
+    public int getKind() {
+        return kind;
+    }
 
-	/**
-	 * Get the metadata precision.
-	 *
-	 * @return the precision
-	 */
-	public int getPrecision() {
-		return precision;
-	}
+    /**
+     * Set the metadata kind.
+     *
+     * @param kind the kind to set
+     */
+    public void setKind(int kind) {
+        this.kind = kind;
+    }
 
-	/**
-	 * Set the metadata precision.
-	 *
-	 * @param precision the precision to set
-	 */
-	public void setPrecision(int precision) {
-		this.precision = precision;
-	}
+    /**
+     * Get the metadata type.
+     *
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
 
-	/**
-	 * Get the metadata length.
-	 *
-	 * @return the length
-	 */
-	public int getLength() {
-		return length;
-	}
+    /**
+     * Set the metadata type.
+     *
+     * @param type the type to set
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	/**
-	 * Set the metadata length.
-	 *
-	 * @param length the length to set
-	 */
-	public void setLength(int length) {
-		this.length = length;
-	}
+    /**
+     * Get the metadata precision.
+     *
+     * @return the precision
+     */
+    public int getPrecision() {
+        return precision;
+    }
 
-	/**
-	 * Get the metadata scale.
-	 *
-	 * @return the scale
-	 */
-	public int getScale() {
-		return scale;
-	}
+    /**
+     * Set the metadata precision.
+     *
+     * @param precision the precision to set
+     */
+    public void setPrecision(int precision) {
+        this.precision = precision;
+    }
 
-	/**
-	 * Set the metadata scale.
-	 *
-	 * @param scale the scale to set
-	 */
-	public void setScale(int scale) {
-		this.scale = scale;
-	}
+    /**
+     * Get the metadata length.
+     *
+     * @return the length
+     */
+    public int getLength() {
+        return length;
+    }
 
-	/**
-	 * Get the metadata radix.
-	 *
-	 * @return the radix
-	 */
-	public int getRadix() {
-		return radix;
-	}
+    /**
+     * Set the metadata length.
+     *
+     * @param length the length to set
+     */
+    public void setLength(int length) {
+        this.length = length;
+    }
 
-	/**
-	 * Set the metadata radix.
-	 *
-	 * @param radix the radix to set
-	 */
-	public void setRadix(int radix) {
-		this.radix = radix;
-	}
+    /**
+     * Get the metadata scale.
+     *
+     * @return the scale
+     */
+    public int getScale() {
+        return scale;
+    }
 
-	/**
-	 * Get the metadata nullable.
-	 *
-	 * @return the nullable
-	 */
-	public boolean getNullable() {
-		return nullable;
-	}
+    /**
+     * Set the metadata scale.
+     *
+     * @param scale the scale to set
+     */
+    public void setScale(int scale) {
+        this.scale = scale;
+    }
 
-	/**
-	 * Set the metadata nullable.
-	 *
-	 * @param nullable the nullable to set
-	 */
-	public void setNullable(boolean nullable) {
-		this.nullable = nullable;
-	}
+    /**
+     * Get the metadata radix.
+     *
+     * @return the radix
+     */
+    public int getRadix() {
+        return radix;
+    }
 
-	/**
-	 * Get the metadata remarks.
-	 *
-	 * @return the remarks
-	 */
-	public String getRemarks() {
-		return remarks;
-	}
+    /**
+     * Set the metadata radix.
+     *
+     * @param radix the radix to set
+     */
+    public void setRadix(int radix) {
+        this.radix = radix;
+    }
 
-	/**
-	 * Set the metadata remarks.
-	 *
-	 * @param remarks the remarks to set
-	 */
-	public void setRemarks(String remarks) {
-		this.remarks = remarks;
-	}
+    /**
+     * Get the metadata nullable.
+     *
+     * @return the nullable
+     */
+    public boolean getNullable() {
+        return nullable;
+    }
+
+    /**
+     * Set the metadata nullable.
+     *
+     * @param nullable the nullable to set
+     */
+    public void setNullable(boolean nullable) {
+        this.nullable = nullable;
+    }
+
+    /**
+     * Get the metadata remarks.
+     *
+     * @return the remarks
+     */
+    public String getRemarks() {
+        return remarks;
+    }
+
+    /**
+     * Set the metadata remarks.
+     *
+     * @param remarks the remarks to set
+     */
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.web.endpoint;
 
@@ -55,17 +54,17 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class WebEndpointTest {
-	
-	/** The expose repository. */
-	@Autowired
-	private ExposeRepository exposeRepository;
-	
-	/** The mock mvc. */
-	@Autowired
+
+    /** The expose repository. */
+    @Autowired
+    private ExposeRepository exposeRepository;
+
+    /** The mock mvc. */
+    @Autowired
     private MockMvc mockMvc;
 
     /** The wac. */
@@ -75,97 +74,103 @@ public class WebEndpointTest {
     /** The spring security filter chain. */
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
-	
-	/** The synchronization processor. */
-	@Autowired
-	private SynchronizationProcessor synchronizationProcessor;
-	
-	/** The classpath expander. */
-	@Autowired
-	private ClasspathExpander classpathExpander;
-	
-	/** The synchronization watcher. */
-	@Autowired
-	private SynchronizationWatcher synchronizationWatcher;
-	
-	/** The definition repository. */
-	@MockBean
-	DefinitionRepository definitionRepository;
-	
-	/** The project json. */
-	private String projectJson = "{\n"
-			+ "    \"guid\":\"demo\",\n"
-			+ "    \"repository\":{\n"
-			+ "        \"type\":\"git\",\n"
-			+ "        \"branch\":\"master\",\n"
-			+ "        \"url\":\"https://github.com/dirigiblelabs/demo.git\"\n"
-			+ "    },\n"
-			+ "    \"exposes\": [\n"
-			+ "        \"ui\",\n"
-			+ "        \"samples\"\n"
-			+ "    ]\n"
-			+ "}\n"
-			+ "";
-	
-	/**
-	 * Setup.
-	 *
-	 * @throws Exception the exception
-	 */
-	@BeforeEach
+
+    /** The synchronization processor. */
+    @Autowired
+    private SynchronizationProcessor synchronizationProcessor;
+
+    /** The classpath expander. */
+    @Autowired
+    private ClasspathExpander classpathExpander;
+
+    /** The synchronization watcher. */
+    @Autowired
+    private SynchronizationWatcher synchronizationWatcher;
+
+    /** The definition repository. */
+    @MockBean
+    DefinitionRepository definitionRepository;
+
+    /** The project json. */
+    private String projectJson = "{\n" + "    \"guid\":\"demo\",\n" + "    \"repository\":{\n" + "        \"type\":\"git\",\n"
+            + "        \"branch\":\"master\",\n" + "        \"url\":\"https://github.com/dirigiblelabs/demo.git\"\n" + "    },\n"
+            + "    \"exposes\": [\n" + "        \"ui\",\n" + "        \"samples\"\n" + "    ]\n" + "}\n" + "";
+
+    /**
+     * Setup.
+     *
+     * @throws Exception the exception
+     */
+    @BeforeEach
     public void setup() throws Exception {
-		cleanup();
+        cleanup();
     }
-	
-	/**
-	 * Cleanup.
-	 *
-	 * @throws Exception the exception
-	 */
-	@AfterEach
+
+    /**
+     * Cleanup.
+     *
+     * @throws Exception the exception
+     */
+    @AfterEach
     public void cleanup() throws Exception {
-		exposeRepository.deleteAll();
+        exposeRepository.deleteAll();
     }
-	
-	/**
-	 * Load the artefact.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
+
+    /**
+     * Load the artefact.
+     *
+     * @throws Exception the exception
+     */
+    @Test
     public void process() throws Exception {
-		String registyrFolder = synchronizationProcessor.getRegistryFolder();
-		Paths.get(registyrFolder, "demo").toFile().mkdirs();
-		Paths.get(registyrFolder, "demo", "hidden").toFile().mkdirs();
-		Paths.get(registyrFolder, "demo", "ui").toFile().mkdirs();
-		Files.writeString(Paths.get(registyrFolder, "demo", "project.json"), projectJson, StandardOpenOption.CREATE);
-		Files.writeString(Paths.get(registyrFolder, "demo", "ui", "hello-world.txt"), "Hello World!", StandardOpenOption.CREATE);
-		Files.writeString(Paths.get(registyrFolder, "demo", "hidden", "hidden.txt"), "Hidden", StandardOpenOption.CREATE);
-		Files.writeString(Paths.get(registyrFolder, "demo", "ui", "index.html"), "Hidden", StandardOpenOption.CREATE);
-		try {
-			synchronizationWatcher.force();
-			synchronizationProcessor.processSynchronizers();
-			assertTrue(ExposeManager.listRegisteredProjects().size() > 0);
-			assertTrue(ExposeManager.isPathExposed("demo/ui"));
-			assertFalse(ExposeManager.isPathExposed("demo/hidden"));
-			mockMvc.perform(get("/services/web/demo/ui/hello-world.txt")).andDo(print())
-					.andExpect(content().string(containsString("Hello World!"))).andExpect(status().is2xxSuccessful());
-			mockMvc.perform(get("/services/web/demo/hidden/hidden.txt")).andDo(print())
-					.andExpect(status().isForbidden());
-			mockMvc.perform(get("/services/web/demo/ui/not-existing.txt")).andDo(print())
-					.andExpect(status().isNotFound());
-			mockMvc.perform(get("/services/web/demo/ui")).andDo(print()).andExpect(status().isNotFound());
-			mockMvc.perform(get("/services/web/demo/ui/")).andDo(print()).andExpect(status().is2xxSuccessful());
-		} finally {
-			FileUtils.deleteDirectory(Paths.get(registyrFolder, "demo").toFile());
-			synchronizationProcessor.processSynchronizers();
-		}
+        String registyrFolder = synchronizationProcessor.getRegistryFolder();
+        Paths.get(registyrFolder, "demo")
+             .toFile()
+             .mkdirs();
+        Paths.get(registyrFolder, "demo", "hidden")
+             .toFile()
+             .mkdirs();
+        Paths.get(registyrFolder, "demo", "ui")
+             .toFile()
+             .mkdirs();
+        Files.writeString(Paths.get(registyrFolder, "demo", "project.json"), projectJson, StandardOpenOption.CREATE);
+        Files.writeString(Paths.get(registyrFolder, "demo", "ui", "hello-world.txt"), "Hello World!", StandardOpenOption.CREATE);
+        Files.writeString(Paths.get(registyrFolder, "demo", "hidden", "hidden.txt"), "Hidden", StandardOpenOption.CREATE);
+        Files.writeString(Paths.get(registyrFolder, "demo", "ui", "index.html"), "Hidden", StandardOpenOption.CREATE);
+        try {
+            synchronizationWatcher.force();
+            synchronizationProcessor.processSynchronizers();
+            assertTrue(ExposeManager.listRegisteredProjects()
+                                    .size() > 0);
+            assertTrue(ExposeManager.isPathExposed("demo/ui"));
+            assertFalse(ExposeManager.isPathExposed("demo/hidden"));
+            mockMvc.perform(get("/services/web/demo/ui/hello-world.txt"))
+                   .andDo(print())
+                   .andExpect(content().string(containsString("Hello World!")))
+                   .andExpect(status().is2xxSuccessful());
+            mockMvc.perform(get("/services/web/demo/hidden/hidden.txt"))
+                   .andDo(print())
+                   .andExpect(status().isForbidden());
+            mockMvc.perform(get("/services/web/demo/ui/not-existing.txt"))
+                   .andDo(print())
+                   .andExpect(status().isNotFound());
+            mockMvc.perform(get("/services/web/demo/ui"))
+                   .andDo(print())
+                   .andExpect(status().isNotFound());
+            mockMvc.perform(get("/services/web/demo/ui/"))
+                   .andDo(print())
+                   .andExpect(status().is2xxSuccessful());
+        } finally {
+            FileUtils.deleteDirectory(Paths.get(registyrFolder, "demo")
+                                           .toFile());
+            synchronizationProcessor.processSynchronizers();
+        }
     }
-	
-	/**
-	 * The Class TestConfiguration.
-	 */
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 }

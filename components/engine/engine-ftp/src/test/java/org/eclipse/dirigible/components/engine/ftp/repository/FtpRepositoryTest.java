@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.ftp.repository;
 
@@ -42,7 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class FtpRepositoryTest {
-	
+
     /** The ftp user repository. */
     @Autowired
     private FtpUserRepository ftpUserRepository;
@@ -67,7 +66,9 @@ public class FtpRepositoryTest {
     @AfterEach
     public void cleanup() {
         // Delete test security roles
-        ftpUserRepository.findAll().stream().forEach(u -> ftpUserRepository.delete(u));
+        ftpUserRepository.findAll()
+                         .stream()
+                         .forEach(u -> ftpUserRepository.delete(u));
     }
 
     /**
@@ -77,25 +78,29 @@ public class FtpRepositoryTest {
      */
     @Test
     public void getOne() {
-        Long id = ftpUserRepository.findAll().get(0).getId();
+        Long id = ftpUserRepository.findAll()
+                                   .get(0)
+                                   .getId();
         Optional<FtpUser> optional = ftpUserRepository.findById(id);
         FtpUser ftpuser = optional.isPresent() ? optional.get() : null;
         assertNotNull(ftpuser);
         assertNotNull(ftpuser.getUsername());
     }
-    
+
     /**
      * Find all by username.
      */
     @Test
     public void findAllByUsername() {
-        Long id = ftpUserRepository.findAll().get(0).getId();
+        Long id = ftpUserRepository.findAll()
+                                   .get(0)
+                                   .getId();
         List<FtpUser> list = ftpUserRepository.findAllByUsername("user1");
         FtpUser ftpuser = list.size() > 0 ? list.get(0) : null;
         assertNotNull(ftpuser);
         assertNotNull(ftpuser.getUsername());
     }
-    
+
     /**
      * Gets the all usernames.
      *
@@ -103,7 +108,10 @@ public class FtpRepositoryTest {
      */
     @Test
     public void getAllUsernames() {
-        List<String> list = ftpUserRepository.findAll().stream().map(FtpUser::getUsername).collect(Collectors.toList());
+        List<String> list = ftpUserRepository.findAll()
+                                             .stream()
+                                             .map(FtpUser::getUsername)
+                                             .collect(Collectors.toList());
         assertEquals(3, list.size());
     }
 
@@ -114,7 +122,9 @@ public class FtpRepositoryTest {
      */
     @Test
     public void getReferenceUsingEntityManager() {
-        Long id = ftpUserRepository.findAll().get(0).getId();
+        Long id = ftpUserRepository.findAll()
+                                   .get(0)
+                                   .getId();
         FtpUser ftpuser = entityManager.getReference(FtpUser.class, id);
         assertNotNull(ftpuser);
         assertNotNull(ftpuser.getUsername());
@@ -131,8 +141,9 @@ public class FtpRepositoryTest {
      * @param homeDirectory the home directory
      * @return the ftp user
      */
-    public static FtpUser createFtpUser(String username, String password, boolean enabled, List<? extends Authority> auths, int maxIdleTime, String homeDirectory, boolean admin) {
-    	FtpUser ftpuser = new FtpUser(username, password, true, auths, maxIdleTime, homeDirectory, admin);
+    public static FtpUser createFtpUser(String username, String password, boolean enabled, List<? extends Authority> auths, int maxIdleTime,
+            String homeDirectory, boolean admin) {
+        FtpUser ftpuser = new FtpUser(username, password, true, auths, maxIdleTime, homeDirectory, admin);
         return ftpuser;
     }
 

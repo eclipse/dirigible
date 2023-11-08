@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.processor;
 
@@ -48,10 +47,10 @@ public class DefaultSQLProcessor extends AbstractSQLProcessor {
 
     /** The Constant DEFAULT_DATA_SOURCE_CONTEXT_KEY. */
     public static final String DEFAULT_DATA_SOURCE_CONTEXT_KEY = DataSource.class.getName();
-    
+
     /** The Constant LOG. */
     private static final Logger LOG = LoggerFactory.getLogger(DefaultSQLProcessor.class);
-    
+
     /** The sql query builder. */
     private final SQLQueryBuilder sqlQueryBuilder;
 
@@ -116,7 +115,7 @@ public class DefaultSQLProcessor extends AbstractSQLProcessor {
      */
     @Override
     public Map<String, Object> onCustomizeExpandedNavigatonProperty(EdmStructuralType entityType, EdmStructuralType expandType,
-                                                                    Map<String, Object> expandInstance) {
+            Map<String, Object> expandInstance) {
         LOG.debug("Override this method to customize the navigation properties feed.");
         return expandInstance;
 
@@ -135,7 +134,8 @@ public class DefaultSQLProcessor extends AbstractSQLProcessor {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @Override
-    public Object onCustomizePropertyValue(EdmStructuralType entityType, EdmProperty property, Object entityInstance, Object value) throws EdmException, SQLException, IOException {
+    public Object onCustomizePropertyValue(EdmStructuralType entityType, EdmProperty property, Object entityInstance, Object value)
+            throws EdmException, SQLException, IOException {
         EdmType propertyType = property.getType();
 
         if (value instanceof String && !propertyType.equals(EdmSimpleTypeKind.String.getEdmSimpleTypeInstance())) {
@@ -166,13 +166,20 @@ public class DefaultSQLProcessor extends AbstractSQLProcessor {
             }
         } else if (value instanceof BigDecimal) {
             BigDecimal dec = (BigDecimal) value;
-            if (property.getType().equals(EdmInt32.getInstance())) {
-                return dec.toBigInteger().intValue();
-            } else if (property.getType().equals(EdmInt64.getInstance())) {
-                return dec.toBigInteger().longValue();
-            } else if (property.getType().equals(EdmInt16.getInstance())) {
-                return dec.toBigInteger().shortValue();
-            } else if (property.getType().equals(EdmDouble.getInstance())) {
+            if (property.getType()
+                        .equals(EdmInt32.getInstance())) {
+                return dec.toBigInteger()
+                          .intValue();
+            } else if (property.getType()
+                               .equals(EdmInt64.getInstance())) {
+                return dec.toBigInteger()
+                          .longValue();
+            } else if (property.getType()
+                               .equals(EdmInt16.getInstance())) {
+                return dec.toBigInteger()
+                          .shortValue();
+            } else if (property.getType()
+                               .equals(EdmDouble.getInstance())) {
                 return dec.doubleValue();
             }
         } else if (value instanceof HanaClob) {

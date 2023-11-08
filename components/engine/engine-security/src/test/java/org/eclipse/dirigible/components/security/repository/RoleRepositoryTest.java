@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.security.repository;
 
@@ -55,12 +54,16 @@ public class RoleRepositoryTest {
     @AfterEach
     public void cleanup() {
         // Delete test security roles
-        securityRoleRepository.findAll().stream().forEach(securityRole -> securityRoleRepository.delete(securityRole));
+        securityRoleRepository.findAll()
+                              .stream()
+                              .forEach(securityRole -> securityRoleRepository.delete(securityRole));
     }
 
     @Test
     public void getOne() {
-        Long id = securityRoleRepository.findAll().get(0).getId();
+        Long id = securityRoleRepository.findAll()
+                                        .get(0)
+                                        .getId();
         Optional<Role> optional = securityRoleRepository.findById(id);
         Role securityRole = optional.isPresent() ? optional.get() : null;
         assertNotNull(securityRole);
@@ -72,7 +75,9 @@ public class RoleRepositoryTest {
 
     @Test
     public void getReferenceUsingEntityManager() {
-        Long id = securityRoleRepository.findAll().get(0).getId();
+        Long id = securityRoleRepository.findAll()
+                                        .get(0)
+                                        .getId();
         Role securityRole = entityManager.getReference(Role.class, id);
         assertNotNull(securityRole);
         assertNotNull(securityRole.getLocation());

@@ -1,26 +1,20 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.componenets.api.etcd;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
-
-import io.etcd.jetcd.kv.GetResponse;
-import io.etcd.jetcd.ByteSequence;
-import io.etcd.jetcd.KV;
-import io.etcd.jetcd.test.EtcdClusterExtension;
-
-import com.google.common.base.Charsets;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.api.etcd.EtcdFacade;
 import org.junit.Before;
@@ -33,8 +27,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import static org.junit.jupiter.api.Assertions.*;
+import com.google.common.base.Charsets;
+import io.etcd.jetcd.ByteSequence;
+import io.etcd.jetcd.KV;
+import io.etcd.jetcd.kv.GetResponse;
+import io.etcd.jetcd.test.EtcdClusterExtension;
 
 /**
  * The Class EtcdFacadeTest.
@@ -52,8 +49,8 @@ public class EtcdFacadeTest {
      */
     @RegisterExtension
     public static final EtcdClusterExtension cluster = EtcdClusterExtension.builder()
-            .withNodes(1)
-            .build();
+                                                                           .withNodes(1)
+                                                                           .build();
 
     /**
      * Sets the up.
@@ -61,14 +58,16 @@ public class EtcdFacadeTest {
     @Before
     public void setUp() {
         cluster.restart();
-        Configuration.set("DIRIGIBLE_ETCD_CLIENT_ENDPOINT", cluster.clientEndpoints().get(0).toString());
+        Configuration.set("DIRIGIBLE_ETCD_CLIENT_ENDPOINT", cluster.clientEndpoints()
+                                                                   .get(0)
+                                                                   .toString());
     }
 
     /**
      * Gets the client.
      *
      * @return the client
-     * @throws ExecutionException   the execution exception
+     * @throws ExecutionException the execution exception
      * @throws InterruptedException the interrupted exception
      */
     @Test
@@ -82,14 +81,21 @@ public class EtcdFacadeTest {
         etcdClient.put(key, value);
         Thread.sleep(500);
 
-        GetResponse getPutResponse = etcdClient.get(key).get();
-        assertEquals(getPutResponse.getKvs().get(0).getValue().toString(Charsets.UTF_8), value.toString(Charsets.UTF_8));
+        GetResponse getPutResponse = etcdClient.get(key)
+                                               .get();
+        assertEquals(getPutResponse.getKvs()
+                                   .get(0)
+                                   .getValue()
+                                   .toString(Charsets.UTF_8),
+                value.toString(Charsets.UTF_8));
 
         etcdClient.delete(key);
         Thread.sleep(500);
 
-        GetResponse getDelResponse = etcdClient.get(key).get();
-        assertTrue(getDelResponse.getKvs().isEmpty());
+        GetResponse getDelResponse = etcdClient.get(key)
+                                               .get();
+        assertTrue(getDelResponse.getKvs()
+                                 .isEmpty());
     }
 
     /**

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.initializers.synchronizer;
 
@@ -39,92 +38,91 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("singleton")
 public class SynchronizationWatcher {
-	
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(SynchronizationWatcher.class);
-	
-	/** The modified. */
-	private AtomicBoolean modified = new AtomicBoolean(false);
-	
-	/**
-	 * Initialize.
-	 *
-	 * @param folder the folder
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws InterruptedException the interrupted exception
-	 */
-	public void initialize(String folder) throws IOException, InterruptedException {
-		logger.debug("Initializing the Registry file watcher...");
 
-		WatchService watchService = FileSystems.getDefault().newWatchService();
-		Path path = Paths.get(folder);
-		path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE,
-				StandardWatchEventKinds.ENTRY_MODIFY);
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(SynchronizationWatcher.class);
 
-		Executors.newFixedThreadPool(1).submit(() -> {
-			WatchKey watchKey;
-			try {
-				while ((watchKey = watchService.take()) != null) {
-					List<WatchEvent<?>> events = watchKey.pollEvents();
-					if (!events.isEmpty()) {
-						modified.set(true);
-					}
-					watchKey.reset();
-				}
-			} catch (InterruptedException e) {
-				logger.error("Failed to take watch keys", e);
-			}
-		});
+    /** The modified. */
+    private AtomicBoolean modified = new AtomicBoolean(false);
 
-		logger.debug("Done initializing the Registry file watcher.");
-	}
-	
-	/**
-	 * Register the given directory and all its sub-directories with the WatchService.
-	 *
-	 * @param start the start
-	 * @param watchService the watch service
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	private void registerAll(final Path start, WatchService watchService) throws IOException {
-	    // register directory and sub-directories
-	    Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
+    /**
+     * Initialize.
+     *
+     * @param folder the folder
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws InterruptedException the interrupted exception
+     */
+    public void initialize(String folder) throws IOException, InterruptedException {
+        logger.debug("Initializing the Registry file watcher...");
 
-	        @Override
-	        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
-	                throws IOException {
-	            dir.register(watchService,
-	            		StandardWatchEventKinds.ENTRY_CREATE,
-	            		StandardWatchEventKinds.ENTRY_DELETE,
-	            		StandardWatchEventKinds.ENTRY_MODIFY);
-	            return FileVisitResult.CONTINUE;
-	        }
+        WatchService watchService = FileSystems.getDefault()
+                                               .newWatchService();
+        Path path = Paths.get(folder);
+        path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE,
+                StandardWatchEventKinds.ENTRY_MODIFY);
 
-	    });
+        Executors.newFixedThreadPool(1)
+                 .submit(() -> {
+                     WatchKey watchKey;
+                     try {
+                         while ((watchKey = watchService.take()) != null) {
+                             List<WatchEvent<?>> events = watchKey.pollEvents();
+                             if (!events.isEmpty()) {
+                                 modified.set(true);
+                             }
+                             watchKey.reset();
+                         }
+                     } catch (InterruptedException e) {
+                         logger.error("Failed to take watch keys", e);
+                     }
+                 });
 
-	}
-	
-	/**
-	 * Checks if is modified.
-	 *
-	 * @return true, if is modified
-	 */
-	public boolean isModified() {
-		return modified.get();
-	}
-	
-	/**
-	 * Reset.
-	 */
-	public void reset() {
-		modified.set(false);
-	}
-	
-	/**
-	 * Force.
-	 */
-	public void force() {
-		modified.set(true);
-	}
+        logger.debug("Done initializing the Registry file watcher.");
+    }
+
+    /**
+     * Register the given directory and all its sub-directories with the WatchService.
+     *
+     * @param start the start
+     * @param watchService the watch service
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    private void registerAll(final Path start, WatchService watchService) throws IOException {
+        // register directory and sub-directories
+        Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
+
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                dir.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE,
+                        StandardWatchEventKinds.ENTRY_MODIFY);
+                return FileVisitResult.CONTINUE;
+            }
+
+        });
+
+    }
+
+    /**
+     * Checks if is modified.
+     *
+     * @return true, if is modified
+     */
+    public boolean isModified() {
+        return modified.get();
+    }
+
+    /**
+     * Reset.
+     */
+    public void reset() {
+        modified.set(false);
+    }
+
+    /**
+     * Force.
+     */
+    public void force() {
+        modified.set(true);
+    }
 
 }

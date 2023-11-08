@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.clause;
 
@@ -23,22 +22,22 @@ import java.util.*;
  * The Class SQLWhereClause.
  */
 public final class SQLWhereClause implements SQLClause {
-    
+
     /** The Constant AND. */
     private static final String AND = " AND ";
-    
+
     /** The Constant OR. */
     private static final String OR = " OR ";
-    
+
     /** The Constant OPEN_BRACKET. */
     private static final char OPEN_BRACKET = '(';
-    
+
     /** The Constant CLOSE_BRACKET. */
     private static final char CLOSE_BRACKET = ')';
 
     /** The statement params. */
     private final List<SQLStatementParam> statementParams;
-    
+
     /** The where clause. */
     private final StringBuilder whereClause;
 
@@ -151,7 +150,8 @@ public final class SQLWhereClause implements SQLClause {
      */
     private SQLWhereClause append(final String appendPredicate, final SQLWhereClause... whereClauses) {
         boolean useBraces = whereClauses.length > 1;
-        Iterator<SQLWhereClause> it = Arrays.asList(whereClauses).iterator();
+        Iterator<SQLWhereClause> it = Arrays.asList(whereClauses)
+                                            .iterator();
         if (useBraces) {
             this.whereClause.append(appendPredicate);
             this.whereClause.append(OPEN_BRACKET);
@@ -194,7 +194,7 @@ public final class SQLWhereClause implements SQLClause {
      * @return the SQL statement param
      */
     public static SQLStatementParam param(Object value, final EdmSimpleType edmType, final EdmTableBinding.ColumnInfo columnInfo) {
-       return new SQLStatementParam(value, edmType, columnInfo);
+        return new SQLStatementParam(value, edmType, columnInfo);
     }
 
 }

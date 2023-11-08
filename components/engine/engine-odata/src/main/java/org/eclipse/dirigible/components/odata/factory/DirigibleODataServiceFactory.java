@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.factory;
 
@@ -45,34 +44,34 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DirigibleODataServiceFactory.class);
-    
-	/**
-	 * Gets the data sources manager.
-	 *
-	 * @return the data sources manager
-	 */
-	public DataSourcesManager getDataSourcesManager() {
-		return DataSourcesManager.get();
-	}
-	
-	/**
-	 * Gets the odata metadata service.
-	 *
-	 * @return the odata metadata service
-	 */
-	public ODataMetadataService getODataMetadataService() {
-		return ODataMetadataService.get();
-	}
-	
-	/**
-	 * Gets the edm table mapping provider.
-	 *
-	 * @return the edm table mapping provider
-	 * @throws ODataException the o data exception
-	 */
-	public ODataEdmTableMappingProvider getEdmTableMappingProvider() throws ODataException {
-		return new ODataEdmTableMappingProvider();
-	}
+
+    /**
+     * Gets the data sources manager.
+     *
+     * @return the data sources manager
+     */
+    public DataSourcesManager getDataSourcesManager() {
+        return DataSourcesManager.get();
+    }
+
+    /**
+     * Gets the odata metadata service.
+     *
+     * @return the odata metadata service
+     */
+    public ODataMetadataService getODataMetadataService() {
+        return ODataMetadataService.get();
+    }
+
+    /**
+     * Gets the edm table mapping provider.
+     *
+     * @return the edm table mapping provider
+     * @throws ODataException the o data exception
+     */
+    public ODataEdmTableMappingProvider getEdmTableMappingProvider() throws ODataException {
+        return new ODataEdmTableMappingProvider();
+    }
 
     /**
      * Creates a new DirigibleODataService object.
@@ -93,7 +92,9 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
 
             return createODataSingleProcessorService(edmProvider, singleProcessor);
         } catch (ODataException e) {
-        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
             throw new ODataException(e);
         }
     }
@@ -117,7 +118,7 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
      * The Class ODataDefaulErrorCallback.
      */
     private class ODataDefaulErrorCallback implements ODataErrorCallback {
-        
+
         /**
          * Handle error.
          *
@@ -127,7 +128,9 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
          */
         @Override
         public ODataResponse handleError(ODataErrorContext context) throws ODataApplicationException {
-        	if (logger.isErrorEnabled()) {logger.error(context.getMessage(), context.getException());}
+            if (logger.isErrorEnabled()) {
+                logger.error(context.getMessage(), context.getException());
+            }
             return EntityProvider.writeErrorDocument(context);
         }
     }
@@ -155,12 +158,13 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
         String odata2EventHandlerName = Configuration.get(OData2EventHandler.DIRIGIBLE_ODATA_EVENT_HANDLER_NAME,
                 OData2EventHandler.DEFAULT_ODATA_EVENT_HANDLER_NAME);
         for (OData2EventHandler next : odata2EventHandlers) {
-            if(next.getName().equals(odata2EventHandlerName)) {
+            if (next.getName()
+                    .equals(odata2EventHandlerName)) {
                 return next;
             }
         }
 
         throw new InvalidStateException("No odata2 event handler found with name " + odata2EventHandlerName);
     }
-    
+
 }

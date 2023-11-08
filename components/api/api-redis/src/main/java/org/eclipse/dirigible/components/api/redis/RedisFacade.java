@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.redis;
 
@@ -38,7 +37,8 @@ public class RedisFacade {
      */
     public static Jedis getClient() {
 
-        String[] splitUri = Configuration.get(DIRIGIBLE_REDIS_CLIENT_URI, CLIENT_URI).split(":");
+        String[] splitUri = Configuration.get(DIRIGIBLE_REDIS_CLIENT_URI, CLIENT_URI)
+                                         .split(":");
 
         String host = splitUri[0];
         int port = Integer.parseInt(splitUri[1]);

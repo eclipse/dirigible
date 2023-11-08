@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.git;
 
@@ -46,49 +45,49 @@ import org.springframework.stereotype.Component;
 public class GitFacade implements InitializingBean {
 
     /** The git facade. */
-	private static GitFacade INSTANCE;
-	
-	/** The workspace service. */
-	private WorkspaceService workspaceService;
-	
-	/**
-	 * Instantiates a new git facade.
-	 *
-	 * @param workspaceService the workspace service
-	 */
-	@Autowired
-	private GitFacade(WorkspaceService workspaceService) {
-		this.workspaceService = workspaceService;
-	}
-	
-	/**
-	 * After properties set.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;		
-	}
-	
-	/**
-	 * Gets the instance.
-	 *
-	 * @return the git facade
-	 */
-	public static GitFacade get() {
+    private static GitFacade INSTANCE;
+
+    /** The workspace service. */
+    private WorkspaceService workspaceService;
+
+    /**
+     * Instantiates a new git facade.
+     *
+     * @param workspaceService the workspace service
+     */
+    @Autowired
+    private GitFacade(WorkspaceService workspaceService) {
+        this.workspaceService = workspaceService;
+    }
+
+    /**
+     * After properties set.
+     *
+     * @throws Exception the exception
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        INSTANCE = this;
+    }
+
+    /**
+     * Gets the instance.
+     *
+     * @return the git facade
+     */
+    public static GitFacade get() {
         return INSTANCE;
     }
-	
-	/**
-	 * Gets the workspace service.
-	 *
-	 * @return the workspace service
-	 */
-	public WorkspaceService getWorkspaceService() {
-		return workspaceService;
-	}
-	
+
+    /**
+     * Gets the workspace service.
+     *
+     * @return the workspace service
+     */
+    public WorkspaceService getWorkspaceService() {
+        return workspaceService;
+    }
+
 
     /**
      * Inits the repository.
@@ -103,8 +102,11 @@ public class GitFacade implements InitializingBean {
      * @throws GitAPIException the git API exception
      * @throws GitConnectorException the git connector exception
      */
-    public static void initRepository(String username, String email, String workspaceName, String projectName, String repositoryName, String commitMessage) throws IOException, GitAPIException, GitConnectorException {
-        Workspace workspaceObject = GitFacade.get().getWorkspaceService().getWorkspace(workspaceName);
+    public static void initRepository(String username, String email, String workspaceName, String projectName, String repositoryName,
+            String commitMessage) throws IOException, GitAPIException, GitConnectorException {
+        Workspace workspaceObject = GitFacade.get()
+                                             .getWorkspaceService()
+                                             .getWorkspace(workspaceName);
         Project projectObject = workspaceObject.getProject(projectName);
         ensureProjectJsonIsCreatedForProject(workspaceObject, projectName);
         String user = UserFacade.getName();
@@ -125,7 +127,8 @@ public class GitFacade implements InitializingBean {
         GitConnectorFactory.initRepository(gitDirectory.getCanonicalPath(), false);
         GitFileUtils.importProjectFromGitRepositoryToWorkspace(projectGitDirectory, projectObject.getPath());
 
-        //the code below is needed because otherwise getHistory method will throw an error in the git perspective
+        // the code below is needed because otherwise getHistory method will throw an error in the git
+        // perspective
         IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
         gitConnector.add(IGitConnector.GIT_ADD_ALL_FILE_PATTERN);
         gitConnector.commit(commitMessage, username, email, true);
@@ -155,7 +158,8 @@ public class GitFacade implements InitializingBean {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws GitConnectorException the git connector exception
      */
-    public static void commit(String username, String email, final String workspaceName, String repositoryName, String commitMessage, Boolean add) throws GitAPIException, IOException, GitConnectorException {
+    public static void commit(String username, String email, final String workspaceName, String repositoryName, String commitMessage,
+            Boolean add) throws GitAPIException, IOException, GitConnectorException {
         String user = UserFacade.getName();
         File tempGitDirectory = GitFileUtils.getGitDirectory(user, workspaceName, repositoryName);
         boolean isExistingGitRepository = tempGitDirectory != null;
@@ -176,7 +180,9 @@ public class GitFacade implements InitializingBean {
      */
     public static List<ProjectDescriptor> getGitRepositories(String workspaceName) {
         String user = UserFacade.getName();
-        Workspace workspaceObject = GitFacade.get().getWorkspaceService().getWorkspace(workspaceName);
+        Workspace workspaceObject = GitFacade.get()
+                                             .getWorkspaceService()
+                                             .getWorkspace(workspaceName);
         if (!workspaceObject.exists()) {
             return null;
         }
@@ -220,14 +226,17 @@ public class GitFacade implements InitializingBean {
      */
     public static void deleteRepository(String workspaceName, String repositoryName) throws GitConnectorException {
         try {
-        	String user = UserFacade.getName();
+            String user = UserFacade.getName();
             File gitRepository = GitFileUtils.getGitDirectory(user, workspaceName, repositoryName);
             if (gitRepository == null) {
                 throw new RefNotFoundException("Repository not found");
             }
 
-            Workspace workspaceApi = GitFacade.get().getWorkspaceService().getWorkspace(workspaceName);
-            Project[] workspaceProjects = workspaceApi.getProjects().toArray(new Project[0]);
+            Workspace workspaceApi = GitFacade.get()
+                                              .getWorkspaceService()
+                                              .getWorkspace(workspaceName);
+            Project[] workspaceProjects = workspaceApi.getProjects()
+                                                      .toArray(new Project[0]);
             for (Project next : workspaceProjects) {
                 if (next.exists()) {
                     next.delete();
@@ -252,7 +261,8 @@ public class GitFacade implements InitializingBean {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws GitAPIException the git API exception
      */
-    public static IGitConnector cloneRepository(String workspaceName, String repositoryUri, String username, String password, String branch) throws IOException, GitAPIException {
+    public static IGitConnector cloneRepository(String workspaceName, String repositoryUri, String username, String password, String branch)
+            throws IOException, GitAPIException {
         String user = UserFacade.getName();
         File gitDirectory = GitFileUtils.createGitDirectory(user, workspaceName, repositoryUri);
         return GitConnectorFactory.cloneRepository(gitDirectory.getCanonicalPath(), repositoryUri, username, password, branch);
@@ -269,7 +279,8 @@ public class GitFacade implements InitializingBean {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws GitConnectorException the git connector exception
      */
-    public static void pull(String workspaceName, String repositoryName, String username, String password) throws GitAPIException, IOException, GitConnectorException {
+    public static void pull(String workspaceName, String repositoryName, String username, String password)
+            throws GitAPIException, IOException, GitConnectorException {
         getConnector(workspaceName, repositoryName).pull(username, password);
     }
 
@@ -284,7 +295,8 @@ public class GitFacade implements InitializingBean {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws GitConnectorException the git connector exception
      */
-    public static void push(String workspaceName, String repositoryName, String username, String password) throws GitAPIException, IOException, GitConnectorException {
+    public static void push(String workspaceName, String repositoryName, String username, String password)
+            throws GitAPIException, IOException, GitConnectorException {
         getConnector(workspaceName, repositoryName).push(username, password);
     }
 
@@ -298,7 +310,8 @@ public class GitFacade implements InitializingBean {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws GitConnectorException the git connector exception
      */
-    public static void checkout(String workspaceName, String repositoryName, String branchName) throws GitAPIException, IOException, GitConnectorException {
+    public static void checkout(String workspaceName, String repositoryName, String branchName)
+            throws GitAPIException, IOException, GitConnectorException {
         getConnector(workspaceName, repositoryName).checkout(branchName);
     }
 
@@ -313,10 +326,11 @@ public class GitFacade implements InitializingBean {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws GitConnectorException the git connector exception
      */
-    public static void createBranch(String workspaceName, String repositoryName, String branchName, String startingPoint) throws GitAPIException, IOException, GitConnectorException {
+    public static void createBranch(String workspaceName, String repositoryName, String branchName, String startingPoint)
+            throws GitAPIException, IOException, GitConnectorException {
         getConnector(workspaceName, repositoryName).createBranch(branchName, startingPoint);
     }
-    
+
     /**
      * Delete the branch.
      *
@@ -328,10 +342,11 @@ public class GitFacade implements InitializingBean {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws GitConnectorException the git connector exception
      */
-    public static void deleteBranch(String workspaceName, String repositoryName, String branchName, String startingPoint) throws GitAPIException, IOException, GitConnectorException {
+    public static void deleteBranch(String workspaceName, String repositoryName, String branchName, String startingPoint)
+            throws GitAPIException, IOException, GitConnectorException {
         getConnector(workspaceName, repositoryName).deleteBranch(branchName);
     }
-    
+
     /**
      * Creates the remote branch.
      *
@@ -345,10 +360,11 @@ public class GitFacade implements InitializingBean {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws GitConnectorException the git connector exception
      */
-    public static void createRemoteBranch(String workspaceName, String repositoryName, String branchName, String startingPoint, String username, String password) throws GitAPIException, IOException, GitConnectorException {
+    public static void createRemoteBranch(String workspaceName, String repositoryName, String branchName, String startingPoint,
+            String username, String password) throws GitAPIException, IOException, GitConnectorException {
         getConnector(workspaceName, repositoryName).createRemoteBranch(branchName, startingPoint, username, password);
     }
-    
+
     /**
      * Delete the remote branch.
      *
@@ -362,7 +378,8 @@ public class GitFacade implements InitializingBean {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws GitConnectorException the git connector exception
      */
-    public static void deleteRemoteBranch(String workspaceName, String repositoryName, String branchName, String startingPoint, String username, String password) throws GitAPIException, IOException, GitConnectorException {
+    public static void deleteRemoteBranch(String workspaceName, String repositoryName, String branchName, String startingPoint,
+            String username, String password) throws GitAPIException, IOException, GitConnectorException {
         getConnector(workspaceName, repositoryName).deleteRemoteBranch(branchName, username, password);
     }
 
@@ -389,7 +406,8 @@ public class GitFacade implements InitializingBean {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws GitConnectorException the git connector exception
      */
-    public static void rebase(String workspaceName, String repositoryName, String branchName) throws GitAPIException, IOException, GitConnectorException {
+    public static void rebase(String workspaceName, String repositoryName, String branchName)
+            throws GitAPIException, IOException, GitConnectorException {
         getConnector(workspaceName, repositoryName).rebase(branchName);
     }
 
@@ -431,7 +449,8 @@ public class GitFacade implements InitializingBean {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws GitConnectorException the git connector exception
      */
-    public static List<GitBranch> getLocalBranches(String workspaceName, String repositoryName) throws GitAPIException, IOException, GitConnectorException {
+    public static List<GitBranch> getLocalBranches(String workspaceName, String repositoryName)
+            throws GitAPIException, IOException, GitConnectorException {
         return getConnector(workspaceName, repositoryName).getLocalBranches();
     }
 
@@ -445,7 +464,8 @@ public class GitFacade implements InitializingBean {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws GitConnectorException the git connector exception
      */
-    public static List<GitBranch> getRemoteBranches(String workspaceName, String repositoryName) throws GitAPIException, IOException, GitConnectorException {
+    public static List<GitBranch> getRemoteBranches(String workspaceName, String repositoryName)
+            throws GitAPIException, IOException, GitConnectorException {
         return getConnector(workspaceName, repositoryName).getRemoteBranches();
     }
 
@@ -459,7 +479,8 @@ public class GitFacade implements InitializingBean {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws GitConnectorException the git connector exception
      */
-    public static List<GitChangedFile> getUnstagedChanges(String workspaceName, String repositoryName) throws GitAPIException, IOException, GitConnectorException {
+    public static List<GitChangedFile> getUnstagedChanges(String workspaceName, String repositoryName)
+            throws GitAPIException, IOException, GitConnectorException {
         return getConnector(workspaceName, repositoryName).getUnstagedChanges();
     }
 
@@ -473,7 +494,8 @@ public class GitFacade implements InitializingBean {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws GitConnectorException the git connector exception
      */
-    public static List<GitChangedFile> getStagedChanges(String workspaceName, String repositoryName) throws GitAPIException, IOException, GitConnectorException {
+    public static List<GitChangedFile> getStagedChanges(String workspaceName, String repositoryName)
+            throws GitAPIException, IOException, GitConnectorException {
         return getConnector(workspaceName, repositoryName).getStagedChanges();
     }
 
@@ -489,7 +511,8 @@ public class GitFacade implements InitializingBean {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws GitConnectorException the git connector exception
      */
-    public static String getFileContent(String workspaceName, String repositoryName, String filePath, String revStr) throws GitAPIException, IOException, GitConnectorException {
+    public static String getFileContent(String workspaceName, String repositoryName, String filePath, String revStr)
+            throws GitAPIException, IOException, GitConnectorException {
         return getConnector(workspaceName, repositoryName).getFileContent(filePath, revStr);
     }
 

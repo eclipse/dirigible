@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.graalium.core;
 
@@ -39,13 +38,14 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
 
     /** The code runner. */
     private final GraalJSCodeRunner codeRunner;
-    
+
     /** The Constant DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS. */
-    private static final ServiceLoader<DirigibleJavascriptHooksProvider> DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS = ServiceLoader.load(DirigibleJavascriptHooksProvider.class);
-    
+    private static final ServiceLoader<DirigibleJavascriptHooksProvider> DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS =
+            ServiceLoader.load(DirigibleJavascriptHooksProvider.class);
+
     /** The Constant DIRIGIBLE_JAVASCRIPT_INTERCEPTORS. */
     private static final ServiceLoader<GraalJSInterceptor> DIRIGIBLE_JAVASCRIPT_INTERCEPTORS = ServiceLoader.load(GraalJSInterceptor.class);
-    
+
     /** The interceptor. */
     private final GraalJSInterceptor interceptor;
 
@@ -57,48 +57,54 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
      * @param repository the repository
      * @param sourceProvider the source provider
      */
-    public DirigibleJavascriptCodeRunner(Map<Object, Object> parameters, boolean debug, IRepository repository, JavascriptSourceProvider sourceProvider) {
+    public DirigibleJavascriptCodeRunner(Map<Object, Object> parameters, boolean debug, IRepository repository,
+            JavascriptSourceProvider sourceProvider) {
         Path workingDirectoryPath = getDirigibleWorkingDirectory();
         Path cachePath = workingDirectoryPath.resolve("caches");
         Path coreModulesESMProxiesCachePath = cachePath.resolve("core-modules-proxies-cache");
         Path javaModulesESMProxiesCachePath = cachePath.resolve("java-modules-proxies-cache");
-        
+
         Consumer<Context.Builder> onBeforeContextCreatedListener = null;
         Consumer<Context> onAfterContextCreatedListener = null;
-        if (DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS.iterator().hasNext()) {
-        	DirigibleJavascriptHooksProvider dirigibleJavascriptHooksProvider = DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS.iterator().next();
-        	onBeforeContextCreatedListener = dirigibleJavascriptHooksProvider.getOnBeforeContextCreatedListener(); 
-        	onAfterContextCreatedListener = dirigibleJavascriptHooksProvider.getOnAfterContextCreatedListener();
+        if (DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS.iterator()
+                                                .hasNext()) {
+            DirigibleJavascriptHooksProvider dirigibleJavascriptHooksProvider = DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS.iterator()
+                                                                                                                    .next();
+            onBeforeContextCreatedListener = dirigibleJavascriptHooksProvider.getOnBeforeContextCreatedListener();
+            onAfterContextCreatedListener = dirigibleJavascriptHooksProvider.getOnAfterContextCreatedListener();
         }
-        if (DIRIGIBLE_JAVASCRIPT_INTERCEPTORS.iterator().hasNext()) {
-        	interceptor = DIRIGIBLE_JAVASCRIPT_INTERCEPTORS.iterator().next();
+        if (DIRIGIBLE_JAVASCRIPT_INTERCEPTORS.iterator()
+                                             .hasNext()) {
+            interceptor = DIRIGIBLE_JAVASCRIPT_INTERCEPTORS.iterator()
+                                                           .next();
         } else {
-        	interceptor = new DirigibleJavascriptInterceptor(this);	
+            interceptor = new DirigibleJavascriptInterceptor(this);
         }
 
         codeRunner = GraalJSCodeRunner.newBuilder(workingDirectoryPath, cachePath)
-                .addJSPolyfill(new RequirePolyfill())
-                .addGlobalObject(new DirigibleContextGlobalObject(parameters))
-                .addGlobalObject(new DirigibleEngineTypeGlobalObject())
-                .addModuleResolver(new JavaModuleResolver(javaModulesESMProxiesCachePath))
-                .addModuleResolver(new DirigibleModuleResolver(coreModulesESMProxiesCachePath, sourceProvider))
-                .addModuleResolver(new DirigibleEsmModuleResolver(sourceProvider))
-                .waitForDebugger(debug && DirigibleJavascriptCodeRunner.shouldEnableDebug())
-                .addOnBeforeContextCreatedListener(onBeforeContextCreatedListener)
-                .addOnAfterContextCreatedListener(onAfterContextCreatedListener)
-                .setOnRealPathNotFound(p -> sourceProvider.unpackedToFileSystem(p, workingDirectoryPath.relativize(p)))
-                .setInterceptor(interceptor)
-                .build();
+                                      .addJSPolyfill(new RequirePolyfill())
+                                      .addGlobalObject(new DirigibleContextGlobalObject(parameters))
+                                      .addGlobalObject(new DirigibleEngineTypeGlobalObject())
+                                      .addModuleResolver(new JavaModuleResolver(javaModulesESMProxiesCachePath))
+                                      .addModuleResolver(new DirigibleModuleResolver(coreModulesESMProxiesCachePath, sourceProvider))
+                                      .addModuleResolver(new DirigibleEsmModuleResolver(sourceProvider))
+                                      .waitForDebugger(debug && DirigibleJavascriptCodeRunner.shouldEnableDebug())
+                                      .addOnBeforeContextCreatedListener(onBeforeContextCreatedListener)
+                                      .addOnAfterContextCreatedListener(onAfterContextCreatedListener)
+                                      .setOnRealPathNotFound(
+                                              p -> sourceProvider.unpackedToFileSystem(p, workingDirectoryPath.relativize(p)))
+                                      .setInterceptor(interceptor)
+                                      .build();
     }
-    
+
     /**
      * Gets the code runner.
      *
      * @return the code runner
      */
     public GraalJSCodeRunner getCodeRunner() {
-		return codeRunner;
-	}
+        return codeRunner;
+    }
 
     /**
      * Should enable debug.
@@ -106,7 +112,8 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
      * @return true, if successful
      */
     private static boolean shouldEnableDebug() {
-        return Configuration.get("DIRIGIBLE_GRAALIUM_ENABLE_DEBUG", Boolean.FALSE.toString()).equals(Boolean.TRUE.toString());
+        return Configuration.get("DIRIGIBLE_GRAALIUM_ENABLE_DEBUG", Boolean.FALSE.toString())
+                            .equals(Boolean.TRUE.toString());
     }
 
     /**
@@ -115,7 +122,7 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
      * @return the dirigible working directory
      */
     private Path getDirigibleWorkingDirectory() {
-    	IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+        IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
         String publicRegistryPath = repository.getInternalResourcePath(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
         return Path.of(publicRegistryPath);
     }
@@ -150,12 +157,12 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
         codeRunner.close();
     }
 
-	/**
-	 * Gets the graal JS interceptor.
-	 *
-	 * @return the graal JS interceptor
-	 */
-	public GraalJSInterceptor getGraalJSInterceptor() {
-		return interceptor;
-	}
+    /**
+     * Gets the graal JS interceptor.
+     *
+     * @return the graal JS interceptor
+     */
+    public GraalJSInterceptor getGraalJSInterceptor() {
+        return interceptor;
+    }
 }

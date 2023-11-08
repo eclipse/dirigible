@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.graalium.core.modules;
 
@@ -29,16 +28,19 @@ public class DirigibleModuleResolver implements ModuleResolver {
 
     /** The Constant DIRIGIBLE_CORE_MODULE_SIGNATURE. */
     private static final String DIRIGIBLE_CORE_MODULE_SIGNATURE = "@dirigible";
-    
+
     /** The Constant DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN. */
-    private static final Pattern DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN = Pattern.compile("(@dirigible)(\\/)(\\w+)"); // e.g. @dirigible/core  => $1=dirigible $2=/ $3=core
+    private static final Pattern DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN = Pattern.compile("(@dirigible)(\\/)(\\w+)"); // e.g.
+                                                                                                                       // @dirigible/core
+                                                                                                                       // => $1=dirigible
+                                                                                                                       // $2=/ $3=core
 
     /** The dirigible module ESM proxy generator. */
     private final DirigibleModuleESMProxyGenerator dirigibleModuleESMProxyGenerator;
-    
+
     /** The cache directory path. */
     private final Path cacheDirectoryPath;
-    
+
     /**
      * Instantiates a new dirigible module resolver.
      *
@@ -47,7 +49,8 @@ public class DirigibleModuleResolver implements ModuleResolver {
      */
     public DirigibleModuleResolver(Path cacheDirectoryPath, JavascriptSourceProvider dirigibleSourceProvider) {
         dirigibleModuleESMProxyGenerator = new DirigibleModuleESMProxyGenerator(dirigibleSourceProvider);
-        cacheDirectoryPath.toFile().mkdirs();
+        cacheDirectoryPath.toFile()
+                          .mkdirs();
         this.cacheDirectoryPath = cacheDirectoryPath;
     }
 

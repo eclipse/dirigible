@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.wiki.service;
 
@@ -45,7 +44,7 @@ public class ConfluenceService implements ArtefactService<Confluence> {
 
     /**
      * Instantiates a new confluence service.
-     * 
+     *
      * @param repository the repository
      */
     @Autowired
@@ -121,7 +120,7 @@ public class ConfluenceService implements ArtefactService<Confluence> {
     @Override
     @Transactional(readOnly = true)
     public Confluence findByName(String name) {
-    	Confluence filter = new Confluence();
+        Confluence filter = new Confluence();
         filter.setName(name);
         Example<Confluence> example = Example.of(filter);
         Optional<Confluence> confluence = confluenceRepository.findOne(example);
@@ -131,7 +130,7 @@ public class ConfluenceService implements ArtefactService<Confluence> {
             throw new IllegalArgumentException("Confluence with name does not exist: " + name);
         }
     }
-    
+
     /**
      * Find by location.
      *
@@ -141,13 +140,13 @@ public class ConfluenceService implements ArtefactService<Confluence> {
     @Override
     @Transactional(readOnly = true)
     public List<Confluence> findByLocation(String location) {
-    	Confluence filter = new Confluence();
+        Confluence filter = new Confluence();
         filter.setLocation(location);
         Example<Confluence> example = Example.of(filter);
         List<Confluence> list = confluenceRepository.findAll(example);
         return list;
     }
-    
+
     /**
      * Find by key.
      *
@@ -157,7 +156,7 @@ public class ConfluenceService implements ArtefactService<Confluence> {
     @Override
     @Transactional(readOnly = true)
     public Confluence findByKey(String key) {
-    	Confluence filter = new Confluence();
+        Confluence filter = new Confluence();
         filter.setKey(key);
         Example<Confluence> example = Example.of(filter);
         Optional<Confluence> confluence = confluenceRepository.findOne(example);

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.entities.northwind;
 
@@ -51,20 +50,20 @@ public class OrderDetail {
 
     /** The order. */
     @EdmNavigationProperty( //
-			toMultiplicity = Multiplicity.ONE, //
-			toType = Order.class, //
-			toRole = "Orders", //
-			association = "FK_Order_Details_Orders" //
-	)
+            toMultiplicity = Multiplicity.ONE, //
+            toType = Order.class, //
+            toRole = "Orders", //
+            association = "FK_Order_Details_Orders" //
+    )
     private Order order;
 
     /** The product. */
     @EdmNavigationProperty( //
-			toMultiplicity = Multiplicity.ONE, //
-			toType = Product.class, //
-			toRole = "Products", //
-			association = "FK_Order_Details_Products" //
-	)
+            toMultiplicity = Multiplicity.ONE, //
+            toType = Product.class, //
+            toRole = "Products", //
+            association = "FK_Order_Details_Products" //
+    )
     private Product product;
-    
+
 }

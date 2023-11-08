@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.listeners.repository;
 
@@ -44,9 +43,9 @@ public class ListenerRepositoryTest {
 
     @BeforeEach
     public void setup() {
-    	
-    	cleanup();
-    	
+
+        cleanup();
+
         listenerRepository.save(new Listener("/a/b/c/l1.listener", "name1", "description", "handler1", 'Q'));
         listenerRepository.save(new Listener("/a/b/c/l2.listener", "name2", "description", "handler2", 'Q'));
         listenerRepository.save(new Listener("/a/b/c/l3.listener", "name3", "description", "handler3", 'Q'));
@@ -61,7 +60,8 @@ public class ListenerRepositoryTest {
     public void getOne() {
         List<Listener> all = listenerRepository.findAll();
         assertEquals(3, all.size());
-        Long id = all.get(0).getId();
+        Long id = all.get(0)
+                     .getId();
         Optional<Listener> optional = listenerRepository.findById(id);
         Listener listener = optional.isPresent() ? optional.get() : null;
         assertNotNull(listener);
@@ -76,7 +76,9 @@ public class ListenerRepositoryTest {
 
     @Test
     public void getReferenceUsingEntityManager() {
-        Long id = listenerRepository.findAll().get(0).getId();
+        Long id = listenerRepository.findAll()
+                                    .get(0)
+                                    .getId();
         Listener listener = entityManager.getReference(Listener.class, id);
         assertNotNull(listener);
         assertEquals("/a/b/c/l1.listener", listener.getLocation());

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
@@ -49,8 +48,7 @@ public final class SQLUtils {
     /**
      * Instantiates a new SQL utils.
      */
-    private SQLUtils() {
-    }
+    private SQLUtils() {}
 
     /**
      * Sets the params on statement.
@@ -65,12 +63,12 @@ public final class SQLUtils {
             EdmSimpleTypeKind edmSimpleTypeKind = param.getEdmSimpleKind();
             Object value = param.getValue();
 
-            if(null == value){
+            if (null == value) {
                 preparedStatement.setObject(i + 1, null);
                 continue;
             }
 
-            switch (edmSimpleTypeKind){
+            switch (edmSimpleTypeKind) {
                 case Time:
                     preparedStatement.setTime(i + 1, asTime(param.getValue()));
                     break;
@@ -127,7 +125,8 @@ public final class SQLUtils {
      * @return the timestamp
      */
     public static Timestamp asTimeStamp(final Calendar calendar) {
-        return new Timestamp(calendar.getTime().getTime());
+        return new Timestamp(calendar.getTime()
+                                     .getTime());
     }
 
     /**
@@ -137,7 +136,8 @@ public final class SQLUtils {
      * @return the time
      */
     public static Time asTime(final Calendar calendar) {
-        return new Time(calendar.getTime().getTime());
+        return new Time(calendar.getTime()
+                                .getTime());
     }
 
     /**
@@ -147,7 +147,8 @@ public final class SQLUtils {
      * @return the date
      */
     public static Date asSQLDate(final Calendar calendar) {
-        return new Date(calendar.getTime().getTime());
+        return new Date(calendar.getTime()
+                                .getTime());
     }
 
     /**
@@ -167,7 +168,8 @@ public final class SQLUtils {
      * @return the string
      */
     public static String normalizeSQLExpression(final String expression) {
-        return expression.replaceAll("  ", " ").trim();
+        return expression.replaceAll("  ", " ")
+                         .trim();
     }
 
     /**
@@ -178,10 +180,12 @@ public final class SQLUtils {
      * @return the string
      */
     public static String assertParametersCount(String sql, List<SQLStatementParam> params) {
-        long count = sql.chars().filter(ch -> ch == '?').count();
+        long count = sql.chars()
+                        .filter(ch -> ch == '?')
+                        .count();
         if (count != params.size()) {
-            throw new IllegalStateException("The count of the ? symbols in the generated SQL "
-                    + sql + " does not match the existing params " + params + ". Make sure that the count is the same");
+            throw new IllegalStateException("The count of the ? symbols in the generated SQL " + sql
+                    + " does not match the existing params " + params + ". Make sure that the count is the same");
         }
         return sql;
     }
@@ -196,11 +200,12 @@ public final class SQLUtils {
      * @throws ExceptionVisitExpression the exception visit expression
      * @throws ODataApplicationException the o data application exception
      */
-    //TODO handle also Grouping Operators () for example /Products?$filter=(Price sub 5) gt 10
+    // TODO handle also Grouping Operators () for example /Products?$filter=(Price sub 5) gt 10
     public static SQLWhereClause buildSQLWhereClause(SQLSelectBuilder query, EdmStructuralType targetEntityType,
-                                                     final FilterExpression expression) throws ExceptionVisitExpression, ODataApplicationException {
+            final FilterExpression expression) throws ExceptionVisitExpression, ODataApplicationException {
         // Better make use of a visitor pattern
-        //TODO the filter might have join tables. Table alias must be removed. We must know in what context we are. 
+        // TODO the filter might have join tables. Table alias must be removed. We must know in what context
+        // we are.
         SQLWhereClauseVisitor visitor = new SQLWhereClauseVisitor(query, targetEntityType);
         return expression == null ? new SQLWhereClause() : (SQLWhereClause) expression.accept(visitor);
     }
@@ -215,7 +220,7 @@ public final class SQLUtils {
      * @throws EdmException the edm exception
      */
     public static SQLWhereClause whereClauseFromKeyPredicates(SQLSelectBuilder query, EdmStructuralType type,
-                                                       final List<KeyPredicate> keyPredicates) throws EdmException {
+            final List<KeyPredicate> keyPredicates) throws EdmException {
         StringBuilder whereClause = new StringBuilder();
         List<SQLStatementParam> params = new ArrayList<>();
 
@@ -226,11 +231,12 @@ public final class SQLUtils {
 
                 EdmProperty property = keyPredicate.getProperty();
 
-                if (!isPropertyParameter(property, query, type)){
+                if (!isPropertyParameter(property, query, type)) {
                     Object literal = keyPredicate.getLiteral();
 
                     if (property.isSimple()) {
-                        EdmSimpleType edmSimpleType = (EdmSimpleType) keyPredicate.getProperty().getType();
+                        EdmSimpleType edmSimpleType = (EdmSimpleType) keyPredicate.getProperty()
+                                                                                  .getType();
                         literal = evaluateDateTimeExpressions(literal, edmSimpleType);
                         ColumnInfo info = query.getSQLTableColumnInfo(type, property);
                         params.add(SQLWhereClause.param(literal, edmSimpleType, info));
@@ -245,7 +251,8 @@ public final class SQLUtils {
 
             while (paramIterator.hasNext()) {
                 SQLStatementParam param = paramIterator.next();
-                whereClause.append(param.getSqlColumnName()).append(" = ?");
+                whereClause.append(param.getSqlColumnName())
+                           .append(" = ?");
 
                 if (paramIterator.hasNext()) {
                     whereClause.append(" AND ");
@@ -266,7 +273,8 @@ public final class SQLUtils {
      * @return the string
      */
     public static String csvInBrackets(List<String> columnValues) {
-        return columnValues.stream().collect(Collectors.joining(",", "(", ")"));
+        return columnValues.stream()
+                           .collect(Collectors.joining(",", "(", ")"));
     }
 
     /**
@@ -292,8 +300,9 @@ public final class SQLUtils {
 
 
     /**
-     * Basic validity check for the values. Prevents that someone deletes an entity with an invalid request
-     * In short, a composite key makes sense if all elements are not-null (otherwise the non-null element suffices)
+     * Basic validity check for the values. Prevents that someone deletes an entity with an invalid
+     * request In short, a composite key makes sense if all elements are not-null (otherwise the
+     * non-null element suffices)
      *
      * @param keyValue the value of the key
      * @return if the key value is valid

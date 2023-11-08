@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.typescript;
 
@@ -39,7 +38,7 @@ public class TypeScriptService {
 
     /** The Constant TS_EXT. */
     private static final String TS_EXT = ".ts";
-    
+
     /** The Constant DTS_EXT. */
     private static final String DTS_EXT = ".d.ts";
 
@@ -130,7 +129,8 @@ public class TypeScriptService {
         if (entryPath != null && !entryPath.equals("")) {
             var tsFilePathString = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, projectName, entryPath).toString();
             var tsFilePath = new File(repository.getInternalResourcePath(tsFilePathString)).toPath();
-            outDir = tsFilePath.getParent().toFile();
+            outDir = tsFilePath.getParent()
+                               .toFile();
             tsFiles = Collections.singletonList(tsFilePath.toFile());
         } else {
             tsFiles = getTypeScriptFilesInDir(projectDir);
@@ -150,14 +150,15 @@ public class TypeScriptService {
     private static void esbuild(File projectDir, File outDir, Collection<File> filesToCompile) {
         var esbuildCommand = new ArrayList<String>();
         esbuildCommand.add("esbuild");
-        esbuildCommand.addAll(filesToCompile.stream().map(Object::toString).toList());
+        esbuildCommand.addAll(filesToCompile.stream()
+                                            .map(Object::toString)
+                                            .toList());
         esbuildCommand.add("--outdir=" + outDir);
         esbuildCommand.add("--out-extension:.js=.mjs");
         esbuildCommand.add("--sourcemap=inline");
 
-        var processBuilder = new ProcessBuilder(esbuildCommand)
-                .directory(projectDir)
-                .redirectErrorStream(true);
+        var processBuilder = new ProcessBuilder(esbuildCommand).directory(projectDir)
+                                                               .redirectErrorStream(true);
 
         try {
             Process process = processBuilder.start();
@@ -193,10 +194,9 @@ public class TypeScriptService {
      * @return the type script files in dir
      */
     private Collection<File> getTypeScriptFilesInDir(File projectDir) {
-        return FileUtils
-                .listFiles(projectDir, new String[]{"ts"}, true)
-                .stream()
-                .filter(x -> isTSButNotDTS(x.toString()))
-                .collect(Collectors.toList());
+        return FileUtils.listFiles(projectDir, new String[] {"ts"}, true)
+                        .stream()
+                        .filter(x -> isTSButNotDTS(x.toString()))
+                        .collect(Collectors.toList());
     }
 }

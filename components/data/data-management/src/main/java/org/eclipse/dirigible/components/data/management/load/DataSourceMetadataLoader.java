@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.management.load;
 
@@ -46,26 +45,27 @@ import com.google.common.base.CaseFormat;
  */
 @Component
 public class DataSourceMetadataLoader implements DatabaseParameters {
-	
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(DataSourceMetadataLoader.class);
+
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(DataSourceMetadataLoader.class);
 
     /** The Constant IS_CASE_SENSETIVE. */
-    private static final boolean IS_CASE_SENSETIVE = Boolean.parseBoolean(Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE));
+    private static final boolean IS_CASE_SENSETIVE =
+            Boolean.parseBoolean(Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE));
 
     /** The data source service. */
-	private final DataSourcesManager datasourceManager;
+    private final DataSourcesManager datasourceManager;
 
-	/**
-	 * Instantiates a new data source endpoint.
-	 *
-	 * @param datasourceManager the datasource manager
-	 */
-	@Autowired
-	public DataSourceMetadataLoader(DataSourcesManager datasourceManager) {
-		this.datasourceManager = datasourceManager;
-	}
-    
+    /**
+     * Instantiates a new data source endpoint.
+     *
+     * @param datasourceManager the datasource manager
+     */
+    @Autowired
+    public DataSourceMetadataLoader(DataSourcesManager datasourceManager) {
+        this.datasourceManager = datasourceManager;
+    }
+
     /**
      * Gets the table metadata.
      *
@@ -76,7 +76,7 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
     public Table getTableMetadata(String tableName) throws SQLException {
         return getTableMetadata(tableName, null);
     }
-    
+
     /**
      * Gets the table metadata.
      *
@@ -86,7 +86,7 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      * @throws SQLException the SQL exception
      */
     public Table getTableMetadata(String tableName, String schemaName) throws SQLException {
-    	return loadTableMetadata(tableName, schemaName, null);
+        return loadTableMetadata(tableName, schemaName, null);
     }
 
     /**
@@ -99,24 +99,24 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      * @throws SQLException the SQL exception
      */
     public Table loadTableMetadata(String schemaName, String tableName, DataSource dataSource) throws SQLException {
-    	if (dataSource == null) {
-    		dataSource = datasourceManager.getDefaultDataSource();
-    	}
-    	Table tableMetadata = new Table();
-    	tableMetadata.setName(tableName);
-    	tableMetadata.setSchema(schemaName);
+        if (dataSource == null) {
+            dataSource = datasourceManager.getDefaultDataSource();
+        }
+        Table tableMetadata = new Table();
+        tableMetadata.setName(tableName);
+        tableMetadata.setSchema(schemaName);
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();
             try (ResultSet rs = databaseMetadata.getTables(null, schemaName, tableName, null)) {
-            	if (rs.next()) {
-		            addColumns(databaseMetadata, connection, tableMetadata, schemaName);
-		            addPrimaryKeys(databaseMetadata, connection, tableMetadata, schemaName);
-		            addForeignKeys(databaseMetadata, connection, tableMetadata, schemaName);
-		            addIndices(databaseMetadata, connection, tableMetadata, schemaName);
-		            addTableType(databaseMetadata, connection, tableMetadata, schemaName);
-            	} else {
-            		return null;
-            	}
+                if (rs.next()) {
+                    addColumns(databaseMetadata, connection, tableMetadata, schemaName);
+                    addPrimaryKeys(databaseMetadata, connection, tableMetadata, schemaName);
+                    addForeignKeys(databaseMetadata, connection, tableMetadata, schemaName);
+                    addIndices(databaseMetadata, connection, tableMetadata, schemaName);
+                    addTableType(databaseMetadata, connection, tableMetadata, schemaName);
+                } else {
+                    return null;
+                }
             }
         } catch (SQLException e) {
             throw e;
@@ -124,7 +124,7 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
 
         return tableMetadata;
     }
-    
+
     /**
      * Adds the fields.
      *
@@ -134,13 +134,17 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      * @param schemaPattern the schema pattern
      * @throws SQLException the SQL exception
      */
-    public static void addColumns(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schemaPattern) throws SQLException {
-        ResultSet columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName()), null);
+    public static void addColumns(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schemaPattern)
+            throws SQLException {
+        ResultSet columns =
+                databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName()), null);
         if (columns.next()) {
             iterateColumns(tableMetadata, columns);
         } else if (!IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
-            columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName().toLowerCase()), null);
+            columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName()
+                                                                                                                          .toLowerCase()),
+                    null);
             if (!columns.next()) {
                 throw new SQLException("Error in getting the information about the columns.");
             } else {
@@ -148,7 +152,7 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
             }
         }
     }
-    
+
     /**
      * Iterate fields.
      *
@@ -158,20 +162,12 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      */
     private static void iterateColumns(Table tableMetadata, ResultSet columns) throws SQLException {
         do {
-            new TableColumn(
-                    columns.getString(JDBC_COLUMN_NAME_PROPERTY),
-                    columns.getString(JDBC_COLUMN_TYPE_PROPERTY),
-                    columns.getInt(JDBC_COLUMN_SIZE_PROPERTY) + "",
-                    columns.getBoolean(JDBC_COLUMN_NULLABLE_PROPERTY),
-                    false,
-                    null,
-                    columns.getInt(JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY) + "",
-                    false,
-                    tableMetadata
-                    );
+            new TableColumn(columns.getString(JDBC_COLUMN_NAME_PROPERTY), columns.getString(JDBC_COLUMN_TYPE_PROPERTY),
+                    columns.getInt(JDBC_COLUMN_SIZE_PROPERTY) + "", columns.getBoolean(JDBC_COLUMN_NULLABLE_PROPERTY), false, null,
+                    columns.getInt(JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY) + "", false, tableMetadata);
         } while (columns.next());
     }
-    
+
     /**
      * Adds the primary keys.
      *
@@ -181,13 +177,16 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      * @param schema the schema
      * @throws SQLException the SQL exception
      */
-    public static void addPrimaryKeys(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schema) throws SQLException {
-        ResultSet primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName()));
+    public static void addPrimaryKeys(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schema)
+            throws SQLException {
+        ResultSet primaryKeys =
+                databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName()));
         if (primaryKeys.next()) {
             iteratePrimaryKeys(tableMetadata, primaryKeys);
         } else if (!IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
-            primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName().toLowerCase()));
+            primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName()
+                                                                                                                           .toLowerCase()));
             if (!primaryKeys.next()) {
                 return;
             } else {
@@ -195,7 +194,7 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
             }
         }
     }
-    
+
     /**
      * Iterate primary keys.
      *
@@ -203,13 +202,12 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      * @param primaryKeys the primary keys
      * @throws SQLException the SQL exception
      */
-    private static void iteratePrimaryKeys(Table tableMetadata, ResultSet primaryKeys)
-            throws SQLException {
+    private static void iteratePrimaryKeys(Table tableMetadata, ResultSet primaryKeys) throws SQLException {
         do {
             setColumnPrimaryKey(primaryKeys.getString(JDBC_COLUMN_NAME_PROPERTY), tableMetadata);
         } while (primaryKeys.next());
     }
-    
+
     /**
      * Sets the column primary key.
      *
@@ -217,14 +215,16 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      * @param tableModel the table model
      */
     public static void setColumnPrimaryKey(String columnName, Table tableModel) {
-        tableModel.getColumns().forEach(column -> {
-            if (column.getName().equals(columnName)) {
-                column.setPrimaryKey(true);
-            }
-        });
+        tableModel.getColumns()
+                  .forEach(column -> {
+                      if (column.getName()
+                                .equals(columnName)) {
+                          column.setPrimaryKey(true);
+                      }
+                  });
     }
 
-	/**
+    /**
      * Adds the foreign keys.
      *
      * @param databaseMetadata the database metadata
@@ -233,13 +233,16 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      * @param schema the schema
      * @throws SQLException the SQL exception
      */
-    public static void addForeignKeys(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schema) throws SQLException {
-        ResultSet foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName()));
+    public static void addForeignKeys(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schema)
+            throws SQLException {
+        ResultSet foreignKeys =
+                databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName()));
         if (foreignKeys.next()) {
             iterateForeignKeys(tableMetadata, foreignKeys);
         } else if (!IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
-            foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName().toLowerCase()));
+            foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName()
+                                                                                                                            .toLowerCase()));
             if (!foreignKeys.next()) {
                 return;
             } else {
@@ -247,7 +250,7 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
             }
         }
     }
-    
+
     /**
      * Iterate foreign keys.
      *
@@ -255,27 +258,17 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      * @param foreignKeys the foreign keys
      * @throws SQLException the SQL exception
      */
-    private static void iterateForeignKeys(Table tableMetadata, ResultSet foreignKeys)
-            throws SQLException {
+    private static void iterateForeignKeys(Table tableMetadata, ResultSet foreignKeys) throws SQLException {
         do {
-    		new TableConstraintForeignKey(
-    				foreignKeys.getString(JDBC_FK_NAME_PROPERTY),
-    				new String[] {},
-    				new String[] {foreignKeys.getString(JDBC_FK_COLUMN_NAME_PROPERTY)},
-    				foreignKeys.getString(JDBC_PK_TABLE_NAME_PROPERTY),
-                    foreignKeys.getString(JDBC_PK_SCHEMA_NAME_PROPERTY),
-    				new String[] {foreignKeys.getString(JDBC_PK_COLUMN_NAME_PROPERTY)},
-                    tableMetadata.getConstraints()
-            );
+            new TableConstraintForeignKey(foreignKeys.getString(JDBC_FK_NAME_PROPERTY), new String[] {},
+                    new String[] {foreignKeys.getString(JDBC_FK_COLUMN_NAME_PROPERTY)}, foreignKeys.getString(JDBC_PK_TABLE_NAME_PROPERTY),
+                    foreignKeys.getString(JDBC_PK_SCHEMA_NAME_PROPERTY), new String[] {foreignKeys.getString(JDBC_PK_COLUMN_NAME_PROPERTY)},
+                    tableMetadata.getConstraints());
         } while (foreignKeys.next());
     }
 
-    
 
-    
 
-    
-    
     /**
      * Add indices.
      *
@@ -285,52 +278,43 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      * @param schema the schema name
      * @throws SQLException the SQL exception
      */
-    public static void addIndices(DatabaseMetaData databaseMetadata, Connection connection,
-			Table tableMetadata, String schema) throws SQLException {
-		
-    	try (ResultSet indexes = databaseMetadata.getIndexInfo(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName()), false, true)) {
-	        String lastIndexName = "";
-	
-	        while (indexes.next()) {
-	            String indexName = indexes.getString("INDEX_NAME");
-	            if (indexName == null) {
-	                continue;
-	            }
-	
-	            TableConstraint index = null;
-	            if (!indexName.equals(lastIndexName)) {
-	            	boolean unique = indexes.getBoolean("NON_UNIQUE");
-	            	
-	            	if (!unique) {
-	            		index = new TableConstraintUnique(
-	            				indexName,
-	            				new String[]{},
-	            				new String[]{},
-	            				tableMetadata.getConstraints(),
-	            				indexes.getShort("TYPE") + "",
-	            				indexes.getString("ASC_OR_DESC")
-	            				);
-	            	} else {
-	            		index = new TableConstraintCheck(
-	            				indexName,
-	            				new String[]{},
-	            				new String[]{},
-	            				tableMetadata.getConstraints(),
-	            				indexes.getShort(JDBC_FILTER_CONDITION_PROPERTY) + "");
-	            	}
-	                
-	                lastIndexName = indexName;
-	            }
-	            if (index != null) {
-	                String columnName = indexes.getString(JDBC_COLUMN_NAME_PROPERTY);
-	                String[] array = Arrays.copyOf(index.getColumns(), index.getColumns().length + 1);
-	                array[array.length - 1] = columnName;
-	                index.setColumns(array);
-	            }
-	        }
-    	}
-		
-	}
+    public static void addIndices(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schema)
+            throws SQLException {
+
+        try (ResultSet indexes =
+                databaseMetadata.getIndexInfo(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName()), false, true)) {
+            String lastIndexName = "";
+
+            while (indexes.next()) {
+                String indexName = indexes.getString("INDEX_NAME");
+                if (indexName == null) {
+                    continue;
+                }
+
+                TableConstraint index = null;
+                if (!indexName.equals(lastIndexName)) {
+                    boolean unique = indexes.getBoolean("NON_UNIQUE");
+
+                    if (!unique) {
+                        index = new TableConstraintUnique(indexName, new String[] {}, new String[] {}, tableMetadata.getConstraints(),
+                                indexes.getShort("TYPE") + "", indexes.getString("ASC_OR_DESC"));
+                    } else {
+                        index = new TableConstraintCheck(indexName, new String[] {}, new String[] {}, tableMetadata.getConstraints(),
+                                indexes.getShort(JDBC_FILTER_CONDITION_PROPERTY) + "");
+                    }
+
+                    lastIndexName = indexName;
+                }
+                if (index != null) {
+                    String columnName = indexes.getString(JDBC_COLUMN_NAME_PROPERTY);
+                    String[] array = Arrays.copyOf(index.getColumns(), index.getColumns().length + 1);
+                    array[array.length - 1] = columnName;
+                    index.setColumns(array);
+                }
+            }
+        }
+
+    }
 
     /**
      * Adds the correct formatting.
@@ -364,13 +348,17 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      * @param schemaPattern the schema pattern
      * @throws SQLException the SQL exception
      */
-    public static void addTableType(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schemaPattern) throws SQLException {
-        ResultSet tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName()), null);
+    public static void addTableType(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schemaPattern)
+            throws SQLException {
+        ResultSet tables =
+                databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName()), null);
         if (tables.next()) {
             iterateTables(tableMetadata, tables);
         } else if (!IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
-            tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName().toLowerCase()), null);
+            tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName()
+                                                                                                                        .toLowerCase()),
+                    null);
             if (!tables.next()) {
                 throw new SQLException("Error in getting the information about the tables.");
             } else {
@@ -403,14 +391,14 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
     public static String getTableSchema(DataSource dataSource, String tableName) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetaData = connection.getMetaData();
-            ResultSet rs = databaseMetaData.getTables(connection.getCatalog(), null, tableName, new String[]{ISqlKeywords.KEYWORD_TABLE});
+            ResultSet rs = databaseMetaData.getTables(connection.getCatalog(), null, tableName, new String[] {ISqlKeywords.KEYWORD_TABLE});
             if (rs.next()) {
                 return rs.getString(JDBC_TABLE_SCHEME_PROPERTY);
             }
             return null;
         }
     }
-    
+
     /**
      * Gets the tables in schema.
      *
@@ -420,64 +408,68 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      * @throws SQLException the SQL exception
      */
     public static List<String> getTablesInSchema(DataSource dataSource, String schemaName) throws SQLException {
-    	List<String> tableNames = new ArrayList<String>();
+        List<String> tableNames = new ArrayList<String>();
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetaData = connection.getMetaData();
             ResultSet schemas = databaseMetaData.getSchemas(null, schemaName);
             if (schemas.next()) {
-            		
-	            ResultSet rs = databaseMetaData.getTables(connection.getCatalog(), schemaName, null, new String[]{ISqlKeywords.KEYWORD_TABLE});
-	            while (rs.next()) {
-	            	tableNames.add(rs.getString(JDBC_TABLE_NAME_PROPERTY));
-	            }
-	            return tableNames;
+
+                ResultSet rs =
+                        databaseMetaData.getTables(connection.getCatalog(), schemaName, null, new String[] {ISqlKeywords.KEYWORD_TABLE});
+                while (rs.next()) {
+                    tableNames.add(rs.getString(JDBC_TABLE_NAME_PROPERTY));
+                }
+                return tableNames;
             }
         }
         return null;
     }
 
-	/**
-	 * Gets the schema metadata.
-	 *
-	 * @param schema the schema
-	 * @param datasource the datasource
-	 * @return the schema metadata
-	 * @throws SQLException the SQL exception
-	 */
-	public List<Table> loadSchemaMetadata(String schema, DataSource datasource) throws SQLException {
-		List<Table> tables = new ArrayList<Table>();
-		
-		List<String> tableNames = getTablesInSchema(datasource, schema);
-		if (tableNames != null) {
-			for (String tableName : tableNames) {
-				Table tableModel = loadTableMetadata(schema, tableName, datasource);
-				tables.add(tableModel);
-			}
-		} else {
-			String error = schema + " does not exist in the target database";
-			if (logger.isErrorEnabled()) {logger.error(error);}
-		}
-		
-		return tables;
-	}
+    /**
+     * Gets the schema metadata.
+     *
+     * @param schema the schema
+     * @param datasource the datasource
+     * @return the schema metadata
+     * @throws SQLException the SQL exception
+     */
+    public List<Table> loadSchemaMetadata(String schema, DataSource datasource) throws SQLException {
+        List<Table> tables = new ArrayList<Table>();
 
-	/**
-	 * Gets the schemas.
-	 *
-	 * @param dataSource the data source
-	 * @return the schemas
-	 * @throws SQLException the SQL exception
-	 */
-	public Set<String> getSchemas(DataSource dataSource) throws SQLException {
-		Set<String> result = new HashSet<>();
-		try (Connection connection = dataSource.getConnection();
-				ResultSet schemas = connection.getMetaData().getSchemas()) {
-			while (schemas.next()) {
-				String schema = schemas.getString("TABLE_SCHEM");
-				result.add(schema);
-			}
-		}
-		return result;
-	}
+        List<String> tableNames = getTablesInSchema(datasource, schema);
+        if (tableNames != null) {
+            for (String tableName : tableNames) {
+                Table tableModel = loadTableMetadata(schema, tableName, datasource);
+                tables.add(tableModel);
+            }
+        } else {
+            String error = schema + " does not exist in the target database";
+            if (logger.isErrorEnabled()) {
+                logger.error(error);
+            }
+        }
+
+        return tables;
+    }
+
+    /**
+     * Gets the schemas.
+     *
+     * @param dataSource the data source
+     * @return the schemas
+     * @throws SQLException the SQL exception
+     */
+    public Set<String> getSchemas(DataSource dataSource) throws SQLException {
+        Set<String> result = new HashSet<>();
+        try (Connection connection = dataSource.getConnection();
+                ResultSet schemas = connection.getMetaData()
+                                              .getSchemas()) {
+            while (schemas.next()) {
+                String schema = schemas.getString("TABLE_SCHEM");
+                result.add(schema);
+            }
+        }
+        return result;
+    }
 
 }

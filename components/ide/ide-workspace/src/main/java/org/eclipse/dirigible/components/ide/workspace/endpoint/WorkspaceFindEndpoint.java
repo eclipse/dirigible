@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.workspace.endpoint;
 
@@ -38,50 +37,50 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspace-find")
 public class WorkspaceFindEndpoint {
-	
-	/** The workspace service. */
+
+    /** The workspace service. */
     @Autowired
     private WorkspaceService workspaceService;
-    
+
     /**
-	 * Find.
-	 *
-	 * @param pattern the pattern
-	 * @return the response
-	 * @throws URISyntaxException the URI syntax exception
-	 * @throws UnsupportedEncodingException the unsupported encoding exception
-	 * @throws DecoderException the decoder exception
-	 */
-	@PostMapping
-	public ResponseEntity<List<FileDescriptor>> find(@Valid @RequestBody String pattern)
-			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
-		if ((pattern == null) || pattern.isEmpty()) {
-			ResponseEntity.ok("No find pattern provided in the request body");
-		}
+     * Find.
+     *
+     * @param pattern the pattern
+     * @return the response
+     * @throws URISyntaxException the URI syntax exception
+     * @throws UnsupportedEncodingException the unsupported encoding exception
+     * @throws DecoderException the decoder exception
+     */
+    @PostMapping
+    public ResponseEntity<List<FileDescriptor>> find(@Valid @RequestBody String pattern)
+            throws URISyntaxException, UnsupportedEncodingException, DecoderException {
+        if ((pattern == null) || pattern.isEmpty()) {
+            ResponseEntity.ok("No find pattern provided in the request body");
+        }
 
-		List<File> files = workspaceService.find(pattern);
-		return ResponseEntity.ok(workspaceService.renderFileDescriptions(files));
-	}
-	
-	/**
-	 * Find.
-	 *
-	 * @param workspace the workspace
-	 * @param pattern the pattern
-	 * @return the response
-	 * @throws URISyntaxException the URI syntax exception
-	 * @throws UnsupportedEncodingException the unsupported encoding exception
-	 * @throws DecoderException the decoder exception
-	 */
-	@PostMapping("{workspace}")
-	public ResponseEntity<List<FileDescriptor>> find(@PathVariable("workspace") String workspace, @Valid @RequestBody String pattern)
-			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
-		if ((pattern == null) || pattern.isEmpty()) {
-			ResponseEntity.ok("No find pattern provided in the request body");
-		}
+        List<File> files = workspaceService.find(pattern);
+        return ResponseEntity.ok(workspaceService.renderFileDescriptions(files));
+    }
 
-		List<File> files = workspaceService.find(workspace, pattern);
-		return ResponseEntity.ok(workspaceService.renderFileDescriptions(files));
-	}
+    /**
+     * Find.
+     *
+     * @param workspace the workspace
+     * @param pattern the pattern
+     * @return the response
+     * @throws URISyntaxException the URI syntax exception
+     * @throws UnsupportedEncodingException the unsupported encoding exception
+     * @throws DecoderException the decoder exception
+     */
+    @PostMapping("{workspace}")
+    public ResponseEntity<List<FileDescriptor>> find(@PathVariable("workspace") String workspace, @Valid @RequestBody String pattern)
+            throws URISyntaxException, UnsupportedEncodingException, DecoderException {
+        if ((pattern == null) || pattern.isEmpty()) {
+            ResponseEntity.ok("No find pattern provided in the request body");
+        }
+
+        List<File> files = workspaceService.find(workspace, pattern);
+        return ResponseEntity.ok(workspaceService.renderFileDescriptions(files));
+    }
 
 }

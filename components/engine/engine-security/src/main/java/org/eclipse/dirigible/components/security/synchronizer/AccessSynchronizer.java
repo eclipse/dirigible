@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.security.synchronizer;
 
@@ -92,13 +91,14 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
     /**
      * Checks if is accepted.
      *
-     * @param file  the file
+     * @param file the file
      * @param attrs the attrs
      * @return true, if is accepted
      */
     @Override
     public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString().endsWith(getFileExtension());
+        return file.toString()
+                   .endsWith(getFileExtension());
     }
 
     /**
@@ -116,7 +116,7 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
      * Load.
      *
      * @param location the location
-     * @param content  the content
+     * @param content the content
      * @return the list
      */
     @Override
@@ -129,55 +129,61 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
 
         for (Access access : accesses) {
             try {
-            	access.updateKey();
-            	Access maybe = getService().findByKey(access.getKey());
-    			if (maybe != null) {
-    				access.setId(maybe.getId());
-    			}
-    			access = getService().save(access);
+                access.updateKey();
+                Access maybe = getService().findByKey(access.getKey());
+                if (maybe != null) {
+                    access.setId(maybe.getId());
+                }
+                access = getService().save(access);
                 result.add(access);
                 return result;
             } catch (Exception e) {
-                if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-                if (logger.isErrorEnabled()) {logger.error("security access: {}", access);}
-                if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+                if (logger.isErrorEnabled()) {
+                    logger.error(e.getMessage(), e);
+                }
+                if (logger.isErrorEnabled()) {
+                    logger.error("security access: {}", access);
+                }
+                if (logger.isErrorEnabled()) {
+                    logger.error("content: {}", new String(content));
+                }
                 throw new ParseException(e.getMessage(), 0);
             }
         }
 
         return result;
     }
-    
+
     /**
-	 * Retrieve.
-	 *
-	 * @param location the location
-	 * @return the list
-	 */
-	@Override
-	public List<Access> retrieve(String location) {
-		return getService().getAll();
-	}
-	
-	/**
-	 * Sets the status.
-	 *
-	 * @param artefact the artefact
-	 * @param lifecycle the lifecycle
-	 * @param error the error
-	 */
-	@Override
-	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
-		artefact.setLifecycle(lifecycle);
-		artefact.setError(error);
-		getService().save((Access) artefact);
-	}
+     * Retrieve.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    public List<Access> retrieve(String location) {
+        return getService().getAll();
+    }
+
+    /**
+     * Sets the status.
+     *
+     * @param artefact the artefact
+     * @param lifecycle the lifecycle
+     * @param error the error
+     */
+    @Override
+    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+        artefact.setLifecycle(lifecycle);
+        artefact.setError(error);
+        getService().save((Access) artefact);
+    }
 
     /**
      * Complete.
      *
      * @param wrapper the wrapper
-     * @param flow    the flow
+     * @param flow the flow
      * @return true, if successful
      */
     @Override
@@ -196,7 +202,9 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
         try {
             getService().delete(access);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
             callback.addError(e.getMessage());
             callback.registerState(this, access, ArtefactLifecycle.DELETED, e.getMessage());
         }
@@ -211,24 +219,24 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
     public void setCallback(SynchronizerCallback callback) {
         this.callback = callback;
     }
-    
+
     /**
      * Gets the file extension.
      *
      * @return the file extension
      */
     @Override
-	public String getFileExtension() {
-		return FILE_EXTENSION_SECURITY_ACCESS;
-	}
+    public String getFileExtension() {
+        return FILE_EXTENSION_SECURITY_ACCESS;
+    }
 
-	/**
-	 * Gets the artefact type.
-	 *
-	 * @return the artefact type
-	 */
-	@Override
-	public String getArtefactType() {
-		return Access.ARTEFACT_TYPE;
-	}
+    /**
+     * Gets the artefact type.
+     *
+     * @return the artefact type
+     */
+    @Override
+    public String getArtefactType() {
+        return Access.ARTEFACT_TYPE;
+    }
 }

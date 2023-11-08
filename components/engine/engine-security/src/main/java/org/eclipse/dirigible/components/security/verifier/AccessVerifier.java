@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.security.verifier;
 
@@ -43,8 +42,8 @@ public class AccessVerifier {
     /**
      * Checks whether the URI is secured via the *.access file or not
      *
-     * @param scope  the scope
-     * @param path   the path
+     * @param scope the scope
+     * @param path the path
      * @param method the method
      * @return all the most specific security access entry matching the URI if any
      */
@@ -54,16 +53,22 @@ public class AccessVerifier {
         List<Access> existingSecurityAccesses = securityAccessService.getAll();
         for (Access securityAccess : existingSecurityAccesses) {
             if (scope.equalsIgnoreCase(securityAccess.getScope()) && path.startsWith(securityAccess.getPath())
-                    && (securityAccess.getMethod().equals("*") || method.equals(securityAccess.getMethod()))) {
+                    && (securityAccess.getMethod()
+                                      .equals("*")
+                            || method.equals(securityAccess.getMethod()))) {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format("URI [%s] with HTTP method [%s] is secured because of definition: %s", path, method,
                             securityAccess.getLocation()));
                 }
-                if ((currentSecurityAccess == null) || (securityAccess.getPath().length() > currentSecurityAccess.getPath().length())) {
+                if ((currentSecurityAccess == null) || (securityAccess.getPath()
+                                                                      .length() > currentSecurityAccess.getPath()
+                                                                                                       .length())) {
                     currentSecurityAccess = securityAccess;
                     securityAccesses.clear();
                     securityAccesses.add(securityAccess);
-                } else if (securityAccess.getPath().length() == currentSecurityAccess.getPath().length()) {
+                } else if (securityAccess.getPath()
+                                         .length() == currentSecurityAccess.getPath()
+                                                                           .length()) {
                     securityAccesses.add(securityAccess);
                 }
             }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.git;
 
@@ -51,25 +50,25 @@ import com.google.gson.reflect.TypeToken;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components.*" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 @TestInstance(Lifecycle.PER_CLASS)
 public class GitFacadeTest {
 
     /** The username. */
     private String username = "dirigible";
-    
+
     /** The email. */
     private String email = "dirigible@eclipse.com";
-    
+
     /** The project name. */
     private String projectName = "project1";
-    
+
     /** The workspace name. */
     private String workspaceName = "workspace";
-    
+
     /** The repository. */
     private String repository = "project1-repo";
-    
+
     /** The gson. */
     private final Gson gson = new Gson();
 
@@ -101,7 +100,9 @@ public class GitFacadeTest {
         GitFacade.commit(username, email, workspaceName, repository, message, true);
         List<GitCommitInfo> history = GitFacade.getHistory(repository, workspaceName, projectName);
         assertTrue(history.size() == 2);
-        assertTrue(history.get(0).getMessage().equals(message));
+        assertTrue(history.get(0)
+                          .getMessage()
+                          .equals(message));
         assertProjectJsonExists(project);
 
         GitFacade.deleteRepository(workspaceName, repository);
@@ -120,19 +121,15 @@ public class GitFacadeTest {
         assertTrue(maybeProjectJson.exists());
 
         String projectJsonContent = new String(maybeProjectJson.getContent(), StandardCharsets.UTF_8);
-        Map<String, String> parsedProjectJsonContent = gson.fromJson(
-                projectJsonContent,
-                new TypeToken<Map<String, String>>() {
-                }.getType()
-        );
+        Map<String, String> parsedProjectJsonContent = gson.fromJson(projectJsonContent, new TypeToken<Map<String, String>>() {}.getType());
 
         assertEquals(project.getName(), parsedProjectJsonContent.get("guid"));
         assertEquals(1, parsedProjectJsonContent.size());
     }
-    
+
     @SpringBootApplication
-	static class TestConfiguration {
-	}
+    static class TestConfiguration {
+    }
 
 }
 

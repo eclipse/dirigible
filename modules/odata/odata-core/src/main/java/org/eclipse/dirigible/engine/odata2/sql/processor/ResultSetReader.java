@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.processor;
 
@@ -54,7 +53,7 @@ public class ResultSetReader {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     protected Map<String, Object> getEntityDataFromResultSet(SQLSelectBuilder selectEntityQuery, final EdmStructuralType entityType,
-                                                             Collection<EdmProperty> properties, final ResultSet resultSet) throws SQLException, ODataException, IOException {
+            Collection<EdmProperty> properties, final ResultSet resultSet) throws SQLException, ODataException, IOException {
         Map<String, Object> result = new HashMap<>();
         for (EdmProperty property : properties) {
             result.put(property.getName(), readProperty(entityType, property, selectEntityQuery, resultSet));
@@ -76,7 +75,8 @@ public class ResultSetReader {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     protected ResultSetEntity getResultSetEntity(SQLSelectBuilder selectEntityQuery, final EdmEntityType entityType,
-                                                 Collection<EdmProperty> properties, final ResultSet resultSet, boolean hasGeneratedId) throws SQLException, ODataException, IOException {
+            Collection<EdmProperty> properties, final ResultSet resultSet, boolean hasGeneratedId)
+            throws SQLException, ODataException, IOException {
         Map<String, Object> data = new HashMap<>();
         for (EdmProperty property : properties) {
             data.put(property.getName(), readProperty(entityType, property, selectEntityQuery, resultSet));
@@ -101,12 +101,13 @@ public class ResultSetReader {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     protected Object readProperty(EdmStructuralType entityType, EdmProperty property, SQLSelectBuilder selectEntityQuery,
-                                  ResultSet resultSet) throws SQLException, ODataException, IOException {
+            ResultSet resultSet) throws SQLException, ODataException, IOException {
         Object propertyDbValue;
         if (property.isSimple()) {
             if (!selectEntityQuery.isTransientType(entityType, property)) {
                 final String columnName = selectEntityQuery.getSQLTableColumnAlias(entityType, property);
-                if ("Binary".equals(property.getType().getName())) {
+                if ("Binary".equals(property.getType()
+                                            .getName())) {
                     propertyDbValue = resultSet.getBytes(columnName);
                 } else {
                     propertyDbValue = resultSet.getObject(columnName);
@@ -140,17 +141,20 @@ public class ResultSetReader {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public void accumulateExpandedEntities(SQLSelectBuilder query, ResultSet resultSet, ExpandAccumulator accumulator,
-                                           List<ArrayList<NavigationPropertySegment>> expandEntities) throws SQLException, ODataException, IOException {
+            List<ArrayList<NavigationPropertySegment>> expandEntities) throws SQLException, ODataException, IOException {
 
         for (List<NavigationPropertySegment> expandContents : expandEntities) {
             List<ResultSetEntity> parents = new ArrayList<>();
             /*
-             * The inner loop is for nested expands e.g. Owner/Address, where the parent has a higher index.
-             * If the resultset contains an Address, the Owner would be empty. If the result set contains an owner, it is added ot the accumulation
+             * The inner loop is for nested expands e.g. Owner/Address, where the parent has a higher index. If
+             * the resultset contains an Address, the Owner would be empty. If the result set contains an owner,
+             * it is added ot the accumulation
              */
             for (NavigationPropertySegment expandContent : expandContents) {
-                EdmEntityType expandType = expandContent.getTargetEntitySet().getEntityType();
-                Map<String, Object> expandData = getEntityDataFromResultSet(query, expandType, EdmUtils.getProperties(expandType), resultSet);
+                EdmEntityType expandType = expandContent.getTargetEntitySet()
+                                                        .getEntityType();
+                Map<String, Object> expandData =
+                        getEntityDataFromResultSet(query, expandType, EdmUtils.getProperties(expandType), resultSet);
                 if (OData2Utils.isEmpty(expandType, expandData)) {
                     break;
                 } else {
@@ -166,10 +170,10 @@ public class ResultSetReader {
      * The Class ExpandAccumulator.
      */
     public static class ExpandAccumulator {
-        
+
         /** The entity. */
         private final ResultSetEntity entity;
-        
+
         /** The expand data. */
         private final LinkedHashMap<String, List<ExpandAccumulator>> expandData;
 
@@ -228,17 +232,17 @@ public class ResultSetReader {
                 if (last == null || !last.isAccumulatorFor(entity)) {
                     for (ExpandAccumulator accumulator : accumulators) {
                         if (accumulator.isAccumulatorFor(entity)) {
-                            return false; //do not add more than once the same entity
+                            return false; // do not add more than once the same entity
                         }
                     }
                     accumulators.add(new ExpandAccumulator(entity));
                 }
                 return true;
-            } else {  //recursion on the parents
+            } else { // recursion on the parents
                 ResultSetEntity firstParent = parents.get(0);
                 ExpandAccumulator firstParentAccumulator = accumulatorFor(firstParent);
                 ArrayList<ResultSetEntity> nextParents = new ArrayList<>(parents);
-                nextParents.remove(0);//firstParent
+                nextParents.remove(0);// firstParent
                 return firstParentAccumulator.addExpandEntity(entity, nextParents);
             }
 
@@ -306,13 +310,13 @@ public class ResultSetReader {
      * The Class ResultSetEntity.
      */
     static class ResultSetEntity {
-        
+
         /** The data. */
         final Map<String, Object> data;
-        
+
         /** The keys. */
         final Map<String, Object> keys;
-        
+
         /** The entity type. */
         final EdmEntityType entityType;
 
@@ -367,8 +371,10 @@ public class ResultSetReader {
          */
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
             ResultSetEntity that = (ResultSetEntity) o;
             return keys.equals(that.keys);
         }

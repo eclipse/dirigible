@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
@@ -43,10 +42,10 @@ public final class SQLUpdateBuilderTest {
 
     /** The provider. */
     AnnotationEdmProvider provider;
-    
+
     /** The edm. */
     EdmImplProv edm;
-    
+
     /** The table mapping provider. */
     EdmTableBindingProvider tableMappingProvider;
 
@@ -62,8 +61,7 @@ public final class SQLUpdateBuilderTest {
                 Entity2.class, //
                 Entity3.class, //
                 Entity4.class, //
-                Entity5.class
-        };
+                Entity5.class};
         provider = new AnnotationEdmProvider(Arrays.asList(classes));
         edm = new EdmImplProv(provider);
         tableMappingProvider = new DefaultEdmTableMappingProvider(OData2TestUtils.resources(classes));
@@ -83,10 +81,13 @@ public final class SQLUpdateBuilderTest {
         Assert.assertEquals("UPDATE ENTITY4_TABLE SET ID4_3=? WHERE ID4_1=? AND ID4_2=?", result);
 
         List<SQLStatementParam> params = expression.getStatementParams();
-        //the values must be ordered as the elements in the query
-        assertEquals("UpdateIt", params.get(0).getValue());
-        assertEquals("1", params.get(1).getValue());
-        assertEquals("2", params.get(2).getValue());
+        // the values must be ordered as the elements in the query
+        assertEquals("UpdateIt", params.get(0)
+                                       .getValue());
+        assertEquals("1", params.get(1)
+                                .getValue());
+        assertEquals("2", params.get(2)
+                                .getValue());
     }
 
     /**
@@ -96,7 +97,9 @@ public final class SQLUpdateBuilderTest {
      * @throws ODataException the o data exception
      */
     private SQLUpdateBuilder createUpdateExpression() throws ODataException {
-        EdmEntityType type = edm.getEntityType(Entity4.class.getPackage().getName(), Entity4.class.getSimpleName());
+        EdmEntityType type = edm.getEntityType(Entity4.class.getPackage()
+                                                            .getName(),
+                Entity4.class.getSimpleName());
         final Map<String, Object> keys = new HashMap<>();
         keys.put("Id4_1", "1");
         keys.put("Id4_2", "2");

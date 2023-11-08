@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.jobs.service;
 
@@ -110,7 +109,7 @@ public class JobEmailService implements ArtefactService<JobEmail> {
         List<JobEmail> jobEmail = jobEmailRepository.findAll(example);
         return jobEmail;
     }
-    
+
     /**
      * Find by job name.
      *
@@ -122,14 +121,14 @@ public class JobEmailService implements ArtefactService<JobEmail> {
     public List<JobEmail> findAllByJobName(String jobName) {
         JobEmail filter = new JobEmail();
         if (jobName != null && jobName.startsWith("/")) {
-        	jobName = jobName.substring(1);
+            jobName = jobName.substring(1);
         }
         filter.setJobName(jobName);
         Example<JobEmail> example = Example.of(filter);
         List<JobEmail> jobEmail = jobEmailRepository.findAll(example);
         return jobEmail;
     }
-    
+
     /**
      * Find by location.
      *
@@ -139,13 +138,13 @@ public class JobEmailService implements ArtefactService<JobEmail> {
     @Override
     @Transactional(readOnly = true)
     public List<JobEmail> findByLocation(String location) {
-    	JobEmail filter = new JobEmail();
+        JobEmail filter = new JobEmail();
         filter.setLocation(location);
         Example<JobEmail> example = Example.of(filter);
         List<JobEmail> list = jobEmailRepository.findAll(example);
         return list;
     }
-    
+
     /**
      * Find by key.
      *
@@ -155,7 +154,7 @@ public class JobEmailService implements ArtefactService<JobEmail> {
     @Override
     @Transactional(readOnly = true)
     public JobEmail findByKey(String key) {
-    	JobEmail filter = new JobEmail();
+        JobEmail filter = new JobEmail();
         filter.setKey(key);
         Example<JobEmail> example = Example.of(filter);
         Optional<JobEmail> jobEmail = jobEmailRepository.findOne(example);
@@ -186,43 +185,43 @@ public class JobEmailService implements ArtefactService<JobEmail> {
         jobEmailRepository.delete(jobEmail);
     }
 
-	/**
-	 * Delete all by job name.
-	 *
-	 * @param jobName the job name
-	 */
-	public void deleteAllByJobName(String jobName) {
-		JobEmail filter = new JobEmail();
+    /**
+     * Delete all by job name.
+     *
+     * @param jobName the job name
+     */
+    public void deleteAllByJobName(String jobName) {
+        JobEmail filter = new JobEmail();
         filter.setJobName(jobName);
         Example<JobEmail> example = Example.of(filter);
         List<JobEmail> jobLogs = jobEmailRepository.findAll(example);
         jobEmailRepository.deleteAll(jobLogs);
-	}
-	
-	/**
-	 * Adds the email.
-	 *
-	 * @param job the job
-	 * @param email the email
-	 */
-	public void addEmail(String job, String email) {
-		if (job != null && job.startsWith("/")) {
-			job = job.substring(1);
+    }
+
+    /**
+     * Adds the email.
+     *
+     * @param job the job
+     * @param email the email
+     */
+    public void addEmail(String job, String email) {
+        if (job != null && job.startsWith("/")) {
+            job = job.substring(1);
         }
-		JobEmail jobEmail = new JobEmail(job, email, null, null, job, email);
-		jobEmail.updateKey();
-		save(jobEmail);
-	}
-	
-	/**
-	 * Removes the email.
-	 *
-	 * @param id the id
-	 */
-	public void removeEmail(Long id) {
-		JobEmail jobEmail = findById(id);
-		if (jobEmail != null) {
-			delete(jobEmail);
-		}
-	}
+        JobEmail jobEmail = new JobEmail(job, email, null, null, job, email);
+        jobEmail.updateKey();
+        save(jobEmail);
+    }
+
+    /**
+     * Removes the email.
+     *
+     * @param id the id
+     */
+    public void removeEmail(Long id) {
+        JobEmail jobEmail = findById(id);
+        if (jobEmail != null) {
+            delete(jobEmail);
+        }
+    }
 }

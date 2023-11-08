@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
@@ -25,7 +24,7 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(HanaAlterTableBuilder.class);
-    
+
     /**
      * Instantiates a new creates the table builder.
      *
@@ -43,8 +42,11 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
      */
     @Override
     protected void generateColumns(StringBuilder sql) {
-        if (!this.getColumns().isEmpty()) {
-            sql.append(OPEN).append(traverseColumns()).append(CLOSE);
+        if (!this.getColumns()
+                 .isEmpty()) {
+            sql.append(OPEN)
+               .append(traverseColumns())
+               .append(CLOSE);
         }
     }
 
@@ -55,8 +57,11 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
      */
     @Override
     protected void generateColumnsForAlter(StringBuilder sql) {
-        if (!this.getColumns().isEmpty()) {
-            sql.append(OPEN).append(traverseColumnsForAlter()).append(CLOSE);
+        if (!this.getColumns()
+                 .isEmpty()) {
+            sql.append(OPEN)
+               .append(traverseColumnsForAlter())
+               .append(CLOSE);
         }
     }
 
@@ -70,9 +75,14 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
         StringBuilder snippet = new StringBuilder();
         for (String[] column : this.getColumns()) {
             String columnName = (isCaseSensitive()) ? encapsulate(column[0]) : column[0];
-            snippet.append(KEYWORD_DROP).append(SPACE).append(OPEN);
-            snippet.append(columnName).append(CLOSE).append(SPACE);
-            snippet.append(COMMA).append(SPACE);
+            snippet.append(KEYWORD_DROP)
+                   .append(SPACE)
+                   .append(OPEN);
+            snippet.append(columnName)
+                   .append(CLOSE)
+                   .append(SPACE);
+            snippet.append(COMMA)
+                   .append(SPACE);
         }
         return snippet.substring(0, snippet.length() - 2);
     }
@@ -113,15 +123,20 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
                 generateColumnsForAlter(sql);
             }
         }
-        //logic for indices
-        sql.append(SEMICOLON).append(SPACE);
-        if(!this.getUniqueIndices().isEmpty()){
+        // logic for indices
+        sql.append(SEMICOLON)
+           .append(SPACE);
+        if (!this.getUniqueIndices()
+                 .isEmpty()) {
             generateUniqueIndices(sql);
         }
 
-        String generated = sql.toString().trim();
+        String generated = sql.toString()
+                              .trim();
 
-        if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
+        if (logger.isTraceEnabled()) {
+            logger.trace("generated: " + generated);
+        }
 
         return generated;
     }
@@ -142,7 +157,7 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
             sql.append(SEMICOLON);
         }
     }
-    
+
     /**
      * Generate unique index.
      *
@@ -155,13 +170,17 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
             if (uniqueIndex.getName() != null) {
                 String uniqueIndexName = (isCaseSensitive()) ? encapsulate(uniqueIndex.getName()) : uniqueIndex.getName();
                 sql.append(KEYWORD_ADD)
-                    .append(SPACE)
-                    .append(KEYWORD_CONSTRAINT)
-                    .append(SPACE)
-                    .append(uniqueIndexName)
-                    .append(SPACE);
+                   .append(SPACE)
+                   .append(KEYWORD_CONSTRAINT)
+                   .append(SPACE)
+                   .append(uniqueIndexName)
+                   .append(SPACE);
             }
-            sql.append(KEYWORD_UNIQUE).append(SPACE).append(OPEN).append(traverseNames(uniqueIndex.getColumns())).append(CLOSE);
+            sql.append(KEYWORD_UNIQUE)
+               .append(SPACE)
+               .append(OPEN)
+               .append(traverseNames(uniqueIndex.getColumns()))
+               .append(CLOSE);
         }
     }
 }

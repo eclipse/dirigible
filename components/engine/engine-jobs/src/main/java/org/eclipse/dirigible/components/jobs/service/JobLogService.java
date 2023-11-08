@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.jobs.service;
 
@@ -39,11 +38,11 @@ public class JobLogService implements ArtefactService<JobLog> {
     /** The job log repository. */
     @Autowired
     private JobLogRepository jobLogRepository;
-    
+
     /** The job service. */
     @Autowired
     private JobService jobService;
-    
+
     /** The job email processor. */
     @Autowired
     private JobEmailProcessor jobEmailProcessor;
@@ -107,7 +106,7 @@ public class JobLogService implements ArtefactService<JobLog> {
             throw new IllegalArgumentException("JobLog with name does not exist: " + name);
         }
     }
-    
+
     /**
      * Find by name.
      *
@@ -118,7 +117,7 @@ public class JobLogService implements ArtefactService<JobLog> {
     public List<JobLog> findByJob(String name) {
         JobLog filter = new JobLog();
         if (name != null && name.startsWith("/")) {
-        	name = name.substring(1);
+            name = name.substring(1);
         }
         filter.setJobName(name);
         filter.setStatus(null);
@@ -126,7 +125,7 @@ public class JobLogService implements ArtefactService<JobLog> {
         List<JobLog> jobLog = jobLogRepository.findAll(example);
         return jobLog;
     }
-    
+
     /**
      * Find by location.
      *
@@ -136,13 +135,13 @@ public class JobLogService implements ArtefactService<JobLog> {
     @Override
     @Transactional(readOnly = true)
     public List<JobLog> findByLocation(String location) {
-    	JobLog filter = new JobLog();
+        JobLog filter = new JobLog();
         filter.setLocation(location);
         Example<JobLog> example = Example.of(filter);
         List<JobLog> list = jobLogRepository.findAll(example);
         return list;
     }
-    
+
     /**
      * Find by key.
      *
@@ -152,7 +151,7 @@ public class JobLogService implements ArtefactService<JobLog> {
     @Override
     @Transactional(readOnly = true)
     public JobLog findByKey(String key) {
-    	JobLog filter = new JobLog();
+        JobLog filter = new JobLog();
         filter.setKey(key);
         Example<JobLog> example = Example.of(filter);
         Optional<JobLog> jobLog = jobLogRepository.findOne(example);
@@ -182,7 +181,7 @@ public class JobLogService implements ArtefactService<JobLog> {
     public void delete(JobLog jobLog) {
         jobLogRepository.delete(jobLog);
     }
-    
+
     private String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
     /**
@@ -214,7 +213,7 @@ public class JobLogService implements ArtefactService<JobLog> {
      * @param severity the severity
      * @return the job log definition
      */
-    private JobLog jobLogged(String name, String handler, String message, short severity){
+    private JobLog jobLogged(String name, String handler, String message, short severity) {
         JobLog jobLog = new JobLog();
         jobLog.setName(name);
         jobLog.setJobName(name);
@@ -298,14 +297,15 @@ public class JobLogService implements ArtefactService<JobLog> {
         jobLog.updateKey();
         save(jobLog);
         Job job = jobService.findByName(name);
-		boolean statusChanged = job.getStatus() != JobLog.JOB_LOG_STATUS_FINISHED;
-		job.setStatus(JobLog.JOB_LOG_STATUS_FINISHED);
-		job.setMessage("");
-		job.setExecutedAt(jobLog.getFinishedAt());
-		if (statusChanged) {
-			String content = jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateNormal, jobEmailProcessor.EMAIL_TEMPLATE_NORMAL);
-			jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectNormal, content);
-		}
+        boolean statusChanged = job.getStatus() != JobLog.JOB_LOG_STATUS_FINISHED;
+        job.setStatus(JobLog.JOB_LOG_STATUS_FINISHED);
+        job.setMessage("");
+        job.setExecutedAt(jobLog.getFinishedAt());
+        if (statusChanged) {
+            String content =
+                    jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateNormal, jobEmailProcessor.EMAIL_TEMPLATE_NORMAL);
+            jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectNormal, content);
+        }
         return jobLog;
     }
 
@@ -333,31 +333,32 @@ public class JobLogService implements ArtefactService<JobLog> {
         jobLog.updateKey();
         save(jobLog);
         Job job = jobService.findByName(name);
-		boolean statusChanged = job.getStatus() != JobLog.JOB_LOG_STATUS_FAILED;
-		job.setStatus(JobLog.JOB_LOG_STATUS_FAILED);
-		job.setMessage(message);
-		job.setExecutedAt(jobLog.getFinishedAt());
-		if (statusChanged) {
-			String content = jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateError, jobEmailProcessor.EMAIL_TEMPLATE_ERROR);
-			jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectError, content);
-		}
+        boolean statusChanged = job.getStatus() != JobLog.JOB_LOG_STATUS_FAILED;
+        job.setStatus(JobLog.JOB_LOG_STATUS_FAILED);
+        job.setMessage(message);
+        job.setExecutedAt(jobLog.getFinishedAt());
+        if (statusChanged) {
+            String content =
+                    jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateError, jobEmailProcessor.EMAIL_TEMPLATE_ERROR);
+            jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectError, content);
+        }
         return jobLog;
     }
 
-	/**
-	 * Delete all by job name.
-	 *
-	 * @param jobName the job name
-	 */
-	public void deleteAllByJobName(String jobName) {
-		JobLog filter = new JobLog();
-		if (jobName != null && jobName.startsWith("/")) {
-			jobName = jobName.substring(1);
+    /**
+     * Delete all by job name.
+     *
+     * @param jobName the job name
+     */
+    public void deleteAllByJobName(String jobName) {
+        JobLog filter = new JobLog();
+        if (jobName != null && jobName.startsWith("/")) {
+            jobName = jobName.substring(1);
         }
         filter.setJobName(jobName);
         Example<JobLog> example = Example.of(filter);
         List<JobLog> jobLogs = jobLogRepository.findAll(example);
         jobLogRepository.deleteAll(jobLogs);
-		
-	}
+
+    }
 }

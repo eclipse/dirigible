@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.utils;
 
@@ -69,7 +68,8 @@ public class OData2UtilsTest {
 
         assertEquals(contentType, errorResponse.getContentType());
         assertEquals("No content", errorResponse.getMessage());
-        assertEquals(HttpStatusCodes.NOT_FOUND.getStatusCode(), response.getStatus().getStatusCode());
+        assertEquals(HttpStatusCodes.NOT_FOUND.getStatusCode(), response.getStatus()
+                                                                        .getStatusCode());
     }
 
     /**
@@ -98,7 +98,8 @@ public class OData2UtilsTest {
 
         assertEquals(contentType, errorResponse.getContentType());
         assertEquals("No content", errorResponse.getMessage());
-        assertEquals(HttpStatusCodes.NOT_FOUND.getStatusCode(), response.getStatus().getStatusCode());
+        assertEquals(HttpStatusCodes.NOT_FOUND.getStatusCode(), response.getStatus()
+                                                                        .getStatusCode());
     }
 
     /**
@@ -110,10 +111,17 @@ public class OData2UtilsTest {
         ODataContext testContext = EasyMock.createMock(ODataContext.class);
         ODataContext testContext2 = EasyMock.createMock(ODataContext.class);
         ODataContext testContext3 = EasyMock.createMock(ODataContext.class);
-        EasyMock.expect(testContext.getBatchParentContext()).andReturn(testContext2).times(1);
-        EasyMock.expect(testContext2.getBatchParentContext()).andReturn(testContext3).times(2);
-        EasyMock.expect(testContext3.getBatchParentContext()).andReturn(null).times(1);
-        EasyMock.expect(testContext3.getParameter(OData2Constants.ODATA_CTX_PARAMETER_TENANT_NAME)).andReturn(resultTenantName);
+        EasyMock.expect(testContext.getBatchParentContext())
+                .andReturn(testContext2)
+                .times(1);
+        EasyMock.expect(testContext2.getBatchParentContext())
+                .andReturn(testContext3)
+                .times(2);
+        EasyMock.expect(testContext3.getBatchParentContext())
+                .andReturn(null)
+                .times(1);
+        EasyMock.expect(testContext3.getParameter(OData2Constants.ODATA_CTX_PARAMETER_TENANT_NAME))
+                .andReturn(resultTenantName);
         EasyMock.replay(testContext, testContext2, testContext3);
         assertEquals(resultTenantName, OData2Utils.getTenantNameFromContext(testContext));
         EasyMock.verify(testContext, testContext2, testContext3);
@@ -127,9 +135,14 @@ public class OData2UtilsTest {
         String resultTenantName = "TestName";
         ODataContext testContext = EasyMock.createMock(ODataContext.class);
         ODataContext testContext2 = EasyMock.createMock(ODataContext.class);
-        EasyMock.expect(testContext.getBatchParentContext()).andReturn(testContext2).times(1);
-        EasyMock.expect(testContext2.getBatchParentContext()).andReturn(null).times(1);
-        EasyMock.expect(testContext2.getParameter(OData2Constants.ODATA_CTX_PARAMETER_TENANT_NAME)).andReturn(resultTenantName);
+        EasyMock.expect(testContext.getBatchParentContext())
+                .andReturn(testContext2)
+                .times(1);
+        EasyMock.expect(testContext2.getBatchParentContext())
+                .andReturn(null)
+                .times(1);
+        EasyMock.expect(testContext2.getParameter(OData2Constants.ODATA_CTX_PARAMETER_TENANT_NAME))
+                .andReturn(resultTenantName);
         EasyMock.replay(testContext, testContext2);
         assertEquals(resultTenantName, OData2Utils.getTenantNameFromContext(testContext));
         EasyMock.verify(testContext, testContext2);
@@ -142,8 +155,11 @@ public class OData2UtilsTest {
     public void testGetTenantNameFromContextNoBatchParent() {
         String resultTenantName = "TestName";
         ODataContext testContext = EasyMock.createMock(ODataContext.class);
-        EasyMock.expect(testContext.getBatchParentContext()).andReturn(null).times(1);
-        EasyMock.expect(testContext.getParameter(OData2Constants.ODATA_CTX_PARAMETER_TENANT_NAME)).andReturn(resultTenantName);
+        EasyMock.expect(testContext.getBatchParentContext())
+                .andReturn(null)
+                .times(1);
+        EasyMock.expect(testContext.getParameter(OData2Constants.ODATA_CTX_PARAMETER_TENANT_NAME))
+                .andReturn(resultTenantName);
         EasyMock.replay(testContext);
         assertEquals(resultTenantName, OData2Utils.getTenantNameFromContext(testContext));
         EasyMock.verify(testContext);
@@ -161,11 +177,14 @@ public class OData2UtilsTest {
         List<KeyPredicate> keyPredicates = new ArrayList<>();
         keyPredicates.add(keyPredicate);
 
-        EasyMock.expect(edmProperty.getName()).andReturn("TestProperty");
+        EasyMock.expect(edmProperty.getName())
+                .andReturn("TestProperty");
         EasyMock.replay(edmProperty);
 
-        EasyMock.expect(keyPredicate.getProperty()).andReturn(edmProperty);
-        EasyMock.expect(keyPredicate.getLiteral()).andReturn("TestValue");
+        EasyMock.expect(keyPredicate.getProperty())
+                .andReturn(edmProperty);
+        EasyMock.expect(keyPredicate.getLiteral())
+                .andReturn("TestValue");
         EasyMock.replay(keyPredicate);
 
         assertEquals("TestValue", OData2Utils.getKeyPredicateValueByPropertyName("TestProperty", keyPredicates));
@@ -184,13 +203,15 @@ public class OData2UtilsTest {
         SQLSelectBuilder query = EasyMock.createMock(SQLSelectBuilder.class);
         EdmStructuralType entityType = EasyMock.createMock(EdmStructuralType.class);
 
-        EasyMock.expect(edmProperty.getName()).andReturn("TestProperty");
+        EasyMock.expect(edmProperty.getName())
+                .andReturn("TestProperty");
         EasyMock.replay(edmProperty);
 
         List<String> targetParameters = new ArrayList<>();
         targetParameters.add("TestProperty");
 
-        EasyMock.expect(query.getSQLTableParameters(entityType)).andReturn(targetParameters);
+        EasyMock.expect(query.getSQLTableParameters(entityType))
+                .andReturn(targetParameters);
         EasyMock.replay(query);
 
         EasyMock.replay(entityType);

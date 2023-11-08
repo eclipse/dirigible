@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.graalium.core.modules;
 
@@ -37,7 +36,7 @@ public class DirigibleModule {
     /** The should be unexposed to ESM. */
     private final Boolean shouldBeUnexposedToESM;
 
-    /**  The CJS exported members to re-export in a deconstructed manner. */
+    /** The CJS exported members to re-export in a deconstructed manner. */
     private final List<String> deconstruct;
 
     /**
@@ -51,15 +50,8 @@ public class DirigibleModule {
      * @param shouldBeUnexposedToESM the should be unexposed to ESM
      * @param deconstruct the CJS exported members to re-export in a deconstructed manner
      */
-    DirigibleModule(
-            String name,
-            String api,
-            String[] versionedPaths,
-            String pathDefault,
-            boolean isPackageDescription,
-            Boolean shouldBeUnexposedToESM,
-            List<String> deconstruct
-    ) {
+    DirigibleModule(String name, String api, String[] versionedPaths, String pathDefault, boolean isPackageDescription,
+            Boolean shouldBeUnexposedToESM, List<String> deconstruct) {
         this.name = name;
         this.api = api;
         this.versionedPaths = versionedPaths;

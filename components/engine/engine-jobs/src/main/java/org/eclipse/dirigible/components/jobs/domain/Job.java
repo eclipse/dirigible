@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.jobs.domain;
 
@@ -143,8 +142,8 @@ public class Job extends Artefact {
      * @param message the message
      * @param executedAt the executed at
      */
-    public Job(String location, String name, String description, Set<String> dependencies, String group, String clazz, 
-    		String expression, String handler, String engine, Boolean singleton, Boolean enabled, Short status, String message, Timestamp executedAt) {
+    public Job(String location, String name, String description, Set<String> dependencies, String group, String clazz, String expression,
+            String handler, String engine, Boolean singleton, Boolean enabled, Short status, String message, Timestamp executedAt) {
         super(location, name, ARTEFACT_TYPE, description, dependencies);
         this.group = group;
         this.clazz = clazz;
@@ -174,7 +173,7 @@ public class Job extends Artefact {
      * @param dependencies the dependencies
      */
     public Job(String name, String group, String clazz, String handler, String engine, String description, String expression,
-               Boolean singleton, List<JobParameter> parameters, String location, Set<String> dependencies) {
+            Boolean singleton, List<JobParameter> parameters, String location, Set<String> dependencies) {
         super(location, name, ARTEFACT_TYPE, description, dependencies);
         this.group = group;
         this.clazz = clazz;
@@ -363,20 +362,21 @@ public class Job extends Artefact {
     public List<JobParameter> getParameters() {
         return parameters;
     }
-    
+
     /**
-	 * Get the parameter by name.
-	 *
-	 * @return the parameter
-	 */
-	public JobParameter getParameter(String name) {
-		for (JobParameter p : parameters) {
-			if (p.getName().equals(name)) {
-				return p;
-			}
-		}
-		return null;
-	}
+     * Get the parameter by name.
+     *
+     * @return the parameter
+     */
+    public JobParameter getParameter(String name) {
+        for (JobParameter p : parameters) {
+            if (p.getName()
+                 .equals(name)) {
+                return p;
+            }
+        }
+        return null;
+    }
 
     /**
      * Sets the parameters list.
@@ -430,29 +430,10 @@ public class Job extends Artefact {
      */
     @Override
     public String toString() {
-        return "Job {" +
-                " id=" + id +
-                ", group=" + group +
-                ", clazz=" + clazz +
-                ", expression=" + expression +
-                ", handler=" + handler +
-                ", engine=" + engine +
-                ", singleton=" + singleton +
-                ", enabled=" + enabled +
-                ", parameters=" + parameters +
-                ", status=" + status +
-                ", message=" + message +
-                ", executedAt=" + executedAt +
-                ", location=" + location +
-                ", name=" + name +
-                ", type=" + type +
-                ", description=" + description +
-                ", key=" + key +
-                ", dependencies=" + dependencies +
-                ", createdBy=" + createdBy +
-                ", createdAt=" + createdAt +
-                ", updatedBy=" + updatedBy +
-                ", updatedAt=" + updatedAt +
-                '}';
+        return "Job {" + " id=" + id + ", group=" + group + ", clazz=" + clazz + ", expression=" + expression + ", handler=" + handler
+                + ", engine=" + engine + ", singleton=" + singleton + ", enabled=" + enabled + ", parameters=" + parameters + ", status="
+                + status + ", message=" + message + ", executedAt=" + executedAt + ", location=" + location + ", name=" + name + ", type="
+                + type + ", description=" + description + ", key=" + key + ", dependencies=" + dependencies + ", createdBy=" + createdBy
+                + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + '}';
     }
 }

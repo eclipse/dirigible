@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.metadata.endpoint;
 
@@ -31,33 +30,34 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 public class DatabaseMetadataHelperTest {
-	
-	/** The datasources manager. */
-	@Autowired
+
+    /** The datasources manager. */
+    @Autowired
     private DataSourcesManager datasourcesManager;
-	
-	/**
-	 * List schemas test.
-	 */
-	@Test
-	public void listSchemasTest() {
-		try {
-			try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
-				DatabaseMetadataHelper.listSchemas(connection, null, null, null);
-			}
-		} catch (SQLException e) {
-			fail(e);
-		}
-	}
-	
-	/**
-	 * The Class TestConfiguration.
-	 */
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+
+    /**
+     * List schemas test.
+     */
+    @Test
+    public void listSchemasTest() {
+        try {
+            try (Connection connection = datasourcesManager.getDefaultDataSource()
+                                                           .getConnection()) {
+                DatabaseMetadataHelper.listSchemas(connection, null, null, null);
+            }
+        } catch (SQLException e) {
+            fail(e);
+        }
+    }
+
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 
 }

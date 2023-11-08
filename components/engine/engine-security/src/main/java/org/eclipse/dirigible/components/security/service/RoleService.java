@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.security.service;
 
@@ -98,7 +97,7 @@ public class RoleService implements ArtefactService<Role> {
             throw new IllegalArgumentException("SecurityRole with name does not exist: " + name);
         }
     }
-    
+
     /**
      * Find by location.
      *
@@ -108,13 +107,13 @@ public class RoleService implements ArtefactService<Role> {
     @Override
     @Transactional(readOnly = true)
     public List<Role> findByLocation(String location) {
-    	Role filter = new Role();
+        Role filter = new Role();
         filter.setLocation(location);
         Example<Role> example = Example.of(filter);
         List<Role> list = roleRepository.findAll(example);
         return list;
     }
-    
+
     /**
      * Find by key.
      *
@@ -124,7 +123,7 @@ public class RoleService implements ArtefactService<Role> {
     @Override
     @Transactional(readOnly = true)
     public Role findByKey(String key) {
-    	Role filter = new Role();
+        Role filter = new Role();
         filter.setKey(key);
         Example<Role> example = Example.of(filter);
         Optional<Role> role = roleRepository.findOne(example);

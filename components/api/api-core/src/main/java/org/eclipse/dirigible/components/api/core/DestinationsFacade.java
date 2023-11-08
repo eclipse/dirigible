@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.core;
 
@@ -56,7 +55,8 @@ public class DestinationsFacade {
     public static final String DIRIGIBLE_DESTINATIONS_INTERNAL_ROOT_FOLDER = "DIRIGIBLE_DESTINATIONS_INTERNAL_ROOT_FOLDER"; //$NON-NLS-1$
 
     /** The Constant DIRIGIBLE_DESTINATIONS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE. */
-    public static final String DIRIGIBLE_DESTINATIONS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE = "DIRIGIBLE_DESTINATIONS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE"; //$NON-NLS-1$
+    public static final String DIRIGIBLE_DESTINATIONS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE =
+            "DIRIGIBLE_DESTINATIONS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE"; //$NON-NLS-1$
 
     /** The Constant DESTINATIONS. */
     public static final String DESTINATIONS = "destinations"; //$NON-NLS-1$
@@ -64,7 +64,7 @@ public class DestinationsFacade {
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DestinationsFacade.class);
 
-    /**  Internal destinations repository. */
+    /** Internal destinations repository. */
     private static IRepository destinationsRepository;
 
 
@@ -82,12 +82,15 @@ public class DestinationsFacade {
      * @throws RepositoryReadException the repository read exception
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public static String get(String name) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NamingException, RepositoryReadException, IOException {
+    public static String get(String name) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException,
+            InvocationTargetException, NamingException, RepositoryReadException, IOException {
         String destinationProvider = Configuration.get(DIRIGIBLE_DESTINATIONS_PROVIDER);
         if (destinationProvider == null) {
             destinationProvider = DIRIGIBLE_DESTINATIONS_PROVIDER_LOCAL;
         }
-        if (logger.isDebugEnabled()) {logger.debug(String.format("Destinations Provider for GET operation: %s", destinationProvider));}
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Destinations Provider for GET operation: %s", destinationProvider));
+        }
         if (DIRIGIBLE_DESTINATIONS_PROVIDER_LOCAL.equals(destinationProvider)) {
             String fullName = name + ".properties";
             IRepository repository = getDestinationsRepostiory();
@@ -121,12 +124,15 @@ public class DestinationsFacade {
      * @throws RepositoryReadException the repository read exception
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public static void set(String name, String content) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NamingException, RepositoryReadException, IOException {
+    public static void set(String name, String content) throws NoSuchMethodException, SecurityException, IllegalAccessException,
+            IllegalArgumentException, InvocationTargetException, NamingException, RepositoryReadException, IOException {
         String destinationProvider = Configuration.get(DIRIGIBLE_DESTINATIONS_PROVIDER);
         if (destinationProvider == null) {
             destinationProvider = DIRIGIBLE_DESTINATIONS_PROVIDER_LOCAL;
         }
-        if (logger.isDebugEnabled()) {logger.debug(String.format("Destinations Provider for SET operation: %s", destinationProvider));}
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Destinations Provider for SET operation: %s", destinationProvider));
+        }
         if (DIRIGIBLE_DESTINATIONS_PROVIDER_LOCAL.equals(destinationProvider)) {
             String fullName = name + ".properties";
             IRepository repository = getDestinationsRepostiory();
@@ -140,7 +146,8 @@ public class DestinationsFacade {
                 repository.createResource(fullName, out.toByteArray());
             }
         } else if (DIRIGIBLE_DESTINATIONS_PROVIDER_MANAGED.equals(destinationProvider)) {
-            throw new IllegalAccessException(String.format("While the Destinations Provider is of type 'managed' you cannot set destination properties via the API, but via the external destination service only"));
+            throw new IllegalAccessException(String.format(
+                    "While the Destinations Provider is of type 'managed' you cannot set destination properties via the API, but via the external destination service only"));
         } else {
             throw new IllegalArgumentException(String.format("Unknown Destinations Provider: %s", destinationProvider));
         }
@@ -177,17 +184,23 @@ public class DestinationsFacade {
      * @throws IllegalArgumentException the illegal argument exception
      * @throws InvocationTargetException the invocation target exception
      */
-    public static Map initializeFromDestination(String destinationName) throws NamingException, NoSuchMethodException,
-            SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        if (logger.isDebugEnabled()) {logger.debug(String.format("Lookup Destination: %s", destinationName));}
+    public static Map initializeFromDestination(String destinationName) throws NamingException, NoSuchMethodException, SecurityException,
+            IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Lookup Destination: %s", destinationName));
+        }
         Object connectivityService = lookupConnectivityConfiguration();
         if (connectivityService != null) {
-            Method configurationMethod = connectivityService.getClass().getMethod("getConfiguration", String.class);
+            Method configurationMethod = connectivityService.getClass()
+                                                            .getMethod("getConfiguration", String.class);
             Object destinationConfiguration = configurationMethod.invoke(connectivityService, destinationName);
             if (destinationConfiguration != null) {
-                Method propertiesMethod = destinationConfiguration.getClass().getMethod("getAllProperties");
+                Method propertiesMethod = destinationConfiguration.getClass()
+                                                                  .getMethod("getAllProperties");
                 Map destinationProperties = (Map) propertiesMethod.invoke(destinationConfiguration);
-                if (logger.isDebugEnabled()) {logger.debug(String.format("Destination Properties: %s", destinationProperties.toString()));}
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Destination Properties: %s", destinationProperties.toString()));
+                }
                 return destinationProperties;
             }
         }

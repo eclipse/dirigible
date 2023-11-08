@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.local;
 
@@ -32,111 +31,112 @@ import org.junit.Test;
  */
 public class LocalRepositoryCopyTest {
 
-	/** The repository src. */
-	IRepository repositorySrc;
-	
-	/** The repository dst. */
-	IRepository repositoryDst;
+    /** The repository src. */
+    IRepository repositorySrc;
 
-	/**
-	 * Sets the up.
-	 */
-	@Before
-	public void setUp() {
-		try {
-			repositorySrc = new LocalRepository("target/testSrc");
-			repositoryDst = new LocalRepository("target/testDst");
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
+    /** The repository dst. */
+    IRepository repositoryDst;
 
-	/**
-	 * Test text.
-	 */
-	@Test
-	public void testText() {
-		String PATH = "/testCollectionPath/toBeRemovedTextPath1.txt";
-		IResource resource = null;
-		try {
-			String content = "test1";
+    /**
+     * Sets the up.
+     */
+    @Before
+    public void setUp() {
+        try {
+            repositorySrc = new LocalRepository("target/testSrc");
+            repositoryDst = new LocalRepository("target/testDst");
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
 
-			resource = repositorySrc.createResource(PATH, content.getBytes(), false, "text/plain"); //$NON-NLS-1$
-			assertNotNull(resource);
-			assertTrue(resource.exists());
-			assertFalse(resource.isBinary());
+    /**
+     * Test text.
+     */
+    @Test
+    public void testText() {
+        String PATH = "/testCollectionPath/toBeRemovedTextPath1.txt";
+        IResource resource = null;
+        try {
+            String content = "test1";
 
-			IResource resourceBack = repositorySrc.getResource(PATH);
-			String path = resourceBack.getPath();
+            resource = repositorySrc.createResource(PATH, content.getBytes(), false, "text/plain"); //$NON-NLS-1$
+            assertNotNull(resource);
+            assertTrue(resource.exists());
+            assertFalse(resource.isBinary());
 
-			assertEquals(PATH, path);
+            IResource resourceBack = repositorySrc.getResource(PATH);
+            String path = resourceBack.getPath();
 
-			copyRepository(repositorySrc, repositoryDst);
+            assertEquals(PATH, path);
 
-			resourceBack = repositoryDst.getResource(PATH);
-			path = resourceBack.getPath();
+            copyRepository(repositorySrc, repositoryDst);
 
-			assertTrue(resourceBack.exists());
-			assertEquals(PATH, path);
+            resourceBack = repositoryDst.getResource(PATH);
+            path = resourceBack.getPath();
 
-		} catch (IOException e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		} finally {
-			try {
-				if ((resource != null) && resource.exists()) {
-					repositorySrc.removeResource(PATH);
-					resource = repositorySrc.getResource(PATH);
-					assertNotNull(resource);
-					assertFalse(resource.exists());
+            assertTrue(resourceBack.exists());
+            assertEquals(PATH, path);
 
-					repositoryDst.removeResource(PATH);
-					resource = repositoryDst.getResource(PATH);
-					assertNotNull(resource);
-					assertFalse(resource.exists());
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				fail(e.getMessage());
-			}
-		}
-	}
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        } finally {
+            try {
+                if ((resource != null) && resource.exists()) {
+                    repositorySrc.removeResource(PATH);
+                    resource = repositorySrc.getResource(PATH);
+                    assertNotNull(resource);
+                    assertFalse(resource.exists());
 
-	/**
-	 * Copy repository.
-	 *
-	 * @param sourceRepository the source repository
-	 * @param targetRepository the target repository
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	private void copyRepository(IRepository sourceRepository, IRepository targetRepository) throws IOException {
-		ICollection root = sourceRepository.getRoot();
-		copyCollection(root, targetRepository);
-	}
+                    repositoryDst.removeResource(PATH);
+                    resource = repositoryDst.getResource(PATH);
+                    assertNotNull(resource);
+                    assertFalse(resource.exists());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                fail(e.getMessage());
+            }
+        }
+    }
 
-	/**
-	 * Copy collection.
-	 *
-	 * @param parent the parent
-	 * @param targetRepository the target repository
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	private void copyCollection(ICollection parent, IRepository targetRepository) throws IOException {
-		List<IEntity> entities = parent.getChildren();
-		for (IEntity entity : entities) {
-			if (entity instanceof ICollection) {
-				ICollection collection = (ICollection) entity;
-				copyCollection(collection, targetRepository);
-			} else {
-				IResource resource = (IResource) entity;
-				try {
-					targetRepository.createResource(resource.getPath(), resource.getContent(), resource.isBinary(), resource.getContentType(), true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
+    /**
+     * Copy repository.
+     *
+     * @param sourceRepository the source repository
+     * @param targetRepository the target repository
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    private void copyRepository(IRepository sourceRepository, IRepository targetRepository) throws IOException {
+        ICollection root = sourceRepository.getRoot();
+        copyCollection(root, targetRepository);
+    }
+
+    /**
+     * Copy collection.
+     *
+     * @param parent the parent
+     * @param targetRepository the target repository
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    private void copyCollection(ICollection parent, IRepository targetRepository) throws IOException {
+        List<IEntity> entities = parent.getChildren();
+        for (IEntity entity : entities) {
+            if (entity instanceof ICollection) {
+                ICollection collection = (ICollection) entity;
+                copyCollection(collection, targetRepository);
+            } else {
+                IResource resource = (IResource) entity;
+                try {
+                    targetRepository.createResource(resource.getPath(), resource.getContent(), resource.isBinary(),
+                            resource.getContentType(), true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 }

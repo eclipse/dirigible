@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.typescript;
 
@@ -53,11 +52,8 @@ public class TypeScriptEndpoint extends BaseEndpoint {
      * @return the response entity
      */
     @GetMapping(HTTP_PATH_MATCHER)
-    public ResponseEntity<?> get(
-            @PathVariable("projectName") String projectName,
-            @PathVariable("projectFilePath") String projectFilePath,
-            @Nullable @RequestParam(required = false) MultiValueMap<String,String> params
-    ) {
+    public ResponseEntity<?> get(@PathVariable("projectName") String projectName, @PathVariable("projectFilePath") String projectFilePath,
+            @Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
         return javascriptEndpoint.get(projectName, replaceTSWithMJSExtension(projectFilePath), params);
     }
 
@@ -70,11 +66,8 @@ public class TypeScriptEndpoint extends BaseEndpoint {
      * @return the response entity
      */
     @PostMapping(HTTP_PATH_MATCHER)
-    public ResponseEntity<?> post(
-            @PathVariable("projectName") String projectName,
-            @PathVariable("projectFilePath") String projectFilePath,
-            @Nullable @RequestParam(required = false) MultiValueMap<String,String> params
-    ) {
+    public ResponseEntity<?> post(@PathVariable("projectName") String projectName, @PathVariable("projectFilePath") String projectFilePath,
+            @Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
         return javascriptEndpoint.post(projectName, replaceTSWithMJSExtension(projectFilePath), params);
     }
 
@@ -88,12 +81,10 @@ public class TypeScriptEndpoint extends BaseEndpoint {
      * @return the response entity
      */
     @PostMapping(value = HTTP_PATH_MATCHER, consumes = "multipart/form-data")
-    public ResponseEntity<?> postFile(
-            @PathVariable("projectName") String projectName,
+    public ResponseEntity<?> postFile(@PathVariable("projectName") String projectName,
             @PathVariable("projectFilePath") String projectFilePath,
-            @Nullable @RequestParam(required = false) MultiValueMap<String,String> params,
-            @Validated @RequestParam("file") MultipartFile file
-    ) {
+            @Nullable @RequestParam(required = false) MultiValueMap<String, String> params,
+            @Validated @RequestParam("file") MultipartFile file) {
         return javascriptEndpoint.postFile(projectName, replaceTSWithMJSExtension(projectFilePath), params, file);
     }
 
@@ -106,11 +97,8 @@ public class TypeScriptEndpoint extends BaseEndpoint {
      * @return the response entity
      */
     @PutMapping(HTTP_PATH_MATCHER)
-    public ResponseEntity<?> put(
-            @PathVariable("projectName") String projectName,
-            @PathVariable("projectFilePath") String projectFilePath,
-            @Nullable @RequestParam(required = false) MultiValueMap<String,String> params
-    ) {
+    public ResponseEntity<?> put(@PathVariable("projectName") String projectName, @PathVariable("projectFilePath") String projectFilePath,
+            @Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
         return javascriptEndpoint.put(projectName, replaceTSWithMJSExtension(projectFilePath), params);
     }
 
@@ -124,12 +112,10 @@ public class TypeScriptEndpoint extends BaseEndpoint {
      * @return the response entity
      */
     @PutMapping(value = HTTP_PATH_MATCHER, consumes = "multipart/form-data")
-    public ResponseEntity<?> putFile(
-            @PathVariable("projectName") String projectName,
+    public ResponseEntity<?> putFile(@PathVariable("projectName") String projectName,
             @PathVariable("projectFilePath") String projectFilePath,
-            @Nullable @RequestParam(required = false) MultiValueMap<String,String> params,
-            @Validated @RequestParam("file") MultipartFile file
-    ) {
+            @Nullable @RequestParam(required = false) MultiValueMap<String, String> params,
+            @Validated @RequestParam("file") MultipartFile file) {
         return javascriptEndpoint.putFile(projectName, replaceTSWithMJSExtension(projectFilePath), params, file);
     }
 
@@ -142,11 +128,8 @@ public class TypeScriptEndpoint extends BaseEndpoint {
      * @return the response entity
      */
     @PatchMapping(HTTP_PATH_MATCHER)
-    public ResponseEntity<?> patch(
-            @PathVariable("projectName") String projectName,
-            @PathVariable("projectFilePath") String projectFilePath,
-            @Nullable @RequestParam(required = false) MultiValueMap<String,String> params
-    ) {
+    public ResponseEntity<?> patch(@PathVariable("projectName") String projectName, @PathVariable("projectFilePath") String projectFilePath,
+            @Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
         return javascriptEndpoint.patch(projectName, replaceTSWithMJSExtension(projectFilePath), params);
     }
 
@@ -159,11 +142,9 @@ public class TypeScriptEndpoint extends BaseEndpoint {
      * @return the response entity
      */
     @DeleteMapping(HTTP_PATH_MATCHER)
-    public ResponseEntity<?> delete(
-            @PathVariable("projectName") String projectName,
+    public ResponseEntity<?> delete(@PathVariable("projectName") String projectName,
             @PathVariable("projectFilePath") String projectFilePath,
-            @Nullable @RequestParam(required = false) MultiValueMap<String,String> params
-    ) {
+            @Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
         return javascriptEndpoint.delete(projectName, replaceTSWithMJSExtension(projectFilePath), params);
     }
 
@@ -180,7 +161,8 @@ public class TypeScriptEndpoint extends BaseEndpoint {
         }
 
         String projectFilePathWithoutExtension = projectFilePath.substring(0, indexOfExtensionStart);
-        String maybePathParameters = projectFilePath.substring(indexOfExtensionStart).replace(".ts", ""); // for decorators and rs api
+        String maybePathParameters = projectFilePath.substring(indexOfExtensionStart)
+                                                    .replace(".ts", ""); // for decorators and rs api
         return projectFilePathWithoutExtension + ".mjs" + maybePathParameters;
     }
 }

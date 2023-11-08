@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
@@ -29,9 +28,9 @@ public class SequenceTest {
     @Test
     public void createSequence() {
         String sql = SqlFactory.getNative(new HanaSqlDialect())
-                .create()
-                .sequence("CUSTOMERS_SEQUENCE")
-                .build();
+                               .create()
+                               .sequence("CUSTOMERS_SEQUENCE")
+                               .build();
 
         assertNotNull(sql);
         assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE", sql);
@@ -43,9 +42,9 @@ public class SequenceTest {
     @Test
     public void alterSequence() {
         String sql = SqlFactory.getNative(new HanaSqlDialect())
-                .alter()
-                .sequence("CUSTOMERS_SEQUENCE")
-                .build();
+                               .alter()
+                               .sequence("CUSTOMERS_SEQUENCE")
+                               .build();
 
         assertNotNull(sql);
         assertEquals("ALTER SEQUENCE CUSTOMERS_SEQUENCE", sql);
@@ -57,9 +56,9 @@ public class SequenceTest {
     @Test
     public void dropSequence() {
         String sql = SqlFactory.getNative(new HanaSqlDialect())
-                .drop()
-                .sequence("CUSTOMERS_SEQUENCE")
-                .build();
+                               .drop()
+                               .sequence("CUSTOMERS_SEQUENCE")
+                               .build();
 
         assertNotNull(sql);
         assertEquals("DROP SEQUENCE CUSTOMERS_SEQUENCE RESTRICT", sql);
@@ -71,8 +70,8 @@ public class SequenceTest {
     @Test
     public void nextvalSequnce() {
         String sql = SqlFactory.getNative(new HanaSqlDialect())
-                .nextval("CUSTOMERS_SEQUENCE")
-                .build();
+                               .nextval("CUSTOMERS_SEQUENCE")
+                               .build();
 
         assertNotNull(sql);
         assertEquals("SELECT CUSTOMERS_SEQUENCE.NEXTVAL FROM DUMMY", sql);

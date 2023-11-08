@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.rabbitmq;
 
@@ -82,9 +81,9 @@ public class RabbitMQReceiverRunner implements Runnable {
      * Instantiates a new rabbit MQ receiver runner.
      *
      * @param connection the connection
-     * @param channel    the channel
-     * @param queue      the queue
-     * @param handler    the handler
+     * @param channel the channel
+     * @param queue the queue
+     * @param handler the handler
      */
 
     public RabbitMQReceiverRunner(Connection connection, Channel channel, String queue, String handler) {
@@ -108,12 +107,14 @@ public class RabbitMQReceiverRunner implements Runnable {
                 Map<Object, Object> context = createMessagingContext();
                 Consumer consumer = new DefaultConsumer(channel) {
                     @Override
-                    public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+                    public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
+                            throws IOException {
                         String message = new String(body, StandardCharsets.UTF_8);
                         context.put("message", message);
                         try {
                             RepositoryPath path = new RepositoryPath(DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE);
-                            JavascriptService.get().handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+                            JavascriptService.get()
+                                             .handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
                         } catch (RuntimeException e) {
                             if (logger.isErrorEnabled()) {
                                 logger.error(e.getMessage(), e);

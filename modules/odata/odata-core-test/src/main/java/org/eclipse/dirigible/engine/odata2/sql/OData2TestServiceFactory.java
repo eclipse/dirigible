@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql;
 
@@ -36,10 +35,10 @@ public class OData2TestServiceFactory extends org.apache.olingo.odata2.api.OData
 
     /** The ds. */
     private final DataSource ds;
-    
+
     /** The edm annotated classes. */
     private final Class<?>[] edmAnnotatedClasses;
-    
+
     /** The interceptor list. */
     private final List<SQLInterceptor> interceptorList = new ArrayList<>();
 
@@ -51,7 +50,7 @@ public class OData2TestServiceFactory extends org.apache.olingo.odata2.api.OData
      * @throws ODataException in case of error
      */
     public OData2TestServiceFactory(DataSource ds, Class<?>... edmAnnotatedClasses) throws ODataException {
-       this(ds, Collections.emptyList(), edmAnnotatedClasses);
+        this(ds, Collections.emptyList(), edmAnnotatedClasses);
     }
 
     /**
@@ -62,7 +61,8 @@ public class OData2TestServiceFactory extends org.apache.olingo.odata2.api.OData
      * @param edmAnnotatedClasses the classes
      * @throws ODataException in case of error
      */
-    public OData2TestServiceFactory(DataSource ds, List<SQLInterceptor> interceptorList, Class<?>... edmAnnotatedClasses) throws ODataException {
+    public OData2TestServiceFactory(DataSource ds, List<SQLInterceptor> interceptorList, Class<?>... edmAnnotatedClasses)
+            throws ODataException {
         this.ds = ds;
         this.edmAnnotatedClasses = edmAnnotatedClasses;
         addInterceptors(interceptorList);
@@ -84,7 +84,7 @@ public class OData2TestServiceFactory extends org.apache.olingo.odata2.api.OData
      *
      * @param interceptorList the interceptor list
      */
-    public void addInterceptors(List<SQLInterceptor> interceptorList){
+    public void addInterceptors(List<SQLInterceptor> interceptorList) {
         this.interceptorList.addAll(interceptorList);
     }
 
@@ -100,8 +100,8 @@ public class OData2TestServiceFactory extends org.apache.olingo.odata2.api.OData
     public ODataService createService(ODataContext ctx) throws ODataException {
         setDefaultDataSource(ctx);
         try {
-            DefaultEdmTableMappingProvider edmTableMappingProvider = new DefaultEdmTableMappingProvider(
-                    OData2TestUtils.resources(edmAnnotatedClasses));
+            DefaultEdmTableMappingProvider edmTableMappingProvider =
+                    new DefaultEdmTableMappingProvider(OData2TestUtils.resources(edmAnnotatedClasses));
             DefaultSQLProcessor processor = new DefaultSQLProcessor(edmTableMappingProvider);
             processor.addInterceptors(interceptorList);
             return super.createODataSingleProcessorService(createAnnotationEdmProvider(), processor);

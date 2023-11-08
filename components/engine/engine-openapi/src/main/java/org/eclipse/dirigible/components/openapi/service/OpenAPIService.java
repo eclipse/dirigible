@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.openapi.service;
 
@@ -131,7 +130,7 @@ public class OpenAPIService implements ArtefactService<OpenAPI> {
             throw new IllegalArgumentException("OpenAPI with name does not exist: " + name);
         }
     }
-    
+
     /**
      * Find by location.
      *
@@ -141,13 +140,13 @@ public class OpenAPIService implements ArtefactService<OpenAPI> {
     @Override
     @Transactional(readOnly = true)
     public List<OpenAPI> findByLocation(String location) {
-    	OpenAPI filter = new OpenAPI();
+        OpenAPI filter = new OpenAPI();
         filter.setLocation(location);
         Example<OpenAPI> example = Example.of(filter);
         List<OpenAPI> list = openAPIRepository.findAll(example);
         return list;
     }
-    
+
     /**
      * Find by key.
      *
@@ -157,7 +156,7 @@ public class OpenAPIService implements ArtefactService<OpenAPI> {
     @Override
     @Transactional(readOnly = true)
     public OpenAPI findByKey(String key) {
-    	OpenAPI filter = new OpenAPI();
+        OpenAPI filter = new OpenAPI();
         filter.setKey(key);
         Example<OpenAPI> example = Example.of(filter);
         Optional<OpenAPI> openAPI = openAPIRepository.findOne(example);

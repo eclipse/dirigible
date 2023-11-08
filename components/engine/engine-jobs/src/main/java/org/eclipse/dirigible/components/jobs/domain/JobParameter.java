@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.jobs.domain;
 
@@ -42,7 +41,7 @@ public class JobParameter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "JOBPARAM_ID", nullable = false)
     private Long id;
-    
+
     /** The name. */
     @Column(name = "JOBPARAM_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
     private String name;
@@ -90,7 +89,7 @@ public class JobParameter {
      * @param job the job
      */
     public JobParameter(String name, String type, String defaultValue, String choices, String value, Job job) {
-    	this.name = name;
+        this.name = name;
         this.type = type;
         this.defaultValue = defaultValue;
         this.choices = choices;
@@ -115,24 +114,24 @@ public class JobParameter {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     /**
      * Gets the name.
      *
      * @return the name
      */
     public String getName() {
-		return name;
-	}
-    
+        return name;
+    }
+
     /**
      * Sets the name.
      *
      * @param name the new name
      */
     public void setName(String name) {
-		this.name = name;
-	}
+        this.name = name;
+    }
 
     /**
      * Gets the parameter type.
@@ -231,15 +230,7 @@ public class JobParameter {
      */
     @Override
     public String toString() {
-        return "JobParameter{" +
-                "id=" + id +
-                ", name=" + name +
-                ", type=" + type +
-                ", defaultValue=" + defaultValue +
-                ", choices=" + choices +
-                ", value=" + value +
-                ", job=" + job.getName() +
-                ", type=" + type +
-                '}';
+        return "JobParameter{" + "id=" + id + ", name=" + name + ", type=" + type + ", defaultValue=" + defaultValue + ", choices="
+                + choices + ", value=" + value + ", job=" + job.getName() + ", type=" + type + '}';
     }
 }

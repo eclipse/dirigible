@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders.table;
 
@@ -40,7 +39,7 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
      * Instantiates a new creates the table builder.
      *
      * @param dialect the dialect
-     * @param table   the table
+     * @param table the table
      */
     public AlterTableBuilder(ISqlDialect dialect, String table) {
         super(dialect, table);
@@ -107,15 +106,17 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
     /**
      * Foreign Key.
      *
-     * @param name              the name of the foreign key
-     * @param columns           the local columns
-     * @param referencedTable   the reference table
+     * @param name the name of the foreign key
+     * @param columns the local columns
+     * @param referencedTable the reference table
      * @param referencedColumns the referenced columns
      * @return the AlterTableBuilder object
      */
     public AlterTableBuilder foreignKey(String name, String[] columns, String referencedTable, String[] referencedColumns) {
-    	if (logger.isTraceEnabled()) {logger.trace("foreignKey: " + name + ", columns" + Arrays.toString(columns) + ", referencedTable: " + referencedTable
-                + ", referencedColumns: " + Arrays.toString(referencedColumns));}
+        if (logger.isTraceEnabled()) {
+            logger.trace("foreignKey: " + name + ", columns" + Arrays.toString(columns) + ", referencedTable: " + referencedTable
+                    + ", referencedColumns: " + Arrays.toString(referencedColumns));
+        }
         CreateTableForeignKeyBuilder foreignKey = new CreateTableForeignKeyBuilder(this.getDialect(), name);
         for (String column : columns) {
             foreignKey.column(column);
@@ -137,7 +138,9 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
      */
     @Override
     public AlterTableBuilder unique(String name, String[] columns) {
-    	if (logger.isTraceEnabled()) {logger.trace("unique: " + name + ", columns" + Arrays.toString(columns));}
+        if (logger.isTraceEnabled()) {
+            logger.trace("unique: " + name + ", columns" + Arrays.toString(columns));
+        }
         CreateTableUniqueIndexBuilder uniqueIndex = new CreateTableUniqueIndexBuilder(this.getDialect(), name);
         for (String column : columns) {
             uniqueIndex.column(column);
@@ -156,7 +159,7 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
      * @return the alter table builder
      */
     @Override
-    public AlterTableBuilder unique(String name, String[] columns, String type, String order){
+    public AlterTableBuilder unique(String name, String[] columns, String type, String order) {
         return unique(name, columns);
     }
 
@@ -167,6 +170,7 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
      */
     /*
      * (non-Javadoc)
+     *
      * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
      */
     @Override
@@ -215,47 +219,55 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
             }
         }
 
-        
-        String generated = sql.append(SEMICOLON).toString().trim();
 
-        if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
+        String generated = sql.append(SEMICOLON)
+                              .toString()
+                              .trim();
+
+        if (logger.isTraceEnabled()) {
+            logger.trace("generated: " + generated);
+        }
 
         return generated;
     }
 
-	/**
-	 * Generate foreign key names for drop.
-	 *
-	 * @param sql the sql
-	 */
-	private void generateForeignKeyNamesForDrop(StringBuilder sql) {
-		if (!this.getForeignKeys().isEmpty()) {
-			sql.append(KEYWORD_DROP)
-				.append(SPACE)
-            	.append(KEYWORD_CONSTRAINT)
-            	.append(SPACE);
-			this.getForeignKeys().forEach(fk -> sql.append(fk.getName() + ", "));
-			sql.delete(sql.length()-2, sql.length());
+    /**
+     * Generate foreign key names for drop.
+     *
+     * @param sql the sql
+     */
+    private void generateForeignKeyNamesForDrop(StringBuilder sql) {
+        if (!this.getForeignKeys()
+                 .isEmpty()) {
+            sql.append(KEYWORD_DROP)
+               .append(SPACE)
+               .append(KEYWORD_CONSTRAINT)
+               .append(SPACE);
+            this.getForeignKeys()
+                .forEach(fk -> sql.append(fk.getName() + ", "));
+            sql.delete(sql.length() - 2, sql.length());
         }
-	}
-	
-	/**
-	 * Generate unique indices for drop.
-	 *
-	 * @param sql the sql
-	 */
-	private void generateUniqueIndicesForDrop(StringBuilder sql) {
-		if (!this.getUniqueIndices().isEmpty()) {
-			sql.append(KEYWORD_DROP)
-				.append(SPACE)
-	        	.append(KEYWORD_CONSTRAINT)
-	        	.append(SPACE);
-			this.getUniqueIndices().forEach(ui -> sql.append(ui.getName() + ", "));
-			sql.delete(sql.length()-2, sql.length());
-        }
-	}
+    }
 
-	/**
+    /**
+     * Generate unique indices for drop.
+     *
+     * @param sql the sql
+     */
+    private void generateUniqueIndicesForDrop(StringBuilder sql) {
+        if (!this.getUniqueIndices()
+                 .isEmpty()) {
+            sql.append(KEYWORD_DROP)
+               .append(SPACE)
+               .append(KEYWORD_CONSTRAINT)
+               .append(SPACE);
+            this.getUniqueIndices()
+                .forEach(ui -> sql.append(ui.getName() + ", "));
+            sql.delete(sql.length() - 2, sql.length());
+        }
+    }
+
+    /**
      * Generate foreign key names.
      *
      * @param sql the sql
@@ -264,24 +276,27 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
         StringBuilder snippet = new StringBuilder();
         for (CreateTableForeignKeyBuilder foreignKey : this.getForeignKeys()) {
             snippet.append(SPACE)
-                    .append(KEYWORD_CONSTRAINT)
-                    .append(SPACE)
-                    .append(foreignKey.getName())
-                    .append(SPACE)
-                    .append(KEYWORD_FOREIGN)
-                    .append(SPACE)
-                    .append(KEYWORD_KEY)
-                    .append(SPACE)
-                    .append(OPEN)
-                    .append(traverseNames(foreignKey.getColumns())).append(CLOSE)
-                    .append(SPACE)
-                    .append(KEYWORD_REFERENCES)
-                    .append(SPACE)
-                    .append(foreignKey.getReferencedTable())
-                    .append(SPACE)
-                    .append(OPEN)
-                    .append(traverseNames(foreignKey.getReferencedColumns())).append(CLOSE)
-                    .append(COMMA).append(SPACE);
+                   .append(KEYWORD_CONSTRAINT)
+                   .append(SPACE)
+                   .append(foreignKey.getName())
+                   .append(SPACE)
+                   .append(KEYWORD_FOREIGN)
+                   .append(SPACE)
+                   .append(KEYWORD_KEY)
+                   .append(SPACE)
+                   .append(OPEN)
+                   .append(traverseNames(foreignKey.getColumns()))
+                   .append(CLOSE)
+                   .append(SPACE)
+                   .append(KEYWORD_REFERENCES)
+                   .append(SPACE)
+                   .append(foreignKey.getReferencedTable())
+                   .append(SPACE)
+                   .append(OPEN)
+                   .append(traverseNames(foreignKey.getReferencedColumns()))
+                   .append(CLOSE)
+                   .append(COMMA)
+                   .append(SPACE);
         }
         sql.append(snippet.substring(0, snippet.length() - 2));
     }
@@ -301,16 +316,23 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
     /**
      * Generate unique index.
      *
-     * @param sql         the sql
+     * @param sql the sql
      * @param uniqueIndex the unique index
      */
     protected void generateUniqueIndex(StringBuilder sql, CreateTableUniqueIndexBuilder uniqueIndex) {
         if (uniqueIndex != null) {
             if (uniqueIndex.getName() != null) {
                 String uniqueIndexName = (isCaseSensitive()) ? encapsulate(uniqueIndex.getName()) : uniqueIndex.getName();
-                sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(uniqueIndexName).append(SPACE);
+                sql.append(KEYWORD_CONSTRAINT)
+                   .append(SPACE)
+                   .append(uniqueIndexName)
+                   .append(SPACE);
             }
-            sql.append(KEYWORD_UNIQUE).append(SPACE).append(OPEN).append(traverseNames(uniqueIndex.getColumns())).append(CLOSE);
+            sql.append(KEYWORD_UNIQUE)
+               .append(SPACE)
+               .append(OPEN)
+               .append(traverseNames(uniqueIndex.getColumns()))
+               .append(CLOSE);
         }
     }
 

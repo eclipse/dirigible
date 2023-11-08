@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.jobs.repository;
 
@@ -37,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class JobLogRepositoryTest {
@@ -59,12 +58,12 @@ public class JobLogRepositoryTest {
     public void setup() throws Exception {
         cleanup();
         // create test Tables
-        createJobLog(jobLogRepository, "/a/b/c/jobLog1.jobLog", "jobLog1", "description", null,
-                "job1", "test-handler.js", new Timestamp(1667667600), 1L, new Timestamp(1667667660), JobLog.JOB_LOG_STATUS_LOGGED, "job logged");
-        createJobLog(jobLogRepository, "/a/b/c/jobLog2.jobLog", "jobLog2", "description", null,
-                "job2", "test-handler.js", new Timestamp(1667667720), 2L, new Timestamp(1667667780), JobLog.JOB_LOG_STATUS_LOGGED, "job logged");
-        createJobLog(jobLogRepository, "/a/b/c/jobLog3.jobLog", "jobLog3", "description", null,
-                "job3", "test-handler.js", new Timestamp(1667667840), 3L, new Timestamp(1667667900), JobLog.JOB_LOG_STATUS_LOGGED, "job logged");
+        createJobLog(jobLogRepository, "/a/b/c/jobLog1.jobLog", "jobLog1", "description", null, "job1", "test-handler.js",
+                new Timestamp(1667667600), 1L, new Timestamp(1667667660), JobLog.JOB_LOG_STATUS_LOGGED, "job logged");
+        createJobLog(jobLogRepository, "/a/b/c/jobLog2.jobLog", "jobLog2", "description", null, "job2", "test-handler.js",
+                new Timestamp(1667667720), 2L, new Timestamp(1667667780), JobLog.JOB_LOG_STATUS_LOGGED, "job logged");
+        createJobLog(jobLogRepository, "/a/b/c/jobLog3.jobLog", "jobLog3", "description", null, "job3", "test-handler.js",
+                new Timestamp(1667667840), 3L, new Timestamp(1667667900), JobLog.JOB_LOG_STATUS_LOGGED, "job logged");
     }
 
     /**
@@ -85,7 +84,9 @@ public class JobLogRepositoryTest {
      */
     @Test
     public void getOne() {
-        Long id = jobLogRepository.findAll().get(0).getId();
+        Long id = jobLogRepository.findAll()
+                                  .get(0)
+                                  .getId();
         Optional<JobLog> optional = jobLogRepository.findById(id);
         JobLog jobLog = optional.isPresent() ? optional.get() : null;
         assertNotNull(jobLog);
@@ -110,7 +111,9 @@ public class JobLogRepositoryTest {
      */
     @Test
     public void getReferenceUsingEntityManager() {
-        Long id = jobLogRepository.findAll().get(0).getId();
+        Long id = jobLogRepository.findAll()
+                                  .get(0)
+                                  .getId();
         JobLog extension = entityManager.getReference(JobLog.class, id);
         assertNotNull(extension);
         assertNotNull(extension.getLocation());
@@ -132,9 +135,11 @@ public class JobLogRepositoryTest {
      * @param status the status
      * @param message the message
      */
-    public static void createJobLog(JobLogRepository jobLogRepository, String location, String name, String description, Set<String> dependencies, String jobName, String handler,
-                                     Timestamp triggeredAt, long triggeredId, Timestamp finishedAt, short status, String message) {
-        JobLog jobLog = new JobLog(location, name, description, dependencies, jobName, handler, triggeredAt, triggeredId, finishedAt, status, message);
+    public static void createJobLog(JobLogRepository jobLogRepository, String location, String name, String description,
+            Set<String> dependencies, String jobName, String handler, Timestamp triggeredAt, long triggeredId, Timestamp finishedAt,
+            short status, String message) {
+        JobLog jobLog = new JobLog(location, name, description, dependencies, jobName, handler, triggeredAt, triggeredId, finishedAt,
+                status, message);
         jobLogRepository.save(jobLog);
     }
 

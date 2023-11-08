@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.security.endpoint;
 
@@ -60,14 +59,14 @@ class AccessEndpointTest {
 
     @BeforeEach
     public void setup() {
-    	
-    	cleanup();
-    	
+
+        cleanup();
+
         // Create test security accesses
-        accessRepository.save(createSecurityAccess("/a/b/c/test1.access", "test1", "description", "HTTP", "/a" +
-                "/b/c/test1.txt", "GET", "test_role_1"));
-        accessRepository.save(createSecurityAccess("/a/b/c/test2.access", "test2", "description", "HTTP", "/a" +
-                "/b/c/test2.txt", "GET", "test_role_2"));
+        accessRepository.save(
+                createSecurityAccess("/a/b/c/test1.access", "test1", "description", "HTTP", "/a" + "/b/c/test1.txt", "GET", "test_role_1"));
+        accessRepository.save(
+                createSecurityAccess("/a/b/c/test2.access", "test2", "description", "HTTP", "/a" + "/b/c/test2.txt", "GET", "test_role_2"));
     }
 
     @AfterEach
@@ -79,8 +78,8 @@ class AccessEndpointTest {
     @Test
     public void testGetSecurityAccesses() throws Exception {
         mockMvc.perform(get("/services/security/access").accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
+               .andDo(print())
+               .andExpect(status().isOk());
     }
 
     @SpringBootApplication

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.utils;
 
@@ -41,8 +40,7 @@ public class OData2Utils {
     /**
      * Instantiates a new o data 2 utils.
      */
-    private OData2Utils() {
-    }
+    private OData2Utils() {}
 
     /**
      * Fqn.
@@ -70,12 +68,11 @@ public class OData2Utils {
     }
 
     /**
-     * Generates the next link for server-side paging. The next-link is based on
-     * the URI of the current request, except that {@code $skip} or
-     * {@code $skiptoken} will be removed.
+     * Generates the next link for server-side paging. The next-link is based on the URI of the current
+     * request, except that {@code $skip} or {@code $skiptoken} will be removed.
      *
-     * @param context    the context
-     * @param top        the top param
+     * @param context the context
+     * @param top the top param
      * @param pagingSize the page size
      * @return the link
      * @throws ODataException in case of an error
@@ -94,8 +91,11 @@ public class OData2Utils {
         }
 
         final StringBuilder nextLinkBuilder = new StringBuilder();
-        String requestUri = percentEncodeNextLink(
-                context.getPathInfo().getServiceRoot().relativize(context.getPathInfo().getRequestUri()).toString());
+        String requestUri = percentEncodeNextLink(context.getPathInfo()
+                                                         .getServiceRoot()
+                                                         .relativize(context.getPathInfo()
+                                                                            .getRequestUri())
+                                                         .toString());
         nextLinkBuilder.append(requestUri);
         nextLinkBuilder.append(requestUri.contains("?") ? "&" : "?");
         nextLinkBuilder.append("$skiptoken=");
@@ -113,7 +113,8 @@ public class OData2Utils {
      * @return the inline entry key value
      * @throws EdmException the edm exception
      */
-    public static String getInlineEntryKeyValue(Map<String, Object> values, EdmTyped inlineEntry, EdmProperty inlinEntityKey) throws EdmException {
+    public static String getInlineEntryKeyValue(Map<String, Object> values, EdmTyped inlineEntry, EdmProperty inlinEntityKey)
+            throws EdmException {
         if (inlineEntry.getType() instanceof EdmEntityType) {
             Object inlineEntryData = values.get(inlineEntry.getName());
             if (inlineEntryData instanceof ODataEntry) {
@@ -131,7 +132,8 @@ public class OData2Utils {
             throw new OData2Exception("Invalid inline entity: missing key " + inlinEntityKey.getName() + //
                     " of entity " + inlineEntry.getName(), HttpStatusCodes.BAD_REQUEST);
         }
-        throw new OData2Exception("Invalid inline entity: required is EntityType for " + inlineEntry.getName(), HttpStatusCodes.BAD_REQUEST);
+        throw new OData2Exception("Invalid inline entity: required is EntityType for " + inlineEntry.getName(),
+                HttpStatusCodes.BAD_REQUEST);
     }
 
     /**
@@ -144,7 +146,19 @@ public class OData2Utils {
         if (link == null) {
             return null;
         }
-        return link.replaceAll("\\$skiptoken=.+?(?:&|$)", "").replaceAll("\\$skip=.+?(?:&|$)", "").replaceFirst("(?:\\?|&)$", ""); // Remove potentially trailing "?" or "&" left over from remove actions
+        return link.replaceAll("\\$skiptoken=.+?(?:&|$)", "")
+                   .replaceAll("\\$skip=.+?(?:&|$)", "")
+                   .replaceFirst("(?:\\?|&)$", ""); // Remove
+                                                    // potentially
+                                                    // trailing
+                                                    // "?"
+                                                    // or
+                                                    // "&"
+                                                    // left
+                                                    // over
+                                                    // from
+                                                    // remove
+                                                    // actions
     }
 
     /**
@@ -210,7 +224,9 @@ public class OData2Utils {
         for (List<NavigationPropertySegment> expand : uriInfo.getExpand()) {
             for (NavigationPropertySegment segment : expand) {
                 EdmEntitySet epxandEntity = segment.getTargetEntitySet();
-                if (epxandEntity.getEntityType().getName().equals(entityType.getName())) {
+                if (epxandEntity.getEntityType()
+                                .getName()
+                                .equals(entityType.getName())) {
                     return true;
                 }
             }
@@ -325,7 +341,9 @@ public class OData2Utils {
     public static String getKeyPredicateValueByPropertyName(String propertyName, List<KeyPredicate> keyPredicates) throws EdmException {
         String keyPredicateValue = "";
         for (KeyPredicate keyPredicate : keyPredicates) {
-            if (keyPredicate.getProperty().getName().equals(propertyName)) {
+            if (keyPredicate.getProperty()
+                            .getName()
+                            .equals(propertyName)) {
                 keyPredicateValue = keyPredicate.getLiteral();
             }
         }
@@ -341,7 +359,8 @@ public class OData2Utils {
      * @return true, if is property parameter
      * @throws EdmException the edm exception
      */
-    public static boolean isPropertyParameter(EdmProperty property, SQLSelectBuilder query, EdmStructuralType entityType) throws EdmException {
+    public static boolean isPropertyParameter(EdmProperty property, SQLSelectBuilder query, EdmStructuralType entityType)
+            throws EdmException {
         boolean isParameter = false;
         List<String> sqlTableParameters = query.getSQLTableParameters(entityType);
 

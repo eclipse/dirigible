@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.commons.process;
 
@@ -22,70 +21,69 @@ import org.apache.commons.io.input.BoundedInputStream;
  */
 public class Piper implements java.lang.Runnable {
 
-	/** The Constant BROKEN_PIPE. */
-	private static final String BROKEN_PIPE = "Broken pipe";
-	
-	/** The Constant MAX_COMMAND_OUTPUT_LENGTH. */
-	private static final long MAX_COMMAND_OUTPUT_LENGTH = 2097152;
+    /** The Constant BROKEN_PIPE. */
+    private static final String BROKEN_PIPE = "Broken pipe";
 
-	/** The input. */
-	private InputStream input;
+    /** The Constant MAX_COMMAND_OUTPUT_LENGTH. */
+    private static final long MAX_COMMAND_OUTPUT_LENGTH = 2097152;
 
-	/** The output. */
-	private OutputStream output;
+    /** The input. */
+    private InputStream input;
 
-	/**
-	 * Instantiates a new piper.
-	 *
-	 * @param input
-	 *            the input
-	 * @param output
-	 *            the output
-	 */
-	public Piper(InputStream input, OutputStream output) {
-		this.input = new BoundedInputStream(input, MAX_COMMAND_OUTPUT_LENGTH);
-		this.output = output;
-	}
+    /** The output. */
+    private OutputStream output;
 
-	/**
-	 * Run.
-	 */
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Runnable#run()
-	 */
-	@Override
-	public void run() {
-		try {
-			byte[] b = new byte[512];
-			int read = 1;
-			int sum = 0;
-			while (read > -1) {
-				read = input.read(b, 0, b.length);
-				sum += read;
-				if (read > -1) {
-					// Write bytes to output
-					output.write(b, 0, read);
-				}
-			}
-			if (sum >= (MAX_COMMAND_OUTPUT_LENGTH - 1)) {
-				output.write("\n...".getBytes(StandardCharsets.UTF_8));
-			}
-		} catch (Exception e) {
-			// Something happened while reading or writing streams; pipe is broken
-			throw new RuntimeException(BROKEN_PIPE, e);
-		} finally {
-			try {
-				input.close();
-			} catch (Exception e) {
-				// Do nothing
-			}
-			try {
-				output.close();
-			} catch (Exception e) {
-				// Do nothing
-			}
-		}
-	}
+    /**
+     * Instantiates a new piper.
+     *
+     * @param input the input
+     * @param output the output
+     */
+    public Piper(InputStream input, OutputStream output) {
+        this.input = new BoundedInputStream(input, MAX_COMMAND_OUTPUT_LENGTH);
+        this.output = output;
+    }
+
+    /**
+     * Run.
+     */
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.lang.Runnable#run()
+     */
+    @Override
+    public void run() {
+        try {
+            byte[] b = new byte[512];
+            int read = 1;
+            int sum = 0;
+            while (read > -1) {
+                read = input.read(b, 0, b.length);
+                sum += read;
+                if (read > -1) {
+                    // Write bytes to output
+                    output.write(b, 0, read);
+                }
+            }
+            if (sum >= (MAX_COMMAND_OUTPUT_LENGTH - 1)) {
+                output.write("\n...".getBytes(StandardCharsets.UTF_8));
+            }
+        } catch (Exception e) {
+            // Something happened while reading or writing streams; pipe is broken
+            throw new RuntimeException(BROKEN_PIPE, e);
+        } finally {
+            try {
+                input.close();
+            } catch (Exception e) {
+                // Do nothing
+            }
+            try {
+                output.close();
+            } catch (Exception e) {
+                // Do nothing
+            }
+        }
+    }
 
 }

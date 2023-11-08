@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.camel.synchronizer;
 
@@ -62,7 +61,8 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
 
     @Override
     public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString().endsWith(getFileExtension());
+        return file.toString()
+                   .endsWith(getFileExtension());
     }
 
     @Override
@@ -74,7 +74,9 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
     public List<Camel> parse(String location, byte[] content) {
         Camel camel = new Camel();
         camel.setLocation(location);
-        camel.setName(Paths.get(location).getFileName().toString());
+        camel.setName(Paths.get(location)
+                           .getFileName()
+                           .toString());
         camel.setType(Camel.ARTEFACT_TYPE);
         camel.updateKey();
         camel.setContent(content);
@@ -85,9 +87,15 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
             }
             getService().save(camel);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-            if (logger.isErrorEnabled()) {logger.error("camel: {}", camel);}
-            if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
+            if (logger.isErrorEnabled()) {
+                logger.error("camel: {}", camel);
+            }
+            if (logger.isErrorEnabled()) {
+                logger.error("content: {}", new String(content));
+            }
         }
         return List.of(camel);
     }
@@ -111,9 +119,8 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
             if (wrapper.getArtefact() instanceof Camel) {
                 camel = (Camel) wrapper.getArtefact();
             } else {
-                throw new UnsupportedOperationException(
-                        String.format("Trying to process %s as Camel", wrapper.getArtefact().getClass())
-                );
+                throw new UnsupportedOperationException(String.format("Trying to process %s as Camel", wrapper.getArtefact()
+                                                                                                              .getClass()));
             }
 
             switch (flow) {
@@ -130,26 +137,27 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
                     }
                     break;
                 case DELETE:
-                    if (ArtefactLifecycle.CREATED.equals(camel.getLifecycle())
-                            || ArtefactLifecycle.UPDATED.equals(camel.getLifecycle())) {
+                    if (ArtefactLifecycle.CREATED.equals(camel.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(camel.getLifecycle())) {
                         removeFromProcessor(camel);
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
                     }
                     break;
                 case START: {
-                        addToProcessor(camel);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
-                    }
+                    addToProcessor(camel);
+                    callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                }
                     break;
                 case STOP: {
-                        removeFromProcessor(camel);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
-                    }
+                    removeFromProcessor(camel);
+                    callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                }
                     break;
             }
             return true;
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
             callback.addError(e.getMessage());
             callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
             return false;
@@ -166,7 +174,9 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
         try {
             removeFromProcessor(camel);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
             callback.addError(e.getMessage());
             callback.registerState(this, camel, ArtefactLifecycle.DELETED, e.getMessage());
         }

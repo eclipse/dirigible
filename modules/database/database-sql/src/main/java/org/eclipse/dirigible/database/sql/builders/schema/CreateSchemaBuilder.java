@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders.schema;
 
@@ -31,7 +30,7 @@ public class CreateSchemaBuilder extends AbstractCreateSqlBuilder {
      * Instantiates a new creates the schema builder.
      *
      * @param dialect the dialect
-     * @param name    the schema name
+     * @param name the schema name
      */
     public CreateSchemaBuilder(ISqlDialect dialect, String name) {
         super(dialect);
@@ -45,6 +44,7 @@ public class CreateSchemaBuilder extends AbstractCreateSqlBuilder {
      */
     /*
      * (non-Javadoc)
+     *
      * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
      */
     @Override
@@ -60,7 +60,9 @@ public class CreateSchemaBuilder extends AbstractCreateSqlBuilder {
 
         String generated = sql.toString();
 
-        if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
+        if (logger.isTraceEnabled()) {
+            logger.trace("generated: " + generated);
+        }
 
         return generated;
     }
@@ -72,7 +74,10 @@ public class CreateSchemaBuilder extends AbstractCreateSqlBuilder {
      */
     protected void generateSchema(StringBuilder sql) {
         String schemaName = (isCaseSensitive()) ? encapsulate(this.getName(), true) : this.getName();
-        sql.append(SPACE).append(KEYWORD_SCHEMA).append(SPACE).append(schemaName);
+        sql.append(SPACE)
+           .append(KEYWORD_SCHEMA)
+           .append(SPACE)
+           .append(schemaName);
     }
 
     /**

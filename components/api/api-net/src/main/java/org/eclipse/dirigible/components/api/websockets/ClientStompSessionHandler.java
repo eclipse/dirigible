@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.websockets;
 
@@ -21,8 +20,8 @@ import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 
 public class ClientStompSessionHandler extends StompSessionHandlerAdapter {
-	
-	private Logger logger = LoggerFactory.getLogger(ClientStompSessionHandler.class);
+
+    private Logger logger = LoggerFactory.getLogger(ClientStompSessionHandler.class);
 
     @Override
     public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
@@ -51,6 +50,7 @@ public class ClientStompSessionHandler extends StompSessionHandlerAdapter {
 
     /**
      * A sample message instance.
+     *
      * @return instance of <code>Message</code>
      */
     private Message getHelloMessage() {

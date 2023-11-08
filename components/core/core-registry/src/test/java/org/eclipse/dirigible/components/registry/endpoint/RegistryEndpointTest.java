@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.registry.endpoint;
 
@@ -36,16 +35,16 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components.*" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 public class RegistryEndpointTest {
-	
-	@Autowired
-	private IRepository repository;
-	
-	@Autowired
-	private RegistryService registryService;
-	
-	@Autowired
+
+    @Autowired
+    private IRepository repository;
+
+    @Autowired
+    private RegistryService registryService;
+
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
@@ -53,27 +52,27 @@ public class RegistryEndpointTest {
 
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
-	
-	@BeforeEach
+
+    @BeforeEach
     public void setup() throws Exception {
-		repository.createResource("/registry/public/test1.txt");
-		repository.createResource("/registry/public/a/test2.txt");
-		repository.createResource("/registry/public/a/test3.txt");
-	}
+        repository.createResource("/registry/public/test1.txt");
+        repository.createResource("/registry/public/a/test2.txt");
+        repository.createResource("/registry/public/a/test3.txt");
+    }
 
-	@Test
-	public void getResource() {
-		assertNotNull(registryService.getResource("test1.txt"));
-	}
-	
-	@Test
-	public void getResourceByPath() throws Exception {
-		mockMvc.perform(get("/services/core/registry/{path}", "a/test2.txt"))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful());
-	}
+    @Test
+    public void getResource() {
+        assertNotNull(registryService.getResource("test1.txt"));
+    }
 
-	@SpringBootApplication
-	static class TestConfiguration {
-	}
+    @Test
+    public void getResourceByPath() throws Exception {
+        mockMvc.perform(get("/services/core/registry/{path}", "a/test2.txt"))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+    }
+
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 }

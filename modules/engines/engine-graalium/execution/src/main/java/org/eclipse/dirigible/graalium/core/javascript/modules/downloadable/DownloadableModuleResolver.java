@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.graalium.core.javascript.modules.downloadable;
 
@@ -37,7 +36,8 @@ public class DownloadableModuleResolver {
      * @param dependenciesCachePath the dependencies cache path
      */
     public DownloadableModuleResolver(Path dependenciesCachePath) {
-        dependenciesCachePath.toFile().mkdirs();
+        dependenciesCachePath.toFile()
+                             .mkdirs();
         this.dependenciesCachePath = dependenciesCachePath;
     }
 
@@ -78,15 +78,14 @@ public class DownloadableModuleResolver {
      */
     private Path downloadDependency(URI uri) {
         HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest
-                .newBuilder()
-                .GET()
-                .uri(uri)
-                .build();
+        HttpRequest request = HttpRequest.newBuilder()
+                                         .GET()
+                                         .uri(uri)
+                                         .build();
 
         try {
-        	BodyHandler<byte[]> responseBodyHandler = HttpResponse.BodyHandlers.ofByteArray();
-        	HttpResponse<byte[]> response = client.send(request, responseBodyHandler);
+            BodyHandler<byte[]> responseBodyHandler = HttpResponse.BodyHandlers.ofByteArray();
+            HttpResponse<byte[]> response = client.send(request, responseBodyHandler);
             Path dependencyFilePath = getDependencyFilePathForOutput(uri);
             byte[] downloadedBytes = response.body();
             Files.write(dependencyFilePath, downloadedBytes);
@@ -115,7 +114,8 @@ public class DownloadableModuleResolver {
      */
     private static String getBase64FromURI(URI uri) {
         Base64.Encoder encoder = Base64.getEncoder();
-        byte[] bytes = uri.toString().getBytes(StandardCharsets.UTF_8);
+        byte[] bytes = uri.toString()
+                          .getBytes(StandardCharsets.UTF_8);
         return encoder.encodeToString(bytes);
     }
 }

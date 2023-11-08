@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.command;
 
@@ -59,19 +58,21 @@ public class CommandDescriptor {
         }
 
         switch (os) {
-            case UNIX: return SystemUtils.IS_OS_UNIX;
-            case LINUX: return SystemUtils.IS_OS_LINUX;
-            case MAC: return SystemUtils.IS_OS_MAC;
-            case WINDOWS :return SystemUtils.IS_OS_WINDOWS;
-            default: throw new IllegalArgumentException("Unsupported OS type: " + os);
+            case UNIX:
+                return SystemUtils.IS_OS_UNIX;
+            case LINUX:
+                return SystemUtils.IS_OS_LINUX;
+            case MAC:
+                return SystemUtils.IS_OS_MAC;
+            case WINDOWS:
+                return SystemUtils.IS_OS_WINDOWS;
+            default:
+                throw new IllegalArgumentException("Unsupported OS type: " + os);
         }
     }
 
     @Override
     public String toString() {
-        return "CommandLine{" +
-                "os=" + os +
-                ", command='" + command + '\'' +
-                '}';
+        return "CommandLine{" + "os=" + os + ", command='" + command + '\'' + '}';
     }
 }

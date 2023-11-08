@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.dialects.postgres;
 
@@ -22,29 +21,43 @@ import org.junit.Test;
  */
 public class CreateViewTest extends CreateTableTest {
 
-	/**
-	 * Creates the view as select.
-	 */
-	@Test
-	public void createViewAsSelect() {
-		createTableGeneric();
-		String sql = SqlFactory.getNative(new PostgresSqlDialect()).create().view("CUSTOMERS_VIEW").column("ID").column("FIRST_NAME").column("LAST_NAME")
-				.asSelect(SqlFactory.getDefault().select().column("*").from("CUSTOMERS").build()).build();
+    /**
+     * Creates the view as select.
+     */
+    @Test
+    public void createViewAsSelect() {
+        createTableGeneric();
+        String sql = SqlFactory.getNative(new PostgresSqlDialect())
+                               .create()
+                               .view("CUSTOMERS_VIEW")
+                               .column("ID")
+                               .column("FIRST_NAME")
+                               .column("LAST_NAME")
+                               .asSelect(SqlFactory.getDefault()
+                                                   .select()
+                                                   .column("*")
+                                                   .from("CUSTOMERS")
+                                                   .build())
+                               .build();
 
-		assertNotNull(sql);
-		assertEquals("CREATE VIEW CUSTOMERS_VIEW ( ID , FIRST_NAME , LAST_NAME ) AS SELECT * FROM CUSTOMERS", sql);
-	}
+        assertNotNull(sql);
+        assertEquals("CREATE VIEW CUSTOMERS_VIEW ( ID , FIRST_NAME , LAST_NAME ) AS SELECT * FROM CUSTOMERS", sql);
+    }
 
-	/**
-	 * Creates the view as values.
-	 */
-	@Test
-	public void createViewAsValues() {
-		String sql = SqlFactory.getNative(new PostgresSqlDialect()).create().view("STATES").column("STATE")
-				.asValues("'STARTED', 'STOPPED', 'FAILED', 'IN PROCESS'").build();
+    /**
+     * Creates the view as values.
+     */
+    @Test
+    public void createViewAsValues() {
+        String sql = SqlFactory.getNative(new PostgresSqlDialect())
+                               .create()
+                               .view("STATES")
+                               .column("STATE")
+                               .asValues("'STARTED', 'STOPPED', 'FAILED', 'IN PROCESS'")
+                               .build();
 
-		assertNotNull(sql);
-		assertEquals("CREATE VIEW STATES ( STATE ) AS VALUES 'STARTED', 'STOPPED', 'FAILED', 'IN PROCESS'", sql);
-	}
+        assertNotNull(sql);
+        assertEquals("CREATE VIEW STATES ( STATE ) AS VALUES 'STARTED', 'STOPPED', 'FAILED', 'IN PROCESS'", sql);
+    }
 
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.io;
 
@@ -46,7 +45,9 @@ public class ZipProcessor {
         try {
             zipFolder(source, target);
         } catch (Exception e) {
-        	if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage());
+            }
         }
     }
 
@@ -62,7 +63,9 @@ public class ZipProcessor {
         try {
             unzipFolder(source, target);
         } catch (IOException e) {
-        	if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage());
+            }
         }
 
     }
@@ -81,7 +84,8 @@ public class ZipProcessor {
             ZipEntry zipEntry = zis.getNextEntry();
 
             while (zipEntry != null) {
-                boolean isDirectory = zipEntry.getName().endsWith(File.separator);
+                boolean isDirectory = zipEntry.getName()
+                                              .endsWith(File.separator);
                 Path newPath = zipSlipProtect(zipEntry, target);
                 if (isDirectory) {
                     Files.createDirectories(newPath);
@@ -110,14 +114,15 @@ public class ZipProcessor {
      */
     private static void zipFolder(Path sourceFolderPath, Path zipPath) throws Exception {
         try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipPath.toFile()))) {
-	        Files.walkFileTree(sourceFolderPath, new SimpleFileVisitor<Path>() {
-	            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-	                zos.putNextEntry(new ZipEntry(sourceFolderPath.relativize(file).toString()));
-	                Files.copy(file, zos);
-	                zos.closeEntry();
-	                return FileVisitResult.CONTINUE;
-	            }
-	        });
+            Files.walkFileTree(sourceFolderPath, new SimpleFileVisitor<Path>() {
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    zos.putNextEntry(new ZipEntry(sourceFolderPath.relativize(file)
+                                                                  .toString()));
+                    Files.copy(file, zos);
+                    zos.closeEntry();
+                    return FileVisitResult.CONTINUE;
+                }
+            });
         }
     }
 
@@ -130,8 +135,7 @@ public class ZipProcessor {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     // protect zip slip attack
-    public static Path zipSlipProtect(ZipEntry zipEntry, Path targetDir)
-            throws IOException {
+    public static Path zipSlipProtect(ZipEntry zipEntry, Path targetDir) throws IOException {
         Path targetDirResolved = targetDir.resolve(zipEntry.getName());
         Path normalizePath = targetDirResolved.normalize();
         if (!normalizePath.startsWith(targetDir)) {
