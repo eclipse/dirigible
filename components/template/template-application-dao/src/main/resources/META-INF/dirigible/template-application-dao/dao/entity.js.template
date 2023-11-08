@@ -2,6 +2,7 @@
 const query = require("db/query");
 #end
 const producer = require("messaging/producer");
+const extensions = require('extensions/extensions');
 const daoApi = require("db/dao");
 #set($isEntityUtilsEnabled = "false")
 #foreach ($property in $properties)
@@ -303,5 +304,19 @@ exports.customDataCount = function() {
 };
 
 function triggerEvent(data) {
+	let triggerExtensions = extensions.getExtensions("${projectName}/${perspectiveName}/${name}");
+	try {
+		for (let i=0; i < triggerExtensions.length; i++) {
+			let module = triggerExtensions[i];
+			let triggerExtension = require(module);
+			try {
+				triggerExtension.trigger(data);
+			} catch (error) {
+				console.error(error);
+			}			
+		}
+	} catch (error) {
+		console.error(error);
+	}
 	producer.queue("${projectName}/${perspectiveName}/${name}").send(JSON.stringify(data));
 }
