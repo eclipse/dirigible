@@ -2,6 +2,7 @@
 const query = require("db/query");
 #end
 const producer = require("messaging/producer");
+const extensions = require('extensions/extensions');
 const daoApi = require("db/dao");
 #set($isEntityUtilsEnabled = "false")
 #foreach ($property in $properties)
@@ -177,7 +178,8 @@ exports.create = function(entity) {
 #end
 #end
 	let id = dao.insert(entity);
-	triggerEvent("Create", {
+	triggerEvent({
+		operation: "create",
 		table: "${tablePrefix}_${dataName}",
 		entity: entity,
 		key: {
@@ -226,7 +228,8 @@ exports.update = function(entity) {
 #end
 #end
 	dao.update(entity);
-	triggerEvent("Update", {
+	triggerEvent({
+		operation: "update",
 		table: "${tablePrefix}_${dataName}",
 		entity: entity,
 		key: {
@@ -249,7 +252,8 @@ exports.delete = function(id) {
 	}
 #end
 	dao.remove(id);
-	triggerEvent("Delete", {
+	triggerEvent({
+		operation: "delete",
 		table: "${tablePrefix}_${dataName}",
 		entity: entity,
 		key: {
@@ -299,6 +303,20 @@ exports.customDataCount = function() {
 #end
 };
 
-function triggerEvent(operation, data) {
-	producer.queue("${projectName}/${perspectiveName}/${name}/" + operation).send(JSON.stringify(data));
+function triggerEvent(data) {
+	let triggerExtensions = extensions.getExtensions("${projectName}/${perspectiveName}/${name}");
+	try {
+		for (let i=0; i < triggerExtensions.length; i++) {
+			let module = triggerExtensions[i];
+			let triggerExtension = require(module);
+			try {
+				triggerExtension.trigger(data);
+			} catch (error) {
+				console.error(error);
+			}			
+		}
+	} catch (error) {
+		console.error(error);
+	}
+	producer.queue("${projectName}/${perspectiveName}/${name}").send(JSON.stringify(data));
 }

@@ -1,0 +1,1 @@
+{"location":"${projectName}/gen/dao/${perspectiveName}/${name}.extensionpoint","name":"${projectName}/${perspectiveName}/${name}","description":"Extension Point for ${projectName} ${perspectiveName} ${name}"}

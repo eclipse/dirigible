@@ -147,7 +147,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.6.0</version>
+						<version>3.6.2</version>
 						<configuration>
 							<source>${java.version}</source>
 						</configuration>
@@ -270,13 +270,13 @@
 					<plugin>
 						<groupId>com.github.spotbugs</groupId>
 						<artifactId>spotbugs-maven-plugin</artifactId>
-						<version>4.7.3.6</version>
+						<version>4.8.1.0</version>
 						<dependencies>
 							<!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
 							<dependency>
 								<groupId>com.github.spotbugs</groupId>
 								<artifactId>spotbugs</artifactId>
-								<version>4.8.0</version>
+								<version>4.8.1</version>
 							</dependency>
 						</dependencies>
 					</plugin>
@@ -347,7 +347,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.6.0</version>
+						<version>3.6.2</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -569,7 +569,7 @@
 		
 		<maven.resource.plugin.version>3.3.1</maven.resource.plugin.version>
 		<maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
-		<maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
+		<maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
 		<maven.scm.plugin.version>2.0.0</maven.scm.plugin.version>
 		<scmVersionType>branch</scmVersionType>
 		<commons.io>2.15.0</commons.io>
@@ -664,7 +664,7 @@
 		<wikitext.version>3.0.48.202308291007</wikitext.version>
 		<flexmark.version>0.64.8</flexmark.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.581</qldb.sdk.version>
+		<qldb.sdk.version>1.12.582</qldb.sdk.version>
 		<cassandra.version>1.17.6</cassandra.version>
 		<cassandra.driver.version>3.11.3</cassandra.driver.version>
 		<jedis.version>5.0.2</jedis.version>
