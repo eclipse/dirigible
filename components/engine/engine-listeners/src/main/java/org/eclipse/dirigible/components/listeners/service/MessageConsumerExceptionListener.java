@@ -1,5 +1,6 @@
 package org.eclipse.dirigible.components.listeners.service;
 
+import java.util.HashMap;
 import java.util.Map;
 import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
@@ -30,8 +31,8 @@ class MessageConsumerExceptionListener implements ExceptionListener {
     public synchronized void onException(JMSException jmsException) {
         LOGGER.error("JMS exception occured", jmsException);
         try {
-            Map<Object, Object> context = MessageConsumerUtil.createMessagingContext(handler);
-            context.put("error", MessageConsumerUtil.escapeCodeString(jmsException.getMessage()));
+            Map<Object, Object> context = createMessagingContext();
+            context.put("error", escapeCodeString(jmsException.getMessage()));
             RepositoryPath path = new RepositoryPath(DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR);
             javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
         } catch (RuntimeException ex) {
@@ -40,5 +41,14 @@ class MessageConsumerExceptionListener implements ExceptionListener {
         }
     }
 
+    private Map<Object, Object> createMessagingContext() {
+        Map<Object, Object> context = new HashMap<>();
+        context.put("handler", handler);
+        return context;
+    }
+
+    private String escapeCodeString(String raw) {
+        return raw.replace("'", "&amp;");
+    }
 
 }
