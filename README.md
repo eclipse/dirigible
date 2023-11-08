@@ -165,16 +165,15 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
         cd build/application
         docker build -t dirigiblelabs/dirigible:latest -f Dockerfile .
+   > prerequisite: build the project as described in step 4 [here](https://github.com/eclipse/dirigible/blob/master/README.md#steps)
 
 2. Start the container
 
         docker run --name dirigible --rm -p 8080:8080 -p 8081:8081 dirigiblelabs/dirigible:latest
 
-3. Open a web browser and go to:
+3. Open a web browser and go to: [http://localhost:8080](http://localhost:8080 "http://localhost:8080")
 
-        http://localhost:8080
-
-4. Optionally you can enhance and customize the Dockerfile from [here](https://github.com/eclipse/dirigible/blob/master/org.eclipse.dirigible/org.eclipse.dirigible.parent/build/application/)
+4. Optionally you can enhance and customize the Dockerfile from [here](https://github.com/eclipse/dirigible/blob/master/build/application/Dockerfile)
 
 #### PostgreSQL
 
@@ -183,6 +182,10 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 1. Install PostgreSQL e.g. for MacOS:
 
         brew install postgresql
+
+   Alternatively you can use docker image
+
+        docker run -itd -e POSTGRES_DB=postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres  -p 5432:5432 --name postgresql postgres
     
 2. The run it:
 
@@ -199,7 +202,17 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
         export DIRIGIBLE_DATASOURCE_DEFAULT_USERNAME=postgres
         export DIRIGIBLE_DATASOURCE_DEFAULT_PASSWORD=postgres
 
+   for Windows execute the following in the terminal with admin privileges
+	```
+	[System.Environment]::SetEnvironmentVariable('DIRIGIBLE_DATASOURCE_DEFAULT_DRIVER','org.postgresql.Driver', 'Machine')
+	[System.Environment]::SetEnvironmentVariable('DIRIGIBLE_DATASOURCE_DEFAULT_URL','jdbc:postgresql://localhost:5432/postgres', 'Machine')
+	[System.Environment]::SetEnvironmentVariable('DIRIGIBLE_DATASOURCE_DEFAULT_USERNAME','postgres', 'Machine')
+	[System.Environment]::SetEnvironmentVariable('DIRIGIBLE_DATASOURCE_DEFAULT_PASSWORD','postgres', 'Machine')
+	```
+
 5. Then you can run Dirigible with PostgreSQL default database (DefaultDB).
+   
+   > If you have started the Dirigible before, make sure to execute `mvn clean` before starting the Dirigible with the PostgreSQL
 
 ### Code formatting
 In order to contribute to the project, you need to configure your java code formatter.
