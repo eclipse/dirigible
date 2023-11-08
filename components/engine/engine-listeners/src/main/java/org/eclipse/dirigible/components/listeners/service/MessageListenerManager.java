@@ -21,6 +21,7 @@ import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("resource")
 public class MessageListenerManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageListenerManager.class);
@@ -28,32 +29,47 @@ public class MessageListenerManager {
     private final Listener listener;
     private final JavascriptService javascriptService;
 
+    private ActiveMQConnectionArtifacts connectionArtifacts;
+
     MessageListenerManager(Listener listener, JavascriptService javascriptService) {
         this.listener = listener;
         this.javascriptService = javascriptService;
     }
 
     public void startListener() {
+        if (null == connectionArtifacts) {
+            LOGGER.debug("Listener [{}] IS already configured", listener);
+            return;
+        }
+
         LOGGER.info("Starting a message listener for {} ...", listener.getName());
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(ListenersManager.CONNECTOR_URL_ATTACH);
-        try (Connection connection = connectionFactory.createConnection()) {
+
+        Connection connection = null;
+        Session session = null;
+        MessageConsumer consumer = null;
+        try {
+            connection = connectionFactory.createConnection();
             connection.start();
             MessageConsumerExceptionListener exceptionListener =
                     new MessageConsumerExceptionListener(listener.getHandler(), javascriptService);
             connection.setExceptionListener(exceptionListener);
 
-            try (Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-                    MessageConsumer consumer = session.createConsumer(createDestination(session))) {
-                MessageListener messageListener = new MessageListener(listener);
-                consumer.setMessageListener(messageListener);
-            }
+            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            consumer = session.createConsumer(createDestination(connection));
+
+            MessageListener messageListener = new MessageListener(listener);
+            consumer.setMessageListener(messageListener);
+
+            connectionArtifacts = new ActiveMQConnectionArtifacts(connection, session, consumer);
         } catch (RuntimeException | JMSException ex) {
-            LOGGER.error("Failed to consume messages for queue/topic [{}], type [{}], listener name [{}]", listener.getName(),
-                    listener.getType(), listener.getName(), ex);
+            LOGGER.error("Failed to start listener for [{}]", listener, ex);
+            new ActiveMQConnectionArtifacts(connection, session, consumer).close();
         }
     }
 
-    private Destination createDestination(Session session) throws JMSException, IllegalArgumentException {
+    private Destination createDestination(Connection connection) throws JMSException, IllegalArgumentException {
+        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         return switch (listener.getKind()) {
             case 'Q' -> session.createQueue(listener.getName());
             case 'T' -> session.createTopic(listener.getName());
@@ -62,7 +78,10 @@ public class MessageListenerManager {
     }
 
     public void stop() {
-        // TODO implement stop
+        if (null != connectionArtifacts) {
+            connectionArtifacts.close();
+        } else {
+            LOGGER.debug("Listener [{}] is NOT started", listener);
+        }
     }
-
 }

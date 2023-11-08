@@ -10,7 +10,7 @@
  */
 package org.eclipse.dirigible;
 
-import org.springframework.boot.SpringApplication;
+import static org.springframework.boot.SpringApplication.run;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +26,7 @@ import org.springframework.web.client.RestTemplate;
 public class DirigibleApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DirigibleApplication.class, args);
+        run(DirigibleApplication.class, args);
     }
 
     @Bean
