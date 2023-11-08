@@ -20,19 +20,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.sql.DataSource;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
-import org.eclipse.dirigible.components.data.structures.domain.TableConstraintForeignKey;
 import org.eclipse.dirigible.components.odata.api.ODataProperty;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
-
 import com.google.common.base.CaseFormat;
-
 
 /**
  * The Class DBMetadataUtil.

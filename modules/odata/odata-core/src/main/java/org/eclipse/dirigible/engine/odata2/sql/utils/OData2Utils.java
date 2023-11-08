@@ -10,8 +10,18 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
-import org.apache.olingo.odata2.api.edm.*;
+import org.apache.olingo.odata2.api.edm.EdmEntitySet;
+import org.apache.olingo.odata2.api.edm.EdmEntityType;
+import org.apache.olingo.odata2.api.edm.EdmException;
+import org.apache.olingo.odata2.api.edm.EdmProperty;
+import org.apache.olingo.odata2.api.edm.EdmStructuralType;
+import org.apache.olingo.odata2.api.edm.EdmType;
+import org.apache.olingo.odata2.api.edm.EdmTyped;
 import org.apache.olingo.odata2.api.ep.EntityProvider;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.exception.ODataApplicationException;
@@ -29,8 +39,6 @@ import org.apache.olingo.odata2.api.uri.expression.MemberExpression;
 import org.apache.olingo.odata2.api.uri.expression.OrderExpression;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
-
-import java.util.*;
 
 /**
  * The Class OData2Utils.
@@ -78,8 +86,6 @@ public class OData2Utils {
      * @throws ODataException in case of an error
      */
     public static String generateNextLink(ODataContext context, int top, int pagingSize) throws ODataException {
-        String nextLink;
-
         final int skipToken;
         if (top > 0) {
             // We already have limited the maximum number of results for the current request
@@ -100,8 +106,7 @@ public class OData2Utils {
         nextLinkBuilder.append(requestUri.contains("?") ? "&" : "?");
         nextLinkBuilder.append("$skiptoken=");
         nextLinkBuilder.append(skipToken);
-        nextLink = nextLinkBuilder.toString();
-        return nextLink;
+        return nextLinkBuilder.toString();
     }
 
     /**
@@ -149,17 +154,7 @@ public class OData2Utils {
         }
         return link.replaceAll("\\$skiptoken=.+?(?:&|$)", "")
                    .replaceAll("\\$skip=.+?(?:&|$)", "")
-                   .replaceFirst("(?:\\?|&)$", ""); // Remove
-                                                    // potentially
-                                                    // trailing
-                                                    // "?"
-                                                    // or
-                                                    // "&"
-                                                    // left
-                                                    // over
-                                                    // from
-                                                    // remove
-                                                    // actions
+                   .replaceFirst("(?:\\?|&)$", ""); // Remove potentially trailing "?" or "&" left over from remove actions
     }
 
     /**
@@ -206,7 +201,6 @@ public class OData2Utils {
         return expand != null && !expand.isEmpty();
     }
 
-
     /**
      * Checks if is order by entity in expand.
      *
@@ -243,14 +237,13 @@ public class OData2Utils {
      */
     public static String getTenantNameFromContext(ODataContext context) {
         ODataContext parentContext = context.getBatchParentContext();
-        if (parentContext != null) {
-            while (parentContext.getBatchParentContext() != null) {
-                parentContext = parentContext.getBatchParentContext();
-            }
-            return (String) parentContext.getParameter(OData2Constants.ODATA_CTX_PARAMETER_TENANT_NAME);
-        } else {
+        if (parentContext == null) {
             return (String) context.getParameter(OData2Constants.ODATA_CTX_PARAMETER_TENANT_NAME);
         }
+        while (parentContext.getBatchParentContext() != null) {
+            parentContext = parentContext.getBatchParentContext();
+        }
+        return (String) parentContext.getParameter(OData2Constants.ODATA_CTX_PARAMETER_TENANT_NAME);
     }
 
     /**

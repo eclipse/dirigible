@@ -12,9 +12,7 @@ package org.eclipse.dirigible.components.ide.workspace.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import java.util.List;
-
 import org.eclipse.dirigible.components.ide.workspace.domain.Folder;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;

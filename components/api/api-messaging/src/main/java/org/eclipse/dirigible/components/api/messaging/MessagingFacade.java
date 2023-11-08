@@ -10,9 +10,10 @@
  */
 package org.eclipse.dirigible.components.api.messaging;
 
-import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
-import org.eclipse.dirigible.components.listeners.service.MessagingConsumer;
+import javax.jms.JMSException;
+import org.eclipse.dirigible.components.listeners.service.MessageReceiver;
 import org.eclipse.dirigible.components.listeners.service.MessagingProducer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,6 +22,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class MessagingFacade {
 
+    private static MessageReceiver messageReceiver;
+
+    @Autowired
+    public MessagingFacade(MessageReceiver messageReceiver) {
+        MessagingFacade.messageReceiver = messageReceiver;
+    }
+
     /**
      * Send a message to queue.
      *
@@ -28,7 +36,7 @@ public class MessagingFacade {
      * @param message the message
      */
     public static final void sendToQueue(String destination, String message) {
-        MessagingProducer producer = new MessagingProducer(destination, ListenerKind.QUEUE, message);
+        MessagingProducer producer = new MessagingProducer(destination, 'Q', message);
         new Thread(producer).start();
     }
 
@@ -39,7 +47,7 @@ public class MessagingFacade {
      * @param message the message
      */
     public static final void sendToTopic(String destination, String message) {
-        MessagingProducer producer = new MessagingProducer(destination, ListenerKind.TOPIC, message);
+        MessagingProducer producer = new MessagingProducer(destination, 'T', message);
         new Thread(producer).start();
     }
 
@@ -49,10 +57,17 @@ public class MessagingFacade {
      * @param destination the destination
      * @param timeout the timeout
      * @return the message as JSON
+     * @throws MessagingAPIException if fail to receive a message from the queue * @throws
+     *         TimeoutException if timeout to get a message from the queue
      */
-    public static final String receiveFromQueue(String destination, int timeout) {
-        MessagingConsumer consumer = new MessagingConsumer(destination, ListenerKind.QUEUE, timeout);
-        return consumer.receiveMessage();
+    public static final String receiveFromQueue(String queue, int timeout) throws MessagingAPIException {
+        try {
+            return messageReceiver.receiveMessageFromQueue(queue, timeout);
+        } catch (org.eclipse.dirigible.components.listeners.service.TimeoutException ex) {
+            throw new TimeoutException("Timeout to get a message from queue [" + queue + "]", ex);
+        } catch (RuntimeException | JMSException ex) {
+            throw new MessagingAPIException("Failed to receive message from queue [" + queue + "]", ex);
+        }
     }
 
     /**
@@ -61,10 +76,17 @@ public class MessagingFacade {
      * @param destination the destination
      * @param timeout the timeout
      * @return the the message as JSON
+     * @throws MessagingAPIException if fail to receive a message from the topic
+     * @throws TimeoutException if timeout to get a message from the topic
      */
-    public static final String receiveFromTopic(String destination, int timeout) {
-        MessagingConsumer consumer = new MessagingConsumer(destination, ListenerKind.TOPIC, timeout);
-        return consumer.receiveMessage();
+    public static final String receiveFromTopic(String topic, int timeout) {
+        try {
+            return messageReceiver.receiveMessageFromTopic(topic, timeout);
+        } catch (org.eclipse.dirigible.components.listeners.service.TimeoutException ex) {
+            throw new TimeoutException("Timeout to get a message from topic [" + topic + "]", ex);
+        } catch (RuntimeException | JMSException ex) {
+            throw new MessagingAPIException("Failed to receive message from topic [" + topic + "]", ex);
+        }
     }
 
 }

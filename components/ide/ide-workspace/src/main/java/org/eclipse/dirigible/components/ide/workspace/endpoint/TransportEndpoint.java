@@ -17,7 +17,6 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.api.utils.UrlFacade;
@@ -179,8 +178,9 @@ public class TransportEndpoint {
             httpHeaders.setContentDisposition(
                     ContentDisposition.parse("attachment; filename=\"" + workspace + "-" + pattern.format(new Date()) + ".zip\""));
             return new ResponseEntity(zip, httpHeaders, HttpStatus.OK);
-        } else if (folder == null || folder.isEmpty() || folder.trim()
-                                                               .isEmpty()
+        }
+        if (folder == null || folder.isEmpty() || folder.trim()
+                                                        .isEmpty()
                 || folder.equals("/"))
             zip = transportService.exportProject(workspace, project);
         else

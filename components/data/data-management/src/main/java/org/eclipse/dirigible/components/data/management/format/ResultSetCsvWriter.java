@@ -152,6 +152,10 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
                         } else if (dbt == Types.OTHER) {
                             Object dataObject = resultSet.getObject(name);
                             if (dataObject instanceof PGobject) {
+
+                                if (stringify) {
+                                    value = "[NULL]";
+                                }
                                 value = ((PGobject) dataObject).getValue();
                             }
                         } else {

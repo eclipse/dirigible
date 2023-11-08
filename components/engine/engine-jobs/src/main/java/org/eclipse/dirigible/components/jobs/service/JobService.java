@@ -10,6 +10,12 @@
  */
 package org.eclipse.dirigible.components.jobs.service;
 
+
+import static java.text.MessageFormat.format;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.jobs.domain.Job;
@@ -85,9 +91,8 @@ public class JobService implements ArtefactService<Job> {
         Optional<Job> job = jobRepository.findById(id);
         if (job.isPresent()) {
             return job.get();
-        } else {
-            throw new IllegalArgumentException("Job with id does not exist: " + id);
         }
+        throw new IllegalArgumentException("Job with id does not exist: " + id);
     }
 
     /**
@@ -110,9 +115,8 @@ public class JobService implements ArtefactService<Job> {
         Optional<Job> job = jobRepository.findOne(example);
         if (job.isPresent()) {
             return job.get();
-        } else {
-            throw new IllegalArgumentException("Job with name does not exist: " + name);
         }
+        throw new IllegalArgumentException("Job with name does not exist: " + name);
     }
 
     /**
@@ -127,8 +131,7 @@ public class JobService implements ArtefactService<Job> {
         Job filter = new Job();
         filter.setLocation(location);
         Example<Job> example = Example.of(filter);
-        List<Job> list = jobRepository.findAll(example);
-        return list;
+        return jobRepository.findAll(example);
     }
 
     /**
@@ -228,8 +231,19 @@ public class JobService implements ArtefactService<Job> {
      */
     public boolean trigger(String name, Map<String, String> parametersMap) throws Exception {
         Job job = findByName(name);
-        if (job != null) {
-            Map<String, String> memento = new HashMap<String, String>();
+        if (job == null) {
+            String error = format("Job with name {0} does not exist, hence cannot be triggered", name);
+            throw new Exception(error);
+        }
+        Map<String, String> memento = new HashMap<String, String>();
+        try {
+            for (Map.Entry<String, String> entry : parametersMap.entrySet()) {
+                memento.put(entry.getKey(), Configuration.get(entry.getKey()));
+                Configuration.set(entry.getKey(), entry.getValue());
+            }
+
+            // String engine = job.getEngine();
+            String handler = job.getHandler();
             try {
                 for (Map.Entry<String, String> entry : parametersMap.entrySet()) {
                     memento.put(entry.getKey(), Configuration.get(entry.getKey()));
@@ -248,10 +262,39 @@ public class JobService implements ArtefactService<Job> {
                 for (Map.Entry<String, String> entry : memento.entrySet()) {
                     Configuration.set(entry.getKey(), entry.getValue());
                 }
+                Map<Object, Object> context = new HashMap<>();
+                context.put("handler", handler);
+                RepositoryPath path = new RepositoryPath(handler);
+                javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+            } catch (Exception e) {
+                throw new Exception(e);
             }
-        } else {
-            String error = format("Job with name {0} does not exist, hence cannot be triggered", name);
-            throw new Exception(error);
+        } finally {
+            for (Map.Entry<String, String> entry : memento.entrySet()) {
+                Configuration.set(entry.getKey(), entry.getValue());
+            }
+        }
+        Map<String, String> memento = new HashMap<String, String>();
+        try {
+            for (Map.Entry<String, String> entry : parametersMap.entrySet()) {
+                memento.put(entry.getKey(), Configuration.get(entry.getKey()));
+                Configuration.set(entry.getKey(), entry.getValue());
+            }
+
+            // String engine = job.getEngine();
+            String handler = job.getHandler();
+            try {
+                Map<Object, Object> context = new HashMap<>();
+                context.put("handler", handler);
+                RepositoryPath path = new RepositoryPath(handler);
+                javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+            } catch (Exception e) {
+                throw new Exception(e);
+            }
+        } finally {
+            for (Map.Entry<String, String> entry : memento.entrySet()) {
+                Configuration.set(entry.getKey(), entry.getValue());
+            }
         }
 
         return true;

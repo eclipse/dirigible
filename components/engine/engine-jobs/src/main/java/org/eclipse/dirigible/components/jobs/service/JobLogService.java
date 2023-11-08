@@ -15,7 +15,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.eclipse.dirigible.components.jobs.domain.JobLog;
@@ -82,9 +81,8 @@ public class JobLogService implements ArtefactService<JobLog> {
         Optional<JobLog> jobLog = jobLogRepository.findById(id);
         if (jobLog.isPresent()) {
             return jobLog.get();
-        } else {
-            throw new IllegalArgumentException("JobLog with id does not exist: " + id);
         }
+        throw new IllegalArgumentException("JobLog with id does not exist: " + id);
     }
 
     /**
@@ -102,9 +100,8 @@ public class JobLogService implements ArtefactService<JobLog> {
         Optional<JobLog> jobLog = jobLogRepository.findOne(example);
         if (jobLog.isPresent()) {
             return jobLog.get();
-        } else {
-            throw new IllegalArgumentException("JobLog with name does not exist: " + name);
         }
+        throw new IllegalArgumentException("JobLog with name does not exist: " + name);
     }
 
     /**
@@ -122,8 +119,7 @@ public class JobLogService implements ArtefactService<JobLog> {
         filter.setJobName(name);
         filter.setStatus(null);
         Example<JobLog> example = Example.of(filter);
-        List<JobLog> jobLog = jobLogRepository.findAll(example);
-        return jobLog;
+        return jobLogRepository.findAll(example);
     }
 
     /**
@@ -138,8 +134,7 @@ public class JobLogService implements ArtefactService<JobLog> {
         JobLog filter = new JobLog();
         filter.setLocation(location);
         Example<JobLog> example = Example.of(filter);
-        List<JobLog> list = jobLogRepository.findAll(example);
-        return list;
+        return jobLogRepository.findAll(example);
     }
 
     /**
@@ -182,7 +177,7 @@ public class JobLogService implements ArtefactService<JobLog> {
         jobLogRepository.delete(jobLog);
     }
 
-    private String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+    private final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
     /**
      * Job triggered.

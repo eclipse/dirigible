@@ -11,14 +11,11 @@
 package org.eclipse.dirigible.components.ide.template.endpoint;
 
 import static java.text.MessageFormat.format;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-
 import javax.validation.Valid;
-
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.ide.template.domain.GenerationTemplateParameters;
 import org.eclipse.dirigible.components.ide.template.service.GenerationService;
@@ -85,7 +82,7 @@ public class GenerationEndpoint {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
         }
 
-        generationService.generateFile(workspace, project, path, parameters);
+        List<File> files = generationService.generateFile(workspace, project, path, parameters);
         return ResponseEntity.created(workspaceService.getURI(workspace, project, path))
                              .build();
     }

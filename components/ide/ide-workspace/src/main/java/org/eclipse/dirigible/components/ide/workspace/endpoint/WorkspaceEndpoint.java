@@ -17,13 +17,12 @@ import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
-
 import javax.validation.Valid;
-
 import org.apache.commons.codec.DecoderException;
 import org.eclipse.dirigible.components.api.utils.UrlFacade;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.ide.workspace.domain.WorkspaceSelectionTargetPair;
+import org.eclipse.dirigible.components.ide.workspace.domain.WorkspaceSelectionTargetPair.SelectedNode;
 import org.eclipse.dirigible.components.ide.workspace.domain.WorkspaceSourceTargetPair;
 import org.eclipse.dirigible.components.ide.workspace.service.PublisherService;
 import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
@@ -179,11 +178,10 @@ public class WorkspaceEndpoint {
         String targetProject = targetPath.getSegments()[1];
         WorkspaceSelectionTargetPair.SelectedNode nodeToCopy;
 
-        for (int i = 0; i < sourceSelection.size(); i++) {
+        for (SelectedNode element : sourceSelection) {
 
-            nodeToCopy = sourceSelection.get(i);
-            RepositoryPath sourcePath = new RepositoryPath(UrlFacade.decode(sourceSelection.get(i)
-                                                                                           .getPath()));
+            nodeToCopy = element;
+            RepositoryPath sourcePath = new RepositoryPath(UrlFacade.decode(element.getPath()));
             String sourceProject = sourcePath.getSegments()[1];
 
             if (sourcePath.getSegments().length == 1) {
@@ -194,8 +192,7 @@ public class WorkspaceEndpoint {
             }
 
             String targetFilePath = targetPath.constructPathFrom(2);
-            String relativePath = sourceSelection.get(i)
-                                                 .getRelativePath();
+            String relativePath = element.getRelativePath();
             if (targetFilePath.equals(targetPath.build())) {
                 targetFilePath = IRepository.SEPARATOR;
             }
@@ -224,17 +221,15 @@ public class WorkspaceEndpoint {
                                 workspaceService.createFolder(targetWorkspace, targetProject, targetFilePath);
                                 break;
                             case "skip":
-                                skipPath = sourceSelection.get(i)
-                                                          .getPath()
-                                                          .concat(IRepository.SEPARATOR);
+                                skipPath = element.getPath()
+                                                  .concat(IRepository.SEPARATOR);
                                 content.skipByPath(skipPath);
                                 break;
                             default:
                                 workspaceService.copyFolder(sourceWorkspace, targetWorkspace, sourceProject, relativePath, targetProject,
                                         relativePathToTargetFile.concat(IRepository.SEPARATOR), fileOrFolderName);
-                                skipPath = sourceSelection.get(i)
-                                                          .getPath()
-                                                          .concat(IRepository.SEPARATOR);
+                                skipPath = element.getPath()
+                                                  .concat(IRepository.SEPARATOR);
                                 content.skipByPath(skipPath);
 
                         }

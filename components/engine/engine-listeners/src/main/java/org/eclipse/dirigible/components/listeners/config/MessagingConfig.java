@@ -11,8 +11,8 @@
 package org.eclipse.dirigible.components.listeners.config;
 
 import javax.sql.DataSource;
-
 import org.eclipse.dirigible.components.listeners.service.ListenersManager;
+import org.eclipse.dirigible.components.listeners.service.MessageListenerManagerFactory;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,10 +31,13 @@ public class MessagingConfig {
     @Autowired
     private IRepository repository;
 
+    @Autowired
+    private MessageListenerManagerFactory messageListenerManagerFactory;
+
     @Bean
     @Scope("singleton")
     public ListenersManager createSchedulerManager() throws Exception {
-        ListenersManager schedulerManager = new ListenersManager(dataSource, repository);
+        ListenersManager schedulerManager = new ListenersManager(dataSource, repository, messageListenerManagerFactory);
         schedulerManager.initialize();
         return schedulerManager;
     }
