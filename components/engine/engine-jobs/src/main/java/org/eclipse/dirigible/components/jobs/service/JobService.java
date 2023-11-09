@@ -12,6 +12,7 @@ package org.eclipse.dirigible.components.jobs.service;
 
 import static java.text.MessageFormat.format;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +20,11 @@ import java.util.Optional;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.eclipse.dirigible.components.jobs.email.JobEmailProcessor;
 import org.eclipse.dirigible.components.jobs.manager.JobsManager;
 import org.eclipse.dirigible.components.jobs.repository.JobRepository;
+import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -46,10 +47,6 @@ public class JobService implements ArtefactService<Job> {
     /** The job email service. */
     @Autowired
     private JobEmailProcessor jobEmailProcessor;
-
-    /** The javascript service. */
-    @Autowired
-    private JavascriptService javascriptService;
 
     @Autowired
     private JobsManager jobsManager;
@@ -240,13 +237,11 @@ public class JobService implements ArtefactService<Job> {
                     Configuration.set(entry.getKey(), entry.getValue());
                 }
 
-                // String engine = job.getEngine();
                 String handler = job.getHandler();
-                try {
-                    Map<Object, Object> context = new HashMap<>();
-                    context.put("handler", handler);
-                    RepositoryPath path = new RepositoryPath(handler);
-                    javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+                var handlerPath = Path.of(handler);
+
+                try (var runner = new DirigibleJavascriptCodeRunner()) {
+                    runner.run(handlerPath);
                 } catch (Exception e) {
                     throw new Exception(e);
                 }

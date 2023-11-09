@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ExecutionData;
-import org.eclipse.dirigible.components.spring.SpringBeanProvider;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
 import org.eclipse.dirigible.graalium.core.modules.DirigibleSourceProvider;
@@ -120,12 +119,9 @@ public class DirigibleCallDelegate implements JavaDelegate {
      */
     private void executeJSHandler(Map<Object, Object> context) {
         RepositoryPath path = new RepositoryPath(handler.getExpressionText());
-        IRepository repository = SpringBeanProvider.getBean(IRepository.class);
-        JavascriptSourceProvider sourceProvider = new DirigibleSourceProvider();
-
         JSTask task = JSTask.fromRepositoryPath(path);
 
-        try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner(context, false, repository, sourceProvider)) {
+        try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner(context, false)) {
             Source source = runner.prepareSource(task.getSourceFilePath());
             Value value = runner.run(source);
 
