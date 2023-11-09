@@ -35,8 +35,8 @@ class ShutdownActiveMQBrokerListener implements ApplicationListener<ApplicationE
 
     private void closeBroker(ApplicationEvent event) {
         try {
-            LOGGER.info("Stopping ActiveMQ broker due to event {}", event);
             if (!broker.isStopped()) {
+                LOGGER.info("Stopping ActiveMQ broker due to event {}", event);
                 broker.stop();
             }
         } catch (Exception ex) {
