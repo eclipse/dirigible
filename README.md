@@ -224,7 +224,7 @@ Please follow the steps bellow
 
 2. Window -> Preferences -> Java -> Editor -> Save Actions -> Check `Perform the selected actions on save` -> Check `Format source code` -> Select -> `Format all lines`
 #### IntelliJ
-1. File -> Settings -> Editor -> Code Style -> Java -> Scheme -> Import Scheme -> Eclipse XML Profile -> Select [this](https://github.com/eclipse/dirigible/blob/master/dirigible-formatter.xml) formatter
+1. File (or IntelliJ IDEA if on MacOS) -> Settings -> Editor -> Code Style -> Java -> Scheme -> Import Scheme (from the settings button) -> Eclipse XML Profile -> Select [this](https://github.com/eclipse/dirigible/blob/master/dirigible-formatter.xml) formatter -> Copy to Project (from the settings button)
 ![image](https://github.com/eclipse/dirigible/assets/5058839/bed1ab0a-b572-47e5-9e79-31d2644c4380)
 
 2.  File -> Settings -> Tools -> Actions on Save -> Check `Reformat code` 
