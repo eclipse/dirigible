@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.ContextStoppedEvent;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +29,7 @@ class ShutdownActiveMQBrokerListener implements ApplicationListener<ApplicationE
     }
 
     private boolean isApplicableEvent(ApplicationEvent event) {
-        return event instanceof ContextRefreshedEvent || event instanceof ContextStoppedEvent || event instanceof ContextClosedEvent;
+        return event instanceof ContextStoppedEvent || event instanceof ContextClosedEvent;
     }
 
     private void closeBroker(ApplicationEvent event) {
