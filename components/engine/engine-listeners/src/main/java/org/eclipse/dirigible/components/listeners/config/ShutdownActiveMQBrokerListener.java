@@ -25,14 +25,7 @@ class ShutdownActiveMQBrokerListener implements ApplicationListener<ApplicationE
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
         if (isApplicableEvent(event)) {
-            try {
-                LOGGER.info("Stopping ActiveMQ broker due to event {}", event);
-                if (!broker.isStopped()) {
-                    broker.stop();
-                }
-            } catch (Exception ex) {
-                throw new IllegalStateException("Failed to stop ActiveMQ broker", ex);
-            }
+            closeBroker(event);
         }
     }
 
@@ -40,4 +33,14 @@ class ShutdownActiveMQBrokerListener implements ApplicationListener<ApplicationE
         return event instanceof ContextRefreshedEvent || event instanceof ContextStoppedEvent || event instanceof ContextClosedEvent;
     }
 
+    private void closeBroker(ApplicationEvent event) {
+        try {
+            LOGGER.info("Stopping ActiveMQ broker due to event {}", event);
+            if (!broker.isStopped()) {
+                broker.stop();
+            }
+        } catch (Exception ex) {
+            throw new IllegalStateException("Failed to stop ActiveMQ broker", ex);
+        }
+    }
 }
