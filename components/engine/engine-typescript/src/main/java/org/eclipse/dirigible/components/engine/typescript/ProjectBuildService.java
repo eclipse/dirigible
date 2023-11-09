@@ -139,7 +139,7 @@ public class ProjectBuildService {
                                         .getStandardOutput();
             LOGGER.info(output);
         } catch (ExecutionException | InterruptedException e) {
-            LOGGER.error("Could not run command: " + buildCommand, e);
+            LOGGER.error("Could not run command: " + buildCommand + " for project: " + project, e);
         }
     }
 

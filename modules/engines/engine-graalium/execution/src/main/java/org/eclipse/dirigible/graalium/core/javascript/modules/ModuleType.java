@@ -8,12 +8,12 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.graalium.core.javascript;
+package org.eclipse.dirigible.graalium.core.javascript.modules;
 
 /**
  * The Enum JavascriptModuleType.
  */
-public enum JavascriptModuleType {
+public enum ModuleType {
 
     /** The based on file extension. */
     BASED_ON_FILE_EXTENSION,
