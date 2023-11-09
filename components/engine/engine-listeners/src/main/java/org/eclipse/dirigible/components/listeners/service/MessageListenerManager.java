@@ -10,78 +10,65 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
-import javax.jms.Connection;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
-import org.apache.activemq.ActiveMQConnectionFactory;
-import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@SuppressWarnings("resource")
 public class MessageListenerManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageListenerManager.class);
 
     private final Listener listener;
-    private final JavascriptService javascriptService;
+    private final Session session;
 
-    private ActiveMQConnectionArtifacts connectionArtifacts;
+    private MessageConsumer consumer;
 
-    MessageListenerManager(Listener listener, JavascriptService javascriptService) {
+    MessageListenerManager(Listener listener, Session session) {
         this.listener = listener;
-        this.javascriptService = javascriptService;
+        this.session = session;
     }
 
     public void startListener() {
-        if (null == connectionArtifacts) {
+        if (null == session) {
             LOGGER.debug("Listener [{}] IS already configured", listener);
             return;
         }
 
-        LOGGER.info("Starting a message listener for {} ...", listener.getName());
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(ListenersManager.CONNECTOR_URL_ATTACH);
-
-        Connection connection = null;
-        Session session = null;
-        MessageConsumer consumer = null;
+        LOGGER.info("Starting a message listener for {} ...", listener);
         try {
-            connection = connectionFactory.createConnection();
-            connection.start();
-            MessageConsumerExceptionListener exceptionListener =
-                    new MessageConsumerExceptionListener(listener.getHandler(), javascriptService);
-            connection.setExceptionListener(exceptionListener);
-
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            consumer = session.createConsumer(createDestination(connection));
+            Destination destination = craeteDestination();
+            consumer = session.createConsumer(destination);
 
             MessageListener messageListener = new MessageListener(listener);
             consumer.setMessageListener(messageListener);
 
-            connectionArtifacts = new ActiveMQConnectionArtifacts(connection, session, consumer);
         } catch (RuntimeException | JMSException ex) {
             LOGGER.error("Failed to start listener for [{}]", listener, ex);
-            new ActiveMQConnectionArtifacts(connection, session, consumer).close();
         }
     }
 
-    private Destination createDestination(Connection connection) throws JMSException, IllegalArgumentException {
-        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+    private Destination craeteDestination() throws JMSException {
+        String destination = listener.getName();
         return switch (listener.getKind()) {
-            case 'Q' -> session.createQueue(listener.getName());
-            case 'T' -> session.createTopic(listener.getName());
-            default -> throw new IllegalArgumentException("Invalid listener type: " + listener.getKind());
+            case 'Q' -> session.createQueue(destination);
+            case 'T' -> session.createTopic(destination);
+            default -> throw new IllegalArgumentException("Invalid kind: " + listener.getKind());
         };
     }
 
     public void stop() {
-        if (null != connectionArtifacts) {
-            connectionArtifacts.close();
-        } else {
+        if (null == consumer) {
             LOGGER.debug("Listener [{}] is NOT started", listener);
+        }
+
+        try {
+            consumer.close();
+        } catch (JMSException ex) {
+            LOGGER.warn("Failed to close " + consumer, ex);
         }
     }
 }

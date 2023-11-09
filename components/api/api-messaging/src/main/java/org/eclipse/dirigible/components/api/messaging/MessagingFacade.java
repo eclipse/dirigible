@@ -11,8 +11,8 @@
 package org.eclipse.dirigible.components.api.messaging;
 
 import javax.jms.JMSException;
-import org.eclipse.dirigible.components.listeners.service.MessageReceiver;
-import org.eclipse.dirigible.components.listeners.service.MessagingProducer;
+import org.eclipse.dirigible.components.listeners.service.MessageConsumer;
+import org.eclipse.dirigible.components.listeners.service.MessageProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,33 +22,52 @@ import org.springframework.stereotype.Component;
 @Component
 public class MessagingFacade {
 
-    private static MessageReceiver messageReceiver;
+    private static MessageConsumer messageConsumer;
+    private static MessageProducer messageProducer;
 
     @Autowired
-    public MessagingFacade(MessageReceiver messageReceiver) {
-        MessagingFacade.messageReceiver = messageReceiver;
+    public MessagingFacade(MessageConsumer messageConsumer, MessageProducer messageProducer) {
+        MessagingFacade.messageConsumer = messageConsumer;
+        MessagingFacade.messageProducer = messageProducer;
     }
 
     /**
      * Send a message to queue.
      *
-     * @param destination the destination
+     * @param queue the queue
      * @param message the message
+     * @throws MessagingAPIException if fail to send the message
      */
-    public static final void sendToQueue(String destination, String message) {
-        MessagingProducer producer = new MessagingProducer(destination, 'Q', message);
-        new Thread(producer).start();
+    public static final void sendToQueue(String queue, String message) throws MessagingAPIException {
+        if (null == messageProducer) {
+            throw new IllegalStateException("Class is not initialized yet. Cannot call this static method before the bean is initialized");
+        }
+
+        try {
+            messageProducer.sendMessageToQueue(queue, message);
+        } catch (RuntimeException | JMSException ex) {
+            throw new MessagingAPIException("Failed to send message to queue [" + queue + "]", ex);
+        }
     }
 
     /**
      * Send a message to topic.
      *
-     * @param destination the destination
+     * @param topic the topic
      * @param message the message
+     * @throws MessagingAPIException if fail to send the message
      */
-    public static final void sendToTopic(String destination, String message) {
-        MessagingProducer producer = new MessagingProducer(destination, 'T', message);
-        new Thread(producer).start();
+    public static final void sendToTopic(String topic, String message) {
+        if (null == messageProducer) {
+            throw new IllegalStateException("Class is not initialized yet. Cannot call this static method before the bean is initialized");
+        }
+
+        try {
+            messageProducer.sendMessageToTopic(topic, message);
+        } catch (RuntimeException | JMSException ex) {
+            throw new MessagingAPIException("Failed to send message to topic [" + topic + "]", ex);
+        }
+
     }
 
     /**
@@ -57,12 +76,16 @@ public class MessagingFacade {
      * @param queue the queue
      * @param timeout the timeout
      * @return the message as JSON
-     * @throws MessagingAPIException if fail to receive a message from the queue * @throws
-     *         TimeoutException if timeout to get a message from the queue
+     * @throws MessagingAPIException if fail to receive a message from the queue
+     * @throws TimeoutException if timeout to get a message from the queue
      */
     public static final String receiveFromQueue(String queue, int timeout) throws MessagingAPIException {
+        if (null == messageConsumer) {
+            throw new IllegalStateException("Class is not initialized yet. Cannot call this static method before the bean is initialized");
+        }
+
         try {
-            return messageReceiver.receiveMessageFromQueue(queue, timeout);
+            return messageConsumer.receiveMessageFromQueue(queue, timeout);
         } catch (org.eclipse.dirigible.components.listeners.service.TimeoutException ex) {
             throw new TimeoutException("Timeout to get a message from queue [" + queue + "]", ex);
         } catch (RuntimeException | JMSException ex) {
@@ -80,8 +103,12 @@ public class MessagingFacade {
      * @throws TimeoutException if timeout to get a message from the topic
      */
     public static final String receiveFromTopic(String topic, int timeout) {
+        if (null == messageConsumer) {
+            throw new IllegalStateException("Class is not initialized yet. Cannot call this static method before the bean is initialized");
+        }
+
         try {
-            return messageReceiver.receiveMessageFromTopic(topic, timeout);
+            return messageConsumer.receiveMessageFromTopic(topic, timeout);
         } catch (org.eclipse.dirigible.components.listeners.service.TimeoutException ex) {
             throw new TimeoutException("Timeout to get a message from topic [" + topic + "]", ex);
         } catch (RuntimeException | JMSException ex) {

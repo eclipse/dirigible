@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.components.listeners.service;
+package org.eclipse.dirigible.components.listeners.config;
 
 import java.util.HashMap;
 import java.util.Map;

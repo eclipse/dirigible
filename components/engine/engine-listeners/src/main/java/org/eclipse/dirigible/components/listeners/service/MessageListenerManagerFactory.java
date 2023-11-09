@@ -1,21 +1,22 @@
 package org.eclipse.dirigible.components.listeners.service;
 
-import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
+import javax.jms.Session;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MessageListenerManagerFactory {
 
-    private final JavascriptService javascriptService;
+    private final Session session;
 
     @Autowired
-    MessageListenerManagerFactory(JavascriptService javascriptService) {
-        this.javascriptService = javascriptService;
+    MessageListenerManagerFactory(@Qualifier("ActiveMQSession") Session session) {
+        this.session = session;
     }
 
-    public MessageListenerManager create(Listener listener) {
-        return new MessageListenerManager(listener, javascriptService);
+    MessageListenerManager create(Listener listener) {
+        return new MessageListenerManager(listener, session);
     }
 }
