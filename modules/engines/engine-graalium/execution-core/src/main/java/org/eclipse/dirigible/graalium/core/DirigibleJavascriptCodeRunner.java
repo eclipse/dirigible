@@ -40,14 +40,19 @@ import java.util.function.Consumer;
  */
 public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> {
 
+    /** CommonJS files extension */
     private static final String CJS_EXT = ".js";
+
+    /** ESM files extension */
     private static final String MJS_EXT = ".mjs";
+
+    /** TypeScript files extension */
     private static final String TS_EXT = ".ts";
 
     /** The code runner. */
     private final GraalJSCodeRunner codeRunner;
 
-    private final DirigibleSourceProvider sourceProvider;
+    private final JavascriptSourceProvider sourceProvider;
 
     /** The Constant DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS. */
     private static final ServiceLoader<DirigibleJavascriptHooksProvider> DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS =
@@ -69,24 +74,32 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
     /**
      * Instantiates a new dirigible javascript code runner.
      *
-     * @param debug the debug
+     * @param shouldEnableDebug the debug
      */
-    public DirigibleJavascriptCodeRunner(boolean debug) {
-        this(new HashMap<>(), debug);
+    public DirigibleJavascriptCodeRunner(boolean shouldEnableDebug) {
+        this(new HashMap<>(), shouldEnableDebug);
     }
 
     /**
      * Instantiates a new dirigible javascript code runner.
      *
-     * @param parameters the parameters
-     * @param debug the debug
+     * @param context the parameters
+     * @param shouldEnableDebug the debug
      */
-    public DirigibleJavascriptCodeRunner(Map<Object, Object> parameters, boolean debug) {
-        Path workingDirectoryPath = getDirigibleWorkingDirectory();
-        Path cachePath = workingDirectoryPath.resolve("caches");
-        Path coreModulesESMProxiesCachePath = cachePath.resolve("core-modules-proxies-cache");
-        Path javaModulesESMProxiesCachePath = cachePath.resolve("java-modules-proxies-cache");
+    public DirigibleJavascriptCodeRunner(Map<Object, Object> context, boolean shouldEnableDebug) {
+        this(context, shouldEnableDebug, new DirigibleSourceProvider());
+    }
 
+    /**
+     * Instantiates a new dirigible javascript code runner.
+     *
+     * @param context the parameters
+     * @param shouldEnableDebug the debug
+     */
+    public DirigibleJavascriptCodeRunner(Map<Object, Object> context, boolean shouldEnableDebug, JavascriptSourceProvider sourceProvider) {
+        this.sourceProvider = sourceProvider;
+
+        Path workingDirectoryPath = getDirigibleWorkingDirectory();
         Consumer<Context.Builder> onBeforeContextCreatedListener = null;
         Consumer<Context> onAfterContextCreatedListener = null;
         if (DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS.iterator()
@@ -104,21 +117,83 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
             interceptor = new DirigibleJavascriptInterceptor(this);
         }
 
-        sourceProvider = new DirigibleSourceProvider();
-        codeRunner = GraalJSCodeRunner.newBuilder(workingDirectoryPath, cachePath)
-                                      .addJSPolyfill(new RequirePolyfill())
-                                      .addGlobalObject(new DirigibleContextGlobalObject(parameters))
-                                      .addGlobalObject(new DirigibleEngineTypeGlobalObject())
-                                      .addModuleResolver(new JavaModuleResolver(javaModulesESMProxiesCachePath))
-                                      .addModuleResolver(new DirigibleModuleResolver(coreModulesESMProxiesCachePath, sourceProvider))
-                                      .addModuleResolver(new DirigibleEsmModuleResolver(sourceProvider))
-                                      .waitForDebugger(debug && DirigibleJavascriptCodeRunner.shouldEnableDebug())
-                                      .addOnBeforeContextCreatedListener(onBeforeContextCreatedListener)
-                                      .addOnAfterContextCreatedListener(onAfterContextCreatedListener)
-                                      .setOnRealPathNotFound(
-                                              p -> sourceProvider.unpackedToFileSystem(p, workingDirectoryPath.relativize(p)))
-                                      .setInterceptor(interceptor)
-                                      .build();
+        codeRunner = createCodeRunner(workingDirectoryPath, context, shouldEnableDebug, onBeforeContextCreatedListener,
+                onAfterContextCreatedListener);
+    }
+
+    private GraalJSCodeRunner createCodeRunner(Path workingDirectoryPath, Map<Object, Object> context, boolean shouldEnableDebug,
+            Consumer<Context.Builder> onBeforeContextCreatedListener, Consumer<Context> onAfterContextCreatedListener) {
+        Path cachePath = workingDirectoryPath.resolve("caches");
+        Path coreModulesESMProxiesCachePath = cachePath.resolve("core-modules-proxies-cache");
+        Path javaModulesESMProxiesCachePath = cachePath.resolve("java-modules-proxies-cache");
+
+        return GraalJSCodeRunner.newBuilder(workingDirectoryPath, cachePath)
+                                .addJSPolyfill(new RequirePolyfill())
+                                .addGlobalObject(new DirigibleContextGlobalObject(context))
+                                .addGlobalObject(new DirigibleEngineTypeGlobalObject())
+                                .addModuleResolver(new JavaModuleResolver(javaModulesESMProxiesCachePath))
+                                .addModuleResolver(new DirigibleModuleResolver(coreModulesESMProxiesCachePath, sourceProvider))
+                                .addModuleResolver(new DirigibleEsmModuleResolver(sourceProvider))
+                                .waitForDebugger(shouldEnableDebug && DirigibleJavascriptCodeRunner.shouldEnableDebug())
+                                .addOnBeforeContextCreatedListener(onBeforeContextCreatedListener)
+                                .addOnAfterContextCreatedListener(onAfterContextCreatedListener)
+                                .setOnRealPathNotFound(p -> sourceProvider.unpackedToFileSystem(p, workingDirectoryPath.relativize(p)))
+                                .setInterceptor(interceptor)
+                                .build();
+    }
+
+    /**
+     * Prepare the Source to be run
+     *
+     * @param codeFilePath the code file path to use
+     * @return the source
+     */
+    @Override
+    public Source prepareSource(Path codeFilePath) {
+        return codeRunner.prepareSource(codeFilePath);
+    }
+
+    /**
+     * Run the given source.
+     *
+     * @param codeSource the code source
+     * @return the value
+     */
+    @Override
+    public Value run(Source codeSource) {
+        return codeRunner.run(codeSource);
+    }
+
+    public Module run(Path codeFilePath) {
+        var pathAsString = codeFilePath.toString();
+        if (pathAsString.endsWith(TS_EXT)) {
+            pathAsString = transformTypeScriptHandlerPathIfNecessary(pathAsString);
+        }
+        Source source = prepareSource(Path.of(pathAsString));
+        Value module = run(source);
+        ModuleType moduleType = pathAsString.endsWith(MJS_EXT) ? ModuleType.ESM : ModuleType.CJS;
+        return new Module(module, moduleType);
+    }
+
+    public Value runMethod(Module codeModule, String methodName, Object... args) {
+        return switch (codeModule.moduleType()) {
+            case CJS -> runCjsMethod(codeModule.module(), methodName, args);
+            case ESM -> runEsmMethod(codeModule.module(), methodName, args);
+            default -> throw new IllegalArgumentException("Unsupported module type: " + codeModule.moduleType());
+        };
+    }
+
+    private Value runEsmMethod(Value module, String methodName, Object... args) {
+        Value onMessage = module.getMember(methodName);
+        return onMessage.execute(args);
+    }
+
+    private Value runCjsMethod(Value module, String methodName, Object... args) {
+        Value onMessage = module.getContext()
+                                .getBindings("js")
+                                .getMember("exports")
+                                .getMember(methodName);
+        return onMessage.execute(args);
     }
 
     /**
@@ -151,26 +226,17 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
         return Path.of(publicRegistryPath);
     }
 
-    /**
-     * Run.
-     *
-     * @param codeFilePath the code file path
-     * @return the source
-     */
-    @Override
-    public Source prepareSource(Path codeFilePath) {
-        return codeRunner.prepareSource(codeFilePath);
+    public JavascriptSourceProvider getSourceProvider() {
+        return sourceProvider;
     }
 
-    public Module run(Path codeFilePath) {
-        var pathAsString = codeFilePath.toString();
-        if (pathAsString.endsWith(TS_EXT)) {
-            pathAsString = transformTypeScriptHandlerPathIfNecessary(pathAsString);
-        }
-        Source source = prepareSource(Path.of(pathAsString));
-        Value module = run(source);
-        ModuleType moduleType = pathAsString.endsWith(MJS_EXT) ? ModuleType.ESM : ModuleType.CJS;
-        return new Module(module, moduleType);
+    /**
+     * Gets the graal JS interceptor.
+     *
+     * @return the graal JS interceptor
+     */
+    public GraalJSInterceptor getGraalJSInterceptor() {
+        return interceptor;
     }
 
     private static String transformTypeScriptHandlerPathIfNecessary(String handlerPath) {
@@ -181,55 +247,10 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
     }
 
     /**
-     * Run the given source.
-     *
-     * @param codeSource the code source
-     * @return the value
-     */
-    @Override
-    public Value run(Source codeSource) {
-        return codeRunner.run(codeSource);
-    }
-
-    public Value runMethod(Module codeModule, String methodName, Object... args) {
-        return switch (codeModule.moduleType()) {
-            case CJS -> runCjsMethod(codeModule.module(), methodName, args);
-            case ESM -> runEsmMethod(codeModule.module(), methodName, args);
-            default -> throw new IllegalArgumentException("Unsupported module type: " + codeModule.moduleType());
-        };
-    }
-
-    private Value runEsmMethod(Value module, String methodName, Object... args) {
-        Value onMessage = module.getMember(methodName);
-        return onMessage.execute(args);
-    }
-
-    private Value runCjsMethod(Value module, String methodName, Object... args) {
-        Value onMessage = module.getContext()
-                                .getBindings("js")
-                                .getMember("exports")
-                                .getMember(methodName);
-        return onMessage.execute(args);
-    }
-
-    public DirigibleSourceProvider getSourceProvider() {
-        return sourceProvider;
-    }
-
-    /**
      * Close.
      */
     @Override
     public void close() {
         codeRunner.close();
-    }
-
-    /**
-     * Gets the graal JS interceptor.
-     *
-     * @return the graal JS interceptor
-     */
-    public GraalJSInterceptor getGraalJSInterceptor() {
-        return interceptor;
     }
 }

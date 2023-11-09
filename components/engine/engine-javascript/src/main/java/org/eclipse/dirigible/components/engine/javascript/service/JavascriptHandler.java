@@ -10,10 +10,6 @@
  */
 package org.eclipse.dirigible.components.engine.javascript.service;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Map;
-
 import org.eclipse.dirigible.components.base.http.access.UserRequestVerifier;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
@@ -23,6 +19,10 @@ import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Map;
 
 import static org.eclipse.dirigible.graalium.core.graal.ValueTransformer.transformValue;
 
@@ -35,7 +35,7 @@ public class JavascriptHandler {
     private static final Logger logger = LoggerFactory.getLogger(JavascriptHandler.class);
 
     /** The source provider. */
-    private final JavascriptSourceProvider sourceProvider = new DirigibleSourceProvider();
+    private final JavascriptSourceProvider sourceProvider;
 
     /** The repository. */
     private final IRepository repository;
@@ -46,7 +46,17 @@ public class JavascriptHandler {
      * @param repository the repository
      */
     public JavascriptHandler(IRepository repository) {
+        this(repository, new DirigibleSourceProvider());
+    }
+
+    /**
+     * Instantiates a new javascript handler.
+     *
+     * @param repository the repository
+     */
+    public JavascriptHandler(IRepository repository, JavascriptSourceProvider sourceProvider) {
         this.repository = repository;
+        this.sourceProvider = sourceProvider;
     }
 
     public IRepository getRepository() {
