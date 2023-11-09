@@ -61,18 +61,30 @@
                 <os>
                     <family>Windows</family>
                 </os>
+                <property>
+                    <name>run-js-tests</name>
+                    <value>true</value>
+                </property>
             </activation>
             <properties>
                 <script.extension>.bat</script.extension>
+                <skip.js.tests>false</skip.js.tests>
             </properties>
         </profile>
         <profile>
             <id>unix</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <os>
+                    <family>unix</family>
+                </os>
+                <property>
+                    <name>run-js-tests</name>
+                    <value>true</value>
+                </property>
             </activation>
             <properties>
                 <script.extension>.sh</script.extension>
+                <skip.js.tests>false</skip.js.tests>
             </properties>
         </profile>
     </profiles>
@@ -82,7 +94,10 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>${exec.maven.plugin}</version>
+                <configuration>
+                    <skip>${skip.js.tests}</skip>
+                </configuration>
                 <executions>
                     <execution>
                         <id>build-ts-test-sources</id>
@@ -94,14 +109,15 @@
                             <executable>
                                 ${basedir}/src/test/resources/META-INF/dirigible/modules-tests/build-source${script.extension}
                             </executable>
-                            <workingDirectory>src/test/resources/META-INF/dirigible/modules-tests</workingDirectory>
+                            <workingDirectory>src/test/resources/META-INF/dirigible/modules-tests
+                            </workingDirectory>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>${maven-surefire-plugin.version}</version>
                 <dependencies>
                     <dependency>
                         <groupId>me.fabriciorby</groupId>
@@ -110,6 +126,7 @@
                     </dependency>
                 </dependencies>
                 <configuration>
+                    <skipTests>${skip.js.tests}</skipTests>
                     <reportFormat>plain</reportFormat>
                     <consoleOutputReporter>
                         <disable>true</disable>
@@ -134,6 +151,7 @@
     <properties>
         <license.header.location>../../../licensing-header.txt</license.header.location>
         <parent.pom.folder>../../../</parent.pom.folder>
+        <skip.js.tests>true</skip.js.tests>
     </properties>
 
 </project>
