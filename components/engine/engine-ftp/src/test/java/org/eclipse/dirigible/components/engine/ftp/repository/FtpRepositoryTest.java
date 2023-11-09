@@ -92,9 +92,6 @@ public class FtpRepositoryTest {
      */
     @Test
     public void findAllByUsername() {
-        Long id = ftpUserRepository.findAll()
-                                   .get(0)
-                                   .getId();
         List<FtpUser> list = ftpUserRepository.findAllByUsername("user1");
         FtpUser ftpuser = list.size() > 0 ? list.get(0) : null;
         assertNotNull(ftpuser);

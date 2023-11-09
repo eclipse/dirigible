@@ -156,7 +156,7 @@ public class CsvimProcessor {
         TableMetadata tableMetadata = CsvimUtils.getTableMetadata(tableName, connection);
         String pkName = getPkName(tableMetadata, csvParser.getHeaderNames());
 
-        if (tableMetadata == null || csvParser == null) {
+        if (tableMetadata == null) {
             String error = String.format(PROBLEM_WITH_TABLE_METADATA_OR_CSVPARSER, tableName);
             logger.error(error);
             CsvimUtils.logProcessorErrors(error, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);

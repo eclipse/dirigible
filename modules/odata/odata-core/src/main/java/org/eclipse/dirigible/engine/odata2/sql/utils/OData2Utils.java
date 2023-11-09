@@ -113,20 +113,21 @@ public class OData2Utils {
      * @return the inline entry key value
      * @throws EdmException the edm exception
      */
+
     public static String getInlineEntryKeyValue(Map<String, Object> values, EdmTyped inlineEntry, EdmProperty inlinEntityKey)
             throws EdmException {
         if (inlineEntry.getType() instanceof EdmEntityType) {
             Object inlineEntryData = values.get(inlineEntry.getName());
             if (inlineEntryData instanceof ODataEntry) {
                 Map<String, Object> inlineEntryDataProperties = ((ODataEntry) inlineEntryData).getProperties();
-                for (Object inlineEntityKeyName : inlineEntryDataProperties.keySet()) {
+
+                for (int idx = 0; idx < inlineEntryDataProperties.size(); idx++) {
                     Object inlineKeyValue = inlineEntryDataProperties.get(inlinEntityKey.getName());
                     if (inlineKeyValue instanceof String) {
                         return (String) inlineKeyValue;
-                    } else {
-                        throw new OData2Exception("Invalid inline entity: the key " + inlinEntityKey.getName()//
-                                + " of entity " + inlineEntry.getName() + " must be of type String!", HttpStatusCodes.BAD_REQUEST);
                     }
+                    throw new OData2Exception("Invalid inline entity: the key " + inlinEntityKey.getName()//
+                            + " of entity " + inlineEntry.getName() + " must be of type String!", HttpStatusCodes.BAD_REQUEST);
                 }
             }
             throw new OData2Exception("Invalid inline entity: missing key " + inlinEntityKey.getName() + //

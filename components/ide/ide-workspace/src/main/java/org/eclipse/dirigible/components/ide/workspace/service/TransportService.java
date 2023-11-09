@@ -164,8 +164,7 @@ public class TransportService {
     public byte[] exportFolder(String workspace, String project, String folder) throws UnsupportedEncodingException, DecoderException {
         Workspace workspaceApi = getWorkspace(workspace);
         Project projectApi = getProject(workspaceApi, project);
-        UrlFacade decodedFolder = new UrlFacade();
-        String decodedPath = decodedFolder.decode(folder, null);
+        String decodedPath = UrlFacade.decode(folder, null);
         return getRepository().exportZip(projectApi.getPath() + IRepositoryStructure.SEPARATOR + decodedPath, true);
     }
 

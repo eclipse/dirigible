@@ -303,8 +303,8 @@ public class JobLogService implements ArtefactService<JobLog> {
         job.setExecutedAt(jobLog.getFinishedAt());
         if (statusChanged) {
             String content =
-                    jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateNormal, jobEmailProcessor.EMAIL_TEMPLATE_NORMAL);
-            jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectNormal, content);
+                    jobEmailProcessor.prepareEmail(job, JobEmailProcessor.emailTemplateNormal, JobEmailProcessor.EMAIL_TEMPLATE_NORMAL);
+            jobEmailProcessor.sendEmail(job, JobEmailProcessor.emailSubjectNormal, content);
         }
         return jobLog;
     }
@@ -339,8 +339,8 @@ public class JobLogService implements ArtefactService<JobLog> {
         job.setExecutedAt(jobLog.getFinishedAt());
         if (statusChanged) {
             String content =
-                    jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateError, jobEmailProcessor.EMAIL_TEMPLATE_ERROR);
-            jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectError, content);
+                    jobEmailProcessor.prepareEmail(job, JobEmailProcessor.emailTemplateError, JobEmailProcessor.EMAIL_TEMPLATE_ERROR);
+            jobEmailProcessor.sendEmail(job, JobEmailProcessor.emailSubjectError, content);
         }
         return jobLog;
     }

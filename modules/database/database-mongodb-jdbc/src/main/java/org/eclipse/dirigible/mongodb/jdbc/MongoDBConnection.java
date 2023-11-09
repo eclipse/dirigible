@@ -690,7 +690,7 @@ public class MongoDBConnection implements Connection {
     public boolean isValid(int timeout) throws SQLException {
         Document response = this.mongoDatabase.runCommand(new BsonDocument("ping", new BsonInt32(1)));
         response.getDouble("ok");
-        return response != null && response.getDouble("ok") == 1.0;
+        return response.getDouble("ok") == 1.0;
     }
 
     /**

@@ -108,7 +108,6 @@ public class DatabaseExportService {
         if (dataSource != null) {
             String productName = null;
             try (Connection connection = dataSource.getConnection()) {
-                ISqlDialect dialect = SqlDialectFactory.getDialect(connection);
                 productName = connection.getMetaData()
                                         .getDatabaseProductName();
                 if ("MongoDB".equals(productName)) {

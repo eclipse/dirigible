@@ -346,10 +346,8 @@ public class DataAnonymizeService {
                             break;
                         }
                         case PHONE: {
-                            if (value != null) {
-                                object.remove(name);
-                                object.addProperty(name, faker.examplify(value));
-                            }
+                            object.remove(name);
+                            object.addProperty(name, faker.examplify(value));
                             break;
                         }
                         case ADDRESS: {
@@ -381,10 +379,8 @@ public class DataAnonymizeService {
                             break;
                         }
                         case RANDOM: {
-                            if (value != null) {
-                                object.remove(name);
-                                object.addProperty(name, faker.examplify(value));
-                            }
+                            object.remove(name);
+                            object.addProperty(name, faker.examplify(value));
                             break;
                         }
                         case MASK: {
