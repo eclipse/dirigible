@@ -53,13 +53,14 @@ export class HttpController {
 
         //weave-in HTTP method-based factory functions - shortcut for service().resource(sPath).method
         ['get', 'post', 'put', 'delete', 'remove', 'method'].forEach((sMethodName) => {
-            this[sMethodName] = (sPath, sVerb, arrConsumes, arrProduces) => {
-                if (arguments.length < 1)
+            this[sMethodName] = (sPath, sVerb, arrConsumes, arrProduces, ...args) => {
+                const allArguments = [sPath, sVerb, arrConsumes, arrProduces, ...args];
+                if (allArguments.length < 1)
                     throw Error('Insufficient arguments provided to HttpController method ' + sMethodName + '.');
                 if (sPath === undefined)
                     sPath = "";
                 const resource = this.resourceMappings.find(sPath, sVerb, arrConsumes, arrProduces) || this.resourceMappings.resource(sPath);
-                resource[sMethodName]['apply'](resource, Array.prototype.slice.call(arguments, 1));
+                resource[sMethodName]['apply'](resource, Array.prototype.slice.call(allArguments, 1));
                 return this;
             };
         });

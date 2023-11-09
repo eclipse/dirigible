@@ -15,7 +15,7 @@ import * as rs from "@dirigible/http/rs"
 const router = rs.service();
 let instance = null;
 
-export function Controller(ctr) {
+export function Controller(ctr: {new()}, context: ClassDecoratorContext): void {
     instance = new ctr();
     router.execute();
 }
@@ -29,7 +29,7 @@ export const Head = createRequestDecorator("head")
 export const Options = createRequestDecorator("options")
 
 function createRequestDecorator(httpMethod) {
-    return function (path) {
+    return function (path: string): any {
         return function (target, propertyKey, descriptor) {
             const handler = descriptor ? descriptor.value : target;
             router[httpMethod](

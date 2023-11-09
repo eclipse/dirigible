@@ -1,3 +1,6 @@
+# fail the whole script if any command bellow fails
+set -e
+
 # clean
 rm -rf ./dist
 
