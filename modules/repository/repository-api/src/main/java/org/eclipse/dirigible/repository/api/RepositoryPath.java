@@ -21,7 +21,7 @@ import java.util.StringTokenizer;
 public class RepositoryPath {
 
     /** The path. */
-    private String path;
+    private final String path;
 
     /** The segments. */
     private final String[] segments;
@@ -55,11 +55,10 @@ public class RepositoryPath {
      * @param input the input
      */
     public RepositoryPath(String... input) {
-        List<String> allSegments = new ArrayList<String>();
+        List<String> allSegments = new ArrayList<>();
         for (String segment : input) {
             final StringTokenizer tokenizer = new StringTokenizer(segment, IRepository.SEPARATOR);
-            String[] segmentParts = new String[tokenizer.countTokens()];
-            for (int idx = 0; idx < segmentParts.length; idx++) {
+            for (int idx = 0; idx < tokenizer.countTokens(); idx++) {
                 allSegments.add(tokenizer.nextToken());
             }
         }
@@ -172,10 +171,9 @@ public class RepositoryPath {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof RepositoryPath)) {
+        if (!(obj instanceof final RepositoryPath other)) {
             return false;
         }
-        final RepositoryPath other = (RepositoryPath) obj;
         return getPath().equals(other.getPath());
     }
 

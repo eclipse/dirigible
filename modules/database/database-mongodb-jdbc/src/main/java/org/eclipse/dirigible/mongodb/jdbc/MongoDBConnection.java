@@ -29,13 +29,11 @@ import java.sql.Struct;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
-
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientURI;
@@ -57,13 +55,13 @@ public class MongoDBConnection implements Connection {
     private Properties info;
 
     /** The uri. */
-    private MongoClientURI uri;
+    private final MongoClientURI uri;
 
     /** The db name. */
     private String dbName;
 
     /** The collection name. */
-    private String collectionName;
+    private final String collectionName;
 
     /** The is closed. */
     private boolean isClosed = true;
@@ -72,10 +70,10 @@ public class MongoDBConnection implements Connection {
     private boolean isReadonly = false;
 
     /** The client. */
-    private MongoClient client;
+    private final MongoClient client;
 
     /** The client options. */
-    private MongoClientOptions clientOptions;
+    private final MongoClientOptions clientOptions;
 
     /** The mongo atabase. */
     MongoDatabase mongoDatabase;
@@ -689,7 +687,6 @@ public class MongoDBConnection implements Connection {
     @Override
     public boolean isValid(int timeout) throws SQLException {
         Document response = this.mongoDatabase.runCommand(new BsonDocument("ping", new BsonInt32(1)));
-        response.getDouble("ok");
         return response.getDouble("ok") == 1.0;
     }
 
