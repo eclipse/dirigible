@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.local.LocalRepositoryException;
 import org.eclipse.dirigible.repository.master.zip.ZipRepository;
@@ -36,35 +35,31 @@ public class JarRepository extends ZipRepository {
      */
     public JarRepository(String zip) throws LocalRepositoryException, IOException {
 
-        InputStream in = JarRepository.class.getClassLoader()
-                                            .getSystemResourceAsStream(zip);
-        try {
-            if (in == null) {
-                in = JarRepository.class.getClassLoader()
-                                        .getParent()
-                                        .getResourceAsStream(zip);
-            }
-            if (in == null) {
-                in = JarRepository.class.getResourceAsStream(zip);
-            }
-            if (in != null) {
-                try {
-                    Path rootFolder = Files.createTempDirectory("jar_repository");
-                    unpackZip(in, rootFolder.toString());
-                    String zipFileName = zip.substring(zip.lastIndexOf(IRepository.SEPARATOR) + 1);
-                    jarRepositoryRootFolder = zipFileName.substring(0, zipFileName.lastIndexOf("."));
-                    createRepository(rootFolder.toString(), true);
-                } catch (IOException e) {
-                    throw new LocalRepositoryException(e);
-                }
-            } else {
+        JarRepository.class.getClassLoader(); // this call has side effect which is needed
+        try (InputStream inputStream = resolveInputStream(zip)) {
+            if (inputStream == null) {
                 throw new LocalRepositoryException(String.format("Zip file containing Repository content does not exist at path: %s", zip));
             }
-        } finally {
-            if (in != null) {
-                in.close();
-            }
+            Path rootFolder = Files.createTempDirectory("jar_repository");
+            unpackZip(inputStream, rootFolder.toString());
+            String zipFileName = zip.substring(zip.lastIndexOf(IRepository.SEPARATOR) + 1);
+            jarRepositoryRootFolder = zipFileName.substring(0, zipFileName.lastIndexOf("."));
+            createRepository(rootFolder.toString(), true);
+        } catch (IOException e) {
+            throw new LocalRepositoryException(e);
         }
+
+    }
+
+    @SuppressWarnings("resource")
+    private InputStream resolveInputStream(String zip) {
+        InputStream inputStream = ClassLoader.getSystemResourceAsStream(zip);
+        if (inputStream == null) {
+            inputStream = JarRepository.class.getClassLoader()
+                                             .getParent()
+                                             .getResourceAsStream(zip);
+        }
+        return inputStream != null ? inputStream : JarRepository.class.getResourceAsStream(zip);
     }
 
     /**
@@ -85,9 +80,7 @@ public class JarRepository extends ZipRepository {
      * @throws LocalRepositoryException the local repository exception
      */
     // disable usage
-    protected JarRepository() throws LocalRepositoryException {
-        super();
-    }
+    protected JarRepository() throws LocalRepositoryException {}
 
     /**
      * Gets the repository root folder.

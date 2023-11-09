@@ -124,7 +124,6 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
         Map<String, String> changeSetHeaders = new HashMap<>();
         changeSetHeaders.put("content-type", "application/json");
         changeSetHeaders.put("Accept", "application/json");
-        String body = "/9j/4AAQSkZJRgABAQEBLAEsAAD/4RM0RXhpZgAATU0AKgAAAAgABwESAAMAAAABAAEA";
         BatchChangeSetPart changeRequest = BatchChangeSetPart.method(PUT.toString())
                                                              .uri("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')")
                                                              .body(content.replaceAll("XXXXXXXXX", "639cac17-4cfd-4d94-b5d0-111fd5488423"))
@@ -187,7 +186,6 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
         Map<String, String> changeSetHeaders = new HashMap<>();
         changeSetHeaders.put("content-type", "application/json");
         changeSetHeaders.put("Accept", "application/json");
-        String body = "/9j/4AAQSkZJRgABAQEBLAEsAAD/4RM0RXhpZgAATU0AKgAAAAgABwESAAMAAAABAAEA";
         BatchChangeSetPart changeRequest = BatchChangeSetPart.method(PUT.toString())
                                                              .uri("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')")
                                                              .body(content.replaceAll("XXXXXXXXX", "639cac17-4cfd-4d94-b5d0-111fd5488423"))
@@ -286,13 +284,13 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
         }
         assertCarHasPrice("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')", 7000.0);
 
-        Response response = modifyingRequestBuilder(sf, content)//
-                                                                .segments("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')") //
-                                                                .accept("application/json")//
-                                                                .content(content)//
-                                                                .param("content-type", "application/json")//
-                                                                .contentSize(content.length())
-                                                                .executeRequest(PUT);
+        modifyingRequestBuilder(sf, content)//
+                                            .segments("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')") //
+                                            .accept("application/json")//
+                                            .content(content)//
+                                            .param("content-type", "application/json")//
+                                            .contentSize(content.length())
+                                            .executeRequest(PUT);
 
         assertCarHasPrice("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')", 123456789.0);
 

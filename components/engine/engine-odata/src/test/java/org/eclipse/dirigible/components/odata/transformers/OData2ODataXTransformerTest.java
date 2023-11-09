@@ -61,8 +61,8 @@ public class OData2ODataXTransformerTest {
             OData definition = ODataSynchronizer.parseOData("/transformers/EmployeeWithWrongMultiplicity.odata", employee);
 
             Table model = new Table("EMPLOYEES");
-            TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
-            TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
+            new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
+            new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
 
             model.setKind(ISqlKeywords.METADATA_TABLE);
             when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -85,18 +85,18 @@ public class OData2ODataXTransformerTest {
         OData definition = ODataSynchronizer.parseOData("/transformers/EmployeeWithProp.odata", employee);
 
         Table model = new Table("EMPLOYEES");
-        TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", false, true, model);
-        TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", false, true, model);
-        TableColumn column3 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
-        TableColumn column4 = new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
+        new TableColumn("COMPANY_ID", "Edm.Int32", "0", false, true, model);
+        new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", false, true, model);
+        new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
+        new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
 
         model.setKind(ISqlKeywords.METADATA_TABLE);
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         model = new Table("PHONES");
-        TableColumn column5 = new TableColumn("NUMBER", "Edm.Int32", "0", true, true, model);
-        TableColumn column6 = new TableColumn("FK_COMPANY_ID", "Edm.Int32", "0", model);
-        TableColumn column7 = new TableColumn("FK_EMPLOYEE_NUMBER", "Edm.Int32", "0", model);
+        new TableColumn("NUMBER", "Edm.Int32", "0", true, true, model);
+        new TableColumn("FK_COMPANY_ID", "Edm.Int32", "0", model);
+        new TableColumn("FK_EMPLOYEE_NUMBER", "Edm.Int32", "0", model);
 
         model.setKind(ISqlKeywords.METADATA_TABLE);
         when(odataDatabaseMetadataUtil.getTableMetadata("PHONES", null)).thenReturn(model);
@@ -132,8 +132,8 @@ public class OData2ODataXTransformerTest {
             OData definition = ODataSynchronizer.parseOData("/transformers/EmployeeWithProp.odata", employee);
 
             Table model = new Table("EMPLOYEES");
-            TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
-            TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
+            new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
+            new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
 
             model.setKind(ISqlKeywords.METADATA_TABLE);
             when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -193,16 +193,16 @@ public class OData2ODataXTransformerTest {
                   .put("sap:creatable", "true");
 
         Table model = new Table("EMPLOYEES");
-        TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
-        TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
+        new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
+        new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
 
         model.setKind(ISqlKeywords.METADATA_TABLE);
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         model = new Table("PHONES");
-        TableColumn column5 = new TableColumn("NUMBER", "Edm.Int32", "0", true, true, model);
-        TableColumn column6 = new TableColumn("FK_COMPANY_ID", "Edm.Int32", "0", model);
-        TableColumn column7 = new TableColumn("FK_EMPLOYEE_NUMBER", "Edm.Int32", "0", model);
+        new TableColumn("NUMBER", "Edm.Int32", "0", true, true, model);
+        new TableColumn("FK_COMPANY_ID", "Edm.Int32", "0", model);
+        new TableColumn("FK_EMPLOYEE_NUMBER", "Edm.Int32", "0", model);
 
         model.setKind(ISqlKeywords.METADATA_TABLE);
         when(odataDatabaseMetadataUtil.getTableMetadata("PHONES", null)).thenReturn(model);
@@ -247,10 +247,10 @@ public class OData2ODataXTransformerTest {
                   .add("GEN_ID");
 
         Table model = new Table("EMPLOYEES");
-        TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
-        TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
-        TableColumn column3 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
-        TableColumn column4 = new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
+        new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
+        new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
+        new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
+        new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
 
         model.setKind(ISqlKeywords.METADATA_VIEW);
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -288,10 +288,10 @@ public class OData2ODataXTransformerTest {
                   .add("EMPLOYEE_NUMBER");
 
         Table model = new Table("EMPLOYEES");
-        TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
-        TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
-        TableColumn column3 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
-        TableColumn column4 = new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
+        new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
+        new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
+        new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
+        new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
 
         model.setKind(ISqlKeywords.METADATA_VIEW);
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -351,10 +351,10 @@ public class OData2ODataXTransformerTest {
                                           .setColumn("EMPLOYEE_NUMBER"));
 
         Table model = new Table("EMPLOYEES");
-        TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
-        TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
-        TableColumn column3 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
-        TableColumn column4 = new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
+        new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
+        new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
+        new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
+        new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
 
         model.setKind(ISqlKeywords.METADATA_VIEW);
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -388,11 +388,11 @@ public class OData2ODataXTransformerTest {
                   .add("ADDRESS_ID");
 
         Table model = new Table("EMPLOYEES");
-        TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
-        TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
-        TableColumn column3 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
-        TableColumn column4 = new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
-        TableColumn column5 = new TableColumn("ID", "Edm.Int32", "0", model);
+        new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
+        new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
+        new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
+        new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
+        new TableColumn("ID", "Edm.Int32", "0", model);
 
         model.setKind(ISqlKeywords.METADATA_VIEW);
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -441,10 +441,10 @@ public class OData2ODataXTransformerTest {
                                           .setColumn("ADDRESS_ID"));
 
         Table model = new Table("EMPLOYEES");
-        TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
-        TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
-        TableColumn column3 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
-        TableColumn column4 = new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
+        new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
+        new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
+        new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
+        new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
 
         model.setKind(ISqlKeywords.METADATA_VIEW);
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -491,10 +491,10 @@ public class OData2ODataXTransformerTest {
                                               .setColumn("ADDRESS_ID"));
 
             Table model = new Table("EMPLOYEES");
-            TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
-            TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
-            TableColumn column3 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
-            TableColumn column4 = new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
+            new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
+            new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
+            new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
+            new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
 
             model.setKind(ISqlKeywords.METADATA_VIEW);
             when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -555,9 +555,9 @@ public class OData2ODataXTransformerTest {
                                            .setNullable(true));
 
         Table model = new Table("EMPLOYEES");
-        TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
-        TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
-        TableColumn column3 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
+        new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
+        new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
+        new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
 
         model.setKind(ISqlKeywords.METADATA_CALC_VIEW);
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -588,10 +588,10 @@ public class OData2ODataXTransformerTest {
         OData definition = ODataSynchronizer.parseOData("/transformers/EmployeeView.odata", employee);
 
         Table model = new Table("EMPLOYEES");
-        TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
-        TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
-        TableColumn column3 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
-        TableColumn column4 = new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
+        new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
+        new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
+        new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
+        new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
 
         model.setKind(ISqlKeywords.METADATA_SYSTEM_TABLE);
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);

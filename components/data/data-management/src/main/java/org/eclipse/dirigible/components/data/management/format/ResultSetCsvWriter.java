@@ -10,20 +10,16 @@
  */
 package org.eclipse.dirigible.components.data.management.format;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.sql.Clob;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.IOUtils;
@@ -53,6 +49,7 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
      *
      * @return true, if is limited
      */
+    @Override
     public boolean isLimited() {
         return limited;
     }
@@ -62,6 +59,7 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
      *
      * @param limited the new limited
      */
+    @Override
     public void setLimited(boolean limited) {
         this.limited = limited;
     }
@@ -71,6 +69,7 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
      *
      * @return true, if is stringified
      */
+    @Override
     public boolean isStringified() {
         return stringify;
     }
@@ -80,6 +79,7 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
      *
      * @param stringify the new stringified
      */
+    @Override
     public void setStringified(boolean stringify) {
         this.stringify = stringify;
     }
@@ -152,9 +152,6 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
                         } else if (dbt == Types.OTHER) {
                             Object dataObject = resultSet.getObject(name);
                             if (dataObject instanceof PGobject) {
-                                if (value == null && stringify) {
-                                    value = "[NULL]";
-                                }
                                 value = ((PGobject) dataObject).getValue();
                             }
                         } else {

@@ -207,9 +207,6 @@ public class WorkspaceEndpoint {
                                                  .getNodeType();
             String conflictResolution = sourceSelection.get(i)
                                                        .getResolution();
-            String relativePathToSourceFile = Paths.get(relativePath)
-                                                   .getParent()
-                                                   .toString();
             String relativePathToTargetFile = Paths.get(targetFilePath)
                                                    .getParent()
                                                    .toString();

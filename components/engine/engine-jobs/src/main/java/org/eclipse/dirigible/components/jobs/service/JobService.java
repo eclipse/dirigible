@@ -172,13 +172,13 @@ public class JobService implements ArtefactService<Job> {
         }
         if (existing != null) {
             if (existing.isEnabled() && !job.isEnabled()) {
-                String content = jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateDisable,
-                        jobEmailProcessor.EMAIL_TEMPLATE_DISABLE);
-                jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectDisable, content);
+                String content = jobEmailProcessor.prepareEmail(job, JobEmailProcessor.emailTemplateDisable,
+                        JobEmailProcessor.EMAIL_TEMPLATE_DISABLE);
+                jobEmailProcessor.sendEmail(job, JobEmailProcessor.emailSubjectDisable, content);
             } else if (!existing.isEnabled() && job.isEnabled()) {
                 String content =
-                        jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateEnable, jobEmailProcessor.EMAIL_TEMPLATE_ENABLE);
-                jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectEnable, content);
+                        jobEmailProcessor.prepareEmail(job, JobEmailProcessor.emailTemplateEnable, JobEmailProcessor.EMAIL_TEMPLATE_ENABLE);
+                jobEmailProcessor.sendEmail(job, JobEmailProcessor.emailSubjectEnable, content);
             }
         }
         return jobRepository.saveAndFlush(job);

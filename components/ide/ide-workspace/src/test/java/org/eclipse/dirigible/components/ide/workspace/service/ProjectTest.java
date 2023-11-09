@@ -117,8 +117,8 @@ public class ProjectTest {
     public void getFoldersTest() {
         Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
         Project project1 = workspace1.createProject("Project1");
-        Folder folder1 = project1.createFolder("Folder1");
-        Folder folder2 = project1.createFolder("Folder2");
+        project1.createFolder("Folder1");
+        project1.createFolder("Folder2");
 
         List<Folder> folders = project1.getFolders();
         assertNotNull(folders);

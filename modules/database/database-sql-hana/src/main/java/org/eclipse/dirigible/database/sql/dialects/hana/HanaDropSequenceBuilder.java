@@ -67,7 +67,6 @@ public class HanaDropSequenceBuilder extends DropSequenceBuilder {
      * @param sql the sql
      */
     protected void generateRestrict(StringBuilder sql) {
-        String sequenceName = (isCaseSensitive()) ? encapsulate(this.getSequence(), true) : this.getSequence();
         sql.append(SPACE)
            .append(KEYWORD_DATABASE_DROP_RESTRICT);
     }

@@ -111,7 +111,6 @@ public class BpmService {
                     bpmnXMLConverter.convertToBpmnModel(new InputStreamSource(new ByteArrayInputStream(file.getContent())), true, true);
             BpmnJsonConverter bpmnJsonConverter = new BpmnJsonConverter();
             ObjectNode objectNode = bpmnJsonConverter.convertToJson(bpmnModel);
-            ObjectMapper objectMapper = new ObjectMapper();
             ObjectNode rootNode = JsonNodeFactory.instance.objectNode();
             rootNode.set("model", objectNode);
             rootNode.set("modelId",

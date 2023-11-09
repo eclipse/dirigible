@@ -85,7 +85,7 @@ public class GenerationEndpoint {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
         }
 
-        List<File> files = generationService.generateFile(workspace, project, path, parameters);
+        generationService.generateFile(workspace, project, path, parameters);
         return ResponseEntity.created(workspaceService.getURI(workspace, project, path))
                              .build();
     }

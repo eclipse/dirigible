@@ -204,10 +204,10 @@ public class ODataDatabaseMetadataUtil {
 
 
         while (foreignKeys.next()) {
-            TableConstraintForeignKey relationMetadata = new TableConstraintForeignKey(foreignKeys.getString(JDBC_FK_NAME_PROPERTY),
-                    new String[] {}, new String[] {foreignKeys.getString(JDBC_FK_COLUMN_NAME_PROPERTY)},
-                    foreignKeys.getString(JDBC_PK_TABLE_NAME_PROPERTY), foreignKeys.getString(JDBC_PK_SCHEMA_NAME_PROPERTY),
-                    new String[] {foreignKeys.getString(JDBC_PK_COLUMN_NAME_PROPERTY)}, tableMetadata.getConstraints());
+            new TableConstraintForeignKey(foreignKeys.getString(JDBC_FK_NAME_PROPERTY), new String[] {},
+                    new String[] {foreignKeys.getString(JDBC_FK_COLUMN_NAME_PROPERTY)}, foreignKeys.getString(JDBC_PK_TABLE_NAME_PROPERTY),
+                    foreignKeys.getString(JDBC_PK_SCHEMA_NAME_PROPERTY), new String[] {foreignKeys.getString(JDBC_PK_COLUMN_NAME_PROPERTY)},
+                    tableMetadata.getConstraints());
 
         }
     }

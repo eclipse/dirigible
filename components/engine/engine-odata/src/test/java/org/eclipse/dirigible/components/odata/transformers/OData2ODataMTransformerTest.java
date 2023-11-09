@@ -12,14 +12,8 @@ package org.eclipse.dirigible.components.odata.transformers;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.mockito.Mockito.when;
-
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
@@ -61,15 +55,15 @@ public class OData2ODataMTransformerTest {
         OData definition = ODataSynchronizer.parseOData("/orders/Orders.odata", orders);
 
         Table model = new Table("ORDERS");
-        TableColumn column1 = new TableColumn("Id", "Edm.Int32", "0", true, true, model);
-        TableColumn column2 = new TableColumn("Customer", "Edm.String", "20", model);
+        new TableColumn("Id", "Edm.Int32", "0", true, true, model);
+        new TableColumn("Customer", "Edm.String", "20", model);
 
         when(odataDatabaseMetadataUtil.getTableMetadata("ORDERS", null)).thenReturn(model);
 
         model = new Table("ITEMS");
-        TableColumn column3 = new TableColumn("Id", "Edm.Int32", "0", true, true, model);
-        TableColumn column4 = new TableColumn("OrderId", "Edm.Int32", "0", model);
-        TableConstraintForeignKey rel = new TableConstraintForeignKey("ORDERS", null, "OrderId", "Id", model.getConstraints());
+        new TableColumn("Id", "Edm.Int32", "0", true, true, model);
+        new TableColumn("OrderId", "Edm.Int32", "0", model);
+        new TableConstraintForeignKey("ORDERS", null, "OrderId", "Id", model.getConstraints());
 
         when(odataDatabaseMetadataUtil.getTableMetadata("ITEMS", null)).thenReturn(model);
 
@@ -100,15 +94,15 @@ public class OData2ODataMTransformerTest {
         OData definition = ODataSynchronizer.parseOData("/orderscs/Orders.odata", orders);
 
         Table model = new Table("ORDERS");
-        TableColumn column1 = new TableColumn("ID", "Edm.Int32", "0", true, true, model);
-        TableColumn column2 = new TableColumn("CUSTOMER", "Edm.String", "20", model);
+        new TableColumn("ID", "Edm.Int32", "0", true, true, model);
+        new TableColumn("CUSTOMER", "Edm.String", "20", model);
 
         when(odataDatabaseMetadataUtil.getTableMetadata("ORDERS", null)).thenReturn(model);
 
         model = new Table("ITEMS");
-        TableColumn column3 = new TableColumn("ITEM_ID", "Edm.Int32", "0", true, true, model);
-        TableColumn column4 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
-        TableConstraintForeignKey rel = new TableConstraintForeignKey("ORDERS", null, "ORDER_ID", "ID", model.getConstraints());
+        new TableColumn("ITEM_ID", "Edm.Int32", "0", true, true, model);
+        new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
+        new TableConstraintForeignKey("ORDERS", null, "ORDER_ID", "ID", model.getConstraints());
 
         when(odataDatabaseMetadataUtil.getTableMetadata("ITEMS", null)).thenReturn(model);
 
@@ -169,8 +163,8 @@ public class OData2ODataMTransformerTest {
         OData definition = ODataSynchronizer.parseOData("/transformers/EmployeeWithParameters.odata", employee);
 
         Table model = new Table("EMPLOYEES");
-        TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
-        TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
+        new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
+        new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
 
         model.setKind("CALC VIEW");
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -197,15 +191,15 @@ public class OData2ODataMTransformerTest {
         OData definition = ODataSynchronizer.parseOData("/transformers/Employee.odata", employee);
 
         Table model = new Table("EMPLOYEES");
-        TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
-        TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
+        new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
+        new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
 
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         model = new Table("PHONES");
-        TableColumn column5 = new TableColumn("NUMBER", "Edm.Int32", "0", true, true, model);
-        TableColumn column6 = new TableColumn("FK_COMPANY_ID", "Edm.Int32", "0", model);
-        TableColumn column7 = new TableColumn("FK_EMPLOYEE_NUMBER", "Edm.Int32", "0", model);
+        new TableColumn("NUMBER", "Edm.Int32", "0", true, true, model);
+        new TableColumn("FK_COMPANY_ID", "Edm.Int32", "0", model);
+        new TableColumn("FK_EMPLOYEE_NUMBER", "Edm.Int32", "0", model);
 
         when(odataDatabaseMetadataUtil.getTableMetadata("PHONES", null)).thenReturn(model);
 
@@ -236,14 +230,14 @@ public class OData2ODataMTransformerTest {
         OData definition = ODataSynchronizer.parseOData("/users/Users.odata", users);
 
         Table model = new Table("CVUSER");
-        TableColumn column1 = new TableColumn("ID", "Edm.Int32", "0", true, true, model);
-        TableColumn column2 = new TableColumn("FIRSTNAME", "Edm.String", "20", model);
+        new TableColumn("ID", "Edm.Int32", "0", true, true, model);
+        new TableColumn("FIRSTNAME", "Edm.String", "20", model);
 
         when(odataDatabaseMetadataUtil.getTableMetadata("CVUSER", null)).thenReturn(model);
 
         model = new Table("CVGROUP");
-        TableColumn column3 = new TableColumn("ID", "Edm.Int32", "0", true, true, model);
-        TableColumn column4 = new TableColumn("FIRSTNAME", "Edm.String", "20", model);
+        new TableColumn("ID", "Edm.Int32", "0", true, true, model);
+        new TableColumn("FIRSTNAME", "Edm.String", "20", model);
 
         when(odataDatabaseMetadataUtil.getTableMetadata("CVGROUP", null)).thenReturn(model);
 
@@ -276,8 +270,8 @@ public class OData2ODataMTransformerTest {
         OData definition = ODataSynchronizer.parseOData("/view/View.odata", view);
 
         Table model = new Table("UserRole");
-        TableColumn column1 = new TableColumn("ZUSR_ROLE", "Edm.String", "20", model);
-        TableColumn column2 = new TableColumn("ZROLE_NAME", "Edm.String", "20", model);
+        new TableColumn("ZUSR_ROLE", "Edm.String", "20", model);
+        new TableColumn("ZROLE_NAME", "Edm.String", "20", model);
 
         model.setKind(ISqlKeywords.KEYWORD_VIEW);
         when(odataDatabaseMetadataUtil.getTableMetadata("UserRole", null)).thenReturn(model);
@@ -304,9 +298,9 @@ public class OData2ODataMTransformerTest {
         OData definition = ODataSynchronizer.parseOData("/customer/Customer.odata", customer);
 
         Table model = new Table("CUSTOMER");
-        TableColumn column1 = new TableColumn("ID", "Edm.Int32", "0", false, true, model);
-        TableColumn column2 = new TableColumn("NUMBER", "Edm.Int32", "0", model);
-        TableColumn column3 = new TableColumn("PAYMENT", "Edm.Int32", "0", model);
+        new TableColumn("ID", "Edm.Int32", "0", false, true, model);
+        new TableColumn("NUMBER", "Edm.Int32", "0", model);
+        new TableColumn("PAYMENT", "Edm.Int32", "0", model);
 
         when(odataDatabaseMetadataUtil.getTableMetadata("CUSTOMER", null)).thenReturn(model);
 
@@ -321,7 +315,6 @@ public class OData2ODataMTransformerTest {
         assertArrayEquals(new String[] {aggregationEntity}, transformed);
     }
 
-    // @Test
     // public void testTransformWithCompositePrimaryKey() throws IOException, SQLException {
     // String employee =
     // IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeCompositePrimaryKey.odata"),
@@ -689,4 +682,5 @@ public class OData2ODataMTransformerTest {
     //
     // odata2ODataMTransformer.transform(definition);
     // }
+
 }

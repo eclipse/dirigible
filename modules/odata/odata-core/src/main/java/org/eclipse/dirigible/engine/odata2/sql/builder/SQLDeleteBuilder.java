@@ -104,7 +104,7 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
 
         for (EdmProperty deleteProperty : target.getKeyProperties()) { // we iterate first the own properties of the type
             if (deleteKeys.containsKey(deleteProperty.getName())) {
-                String columnName = getSQLTableColumnNoAlias(target, deleteProperty);
+                getSQLTableColumnNoAlias(target, deleteProperty);
                 deleteKeysColumnNames.add(getSQLTableColumnNoAlias(target, deleteProperty));
                 Object keyValue = deleteKeys.get(deleteProperty.getName());
                 if (!isValidKeyValue(keyValue)) {
