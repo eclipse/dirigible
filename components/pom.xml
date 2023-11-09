@@ -176,6 +176,7 @@
 		<module>api/api-redis</module>
 		<module>api/api-qldb</module>
 		<module>api/api-pdf</module>
+		<module>api/api-junit</module>
 		
 		<!-- Resources -->
 		<module>resources/resources-core</module>
@@ -228,7 +229,8 @@
 
 		<!-- Test -->
 		<module>test-project</module>
-	</modules>
+        <module>api/api-modules-javascript-tests</module>
+    </modules>
 
 	<dependencies>
 
