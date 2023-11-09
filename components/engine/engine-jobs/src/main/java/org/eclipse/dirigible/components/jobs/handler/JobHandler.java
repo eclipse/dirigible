@@ -10,20 +10,18 @@
  */
 package org.eclipse.dirigible.components.jobs.handler;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.components.jobs.domain.JobLog;
 import org.eclipse.dirigible.components.jobs.service.JobLogService;
-import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.nio.file.Path;
+import java.util.Date;
 
 /**
  * The built-in scripting service job handler.
@@ -43,10 +41,6 @@ public class JobHandler implements Job {
     @Autowired
     private JobLogService jobLogService;
 
-    /** The javascript service. */
-    @Autowired
-    private JavascriptService javascriptService;
-
     /**
      * Execute.
      *
@@ -61,23 +55,15 @@ public class JobHandler implements Job {
         String handler = (String) context.getJobDetail()
                                          .getJobDataMap()
                                          .get(JOB_PARAMETER_HANDLER);
-        String type = (String) context.getJobDetail()
-                                      .getJobDataMap()
-                                      .get(JOB_PARAMETER_ENGINE);
-
         JobLog triggered = registerTriggered(name, handler);
         if (triggered != null) {
-            try {
-                if (type == null) {
-                    type = "javascript";
-                }
-                Map<Object, Object> internal = new HashMap<>();
-                context.put("handler", handler);
-                RepositoryPath path = new RepositoryPath(handler);
-                javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, internal, false);
+            context.put("handler", handler);
+            Path handlerPath = Path.of(handler);
+
+            try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner()) {
+                runner.run(handlerPath);
             } catch (Exception e) {
                 registeredFailed(name, handler, triggered, e);
-
                 throw new JobExecutionException(e);
             }
 

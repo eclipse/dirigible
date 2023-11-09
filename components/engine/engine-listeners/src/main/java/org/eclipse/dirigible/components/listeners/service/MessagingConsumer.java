@@ -10,27 +10,16 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
-import static java.text.MessageFormat.format;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.jms.Connection;
-import javax.jms.Destination;
-import javax.jms.ExceptionListener;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
-import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
+import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
+import javax.jms.*;
+import java.nio.file.Path;
+
+import static java.text.MessageFormat.format;
 
 /**
  * The Class MessagingConsumer.
@@ -38,19 +27,11 @@ import org.springframework.stereotype.Component;
 public class MessagingConsumer implements Runnable, ExceptionListener {
 
     private static final Logger logger = LoggerFactory.getLogger(MessagingConsumer.class);
-
-    private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE = "messaging/wrappers/onMessage.js";
-    private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR = "messaging/wrappers/onError.js";
-
-    private String name;
-    private char type;
+    private final String name;
+    private final char type;
     private String handler;
     private int timeout = 1000;
     private boolean stopped;
-
-    /** The javascript service. */
-    @Autowired
-    private JavascriptService javascriptService;
 
     /**
      * Instantiates a new messaging consumer.
@@ -144,11 +125,8 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
                             logger.trace(format("Start processing a received message in [{0}] by [{1}] ...", this.name, this.handler));
                         }
                         if (message instanceof TextMessage) {
-                            Map<Object, Object> context = createMessagingContext();
-                            context.put("message", escapeCodeString(((TextMessage) message).getText()));
-                            RepositoryPath path = new RepositoryPath(DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE);
-                            JavascriptService.get()
-                                             .handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+                            String messageAsString = escapeCodeString(((TextMessage) message).getText());
+                            executeOnMessageHandler(messageAsString);
                         } else {
                             throw new Exception(format("Invalid message [{0}] has been received in destination [{1}]", message, this.name));
                         }
@@ -189,10 +167,8 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
     @Override
     public synchronized void onException(JMSException exception) {
         try {
-            Map<Object, Object> context = createMessagingContext();
-            context.put("error", escapeCodeString(exception.getMessage()));
-            RepositoryPath path = new RepositoryPath(DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR);
-            javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+            String errorMessage = escapeCodeString(exception.getMessage());
+            executeOnErrorHandler(errorMessage);
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {
                 logger.error(e.getMessage(), e);
@@ -203,10 +179,19 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
         }
     }
 
-    private Map<Object, Object> createMessagingContext() {
-        Map<Object, Object> context = new HashMap<Object, Object>();
-        context.put("handler", this.handler);
-        return context;
+    private void executeOnMessageHandler(String message) {
+        executeHandler("onMessage", message);
+    }
+
+    private void executeOnErrorHandler(String errorMessage) {
+        executeHandler("onError", errorMessage);
+    }
+
+    private void executeHandler(String methodName, String message) {
+        try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner()) {
+            Module module = runner.run(Path.of(handler));
+            runner.runMethod(module, methodName, message);
+        }
     }
 
     /**
