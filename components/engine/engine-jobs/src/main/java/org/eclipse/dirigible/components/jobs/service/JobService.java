@@ -10,14 +10,6 @@
  */
 package org.eclipse.dirigible.components.jobs.service;
 
-import static java.text.MessageFormat.format;
-
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.jobs.domain.Job;
@@ -25,13 +17,20 @@ import org.eclipse.dirigible.components.jobs.email.JobEmailProcessor;
 import org.eclipse.dirigible.components.jobs.manager.JobsManager;
 import org.eclipse.dirigible.components.jobs.repository.JobRepository;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
-import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static java.text.MessageFormat.format;
 
 /**
  * The Class JobService.
@@ -238,9 +237,9 @@ public class JobService implements ArtefactService<Job> {
                 }
 
                 String handler = job.getHandler();
-                var handlerPath = Path.of(handler);
+                Path handlerPath = Path.of(handler);
 
-                try (var runner = new DirigibleJavascriptCodeRunner()) {
+                try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner()) {
                     runner.run(handlerPath);
                 } catch (Exception e) {
                     throw new Exception(e);

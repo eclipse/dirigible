@@ -10,23 +10,16 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
-import static java.text.MessageFormat.format;
-
-import java.nio.file.Path;
-
-import javax.jms.Connection;
-import javax.jms.Destination;
-import javax.jms.ExceptionListener;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
+import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jms.*;
+import java.nio.file.Path;
+
+import static java.text.MessageFormat.format;
 
 /**
  * The Class MessagingConsumer.
@@ -195,8 +188,8 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
     }
 
     private void executeHandler(String methodName, String message) {
-        try (var runner = new DirigibleJavascriptCodeRunner()) {
-            var module = runner.run(Path.of(handler));
+        try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner()) {
+            Module module = runner.run(Path.of(handler));
             runner.runMethod(module, methodName, message);
         }
     }
