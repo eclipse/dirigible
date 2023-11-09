@@ -54,7 +54,7 @@ public class MessagingFacade {
     /**
      * Receive a message from queue.
      *
-     * @param destination the destination
+     * @param queue the queue
      * @param timeout the timeout
      * @return the message as JSON
      * @throws MessagingAPIException if fail to receive a message from the queue * @throws
@@ -73,7 +73,7 @@ public class MessagingFacade {
     /**
      * Receive a message from topic.
      *
-     * @param destination the destination
+     * @param topic the topic
      * @param timeout the timeout
      * @return the the message as JSON
      * @throws MessagingAPIException if fail to receive a message from the topic
