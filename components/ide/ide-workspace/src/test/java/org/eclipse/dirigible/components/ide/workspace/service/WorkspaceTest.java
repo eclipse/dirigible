@@ -14,7 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
+
 import org.eclipse.dirigible.components.ide.workspace.domain.File;
 import org.eclipse.dirigible.components.ide.workspace.domain.Folder;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
@@ -71,7 +73,6 @@ public class WorkspaceTest {
     public void getProjectTest() {
         Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
         Project project1 = workspace1.createProject("Project1");
-
         assertNotNull(project1);
         assertNotNull(project1.getInternal());
         assertEquals("Project1", project1.getName());
@@ -98,8 +99,7 @@ public class WorkspaceTest {
     public void getProjectsTest() {
         Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
         Project project1 = workspace1.createProject("Project1");
-        workspace1.createProject("Project2");
-
+        Project project2 = workspace1.createProject("Project2");
         assertNotNull(project1);
         assertNotNull(project1.getInternal());
         assertEquals("Project1", project1.getName());
@@ -154,7 +154,7 @@ public class WorkspaceTest {
     public void copyProjectTest() {
         Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
         Project project1 = workspace1.createProject("Project1");
-        project1.createFolder("Folder1");
+        Folder folder1 = project1.createFolder("Folder1");
         assertNotNull(project1);
         assertNotNull(project1.getInternal());
         assertEquals("Project1", project1.getName());
@@ -205,7 +205,7 @@ public class WorkspaceTest {
     public void moveProjectTest() {
         Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
         Project project1 = workspace1.createProject("Project1");
-        project1.createFolder("Folder1");
+        Folder folder1 = project1.createFolder("Folder1");
         assertNotNull(project1);
         assertNotNull(project1.getInternal());
         assertEquals("Project1", project1.getName());
@@ -275,7 +275,6 @@ public class WorkspaceTest {
         Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
         Project project1 = workspace1.createProject("Project1");
         Folder folder1 = project1.createFolder("Folder1");
-        project1.createFolder("Folder2");
         assertNotNull(folder1);
         assertNotNull(folder1.getInternal());
         assertEquals("Folder1", folder1.getName());
@@ -304,8 +303,7 @@ public class WorkspaceTest {
         Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
         Project project1 = workspace1.createProject("Project1");
         Folder folder1 = project1.createFolder("Folder1");
-        project1.createFolder("Folder2");
-
+        Folder folder2 = project1.createFolder("Folder2");
         assertNotNull(folder1);
         assertNotNull(folder1.getInternal());
         assertEquals("Folder1", folder1.getName());
@@ -385,7 +383,6 @@ public class WorkspaceTest {
         Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
         Project project1 = workspace1.createProject("Project1");
         File file1 = project1.createFile("File1.txt", "test".getBytes());
-        project1.createFile("File2.txt", "test".getBytes());
         assertNotNull(file1);
         assertNotNull(file1.getInternal());
         assertEquals("File1.txt", file1.getName());
@@ -415,8 +412,7 @@ public class WorkspaceTest {
         Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
         Project project1 = workspace1.createProject("Project1");
         File file1 = project1.createFile("File1.txt", "test".getBytes());
-        project1.createFile("File2.txt", "test".getBytes());
-
+        File file2 = project1.createFile("File2.txt", "test".getBytes());
         assertNotNull(file1);
         assertNotNull(file1.getInternal());
         assertEquals("File1.txt", file1.getName());

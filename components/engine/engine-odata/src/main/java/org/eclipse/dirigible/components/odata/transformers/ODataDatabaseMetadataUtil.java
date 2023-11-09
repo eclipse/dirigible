@@ -25,6 +25,7 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
+import org.eclipse.dirigible.components.data.structures.domain.TableConstraintForeignKey;
 import org.eclipse.dirigible.components.odata.api.ODataProperty;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import com.google.common.base.CaseFormat;
@@ -196,7 +197,6 @@ public class ODataDatabaseMetadataUtil {
             foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schemaName, normalizeTableName(tableMetadata.getName()
                                                                                                                                 .toLowerCase()));
         }
-
 
         while (foreignKeys.next()) {
             new TableConstraintForeignKey(foreignKeys.getString(JDBC_FK_NAME_PROPERTY), new String[] {},

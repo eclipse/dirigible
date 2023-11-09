@@ -86,6 +86,8 @@ public class OData2Utils {
      * @throws ODataException in case of an error
      */
     public static String generateNextLink(ODataContext context, int top, int pagingSize) throws ODataException {
+        String nextLink;
+
         final int skipToken;
         if (top > 0) {
             // We already have limited the maximum number of results for the current request
@@ -130,6 +132,7 @@ public class OData2Utils {
                     Object inlineKeyValue = inlineEntryDataProperties.get(inlinEntityKey.getName());
                     if (inlineKeyValue instanceof String) {
                         return (String) inlineKeyValue;
+                    } else {
                     }
                     throw new OData2Exception("Invalid inline entity: the key " + inlinEntityKey.getName()//
                             + " of entity " + inlineEntry.getName() + " must be of type String!", HttpStatusCodes.BAD_REQUEST);
@@ -154,7 +157,17 @@ public class OData2Utils {
         }
         return link.replaceAll("\\$skiptoken=.+?(?:&|$)", "")
                    .replaceAll("\\$skip=.+?(?:&|$)", "")
-                   .replaceFirst("(?:\\?|&)$", ""); // Remove potentially trailing "?" or "&" left over from remove actions
+                   .replaceFirst("(?:\\?|&)$", ""); // Remove
+                                                    // potentially
+                                                    // trailing
+                                                    // "?"
+                                                    // or
+                                                    // "&"
+                                                    // left
+                                                    // over
+                                                    // from
+                                                    // remove
+                                                    // actions
     }
 
     /**

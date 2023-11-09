@@ -13,6 +13,7 @@ package org.eclipse.dirigible.database.sql.dialects.sybase;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
 
@@ -27,10 +28,10 @@ public class SequenceTest {
     @Test
     public void createSequence() {
         try {
-            SqlFactory.getNative(new SybaseSqlDialect())
-                      .create()
-                      .sequence("CUSTOMERS_SEQUENCE")
-                      .build();
+            String sql = SqlFactory.getNative(new SybaseSqlDialect())
+                                   .create()
+                                   .sequence("CUSTOMERS_SEQUENCE")
+                                   .build();
         } catch (Exception e) {
             return;
         }
@@ -58,10 +59,10 @@ public class SequenceTest {
     @Test
     public void dropSequnce() {
         try {
-            SqlFactory.getNative(new SybaseSqlDialect())
-                      .drop()
-                      .sequence("CUSTOMERS_SEQUENCE")
-                      .build();
+            String sql = SqlFactory.getNative(new SybaseSqlDialect())
+                                   .drop()
+                                   .sequence("CUSTOMERS_SEQUENCE")
+                                   .build();
         } catch (Exception e) {
             return;
         }
@@ -75,9 +76,9 @@ public class SequenceTest {
     @Test
     public void nextvalSequnce() {
         try {
-            SqlFactory.getNative(new SybaseSqlDialect())
-                      .nextval("CUSTOMERS_SEQUENCE")
-                      .build();
+            String sql = SqlFactory.getNative(new SybaseSqlDialect())
+                                   .nextval("CUSTOMERS_SEQUENCE")
+                                   .build();
         } catch (Exception e) {
             return;
         }

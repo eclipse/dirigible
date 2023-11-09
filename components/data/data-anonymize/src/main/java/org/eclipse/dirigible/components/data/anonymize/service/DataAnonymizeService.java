@@ -10,6 +10,7 @@
  */
 package org.eclipse.dirigible.components.data.anonymize.service;
 
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -19,6 +20,7 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
+
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.data.anonymize.domain.DataAnonymizeType;
@@ -29,10 +31,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+
 import net.datafaker.Faker;
 
 /**
@@ -345,8 +349,10 @@ public class DataAnonymizeService {
                             break;
                         }
                         case PHONE: {
-                            object.remove(name);
-                            object.addProperty(name, faker.examplify(value));
+                            if (value != null) {
+                                object.remove(name);
+                                object.addProperty(name, faker.examplify(value));
+                            }
                             break;
                         }
                         case ADDRESS: {
@@ -378,8 +384,10 @@ public class DataAnonymizeService {
                             break;
                         }
                         case RANDOM: {
-                            object.remove(name);
-                            object.addProperty(name, faker.examplify(value));
+                            if (value != null) {
+                                object.remove(name);
+                                object.addProperty(name, faker.examplify(value));
+                            }
                             break;
                         }
                         case MASK: {
@@ -431,12 +439,13 @@ public class DataAnonymizeService {
             if (object.get(name) == null) {
                 return null;
             }
-            if (!object.get(name)
-                       .isJsonObject()) {
+            if (object.get(name)
+                      .isJsonObject()) {
+                object = object.get(name)
+                               .getAsJsonObject();
+            } else {
                 break;
             }
-            object = object.get(name)
-                           .getAsJsonObject();
         }
         return object;
     }

@@ -107,20 +107,11 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
         grantTableAliasForStructuralTypeInQuery(target);
 
         for (EdmProperty deleteProperty : target.getKeyProperties()) { // we iterate first the own properties of the type
-            if (deleteKeys.containsKey(deleteProperty.getName())) {
-                getSQLTableColumnNoAlias(target, deleteProperty);
-                deleteKeysColumnNames.add(getSQLTableColumnNoAlias(target, deleteProperty));
-                Object keyValue = deleteKeys.get(deleteProperty.getName());
-                if (!isValidKeyValue(keyValue)) {
-                    throw new OData2Exception("Invalid key value for property  " + deleteProperty.getName(), HttpStatusCodes.BAD_REQUEST);
-                }
-                Object value = deleteKeys.get(deleteProperty.getName());
-                this.addStatementParam(target, deleteProperty, value);
-
-            } else {
+            if (!deleteKeys.containsKey(deleteProperty.getName())) {
                 throw new OData2Exception(String.format("Key property %s is missing in the DELETE request!", deleteProperty.getName()),
                         HttpStatusCodes.BAD_REQUEST);
             }
+            getSQLTableColumnNoAlias(target, deleteProperty);
             deleteKeysColumnNames.add(getSQLTableColumnNoAlias(target, deleteProperty));
             Object keyValue = deleteKeys.get(deleteProperty.getName());
             if (!isValidKeyValue(keyValue)) {

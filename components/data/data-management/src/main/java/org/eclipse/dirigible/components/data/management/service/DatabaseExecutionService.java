@@ -233,11 +233,8 @@ public class DatabaseExecutionService {
             return;
         }
 
-<<<<<<< Upstream, based on origin/master
+        List<String> results = new ArrayList<String>();
         List<String> errors = new ArrayList<String>();
-=======
-        List<String> errors = new ArrayList<>();
->>>>>>> b4735b9 refactor ActiveMQ consumer logic
 
         StringTokenizer tokenizer = new StringTokenizer(sql, getDelimiter(sql));
         while (tokenizer.hasMoreTokens()) {

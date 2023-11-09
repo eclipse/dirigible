@@ -12,10 +12,13 @@ package org.eclipse.dirigible.components.engine.ftp.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import javax.persistence.EntityManager;
+
 import org.apache.ftpserver.ftplet.Authority;
 import org.eclipse.dirigible.components.engine.ftp.domain.FtpUser;
 import org.junit.jupiter.api.AfterEach;
@@ -89,6 +92,9 @@ public class FtpRepositoryTest {
      */
     @Test
     public void findAllByUsername() {
+        Long id = ftpUserRepository.findAll()
+                                   .get(0)
+                                   .getId();
         List<FtpUser> list = ftpUserRepository.findAllByUsername("user1");
         FtpUser ftpuser = list.size() > 0 ? list.get(0) : null;
         assertNotNull(ftpuser);
@@ -137,7 +143,8 @@ public class FtpRepositoryTest {
      */
     public static FtpUser createFtpUser(String username, String password, boolean enabled, List<? extends Authority> auths, int maxIdleTime,
             String homeDirectory, boolean admin) {
-        return new FtpUser(username, password, true, auths, maxIdleTime, homeDirectory, admin);
+        FtpUser ftpuser = new FtpUser(username, password, true, auths, maxIdleTime, homeDirectory, admin);
+        return ftpuser;
     }
 
     /**

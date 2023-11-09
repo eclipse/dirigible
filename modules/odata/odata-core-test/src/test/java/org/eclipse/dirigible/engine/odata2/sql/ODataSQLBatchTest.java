@@ -10,28 +10,41 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql;
 
-import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.PUT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.cxf.helpers.IOUtils;
-import org.apache.olingo.odata2.api.client.batch.BatchChangeSet;
-import org.apache.olingo.odata2.api.client.batch.BatchChangeSetPart;
-import org.apache.olingo.odata2.api.client.batch.BatchPart;
-import org.apache.olingo.odata2.api.client.batch.BatchQueryPart;
-import org.apache.olingo.odata2.api.client.batch.BatchSingleResponse;
+import org.apache.olingo.odata2.api.client.batch.*;
 import org.apache.olingo.odata2.api.commons.ODataHttpMethod;
+import org.apache.olingo.odata2.api.edm.EdmEntityType;
+import org.apache.olingo.odata2.api.edm.EdmProperty;
+import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
+import org.apache.olingo.odata2.api.ep.feed.ODataFeed;
+import org.apache.olingo.odata2.api.exception.ODataException;
+import org.apache.olingo.odata2.api.processor.ODataContext;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
+import org.apache.olingo.odata2.api.uri.UriInfo;
+import org.apache.olingo.odata2.api.uri.info.DeleteUriInfo;
+import org.apache.olingo.odata2.api.uri.info.PostUriInfo;
+import org.apache.olingo.odata2.api.uri.info.PutMergePatchUriInfo;
 import org.apache.olingo.odata2.core.batch.v2.BatchParser;
+import org.eclipse.dirigible.engine.odata2.sql.api.SQLInterceptor;
+import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
+import org.eclipse.dirigible.engine.odata2.sql.builder.SQLDeleteBuilder;
+import org.eclipse.dirigible.engine.odata2.sql.builder.SQLInsertBuilder;
+import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
+import org.eclipse.dirigible.engine.odata2.sql.builder.SQLUpdateBuilder;
+import org.eclipse.dirigible.engine.odata2.sql.clause.SQLWhereClause;
 import org.eclipse.dirigible.engine.odata2.sql.entities.Address;
 import org.eclipse.dirigible.engine.odata2.sql.entities.Car;
 import org.eclipse.dirigible.engine.odata2.sql.entities.Driver;
 import org.eclipse.dirigible.engine.odata2.sql.entities.Owner;
 import org.junit.Test;
+
+import javax.ws.rs.core.Response;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.*;
+
+import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.*;
+import static org.junit.Assert.*;
 
 /**
  * The Class ODataSQLBatchTest.
@@ -47,6 +60,7 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
     protected Class<?>[] getODataEntities() {
         return new Class[] {Car.class, Driver.class, Owner.class, Address.class};
     }
+
 
     /**
      * Gets the boundary.
@@ -88,6 +102,7 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
         }
     }
 
+
     /**
      * Test execute metadata request batch change set two updates.
      *
@@ -109,6 +124,7 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
         Map<String, String> changeSetHeaders = new HashMap<>();
         changeSetHeaders.put("content-type", "application/json");
         changeSetHeaders.put("Accept", "application/json");
+        String body = "/9j/4AAQSkZJRgABAQEBLAEsAAD/4RM0RXhpZgAATU0AKgAAAAgABwESAAMAAAABAAEA";
         BatchChangeSetPart changeRequest = BatchChangeSetPart.method(PUT.toString())
                                                              .uri("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')")
                                                              .body(content.replaceAll("XXXXXXXXX", "639cac17-4cfd-4d94-b5d0-111fd5488423"))
@@ -130,6 +146,7 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
                                                               .build();
         changeSet.add(changeRequest2);
         batch.add(changeSet);
+
 
         ODataResponse res = OData2RequestBuilder.createRequest(sf)
                                                 .executeBatchRequest(batch);
@@ -170,6 +187,7 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
         Map<String, String> changeSetHeaders = new HashMap<>();
         changeSetHeaders.put("content-type", "application/json");
         changeSetHeaders.put("Accept", "application/json");
+        String body = "/9j/4AAQSkZJRgABAQEBLAEsAAD/4RM0RXhpZgAATU0AKgAAAAgABwESAAMAAAABAAEA";
         BatchChangeSetPart changeRequest = BatchChangeSetPart.method(PUT.toString())
                                                              .uri("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')")
                                                              .body(content.replaceAll("XXXXXXXXX", "639cac17-4cfd-4d94-b5d0-111fd5488423"))
@@ -185,8 +203,9 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
         changeSetHeaders.put("Accept", "application/json");
         BatchChangeSetPart invalidPriceChangeSet = BatchChangeSetPart.method(PUT.toString())
                                                                      .uri("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')")
-                                                                     .body(content.replaceAll("123456789.0", "BOOM")// Simulate error by
-                                                                                                                    // setting invalid price
+                                                                     .body(content.replaceAll("123456789.0", "BOOM")// Simulate error
+                                                                                                                    // by setting
+                                                                                                                    // invalid price
                                                                                   .replaceAll("XXXXXXXXX",
                                                                                           "3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5"))
                                                                      .headers(changeSetHeaders)
@@ -194,6 +213,7 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
                                                                      .build();
         changeSet.add(invalidPriceChangeSet);
         batch.add(changeSet);
+
 
         ODataResponse res = OData2RequestBuilder.createRequest(sf)
                                                 .executeBatchRequest(batch);
@@ -249,6 +269,7 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
         changeSet.add(invalidPriceChangeSet);
         batch.add(changeSet);
 
+
         ODataResponse res = OData2RequestBuilder.createRequest(sf)
                                                 .executeBatchRequest(batch);
         assertEquals(202, res.getStatus()
@@ -265,15 +286,16 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
         }
         assertCarHasPrice("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')", 7000.0);
 
-        modifyingRequestBuilder(sf, content)//
-                                            .segments("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')") //
-                                            .accept("application/json")//
-                                            .content(content)//
-                                            .param("content-type", "application/json")//
-                                            .contentSize(content.length())
-                                            .executeRequest(PUT);
+        Response response = modifyingRequestBuilder(sf, content)//
+                                                                .segments("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')") //
+                                                                .accept("application/json")//
+                                                                .content(content)//
+                                                                .param("content-type", "application/json")//
+                                                                .contentSize(content.length())
+                                                                .executeRequest(PUT);
 
         assertCarHasPrice("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')", 123456789.0);
+
 
     }
 
