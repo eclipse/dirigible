@@ -10,28 +10,28 @@
  */
 package org.eclipse.dirigible.graalium.core.javascript;
 
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 import org.eclipse.dirigible.graalium.core.CodeRunner;
 import org.eclipse.dirigible.graalium.core.graal.ContextCreator;
 import org.eclipse.dirigible.graalium.core.graal.EngineCreator;
+import org.eclipse.dirigible.graalium.core.graal.globals.GlobalFunction;
 import org.eclipse.dirigible.graalium.core.graal.globals.GlobalObject;
 import org.eclipse.dirigible.graalium.core.javascript.modules.ModuleResolver;
+import org.eclipse.dirigible.graalium.core.javascript.modules.ModuleType;
 import org.eclipse.dirigible.graalium.core.javascript.modules.downloadable.DownloadableModuleResolver;
 import org.eclipse.dirigible.graalium.core.javascript.polyfills.JavascriptPolyfill;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
-import java.lang.IllegalStateException;
+
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * The Class GraalJSCodeRunner.
@@ -80,7 +80,7 @@ public class GraalJSCodeRunner implements CodeRunner<Source, Value> {
         graalContext = new ContextCreator(graalEngine, currentWorkingDirectoryPath, currentWorkingDirectoryPath, null,
                 onBeforeContextCreatedHook, onAfterContextCreatedHook, graalJSFileSystem).createContext();
 
-        registerGlobalObjects(graalContext, builder.globalObjects);
+        addGlobalObjects(builder.globalObjects);
         registerPolyfills(graalContext, builder.jsPolyfills);
     }
 
@@ -112,17 +112,6 @@ public class GraalJSCodeRunner implements CodeRunner<Source, Value> {
      */
     private static Consumer<Context> provideOnAfterContextCreatedHook(List<Consumer<Context>> onAfterContextCreatedListeners) {
         return context -> onAfterContextCreatedListeners.forEach(x -> x.accept(context));
-    }
-
-    /**
-     * Register global objects.
-     *
-     * @param context the context
-     * @param globalObjects the global objects
-     */
-    private static void registerGlobalObjects(Context context, List<GlobalObject> globalObjects) {
-        Value contextBindings = context.getBindings("js");
-        globalObjects.forEach(global -> contextBindings.putMember(global.getName(), global.getValue()));
     }
 
     /**
@@ -181,12 +170,23 @@ public class GraalJSCodeRunner implements CodeRunner<Source, Value> {
     }
 
     /**
-     * Adds the global object.
+     * Adds the global objects.
      *
-     * @param globalObject the js global object
+     * @param globalObjects the js global objects
      */
-    public void addGlobalObject(GlobalObject globalObject) {
-        registerGlobalObjects(graalContext, Collections.singletonList(globalObject));
+    public void addGlobalObjects(List<GlobalObject> globalObjects) {
+        Value contextBindings = graalContext.getBindings("js");
+        globalObjects.forEach(global -> contextBindings.putMember(global.getName(), global.getValue()));
+    }
+
+    /**
+     * Adds the global functions.
+     *
+     * @param globalFunctions the js global functions
+     */
+    public void addGlobalFunctions(List<GlobalFunction> globalFunctions) {
+        Value contextBindings = graalContext.getBindings("js");
+        globalFunctions.forEach(global -> contextBindings.putMember(global.getName(), global));
     }
 
     /**
@@ -273,7 +273,7 @@ public class GraalJSCodeRunner implements CodeRunner<Source, Value> {
         /**
          * The js module type.
          */
-        private JavascriptModuleType jsModuleType = JavascriptModuleType.BASED_ON_FILE_EXTENSION;
+        private ModuleType jsModuleType = ModuleType.BASED_ON_FILE_EXTENSION;
 
         /**
          * The js polyfills.
@@ -332,7 +332,7 @@ public class GraalJSCodeRunner implements CodeRunner<Source, Value> {
          * @param jsModuleType the js module type
          * @return the builder
          */
-        public Builder withJSModuleType(JavascriptModuleType jsModuleType) {
+        public Builder withJSModuleType(ModuleType jsModuleType) {
             this.jsModuleType = jsModuleType;
             return this;
         }

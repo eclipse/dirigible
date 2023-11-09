@@ -10,18 +10,19 @@
  */
 package org.eclipse.dirigible.components.engine.javascript.service;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Map;
-
 import org.eclipse.dirigible.components.base.http.access.UserRequestVerifier;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
+import org.eclipse.dirigible.graalium.core.modules.DirigibleSourceProvider;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Map;
 
 import static org.eclipse.dirigible.graalium.core.graal.ValueTransformer.transformValue;
 
@@ -34,16 +35,24 @@ public class JavascriptHandler {
     private static final Logger logger = LoggerFactory.getLogger(JavascriptHandler.class);
 
     /** The source provider. */
-    private JavascriptSourceProvider sourceProvider;
+    private final JavascriptSourceProvider sourceProvider;
 
     /** The repository. */
-    private IRepository repository;
+    private final IRepository repository;
 
     /**
      * Instantiates a new javascript handler.
      *
      * @param repository the repository
-     * @param sourceProvider the source provider
+     */
+    public JavascriptHandler(IRepository repository) {
+        this(repository, new DirigibleSourceProvider());
+    }
+
+    /**
+     * Instantiates a new javascript handler.
+     *
+     * @param repository the repository
      */
     public JavascriptHandler(IRepository repository, JavascriptSourceProvider sourceProvider) {
         this.repository = repository;
@@ -52,10 +61,6 @@ public class JavascriptHandler {
 
     public IRepository getRepository() {
         return repository;
-    }
-
-    public JavascriptSourceProvider getSourceProvider() {
-        return sourceProvider;
     }
 
     /**
@@ -85,7 +90,7 @@ public class JavascriptHandler {
             }
 
             Path absoluteSourcePath = sourceProvider.getAbsoluteSourcePath(projectName, projectFilePath);
-            try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner(parameters, debug, repository, sourceProvider)) {
+            try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner(parameters, debug)) {
                 Source source = runner.prepareSource(absoluteSourcePath);
                 runner.getGraalJSInterceptor()
                       .onBeforeRun(sourceFilePath, absoluteSourcePath, source, runner.getCodeRunner()

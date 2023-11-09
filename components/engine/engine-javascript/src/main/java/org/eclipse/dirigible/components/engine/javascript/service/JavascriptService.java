@@ -30,8 +30,6 @@ public class JavascriptService implements InitializingBean {
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(JavascriptService.class);
 
-    /** The dirigible source provider. */
-    private JavascriptSourceProvider sourceProvider;
     /** The repository. */
     private IRepository repository;
 
@@ -49,8 +47,7 @@ public class JavascriptService implements InitializingBean {
     @Autowired
     public JavascriptService(IRepository repository) {
         this.repository = repository;
-        this.sourceProvider = new DirigibleSourceProvider();
-        this.handler = new JavascriptHandler(getRepository(), getSourceProvider());
+        this.handler = new JavascriptHandler(getRepository());
     }
 
     /**
@@ -79,15 +76,6 @@ public class JavascriptService implements InitializingBean {
      */
     public IRepository getRepository() {
         return repository;
-    }
-
-    /**
-     * Gets the source provider.
-     *
-     * @return the source provider
-     */
-    public JavascriptSourceProvider getSourceProvider() {
-        return sourceProvider;
     }
 
     /**
