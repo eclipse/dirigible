@@ -38,14 +38,26 @@
                             ng-required="true"
                             ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
                             ng-model="entity.${property.name}"
+#if($property.isCalculatedProperty == "true")
+                            dg-disabled="true"
+#else
                             dg-disabled="action === 'select'"
+#end
                             dropdown-items="options${property.name}"
                             dg-placeholder="Search ${property.widgetLabel} ...">
                         </fd-combobox-input>
                     </fd-form-item>
 #elseif($property.widgetType == "CHECKBOX")
                     <fd-form-item>
-                        <fd-checkbox id="id${property.name}" compact="false" ng-required="${property.dataNotNull}" ng-model="entity.${property.name}">
+                        <fd-checkbox id="id${property.name}"
+                            compact="false"
+                            ng-required="${property.dataNotNull}"
+#if($property.isCalculatedProperty == "true")
+                            ng-disabled="true"
+#else
+                            ng-disabled="action === 'select'"
+#end
+                            ng-model="entity.${property.name}">
                         </fd-checkbox>
                         <fd-checkbox-label for="id${property.name}" dg-required="${property.dataNotNull}">${property.widgetLabel}</fd-checkbox-label>
                     </fd-form-item>
@@ -59,7 +71,11 @@
 								ng-required="${property.dataNotNull}"
                                 ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
                                 ng-model="entity.${property.name}"
+#if($property.isCalculatedProperty == "true")
+                                ng-readonly="true"
+#else
                                 ng-readonly="action === 'select'"
+#end
                                 type="color"
                                 placeholder="Enter ${property.widgetLabel}">
                             </fd-input>
@@ -76,7 +92,11 @@
 								ng-required="${property.dataNotNull}"
                                 ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
                                 ng-model="entity.${property.name}"
+#if($property.isCalculatedProperty == "true")
+                                ng-readonly="true"
+#else
                                 ng-readonly="action === 'select'"
+#end
                                 type="number"
                                 placeholder="Enter ${property.widgetLabel}">
                             </fd-input>
@@ -93,7 +113,11 @@
 								ng-required="${property.dataNotNull}"
                                 ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
                                 ng-model="entity.${property.name}"
+#if($property.isCalculatedProperty == "true")
+                                ng-readonly="true"
+#else
                                 ng-readonly="action === 'select'"
+#end
                                 type="month">
                             </fd-input>
                             <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
@@ -109,7 +133,11 @@
 								ng-required="${property.dataNotNull}"
                                 ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
                                 ng-model="entity.${property.name}"
+#if($property.isCalculatedProperty == "true")
+                                ng-readonly="true"
+#else
                                 ng-readonly="action === 'select'"
+#end
                                 type="week">
                             </fd-input>
                             <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
@@ -125,7 +153,11 @@
 								ng-required="${property.dataNotNull}"
                                 ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
                                 ng-model="entity.${property.name}"
+#if($property.isCalculatedProperty == "true")
+                                ng-readonly="true"
+#else
                                 ng-readonly="action === 'select'"
+#end
                                 type="time">
                             </fd-input>
                             <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
@@ -141,7 +173,11 @@
 								ng-required="${property.dataNotNull}"
                                 ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
                                 ng-model="entity.${property.name}"
+#if($property.isCalculatedProperty == "true")
+                                ng-readonly="true"
+#else
                                 ng-readonly="action === 'select'"
+#end
                                 type="datetime-local">
                             </fd-input>
                             <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
@@ -157,7 +193,11 @@
 								ng-required="${property.dataNotNull}"
                                 ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
                                 ng-model="entity.${property.name}"
+#if($property.isCalculatedProperty == "true")
+                                ng-readonly="true"
+#else
                                 ng-readonly="action === 'select'"
+#end
                                 type="date">
                             </fd-input>
                             <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
@@ -172,7 +212,11 @@
 							ng-required="${property.dataNotNull}"
 							ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
 							ng-model="entity.${property.name}"
-							ng-readonly="action === 'select'"
+#if($property.isCalculatedProperty == "true")
+                            ng-readonly="true"
+#else
+                            ng-readonly="action === 'select'"
+#end
 							ng-minlength="${property.minLength} || 0"
 							ng-maxlength="${property.maxLength} || -1"
 							dg-input-rules="{ patterns: ['${property.inputRule}'] }"
@@ -190,7 +234,11 @@
 								ng-required="${property.dataNotNull}"
                                 ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
                                 ng-model="entity.${property.name}"
+#if($property.isCalculatedProperty == "true")
+                                ng-readonly="true"
+#else
                                 ng-readonly="action === 'select'"
+#end
                                 ng-minlength="${property.minLength} || 0"
                                 ng-maxlength="${property.maxLength} || -1"
                                 dg-input-rules="{ patterns:#if($property.inputRule == "")['^[0-9]{0,14}$']#else ['${property.inputRule}']#end }"
@@ -210,7 +258,11 @@
 								ng-required="${property.dataNotNull}"
                                 ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
                                 ng-model="entity.${property.name}"
+#if($property.isCalculatedProperty == "true")
+                                ng-readonly="true"
+#else
                                 ng-readonly="action === 'select'"
+#end
                                 ng-minlength="${property.minLength} || 0"
                                 ng-maxlength="${property.maxLength} || -1"
                                 dg-input-rules="{ patterns: ['${property.inputRule}'] }"
@@ -230,7 +282,11 @@
 								ng-required="${property.dataNotNull}"
                                 ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
                                 ng-model="entity.${property.name}"
+#if($property.isCalculatedProperty == "true")
+                                ng-readonly="true"
+#else
                                 ng-readonly="action === 'select'"
+#end
                                 ng-minlength="${property.minLength} || 0"
                                 ng-maxlength="${property.maxLength} || -1"
                                 dg-input-rules="{ patterns: ['${property.inputRule}'] }"
@@ -250,7 +306,11 @@
 								ng-required="${property.dataNotNull}"
                                 ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
                                 ng-model="entity.${property.name}"
+#if($property.isCalculatedProperty == "true")
+                                ng-readonly="true"
+#else
                                 ng-readonly="action === 'select'"
+#end
                                 ng-minlength="${property.minLength} || 0"
                                 ng-maxlength="${property.maxLength} || -1"
                                 dg-input-rules="{ patterns: ['${property.inputRule}'] }"
