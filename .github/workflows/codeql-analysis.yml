@@ -47,6 +47,14 @@ jobs:
         distribution: 'corretto'
         java-version: '21'
         architecture: x64
+    - name: Install NodeJS
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - name: Install esbuild
+      run: npm i -g esbuild
+    - name: Install TypeScript compiler
+      run: npm i -g typescript
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
