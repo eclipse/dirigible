@@ -71,7 +71,7 @@ public class WorkspaceTest {
     public void getProjectTest() {
         Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
         Project project1 = workspace1.createProject("Project1");
-        workspace1.createProject("Project2");
+
         assertNotNull(project1);
         assertNotNull(project1.getInternal());
         assertEquals("Project1", project1.getName());
@@ -99,6 +99,7 @@ public class WorkspaceTest {
         Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
         Project project1 = workspace1.createProject("Project1");
         workspace1.createProject("Project2");
+
         assertNotNull(project1);
         assertNotNull(project1.getInternal());
         assertEquals("Project1", project1.getName());
@@ -303,7 +304,6 @@ public class WorkspaceTest {
         Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
         Project project1 = workspace1.createProject("Project1");
         Folder folder1 = project1.createFolder("Folder1");
-        project1.createFolder("Folder2");
         assertNotNull(folder1);
         assertNotNull(folder1.getInternal());
         assertEquals("Folder1", folder1.getName());
@@ -413,7 +413,6 @@ public class WorkspaceTest {
         Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
         Project project1 = workspace1.createProject("Project1");
         File file1 = project1.createFile("File1.txt", "test".getBytes());
-        project1.createFile("File2.txt", "test".getBytes());
         assertNotNull(file1);
         assertNotNull(file1.getInternal());
         assertEquals("File1.txt", file1.getName());
