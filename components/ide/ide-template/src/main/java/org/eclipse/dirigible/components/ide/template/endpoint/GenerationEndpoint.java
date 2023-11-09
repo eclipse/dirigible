@@ -14,7 +14,6 @@ import static java.text.MessageFormat.format;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 import javax.validation.Valid;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.ide.template.domain.GenerationTemplateParameters;
@@ -82,7 +81,7 @@ public class GenerationEndpoint {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
         }
 
-        List<File> files = generationService.generateFile(workspace, project, path, parameters);
+        generationService.generateFile(workspace, project, path, parameters);
         return ResponseEntity.created(workspaceService.getURI(workspace, project, path))
                              .build();
     }
