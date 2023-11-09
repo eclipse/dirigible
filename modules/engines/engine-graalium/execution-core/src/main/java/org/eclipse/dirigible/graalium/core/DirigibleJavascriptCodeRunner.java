@@ -10,20 +10,18 @@
  */
 package org.eclipse.dirigible.graalium.core;
 
-import java.nio.file.Path;
-import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.function.Consumer;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.graalium.core.globals.DirigibleContextGlobalObject;
 import org.eclipse.dirigible.graalium.core.globals.DirigibleEngineTypeGlobalObject;
-import org.eclipse.dirigible.graalium.core.javascript.GraalJSInterceptor;
-import org.eclipse.dirigible.graalium.core.javascript.modules.java.JavaModuleResolver;
 import org.eclipse.dirigible.graalium.core.javascript.GraalJSCodeRunner;
+import org.eclipse.dirigible.graalium.core.javascript.GraalJSInterceptor;
+import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
+import org.eclipse.dirigible.graalium.core.javascript.modules.ModuleType;
+import org.eclipse.dirigible.graalium.core.javascript.modules.java.JavaModuleResolver;
 import org.eclipse.dirigible.graalium.core.modules.DirigibleEsmModuleResolver;
 import org.eclipse.dirigible.graalium.core.modules.DirigibleModuleResolver;
+import org.eclipse.dirigible.graalium.core.modules.DirigibleSourceProvider;
 import org.eclipse.dirigible.graalium.core.polyfills.RequirePolyfill;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -31,13 +29,25 @@ import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ServiceLoader;
+import java.util.function.Consumer;
+
 /**
  * The Class DirigibleJavascriptCodeRunner.
  */
 public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> {
 
+    private static final String CJS_EXT = ".js";
+    private static final String MJS_EXT = ".mjs";
+    private static final String TS_EXT = ".ts";
+
     /** The code runner. */
     private final GraalJSCodeRunner codeRunner;
+
+    private final DirigibleSourceProvider sourceProvider;
 
     /** The Constant DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS. */
     private static final ServiceLoader<DirigibleJavascriptHooksProvider> DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS =
@@ -51,14 +61,27 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
 
     /**
      * Instantiates a new dirigible javascript code runner.
+     */
+    public DirigibleJavascriptCodeRunner() {
+        this(new HashMap<>(), false);
+    }
+
+    /**
+     * Instantiates a new dirigible javascript code runner.
+     *
+     * @param debug the debug
+     */
+    public DirigibleJavascriptCodeRunner(boolean debug) {
+        this(new HashMap<>(), debug);
+    }
+
+    /**
+     * Instantiates a new dirigible javascript code runner.
      *
      * @param parameters the parameters
      * @param debug the debug
-     * @param repository the repository
-     * @param sourceProvider the source provider
      */
-    public DirigibleJavascriptCodeRunner(Map<Object, Object> parameters, boolean debug, IRepository repository,
-            JavascriptSourceProvider sourceProvider) {
+    public DirigibleJavascriptCodeRunner(Map<Object, Object> parameters, boolean debug) {
         Path workingDirectoryPath = getDirigibleWorkingDirectory();
         Path cachePath = workingDirectoryPath.resolve("caches");
         Path coreModulesESMProxiesCachePath = cachePath.resolve("core-modules-proxies-cache");
@@ -81,6 +104,7 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
             interceptor = new DirigibleJavascriptInterceptor(this);
         }
 
+        sourceProvider = new DirigibleSourceProvider();
         codeRunner = GraalJSCodeRunner.newBuilder(workingDirectoryPath, cachePath)
                                       .addJSPolyfill(new RequirePolyfill())
                                       .addGlobalObject(new DirigibleContextGlobalObject(parameters))
@@ -138,8 +162,26 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
         return codeRunner.prepareSource(codeFilePath);
     }
 
+    public Module run(Path codeFilePath) {
+        var pathAsString = codeFilePath.toString();
+        if (pathAsString.endsWith(TS_EXT)) {
+            pathAsString = transformTypeScriptHandlerPathIfNecessary(pathAsString);
+        }
+        Source source = prepareSource(Path.of(pathAsString));
+        Value module = run(source);
+        ModuleType moduleType = pathAsString.endsWith(MJS_EXT) ? ModuleType.ESM : ModuleType.CJS;
+        return new Module(module, moduleType);
+    }
+
+    private static String transformTypeScriptHandlerPathIfNecessary(String handlerPath) {
+        if (handlerPath.endsWith(TS_EXT)) {
+            return handlerPath.substring(0, handlerPath.length() - TS_EXT.length()) + MJS_EXT;
+        }
+        return handlerPath;
+    }
+
     /**
-     * Run.
+     * Run the given source.
      *
      * @param codeSource the code source
      * @return the value
@@ -147,6 +189,31 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
     @Override
     public Value run(Source codeSource) {
         return codeRunner.run(codeSource);
+    }
+
+    public Value runMethod(Module codeModule, String methodName, Object... args) {
+        return switch (codeModule.moduleType()) {
+            case CJS -> runCjsMethod(codeModule.module(), methodName, args);
+            case ESM -> runEsmMethod(codeModule.module(), methodName, args);
+            default -> throw new IllegalArgumentException("Unsupported module type: " + codeModule.moduleType());
+        };
+    }
+
+    private Value runEsmMethod(Value module, String methodName, Object... args) {
+        Value onMessage = module.getMember(methodName);
+        return onMessage.execute(args);
+    }
+
+    private Value runCjsMethod(Value module, String methodName, Object... args) {
+        Value onMessage = module.getContext()
+                                .getBindings("js")
+                                .getMember("exports")
+                                .getMember(methodName);
+        return onMessage.execute(args);
+    }
+
+    public DirigibleSourceProvider getSourceProvider() {
+        return sourceProvider;
     }
 
     /**

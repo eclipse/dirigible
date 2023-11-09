@@ -11,16 +11,22 @@
  */
 const DirigibleSourceProvider = Java.type("org.eclipse.dirigible.graalium.core.modules.DirigibleSourceProvider");
 const dirigibleSourceProvider = new DirigibleSourceProvider();
+const fileSeparator = Java.type('java.io.File').separator;
 
 const _loadedModules = {};
 
-function _require (path) {
+function _require (initialPath, path) {
     let moduleInfo = _loadedModules[path];
     if (moduleInfo) {
         return moduleInfo;
     }
 
-    const code = '(function(exports, module, require) { ' + dirigibleSourceProvider.getSource(path) + '\n})';
+    let maybeSource = dirigibleSourceProvider.getSource(path);
+    if (!maybeSource) {
+        maybeSource = dirigibleSourceProvider.getSource(fixPath(initialPath + fileSeparator + "index.js"));
+    }
+
+    const code = '(function(exports, module, require) { ' + maybeSource + '\n})';
     moduleInfo = {
         loaded: false,
         id: path,
@@ -45,7 +51,7 @@ function _require (path) {
 };
 
 function require(path) {
-    const module = _require(fixPath(path));
+    const module = _require(path, fixPath(path));
     return module.exports;
 }
 
@@ -75,7 +81,8 @@ function fixPath(path, mod) {
         "redis",
         "user",
         "template",
-        "utils"
+        "utils",
+        "junit"
     ];
 
     let fixedPath = path;
@@ -97,4 +104,5 @@ function fixPath(path, mod) {
 }
 
 globalThis.require = require;
+globalThis.exports = {};
 globalThis.dirigibleRequire = globalThis.require;
