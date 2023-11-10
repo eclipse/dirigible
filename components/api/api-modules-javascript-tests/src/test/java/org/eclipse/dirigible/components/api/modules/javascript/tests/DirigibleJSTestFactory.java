@@ -48,8 +48,7 @@ public class DirigibleJSTestFactory {
         return findAllTestFilesInProject(testProjectName).stream()
                                                          .map(testFilePath -> {
                                                              String testFilePathAsString = testFilePath.toString();
-                                                             ModuleType moduleType = testFilePathAsString.endsWith(".mjs")
-                                                                     ? ModuleType.ESM
+                                                             ModuleType moduleType = testFilePathAsString.endsWith(".mjs") ? ModuleType.ESM
                                                                      : ModuleType.CJS;
                                                              Source source =
                                                                      new GraalJSSourceCreator(moduleType).createSource(testFilePath);
