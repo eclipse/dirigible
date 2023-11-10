@@ -233,7 +233,6 @@ public class DatabaseExecutionService {
             return;
         }
 
-        List<String> results = new ArrayList<String>();
         List<String> errors = new ArrayList<String>();
 
         StringTokenizer tokenizer = new StringTokenizer(sql, getDelimiter(sql));

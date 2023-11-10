@@ -132,7 +132,6 @@ public class OData2Utils {
                     Object inlineKeyValue = inlineEntryDataProperties.get(inlinEntityKey.getName());
                     if (inlineKeyValue instanceof String) {
                         return (String) inlineKeyValue;
-                    } else {
                     }
                     throw new OData2Exception("Invalid inline entity: the key " + inlinEntityKey.getName()//
                             + " of entity " + inlineEntry.getName() + " must be of type String!", HttpStatusCodes.BAD_REQUEST);

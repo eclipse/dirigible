@@ -55,7 +55,7 @@ public class RepositoryPath {
      * @param input the input
      */
     public RepositoryPath(String... input) {
-        List<String> allSegments = new ArrayList<String>();
+        List<String> allSegments = new ArrayList<>();
         for (String segment : input) {
             final StringTokenizer tokenizer = new StringTokenizer(segment, IRepository.SEPARATOR);
             int tokens = tokenizer.countTokens();

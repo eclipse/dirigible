@@ -11,15 +11,11 @@
 package org.eclipse.dirigible.components.engine.bpm.flowable.service;
 
 import static java.text.MessageFormat.format;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ProcessDefinitionData;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ProcessInstanceData;
@@ -38,9 +34,7 @@ import org.flowable.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,10 +51,10 @@ public class BpmService {
     private static final Logger logger = LoggerFactory.getLogger(BpmService.class);
 
     /** The workspace service. */
-    private WorkspaceService workspaceService;
+    private final WorkspaceService workspaceService;
 
     /** The bpm provider flowable. */
-    private BpmProviderFlowable bpmProviderFlowable;
+    private final BpmProviderFlowable bpmProviderFlowable;
 
     /**
      * Instantiates a new bpm service.
@@ -111,7 +105,6 @@ public class BpmService {
                     bpmnXMLConverter.convertToBpmnModel(new InputStreamSource(new ByteArrayInputStream(file.getContent())), true, true);
             BpmnJsonConverter bpmnJsonConverter = new BpmnJsonConverter();
             ObjectNode objectNode = bpmnJsonConverter.convertToJson(bpmnModel);
-            ObjectMapper objectMapper = new ObjectMapper();
             ObjectNode rootNode = JsonNodeFactory.instance.objectNode();
             rootNode.set("model", objectNode);
             rootNode.set("modelId",
@@ -133,11 +126,9 @@ public class BpmService {
             // String json = objectMapper.writeValueAsString(rootNode);
             // return json;
             return rootNode;
-        } else {
-            throw new RepositoryNotFoundException(
-                    format("The requested BPMN file does not exist in workspace: [{0}], project: [{1}] and path: [{2}]", workspace, project,
-                            path));
         }
+        throw new RepositoryNotFoundException(format(
+                "The requested BPMN file does not exist in workspace: [{0}], project: [{1}] and path: [{2}]", workspace, project, path));
     }
 
     /**
@@ -173,16 +164,12 @@ public class BpmService {
      */
     public JsonNode getStencilSet() throws IOException {
         InputStream in = BpmService.class.getResourceAsStream("/stencilset_bpmn.json");
-        try {
+        try (in) {
             byte[] content = IOUtils.toByteArray(in);
             ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode modelNode = objectMapper.readTree(content);
+
             // return new String(content, StandardCharsets.UTF_8);
-            return modelNode;
-        } finally {
-            if (in != null) {
-                in.close();
-            }
+            return objectMapper.readTree(content);
         }
     }
 
@@ -192,7 +179,7 @@ public class BpmService {
      * @return the process definitions
      */
     public List<ProcessDefinitionData> getProcessDefinitions() {
-        ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
+        ProcessEngine processEngine = (getBpmProviderFlowable().getProcessEngine());
 
         List<ProcessDefinition> processDefinitions = processEngine.getRepositoryService()
                                                                   .createProcessDefinitionQuery()
@@ -213,7 +200,7 @@ public class BpmService {
      * @return the process definition by key
      */
     public ProcessDefinitionData getProcessDefinitionByKey(String key) {
-        ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
+        ProcessEngine processEngine = (getBpmProviderFlowable().getProcessEngine());
 
         List<ProcessDefinition> processDefinitions = processEngine.getRepositoryService()
                                                                   .createProcessDefinitionQuery()
@@ -221,8 +208,7 @@ public class BpmService {
                                                                   .list();
 
         for (ProcessDefinition processDefinition : processDefinitions) {
-            ProcessDefinitionData processDefinitionData = mapProcessDefinition(processDefinition);
-            return processDefinitionData;
+            return mapProcessDefinition(processDefinition);
         }
         return null;
     }
@@ -234,7 +220,7 @@ public class BpmService {
      * @return the process definition by id
      */
     public ProcessDefinitionData getProcessDefinitionById(String id) {
-        ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
+        ProcessEngine processEngine = (getBpmProviderFlowable().getProcessEngine());
 
         List<ProcessDefinition> processDefinitions = processEngine.getRepositoryService()
                                                                   .createProcessDefinitionQuery()
@@ -242,8 +228,7 @@ public class BpmService {
                                                                   .list();
 
         for (ProcessDefinition processDefinition : processDefinitions) {
-            ProcessDefinitionData processDefinitionData = mapProcessDefinition(processDefinition);
-            return processDefinitionData;
+            return mapProcessDefinition(processDefinition);
         }
         return null;
     }
@@ -254,7 +239,7 @@ public class BpmService {
      * @return the process instances
      */
     public List<ProcessInstanceData> getProcessInstances() {
-        ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
+        ProcessEngine processEngine = (getBpmProviderFlowable().getProcessEngine());
 
         List<ProcessInstance> processInstances = processEngine.getRuntimeService()
                                                               .createProcessInstanceQuery()
@@ -275,7 +260,7 @@ public class BpmService {
      * @return the process instance
      */
     public List<ProcessInstanceData> getProcessInstanceByKey(String key) {
-        ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
+        ProcessEngine processEngine = (getBpmProviderFlowable().getProcessEngine());
 
         List<ProcessInstance> processInstances = processEngine.getRuntimeService()
                                                               .createProcessInstanceQuery()
@@ -297,7 +282,7 @@ public class BpmService {
      * @return the process instance
      */
     public ProcessInstanceData getProcessInstanceById(String id) {
-        ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
+        ProcessEngine processEngine = (getBpmProviderFlowable().getProcessEngine());
 
         List<ProcessInstance> processInstances = processEngine.getRuntimeService()
                                                               .createProcessInstanceQuery()
@@ -305,8 +290,7 @@ public class BpmService {
                                                               .list();
 
         for (ProcessInstance processInstance : processInstances) {
-            ProcessInstanceData processInstanceData = mapProcessInstance(processInstance);
-            return processInstanceData;
+            return mapProcessInstance(processInstance);
         }
         return null;
     }
@@ -318,7 +302,7 @@ public class BpmService {
      * @return the process instance
      */
     public List<ProcessInstanceData> getProcessInstanceByBusinessKey(String businessKey) {
-        ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
+        ProcessEngine processEngine = (getBpmProviderFlowable().getProcessEngine());
 
         List<ProcessInstance> processInstances = processEngine.getRuntimeService()
                                                               .createProcessInstanceQuery()

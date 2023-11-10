@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.components.data.csvim.synchronizer;
 
 import static org.eclipse.dirigible.components.api.platform.RepositoryFacade.getResource;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -20,11 +19,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -129,8 +126,7 @@ public class CsvimProcessor {
     /**
      * The csv processor.
      */
-    private CsvProcessor csvProcessor;
-
+    private final CsvProcessor csvProcessor;
 
     /**
      * Instantiates a new csvim processor.
@@ -156,7 +152,7 @@ public class CsvimProcessor {
         TableMetadata tableMetadata = CsvimUtils.getTableMetadata(tableName, connection);
         String pkName = getPkName(tableMetadata, csvParser.getHeaderNames());
 
-        if (tableMetadata == null || csvParser == null) {
+        if (tableMetadata == null) {
             String error = String.format(PROBLEM_WITH_TABLE_METADATA_OR_CSVPARSER, tableName);
             logger.error(error);
             CsvimUtils.logProcessorErrors(error, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
@@ -168,15 +164,13 @@ public class CsvimProcessor {
 
         String pkNameForCSVRecord = getPkNameForCSVRecord(connection, tableName, csvParser.getHeaderNames());
 
-        Iterator<CSVRecord> csvRecords = csvParser.iterator();
         List<ColumnMetadata> tableColumns = tableMetadata.getColumns();
         boolean skipComparing = isEmptyTable(tableName, connection);
 
         int countAll = 0;
         int countBatch = 0;
         int batchSize = getCsvDataBatchSize();
-        while (csvRecords.hasNext()) {
-            CSVRecord csvRecord = csvRecords.next();
+        for (CSVRecord csvRecord : csvParser) {
             countAll++;
             countBatch++;
             if (skipComparing) {
@@ -309,8 +303,9 @@ public class CsvimProcessor {
             String errorMessage = "Only ';' or ',' characters are supported as delimiters for CSV files.";
             CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
             throw new Exception(errorMessage);
-        } else if (csvFile.getDelimEnclosing() != null && csvFile.getDelimEnclosing()
-                                                                 .length() > 1) {
+        }
+        if (csvFile.getDelimEnclosing() != null && csvFile.getDelimEnclosing()
+                                                          .length() > 1) {
             String errorMessage = "Delim enclosing should only contain one character.";
             CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
             throw new Exception(errorMessage);
@@ -355,11 +350,9 @@ public class CsvimProcessor {
                 return found != null ? found.getName() : null;
             }
 
-            for (int i = 0; i < columnModels.size(); i++) {
-                if (columnModels.get(i)
-                                .isKey()) {
-                    return columnModels.get(i)
-                                       .getName();
+            for (ColumnMetadata columnModel : columnModels) {
+                if (columnModel.isKey()) {
+                    return columnModel.getName();
                 }
             }
         }
@@ -381,7 +374,6 @@ public class CsvimProcessor {
         }
         return batchSize;
     }
-
 
     /**
      * Insert csv records.
@@ -458,9 +450,8 @@ public class CsvimProcessor {
                 if (pkColumnName != null) {
                     int csvRecordPkValueIndex = headerNames.indexOf(pkColumnName);
                     return csvRecordPkValueIndex >= 0 ? csvRecord.get(csvRecordPkValueIndex) : null;
-                } else {
-                    return null;
                 }
+                return null;
             }
 
             for (int i = 0; i < csvRecord.size(); i++) {
@@ -490,8 +481,7 @@ public class CsvimProcessor {
                                                    .filter(ColumnMetadata::isKey)
                                                    .findFirst()
                                                    .orElse(null);
-                String pkColumnName = found != null ? found.getName() : null;
-                return pkColumnName;
+                return found != null ? found.getName() : null;
             }
         }
         return null;
