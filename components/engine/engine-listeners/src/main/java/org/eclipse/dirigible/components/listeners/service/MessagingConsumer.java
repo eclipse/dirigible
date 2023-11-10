@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.components.listeners.service;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 
     private static final Logger logger = LoggerFactory.getLogger(MessagingConsumer.class);
     private final String name;
-    private final char type;
+    private final ListenerKind type;
     private String handler;
     private int timeout = 1000;
     private boolean stopped;
@@ -41,7 +42,7 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
      * @param handler the handler
      * @param timeout the timeout
      */
-    public MessagingConsumer(String name, char type, String handler, int timeout) {
+    public MessagingConsumer(String name, ListenerKind type, String handler, int timeout) {
         this.name = name;
         this.type = type;
         this.handler = handler;
@@ -55,7 +56,7 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
      * @param type the type
      * @param timeout the timeout
      */
-    public MessagingConsumer(String name, char type, int timeout) {
+    public MessagingConsumer(String name, ListenerKind type, int timeout) {
         this.name = name;
         this.type = type;
         this.timeout = timeout;
@@ -104,9 +105,9 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
             Destination destination = null;
-            if (type == 'Q') {
+            if (ListenerKind.QUEUE.equals(type)) {
                 destination = session.createQueue(this.name);
-            } else if (type == 'T') {
+            } else if (ListenerKind.TOPIC.equals(type)) {
                 destination = session.createTopic(this.name);
             } else {
                 throw new Exception("Invalid Destination Type: " + this.type);
@@ -124,8 +125,8 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
                         if (logger.isTraceEnabled()) {
                             logger.trace(format("Start processing a received message in [{0}] by [{1}] ...", this.name, this.handler));
                         }
-                        if (message instanceof TextMessage) {
-                            String messageAsString = escapeCodeString(((TextMessage) message).getText());
+                        if (message instanceof TextMessage textMessage) {
+                            String messageAsString = escapeCodeString(textMessage.getText());
                             executeOnMessageHandler(messageAsString);
                         } else {
                             throw new Exception(format("Invalid message [{0}] has been received in destination [{1}]", message, this.name));
@@ -139,10 +140,8 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
                     if (logger.isDebugEnabled()) {
                         logger.debug(format("Received message in [{0}] by synchronous consumer.", this.name));
                     }
-                    if (message instanceof TextMessage) {
-                        TextMessage textMessage = (TextMessage) message;
-                        String text = textMessage.getText();
-                        return text;
+                    if (message instanceof TextMessage textMessage) {
+                        return textMessage.getText();
                     }
                     return null;
                 }

@@ -38,9 +38,10 @@ public class Listener extends Artefact {
     private String handler;
 
     /** The handler. */
+    @Convert(converter = ListenerKindConverter.class)
     @Column(name = "LISTENER_KIND", columnDefinition = "CHAR", nullable = false, length = 1)
     @Expose
-    private Character kind;
+    private ListenerKind kind;
 
     /**
      * Instantiates a new listener.
@@ -51,7 +52,7 @@ public class Listener extends Artefact {
      * @param handler the handler
      * @param kind the kind
      */
-    public Listener(String location, String name, String description, String handler, Character kind) {
+    public Listener(String location, String name, String description, String handler, ListenerKind kind) {
         super(location, name, ARTEFACT_TYPE, description, null);
         this.handler = handler;
         this.kind = kind;
@@ -103,7 +104,7 @@ public class Listener extends Artefact {
      *
      * @return the kind
      */
-    public Character getKind() {
+    public ListenerKind getKind() {
         return kind;
     }
 
@@ -112,7 +113,7 @@ public class Listener extends Artefact {
      *
      * @param kind the new kind
      */
-    public void setKind(Character kind) {
+    public void setKind(ListenerKind kind) {
         this.kind = kind;
     }
 

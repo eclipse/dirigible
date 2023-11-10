@@ -10,6 +10,7 @@
  */
 package org.eclipse.dirigible.components.api.messaging;
 
+import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
 import org.eclipse.dirigible.components.listeners.service.MessagingConsumer;
 import org.eclipse.dirigible.components.listeners.service.MessagingProducer;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,7 @@ public class MessagingFacade {
      * @param message the message
      */
     public static final void sendToQueue(String destination, String message) {
-        MessagingProducer producer = new MessagingProducer(destination, 'Q', message);
+        MessagingProducer producer = new MessagingProducer(destination, ListenerKind.QUEUE, message);
         new Thread(producer).start();
     }
 
@@ -38,7 +39,7 @@ public class MessagingFacade {
      * @param message the message
      */
     public static final void sendToTopic(String destination, String message) {
-        MessagingProducer producer = new MessagingProducer(destination, 'T', message);
+        MessagingProducer producer = new MessagingProducer(destination, ListenerKind.TOPIC, message);
         new Thread(producer).start();
     }
 
@@ -50,7 +51,7 @@ public class MessagingFacade {
      * @return the message as JSON
      */
     public static final String receiveFromQueue(String destination, int timeout) {
-        MessagingConsumer consumer = new MessagingConsumer(destination, 'Q', timeout);
+        MessagingConsumer consumer = new MessagingConsumer(destination, ListenerKind.QUEUE, timeout);
         return consumer.receiveMessage();
     }
 
@@ -62,7 +63,7 @@ public class MessagingFacade {
      * @return the the message as JSON
      */
     public static final String receiveFromTopic(String destination, int timeout) {
-        MessagingConsumer consumer = new MessagingConsumer(destination, 'T', timeout);
+        MessagingConsumer consumer = new MessagingConsumer(destination, ListenerKind.TOPIC, timeout);
         return consumer.receiveMessage();
     }
 
