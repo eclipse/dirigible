@@ -80,8 +80,7 @@ public class JarRepository extends ZipRepository {
      * @throws LocalRepositoryException the local repository exception
      */
     // disable usage
-    protected JarRepository() throws LocalRepositoryException {
-    }
+    protected JarRepository() throws LocalRepositoryException {}
 
     /**
      * Gets the repository root folder.

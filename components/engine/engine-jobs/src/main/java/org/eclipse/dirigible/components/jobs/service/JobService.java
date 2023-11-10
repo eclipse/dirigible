@@ -11,12 +11,11 @@
 package org.eclipse.dirigible.components.jobs.service;
 
 import static java.text.MessageFormat.format;
-
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.jobs.domain.Job;
@@ -30,14 +29,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import static java.text.MessageFormat.format;
 
 /**
  * The Class JobService.
@@ -172,13 +163,13 @@ public class JobService implements ArtefactService<Job> {
         }
         if (existing != null) {
             if (existing.isEnabled() && !job.isEnabled()) {
-                String content = jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateDisable,
-                        jobEmailProcessor.EMAIL_TEMPLATE_DISABLE);
-                jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectDisable, content);
+                String content = jobEmailProcessor.prepareEmail(job, JobEmailProcessor.emailTemplateDisable,
+                        JobEmailProcessor.EMAIL_TEMPLATE_DISABLE);
+                jobEmailProcessor.sendEmail(job, JobEmailProcessor.emailSubjectDisable, content);
             } else if (!existing.isEnabled() && job.isEnabled()) {
                 String content =
-                        jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateEnable, jobEmailProcessor.EMAIL_TEMPLATE_ENABLE);
-                jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectEnable, content);
+                        jobEmailProcessor.prepareEmail(job, JobEmailProcessor.emailTemplateEnable, JobEmailProcessor.EMAIL_TEMPLATE_ENABLE);
+                jobEmailProcessor.sendEmail(job, JobEmailProcessor.emailSubjectEnable, content);
             }
         }
         return jobRepository.saveAndFlush(job);
@@ -232,30 +223,7 @@ public class JobService implements ArtefactService<Job> {
      */
     public boolean trigger(String name, Map<String, String> parametersMap) throws Exception {
         Job job = findByName(name);
-        if (job != null) {
-            Map<String, String> memento = new HashMap<String, String>();
-            try {
-                for (Map.Entry<String, String> entry : parametersMap.entrySet()) {
-                    memento.put(entry.getKey(), Configuration.get(entry.getKey()));
-                    Configuration.set(entry.getKey(), entry.getValue());
-                }
-
-                // String engine = job.getEngine();
-                String handler = job.getHandler();
-                try {
-                    Map<Object, Object> context = new HashMap<>();
-                    context.put("handler", handler);
-                    RepositoryPath path = new RepositoryPath(handler);
-                    javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
-                } catch (Exception e) {
-                    throw new Exception(e);
-                }
-            } finally {
-                for (Map.Entry<String, String> entry : memento.entrySet()) {
-                    Configuration.set(entry.getKey(), entry.getValue());
-                }
-            }
-        } else {
+        if (job == null) {
             String error = format("Job with name {0} does not exist, hence cannot be triggered", name);
             throw new Exception(error);
         }
@@ -266,52 +234,11 @@ public class JobService implements ArtefactService<Job> {
                 Configuration.set(entry.getKey(), entry.getValue());
             }
 
-            // String engine = job.getEngine();
             String handler = job.getHandler();
-            try {
-                for (Map.Entry<String, String> entry : parametersMap.entrySet()) {
-                    memento.put(entry.getKey(), Configuration.get(entry.getKey()));
-                    Configuration.set(entry.getKey(), entry.getValue());
-                }
+            Path handlerPath = Path.of(handler);
 
-                String handler = job.getHandler();
-                Path handlerPath = Path.of(handler);
-
-                try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner()) {
-                    runner.run(handlerPath);
-                } catch (Exception e) {
-                    throw new Exception(e);
-                }
-            } finally {
-                for (Map.Entry<String, String> entry : memento.entrySet()) {
-                    Configuration.set(entry.getKey(), entry.getValue());
-                }
-                Map<Object, Object> context = new HashMap<>();
-                context.put("handler", handler);
-                RepositoryPath path = new RepositoryPath(handler);
-                javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
-            } catch (Exception e) {
-                throw new Exception(e);
-            }
-        } finally {
-            for (Map.Entry<String, String> entry : memento.entrySet()) {
-                Configuration.set(entry.getKey(), entry.getValue());
-            }
-        }
-        Map<String, String> memento = new HashMap<String, String>();
-        try {
-            for (Map.Entry<String, String> entry : parametersMap.entrySet()) {
-                memento.put(entry.getKey(), Configuration.get(entry.getKey()));
-                Configuration.set(entry.getKey(), entry.getValue());
-            }
-
-            // String engine = job.getEngine();
-            String handler = job.getHandler();
-            try {
-                Map<Object, Object> context = new HashMap<>();
-                context.put("handler", handler);
-                RepositoryPath path = new RepositoryPath(handler);
-                javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+            try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner()) {
+                runner.run(handlerPath);
             } catch (Exception e) {
                 throw new Exception(e);
             }
