@@ -23,8 +23,6 @@ import org.apache.activemq.store.PersistenceAdapter;
 import org.apache.activemq.store.jdbc.JDBCPersistenceAdapter;
 import org.apache.activemq.store.kahadb.plist.PListStoreImpl;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,8 +30,6 @@ import org.springframework.context.annotation.DependsOn;
 
 @Configuration
 public class MessagingConfig {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MessagingConfig.class);
 
     private static final String CONNECTOR_URL_ATTACH = "vm://localhost?create=false";
     private static final String CONNECTOR_URL = "vm://localhost";
@@ -78,10 +74,11 @@ public class MessagingConfig {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(CONNECTOR_URL_ATTACH);
         try {
             Connection connection = connectionFactory.createConnection();
-            connection.start();
 
             MessageConsumerExceptionListener exceptionListener = new MessageConsumerExceptionListener(javascriptService);
             connection.setExceptionListener(exceptionListener);
+
+            connection.start();
 
             return connection;
         } catch (JMSException ex) {

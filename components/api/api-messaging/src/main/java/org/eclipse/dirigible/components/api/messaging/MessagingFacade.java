@@ -74,12 +74,12 @@ public class MessagingFacade {
      * Receive a message from queue.
      *
      * @param queue the queue
-     * @param timeout the timeout
+     * @param timeout the timeout in milliseconds
      * @return the message as JSON
      * @throws MessagingAPIException if fail to receive a message from the queue
      * @throws TimeoutException if timeout to get a message from the queue
      */
-    public static final String receiveFromQueue(String queue, int timeout) throws MessagingAPIException {
+    public static final String receiveFromQueue(String queue, long timeout) throws MessagingAPIException {
         if (null == messageConsumer) {
             throw new IllegalStateException("Class is not initialized yet. Cannot call this static method before the bean is initialized");
         }
@@ -97,12 +97,12 @@ public class MessagingFacade {
      * Receive a message from topic.
      *
      * @param topic the topic
-     * @param timeout the timeout
+     * @param timeout the timeout in milliseconds
      * @return the the message as JSON
      * @throws MessagingAPIException if fail to receive a message from the topic
      * @throws TimeoutException if timeout to get a message from the topic
      */
-    public static final String receiveFromTopic(String topic, int timeout) {
+    public static final String receiveFromTopic(String topic, long timeout) {
         if (null == messageConsumer) {
             throw new IllegalStateException("Class is not initialized yet. Cannot call this static method before the bean is initialized");
         }

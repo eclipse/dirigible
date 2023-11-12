@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
+ */
 package org.eclipse.dirigible.components.listeners.config;
 
 import java.util.HashMap;
@@ -15,21 +25,14 @@ class MessageConsumerExceptionListener implements ExceptionListener {
 
     private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR = "messaging/wrappers/onError.js";
 
-    private final String handler;
     private final JavascriptService javascriptService;
 
     MessageConsumerExceptionListener(JavascriptService javascriptService) {
-        this(null, javascriptService);
-    }
-
-    MessageConsumerExceptionListener(String handler, JavascriptService javascriptService) {
-        this.handler = handler;
         this.javascriptService = javascriptService;
     }
 
     @Override
     public synchronized void onException(JMSException jmsException) {
-        LOGGER.error("JMS exception occured", jmsException);
         try {
             Map<Object, Object> context = createMessagingContext();
             context.put("error", escapeCodeString(jmsException.getMessage()));
@@ -43,6 +46,7 @@ class MessageConsumerExceptionListener implements ExceptionListener {
 
     private Map<Object, Object> createMessagingContext() {
         Map<Object, Object> context = new HashMap<>();
+        String handler = null; // TODO get handler if needed?
         context.put("handler", handler);
         return context;
     }

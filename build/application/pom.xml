@@ -14,7 +14,6 @@
 	<artifactId>dirigible-application</artifactId>
 	<packaging>jar</packaging>
 
-
 	<dependencies>
 
 		<!-- Platform -->
@@ -281,6 +280,9 @@
 						<goals>
 							<goal>repackage</goal>
 						</goals>
+						<configuration>
+							<classifier>executable</classifier>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

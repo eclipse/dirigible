@@ -66,7 +66,7 @@ public class ListenersManager {
     public void stopListener(Listener listener) {
         MessageListenerManager listenerManager = LISTENERS.get(listener.getLocation());
         if (listenerManager != null) {
-            listenerManager.stop();
+            listenerManager.stopListener();
             LISTENERS.remove(listener.getLocation());
             LOGGER.info("Listener stopped: " + listener.getLocation());
         } else {

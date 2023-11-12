@@ -29,7 +29,8 @@
 		mvn clean install -Dmaven.javadoc.skip=true
 
 	Do a fast build:
-		mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests -Dmaven.javadoc.skip=true
+		mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests
+-Dmaven.javadoc.skip=true
 
 	Update the years in the license header:
 		mvn license:format -P license
@@ -54,7 +55,9 @@
 		mvn clean install -P spotbugs
 
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -108,13 +111,13 @@
 							<compilerCompliance>${formatter.java.version}</compilerCompliance>
 							<compilerTargetPlatform>${formatter.java.version}</compilerTargetPlatform>
 						</configuration>
-				        <executions>
+						<executions>
 							<execution>
-							<id>validate-java-code-formatting</id>
-							<phase>validate</phase>
-							<goals>
-								<goal>validate</goal>
-							</goals>
+								<id>validate-java-code-formatting</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>validate</goal>
+								</goals>
 							</execution>
 						</executions>
 					</plugin>
@@ -138,7 +141,8 @@
 								--add-opens java.base/java.lang=ALL-UNNAMED
 								--add-opens java.base/java.math=ALL-UNNAMED
 								--add-opens java.base/java.util=ALL-UNNAMED
-								--add-opens java.base/java.util.concurrent=ALL-UNNAMED
+								--add-opens
+								java.base/java.util.concurrent=ALL-UNNAMED
 								--add-opens java.base/java.net=ALL-UNNAMED
 								--add-opens java.base/java.text=ALL-UNNAMED
 							</argLine>
@@ -202,16 +206,26 @@
 								<exclude>**/logback.xml</exclude>
 								<exclude>**/logback-test.xml</exclude>
 								<exclude>**/src/test/resources/**</exclude>
-								<exclude>**/src/main/resources/META-INF/dirigible/font-awesome-4.7.0/**</exclude>
-								<exclude>**/src/main/resources/META-INF/dirigible/font-dirigible/**</exclude>
-								<exclude>**/src/main/resources/META-INF/dirigible/ide-bpm/**</exclude>
-								<exclude>**/src/main/resources/META-INF/dirigible/ide-monaco/**</exclude>
-								<exclude>**/src/main/resources/META-INF/dirigible/ide-swagger/**</exclude>
-								<exclude>**/src/main/resources/META-INF/dirigible/resources-core/ui/**</exclude>
-								<exclude>**/src/main/resources/META-INF/dirigible/ide-terminal/js/**</exclude>
-								<exclude>**/src/main/resources/META-INF/dirigible/dev-tools/**</exclude>
-								<exclude>**/src/main/resources/META-INF/dirigible/template-mobile-hello-world/node_modules/**</exclude>
-								<exclude>**/src/main/resources/META-INF/dirigible/utils/jsonpath.js</exclude>
+								<exclude>
+									**/src/main/resources/META-INF/dirigible/font-awesome-4.7.0/**</exclude>
+								<exclude>
+									**/src/main/resources/META-INF/dirigible/font-dirigible/**</exclude>
+								<exclude>
+									**/src/main/resources/META-INF/dirigible/ide-bpm/**</exclude>
+								<exclude>
+									**/src/main/resources/META-INF/dirigible/ide-monaco/**</exclude>
+								<exclude>
+									**/src/main/resources/META-INF/dirigible/ide-swagger/**</exclude>
+								<exclude>
+									**/src/main/resources/META-INF/dirigible/resources-core/ui/**</exclude>
+								<exclude>
+									**/src/main/resources/META-INF/dirigible/ide-terminal/js/**</exclude>
+								<exclude>
+									**/src/main/resources/META-INF/dirigible/dev-tools/**</exclude>
+								<exclude>
+									**/src/main/resources/META-INF/dirigible/template-mobile-hello-world/node_modules/**</exclude>
+								<exclude>
+									**/src/main/resources/META-INF/dirigible/utils/jsonpath.js</exclude>
 							</excludes>
 							<skipExistingHeaders>true</skipExistingHeaders>
 						</configuration>
@@ -272,7 +286,8 @@
 						<artifactId>spotbugs-maven-plugin</artifactId>
 						<version>4.8.1.0</version>
 						<dependencies>
-							<!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
+							<!-- overwrite dependency on spotbugs if you want to
+							specify the version of spotbugs -->
 							<dependency>
 								<groupId>com.github.spotbugs</groupId>
 								<artifactId>spotbugs</artifactId>
@@ -379,7 +394,8 @@
 									<goal>sign</goal>
 								</goals>
 								<configuration>
-									<!-- Prevent gpg from using pinentry programs -->
+									<!-- Prevent gpg from using pinentry
+									programs -->
 									<gpgArguments>
 										<arg>--pinentry-mode</arg>
 										<arg>loopback</arg>
@@ -439,6 +455,7 @@
 		<module>modules</module>
 		<module>components</module>
 		<module>build</module>
+		<module>integration-tests</module>
 	</modules>
 
 	<dependencies>
@@ -448,7 +465,7 @@
 			<version>4.0.1</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -557,16 +574,26 @@
 		<!-- End Test Dependencies -->
 	</dependencies>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-application</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<properties>
 		<project.title>Eclipse Dirigible</project.title>
-		
+
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		
+
 		<java.version>17</java.version>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
-		
+
 		<maven.resource.plugin.version>3.3.1</maven.resource.plugin.version>
 		<maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
 		<maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
@@ -585,12 +612,12 @@
 		<retrofit.version>1.8.0</retrofit.version>
 		<okhttp3.version>4.12.0</okhttp3.version>
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
-		
+
 		<h2database.version>2.2.224</h2database.version>
 		<postgresql.version>42.6.0</postgresql.version>
 		<ngdbc.version>2.18.13</ngdbc.version>
 		<snowflake.version>3.14.3</snowflake.version>
-		
+
 		<activemq.version>5.18.3</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<lucene.version>9.8.0</lucene.version>
@@ -683,21 +710,24 @@
 
 		<profile.content.phase>none</profile.content.phase>
 
-		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
-		<content.scm.connection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
-		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
+		<content.scm.url>
+			https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
+		<content.scm.connection>
+			scm:git:https://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
+		<content.scm.developerConnection>
+			scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
 		<content.repository.branch>master</content.repository.branch>
 
 		<content.scm.server>github</content.scm.server>
 		<content.scm.checkoutDirectory>target</content.scm.checkoutDirectory>
 		<content.source.directory>target/${content.project.name}</content.source.directory>
-		<content.output.directory>${basedir}/src/main/resources/META-INF/dirigible/${content.project.name}</content.output.directory>
+		<content.output.directory>
+			${basedir}/src/main/resources/META-INF/dirigible/${content.project.name}</content.output.directory>
 
 		<license.header.location>licensing-header.txt</license.header.location>
-		
+
 		<parent.pom.folder>./</parent.pom.folder>
 		<formatter.location>${parent.pom.folder}/dirigible-formatter.xml</formatter.location>
 		<formatter.java.version>${java.version}</formatter.java.version>
 	</properties>
-
 </project>

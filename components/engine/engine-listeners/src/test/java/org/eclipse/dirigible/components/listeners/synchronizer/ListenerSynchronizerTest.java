@@ -36,6 +36,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @EntityScan("org.eclipse.dirigible.components")
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class ListenerSynchronizerTest {
+
     @Autowired
     private ListenerSynchronizer listenerSynchronizer;
 
@@ -70,5 +71,6 @@ public class ListenerSynchronizerTest {
 
     @SpringBootApplication
     static class TestConfiguration {
+        // it is needed
     }
 }

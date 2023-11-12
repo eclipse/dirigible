@@ -27,7 +27,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -56,9 +55,6 @@ public class ListenerEndpointTest {
     @Autowired
     protected WebApplicationContext wac;
 
-    @Autowired
-    private FilterChainProxy springSecurityFilterChain;
-
     @BeforeEach
     public void setup() {
         cleanup();
@@ -78,10 +74,10 @@ public class ListenerEndpointTest {
         mockMvc.perform(get("/services/listeners"))
                .andDo(print())
                .andExpect(status().is2xxSuccessful());
-        // .andExpect(jsonPath("$.content[0].location").value("/a/b/c/l1.listener"));
     }
 
     @SpringBootApplication
     static class TestConfiguration {
+        // it is needed
     }
 }

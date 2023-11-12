@@ -32,8 +32,8 @@ public class MessageListenerManager {
         this.session = session;
     }
 
-    public void startListener() {
-        if (null == session) {
+    public synchronized void startListener() {
+        if (null == consumer) {
             LOGGER.debug("Listener [{}] IS already configured", listener);
             return;
         }
@@ -60,13 +60,14 @@ public class MessageListenerManager {
         };
     }
 
-    public void stop() {
+    public synchronized void stopListener() {
         if (null == consumer) {
             LOGGER.debug("Listener [{}] is NOT started", listener);
         }
 
         try {
             consumer.close();
+            consumer = null;
         } catch (JMSException ex) {
             LOGGER.warn("Failed to close " + consumer, ex);
         }
