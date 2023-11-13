@@ -8,7 +8,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.listeners.config;
+package org.eclipse.dirigible.components.listeners.service;
 
 import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
@@ -16,15 +16,18 @@ import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
-@Component
-class MessageConsumerExceptionListener implements ExceptionListener {
+class BackgroundExceptionListener implements ExceptionListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MessageConsumerExceptionListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundExceptionListener.class);
+    private final String handlerPath;
+
+    BackgroundExceptionListener(String handlerPath) {
+        this.handlerPath = handlerPath;
+    }
 
     @Override
-    public synchronized void onException(JMSException jmsException) {
+    public void onException(JMSException jmsException) {
         try {
             String errorMessage = escapeCodeString(jmsException.getMessage());
             executeOnErrorHandler(errorMessage);
@@ -36,7 +39,6 @@ class MessageConsumerExceptionListener implements ExceptionListener {
 
     private void executeOnErrorHandler(String errorMessage) {
         try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner()) {
-            String handlerPath = ""; // TODO get handler?
             Module module = runner.run(handlerPath);
             runner.runMethod(module, "onError", errorMessage);
         }

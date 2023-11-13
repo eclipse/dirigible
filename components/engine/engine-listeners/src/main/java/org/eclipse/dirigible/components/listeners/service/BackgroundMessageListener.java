@@ -20,13 +20,13 @@ import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class BackgroundListener implements MessageListener {
+class BackgroundMessageListener implements MessageListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundMessageListener.class);
 
     private final Listener listener;
 
-    BackgroundListener(Listener listener) {
+    BackgroundMessageListener(Listener listener) {
         this.listener = listener;
     }
 

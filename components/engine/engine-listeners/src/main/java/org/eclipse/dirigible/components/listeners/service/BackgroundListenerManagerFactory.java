@@ -10,23 +10,22 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
-import javax.jms.Session;
+import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
 class BackgroundListenerManagerFactory {
 
-    private final Session session;
+    private final ActiveMQConnectionArtifactsFactory connectionArtifactsFactory;
 
     @Autowired
-    BackgroundListenerManagerFactory(@Qualifier("ActiveMQSession") Session session) {
-        this.session = session;
+    BackgroundListenerManagerFactory(ActiveMQConnectionArtifactsFactory connectionArtifactsFactory) {
+        this.connectionArtifactsFactory = connectionArtifactsFactory;
     }
 
     BackgroundListenerManager create(Listener listener) {
-        return new BackgroundListenerManager(listener, session);
+        return new BackgroundListenerManager(listener, connectionArtifactsFactory);
     }
 }

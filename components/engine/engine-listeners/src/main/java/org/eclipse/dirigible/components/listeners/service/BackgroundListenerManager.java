@@ -10,10 +10,13 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
+import javax.jms.Connection;
 import javax.jms.Destination;
+import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
+import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
 import org.slf4j.Logger;
@@ -24,35 +27,42 @@ class BackgroundListenerManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundListenerManager.class);
 
     private final Listener listener;
-    private final Session session;
+    private final ActiveMQConnectionArtifactsFactory connectionArtifactsFactory;
+    private ConnectionArtifacts connectionArtifacts;
 
-    private MessageConsumer consumer;
-
-    BackgroundListenerManager(Listener listener, Session session) {
+    BackgroundListenerManager(Listener listener, ActiveMQConnectionArtifactsFactory connectionArtifactsFactory) {
         this.listener = listener;
-        this.session = session;
+        this.connectionArtifactsFactory = connectionArtifactsFactory;
     }
 
+    @SuppressWarnings("resource")
     synchronized void startListener() {
-        if (null == consumer) {
+        if (null != connectionArtifacts) {
             LOGGER.debug("Listener [{}] IS already configured", listener);
             return;
         }
 
         LOGGER.info("Starting a message listener for {} ...", listener);
         try {
-            Destination destination = craeteDestination();
-            consumer = session.createConsumer(destination);
+            String handlerPath = listener.getHandler();
+            ExceptionListener exceptionListener = new BackgroundExceptionListener(handlerPath);
 
-            BackgroundListener messageListener = new BackgroundListener(listener);
+            Connection connection = connectionArtifactsFactory.createConnection(exceptionListener);
+            Session session = connectionArtifactsFactory.createSession(connection);
+
+            Destination destination = craeteDestination(session);
+            MessageConsumer consumer = session.createConsumer(destination);
+
+            BackgroundMessageListener messageListener = new BackgroundMessageListener(listener);
             consumer.setMessageListener(messageListener);
 
-        } catch (RuntimeException | JMSException ex) {
-            LOGGER.error("Failed to start listener for [{}]", listener, ex);
+            connectionArtifacts = new ConnectionArtifacts(connection, session, consumer);
+        } catch (JMSException ex) {
+            throw new IllegalStateException("Failed to start listener for " + listener, ex);
         }
     }
 
-    private Destination craeteDestination() throws JMSException {
+    private Destination craeteDestination(Session session) throws JMSException {
         String destination = listener.getName();
         ListenerKind kind = listener.getKind();
         return switch (kind) {
@@ -63,16 +73,12 @@ class BackgroundListenerManager {
     }
 
     synchronized void stopListener() {
-        if (null == consumer) {
+        if (null == connectionArtifacts) {
             LOGGER.debug("Listener [{}] is NOT started", listener);
             return;
         }
 
-        try {
-            consumer.close();
-            consumer = null;
-        } catch (JMSException ex) {
-            LOGGER.warn("Failed to close " + consumer, ex);
-        }
+        connectionArtifacts.closeAll();
+        connectionArtifacts = null;
     }
 }

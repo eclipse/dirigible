@@ -15,7 +15,6 @@ import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.sql.DataSource;
-import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.openwire.OpenWireFormat;
 import org.apache.activemq.store.PListStore;
@@ -28,9 +27,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
 @Configuration
-public class MessagingConfig {
+class MessagingConfig {
 
-    private static final String CONNECTOR_URL_ATTACH = "vm://localhost?create=false";
     private static final String CONNECTOR_URL = "vm://localhost";
     private static final String LOCATION_TEMP_STORE = "./target/temp/kahadb";
 
@@ -69,17 +67,8 @@ public class MessagingConfig {
 
     @Bean("ActiveMQConnection")
     @DependsOn("ActiveMQBroker")
-    Connection createConnection(MessageConsumerExceptionListener exceptionListener) {
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(CONNECTOR_URL_ATTACH);
-        try {
-            Connection connection = connectionFactory.createConnection();
-            connection.setExceptionListener(exceptionListener);
-
-            connection.start();
-
-            return connection;
-        } catch (JMSException ex) {
-            throw new IllegalStateException("Failed to create connection to ActiveMQ", ex);
-        }
+    Connection createConnection(ActiveMQConnectionArtifactsFactory connectionArtifactsFactory,
+            LoggingExceptionListener loggingExceptionListener) {
+        return connectionArtifactsFactory.createConnection(loggingExceptionListener);
     }
 }
