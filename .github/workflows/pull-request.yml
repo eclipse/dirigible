@@ -67,4 +67,5 @@ jobs:
     - name: Maven Build
       run: mvn -T 1C clean compile -D maven.javadoc.skip=true -D license.skip=true -U
     - name: Integration tests
-      run: mvn verify -P integration-tests
+      run: mvn -f integration-tests/pom.xml verify -P integration-tests
+
