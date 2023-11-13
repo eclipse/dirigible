@@ -13,22 +13,14 @@ package org.eclipse.dirigible.integration.tests.messaging;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import java.util.concurrent.TimeUnit;
-import org.eclipse.dirigible.DirigibleApplication;
 import org.eclipse.dirigible.components.api.messaging.MessagingFacade;
 import org.eclipse.dirigible.components.api.messaging.TimeoutException;
+import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.testcontainers.shaded.org.awaitility.Awaitility;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = {DirigibleApplication.class})
-@AutoConfigureMockMvc
-class MessagingFacadeIT {
+class MessagingFacadeIT extends IntegrationTest {
 
     private static final String TEST_MESSAGE = "Test message";
     private static final String TEST_MESSAGE_2 = "Test message 2";

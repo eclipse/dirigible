@@ -26,8 +26,8 @@ import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
-import org.eclipse.dirigible.components.listeners.service.BackgroundListenersManager;
 import org.eclipse.dirigible.components.listeners.service.BackgroundListenerService;
+import org.eclipse.dirigible.components.listeners.service.BackgroundListenersManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,15 +106,7 @@ class BackgroundListenerSynchronizer<A extends Artefact> implements Synchronizer
             }
             listener = getService().save(listener);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
-            if (logger.isErrorEnabled()) {
-                logger.error("listener: {}", listener);
-            }
-            if (logger.isErrorEnabled()) {
-                logger.error("content: {}", new String(content));
-            }
+            logger.error("Failed to save listener [{}], content:\n{}", listener, new String(content), e);
             throw new ParseException(e.getMessage(), 0);
         }
         return List.of(listener);

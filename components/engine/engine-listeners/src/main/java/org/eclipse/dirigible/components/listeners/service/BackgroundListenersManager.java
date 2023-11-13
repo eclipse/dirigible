@@ -68,9 +68,8 @@ public class BackgroundListenersManager {
         if (listenerManager != null) {
             listenerManager.stopListener();
             LISTENERS.remove(listener.getLocation());
-            LOGGER.info("Listener stopped: " + listener.getLocation());
         } else {
-            LOGGER.warn(format("There is no a message consumer for listener at [{0}] running!", listener.getLocation()));
+            LOGGER.warn("There is no a message consumer for listener [{}] running!", listener);
         }
     }
 

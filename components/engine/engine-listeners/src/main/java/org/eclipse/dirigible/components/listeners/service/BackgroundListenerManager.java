@@ -77,8 +77,9 @@ class BackgroundListenerManager {
             LOGGER.debug("Listener [{}] is NOT started", listener);
             return;
         }
-
+        LOGGER.info("Stopping message listener for {} ...", listener);
         connectionArtifacts.closeAll();
         connectionArtifacts = null;
+        LOGGER.info("Stopped message listener for {}", listener);
     }
 }
