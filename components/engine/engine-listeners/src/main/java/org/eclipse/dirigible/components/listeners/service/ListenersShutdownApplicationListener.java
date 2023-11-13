@@ -8,11 +8,8 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.listeners.config;
+package org.eclipse.dirigible.components.listeners.service;
 
-import org.apache.activemq.broker.BrokerService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
@@ -21,35 +18,23 @@ import org.springframework.context.event.ContextStoppedEvent;
 import org.springframework.stereotype.Component;
 
 @Component
-class ShutdownActiveMQBrokerListener implements ApplicationListener<ApplicationEvent> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ShutdownActiveMQBrokerListener.class);
+class ListenersShutdownApplicationListener implements ApplicationListener<ApplicationEvent> {
 
-    private final BrokerService broker;
+    private final BackgroundListenersManager listenersManager;
 
     @Autowired
-    ShutdownActiveMQBrokerListener(BrokerService broker) {
-        this.broker = broker;
+    ListenersShutdownApplicationListener(BackgroundListenersManager listenersManager) {
+        this.listenersManager = listenersManager;
     }
 
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
         if (isApplicableEvent(event)) {
-            closeBroker(event);
+            listenersManager.stopListeners();
         }
     }
 
     private boolean isApplicableEvent(ApplicationEvent event) {
         return event instanceof ContextStoppedEvent || event instanceof ContextClosedEvent;
-    }
-
-    private void closeBroker(ApplicationEvent event) {
-        try {
-            if (!broker.isStopped()) {
-                LOGGER.info("Stopping ActiveMQ broker due to event {}", event);
-                broker.stop();
-            }
-        } catch (Exception ex) {
-            throw new IllegalStateException("Failed to stop ActiveMQ broker", ex);
-        }
     }
 }

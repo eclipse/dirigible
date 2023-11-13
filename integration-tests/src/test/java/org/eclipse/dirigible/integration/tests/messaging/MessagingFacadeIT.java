@@ -76,7 +76,6 @@ class MessagingFacadeIT extends IntegrationTest {
 
             Awaitility.await()
                       .atMost(TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                      .pollDelay(100, TimeUnit.MILLISECONDS)
                       .until(() -> areMessagesReceived(msgReceiver, msgReceiver2));
 
             assertEquals("Unexpected message", TEST_MESSAGE, msgReceiver.getMessage());

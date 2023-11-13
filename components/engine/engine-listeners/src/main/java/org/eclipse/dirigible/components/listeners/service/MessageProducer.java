@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 public class MessageProducer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageProducer.class);
+
     private final Session session;
 
     @Autowired

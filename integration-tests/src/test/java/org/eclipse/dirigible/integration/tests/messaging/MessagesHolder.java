@@ -16,7 +16,7 @@ public class MessagesHolder {
     private static String latestReceivedError;
 
     public static String getLatestReceivedMessage() {
-        return MessagesHolder.latestReceivedMessage;
+        return latestReceivedMessage;
     }
 
     public static void setLatestReceivedMessage(String latestReceivedMessage) {
@@ -24,18 +24,18 @@ public class MessagesHolder {
     }
 
     public static void clearLatestReceivedMessage() {
-        MessagesHolder.latestReceivedMessage = null;
+        latestReceivedMessage = null;
     }
 
     public static String getLatestReceivedError() {
-        return MessagesHolder.latestReceivedError;
+        return latestReceivedError;
     }
 
-    public static void setLatestReceivedError(String latestReceivedMessage) {
-        MessagesHolder.latestReceivedError = latestReceivedMessage;
+    public static void setLatestReceivedError(String latestReceivedError) {
+        MessagesHolder.latestReceivedError = latestReceivedError;
     }
 
     public static void clearLatestReceivedError() {
-        MessagesHolder.latestReceivedError = null;
+        latestReceivedError = null;
     }
 }

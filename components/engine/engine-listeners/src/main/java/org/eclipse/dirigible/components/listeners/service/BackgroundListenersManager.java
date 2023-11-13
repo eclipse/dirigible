@@ -14,8 +14,10 @@ import static java.text.MessageFormat.format;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -63,13 +65,29 @@ public class BackgroundListenersManager {
         }
     }
 
+    public synchronized void stopListeners() {
+        LOGGER.info("Stopping all background listeners...");
+
+        Iterator<Entry<String, BackgroundListenerManager>> iterator = LISTENERS.entrySet()
+                                                                               .iterator();
+        while (iterator.hasNext()) {
+            Entry<String, BackgroundListenerManager> entry = iterator.next();
+            BackgroundListenerManager listenerManager = entry.getValue();
+            if (listenerManager != null) {
+                listenerManager.stopListener();
+            }
+            iterator.remove();
+        }
+    }
+
     public void stopListener(Listener listener) {
-        BackgroundListenerManager listenerManager = LISTENERS.get(listener.getLocation());
+        String listenerLocation = listener.getLocation();
+        BackgroundListenerManager listenerManager = LISTENERS.get(listenerLocation);
         if (listenerManager != null) {
             listenerManager.stopListener();
-            LISTENERS.remove(listener.getLocation());
+            LISTENERS.remove(listenerLocation);
         } else {
-            LOGGER.warn("There is no a message consumer for listener [{}] running!", listener);
+            LOGGER.warn("There is NO configured listener for [{}]", listenerLocation);
         }
     }
 
