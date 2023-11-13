@@ -15,6 +15,7 @@ import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
+import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,16 +54,18 @@ public class MessageListenerManager {
 
     private Destination craeteDestination() throws JMSException {
         String destination = listener.getName();
-        return switch (listener.getKind()) {
-            case 'Q' -> session.createQueue(destination);
-            case 'T' -> session.createTopic(destination);
-            default -> throw new IllegalArgumentException("Invalid kind: " + listener.getKind());
+        ListenerKind kind = listener.getKind();
+        return switch (kind) {
+            case QUEUE -> session.createQueue(destination);
+            case TOPIC -> session.createTopic(destination);
+            default -> throw new IllegalArgumentException("Invalid kind: " + kind);
         };
     }
 
     public synchronized void stopListener() {
         if (null == consumer) {
             LOGGER.debug("Listener [{}] is NOT started", listener);
+            return;
         }
 
         try {
