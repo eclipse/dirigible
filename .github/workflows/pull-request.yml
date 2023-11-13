@@ -65,6 +65,6 @@ jobs:
     - name: Install TypeScript compiler
       run: npm i -g typescript
     - name: Maven Build
-      run: mvn -T 1C clean compile -D maven.test.skip=true -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
+      run: mvn -T 1C clean compile -D maven.javadoc.skip=true -D license.skip=true -U
     - name: Integration tests
       run: mvn verify -P integration-tests
