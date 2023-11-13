@@ -26,17 +26,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component("ListenersManager")
-public class ListenersManager {
+public class BackgroundListenersManager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ListenersManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundListenersManager.class);
 
-    private static Map<String, MessageListenerManager> LISTENERS = Collections.synchronizedMap(new HashMap<>());
+    private static Map<String, BackgroundListenerManager> LISTENERS = Collections.synchronizedMap(new HashMap<>());
 
     private final IRepository repository;
-    private final MessageListenerManagerFactory messageListenerManagerFactory;
+    private final BackgroundListenerManagerFactory messageListenerManagerFactory;
 
     @Autowired
-    ListenersManager(IRepository repository, MessageListenerManagerFactory messageListenerManagerFactory) {
+    BackgroundListenersManager(IRepository repository, BackgroundListenerManagerFactory messageListenerManagerFactory) {
         this.repository = repository;
         this.messageListenerManagerFactory = messageListenerManagerFactory;
     }
@@ -53,7 +53,7 @@ public class ListenersManager {
                 LOGGER.error("Listener {} cannot be started, because the handler {} does not exist!", listener.getLocation(),
                         listener.getHandler());
             }
-            MessageListenerManager listenerManager = messageListenerManagerFactory.create(listener);
+            BackgroundListenerManager listenerManager = messageListenerManagerFactory.create(listener);
             listenerManager.startListener();
 
             LISTENERS.put(listener.getLocation(), listenerManager);
@@ -64,7 +64,7 @@ public class ListenersManager {
     }
 
     public void stopListener(Listener listener) {
-        MessageListenerManager listenerManager = LISTENERS.get(listener.getLocation());
+        BackgroundListenerManager listenerManager = LISTENERS.get(listener.getLocation());
         if (listenerManager != null) {
             listenerManager.stopListener();
             LISTENERS.remove(listener.getLocation());

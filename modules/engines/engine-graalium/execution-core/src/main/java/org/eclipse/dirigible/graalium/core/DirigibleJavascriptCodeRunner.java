@@ -10,6 +10,11 @@
  */
 package org.eclipse.dirigible.graalium.core;
 
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ServiceLoader;
+import java.util.function.Consumer;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.graalium.core.globals.DirigibleContextGlobalObject;
@@ -29,19 +34,10 @@ import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.function.Consumer;
-
 /**
  * The Class DirigibleJavascriptCodeRunner.
  */
 public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> {
-
-    /** CommonJS files extension */
-    private static final String CJS_EXT = ".js";
 
     /** ESM files extension */
     private static final String MJS_EXT = ".mjs";
@@ -162,6 +158,11 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
     @Override
     public Value run(Source codeSource) {
         return codeRunner.run(codeSource);
+    }
+
+    public Module run(String codeFilePath) {
+        Path path = Path.of(codeFilePath);
+        return run(path);
     }
 
     public Module run(Path codeFilePath) {

@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
-import org.eclipse.dirigible.components.listeners.service.ListenerService;
+import org.eclipse.dirigible.components.listeners.service.BackgroundListenerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,7 +39,7 @@ public class ListenerEndpoint {
 
     /** The listener service. */
     @Autowired
-    private ListenerService listenerService;
+    private BackgroundListenerService listenerService;
 
     /**
      * Find all.

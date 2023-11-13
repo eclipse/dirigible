@@ -10,26 +10,23 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.MessageListener;
 import javax.jms.TextMessage;
-import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
-import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
+import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class MessageListener implements javax.jms.MessageListener {
+class BackgroundListener implements MessageListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MessageListener.class);
-
-    private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE = "messaging/wrappers/onMessage.js";
+    private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundListener.class);
 
     private final Listener listener;
 
-    MessageListener(Listener listener) {
+    BackgroundListener(Listener listener) {
         this.listener = listener;
     }
 
@@ -40,18 +37,17 @@ class MessageListener implements javax.jms.MessageListener {
             String msg = String.format("Invalid message [%s] has been received in destination [%s]", message, listener.getName());
             throw new IllegalStateException(msg);
         }
-        Map<Object, Object> context = createMessagingContext();
-        context.put("message", extractMessage(textMsg));
-        RepositoryPath path = new RepositoryPath(DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE);
-        JavascriptService.get()
-                         .handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+        executeOnMessageHandler(textMsg);
         LOGGER.trace("Done processing the received message in [{}] by [{}]", listener.getName(), listener.getHandler());
     }
 
-    private Map<Object, Object> createMessagingContext() {
-        Map<Object, Object> context = new HashMap<>();
-        context.put("handler", listener.getHandler());
-        return context;
+    private void executeOnMessageHandler(TextMessage textMsg) {
+        String extractedMsg = extractMessage(textMsg);
+        try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner()) {
+            String handlerPath = listener.getHandler();
+            Module module = runner.run(handlerPath);
+            runner.runMethod(module, "onMessage", extractedMsg);
+        }
     }
 
     private String extractMessage(TextMessage textMsg) {

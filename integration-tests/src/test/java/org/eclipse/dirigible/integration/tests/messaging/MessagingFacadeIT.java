@@ -13,12 +13,14 @@ package org.eclipse.dirigible.integration.tests.messaging;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import java.util.concurrent.TimeUnit;
+import org.apache.activemq.broker.BrokerService;
 import org.eclipse.dirigible.DirigibleApplication;
 import org.eclipse.dirigible.components.api.messaging.MessagingFacade;
 import org.eclipse.dirigible.components.api.messaging.TimeoutException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -62,6 +64,25 @@ class MessagingFacadeIT {
         @Test
         void testReceiveOnTimeout() {
             assertThrows(TimeoutException.class, () -> MessagingFacade.receiveFromQueue(QUEUE, 50));
+        }
+
+        @Autowired
+        private BrokerService broker;
+
+        @Test
+        void test() throws Exception {
+
+            new Thread() {
+                @Override
+                public void run() {
+                    MessagingFacade.receiveFromQueue(QUEUE, 50);
+                }
+            }.start();
+            Thread.sleep(3_000);
+
+            broker.stop();
+
+            Thread.sleep(60_000);
         }
 
         @Nested

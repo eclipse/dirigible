@@ -22,7 +22,6 @@ import org.apache.activemq.store.PListStore;
 import org.apache.activemq.store.PersistenceAdapter;
 import org.apache.activemq.store.jdbc.JDBCPersistenceAdapter;
 import org.apache.activemq.store.kahadb.plist.PListStoreImpl;
-import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -70,12 +69,10 @@ public class MessagingConfig {
 
     @Bean("ActiveMQConnection")
     @DependsOn("ActiveMQBroker")
-    Connection createConnection(JavascriptService javascriptService) {
+    Connection createConnection(MessageConsumerExceptionListener exceptionListener) {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(CONNECTOR_URL_ATTACH);
         try {
             Connection connection = connectionFactory.createConnection();
-
-            MessageConsumerExceptionListener exceptionListener = new MessageConsumerExceptionListener(javascriptService);
             connection.setExceptionListener(exceptionListener);
 
             connection.start();

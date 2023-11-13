@@ -19,21 +19,21 @@ import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MessageListenerManager {
+class BackgroundListenerManager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MessageListenerManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundListenerManager.class);
 
     private final Listener listener;
     private final Session session;
 
     private MessageConsumer consumer;
 
-    MessageListenerManager(Listener listener, Session session) {
+    BackgroundListenerManager(Listener listener, Session session) {
         this.listener = listener;
         this.session = session;
     }
 
-    public synchronized void startListener() {
+    synchronized void startListener() {
         if (null == consumer) {
             LOGGER.debug("Listener [{}] IS already configured", listener);
             return;
@@ -44,7 +44,7 @@ public class MessageListenerManager {
             Destination destination = craeteDestination();
             consumer = session.createConsumer(destination);
 
-            MessageListener messageListener = new MessageListener(listener);
+            BackgroundListener messageListener = new BackgroundListener(listener);
             consumer.setMessageListener(messageListener);
 
         } catch (RuntimeException | JMSException ex) {
@@ -62,7 +62,7 @@ public class MessageListenerManager {
         };
     }
 
-    public synchronized void stopListener() {
+    synchronized void stopListener() {
         if (null == consumer) {
             LOGGER.debug("Listener [{}] is NOT started", listener);
             return;

@@ -15,21 +15,19 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
-import org.eclipse.dirigible.components.listeners.service.ListenerService;
-import org.eclipse.dirigible.components.listeners.service.ListenersManager;
+import org.eclipse.dirigible.components.listeners.service.BackgroundListenersManager;
+import org.eclipse.dirigible.components.listeners.service.BackgroundListenerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +41,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.LISTENER)
-public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Listener> {
+class BackgroundListenerSynchronizer<A extends Artefact> implements Synchronizer<Listener> {
 
     /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(ListenerSynchronizer.class);
+    private static final Logger logger = LoggerFactory.getLogger(BackgroundListenerSynchronizer.class);
 
     /** The Constant FILE_EXTENSION_LISTENER. */
     private static final String FILE_EXTENSION_LISTENER = ".listener";
@@ -56,11 +54,11 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
 
     /** The listener service. */
     @Autowired
-    private ListenerService listenerService;
+    private BackgroundListenerService listenerService;
 
     /** The Scheduler manager. */
     @Autowired
-    private ListenersManager listenersManager;
+    private BackgroundListenersManager listenersManager;
 
     /**
      * Checks if is accepted.
@@ -167,12 +165,11 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
     @Override
     public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
         Listener listener = null;
-        if (wrapper.getArtefact() instanceof Listener) {
-            listener = (Listener) wrapper.getArtefact();
-        } else {
+        if (!(wrapper.getArtefact() instanceof Listener)) {
             throw new UnsupportedOperationException(String.format("Trying to process %s as Listener", wrapper.getArtefact()
                                                                                                              .getClass()));
         }
+        listener = (Listener) wrapper.getArtefact();
 
         switch (flow) {
             case CREATE:

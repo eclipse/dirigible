@@ -35,10 +35,10 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-public class ListenerSynchronizerTest {
+public class BackgroundListenerSynchronizerTest {
 
     @Autowired
-    private ListenerSynchronizer listenerSynchronizer;
+    private BackgroundListenerSynchronizer listenerSynchronizer;
 
     @Autowired
     private ListenerRepository listenerRepository;

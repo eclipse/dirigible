@@ -10,45 +10,36 @@
  */
 package org.eclipse.dirigible.components.listeners.config;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
-import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
-import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
+import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+@Component
 class MessageConsumerExceptionListener implements ExceptionListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageConsumerExceptionListener.class);
 
-    private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR = "messaging/wrappers/onError.js";
-
-    private final JavascriptService javascriptService;
-
-    MessageConsumerExceptionListener(JavascriptService javascriptService) {
-        this.javascriptService = javascriptService;
-    }
-
     @Override
     public synchronized void onException(JMSException jmsException) {
         try {
-            Map<Object, Object> context = createMessagingContext();
-            context.put("error", escapeCodeString(jmsException.getMessage()));
-            RepositoryPath path = new RepositoryPath(DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR);
-            javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+            String errorMessage = escapeCodeString(jmsException.getMessage());
+            executeOnErrorHandler(errorMessage);
         } catch (RuntimeException ex) {
             ex.addSuppressed(jmsException);
             LOGGER.error("Failed to handle exception properly", ex);
         }
     }
 
-    private Map<Object, Object> createMessagingContext() {
-        Map<Object, Object> context = new HashMap<>();
-        String handler = null; // TODO get handler if needed?
-        context.put("handler", handler);
-        return context;
+    private void executeOnErrorHandler(String errorMessage) {
+        try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner()) {
+            String handlerPath = ""; // TODO get handler?
+            Module module = runner.run(handlerPath);
+            runner.runMethod(module, "onError", errorMessage);
+        }
     }
 
     private String escapeCodeString(String raw) {

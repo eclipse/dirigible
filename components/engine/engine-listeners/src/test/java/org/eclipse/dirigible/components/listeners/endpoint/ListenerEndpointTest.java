@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
 import org.eclipse.dirigible.components.listeners.repository.ListenerRepository;
-import org.eclipse.dirigible.components.listeners.service.ListenerService;
+import org.eclipse.dirigible.components.listeners.service.BackgroundListenerService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ import org.springframework.web.context.WebApplicationContext;
 public class ListenerEndpointTest {
 
     @Autowired
-    private ListenerService listenerService;
+    private BackgroundListenerService listenerService;
 
     @Autowired
     private ListenerRepository listenerRepository;
