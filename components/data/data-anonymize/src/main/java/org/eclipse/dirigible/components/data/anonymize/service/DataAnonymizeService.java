@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import net.datafaker.Faker;
 
@@ -295,7 +296,7 @@ public class DataAnonymizeService {
                     continue;
                 }
                 JsonElement jsonElement = object.get(name);
-                if (jsonElement == null) {
+                if (jsonElement == null || jsonElement instanceof JsonNull) {
                     continue;
                 }
                 if (jsonElement instanceof JsonArray) {
