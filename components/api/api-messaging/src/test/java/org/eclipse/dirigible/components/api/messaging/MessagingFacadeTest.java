@@ -46,7 +46,7 @@ class MessagingFacadeTest {
         }
 
         @Test
-        void onJMSException() throws        TimeoutException, JMSException {
+        void onJMSException() throws TimeoutException, JMSException {
             when(messageConsumer.receiveMessageFromQueue(QUEUE, TIMEOUT)).thenThrow(JMSException.class);
 
             assertThrows(MessagingAPIException.class, ()->MessagingFacade.receiveFromQueue(QUEUE, TIMEOUT));
