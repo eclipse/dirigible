@@ -2,10 +2,10 @@ const MessagesHolder = Java.type("org.eclipse.dirigible.integration.tests.messag
 
 exports.onMessage = function (message) {
 	MessagesHolder.setLatestReceivedMessage(message)
-    console.log("--- BACKGROUND LISTENER --- Received a message: " + message);
+    console.log(new Date() + "### BACKGROUND HANDLER ### - Received a message: [" + message + "]");
 }
 
 exports.onError = function (error) {
 	MessagesHolder.setLatestReceivedError(error)
-    console.error("--- BACKGROUND LISTENER --- Received an error: " + error);
+    console.error(new Date() + "### BACKGROUND HANDLER ### - Received an error: [" + error + "]");
 }

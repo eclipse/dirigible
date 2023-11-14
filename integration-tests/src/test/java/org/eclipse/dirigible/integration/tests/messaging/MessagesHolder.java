@@ -10,6 +10,9 @@
  */
 package org.eclipse.dirigible.integration.tests.messaging;
 
+/**
+ * used by <b>background-handler.js</b>
+ */
 public class MessagesHolder {
 
     private static String latestReceivedMessage;

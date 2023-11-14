@@ -13,6 +13,7 @@ package org.eclipse.dirigible.components.listeners.config;
 import javax.jms.Connection;
 import javax.jms.Session;
 import org.apache.activemq.broker.BrokerService;
+import org.eclipse.dirigible.components.listeners.service.BackgroundListenersManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +31,15 @@ class CloseActiveMQResourcesApplicationListener implements ApplicationListener<A
     private final BrokerService broker;
     private final Connection connection;
     private final Session session;
+    private final BackgroundListenersManager listenersManager;
 
     @Autowired
     CloseActiveMQResourcesApplicationListener(BrokerService broker, @Qualifier("ActiveMQConnection") Connection connection,
-            @Qualifier("ActiveMQSession") Session session) {
+            @Qualifier("ActiveMQSession") Session session, BackgroundListenersManager listenersManager) {
         this.broker = broker;
         this.connection = connection;
         this.session = session;
+        this.listenersManager = listenersManager;
     }
 
     @Override
@@ -51,12 +54,8 @@ class CloseActiveMQResourcesApplicationListener implements ApplicationListener<A
     }
 
     private void closeResources(ApplicationEvent event) {
-        if (broker.isStopped()) {
-            LOGGER.info("ActiveMQ resources already closed");
-            return;
-        }
-
         LOGGER.info("Closing ActiveMQ resources due to event {}", event);
+        listenersManager.stopListeners();
         closeResource(session);
         closeResource(connection);
         stopBroker();
@@ -66,7 +65,7 @@ class CloseActiveMQResourcesApplicationListener implements ApplicationListener<A
         try {
             closeable.close();
         } catch (Exception ex) {
-            LOGGER.warn("Failed to close " + closeable, ex);
+            LOGGER.warn("Failed to close {}", closeable, ex);
         }
     }
 
@@ -74,7 +73,7 @@ class CloseActiveMQResourcesApplicationListener implements ApplicationListener<A
         try {
             broker.stop();
         } catch (Exception ex) {
-            LOGGER.warn("Failed to close broker ", ex);
+            LOGGER.warn("Failed to close broker {}", broker, ex);
         }
     }
 }
