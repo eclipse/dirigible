@@ -626,7 +626,7 @@
 		<webjars.locator.core.version>0.55</webjars.locator.core.version>
 		<es5-shim.version>4.6.7</es5-shim.version>
 		<angular-file-upload.version>2.6.1</angular-file-upload.version>
-		<angularjs.version>1.8.2</angularjs.version>
+		<angularjs.version>1.8.3</angularjs.version>
 		<fontawesome.version>4.7.0</fontawesome.version>
 		<classgraph.version>4.8.164</classgraph.version>
 		<commons-compress.version>1.22</commons-compress.version>
