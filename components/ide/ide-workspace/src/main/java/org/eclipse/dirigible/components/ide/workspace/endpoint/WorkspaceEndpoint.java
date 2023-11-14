@@ -200,8 +200,10 @@ public class WorkspaceEndpoint {
                                            .concat(nodeToCopy.getInternalPath())
                                            .replaceAll("^/+", "");
 
-            String fileOrFolder = element.getNodeType();
-            String conflictResolution = element.getResolution();
+            String fileOrFolder = sourceSelection.get(i)
+                                                 .getNodeType();
+            String conflictResolution = sourceSelection.get(i)
+                                                       .getResolution();
             String relativePathToTargetFile = Paths.get(targetFilePath)
                                                    .getParent()
                                                    .toString();

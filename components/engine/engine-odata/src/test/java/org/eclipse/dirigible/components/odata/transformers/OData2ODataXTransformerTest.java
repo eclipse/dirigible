@@ -13,8 +13,10 @@ package org.eclipse.dirigible.components.odata.transformers;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.sql.SQLException;
+
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.data.structures.domain.TableColumn;

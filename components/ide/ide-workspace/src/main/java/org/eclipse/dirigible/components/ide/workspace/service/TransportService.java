@@ -13,6 +13,7 @@ package org.eclipse.dirigible.components.ide.workspace.service;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.zip.ZipInputStream;
+
 import org.apache.commons.codec.DecoderException;
 import org.eclipse.dirigible.components.api.utils.UrlFacade;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;

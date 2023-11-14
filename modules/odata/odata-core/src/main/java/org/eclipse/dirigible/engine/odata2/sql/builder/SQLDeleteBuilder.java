@@ -10,25 +10,21 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
-import static org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils.isValidKeyValue;
-import static org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils.join;
-import static org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils.normalizeSQLExpression;
-import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
-import org.apache.olingo.odata2.api.edm.EdmEntityType;
-import org.apache.olingo.odata2.api.edm.EdmException;
-import org.apache.olingo.odata2.api.edm.EdmNavigationProperty;
-import org.apache.olingo.odata2.api.edm.EdmProperty;
-import org.apache.olingo.odata2.api.edm.EdmStructuralType;
+import org.apache.olingo.odata2.api.edm.*;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatement;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.clause.SQLWhereClause;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import static org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils.*;
+import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 
 /**
  * The Class SQLDeleteBuilder.
@@ -107,18 +103,20 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
         grantTableAliasForStructuralTypeInQuery(target);
 
         for (EdmProperty deleteProperty : target.getKeyProperties()) { // we iterate first the own properties of the type
-            if (!deleteKeys.containsKey(deleteProperty.getName())) {
+            if (deleteKeys.containsKey(deleteProperty.getName())) {
+                getSQLTableColumnNoAlias(target, deleteProperty);
+                deleteKeysColumnNames.add(getSQLTableColumnNoAlias(target, deleteProperty));
+                Object keyValue = deleteKeys.get(deleteProperty.getName());
+                if (!isValidKeyValue(keyValue)) {
+                    throw new OData2Exception("Invalid key value for property  " + deleteProperty.getName(), HttpStatusCodes.BAD_REQUEST);
+                }
+                Object value = deleteKeys.get(deleteProperty.getName());
+                this.addStatementParam(target, deleteProperty, value);
+
+            } else {
                 throw new OData2Exception(String.format("Key property %s is missing in the DELETE request!", deleteProperty.getName()),
                         HttpStatusCodes.BAD_REQUEST);
             }
-            getSQLTableColumnNoAlias(target, deleteProperty);
-            deleteKeysColumnNames.add(getSQLTableColumnNoAlias(target, deleteProperty));
-            Object keyValue = deleteKeys.get(deleteProperty.getName());
-            if (!isValidKeyValue(keyValue)) {
-                throw new OData2Exception("Invalid key value for property  " + deleteProperty.getName(), HttpStatusCodes.BAD_REQUEST);
-            }
-            Object value = deleteKeys.get(deleteProperty.getName());
-            this.addStatementParam(target, deleteProperty, value);
         }
 
         for (EdmNavigationProperty inlineEntry : EdmUtils.getNavigationProperties(target)) {
@@ -172,6 +170,7 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
         return join(deleteKeyExpressions, " AND ");
     }
 
+
     /**
      * Builds the.
      *
@@ -197,6 +196,7 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
                 builder.append(where.getWhereClause());
                 return SQLUtils.assertParametersCount(normalizeSQLExpression(builder.toString()), getStatementParams());
             }
+
 
             @Override
             public List<SQLStatementParam> getStatementParams() {
