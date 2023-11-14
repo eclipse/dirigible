@@ -44,17 +44,19 @@
                 <version>3.1.0</version>
                 <executions>
                     <execution>
+                        <id>build-ts-sources</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
+                        <configuration>
+                            <executable>
+                                ${basedir}/src/main/resources/META-INF/dirigible/modules/build-source${script.extension}
+                            </executable>
+                            <workingDirectory>src/main/resources/META-INF/dirigible/modules</workingDirectory>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <executable>${basedir}/src/main/resources/META-INF/dirigible/modules/build${script.extension}
-                    </executable>
-                    <workingDirectory>src/main/resources/META-INF/dirigible/modules</workingDirectory>
-                </configuration>
             </plugin>
         </plugins>
     </build>

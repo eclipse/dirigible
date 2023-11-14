@@ -303,6 +303,7 @@ public class HttpResponseFacade {
             throw new InvalidStateException(NO_VALID_RESPONSE);
         }
         Cookie cookie = GsonHelper.fromJson(cookieJson, Cookie.class);
+        cookie.setSecure(true);
         response.addCookie(cookie);
     }
 
