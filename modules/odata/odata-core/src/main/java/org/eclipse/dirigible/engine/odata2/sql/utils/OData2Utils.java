@@ -10,18 +10,8 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
-import org.apache.olingo.odata2.api.edm.EdmEntitySet;
-import org.apache.olingo.odata2.api.edm.EdmEntityType;
-import org.apache.olingo.odata2.api.edm.EdmException;
-import org.apache.olingo.odata2.api.edm.EdmProperty;
-import org.apache.olingo.odata2.api.edm.EdmStructuralType;
-import org.apache.olingo.odata2.api.edm.EdmType;
-import org.apache.olingo.odata2.api.edm.EdmTyped;
+import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.ep.EntityProvider;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.exception.ODataApplicationException;
@@ -39,6 +29,8 @@ import org.apache.olingo.odata2.api.uri.expression.MemberExpression;
 import org.apache.olingo.odata2.api.uri.expression.OrderExpression;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
+
+import java.util.*;
 
 /**
  * The Class OData2Utils.
@@ -108,7 +100,8 @@ public class OData2Utils {
         nextLinkBuilder.append(requestUri.contains("?") ? "&" : "?");
         nextLinkBuilder.append("$skiptoken=");
         nextLinkBuilder.append(skipToken);
-        return nextLinkBuilder.toString();
+        nextLink = nextLinkBuilder.toString();
+        return nextLink;
     }
 
     /**
@@ -120,21 +113,20 @@ public class OData2Utils {
      * @return the inline entry key value
      * @throws EdmException the edm exception
      */
-
     public static String getInlineEntryKeyValue(Map<String, Object> values, EdmTyped inlineEntry, EdmProperty inlinEntityKey)
             throws EdmException {
         if (inlineEntry.getType() instanceof EdmEntityType) {
             Object inlineEntryData = values.get(inlineEntry.getName());
             if (inlineEntryData instanceof ODataEntry) {
                 Map<String, Object> inlineEntryDataProperties = ((ODataEntry) inlineEntryData).getProperties();
-
-                for (int idx = 0; idx < inlineEntryDataProperties.size(); idx++) {
+                for (Object inlineEntityKeyName : inlineEntryDataProperties.keySet()) {
                     Object inlineKeyValue = inlineEntryDataProperties.get(inlinEntityKey.getName());
                     if (inlineKeyValue instanceof String) {
                         return (String) inlineKeyValue;
+                    } else {
+                        throw new OData2Exception("Invalid inline entity: the key " + inlinEntityKey.getName()//
+                                + " of entity " + inlineEntry.getName() + " must be of type String!", HttpStatusCodes.BAD_REQUEST);
                     }
-                    throw new OData2Exception("Invalid inline entity: the key " + inlinEntityKey.getName()//
-                            + " of entity " + inlineEntry.getName() + " must be of type String!", HttpStatusCodes.BAD_REQUEST);
                 }
             }
             throw new OData2Exception("Invalid inline entity: missing key " + inlinEntityKey.getName() + //
@@ -213,6 +205,7 @@ public class OData2Utils {
         return expand != null && !expand.isEmpty();
     }
 
+
     /**
      * Checks if is order by entity in expand.
      *
@@ -249,13 +242,14 @@ public class OData2Utils {
      */
     public static String getTenantNameFromContext(ODataContext context) {
         ODataContext parentContext = context.getBatchParentContext();
-        if (parentContext == null) {
+        if (parentContext != null) {
+            while (parentContext.getBatchParentContext() != null) {
+                parentContext = parentContext.getBatchParentContext();
+            }
+            return (String) parentContext.getParameter(OData2Constants.ODATA_CTX_PARAMETER_TENANT_NAME);
+        } else {
             return (String) context.getParameter(OData2Constants.ODATA_CTX_PARAMETER_TENANT_NAME);
         }
-        while (parentContext.getBatchParentContext() != null) {
-            parentContext = parentContext.getBatchParentContext();
-        }
-        return (String) parentContext.getParameter(OData2Constants.ODATA_CTX_PARAMETER_TENANT_NAME);
     }
 
     /**

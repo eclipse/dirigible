@@ -10,6 +10,7 @@
  */
 package org.eclipse.dirigible.components.data.management.service;
 
+
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -19,7 +20,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseErrorHelper;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseQueryHelper;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseQueryHelper.RequestExecutionCallback;
@@ -82,6 +85,7 @@ public class DatabaseExecutionService {
                                 .map(DataSource::getName)
                                 .collect(Collectors.toSet());
     }
+
 
     /**
      * Execute query.
