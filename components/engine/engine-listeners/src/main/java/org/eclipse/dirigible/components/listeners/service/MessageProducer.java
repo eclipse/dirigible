@@ -53,4 +53,5 @@ public class MessageProducer {
             LOGGER.trace("Message sent in [{}]", destination);
         }
     }
+
 }

@@ -43,7 +43,7 @@ class BackgroundMessageListener implements MessageListener {
 
     private void executeOnMessageHandler(TextMessage textMsg) {
         String extractedMsg = extractMessage(textMsg);
-        try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner()) {
+        try (DirigibleJavascriptCodeRunner runner = createJSCodeRunner()) {
             String handlerPath = listener.getHandler();
             Module module = runner.run(handlerPath);
             runner.runMethod(module, "onMessage", extractedMsg);
@@ -52,14 +52,14 @@ class BackgroundMessageListener implements MessageListener {
 
     private String extractMessage(TextMessage textMsg) {
         try {
-            return escapeCodeString(textMsg.getText());
+            return textMsg.getText();
         } catch (JMSException ex) {
             throw new IllegalStateException("Failed to extract test message from " + textMsg, ex);
         }
     }
 
-    private String escapeCodeString(String raw) {
-        return raw.replace("'", "&amp;");
+    DirigibleJavascriptCodeRunner createJSCodeRunner() {
+        return new DirigibleJavascriptCodeRunner();
     }
 
 }

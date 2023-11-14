@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.components.listeners.service;
 
 import javax.jms.Destination;
-import javax.jms.IllegalStateException;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;

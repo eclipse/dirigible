@@ -146,8 +146,7 @@ public class TransportEndpoint {
                 || folder.equals("/"))
             relativePath = "";
         else {
-            UrlFacade decodedFolder = new UrlFacade();
-            relativePath = decodedFolder.decode(folder, null);
+            relativePath = UrlFacade.decode(folder, null);
         }
 
         transportService.importZipToPath(workspace, project, relativePath, file.getBytes(), true);
@@ -250,8 +249,7 @@ public class TransportEndpoint {
                 || folder.equals("/"))
             relativePath = "";
         else {
-            UrlFacade decodedFolder = new UrlFacade();
-            relativePath = decodedFolder.decode(folder, null);
+            relativePath = UrlFacade.decode(folder, null);
         }
 
         InputStream in = file.getInputStream();

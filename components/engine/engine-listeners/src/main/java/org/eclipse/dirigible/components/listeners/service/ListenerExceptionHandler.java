@@ -17,19 +17,20 @@ import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class BackgroundExceptionListener implements ExceptionListener {
+class ListenerExceptionHandler implements ExceptionListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundExceptionListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ListenerExceptionHandler.class);
+
     private final String handlerPath;
 
-    BackgroundExceptionListener(String handlerPath) {
+    ListenerExceptionHandler(String handlerPath) {
         this.handlerPath = handlerPath;
     }
 
     @Override
     public void onException(JMSException jmsException) {
         try {
-            String errorMessage = escapeCodeString(jmsException.getMessage());
+            String errorMessage = jmsException.getMessage();
             executeOnErrorHandler(errorMessage);
         } catch (RuntimeException ex) {
             ex.addSuppressed(jmsException);
@@ -38,14 +39,14 @@ class BackgroundExceptionListener implements ExceptionListener {
     }
 
     private void executeOnErrorHandler(String errorMessage) {
-        try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner()) {
+        try (DirigibleJavascriptCodeRunner runner = createJSCodeRunner()) {
             Module module = runner.run(handlerPath);
             runner.runMethod(module, "onError", errorMessage);
         }
     }
 
-    private String escapeCodeString(String raw) {
-        return raw.replace("'", "&amp;");
+    DirigibleJavascriptCodeRunner createJSCodeRunner() {
+        return new DirigibleJavascriptCodeRunner();
     }
 
 }

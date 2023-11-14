@@ -121,7 +121,7 @@ public class DataStore {
                                                          .setProperty("hibernate.current_session_context_class",
                                                                  "org.hibernate.context.internal.ThreadLocalSessionContext");
 
-        mappings.forEach((k, v) -> addInputStreanToConfig(configuration, k, v));
+        mappings.forEach((k, v) -> addInputStreamToConfig(configuration, k, v));
 
         StandardServiceRegistryBuilder serviceRegistryBuilder = new StandardServiceRegistryBuilder();
         serviceRegistryBuilder.applySetting(Environment.DATASOURCE, getDataSource());
@@ -130,7 +130,7 @@ public class DataStore {
         sessionFactory = configuration.buildSessionFactory(serviceRegistry);
     }
 
-    private void addInputStreanToConfig(Configuration configuration, String key, String value) {
+    private void addInputStreamToConfig(Configuration configuration, String key, String value) {
         try (InputStream inputStream = IOUtils.toInputStream(value, StandardCharsets.UTF_8)) {
             configuration.addInputStream(inputStream);
         } catch (RuntimeException | IOException ex) {

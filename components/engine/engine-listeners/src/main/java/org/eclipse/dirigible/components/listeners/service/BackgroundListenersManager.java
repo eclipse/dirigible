@@ -11,11 +11,9 @@
 package org.eclipse.dirigible.components.listeners.service;
 
 import static java.text.MessageFormat.format;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
@@ -32,7 +30,7 @@ public class BackgroundListenersManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundListenersManager.class);
 
-    private static Map<String, BackgroundListenerManager> LISTENERS = Collections.synchronizedMap(new HashMap<>());
+    static Map<String, BackgroundListenerManager> LISTENERS = Collections.synchronizedMap(new HashMap<>());
 
     private final IRepository repository;
     private final BackgroundListenerManagerFactory messageListenerManagerFactory;
@@ -43,26 +41,28 @@ public class BackgroundListenersManager {
         this.messageListenerManagerFactory = messageListenerManagerFactory;
     }
 
-    public IRepository getRepository() {
-        return repository;
+    public void startListener(Listener listener) {
+        if (LISTENERS.containsKey(listener.getLocation())) {
+            LOGGER.warn(format("Message consumer for listener at [{0}] already running!", listener.getLocation()));
+            return;
+
+        }
+        if (isMissingListener(listener)) {
+            LOGGER.error("Listener {} cannot be started, because the handler {} does not exist!", listener.getLocation(),
+                    listener.getHandler());
+            return;
+        }
+        BackgroundListenerManager listenerManager = messageListenerManagerFactory.create(listener);
+        listenerManager.startListener();
+
+        LISTENERS.put(listener.getLocation(), listenerManager);
+        LOGGER.info("Listener started: " + listener.getLocation());
     }
 
-    public void startListener(Listener listener) {
-        if (!LISTENERS.containsKey(listener.getLocation())) {
-            IResource resource = getRepository().getResource(
-                    IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + listener.getHandler());
-            if (!resource.exists()) {
-                LOGGER.error("Listener {} cannot be started, because the handler {} does not exist!", listener.getLocation(),
-                        listener.getHandler());
-            }
-            BackgroundListenerManager listenerManager = messageListenerManagerFactory.create(listener);
-            listenerManager.startListener();
-
-            LISTENERS.put(listener.getLocation(), listenerManager);
-            LOGGER.info("Listener started: " + listener.getLocation());
-        } else {
-            LOGGER.warn(format("Message consumer for listener at [{0}] already running!", listener.getLocation()));
-        }
+    private boolean isMissingListener(Listener listener) {
+        IResource resource =
+                repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + listener.getHandler());
+        return !resource.exists();
     }
 
     public synchronized void stopListeners() {
@@ -89,27 +89,6 @@ public class BackgroundListenersManager {
         } else {
             LOGGER.warn("There is NO configured listener for [{}]", listenerLocation);
         }
-    }
-
-    /**
-     * Check if listener is registered.
-     *
-     * @param listenerLocation the listener location
-     * @return true, if such listener is registered
-     */
-    public boolean existsListener(String listenerLocation) {
-        return LISTENERS.containsKey(listenerLocation);
-    }
-
-    /**
-     * Gets the running listeners.
-     *
-     * @return the running listeners
-     */
-    public List<String> getRunningListeners() {
-        List<String> result = new ArrayList<>();
-        result.addAll(LISTENERS.keySet());
-        return result;
     }
 
 }

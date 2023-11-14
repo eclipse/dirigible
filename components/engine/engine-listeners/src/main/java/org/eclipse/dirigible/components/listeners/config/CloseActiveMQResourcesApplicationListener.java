@@ -55,10 +55,18 @@ class CloseActiveMQResourcesApplicationListener implements ApplicationListener<A
 
     private void closeResources(ApplicationEvent event) {
         LOGGER.info("Closing ActiveMQ resources due to event {}", event);
-        listenersManager.stopListeners();
+        stopListeners();
         closeResource(session);
         closeResource(connection);
         stopBroker();
+    }
+
+    private void stopListeners() {
+        try {
+            listenersManager.stopListeners();
+        } catch (RuntimeException ex) {
+            LOGGER.warn("Failed to stop listeners", ex);
+        }
     }
 
     private void closeResource(AutoCloseable closeable) {

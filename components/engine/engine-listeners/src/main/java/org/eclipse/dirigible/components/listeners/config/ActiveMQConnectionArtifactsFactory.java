@@ -5,19 +5,24 @@ import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 import javax.jms.Session;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ActiveMQConnectionArtifactsFactory {
 
-    private static final String CONNECTOR_URL_ATTACH = "vm://localhost?create=false";
+    private final ActiveMQConnectionFactory connectionFactory;
+
+    @Autowired
+    ActiveMQConnectionArtifactsFactory(ActiveMQConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
 
     public Session createSession(Connection connection) throws JMSException {
         return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
     }
 
-    public Connection createConnection(ExceptionListener exceptionListener) {
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(CONNECTOR_URL_ATTACH);
+    public Connection createConnection(ExceptionListener exceptionListener) throws IllegalStateException {
         try {
             Connection connection = connectionFactory.createConnection();
             connection.setExceptionListener(exceptionListener);

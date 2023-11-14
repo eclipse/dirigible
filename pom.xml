@@ -581,6 +581,18 @@
 				<artifactId>dirigible-application</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+			    <groupId>junit</groupId>
+			    <artifactId>junit</artifactId>
+			    <version>${junit.version}</version>
+			    <scope>test</scope>
+			</dependency>
+		    <dependency>
+		        <groupId>org.junit.vintage</groupId>
+		        <artifactId>junit-vintage-engine</artifactId>
+		        <version>5.10.1</version>
+		        <scope>test</scope>
+		    </dependency>
 		</dependencies>
 	</dependencyManagement>
 

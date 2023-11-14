@@ -11,7 +11,7 @@
 package org.eclipse.dirigible.integration.tests.messaging;
 
 /**
- * used by <b>background-handler.js</b>
+ * used by <b>background-handler.js as well</b>
  */
 public class MessagesHolder {
 

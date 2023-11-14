@@ -15,6 +15,7 @@ import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.sql.DataSource;
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.openwire.OpenWireFormat;
 import org.apache.activemq.store.PListStore;
@@ -29,8 +30,14 @@ import org.springframework.context.annotation.DependsOn;
 @Configuration
 class MessagingConfig {
 
+    private static final String CONNECTOR_URL_ATTACH = "vm://localhost?create=false";
     private static final String CONNECTOR_URL = "vm://localhost";
     private static final String LOCATION_TEMP_STORE = "./target/temp/kahadb";
+
+    @Bean
+    ActiveMQConnectionFactory createActiveMQConnectionFactory() {
+        return new ActiveMQConnectionFactory(CONNECTOR_URL_ATTACH);
+    }
 
     @Bean("ActiveMQBroker")
     BrokerService createBrokerService(@Qualifier("SystemDB") DataSource dataSource) {

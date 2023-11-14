@@ -12,7 +12,6 @@ package org.eclipse.dirigible.components.listeners.service;
 
 import javax.jms.Connection;
 import javax.jms.Destination;
-import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
@@ -45,7 +44,7 @@ class BackgroundListenerManager {
         LOGGER.info("Starting a message listener for {} ...", listener);
         try {
             String handlerPath = listener.getHandler();
-            ExceptionListener exceptionListener = new BackgroundExceptionListener(handlerPath);
+            ListenerExceptionHandler exceptionListener = new ListenerExceptionHandler(handlerPath);
 
             Connection connection = connectionArtifactsFactory.createConnection(exceptionListener);
             Session session = connectionArtifactsFactory.createSession(connection);
@@ -65,6 +64,9 @@ class BackgroundListenerManager {
     private Destination craeteDestination(Session session) throws JMSException {
         String destination = listener.getName();
         ListenerKind kind = listener.getKind();
+        if (null == kind) {
+            throw new IllegalArgumentException("Invalid listener: " + listener + ", kind IS null");
+        }
         return switch (kind) {
             case QUEUE -> session.createQueue(destination);
             case TOPIC -> session.createTopic(destination);

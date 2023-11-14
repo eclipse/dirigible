@@ -26,7 +26,7 @@ public class MessagingFacade {
     private static MessageProducer messageProducer;
 
     @Autowired
-    public MessagingFacade(MessageConsumer messageConsumer, MessageProducer messageProducer) {
+    MessagingFacade(MessageConsumer messageConsumer, MessageProducer messageProducer) {
         MessagingFacade.messageConsumer = messageConsumer;
         MessagingFacade.messageProducer = messageProducer;
     }
