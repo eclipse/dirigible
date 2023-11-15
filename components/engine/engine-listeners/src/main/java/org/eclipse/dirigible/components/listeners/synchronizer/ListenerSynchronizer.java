@@ -26,8 +26,8 @@ import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
-import org.eclipse.dirigible.components.listeners.service.BackgroundListenerService;
-import org.eclipse.dirigible.components.listeners.service.BackgroundListenersManager;
+import org.eclipse.dirigible.components.listeners.service.ListenerService;
+import org.eclipse.dirigible.components.listeners.service.ListenersManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +41,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.LISTENER)
-class BackgroundListenerSynchronizer<A extends Artefact> implements Synchronizer<Listener> {
+public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Listener> {
 
     /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(BackgroundListenerSynchronizer.class);
+    private static final Logger logger = LoggerFactory.getLogger(ListenerSynchronizer.class);
 
     /** The Constant FILE_EXTENSION_LISTENER. */
     private static final String FILE_EXTENSION_LISTENER = ".listener";
@@ -54,11 +54,11 @@ class BackgroundListenerSynchronizer<A extends Artefact> implements Synchronizer
 
     /** The listener service. */
     @Autowired
-    private BackgroundListenerService listenerService;
+    private ListenerService listenerService;
 
     /** The Scheduler manager. */
     @Autowired
-    private BackgroundListenersManager listenersManager;
+    private ListenersManager listenersManager;
 
     /**
      * Checks if is accepted.
@@ -90,7 +90,7 @@ class BackgroundListenerSynchronizer<A extends Artefact> implements Synchronizer
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Listener> parse(String location, byte[] content) throws ParseException {

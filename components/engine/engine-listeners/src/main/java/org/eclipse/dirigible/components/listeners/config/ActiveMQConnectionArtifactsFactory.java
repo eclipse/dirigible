@@ -18,20 +18,43 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * A factory for creating ActiveMQConnectionArtifacts objects.
+ */
 @Component
 public class ActiveMQConnectionArtifactsFactory {
 
+    /** The connection factory. */
     private final ActiveMQConnectionFactory connectionFactory;
 
+    /**
+     * Instantiates a new active MQ connection artifacts factory.
+     *
+     * @param connectionFactory the connection factory
+     */
     @Autowired
     ActiveMQConnectionArtifactsFactory(ActiveMQConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
 
+    /**
+     * Creates a new ActiveMQConnectionArtifacts object.
+     *
+     * @param connection the connection
+     * @return the session
+     * @throws JMSException the JMS exception
+     */
     public Session createSession(Connection connection) throws JMSException {
         return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
     }
 
+    /**
+     * Creates a new ActiveMQConnectionArtifacts object.
+     *
+     * @param exceptionListener the exception listener
+     * @return the connection
+     * @throws IllegalStateException the illegal state exception
+     */
     public Connection createConnection(ExceptionListener exceptionListener) throws IllegalStateException {
         try {
             Connection connection = connectionFactory.createConnection();

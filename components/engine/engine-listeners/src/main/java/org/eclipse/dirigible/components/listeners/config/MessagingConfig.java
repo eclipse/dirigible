@@ -27,18 +27,37 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
+/**
+ * The Class MessagingConfig.
+ */
 @Configuration
 class MessagingConfig {
 
+    /** The Constant CONNECTOR_URL_ATTACH. */
     private static final String CONNECTOR_URL_ATTACH = "vm://localhost?create=false";
+
+    /** The Constant CONNECTOR_URL. */
     private static final String CONNECTOR_URL = "vm://localhost";
+
+    /** The Constant LOCATION_TEMP_STORE. */
     private static final String LOCATION_TEMP_STORE = "./target/temp/kahadb";
 
+    /**
+     * Creates the active MQ connection factory.
+     *
+     * @return the active MQ connection factory
+     */
     @Bean
     ActiveMQConnectionFactory createActiveMQConnectionFactory() {
         return new ActiveMQConnectionFactory(CONNECTOR_URL_ATTACH);
     }
 
+    /**
+     * Creates the broker service.
+     *
+     * @param dataSource the data source
+     * @return the broker service
+     */
     @Bean("ActiveMQBroker")
     BrokerService createBrokerService(@Qualifier("SystemDB") DataSource dataSource) {
         try {
@@ -63,6 +82,12 @@ class MessagingConfig {
         }
     }
 
+    /**
+     * Creates the connection.
+     *
+     * @param connection the connection
+     * @return the session
+     */
     @Bean("ActiveMQSession")
     Session createConnection(@Qualifier("ActiveMQConnection") Connection connection) {
         try {
@@ -72,6 +97,13 @@ class MessagingConfig {
         }
     }
 
+    /**
+     * Creates the connection.
+     *
+     * @param connectionArtifactsFactory the connection artifacts factory
+     * @param loggingExceptionListener the logging exception listener
+     * @return the connection
+     */
     @Bean("ActiveMQConnection")
     @DependsOn("ActiveMQBroker")
     Connection createConnection(ActiveMQConnectionArtifactsFactory connectionArtifactsFactory,

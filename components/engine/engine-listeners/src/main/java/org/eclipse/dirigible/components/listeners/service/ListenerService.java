@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class BackgroundListenerService implements ArtefactService<Listener> {
+public class ListenerService implements ArtefactService<Listener> {
 
     /** The listener repository. */
     @Autowired

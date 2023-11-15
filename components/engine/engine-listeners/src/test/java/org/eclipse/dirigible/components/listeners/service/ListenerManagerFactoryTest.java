@@ -19,21 +19,30 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+/**
+ * The Class BackgroundListenerManagerFactoryTest.
+ */
 @ExtendWith(MockitoExtension.class)
-class BackgroundListenerManagerFactoryTest {
+class ListenerManagerFactoryTest {
 
+    /** The factory. */
     @InjectMocks
-    private BackgroundListenerManagerFactory factory;
+    private ListenerManagerFactory factory;
 
+    /** The connection artifacts factory. */
     @Mock
     private ActiveMQConnectionArtifactsFactory connectionArtifactsFactory;
 
+    /** The listener. */
     @Mock
     private Listener listener;
 
+    /**
+     * Test create.
+     */
     @Test
     void testCreate() {
-        BackgroundListenerManager manager = factory.create(listener);
+        ListenerManager manager = factory.create(listener);
 
         assertThat(manager).isNotNull();
     }

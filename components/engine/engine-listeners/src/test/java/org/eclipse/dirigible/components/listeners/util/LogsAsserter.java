@@ -17,10 +17,20 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 
+/**
+ * The Class LogsAsserter.
+ */
 public class LogsAsserter {
 
+    /** The memory appender. */
     private final InMemoryAppender memoryAppender;
 
+    /**
+     * Instantiates a new logs asserter.
+     *
+     * @param loggerClass the logger class
+     * @param loggerLevel the logger level
+     */
     public LogsAsserter(Class<?> loggerClass, Level loggerLevel) {
         Logger logger = (Logger) LoggerFactory.getLogger(loggerClass);
         logger.setLevel(loggerLevel);
@@ -32,6 +42,12 @@ public class LogsAsserter {
         memoryAppender.start();
     }
 
+    /**
+     * Assert logged message.
+     *
+     * @param expectedMessage the expected message
+     * @param expectedLevel the expected level
+     */
     public void assertLoggedMessage(String expectedMessage, Level expectedLevel) {
         boolean messageLogged = memoryAppender.contains(expectedMessage, expectedLevel);
         if (!messageLogged) {

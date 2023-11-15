@@ -28,38 +28,59 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+/**
+ * The Class BackgroundMessageListenerTest.
+ */
 @SuppressWarnings("resource")
 @ExtendWith(MockitoExtension.class)
-class BackgroundMessageListenerTest {
+class MessageListenerTest {
 
+    /** The Constant MESSAGE. */
     private static final String MESSAGE = "This is a test message";
+
+    /** The Constant HANDLER. */
     private static final String HANDLER = "test-handler";
 
-    private BackgroundMessageListener backgroundMessageListener;
+    /** The background message listener. */
+    private AsynchronousMessageListener backgroundMessageListener;
 
+    /** The js code runner. */
     @Mock
     private DirigibleJavascriptCodeRunner jsCodeRunner;
 
+    /** The text message. */
     @Mock
     private TextMessage textMessage;
 
+    /** The listener. */
     @Mock
     private Listener listener;
 
+    /** The bytes message. */
     @Mock
     private BytesMessage bytesMessage;
 
+    /** The module. */
     @Mock
     private Module module;
 
+    /** The value. */
     @Mock
     private Value value;
 
+    /**
+     * Sets the up.
+     */
     @BeforeEach
     void setUp() {
-        backgroundMessageListener = spy(new BackgroundMessageListener(listener));
+        backgroundMessageListener = spy(new AsynchronousMessageListener(listener));
     }
 
+    /**
+     * Test on message.
+     *
+     * @throws JMSException the JMS exception
+     */
     @Test
     void testOnMessage() throws JMSException {
         doReturn(jsCodeRunner).when(backgroundMessageListener)
@@ -74,6 +95,11 @@ class BackgroundMessageListenerTest {
 
     }
 
+    /**
+     * Test on message failed to extract message.
+     *
+     * @throws JMSException the JMS exception
+     */
     @Test
     void testOnMessageFailedToExtractMessage() throws JMSException {
         when(textMessage.getText()).thenThrow(JMSException.class);
@@ -81,6 +107,9 @@ class BackgroundMessageListenerTest {
         assertThrows(IllegalStateException.class, () -> backgroundMessageListener.onMessage(textMessage));
     }
 
+    /**
+     * Test on message with unsupported message.
+     */
     @Test
     void testOnMessageWithUnsupportedMessage() {
         assertThrows(IllegalStateException.class, () -> backgroundMessageListener.onMessage(bytesMessage));

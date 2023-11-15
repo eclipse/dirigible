@@ -13,14 +13,27 @@ package org.eclipse.dirigible.components.listeners.config;
 import org.eclipse.dirigible.components.base.artefact.Engine;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class ListenersEngine.
+ */
 @Component
 public class ListenersEngine implements Engine {
 
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
     @Override
     public String getName() {
         return "Listener (ActiveMQ)";
     }
 
+    /**
+     * Gets the provider.
+     *
+     * @return the provider
+     */
     @Override
     public String getProvider() {
         return "Eclipse Dirigible";

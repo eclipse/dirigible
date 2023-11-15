@@ -25,22 +25,41 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class ListenersManager.
+ */
 @Component("ListenersManager")
-public class BackgroundListenersManager {
+public class ListenersManager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundListenersManager.class);
+    /** The Constant LOGGER. */
+    private static final Logger LOGGER = LoggerFactory.getLogger(ListenersManager.class);
 
-    static Map<String, BackgroundListenerManager> LISTENERS = Collections.synchronizedMap(new HashMap<>());
+    /** The listeners. */
+    static Map<String, ListenerManager> LISTENERS = Collections.synchronizedMap(new HashMap<>());
 
+    /** The repository. */
     private final IRepository repository;
-    private final BackgroundListenerManagerFactory messageListenerManagerFactory;
 
+    /** The message listener manager factory. */
+    private final ListenerManagerFactory messageListenerManagerFactory;
+
+    /**
+     * Instantiates a new listeners manager.
+     *
+     * @param repository the repository
+     * @param messageListenerManagerFactory the message listener manager factory
+     */
     @Autowired
-    BackgroundListenersManager(IRepository repository, BackgroundListenerManagerFactory messageListenerManagerFactory) {
+    public ListenersManager(IRepository repository, ListenerManagerFactory messageListenerManagerFactory) {
         this.repository = repository;
         this.messageListenerManagerFactory = messageListenerManagerFactory;
     }
 
+    /**
+     * Start listener.
+     *
+     * @param listener the listener
+     */
     public void startListener(Listener listener) {
         if (LISTENERS.containsKey(listener.getLocation())) {
             LOGGER.warn(format("Message consumer for listener at [{0}] already running!", listener.getLocation()));
@@ -52,27 +71,36 @@ public class BackgroundListenersManager {
                     listener.getHandler());
             return;
         }
-        BackgroundListenerManager listenerManager = messageListenerManagerFactory.create(listener);
+        ListenerManager listenerManager = messageListenerManagerFactory.create(listener);
         listenerManager.startListener();
 
         LISTENERS.put(listener.getLocation(), listenerManager);
         LOGGER.info("Listener started: " + listener.getLocation());
     }
 
+    /**
+     * Checks if is missing listener.
+     *
+     * @param listener the listener
+     * @return true, if is missing listener
+     */
     private boolean isMissingListener(Listener listener) {
         IResource resource =
                 repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + listener.getHandler());
         return !resource.exists();
     }
 
+    /**
+     * Stop listeners.
+     */
     public synchronized void stopListeners() {
         LOGGER.info("Stopping all background listeners...");
 
-        Iterator<Entry<String, BackgroundListenerManager>> iterator = LISTENERS.entrySet()
-                                                                               .iterator();
+        Iterator<Entry<String, ListenerManager>> iterator = LISTENERS.entrySet()
+                                                                     .iterator();
         while (iterator.hasNext()) {
-            Entry<String, BackgroundListenerManager> entry = iterator.next();
-            BackgroundListenerManager listenerManager = entry.getValue();
+            Entry<String, ListenerManager> entry = iterator.next();
+            ListenerManager listenerManager = entry.getValue();
             if (listenerManager != null) {
                 listenerManager.stopListener();
             }
@@ -80,9 +108,14 @@ public class BackgroundListenersManager {
         }
     }
 
+    /**
+     * Stop listener.
+     *
+     * @param listener the listener
+     */
     public void stopListener(Listener listener) {
         String listenerLocation = listener.getLocation();
-        BackgroundListenerManager listenerManager = LISTENERS.get(listenerLocation);
+        ListenerManager listenerManager = LISTENERS.get(listenerLocation);
         if (listenerManager != null) {
             listenerManager.stopListener();
             LISTENERS.remove(listenerLocation);

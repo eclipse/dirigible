@@ -30,6 +30,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The Class ListenerRepositoryTest.
+ */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
@@ -37,12 +40,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class ListenerRepositoryTest {
+
+    /** The listener repository. */
     @Autowired
     private ListenerRepository listenerRepository;
 
+    /** The entity manager. */
     @Autowired
     EntityManager entityManager;
 
+    /**
+     * Setup.
+     */
     @BeforeEach
     public void setup() {
         cleanup();
@@ -52,11 +61,19 @@ public class ListenerRepositoryTest {
         listenerRepository.save(new Listener("/a/b/c/l3.listener", "name3", "description", "handler3", ListenerKind.QUEUE));
     }
 
+    /**
+     * Cleanup.
+     */
     @AfterEach
     public void cleanup() {
         listenerRepository.deleteAll();
     }
 
+    /**
+     * Gets the one.
+     *
+     * @return the one
+     */
     @Test
     public void getOne() {
         List<Listener> all = listenerRepository.findAll();
@@ -75,6 +92,11 @@ public class ListenerRepositoryTest {
         assertNotNull(listener.getCreatedAt());
     }
 
+    /**
+     * Gets the reference using entity manager.
+     *
+     * @return the reference using entity manager
+     */
     @Test
     public void getReferenceUsingEntityManager() {
         Long id = listenerRepository.findAll()
@@ -85,6 +107,9 @@ public class ListenerRepositoryTest {
         assertEquals("/a/b/c/l1.listener", listener.getLocation());
     }
 
+    /**
+     * The Class TestConfiguration.
+     */
     @SpringBootApplication
     static class TestConfiguration {
     }

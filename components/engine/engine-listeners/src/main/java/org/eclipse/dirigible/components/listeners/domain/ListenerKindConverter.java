@@ -12,11 +12,23 @@ package org.eclipse.dirigible.components.listeners.domain;
 
 import javax.persistence.AttributeConverter;
 
+/**
+ * The Class ListenerKindConverter.
+ */
 public class ListenerKindConverter implements AttributeConverter<ListenerKind, Character> {
 
+    /** The Constant QUEUE_CHAR. */
     private static final char QUEUE_CHAR = 'Q';
+
+    /** The Constant TOPIC_CHAR. */
     private static final char TOPIC_CHAR = 'T';
 
+    /**
+     * Convert to database column.
+     *
+     * @param from the from
+     * @return the character
+     */
     @Override
     public Character convertToDatabaseColumn(ListenerKind from) {
         if (ListenerKind.QUEUE.equals(from)) {
@@ -28,6 +40,12 @@ public class ListenerKindConverter implements AttributeConverter<ListenerKind, C
         throw new IllegalArgumentException("Unsupported listener kind: " + from);
     }
 
+    /**
+     * Convert to entity attribute.
+     *
+     * @param to the to
+     * @return the listener kind
+     */
     @Override
     public ListenerKind convertToEntityAttribute(Character to) {
         if (to == null) {

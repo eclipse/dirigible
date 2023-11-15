@@ -20,16 +20,37 @@ import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class BackgroundMessageListener implements MessageListener {
+/**
+ * The listener interface for receiving asynchronousMessage events. The class that is interested in
+ * processing a asynchronousMessage event implements this interface, and the object created with
+ * that class is registered with a component using the component's
+ * <code>addAsynchronousMessageListener<code> method. When the asynchronousMessage event occurs,
+ * that object's appropriate method is invoked.
+ *
+ * @see AsynchronousMessageEvent
+ */
+public class AsynchronousMessageListener implements MessageListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundMessageListener.class);
+    /** The Constant LOGGER. */
+    private static final Logger LOGGER = LoggerFactory.getLogger(AsynchronousMessageListener.class);
 
+    /** The listener. */
     private final Listener listener;
 
-    BackgroundMessageListener(Listener listener) {
+    /**
+     * Instantiates a new asynchronous message listener.
+     *
+     * @param listener the listener
+     */
+    public AsynchronousMessageListener(Listener listener) {
         this.listener = listener;
     }
 
+    /**
+     * On message.
+     *
+     * @param message the message
+     */
     @Override
     public void onMessage(Message message) {
         LOGGER.trace("Start processing a received message in [{}] by [{}] ...", listener.getName(), listener.getHandler());
@@ -41,6 +62,11 @@ class BackgroundMessageListener implements MessageListener {
         LOGGER.trace("Done processing the received message in [{}] by [{}]", listener.getName(), listener.getHandler());
     }
 
+    /**
+     * Execute on message handler.
+     *
+     * @param textMsg the text msg
+     */
     private void executeOnMessageHandler(TextMessage textMsg) {
         String extractedMsg = extractMessage(textMsg);
         try (DirigibleJavascriptCodeRunner runner = createJSCodeRunner()) {
@@ -50,6 +76,12 @@ class BackgroundMessageListener implements MessageListener {
         }
     }
 
+    /**
+     * Extract message.
+     *
+     * @param textMsg the text msg
+     * @return the string
+     */
     private String extractMessage(TextMessage textMsg) {
         try {
             return textMsg.getText();
@@ -58,6 +90,11 @@ class BackgroundMessageListener implements MessageListener {
         }
     }
 
+    /**
+     * Creates the JS code runner.
+     *
+     * @return the dirigible javascript code runner
+     */
     DirigibleJavascriptCodeRunner createJSCodeRunner() {
         return new DirigibleJavascriptCodeRunner();
     }

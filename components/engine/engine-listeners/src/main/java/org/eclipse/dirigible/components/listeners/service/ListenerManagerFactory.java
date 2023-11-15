@@ -15,17 +15,32 @@ import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * A factory for creating ListenerManager objects.
+ */
 @Component
-class BackgroundListenerManagerFactory {
+public class ListenerManagerFactory {
 
+    /** The connection artifacts factory. */
     private final ActiveMQConnectionArtifactsFactory connectionArtifactsFactory;
 
+    /**
+     * Instantiates a new listener manager factory.
+     *
+     * @param connectionArtifactsFactory the connection artifacts factory
+     */
     @Autowired
-    BackgroundListenerManagerFactory(ActiveMQConnectionArtifactsFactory connectionArtifactsFactory) {
+    public ListenerManagerFactory(ActiveMQConnectionArtifactsFactory connectionArtifactsFactory) {
         this.connectionArtifactsFactory = connectionArtifactsFactory;
     }
 
-    BackgroundListenerManager create(Listener listener) {
-        return new BackgroundListenerManager(listener, connectionArtifactsFactory);
+    /**
+     * Creates the.
+     *
+     * @param listener the listener
+     * @return the listener manager
+     */
+    public ListenerManager create(Listener listener) {
+        return new ListenerManager(listener, connectionArtifactsFactory);
     }
 }

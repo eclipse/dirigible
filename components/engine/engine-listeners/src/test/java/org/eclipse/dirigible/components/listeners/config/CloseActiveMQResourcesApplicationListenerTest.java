@@ -16,7 +16,7 @@ import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.Session;
 import org.apache.activemq.broker.BrokerService;
-import org.eclipse.dirigible.components.listeners.service.BackgroundListenersManager;
+import org.eclipse.dirigible.components.listeners.service.ListenersManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
@@ -28,33 +28,49 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.ContextStoppedEvent;
 
+/**
+ * The Class CloseActiveMQResourcesApplicationListenerTest.
+ */
 @ExtendWith(MockitoExtension.class)
 class CloseActiveMQResourcesApplicationListenerTest {
 
+    /** The listener. */
     @InjectMocks
     private CloseActiveMQResourcesApplicationListener listener;
 
+    /** The broker. */
     @Mock
     private BrokerService broker;
 
+    /** The connection. */
     @Mock
     private Connection connection;
 
+    /** The session. */
     @Mock
     private Session session;
 
+    /** The listeners manager. */
     @Mock
-    private BackgroundListenersManager listenersManager;
+    private ListenersManager listenersManager;
 
+    /** The closed event. */
     @Mock
     private ContextClosedEvent closedEvent;
 
+    /** The stopped event. */
     @Mock
     private ContextStoppedEvent stoppedEvent;
 
+    /** The started event. */
     @Mock
     private ContextStartedEvent startedEvent;
 
+    /**
+     * Test on context closed event.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void testOnContextClosedEvent() throws Exception {
         listener.onApplicationEvent(closedEvent);
@@ -62,6 +78,11 @@ class CloseActiveMQResourcesApplicationListenerTest {
         verifyClosedResources();
     }
 
+    /**
+     * Test on context stopped event.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void testOnContextStoppedEvent() throws Exception {
         listener.onApplicationEvent(stoppedEvent);
@@ -69,6 +90,12 @@ class CloseActiveMQResourcesApplicationListenerTest {
         verifyClosedResources();
     }
 
+    /**
+     * Verify closed resources.
+     *
+     * @throws JMSException the JMS exception
+     * @throws Exception the exception
+     */
     private void verifyClosedResources() throws JMSException, Exception {
         InOrder inOrder = Mockito.inOrder(listenersManager, session, connection, broker);
 
@@ -85,6 +112,9 @@ class CloseActiveMQResourcesApplicationListenerTest {
                .stop();
     }
 
+    /**
+     * Test on not applicable event.
+     */
     @Test
     void testOnNotApplicableEvent() {
         listener.onApplicationEvent(startedEvent);
@@ -92,6 +122,11 @@ class CloseActiveMQResourcesApplicationListenerTest {
         verifyNoInteractions(listenersManager, session, connection, broker);
     }
 
+    /**
+     * Test stop listeners doesnt terminate the close.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void testStopListenersDoesntTerminateTheClose() throws Exception {
         doThrow(RuntimeException.class).when(listenersManager)
@@ -102,6 +137,11 @@ class CloseActiveMQResourcesApplicationListenerTest {
         verifyClosedResources();
     }
 
+    /**
+     * Test close session doesnt terminate the close.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void testCloseSessionDoesntTerminateTheClose() throws Exception {
         doThrow(Exception.class).when(session)
@@ -112,6 +152,11 @@ class CloseActiveMQResourcesApplicationListenerTest {
         verifyClosedResources();
     }
 
+    /**
+     * Test close connection doesnt terminate the close.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void testCloseConnectionDoesntTerminateTheClose() throws Exception {
         doThrow(Exception.class).when(connection)
@@ -122,6 +167,11 @@ class CloseActiveMQResourcesApplicationListenerTest {
         verifyClosedResources();
     }
 
+    /**
+     * Test stop broker doesnt terminate the close.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void testStopBrokerDoesntTerminateTheClose() throws Exception {
         doThrow(Exception.class).when(broker)

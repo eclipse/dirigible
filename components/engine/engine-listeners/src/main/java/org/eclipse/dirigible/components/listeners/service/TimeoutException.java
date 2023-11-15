@@ -10,10 +10,19 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
+/**
+ * The Class TimeoutException.
+ */
 public class TimeoutException extends RuntimeException {
 
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Instantiates a new timeout exception.
+     *
+     * @param message the message
+     */
     public TimeoutException(String message) {
         super(message);
     }

@@ -16,8 +16,18 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 
+/**
+ * The Class InMemoryAppender.
+ */
 class InMemoryAppender extends ListAppender<ILoggingEvent> {
 
+    /**
+     * Contains.
+     *
+     * @param string the string
+     * @param level the level
+     * @return true, if successful
+     */
     boolean contains(String string, Level level) {
         return this.list.stream()
                         .anyMatch(event -> event.toString()
@@ -26,6 +36,11 @@ class InMemoryAppender extends ListAppender<ILoggingEvent> {
                                         .equals(level));
     }
 
+    /**
+     * Gets the all logged messages.
+     *
+     * @return the all logged messages
+     */
     List<String> getAllLoggedMessages() {
         return list.stream()
                    .map(e -> e.getMessage())

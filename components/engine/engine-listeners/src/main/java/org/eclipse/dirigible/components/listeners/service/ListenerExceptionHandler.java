@@ -17,16 +17,31 @@ import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class ListenerExceptionHandler.
+ */
 class ListenerExceptionHandler implements ExceptionListener {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(ListenerExceptionHandler.class);
 
+    /** The handler path. */
     private final String handlerPath;
 
+    /**
+     * Instantiates a new listener exception handler.
+     *
+     * @param handlerPath the handler path
+     */
     ListenerExceptionHandler(String handlerPath) {
         this.handlerPath = handlerPath;
     }
 
+    /**
+     * On exception.
+     *
+     * @param jmsException the jms exception
+     */
     @Override
     public void onException(JMSException jmsException) {
         try {
@@ -38,6 +53,11 @@ class ListenerExceptionHandler implements ExceptionListener {
         }
     }
 
+    /**
+     * Execute on error handler.
+     *
+     * @param errorMessage the error message
+     */
     private void executeOnErrorHandler(String errorMessage) {
         try (DirigibleJavascriptCodeRunner runner = createJSCodeRunner()) {
             Module module = runner.run(handlerPath);
@@ -45,6 +65,11 @@ class ListenerExceptionHandler implements ExceptionListener {
         }
     }
 
+    /**
+     * Creates the JS code runner.
+     *
+     * @return the dirigible javascript code runner
+     */
     DirigibleJavascriptCodeRunner createJSCodeRunner() {
         return new DirigibleJavascriptCodeRunner();
     }
