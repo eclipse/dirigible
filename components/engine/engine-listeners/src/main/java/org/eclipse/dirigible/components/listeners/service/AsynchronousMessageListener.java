@@ -24,10 +24,9 @@ import org.slf4j.LoggerFactory;
  * The listener interface for receiving asynchronousMessage events. The class that is interested in
  * processing a asynchronousMessage event implements this interface, and the object created with
  * that class is registered with a component using the component's
- * <code>addAsynchronousMessageListener<code> method. When the asynchronousMessage event occurs,
+ * addAsynchronousMessageListener method. When the asynchronousMessage event occurs,
  * that object's appropriate method is invoked.
  *
- * @see AsynchronousMessageEvent
  */
 public class AsynchronousMessageListener implements MessageListener {
 
