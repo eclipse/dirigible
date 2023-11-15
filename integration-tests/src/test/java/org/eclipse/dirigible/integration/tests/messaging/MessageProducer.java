@@ -4,7 +4,7 @@ import org.eclipse.dirigible.components.api.messaging.MessagingFacade;
 
 public class MessageProducer {
 
-    public static void sendMessageToTopic(String topic, String message) {
+    public static void asyncSendMessageToTopic(String topic, String message) {
         new Thread(() -> MessagingFacade.sendToTopic(topic, message)).start();
     }
 

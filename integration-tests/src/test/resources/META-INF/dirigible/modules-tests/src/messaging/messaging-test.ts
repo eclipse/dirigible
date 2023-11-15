@@ -17,7 +17,7 @@ test('send-receive-to-from-queue-test', () => {
 test('send-receive-to-from-topic-test', () => {
 	const topicName = "messaging-test-topic";
 	const message = "'This is a test message'";
-	MessageProducer.sendMessageToTopic(topicName, message);
+	MessageProducer.asyncSendMessageToTopic(topicName, message);
 
 	const receivedMessage = consumer.topic(topicName).receive(4000);
 

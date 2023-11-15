@@ -24,14 +24,10 @@ import org.eclipse.dirigible.graalium.core.javascript.modules.ModuleType;
 import org.graalvm.polyglot.Source;
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicTest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 class DirigibleJavaScriptTestsFactory implements AutoCloseable {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DirigibleJavaScriptTestsFactory.class);
 
     private static final String TESTS_PROJECT_NAME = "modules-tests";
 
@@ -88,14 +84,13 @@ class DirigibleJavaScriptTestsFactory implements AutoCloseable {
     }
 
     private String createTestDisplayName(String testFilePath) {
-        System.out.println("Creating ");
-        LOGGER.info("Creating test display name for file [{}]", testFilePath);
+        System.err.println("Creating test display name for file: " + testFilePath);
 
         String rootRelativePath = String.format("%s%sdist%sesm%s", TESTS_PROJECT_NAME, File.separator, File.separator, File.separator);
-        LOGGER.info("Relative path is [{}]", rootRelativePath);
+        System.err.println("Relative path is: " + rootRelativePath);
 
         String testDisaplyName = StringUtils.substringAfterLast(testFilePath, rootRelativePath);
-        LOGGER.info("Created test display name is [{}]", testDisaplyName);
+        System.err.println("Created test display name is: " + testDisaplyName);
         return testDisaplyName;
     }
 
