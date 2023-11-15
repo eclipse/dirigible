@@ -131,17 +131,13 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
 ##### Steps
 
-1. From the project root directory run command:
+1. From the `build/application` directory run the following command:
 
-        java -jar build/application/target/dirigible-application-*.jar
-
-   > for Windows
-   
-        java -jar build/application/target/$((Get-ChildItem dirigible-application-*.jar -recurse -File | Sort-Object LastWriteTime | Select -Last 1).BaseName).jar
+        mvn spring-boot:run
 
 3. In case you want to debug the application run:
 
-        java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -jar build/application/target/dirigible-application-*.jar
+        mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
 
 4. Open a web browser and go to: [http://localhost:8080](http://localhost:8080 "http://localhost:8080")
 5. Login with user: `admin` and password `admin`
