@@ -26,40 +26,59 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+/**
+ * The Class BackgroundListenersManagerTest.
+ */
 @ExtendWith(MockitoExtension.class)
-class BackgroundListenersManagerTest {
+class ListenersManagerTest {
 
+    /** The Constant HANDLER. */
     private static final String HANDLER = "test-handler";
+
+    /** The Constant LISTNER_LOCATION. */
     private static final String LISTNER_LOCATION = "my-listener";
 
+    /** The listeners manager. */
     @InjectMocks
-    private BackgroundListenersManager listenersManager;
+    private ListenersManager listenersManager;
 
+    /** The repository. */
     @Mock
     private IRepository repository;
 
+    /** The message listener manager factory. */
     @Mock
-    private BackgroundListenerManagerFactory messageListenerManagerFactory;
+    private ListenerManagerFactory messageListenerManagerFactory;
 
+    /** The listener. */
     @Mock
     private Listener listener;
 
+    /** The resource. */
     @Mock
     private IResource resource;
 
+    /** The listener manager. */
     @Mock
-    private BackgroundListenerManager listenerManager;
+    private ListenerManager listenerManager;
 
+    /** The listener manager 2. */
     @Mock
-    private BackgroundListenerManager listenerManager2;
+    private ListenerManager listenerManager2;
 
+    /**
+     * Sets the up.
+     */
     @BeforeEach
     void setUp() {
-        BackgroundListenersManager.LISTENERS.clear();
+        ListenersManager.LISTENERS.clear();
         lenient().when(listener.getLocation())
                  .thenReturn(LISTNER_LOCATION);
     }
 
+    /**
+     * Test start listener on try to start the listner again.
+     */
     @Test
     void testStartListenerOnTryToStartTheListnerAgain() {
         testStartListenerOnExistingListener();
@@ -69,6 +88,9 @@ class BackgroundListenersManagerTest {
         verifyNoMoreInteractions(listenerManager);
     }
 
+    /**
+     * Test start listener on existing listener.
+     */
     @Test
     void testStartListenerOnExistingListener() {
         when(listener.getHandler()).thenReturn(HANDLER);
@@ -82,6 +104,9 @@ class BackgroundListenersManagerTest {
         verify(listenerManager).startListener();
     }
 
+    /**
+     * Test start listener on missing listener.
+     */
     @Test
     void testStartListenerOnMissingListener() {
         when(listener.getHandler()).thenReturn(HANDLER);
@@ -94,9 +119,12 @@ class BackgroundListenersManagerTest {
         verifyNoInteractions(messageListenerManagerFactory);
     }
 
+    /**
+     * Test stop listener.
+     */
     @Test
     void testStopListener() {
-        BackgroundListenersManager.LISTENERS.put(LISTNER_LOCATION, listenerManager);
+        ListenersManager.LISTENERS.put(LISTNER_LOCATION, listenerManager);
 
         listenersManager.stopListener(listener);
         listenersManager.stopListener(listener);
@@ -105,10 +133,13 @@ class BackgroundListenersManagerTest {
         verify(listenerManager).stopListener();
     }
 
+    /**
+     * Test stop listeners.
+     */
     @Test
     void testStopListeners() {
-        BackgroundListenersManager.LISTENERS.put(LISTNER_LOCATION, listenerManager);
-        BackgroundListenersManager.LISTENERS.put("my-listener2", listenerManager2);
+        ListenersManager.LISTENERS.put(LISTNER_LOCATION, listenerManager);
+        ListenersManager.LISTENERS.put("my-listener2", listenerManager2);
 
         listenersManager.stopListeners();
         listenersManager.stopListeners();

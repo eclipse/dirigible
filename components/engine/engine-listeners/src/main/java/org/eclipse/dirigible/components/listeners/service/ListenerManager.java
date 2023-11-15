@@ -21,21 +21,39 @@ import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class BackgroundListenerManager {
+/**
+ * The Class BackgroundListenerManager.
+ */
+public class ListenerManager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundListenerManager.class);
+    /** The Constant LOGGER. */
+    private static final Logger LOGGER = LoggerFactory.getLogger(ListenerManager.class);
 
+    /** The listener. */
     private final Listener listener;
+
+    /** The connection artifacts factory. */
     private final ActiveMQConnectionArtifactsFactory connectionArtifactsFactory;
+
+    /** The connection artifacts. */
     private ConnectionArtifacts connectionArtifacts;
 
-    BackgroundListenerManager(Listener listener, ActiveMQConnectionArtifactsFactory connectionArtifactsFactory) {
+    /**
+     * Instantiates a new background listener manager.
+     *
+     * @param listener the listener
+     * @param connectionArtifactsFactory the connection artifacts factory
+     */
+    public ListenerManager(Listener listener, ActiveMQConnectionArtifactsFactory connectionArtifactsFactory) {
         this.listener = listener;
         this.connectionArtifactsFactory = connectionArtifactsFactory;
     }
 
+    /**
+     * Start listener.
+     */
     @SuppressWarnings("resource")
-    synchronized void startListener() {
+    public synchronized void startListener() {
         if (null != connectionArtifacts) {
             LOGGER.debug("Listener [{}] IS already configured", listener);
             return;
@@ -52,7 +70,7 @@ class BackgroundListenerManager {
             Destination destination = craeteDestination(session);
             MessageConsumer consumer = session.createConsumer(destination);
 
-            BackgroundMessageListener messageListener = new BackgroundMessageListener(listener);
+            AsynchronousMessageListener messageListener = new AsynchronousMessageListener(listener);
             consumer.setMessageListener(messageListener);
 
             connectionArtifacts = new ConnectionArtifacts(connection, session, consumer);
@@ -61,6 +79,13 @@ class BackgroundListenerManager {
         }
     }
 
+    /**
+     * Craete destination.
+     *
+     * @param session the session
+     * @return the destination
+     * @throws JMSException the JMS exception
+     */
     private Destination craeteDestination(Session session) throws JMSException {
         String destination = listener.getName();
         ListenerKind kind = listener.getKind();
@@ -74,7 +99,10 @@ class BackgroundListenerManager {
         };
     }
 
-    synchronized void stopListener() {
+    /**
+     * Stop listener.
+     */
+    public synchronized void stopListener() {
         if (null == connectionArtifacts) {
             LOGGER.debug("Listener [{}] is NOT started", listener);
             return;

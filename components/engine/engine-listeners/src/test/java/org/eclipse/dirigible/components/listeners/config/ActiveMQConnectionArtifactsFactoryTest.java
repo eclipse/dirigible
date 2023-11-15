@@ -25,25 +25,38 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+/**
+ * The Class ActiveMQConnectionArtifactsFactoryTest.
+ */
 @SuppressWarnings("resource")
 @ExtendWith(MockitoExtension.class)
 class ActiveMQConnectionArtifactsFactoryTest {
 
+    /** The connection artifacts factory. */
     @InjectMocks
     private ActiveMQConnectionArtifactsFactory connectionArtifactsFactory;
 
+    /** The connection factory. */
     @Mock
     private ActiveMQConnectionFactory connectionFactory;
 
+    /** The exception listener. */
     @Mock
     private ExceptionListener exceptionListener;
 
+    /** The connection. */
     @Mock
     private Connection connection;
 
+    /** The session. */
     @Mock
     private Session session;
 
+    /**
+     * Test create connection.
+     *
+     * @throws JMSException the JMS exception
+     */
     @Test
     void testCreateConnection() throws JMSException {
         when(connectionFactory.createConnection()).thenReturn(connection);
@@ -55,6 +68,11 @@ class ActiveMQConnectionArtifactsFactoryTest {
       verify(connection).start();
     }
 
+    /**
+     * Test create connection on JMS exception.
+     *
+     * @throws JMSException the JMS exception
+     */
     @Test
     void testCreateConnectionOnJMSException() throws JMSException {
         when(connectionFactory.createConnection()).thenThrow(JMSException.class);
@@ -62,6 +80,11 @@ class ActiveMQConnectionArtifactsFactoryTest {
         assertThrows(IllegalStateException.class, ()->connectionArtifactsFactory.createConnection(exceptionListener));
     }
 
+    /**
+     * Test create session.
+     *
+     * @throws JMSException the JMS exception
+     */
     @Test
     void testCreateSession() throws JMSException {
         when(connection.createSession(false, Session.AUTO_ACKNOWLEDGE)).thenReturn(session);

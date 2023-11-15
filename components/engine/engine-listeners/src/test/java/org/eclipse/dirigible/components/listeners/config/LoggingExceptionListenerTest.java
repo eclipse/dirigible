@@ -19,19 +19,30 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ch.qos.logback.classic.Level;
 
+/**
+ * The Class LoggingExceptionListenerTest.
+ */
 @ExtendWith(MockitoExtension.class)
 class LoggingExceptionListenerTest {
 
+    /** The listener. */
     @InjectMocks
     private LoggingExceptionListener listener;
 
+    /** The logs asserter. */
     private LogsAsserter logsAsserter;
 
+    /**
+     * Sets the up.
+     */
     @BeforeEach
     void setUp() {
         this.logsAsserter = new LogsAsserter(LoggingExceptionListener.class, Level.ERROR);
     }
 
+    /**
+     * Test on exception.
+     */
     @Test
     void testOnException() {
         JMSException jmsException = new JMSException("Opsss");

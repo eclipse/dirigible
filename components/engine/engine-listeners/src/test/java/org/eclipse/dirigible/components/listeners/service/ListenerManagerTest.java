@@ -35,43 +35,64 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+/**
+ * The Class BackgroundListenerManagerTest.
+ */
 @SuppressWarnings("resource")
 @ExtendWith(MockitoExtension.class)
-class BackgroundListenerManagerTest {
+class ListenerManagerTest {
 
+    /** The Constant TOPIC. */
     private static final String TOPIC = "test-topic";
+
+    /** The Constant QUEUE. */
     private static final String QUEUE = "test-queue";
 
+    /** The manager. */
     @InjectMocks
-    private BackgroundListenerManager manager;
+    private ListenerManager manager;
 
+    /** The listener. */
     @Mock
     private Listener listener;
 
+    /** The connection artifacts factory. */
     @Mock
     private ActiveMQConnectionArtifactsFactory connectionArtifactsFactory;
 
+    /** The connection. */
     @Mock
     private Connection connection;
 
+    /** The session. */
     @Mock
     private Session session;
 
+    /** The topic. */
     @Mock
     private Topic topic;
 
+    /** The queue. */
     @Mock
     private Queue queue;
 
+    /** The consumer. */
     @Mock
     private MessageConsumer consumer;
 
+    /** The exception listener captor. */
     @Captor
     private ArgumentCaptor<ExceptionListener> exceptionListenerCaptor;
 
+    /** The message listener captor. */
     @Captor
-    private ArgumentCaptor<BackgroundMessageListener> messageListenerCaptor;
+    private ArgumentCaptor<AsynchronousMessageListener> messageListenerCaptor;
 
+    /**
+     * Test start listener on start error.
+     *
+     * @throws JMSException the JMS exception
+     */
     @Test
     void testStartListenerOnStartError() throws JMSException {
         when(connectionArtifactsFactory.createConnection(any(ExceptionListener.class))).thenReturn(connection);
@@ -80,6 +101,9 @@ class BackgroundListenerManagerTest {
         assertThrows(IllegalStateException.class, ()-> manager.startListener());
     }
 
+    /**
+     * Test start listener for unsupported listener kind.
+     */
     @Test
     void testStartListenerForUnsupportedListenerKind() {
         when(listener.getKind()).thenReturn(null);
@@ -87,6 +111,11 @@ class BackgroundListenerManagerTest {
         assertThrows(IllegalArgumentException.class, ()-> manager.startListener());
     }
 
+    /**
+     * Test start listener for queue.
+     *
+     * @throws JMSException the JMS exception
+     */
     @Test
     void testStartListenerForQueue() throws JMSException {
         mockConnectionAndSession();
@@ -109,6 +138,11 @@ class BackgroundListenerManagerTest {
         verify(connectionArtifactsFactory).createSession(connection);
     }
 
+    /**
+     * Test start listener for topic.
+     *
+     * @throws JMSException the JMS exception
+     */
     @Test
     void testStartListenerForTopic() throws JMSException {
         mockConnectionAndSession();
@@ -124,22 +158,40 @@ class BackgroundListenerManagerTest {
         verifyConfiguredMessageListener();
     }
 
+    /**
+     * Mock connection and session.
+     *
+     * @throws JMSException the JMS exception
+     */
     private void mockConnectionAndSession() throws JMSException {
         when(connectionArtifactsFactory.createConnection(any(ExceptionListener.class))).thenReturn(connection);
         when(connectionArtifactsFactory.createSession(connection)).thenReturn(session);
     }
 
+    /**
+     * Verify configured exception listener.
+     */
     private void verifyConfiguredExceptionListener() {
         verify(connectionArtifactsFactory).createConnection(exceptionListenerCaptor.capture());
         ExceptionListener actualExceptionListener = exceptionListenerCaptor.getValue();
         assertThat(actualExceptionListener).isInstanceOf(ListenerExceptionHandler.class);
     }
 
+    /**
+     * Verify configured message listener.
+     *
+     * @throws JMSException the JMS exception
+     */
     private void verifyConfiguredMessageListener() throws JMSException {
         verify(consumer).setMessageListener(messageListenerCaptor.capture());
-        assertThat(messageListenerCaptor.getValue()).isInstanceOf(BackgroundMessageListener.class);
+        assertThat(messageListenerCaptor.getValue()).isInstanceOf(AsynchronousMessageListener.class);
     }
 
+    /**
+     * Test stop.
+     *
+     * @throws JMSException the JMS exception
+     */
     @Test
     void testStop() throws JMSException {
         testStartListenerForTopic();

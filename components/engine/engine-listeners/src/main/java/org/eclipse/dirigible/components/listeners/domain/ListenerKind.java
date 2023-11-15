@@ -12,11 +12,16 @@ package org.eclipse.dirigible.components.listeners.domain;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * The Enum ListenerKind.
+ */
 public enum ListenerKind {
 
+    /** The queue. */
     @SerializedName(value = "queue", alternate = {"q", "Q"})
     QUEUE, //
 
+    /** The topic. */
     @SerializedName(value = "topic", alternate = {"t", "T"})
     TOPIC
 }

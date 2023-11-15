@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
 import org.eclipse.dirigible.components.listeners.repository.ListenerRepository;
-import org.eclipse.dirigible.components.listeners.service.BackgroundListenerService;
+import org.eclipse.dirigible.components.listeners.service.ListenerService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +34,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+/**
+ * The Class ListenerEndpointTest.
+ */
 @WithMockUser
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -43,18 +46,25 @@ import org.springframework.web.context.WebApplicationContext;
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class ListenerEndpointTest {
 
+    /** The listener service. */
     @Autowired
-    private BackgroundListenerService listenerService;
+    private ListenerService listenerService;
 
+    /** The listener repository. */
     @Autowired
     private ListenerRepository listenerRepository;
 
+    /** The mock mvc. */
     @Autowired
     private MockMvc mockMvc;
 
+    /** The wac. */
     @Autowired
     protected WebApplicationContext wac;
 
+    /**
+     * Setup.
+     */
     @BeforeEach
     public void setup() {
         cleanup();
@@ -64,11 +74,19 @@ public class ListenerEndpointTest {
         listenerService.save(new Listener("/a/b/c/l3.listener", "name3", "description", "handler3", ListenerKind.QUEUE));
     }
 
+    /**
+     * Cleanup.
+     */
     @AfterEach
     public void cleanup() {
         listenerRepository.deleteAll();
     }
 
+    /**
+     * Find all extension points.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void findAllExtensionPoints() throws Exception {
         mockMvc.perform(get("/services/listeners"))
@@ -76,6 +94,9 @@ public class ListenerEndpointTest {
                .andExpect(status().is2xxSuccessful());
     }
 
+    /**
+     * The Class TestConfiguration.
+     */
     @SpringBootApplication
     static class TestConfiguration {
         // it is needed

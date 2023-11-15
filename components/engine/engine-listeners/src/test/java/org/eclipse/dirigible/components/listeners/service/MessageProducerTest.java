@@ -23,32 +23,51 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+/**
+ * The Class MessageProducerTest.
+ */
 @SuppressWarnings("resource")
 @ExtendWith(MockitoExtension.class)
 class MessageProducerTest {
 
+    /** The Constant QUEUE. */
     private static final String QUEUE = "test-queue";
+
+    /** The Constant MESSAGE. */
     private static final String MESSAGE = "This is a test message";
+
+    /** The Constant TOPIC. */
     private static final String TOPIC = "test-topic";
 
+    /** The producer. */
     @InjectMocks
     private MessageProducer producer;
 
+    /** The session. */
     @Mock
     private Session session;
 
+    /** The jsm producer. */
     @Mock
     private javax.jms.MessageProducer jsmProducer;
 
+    /** The queue. */
     @Mock
     private Queue queue;
 
+    /** The topic. */
     @Mock
     private Topic topic;
 
+    /** The txt message. */
     @Mock
     private TextMessage txtMessage;
 
+    /**
+     * Test send message to topic.
+     *
+     * @throws JMSException the JMS exception
+     */
     @Test
     void testSendMessageToTopic() throws JMSException {
         when(session.createTopic(TOPIC)).thenReturn(topic);
@@ -60,6 +79,11 @@ class MessageProducerTest {
         verify(jsmProducer).send(txtMessage);
     }
 
+    /**
+     * Test send message to queue.
+     *
+     * @throws JMSException the JMS exception
+     */
     @Test
     void testSendMessageToQueue() throws JMSException {
         when(session.createQueue(QUEUE)).thenReturn(queue);

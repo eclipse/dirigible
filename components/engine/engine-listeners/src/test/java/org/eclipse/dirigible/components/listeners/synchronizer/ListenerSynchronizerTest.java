@@ -30,35 +30,54 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
+/**
+ * The Class BackgroundListenerSynchronizerTest.
+ */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-public class BackgroundListenerSynchronizerTest {
+public class ListenerSynchronizerTest {
 
+    /** The listener synchronizer. */
     @Autowired
-    private BackgroundListenerSynchronizer listenerSynchronizer;
+    private ListenerSynchronizer listenerSynchronizer;
 
+    /** The listener repository. */
     @Autowired
     private ListenerRepository listenerRepository;
 
+    /**
+     * Cleanup.
+     */
     @AfterEach
     public void cleanup() {
         listenerRepository.deleteAll();
     }
 
+    /**
+     * Checks if is accepted path.
+     */
     @Test
     public void isAcceptedPath() {
         assertTrue(listenerSynchronizer.isAccepted(Path.of("/a/b/c/l1.listener"), null));
     }
 
+    /**
+     * Checks if is accepted artefact.
+     */
     @Test
     public void isAcceptedArtefact() {
         assertTrue(listenerSynchronizer.isAccepted(
                 new Listener("/a/b/c/l1.listener", "name1", "description", "handler1", ListenerKind.QUEUE).getType()));
     }
 
+    /**
+     * Load.
+     *
+     * @throws ParseException the parse exception
+     */
     @Test
     public void load() throws ParseException {
         String content =
@@ -69,6 +88,9 @@ public class BackgroundListenerSynchronizerTest {
                                                 .getLocation());
     }
 
+    /**
+     * The Class TestConfiguration.
+     */
     @SpringBootApplication
     static class TestConfiguration {
         // it is needed

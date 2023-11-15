@@ -21,26 +21,63 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class MessageConsumer.
+ */
 @Component
 public class MessageConsumer {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageConsumer.class);
 
+    /** The session. */
     private final Session session;
 
+    /**
+     * Instantiates a new message consumer.
+     *
+     * @param session the session
+     */
     @Autowired
-    MessageConsumer(@Qualifier("ActiveMQSession") Session session) {
+    public MessageConsumer(@Qualifier("ActiveMQSession") Session session) {
         this.session = session;
     }
 
+    /**
+     * Receive message from queue.
+     *
+     * @param queue the queue
+     * @param timeout the timeout
+     * @return the string
+     * @throws JMSException the JMS exception
+     * @throws TimeoutException the timeout exception
+     */
     public String receiveMessageFromQueue(String queue, long timeout) throws JMSException, TimeoutException {
         return receiveMessage(timeout, session.createQueue(queue));
     }
 
+    /**
+     * Receive message from topic.
+     *
+     * @param topic the topic
+     * @param timeout the timeout
+     * @return the string
+     * @throws JMSException the JMS exception
+     * @throws TimeoutException the timeout exception
+     */
     public String receiveMessageFromTopic(String topic, long timeout) throws JMSException, TimeoutException {
         return receiveMessage(timeout, session.createTopic(topic));
     }
 
+    /**
+     * Receive message.
+     *
+     * @param timeout the timeout
+     * @param destination the destination
+     * @return the string
+     * @throws JMSException the JMS exception
+     * @throws TimeoutException the timeout exception
+     */
     private String receiveMessage(long timeout, Destination destination) throws JMSException, TimeoutException {
         try (javax.jms.MessageConsumer consumer = session.createConsumer(destination)) {
 

@@ -24,20 +24,33 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+/**
+ * The Class ConnectionArtifactsTest.
+ */
 @ExtendWith(MockitoExtension.class)
 class ConnectionArtifactsTest {
 
+    /** The artifacts. */
     @InjectMocks
     private ConnectionArtifacts artifacts;
+
+    /** The connection. */
     @Mock
     private Connection connection;
 
+    /** The session. */
     @Mock
     private Session session;
 
+    /** The message consumer. */
     @Mock
     private MessageConsumer messageConsumer;
 
+    /**
+     * Test close all.
+     *
+     * @throws JMSException the JMS exception
+     */
     @Test
     void testCloseAll() throws JMSException {
         artifacts.closeAll();
@@ -45,6 +58,11 @@ class ConnectionArtifactsTest {
         verifyClosedArtifacts();
     }
 
+    /**
+     * Test close all closes all resource on exception.
+     *
+     * @throws JMSException the JMS exception
+     */
     @Test
     void testCloseAllClosesAllResourceOnException() throws JMSException {
         doThrow(IOException.class).when(messageConsumer)
@@ -59,6 +77,11 @@ class ConnectionArtifactsTest {
         verifyClosedArtifacts();
     }
 
+    /**
+     * Verify closed artifacts.
+     *
+     * @throws JMSException the JMS exception
+     */
     private void verifyClosedArtifacts() throws JMSException {
         InOrder inOrder = Mockito.inOrder(messageConsumer, session, connection);
 
