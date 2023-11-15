@@ -11,7 +11,6 @@
     <name>Components - Engine - Listeners</name>
     <artifactId>dirigible-components-engine-listeners</artifactId>
     <modelVersion>4.0.0</modelVersion>
-    
     <dependencies>
 
     	<!-- Components -->
@@ -73,6 +72,10 @@
 		    <groupId>org.fusesource.hawtbuf</groupId>
 		    <artifactId>hawtbuf</artifactId>
 		    <version>1.11</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
 		</dependency>
     </dependencies>
 

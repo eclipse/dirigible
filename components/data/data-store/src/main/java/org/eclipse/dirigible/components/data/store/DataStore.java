@@ -10,14 +10,14 @@
  */
 package org.eclipse.dirigible.components.data.store;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.sql.DataSource;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
@@ -43,14 +43,13 @@ public class DataStore {
     private SessionFactory sessionFactory;
 
     /** The datasources manager. */
-    private DataSourcesManager datasourcesManager;
+    private final DataSourcesManager datasourcesManager;
 
     /** The data source. */
     private DataSource dataSource;
 
-
     /** The mappings. */
-    private Map<String, String> mappings = new HashMap<String, String>();
+    private final Map<String, String> mappings = new HashMap<>();
 
     /**
      * Instantiates a new object store.
@@ -122,14 +121,21 @@ public class DataStore {
                                                          .setProperty("hibernate.current_session_context_class",
                                                                  "org.hibernate.context.internal.ThreadLocalSessionContext");
 
-        mappings.entrySet()
-                .forEach(e -> configuration.addInputStream(IOUtils.toInputStream(e.getValue(), StandardCharsets.UTF_8)));
+        mappings.forEach((k, v) -> addInputStreamToConfig(configuration, k, v));
 
         StandardServiceRegistryBuilder serviceRegistryBuilder = new StandardServiceRegistryBuilder();
         serviceRegistryBuilder.applySetting(Environment.DATASOURCE, getDataSource());
         serviceRegistryBuilder.applySettings(configuration.getProperties());
         StandardServiceRegistry serviceRegistry = serviceRegistryBuilder.build();
         sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+    }
+
+    private void addInputStreamToConfig(Configuration configuration, String key, String value) {
+        try (InputStream inputStream = IOUtils.toInputStream(value, StandardCharsets.UTF_8)) {
+            configuration.addInputStream(inputStream);
+        } catch (RuntimeException | IOException ex) {
+            throw new IllegalStateException("Failed to add input stream to configuration for [" + key + "]: [" + value + "]", ex);
+        }
     }
 
     /**
@@ -343,7 +349,6 @@ public class DataStore {
                           .list();
         }
     }
-
 
     // /**
     // * List.

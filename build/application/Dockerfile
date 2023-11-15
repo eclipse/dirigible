@@ -7,5 +7,5 @@ RUN apk add nodejs npm
 RUN npm i -g esbuild
 RUN npm i -g typescript
 
-COPY target/*.jar dirigible.jar
+COPY target/dirigible-application-*-executable.jar dirigible.jar
 ENTRYPOINT ["java","-jar","/dirigible.jar"]

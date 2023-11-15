@@ -13,11 +13,10 @@ package org.eclipse.dirigible.components.listeners.endpoint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
 import org.eclipse.dirigible.components.listeners.repository.ListenerRepository;
-import org.eclipse.dirigible.components.listeners.service.ListenerService;
+import org.eclipse.dirigible.components.listeners.service.BackgroundListenerService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.web.FilterChainProxy;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,10 +40,11 @@ import org.springframework.web.context.WebApplicationContext;
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @Transactional
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class ListenerEndpointTest {
 
     @Autowired
-    private ListenerService listenerService;
+    private BackgroundListenerService listenerService;
 
     @Autowired
     private ListenerRepository listenerRepository;
@@ -53,9 +54,6 @@ public class ListenerEndpointTest {
 
     @Autowired
     protected WebApplicationContext wac;
-
-    @Autowired
-    private FilterChainProxy springSecurityFilterChain;
 
     @BeforeEach
     public void setup() {
@@ -76,10 +74,10 @@ public class ListenerEndpointTest {
         mockMvc.perform(get("/services/listeners"))
                .andDo(print())
                .andExpect(status().is2xxSuccessful());
-        // .andExpect(jsonPath("$.content[0].location").value("/a/b/c/l1.listener"));
     }
 
     @SpringBootApplication
     static class TestConfiguration {
+        // it is needed
     }
 }

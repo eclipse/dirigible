@@ -8,6 +8,7 @@ bin/
 .history
 .vscode
 node_modules
+build/
 
 # files
 .DS_Store

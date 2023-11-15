@@ -48,11 +48,11 @@
 		</dependency>
 
 		<!-- Test -->
-		<dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-        </dependency>
+        <dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>compile</scope>
+		</dependency>
         
         <dependency>
 			<groupId>org.apache.cxf</groupId>
