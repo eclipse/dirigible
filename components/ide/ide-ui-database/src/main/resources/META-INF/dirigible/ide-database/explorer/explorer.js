@@ -611,7 +611,10 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 	
 	let findParentTableOfColumn = function(tree, node) {
 		let maybe = tree.get_node(node.parent);
-		if (maybe.original.type == "collection") {
+		if (!maybe.original.type && "Columns" === maybe.text) {
+			maybe = tree.get_node(maybe.parent);
+		}
+		if (maybe.original.type == "table" || maybe.original.type == "base table" || maybe.original.type == "collection") {
 			return maybe;
 		}
 		return findParentTableOfColumn(tree, maybe);
@@ -619,7 +622,10 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 	
 	let findParentSchemaOfColumn = function(tree, node) {
 		let maybe = tree.get_node(node.parent);
-		if (maybe.original.type == "nosql") {
+		if (!maybe.original.type && "Columns" === maybe.text) {
+			maybe = tree.get_node(maybe.parent);
+		}
+		if (maybe.original.type == "schema" || maybe.original.type == "nosql") {
 			return maybe;
 		}
 		return findParentSchemaOfColumn(tree, maybe);
