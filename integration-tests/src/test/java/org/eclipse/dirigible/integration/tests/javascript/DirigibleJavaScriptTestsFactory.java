@@ -85,11 +85,15 @@ class DirigibleJavaScriptTestsFactory implements AutoCloseable {
     }
 
     private String createTestDisplayName(String testFilePath) {
-        System.err.println("---- File separator: " + File.separator); // for testing only, will be removed
-        String separator = SystemUtils.IS_OS_WINDOWS ? "\\" : "/"; // File.separator on linux returns something else
+        System.err.println("---- testFilePath: [" + testFilePath + "]");
+        System.err.println("---- File separator: [" + File.separator + "]");
+        String separator = SystemUtils.IS_OS_WINDOWS ? "\\" : "/";
         String rootRelativePath = String.format("%s%sdist%sesm%s", TESTS_PROJECT_NAME, separator, separator, separator);
+        System.err.println("---- rootRelativePath: [" + rootRelativePath + "]");
 
-        return StringUtils.substringAfterLast(testFilePath, rootRelativePath);
+        String testDisplayName = StringUtils.substringAfterLast(testFilePath, rootRelativePath);
+        System.err.println("---- testDisplayName: [" + testDisplayName + "]");
+        return testDisplayName;
     }
 
     @Override
