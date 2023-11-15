@@ -25,7 +25,6 @@ import org.graalvm.polyglot.Source;
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicTest;
 import org.springframework.stereotype.Component;
-import liquibase.repackaged.org.apache.commons.lang3.SystemUtils;
 
 @Component
 class DirigibleJavaScriptTestsFactory implements AutoCloseable {
@@ -40,7 +39,6 @@ class DirigibleJavaScriptTestsFactory implements AutoCloseable {
         }
         List<Path> testFilesInProject = findAllTestFiles(TESTS_PROJECT_NAME);
         return testFilesInProject.stream()
-                                 .map(Object::toString)
                                  .map(this::registerTest)
                                  .toList();
     }
@@ -61,7 +59,7 @@ class DirigibleJavaScriptTestsFactory implements AutoCloseable {
         }
     }
 
-    private DynamicContainer registerTest(String testFilePath) {
+    private DynamicContainer registerTest(Path testFilePath) {
         ModuleType moduleType = testFilePath.endsWith(".mjs") ? ModuleType.ESM : ModuleType.CJS;
         Source source = new GraalJSSourceCreator(moduleType).createSource(testFilePath);
         TestFunction testFunction = runSource(source);
@@ -84,16 +82,12 @@ class DirigibleJavaScriptTestsFactory implements AutoCloseable {
         }
     }
 
-    private String createTestDisplayName(String testFilePath) {
-        System.err.println("---- testFilePath: [" + testFilePath + "]");
-        System.err.println("---- File separator: [" + File.separator + "]");
-        String separator = SystemUtils.IS_OS_WINDOWS ? "\\" : "/";
-        String rootRelativePath = String.format("%s%sdist%sesm%s", TESTS_PROJECT_NAME, separator, separator, separator);
-        System.err.println("---- rootRelativePath: [" + rootRelativePath + "]");
-
-        String testDisplayName = StringUtils.substringAfterLast(testFilePath, rootRelativePath);
-        System.err.println("---- testDisplayName: [" + testDisplayName + "]");
-        return testDisplayName;
+    private String createTestDisplayName(Path testFilePath) {
+        String rootRelativePath = String.format("%s%sdist%sesm%s", TESTS_PROJECT_NAME, File.separator, File.separator, File.separator);
+        String testDisplayName = StringUtils.substringAfterLast(testFilePath.toString(), rootRelativePath);
+        return StringUtils.isNotBlank(testDisplayName) ? testDisplayName
+                : testFilePath.getFileName()
+                              .toString();
     }
 
     @Override
