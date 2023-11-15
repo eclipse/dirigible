@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-components-parent</artifactId>
-		<version>9.0.0-SNAPSHOT</version>
+		<version>8.18.6</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -19,56 +19,56 @@
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-base</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.18.6</version>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-database</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.18.6</version>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-repository</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.18.6</version>
     	</dependency>
     	
     	<!-- Data -->
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-data-structures</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.18.6</version>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-data-sources</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.18.6</version>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-data-transfer</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.18.6</version>
     	</dependency>
     	
     	<!-- Modules -->
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-sql</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.18.6</version>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-persistence</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.18.6</version>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-sql-h2</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.18.6</version>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-sql-postgres</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.18.6</version>
     	</dependency>
     	
     	<!-- External -->
