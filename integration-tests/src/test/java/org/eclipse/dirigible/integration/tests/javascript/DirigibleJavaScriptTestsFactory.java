@@ -25,6 +25,7 @@ import org.graalvm.polyglot.Source;
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicTest;
 import org.springframework.stereotype.Component;
+import liquibase.repackaged.org.apache.commons.lang3.SystemUtils;
 
 @Component
 class DirigibleJavaScriptTestsFactory implements AutoCloseable {
@@ -84,14 +85,11 @@ class DirigibleJavaScriptTestsFactory implements AutoCloseable {
     }
 
     private String createTestDisplayName(String testFilePath) {
-        System.err.println("Creating test display name for file: " + testFilePath);
+        System.err.println("---- File separator: " + File.separator); // for testing only, will be removed
+        String separator = SystemUtils.IS_OS_WINDOWS ? "\\" : "/"; // File.separator on linux returns something else
+        String rootRelativePath = String.format("%s%sdist%sesm%s", TESTS_PROJECT_NAME, separator, separator, separator);
 
-        String rootRelativePath = String.format("%s%sdist%sesm%s", TESTS_PROJECT_NAME, File.separator, File.separator, File.separator);
-        System.err.println("Relative path is: " + rootRelativePath);
-
-        String testDisaplyName = StringUtils.substringAfterLast(testFilePath, rootRelativePath);
-        System.err.println("Created test display name is: " + testDisaplyName);
-        return testDisaplyName;
+        return StringUtils.substringAfterLast(testFilePath, rootRelativePath);
     }
 
     @Override
