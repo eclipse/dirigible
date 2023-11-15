@@ -221,8 +221,17 @@ projectsView.controller('ProjectsViewController', [
         });
 
         $scope.jstreeWidget.on('move_node.jstree', function (event, moveObj) {
-            if (!moveObj.node.state.failedMove) {
-                let parent = $scope.jstreeWidget.jstree(true).get_node(moveObj.parent);
+            function failedToMove(showAlert = true) {
+                moveObj.node.state.failedMove = true;
+                if (showAlert)
+                    messageHub.setStatusError(`Unable to move '${moveObj.node.text}'.`);
+                $scope.jstreeWidget.jstree(true).move_node(
+                    moveObj.node,
+                    $scope.jstreeWidget.jstree(true).get_node(moveObj.old_parent),
+                    moveObj.old_position,
+                );
+            }
+            function move(parent, oldWorkspace, oldPath) {
                 for (let i = 0; i < parent.children.length; i++) { // Temp solution
                     let node = $scope.jstreeWidget.jstree(true).get_node(parent.children[i]);
                     if (node.text === moveObj.node.text && node.id !== moveObj.node.id) {
@@ -249,17 +258,39 @@ projectsView.controller('ProjectsViewController', [
                         moveObj.node.data.path = (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/') + moveObj.node.text;
                         moveObj.node.data.workspace = parent.data.workspace;
                         $scope.jstreeWidget.jstree(true).show_node(moveObj.node);
+                        messageHub.announceFileMoved({
+                            name: moveObj.node.text,
+                            path: moveObj.node.data.path,
+                            oldPath: oldPath,
+                            workspace: moveObj.node.data.workspace,
+                        });
                     } else {
-                        moveObj.node.state.failedMove = true;
-                        messageHub.setStatusError(`Unable to move '${moveObj.node.text}'.`);
-                        $scope.jstreeWidget.jstree(true).move_node(
-                            moveObj.node,
-                            $scope.jstreeWidget.jstree(true).get_node(moveObj.old_parent),
-                            moveObj.old_position,
-                        );
+                        failedToMove();
                     }
                     hideSpinner(spinnerId);
                 });
+            }
+            if (!moveObj.node.state.failedMove) {
+                let parent = $scope.jstreeWidget.jstree(true).get_node(moveObj.parent);
+                if (moveObj.node.type === 'file') {
+                    messageHub.isEditorOpen(`/${moveObj.node.data.workspace}${moveObj.node.data.path}`).then(function (response) {
+                        if (response.data.isFlowable) {
+                            messageHub.showAlertWarning('Cannot move file', 'The file you are trying to move is currently opened in the Flowable editor. You must save your changes, close the editor and then move the file.');
+                            failedToMove(false);
+                        }
+                        else if (response.data.isOpen && response.data.isDirty) {
+                            messageHub.showAlertWarning('Cannot move file', 'The file you are trying to move is currently open and has unsaved changes.');
+                            failedToMove(false);
+                        } else {
+                            move(parent, moveObj.node.data.workspace, moveObj.node.data.path);
+                        }
+                    }, function (error) {
+                        failedToMove();
+                        console.error(error);
+                    });
+                } else {
+                    move(parent, moveObj.node.data.path);
+                }
             } else delete moveObj.node.state.failedMove;
         });
 
@@ -1727,7 +1758,6 @@ projectsView.controller('ProjectsViewController', [
                             if ($scope.renameNodeData.type === "file") {
                                 workspaceApi.getMetadataByPath($scope.renameNodeData.data.workspace, guessedPath).then(function (metadata) {
                                     if (metadata.status === 200) {
-                                        messageHub.closeEditor(`/${$scope.renameNodeData.data.workspace}${$scope.renameNodeData.data.path}`);
                                         node.text = metadata.data.name;
                                         node.data.path = metadata.data.path.substring($scope.selectedWorkspace.name.length + 1, metadata.data.path.length);
                                         node.data.contentType = metadata.data.contentType;
@@ -1749,8 +1779,14 @@ projectsView.controller('ProjectsViewController', [
                             } else {
                                 for (let i = 0; i < $scope.renameNodeData.children_d.length; i++) {
                                     let child = $scope.jstreeWidget.jstree(true).get_node($scope.renameNodeData.children_d[i]);
-                                    messageHub.closeEditor(`/${child.data.workspace}${child.data.path}`);
+                                    const oldPath = child.data.path;
                                     child.data.path = guessedPath + child.data.path.substring($scope.renameNodeData.data.path.length);
+                                    messageHub.announceFileMoved({
+                                        name: child.text,
+                                        path: child.data.path,
+                                        oldPath: oldPath,
+                                        workspace: child.data.workspace,
+                                    });
                                 }
                                 node.text = msg.data.formData[0].value;
                                 node.data.path = guessedPath;

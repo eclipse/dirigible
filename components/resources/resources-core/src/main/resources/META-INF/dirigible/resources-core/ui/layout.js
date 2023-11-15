@@ -50,7 +50,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
             template: '<iframe loading="{{loadType}}" ng-src="{{path}}" data-parameters="{{getParams()}}"></iframe>'
         }
     }])
-    .directive('ideLayout', ['Views', 'Editors', 'SplitPaneState', 'messageHub', 'perspective', 'layoutConstants', 'branding', function (Views, Editors, SplitPaneState, messageHub, perspective, layoutConstants, branding) {
+    .directive('ideLayout', ['Views', 'Editors', 'SplitPaneState', 'messageHub', 'perspective', 'layoutConstants', 'branding', 'uuid', function (Views, Editors, SplitPaneState, messageHub, perspective, layoutConstants, branding, uuid) {
         return {
             restrict: 'E',
             replace: true,
@@ -462,7 +462,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     return view;
                 }
 
-                function findCenterSplittedTabView(id, pane = null, parent = null, indexInParent = -1) {
+                function findCenterSplittedTabViewById(id, pane = null, parent = null, indexInParent = -1) {
 
                     let currentPane = pane || $scope.centerSplittedTabViews;
 
@@ -474,7 +474,28 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     } else if (currentPane.panes) {
                         for (let i = 0; i < currentPane.panes.length; i++) {
                             let childPane = currentPane.panes[i];
-                            let result = findCenterSplittedTabView(id, childPane, { parent, indexInParent, ...currentPane }, i);
+                            let result = findCenterSplittedTabViewById(id, childPane, { parent, indexInParent, ...currentPane }, i);
+                            if (result)
+                                return result;
+                        }
+                    }
+
+                    return null;
+                }
+
+                function findCenterSplittedTabViewByPath(resourcePath, pane = null, parent = null, indexInParent = -1) {
+
+                    let currentPane = pane || $scope.centerSplittedTabViews;
+
+                    if (currentPane.tabs) {
+                        const index = currentPane.tabs.findIndex(f => f.params.file === resourcePath);
+                        if (index >= 0)
+                            return { tabsView: currentPane, parent, index };
+
+                    } else if (currentPane.panes) {
+                        for (let i = 0; i < currentPane.panes.length; i++) {
+                            let childPane = currentPane.panes[i];
+                            let result = findCenterSplittedTabViewByPath(resourcePath, childPane, { parent, indexInParent, ...currentPane }, i);
                             if (result)
                                 return result;
                         }
@@ -509,7 +530,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
 
                 function splitTabs(direction, pane) {
                     const { selectedTab } = pane;
-                    const result = findCenterSplittedTabView(selectedTab);
+                    const result = findCenterSplittedTabViewById(selectedTab);
                     if (result) {
                         const splitView = result.parent;
                         const srcTabsView = result.tabsView;
@@ -579,38 +600,38 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     }
                 }
 
-                function moveTab(tabId) {
-                    const result = findCenterSplittedTabView(tabId);
-                    if (result) {
-                        const splitView = result.parent;
-                        const srcTabsView = result.tabsView;
+                // function moveTab(tabId) {
+                //     const result = findCenterSplittedTabViewById(tabId);
+                //     if (result) {
+                //         const splitView = result.parent;
+                //         const srcTabsView = result.tabsView;
 
-                        if (srcTabsView.tabs.length === 1 && splitView.panes.length === 1)
-                            return;
+                //         if (srcTabsView.tabs.length === 1 && splitView.panes.length === 1)
+                //             return;
 
-                        const tab = srcTabsView.tabs[result.index];
+                //         const tab = srcTabsView.tabs[result.index];
 
-                        srcTabsView.tabs.splice(result.index, 1);
+                //         srcTabsView.tabs.splice(result.index, 1);
 
-                        let destTabsView;
-                        if (splitView.panes.length === 1) {
-                            destTabsView = {
-                                tabs: [tab],
-                                selectedTab: tabId
-                            }
-                            splitView.panes.push(destTabsView);
-                        } else {
-                            const srcIndex = splitView.panes.indexOf(srcTabsView);
-                            destTabsView = splitView.panes[srcIndex === 0 ? 1 : 0];
-                            destTabsView.selectedTab = tabId;
-                            destTabsView.tabs.push(tab);
+                //         let destTabsView;
+                //         if (splitView.panes.length === 1) {
+                //             destTabsView = {
+                //                 tabs: [tab],
+                //                 selectedTab: tabId
+                //             }
+                //             splitView.panes.push(destTabsView);
+                //         } else {
+                //             const srcIndex = splitView.panes.indexOf(srcTabsView);
+                //             destTabsView = splitView.panes[srcIndex === 0 ? 1 : 0];
+                //             destTabsView.selectedTab = tabId;
+                //             destTabsView.tabs.push(tab);
 
-                            if (srcTabsView.tabs.length === 0) {
-                                splitView.panes.splice(srcIndex, 1);
-                            }
-                        }
-                    }
-                }
+                //             if (srcTabsView.tabs.length === 0) {
+                //                 splitView.panes.splice(srcIndex, 1);
+                //             }
+                //         }
+                //     }
+                // }
 
                 function showFileSaveDialog(fileName, filePath, args = {}) {
                     return new Promise((resolve, reject) => {
@@ -670,12 +691,12 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     if (dirtyFiles.length > 0) {
 
                         let tab = dirtyFiles[0];
-                        let result = findCenterSplittedTabView(tab.id);
+                        let result = findCenterSplittedTabViewById(tab.id);
                         if (result) {
                             result.tabsView.selectedTab = tab.id;
                         }
 
-                        showFileSaveDialog(tab.label, tab.id, { tabs })
+                        showFileSaveDialog(tab.label, tab.params.file, { tabs })
                             .then(args => {
                                 switch (args.id) {
                                     case 'save':
@@ -684,7 +705,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                                     case 'ignore':
                                         closeCenterTab(args.file)
 
-                                        let rest = args.tabs.filter(x => x.id !== args.file);
+                                        let rest = args.tabs.filter(x => x.params.file !== args.file);
                                         if (rest.length > 0)
                                             if (tryCloseCenterTabs(rest)) {
                                                 $scope.$digest();
@@ -705,7 +726,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                 }
 
                 function removeCenterTab(id) {
-                    let result = findCenterSplittedTabView(id);
+                    let result = findCenterSplittedTabViewById(id);
                     if (result) {
                         const { tabsView, parent: splitView } = result;
                         tabsView.tabs.splice(result.index, 1);
@@ -728,7 +749,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                 }
 
                 function reloadCenterTab(id, editorPath, params) {
-                    let result = findCenterSplittedTabView(id);
+                    let result = findCenterSplittedTabViewById(id);
                     if (result) {
                         const tab = result.tabsView.tabs[result.index];
                         tab.path = editorPath;
@@ -821,15 +842,60 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     }
                 });
 
+                messageHub.onFileMoved(
+                    function (fileDescriptor) {
+                        $scope.$apply(
+                            $scope.updateEditor(
+                                `/${fileDescriptor.workspace}${fileDescriptor.oldPath}`,
+                                `/${fileDescriptor.workspace}${fileDescriptor.path}`,
+                                fileDescriptor.name
+                            )
+                        );
+                    }
+                );
+
+                messageHub.onFileRenamed(
+                    function (fileDescriptor) {
+                        $scope.$apply(
+                            $scope.updateEditor(
+                                `/${fileDescriptor.workspace}${fileDescriptor.oldPath}`,
+                                `/${fileDescriptor.workspace}${fileDescriptor.path}`,
+                                fileDescriptor.name
+                            )
+                        );
+                    }
+                );
+
                 messageHub.onDidReceiveMessage('ide-core.setFocusedEditor', function (msg) {
-                    const file = msg.resourcePath;
-                    const result = findCenterSplittedTabView(file);
+                    const result = findCenterSplittedTabViewByPath(msg.resourcePath);
                     if (result) {
                         $scope.$apply(() => {
                             $scope.focusedTabView = result.tabsView;
                         });
                     } else {
-                        console.warn(`Tabview for file '${file}' not found`);
+                        console.warn(`Tabview for file '${msg.resourcePath}' not found`);
+                    }
+                }, true);
+
+                messageHub.onSetTabFocus(
+                    function (msg) {
+                        const result = findCenterSplittedTabViewById(msg.tabId);
+                        $scope.$apply(() => {
+                            $scope.focusedTabView = result.tabsView;
+                        });
+                    }
+                );
+
+                messageHub.onDidReceiveMessage('ide-core.isEditorOpen', function (msg) {
+                    const result = findCenterSplittedTabViewByPath(msg.resourcePath);
+                    if (result) {
+                        messageHub.postMessage(msg.callbackTopic, {
+                            isOpen: true,
+                            isDirty: result.tabsView.tabs[result.index].dirty || false,
+                            isFlowable: result.tabsView.tabs[result.index].path.startsWith('../ide-bpm/index.html#/editor') // Temp Flowable fix
+                        }, true);
+                    } else {
+                        messageHub.postMessage(msg.callbackTopic, { isOpen: false }, true);
                     }
                 }, true);
 
@@ -957,24 +1023,25 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                         if (eId === 'flowable')
                             editorPath += resourcePath;
 
-                        let result = findCenterSplittedTabView(resourcePath);
+                        let result = findCenterSplittedTabViewByPath(resourcePath);
                         let currentTabsView = result ? result.tabsView : getCurrentCenterSplittedTabViewPane();
                         if (result) {
-                            currentTabsView.selectedTab = resourcePath;
                             let fileTab = currentTabsView.tabs[result.index];
+                            currentTabsView.selectedTab = fileTab.id;
+                            $scope.focusedTabView = result.tabsView;
                             if (fileTab.path !== editorPath) {
                                 tryReloadCenterTab(fileTab, editorPath, params);
                             }
                         } else {
                             let fileTab = {
-                                id: resourcePath,
+                                id: `ET${uuid.generate()}`,
                                 type: EDITOR,
                                 label: resourceLabel,
                                 path: editorPath,
                                 params: params
                             };
 
-                            currentTabsView.selectedTab = resourcePath;
+                            currentTabsView.selectedTab = fileTab.id;
                             currentTabsView.tabs.push(fileTab);
                         }
 
@@ -985,8 +1052,28 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                         console.error('openEditor: resourcePath is undefined');
                     }
                 };
+                $scope.updateEditor = function (resourcePath, newResourcePath, resourceLabel) {
+                    if (resourcePath === undefined && resourcePath === null && resourcePath.trim() === '')
+                        console.error('updateEditor: resourcePath is undefined');
+                    else if (newResourcePath === undefined && newResourcePath === null && newResourcePath.trim() === '')
+                        console.error('updateEditor: newResourcePath is undefined');
+                    else if (resourceLabel === undefined && resourceLabel === null && resourceLabel.trim() === '')
+                        console.error('updateEditor: resourceLabel is undefined');
+                    else {
+                        let result = findCenterSplittedTabViewByPath(resourcePath);
+                        if (result) {
+                            if (result.tabsView.tabs[result.index].path.startsWith('../ide-bpm/index.html#/editor'))
+                                throw Error("updateEditor: File is opened in the Flowable editor which doesn't support dynamic updates");
+                            result.tabsView.tabs[result.index].label = resourceLabel;
+                            result.tabsView.tabs[result.index].params.file = newResourcePath;
+                            messageHub.editorReloadParameters(resourcePath);
+                            shortenCenterTabsLabels();
+                            $scope.$digest();
+                        }
+                    }
+                };
                 $scope.closeEditor = function (resourcePath) {
-                    let result = findCenterSplittedTabView(resourcePath);
+                    let result = findCenterSplittedTabViewByPath(resourcePath);
                     if (result) {
                         let tab = result.tabsView.tabs[result.index];
                         if (tryCloseCenterTabs([tab])) {
@@ -995,7 +1082,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     }
                 };
                 $scope.closeOtherEditors = function (resourcePath) {
-                    let result = findCenterSplittedTabView(resourcePath);
+                    let result = findCenterSplittedTabViewByPath(resourcePath);
                     if (result) {
                         let rest = result.tabsView.tabs.filter(x => x.id !== resourcePath);
                         if (rest.length > 0) {
@@ -1013,7 +1100,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     }, $scope.centerSplittedTabViews);
                 };
                 $scope.setEditorDirty = function (resourcePath, dirty) {
-                    let result = findCenterSplittedTabView(resourcePath);
+                    let result = findCenterSplittedTabViewByPath(resourcePath);
                     if (result) {
                         let fileTab = result.tabsView.tabs[result.index];
                         fileTab.dirty = dirty;
@@ -1048,7 +1135,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                             }
 
                         } else if (view.region === 'center-middle' || view.region === 'center-top' || view.region === 'center') {
-                            let result = findCenterSplittedTabView(view.id);
+                            let result = findCenterSplittedTabViewById(view.id);
                             let currentTabsView = result ? result.tabsView : getCurrentCenterSplittedTabViewPane();
                             if (result) {
                                 currentTabsView.selectedTab = view.id;
@@ -1282,16 +1369,8 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
 
                 scope.onTabClick = function (pane, tabId) {
                     pane.selectedTab = tabId;
-                    messageHub.setEditorFocusGain(tabId);
+                    messageHub.setTabFocus(tabId);
                 };
-
-                messageHub.onDidReceiveMessage(
-                    'ide.splittedTabs.action',
-                    function (msg) {
-                        console.log(msg.data);
-                    },
-                    true
-                );
             },
             templateUrl: '/services/web/resources-core/ui/templates/splittedTabs.html'
         };
