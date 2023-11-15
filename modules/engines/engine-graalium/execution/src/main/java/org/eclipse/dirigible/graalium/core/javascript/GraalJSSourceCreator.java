@@ -10,13 +10,12 @@
  */
 package org.eclipse.dirigible.graalium.core.javascript;
 
-import org.eclipse.dirigible.graalium.core.javascript.modules.ModuleType;
-import org.graalvm.polyglot.Source;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import org.eclipse.dirigible.graalium.core.javascript.modules.ModuleType;
+import org.graalvm.polyglot.Source;
 
 /**
  * The Class GraalJSSourceCreator.
@@ -58,6 +57,16 @@ public class GraalJSSourceCreator {
         Source.Builder sourceBuilder = Source.newBuilder("js", source, fileName)
                                              .internal(true);
         return createSource(sourceBuilder);
+    }
+
+    /**
+     * Creates the source.
+     *
+     * @param sourceFilePath the source file path
+     * @return the source
+     */
+    public Source createSource(String sourceFilePath) {
+        return createSource(Path.of(sourceFilePath));
     }
 
     /**
