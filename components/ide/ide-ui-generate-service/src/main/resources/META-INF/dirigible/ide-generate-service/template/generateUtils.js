@@ -15,27 +15,29 @@ const templateEngines = dirigibleRequire("template/engines");
 exports.generateFiles = function (model, parameters, templateSources) {
     let generatedFiles = [];
 
-    let feedModels = model.entities.filter(e => e.feedUrl);
+    const models = model.entities.filter(e => e.type !== "REPORT");
+    const reportModels = model.entities.filter(e => e.type === "REPORT");
+    const feedModels = model.entities.filter(e => e.feedUrl);
 
-    // Basic
-    let uiManageModels = model.entities.filter(e => e.layoutType === "MANAGE" && (e.type === "PRIMARY" || e.type === "SETTING"));
-    let uiListModels = model.entities.filter(e => e.layoutType === "LIST" && (e.type === "PRIMARY" || e.type === "SETTING"));
+    // UI Basic
+    const uiManageModels = model.entities.filter(e => e.layoutType === "MANAGE" && (e.type === "PRIMARY" || e.type === "SETTING"));
+    const uiListModels = model.entities.filter(e => e.layoutType === "LIST" && (e.type === "PRIMARY" || e.type === "SETTING"));
 
-    // Master-Details
-    let uiManageMasterModels = model.entities.filter(e => e.layoutType === "MANAGE_MASTER" && (e.type === "PRIMARY" || e.type === "SETTING"));
-    let uiListMasterModels = model.entities.filter(e => e.layoutType === "LIST_MASTER" && (e.type === "PRIMARY" || e.type === "SETTING"));
-    let uiManageDetailsModels = model.entities.filter(e => e.layoutType === "MANAGE_DETAILS" && e.type === "DEPENDENT");
-    let uiListDetailsModels = model.entities.filter(e => e.layoutType === "LIST_DETAILS" && e.type === "DEPENDENT");
+    // UI Master-Details
+    const uiManageMasterModels = model.entities.filter(e => e.layoutType === "MANAGE_MASTER" && (e.type === "PRIMARY" || e.type === "SETTING"));
+    const uiListMasterModels = model.entities.filter(e => e.layoutType === "LIST_MASTER" && (e.type === "PRIMARY" || e.type === "SETTING"));
+    const uiManageDetailsModels = model.entities.filter(e => e.layoutType === "MANAGE_DETAILS" && e.type === "DEPENDENT");
+    const uiListDetailsModels = model.entities.filter(e => e.layoutType === "LIST_DETAILS" && e.type === "DEPENDENT");
 
-    // Reports
-    let uiReportTableModels = model.entities.filter(e => e.layoutType === "REPORT_TABLE" && e.type === "REPORT");
-    let uiReportBarsModels = model.entities.filter(e => e.layoutType === "REPORT_BAR" && e.type === "REPORT");
-    let uiReportLinesModels = model.entities.filter(e => e.layoutType === "REPORT_LINE" && e.type === "REPORT");
-    let uiReportPieModels = model.entities.filter(e => e.layoutType === "REPORT_PIE" && e.type === "REPORT");
+    // UI Reports
+    const uiReportTableModels = model.entities.filter(e => e.layoutType === "REPORT_TABLE" && e.type === "REPORT");
+    const uiReportBarsModels = model.entities.filter(e => e.layoutType === "REPORT_BAR" && e.type === "REPORT");
+    const uiReportLinesModels = model.entities.filter(e => e.layoutType === "REPORT_LINE" && e.type === "REPORT");
+    const uiReportPieModels = model.entities.filter(e => e.layoutType === "REPORT_PIE" && e.type === "REPORT");
 
     for (let i = 0; i < templateSources.length; i++) {
-        let template = templateSources[i];
-        let content = registry.getText(template.location);
+        const template = templateSources[i];
+        const content = registry.getText(template.location);
         if (content == null) {
             throw new Error(`Template file at location '${templateSources[i].location}' does not exists.`)
         }
@@ -48,7 +50,10 @@ exports.generateFiles = function (model, parameters, templateSources) {
         } else if (template.action === "generate") {
             switch (template.collection) {
                 case "models":
-                    generatedFiles = generatedFiles.concat(generateCollection(content, template, model.entities, parameters));
+                    generatedFiles = generatedFiles.concat(generateCollection(content, template, models, parameters));
+                    break;
+                case "reportModels":
+                    generatedFiles = generatedFiles.concat(generateCollection(content, template, reportModels, parameters));
                     break;
                 case "feedModels":
                     generatedFiles = generatedFiles.concat(generateCollection(content, template, feedModels, parameters));
@@ -99,10 +104,10 @@ exports.generateFiles = function (model, parameters, templateSources) {
 
 function generateCollection(content, template, collection, parameters) {
     try {
-        let generationEngine = getGenerationEngine(template);
-        let generatedFiles = [];
+        const generationEngine = getGenerationEngine(template);
+        const generatedFiles = [];
         for (let i = 0; i < collection.length; i++) {
-            let templateParameters = {};
+            const templateParameters = {};
             Object.assign(templateParameters, collection[i], parameters);
             // TODO Move this to the more generic "generate()" function, with layoutType === "MANAGE_MASTER" check
             templateParameters.perspectiveViews = templateParameters.perspectives[collection[i].perspectiveName].views;
@@ -117,7 +122,7 @@ function generateCollection(content, template, collection, parameters) {
         }
         return generatedFiles;
     } catch (e) {
-        let message = `Error occurred while generating template:\n\nError: ${e.message}\n\nTemplate:\n${JSON.stringify(template, null, 2)}\n`;
+        const message = `Error occurred while generating template:\n\nError: ${e.message}\n\nTemplate:\n${JSON.stringify(template, null, 2)}\n`;
         console.error(message);
         throw e;
     }

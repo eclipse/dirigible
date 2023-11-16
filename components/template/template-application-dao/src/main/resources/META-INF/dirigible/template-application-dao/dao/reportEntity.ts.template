@@ -1,0 +1,91 @@
+import { database } from "@dirigible/db";
+
+export interface ${name} {
+#foreach ($property in $properties)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+    readonly ${property.name}: string;
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+    readonly ${property.name}: number;
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+    readonly ${property.name}: Date;
+#elseif($property.dataType == "BOOLEAN")
+    readonly ${property.name}: boolean;
+#else
+    readonly ${property.name}: unknown;
+#end
+#end
+}
+
+export class ${name}Repository {
+
+    private readonly datasourceName: string;
+
+    constructor(datasourceName?: string) {
+        this.datasourceName = datasourceName;
+    }
+
+    public filter(categoryId?: number, startDate?: Date, endDate?: Date): ${name}[] {
+        const data: ${name}[] = [];
+        let connection;
+        try {
+            connection = database.getConnection(this.datasourceName);
+
+            const sql = `
+                ${dataQuery}
+            `;
+
+            const statement = connection.prepareStatement(sql);
+
+            let paramIndex = 1;
+            if (categoryId) {
+                statement.setInt(paramIndex++, categoryId);
+            }
+            if (startDate) {
+                statement.setTimestamp(paramIndex++, startDate);
+            }
+            if (endDate) {
+                statement.setTimestamp(paramIndex++, endDate);
+            }
+
+            const resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                data.push({
+#set( $resultSetIndex = 1 )
+#foreach ($property in $properties)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+                    ${property.name}: resultSet.getString(${resultSetIndex})#if($foreach.hasNext),#end
+#elseif($property.dataType == "INTEGER")
+                    ${property.name}: resultSet.getInt(${resultSetIndex})#if($foreach.hasNext),#end
+#elseif($property.dataType == "BIGINT")
+                    ${property.name}: resultSet.getLong(${resultSetIndex})#if($foreach.hasNext),#end
+#elseif($property.dataType == "SMALLINT" || $property.dataType == "TINYINT")
+                    ${property.name}: resultSet.getShort(${resultSetIndex})#if($foreach.hasNext),#end
+#elseif($property.dataType == "REAL")
+                    ${property.name}: resultSet.getFloat(${resultSetIndex})#if($foreach.hasNext),#end
+#elseif($property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+                    ${property.name}: resultSet.getDouble(${resultSetIndex})#if($foreach.hasNext),#end
+#elseif($property.dataType == "DATE")
+                    ${property.name}: resultSet.getDate(${resultSetIndex})#if($foreach.hasNext),#end
+#elseif($property.dataType == "TIME")
+                    ${property.name}: resultSet.getTime(${resultSetIndex})#if($foreach.hasNext),#end
+#elseif($property.dataType == "TIMESTAMP")
+                    ${property.name}: resultSet.getTimestamp(${resultSetIndex})#if($foreach.hasNext),#end
+#elseif($property.dataType == "BOOLEAN")
+                    ${property.name}: resultSet.getBoolean(${resultSetIndex})#if($foreach.hasNext),#end
+#else
+                    ${property.name}: "Not-Supported-Data-Type"#if($foreach.hasNext),#end
+#end
+#set( $resultSetIndex = $resultSetIndex + 1 )
+#end
+                });
+            }
+            resultSet.close();
+            statement.close();
+        } finally {
+            if (connection) {
+                connection.close();
+            }
+        }
+        return data;
+    }
+}

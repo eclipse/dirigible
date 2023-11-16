@@ -3,7 +3,6 @@ const rs = require("http/rs");
 const dao = require("${projectName}/gen/dao/${perspectiveName}/${name}");
 const http = require("${projectName}/gen/api/utils/http");
 
-#if($type != "REPORT")
 #foreach ($property in $properties)
 #if($property.widgetPattern && $property.widgetPattern != "")
 #set($isEntityPropertyPropertyEnabled = "true")
@@ -154,25 +153,4 @@ function validateEntity(entity) {
 		throw new ValidationError("The input data doesn't match the required property pattern");
 	}
 }
-#end
-#else
-rs.service()
-	.resource("")
-		.get(function(ctx, request) {
-			let queryOptions = {};
-			let parameters = request.getParameterNames();
-			for (let i = 0; i < parameters.length; i ++) {
-				queryOptions[parameters[i]] = request.getParameter(parameters[i]);
-			}
-			let entities = dao.list(queryOptions);
-			http.sendResponseOk(entities);
-		})
-		.catch(function(ctx, error) {
-            if (error.name === "ForbiddenError") {
-                http.sendForbiddenRequest(error.message));
-            } else {
-				http.sendResponseBadRequest(error.message);
-			}
-        })
-.execute();
 #end

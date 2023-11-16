@@ -25,6 +25,12 @@ exports.getTemplate = function (parameters) {
             engine: "velocity",
             collection: "models"
         }, {
+            location: "/template-application-dao/dao/reportEntity.ts.template",
+            action: "generate",
+            rename: "gen/dao/{{perspectiveName}}/{{name}}Repository.ts",
+            engine: "velocity",
+            collection: "reportModels"
+        }, {
             location: "/template-application-dao/dao/entity.extensionpoint.template",
             action: "generate",
             rename: "gen/dao/{{perspectiveName}}/{{name}}.extensionpoint",
