@@ -233,6 +233,7 @@
         <!-- Test -->
         <module>test-project</module>
         <module>api/api-modules-javascript-tests</module>
+
     </modules>
 
     <dependencies>

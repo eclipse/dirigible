@@ -16,7 +16,7 @@
         "paths": {
             "@dirigible/*": [
                 "./src/*",
-                "./../../../../../../../api-modules-javascript/src/main/resources/META-INF/dirigible/modules/src/*"
+                "./../../../../../../../components/api/api-modules-javascript/src/main/resources/META-INF/dirigible/modules/src/*"
             ]
         }
     },
