@@ -62,7 +62,7 @@ public class HttpSecurityURIConfigurator {
             .permitAll()
             .antMatchers("/services/js/resources-core/**")
             .permitAll()
-            .antMatchers("/camel/*")
+            .antMatchers("/services/integrations/**")
             .permitAll()
 
             .antMatchers("/actuator/**")

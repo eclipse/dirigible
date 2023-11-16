@@ -10,19 +10,8 @@
  */
 package org.eclipse.dirigible.components.data.sources.manager;
 
-import static java.text.MessageFormat.format;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
-import org.apache.commons.codec.binary.Base64;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.service.CustomDataSourcesService;
@@ -32,10 +21,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.*;
+
+import static java.text.MessageFormat.format;
 
 /**
  * The Class DataSourcesManager.
@@ -58,16 +53,21 @@ public class DataSourcesManager implements InitializingBean {
     /** The custom data sources service. */
     private CustomDataSourcesService customDataSourcesService;
 
+    private ApplicationContext applicationContext;
+
     /**
      * Instantiates a new data sources manager.
      *
      * @param datasourceService the datasource service
      * @param customDataSourcesService the custom data sources service
+     * @param applicationContext
      */
     @Autowired
-    public DataSourcesManager(DataSourceService datasourceService, CustomDataSourcesService customDataSourcesService) {
+    public DataSourcesManager(DataSourceService datasourceService, CustomDataSourcesService customDataSourcesService,
+            ApplicationContext applicationContext) {
         this.datasourceService = datasourceService;
         this.customDataSourcesService = customDataSourcesService;
+        this.applicationContext = applicationContext;
         this.customDataSourcesService.initialize();
     }
 
@@ -162,6 +162,8 @@ public class DataSourcesManager implements InitializingBean {
         HikariDataSource hds = new HikariDataSource(config);
 
         ManagedDataSource managedDataSource = new ManagedDataSource(hds);
+        ((AnnotationConfigServletWebServerApplicationContext) applicationContext).getBeanFactory()
+                                                                                 .registerSingleton(name, managedDataSource);
         DATASOURCES.put(name, managedDataSource);
         if (logger.isInfoEnabled()) {
             logger.info("Initialized a datasource with name: " + name);

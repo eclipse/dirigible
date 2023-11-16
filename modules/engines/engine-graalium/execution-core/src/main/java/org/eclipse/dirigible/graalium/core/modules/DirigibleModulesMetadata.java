@@ -22,7 +22,7 @@ public class DirigibleModulesMetadata {
             "@dirigible/core", "@dirigible/db", "@dirigible/etcd", "@dirigible/extensions", "@dirigible/git", "@dirigible/indexing",
             "@dirigible/job", "@dirigible/kafka", "@dirigible/log", "@dirigible/mail", "@dirigible/messaging", "@dirigible/mongodb",
             "@dirigible/net", "@dirigible/pdf", "@dirigible/platform", "@dirigible/qldb", "@dirigible/rabbitmq", "@dirigible/redis",
-            "@dirigible/user", "@dirigible/template", "@dirigible/utils", "@dirigible/junit");
+            "@dirigible/user", "@dirigible/template", "@dirigible/utils", "@dirigible/junit", "@dirigible/integrations");
 
     /**
      * Checks if is pure esm module.
