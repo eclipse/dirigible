@@ -648,7 +648,7 @@
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<mongodb.version>3.12.14</mongodb.version>
 		<caffeine.version>3.1.8</caffeine.version>
-		<liquibase-core.version>4.24.0</liquibase-core.version>
+		<liquibase-core.version>4.25.0</liquibase-core.version>
 		<commons-csv.version>1.10.0</commons-csv.version>
 		<jquery-ui.version>1.13.0</jquery-ui.version>
 		<sap-theming__theming-base-content.version>11.7.0</sap-theming__theming-base-content.version>
@@ -679,7 +679,7 @@
 		<jetcd.test.version>0.5.4</jetcd.test.version>
 		<logcaptor.version>2.9.0</logcaptor.version>
 		<exec.maven.plugin>3.1.0</exec.maven.plugin>
-		<jackson.databind.version>2.15.3</jackson.databind.version>
+		<jackson.databind.version>2.16.0</jackson.databind.version>
 		<mina-core.version>2.2.3</mina-core.version>
 		<sshd-core.version>2.11.0</sshd-core.version>
 
@@ -704,7 +704,7 @@
 		<wikitext.version>3.0.48.202308291007</wikitext.version>
 		<flexmark.version>0.64.8</flexmark.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.589</qldb.sdk.version>
+		<qldb.sdk.version>1.12.590</qldb.sdk.version>
 		<cassandra.version>1.17.6</cassandra.version>
 		<cassandra.driver.version>3.11.3</cassandra.driver.version>
 		<jedis.version>5.0.2</jedis.version>

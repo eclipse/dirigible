@@ -1,363 +1,367 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-parent</artifactId>
-		<version>9.0.0-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+    <parent>
+        <groupId>org.eclipse.dirigible</groupId>
+        <artifactId>dirigible-parent</artifactId>
+        <version>9.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-	<name>Components - Parent</name>
-	<artifactId>dirigible-components-parent</artifactId>
-	<packaging>pom</packaging>
+    <name>Components - Parent</name>
+    <artifactId>dirigible-components-parent</artifactId>
+    <packaging>pom</packaging>
 
-	<modules>
-		<!-- Core -->
-		<module>core/core-configurations</module>
-		<module>core/core-base</module>
-		<module>core/core-initializers</module>
-		<module>core/core-extensions</module>
-		<module>core/core-database</module>
-		<module>core/core-repository</module>
-		<module>core/core-registry</module>
-		<module>core/core-version</module>
-		<module>core/core-healthcheck</module>
-		<module>core/core-spring</module>
-		<module>core/core-project</module>
-		
-		<!-- Security -->
-		<module>security/security-basic</module>
-		<module>security/security-keycloak</module>
-		<module>security/security-oauth2</module>
+    <modules>
+        <!-- Core -->
+        <module>core/core-configurations</module>
+        <module>core/core-base</module>
+        <module>core/core-initializers</module>
+        <module>core/core-extensions</module>
+        <module>core/core-database</module>
+        <module>core/core-repository</module>
+        <module>core/core-registry</module>
+        <module>core/core-version</module>
+        <module>core/core-healthcheck</module>
+        <module>core/core-spring</module>
+        <module>core/core-project</module>
 
-		<!-- Data -->
-		<module>data/data-structures</module>
-		<module>data/data-sources</module>
-		<module>data/data-transfer</module>
-		<module>data/data-management</module>
-		<module>data/data-store</module>
-		<module>data/data-csvim</module>
-		<module>data/data-export</module>
-		<module>data/data-import</module>
-		<module>data/data-anonymize</module>
+        <!-- Security -->
+        <module>security/security-basic</module>
+        <module>security/security-keycloak</module>
+        <module>security/security-oauth2</module>
 
-		<!-- Engines -->
-		<module>engine/engine-javascript</module>
-		<module>engine/engine-typescript</module>
-		<module>engine/engine-python</module>
-		<module>engine/engine-web</module>
-		<module>engine/engine-template</module>
-		<module>engine/engine-template-velocity</module>
-		<module>engine/engine-template-mustache</module>
-		<module>engine/engine-template-javascript</module>
-		<module>engine/engine-wiki</module>
-		<module>engine/engine-command</module>
-		<module>engine/engine-bpm</module>
-		<module>engine/engine-bpm-flowable</module>
-		<module>engine/engine-cms</module>
-		<module>engine/engine-cms-internal</module>
-		<module>engine/engine-jobs</module>
-		<module>engine/engine-openapi</module>
-		<module>engine/engine-websockets</module>
-		<module>engine/engine-security</module>
-		<module>engine/engine-listeners</module>
-		<module>engine/engine-odata</module>
-		<module>engine/engine-camel</module>
-		<module>engine/engine-ftp</module>
-		<module>engine/engine-sftp</module>
-		
-		<!-- IDE -->
-		<module>ide/ide-workspace</module>
-		<module>ide/ide-git</module>
-		<module>ide/ide-console</module>
-		<module>ide/ide-template</module>
-		<module>ide/ide-terminal</module>
-		<module>ide/ide-problems</module>
-		<module>ide/ide-logs</module>
-		
-		<!-- IDE UI -->
-		<module>ide/ide-ui-about</module>
-		<module>ide/ide-ui-actions-service</module>
-		<module>ide/ide-ui-bpm</module>
-		<module>ide/ide-ui-bpm-menu</module>
-		<module>ide/ide-ui-bpm-workspace</module>
-		<module>ide/ide-ui-branding</module>
-		<module>ide/ide-ui-console</module>
-		<module>ide/ide-ui-csv</module>
-		<module>ide/ide-ui-csvim</module>
-		<module>ide/ide-ui-data-structures</module>
-		<module>ide/ide-ui-database</module>
-		<module>ide/ide-ui-database-menu</module>
-		<module>ide/ide-ui-databases</module>
-		<module>ide/ide-ui-debugger</module>
-		<module>ide/ide-ui-deploy-manager</module>
-		<module>ide/ide-ui-documents</module>
-		<module>ide/ide-ui-documents-ext-content-type-ms</module>
-		<module>ide/ide-ui-entity</module>
-		<module>ide/ide-ui-entity-menu</module>
-		<module>ide/ide-ui-extensions</module>
-		<module>ide/ide-ui-extensions-menu</module>
-		<module>ide/ide-ui-file-manager</module>
-		<module>ide/ide-ui-form-builder</module>
-		<module>ide/ide-ui-form-builder-menu</module>
-		<module>ide/ide-ui-generate-service</module>
-		<module>ide/ide-ui-git</module>
-		<module>ide/ide-ui-git-branches</module>
-		<module>ide/ide-ui-git-projects</module>
-		<module>ide/ide-ui-git-service</module>
-		<module>ide/ide-ui-image</module>
-		<module>ide/ide-ui-import</module>
-		<module>ide/ide-ui-integrations</module>
-		<module>ide/ide-ui-jobs</module>
-		<module>ide/ide-ui-jobs-menu</module>
-		<module>ide/ide-ui-listeners</module>
-		<module>ide/ide-ui-listeners-menu</module>
-		<module>ide/ide-ui-logs</module>
-		<module>ide/ide-ui-monaco</module>
-		<module>ide/ide-ui-monaco-extensions</module>
-		<module>ide/ide-ui-operations</module>
-		<module>ide/ide-ui-plugins</module>
-		<module>ide/ide-ui-preview</module>
-		<module>ide/ide-ui-problems</module>
-		<module>ide/ide-ui-projects</module>
-		<module>ide/ide-ui-properties</module>
-		<module>ide/ide-ui-publisher-service</module>
-		<module>ide/ide-ui-registry</module>
-		<module>ide/ide-ui-registry-service</module>
-		<module>ide/ide-ui-repository</module>
-		<module>ide/ide-ui-repository-service</module>
-		<module>ide/ide-ui-result</module>
-		<module>ide/ide-ui-schema</module>
-		<module>ide/ide-ui-schema-menu</module>
-		<module>ide/ide-ui-search</module>
-		<module>ide/ide-ui-security</module>
-		<module>ide/ide-ui-security-menu</module>
-		<module>ide/ide-ui-sql</module>
-		<module>ide/ide-ui-staging</module>
-		<module>ide/ide-ui-swagger</module>
-		<module>ide/ide-ui-template-service</module>
-		<module>ide/ide-ui-terminal</module>
-		<module>ide/ide-ui-transport-service</module>
-		<module>ide/ide-ui-websockets</module>
-		<module>ide/ide-ui-websockets-menu</module>
-		<module>ide/ide-ui-welcome</module>
-		<module>ide/ide-ui-workbench</module>
-		<module>ide/ide-ui-workspace-menu</module>
-		<module>ide/ide-ui-workspace-service</module>
-		
-		<!-- API -->
-		<module>api/api-modules-javascript</module>
-		<module>api/api-modules-python</module>
-		<module>api/api-core</module>
-		<module>api/api-test</module>
-		<module>api/api-qunit</module>
-		<module>api/api-utils</module>
-		<module>api/api-io</module>
-		<module>api/api-job</module>
-		<module>api/api-bpm</module>
-		<module>api/api-cms</module>
-		<module>api/api-http</module>
-		<module>api/api-log</module>
-		<module>api/api-database</module>
-		<module>api/api-extensions</module>
-		<module>api/api-security</module>
-		<module>api/api-platform</module>
-		<module>api/api-indexing</module>
-		<module>api/api-net</module>
-		<module>api/api-git</module>
-		<module>api/api-messaging</module>
-		<module>api/api-etcd</module>
-		<module>api/api-template</module>
-		<module>api/api-mail</module>
-		<module>api/api-kafka</module>
-		<module>api/api-mongodb</module>
-		<module>api/api-rabbitmq</module>
-		<module>api/api-redis</module>
-		<module>api/api-qldb</module>
-		<module>api/api-pdf</module>
-		<module>api/api-junit</module>
-		
-		<!-- Resources -->
-		<module>resources/resources-core</module>
-		<module>resources/resources-dev-tools</module>
-		<module>resources/resources-flowable-libs</module>
-		<module>resources/resources-mxgraph</module>
-		<module>resources/resources-resources</module>
-		<module>resources/resources-theme-default</module>
-		<module>resources/resources-theme-quartz-dark</module>
-		<module>resources/resources-theme-quartz-light</module>
-		<module>resources/resources-themes</module>
-		<module>resources/resources-portal</module>
-		
-		<!-- Templates -->
-		<module>template/template-application-angular</module>
-		<module>template/template-application-dao</module>
-		<module>template/template-application-data</module>
-		<module>template/template-application-feed</module>
-		<module>template/template-application-odata</module>
-		<module>template/template-application-rest</module>
-		<module>template/template-application-schema</module>
-		<module>template/template-application-ui-angular</module>
-		<module>template/template-bookstore</module>
-		<module>template/template-database-access</module>
-		<module>template/template-database-table</module>
-		<module>template/template-database-view</module>
-		<module>template/template-extension-perspective</module>
-		<module>template/template-extension-view</module>
-		<module>template/template-form-builder-angularjs</module>
-		<module>template/template-hello-world</module>
-		<module>template/template-react</module>
-		<module>template/template-html</module>
-		<module>template/template-html-widgets</module>
-		<module>template/template-http-client</module>
-		<module>template/template-job</module>
-		<module>template/template-listener</module>
-		<module>template/template-websocket</module>
-		
-		<!-- Groups -->
-		<module>group/group-api-core</module>
-		<module>group/group-api-platform</module>
-		<module>group/group-api</module>
-		<module>group/group-core</module>
-		<module>group/group-database</module>
-		<module>group/group-engines-core</module>
-		<module>group/group-engines</module>
-		<module>group/group-ide</module>
-		<module>group/group-resources-core</module>
-		<module>group/group-resources</module>
-		<module>group/group-templates</module>		
+        <!-- Data -->
+        <module>data/data-structures</module>
+        <module>data/data-sources</module>
+        <module>data/data-transfer</module>
+        <module>data/data-management</module>
+        <module>data/data-store</module>
+        <module>data/data-csvim</module>
+        <module>data/data-export</module>
+        <module>data/data-import</module>
+        <module>data/data-anonymize</module>
 
-		<!-- Test -->
-		<module>test-project</module>
+        <!-- Engines -->
+        <module>engine/engine-javascript</module>
+        <module>engine/engine-typescript</module>
+        <module>engine/engine-python</module>
+        <module>engine/engine-web</module>
+        <module>engine/engine-template</module>
+        <module>engine/engine-template-velocity</module>
+        <module>engine/engine-template-mustache</module>
+        <module>engine/engine-template-javascript</module>
+        <module>engine/engine-wiki</module>
+        <module>engine/engine-command</module>
+        <module>engine/engine-bpm</module>
+        <module>engine/engine-bpm-flowable</module>
+        <module>engine/engine-cms</module>
+        <module>engine/engine-cms-internal</module>
+        <module>engine/engine-jobs</module>
+        <module>engine/engine-openapi</module>
+        <module>engine/engine-websockets</module>
+        <module>engine/engine-security</module>
+        <module>engine/engine-listeners</module>
+        <module>engine/engine-odata</module>
+        <module>engine/engine-camel</module>
+        <module>engine/engine-ftp</module>
+        <module>engine/engine-sftp</module>
+
+        <!-- IDE -->
+        <module>ide/ide-workspace</module>
+        <module>ide/ide-git</module>
+        <module>ide/ide-console</module>
+        <module>ide/ide-template</module>
+        <module>ide/ide-terminal</module>
+        <module>ide/ide-problems</module>
+        <module>ide/ide-logs</module>
+
+        <!-- IDE UI -->
+        <module>ide/ide-ui-about</module>
+        <module>ide/ide-ui-actions-service</module>
+        <module>ide/ide-ui-bpm</module>
+        <module>ide/ide-ui-bpm-menu</module>
+        <module>ide/ide-ui-bpm-workspace</module>
+        <module>ide/ide-ui-branding</module>
+        <module>ide/ide-ui-console</module>
+        <module>ide/ide-ui-csv</module>
+        <module>ide/ide-ui-csvim</module>
+        <module>ide/ide-ui-data-structures</module>
+        <module>ide/ide-ui-database</module>
+        <module>ide/ide-ui-database-menu</module>
+        <module>ide/ide-ui-databases</module>
+        <module>ide/ide-ui-debugger</module>
+        <module>ide/ide-ui-deploy-manager</module>
+        <module>ide/ide-ui-documents</module>
+        <module>ide/ide-ui-documents-ext-content-type-ms</module>
+        <module>ide/ide-ui-entity</module>
+        <module>ide/ide-ui-entity-menu</module>
+        <module>ide/ide-ui-extensions</module>
+        <module>ide/ide-ui-extensions-menu</module>
+        <module>ide/ide-ui-file-manager</module>
+        <module>ide/ide-ui-form-builder</module>
+        <module>ide/ide-ui-form-builder-menu</module>
+        <module>ide/ide-ui-generate-service</module>
+        <module>ide/ide-ui-git</module>
+        <module>ide/ide-ui-git-branches</module>
+        <module>ide/ide-ui-git-projects</module>
+        <module>ide/ide-ui-git-service</module>
+        <module>ide/ide-ui-image</module>
+        <module>ide/ide-ui-import</module>
+        <module>ide/ide-ui-integrations</module>
+        <module>ide/ide-ui-designer</module>
+        <module>ide/ide-ui-jobs</module>
+        <module>ide/ide-ui-jobs-menu</module>
+        <module>ide/ide-ui-listeners</module>
+        <module>ide/ide-ui-listeners-menu</module>
+        <module>ide/ide-ui-logs</module>
+        <module>ide/ide-ui-monaco</module>
+        <module>ide/ide-ui-monaco-extensions</module>
+        <module>ide/ide-ui-operations</module>
+        <module>ide/ide-ui-plugins</module>
+        <module>ide/ide-ui-preview</module>
+        <module>ide/ide-ui-problems</module>
+        <module>ide/ide-ui-projects</module>
+        <module>ide/ide-ui-properties</module>
+        <module>ide/ide-ui-publisher-service</module>
+        <module>ide/ide-ui-registry</module>
+        <module>ide/ide-ui-registry-service</module>
+        <module>ide/ide-ui-repository</module>
+        <module>ide/ide-ui-repository-service</module>
+        <module>ide/ide-ui-result</module>
+        <module>ide/ide-ui-schema</module>
+        <module>ide/ide-ui-schema-menu</module>
+        <module>ide/ide-ui-search</module>
+        <module>ide/ide-ui-security</module>
+        <module>ide/ide-ui-security-menu</module>
+        <module>ide/ide-ui-sql</module>
+        <module>ide/ide-ui-staging</module>
+        <module>ide/ide-ui-swagger</module>
+        <module>ide/ide-ui-template-service</module>
+        <module>ide/ide-ui-terminal</module>
+        <module>ide/ide-ui-transport-service</module>
+        <module>ide/ide-ui-websockets</module>
+        <module>ide/ide-ui-websockets-menu</module>
+        <module>ide/ide-ui-welcome</module>
+        <module>ide/ide-ui-workbench</module>
+        <module>ide/ide-ui-workspace-menu</module>
+        <module>ide/ide-ui-workspace-service</module>
+
+        <!-- API -->
+        <module>api/api-modules-javascript</module>
+        <module>api/api-modules-python</module>
+        <module>api/api-core</module>
+        <module>api/api-test</module>
+        <module>api/api-qunit</module>
+        <module>api/api-utils</module>
+        <module>api/api-io</module>
+        <module>api/api-job</module>
+        <module>api/api-bpm</module>
+        <module>api/api-cms</module>
+        <module>api/api-http</module>
+        <module>api/api-log</module>
+        <module>api/api-database</module>
+        <module>api/api-extensions</module>
+        <module>api/api-security</module>
+        <module>api/api-platform</module>
+        <module>api/api-indexing</module>
+        <module>api/api-net</module>
+        <module>api/api-git</module>
+        <module>api/api-messaging</module>
+        <module>api/api-etcd</module>
+        <module>api/api-template</module>
+        <module>api/api-mail</module>
+        <module>api/api-kafka</module>
+        <module>api/api-mongodb</module>
+        <module>api/api-rabbitmq</module>
+        <module>api/api-redis</module>
+        <module>api/api-qldb</module>
+        <module>api/api-pdf</module>
+        <module>api/api-junit</module>
+
+        <!-- Resources -->
+        <module>resources/resources-core</module>
+        <module>resources/resources-dev-tools</module>
+        <module>resources/resources-flowable-libs</module>
+        <module>resources/resources-mxgraph</module>
+        <module>resources/resources-resources</module>
+        <module>resources/resources-theme-default</module>
+        <module>resources/resources-theme-quartz-dark</module>
+        <module>resources/resources-theme-quartz-light</module>
+        <module>resources/resources-themes</module>
+        <module>resources/resources-portal</module>
+
+        <!-- Templates -->
+        <module>template/template-application-angular</module>
+        <module>template/template-application-dao</module>
+        <module>template/template-application-data</module>
+        <module>template/template-application-feed</module>
+        <module>template/template-application-odata</module>
+        <module>template/template-application-rest</module>
+        <module>template/template-application-schema</module>
+        <module>template/template-application-ui-angular</module>
+        <module>template/template-bookstore</module>
+        <module>template/template-database-access</module>
+        <module>template/template-database-table</module>
+        <module>template/template-database-view</module>
+        <module>template/template-extension-perspective</module>
+        <module>template/template-extension-view</module>
+        <module>template/template-form-builder-angularjs</module>
+        <module>template/template-hello-world</module>
+        <module>template/template-react</module>
+        <module>template/template-html</module>
+        <module>template/template-html-widgets</module>
+        <module>template/template-http-client</module>
+        <module>template/template-job</module>
+        <module>template/template-listener</module>
+        <module>template/template-websocket</module>
+
+        <!-- Groups -->
+        <module>group/group-api-core</module>
+        <module>group/group-api-platform</module>
+        <module>group/group-api</module>
+        <module>group/group-core</module>
+        <module>group/group-database</module>
+        <module>group/group-engines-core</module>
+        <module>group/group-engines</module>
+        <module>group/group-ide</module>
+        <module>group/group-resources-core</module>
+        <module>group/group-resources</module>
+        <module>group/group-templates</module>
+
+        <!-- Test -->
+        <module>test-project</module>
+        <module>api/api-modules-javascript-tests</module>
+
     </modules>
 
-	<dependencies>
+    <dependencies>
 
-		<!-- Platform -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${spring.boot.slf4j.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-			<version>${spring.boot.logback.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>${spring.boot.logback.version}</version>
-			<scope>compile</scope>
-		</dependency>
+        <!-- Platform -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${spring.boot.slf4j.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${spring.boot.logback.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${spring.boot.logback.version}</version>
+            <scope>compile</scope>
+        </dependency>
 
-		<!-- Commons -->
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-commons-config</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
-		</dependency>
+        <!-- Commons -->
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-commons-config</artifactId>
+            <version>9.0.0-SNAPSHOT</version>
+        </dependency>
 
-		<!-- Spring Boot -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<version>${spring.boot.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.logging.log4j</groupId>
-					<artifactId>log4j-to-slf4j</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-websocket</artifactId>
-		    <version>${spring.boot.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jdbc</artifactId>
-			<version>${spring.boot.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-			<version>${spring.boot.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-			<version>${spring.boot.version}</version>
-		</dependency>
-		<dependency>
-		  	<groupId>org.springframework.boot</groupId>
-		  	<artifactId>spring-boot-starter-validation</artifactId>
-		  	<version>${spring.boot.version}</version>
-		</dependency>
-		
-		<dependency>
-	        <groupId>org.springframework.security</groupId>
-	        <artifactId>spring-security-web</artifactId>
-	        <version>${spring-security.version}</version>
-	    </dependency>
-	   
+        <!-- Spring Boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring.boot.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-to-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jdbc</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<version>${spring.boot.version}</version>
-			<scope>test</scope>
-			<exclusions>
-            <exclusion>
-                <groupId>org.junit.vintage</groupId>
-                <artifactId>junit-vintage-engine</artifactId>
-            </exclusion>
-        </exclusions>
-		</dependency>
-		<dependency>
-	        <groupId>org.springframework.security</groupId>
-	        <artifactId>spring-security-test</artifactId>
-	        <version>${spring-security.version}</version>
-	        <scope>test</scope>
-	    </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
 
-		<!-- Date Type Utils -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-joda</artifactId>
-			<version>${jackson.databind.version}</version>
-		</dependency>
 
-		<!-- Swagger -->
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>${org.springdoc.openapi.ui.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring.boot.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <version>${spring-security.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-		<!-- Data Access -->
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>${h2database.version}</version>
-		</dependency>
+        <!-- Date Type Utils -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
+            <version>${jackson.databind.version}</version>
+        </dependency>
 
-		<!-- WebJars -->
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>webjars-locator</artifactId>
-			<version>${webjars.locator.version}</version>
-		</dependency>
+        <!-- Swagger -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${org.springdoc.openapi.ui.version}</version>
+        </dependency>
 
-	</dependencies>
+        <!-- Data Access -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2database.version}</version>
+        </dependency>
 
-	<properties>
-		<license.header.location>../licensing-header.txt</license.header.location>
-		<parent.pom.folder>../</parent.pom.folder>
-	</properties>
+        <!-- WebJars -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>webjars-locator</artifactId>
+            <version>${webjars.locator.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <properties>
+        <license.header.location>../licensing-header.txt</license.header.location>
+        <parent.pom.folder>../</parent.pom.folder>
+    </properties>
 
 </project>
