@@ -270,8 +270,8 @@ projectsView.controller('ProjectsViewController', [
                                 for (let i = 0; i < result.data.files.length; i++) {
                                     messageHub.announceFileMoved({
                                         name: result.data.files[i].substring(result.data.files[i].lastIndexOf('/') + 1, result.data.files[i].length),
-                                        path: result.data.files[i].replace(oldPath, moveObj.node.data.path),
-                                        oldPath: result.data.files[i],
+                                        path: result.data.files[i].replace(`/${moveObj.node.data.workspace}`, '').replace(oldPath, moveObj.node.data.path),
+                                        oldPath: result.data.files[i].replace(`/${moveObj.node.data.workspace}`, ''),
                                         workspace: moveObj.node.data.workspace,
                                     });
                                 }
@@ -1794,16 +1794,19 @@ projectsView.controller('ProjectsViewController', [
                                     }
                                 });
                             } else {
+                                messageHub.getCurrentlyOpenedFiles(`/${$scope.renameNodeData.data.workspace}${$scope.renameNodeData.data.path}`).then(function (result) {
+                                    for (let i = 0; i < result.data.files.length; i++) {
+                                        messageHub.announceFileMoved({
+                                            name: result.data.files[i].substring(result.data.files[i].lastIndexOf('/') + 1, result.data.files[i].length),
+                                            path: result.data.files[i].replace(`/${$scope.renameNodeData.data.workspace}`, '').replace($scope.renameNodeData.data.path, guessedPath),
+                                            oldPath: result.data.files[i].replace(`/${$scope.renameNodeData.data.workspace}`, ''),
+                                            workspace: $scope.renameNodeData.data.workspace,
+                                        });
+                                    }
+                                });
                                 for (let i = 0; i < $scope.renameNodeData.children_d.length; i++) {
                                     let child = $scope.jstreeWidget.jstree(true).get_node($scope.renameNodeData.children_d[i]);
-                                    const oldPath = child.data.path;
                                     child.data.path = guessedPath + child.data.path.substring($scope.renameNodeData.data.path.length);
-                                    messageHub.announceFileMoved({
-                                        name: child.text,
-                                        path: child.data.path,
-                                        oldPath: oldPath,
-                                        workspace: child.data.workspace,
-                                    });
                                 }
                                 node.text = msg.data.formData[0].value;
                                 node.data.path = guessedPath;
