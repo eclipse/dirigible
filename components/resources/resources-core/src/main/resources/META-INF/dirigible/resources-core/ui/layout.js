@@ -11,7 +11,7 @@
 angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'ideView'])
     .constant('perspective', perspectiveData || {})
     .constant('layoutConstants', {
-        version: 2.0,
+        version: 3.0,
         stateKey: 'ide.layout.state'
     })
     .directive('view', ['Views', 'perspective', function (Views, perspective) {
@@ -504,6 +504,23 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     return null;
                 }
 
+                /**
+                 * Returnes a list of all files whose path starts with 'basePath', from the currently opened editors.
+                 * If basePath is not specified, all files will be listed.
+                 */
+                function getCurrentlyOpenedFiles(basePath = '/') {
+                    let fileList = [];
+                    for (let childIndex = 0; childIndex < $scope.centerSplittedTabViews.panes.length; childIndex++) {
+                        let childPane = $scope.centerSplittedTabViews.panes[childIndex];
+                        for (let tabIndex = 0; tabIndex < childPane.tabs.length; tabIndex++) {
+                            if (childPane.tabs[tabIndex].params && childPane.tabs[tabIndex].params.file && childPane.tabs[tabIndex].params.file.startsWith(basePath)) {
+                                fileList.push(childPane.tabs[tabIndex].params.file);
+                            }
+                        }
+                    }
+                    return fileList;
+                }
+
                 function getFirstCenterSplittedTabViewPane(parent) {
                     let pane = parent;
                     while (pane.panes) {
@@ -886,7 +903,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     }
                 );
 
-                messageHub.onDidReceiveMessage('ide-core.isEditorOpen', function (msg) {
+                messageHub.onDidReceiveMessage('core.editors.isOpen', function (msg) {
                     const result = findCenterSplittedTabViewByPath(msg.resourcePath);
                     if (result) {
                         messageHub.postMessage(msg.callbackTopic, {
@@ -897,6 +914,10 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     } else {
                         messageHub.postMessage(msg.callbackTopic, { isOpen: false }, true);
                     }
+                }, true);
+
+                messageHub.onDidReceiveMessage('core.editors.openedFiles', function (msg) {
+                    messageHub.postMessage(msg.callbackTopic, { files: getCurrentlyOpenedFiles(msg.basePath) }, true);
                 }, true);
 
                 function shortenCenterTabsLabels() {

@@ -231,7 +231,7 @@ projectsView.controller('ProjectsViewController', [
                     moveObj.old_position,
                 );
             }
-            function move(parent, oldWorkspace, oldPath) {
+            function move(parent, oldPath) {
                 for (let i = 0; i < parent.children.length; i++) { // Temp solution
                     let node = $scope.jstreeWidget.jstree(true).get_node(parent.children[i]);
                     if (node.text === moveObj.node.text && node.id !== moveObj.node.id) {
@@ -258,12 +258,29 @@ projectsView.controller('ProjectsViewController', [
                         moveObj.node.data.path = (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/') + moveObj.node.text;
                         moveObj.node.data.workspace = parent.data.workspace;
                         $scope.jstreeWidget.jstree(true).show_node(moveObj.node);
-                        messageHub.announceFileMoved({
-                            name: moveObj.node.text,
-                            path: moveObj.node.data.path,
-                            oldPath: oldPath,
-                            workspace: moveObj.node.data.workspace,
-                        });
+                        if (moveObj.node.type === 'file') {
+                            messageHub.announceFileMoved({
+                                name: moveObj.node.text,
+                                path: moveObj.node.data.path,
+                                oldPath: oldPath,
+                                workspace: moveObj.node.data.workspace,
+                            });
+                        } else {
+                            messageHub.getCurrentlyOpenedFiles(`/${moveObj.node.data.workspace}${oldPath}`).then(function (result) {
+                                for (let i = 0; i < result.data.files.length; i++) {
+                                    messageHub.announceFileMoved({
+                                        name: result.data.files[i].substring(result.data.files[i].lastIndexOf('/') + 1, result.data.files[i].length),
+                                        path: result.data.files[i].replace(oldPath, moveObj.node.data.path),
+                                        oldPath: result.data.files[i],
+                                        workspace: moveObj.node.data.workspace,
+                                    });
+                                }
+                            });
+                            for (let i = 0; i < moveObj.node.children_d.length; i++) {
+                                let child = $scope.jstreeWidget.jstree(true).get_node(moveObj.node.children_d[i]);
+                                child.data.path = child.data.path.replace(oldPath, moveObj.node.data.path);
+                            }
+                        }
                     } else {
                         failedToMove();
                     }
@@ -282,7 +299,7 @@ projectsView.controller('ProjectsViewController', [
                             messageHub.showAlertWarning('Cannot move file', 'The file you are trying to move is currently open and has unsaved changes.');
                             failedToMove(false);
                         } else {
-                            move(parent, moveObj.node.data.workspace, moveObj.node.data.path);
+                            move(parent, moveObj.node.data.path);
                         }
                     }, function (error) {
                         failedToMove();

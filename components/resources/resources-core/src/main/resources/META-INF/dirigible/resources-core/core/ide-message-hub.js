@@ -351,12 +351,34 @@ angular.module('ideMessageHub', [])
                     if (isNullOrUndefinedOrEmpty(resourcePath))
                         reject(new Error("isEditorOpen: resourcePath must be specified"));
 
-                    const callbackTopic = `ide-core.isEditorOpen.${new Date().valueOf()}`;
+                    const callbackTopic = `core.editors.isOpen.${new Date().valueOf()}`;
 
                     messageHub.post({
                         resourcePath: resourcePath,
                         callbackTopic: callbackTopic
-                    }, 'ide-core.isEditorOpen');
+                    }, 'core.editors.isOpen');
+
+                    const handler = messageHub.subscribe(function (msg) {
+                        messageHub.unsubscribe(handler);
+                        resolve(msg);
+                    }, callbackTopic);
+                });
+            };
+            /**
+             * Returnes a list of all files whose path starts with 'basePath', from the currently opened editors.
+             * If basePath is not specified, all files will be listed.
+             */
+            const getCurrentlyOpenedFiles = function (basePath = '/') {
+                return new Promise((resolve, reject) => {
+                    if (isNullOrUndefinedOrEmpty(basePath))
+                        reject(new Error("getOpenedFiles: resourcePath cannot be null, undefined or empty"));
+
+                    const callbackTopic = `core.editors.openedFiles.${new Date().valueOf()}`;
+
+                    messageHub.post({
+                        basePath: basePath,
+                        callbackTopic: callbackTopic
+                    }, 'core.editors.openedFiles');
 
                     const handler = messageHub.subscribe(function (msg) {
                         messageHub.unsubscribe(handler);
@@ -616,6 +638,7 @@ angular.module('ideMessageHub', [])
                 openPerspective: openPerspective,
                 openEditor: openEditor,
                 isEditorOpen: isEditorOpen,
+                getCurrentlyOpenedFiles: getCurrentlyOpenedFiles,
                 editorReloadParameters: editorReloadParameters,
                 onEditorReloadParameters: onEditorReloadParameters,
                 setEditorDirty: setEditorDirty,
