@@ -5,6 +5,7 @@ import org.apache.camel.component.platform.http.PlatformHttpComponent;
 import org.apache.camel.component.platform.http.spi.PlatformHttpEngine;
 import org.apache.camel.component.platform.http.springboot.CamelRequestHandlerMapping;
 import org.apache.camel.component.platform.http.springboot.SpringBootPlatformHttpAutoConfiguration;
+import org.eclipse.dirigible.components.engine.camel.config.CamelDirigibleConfiguration;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;

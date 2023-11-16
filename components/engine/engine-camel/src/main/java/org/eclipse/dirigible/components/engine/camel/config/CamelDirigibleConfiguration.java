@@ -1,9 +1,10 @@
-package org.eclipse.dirigible.components.engine.camel.processor;
+package org.eclipse.dirigible.components.engine.camel.config;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.platform.http.PlatformHttpComponent;
 import org.apache.camel.component.platform.http.spi.PlatformHttpEngine;
 import org.apache.camel.component.platform.http.springboot.CamelRequestHandlerMapping;
+import org.eclipse.dirigible.components.engine.camel.processor.CamelDirigibleRequestHandlerMapping;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
