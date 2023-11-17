@@ -668,7 +668,7 @@
 		<angular-file-upload.version>2.6.1</angular-file-upload.version>
 		<angularjs.version>1.8.2</angularjs.version>
 		<fontawesome.version>4.7.0</fontawesome.version>
-		<classgraph.version>4.8.164</classgraph.version>
+		<classgraph.version>4.8.165</classgraph.version>
 		<commons-compress.version>1.22</commons-compress.version>
 		<testcontainers.elasticsearch.version>1.17.6</testcontainers.elasticsearch.version>
 		<testcontainers.version>1.19.2</testcontainers.version>
@@ -678,7 +678,7 @@
 		<jetcd.core.version>0.7.6</jetcd.core.version>
 		<jetcd.test.version>0.5.4</jetcd.test.version>
 		<logcaptor.version>2.9.0</logcaptor.version>
-		<exec.maven.plugin>3.1.0</exec.maven.plugin>
+		<exec.maven.plugin>3.1.1</exec.maven.plugin>
 		<jackson.databind.version>2.16.0</jackson.databind.version>
 		<mina-core.version>2.2.3</mina-core.version>
 		<sshd-core.version>2.11.0</sshd-core.version>
@@ -704,7 +704,7 @@
 		<wikitext.version>3.0.48.202308291007</wikitext.version>
 		<flexmark.version>0.64.8</flexmark.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.590</qldb.sdk.version>
+		<qldb.sdk.version>1.12.591</qldb.sdk.version>
 		<cassandra.version>1.17.6</cassandra.version>
 		<cassandra.driver.version>3.11.3</cassandra.driver.version>
 		<jedis.version>5.0.2</jedis.version>
