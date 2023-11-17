@@ -628,7 +628,7 @@
 
 		<h2database.version>2.2.224</h2database.version>
 		<postgresql.version>42.6.0</postgresql.version>
-		<ngdbc.version>2.18.13</ngdbc.version>
+		<ngdbc.version>2.18.16</ngdbc.version>
 		<snowflake.version>3.14.3</snowflake.version>
 
 		<activemq.version>5.18.3</activemq.version>
