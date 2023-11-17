@@ -16,6 +16,17 @@ export interface ${name} {
 #end
 }
 
+export interface ${name}Filter {
+    readonly categoryId?: number;
+    readonly startDate?: Date;
+    readonly endDate?: Date
+}
+
+export interface ${name}PaginatedFilter extends ${name}Filter {
+    readonly "$limit"?: number;
+    readonly "$offset"?: number;
+}
+
 export class ${name}Repository {
 
     private readonly datasourceName: string;
@@ -24,7 +35,7 @@ export class ${name}Repository {
         this.datasourceName = datasourceName;
     }
 
-    public filter(categoryId?: number, startDate?: Date, endDate?: Date): ${name}[] {
+    public findAll(filter: ${name}PaginatedFilter): ${name}[] {
         const data: ${name}[] = [];
         let connection;
         try {
@@ -37,14 +48,20 @@ export class ${name}Repository {
             const statement = connection.prepareStatement(sql);
 
             let paramIndex = 1;
-            if (categoryId) {
-                statement.setInt(paramIndex++, categoryId);
+            if (filter.categoryId) {
+                statement.setInt(paramIndex++, filter.categoryId);
             }
-            if (startDate) {
-                statement.setTimestamp(paramIndex++, startDate);
+            if (filter.startDate) {
+                statement.setTimestamp(paramIndex++, filter.startDate);
             }
-            if (endDate) {
-                statement.setTimestamp(paramIndex++, endDate);
+            if (filter.endDate) {
+                statement.setTimestamp(paramIndex++, filter.endDate);
+            }
+            if (filter["$limit"]) {
+                statement.setInt(paramIndex++, filter["$limit"]);
+            }
+            if (filter["$offset"]) {
+                statement.setInt(paramIndex++, filter["$offset"]);
             }
 
             const resultSet = statement.executeQuery();
@@ -85,5 +102,42 @@ export class ${name}Repository {
             }
         }
         return data;
+    }
+
+    public count(filter: ${name}Filter): number {
+        let count = 0;
+        let connection;
+        try {
+            connection = database.getConnection(this.datasourceName);
+
+            const sql = `
+                ${dataCount}
+            `;
+
+            const statement = connection.prepareStatement(sql);
+
+            let paramIndex = 1;
+            if (filter.categoryId) {
+                statement.setInt(paramIndex++, filter.categoryId);
+            }
+            if (filter.startDate) {
+                statement.setTimestamp(paramIndex++, filter.startDate);
+            }
+            if (filter.endDate) {
+                statement.setTimestamp(paramIndex++, filter.endDate);
+            }
+
+            const resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+            resultSet.close();
+            statement.close();
+        } finally {
+            if (connection) {
+                connection.close();
+            }
+        }
+        return count;
     }
 }

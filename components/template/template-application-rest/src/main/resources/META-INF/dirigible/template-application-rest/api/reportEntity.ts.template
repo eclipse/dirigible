@@ -1,5 +1,5 @@
 import { Controller, Get } from "@dirigible/http"
-import { ${name}Repository } from "../../dao/entities/${name}Repository";
+import { ${name}Repository, ${name}Filter, ${name}PaginatedFilter } from "../../dao/entities/${name}Repository";
 
 @Controller
 class ${name}Service {
@@ -8,11 +8,26 @@ class ${name}Service {
 
     @Get("/")
     public filter(_, ctx) {
-        const categoryId = ctx.queryParameters.CategoryId ? parseInt(ctx.queryParameters.CategoryId) : undefined;
-        const startDate = ctx.queryParameters.StartDate ? new Date(ctx.queryParameters.StartDate) : undefined;
-        const endDate = ctx.queryParameters.EndDate ? new Date(ctx.queryParameters.EndDate) : undefined;
+        const filter: ${name}PaginatedFilter = {
+            categoryId: ctx.queryParameters.CategoryId ? parseInt(ctx.queryParameters.CategoryId) : undefined,
+            startDate: ctx.queryParameters.StartDate ? new Date(ctx.queryParameters.StartDate) : undefined,
+            endDate: ctx.queryParameters.EndDate ? new Date(ctx.queryParameters.EndDate) : undefined,
+            "$limit": ctx.queryParameters["$limit"] ? parseInt(ctx.queryParameters["$limit"]) : undefined,
+            "$offset": ctx.queryParameters["$offset"] ? parseInt(ctx.queryParameters["$offset"]) : undefined
+        }
 
-        return this.repository.filter(categoryId, startDate, endDate);
+        return this.repository.findAll(filter);
+    }
+
+    @Get("/count")
+    public count(_, ctx) {
+        const filter: ${name}Filter = {
+            categoryId: ctx.queryParameters.CategoryId ? parseInt(ctx.queryParameters.CategoryId) : undefined,
+            startDate: ctx.queryParameters.StartDate ? new Date(ctx.queryParameters.StartDate) : undefined,
+            endDate: ctx.queryParameters.EndDate ? new Date(ctx.queryParameters.EndDate) : undefined
+        }
+
+        return this.repository.count(filter);
     }
 
 }
