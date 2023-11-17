@@ -13,10 +13,11 @@ angular.module('ideGit', [])
     .provider('gitApi', function GitApiProvider() {
         this.gitServiceUrl = '/services/ide/git';
         this.$get = ['$http', function gitApiFactory($http) {
-            function getErrorMessage(error) {
-                if (error)
-                    return JSON.parse(response.data.error).message;
-                else return 'Check console for more information.';
+            function getErrorMessage(response) {
+                if (response && response.data && response.data.error) {
+                    if (typeof response.data.error === "string") return JSON.parse(response.data.error).message;
+                    else return response.data.error.message;
+                } else return 'Check console for more information.';
             }
 
             let listProjects = function (resourcePath) {
@@ -30,7 +31,7 @@ angular.module('ideGit', [])
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
                         console.error('Git service:', response);
-                        return { status: response.status, message: getErrorMessage(response.data.error) };
+                        return { status: response.status, message: getErrorMessage(response) };
                     });
             }.bind(this);
 
@@ -49,7 +50,7 @@ angular.module('ideGit', [])
                     return { status: response.status, data: response.data };
                 }, function errorCallback(response) {
                     console.error('Git service:', response);
-                    return { status: response.status, message: getErrorMessage(response.data.error) };
+                    return { status: response.status, message: getErrorMessage(response) };
                 });
             }.bind(this);
 
@@ -68,7 +69,7 @@ angular.module('ideGit', [])
                     return { status: response.status, data: response.data };
                 }, function errorCallback(response) {
                     console.error('Git service:', response);
-                    return { status: response.status, message: getErrorMessage(response.data.error) };
+                    return { status: response.status, message: getErrorMessage(response) };
                 });
             }.bind(this);
 
@@ -100,7 +101,7 @@ angular.module('ideGit', [])
                     return { status: response.status, data: response.data };
                 }, function errorCallback(response) {
                     console.error('Git service:', response);
-                    return { status: response.status, message: getErrorMessage(response.data.error) };
+                    return { status: response.status, message: getErrorMessage(response) };
                 });
             }.bind(this);
 
@@ -119,7 +120,7 @@ angular.module('ideGit', [])
                     return { status: response.status, data: response.data };
                 }, function errorCallback(response) {
                     console.error('Git service:', response);
-                    return { status: response.status, message: getErrorMessage(response.data.error) };
+                    return { status: response.status, message: getErrorMessage(response) };
                 });
             }.bind(this);
 
@@ -133,7 +134,7 @@ angular.module('ideGit', [])
                     return { status: response.status, data: response.data };
                 }, function errorCallback(response) {
                     console.error('Git service:', response);
-                    return { status: response.status, message: getErrorMessage(response.data.error) };
+                    return { status: response.status, message: getErrorMessage(response) };
                 });
             }.bind(this);
 
@@ -147,7 +148,7 @@ angular.module('ideGit', [])
                     return { status: response.status, data: response.data };
                 }, function errorCallback(response) {
                     console.error('Git service:', response);
-                    return { status: response.status, message: getErrorMessage(response.data.error) };
+                    return { status: response.status, message: getErrorMessage(response) };
                 });
             }.bind(this);
 
@@ -162,7 +163,7 @@ angular.module('ideGit', [])
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
                         console.error('Workspace service:', response);
-                        return { status: response.status, message: getErrorMessage(response.data.error) };
+                        return { status: response.status, message: getErrorMessage(response) };
                     });
             }.bind(this);
 
@@ -195,7 +196,7 @@ angular.module('ideGit', [])
                     return { status: response.status, data: response.data };
                 }, function errorCallback(response) {
                     console.error('Git service:', response);
-                    return { status: response.status, message: getErrorMessage(response.data.error) };
+                    return { status: response.status, message: getErrorMessage(response) };
                 });
             }.bind(this);
 
@@ -213,7 +214,7 @@ angular.module('ideGit', [])
                     return { status: response.status, data: response.data };
                 }, function errorCallback(response) {
                     console.error('Git service:', response);
-                    return { status: response.status, message: getErrorMessage(response.data.error) };
+                    return { status: response.status, message: getErrorMessage(response) };
                 });
             }.bind(this);
 
@@ -238,7 +239,7 @@ angular.module('ideGit', [])
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
                         console.error('Git service:', response);
-                        return { status: response.status, message: getErrorMessage(response.data.error) };
+                        return { status: response.status, message: getErrorMessage(response) };
                     });
             }.bind(this);
 
@@ -263,7 +264,7 @@ angular.module('ideGit', [])
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
                         console.error('Git service:', response);
-                        return { status: response.status, message: getErrorMessage(response.data.error) };
+                        return { status: response.status, message: getErrorMessage(response) };
                     });
             }.bind(this);
 
@@ -291,7 +292,7 @@ angular.module('ideGit', [])
                     return { status: response.status, data: response.data };
                 }, function errorCallback(response) {
                     console.error('Git service:', response);
-                    return { status: response.status, message: getErrorMessage(response.data.error) };
+                    return { status: response.status, message: getErrorMessage(response) };
                 });
             }.bind(this);
 
@@ -320,7 +321,7 @@ angular.module('ideGit', [])
                     return { status: response.status, data: response.data };
                 }, function errorCallback(response) {
                     console.error('Git service:', response);
-                    return { status: response.status, message: getErrorMessage(response.data.error) };
+                    return { status: response.status, message: getErrorMessage(response) };
                 });
             }.bind(this);
 
@@ -339,7 +340,7 @@ angular.module('ideGit', [])
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
                         console.error('Git service:', response);
-                        return { status: response.status, message: getErrorMessage(response.data.error) };
+                        return { status: response.status, message: getErrorMessage(response) };
                     });
             }.bind(this);
 
@@ -355,7 +356,7 @@ angular.module('ideGit', [])
                         return { status: response.status, data: response.data.files };
                     }, function errorCallback(response) {
                         console.error('Git service:', response);
-                        return { status: response.status, message: getErrorMessage(response.data.error) };
+                        return { status: response.status, message: getErrorMessage(response) };
                     });
             }.bind(this);
 
@@ -371,7 +372,7 @@ angular.module('ideGit', [])
                         return { status: response.status, data: response.data.files };
                     }, function errorCallback(response) {
                         console.error('Git service:', response);
-                        return { status: response.status, message: getErrorMessage(response.data.error) };
+                        return { status: response.status, message: getErrorMessage(response) };
                     });
             }.bind(this);
 
@@ -387,7 +388,7 @@ angular.module('ideGit', [])
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
                         console.error('Git service:', response);
-                        return { status: response.status, message: getErrorMessage(response.data.error) };
+                        return { status: response.status, message: getErrorMessage(response) };
                     });
             }.bind(this);
 
@@ -403,7 +404,7 @@ angular.module('ideGit', [])
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
                         console.error('Git service:', response);
-                        return { status: response.status, message: getErrorMessage(response.data.error) };
+                        return { status: response.status, message: getErrorMessage(response) };
                     });
             }.bind(this);
 
@@ -419,7 +420,7 @@ angular.module('ideGit', [])
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
                         console.error('Git service:', response);
-                        return { status: response.status, message: getErrorMessage(response.data.error) };
+                        return { status: response.status, message: getErrorMessage(response) };
                     });
             }.bind(this);
 
@@ -435,7 +436,7 @@ angular.module('ideGit', [])
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
                         console.error('Git service:', response);
-                        return { status: response.status, message: getErrorMessage(response.data.error) };
+                        return { status: response.status, message: getErrorMessage(response) };
                     });
             }.bind(this);
 
@@ -451,7 +452,7 @@ angular.module('ideGit', [])
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
                         console.error('Git service:', response);
-                        return { status: response.status, message: getErrorMessage(response.data.error) };
+                        return { status: response.status, message: getErrorMessage(response) };
                     });
             }.bind(this);
 
@@ -467,7 +468,7 @@ angular.module('ideGit', [])
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
                         console.error('Git service:', response);
-                        return { status: response.status, message: getErrorMessage(response.data.error) };
+                        return { status: response.status, message: getErrorMessage(response) };
                     });
             }.bind(this);
 
@@ -481,7 +482,7 @@ angular.module('ideGit', [])
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
                         console.error('Git service:', response);
-                        return { status: response.status, message: getErrorMessage(response.data.error) };
+                        return { status: response.status, message: getErrorMessage(response) };
                     });
             }.bind(this);
 
