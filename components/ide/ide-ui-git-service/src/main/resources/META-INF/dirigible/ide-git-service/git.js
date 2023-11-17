@@ -14,9 +14,12 @@ angular.module('ideGit', [])
         this.gitServiceUrl = '/services/ide/git';
         this.$get = ['$http', function gitApiFactory($http) {
             function getErrorMessage(response) {
-                if (response && response.data && response.data.error) {
-                    if (typeof response.data.error === "string") return JSON.parse(response.data.error).message;
-                    else return response.data.error.message;
+                if (response && response.data) {
+                    if (typeof response.data === "string") {
+                        const data = JSON.parse(response.data);
+                        if (data.error && data.message) return `${data.error}: ${data.message}`;
+                    }
+                    else return `${response.data.error}: ${response.data.message}`;
                 } else return 'Check console for more information.';
             }
 
