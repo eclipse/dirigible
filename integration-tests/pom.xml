@@ -24,6 +24,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-application</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -64,6 +65,31 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>${exec.maven.plugin}</version>
+				<configuration>
+					<skip>${skipITs}</skip>
+				</configuration>
+				<executions>
+					<execution>
+						<id>build-ts-test-sources</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>
+								${basedir}/src/test/resources/META-INF/dirigible/modules-tests/build-source${script.extension}
+							</executable>
+							<workingDirectory>
+								src/test/resources/META-INF/dirigible/modules-tests
+							</workingDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -73,7 +99,39 @@
 			<properties>
 				<skipITs>false</skipITs>
 			</properties>
-
+		</profile>
+		<profile>
+			<id>Windows 11</id>
+			<activation>
+				<os>
+					<family>dos</family>
+				</os>
+			</activation>
+			<properties>
+				<script.extension>.bat</script.extension>
+			</properties>
+		</profile>
+		<profile>
+			<id>Windows</id>
+			<activation>
+				<os>
+					<family>Windows</family>
+				</os>
+			</activation>
+			<properties>
+				<script.extension>.bat</script.extension>
+			</properties>
+		</profile>
+		<profile>
+			<id>unix</id>
+			<activation>
+				<os>
+					<family>unix</family>
+				</os>
+			</activation>
+			<properties>
+				<script.extension>.sh</script.extension>
+			</properties>
 		</profile>
 	</profiles>
 
