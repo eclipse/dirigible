@@ -9,9 +9,21 @@ class ${name}Service {
     @Get("/")
     public filter(_, ctx) {
         const filter: ${name}PaginatedFilter = {
-            categoryId: ctx.queryParameters.CategoryId ? parseInt(ctx.queryParameters.CategoryId) : undefined,
-            startDate: ctx.queryParameters.StartDate ? new Date(ctx.queryParameters.StartDate) : undefined,
-            endDate: ctx.queryParameters.EndDate ? new Date(ctx.queryParameters.EndDate) : undefined,
+#foreach ($property in $filter.properties)
+#if(!$property.dataPrimaryKey)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+            ${property.name}: ctx.queryParameters.${property.name} ? ctx.queryParameters.${property.name} : undefined,
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+            ${property.name}: ctx.queryParameters.${property.name} ? parseInt(ctx.queryParameters.${property.name}) : undefined,
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+            ${property.name}: ctx.queryParameters.${property.name} ? new Date(parseInt(ctx.queryParameters.${property.name})) : undefined,
+#elseif($property.dataType == "BOOLEAN")
+            ${property.name}: ctx.queryParameters.${property.name} ? !!ctx.queryParameters.${property.name} : undefined,
+#else
+            ${property.name}: ctx.queryParameters.${property.name} ? ctx.queryParameters.${property.name} as unknown: undefined,
+#end
+#end
+#end
             "$limit": ctx.queryParameters["$limit"] ? parseInt(ctx.queryParameters["$limit"]) : undefined,
             "$offset": ctx.queryParameters["$offset"] ? parseInt(ctx.queryParameters["$offset"]) : undefined
         }
@@ -22,9 +34,21 @@ class ${name}Service {
     @Get("/count")
     public count(_, ctx) {
         const filter: ${name}Filter = {
-            categoryId: ctx.queryParameters.CategoryId ? parseInt(ctx.queryParameters.CategoryId) : undefined,
-            startDate: ctx.queryParameters.StartDate ? new Date(ctx.queryParameters.StartDate) : undefined,
-            endDate: ctx.queryParameters.EndDate ? new Date(ctx.queryParameters.EndDate) : undefined
+#foreach ($property in $filter.properties)
+#if(!$property.dataPrimaryKey)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+            ${property.name}: ctx.queryParameters.${property.name} ? ctx.queryParameters.${property.name} : undefined,
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+            ${property.name}: ctx.queryParameters.${property.name} ? parseInt(ctx.queryParameters.${property.name}) : undefined,
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+            ${property.name}: ctx.queryParameters.${property.name} ? new Date(parseInt(ctx.queryParameters.${property.name})) : undefined,
+#elseif($property.dataType == "BOOLEAN")
+            ${property.name}: ctx.queryParameters.${property.name} ? !!ctx.queryParameters.${property.name} : undefined,
+#else
+            ${property.name}: ctx.queryParameters.${property.name} ? ctx.queryParameters.${property.name} as unknown: undefined,
+#end
+#end
+#end
         }
 
         return this.repository.count(filter);

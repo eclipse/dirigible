@@ -17,9 +17,21 @@ export interface ${name} {
 }
 
 export interface ${name}Filter {
-    readonly categoryId?: number;
-    readonly startDate?: Date;
-    readonly endDate?: Date
+#foreach ($property in $filter.properties)
+#if(!$property.dataPrimaryKey)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+    readonly ${property.name}: string;
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+    readonly ${property.name}: number;
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+    readonly ${property.name}: Date;
+#elseif($property.dataType == "BOOLEAN")
+    readonly ${property.name}: boolean;
+#else
+    readonly ${property.name}: unknown;
+#end
+#end
+#end
 }
 
 export interface ${name}PaginatedFilter extends ${name}Filter {
@@ -48,15 +60,55 @@ export class ${name}Repository {
             const statement = connection.prepareStatement(sql);
 
             let paramIndex = 1;
-            if (filter.categoryId) {
-                statement.setInt(paramIndex++, filter.categoryId);
+#foreach ($property in $filter.properties)
+#if(!$property.dataPrimaryKey)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+            if (filter.${property.name}) {
+                statement.setString(paramIndex++, filter.${property.name});
             }
-            if (filter.startDate) {
-                statement.setTimestamp(paramIndex++, filter.startDate);
+#elseif($property.dataType == "INTEGER")
+            if (filter.${property.name}) {
+                statement.setInt(paramIndex++, filter.${property.name});
             }
-            if (filter.endDate) {
-                statement.setTimestamp(paramIndex++, filter.endDate);
+#elseif($property.dataType == "BIGINT")
+            if (filter.${property.name}) {
+                statement.setLong(paramIndex++, filter.${property.name});
             }
+#elseif($property.dataType == "SMALLINT" || $property.dataType == "TINYINT")
+            if (filter.${property.name}) {
+                statement.setShort(paramIndex++, filter.${property.name});
+            }
+#elseif($property.dataType == "REAL")
+            if (filter.${property.name}) {
+                statement.setFloat(paramIndex++, filter.${property.name});
+            }
+#elseif($property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+            if (filter.${property.name}) {
+                statement.setDouble(paramIndex++, filter.${property.name});
+            }
+#elseif($property.dataType == "DATE")
+            if (filter.${property.name}) {
+                statement.setDate(paramIndex++, filter.${property.name});
+            }
+#elseif($property.dataType == "TIME")
+            if (filter.${property.name}) {
+                statement.setTime(paramIndex++, filter.${property.name});
+            }
+#elseif($property.dataType == "TIMESTAMP")
+            if (filter.${property.name}) {
+                statement.setTimestamp(paramIndex++, filter.${property.name});
+            }
+#elseif($property.dataType == "BOOLEAN")
+            if (filter.${property.name}) {
+                statement.setBoolean(paramIndex++, filter.${property.name});
+            }
+#else
+            if (filter.${property.name}) {
+                throw new Error("Not-Supported-Data-Type");
+            }
+#end
+#end
+#end
             if (filter["$limit"]) {
                 statement.setInt(paramIndex++, filter["$limit"]);
             }
@@ -117,15 +169,55 @@ export class ${name}Repository {
             const statement = connection.prepareStatement(sql);
 
             let paramIndex = 1;
-            if (filter.categoryId) {
-                statement.setInt(paramIndex++, filter.categoryId);
+#foreach ($property in $filter.properties)
+#if(!$property.dataPrimaryKey)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+            if (filter.${property.name}) {
+                statement.setString(paramIndex++, filter.${property.name});
             }
-            if (filter.startDate) {
-                statement.setTimestamp(paramIndex++, filter.startDate);
+#elseif($property.dataType == "INTEGER")
+            if (filter.${property.name}) {
+                statement.setInt(paramIndex++, filter.${property.name});
             }
-            if (filter.endDate) {
-                statement.setTimestamp(paramIndex++, filter.endDate);
+#elseif($property.dataType == "BIGINT")
+            if (filter.${property.name}) {
+                statement.setLong(paramIndex++, filter.${property.name});
             }
+#elseif($property.dataType == "SMALLINT" || $property.dataType == "TINYINT")
+            if (filter.${property.name}) {
+                statement.setShort(paramIndex++, filter.${property.name});
+            }
+#elseif($property.dataType == "REAL")
+            if (filter.${property.name}) {
+                statement.setFloat(paramIndex++, filter.${property.name});
+            }
+#elseif($property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+            if (filter.${property.name}) {
+                statement.setDouble(paramIndex++, filter.${property.name});
+            }
+#elseif($property.dataType == "DATE")
+            if (filter.${property.name}) {
+                statement.setDate(paramIndex++, filter.${property.name});
+            }
+#elseif($property.dataType == "TIME")
+            if (filter.${property.name}) {
+                statement.setTime(paramIndex++, filter.${property.name});
+            }
+#elseif($property.dataType == "TIMESTAMP")
+            if (filter.${property.name}) {
+                statement.setTimestamp(paramIndex++, filter.${property.name});
+            }
+#elseif($property.dataType == "BOOLEAN")
+            if (filter.${property.name}) {
+                statement.setBoolean(paramIndex++, filter.${property.name});
+            }
+#else
+            if (filter.${property.name}) {
+                throw new Error("Not-Supported-Data-Type");
+            }
+#end
+#end
+#end
 
             const resultSet = statement.executeQuery();
             while (resultSet.next()) {

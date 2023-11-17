@@ -15,9 +15,22 @@ const templateEngines = dirigibleRequire("template/engines");
 exports.generateFiles = function (model, parameters, templateSources) {
     let generatedFiles = [];
 
-    const models = model.entities.filter(e => e.type !== "REPORT");
-    const reportModels = model.entities.filter(e => e.type === "REPORT");
+    const models = model.entities.filter(e => e.type !== "REPORT" && e.type !== "REPORT_FILTER");
     const feedModels = model.entities.filter(e => e.feedUrl);
+
+    const reportModels = model.entities.filter(e => e.type === "REPORT");
+    const reportFilterModels = model.entities.filter(e => e.type === "REPORT_FILTER");
+    for (const filter of reportFilterModels) {
+        const reportModelName = filter.properties.filter(e => e.relationshipType === "ASSOCIATION" && e.relationshipCardinality === "1_1").map(e => e.relationshipEntityName)[0];
+        if (reportModelName) {
+            for (const model of reportModels) {
+                if (model.name === reportModelName) {
+                    model.filter = filter;
+                    break;
+                }
+            }
+        }
+    }
 
     // UI Basic
     const uiManageModels = model.entities.filter(e => e.layoutType === "MANAGE" && (e.type === "PRIMARY" || e.type === "SETTING"));
@@ -30,10 +43,10 @@ exports.generateFiles = function (model, parameters, templateSources) {
     const uiListDetailsModels = model.entities.filter(e => e.layoutType === "LIST_DETAILS" && e.type === "DEPENDENT");
 
     // UI Reports
-    const uiReportTableModels = model.entities.filter(e => e.layoutType === "REPORT_TABLE" && e.type === "REPORT");
-    const uiReportBarsModels = model.entities.filter(e => e.layoutType === "REPORT_BAR" && e.type === "REPORT");
-    const uiReportLinesModels = model.entities.filter(e => e.layoutType === "REPORT_LINE" && e.type === "REPORT");
-    const uiReportPieModels = model.entities.filter(e => e.layoutType === "REPORT_PIE" && e.type === "REPORT");
+    const uiReportTableModels = reportModels.filter(e => e.layoutType === "REPORT_TABLE");
+    const uiReportBarsModels = reportModels.filter(e => e.layoutType === "REPORT_BAR");
+    const uiReportLinesModels = reportModels.filter(e => e.layoutType === "REPORT_LINE");
+    const uiReportPieModels = reportModels.filter(e => e.layoutType === "REPORT_PIE");
 
     for (let i = 0; i < templateSources.length; i++) {
         const template = templateSources[i];
