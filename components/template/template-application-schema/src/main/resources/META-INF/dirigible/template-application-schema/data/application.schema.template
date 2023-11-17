@@ -59,24 +59,6 @@
             }
 #end
 #end
-#else
-            {
-                "name": "${tablePrefix}_${model.dataName}",
-                "type": "VIEW",
-                "columns": [
-                    {
-                        "query": "${model.dataQuery}"
-                    }
-                ]
-#if($foreach.hasNext)
-            },
-#else
-#if($foreignKeysCount > 0)
-            },
-#else
-            }
-#end
-#end
 #end
 #end
 #foreach ($model in $models)
