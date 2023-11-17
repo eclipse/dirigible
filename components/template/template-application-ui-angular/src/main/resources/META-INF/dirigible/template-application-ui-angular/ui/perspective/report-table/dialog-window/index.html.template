@@ -27,7 +27,6 @@
             <fd-fieldset class="fd-margin--md" ng-form="formFieldset">
                 <fd-form-group dg-header="${name} Details" name="entityForm">
 #foreach ($property in $properties)
-#if(!$property.dataAutoIncrement)
 #if($property.widgetType == "DROPDOWN")
                     <fd-form-item horizontal="false">
                         <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
@@ -184,7 +183,6 @@
                             placeholder="Enter ${property.widgetLabel}">
                         </fd-input>
                     </fd-form-item>
-#end
 #end
 #end
             </fd-fieldset>
