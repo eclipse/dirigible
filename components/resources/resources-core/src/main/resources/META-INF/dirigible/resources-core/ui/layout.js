@@ -513,7 +513,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     for (let childIndex = 0; childIndex < $scope.centerSplittedTabViews.panes.length; childIndex++) {
                         let childPane = $scope.centerSplittedTabViews.panes[childIndex];
                         for (let tabIndex = 0; tabIndex < childPane.tabs.length; tabIndex++) {
-                            if (childPane.tabs[tabIndex].params && childPane.tabs[tabIndex].params.file && childPane.tabs[tabIndex].params.file.startsWith(basePath)) {
+                            if (childPane.tabs[tabIndex].type === EDITOR && childPane.tabs[tabIndex].params.file.startsWith(basePath)) {
                                 fileList.push(childPane.tabs[tabIndex].params.file);
                             }
                         }

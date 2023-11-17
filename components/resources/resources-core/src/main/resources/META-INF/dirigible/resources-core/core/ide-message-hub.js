@@ -16,11 +16,11 @@ angular.module('ideMessageHub', [])
         this.$get = [function messageHubFactory() {
             const messageHub = new FramesMessageHub();
             const isNullOrUndefined = function (value) {
-                if (value === undefined || value === undefined) return true;
+                if (value === null || value === undefined) return true;
                 return false;
             };
             const isNullOrUndefinedOrEmpty = function (value) {
-                if (value === undefined || value === undefined || value.trim() === '') return true;
+                if (value === null || value === undefined || value.trim() === '') return true;
                 return false;
             };
             const trigger = function (eventId, absolute = false) {
@@ -314,7 +314,7 @@ angular.module('ideMessageHub', [])
             const openView = function (viewId, params) {
                 if (isNullOrUndefinedOrEmpty(viewId))
                     throw Error("openView: viewId must be specified");
-                if (isNullOrUndefined(params) && !(typeof params === 'object' && !Array.isArray(params)))
+                if (!isNullOrUndefined(params) && !(typeof params === 'object' && !Array.isArray(params)))
                     throw Error("openView: params must be an object");
                 messageHub.post({
                     viewId: viewId,
