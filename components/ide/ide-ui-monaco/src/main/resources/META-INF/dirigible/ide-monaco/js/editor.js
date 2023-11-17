@@ -149,40 +149,38 @@ function FileIO() {
                         'Dirigible-Editor': 'Monaco',
                         'Content-Type': 'text/plain'
                     }
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(response.statusText);
-                        }
+                }).then(response => {
+                    if (!response.ok) {
+                        throw new Error(response.statusText);
+                    }
 
-                        resolve(fileName);
-                        let fileDescriptor = {
-                            name: fileName.substring(fileName.lastIndexOf('/') + 1),
-                            path: fileName.substring(fileName.indexOf('/', 1)),
-                            contentType: parameters.contentType,
-                            workspace: fileName.substring(1, fileName.indexOf('/', 1)),
-                        };
-                        if (parameters.gitName) {
-                            if (lineDecorations.length)
-                                fileDescriptor.status = 'modified';
-                            else fileDescriptor.status = 'unmodified';
-                        }
-                        messageHub.post({ resourcePath: fileName, isDirty: false }, 'ide-core.setEditorDirty');
-                        messageHub.post(fileDescriptor, 'ide.file.saved');
-                        messageHub.post({
-                            message: `File '${fileName}' saved`
-                        }, 'ide.status.message');
-                        if (isTypeScriptFile(fileName)) {
-                            messageHub.post({fileName}, 'ide.ts.reload');
-                        }
-                    })
-                    .catch(ex => {
-                        reject(ex.message);
-                        messageHub.post({
-                            message: `Error saving '${fileName}'`
-                        }, 'ide.status.error');
-                        // messageHub.post({ data: { file: fileName, error: ex.message } }, 'editor.file.save.failed');
-                    });
+                    resolve(fileName);
+                    let fileDescriptor = {
+                        name: fileName.substring(fileName.lastIndexOf('/') + 1),
+                        path: fileName.substring(fileName.indexOf('/', 1)),
+                        contentType: parameters.contentType,
+                        workspace: fileName.substring(1, fileName.indexOf('/', 1)),
+                    };
+                    if (parameters.gitName) {
+                        if (lineDecorations.length)
+                            fileDescriptor.status = 'modified';
+                        else fileDescriptor.status = 'unmodified';
+                    }
+                    messageHub.post({ resourcePath: fileName, isDirty: false }, 'ide-core.setEditorDirty');
+                    messageHub.post(fileDescriptor, 'ide.file.saved');
+                    messageHub.post({
+                        message: `File '${fileName}' saved`
+                    }, 'ide.status.message');
+                    if (isTypeScriptFile(fileName)) {
+                        messageHub.post({ fileName }, 'ide.ts.reload');
+                    }
+                }).catch(ex => {
+                    reject(ex.message);
+                    messageHub.post({
+                        message: `Error saving '${fileName}'`
+                    }, 'ide.status.error');
+                    // messageHub.post({ data: { file: fileName, error: ex.message } }, 'editor.file.save.failed');
+                });
             } else {
                 reject('file query parameter is not present in the URL');
             }
@@ -297,7 +295,7 @@ function createSaveAction() {
 };
 
 function saveFileContent(editor) {
-    let fileIO = new FileIO();
+    const fileIO = new FileIO();
     fileIO.saveText(editor.getModel().getValue()).then(() => {
         lastSavedVersionId = editor.getModel().getAlternativeVersionId();
         _dirty = false;
@@ -532,7 +530,7 @@ async function loadDTS() {
     for (const dts of allDts) {
         monaco.languages.typescript.javascriptDefaults.addExtraLib(dts.content, dts.filePath);
         monaco.languages.typescript.typescriptDefaults.addExtraLib(dts.content, dts.filePath);
-        modulesSuggestions.push({ name: dts.moduleName});
+        modulesSuggestions.push({ name: dts.moduleName });
     }
 
     let cachedDts = window.sessionStorage.getItem('dtsContent');
@@ -641,7 +639,7 @@ function isDirty(model) {
             monaco.editor.setTheme(monacoTheme);
         }, 'ide.themeChange');
 
-        let fileIO = new FileIO();
+        const fileIO = new FileIO();
         let fileName = fileIO.resolveFileName();
         let readOnly = fileIO.isReadOnly();
         let _fileObject;
@@ -690,6 +688,14 @@ function isDirty(model) {
                                 }
                             }, "editor.file.save");
 
+                            messageHub.subscribe(function (event) {
+                                let file = event.resourcePath;
+                                if (file === fileName) {
+                                    getViewParameters();
+                                    fileName = fileIO.resolveFileName();
+                                }
+                            }, "core.editors.reloadParams");
+
                             messageHub.subscribe(function () {
                                 let model = _editor.getModel();
                                 if (isDirty(model)) {
@@ -729,7 +735,7 @@ function isDirty(model) {
                                         fileIO.loadText(importedFile)
                                             .then((fileObject) => {
                                                 const importedFile = JSON.parse(fileObject.modified);
-                                                const uri = new monaco.Uri().with({path: `/${importedFile.workspace}/${importedFile.project}/${importedFile.filePath}`});
+                                                const uri = new monaco.Uri().with({ path: `/${importedFile.workspace}/${importedFile.project}/${importedFile.filePath}` });
                                                 if (isReload) {
                                                     const model = monaco.editor.getModel(uri);
                                                     model.setValue(importedFile.sourceCode);
@@ -748,7 +754,7 @@ function isDirty(model) {
                                 }, "ide.ts.reload")
                             }
 
-                            const mainFileUri = new monaco.Uri().with({path: fileName});
+                            const mainFileUri = new monaco.Uri().with({ path: fileName });
                             let model = monaco.editor.createModel(fileText, fileType || 'text', mainFileUri);
                             lastSavedVersionId = model.getAlternativeVersionId();
 
@@ -760,7 +766,7 @@ function isDirty(model) {
                                 sourceBeingChangedProgramatically = false;
                             }, "ide.ts.reload")
 
-                            
+
                             _editor.setModel(model);
                             if (!readOnly) {
                                 _editor.addAction(createSaveAction());
@@ -1007,7 +1013,7 @@ function isDirty(model) {
         monaco.languages.typescript.typescriptDefaults.getCompilerOptions().jsx = (fileName?.endsWith(".tsx") === true) ? "react" : undefined;
         monaco.languages.typescript.javascriptDefaults.getCompilerOptions().jsx = (fileName?.endsWith(".jsx") === true) ? "react" : undefined,
 
-        monaco.languages.html.registerHTMLLanguageService('xml', {}, { documentFormattingEdits: true });
+            monaco.languages.html.registerHTMLLanguageService('xml', {}, { documentFormattingEdits: true });
         monaco.languages.html.htmlDefaults.setOptions({
             format: {
                 tabSize: 2,
@@ -1020,13 +1026,6 @@ function isDirty(model) {
                 extraLiners: "head, body, /html",
                 maxPreserveNewLines: null
             }
-        });
-        cssFormatMonaco(monaco, {
-            indent_size: 2,
-            newline_between_rules: false,
-            end_with_newline: true,
-            indent_with_tabs: false,
-            space_around_combinator: true
         });
         monaco.editor.defineTheme('quartz-dark', {
             base: 'vs-dark',

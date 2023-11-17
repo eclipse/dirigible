@@ -45,15 +45,15 @@
 						leftPaneMinSize: 355,
 					};
                     $scope.contextMenuContent = function (element) {
-                        let id;
+                        let resourcePath;
                         if (element.tagName !== "LI") {
                             let closest = element.closest("li");
-                            if (closest && closest.hasAttribute('tab-id') && closest.hasAttribute('is-editor-tab')) {
-                                id = closest.getAttribute('tab-id');
+                            if (closest && closest.hasAttribute('tab-id') && closest.hasAttribute('data-file-path')) {
+                                resourcePath = closest.getAttribute('data-file-path');
                             } else return;
                         } else {
-                            if (element.hasAttribute('tab-id') && element.hasAttribute('is-editor-tab')) {
-                                id = closest.getAttribute('tab-id');
+                            if (element.hasAttribute('tab-id') && element.hasAttribute('data-file-path')) {
+                                resourcePath = closest.getAttribute('data-file-path');
                             } else return;
                         }
                         return {
@@ -62,12 +62,12 @@
                                 {
                                     id: "close",
                                     label: "Close",
-                                    data: id,
+                                    data: resourcePath,
                                 },
                                 {
                                     id: "closeOthers",
                                     label: "Close Others",
-                                    data: id,
+                                    data: resourcePath,
                                 },
                                 {
                                     id: "closeAll",
@@ -77,7 +77,7 @@
                                     id: "reveal",
                                     label: "Reveal in Projects View",
                                     divider: true,
-                                    data: id,
+                                    data: resourcePath,
                                 }
                             ]
                         }
