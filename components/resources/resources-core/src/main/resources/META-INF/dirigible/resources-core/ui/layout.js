@@ -657,7 +657,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                             `Do you want to save the changes you made to ${fileName}?`,
                             [{
                                 id: { id: 'save', file: filePath, ...args },
-                                type: 'normal',
+                                type: 'emphasized',
                                 label: 'Save',
                             }, {
                                 id: { id: 'ignore', file: filePath, ...args },
@@ -686,20 +686,20 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
 
                 function tryReloadCenterTab(tab, editorPath, params) {
                     if (tab.dirty) {
-                        showFileSaveDialog(tab.label, tab.id, { editorPath, params })
+                        showFileSaveDialog(tab.label, tab.params.file, { editorPath, params })
                             .then(args => {
                                 switch (args.id) {
                                     case 'save':
                                         reloadingFileArgs = args;
                                         break;
                                     case 'ignore':
-                                        reloadCenterTab(args.file, args.editorPath, args.params);
+                                        reloadCenterTab(args.editorPath, args.params);
                                         $scope.$digest();
                                         break;
                                 }
                             });
                     } else {
-                        reloadCenterTab(tab.id, editorPath, params);
+                        reloadCenterTab(editorPath, params);
                     }
                 }
 
@@ -742,8 +742,10 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     return false;
                 }
 
-                function removeCenterTab(id) {
-                    let result = findCenterSplittedTabViewById(id);
+                function removeCenterTab(id, filePath) {
+                    let result;
+                    if (id) result = findCenterSplittedTabViewById(id);
+                    else result = findCenterSplittedTabViewByPath(filePath);
                     if (result) {
                         const { tabsView, parent: splitView } = result;
                         tabsView.tabs.splice(result.index, 1);
@@ -759,14 +761,14 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     return false;
                 }
 
-                function closeCenterTab(id) {
-                    if (removeCenterTab(id)) {
+                function closeCenterTab(filePath) {
+                    if (removeCenterTab(undefined, filePath)) {
                         $scope.$digest();
                     }
                 }
 
-                function reloadCenterTab(id, editorPath, params) {
-                    let result = findCenterSplittedTabViewById(id);
+                function reloadCenterTab(editorPath, params) {
+                    let result = findCenterSplittedTabViewByPath(params.file);
                     if (result) {
                         const tab = result.tabsView.tabs[result.index];
                         tab.path = editorPath;
@@ -836,7 +838,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                         if (fileName === closingFileArgs.file) {
                             closeCenterTab(fileName);
 
-                            let rest = closingFileArgs.tabs.filter(x => x.id !== closingFileArgs.file);
+                            let rest = closingFileArgs.tabs.filter(x => x.params.file !== closingFileArgs.file);
                             if (rest.length > 0) {
                                 if (tryCloseCenterTabs(rest)) {
                                     $scope.$digest();
@@ -852,7 +854,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                         const { file, editorPath, params } = reloadingFileArgs;
 
                         if (fileName === file) {
-                            reloadCenterTab(file, editorPath, params);
+                            reloadCenterTab(editorPath, params);
                             $scope.$digest();
                             reloadingFileArgs = null;
                         }
@@ -1105,7 +1107,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                 $scope.closeOtherEditors = function (resourcePath) {
                     let result = findCenterSplittedTabViewByPath(resourcePath);
                     if (result) {
-                        let rest = result.tabsView.tabs.filter(x => x.id !== resourcePath);
+                        let rest = result.tabsView.tabs.filter(x => x.type === EDITOR && x.params.file !== resourcePath);
                         if (rest.length > 0) {
                             if (tryCloseCenterTabs(rest)) {
                                 $scope.$digest();
@@ -1115,7 +1117,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                 };
                 $scope.closeAllEditors = function () {
                     forEachCenterSplittedTabView(pane => {
-                        if (tryCloseCenterTabs(pane.tabs.slice())) {
+                        if (tryCloseCenterTabs(pane.tabs.filter(x => x.type === EDITOR))) {
                             $scope.$digest();
                         }
                     }, $scope.centerSplittedTabViews);

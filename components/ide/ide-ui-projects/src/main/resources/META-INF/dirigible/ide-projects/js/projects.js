@@ -294,10 +294,6 @@ projectsView.controller('ProjectsViewController', [
                         if (response.data.isFlowable) {
                             messageHub.showAlertWarning('Cannot move file', 'The file you are trying to move is currently opened in the Flowable editor. You must save your changes, close the editor and then move the file.');
                             failedToMove(false);
-                        }
-                        else if (response.data.isOpen && response.data.isDirty) {
-                            messageHub.showAlertWarning('Cannot move file', 'The file you are trying to move is currently open and has unsaved changes.');
-                            failedToMove(false);
                         } else {
                             move(parent, moveObj.node.data.path);
                         }
