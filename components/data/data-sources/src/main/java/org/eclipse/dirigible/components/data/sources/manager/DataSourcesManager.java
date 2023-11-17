@@ -21,8 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -162,8 +162,8 @@ public class DataSourcesManager implements InitializingBean {
         HikariDataSource hds = new HikariDataSource(config);
 
         ManagedDataSource managedDataSource = new ManagedDataSource(hds);
-        ((AnnotationConfigServletWebServerApplicationContext) applicationContext).getBeanFactory()
-                                                                                 .registerSingleton(name, managedDataSource);
+        ((GenericApplicationContext) applicationContext).getBeanFactory()
+                                                        .registerSingleton(name, managedDataSource);
         DATASOURCES.put(name, managedDataSource);
         if (logger.isInfoEnabled()) {
             logger.info("Initialized a datasource with name: " + name);
