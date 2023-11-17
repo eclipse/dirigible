@@ -923,8 +923,8 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                 function shortenCenterTabsLabels() {
 
                     const getTabPath = tab => {
-                        const index = tab.id.lastIndexOf('/');
-                        return tab.id.substring(0, index > 0 ? index : x.id.length);
+                        const index = tab.params.file.lastIndexOf('/');
+                        return tab.params.file.substring(0, index > 0 ? index : tab.params.file.length);
                     }
 
                     const allTabs = [];
