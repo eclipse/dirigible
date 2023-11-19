@@ -69,6 +69,7 @@ class DirigibleJavaScriptTestsFactory implements AutoCloseable {
         return DynamicContainer.dynamicContainer(testDisplayName, dynamicTests);
     }
 
+    @SuppressWarnings("resource")
     private TestFunction runSource(Source source) {
         try {
             TestFunction testFunction = new TestFunction();
