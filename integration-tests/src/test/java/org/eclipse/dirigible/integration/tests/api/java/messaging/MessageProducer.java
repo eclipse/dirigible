@@ -12,6 +12,9 @@ package org.eclipse.dirigible.integration.tests.api.java.messaging;
 
 import org.eclipse.dirigible.components.api.messaging.MessagingFacade;
 
+/**
+ * used by <b>messaging-test.ts</b>
+ */
 public class MessageProducer {
 
     public static void asyncSendMessageToTopic(String topic, String message) {
