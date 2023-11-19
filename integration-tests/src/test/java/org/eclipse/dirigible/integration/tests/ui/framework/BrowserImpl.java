@@ -12,7 +12,6 @@ package org.eclipse.dirigible.integration.tests.ui.framework;
 
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
@@ -35,7 +34,6 @@ public class BrowserImpl implements Browser {
 
     private final int localServerPort;
 
-    @Autowired
     public BrowserImpl(int localServerPort) {
         this.localServerPort = localServerPort;
     }
