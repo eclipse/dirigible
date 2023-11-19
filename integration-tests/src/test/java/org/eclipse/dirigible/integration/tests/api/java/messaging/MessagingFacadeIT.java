@@ -8,7 +8,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.integration.tests.messaging;
+package org.eclipse.dirigible.integration.tests.api.java.messaging;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
