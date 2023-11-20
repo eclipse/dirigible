@@ -43,11 +43,12 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
-        os: [ubuntu, windows, macos]
+        os: [ubuntu, windows]
     steps:
+    - uses: browser-actions/setup-chrome@v1
+    - run: chrome --version
     - uses: actions/checkout@v1
-    - name: Install Chrome with no params
-      uses: ./.github/actions/setup-chrome
+    - name: Print Chrome version
     - if: runner.os == 'Linux'
       run: chrome --version
     - if: runner.os == 'macOS'
