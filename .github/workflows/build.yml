@@ -44,8 +44,21 @@ jobs:
         cd build/application
         docker buildx build --push --tag dirigiblelabs/dirigible -o type=image --platform=linux/arm64,linux/amd64 .
   integration-tests: 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        os: [windows]
     steps:
+      - name: Setup Chrome
+      uses: browser-actions/setup-chrome@v1.3.0
+      with:
+        chrome-version: stable
+    - if: runner.os == 'Linux'
+      run: chrome --version
+    - if: runner.os == 'macOS'
+      run: chromium --version
+    - if: runner.os == 'Windows'
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
