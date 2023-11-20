@@ -88,4 +88,4 @@ jobs:
       with:
         retention-days: 1
         name: integration-tests-target
-        path: /integration-tests/target
+        path: integration-tests/target
