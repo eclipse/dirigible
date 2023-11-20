@@ -45,9 +45,6 @@ jobs:
       matrix:
         os: [ubuntu, windows, macos]
     steps:
-    - uses: actions/download-artifact@v3
-      with:
-        name: dist
     - name: Install Chrome with no params
       uses: ./
     - if: runner.os == 'Linux'
