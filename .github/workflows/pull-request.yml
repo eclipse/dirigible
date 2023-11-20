@@ -7,10 +7,10 @@ on:
       - master
 jobs:
   build:        
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu, windows, macos]
     steps:
     - uses: actions/checkout@v3
       with:
@@ -38,12 +38,25 @@ jobs:
       run: mvn formatter:validate
     - name: Maven Build
       run: mvn clean install -D maven.javadoc.skip=false -U
+      
   integration-tests:        
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu, windows, macos]
     steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: dist
+
+    - name: Install with no params
+      uses: ./
+    - if: runner.os == 'Linux'
+      run: chrome --version
+    - if: runner.os == 'macOS'
+      run: chromium --version
+    - if: runner.os == 'Windows'
+      run: (Get-Item (Get-Command chrome).Source).VersionInfo.ProductVersion
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
