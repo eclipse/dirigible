@@ -16,8 +16,8 @@
                     <fd-icon-tab-bar-overflow label="More"
                         ng-class="isMoreTabsButtonVisible(pane) ? '' : 'dg-invisible'">
                         <fd-icon-tab-bar-overflow-item ng-if="tab.isHidden" ng-repeat="tab in pane.tabs"
-                            label="{{tab.label}}" tab-id="{{tab.id}}-overflow" has-badge="tab.dirty"
-                            ng-click="pane.selectedTab = tab.id">
+                            label="{{tab.label}}" title="{{tab.label}}" tab-hint="{{tab.hint}}"
+                            tab-id="{{tab.id}}-overflow" has-badge="tab.dirty" ng-click="pane.selectedTab = tab.id">
                         </fd-icon-tab-bar-overflow-item>
                     </fd-icon-tab-bar-overflow>
                     <dg-icon-tab-bar-buttons ng-if="canSplit(pane)" dg-align="right">
