@@ -1,6 +1,5 @@
 name: 'Setup Chrome'
 description: 'Install and setup Google Chrome and Chromium'
-author: "Shin'ya Ueoka"
 inputs:
   chrome-version:
     description: |-
