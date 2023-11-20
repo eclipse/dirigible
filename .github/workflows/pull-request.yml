@@ -45,16 +45,8 @@ jobs:
       matrix:
         os: [ubuntu, windows]
     steps:
-    - uses: browser-actions/setup-chrome@v1
-    - run: chrome --version
-    - uses: actions/checkout@v1
-    - name: Print Chrome version
-    - if: runner.os == 'Linux'
-      run: chrome --version
-    - if: runner.os == 'macOS'
-      run: chromium --version
-    - if: runner.os == 'Windows'
-      run: (Get-Item (Get-Command chrome).Source).VersionInfo.ProductVersion
+    - name: Setup Chrome
+      uses: browser-actions/setup-chrome@v1.3.0
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
