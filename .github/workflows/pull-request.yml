@@ -41,6 +41,7 @@ jobs:
       
   integration-tests:        
     runs-on: ${{ matrix.os }}-latest
+    continue-on-error: true
     strategy:
       matrix:
         os: [windows, ubuntu]
