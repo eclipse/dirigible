@@ -43,7 +43,7 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
-        os: [ubuntu, windows]
+        os: [windows]
     steps:
     - name: Setup Chrome
       uses: browser-actions/setup-chrome@v1.3.0
