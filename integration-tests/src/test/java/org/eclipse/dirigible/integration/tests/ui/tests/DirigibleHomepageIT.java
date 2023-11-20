@@ -14,6 +14,7 @@ import org.eclipse.dirigible.integration.tests.ui.Dirigible;
 import org.eclipse.dirigible.integration.tests.ui.framework.HtmlElementType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import com.codeborne.selenide.Selenide;
 
 class DirigibleHomepageIT extends UserInterfaceIntegrationTest {
 
@@ -31,5 +32,8 @@ class DirigibleHomepageIT extends UserInterfaceIntegrationTest {
         dirigible.openHomePage();
 
         browser.assertElementExistsByTypeAndText(HtmlElementType.HEADER5, ECLIPSE_DIRIGIBLE_HEADER);
+
+        String screenshot = Selenide.screenshot("test-screenshot");
+        System.err.println("Screenshot saved in: " + screenshot);
     }
 }
