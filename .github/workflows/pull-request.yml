@@ -45,6 +45,7 @@ jobs:
       matrix:
         os: [ubuntu, windows, macos]
     steps:
+    - uses: actions/checkout@v1
     - name: Install Chrome with no params
       uses: ./.github/actions/setup-chrome
     - if: runner.os == 'Linux'
