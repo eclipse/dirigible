@@ -631,7 +631,7 @@
 		<ngdbc.version>2.18.16</ngdbc.version>
 		<snowflake.version>3.14.3</snowflake.version>
 
-		<activemq.version>5.18.3</activemq.version>
+		<activemq.version>6.0.0</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<lucene.version>9.8.0</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
