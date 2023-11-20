@@ -48,7 +48,6 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: dist
-
     - name: Install with no params
       uses: ./
     - if: runner.os == 'Linux'
