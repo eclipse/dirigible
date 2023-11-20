@@ -115,4 +115,20 @@ public class BrowserImpl implements Browser {
         return Selectors.byCssSelector(cssSelector);
     }
 
+    @Override
+    public String getPageTitle() {
+        return Selenide.title();
+    }
+
+    @Override
+    public SelenideElement waitUntilExist(HtmlElementType elementType) {
+        SelenideElement element = getElementByType(elementType);
+        return element.should(Condition.exist);
+    }
+
+    private SelenideElement getElementByType(HtmlElementType elementType) {
+        By cssSelector = Selectors.byCssSelector(elementType.getType());
+        return Selenide.$(cssSelector);
+    }
+
 }

@@ -13,7 +13,8 @@ package org.eclipse.dirigible.integration.tests.ui.framework;
 public enum HtmlElementType {
     BUTTON("button"), //
     INPUT("input"), //
-    HEADER5("h5");
+    HEADER5("h5"), //
+    TITLE("title");
 
     private final String type;
 
