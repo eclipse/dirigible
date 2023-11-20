@@ -48,7 +48,7 @@ jobs:
     - name: Setup Chrome
       uses: browser-actions/setup-chrome@v1.3.0
       with:
-        chrome-version: 117.0.5938.144
+        chrome-version: stable
     - if: runner.os == 'Linux'
       run: chrome --version
     - if: runner.os == 'macOS'
