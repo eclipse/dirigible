@@ -49,9 +49,19 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         $scope.datasource = evt.data;
     }, true);
 
+    $scope.showProgress = function () {
+        $scope.state.isBusy = true;
+        messageHub.showStatusBusy("Executing query...");
+    };
+
+    $scope.hideProgress = function () {
+        $scope.state.isBusy = false;
+        messageHub.hideStatusBusy();
+    };
+
     messageHub.onDidReceiveMessage("database.sql.execute", function (command) {
         $scope.state.error = false;
-        $scope.state.isBusy = true;
+        $scope.showProgress();
         let url = "/services/data/" + $scope.datasource;
         let sql = command.data.trim().toLowerCase();
         if (sql.startsWith('select')) {
@@ -82,13 +92,13 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
                     } else {
                         $scope.result = 'Empty result';
                     }
-                    $scope.state.isBusy = false;
+                    $scope.hideProgress();
                 }, function (reject) {
                     cleanScope();
                     $scope.state.error = true;
                     $scope.errorMessage = reject.data.message;
                     console.error(reject);
-                    $scope.state.isBusy = false;
+                    $scope.hideProgress();
                 }
             );
         } else if (sql.startsWith('call')) {
@@ -139,13 +149,13 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
                     } else {
                         $scope.result = 'Empty result';
                     }
-                    $scope.state.isBusy = false;
+                    $scope.hideProgress();
                 }, function (reject) {
                     cleanScope();
                     $scope.state.error = true;
                     $scope.errorMessage = reject.data.message;
                     console.error(reject);
-                    $scope.state.isBusy = false;
+                    $scope.hideProgress();
                 }
             );
         } else if (sql.startsWith('query: ')) {
@@ -176,13 +186,13 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
                     } else {
                         $scope.result = 'Empty result';
                     }
-                    $scope.state.isBusy = false;
+                    $scope.hideProgress();
                 }, function (reject) {
                     cleanScope();
                     $scope.state.error = true;
                     $scope.errorMessage = reject.data.message;
                     console.error(reject);
-                    $scope.state.isBusy = false;
+                    $scope.hideProgress();
                 }
             );
         } else if (sql.startsWith('update: ')) {
@@ -206,13 +216,13 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
                         $scope.result = 'Empty result';
                     }
                     $scope.result = result.data;
-                    $scope.state.isBusy = false;
+                    $scope.hideProgress();
                 }, function (reject) {
                     cleanScope();
                     $scope.state.error = true;
                     $scope.errorMessage = reject.data.message;
                     console.error(reject);
-                    $scope.state.isBusy = false;
+                    $scope.hideProgress();
                 }
             );
         } else {
@@ -236,13 +246,13 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
                         $scope.result = 'Empty result';
                     }
                     $scope.result = result.data;
-                    $scope.state.isBusy = false;
+                    $scope.hideProgress();
                 }, function (reject) {
                     cleanScope();
                     $scope.state.error = true;
                     $scope.errorMessage = reject.data.message;
                     console.error(reject);
-                    $scope.state.isBusy = false;
+                    $scope.hideProgress();
                 }
             );
         }
@@ -354,12 +364,12 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
                 } else {
                     $scope.result = 'Data anonymized.';
                 }
-                $scope.state.isBusy = false;
+                $scope.hideProgress();
             }, function (result) {
                 cleanScope();
                 $scope.state.error = true;
                 $scope.errorMessage = result.data.errorMessage;
-                $scope.state.isBusy = false;
+                $scope.hideProgress();
             }
         );
     }, true);
