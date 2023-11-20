@@ -46,7 +46,7 @@ jobs:
         os: [ubuntu, windows, macos]
     steps:
     - name: Install Chrome with no params
-      uses: ./
+      uses: ./.github/actions/setup-chrome.yml
     - if: runner.os == 'Linux'
       run: chrome --version
     - if: runner.os == 'macOS'
