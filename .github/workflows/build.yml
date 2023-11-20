@@ -90,7 +90,7 @@ jobs:
       run: mvn -T 1C clean install -D maven.test.skip=true -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
     - name: Integration tests
       run: mvn -f integration-tests/pom.xml verify -P integration-tests
-    - name: Upload a Build Artifact
+    - name: Upload integration tests target
       uses: actions/upload-artifact@v3.1.3
       if: always()
       with:
