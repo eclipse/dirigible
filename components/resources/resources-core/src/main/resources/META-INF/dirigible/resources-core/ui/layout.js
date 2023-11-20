@@ -946,22 +946,22 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
 
                     duplicatedTabs.forEach(tabs => {
                         if (tabs.length == 1) {
-                            //no duplication so just reset the description
-                            tabs[0].description = '';
+                            // no duplication so just reset the hint
+                            tabs[0].hint = '';
                             return;
                         }
 
                         const paths = tabs.map(getTabPath);
                         const shortenedPaths = shortenPaths(paths);
 
-                        tabs.forEach((tab, index) => tab.description = shortenedPaths[index]);
+                        tabs.forEach((tab, index) => tab.hint = shortenedPaths[index]);
                     });
                 }
 
                 function shortenPaths(paths) {
                     const shortenedPaths = [];
                     const pathSeparator = '/';
-                    const ellipsis = '..';
+                    const ellipsis = '…';
 
                     let match;
                     for (let pathIndex = 0; pathIndex < paths.length; pathIndex++) {

@@ -8,16 +8,16 @@
             <fd-icon-tab-bar ng-if="!!pane.tabs" side-padding="sm" unfocused="!isFocused(pane)"
                 selected-tab-id="pane.selectedTab">
                 <fd-icon-tab-bar-tablist ng-show="!hideTabs" dg-tabs-overflowable>
-                    <fd-icon-tab-bar-tab ng-repeat="tab in pane.tabs" label="{{tab.label}}" title="{{tab.description}}"
-                        tab-id="{{tab.id}}" ng-click="onTabClick(pane, tab.id)" on-close="onRemoveTab(tab)"
-                        has-badge="tab.dirty" is-hidden="tab.isHidden"
+                    <fd-icon-tab-bar-tab ng-repeat="tab in pane.tabs" label="{{tab.label}}" tab-hint="{{tab.hint}}"
+                        title="{{tab.label}}" tab-id="{{tab.id}}" ng-click="onTabClick(pane, tab.id)"
+                        on-close="onRemoveTab(tab)" has-badge="tab.dirty" is-hidden="tab.isHidden"
                         ng-attr-data-file-path="{{isEditorTab() && tab.params.file || undefined}}">
                     </fd-icon-tab-bar-tab>
                     <fd-icon-tab-bar-overflow label="More"
                         ng-class="isMoreTabsButtonVisible(pane) ? '' : 'dg-invisible'">
                         <fd-icon-tab-bar-overflow-item ng-if="tab.isHidden" ng-repeat="tab in pane.tabs"
-                            label="{{tab.label}}" tab-id="{{tab.id}}-overflow" has-badge="tab.dirty"
-                            ng-click="pane.selectedTab = tab.id">
+                            label="{{tab.label}}" title="{{tab.label}}" tab-hint="{{tab.hint}}"
+                            tab-id="{{tab.id}}-overflow" has-badge="tab.dirty" ng-click="pane.selectedTab = tab.id">
                         </fd-icon-tab-bar-overflow-item>
                     </fd-icon-tab-bar-overflow>
                     <dg-icon-tab-bar-buttons ng-if="canSplit(pane)" dg-align="right">
