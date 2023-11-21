@@ -5406,6 +5406,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * dgIcon: String - Icon class.
          * dgHref: String - Link.
          * tabId: String - The id of the tab.
+         * tabHint: String - Show a small text hint next to the label. This is ignored in icon and process mode. 
          * dgState: String - State of the tab. Possible options are 'positive', 'negative', 'critical' and 'informative'.
          * isLastStep: Boolean - If the tabs is the last step of a process.
          * onClose: Function - Function that will be called when the tab close button is clicked. The tab will have an "X" button and on click, the tab ID will be passed as a parameter.
@@ -5424,6 +5425,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 dgIcon: '@?',
                 dgHref: '@?',
                 tabId: '@',
+                tabHint: '@?',
                 dgState: '@?',
                 isLastStep: '<?',
                 onClose: '&?',
@@ -5468,7 +5470,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     </div>
                     <span ng-if="counter && !dgIcon" class="fd-icon-tab-bar__counter">{{counter}}</span>
                     <span ng-if="hasBadge && !dgIcon" class="fd-icon-tab-bar__badge"></span>
-                    <span ng-if="label && !dgIcon" class="fd-icon-tab-bar__tag">{{label}}</span>
+                    <span ng-if="label && !dgIcon" class="fd-icon-tab-bar__tag">{{label}}<span class="dg-icon-tab-hint" ng-if="tabHint">{{tabHint}}</span></span>
                     <div ng-if="label && isFilter()" class="fd-icon-tab-bar__label">{{label}}</div>
                     <div ng-if="dgIcon && description" class="fd-icon-tab-bar__details">
                         <span class="fd-icon-tab-bar__counter">{{counter}}</span>
@@ -5557,6 +5559,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * dgIcon: String - Icon class.
          * dgHref: String - Link.
          * tabId: String - The id of the tab.
+         * tabHint: String - Show a small text hint next to the label. This is ignored in icon and process mode. 
          * dgState: String - State of the tab. Possible options are 'positive', 'negative', 'critical' and 'informative'.
          * onClose: Function - Function that will be called when the tab close button is clicked. The tab will have an "X" button and on click, the tab ID will be passed as a parameter.
          */
@@ -5571,6 +5574,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 dgIcon: '@?',
                 dgHref: '@?',
                 tabId: '@',
+                tabHint: '@?',
                 dgState: '@?',
                 onClose: '&?',
             },
@@ -5596,7 +5600,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                             <i class="{{dgIcon}}" role="presentation"></i>
                         </span>
                     </span>
-                    <span class="fd-list__title fd-icon-tab-bar__list-item-title">{{label}}</span>
+                    <span class="fd-list__title fd-icon-tab-bar__list-item-title">{{label}}<span class="dg-icon-tab-hint" ng-if="tabHint">{{tabHint}}</span></span>
                     <span ng-if="counter" class="fd-list__counter fd-icon-tab-bar__list-item-counter">{{counter}}</span>
                     <span ng-if="hasBadge" class="fd-icon-tab-bar__badge"></span>
                 </a>

@@ -255,6 +255,16 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 			if (msg.resourcePath === $scope.dataParameters.file) messageHub.setStatusCaret('');
 		});
 
+		messageHub.onEditorReloadParameters(
+			function (event) {
+				$scope.$apply(() => {
+					if (event.resourcePath === $scope.dataParameters.file) {
+						$scope.dataParameters = ViewParameters.get();
+					}
+				});
+			}
+		);
+
 		messageHub.onDidReceiveMessage(
 			"editor.file.save.all",
 			function () {

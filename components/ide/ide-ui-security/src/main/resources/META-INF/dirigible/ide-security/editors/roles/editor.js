@@ -95,6 +95,16 @@ angular.module('page', ["ideUI", "ideView"])
             if (msg.resourcePath === $scope.dataParameters.file) messageHub.setStatusCaret('');
         });
 
+        messageHub.onEditorReloadParameters(
+            function (event) {
+                $scope.$apply(() => {
+                    if (event.resourcePath === $scope.dataParameters.file) {
+                        $scope.dataParameters = ViewParameters.get();
+                    }
+                });
+            }
+        );
+
         messageHub.onDidReceiveMessage(
             "editor.file.save.all",
             function () {
