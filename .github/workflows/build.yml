@@ -50,7 +50,7 @@ jobs:
       matrix:
         os: [windows]
     steps:
-      - name: Setup Chrome
+    - name: Setup Chrome
       uses: browser-actions/setup-chrome@v1.3.0
       with:
         chrome-version: stable
