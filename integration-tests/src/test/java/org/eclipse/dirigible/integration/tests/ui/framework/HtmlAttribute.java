@@ -8,14 +8,19 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.integration.tests.messaging;
+package org.eclipse.dirigible.integration.tests.ui.framework;
 
-import org.eclipse.dirigible.components.api.messaging.MessagingFacade;
+public enum HtmlAttribute {
+    ID("id"), //
+    TYPE("type");
 
-public class MessageProducer {
+    private final String attribute;
 
-    public static void asyncSendMessageToTopic(String topic, String message) {
-        new Thread(() -> MessagingFacade.sendToTopic(topic, message)).start();
+    HtmlAttribute(String attribute) {
+        this.attribute = attribute;
     }
 
+    public String getAttribute() {
+        return attribute;
+    }
 }

@@ -127,13 +127,11 @@
       load();
 
       function saveContents(text, publish) {
-        console.log('Save called...');
         if ($scope.file) {
           let xhr = new XMLHttpRequest();
           xhr.open('PUT', '/services/ide/workspaces' + $scope.file);
           xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
-              console.log('file saved: ' + $scope.file);
               if (publish) {
                 setTimeout(function () { publishFile(); }, 800);
               }
@@ -160,13 +158,11 @@
       }
 
       function publishFile() {
-        console.log('Publish called...');
         if ($scope.file) {
           let xhr = new XMLHttpRequest();
           xhr.open('POST', '/services/ide/publisher/request' + $scope.file.substring(0, $scope.file.lastIndexOf('/')));
           xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
-              console.log('publish request sent for file: ' + $scope.file);
               messageHub.post({ data: $scope.file }, 'workspace.file.published');
             }
           };
@@ -195,6 +191,13 @@
         },
         "editor.file.save.all"
       );
+
+      messageHub.subscribe(function (event) {
+        let file = event.resourcePath;
+        if (file === $scope.file) {
+          getViewParameters();
+        }
+      }, "core.editors.reloadParams");
 
       messageHub.subscribe(
         function (msg) {
