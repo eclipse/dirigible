@@ -91,9 +91,8 @@ public class BrowserImpl implements Browser {
     }
 
     private void clickElement(SelenideElement element) {
-        element//
-               .shouldBe(Condition.visible, Condition.enabled)//
-               .scrollIntoView(false)//
+        element.shouldBe(Condition.visible, Condition.enabled)
+               .scrollIntoView(false)
                .click();
     }
 
