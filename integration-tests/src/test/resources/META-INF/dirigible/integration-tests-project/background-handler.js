@@ -1,4 +1,4 @@
-const MessagesHolder = Java.type("org.eclipse.dirigible.integration.tests.messaging.MessagesHolder");
+const MessagesHolder = Java.type("org.eclipse.dirigible.integration.tests.api.java.messaging.MessagesHolder");
 
 exports.onMessage = function (message) {
 	MessagesHolder.setLatestReceivedMessage(message)

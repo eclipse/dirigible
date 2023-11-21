@@ -2,7 +2,7 @@ import { test, assertEquals } from "@dirigible/junit"
 import { producer } from "@dirigible/messaging"
 import { consumer } from "@dirigible/messaging"
 
-const MessageProducer = Java.type("org.eclipse.dirigible.integration.tests.messaging.MessageProducer");
+const MessageProducer = Java.type("org.eclipse.dirigible.integration.tests.api.java.messaging.MessageProducer");
 
 test('send-receive-to-from-queue-test', () => {
 	const message = "'This is a test message'";
