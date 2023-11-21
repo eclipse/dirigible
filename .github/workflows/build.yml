@@ -83,10 +83,6 @@ jobs:
       run: npm i -g esbuild
     - name: Install TypeScript compiler
       run: npm i -g typescript
-    - name: Setup Docker Buildx
-      run: |
-        docker buildx create --name dirigible-builder
-        docker buildx use dirigible-builder
     - name: Maven Build
       run: mvn -T 1C clean install -D maven.test.skip=true -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
     - name: Integration tests
