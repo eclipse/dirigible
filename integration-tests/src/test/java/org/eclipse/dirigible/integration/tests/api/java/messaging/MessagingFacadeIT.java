@@ -8,7 +8,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.integration.tests.messaging;
+package org.eclipse.dirigible.integration.tests.api.java.messaging;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
@@ -18,8 +18,11 @@ import org.eclipse.dirigible.components.api.messaging.TimeoutException;
 import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.testcontainers.shaded.org.awaitility.Awaitility;
 
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 class MessagingFacadeIT extends IntegrationTest {
 
     private static final String TEST_MESSAGE = "Test message";

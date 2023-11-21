@@ -8,7 +8,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.integration.tests.javascript;
+package org.eclipse.dirigible.integration.tests.api.javascript;
 
 import java.util.List;
 import org.eclipse.dirigible.components.ide.workspace.domain.ProjectStatusProvider;

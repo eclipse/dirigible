@@ -8,7 +8,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.integration.tests.javascript;
+package org.eclipse.dirigible.integration.tests.api.javascript;
 
 import java.io.File;
 import java.io.IOException;
@@ -69,6 +69,7 @@ class DirigibleJavaScriptTestsFactory implements AutoCloseable {
         return DynamicContainer.dynamicContainer(testDisplayName, dynamicTests);
     }
 
+    @SuppressWarnings("resource")
     private TestFunction runSource(Source source) {
         try {
             TestFunction testFunction = new TestFunction();
