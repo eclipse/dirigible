@@ -627,7 +627,7 @@
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
 
 		<h2database.version>2.2.224</h2database.version>
-		<postgresql.version>42.6.0</postgresql.version>
+		<postgresql.version>42.7.0</postgresql.version>
 		<ngdbc.version>2.18.16</ngdbc.version>
 		<snowflake.version>3.14.3</snowflake.version>
 
