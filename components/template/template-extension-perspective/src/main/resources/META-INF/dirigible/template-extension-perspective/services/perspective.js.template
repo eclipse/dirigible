@@ -9,22 +9,15 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getContent = function () {
-    return [
-	  {
-	    "name": "@dirigible/camel",
-	    "description": "Dirigible Camel module",
-	    "isPackageDescription": true,
-	    "dtsPath": "integrations/extensions/camel.d.ts"
-	  },
-	  {
-	    "name": "integrations/camel",
-	    "description": "Camel API",
-	    "api": "camel",
-	    "versionedPaths": [
-	      "integrations/camel"
-	    ],
-	    "pathDefault": "integrations/camel"
-	  }
-	];
+const perspectiveData = {
+	id: "{{fileName}}",
+	name: "{{fileName}}",
+	link: "../{{projectName}}/index.html",
+	order: "1000",
+	icon: "../{{projectName}}/images/perspective.svg",
 };
+if (typeof exports !== 'undefined') {
+	exports.getPerspective = function () {
+		return perspectiveData;
+	}
+}
