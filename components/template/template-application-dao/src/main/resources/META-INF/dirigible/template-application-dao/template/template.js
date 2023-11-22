@@ -31,6 +31,18 @@ exports.getTemplate = function (parameters) {
             engine: "velocity",
             collection: "reportModels"
         }, {
+            location: "/template-application-dao/project.json.template",
+            action: "generate",
+            rename: "project.json",
+            engine: "velocity",
+            collection: "reportModels"
+        }, {
+            location: "/template-application-dao/tsconfig.json.template",
+            action: "generate",
+            rename: "tsconfig.json",
+            engine: "velocity",
+            collection: "reportModels"
+        }, {
             location: "/template-application-dao/dao/entity.extensionpoint.template",
             action: "generate",
             rename: "gen/dao/{{perspectiveName}}/{{name}}.extensionpoint",

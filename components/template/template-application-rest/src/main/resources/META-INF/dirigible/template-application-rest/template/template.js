@@ -33,6 +33,18 @@ exports.getTemplate = function (parameters) {
         rename: "gen/api/{{perspectiveName}}/{{name}}Service.ts",
         engine: "velocity",
         collection: "reportModels"
+    }, {
+        location: "/template-application-dao/project.json.template",
+        action: "generate",
+        rename: "project.json",
+        engine: "velocity",
+        collection: "reportModels"
+    }, {
+        location: "/template-application-dao/tsconfig.json.template",
+        action: "generate",
+        rename: "tsconfig.json",
+        engine: "velocity",
+        collection: "reportModels"
     }];
     templateSources = templateSources.concat(daoTemplate.sources);
 

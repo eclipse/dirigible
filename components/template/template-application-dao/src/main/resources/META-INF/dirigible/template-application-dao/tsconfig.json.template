@@ -1,0 +1,6 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "outDir": "../../../../registry/public/${projectName}"
+    }
+}

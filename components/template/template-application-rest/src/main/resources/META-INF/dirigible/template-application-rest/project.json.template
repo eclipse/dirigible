@@ -1,0 +1,19 @@
+{
+    "guid": "${projectName}",
+    "actions": [
+        {
+            "name": "Build",
+            "commands": [
+                {
+                    "os": "unix",
+                    "command": "tsc"
+                },
+                {
+                    "os": "windows",
+                    "command": "tsc"
+                }
+            ],
+            "publish": "true"
+        }
+    ]
+}
