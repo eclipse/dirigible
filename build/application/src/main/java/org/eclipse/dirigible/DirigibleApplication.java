@@ -48,6 +48,6 @@ public class DirigibleApplication {
 
     @EventListener
     public void onShutdown(ContextClosedEvent event) {
-        LOGGER.info("------------------------ Dirigible stopped ------------------------");                                                                                                             ");
+        LOGGER.info("------------------------ Dirigible stopped ------------------------");
     }
 }
