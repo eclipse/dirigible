@@ -82,7 +82,8 @@ function fixPath(path, mod) {
         "user",
         "template",
         "utils",
-        "junit"
+        "junit",
+        "integrations"
     ];
 
     let fixedPath = path;

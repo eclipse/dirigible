@@ -10,6 +10,9 @@
  */
 package org.eclipse.dirigible.integration.tests.api.java.messaging;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.eclipse.dirigible.components.api.messaging.MessagingFacade;
 
 /**
@@ -18,7 +21,9 @@ import org.eclipse.dirigible.components.api.messaging.MessagingFacade;
 public class MessageProducer {
 
     public static void asyncSendMessageToTopic(String topic, String message) {
-        new Thread(() -> MessagingFacade.sendToTopic(topic, message)).start();
+        ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(1);
+
+        scheduledThreadPool.schedule(() -> MessagingFacade.sendToTopic(topic, message), 1, TimeUnit.SECONDS);
     }
 
 }

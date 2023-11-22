@@ -627,7 +627,7 @@
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
 
 		<h2database.version>2.2.224</h2database.version>
-		<postgresql.version>42.6.0</postgresql.version>
+		<postgresql.version>42.7.0</postgresql.version>
 		<ngdbc.version>2.18.16</ngdbc.version>
 		<snowflake.version>3.14.3</snowflake.version>
 
@@ -662,7 +662,7 @@
 		<jquery.version>3.6.0</jquery.version>
 		<jqplot.version>1.0.8r1250</jqplot.version>
 		<webjars.bootstrap.version>5.3.2</webjars.bootstrap.version>
-		<webjars.locator.version>0.48</webjars.locator.version>
+		<webjars.locator.version>0.49</webjars.locator.version>
 		<webjars.locator.core.version>0.55</webjars.locator.core.version>
 		<es5-shim.version>4.6.7</es5-shim.version>
 		<angular-file-upload.version>2.6.1</angular-file-upload.version>
@@ -707,7 +707,7 @@
 		<qldb.sdk.version>1.12.593</qldb.sdk.version>
 		<cassandra.version>1.17.6</cassandra.version>
 		<cassandra.driver.version>3.11.3</cassandra.driver.version>
-		<jedis.version>5.0.2</jedis.version>
+		<jedis.version>5.1.0</jedis.version>
 		<spark.version>3.3.2</spark.version>
 		<javax.websocket-api.version>1.1</javax.websocket-api.version>
 		<camel.version>3.21.2</camel.version>
