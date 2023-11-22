@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-build-parent</artifactId>
-		<version>8.18.7</version>
+		<version>9.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -40,7 +40,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-config</artifactId>
-			<version>8.18.7</version>
+			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Spring Boot -->
@@ -157,7 +157,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-group-core</artifactId>
-			<version>8.18.7</version>
+			<version>9.0.0-SNAPSHOT</version>
 			<type>pom</type>
 		</dependency>
 
@@ -165,24 +165,24 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-security-basic</artifactId>
-			<version>8.18.7</version>
+			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-security-keycloak</artifactId>
-			<version>8.18.7</version>
+			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-security-oauth2</artifactId>
-			<version>8.18.7</version>
+			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Data -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-group-database</artifactId>
-			<version>8.18.7</version>
+			<version>9.0.0-SNAPSHOT</version>
 			<type>pom</type>
 		</dependency>
 
@@ -190,7 +190,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-group-engines</artifactId>
-			<version>8.18.7</version>
+			<version>9.0.0-SNAPSHOT</version>
 			<type>pom</type>
 		</dependency>
 
@@ -198,7 +198,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-group-ide</artifactId>
-			<version>8.18.7</version>
+			<version>9.0.0-SNAPSHOT</version>
 			<type>pom</type>
 		</dependency>
 
@@ -206,7 +206,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-group-api</artifactId>
-			<version>8.18.7</version>
+			<version>9.0.0-SNAPSHOT</version>
 			<type>pom</type>
 		</dependency>
 
@@ -214,7 +214,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-group-resources</artifactId>
-			<version>8.18.7</version>
+			<version>9.0.0-SNAPSHOT</version>
 			<type>pom</type>
 		</dependency>
 
@@ -222,7 +222,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-group-templates</artifactId>
-			<version>8.18.7</version>
+			<version>9.0.0-SNAPSHOT</version>
 			<type>pom</type>
 		</dependency>
 
@@ -230,7 +230,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-test-project</artifactId>
-			<version>8.18.7</version>
+			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Drivers -->
@@ -242,7 +242,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-mongodb-jdbc</artifactId>
-			<version>8.18.7</version>
+			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
 		<!--
 		<dependency>
