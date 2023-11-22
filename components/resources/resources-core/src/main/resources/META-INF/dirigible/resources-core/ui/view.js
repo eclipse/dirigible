@@ -105,7 +105,7 @@ angular.module('ideView', ['ngResource', 'ideTheming'])
     .service('ViewParameters', ['$window', function ($window) {
         return {
             get: function () {
-                if ($window.frameElement.hasAttribute("data-parameters")) {
+                if ($window.frameElement && $window.frameElement.hasAttribute("data-parameters")) {
                     return JSON.parse($window.frameElement.getAttribute("data-parameters"));
                 }
                 return {};
