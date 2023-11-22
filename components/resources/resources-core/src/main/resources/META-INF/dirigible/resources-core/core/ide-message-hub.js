@@ -291,11 +291,11 @@ angular.module('ideMessageHub', [])
             };
             const showDialogWindow = function (
                 dialogWindowId = "",
-                params,
+                params = {},
                 callbackTopic = null,
                 closable = true,
             ) {
-                if (isNullOrUndefined(params) && !(typeof params === 'object' && !Array.isArray(params)))
+                if (isNullOrUndefined(params) || !(typeof params === 'object' && !Array.isArray(params)))
                     throw Error("showDialogWindow: params must be an object");
                 messageHub.post({
                     dialogWindowId: dialogWindowId,
