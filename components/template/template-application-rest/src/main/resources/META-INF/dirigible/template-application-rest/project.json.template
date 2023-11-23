@@ -2,7 +2,7 @@
     "guid": "${projectName}",
     "actions": [
         {
-            "name": "Build",
+            "name": "Build TypeScript",
             "commands": [
                 {
                     "os": "unix",
@@ -13,7 +13,7 @@
                     "command": "tsc"
                 }
             ],
-            "publish": "true"
+            "registry": "true"
         }
     ]
 }
