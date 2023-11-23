@@ -256,12 +256,6 @@
 		    <version>${snowflake.version}</version>
 		</dependency>
 		-->
-
-		<dependency>
-			<groupId>net.snowflake</groupId>
-			<artifactId>snowflake-jdbc</artifactId>
-			<version>${snowflake.version}</version>
-		</dependency>
 		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
