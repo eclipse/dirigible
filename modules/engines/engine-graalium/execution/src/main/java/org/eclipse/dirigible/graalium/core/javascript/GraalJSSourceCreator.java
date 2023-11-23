@@ -10,13 +10,12 @@
  */
 package org.eclipse.dirigible.graalium.core.javascript;
 
-import org.eclipse.dirigible.graalium.core.javascript.modules.ModuleType;
-import org.graalvm.polyglot.Source;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import org.eclipse.dirigible.graalium.core.javascript.modules.ModuleType;
+import org.graalvm.polyglot.Source;
 
 /**
  * The Class GraalJSSourceCreator.
@@ -80,9 +79,9 @@ public class GraalJSSourceCreator {
      */
     private Source createSource(Source.Builder sourceBuilder) {
         try {
-            if (ModuleType.ESM.equals(jsModuleType)) {
-                sourceBuilder.mimeType("application/javascript+module");
-            }
+            // if (ModuleType.ESM.equals(jsModuleType)) {
+            // }
+            sourceBuilder.mimeType("application/javascript+module");
 
             return sourceBuilder.cached(false)
                                 .encoding(StandardCharsets.UTF_8)

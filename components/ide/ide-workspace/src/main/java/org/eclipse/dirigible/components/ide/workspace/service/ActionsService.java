@@ -13,16 +13,16 @@ package org.eclipse.dirigible.components.ide.workspace.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.stream.Collectors;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.process.Piper;
 import org.eclipse.dirigible.commons.process.ProcessUtils;
-import org.eclipse.dirigible.components.command.CommandDescriptor;
 import org.eclipse.dirigible.components.base.helpers.logging.LoggingOutputStream;
-import org.eclipse.dirigible.components.project.ProjectAction;
-import org.eclipse.dirigible.components.project.ProjectMetadata;
+import org.eclipse.dirigible.components.command.CommandDescriptor;
 import org.eclipse.dirigible.components.ide.workspace.domain.File;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
+import org.eclipse.dirigible.components.project.ProjectAction;
+import org.eclipse.dirigible.components.project.ProjectMetadata;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
 import org.slf4j.Logger;
@@ -81,8 +81,14 @@ public class ActionsService {
 
             String workingDirectory =
                     LocalWorkspaceMapper.getMappedName((FileSystemRepository) projectObject.getRepository(), projectObject.getPath());
-            CommandDescriptor commandDescriptor = getCommandForOS(projectAction);
-            return executeCommandLine(workingDirectory, commandDescriptor.getCommand());
+            int result = 0;
+            for (CommandDescriptor next : getCommandsForOS(projectAction)) {
+                result += executeCommandLine(workingDirectory, next.getCommand());
+                if (result > 0) {
+                    break;
+                }
+            }
+            return result;
         } catch (Exception e) {
             String errorMessage = "Malformed project file: " + project + " (" + e.getMessage() + ")";
             logger.error(errorMessage, e);
@@ -91,12 +97,11 @@ public class ActionsService {
 
     }
 
-    private static CommandDescriptor getCommandForOS(ProjectAction projectAction) {
+    public List<CommandDescriptor> getCommandsForOS(ProjectAction projectAction) {
         List<CommandDescriptor> commands = projectAction.getCommands();
         return commands.stream()
                        .filter(CommandDescriptor::isCompatibleWithCurrentOS)
-                       .findFirst()
-                       .orElseThrow();
+                       .collect(Collectors.toList());
     }
 
     /**

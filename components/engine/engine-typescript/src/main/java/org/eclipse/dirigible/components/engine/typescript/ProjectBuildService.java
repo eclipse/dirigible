@@ -10,6 +10,14 @@
  */
 package org.eclipse.dirigible.components.engine.typescript;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.process.execution.ProcessExecutionOptions;
 import org.eclipse.dirigible.commons.process.execution.ProcessExecutor;
@@ -25,14 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 /**
  * The Class ProjectBuildService.
@@ -51,20 +51,13 @@ public class ProjectBuildService {
     private final IRepository repository;
 
     /**
-     * The type script service.
-     */
-    private final TypeScriptService typeScriptService;
-
-    /**
      * Instantiates a new project build service.
      *
      * @param repository the repository
-     * @param typeScriptService the type script service
      */
     @Autowired
-    public ProjectBuildService(IRepository repository, TypeScriptService typeScriptService) {
+    public ProjectBuildService(IRepository repository) {
         this.repository = repository;
-        this.typeScriptService = typeScriptService;
     }
 
     /**
@@ -84,9 +77,11 @@ public class ProjectBuildService {
      */
     public void build(String project, String projectEntryPath) {
         try {
-            getProjectJson(project).ifPresentOrElse(
-                    projectMetadata -> getPublishCommand(projectMetadata).ifPresent(command -> buildWithCommand(project, command)),
-                    () -> maybeBuildTypeScript(project, projectEntryPath));
+            Optional<ProjectMetadata> projectJson = getProjectJson(project);
+            if (projectJson.isPresent()) {
+                ProjectMetadata projectMetadata = projectJson.get();
+                getPublishCommand(projectMetadata).ifPresent(command -> buildWithCommand(project, command));
+            }
         } catch (Exception e) {
             var errorMessage = "Failed to build project: " + project + " with entry path: " + projectEntryPath;
             LOGGER.error(errorMessage, e);
@@ -106,18 +101,6 @@ public class ProjectBuildService {
                                                .stream()
                                                .filter(CommandDescriptor::isCompatibleWithCurrentOS)
                                                .findFirst());
-    }
-
-    /**
-     * Maybe build type script.
-     *
-     * @param project the project
-     * @param projectEntryPath the project entry path
-     */
-    private void maybeBuildTypeScript(String project, String projectEntryPath) {
-        if (typeScriptService.shouldCompileTypeScript(project, projectEntryPath)) {
-            typeScriptService.compileTypeScript(project, projectEntryPath);
-        }
     }
 
     /**
