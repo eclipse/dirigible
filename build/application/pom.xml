@@ -266,8 +266,9 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
+			<version>${spring.boot.version}</version>
+			<scope>runtime</scope>
 			<optional>true</optional>
-			<version>2.6.13</version>
 		</dependency>
 	</dependencies>
 
