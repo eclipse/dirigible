@@ -62,12 +62,10 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>${gson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>${spring.boot.slf4j.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

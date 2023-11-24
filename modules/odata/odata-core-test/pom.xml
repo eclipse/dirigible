@@ -81,7 +81,6 @@
 		<dependency>
 			<groupId>org.liquibase</groupId>
 			<artifactId>liquibase-core</artifactId>
-			<version>${liquibase-core.version}</version>
 		</dependency>
 
 		<dependency>
@@ -92,13 +91,11 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>${h2database.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>jakarta.ws.rs</groupId>
 			<artifactId>jakarta.ws.rs-api</artifactId>
-			<version>${jakarta.ws.rs-api.version}</version>
 		</dependency>
 
 		<dependency>
