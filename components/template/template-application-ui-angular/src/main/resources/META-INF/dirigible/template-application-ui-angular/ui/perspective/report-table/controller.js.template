@@ -15,6 +15,18 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 		}
 		resetPagination();
 
+		//-----------------Events-------------------//
+		messageHub.onDidReceiveMessage("filter", function (msg) {
+			debugger
+			// TODO
+			// $scope.loadPage();
+			$scope.$apply(function () {
+				$scope.entity = {};
+				$scope.action = 'select';
+			});
+		});
+		//-----------------Events-------------------//
+
 		$scope.loadPage = function (pageNumber) {
 			$scope.dataPage = pageNumber;
 			entityApi.count().then(function (response) {
@@ -65,6 +77,12 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 #end
 #end
 #end
+			});
+		};
+
+		$scope.openFilter = function () {
+			messageHub.showDialogWindow("${name}-details-filter", {
+				action: "filter"
 			});
 		};
 

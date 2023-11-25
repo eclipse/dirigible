@@ -18,6 +18,7 @@
 	<body class="dg-vbox">
 		<fd-toolbar has-title="true">
 			<fd-toolbar-title>Items ({{dataCount}})</fd-toolbar-title>
+			<fd-button dg-type="transparent" dg-label="Filter" ng-click="openFilter()"></fd-button>
 		</fd-toolbar>
 
 		<fd-scrollbar class="dg-full-height" ng-hide="data == null">

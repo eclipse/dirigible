@@ -1,0 +1,81 @@
+#set($dollar = '$')
+#set($hasDropdowns = false)
+#foreach ($property in $filter.properties)
+#if($property.widgetType == "DROPDOWN")
+#set($hasDropdowns = true)
+#end
+#end
+angular.module('page', ["ideUI", "ideView", "entityApi"])
+	.config(["messageHubProvider", function (messageHubProvider) {
+		messageHubProvider.eventIdPrefix = '${projectName}.${perspectiveName}.${name}';
+	}])
+	.config(["entityApiProvider", function (entityApiProvider) {
+		entityApiProvider.baseUrl = "/services/js/${projectName}/gen/api/${perspectiveName}/${name}.js";
+	}])
+	.controller('PageController', ['$scope', 'messageHub',#if($hasDropdowns) '${dollar}http',#end 'entityApi', function ($scope, messageHub,#if($hasDropdowns) ${dollar}http,#end entityApi) {
+
+		$scope.entity = {};
+		$scope.formHeaders = {
+			select: "${name} Details",
+			create: "Create ${name}",
+			update: "Update ${name}"
+		};
+		$scope.formErrors = {};
+
+		$scope.isValid = function (isValid, property) {
+			${dollar}scope.formErrors[property] = !isValid ? true : undefined;
+			for (let next in ${dollar}scope.formErrors) {
+				if (${dollar}scope.formErrors[next] === true) {
+					${dollar}scope.isFormValid = false;
+					return;
+				}
+			}
+			${dollar}scope.isFormValid = true;
+		};
+
+		$scope.filter = function () {
+			alert(JSON.stringify(${dollar}scope.entity, null, 4));
+			messageHub.postMessage("filter", ${dollar}scope.entity);
+			$scope.cancel();
+		};
+
+		$scope.cancel = function () {
+			messageHub.closeDialogWindow("${name}-details-filter");
+		};
+#if($hasDropdowns)
+
+		//----------------Dropdowns-----------------//
+#foreach ($property in $filter.properties)
+#if($property.widgetType == "DROPDOWN")
+		$scope.options${property.name} = [];
+#end
+#end
+#foreach ($property in $filter.properties)
+#if($property.widgetType == "DROPDOWN")
+
+		${dollar}http.get("/services/js/${projectName}/gen/api/${property.relationshipEntityPerspectiveName}/${property.relationshipEntityName}.js").then(function (response) {
+			${dollar}scope.options${property.name} = response.data.map(e => {
+				return {
+					value: e.${property.widgetDropDownKey},
+					text: e.${property.widgetDropDownValue}
+				}
+			});
+		});
+#end
+#end
+#foreach ($property in $filter.properties)
+#if($property.widgetType == "DROPDOWN")
+		${dollar}scope.options${property.name}Value = function (optionKey) {
+			for (let i = 0; i < ${dollar}scope.options${property.name}.length; i++) {
+				if (${dollar}scope.options${property.name}[i].value === optionKey) {
+					return ${dollar}scope.options${property.name}[i].text;
+				}
+			}
+			return null;
+		};
+#end
+#end
+		//----------------Dropdowns-----------------//
+#end
+
+	}]);

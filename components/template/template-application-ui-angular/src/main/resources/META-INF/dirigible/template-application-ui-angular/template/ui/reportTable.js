@@ -59,6 +59,32 @@ exports.getSources = function (parameters) {
 			collection: "uiReportTableModels"
 		},
 		{
+			location: "/template-application-ui-angular/ui/perspective/report-table/dialog-window-filter/controller.js.template",
+			action: "generate",
+			engine: "velocity",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-window-filter/controller.js",
+			collection: "uiReportTableModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/report-table/dialog-window-filter/index.html.template",
+			action: "generate",
+			engine: "velocity",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-window-filter/index.html",
+			collection: "uiReportTableModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/report-table/dialog-window-filter/view.extension",
+			action: "generate",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-window-filter/view.extension",
+			collection: "uiReportTableModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/report-table/dialog-window-filter/view.js",
+			action: "generate",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-window-filter/view.js",
+			collection: "uiReportTableModels"
+		},
+		{
 			location: "/template-application-ui-angular/ui/perspective/report-table/controller.js.template",
 			action: "generate",
 			engine: "velocity",
