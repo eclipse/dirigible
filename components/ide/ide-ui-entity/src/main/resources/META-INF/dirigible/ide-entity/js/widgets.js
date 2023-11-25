@@ -54,25 +54,34 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 				}
 			}
 			//showPrompt('Enter name for new entity', 'Entity'+(entitiesCount+1), createNode);
-			createNode('Entity' + (entitiesCount + 1), prototype.style === 'copied', prototype.style === 'projection', prototype.style === 'extension');
+			createNode('Entity' + (entitiesCount + 1), prototype.style); //  === 'copied', prototype.style === 'projection', prototype.style === 'extension'
 
-			if (prototype.style === 'copied') {
+
+			if (prototype.style === 'dependent') {
+				$scope.$cell = graph.getSelectionCell();
+				$scope.$cell.value.entityType = "DEPENDENT";
+			} else if (prototype.style === 'report') {
+				$scope.$cell = graph.getSelectionCell();
+				$scope.$cell.value.entityType = "REPORT";
+			} else if (prototype.style === 'filter') {
+				$scope.$cell = graph.getSelectionCell();
+				$scope.$cell.value.entityType = "FILTER";
+			} else if (prototype.style === 'setting') {
+				$scope.$cell = graph.getSelectionCell();
+				$scope.$cell.value.entityType = "SETTING";
+			} else if (prototype.style === 'copied') {
 				$scope.$cell = graph.getSelectionCell();
 				$scope.showCopiedEntityDialog($scope.$cell.id);
-			}
-
-			if (prototype.style === 'projection') {
+			} else if (prototype.style === 'projection') {
 				$scope.$cell = graph.getSelectionCell();
 				$scope.showReferDialog($scope.$cell.id);
-			}
-
-			if (prototype.style === 'extension') {
+			} else if (prototype.style === 'extension') {
 				$scope.$cell = graph.getSelectionCell();
 				$scope.$cell.value.entityType = "EXTENSION";
 			}
 		}
 
-		function createNode(name, isCopy, isProjection, isExtension) {
+		function createNode(name, style) {
 			if (name !== null) {
 				let v1 = model.cloneCell(prototype);
 
@@ -82,15 +91,15 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 					v1.geometry.x = pt.x;
 					v1.geometry.y = pt.y;
 
-					if (isEntity && isExtension) {
+					if (isEntity && style === 'extension') {
 						v1.style = 'extension';
 						v1.value.entityType = "EXTENSION";
 					}
-					if (!isEntity && isExtension) {
+					if (!isEntity && style === 'extension') {
 						v1.style = 'extensionproperty';
 					}
 
-					if (isEntity && isCopy) {
+					if (isEntity && style === 'copied') {
 						v1.style = 'copied';
 						v1.value.entityType = "COPIED";
 					}
@@ -108,7 +117,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 
 					if (isEntity) {
 						v1.geometry.alternateBounds = new mxRectangle(0, 0, v1.geometry.width, v1.geometry.height);
-						if (!isProjection) {
+						if (style !== 'projection') {
 							if (v1.children && v1.children.length > 0) {
 								if (!v1.children[0].value.isSQL) {
 									v1.children[0].value.name = name.toLowerCase() + 'Id';
@@ -177,16 +186,16 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_IMAGE_HEIGHT] = '48';
 	graph.getStylesheet().putDefaultVertexStyle(style);
 
-	// Entity Style
+	// Primary Style
 	style = new Object();
 	style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
 	//style[mxConstants.STYLE_GRADIENTCOLOR] = 'var(--modeler-entity-fill)';
-	style[mxConstants.STYLE_FILLCOLOR] = '#0854a0'; // 'var(--modeler-entity-header-background)';
+	style[mxConstants.STYLE_FILLCOLOR] = '#117dd4'; // 'var(--modeler-entity-header-background)';
 	//style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff'; // 'var(--modeler-entity-background)';
-	style[mxConstants.STYLE_STROKECOLOR] = '#0854a0'; // 'var(--modeler-entity-border)';//'#337ab7';
+	style[mxConstants.STYLE_STROKECOLOR] = '#117dd4'; // 'var(--modeler-entity-border)';//'#337ab7';
 	style[mxConstants.STYLE_FONTCOLOR] = '#fff'; // 'var(--modeler-entity-header-color)';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
@@ -203,10 +212,94 @@ function configureStylesheet(graph) {
 	style = graph.stylesheet.getDefaultEdgeStyle();
 	style[mxConstants.STYLE_FONTCOLOR] = 'var(--sapTextColor)';
 	style[mxConstants.STYLE_LABEL_COLOR] = 'var(--sapTextColor)';
-	style[mxConstants.STYLE_STROKECOLOR] = '#0854a0'; // var(--modeler-entity-border)';//'#337ab7';
+	style[mxConstants.STYLE_STROKECOLOR] = '#117dd4'; // var(--modeler-entity-border)';//'#337ab7';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_ROUNDED] = true;
 	style[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;
+
+	// Dependent Style
+	style = new Object();
+	style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+	style[mxConstants.STYLE_FILLCOLOR] = '#0d61a5'; // 'var(--modeler-entity-header-background)';
+	style[mxConstants.STYLE_STROKECOLOR] = '#0d61a5'; // 'var(--modeler-entity-border)';//'#337ab7';
+	style[mxConstants.STYLE_FONTCOLOR] = '#fff'; // 'var(--modeler-entity-header-color)';
+	style[mxConstants.STYLE_STROKEWIDTH] = '2';
+	style[mxConstants.STYLE_STARTSIZE] = '28';
+	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
+	style[mxConstants.STYLE_FONTSIZE] = '12';
+	style[mxConstants.STYLE_FONTSTYLE] = 1;
+	style[mxConstants.STYLE_ROUNDED] = true;
+	style[mxConstants.STYLE_ARCSIZE] = 4;
+	// Looks better without opacity if shadow is enabled
+	style[mxConstants.STYLE_OPACITY] = '80';
+	style[mxConstants.STYLE_SHADOW] = 1;
+	graph.getStylesheet().putCellStyle('dependent', style);
+
+	// Report Style
+	style = new Object();
+	style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+	style[mxConstants.STYLE_FILLCOLOR] = '#0da57f'; // 'var(--modeler-entity-header-background)';
+	style[mxConstants.STYLE_STROKECOLOR] = '#0da57f'; // 'var(--modeler-entity-border)';//'#337ab7';
+	style[mxConstants.STYLE_FONTCOLOR] = '#fff'; // 'var(--modeler-entity-header-color)';
+	style[mxConstants.STYLE_STROKEWIDTH] = '2';
+	style[mxConstants.STYLE_STARTSIZE] = '28';
+	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
+	style[mxConstants.STYLE_FONTSIZE] = '12';
+	style[mxConstants.STYLE_FONTSTYLE] = 1;
+	style[mxConstants.STYLE_ROUNDED] = true;
+	style[mxConstants.STYLE_ARCSIZE] = 4;
+	// Looks better without opacity if shadow is enabled
+	style[mxConstants.STYLE_OPACITY] = '80';
+	style[mxConstants.STYLE_SHADOW] = 1;
+	graph.getStylesheet().putCellStyle('report', style);
+
+	// Filter Style
+	style = new Object();
+	style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+	style[mxConstants.STYLE_FILLCOLOR] = '#a5a50d'; // 'var(--modeler-entity-header-background)';
+	style[mxConstants.STYLE_STROKECOLOR] = '#a5a50d'; // 'var(--modeler-entity-border)';//'#337ab7';
+	style[mxConstants.STYLE_FONTCOLOR] = '#fff'; // 'var(--modeler-entity-header-color)';
+	style[mxConstants.STYLE_STROKEWIDTH] = '2';
+	style[mxConstants.STYLE_STARTSIZE] = '28';
+	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
+	style[mxConstants.STYLE_FONTSIZE] = '12';
+	style[mxConstants.STYLE_FONTSTYLE] = 1;
+	style[mxConstants.STYLE_ROUNDED] = true;
+	style[mxConstants.STYLE_ARCSIZE] = 4;
+	// Looks better without opacity if shadow is enabled
+	style[mxConstants.STYLE_OPACITY] = '80';
+	style[mxConstants.STYLE_SHADOW] = 1;
+	graph.getStylesheet().putCellStyle('filter', style);
+
+	// Setting Style
+	style = new Object();
+	style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+	style[mxConstants.STYLE_FILLCOLOR] = '#aaaaaa'; // 'var(--modeler-entity-header-background)';
+	style[mxConstants.STYLE_STROKECOLOR] = '#aaaaaa'; // 'var(--modeler-entity-border)';//'#337ab7';
+	style[mxConstants.STYLE_FONTCOLOR] = '#fff'; // 'var(--modeler-entity-header-color)';
+	style[mxConstants.STYLE_STROKEWIDTH] = '2';
+	style[mxConstants.STYLE_STARTSIZE] = '28';
+	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
+	style[mxConstants.STYLE_FONTSIZE] = '12';
+	style[mxConstants.STYLE_FONTSTYLE] = 1;
+	style[mxConstants.STYLE_ROUNDED] = true;
+	style[mxConstants.STYLE_ARCSIZE] = 4;
+	// Looks better without opacity if shadow is enabled
+	style[mxConstants.STYLE_OPACITY] = '80';
+	style[mxConstants.STYLE_SHADOW] = 1;
+	graph.getStylesheet().putCellStyle('setting', style);
 
 	// Copied Style
 	style = new Object();
@@ -214,10 +307,8 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-	//style[mxConstants.STYLE_GRADIENTCOLOR] = 'var(--modeler-entity-fill)';
-	style[mxConstants.STYLE_FILLCOLOR] = '#7700b3'; // 'var(--modeler-entity-header-background)';
-	//style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff'; // 'var(--modeler-entity-background)';
-	style[mxConstants.STYLE_STROKECOLOR] = '#7700b3'; // 'var(--modeler-entity-border)';//'#337ab7';
+	style[mxConstants.STYLE_FILLCOLOR] = '#7f0da5'; // 'var(--modeler-entity-header-background)';
+	style[mxConstants.STYLE_STROKECOLOR] = '#7f0da5'; // 'var(--modeler-entity-border)';//'#337ab7';
 	style[mxConstants.STYLE_FONTCOLOR] = '#fff'; // 'var(--modeler-entity-header-color)';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
@@ -237,9 +328,8 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-	style[mxConstants.STYLE_FILLCOLOR] = '#b32d00';
-	//style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#b32d00';
+	style[mxConstants.STYLE_FILLCOLOR] = '#a50d7f';
+	style[mxConstants.STYLE_STROKECOLOR] = '#a50d7f';
 	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
@@ -259,9 +349,8 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-	style[mxConstants.STYLE_FILLCOLOR] = '#117dd4';
-	//style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#117dd4';
+	style[mxConstants.STYLE_FILLCOLOR] = '#0d7fa5';
+	style[mxConstants.STYLE_STROKECOLOR] = '#0d7fa5';
 	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
