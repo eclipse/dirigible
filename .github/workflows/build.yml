@@ -86,11 +86,11 @@ jobs:
     - name: Maven Build
       run: mvn -T 1C clean install -D maven.test.skip=true -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
     - name: Integration tests
-      run: mvn -f integration-tests/pom.xml verify -P integration-tests
+      run: mvn -f tests/pom.xml verify -P integration-tests
     - name: Upload selenide screenshots
       uses: actions/upload-artifact@v3.1.3
       if: always()
       with:
         retention-days: 1
         name: selenide-screenshots
-        path: integration-tests/build/reports/tests
+        path: tests/build/reports/tests
