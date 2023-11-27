@@ -88,7 +88,7 @@ public class BrowserImpl implements Browser {
     }
 
     private By constructCssSelectorByTypeAndAttribute(HtmlElementType elementType, HtmlAttribute attribute, String attributePattern) {
-        String cssSelector = elementType.getType() + "[" + attribute.getAttribute() + "*=" + attributePattern + "]";
+        String cssSelector = elementType.getType() + "[" + attribute.getAttribute() + "*='" + attributePattern + "']";
         return Selectors.byCssSelector(cssSelector);
     }
 
@@ -130,6 +130,12 @@ public class BrowserImpl implements Browser {
     private SelenideElement getElementByType(HtmlElementType elementType) {
         By cssSelector = Selectors.byCssSelector(elementType.getType());
         return Selenide.$(cssSelector);
+    }
+
+    @Override
+    public void switchToWindow(String windowTitle) {
+        com.codeborne.selenide.Selenide.switchTo()
+                                       .window(windowTitle);
     }
 
 }
