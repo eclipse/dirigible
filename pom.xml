@@ -677,7 +677,7 @@
 		<elasticsearch.client.version>7.7.1</elasticsearch.client.version>
 		<jetcd.core.version>0.7.6</jetcd.core.version>
 		<jetcd.test.version>0.5.4</jetcd.test.version>
-		<logcaptor.version>2.9.0</logcaptor.version>
+		<logcaptor.version>2.9.1</logcaptor.version>
 		<exec.maven.plugin>3.1.1</exec.maven.plugin>
 		<jackson.databind.version>2.16.0</jackson.databind.version>
 		<mina-core.version>2.2.3</mina-core.version>
