@@ -68,7 +68,11 @@ public class HttpSecurityURIConfigurator {
 
              // "Developer" role required
              .requestMatchers(DEVELOPER_PATTERNS)
-             .hasRole("Developer")
+             .hasRole(DirigibleRole.DEVELOPER.getName())
+
+             // Spring Boot Admin
+             .requestMatchers("/spring-admin/**")
+             .hasRole(DirigibleRole.OPERATOR.getName())
 
              // Deny all other requests
              .anyRequest()

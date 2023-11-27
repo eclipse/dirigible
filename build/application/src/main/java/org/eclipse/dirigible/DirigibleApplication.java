@@ -23,7 +23,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
+import de.codecentric.boot.admin.server.config.EnableAdminServer;
 
+@EnableAdminServer
 @EnableJpaAuditing
 @EnableJpaRepositories
 @SpringBootApplication

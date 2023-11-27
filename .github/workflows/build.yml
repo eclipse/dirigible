@@ -85,6 +85,8 @@ jobs:
       run: npm i -g typescript
     - name: Maven Build
       run: mvn -T 1C clean install -D maven.test.skip=true -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
+    - if: runner.os == 'Windows'
+      run: Set-DisplayResolution -Width 1920 -Height 1080 -Force
     - name: Integration tests
       run: mvn -f tests/pom.xml verify -P integration-tests
     - name: Upload selenide screenshots
