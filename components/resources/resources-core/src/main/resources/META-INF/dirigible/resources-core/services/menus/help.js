@@ -43,13 +43,6 @@ const defaultMenuItems = [
 		action: "open",
 		order: 5,
 		data: "http://download.dirigible.io/",
-		divider: false
-	},
-	{
-		label: "Admin Panel",
-		action: "open",
-		order: 6,
-		data: "/spring-admin",
 		divider: true
 	}
 ];
@@ -64,7 +57,7 @@ exports.getMenu = function () {
 			{
 				label: "About",
 				action: "openDialogWindow",
-				order: 7,
+				order: 6,
 				dialogId: "about",
 				divider: false
 			}]

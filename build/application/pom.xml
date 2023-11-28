@@ -229,14 +229,10 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-		    <groupId>de.codecentric</groupId>
-		    <artifactId>spring-boot-admin-starter-server</artifactId>
-		    <version>${spring.boot.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>de.codecentric</groupId>
-		    <artifactId>spring-boot-admin-starter-client</artifactId>
-		    <version>${spring.boot.version}</version>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-server</artifactId>
+			<version>${spring.admin.version}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
