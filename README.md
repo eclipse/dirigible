@@ -111,7 +111,7 @@ git config --system core.longpaths true
 
 > The build should pass successfully.
 
-The produced `dirigible-application-XXX.jar` file is in `build/application/target/` and is ready to be deployed. It is Spring Boot application, so it can be executed locally right away.
+The produced `dirigible-application-XXX-executable.jar` file is in `build/application/target/` and is ready to be deployed. It is Spring Boot application, so it can be executed locally right away.
 
 ### Run
 
@@ -133,15 +133,15 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
 1. From the project root directory run command:
 
-        java -jar build/application/target/dirigible-application-*.jar
+        java -jar build/application/target/dirigible-application-*-executable.jar
 
    > for Windows
    
-        java -jar build/application/target/$((Get-ChildItem dirigible-application-*.jar -recurse -File | Sort-Object LastWriteTime | Select -Last 1).BaseName).jar
+        java -jar build/application/target/$((Get-ChildItem dirigible-application-*-executable.jar -recurse -File | Sort-Object LastWriteTime | Select -Last 1).BaseName).jar
 
 3. In case you want to debug the application run:
 
-        java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -jar build/application/target/dirigible-application-*.jar
+        java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -jar build/application/target/dirigible-application-*-executable.jar
 
 4. Open a web browser and go to: [http://localhost:8080](http://localhost:8080 "http://localhost:8080")
 5. Login with user: `admin` and password `admin`
