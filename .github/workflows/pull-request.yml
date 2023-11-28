@@ -139,7 +139,7 @@ jobs:
     - if: runner.os == 'Windows'
       run: Set-DisplayResolution -Width 1920 -Height 1080 -Force
     - name: Integration tests
-      run: mvn -f tests/pom.xml verify -P spring-boot-admin -D spring.profiles.active=spring-boot-admin
+      run: mvn -f tests/pom.xml verify -P integration-tests-spring-boot-admin -D spring.profiles.active=spring-boot-admin
     - name: Upload selenide screenshots
       uses: actions/upload-artifact@v3.1.3
       if: always()
