@@ -470,19 +470,16 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>${spring.boot.slf4j.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
-			<version>${spring.boot.logback.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>${spring.boot.logback.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -577,6 +574,13 @@
 
 	<dependencyManagement>
 		<dependencies>
+	        <dependency>
+	            <groupId>org.springframework.boot</groupId>
+	            <artifactId>spring-boot-dependencies</artifactId>
+	            <version>${spring.boot.version}</version>
+	            <type>pom</type>
+	            <scope>import</scope>
+	        </dependency>
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-application</artifactId>
@@ -685,10 +689,6 @@
 
 		<spring.version>5.5.18</spring.version>
 		<spring.boot.version>2.7.18</spring.boot.version>
-		<spring.boot.slf4j.version>1.7.36</spring.boot.slf4j.version>
-		<spring.boot.logback.version>1.2.11</spring.boot.logback.version>
-		<spring-context-support.version>5.3.24</spring-context-support.version>
-		<spring-security.version>5.8.0</spring-security.version>
 
 		<keycloak.keycloak-spring-boot-starter>22.0.5</keycloak.keycloak-spring-boot-starter>
 		<hikaricp.version>5.1.0</hikaricp.version>
