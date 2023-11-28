@@ -26,6 +26,4 @@ public interface Browser {
 
     SelenideElement waitUntilExist(HtmlElementType elementType);
 
-    void switchToWindow(String windowTitle);
-
 }

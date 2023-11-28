@@ -131,11 +131,4 @@ public class BrowserImpl implements Browser {
         By cssSelector = Selectors.byCssSelector(elementType.getType());
         return Selenide.$(cssSelector);
     }
-
-    @Override
-    public void switchToWindow(String windowTitle) {
-        com.codeborne.selenide.Selenide.switchTo()
-                                       .window(windowTitle);
-    }
-
 }

@@ -12,9 +12,7 @@ package org.eclipse.dirigible.integration.tests.ui.framework;
 
 public enum HtmlAttribute {
     ID("id"), //
-    TYPE("type"), //
-    IS_MENU("is-menu"), //
-    TITLE("title");
+    TYPE("type");
 
     private final String attribute;
 

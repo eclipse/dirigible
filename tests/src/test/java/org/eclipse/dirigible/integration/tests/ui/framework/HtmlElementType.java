@@ -15,7 +15,6 @@ public enum HtmlElementType {
     INPUT("input"), //
     HEADER5("h5"), //
     TITLE("title"), //
-    LI("li"), //
     ANCHOR("a");
 
     private final String type;

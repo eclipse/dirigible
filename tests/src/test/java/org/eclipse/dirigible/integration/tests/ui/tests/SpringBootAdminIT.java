@@ -14,10 +14,11 @@ import org.eclipse.dirigible.integration.tests.ui.Dirigible;
 import org.eclipse.dirigible.integration.tests.ui.framework.HtmlElementType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("spring-boot-admin")
 class SpringBootAdminIT extends UserInterfaceIntegrationTest {
 
-    private static final String SPRING_ADMIN_PAGE_TITLE = "Eclipse Dirigible Admin";
     private static final String SPRING_ADMIN_BRAND_TITLE = "Eclipse Dirigible Admin";
     private Dirigible dirigible;
 
@@ -28,9 +29,7 @@ class SpringBootAdminIT extends UserInterfaceIntegrationTest {
 
     @Test
     void testOpenSpringBootAdminUI() {
-        dirigible.openHomePage();
-        dirigible.navigateToAdminPanel();
-        browser.switchToWindow(SPRING_ADMIN_PAGE_TITLE);
+        dirigible.openSpringBootAdmin();
         browser.assertElementExistsByTypeAndText(HtmlElementType.ANCHOR, SPRING_ADMIN_BRAND_TITLE);
     }
 }

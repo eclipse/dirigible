@@ -24,6 +24,7 @@ public class Dirigible {
     private static final String LOGIN_PAGE_TITLE = "Please sign in";
 
     private static final String ROOT_PATH = "/";
+    private static final String SPRING_BOOT_PATH = "/spring-admin";
 
     private static final String USERNAME = "admin";
     private static final String PASSWORD = "admin";
@@ -33,10 +34,6 @@ public class Dirigible {
     private static final String SUBMIT_TYPE = "submit";
 
     private static final String SIGN_IN_BUTTON_TEXT = "Sign in";
-
-    private static final String HELP_MENU_BUTTON = "Help";
-
-    private static final String ADMIN_PANEL_OPTION = "Admin Panel";
 
     private final Browser browser;
 
@@ -62,14 +59,9 @@ public class Dirigible {
         browser.clickElementByAttributePatternAndText(HtmlElementType.BUTTON, HtmlAttribute.TYPE, SUBMIT_TYPE, SIGN_IN_BUTTON_TEXT);
     }
 
-    public void navigateToAdminPanel() {
-        openHelpMenu();
-        browser.clickElementByAttributePatternAndText(HtmlElementType.LI, HtmlAttribute.TITLE, ADMIN_PANEL_OPTION, ADMIN_PANEL_OPTION);
-    }
-
-    public void openHelpMenu() {
-        browser.clickElementByAttributePatternAndText(HtmlElementType.BUTTON, HtmlAttribute.IS_MENU, Boolean.TRUE.toString(),
-                HELP_MENU_BUTTON);
+    public void openSpringBootAdmin() {
+        browser.openPath(SPRING_BOOT_PATH);
+        login();
     }
 
 
