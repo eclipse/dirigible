@@ -65,7 +65,7 @@ class SecurityIT extends IntegrationTest {
     }
 
     private static Stream<Arguments> provideOperatorEndpointsParams() {
-        return Stream.of(Arguments.of("/spring-admin", HttpStatus.OK), //
+        return Stream.of(Arguments.of("/spring-admin", HttpStatus.NOT_FOUND), //
                 Arguments.of("/actuator/heapdump", HttpStatus.OK));
     }
 
