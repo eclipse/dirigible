@@ -579,13 +579,6 @@
 
 	<dependencyManagement>
 		<dependencies>
-	        <dependency>
-	            <groupId>org.springframework.boot</groupId>
-	            <artifactId>spring-boot-dependencies</artifactId>
-	            <version>${spring.boot.version}</version>
-	            <type>pom</type>
-	            <scope>import</scope>
-	        </dependency>
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-application</artifactId>
@@ -603,6 +596,13 @@
 		        <version>5.10.1</version>
 		        <scope>test</scope>
 		    </dependency>
+	        <dependency>
+	            <groupId>org.springframework.boot</groupId>
+	            <artifactId>spring-boot-dependencies</artifactId>
+	            <version>${spring.boot.version}</version>
+	            <type>pom</type>
+	            <scope>import</scope>
+	        </dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -640,7 +640,6 @@
 		<ngdbc.version>2.18.16</ngdbc.version>
 		<snowflake.version>3.14.3</snowflake.version>
 
-		<activemq.version>5.18.3</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<lucene.version>9.8.0</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>

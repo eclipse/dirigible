@@ -75,13 +75,16 @@ public class MessageProducer {
      * @throws JMSException the JMS exception
      */
     private void sendMessage(String message, Destination destination) throws JMSException {
-        try (javax.jms.MessageProducer producer = session.createProducer(destination)) {
+        javax.jms.MessageProducer producer = session.createProducer(destination);
+        try {
             producer.setDeliveryMode(DeliveryMode.PERSISTENT);
 
             TextMessage textMessage = session.createTextMessage(message);
 
             producer.send(textMessage);
             LOGGER.trace("Message sent in [{}]", destination);
+        } finally {
+            producer.close();
         }
     }
 
