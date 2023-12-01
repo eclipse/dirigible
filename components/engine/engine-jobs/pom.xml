@@ -66,7 +66,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
-            <version>${spring-context-support.version}</version>
         </dependency>
         <!-- quartz -->
         <dependency>
