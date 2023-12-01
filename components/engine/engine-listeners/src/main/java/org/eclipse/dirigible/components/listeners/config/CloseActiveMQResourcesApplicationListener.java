@@ -99,9 +99,7 @@ class CloseActiveMQResourcesApplicationListener implements ApplicationListener<A
     private void closeResources(ApplicationEvent event) {
         LOGGER.info("Closing ActiveMQ resources due to event {}", event);
         stopListeners();
-
         closeSession();
-
         closeConnection();
         stopBroker();
     }

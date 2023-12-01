@@ -51,18 +51,20 @@ public class ConnectionArtifacts {
      * Close all.
      */
     public void closeAll() {
+        closeMessageConsumer();
+        closeSession();
+        closeConnection();
+    }
+
+    private void closeMessageConsumer() {
         try {
             messageConsumer.close();
         } catch (RuntimeException | JMSException ex) {
             LOGGER.warn("Failed to close message consumer", ex);
         }
+    }
 
-        try {
-            session.close();
-        } catch (RuntimeException | JMSException ex) {
-            LOGGER.warn("Failed to close session", ex);
-        }
-
+    private void closeConnection() {
         try {
             connection.close();
         } catch (RuntimeException | JMSException ex) {
@@ -70,6 +72,11 @@ public class ConnectionArtifacts {
         }
     }
 
-
-
+    private void closeSession() {
+        try {
+            session.close();
+        } catch (RuntimeException | JMSException ex) {
+            LOGGER.warn("Failed to close session", ex);
+        }
+    }
 }
