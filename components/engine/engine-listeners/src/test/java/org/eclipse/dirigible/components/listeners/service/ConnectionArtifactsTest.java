@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.components.listeners.service;
 
 import static org.mockito.Mockito.doThrow;
-import java.io.IOException;
 import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
@@ -65,12 +64,12 @@ class ConnectionArtifactsTest {
      */
     @Test
     void testCloseAllClosesAllResourceOnException() throws JMSException {
-        doThrow(IOException.class).when(messageConsumer)
-                                  .close();
-        doThrow(IOException.class).when(session)
-                                  .close();
-        doThrow(IOException.class).when(connection)
-                                  .close();
+        doThrow(JMSException.class).when(messageConsumer)
+                                   .close();
+        doThrow(JMSException.class).when(session)
+                                   .close();
+        doThrow(JMSException.class).when(connection)
+                                   .close();
 
         artifacts.closeAll();
 

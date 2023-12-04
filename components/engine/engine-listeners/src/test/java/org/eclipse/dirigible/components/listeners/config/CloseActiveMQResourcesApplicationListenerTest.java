@@ -144,8 +144,8 @@ class CloseActiveMQResourcesApplicationListenerTest {
      */
     @Test
     void testCloseSessionDoesntTerminateTheClose() throws Exception {
-        doThrow(Exception.class).when(session)
-                                .close();
+        doThrow(JMSException.class).when(session)
+                                   .close();
 
         listener.onApplicationEvent(closedEvent);
 
@@ -159,8 +159,8 @@ class CloseActiveMQResourcesApplicationListenerTest {
      */
     @Test
     void testCloseConnectionDoesntTerminateTheClose() throws Exception {
-        doThrow(Exception.class).when(connection)
-                                .close();
+        doThrow(JMSException.class).when(connection)
+                                   .close();
 
         listener.onApplicationEvent(closedEvent);
 
