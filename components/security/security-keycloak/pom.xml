@@ -20,7 +20,6 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-base</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
