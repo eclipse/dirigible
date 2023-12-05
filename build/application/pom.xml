@@ -296,4 +296,28 @@
 		<parent.pom.folder>../../</parent.pom.folder>
 	</properties>
 
+	<profiles>
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>spring-boot-admin</id>
+			<dependencies>
+				<dependency>
+					<groupId>de.codecentric</groupId>
+					<artifactId>spring-boot-admin-starter-server</artifactId>
+					<version>${spring.admin.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>de.codecentric</groupId>
+					<artifactId>spring-boot-admin-starter-client</artifactId>
+					<version>${spring.admin.version}</version>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
+
 </project>
