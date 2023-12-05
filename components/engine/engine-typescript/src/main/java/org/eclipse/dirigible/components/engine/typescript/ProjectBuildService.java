@@ -10,14 +10,6 @@
  */
 package org.eclipse.dirigible.components.engine.typescript;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import org.apache.commons.lang3.SystemUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.process.execution.ProcessExecutionOptions;
 import org.eclipse.dirigible.commons.process.execution.ProcessExecutor;
@@ -34,15 +26,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 /**
  * The Class ProjectBuildService.
  */
 @Component
 public class ProjectBuildService {
-
-    private static final String PATH_ENV_VARIABLE = "PATH";
-    private static final String PATH_SEPARATOR = ":";
-    private static final String USR_LOCAL_BIN = "/usr/local/bin";
 
     /**
      * The Constant LOGGER.
@@ -134,7 +130,7 @@ public class ProjectBuildService {
         var projectPath = getProjectPath(project).toString();
         var options = new ProcessExecutionOptions();
         options.setWorkingDirectory(projectPath);
-        var env = createEnv();
+        var env = Map.of("PATH", System.getenv("PATH"));
         try {
             var processExecutor = ProcessExecutor.create();
             Future<ProcessResult<OutputsPair>> outputFuture = processExecutor.executeProcess(buildCommand.getCommand(), env, options);
@@ -145,14 +141,6 @@ public class ProjectBuildService {
         } catch (ExecutionException | InterruptedException e) {
             LOGGER.error("Could not run command: " + buildCommand + " for project: " + project, e);
         }
-    }
-
-    private Map<String, String> createEnv() {
-        String path = System.getenv(PATH_ENV_VARIABLE);
-        if (SystemUtils.IS_OS_UNIX && !path.contains(USR_LOCAL_BIN)) {
-            path += PATH_SEPARATOR + USR_LOCAL_BIN;
-        }
-        return Map.of(PATH_ENV_VARIABLE, path);
     }
 
     /**
