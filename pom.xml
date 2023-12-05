@@ -691,7 +691,7 @@
 		<sshd-core.version>2.11.0</sshd-core.version>
 
 		<spring.version>5.5.18</spring.version>
-		<spring.boot.version>2.7.18</spring.boot.version>
+		<spring.boot.version>3.2.0</spring.boot.version>
 
 		<keycloak.keycloak-spring-boot-starter>23.0.1</keycloak.keycloak-spring-boot-starter>
 		<hikaricp.version>5.1.0</hikaricp.version>
