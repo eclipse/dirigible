@@ -12,6 +12,7 @@ package org.eclipse.dirigible.integration.tests.ui.framework;
 
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
+import org.openqa.selenium.chrome.ChromeOptions;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
@@ -30,6 +31,7 @@ public class BrowserImpl implements Browser {
     static {
         Configuration.timeout = SELENIDE_TIMEOUT_MILLIS;
         Configuration.browser = BROWSER;
+        Configuration.browserCapabilities = new ChromeOptions().addArguments("--remote-allow-origins=*");
     }
 
     private final int localServerPort;
