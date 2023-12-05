@@ -10,10 +10,10 @@
  */
 package org.eclipse.dirigible.commons.api.helpers;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.commons.io.FilenameUtils;
 
 /**
  * The ContentTypeHelper class is an utility used to map file extensions to mime types.
@@ -433,6 +433,7 @@ public class ContentTypeHelper {
     public static final String APPLICATION_BPMN = "application/bpmn+xml";
 
     public static final String APPLICATION_CAMEL = "application/camel";
+    public static final String APPLICATION_DESIGNER = "application/dirigible-designer";
 
     /** The Constant APPLICATION_SCHEMA. */
     public static final String APPLICATION_SCHEMA = "application/database-schema-model+xml";
@@ -747,6 +748,7 @@ public class ContentTypeHelper {
         TEXT_CONTENT_TYPES.put("twiki", TEXT_HTML); //$NON-NLS-1$
         TEXT_CONTENT_TYPES.put("bpmn", APPLICATION_BPMN); //$NON-NLS-1$
         TEXT_CONTENT_TYPES.put("camel", APPLICATION_CAMEL); //$NON-NLS-1$
+        TEXT_CONTENT_TYPES.put("designer", APPLICATION_DESIGNER); //$NON-NLS-1$
         TEXT_CONTENT_TYPES.put("dsm", APPLICATION_SCHEMA); //$NON-NLS-1$
         TEXT_CONTENT_TYPES.put("edm", APPLICATION_ENTITY_DATA_MODEL); //$NON-NLS-1$
         TEXT_CONTENT_TYPES.put("hdi", APPLICATION_JSON_HDI); //$NON-NLS-1$

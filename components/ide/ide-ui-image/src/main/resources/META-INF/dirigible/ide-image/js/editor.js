@@ -33,6 +33,17 @@ editorView.controller('ImageViewController', ['$scope', '$window', 'messageHub',
         if (msg.resourcePath === $scope.dataParameters.file) messageHub.setStatusCaret('');
     });
 
+    messageHub.onEditorReloadParameters(
+        function (event) {
+            $scope.$apply(() => {
+                if (event.resourcePath === $scope.dataParameters.file) {
+                    $scope.dataParameters = ViewParameters.get();
+                    $scope.loadFileContents();
+                }
+            });
+        }
+    );
+
     $scope.dataParameters = ViewParameters.get();
     if (!$scope.dataParameters.hasOwnProperty('file')) {
         $scope.state.error = true;

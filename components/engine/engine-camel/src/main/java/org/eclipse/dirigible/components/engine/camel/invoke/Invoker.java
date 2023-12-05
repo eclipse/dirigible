@@ -12,43 +12,35 @@ package org.eclipse.dirigible.components.engine.camel.invoke;
 
 import org.apache.camel.Message;
 import org.eclipse.dirigible.components.engine.camel.processor.CamelProcessor;
-import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
-import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
+import org.eclipse.dirigible.graalium.core.javascript.CalledFromJS;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
-import java.util.HashMap;
+import java.nio.file.Path;
 import java.util.Map;
 
 @Component
 public class Invoker {
-    private final JavascriptService javascriptService;
 
     private final CamelProcessor processor;
 
     @Autowired
-    public Invoker(JavascriptService javascriptService, CamelProcessor processor) {
-        this.javascriptService = javascriptService;
+    public Invoker(CamelProcessor processor) {
         this.processor = processor;
     }
 
     public void invoke(Message camelMessage) {
         String resourcePath = (String) camelMessage.getExchange()
                                                    .getProperty("resource");
-        RepositoryPath path = new RepositoryPath(resourcePath);
-
         String messageBody = camelMessage.getBody(String.class);
-
-        Map<Object, Object> context = new HashMap<>();
-        context.put("camelMessage", messageBody);
-
-        javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+        try (var runner = new DirigibleJavascriptCodeRunner()) {
+            var module = runner.run(Path.of(resourcePath));
+            runner.runMethod(module, "onMessage", messageBody);
+        }
     }
 
+    @CalledFromJS
     public Object invokeRoute(String routeId, Object payload, Map<String, Object> headers) {
         return processor.invokeRoute(routeId, payload, headers);
     }

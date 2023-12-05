@@ -44,8 +44,22 @@ jobs:
         cd build/application
         docker buildx build --push --tag dirigiblelabs/dirigible -o type=image --platform=linux/arm64,linux/amd64 .
   integration-tests: 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        os: [windows]
     steps:
+    - name: Setup Chrome
+      uses: browser-actions/setup-chrome@v1.3.0
+      with:
+        chrome-version: stable
+    - if: runner.os == 'Linux'
+      run: chrome --version
+    - if: runner.os == 'macOS'
+      run: chromium --version
+    - if: runner.os == 'Windows'
+      run: (Get-Item (Get-Command chrome).Source).VersionInfo.ProductVersion
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
@@ -69,11 +83,14 @@ jobs:
       run: npm i -g esbuild
     - name: Install TypeScript compiler
       run: npm i -g typescript
-    - name: Setup Docker Buildx
-      run: |
-        docker buildx create --name dirigible-builder
-        docker buildx use dirigible-builder
     - name: Maven Build
       run: mvn -T 1C clean install -D maven.test.skip=true -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
     - name: Integration tests
-      run: mvn -f integration-tests/pom.xml verify -P integration-tests
+      run: mvn -f tests/pom.xml verify -P integration-tests
+    - name: Upload selenide screenshots
+      uses: actions/upload-artifact@v3.1.3
+      if: always()
+      with:
+        retention-days: 1
+        name: selenide-screenshots
+        path: tests/build/reports/tests

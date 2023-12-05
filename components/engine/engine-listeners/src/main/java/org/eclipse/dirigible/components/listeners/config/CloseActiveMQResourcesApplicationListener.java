@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.components.listeners.config;
 
 import javax.jms.Connection;
+import javax.jms.JMSException;
 import javax.jms.Session;
 import org.apache.activemq.broker.BrokerService;
 import org.eclipse.dirigible.components.listeners.service.ListenersManager;
@@ -98,8 +99,8 @@ class CloseActiveMQResourcesApplicationListener implements ApplicationListener<A
     private void closeResources(ApplicationEvent event) {
         LOGGER.info("Closing ActiveMQ resources due to event {}", event);
         stopListeners();
-        closeResource(session);
-        closeResource(connection);
+        closeSession();
+        closeConnection();
         stopBroker();
     }
 
@@ -114,16 +115,20 @@ class CloseActiveMQResourcesApplicationListener implements ApplicationListener<A
         }
     }
 
-    /**
-     * Close resource.
-     *
-     * @param closeable the closeable
-     */
-    private void closeResource(AutoCloseable closeable) {
+
+    private void closeSession() {
         try {
-            closeable.close();
-        } catch (Exception ex) {
-            LOGGER.warn("Failed to close {}", closeable, ex);
+            session.close();
+        } catch (RuntimeException | JMSException ex) {
+            LOGGER.warn("Failed to close session [{}]", session, ex);
+        }
+    }
+
+    private void closeConnection() {
+        try {
+            connection.close();
+        } catch (RuntimeException | JMSException ex) {
+            LOGGER.warn("Failed to close connection [{}]", connection, ex);
         }
     }
 

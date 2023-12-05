@@ -65,6 +65,16 @@ public class GraalJSSourceCreator {
      * @param sourceFilePath the source file path
      * @return the source
      */
+    public Source createSource(String sourceFilePath) {
+        return createSource(Path.of(sourceFilePath));
+    }
+
+    /**
+     * Creates the source.
+     *
+     * @param sourceFilePath the source file path
+     * @return the source
+     */
     public Source createSource(Path sourceFilePath) {
         File codeFile = sourceFilePath.toFile();
         Source.Builder sourceBuilder = Source.newBuilder("js", codeFile);

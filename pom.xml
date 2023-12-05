@@ -152,7 +152,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.6.2</version>
+						<version>3.6.3</version>
 						<configuration>
 							<source>${java.version}</source>
 						</configuration>
@@ -285,14 +285,14 @@
 					<plugin>
 						<groupId>com.github.spotbugs</groupId>
 						<artifactId>spotbugs-maven-plugin</artifactId>
-						<version>4.8.1.0</version>
+						<version>4.8.2.0</version>
 						<dependencies>
 							<!-- overwrite dependency on spotbugs if you want to
 							specify the version of spotbugs -->
 							<dependency>
 								<groupId>com.github.spotbugs</groupId>
 								<artifactId>spotbugs</artifactId>
-								<version>4.8.1</version>
+								<version>4.8.2</version>
 							</dependency>
 						</dependencies>
 					</plugin>
@@ -363,7 +363,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.6.2</version>
+						<version>3.6.3</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -456,7 +456,7 @@
 		<module>modules</module>
 		<module>components</module>
 		<module>build</module>
-		<module>integration-tests</module>
+		<module>tests</module>
 	</modules>
 
 	<dependencies>
@@ -470,19 +470,16 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>${spring.boot.slf4j.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
-			<version>${spring.boot.logback.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>${spring.boot.logback.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -511,7 +508,6 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>${jackson.databind.version}</version>
 		</dependency>
 
 		<!-- Java 11 Dependencies -->
@@ -572,6 +568,11 @@
 			<version>${mockito-inline.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+		    <groupId>net.bytebuddy</groupId>
+		    <artifactId>byte-buddy</artifactId>
+		    <version>1.14.10</version>
+		</dependency>
 		<!-- End Test Dependencies -->
 	</dependencies>
 
@@ -594,6 +595,13 @@
 		        <version>5.10.1</version>
 		        <scope>test</scope>
 		    </dependency>
+	        <dependency>
+	            <groupId>org.springframework.boot</groupId>
+	            <artifactId>spring-boot-dependencies</artifactId>
+	            <version>${spring.boot.version}</version>
+	            <type>pom</type>
+	            <scope>import</scope>
+	        </dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -612,13 +620,13 @@
 		<maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
 		<maven.scm.plugin.version>2.0.0</maven.scm.plugin.version>
 		<scmVersionType>branch</scmVersionType>
-		<commons.io>2.15.0</commons.io>
+		<commons.io>2.15.1</commons.io>
 		<commons.codec>1.16.0</commons.codec>
-		<commons.lang3>3.13.0</commons.lang3>
+		<commons.lang3>3.14.0</commons.lang3>
 		<commons.exec>1.3</commons.exec>
 		<commons.text>1.10.0</commons.text>
 		<gson.version>2.10.1</gson.version>
-		<mockito.version>5.7.0</mockito.version>
+		<mockito.version>5.8.0</mockito.version>
 		<mockito-inline.version>5.2.0</mockito-inline.version>
 		<junit.version>4.13.2</junit.version>
 		<hamcrest.all.version>1.3</hamcrest.all.version>
@@ -627,11 +635,10 @@
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
 
 		<h2database.version>2.2.224</h2database.version>
-		<postgresql.version>42.6.0</postgresql.version>
-		<ngdbc.version>2.18.13</ngdbc.version>
+		<postgresql.version>42.7.0</postgresql.version>
+		<ngdbc.version>2.18.16</ngdbc.version>
 		<snowflake.version>3.14.3</snowflake.version>
 
-		<activemq.version>5.18.3</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<lucene.version>9.8.0</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
@@ -648,7 +655,7 @@
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<mongodb.version>3.12.14</mongodb.version>
 		<caffeine.version>3.1.8</caffeine.version>
-		<liquibase-core.version>4.24.0</liquibase-core.version>
+		<liquibase-core.version>4.25.0</liquibase-core.version>
 		<commons-csv.version>1.10.0</commons-csv.version>
 		<jquery-ui.version>1.13.0</jquery-ui.version>
 		<sap-theming__theming-base-content.version>11.7.0</sap-theming__theming-base-content.version>
@@ -662,35 +669,31 @@
 		<jquery.version>3.6.0</jquery.version>
 		<jqplot.version>1.0.8r1250</jqplot.version>
 		<webjars.bootstrap.version>5.3.2</webjars.bootstrap.version>
-		<webjars.locator.version>0.48</webjars.locator.version>
+		<webjars.locator.version>0.50</webjars.locator.version>
 		<webjars.locator.core.version>0.55</webjars.locator.core.version>
 		<es5-shim.version>4.6.7</es5-shim.version>
 		<angular-file-upload.version>2.6.1</angular-file-upload.version>
 		<angularjs.version>1.8.2</angularjs.version>
 		<fontawesome.version>4.7.0</fontawesome.version>
-		<classgraph.version>4.8.164</classgraph.version>
+		<classgraph.version>4.8.165</classgraph.version>
 		<commons-compress.version>1.22</commons-compress.version>
 		<testcontainers.elasticsearch.version>1.17.6</testcontainers.elasticsearch.version>
-		<testcontainers.version>1.19.2</testcontainers.version>
+		<testcontainers.version>1.19.3</testcontainers.version>
 		<testcontainers.rabbitmq.version>1.17.6</testcontainers.rabbitmq.version>
 		<amqp.client.version>5.20.0</amqp.client.version>
 		<elasticsearch.client.version>7.7.1</elasticsearch.client.version>
 		<jetcd.core.version>0.7.6</jetcd.core.version>
 		<jetcd.test.version>0.5.4</jetcd.test.version>
-		<logcaptor.version>2.9.0</logcaptor.version>
-		<exec.maven.plugin>3.1.0</exec.maven.plugin>
-		<jackson.databind.version>2.15.3</jackson.databind.version>
+		<logcaptor.version>2.9.2</logcaptor.version>
+		<exec.maven.plugin>3.1.1</exec.maven.plugin>
+		<jackson.databind.version>2.16.0</jackson.databind.version>
 		<mina-core.version>2.2.3</mina-core.version>
 		<sshd-core.version>2.11.0</sshd-core.version>
 
 		<spring.version>5.5.18</spring.version>
-		<spring.boot.version>2.7.5</spring.boot.version>
-		<spring.boot.slf4j.version>1.7.36</spring.boot.slf4j.version>
-		<spring.boot.logback.version>1.2.11</spring.boot.logback.version>
-		<spring-context-support.version>5.3.24</spring-context-support.version>
-		<spring-security.version>5.8.0</spring-security.version>
+		<spring.boot.version>2.7.18</spring.boot.version>
 
-		<keycloak.keycloak-spring-boot-starter>22.0.5</keycloak.keycloak-spring-boot-starter>
+		<keycloak.keycloak-spring-boot-starter>23.0.1</keycloak.keycloak-spring-boot-starter>
 		<hikaricp.version>5.1.0</hikaricp.version>
 		<validator.version>1.7</validator.version>
 		<quartz.version>2.3.2</quartz.version>
@@ -704,10 +707,10 @@
 		<wikitext.version>3.0.48.202308291007</wikitext.version>
 		<flexmark.version>0.64.8</flexmark.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.589</qldb.sdk.version>
+		<qldb.sdk.version>1.12.604</qldb.sdk.version>
 		<cassandra.version>1.17.6</cassandra.version>
 		<cassandra.driver.version>3.11.3</cassandra.driver.version>
-		<jedis.version>5.0.2</jedis.version>
+		<jedis.version>5.1.0</jedis.version>
 		<spark.version>3.3.2</spark.version>
 		<javax.websocket-api.version>1.1</javax.websocket-api.version>
 		<camel.version>3.21.2</camel.version>

@@ -79,7 +79,8 @@ public class MessageConsumer {
      * @throws TimeoutException the timeout exception
      */
     private String receiveMessage(long timeout, Destination destination) throws JMSException, TimeoutException {
-        try (javax.jms.MessageConsumer consumer = session.createConsumer(destination)) {
+        javax.jms.MessageConsumer consumer = session.createConsumer(destination);
+        try {
 
             Message message = consumer.receive(timeout);
             LOGGER.debug("Received message [{}] by synchronous consumer.", message);
@@ -90,6 +91,8 @@ public class MessageConsumer {
                 return textMessage.getText();
             }
             throw new IllegalStateException("Received an unsupported message " + message);
+        } finally {
+            consumer.close();
         }
     }
 

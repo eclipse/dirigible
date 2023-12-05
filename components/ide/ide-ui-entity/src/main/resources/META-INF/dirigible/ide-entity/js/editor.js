@@ -255,6 +255,16 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 			if (msg.resourcePath === $scope.dataParameters.file) messageHub.setStatusCaret('');
 		});
 
+		messageHub.onEditorReloadParameters(
+			function (event) {
+				$scope.$apply(() => {
+					if (event.resourcePath === $scope.dataParameters.file) {
+						$scope.dataParameters = ViewParameters.get();
+					}
+				});
+			}
+		);
+
 		messageHub.onDidReceiveMessage(
 			"editor.file.save.all",
 			function () {
@@ -304,14 +314,22 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				cell.value.feedPath = msg.data.feedPath;
 				cell.value.roleRead = msg.data.roleRead;
 				cell.value.roleWrite = msg.data.roleWrite;
-				// Maybe we should do this with "cell.value.clone()'
+
 				$scope.graph.model.setValue(cell, cell.value.clone());
-				if (cell.entityType === 'PROJECTION') {
+
+				if (cell.entityType === 'DEPENDENT') {
+					$scope.graph.getSelectionCell().style = 'dependent';
+					//$scope.graph.getSelectionCell().children.forEach(cell => cell.style = 'copiedproperty');
+					$scope.graph.refresh();
+				} else if (cell.entityType === 'COPIED') {
+					$scope.graph.getSelectionCell().style = 'copied';
+					$scope.graph.getSelectionCell().children.forEach(cell => cell.style = 'copiedproperty');
+					$scope.graph.refresh();
+				} else if (cell.entityType === 'PROJECTION') {
 					$scope.graph.getSelectionCell().style = 'projection';
 					$scope.graph.getSelectionCell().children.forEach(cell => cell.style = 'projectionproperty');
 					$scope.graph.refresh();
-				}
-				if (cell.entityType === 'EXTENSION') {
+				} else if (cell.entityType === 'EXTENSION') {
 					$scope.graph.getSelectionCell().style = 'extension';
 					$scope.graph.getSelectionCell().children.forEach(cell => cell.style = 'extensionproperty');
 					$scope.graph.refresh();
@@ -474,7 +492,11 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 
 		function main(container, outline, toolbar, sidebar) {
 			let ICON_ENTITY = 'sap-icon--header';
-			let ICON_PROPERTY = 'sap-icon--menu2';
+			let ICON_PROPERTY = 'sap-icon--bullet-text';
+			let ICON_DEPENDENT = 'sap-icon--accelerated';
+			let ICON_REPORT = 'sap-icon--area-chart';
+			let ICON_SETTING = 'sap-icon--wrench';
+			let ICON_FILTER = 'sap-icon--filter';
 			let ICON_COPIED = 'sap-icon--duplicate';
 			let ICON_PROJECTION = 'sap-icon--journey-arrive';
 			let ICON_EXTENSION = 'sap-icon--puzzle';
@@ -672,6 +694,8 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				// Adds all required styles to the graph (see below)
 				configureStylesheet($scope.graph);
 
+				// Primary Entity ----------------------------------------------
+
 				// Adds sidebar icon for the entity object
 				let entityObject = new Entity('EntityName');
 				let entity = new mxCell(entityObject, new mxGeometry(0, 0, 200, 28), 'entity');
@@ -688,13 +712,11 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 
 				// Adds primary key field into entity
 				let firstProperty = property.clone();
-
 				firstProperty.value.name = 'entityNameId';
 				firstProperty.value.dataType = 'INTEGER';
 				firstProperty.value.dataLength = 0;
 				firstProperty.value.dataPrimaryKey = 'true';
 				firstProperty.value.dataAutoIncrement = 'true';
-
 				entity.insert(firstProperty);
 
 				// Adds child properties for new connections between entities
@@ -743,6 +765,76 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 					}
 				};
 
+				// Dependent Entity ----------------------------------------------
+
+				// Adds sidebar icon for the dependent entity object
+				let dependentObject = new Entity('DependentEntityName');
+				let dependent = new mxCell(dependentObject, new mxGeometry(0, 0, 200, 28), 'dependent');
+				dependent.setVertex(true);
+				addSidebarIcon($scope.graph, sidebar, dependent, ICON_DEPENDENT, 'Drag this to the diagram to create a new Dependent Entity', $scope);
+
+				// Adds primary key field into entity
+				firstProperty = property.clone();
+				firstProperty.value.name = 'entityNameId';
+				firstProperty.value.dataType = 'INTEGER';
+				firstProperty.value.dataLength = 0;
+				firstProperty.value.dataPrimaryKey = 'true';
+				firstProperty.value.dataAutoIncrement = 'true';
+				dependent.insert(firstProperty);
+
+				// Report Entity ----------------------------------------------
+
+				// Adds sidebar icon for the report entity object
+				let reportObject = new Entity('ReportEntityName');
+				let report = new mxCell(reportObject, new mxGeometry(0, 0, 200, 28), 'report');
+				report.setVertex(true);
+				addSidebarIcon($scope.graph, sidebar, report, ICON_REPORT, 'Drag this to the diagram to create a new Report Entity', $scope);
+
+				// Adds primary key field into entity
+				firstProperty = property.clone();
+				firstProperty.value.name = 'entityNameId';
+				firstProperty.value.dataType = 'INTEGER';
+				firstProperty.value.dataLength = 0;
+				firstProperty.value.dataPrimaryKey = 'true';
+				firstProperty.value.dataAutoIncrement = 'true';
+				report.insert(firstProperty);
+
+				// Filter Entity ----------------------------------------------
+
+				// Adds sidebar icon for the filter entity object
+				let filterObject = new Entity('FilterEntityName');
+				let filter = new mxCell(filterObject, new mxGeometry(0, 0, 200, 28), 'filter');
+				filter.setVertex(true);
+				addSidebarIcon($scope.graph, sidebar, filter, ICON_FILTER, 'Drag this to the diagram to create a new Filter Entity', $scope);
+
+				// Adds primary key field into entity
+				firstProperty = property.clone();
+				firstProperty.value.name = 'entityNameId';
+				firstProperty.value.dataType = 'INTEGER';
+				firstProperty.value.dataLength = 0;
+				firstProperty.value.dataPrimaryKey = 'true';
+				firstProperty.value.dataAutoIncrement = 'true';
+				filter.insert(firstProperty);
+
+				// Setting Entity ----------------------------------------------
+
+				// Adds sidebar icon for the setting entity object
+				let settingObject = new Entity('SettingEntityName');
+				let setting = new mxCell(settingObject, new mxGeometry(0, 0, 200, 28), 'setting');
+				setting.setVertex(true);
+				addSidebarIcon($scope.graph, sidebar, setting, ICON_SETTING, 'Drag this to the diagram to create a new Setting Entity', $scope);
+
+				// Adds primary key field into entity
+				firstProperty = property.clone();
+				firstProperty.value.name = 'entityNameId';
+				firstProperty.value.dataType = 'INTEGER';
+				firstProperty.value.dataLength = 0;
+				firstProperty.value.dataPrimaryKey = 'true';
+				firstProperty.value.dataAutoIncrement = 'true';
+				setting.insert(firstProperty);
+
+				// Copied Entity ----------------------------------------------
+
 				// Adds sidebar icon for the copied entity object
 				let copiedObject = new Entity('EntityName');
 				let copied = new mxCell(copiedObject, new mxGeometry(0, 0, 200, 28), 'copied');
@@ -771,23 +863,26 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 					);
 				};
 
+				// Extension Entity ----------------------------------------------
+
 				// Adds sidebar icon for the extension entity object
 				let extensionObject = new Entity('EntityName');
 				let extension = new mxCell(extensionObject, new mxGeometry(0, 0, 200, 28), 'extension');
 				extension.setVertex(true);
 				addSidebarIcon($scope.graph, sidebar, extension, ICON_EXTENSION, 'Drag this to the diagram to create a new Extension Entity', $scope);
 
-				// Adds primary key field into projection entity
+				// Adds primary key field into extension entity
 				keyProperty = property.clone();
-
 				keyProperty.value.name = 'Id';
 				keyProperty.value.dataType = 'INTEGER';
 				keyProperty.value.dataLength = 0;
 				keyProperty.value.dataPrimaryKey = 'true';
 				keyProperty.value.dataAutoIncrement = 'true';
 				keyProperty.style = 'extensionproperty';
-
 				extension.insert(keyProperty);
+
+
+
 
 				// Creates a new DIV that is used as a toolbar and adds
 				// toolbar buttons.

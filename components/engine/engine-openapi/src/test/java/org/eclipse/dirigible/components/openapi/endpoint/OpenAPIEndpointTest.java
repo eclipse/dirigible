@@ -16,7 +16,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import org.eclipse.dirigible.components.openapi.repository.OpenAPIRepository;
 import org.eclipse.dirigible.components.openapi.synchronizer.OpenAPISynchronizer;
 import org.eclipse.dirigible.components.repository.RepositoryConfig;
@@ -68,16 +67,13 @@ class OpenAPIEndpointTest {
 
         cleanup();
 
-        try {
-            // Create test OpenAPI
-            openAPIRepository.save(createOpenAPI("/a/b/c/test1.openapi", "test1", "description"));
-            openAPIRepository.save(createOpenAPI("/a/b/c/test2.openapi", "test2", "description"));
-            openAPIRepository.save(createOpenAPI("/a/b/c/test3.openapi", "test3", "description"));
-            openAPIRepository.save(createOpenAPI("/a/b/c/test4.openapi", "test4", "description"));
-            openAPIRepository.save(createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // Create test OpenAPI
+        openAPIRepository.save(createOpenAPI("/a/b/c/test1.openapi", "test1", "description"));
+        openAPIRepository.save(createOpenAPI("/a/b/c/test2.openapi", "test2", "description"));
+        openAPIRepository.save(createOpenAPI("/a/b/c/test3.openapi", "test3", "description"));
+        openAPIRepository.save(createOpenAPI("/a/b/c/test4.openapi", "test4", "description"));
+        openAPIRepository.save(createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
+
     }
 
     @AfterEach

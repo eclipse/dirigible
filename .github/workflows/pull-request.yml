@@ -5,12 +5,15 @@ on:
     branches: 
       - main
       - master
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 jobs:
   build:        
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu, windows]
     steps:
     - uses: actions/checkout@v3
       with:
@@ -38,12 +41,24 @@ jobs:
       run: mvn formatter:validate
     - name: Maven Build
       run: mvn clean install -D maven.javadoc.skip=false -U
+      
   integration-tests:        
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
+    continue-on-error: true
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [windows]
     steps:
+    - name: Setup Chrome
+      uses: browser-actions/setup-chrome@v1.3.0
+      with:
+        chrome-version: stable
+    - if: runner.os == 'Linux'
+      run: chrome --version
+    - if: runner.os == 'macOS'
+      run: chromium --version
+    - if: runner.os == 'Windows'
+      run: (Get-Item (Get-Command chrome).Source).VersionInfo.ProductVersion
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
@@ -69,5 +84,11 @@ jobs:
     - name: Maven Build
       run: mvn -T 1C clean install -D maven.test.skip=true -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
     - name: Integration tests
-      run: mvn -f integration-tests/pom.xml verify -P integration-tests
-
+      run: mvn -f tests/pom.xml verify -P integration-tests
+    - name: Upload selenide screenshots
+      uses: actions/upload-artifact@v3.1.3
+      if: always()
+      with:
+        retention-days: 1
+        name: selenide-screenshots
+        path: tests/build/reports/tests

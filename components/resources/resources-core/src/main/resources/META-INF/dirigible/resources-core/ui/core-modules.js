@@ -1033,7 +1033,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                                         data.params['container'] = 'dialog';
                                         data.params['perspectiveId'] = perspective.id;
                                     } else {
-                                        data.parameters = {
+                                        data.params = {
                                             container: 'layout',
                                             perspectiveId: perspective.id,
                                         };

@@ -391,6 +391,14 @@ body {
   position: absolute !important;
 }
 
+.dg-icon-tab-hint {
+  opacity: .75;
+  margin-left: 0.5em;
+  white-space: pre;
+  font-size: var(--sapFontSmallSize, .9em);
+  font-style: italic;
+}
+
 /* Tool header fixes */
 .fd-button--tool-header {
   width: auto;

@@ -32,7 +32,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.6.2</version>
+				<version>3.6.3</version>
 				<configuration>
 					<detectJavaApiLink>false</detectJavaApiLink>
 				</configuration>
@@ -63,12 +63,6 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>${gson.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${spring.boot.slf4j.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.sap.cloud.db.jdbc</groupId>
