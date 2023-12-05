@@ -10,6 +10,8 @@
  */
 package org.eclipse.dirigible.components.jobs.handler;
 
+import java.nio.file.Path;
+import java.util.Date;
 import org.eclipse.dirigible.components.jobs.domain.JobLog;
 import org.eclipse.dirigible.components.jobs.service.JobLogService;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
@@ -19,9 +21,6 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.nio.file.Path;
-import java.util.Date;
 
 /**
  * The built-in scripting service job handler.
@@ -62,9 +61,11 @@ public class JobHandler implements Job {
 
             try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner()) {
                 runner.run(handlerPath);
-            } catch (Exception e) {
-                registeredFailed(name, handler, triggered, e);
-                throw new JobExecutionException(e);
+            } catch (RuntimeException ex) {
+                registeredFailed(name, handler, triggered, ex);
+                String msg = "Failed to execute JS. Job name [" + name + "], handler[" + handler + "]";
+                logger.error(msg, ex);
+                throw new JobExecutionException(msg, ex);
             }
 
             registeredFinished(name, handler, triggered);
