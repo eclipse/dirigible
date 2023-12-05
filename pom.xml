@@ -114,11 +114,11 @@
 						</configuration>
 						<executions>
 							<execution>
-							<id>format-java-code</id>
-							<phase>process-sources</phase>
-							<goals>
-								<goal>format</goal>
-							</goals>
+								<id>format-java-code</id>
+								<phase>process-sources</phase>
+								<goals>
+									<goal>format</goal>
+								</goals>
 							</execution>
 						</executions>
 					</plugin>
@@ -463,7 +463,6 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>4.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -486,7 +485,6 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>${gson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -503,7 +501,6 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>${commons.lang3}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -514,7 +511,6 @@
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
-			<version>${jaxb.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.xml.bind</groupId>
@@ -529,49 +525,38 @@
 		<dependency>
 			<groupId>jakarta.xml.ws</groupId>
 			<artifactId>jakarta.xml.ws-api</artifactId>
-			<version>${jaxws.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>${guava.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>net.bytebuddy</groupId>
+			<artifactId>byte-buddy</artifactId>
+			<version>1.14.10</version>
+		</dependency>
 
 		<!-- Test Dependencies -->
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>
-			<version>${okhttp3.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp-urlconnection</artifactId>
-			<version>${okhttp3.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-all</artifactId>
-			<version>${hamcrest.all.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>${mockito.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-inline</artifactId>
-			<version>${mockito-inline.version}</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-		    <groupId>net.bytebuddy</groupId>
-		    <artifactId>byte-buddy</artifactId>
-		    <version>1.14.10</version>
 		</dependency>
 		<!-- End Test Dependencies -->
 	</dependencies>
@@ -584,24 +569,1144 @@
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-			    <groupId>junit</groupId>
-			    <artifactId>junit</artifactId>
-			    <version>${junit.version}</version>
-			    <scope>test</scope>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-commons-config</artifactId>
+				<version>${project.version}</version>
 			</dependency>
-		    <dependency>
-		        <groupId>org.junit.vintage</groupId>
-		        <artifactId>junit-vintage-engine</artifactId>
-		        <version>5.10.1</version>
-		        <scope>test</scope>
-		    </dependency>
-	        <dependency>
-	            <groupId>org.springframework.boot</groupId>
-	            <artifactId>spring-boot-dependencies</artifactId>
-	            <version>${spring.boot.version}</version>
-	            <type>pom</type>
-	            <scope>import</scope>
-	        </dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-group-core</artifactId>
+				<version>${project.version}</version>
+				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-security-basic</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-security-keycloak</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-security-oauth2</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-group-database</artifactId>
+				<version>${project.version}</version>
+				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-group-engines</artifactId>
+				<version>${project.version}</version>
+				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-group-ide</artifactId>
+				<version>${project.version}</version>
+				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-group-api</artifactId>
+				<version>${project.version}</version>
+				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-group-resources</artifactId>
+				<version>${project.version}</version>
+				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-group-templates</artifactId>
+				<version>${project.version}</version>
+				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-test-project</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-modules-javascript</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-core-base</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-bpm-flowable</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-commons-helpers</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-test</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-http</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-security</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-cms</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-core-database</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-data-structures</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-data-sources</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-data-management</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-data-store</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-git</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-core-extensions</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-platform</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-workspace</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-cms-internal</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-javascript</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-log</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-io</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-jobs</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-group-api-core</artifactId>
+				<version>${project.version}</version>
+				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-core-repository</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-problems</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-commons-process</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-listeners</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-template</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-commons-xml2json</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-commons-timeout</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-core-healthcheck</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-repository-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-repository-local</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-database-sql</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-database-sql-h2</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-data-csvim</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-data-transfer</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-database-persistence</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-database-sql-postgres</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-security</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-core-spring</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-bpm</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-core-project</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-core-registry</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-core-initializers</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-engine-graalium-execution-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-odata-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-core-version</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-net</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-utils</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-modules-python</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-database</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-extensions</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-pdf</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-qunit</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-indexing</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-git</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-job</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-messaging</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-template</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-mail</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-core-configurations</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-data-export</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-data-import</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-data-anonymize</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-database-sql-mysql</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-database-sql-mongodb</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-database-sql-hana</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-database-sql-sybase</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-database-sql-snowflake</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-group-engines-core</artifactId>
+				<version>${project.version}</version>
+				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-typescript</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-python</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-template-velocity</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-template-mustache</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-template-javascript</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-wiki</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-command</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-websockets</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-openapi</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-odata</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-camel</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-web</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-console</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-template</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-terminal</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-logs</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-about</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-actions-service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-bpm</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-bpm-menu</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-bpm-workspace</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-branding</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-console</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-csv</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-csvim</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-integrations</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-designer</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-data-structures</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-database</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-database-menu</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-databases</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-debugger</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-deploy-manager</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-documents</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>
+					dirigible-components-ide-ui-documents-ext-content-type-ms</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-entity</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-entity-menu</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-extensions</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-extensions-menu</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-file-manager</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-form-builder</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-form-builder-menu</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-generate-service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-git</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-git-branches</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-git-projects</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-git-service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-image</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-import</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-jobs</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-jobs-menu</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-listeners</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-listeners-menu</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-logs</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-monaco</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-monaco-extensions</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-operations</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-plugins</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-preview</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-problems</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-projects</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-properties</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-publisher-service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-registry</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-registry-service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-repository</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-repository-service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-result</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-schema</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-schema-menu</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-search</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-security</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-security-menu</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-sql</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-staging</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-swagger</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-template-service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-terminal</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-transport-service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-websockets</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-websockets-menu</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-welcome</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-workbench</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-workspace-menu</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-workspace-service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-group-resources-core</artifactId>
+				<version>${project.version}</version>
+				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-resources-flowable-libs</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-resources-mxgraph</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-resources-portal</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-group-api-platform</artifactId>
+				<version>${project.version}</version>
+				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-bpm</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-cms</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-kafka</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-etcd</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-mongodb</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-rabbitmq</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-redis</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-api-qldb</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-sftp</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-resources-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-resources-dev-tools</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-resources-resources</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-resources-theme-default</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-resources-theme-quartz-dark</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-resources-theme-quartz-light</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-resources-themes</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-application-angular</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-application-dao</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-application-data</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-application-feed</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-application-odata</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-application-rest</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-application-schema</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-application-ui-angular</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-database-access</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-database-table</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-database-view</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-extension-perspective</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-extension-view</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-form-builder-angularjs</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-hello-world</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-react</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-html</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-html-widgets</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-http-client</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-job</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-listener</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-websocket</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-database-h2</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-database-sql-h2</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-database-mongodb-jdbc</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-engine-graalium-execution</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-repository-search</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-repository-zip</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-repository-api-test</artifactId>
+				<version>${project.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-repository-cache</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-odata-core-test</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.junit.vintage</groupId>
+				<artifactId>junit-vintage-engine</artifactId>
+				<version>5.10.1</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring.boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.seleniumhq.selenium</groupId>
+				<artifactId>selenium-java</artifactId>
+				<version>4.15.0</version>
+				<scope>test</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -621,40 +1726,26 @@
 		<maven.scm.plugin.version>2.0.0</maven.scm.plugin.version>
 		<scmVersionType>branch</scmVersionType>
 		<commons.io>2.15.1</commons.io>
-		<commons.codec>1.16.0</commons.codec>
 		<commons.lang3>3.14.0</commons.lang3>
 		<commons.exec>1.3</commons.exec>
-		<commons.text>1.10.0</commons.text>
-		<gson.version>2.10.1</gson.version>
-		<mockito.version>5.8.0</mockito.version>
-		<mockito-inline.version>5.2.0</mockito-inline.version>
-		<junit.version>4.13.2</junit.version>
 		<hamcrest.all.version>1.3</hamcrest.all.version>
 		<retrofit.version>1.8.0</retrofit.version>
-		<okhttp3.version>4.12.0</okhttp3.version>
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
 
 		<h2database.version>2.2.224</h2database.version>
-		<postgresql.version>42.7.0</postgresql.version>
 		<ngdbc.version>2.18.16</ngdbc.version>
-		<snowflake.version>3.14.3</snowflake.version>
 
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<lucene.version>9.8.0</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
 		<flowable.version>6.8.0</flowable.version>
 		<jaxb.version>2.3.0</jaxb.version>
-		<jaxws.version>2.3.3</jaxws.version>
-		<jakarta.ws.rs-api.version>2.1.5</jakarta.ws.rs-api.version>
 		<license-maven-plugin.version>4.3</license-maven-plugin.version>
 		<persistence.api.version>2.2.3</persistence.api.version>
 		<jgit.version>6.7.0.202309050840-r</jgit.version>
-		<javax.mail.api.version>1.6.4</javax.mail.api.version>
 		<olingo.version>2.0.13</olingo.version>
-		<kafka.version>3.6.0</kafka.version>
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<mongodb.version>3.12.14</mongodb.version>
-		<caffeine.version>3.1.8</caffeine.version>
 		<liquibase-core.version>4.25.0</liquibase-core.version>
 		<commons-csv.version>1.10.0</commons-csv.version>
 		<jquery-ui.version>1.13.0</jquery-ui.version>
@@ -677,49 +1768,29 @@
 		<fontawesome.version>4.7.0</fontawesome.version>
 		<classgraph.version>4.8.165</classgraph.version>
 		<commons-compress.version>1.22</commons-compress.version>
-		<testcontainers.elasticsearch.version>1.17.6</testcontainers.elasticsearch.version>
 		<testcontainers.version>1.19.3</testcontainers.version>
-		<testcontainers.rabbitmq.version>1.17.6</testcontainers.rabbitmq.version>
-		<amqp.client.version>5.20.0</amqp.client.version>
-		<elasticsearch.client.version>7.7.1</elasticsearch.client.version>
 		<jetcd.core.version>0.7.6</jetcd.core.version>
-		<jetcd.test.version>0.5.4</jetcd.test.version>
 		<logcaptor.version>2.9.2</logcaptor.version>
 		<exec.maven.plugin>3.1.1</exec.maven.plugin>
-		<jackson.databind.version>2.16.0</jackson.databind.version>
 		<mina-core.version>2.2.3</mina-core.version>
 		<sshd-core.version>2.11.0</sshd-core.version>
 
-		<spring.version>5.5.18</spring.version>
 		<spring.boot.version>2.7.18</spring.boot.version>
 
 		<keycloak.keycloak-spring-boot-starter>23.0.1</keycloak.keycloak-spring-boot-starter>
-		<hikaricp.version>5.1.0</hikaricp.version>
-		<validator.version>1.7</validator.version>
-		<quartz.version>2.3.2</quartz.version>
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<graalvm.version>23.1.1</graalvm.version>
 		<guava.version>32.1.3-jre</guava.version>
 		<icu4j.version>74.1</icu4j.version>
-		<commons-collections.version>3.2.2</commons-collections.version>
-		<commons-collections4.version>4.4</commons-collections4.version>
 		<velocity.version>2.3</velocity.version>
 		<wikitext.version>3.0.48.202308291007</wikitext.version>
 		<flexmark.version>0.64.8</flexmark.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
 		<qldb.sdk.version>1.12.604</qldb.sdk.version>
-		<cassandra.version>1.17.6</cassandra.version>
-		<cassandra.driver.version>3.11.3</cassandra.driver.version>
-		<jedis.version>5.1.0</jedis.version>
-		<spark.version>3.3.2</spark.version>
-		<javax.websocket-api.version>1.1</javax.websocket-api.version>
 		<camel.version>3.21.2</camel.version>
-		<mina.version>3.0.0-M2</mina.version>
 		<ftpserver.version>1.2.0</ftpserver.version>
 
 		<org.springdoc.openapi.ui.version>1.7.0</org.springdoc.openapi.ui.version>
-		<swagger-annotations.version>1.6.10</swagger-annotations.version>
-		<junit4.version>4.13.2</junit4.version>
 
 		<sonar.organization>eclipse</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
