@@ -63,7 +63,7 @@ public class JobHandler implements Job {
                 runner.run(handlerPath);
             } catch (RuntimeException ex) {
                 registeredFailed(name, handler, triggered, ex);
-                String msg = "Failed to execute JS. Job name [" + name + "], handler[" + handler + "]";
+                String msg = "Failed to execute JS. Job name [" + name + "], handler [" + handler + "]";
                 logger.error(msg, ex);
                 throw new JobExecutionException(msg, ex);
             }
