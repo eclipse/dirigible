@@ -20,7 +20,7 @@ const projectName = 'test-project';
 const repositoryName = projectName;
 
 const workspace = workspaceManager.createWorkspace(workspaceName);
-project = workspace.createProject(projectName);
+const project = workspace.createProject(projectName);
 let firstFile = project.createFile("firstFile.js");
 firstFile.setText('first file content');
 
