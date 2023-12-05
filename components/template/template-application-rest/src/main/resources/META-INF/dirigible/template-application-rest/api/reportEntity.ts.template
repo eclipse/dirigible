@@ -26,7 +26,7 @@ class ${name}Service {
 #end
             "$limit": ctx.queryParameters["$limit"] ? parseInt(ctx.queryParameters["$limit"]) : undefined,
             "$offset": ctx.queryParameters["$offset"] ? parseInt(ctx.queryParameters["$offset"]) : undefined
-        }
+        };
 
         return this.repository.findAll(filter);
     }
@@ -49,9 +49,10 @@ class ${name}Service {
 #end
 #end
 #end
-        }
+        };
 
-        return this.repository.count(filter);
+        const count = this.repository.count(filter);
+        return JSON.stringify(count);
     }
 
 }

@@ -15,12 +15,23 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 	.controller('PageController', ['$scope', 'messageHub',#if($hasDropdowns) '${dollar}http',#end 'entityApi', function ($scope, messageHub,#if($hasDropdowns) ${dollar}http,#end entityApi) {
 
 		$scope.entity = {};
-		$scope.formHeaders = {
-			select: "${name} Details",
-			create: "Create ${name}",
-			update: "Update ${name}"
-		};
 		$scope.formErrors = {};
+
+		if (window != null && window.frameElement != null && window.frameElement.hasAttribute("data-parameters")) {
+			const dataParameters = window.frameElement.getAttribute("data-parameters");
+			if (dataParameters) {
+				const params = JSON.parse(dataParameters);
+
+#foreach ($property in $filter.properties)
+#if($property.isDateType)
+				if (params.filter.${property.name}) {
+					params.filter.${property.name} = new Date(params.filter.${property.name});
+				}
+#end
+#end
+				$scope.entity = params.filter;
+			}
+		};
 
 		$scope.isValid = function (isValid, property) {
 			${dollar}scope.formErrors[property] = !isValid ? true : undefined;
@@ -34,9 +45,21 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 		};
 
 		$scope.filter = function () {
-			alert(JSON.stringify(${dollar}scope.entity, null, 4));
-			messageHub.postMessage("filter", ${dollar}scope.entity);
+			const filter = {
+				...$scope.entity
+			};
+#foreach ($property in $filter.properties)
+#if($property.isDateType)
+			filter.${property.name} = filter.${property.name}?.getTime();
+#end
+#end
+			messageHub.postMessage("filter", filter);
 			$scope.cancel();
+		};
+
+		$scope.resetFilter = function () {
+			$scope.entity = {};
+			$scope.filter();
 		};
 
 		$scope.cancel = function () {

@@ -8,6 +8,8 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 	}])
 	.controller('PageController', ['${dollar}scope',#if($hasDropdowns) '${dollar}http',#end 'messageHub', 'entityApi', function (${dollar}scope,#if($hasDropdowns) ${dollar}http,#end messageHub, entityApi) {
 
+		$scope.filter = {};
+
 		function resetPagination() {
 			$scope.dataPage = 1;
 			$scope.dataCount = 0;
@@ -17,27 +19,25 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 
 		//-----------------Events-------------------//
 		messageHub.onDidReceiveMessage("filter", function (msg) {
-			debugger
-			// TODO
-			// $scope.loadPage();
-			$scope.$apply(function () {
-				$scope.entity = {};
-				$scope.action = 'select';
-			});
+			$scope.filter = msg.data;
+			${dollar}scope.loadPage(1);
 		});
 		//-----------------Events-------------------//
 
 		$scope.loadPage = function (pageNumber) {
+			const listFilter = {
+				$offset: (pageNumber - 1) * $scope.dataLimit,
+				$limit: $scope.dataLimit,
+				...$scope.filter
+			};
 			$scope.dataPage = pageNumber;
-			entityApi.count().then(function (response) {
+			entityApi.count($scope.filter).then(function (response) {
 				if (response.status != 200) {
 					messageHub.showAlertError("${name}", `Unable to count ${name}: '${response.message}'`);
 					return;
 				}
 				$scope.dataCount = response.data;
-				let offset = (pageNumber - 1) * $scope.dataLimit;
-				let limit = $scope.dataLimit;
-				entityApi.list(offset, limit).then(function (response) {
+				entityApi.list(listFilter).then(function (response) {
 					if (response.status != 200) {
 						messageHub.showAlertError("${name}", `Unable to list ${name}: '${response.message}'`);
 						return;
@@ -82,7 +82,8 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 
 		$scope.openFilter = function () {
 			messageHub.showDialogWindow("${name}-details-filter", {
-				action: "filter"
+				action: "filter",
+				filter: $scope.filter
 			});
 		};
 

@@ -3,8 +3,16 @@ angular.module('entityApi', [])
         this.baseUrl = '';
         this.$get = ['$http', function workspaceApiFactory($http) {
 
-            let count = function (entityId) {
-                let url = `${this.baseUrl}/count${entityId ? `/${entityId}` : ''}`;
+            const count = function (idOrFilter) {
+                let url = `${this.baseUrl}/count`;
+                if (idOrFilter != null && typeof idOrFilter === 'object') {
+                    const query = Object.keys(idOrFilter).map(e => idOrFilter[e] ? `${e}=${idOrFilter[e]}` : null).filter(e => e !== null).join('&');
+                    if (query) {
+                        url = `${this.baseUrl}/count?${query}`;
+                    }
+                } else if (idOrFilter != null) {
+                    url = `${this.baseUrl}/count/${idOrFilter}`;
+                }
                 return $http.get(url, { headers: { 'describe': 'application/json' } })
                     .then(function successCallback(response) {
                         return { status: response.status, data: response.data };
@@ -14,10 +22,15 @@ angular.module('entityApi', [])
                     });
             }.bind(this);
 
-            let list = function (offset, limit) {
+            const list = function (offsetOrFilter, limit) {
                 let url = this.baseUrl;
-                if (offset != null && limit != null) {
-                    url = `${url}?$offset=${offset}&$limit=${limit}`;
+                if (offsetOrFilter != null && typeof offsetOrFilter === 'object') {
+                    const query = Object.keys(offsetOrFilter).map(e => offsetOrFilter[e] ? `${e}=${offsetOrFilter[e]}` : null).filter(e => e !== null).join('&');
+                    if (query) {
+                        url = `${this.baseUrl}?${query}`;
+                    }
+                } else if (offsetOrFilter != null && limit != null) {
+                    url = `${url}?$offset=${offsetOrFilter}&$limit=${limit}`;
                 }
                 return $http.get(url, { headers: { 'describe': 'application/json' } })
                     .then(function successCallback(response) {
@@ -28,8 +41,8 @@ angular.module('entityApi', [])
                     });
             }.bind(this);
 
-            let filter = function (query, offset, limit) {
-                let url = `${this.baseUrl}?${query}&$offset=${offset}&$limit=${limit}`;
+            const filter = function (query, offset, limit) {
+                const url = `${this.baseUrl}?${query}&$offset=${offset}&$limit=${limit}`;
                 return $http.get(url, { headers: { 'describe': 'application/json' } })
                     .then(function successCallback(response) {
                         return { status: response.status, data: response.data };
@@ -39,9 +52,9 @@ angular.module('entityApi', [])
                     });
             }.bind(this);
 
-            let create = function (entity) {
-                let url = this.baseUrl;
-                let body = JSON.stringify(entity);
+            const create = function (entity) {
+                const url = this.baseUrl;
+                const body = JSON.stringify(entity);
                 return $http.post(url, body)
                     .then(function (response) {
                         return { status: response.status, data: response.data };
@@ -51,9 +64,9 @@ angular.module('entityApi', [])
                     });
             }.bind(this);
 
-            let update = function (id, entity) {
-                let url = `${this.baseUrl}/${id}`;
-                let body = JSON.stringify(entity);
+            const update = function (id, entity) {
+                const url = `${this.baseUrl}/${id}`;
+                const body = JSON.stringify(entity);
                 return $http.put(url, body)
                     .then(function (response) {
                         return { status: response.status, data: response.data };
@@ -63,8 +76,8 @@ angular.module('entityApi', [])
                     });
             }.bind(this);
 
-            let deleteEntity = function (id) {
-                let url = `${this.baseUrl}/${id}`;
+            const deleteEntity = function (id) {
+                const url = `${this.baseUrl}/${id}`;
                 return $http.delete(url, { headers: { 'describe': 'application/json' } })
                     .then(function successCallback(response) {
                         return { status: response.status, data: response.data };

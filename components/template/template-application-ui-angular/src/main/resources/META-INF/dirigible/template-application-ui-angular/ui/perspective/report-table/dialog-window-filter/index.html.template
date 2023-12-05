@@ -24,7 +24,7 @@
             </div>
 
             <fd-fieldset class="fd-margin--md" ng-form="formFieldset">
-                <fd-form-group dg-header="{{formHeaders[action]}}" name="entityForm">
+                <fd-form-group dg-header="Report Filter" name="entityForm">
 #foreach ($property in $filter.properties)
 #if(!$property.dataAutoIncrement && !$property.dataPrimaryKey)
 #if($property.widgetType == "DROPDOWN")
@@ -38,8 +38,6 @@
                             ng-model="entity.${property.name}"
 #if($property.isCalculatedProperty == "true")
                             dg-disabled="true"
-#else
-                            dg-disabled="action === 'select'"
 #end
                             dropdown-items="options${property.name}"
                             dg-placeholder="Search ${property.widgetLabel} ...">
@@ -52,8 +50,6 @@
                             ng-required="${property.dataNotNull}"
 #if($property.isCalculatedProperty == "true")
                             ng-disabled="true"
-#else
-                            ng-disabled="action === 'select'"
 #end
                             ng-model="entity.${property.name}">
                         </fd-checkbox>
@@ -71,8 +67,6 @@
                                 ng-model="entity.${property.name}"
 #if($property.isCalculatedProperty == "true")
                                 ng-readonly="true"
-#else
-                                ng-readonly="action === 'select'"
 #end
                                 type="color"
                                 placeholder="Enter ${property.widgetLabel}">
@@ -92,8 +86,6 @@
                                 ng-model="entity.${property.name}"
 #if($property.isCalculatedProperty == "true")
                                 ng-readonly="true"
-#else
-                                ng-readonly="action === 'select'"
 #end
                                 type="number"
                                 placeholder="Enter ${property.widgetLabel}">
@@ -113,8 +105,6 @@
                                 ng-model="entity.${property.name}"
 #if($property.isCalculatedProperty == "true")
                                 ng-readonly="true"
-#else
-                                ng-readonly="action === 'select'"
 #end
                                 type="month">
                             </fd-input>
@@ -133,8 +123,6 @@
                                 ng-model="entity.${property.name}"
 #if($property.isCalculatedProperty == "true")
                                 ng-readonly="true"
-#else
-                                ng-readonly="action === 'select'"
 #end
                                 type="week">
                             </fd-input>
@@ -153,8 +141,6 @@
                                 ng-model="entity.${property.name}"
 #if($property.isCalculatedProperty == "true")
                                 ng-readonly="true"
-#else
-                                ng-readonly="action === 'select'"
 #end
                                 type="time">
                             </fd-input>
@@ -173,8 +159,6 @@
                                 ng-model="entity.${property.name}"
 #if($property.isCalculatedProperty == "true")
                                 ng-readonly="true"
-#else
-                                ng-readonly="action === 'select'"
 #end
                                 type="datetime-local">
                             </fd-input>
@@ -193,8 +177,6 @@
                                 ng-model="entity.${property.name}"
 #if($property.isCalculatedProperty == "true")
                                 ng-readonly="true"
-#else
-                                ng-readonly="action === 'select'"
 #end
                                 type="date">
                             </fd-input>
@@ -212,8 +194,6 @@
 							ng-model="entity.${property.name}"
 #if($property.isCalculatedProperty == "true")
                             ng-readonly="true"
-#else
-                            ng-readonly="action === 'select'"
 #end
 							ng-minlength="${property.minLength} || 0"
 							ng-maxlength="${property.maxLength} || -1"
@@ -234,8 +214,6 @@
                                 ng-model="entity.${property.name}"
 #if($property.isCalculatedProperty == "true")
                                 ng-readonly="true"
-#else
-                                ng-readonly="action === 'select'"
 #end
                                 ng-minlength="${property.minLength} || 0"
                                 ng-maxlength="${property.maxLength} || -1"
@@ -258,8 +236,6 @@
                                 ng-model="entity.${property.name}"
 #if($property.isCalculatedProperty == "true")
                                 ng-readonly="true"
-#else
-                                ng-readonly="action === 'select'"
 #end
                                 ng-minlength="${property.minLength} || 0"
                                 ng-maxlength="${property.maxLength} || -1"
@@ -282,8 +258,6 @@
                                 ng-model="entity.${property.name}"
 #if($property.isCalculatedProperty == "true")
                                 ng-readonly="true"
-#else
-                                ng-readonly="action === 'select'"
 #end
                                 ng-minlength="${property.minLength} || 0"
                                 ng-maxlength="${property.maxLength} || -1"
@@ -306,8 +280,6 @@
                                 ng-model="entity.${property.name}"
 #if($property.isCalculatedProperty == "true")
                                 ng-readonly="true"
-#else
-                                ng-readonly="action === 'select'"
 #end
                                 ng-minlength="${property.minLength} || 0"
                                 ng-maxlength="${property.maxLength} || -1"
@@ -324,11 +296,15 @@
             </fd-fieldset>
         </fd-scrollbar>
 
-        <footer class="fd-dialog__footer fd-bar fd-bar--footer" ng-show="action !== 'select'">
+        <footer class="fd-dialog__footer fd-bar fd-bar--footer">
             <div class="fd-bar__right">
                 <fd-button class="fd-margin-end--tiny fd-dialog__decisive-button" compact="true" dg-type="emphasized"
                     dg-label="Filter"
                     ng-click="filter()" state="{{ !isFormValid ? 'disabled' : '' }}">
+                </fd-button>
+                <fd-button class="fd-margin-end--tiny fd-dialog__decisive-button" compact="true" dg-type="transparent"
+                    dg-label="Reset"
+                    ng-click="resetFilter()">
                 </fd-button>
                 <fd-button class="fd-dialog__decisive-button" compact="true" dg-type="transparent" dg-label="Cancel"
                     ng-click="cancel()"></fd-button>

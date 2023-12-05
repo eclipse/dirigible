@@ -8,7 +8,7 @@ angular.module('page', ["ideUI", "ideView"])
 			let dataParameters = window.frameElement.getAttribute("data-parameters");
 			if (dataParameters) {
 				let params = JSON.parse(dataParameters);
-				$scope.action = "select";;
+				$scope.action = "select";
 
 #foreach ($property in $properties)
 #if($property.isDateType)
