@@ -143,7 +143,7 @@ public class ProjectBuildService {
                                         .getStandardOutput();
             LOGGER.info(output);
         } catch (ExecutionException | InterruptedException e) {
-            LOGGER.error("Could not run command [{}] for project [{}] using env [{}]", buildCommand, projectPath, env, e);
+            LOGGER.error("Could not run command: " + buildCommand + " for project: " + project, e);
         }
     }
 
