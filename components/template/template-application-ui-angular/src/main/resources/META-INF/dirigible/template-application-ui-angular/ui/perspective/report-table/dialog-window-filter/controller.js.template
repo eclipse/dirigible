@@ -12,26 +12,23 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 	.config(["entityApiProvider", function (entityApiProvider) {
 		entityApiProvider.baseUrl = "/services/js/${projectName}/gen/api/${perspectiveName}/${name}.js";
 	}])
-	.controller('PageController', ['$scope', 'messageHub',#if($hasDropdowns) '${dollar}http',#end 'entityApi', function ($scope, messageHub,#if($hasDropdowns) ${dollar}http,#end entityApi) {
+	.controller('PageController', ['$scope', 'messageHub', 'ViewParameters',#if($hasDropdowns) '${dollar}http',#end 'entityApi', function ($scope, messageHub, ViewParameters,#if($hasDropdowns) ${dollar}http,#end entityApi) {
 
 		$scope.entity = {};
 		$scope.formErrors = {};
 
-		if (window != null && window.frameElement != null && window.frameElement.hasAttribute("data-parameters")) {
-			const dataParameters = window.frameElement.getAttribute("data-parameters");
-			if (dataParameters) {
-				const params = JSON.parse(dataParameters);
-
+		$scope.dataParameters = ViewParameters.get();
+		if ($scope.dataParameters?.filter) {
+			const filter = $scope.dataParameters.filter;
 #foreach ($property in $filter.properties)
 #if($property.isDateType)
-				if (params.filter.${property.name}) {
-					params.filter.${property.name} = new Date(params.filter.${property.name});
-				}
-#end
-#end
-				$scope.entity = params.filter;
+			if (filter.${property.name}) {
+				filter.${property.name} = new Date(filter.${property.name});
 			}
-		};
+#end
+#end
+			$scope.entity = filter;
+		}
 
 		$scope.isValid = function (isValid, property) {
 			${dollar}scope.formErrors[property] = !isValid ? true : undefined;
