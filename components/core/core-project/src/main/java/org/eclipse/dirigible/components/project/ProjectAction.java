@@ -10,9 +10,8 @@
  */
 package org.eclipse.dirigible.components.project;
 
-import org.eclipse.dirigible.components.command.CommandDescriptor;
-
 import java.util.List;
+import org.eclipse.dirigible.components.command.CommandDescriptor;
 
 /**
  * The Class ProjectAction.
@@ -28,10 +27,14 @@ public class ProjectAction {
     /** The publish. */
     private final boolean publish;
 
-    public ProjectAction(String name, List<CommandDescriptor> commands, boolean publish) {
+    /** The publish. */
+    private final boolean registry;
+
+    public ProjectAction(String name, List<CommandDescriptor> commands, boolean publish, boolean afterPublish) {
         this.name = name;
         this.commands = commands;
         this.publish = publish;
+        this.registry = afterPublish;
     }
 
     /**
@@ -61,8 +64,18 @@ public class ProjectAction {
         return publish;
     }
 
+    /**
+     * Checks if is registry.
+     *
+     * @return true, if is registry
+     */
+    public boolean isRegistry() {
+        return registry;
+    }
+
     @Override
     public String toString() {
-        return "ProjectAction{" + "name='" + name + '\'' + ", commands=" + commands + ", publish=" + publish + '}';
+        return "ProjectAction{" + "name='" + name + '\'' + ", commands=" + commands + ", publish=" + publish + ", registry=" + registry
+                + '}';
     }
 }

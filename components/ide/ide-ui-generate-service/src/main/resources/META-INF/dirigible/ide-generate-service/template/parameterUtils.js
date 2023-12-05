@@ -14,6 +14,9 @@ exports.process = function (model, parameters) {
         if (e.dataCount && parameters.tablePrefix) {
             e.dataCount = e.dataCount.replaceAll("${tablePrefix}", parameters.tablePrefix);
         }
+        if (e.dataQuery && parameters.tablePrefix) {
+            e.dataQuery = e.dataQuery.replaceAll("${tablePrefix}", parameters.tablePrefix);
+        }
 
         if (e.type === "DEPENDENT" && (e.layoutType === "LIST_DETAILS" || e.layoutType === "MANAGE_DETAILS")) {
             const relationshipEntityName = e.properties.filter(p => p.relationshipType === "COMPOSITION" && p.relationshipCardinality === "1_n").map(p => p.relationshipEntityName)[0];
