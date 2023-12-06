@@ -1,7 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-parent</artifactId>
@@ -12,7 +13,7 @@
 	<name>Modules - Parent</name>
 	<artifactId>dirigible-modules-parent</artifactId>
 	<description>Core modules packaged with Dirigible</description>
-    <packaging>pom</packaging>
+	<packaging>pom</packaging>
 
 	<modules>
 		<module>commons</module>
@@ -22,7 +23,7 @@
 		<module>odata</module>
 		<module>repository</module>
 	</modules>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -30,6 +31,18 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-dependencies</artifactId>
+				<version>${project.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<properties>
 		<license.header.location>../licensing-header.txt</license.header.location>
