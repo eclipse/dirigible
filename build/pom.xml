@@ -23,16 +23,4 @@
 	<properties>
 		<license.header.location>../licensing-header.txt</license.header.location>
 	</properties>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.eclipse.dirigible</groupId>
-				<artifactId>dirigible-dependencies</artifactId>
-				<version>${project.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 </project>
