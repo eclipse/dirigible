@@ -31,6 +31,7 @@
         <module>security/security-basic</module>
         <module>security/security-keycloak</module>
         <module>security/security-oauth2</module>
+		<module>security/security-azure</module>
 
         <!-- Data -->
         <module>data/data-structures</module>
