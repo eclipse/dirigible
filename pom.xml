@@ -565,6 +565,11 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-application</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.junit.vintage</groupId>
 				<artifactId>junit-vintage-engine</artifactId>
 				<version>5.10.1</version>
@@ -694,3 +699,4 @@
 		<formatter.java.version>${java.version}</formatter.java.version>
 	</properties>
 </project>
+
