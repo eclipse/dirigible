@@ -44,6 +44,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-odata-core</artifactId>
+			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Test -->

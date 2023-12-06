@@ -19,6 +19,7 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-data-management</artifactId>
+            <version>9.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.datafaker</groupId>
@@ -30,6 +31,7 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-ide-git</artifactId>
+            <version>9.0.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
