@@ -135,7 +135,8 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
      * @return the CMIS session object
      */
     public static final Object getSession() {
-        Object session = ((CmsProvider) applicationContext.getBean("CMS_PROVIDER")).getSession();
+        String type = Configuration.get("DIRIGIBLE_CMS_PROVIDER", "cms-provider-internal");
+        Object session = ((CmsProvider) applicationContext.getBean(type)).getSession();
         return session;
     }
 

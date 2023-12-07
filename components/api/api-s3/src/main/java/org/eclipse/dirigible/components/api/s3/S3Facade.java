@@ -16,14 +16,18 @@ import static software.amazon.awssdk.regions.Region.EU_NORTH_1;
 
 
 @Component
-    public class S3Facade {
+public class S3Facade {
     private static final String BUCKET = "testbuckets3mina";
-    public static final String ACCESS_KEY_ID = "AKIAYUZ6SK3AGWNHSAPE";
-    public static final String SECRET_ACCESS_KEY = "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";
-    public static final String BUCKET_URL_PATH = "https://testbuckets3mina.s3.eu-north-1.amazonaws.com/";
+//    public static final String ACCESS_KEY_ID = "AKIAYUZ6SK3AGWNHSAPE";
+//    public static final String SECRET_ACCESS_KEY = "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";
+//    public static final String BUCKET_URL_PATH = "https://testbuckets3mina.s3.eu-north-1.amazonaws.com/";
     private static final Region region = EU_NORTH_1;
+
     private static AwsBasicCredentials awsCredentials;
     private static S3Client s3;
+
+    public S3Facade() {
+    }
 
     public S3Facade(AwsBasicCredentials awsCredentials) {
         this.awsCredentials = awsCredentials;
@@ -47,7 +51,7 @@ import static software.amazon.awssdk.regions.Region.EU_NORTH_1;
         s3.putObject(objectRequest, RequestBody.fromBytes(content));
     }
 
-    public void delete (String name){
+    public static void delete(String name) {
 
         DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
                 .bucket(BUCKET)
@@ -57,19 +61,18 @@ import static software.amazon.awssdk.regions.Region.EU_NORTH_1;
         s3.deleteObject(objectRequest);
     }
 
-    public static byte[] get(String name){
+    public static byte[] get(String name) {
 
         ResponseBytes<GetObjectResponse> response = s3.getObjectAsBytes(GetObjectRequest.builder()
                 .bucket(BUCKET)
                 .key(name)
                 .build());
-        byte[] data = response.asByteArray();
 
-        return data;
+        return response.asByteArray();
     }
 
-    public static void update(String name, byte[] content){
-        //will upload the updated object to S3, overwriting the existing object
+    public static void update(String name, byte[] content) {
+        // will upload the updated object to S3, overwriting the existing object
         create(name, content);
     }
 }

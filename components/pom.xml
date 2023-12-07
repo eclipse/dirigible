@@ -58,6 +58,7 @@
         <module>engine/engine-bpm-flowable</module>
         <module>engine/engine-cms</module>
         <module>engine/engine-cms-internal</module>
+        <module>engine/engine-cms-s3</module>
         <module>engine/engine-jobs</module>
         <module>engine/engine-openapi</module>
         <module>engine/engine-websockets</module>
@@ -164,6 +165,7 @@
         <module>api/api-database</module>
         <module>api/api-extensions</module>
         <module>api/api-security</module>
+        <module>api/api-s3</module>
         <module>api/api-platform</module>
         <module>api/api-indexing</module>
         <module>api/api-net</module>

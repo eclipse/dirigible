@@ -8,7 +8,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.engine.cms.internal.repository;
+package org.eclipse.dirigible.components.engine.cms.s3.repository;
 
 import java.io.IOException;
 
@@ -38,6 +38,7 @@ public class CmisObject {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public CmisObject(CmisSession session, String path) throws IOException {
+
         super();
         this.session = session;
         path = sanitize(path);
