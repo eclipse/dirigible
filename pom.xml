@@ -457,6 +457,7 @@
 		<module>components</module>
 		<module>build</module>
 		<module>tests</module>
+		<module>dependencies</module>
 	</modules>
 
 	<dependencies>
@@ -698,3 +699,4 @@
 		<formatter.java.version>${java.version}</formatter.java.version>
 	</properties>
 </project>
+

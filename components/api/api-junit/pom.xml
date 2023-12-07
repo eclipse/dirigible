@@ -18,7 +18,6 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-group-api-core</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
             <type>pom</type>
             <scope>test</scope>
         </dependency>
