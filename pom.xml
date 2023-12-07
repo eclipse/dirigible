@@ -614,7 +614,7 @@
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
 
 		<h2database.version>2.2.224</h2database.version>
-		<ngdbc.version>2.18.16</ngdbc.version>
+		<ngdbc.version>2.19.11</ngdbc.version>
 
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<lucene.version>9.8.0</lucene.version>
