@@ -802,10 +802,10 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				// Filter Entity ----------------------------------------------
 
 				// Adds sidebar icon for the filter entity object
-				let filterObject = new Entity('FilterEntityName');
-				let filter = new mxCell(filterObject, new mxGeometry(0, 0, 200, 28), 'filter');
-				filter.setVertex(true);
-				addSidebarIcon($scope.graph, sidebar, filter, ICON_FILTER, 'Drag this to the diagram to create a new Filter Entity', $scope);
+				let reportFilterObject = new Entity('ReportFilterEntityName');
+				let reportFilter = new mxCell(reportFilterObject, new mxGeometry(0, 0, 200, 28), 'filter');
+				reportFilter.setVertex(true);
+				addSidebarIcon($scope.graph, sidebar, reportFilter, ICON_FILTER, 'Drag this to the diagram to create a new Report Filter Entity', $scope);
 
 				// Adds primary key field into entity
 				firstProperty = property.clone();
@@ -814,7 +814,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				firstProperty.value.dataLength = 0;
 				firstProperty.value.dataPrimaryKey = 'true';
 				firstProperty.value.dataAutoIncrement = 'true';
-				filter.insert(firstProperty);
+				reportFilter.insert(firstProperty);
 
 				// Setting Entity ----------------------------------------------
 
