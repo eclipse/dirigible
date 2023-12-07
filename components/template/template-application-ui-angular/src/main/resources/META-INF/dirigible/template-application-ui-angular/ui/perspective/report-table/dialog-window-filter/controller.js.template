@@ -27,7 +27,17 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			}
 #end
 #end
+#foreach ($property in $filter.properties)
+#if($property.widgetType == "DROPDOWN")
+			${dollar}scope.${property.name}Value = filter.${property.name};
+#end
+#end
 			$scope.entity = filter;
+#foreach ($property in $filter.properties)
+#if($property.widgetType == "DROPDOWN")
+			${dollar}scope.entity.${property.name} = undefined;
+#end
+#end
 		}
 
 		$scope.isValid = function (isValid, property) {
@@ -80,6 +90,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 					text: e.${property.widgetDropDownValue}
 				}
 			});
+			${dollar}scope.entity.${property.name} = ${dollar}scope.${property.name}Value;
 		});
 #end
 #end
