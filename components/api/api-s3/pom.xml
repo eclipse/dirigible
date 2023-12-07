@@ -77,6 +77,12 @@
             <artifactId>url-connection-client</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3-transfer-manager</artifactId>
+            <version>2.21.38</version>
+        </dependency>
+
 <!--        <dependency>-->
 <!--            <groupId>org.eclipse.jgit</groupId>-->
 <!--            <artifactId>org.eclipse.jgit</artifactId>-->
@@ -110,8 +116,12 @@
             <version>5.9.3</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>utils</artifactId>
+        </dependency>
 
-<!--        <dependency>-->
+        <!--        <dependency>-->
 <!--            <groupId>org.testcontainers</groupId>-->
 <!--            <artifactId>localstack</artifactId>-->
 <!--            <version>1.19.0</version>-->
