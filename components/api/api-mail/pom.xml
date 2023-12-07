@@ -36,7 +36,6 @@
 		<dependency>
 			<groupId>com.sun.mail</groupId>
 			<artifactId>jakarta.mail</artifactId>
-			<version>${javax.mail.api.version}</version>
 		</dependency>
 		
 		<!-- Test -->

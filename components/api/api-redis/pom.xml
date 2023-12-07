@@ -26,7 +26,6 @@
 		<dependency>
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
-			<version>${jedis.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>         
 			<exclusions>

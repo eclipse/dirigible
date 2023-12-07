@@ -61,7 +61,6 @@
         <dependency>
             <groupId>com.rabbitmq</groupId>
             <artifactId>amqp-client</artifactId>
-            <version>${amqp.client.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.hakky54</groupId>
