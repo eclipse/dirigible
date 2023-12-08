@@ -667,7 +667,7 @@
 		<wikitext.version>3.0.48.202308291007</wikitext.version>
 		<flexmark.version>0.64.8</flexmark.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.607</qldb.sdk.version>
+		<qldb.sdk.version>1.12.608</qldb.sdk.version>
 		<camel.version>3.21.2</camel.version>
 		<ftpserver.version>1.2.0</ftpserver.version>
 
