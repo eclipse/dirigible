@@ -32,15 +32,15 @@ export class InputStream {
 		return StreamsFacade.readBytes(this.native);
 	}
 
-	readText() {
+	readText(): string {
 		return StreamsFacade.readText(this.native);
 	}
 
-	close() {
+	close(): void {
 		StreamsFacade.close(this.native);
 	}
 
-	isValid() {
+	isValid(): boolean {
 		return this.native !== null;
 	}
 
@@ -53,24 +53,24 @@ export class OutputStream {
 
 	constructor(public readonly native) {}
 
-	write(byte) {
+	write(byte: bytes): void {
 		StreamsFacade.write(this.native, byte);
 	}
 
-	writeBytes(data) {
+	writeBytes(data): void {
 		const native = bytes.toJavaBytes(data);
 		StreamsFacade.writeBytes(this.native, native);
 	}
 
-	writeBytesNative(data) {
+	writeBytesNative(data): void {
 		StreamsFacade.writeBytes(this.native, data);
 	}
 
-	writeText(text) {
+	writeText(text: string): void {
 		StreamsFacade.writeText(this.native, text);
 	}
 
-	close() {
+	close(): void {
 		StreamsFacade.close(this.native);
 	}
 
@@ -85,12 +85,12 @@ export class OutputStream {
 		return native;
 	}
 
-	getText() {
+	getText(): string {
 		const value = StreamsFacade.getText(this.native);
 		return value;
 	}
 
-	isValid() {
+	isValid(): boolean {
 		return this.native !== null;
 	}
 
