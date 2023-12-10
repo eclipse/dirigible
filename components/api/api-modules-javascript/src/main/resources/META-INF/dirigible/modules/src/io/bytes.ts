@@ -13,6 +13,8 @@
  * API Bytes
  */
 
+import { bytes } from ".";
+
 /**
  * Convert the native JavaScript byte array to Java one. To be used internally by the API layer
  */
@@ -22,52 +24,52 @@ const JByte = Java.type("java.lang.Byte");
 const JArray = Java.type("java.lang.reflect.Array");
 const BytesFacade = Java.type("org.eclipse.dirigible.components.api.io.BytesFacade");
 
-export function toJavaBytes(bytes) {
-	const internalBytes = JArray.newInstance(JByte.TYPE, bytes.length);
-	for (let i=0; i<bytes.length; i++) {
-		internalBytes[i] = bytes[i];
-	}
-	return internalBytes;
-};
+export class Bytes{
+   toJavaScriptBytes(internalBytes): Array<typeof internalBytes> {
+       const bytes = [];
+       for (let i=0; i<internalBytes.length; i++) {
+           bytes.push(internalBytes[i]);
+       }
+       return bytes;
+   };
 
-/**
- * Convert the Java byte array to a native JavaScript one. To be used internally by the API layer
- */
-export function toJavaScriptBytes(internalBytes) {
-	const bytes = [];
-	for (let i=0; i<internalBytes.length; i++) {
-		bytes.push(internalBytes[i]);
-	}
-	return bytes;
-};
+    toJavaBytes(bytes): typeof JArray {
+       const internalBytes = JArray.newInstance(JByte.TYPE, bytes.length);
+       for (let i=0; i<bytes.length; i++) {
+           internalBytes[i] = bytes[i];
+       }
+       return internalBytes;
+   };
 
-/**
- * Converts a text to a byte array
- */
-export function textToByteArray(text) {
-	const javaString = new JString(text);
-	const native = BytesFacade.textToByteArray(text);
-	return toJavaScriptBytes(native);
-};
+   /**
+    * Convert the Java byte array to a native JavaScript one. To be used internally by the API layer
+    */
+    textToByteArray(text: string) {
+       const javaString = new JString(text);
+       const native = BytesFacade.textToByteArray(text);
+       return this.toJavaScriptBytes(native);
+   };
 
-/**
- * Converts a text to a byte array
- */
-export function byteArrayToText(data) {
-	const native = toJavaBytes(data);
-	return String.fromCharCode.apply(String, toJavaScriptBytes(native));
-};
+   /**
+    * Converts a text to a byte array
+    */
+   byteArrayToText(data): string {
+       const native = this.toJavaBytes(data);
+       return String.fromCharCode.apply(String, this.toJavaScriptBytes(native));
+   };
 
-/**
- * Converts an integer to a byte array
- */
- export function intToByteArray(value, byteOrder) {
-    return BytesFacade.intToByteArray(value, byteOrder)
-}
+   /**
+    * Converts an integer to a byte array
+    */
+    intToByteArray(value: number, byteOrder: string) { //kakvo vrushta? Ochakvame da vrushta bytesFacade
+       return BytesFacade.intToByteArray(value, byteOrder)
+   }
 
-/**
- * Converts a byte array to integer
- */
-export function byteArrayToInt(data, byteOrder) {
-    return BytesFacade.byteArrayToInt(data, byteOrder);
+   /**
+    * Converts a byte array to integer
+    */
+   byteArrayToInt(data, byteOrder: string) { //Kakvo vrushta? Kakvo shte bude data (Bytes array)
+       return BytesFacade.byteArrayToInt(data, byteOrder);
+   }
+
 }
