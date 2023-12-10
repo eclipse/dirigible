@@ -17,7 +17,7 @@ import * as streams from "@dirigible/io/streams";
 const ImageFacade = Java.type("org.eclipse.dirigible.components.api.io.ImageFacade");
 
 export class Image{
-	resize(original, type, width, height): streams.InputStream {
+	static resize(original, type, width, height): streams.InputStream {
 		const native = ImageFacade.resize(original, type, width, height);
 		return new streams.InputStream(native);
 	};

@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import * as bytes from "@dirigible/io/bytes";
+import {bytes} from ".";
 const StreamsFacade = Java.type("org.eclipse.dirigible.components.api.io.StreamsFacade");
 
 /**

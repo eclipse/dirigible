@@ -25,7 +25,7 @@ const JArray = Java.type("java.lang.reflect.Array");
 const BytesFacade = Java.type("org.eclipse.dirigible.components.api.io.BytesFacade");
 
 export class Bytes{
-   toJavaScriptBytes(internalBytes): Array<typeof internalBytes> {
+   static toJavaScriptBytes(internalBytes): Array<typeof internalBytes> {
        const bytes = [];
        for (let i=0; i<internalBytes.length; i++) {
            bytes.push(internalBytes[i]);
@@ -33,7 +33,7 @@ export class Bytes{
        return bytes;
    };
 
-    toJavaBytes(bytes): typeof JArray {
+    static toJavaBytes(bytes): typeof JArray {
        const internalBytes = JArray.newInstance(JByte.TYPE, bytes.length);
        for (let i=0; i<bytes.length; i++) {
            internalBytes[i] = bytes[i];
@@ -44,7 +44,7 @@ export class Bytes{
    /**
     * Convert the Java byte array to a native JavaScript one. To be used internally by the API layer
     */
-    textToByteArray(text: string) {
+   static textToByteArray(text: string) {
        const javaString = new JString(text);
        const native = BytesFacade.textToByteArray(text);
        return this.toJavaScriptBytes(native);
@@ -53,7 +53,7 @@ export class Bytes{
    /**
     * Converts a text to a byte array
     */
-   byteArrayToText(data): string {
+   static byteArrayToText(data): string {
        const native = this.toJavaBytes(data);
        return String.fromCharCode.apply(String, this.toJavaScriptBytes(native));
    };
@@ -61,14 +61,14 @@ export class Bytes{
    /**
     * Converts an integer to a byte array
     */
-    intToByteArray(value: number, byteOrder: string) { //kakvo vrushta? Ochakvame da vrushta bytesFacade
+   static intToByteArray(value: number, byteOrder: string) { //kakvo vrushta? Ochakvame da vrushta bytesFacade
        return BytesFacade.intToByteArray(value, byteOrder)
    }
 
    /**
     * Converts a byte array to integer
     */
-   byteArrayToInt(data, byteOrder: string) { //Kakvo vrushta? Kakvo shte bude data (Bytes array)
+   static byteArrayToInt(data, byteOrder: string) { //Kakvo vrushta? Kakvo shte bude data (Bytes array)
        return BytesFacade.byteArrayToInt(data, byteOrder);
    }
 
