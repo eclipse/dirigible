@@ -16,13 +16,10 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
-
-import jakarta.naming.InitialContext;
-import jakarta.naming.NamingException;
-
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -102,7 +99,8 @@ public class DestinationsFacade {
             } else {
                 throw new IllegalArgumentException(String.format("Destination: %s does not exist", fullName));
             }
-        } else if (DIRIGIBLE_DESTINATIONS_PROVIDER_MANAGED.equals(destinationProvider)) {
+        }
+        if (DIRIGIBLE_DESTINATIONS_PROVIDER_MANAGED.equals(destinationProvider)) {
             Map destinationProperties = initializeFromDestination(name);
             return GsonHelper.toJson(destinationProperties);
         } else {

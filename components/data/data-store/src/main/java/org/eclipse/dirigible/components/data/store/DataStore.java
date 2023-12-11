@@ -17,11 +17,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.sql.DataSource;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
-import org.hibernate.Criteria; 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -29,9 +29,11 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.google.common.base.Objects;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.metamodel.EntityType;
 
 /**
  * The Class ObjectStore.
@@ -273,56 +275,18 @@ public class DataStore {
      * @return the list
      */
     public List<Map> list(String type) {
-        return list(type, getDataSource());
-    }
-
-    /**
-     * List.
-     *
-     * @param type the type
-     * @param datasource the datasource
-     * @return the list
-     */
-    public List<Map> list(String type, DataSource datasource) {
         try (Session session = sessionFactory.openSession()) {
-            return session.createCriteria(type)
-                          .list();
-        }
-    }
-
-    /**
-     * Criteria.
-     *
-     * @param type the type
-     * @param restrictions the restrictions
-     * @param aliases the aliases
-     * @return the list
-     */
-    public List<Map> criteria(String type, Map<String, String> restrictions, Map<String, String> aliases) {
-        return criteria(type, restrictions, aliases, getDataSource());
-    }
-
-    /**
-     * Criteria.
-     *
-     * @param type the type
-     * @param restrictions the restrictions
-     * @param aliases the aliases
-     * @param datasource the datasource
-     * @return the list
-     */
-    public List<Map> criteria(String type, Map<String, String> restrictions, Map<String, String> aliases, DataSource datasource) {
-        try (Session session = sessionFactory.openSession()) {
-            Criteria criteria = session.createCriteria(type);
-            if (aliases != null) {
-                aliases.entrySet()
-                       .forEach(e -> criteria.createAlias(e.getKey(), e.getValue()));
+            Set<EntityType<?>> entities = sessionFactory.getMetamodel()
+                                                        .getEntities();
+            EntityType<?> entityType = entities.stream()
+                                               .filter(et -> Objects.equal(et.getName(), type))
+                                               .findFirst()
+                                               .orElseThrow(() -> new IllegalArgumentException("There is not entity of type " + type));
+            try (EntityManager entityManager = session.getEntityManagerFactory()
+                                                      .createEntityManager()) {
+                jakarta.persistence.Query query = entityManager.createQuery("from " + entityType.getName() + " c");
+                return query.getResultList();
             }
-            if (restrictions != null) {
-                restrictions.entrySet()
-                            .forEach(e -> criteria.add(Restrictions.like(e.getKey(), e.getValue())));
-            }
-            return criteria.list();
         }
     }
 
@@ -364,3 +328,5 @@ public class DataStore {
     // }
 
 }
+
+

@@ -54,7 +54,7 @@ class MessageConsumerTest {
 
     /** The jsm consumer. */
     @Mock
-    private javax.jms.MessageConsumer jsmConsumer;
+    private jakarta.jms.MessageConsumer jsmConsumer;
 
     /** The queue. */
     @Mock

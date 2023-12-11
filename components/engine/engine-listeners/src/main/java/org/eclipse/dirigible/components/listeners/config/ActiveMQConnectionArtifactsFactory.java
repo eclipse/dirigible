@@ -10,13 +10,13 @@
  */
 package org.eclipse.dirigible.components.listeners.config;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import jakarta.jms.Connection;
 import jakarta.jms.ExceptionListener;
 import jakarta.jms.JMSException;
 import jakarta.jms.Session;
-import org.apache.activemq.ActiveMQConnectionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * A factory for creating ActiveMQConnectionArtifacts objects.

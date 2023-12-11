@@ -29,8 +29,8 @@ import org.eclipse.dirigible.components.registry.accessor.RegistryAccessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Component;
+import jakarta.mail.MessagingException;
 
 /**
  * The Class JobEmailProcessor.

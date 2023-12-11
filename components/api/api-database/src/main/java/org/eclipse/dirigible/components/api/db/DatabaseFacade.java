@@ -476,9 +476,9 @@ public class DatabaseFacade implements InitializingBean {
                                 } catch (NumberFormatException e) {
                                     // assume date string in ISO format e.g. 2018-05-22T21:00:00.000Z
                                     value = new Date(jakarta.xml.bind.DatatypeConverter.parseDateTime(valueElement.getAsJsonPrimitive()
-                                                                                                                .getAsString())
-                                                                                     .getTime()
-                                                                                     .getTime());
+                                                                                                                  .getAsString())
+                                                                                       .getTime()
+                                                                                       .getTime());
                                 }
                                 preparedStatement.setDate(i++, value);
                             } else {
@@ -499,9 +499,9 @@ public class DatabaseFacade implements InitializingBean {
                                 } catch (NumberFormatException e) {
                                     // assume XSDTime
                                     value = new Time(jakarta.xml.bind.DatatypeConverter.parseTime(valueElement.getAsJsonPrimitive()
-                                                                                                            .getAsString())
-                                                                                     .getTime()
-                                                                                     .getTime());
+                                                                                                              .getAsString())
+                                                                                       .getTime()
+                                                                                       .getTime());
                                 }
                                 preparedStatement.setTime(i++, value);
                             } else {
@@ -522,9 +522,9 @@ public class DatabaseFacade implements InitializingBean {
                                 } catch (NumberFormatException e) {
                                     // assume date string in ISO format e.g. 2018-05-22T21:00:00.000Z
                                     value = new Timestamp(jakarta.xml.bind.DatatypeConverter.parseDateTime(valueElement.getAsJsonPrimitive()
-                                                                                                                     .getAsString())
-                                                                                          .getTime()
-                                                                                          .getTime());
+                                                                                                                       .getAsString())
+                                                                                            .getTime()
+                                                                                            .getTime());
                                 }
                                 preparedStatement.setTimestamp(i++, value);
                             } else {

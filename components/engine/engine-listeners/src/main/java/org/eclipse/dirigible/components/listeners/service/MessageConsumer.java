@@ -10,16 +10,16 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
-import jakarta.jms.Destination;
-import jakarta.jms.JMSException;
-import jakarta.jms.Message;
-import jakarta.jms.Session;
-import jakarta.jms.TextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
+import jakarta.jms.Session;
+import jakarta.jms.TextMessage;
 
 /**
  * The Class MessageConsumer.
@@ -79,8 +79,7 @@ public class MessageConsumer {
      * @throws TimeoutException the timeout exception
      */
     private String receiveMessage(long timeout, Destination destination) throws JMSException, TimeoutException {
-        javax.jms.MessageConsumer consumer = session.createConsumer(destination);
-        try {
+        try (jakarta.jms.MessageConsumer consumer = session.createConsumer(destination)) {
 
             Message message = consumer.receive(timeout);
             LOGGER.debug("Received message [{}] by synchronous consumer.", message);
@@ -91,8 +90,6 @@ public class MessageConsumer {
                 return textMessage.getText();
             }
             throw new IllegalStateException("Received an unsupported message " + message);
-        } finally {
-            consumer.close();
         }
     }
 

@@ -11,9 +11,6 @@
 package org.eclipse.dirigible.components.listeners.config;
 
 import java.io.File;
-import jakarta.jms.Connection;
-import jakarta.jms.JMSException;
-import jakarta.jms.Session;
 import javax.sql.DataSource;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerService;
@@ -26,6 +23,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import jakarta.jms.Connection;
+import jakarta.jms.JMSException;
+import jakarta.jms.Session;
 
 /**
  * The Class MessagingConfig.

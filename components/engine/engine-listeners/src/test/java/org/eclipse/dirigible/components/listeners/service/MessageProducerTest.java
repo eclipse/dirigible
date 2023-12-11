@@ -49,7 +49,7 @@ class MessageProducerTest {
 
     /** The jsm producer. */
     @Mock
-    private javax.jms.MessageProducer jsmProducer;
+    private jakarta.jms.MessageProducer jsmProducer;
 
     /** The queue. */
     @Mock
