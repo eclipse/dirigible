@@ -88,10 +88,10 @@
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-openapi</artifactId>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-odata</artifactId>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-camel</artifactId>
