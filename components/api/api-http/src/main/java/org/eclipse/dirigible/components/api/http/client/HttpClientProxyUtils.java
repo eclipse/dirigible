@@ -16,12 +16,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import jakarta.net.ssl.HostnameVerifier;
+import jakarta.net.ssl.HttpsURLConnection;
+import jakarta.net.ssl.SSLContext;
+import jakarta.net.ssl.SSLSession;
+import jakarta.net.ssl.TrustManager;
+import jakarta.net.ssl.X509TrustManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpException;

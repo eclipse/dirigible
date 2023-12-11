@@ -475,7 +475,7 @@ public class DatabaseFacade implements InitializingBean {
                                                                                 .getAsString()));
                                 } catch (NumberFormatException e) {
                                     // assume date string in ISO format e.g. 2018-05-22T21:00:00.000Z
-                                    value = new Date(javax.xml.bind.DatatypeConverter.parseDateTime(valueElement.getAsJsonPrimitive()
+                                    value = new Date(jakarta.xml.bind.DatatypeConverter.parseDateTime(valueElement.getAsJsonPrimitive()
                                                                                                                 .getAsString())
                                                                                      .getTime()
                                                                                      .getTime());
@@ -498,7 +498,7 @@ public class DatabaseFacade implements InitializingBean {
                                                                                 .getAsString()));
                                 } catch (NumberFormatException e) {
                                     // assume XSDTime
-                                    value = new Time(javax.xml.bind.DatatypeConverter.parseTime(valueElement.getAsJsonPrimitive()
+                                    value = new Time(jakarta.xml.bind.DatatypeConverter.parseTime(valueElement.getAsJsonPrimitive()
                                                                                                             .getAsString())
                                                                                      .getTime()
                                                                                      .getTime());
@@ -521,7 +521,7 @@ public class DatabaseFacade implements InitializingBean {
                                                                                      .getAsString()));
                                 } catch (NumberFormatException e) {
                                     // assume date string in ISO format e.g. 2018-05-22T21:00:00.000Z
-                                    value = new Timestamp(javax.xml.bind.DatatypeConverter.parseDateTime(valueElement.getAsJsonPrimitive()
+                                    value = new Timestamp(jakarta.xml.bind.DatatypeConverter.parseDateTime(valueElement.getAsJsonPrimitive()
                                                                                                                      .getAsString())
                                                                                           .getTime()
                                                                                           .getTime());

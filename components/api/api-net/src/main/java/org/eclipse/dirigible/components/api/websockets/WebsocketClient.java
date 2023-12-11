@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import javax.websocket.ClientEndpoint;
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
+import jakarta.websocket.ClientEndpoint;
+import jakarta.websocket.OnClose;
+import jakarta.websocket.OnError;
+import jakarta.websocket.OnMessage;
+import jakarta.websocket.OnOpen;
+import jakarta.websocket.Session;
 
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.repository.api.RepositoryPath;

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.apache.commons.codec.binary.Base64;
 import org.eclipse.dirigible.components.engine.typescript.TypeScriptService;

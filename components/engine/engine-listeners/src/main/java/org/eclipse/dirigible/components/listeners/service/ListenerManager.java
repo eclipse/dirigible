@@ -10,11 +10,11 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
-import javax.jms.Connection;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.MessageConsumer;
-import javax.jms.Session;
+import jakarta.jms.Connection;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.MessageConsumer;
+import jakarta.jms.Session;
 import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.eclipse.dirigible.components.listeners.domain.ListenerKind;

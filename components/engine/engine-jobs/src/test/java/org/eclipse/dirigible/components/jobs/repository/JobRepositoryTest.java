@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.eclipse.dirigible.components.jobs.domain.JobParameter;
