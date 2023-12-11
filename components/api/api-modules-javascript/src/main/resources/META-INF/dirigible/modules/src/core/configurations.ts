@@ -15,55 +15,58 @@
 
 const Configuration = Java.type("org.eclipse.dirigible.commons.config.Configuration");
 
-export function get(key, defaultValue?) {
-	if (defaultValue) {
-		return Configuration.get(key, defaultValue);
+export class Configurations{
+
+	static get(key, defaultValue) {
+		if (defaultValue) {
+			return Configuration.get(key, defaultValue);
+		}
+		return Configuration.get(key);
+	};
+
+	static set(key, value) {
+		Configuration.set(key, value);
+	};
+
+	static remove(key) {
+		Configuration.remove(key);
+	};
+
+	static getKeys() {
+		let keys = [];
+		let keysAsArray = Configuration.getKeys();
+		for (let i = 0; i < keysAsArray.length; i ++) {
+			keys.push(keysAsArray[i]);
+		}
+		return keys;
+	};
+
+	static load(path) {
+		Configuration.load(path);
+	};
+
+	static update() {
+		Configuration.update();
+	};
+
+	static getOS() {
+		return Configuration.getOS();
 	}
-	return Configuration.get(key);
-};
 
-export function set(key, value) {
-	Configuration.set(key, value);
-};
-
-export function remove(key) {
-	Configuration.remove(key);
-};
-
-export function getKeys() {
-	let keys = [];
-	let keysAsArray = Configuration.getKeys();
-	for (let i = 0; i < keysAsArray.length; i ++) {
-		keys.push(keysAsArray[i]);
+	static isOSWindows() {
+		return Configuration.isOSWindows();
 	}
-	return keys;
-};
 
-export function load(path) {
-	Configuration.load(path);
-};
+	static isOSMac() {
+		return Configuration.isOSMac();
+	}
 
-export function update() {
-	Configuration.update();
-};
+	static isOSUNIX() {
+		return Configuration.isOSUNIX();
+	}
 
-export function getOS() {
-	return Configuration.getOS();
+	static isOSSolaris() {
+		return Configuration.isOSSolaris();
+	}
+
 }
-
-export function isOSWindows() {
-	return Configuration.isOSWindows();
-}
-
-export function isOSMac() {
-	return Configuration.isOSMac();
-}
-
-export function isOSUNIX() {
-	return Configuration.isOSUNIX();
-}
-
-export function isOSSolaris() {
-	return Configuration.isOSSolaris();
-}
-
