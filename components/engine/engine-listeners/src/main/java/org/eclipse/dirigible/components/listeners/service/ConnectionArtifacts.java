@@ -10,12 +10,11 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
-import jakarta.jms.Connection;
-import jakarta.jms.JMSException;
-import jakarta.jms.MessageConsumer;
-import jakarta.jms.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import jakarta.jms.Connection;
+import jakarta.jms.MessageConsumer;
+import jakarta.jms.Session;
 
 /**
  * The Class ConnectionArtifacts.
@@ -51,32 +50,22 @@ public class ConnectionArtifacts {
      * Close all.
      */
     public void closeAll() {
-        closeMessageConsumer();
-        closeSession();
-        closeConnection();
+        close(messageConsumer);
+        close(session);
+        close(connection);
     }
 
-    private void closeMessageConsumer() {
+    /**
+     * Close.
+     *
+     * @param closeable the closeable
+     */
+    private void close(AutoCloseable closeable) {
         try {
-            messageConsumer.close();
-        } catch (RuntimeException | JMSException ex) {
-            LOGGER.warn("Failed to close message consumer", ex);
+            closeable.close();
+        } catch (Exception ex) {
+            LOGGER.warn("Failed to close {}", closeable, ex);
         }
-    }
 
-    private void closeConnection() {
-        try {
-            connection.close();
-        } catch (RuntimeException | JMSException ex) {
-            LOGGER.warn("Failed to close conneciton", ex);
-        }
-    }
-
-    private void closeSession() {
-        try {
-            session.close();
-        } catch (RuntimeException | JMSException ex) {
-            LOGGER.warn("Failed to close session", ex);
-        }
     }
 }
