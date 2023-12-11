@@ -12,12 +12,12 @@ package org.eclipse.dirigible.components.security.basic;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-
 import org.apache.commons.codec.binary.Base64;
 import org.eclipse.dirigible.components.base.http.access.HttpSecurityURIConfigurator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,31 +32,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class BasicAuthSecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors()
-            .and()
-            .csrf()
-            .disable()
-            .httpBasic()
-            .and()
-            // .authorizeRequests()
-            // .antMatchers("/login/**").permitAll()
-            // .antMatchers("/error/**").permitAll()
-            // .antMatchers("/error.html").permitAll()
-            // .antMatchers("/index-busy.html").permitAll()
-            // .antMatchers("/stomp").permitAll()
-            // .antMatchers("/actuator/**").permitAll()
-            // .antMatchers("/*").fullyAuthenticated()
-            // .anyRequest().authenticated()
-            // .and()
-            .formLogin()
-            .and()
-            .logout()
-            .deleteCookies("JSESSIONID")
-            .and()
-            .headers()
-            .frameOptions()
-            .disable();
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.cors(Customizer.withDefaults())
+            .csrf((csrf) -> csrf.disable())
+            .httpBasic(Customizer.withDefaults())
+            .formLogin(Customizer.withDefaults())
+            .logout(logout -> logout.deleteCookies("JSESSIONID"))
+            .headers(headers -> headers.frameOptions(frameOpts -> frameOpts.disable()));
 
         HttpSecurityURIConfigurator.configure(http);
 
@@ -64,7 +46,7 @@ public class BasicAuthSecurityConfiguration {
     }
 
     @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
+    InMemoryUserDetailsManager userDetailsService() {
         String username = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_BASIC_USERNAME", "YWRtaW4="); // admin
         String password = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_BASIC_PASSWORD", "YWRtaW4="); // admin
         UserDetails user = User.withUsername(new String(new Base64().decode(username.getBytes()), StandardCharsets.UTF_8).trim())
@@ -75,7 +57,7 @@ public class BasicAuthSecurityConfiguration {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowCredentials(true);

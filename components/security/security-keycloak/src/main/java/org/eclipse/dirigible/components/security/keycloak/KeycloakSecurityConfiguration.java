@@ -16,8 +16,10 @@ import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticatio
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
@@ -25,7 +27,7 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 
 @KeycloakConfiguration
 @ConditionalOnProperty(name = "keycloak.enabled", havingValue = "true")
-public class KeycloakSecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter {
+class KeycloakSecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) {
@@ -42,54 +44,25 @@ public class KeycloakSecurityConfiguration extends KeycloakWebSecurityConfigurer
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
-        http.csrf()
-            .disable();
-        http.headers()
-            .frameOptions()
-            .sameOrigin();
+
+        http.cors(Customizer.withDefaults())
+            .csrf((csrf) -> csrf.disable())
+            .headers(headers -> headers.frameOptions(frameOpts -> frameOpts.sameOrigin()));
+
         HttpSecurityURIConfigurator.configure(http);
-
-        // http
-        // .authorizeRequests()
-        // .antMatchers("/").permitAll()
-        // .antMatchers("/home").permitAll()
-        // .antMatchers("/logout").permitAll()
-        // .antMatchers("/index-busy.html").permitAll()
-        //
-        // .antMatchers("/stomp").permitAll()
-        //
-        // .antMatchers("/error/**").permitAll()
-        // .antMatchers("/error.html").permitAll()
-        //
-        // // Public
-        // .antMatchers("/favicon.ico").permitAll()
-        // .antMatchers("/public/**").permitAll()
-        // .antMatchers("/webjars/**").permitAll()
-        //
-        // .antMatchers("/services/core/theme/**").permitAll()
-        // .antMatchers("/services/core/version/**").permitAll()
-        // .antMatchers("/services/core/healthcheck/**").permitAll()
-        // .antMatchers("/services/web/resources/**").permitAll()
-        // .antMatchers("/services/web/resources-core/**").permitAll()
-        // .antMatchers("/services/js/resources-core/**").permitAll()
-        //
-        // .antMatchers("/actuator/**").permitAll()
-        //
-        // // Authenticated
-        // .antMatchers("/services/**").authenticated()
-        // .antMatchers("/websockets/**").authenticated()
-        // .antMatchers("/odata/**").authenticated()
-        //
-        // // "Developer" role required
-        // .antMatchers("/services/ide/**").hasRole("Developer")
-        // .antMatchers("/websockets/ide/**").hasRole("Developer")
-
-        // "Operator" role required
-        // .antMatchers("/services/ops/**").hasRole("Operator")
-        // .antMatchers("/services/transport/**").hasRole("Operator")
-        // .antMatchers("/websockets/ops/**").hasRole("Operator")
-
-        // Deny all other requests
-        // .anyRequest().denyAll();
     }
+
+    @Override
+    public void init(WebSecurity builder) throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void configure(WebSecurity builder) throws Exception {
+        builder.c
+        // TODO Auto-generated method stub
+
+    }
+
 }
