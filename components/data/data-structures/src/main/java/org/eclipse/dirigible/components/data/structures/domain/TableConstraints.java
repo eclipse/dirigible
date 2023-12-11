@@ -38,7 +38,7 @@ import com.google.gson.annotations.Expose;
  * The Class TableConstraints.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_CONSTRAINTS")
+@jakarta.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_CONSTRAINTS")
 public class TableConstraints {
 
     /** The id. */

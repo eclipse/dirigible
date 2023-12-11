@@ -38,7 +38,7 @@ import com.google.gson.annotations.Expose;
  * The Class TableIndex.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_INDEXES")
+@jakarta.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_INDEXES")
 public class TableIndex {
 
     /** The id. */

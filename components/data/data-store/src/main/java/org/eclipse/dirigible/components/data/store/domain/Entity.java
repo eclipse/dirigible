@@ -22,7 +22,7 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 /**
  * The Class Entity.
  */
-@javax.persistence.Entity
+@jakarta.persistence.Entity
 @Table(name = "DIRIGIBLE_ENTITIES")
 public class Entity extends Artefact {
 

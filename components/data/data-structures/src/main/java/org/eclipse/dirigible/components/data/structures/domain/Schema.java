@@ -33,7 +33,7 @@ import com.google.gson.annotations.Expose;
  * The Class Schema.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_DATA_SCHEMAS")
+@jakarta.persistence.Table(name = "DIRIGIBLE_DATA_SCHEMAS")
 public class Schema extends Artefact {
 
     /** The Constant ARTEFACT_TYPE. */

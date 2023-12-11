@@ -29,7 +29,7 @@ import com.google.gson.annotations.Expose;
  * The Class TableColumn.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_COLUMNS")
+@jakarta.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_COLUMNS")
 public class TableColumn {
 
     /** The id. */

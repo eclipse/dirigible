@@ -20,7 +20,7 @@ import jakarta.persistence.Id;
  * The Class TableConstraintPrimaryKey.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_PRIMARYKEYS")
+@jakarta.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_PRIMARYKEYS")
 public class TableConstraintPrimaryKey extends TableConstraint {
 
     /** The id. */

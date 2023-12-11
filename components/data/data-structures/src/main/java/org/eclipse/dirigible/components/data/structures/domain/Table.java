@@ -40,7 +40,7 @@ import com.google.gson.annotations.Expose;
  * The Class Table.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLES")
+@jakarta.persistence.Table(name = "DIRIGIBLE_DATA_TABLES")
 public class Table extends Artefact {
 
     /** The Constant ARTEFACT_TYPE. */

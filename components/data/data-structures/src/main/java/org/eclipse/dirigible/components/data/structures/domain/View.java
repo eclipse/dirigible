@@ -32,7 +32,7 @@ import com.google.gson.annotations.Expose;
  * The Class View.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_DATA_VIEWS")
+@jakarta.persistence.Table(name = "DIRIGIBLE_DATA_VIEWS")
 public class View extends Artefact {
 
     /** The Constant ARTEFACT_TYPE. */
