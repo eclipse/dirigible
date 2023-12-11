@@ -10,7 +10,6 @@
  */
 package org.eclipse.dirigible.components.base.encryption;
 
-import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.event.service.spi.EventListenerRegistry;
 import org.hibernate.event.spi.EventType;
 import org.hibernate.internal.SessionFactoryImpl;
@@ -58,11 +57,11 @@ public class EncryptionBeanPostProcessor implements BeanPostProcessor {
      */
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if (bean instanceof EntityManagerFactory) {
-            SessionFactoryImplementor hibernateEntityManagerFactory = (SessionFactoryImplementor) bean;
-            SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) hibernateEntityManagerFactory.getSessionFactory();
-            EventListenerRegistry registry = sessionFactoryImpl.getServiceRegistry()
-                                                               .getService(EventListenerRegistry.class);
+        if (bean instanceof EntityManagerFactory emf) {
+            SessionFactoryImpl sessionFactory = emf.unwrap(SessionFactoryImpl.class);
+            EventListenerRegistry registry = sessionFactory.getServiceRegistry()
+                                                           .getService(EventListenerRegistry.class);
+
             registry.appendListeners(EventType.PRE_LOAD, encryptionListener);
             registry.appendListeners(EventType.PRE_INSERT, encryptionListener);
             registry.appendListeners(EventType.PRE_UPDATE, encryptionListener);
