@@ -9,7 +9,7 @@
             },
             {
                 "os": "windows",
-                "command": "CMD /c build-source.bat"
+                "command": "cmd /c build-source.bat"
             }
         ],
         "publish": true
