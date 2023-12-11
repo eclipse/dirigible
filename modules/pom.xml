@@ -20,7 +20,7 @@
 		<module>database</module>
 		<module>engines</module>
 		<module>mail</module>
-		<module>odata</module>
+		<!-- <module>odata</module> -->
 		<module>repository</module>
 	</modules>
 
