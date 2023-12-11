@@ -127,6 +127,7 @@
 						<artifactId>maven-compiler-plugin</artifactId>
 						<version>${maven.compiler.plugin.version}</version>
 						<configuration>
+							<parameters>true</parameters>
 							<source>${maven.compiler.source}</source>
 							<target>${maven.compiler.target}</target>
 							<debug>true</debug>
@@ -252,6 +253,7 @@
 						<artifactId>maven-compiler-plugin</artifactId>
 						<version>${maven.compiler.plugin.version}</version>
 						<configuration>
+							<parameters>true</parameters>
 							<source>${maven.compiler.source}</source>
 							<target>${maven.compiler.target}</target>
 							<debug>true</debug>
@@ -275,6 +277,7 @@
 						<artifactId>maven-compiler-plugin</artifactId>
 						<version>${maven.compiler.plugin.version}</version>
 						<configuration>
+							<parameters>true</parameters>
 							<source>${maven.compiler.source}</source>
 							<target>${maven.compiler.target}</target>
 							<debug>true</debug>
@@ -341,6 +344,7 @@
 						<artifactId>maven-compiler-plugin</artifactId>
 						<version>${maven.compiler.plugin.version}</version>
 						<configuration>
+							<parameters>true</parameters>
 							<source>${maven.compiler.source}</source>
 							<target>${maven.compiler.target}</target>
 							<debug>true</debug>
@@ -462,12 +466,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<scope>provided</scope>
@@ -510,10 +508,6 @@
 
 		<!-- Java 11 Dependencies -->
 		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-core</artifactId>
 			<version>${jaxb.version}</version>
@@ -554,16 +548,18 @@
 			<artifactId>mockito-core</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-inline</artifactId>
-			<scope>test</scope>
-		</dependency>
 		<!-- End Test Dependencies -->
 	</dependencies>
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring.boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-application</artifactId>
@@ -575,13 +571,7 @@
 				<version>5.10.1</version>
 				<scope>test</scope>
 			</dependency>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-dependencies</artifactId>
-				<version>${spring.boot.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
+
 			<dependency>
 				<groupId>org.seleniumhq.selenium</groupId>
 				<artifactId>selenium-java</artifactId>
@@ -656,7 +646,7 @@
 		<mina-core.version>2.2.3</mina-core.version>
 		<sshd-core.version>2.11.0</sshd-core.version>
 
-		<spring.boot.version>2.7.18</spring.boot.version>
+		<spring.boot.version>3.1.6</spring.boot.version>
 
 		<keycloak.keycloak-spring-boot-starter>23.0.3</keycloak.keycloak-spring-boot-starter>
 		<c3p0.version>0.9.5.5</c3p0.version>

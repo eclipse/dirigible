@@ -41,12 +41,6 @@
 			<artifactId>dirigible-components-api-net</artifactId>
 		</dependency>
 		
-		<!-- Libs -->
-        <dependency>
-		    <groupId>javax.websocket</groupId>
-		    <artifactId>javax.websocket-api</artifactId>
-		</dependency>
-		
     </dependencies>
     
     <properties>

@@ -22,6 +22,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven.compiler.plugin.version}</version>
 				<configuration>
+					<parameters>true</parameters>
 					<source>${custom.java.build.version}</source>
 					<target>${custom.java.build.version}</target>
 					<debug>true</debug>
