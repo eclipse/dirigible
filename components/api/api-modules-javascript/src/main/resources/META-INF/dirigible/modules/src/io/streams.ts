@@ -17,18 +17,18 @@ const StreamsFacade = Java.type("org.eclipse.dirigible.components.api.io.Streams
  */
 export class InputStream {
 
-	constructor(private native) {}
+	constructor(public readonly native) {}
 
-	read() {
+	read(): Array<bytes> | number {
 		return StreamsFacade.read(this.native);
 	}
 
-	readBytes() {
+	readBytes(): Array<bytes> {
 		const native = StreamsFacade.readBytes(this.native);
 		return bytes.toJavaScriptBytes(native);
 	}
 
-	readBytesNative() {
+	readBytesNative(): Array<bytes>{
 		return StreamsFacade.readBytes(this.native);
 	}
 
@@ -62,7 +62,7 @@ export class OutputStream {
 		StreamsFacade.writeBytes(this.native, native);
 	}
 
-	writeBytesNative(data): void {
+	writeBytesNative(data: string): void {
 		StreamsFacade.writeBytes(this.native, data);
 	}
 
@@ -74,13 +74,13 @@ export class OutputStream {
 		StreamsFacade.close(this.native);
 	}
 
-	getBytes() {
+	getBytes(): Array<bytes> {
 		const native = StreamsFacade.getBytes(this.native);
 		const data = bytes.toJavaScriptBytes(native);
 		return data;
 	}
 
-	getBytesNative() {
+	getBytesNative(): Array<bytes> {
 		const native = StreamsFacade.getBytes(this.native);
 		return native;
 	}
@@ -96,18 +96,18 @@ export class OutputStream {
 
 };
 
-export function copy(input, output) {
+export function copy(input: InputStream, output: OutputStream): void {
 	StreamsFacade.copy(input.native, output.native);
 };
 
-export function copyLarge(input, output) {
+export function copyLarge(input: InputStream, output: OutputStream): void {
 	StreamsFacade.copyLarge(input.native, output.native);
 };
 
 /**
  * Get an ByteArrayInputStream for the provided resource
  */
-export function getResourceAsByteArrayInputStream(path) {
+export function getResourceAsByteArrayInputStream(path: string): InputStream {
 	const native = StreamsFacade.getResourceAsByteArrayInputStream(path);
 	return new InputStream(native);
 };
@@ -115,7 +115,7 @@ export function getResourceAsByteArrayInputStream(path) {
 /**
  * Create an ByteArrayInputStream for byte array provided
  */
-export function createByteArrayInputStream(data) {
+export function createByteArrayInputStream(data): InputStream {
 	const array = bytes.toJavaBytes(data);
 	const native = StreamsFacade.createByteArrayInputStream(array);
 	return new InputStream(native);
@@ -125,7 +125,7 @@ export function createByteArrayInputStream(data) {
 /**
  * Create a ByteArrayOutputStream
  */
-export function createByteArrayOutputStream() {
+export function createByteArrayOutputStream(): OutputStream {
 	const native = StreamsFacade.createByteArrayOutputStream();
 	return new OutputStream(native);
 };
@@ -133,7 +133,7 @@ export function createByteArrayOutputStream() {
 /**
  * Create an InputStream object by a native InputStream
  */
-export function createInputStream(native) {
+export function createInputStream(native): InputStream {
 	const inputStream = new InputStream(native);
 	return inputStream;
 };
@@ -141,7 +141,7 @@ export function createInputStream(native) {
 /**
  * Create an OutputStream object by a native OutputStream
  */
-export function createOutputStream(native) {
+export function createOutputStream(native): OutputStream {
 	const outputStream = new OutputStream(native);
 	return outputStream;
 };

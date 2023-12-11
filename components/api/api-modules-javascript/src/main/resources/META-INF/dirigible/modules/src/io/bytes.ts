@@ -26,7 +26,7 @@ const BytesFacade = Java.type("org.eclipse.dirigible.components.api.io.BytesFaca
 
 export class Bytes{
 
-   static toJavaScriptBytes(internalBytes): bytes[] {
+   static toJavaScriptBytes(internalBytes): Array<bytes> {
        const bytes = [];
        for (let i=0; i<internalBytes.length; i++) {
            bytes.push(internalBytes[i]);
@@ -62,14 +62,14 @@ export class Bytes{
    /**
     * Converts an integer to a byte array
     */
-   static intToByteArray(value: number, byteOrder: string) { //kakvo vrushta? Ochakvame da vrushta bytesFacade
+   static intToByteArray(value: number, byteOrder: string) {
        return BytesFacade.intToByteArray(value, byteOrder)
    }
 
    /**
     * Converts a byte array to integer
     */
-   static byteArrayToInt(data, byteOrder: string) { //Kakvo vrushta? Kakvo shte bude data (Bytes array)
+   static byteArrayToInt(data, byteOrder: string): number {
        return BytesFacade.byteArrayToInt(data, byteOrder);
    }
 
