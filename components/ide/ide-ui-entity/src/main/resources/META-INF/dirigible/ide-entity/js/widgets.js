@@ -65,7 +65,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 				$scope.$cell.value.entityType = "REPORT";
 			} else if (prototype.style === 'filter') {
 				$scope.$cell = graph.getSelectionCell();
-				$scope.$cell.value.entityType = "FILTER";
+				$scope.$cell.value.entityType = "REPORT_FILTER";
 			} else if (prototype.style === 'setting') {
 				$scope.$cell = graph.getSelectionCell();
 				$scope.$cell.value.entityType = "SETTING";

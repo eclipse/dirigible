@@ -9,13 +9,13 @@ const parameterUtils = dirigibleRequire("ide-generate-service/template/parameter
 
 exports.generate = function (model, parameters) {
     model = JSON.parse(model).model;
-    let templateSources = exports.getTemplate(parameters).sources;
+    const templateSources = exports.getTemplate(parameters).sources;
     parameterUtils.process(model, parameters)
     return generateUtils.generateFiles(model, parameters, templateSources);
 };
 
 exports.getTemplate = function (parameters) {
-    let daoTemplate = daoTemplateManager.getTemplate(parameters);
+    const daoTemplate = daoTemplateManager.getTemplate(parameters);
 
     let templateSources = [{
         location: "/template-application-rest/api/utils/http.js.template",
@@ -27,6 +27,24 @@ exports.getTemplate = function (parameters) {
         rename: "gen/api/{{perspectiveName}}/{{name}}.js",
         engine: "velocity",
         collection: "models"
+    }, {
+        location: "/template-application-rest/api/reportEntity.ts.template",
+        action: "generate",
+        rename: "gen/api/{{perspectiveName}}/{{name}}Service.ts",
+        engine: "velocity",
+        collection: "reportModels"
+    }, {
+        location: "/template-application-dao/project.json.template",
+        action: "generate",
+        rename: "project.json",
+        engine: "velocity",
+        collection: "reportModels"
+    }, {
+        location: "/template-application-dao/tsconfig.json.template",
+        action: "generate",
+        rename: "tsconfig.json",
+        engine: "velocity",
+        collection: "reportModels"
     }];
     templateSources = templateSources.concat(daoTemplate.sources);
 

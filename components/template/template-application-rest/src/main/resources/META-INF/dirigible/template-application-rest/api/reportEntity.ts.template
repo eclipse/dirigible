@@ -1,0 +1,58 @@
+import { Controller, Get } from "@dirigible/http"
+import { ${name}Repository, ${name}Filter, ${name}PaginatedFilter } from "../../dao/entities/${name}Repository";
+
+@Controller
+class ${name}Service {
+
+    private readonly repository = new ${name}Repository();
+
+    @Get("/")
+    public filter(_, ctx) {
+        const filter: ${name}PaginatedFilter = {
+#foreach ($property in $filter.properties)
+#if(!$property.dataPrimaryKey)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+            ${property.name}: ctx.queryParameters.${property.name} ? ctx.queryParameters.${property.name} : undefined,
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+            ${property.name}: ctx.queryParameters.${property.name} ? parseInt(ctx.queryParameters.${property.name}) : undefined,
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+            ${property.name}: ctx.queryParameters.${property.name} ? new Date(parseInt(ctx.queryParameters.${property.name})) : undefined,
+#elseif($property.dataType == "BOOLEAN")
+            ${property.name}: ctx.queryParameters.${property.name} ? !!ctx.queryParameters.${property.name} : undefined,
+#else
+            ${property.name}: ctx.queryParameters.${property.name} ? ctx.queryParameters.${property.name} as unknown: undefined,
+#end
+#end
+#end
+            "$limit": ctx.queryParameters["$limit"] ? parseInt(ctx.queryParameters["$limit"]) : undefined,
+            "$offset": ctx.queryParameters["$offset"] ? parseInt(ctx.queryParameters["$offset"]) : undefined
+        };
+
+        return this.repository.findAll(filter);
+    }
+
+    @Get("/count")
+    public count(_, ctx) {
+        const filter: ${name}Filter = {
+#foreach ($property in $filter.properties)
+#if(!$property.dataPrimaryKey)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+            ${property.name}: ctx.queryParameters.${property.name} ? ctx.queryParameters.${property.name} : undefined,
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+            ${property.name}: ctx.queryParameters.${property.name} ? parseInt(ctx.queryParameters.${property.name}) : undefined,
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+            ${property.name}: ctx.queryParameters.${property.name} ? new Date(parseInt(ctx.queryParameters.${property.name})) : undefined,
+#elseif($property.dataType == "BOOLEAN")
+            ${property.name}: ctx.queryParameters.${property.name} ? !!ctx.queryParameters.${property.name} : undefined,
+#else
+            ${property.name}: ctx.queryParameters.${property.name} ? ctx.queryParameters.${property.name} as unknown: undefined,
+#end
+#end
+#end
+        };
+
+        const count = this.repository.count(filter);
+        return JSON.stringify(count);
+    }
+
+}

@@ -101,7 +101,6 @@ exports.list = function(settings) {
 	return dao.list(settings);
 #end
 };
-#if($type != "REPORT")
 
 exports.get = function(id) {
 #if($roleRead && $roleRead != "") 
@@ -267,7 +266,6 @@ exports.delete = function(id) {
 		}
 	});
 };
-#end
 
 #if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
 exports.count = function (#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end) {
