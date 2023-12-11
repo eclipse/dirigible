@@ -25,7 +25,8 @@ const JArray = Java.type("java.lang.reflect.Array");
 const BytesFacade = Java.type("org.eclipse.dirigible.components.api.io.BytesFacade");
 
 export class Bytes{
-   static toJavaScriptBytes(internalBytes): Array<typeof internalBytes> {
+
+   static toJavaScriptBytes(internalBytes): bytes[] {
        const bytes = [];
        for (let i=0; i<internalBytes.length; i++) {
            bytes.push(internalBytes[i]);
@@ -44,7 +45,7 @@ export class Bytes{
    /**
     * Convert the Java byte array to a native JavaScript one. To be used internally by the API layer
     */
-   static textToByteArray(text: string) {
+   static textToByteArray(text: string) { //Kakvo trqbva da vrushta
        const javaString = new JString(text);
        const native = BytesFacade.textToByteArray(text);
        return this.toJavaScriptBytes(native);
