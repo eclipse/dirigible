@@ -15,10 +15,13 @@
 
 const EnvFacade = Java.type("org.eclipse.dirigible.components.api.core.EnvFacade");
 
-export function get(name) {
-	return EnvFacade.get(name);
-};
+export class Env{
 
-export function list() {
-	return EnvFacade.list();
-};
+	static get(name: string): string {
+		return EnvFacade.get(name);
+	};
+
+	static list(): string {
+		return EnvFacade.list();
+	};
+}
