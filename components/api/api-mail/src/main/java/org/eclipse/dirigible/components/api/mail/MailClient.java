@@ -12,19 +12,25 @@ package org.eclipse.dirigible.components.api.mail;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.PasswordAuthentication;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import org.springframework.messaging.MessagingException;
 import com.google.gson.Gson;
 import com.sun.mail.smtp.SMTPSSLTransport;
 import com.sun.mail.smtp.SMTPTransport;
 import jakarta.activation.DataHandler;
-import jakarta.mail.*;
-import jakarta.mail.internet.*;
+import jakarta.mail.Authenticator;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.internet.ContentType;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 import jakarta.mail.util.ByteArrayDataSource;
 
 /**
@@ -124,6 +130,7 @@ public class MailClient {
         String user = properties.getProperty(MAIL_USER);
         String password = properties.getProperty(MAIL_PASSWORD);
         Authenticator authenticator = new Authenticator() {
+            @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(user, password);
             }
