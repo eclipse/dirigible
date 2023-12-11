@@ -64,7 +64,7 @@
 		<module>engine/engine-websockets</module>
 		<module>engine/engine-security</module>
 		<module>engine/engine-listeners</module>
-		<module>engine/engine-odata</module>
+		<!-- <module>engine/engine-odata</module> -->
 		<module>engine/engine-camel</module>
 		<module>engine/engine-ftp</module>
 		<module>engine/engine-sftp</module>
