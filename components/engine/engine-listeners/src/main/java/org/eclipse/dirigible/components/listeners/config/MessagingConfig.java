@@ -89,7 +89,7 @@ class MessagingConfig {
      * @return the session
      */
     @Bean("ActiveMQSession")
-    Session createConnection(@Qualifier("ActiveMQConnection") Connection connection) {
+    Session createSession(@Qualifier("ActiveMQConnection") Connection connection) {
         try {
             return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         } catch (JMSException ex) {
