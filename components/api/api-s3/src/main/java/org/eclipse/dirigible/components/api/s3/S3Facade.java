@@ -10,6 +10,7 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.transfer.s3.S3TransferManager;
+import software.amazon.awssdk.transfer.s3.model.CompletedDirectoryUpload;
 import software.amazon.awssdk.transfer.s3.model.DirectoryUpload;
 import software.amazon.awssdk.transfer.s3.model.UploadDirectoryRequest;
 import software.amazon.awssdk.utils.IoUtils;
@@ -54,6 +55,8 @@ public class S3Facade {
 
     public static void put (String name, InputStream inputStream) throws IOException {
 
+        inputStream.read();
+
         byte[] contentBytes = IoUtils.toByteArray(inputStream);
 
         PutObjectRequest objectRequest = PutObjectRequest.builder()
@@ -64,15 +67,16 @@ public class S3Facade {
         s3.putObject(objectRequest, RequestBody.fromBytes(contentBytes));
     }
 
-    public void uploadDirectory(String sourceDirectory) throws IOException {
+    public void uploadDirectory(String sourceDirectory) {
 
-        File folder = new File(sourceDirectory);
-        String folderName = folder.getName() + "/";
+        S3TransferManager transferManager = S3TransferManager.create();
+        DirectoryUpload directoryUpload =
+                transferManager.uploadDirectory(UploadDirectoryRequest.builder()
+                                                                      .source(Paths.get(sourceDirectory))
+                                                                      .bucket(BUCKET)
+                                                                      .build());
 
-        for (File file: folder.listFiles()) {
-            InputStream fileToStream = new FileInputStream(file);
-            put(folderName + file.getName(), new ByteArrayInputStream(fileToStream.readAllBytes()));
-        }
+        directoryUpload.completionFuture().join();
     }
 
     public static void delete(String name) {
