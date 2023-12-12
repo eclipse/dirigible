@@ -22,11 +22,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 @Configuration
-public class CamelDirigibleConfiguration {
+class CamelDirigibleConfiguration {
 
     @Bean
     @Primary
-    CamelRequestHandlerMapping createCamelRequestHandlerMapping(CamelContext camelContext, PlatformHttpEngine httpEngine,
+    public CamelRequestHandlerMapping createCamelRequestHandlerMapping(CamelContext camelContext, PlatformHttpEngine httpEngine,
             CamelRequestHandlerMapping camelRequestHandlerMapping) {
         var httpComponent = camelContext.getComponent("platform-http", PlatformHttpComponent.class);
         httpComponent.removePlatformHttpListener(camelRequestHandlerMapping);
