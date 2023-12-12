@@ -10,45 +10,7 @@
  */
 package org.eclipse.dirigible.components.security.keycloak;
 
-// TODO to be adapted
-//
-// @KeycloakConfiguration
-// @ConditionalOnProperty(name = "keycloak.enabled", havingValue = "true")
-// class KeycloakSecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter {
-//
-// @Autowired
-// public void configureGlobal(AuthenticationManagerBuilder auth) {
-// KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
-// keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(new SimpleAuthorityMapper()); //
-// prefix = "ROLE_
-// auth.authenticationProvider(keycloakAuthenticationProvider);
-// }
-//
-// @Override
-// protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
-// return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
-// }
-//
-// @Override
-// protected void configure(HttpSecurity http) throws Exception {
-// super.configure(http);
-//
-// http.cors(Customizer.withDefaults())
-// .csrf((csrf) -> csrf.disable())
-// .headers(headers -> headers.frameOptions(frameOpts -> frameOpts.sameOrigin()));
-//
-// HttpSecurityURIConfigurator.configure(http);
-// }
-//
-// @Override
-// public void init(WebSecurity builder) throws Exception {
-// // TODO Auto-generated method stub
-//
-// }
-//
-// @Override
-// public void configure(WebSecurity builder) throws Exception {
-// // TODO Auto-generated method stub
-// }
-//
-// }
+// TODO: to be adapted
+class KeycloakSecurityConfiguration {
+
+}
