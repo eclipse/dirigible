@@ -18,13 +18,12 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
-
 @Configuration
 @ConditionalOnProperty(name = "oauth2.enabled", havingValue = "true")
-class OAuth2SecurityConfiguration {
+public class OAuth2SecurityConfiguration {
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.cors(Customizer.withDefaults())
             .csrf((csrf) -> csrf.disable())
