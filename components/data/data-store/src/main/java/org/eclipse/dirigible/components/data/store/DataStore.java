@@ -110,7 +110,7 @@ public class DataStore {
     /**
      * Initialize.
      */
-    public void initialize() {
+    public synchronized void initialize() {
         if (this.dataSource == null) {
             this.dataSource = datasourcesManager.getDefaultDataSource();
         }
