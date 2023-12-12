@@ -17,6 +17,40 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
  */
 public class HttpSecurityURIConfigurator {
 
+    private static final String[] PUBLIC_PATTERNS = {//
+            "/", //
+            "/home", //
+            "/index.html", //
+            "/logout", //
+            "/index-busy.html", //
+            "/stomp", //
+            "/error/**", //
+            "/error.html", //
+            "/favicon.ico", //
+            "/public/**", //
+            "/webjars/**", //
+            "/services/core/theme/**", //
+            "/services/core/version/**", //
+            "/services/core/healthcheck/**", //
+            "/services/web/resources/**", //
+            "/services/web/resources-core/**", //
+            "/services/js/resources-core/**", //
+            "/services/js/resources-core/**", //
+            "/services/integrations/**", //
+            "/actuator/**"};
+
+    private static final String[] AUTHENTICATED_PATTERNS = {//
+            "/services/**", //
+            "/websockets/**", //
+            "/v3/api-docs/swagger-config", //
+            "/v3/api-docs/**", //
+            "/odata/**", //
+            "/swagger-ui/**"};
+
+    private static final String[] DEVELOPER_PATTERNS = {//
+            "/services/ide/**", //
+            "/websockets/ide/**"};
+
     /**
      * Configure.
      *
@@ -25,75 +59,16 @@ public class HttpSecurityURIConfigurator {
      */
     public static void configure(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authz) -> //
-        authz.requestMatchers("/")
-             .permitAll()
-             .requestMatchers("/home")
-             .permitAll()
-             .requestMatchers("/logout")
-             .permitAll()
-             .requestMatchers("/index-busy.html")
-             .permitAll()
-
-             .requestMatchers("/stomp")
-             .permitAll()
-
-             .requestMatchers("/error/**")
-             .permitAll()
-             .requestMatchers("/error.html")
-             .permitAll()
-
-             // Public
-             .requestMatchers("/favicon.ico")
-             .permitAll()
-             .requestMatchers("/public/**")
-             .permitAll()
-             .requestMatchers("/webjars/**")
-             .permitAll()
-
-             .requestMatchers("/services/core/theme/**")
-             .permitAll()
-             .requestMatchers("/services/core/version/**")
-             .permitAll()
-             .requestMatchers("/services/core/healthcheck/**")
-             .permitAll()
-             .requestMatchers("/services/web/resources/**")
-             .permitAll()
-             .requestMatchers("/services/web/resources-core/**")
-             .permitAll()
-             .requestMatchers("/services/js/resources-core/**")
-             .permitAll()
-             .requestMatchers("/services/integrations/**")
-             .permitAll()
-
-             .requestMatchers("/actuator/**")
+        authz.requestMatchers(PUBLIC_PATTERNS)
              .permitAll()
 
              // Authenticated
-             .requestMatchers("/services/**")
-             .authenticated()
-             .requestMatchers("/websockets/**")
-             .authenticated()
-             .requestMatchers("/odata/**")
-             .authenticated()
-
-             // Swagger UI
-             .requestMatchers("/swagger-ui/**")
-             .authenticated()
-             .requestMatchers("/v3/api-docs/swagger-config")
-             .authenticated()
-             .requestMatchers("/v3/api-docs/**")
+             .requestMatchers(AUTHENTICATED_PATTERNS)
              .authenticated()
 
              // "Developer" role required
-             .requestMatchers("/services/ide/**")
+             .requestMatchers(DEVELOPER_PATTERNS)
              .hasRole("Developer")
-             .requestMatchers("/websockets/ide/**")
-             .hasRole("Developer")
-
-             // "Operator" role required
-             // .requestMatchers("/services/ops/**").hasRole("Operator")
-             // .requestMatchers("/services/transport/**").hasRole("Operator")
-             // .requestMatchers("/websockets/ops/**").hasRole("Operator")
 
              // Deny all other requests
              .anyRequest()
