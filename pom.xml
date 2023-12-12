@@ -655,6 +655,7 @@
 		<qldb.sdk.version>1.12.608</qldb.sdk.version>
 		<camel.version>4.2.0</camel.version>
 		<ftpserver.version>1.2.0</ftpserver.version>
+		<activemq.version>6.0.1</activemq.version>
 
 		<org.springdoc.openapi.ui.version>1.7.0</org.springdoc.openapi.ui.version>
 
