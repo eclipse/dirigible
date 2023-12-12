@@ -10,14 +10,17 @@
  */
 package org.eclipse.dirigible.components.engine.cms.internal.repository;
 
+
 import org.eclipse.dirigible.components.engine.cms.CmisConstants;
+import org.eclipse.dirigible.components.engine.cms.CmisObject;
+import org.eclipse.dirigible.components.engine.cms.CmisSession;
 
 import java.io.IOException;
 
 /**
- * The Class CmisSession.
+ * The Class CmisInternalSession.
  */
-public class CmisSession {
+public class CmisInternalSession implements CmisSession {
 
     /** The cmis repository. */
     private CmisRepository cmisRepository;
@@ -27,7 +30,7 @@ public class CmisSession {
      *
      * @param cmisRepository the cmis repository
      */
-    public CmisSession(CmisRepository cmisRepository) {
+    public CmisInternalSession(CmisRepository cmisRepository) {
         super();
         this.cmisRepository = cmisRepository;
     }
@@ -46,8 +49,8 @@ public class CmisSession {
      *
      * @return Repository Info
      */
-    public RepositoryInfo getRepositoryInfo() {
-        return new RepositoryInfo(this);
+    public CmisInternalRepositoryInfo getRepositoryInfo() {
+        return new CmisInternalRepositoryInfo(this);
     }
 
     /**
@@ -55,18 +58,18 @@ public class CmisSession {
      *
      * @return Object Factory
      */
-    public ObjectFactory getObjectFactory() {
-        return new ObjectFactory(this);
+    public CmisInternalObjectFactory getObjectFactory() {
+        return new CmisInternalObjectFactory(this);
     }
 
     /**
      * Returns the root folder of this repository.
      *
-     * @return Folder
+     * @return CmisInternalFolder
      * @throws IOException IO Exception
      */
-    public Folder getRootFolder() throws IOException {
-        return new Folder(this);
+    public CmisInternalFolder getRootFolder() throws IOException {
+        return new CmisInternalFolder(this);
     }
 
     /**
@@ -76,18 +79,19 @@ public class CmisSession {
      * @return CMIS Object
      * @throws IOException IO Exception
      */
+    @Override
     public CmisObject getObject(String id) throws IOException {
-        CmisObject cmisObject = new CmisObject(this, id);
+        CmisInternalObject cmisObject = new CmisInternalObject(this, id);
         if (!cmisObject.getInternalEntity()
                        .exists()) {
             throw new IOException(String.format("Object with id: %s does not exist", id));
         }
         if (CmisConstants.OBJECT_TYPE_FOLDER.equals(cmisObject.getType()
                                                               .getId())) {
-            return new Folder(this, id);
+            return new CmisInternalFolder(this, id);
         } else if (CmisConstants.OBJECT_TYPE_DOCUMENT.equals(cmisObject.getType()
                                                                        .getId())) {
-            return new Document(this, id);
+            return new CmisInternalDocument(this, id);
         }
         return cmisObject;
     }
@@ -99,6 +103,7 @@ public class CmisSession {
      * @return CMIS Object
      * @throws IOException IO Exception
      */
+    @Override
     public CmisObject getObjectByPath(String path) throws IOException {
         return getObject(path);
     }

@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.components.api.cms;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -65,7 +66,7 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
     private AccessVerifier securityAccessVerifier;
 
     /** The cms provider. */
-    private CmsProvider cmsProvider;
+    private List<CmsProvider> cmsProvider;
 
     /** The instance. */
     private static CmisFacade INSTANCE;
@@ -77,7 +78,7 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
      * @param securityAccessVerifier the security access verifier
      */
     @Autowired
-    public CmisFacade(CmsProvider cmsProvider, AccessVerifier securityAccessVerifier) {
+    public CmisFacade(List<CmsProvider> cmsProvider, AccessVerifier securityAccessVerifier) {
         this.cmsProvider = cmsProvider;
         this.securityAccessVerifier = securityAccessVerifier;
     }
@@ -106,7 +107,7 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
      *
      * @return the cms provider
      */
-    protected CmsProvider getCmsProvider() {
+    protected List<CmsProvider> getCmsProvider() {
         return cmsProvider;
     }
 

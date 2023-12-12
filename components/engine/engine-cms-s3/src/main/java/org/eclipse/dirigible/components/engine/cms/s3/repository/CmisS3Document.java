@@ -8,21 +8,22 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.engine.cms.internal.repository;
+package org.eclipse.dirigible.components.engine.cms.s3.repository;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import org.eclipse.dirigible.components.engine.cms.CmisDocument;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 
 /**
- * The Class Document.
+ * The Class CmisDocument.
  */
-public class Document extends CmisObject {
+public class CmisS3Document extends CmisS3Object implements CmisDocument {
 
     /** The session. */
-    private CmisSession session;
+    private CmisS3Session session;
 
     /** The internal resource. */
     private IResource internalResource;
@@ -37,11 +38,11 @@ public class Document extends CmisObject {
      * @param internalResource the internal resource
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public Document(CmisSession session, IResource internalResource) throws IOException {
+    public CmisS3Document(CmisS3Session session, IResource internalResource) throws IOException {
         super(session, internalResource.getPath());
         this.session = session;
-        this.repository = (IRepository) session.getCmisRepository()
-                                               .getInternalObject();
+        // this.repository = (IRepository) session.getCmisRepository()
+        // .getInternalObject();
         this.internalResource = internalResource;
     }
 
@@ -49,15 +50,15 @@ public class Document extends CmisObject {
      * Instantiates a new document.
      *
      * @param session the session
-     * @param id the id
+     * @param id the idx
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public Document(CmisSession session, String id) throws IOException {
+    public CmisS3Document(CmisS3Session session, String id) throws IOException {
         super(session, id);
         id = sanitize(id);
         this.session = session;
-        this.repository = (IRepository) session.getCmisRepository()
-                                               .getInternalObject();
+        // this.repository = (IRepository) session.getCmisRepository()
+        // .getInternalObject();
         this.internalResource = this.repository.getResource(id);
     }
 
@@ -81,19 +82,19 @@ public class Document extends CmisObject {
     }
 
     /**
-     * Returns the ContentStream representing the contents of this Document.
+     * Returns the CmisS3ContentStream representing the contents of this CmisDocument.
      *
      * @return Content Stream
      * @throws IOException IO Exception
      */
-    public ContentStream getContentStream() throws IOException {
+    public CmisS3ContentStream getContentStream() throws IOException {
         byte[] content = this.internalResource.getContent();
-        return new ContentStream(session, this.internalResource.getName(), content.length, this.internalResource.getContentType(),
+        return new CmisS3ContentStream(session, this.internalResource.getName(), content.length, this.internalResource.getContentType(),
                 new ByteArrayInputStream(content));
     }
 
     /**
-     * Returns the Path of this Document.
+     * Returns the Path of this CmisDocument.
      *
      * @return the path
      */

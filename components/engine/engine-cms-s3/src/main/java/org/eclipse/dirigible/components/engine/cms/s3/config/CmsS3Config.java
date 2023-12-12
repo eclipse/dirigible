@@ -28,7 +28,7 @@ public class CmsS3Config {
      */
     @Bean("cms-provider-s3")
     public CmsProvider getCmsProvider() {
-        return new CmsProviderS3(cmisRepository, s3Facade);
+        return new CmsProviderS3();
     }
 
 }

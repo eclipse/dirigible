@@ -10,20 +10,22 @@
  */
 package org.eclipse.dirigible.components.engine.cms.internal.repository;
 
+import org.eclipse.dirigible.components.engine.cms.CmisRepositoryInfo;
+
 /**
- * The Class RepositoryInfo.
+ * The Class CmisInternalRepositoryInfo.
  */
-public class RepositoryInfo {
+public class CmisInternalRepositoryInfo implements CmisRepositoryInfo {
 
     /** The session. */
-    private CmisSession session;
+    private CmisInternalSession session;
 
     /**
      * Instantiates a new repository info.
      *
      * @param session the session
      */
-    public RepositoryInfo(CmisSession session) {
+    public CmisInternalRepositoryInfo(CmisInternalSession session) {
         super();
         this.session = session;
     }
@@ -33,6 +35,7 @@ public class RepositoryInfo {
      *
      * @return the Id
      */
+    @Override
     public String getId() {
         return this.session.getCmisRepository()
                            .getInternalObject()
@@ -45,6 +48,7 @@ public class RepositoryInfo {
      *
      * @return the Name
      */
+    @Override
     public String getName() {
         return this.session.getCmisRepository()
                            .getInternalObject()

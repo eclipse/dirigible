@@ -10,10 +10,10 @@
  */
 package org.eclipse.dirigible.components.engine.cms.s3.provider;
 
-import org.eclipse.dirigible.components.api.s3.S3Facade;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.engine.cms.CmsProvider;
 import org.eclipse.dirigible.components.engine.cms.s3.repository.CmisRepository;
-import org.eclipse.dirigible.components.engine.cms.s3.repository.CmisSession;
+import org.eclipse.dirigible.components.engine.cms.s3.repository.CmisS3Session;
 
 /**
  * The Class CmsProviderS3.
@@ -36,15 +36,15 @@ public class CmsProviderS3 implements CmsProvider {
      * Instantiates a new cms provider s3.
      */
     public CmsProviderS3() {
-
-//
-//        String rootFolder = Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER, "target/dirigible");
-//        boolean absolute = Boolean.parseBoolean(Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE, "false"));
-//
-//        String repositoryFolder = rootFolder + File.separator + CMS;
-//
-//        IRepository repository = new LocalRepository(repositoryFolder, absolute);
-//        this.cmisRepository = CmisRepositoryFactory.createCmisRepository(repository);
+        //
+        // String rootFolder = Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER, "target/dirigible");
+        // boolean absolute =
+        // Boolean.parseBoolean(Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE, "false"));
+        //
+        // String repositoryFolder = rootFolder + File.separator + CMS;
+        //
+        // IRepository repository = new LocalRepository(repositoryFolder, absolute);
+        // this.cmisRepository = CmisRepositoryFactory.createCmisRepository(repository);
     }
 
     /**
@@ -54,7 +54,7 @@ public class CmsProviderS3 implements CmsProvider {
      */
     @Override
     public Object getSession() {
-        CmisSession cmisSession = this.cmisRepository.getSession();
+        CmisS3Session cmisSession = this.cmisRepository.getSession();
         return cmisSession;
     }
 

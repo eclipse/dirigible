@@ -10,14 +10,14 @@
  */
 package org.eclipse.dirigible.components.engine.cms.s3.repository;
 
-import org.eclipse.dirigible.components.engine.cms.CmisConstants;
+import org.eclipse.dirigible.components.engine.cms.CmisSession;
 
 import java.io.IOException;
 
 /**
- * The Class CmisSession.
+ * The Class CmisS3Session.
  */
-public class CmisSession {
+public class CmisS3Session implements CmisSession {
 
     /** The cmis repository. */
     private CmisRepository cmisRepository;
@@ -27,7 +27,7 @@ public class CmisSession {
      *
      * @param cmisRepository the cmis repository
      */
-    public CmisSession(CmisRepository cmisRepository) {
+    public CmisS3Session(CmisRepository cmisRepository) {
         super();
         this.cmisRepository = cmisRepository;
     }
@@ -46,27 +46,27 @@ public class CmisSession {
      *
      * @return Repository Info
      */
-    public RepositoryInfo getRepositoryInfo() {
-        return new RepositoryInfo(this);
+    public CmisS3RepositoryInfo getRepositoryInfo() {
+        return new CmisS3RepositoryInfo(this);
     }
 
     /**
-     * Returns the ObjectFactory utility.
+     * Returns the CmisS3ObjectFactory utility.
      *
      * @return Object Factory
      */
-    public ObjectFactory getObjectFactory() {
-        return new ObjectFactory(this);
+    public CmisS3ObjectFactory getObjectFactory() {
+        return new CmisS3ObjectFactory(this);
     }
 
     /**
      * Returns the root folder of this repository.
      *
-     * @return Folder
+     * @return CmisS3Folder
      * @throws IOException IO Exception
      */
-    public Folder getRootFolder() throws IOException {
-        return new Folder(this);
+    public CmisS3Folder getRootFolder() throws IOException {
+        return new CmisS3Folder(this);
     }
 
     /**
@@ -76,19 +76,20 @@ public class CmisSession {
      * @return CMIS Object
      * @throws IOException IO Exception
      */
-    public CmisObject getObject(String id) throws IOException {
-        CmisObject cmisObject = new CmisObject(this, id);
-        if (!cmisObject.getInternalEntity()
-                       .exists()) {
-            throw new IOException(String.format("Object with id: %s does not exist", id));
-        }
-        if (CmisConstants.OBJECT_TYPE_FOLDER.equals(cmisObject.getType()
-                                                              .getId())) {
-            return new Folder(this, id);
-        } else if (CmisConstants.OBJECT_TYPE_DOCUMENT.equals(cmisObject.getType()
-                                                                       .getId())) {
-            return new Document(this, id);
-        }
+    @Override
+    public CmisS3Object getObject(String id) throws IOException {
+        CmisS3Object cmisObject = new CmisS3Object(this, id);
+        // if (!cmisObject.getInternalEntity()
+        // .exists()) {
+        // throw new IOException(String.format("Object with id: %s does not exist", id));
+        // }
+        // if (CmisConstants.OBJECT_TYPE_FOLDER.equals(cmisObject.getType()
+        // .getId())) {
+        // return new CmisS3Folder(this, id);
+        // } else if (CmisConstants.OBJECT_TYPE_DOCUMENT.equals(cmisObject.getType()
+        // .getId())) {
+        // return new CmisS3Document(this, id);
+        // }
         return cmisObject;
     }
 
@@ -99,7 +100,8 @@ public class CmisSession {
      * @return CMIS Object
      * @throws IOException IO Exception
      */
-    public CmisObject getObjectByPath(String path) throws IOException {
+    @Override
+    public CmisS3Object getObjectByPath(String path) throws IOException {
         return getObject(path);
     }
 

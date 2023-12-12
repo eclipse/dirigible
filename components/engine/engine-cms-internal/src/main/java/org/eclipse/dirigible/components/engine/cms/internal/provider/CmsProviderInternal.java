@@ -14,9 +14,9 @@ import java.io.File;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.engine.cms.CmsProvider;
+import org.eclipse.dirigible.components.engine.cms.internal.repository.CmisInternalSession;
 import org.eclipse.dirigible.components.engine.cms.internal.repository.CmisRepository;
 import org.eclipse.dirigible.components.engine.cms.internal.repository.CmisRepositoryFactory;
-import org.eclipse.dirigible.components.engine.cms.internal.repository.CmisSession;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 
@@ -58,7 +58,7 @@ public class CmsProviderInternal implements CmsProvider {
      */
     @Override
     public Object getSession() {
-        CmisSession cmisSession = this.cmisRepository.getSession();
+        CmisInternalSession cmisSession = this.cmisRepository.getSession();
         return cmisSession;
     }
 

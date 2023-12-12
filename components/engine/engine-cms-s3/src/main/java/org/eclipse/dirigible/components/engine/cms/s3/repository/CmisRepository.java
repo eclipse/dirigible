@@ -20,13 +20,5 @@ public interface CmisRepository {
      *
      * @return the session
      */
-    public CmisSession getSession();
-
-    /**
-     * Gets the internal object.
-     *
-     * @return the internal object
-     */
-    public Object getS3Object();
-
+    public CmisS3Session getSession();
 }

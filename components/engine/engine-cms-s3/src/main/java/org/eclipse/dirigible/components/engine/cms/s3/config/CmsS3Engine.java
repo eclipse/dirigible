@@ -26,7 +26,7 @@ public class CmsS3Engine implements Engine {
      */
     @Override
     public String getName() {
-        return "Content (Chemistry)";
+        return "Content (S3)";
     }
 
     /**

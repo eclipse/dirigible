@@ -44,7 +44,7 @@ public interface CmisConstants {
     public static final String CHANGE_TOKEN = "cmis:changeToken";
 
     /** The Constant IS_IMMUTABLE. */
-    // ---- Document ----
+    // ---- CmisDocument ----
     public static final String IS_IMMUTABLE = "cmis:isImmutable";
 
     /** The Constant IS_LATEST_VERSION. */

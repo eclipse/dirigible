@@ -8,17 +8,20 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.engine.cms.s3.repository;
+package org.eclipse.dirigible.components.engine.cms.internal.repository;
+
+import org.eclipse.dirigible.components.engine.cms.CmisContentStream;
+import org.eclipse.dirigible.components.engine.cms.CmisSession;
 
 import java.io.InputStream;
 
 /**
- * The Class ContentStream.
+ * The Class CmisInternalContentStream.
  */
-public class ContentStream {
+public class CmisInternalContentStream implements CmisContentStream {
 
     /** The cmis session. */
-    private CmisSession cmisSession;
+    private CmisInternalSession cmisSession;
 
     /** The filename. */
     private String filename;
@@ -41,7 +44,8 @@ public class ContentStream {
      * @param mimetype the mimetype
      * @param inputStream the input stream
      */
-    public ContentStream(CmisSession cmisSession, String filename, long length, String mimetype, InputStream inputStream) {
+    public CmisInternalContentStream(CmisInternalSession cmisSession, String filename, long length, String mimetype,
+            InputStream inputStream) {
         super();
         this.cmisSession = cmisSession;
         this.filename = filename;
@@ -51,10 +55,11 @@ public class ContentStream {
     }
 
     /**
-     * Returns the InputStream of this ContentStream object.
+     * Returns the InputStream of this CmisInternalContentStream object.
      *
      * @return Input Stream
      */
+    @Override
     public InputStream getStream() {
         return this.inputStream;
     }
@@ -64,7 +69,8 @@ public class ContentStream {
      *
      * @return the cmis session
      */
-    public CmisSession getCmisSession() {
+    @Override
+    public CmisInternalSession getCmisSession() {
         return cmisSession;
     }
 
@@ -73,8 +79,9 @@ public class ContentStream {
      *
      * @param cmisSession the new cmis session
      */
+    @Override
     public void setCmisSession(CmisSession cmisSession) {
-        this.cmisSession = cmisSession;
+        this.cmisSession = (CmisInternalSession) cmisSession;
     }
 
     /**
@@ -82,6 +89,7 @@ public class ContentStream {
      *
      * @return the filename
      */
+    @Override
     public String getFilename() {
         return filename;
     }
@@ -91,6 +99,7 @@ public class ContentStream {
      *
      * @return the length
      */
+    @Override
     public long getLength() {
         return length;
     }
@@ -100,6 +109,7 @@ public class ContentStream {
      *
      * @return the mime type
      */
+    @Override
     public String getMimeType() {
         return mimetype;
     }
@@ -109,6 +119,7 @@ public class ContentStream {
      *
      * @return the input stream
      */
+    @Override
     public InputStream getInputStream() {
         return inputStream;
     }
