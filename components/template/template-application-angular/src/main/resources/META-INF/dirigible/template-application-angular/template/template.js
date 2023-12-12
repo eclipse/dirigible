@@ -12,8 +12,11 @@ const parameterUtils = dirigibleRequire("ide-generate-service/template/parameter
 
 exports.generate = function (model, parameters) {
     model = JSON.parse(model).model;
+
+    uiAngularjsTemplateManager.enhanceModel(model, parameters);
+
     let templateSources = exports.getTemplate(parameters).sources;
-    parameterUtils.process(model, parameters)
+    parameterUtils.process(model, parameters);
     return generateUtils.generateFiles(model, parameters, templateSources);
 };
 

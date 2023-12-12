@@ -8,12 +8,48 @@ const uiTemplate = dirigibleRequire("template-application-ui-angular/template/ui
 const generateUtils = dirigibleRequire("ide-generate-service/template/generateUtils");
 const parameterUtils = dirigibleRequire("ide-generate-service/template/parameterUtils");
 
+const extensions = dirigibleRequire("extensions/extensions");
+
 exports.generate = function (model, parameters) {
     model = JSON.parse(model).model;
+
+    exports.enhanceModel(model, parameters);
+
     let templateSources = exports.getTemplate(parameters).sources;
     parameterUtils.process(model, parameters)
+    templateSources = [];
     return generateUtils.generateFiles(model, parameters, templateSources);
 };
+
+exports.enhanceModel = function (model, parameters) {
+    try {
+        const extensionPointName = `${parameters.projectName}-action`;
+        const actions = []
+        try {
+            const actionExtensions = extensions.getExtensions(extensionPointName);
+            for (let i = 0; i < actionExtensions.length; i++) {
+                const actionExtension = require(actionExtensions[i]);
+                actions.push(actionExtension.getAction());
+            }
+        } catch (e) {
+            console.error(`Error occurred, while generating custom actions from extension point '${extensionPointName}': ${e}`);
+        }
+
+        for (let i = 0; i < actions.length; i++) {
+            for (let j = 0; j < model.entities.length; j++) {
+                if (actions[i].entity === model.entities[j].name) {
+                    if (model.entities[j].actions === undefined) {
+                        model.entities[j].actions = [];
+                    }
+                    model.entities[j].actions.push(actions[i]);
+                }
+            }
+        }
+
+    } catch (e) {
+        console.error(`Error occurred, while enhancing model:\n\n'${JSON.stringify(model)}'\n\nParameters:\n\n${JSON.stringify(parameters)}\n\nError: ${e}`);
+    }
+}
 
 exports.getTemplate = function (parameters) {
     let restTemplate = restTemplateManager.getTemplate(parameters);
