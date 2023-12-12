@@ -11,29 +11,27 @@
 package org.eclipse.dirigible.components.ide.workspace.endpoint;
 
 import static java.text.MessageFormat.format;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Nullable;
-import jakarta.validation.Valid;
-
 import org.apache.commons.codec.binary.Base64;
-import org.eclipse.dirigible.components.engine.typescript.TypeScriptService;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
-import org.eclipse.dirigible.components.ide.workspace.domain.*;
+import org.eclipse.dirigible.components.engine.typescript.TypeScriptService;
+import org.eclipse.dirigible.components.ide.workspace.domain.File;
+import org.eclipse.dirigible.components.ide.workspace.domain.Folder;
+import org.eclipse.dirigible.components.ide.workspace.domain.Project;
+import org.eclipse.dirigible.components.ide.workspace.domain.TypeScriptFile;
+import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
 import org.eclipse.dirigible.components.ide.workspace.json.ProjectDescriptor;
 import org.eclipse.dirigible.components.ide.workspace.json.WorkspaceDescriptor;
 import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -49,6 +47,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import jakarta.validation.Valid;
 
 /**
  * The Class WorkspaceEndpoint.
@@ -56,9 +55,6 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspaces")
 public class WorkspacesEndpoint {
-
-    /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(WorkspacesEndpoint.class);
 
     /** The workspace service. */
     @Autowired
@@ -276,7 +272,7 @@ public class WorkspacesEndpoint {
             httpHeaders.setContentType(MediaType.APPLICATION_JSON);
             return new ResponseEntity(workspaceService.renderFolderTree(workspace, folder), httpHeaders, HttpStatus.OK);
         }
-        if ((headerContentType != null) && ContentTypeHelper.APPLICATION_JSON.equals(headerContentType)) {
+        if (ContentTypeHelper.APPLICATION_JSON.equals(headerContentType)) {
             final HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.APPLICATION_JSON);
             return new ResponseEntity(workspaceService.renderFileDescription(workspace, file), httpHeaders, HttpStatus.OK);
@@ -344,7 +340,7 @@ public class WorkspacesEndpoint {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
         }
 
-        if (headerContentTransferEncoding != null && "base64".equals(headerContentTransferEncoding)) {
+        if ("base64".equals(headerContentTransferEncoding)) {
             content = Base64.decodeBase64(content);
         }
         file = workspaceService.createFile(workspace, project, path, content, headerContentType);
