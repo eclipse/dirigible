@@ -12,7 +12,6 @@ exports.generate = function (model, parameters) {
     model = JSON.parse(model).model;
     let templateSources = exports.getTemplate(parameters).sources;
     parameterUtils.process(model, parameters)
-    templateSources = [];
     return generateUtils.generateFiles(model, parameters, templateSources);
 };
 
