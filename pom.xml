@@ -662,7 +662,7 @@
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<graalvm.version>23.1.1</graalvm.version>
 		<guava.version>32.1.3-jre</guava.version>
-		<icu4j.version>74.1</icu4j.version>
+		<icu4j.version>74.2</icu4j.version>
 		<velocity.version>2.3</velocity.version>
 		<wikitext.version>3.0.48.202308291007</wikitext.version>
 		<flexmark.version>0.64.8</flexmark.version>
