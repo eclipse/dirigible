@@ -3,10 +3,11 @@ package org.eclipse.dirigible.components.api.s3;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.core.ResponseBytes;
+import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -22,34 +23,35 @@ import java.util.List;
 
 
 @Component
-public class S3Facade {
+public class S3Facade implements InitializingBean {
     /**
      * The Constant logger.
      */
     private static final Logger logger = LoggerFactory.getLogger(S3Facade.class);
+    private static S3Facade INSTANCE;
     private static final String BUCKET = Configuration.get("BUCKET_URL_PATH", "");
     private static final Region REGION = Region.of(Configuration.get("REGION", ""));
     private static final String ACCESS_KEY_ID = Configuration.get("ACCESS_KEY_ID", "");
     private static final String SECRET_ACCESS_KEY = Configuration.get("SECRET_ACCESS_KEY", "");
-
     private static S3Client s3;
-
-
-    public S3Facade() {
+    static {
         AwsBasicCredentials credentials = AwsBasicCredentials.create(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
-        new S3Facade(credentials);
+        s3 = S3Client.builder()
+                     .region(REGION)
+                     .credentialsProvider(StaticCredentialsProvider.create(credentials))
+                     .build();
     }
 
-    private S3Facade(AwsBasicCredentials awsCredentials) {
-        this.s3 = S3Client.builder()
-                .region(REGION)
-                .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
-                .build();
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        INSTANCE = this;
+    }
+
+    public static S3Facade get(){
+        return INSTANCE;
     }
 
     public static void put(String name, InputStream inputStream) throws IOException {
-
-        inputStream.read();
 
         byte[] contentBytes = IoUtils.toByteArray(inputStream);
 
@@ -82,14 +84,15 @@ public class S3Facade {
         s3.deleteObject(objectRequest);
     }
 
-    public static byte[] get(String name) {
+    public static byte[] get(String name) throws IOException {
 
-        ResponseBytes<GetObjectResponse> response = s3.getObjectAsBytes(GetObjectRequest.builder()
-                .bucket(BUCKET)
-                .key(name)
-                .build());
+        ResponseInputStream<GetObjectResponse> response =
+                s3.getObject(GetObjectRequest.builder()
+                                             .bucket(BUCKET)
+                                             .key(name)
+                                             .build());
 
-        return response.asByteArray();
+        return response.readAllBytes();
     }
 
     public static void update(String name, InputStream inputStream) throws IOException {
@@ -108,4 +111,6 @@ public class S3Facade {
         logger.info("Number of objects in the bucket: " + contents.stream().count());
         return contents;
     }
+
+
 }
