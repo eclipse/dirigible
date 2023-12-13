@@ -16,56 +16,58 @@
 
 const HttpSessionFacade = Java.type("org.eclipse.dirigible.components.api.http.HttpSessionFacade");
 
-export function isValid() {
-	return HttpSessionFacade.isValid();
-};
+export class Session {
+	public static isValid(): boolean {
+		return HttpSessionFacade.isValid();
+	};
 
-export function getAttribute(name) {
-	return HttpSessionFacade.getAttribute(name);
-};
+	public static getAttribute(name: string): string {
+		return HttpSessionFacade.getAttribute(name);
+	};
 
-export function getAttributeNames() {
-	const attrNames = HttpSessionFacade.getAttributeNamesJson();
-	if (attrNames) {
-		return JSON.parse(attrNames);
-	}
-	return attrNames;
-};
+	public static getAttributeNames(): Array<string> {
+		const attrNames = HttpSessionFacade.getAttributeNamesJson();
+		if (attrNames) {
+			return JSON.parse(attrNames);
+		}
+		return attrNames;
+	};
 
-export function getCreationTime() {
-	const time = HttpSessionFacade.getCreationTime();
-	return new Date(time);
-};
+	public static getCreationTime(): Date {
+		const time = HttpSessionFacade.getCreationTime();
+		return new Date(time);
+	};
 
-export function getId() {
-	return HttpSessionFacade.getId();
-};
+	public static getId(): string {
+		return HttpSessionFacade.getId();
+	};
 
-export function getLastAccessedTime() {
-	const time = HttpSessionFacade.getLastAccessedTime();
-	return new Date(time);
-};
+	public static getLastAccessedTime(): Date {
+		const time = HttpSessionFacade.getLastAccessedTime();
+		return new Date(time);
+	};
 
-export function getMaxInactiveInterval() {
-	return HttpSessionFacade.getMaxInactiveInterval();
-};
+	public static getMaxInactiveInterval(): number {
+		return HttpSessionFacade.getMaxInactiveInterval();
+	};
 
-export function invalidate() {
-	HttpSessionFacade.invalidate();
-};
+	public static invalidate(): void {
+		HttpSessionFacade.invalidate();
+	};
 
-export function isNew() {
-	return HttpSessionFacade.isNew();
-};
+	public static isNew(): boolean {
+		return HttpSessionFacade.isNew();
+	};
 
-export function setAttribute(name, value) {
-	HttpSessionFacade.setAttribute(name, value);
-};
+	public static setAttribute(name: string, value: string): void {
+		HttpSessionFacade.setAttribute(name, value);
+	};
 
-export function removeAttribute(name) {
-	HttpSessionFacade.removeAttribute(name);
-};
+	public static removeAttribute(name: string): void {
+		HttpSessionFacade.removeAttribute(name);
+	};
 
-export function setMaxInactiveInterval(interval) {
-	HttpSessionFacade.setMaxInactiveInterval(interval);
-};
+	public static setMaxInactiveInterval(interval: number): void {
+		HttpSessionFacade.setMaxInactiveInterval(interval);
+	};
+}

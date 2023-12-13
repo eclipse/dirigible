@@ -10,42 +10,44 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-import * as rs from "@dirigible/http/rs"
+import { rs, response, request } from "."
 
 const router = rs.service();
 let instance = null;
 
-export function Controller(ctr: {new()}, context: ClassDecoratorContext): void {
-    instance = new ctr();
-    router.execute();
-}
-
-export const Get = createRequestDecorator("get")
-export const Post = createRequestDecorator("post")
-export const Put = createRequestDecorator("put")
-export const Patch = createRequestDecorator("patch")
-export const Delete = createRequestDecorator("delete")
-export const Head = createRequestDecorator("head")
-export const Options = createRequestDecorator("options")
-
-function createRequestDecorator(httpMethod) {
-    return function (path: string): any {
-        return function (target, propertyKey, descriptor) {
-            const handler = descriptor ? descriptor.value : target;
-            router[httpMethod](
-                path,
-                (ctx, req, res) => {
-                    handleRequest(req, res, ctx, handler);
-                }
-            );
-        };
+export class Decorators {
+    public static Controller(ctr: {new()}, context: ClassDecoratorContext): void {
+        instance = new ctr();
+        router.execute();
     }
-}
 
-function handleRequest(req, res, ctx, handler) {
-    const body = req.json();
-    const maybeResponseBody = handler.apply(instance || {}, [body, ctx, req, res]);
-    if (maybeResponseBody) {
-        res.json(maybeResponseBody);
+    public static Get = this.createRequestDecorator("get")
+    public static Post = this.createRequestDecorator("post")
+    public static Put = this.createRequestDecorator("put")
+    public static Patch = this.createRequestDecorator("patch")
+    public static Delete = this.createRequestDecorator("delete")
+    public static Head = this.createRequestDecorator("head")
+    public static Options = this.createRequestDecorator("options")
+
+    private static createRequestDecorator(httpMethod:string): (path: string)=>(target, propertyKey, descriptor: PropertyDescriptor) => void {
+        return function (path: string): (target, propertyKey, descriptor: PropertyDescriptor) => void {
+            return function (target, _propertyKey, descriptor: PropertyDescriptor) {
+                const handler = descriptor ? descriptor.value : target;
+                router[httpMethod](
+                    path,
+                    (ctx, req: typeof request, res: typeof response) => {
+                        Decorators.handleRequest(req, res, ctx, handler);
+                    }
+                );
+            };
+        }
+    }
+
+    private static handleRequest(req: typeof request, res: typeof response, ctx, handler): void {//TODO what are the types of ctx and handler?
+        const body = req.json();
+        const maybeResponseBody = handler.apply(instance || {}, [body, ctx, req, res]);
+        if (maybeResponseBody) {
+            res.json(maybeResponseBody);
+        }
     }
 }

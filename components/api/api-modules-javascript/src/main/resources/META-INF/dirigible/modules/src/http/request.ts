@@ -1,232 +1,233 @@
 import * as streams from "@dirigible/io/streams"
 const HttpRequestFacade = Java.type("org.eclipse.dirigible.components.api.http.HttpRequestFacade");
 
-export function isValid() {
-    return HttpRequestFacade.isValid();
-};
+export class Request {
+    public static isValid(): boolean {
+        return HttpRequestFacade.isValid();
+    };
 
-export function getMethod() {
-    return HttpRequestFacade.getMethod();
-};
+    public static getMethod(): string {
+        return HttpRequestFacade.getMethod();
+    };
 
-export function getRemoteUser() {
-    return HttpRequestFacade.getRemoteUser();
-};
+    public static getRemoteUser(): string {
+        return HttpRequestFacade.getRemoteUser();
+    };
 
-export function getPathInfo() {
-    return HttpRequestFacade.getPathInfo();
-};
+    public static getPathInfo(): string {
+        return HttpRequestFacade.getPathInfo();
+    };
 
-export function getPathTranslated() {
-    return HttpRequestFacade.getPathTranslated();
-};
+    public static getPathTranslated(): string {
+        return HttpRequestFacade.getPathTranslated();
+    };
 
-export function getHeader(name) {
-    return HttpRequestFacade.getHeader(name);
-};
+    public static getHeader(name: string): string {
+        return HttpRequestFacade.getHeader(name);
+    };
 
-export function isUserInRole(role) {
-    return HttpRequestFacade.isUserInRole(role);
-};
+    public static isUserInRole(role: string): boolean {
+        return HttpRequestFacade.isUserInRole(role);
+    };
 
-export function getAttribute(name) {
-    return HttpRequestFacade.getAttribute(name);
-};
+    public static getAttribute(name: string): string {
+        return HttpRequestFacade.getAttribute(name);
+    };
 
-export function getAuthType() {
-    return HttpRequestFacade.getAuthType();
-};
+    public static getAuthType(): string {
+        return HttpRequestFacade.getAuthType();
+    };
 
-export function getCookies() {
-    let cookiesJson = HttpRequestFacade.getCookies();
-    return JSON.parse(cookiesJson);
-};
+    public static getCookies(): string {
+        let cookiesJson = HttpRequestFacade.getCookies();
+        return JSON.parse(cookiesJson);
+    };
 
-export function getAttributeNames() {
-    let attrNamesJson = HttpRequestFacade.getAttributeNames();
-    return JSON.parse(attrNamesJson);
-};
+    public static getAttributeNames(): string {
+        let attrNamesJson = HttpRequestFacade.getAttributeNames();
+        return JSON.parse(attrNamesJson);
+    };
 
-export function getCharacterEncoding() {
-    return HttpRequestFacade.getCharacterEncoding();
-};
+    public static getCharacterEncoding(): string {
+        return HttpRequestFacade.getCharacterEncoding();
+    };
 
-export function getContentLength() {
-    return HttpRequestFacade.getContentLength();
-};
+    public static getContentLength(): number {
+        return HttpRequestFacade.getContentLength();
+    };
 
-export function getHeaders(name) {
-    let headersJson = HttpRequestFacade.getHeaders(name);
-    return JSON.parse(headersJson);
-};
+    public static getHeaders(name: string): string {
+        let headersJson = HttpRequestFacade.getHeaders(name);
+        return JSON.parse(headersJson);
+    };
 
-export function getContentType() {
-    return HttpRequestFacade.getContentType();
-};
+    public static getContentType(): string {
+        return HttpRequestFacade.getContentType();
+    };
 
-export function getBytes() {
-    let bytesJson = HttpRequestFacade.getBytes();
-    return JSON.parse(bytesJson);
-};
+    public static getBytes(): string {
+        let bytesJson = HttpRequestFacade.getBytes();
+        return JSON.parse(bytesJson);
+    };
 
-let textData = null;
-export function getText() {
-    let textData = null;
-    if (textData === null) {
-        textData = HttpRequestFacade.getText();
-    }
-    return textData;
-};
-
-export function json() {
-    return getJSON();
-}
-
-export function getJSON() {
-    try {
-        let text = getText();
-        return JSON.parse(text);
-    } catch (e) {
-        return null;
-    }
-};
-
-export function getParameter(name) {
-    return HttpRequestFacade.getParameter(name);
-};
-
-export function getParameters() {
-    let paramsJson;
-    paramsJson = HttpRequestFacade.getParameters();
-    return JSON.parse(paramsJson);
-};
-
-export function getResourcePath() {
-    return HttpRequestFacade.getResourcePath();
-};
-
-export function getHeaderNames() {
-    let headerNamesJson = HttpRequestFacade.getHeaderNames();
-    return JSON.parse(headerNamesJson);
-};
-
-export function getParameterNames() {
-    let paramNamesJson = HttpRequestFacade.getParameterNames();
-    return JSON.parse(paramNamesJson);
-};
-
-export function getParameterValues(name) {
-    let paramValuesJson = HttpRequestFacade.getParameterValues(name);
-    return JSON.parse(paramValuesJson);
-};
-
-export function getProtocol() {
-    return HttpRequestFacade.getProtocol();
-};
-
-export function getScheme() {
-    return HttpRequestFacade.getScheme();
-};
-
-export function getContextPath() {
-    return HttpRequestFacade.getContextPath();
-};
-
-export function getServerName() {
-    return HttpRequestFacade.getServerName();
-};
-
-export function getServerPort() {
-    return HttpRequestFacade.getServerPort();
-};
-
-export function getQueryString() {
-    return HttpRequestFacade.getQueryString();
-};
-
-/**
- * Returns the query string name value pairs as JS object map. When multiple query parameters with the same name are specified,
- * it will collect theirs values in an array in the order of declaration under that name in the map.
- */
-export function getQueryParametersMap() {
-    let queryString = getQueryString();
-    if (!queryString)
-        return {};
-
-    queryString = decodeURI(queryString);
-    let queryStringSegments = queryString.split('&');
-
-    let queryMap = {};
-    queryStringSegments.forEach(function (seg) {
-        seg = seg.replace('amp;', '');
-        const kv = seg.split('=');
-        const key = kv[0].trim();
-        const value = kv[1] === undefined ? true : kv[1].trim();
-        if (queryMap[key] !== undefined) {
-            if (!Array.isArray(queryMap[key]))
-                queryMap[key] = [queryMap[key]];
-            else
-                queryMap[key].push(value);
-        } else {
-            queryMap[key] = value;
+    public static getText(): string {
+        let textData = null;
+        if (textData === null) {
+            textData = HttpRequestFacade.getText();
         }
-    }.bind(this));
-    return queryMap;
-};
+        return textData;
+    };
 
-export function getRemoteAddress() {
-    return HttpRequestFacade.getRemoteAddress();
-};
+    public static json(): Object | null {
+        return this.getJSON();
+    }
 
-export function getRemoteHost() {
-    return HttpRequestFacade.getRemoteHost();
-};
+    public static getJSON(): Object | null {
+        try {
+            let text = this.getText();
+            return JSON.parse(text);
+        } catch (e) {
+            return null;
+        }
+    };
 
-export function setAttribute(name, value) {
-    HttpRequestFacade.setAttribute(name, value);
-};
+    public static getParameter(name: string): string {
+        return HttpRequestFacade.getParameter(name);
+    };
 
-export function removeAttribute(name) {
-    HttpRequestFacade.removeAttribute(name);
-};
+    public static getParameters(): string{
+        let paramsJson;
+        paramsJson = HttpRequestFacade.getParameters();
+        return JSON.parse(paramsJson);
+    };
 
-export function getLocale() {
-    let localeJson = HttpRequestFacade.getLocale();
-    return JSON.parse(localeJson);
-};
+    public static getResourcePath(): string {
+        return HttpRequestFacade.getResourcePath();
+    };
 
-export function getRequestURI() {
-    return HttpRequestFacade.getRequestURI();
-};
+    public static getHeaderNames(): string {
+        let headerNamesJson = HttpRequestFacade.getHeaderNames();
+        return JSON.parse(headerNamesJson);
+    };
 
-export function isSecure() {
-    return HttpRequestFacade.isSecure();
-};
+    public static getParameterNames(): string {
+        let paramNamesJson = HttpRequestFacade.getParameterNames();
+        return JSON.parse(paramNamesJson);
+    };
 
-export function getRequestURL() {
-    return HttpRequestFacade.getRequestURL();
-};
+    public static getParameterValues(name: string): string {
+        let paramValuesJson = HttpRequestFacade.getParameterValues(name);
+        return JSON.parse(paramValuesJson);
+    };
 
-export function getServicePath() {
-    return HttpRequestFacade.getServicePath();
-};
+    public static getProtocol(): string {
+        return HttpRequestFacade.getProtocol();
+    };
 
-export function getRemotePort() {
-    return HttpRequestFacade.getRemotePort();
-};
+    public static getScheme(): string {
+        return HttpRequestFacade.getScheme();
+    };
 
-export function getLocalName() {
-    return HttpRequestFacade.getLocalName();
-};
+    public static getContextPath(): string {
+        return HttpRequestFacade.getContextPath();
+    };
 
-export function getLocalAddress() {
-    return HttpRequestFacade.getLocalAddress();
-};
+    public static getServerName(): string {
+        return HttpRequestFacade.getServerName();
+    };
 
-export function getLocalPort() {
-    return HttpRequestFacade.getLocalPort();
-};
+    public static getServerPort(): number {
+        return HttpRequestFacade.getServerPort();
+    };
 
-export function getInputStream() {
-    return streams.createInputStream(HttpRequestFacade.getInputStream());
-};
+    public static getQueryString(): string {
+        return HttpRequestFacade.getQueryString();
+    };
+
+    /**
+     * Returns the query string name value pairs as JS object map. When multiple query parameters with the same name are specified,
+     * it will collect theirs values in an array in the order of declaration under that name in the map.
+     */
+    public static getQueryParametersMap(): Object {
+        let queryString = this.getQueryString();
+        if (!queryString)
+            return {};
+
+        queryString = decodeURI(queryString);
+        let queryStringSegments = queryString.split('&');
+
+        let queryMap = {};
+        queryStringSegments.forEach(function (seg) {
+            seg = seg.replace('amp;', '');
+            const kv = seg.split('=');
+            const key = kv[0].trim();
+            const value = kv[1] === undefined ? true : kv[1].trim();
+            if (queryMap[key] !== undefined) {
+                if (!Array.isArray(queryMap[key]))
+                    queryMap[key] = [queryMap[key]];
+                else
+                    queryMap[key].push(value);
+            } else {
+                queryMap[key] = value;
+            }
+        }.bind(this));
+        return queryMap;
+    };
+
+    public static getRemoteAddress(): string {
+        return HttpRequestFacade.getRemoteAddress();
+    };
+
+    public static getRemoteHost(): string {
+        return HttpRequestFacade.getRemoteHost();
+    };
+
+    public static setAttribute(name: string, value: string): void {
+        HttpRequestFacade.setAttribute(name, value);
+    };
+
+    public static removeAttribute(name: string): void {
+        HttpRequestFacade.removeAttribute(name);
+    };
+
+    public static getLocale(): string {
+        let localeJson = HttpRequestFacade.getLocale();
+        return JSON.parse(localeJson);
+    };
+
+    public static getRequestURI(): string {
+        return HttpRequestFacade.getRequestURI();
+    };
+
+    public static isSecure(): boolean {
+        return HttpRequestFacade.isSecure();
+    };
+
+    public static getRequestURL(): string {
+        return HttpRequestFacade.getRequestURL();
+    };
+
+    public static getServicePath(): string {
+        return HttpRequestFacade.getServicePath();
+    };
+
+    public static getRemotePort(): number {
+        return HttpRequestFacade.getRemotePort();
+    };
+
+    public static getLocalName(): string {
+        return HttpRequestFacade.getLocalName();
+    };
+
+    public static getLocalAddress(): string {
+        return HttpRequestFacade.getLocalAddress();
+    };
+
+    public static getLocalPort(): number {
+        return HttpRequestFacade.getLocalPort();
+    };
+
+    public static getInputStream(): streams.InputStream {
+        return streams.createInputStream(HttpRequestFacade.getInputStream());
+    };
+}

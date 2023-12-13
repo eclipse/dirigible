@@ -1,4 +1,7 @@
+import { Resource } from "./resource";
 import { handlerFunction } from "./resource-common";
+import { HttpController } from "./resource-http-controller";
+import { ResourceMappings } from "./resource-mappings";
 
 /**
  * Constructor function for ResourceMethod instances.
@@ -57,14 +60,14 @@ import { handlerFunction } from "./resource-common";
  * @returns {ResourceMethod}
  */
 export class ResourceMethod {
-    cfg: any;
-    _resource: any;
-    resource: any;
-    resourcePath: any;
-    path: any;
-    controller: any;
+    cfg: Object;
+    _resource: Resource;
+    resource: string;
+    resourcePath: string;
+    path: string;
+    controller: HttpController;
 
-    constructor(oConfiguration, controller, resource, mappings) {
+    constructor(oConfiguration: Object, controller: HttpController, resource: Resource, mappings: ResourceMappings) {
         this.cfg = oConfiguration;
         this._resource = resource;
         this.controller = controller;
@@ -74,32 +77,32 @@ export class ResourceMethod {
         }
     }
 
-    execute() {
+    execute(): void{
         this.controller?.execute?.(...arguments)
     }
 
-    get() {
-        return this._resource?.["get"]?.(...arguments)
+    get(...args: any[]): ResourceMethod {
+        return this._resource?.["get"]?.(...args) //TODO: ...args must either have a tuple type or be passed to a rest parameter.
     }
 
-    post() {
-        return this._resource?.["post"]?.(...arguments)
+    post(...args): ResourceMethod {
+        return this._resource?.["post"]?.(...args) //TODO: ...args must either have a tuple type or be passed to a rest parameter.
     }
 
-    put() {
-        return this._resource?.["put"]?.(...arguments)
+    put(...args): ResourceMethod {
+        return this._resource?.["put"]?.(...args) //TODO: ...args must either have a tuple type or be passed to a rest parameter.
     }
 
-    delete() {
-        return this._resource?.["delete"]?.(...arguments)
+    delete(...args): ResourceMethod {
+        return this._resource?.["delete"]?.(...args) //TODO: ...args must either have a tuple type or be passed to a rest parameter.
     }
 
-    remove() {
-        return this._resource?.["remove"]?.(...arguments)
+    remove(...args): ResourceMethod {
+        return this._resource?.["remove"]?.(...args) //TODO: ...args must either have a tuple type or be passed to a rest parameter.
     }
 
-    method() {
-        return this._resource?.["method"]?.(...arguments)
+    method(...args): ResourceMethod {
+        return this._resource?.["method"]?.(...args) //TODO: ...args must either have a tuple type or be passed to a rest parameter.
     }
 
     /**
@@ -107,7 +110,7 @@ export class ResourceMethod {
  *
  * @returns {Object}
  */
-    configuration() {
+    configuration(): Object {
         return this.cfg;
     };
 
@@ -137,7 +140,7 @@ export class ResourceMethod {
      * @returns {ResourceMethod} The ResourceMethod instance to which the function invocation is bound, for mehtod chaining.
      */
 
-    consumes(mimeTypes) {
+    consumes(mimeTypes: Array<string>): ResourceMethod {
         return this.mimeSetting('consumes', mimeTypes);
     };
 
@@ -183,7 +186,7 @@ export class ResourceMethod {
      * @param {String[]} mimeTypes Sets the mime type(s) that this ResourceMethod request processing function may produce.
      * @returns {ResourceMethod} The ResourceMethod instance to which the function invocation is bound, for mehtod chaining.
      */
-    produces(mimeTypes) {
+    produces(mimeTypes: Array<string>): ResourceMethod {
         return this.mimeSetting('produces', mimeTypes);
     };
     /**
@@ -208,7 +211,7 @@ export class ResourceMethod {
      * @param {Function} Callback function for the before phase of procesing matched resource requests
      * @returns {ResourceMethod} The ResourceMethod instance to which the function invocation is bound, for mehtod chaining.
      */
-    before(fHandler) {
+    before(fHandler: Function): ResourceMethod {
         return handlerFunction(this, this.configuration(), 'before', fHandler);
     };
     /**
@@ -217,7 +220,7 @@ export class ResourceMethod {
      * @param {Function} Callback function for the serve phase of procesing matched resource requests
      * @returns {ResourceMethod} The ResourceMethod instance to which the function invocation is bound, for mehtod chaining.
      */
-    serve(fHandler) {
+    serve(fHandler: Function): ResourceMethod {
         return handlerFunction(this, this.configuration(), 'serve', fHandler);
     };
     /**
@@ -226,7 +229,7 @@ export class ResourceMethod {
      * @param {Function} Callback function for the catch errors phase of procesing matched resource requests
      * @returns {ResourceMethod} The ResourceMethod instance to which the function invocation is bound, for mehtod chaining.
      */
-    catch(fHandler) {
+    catch(fHandler: Function): ResourceMethod {
         return handlerFunction(this, this.configuration(), 'catch', fHandler);
     };
     /**
@@ -236,7 +239,7 @@ export class ResourceMethod {
      * @param {Function} Callback function for the finally phase of procesing matched resource requests
      * @returns {ResourceMethod} The ResourceMethod instance to which the function invocation is bound, for mehtod chaining.
      */
-    finally(fHandler) {
+    finally(fHandler: Function): ResourceMethod {
         return handlerFunction(this, this.configuration(), 'finally', fHandler);
     };
 
@@ -250,7 +253,7 @@ export class ResourceMethod {
  * @returns {ResourceMethod} The ResourceMethod instance to which the function is bound.
  * @private
  */
-    private mimeSetting(mimeSettingName, mimeTypes) {
+    private mimeSetting(mimeSettingName: string, mimeTypes: Array<string>): ResourceMethod {
 
         if (mimeTypes !== undefined) {
             if (typeof mimeTypes === 'string') {

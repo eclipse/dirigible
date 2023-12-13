@@ -17,11 +17,11 @@ import * as streams from "@dirigible/io/streams"
 import * as bytes from "@dirigible/io/bytes"
 const HttpUploadFacade = Java.type("org.eclipse.dirigible.components.api.http.HttpUploadFacade");
 
-export function isMultipartContent() {
+export function isMultipartContent(): boolean {
     return HttpUploadFacade.isMultipartContent();
 }
 
-export function parseRequest() {
+export function parseRequest(): FileItems {
     const native = __context.get("files");
     return new FileItems(native);
 }
@@ -37,12 +37,12 @@ class FileItems {
         this.native = native;
     }
 
-    public get(index) {
+    public get(index: number): FileItem {
         const native = this.native.get(index);
         return new FileItem(native);
     }
 
-    public size() {
+    public size(): number {
         return this.native.size();
     }
 }
@@ -58,40 +58,40 @@ class FileItem {
         this.native = native;
     }
 
-    public getName() {
+    public getName(): string {
         return this.native.getName();
     }
 
-    public getOriginalFilename() {
+    public getOriginalFilename(): string {
         return this.native.getOriginalFilename();
     }
 
-    public getContentType() {
+    public getContentType(): string {
         return this.native.getContentType();
     }
 
-    public isEmpty() {
+    public isEmpty(): boolean {
         return this.native.isEmpty();
     }
 
-    public getSize() {
+    public getSize(): number {
         return this.native.getSize();
     }
 
-    public getBytes() {
+    public getBytes(): number[] {
         const data = this.getBytesNative();
         return bytes.toJavaScriptBytes(data);
     }
 
-    public getBytesNative() {
+    public getBytesNative() { // TODO pitaj tuk za bytes
         return this.native.getBytes();
     }
 
-    public getText() {
+    public getText(): string {
         return String.fromCharCode.apply(null, this.getBytesNative());
     }
 
-    public getInputStream() {
+    public getInputStream(): streams.InputStream {
         const native = this.native.getInputStream();
         return new streams.InputStream(native);
     }

@@ -18,11 +18,21 @@ const HttpClientAsyncFacade = Java.type("org.eclipse.dirigible.components.api.ht
 const SpringBeanProvider = Java.type("org.eclipse.dirigible.components.spring.SpringBeanProvider");
 const httpClient = SpringBeanProvider.getBean(HttpClientAsyncFacade.class);
 
-export class HttpAsyncClient {
 
-	getAsync(url, config, options) {
-		const newUrl = buildUrl(url, options);
-		const callback = createHttpResponseCallback(
+interface Config {
+	success: Function;
+	error: Function;
+	cancel: Function;
+}
+
+interface Option {
+	params: Array<{name: string, value: string}>;
+}
+
+export class HttpAsyncClient {
+	public static getAsync(url: string, config: Config, options: Option): void{
+		const newUrl = this.buildUrl(url, options);
+		const callback =  this.createHttpResponseCallback(
 			httpClient,
 			config.success,
 			config.error,
@@ -35,9 +45,9 @@ export class HttpAsyncClient {
 		}
 	};
 
-	postAsync(url, config, options) {
-		const newUrl = buildUrl(url, options);
-		const callback = createHttpResponseCallback(
+	public static postAsync(url: string, config: Config, options: Option): void {
+		const newUrl = this.buildUrl(url, options);
+		const callback = this.createHttpResponseCallback(
 			httpClient,
 			config.success,
 			config.error,
@@ -50,9 +60,9 @@ export class HttpAsyncClient {
 		}
 	};
 
-	putAsync(url, config, options) {
-		const newUrl = buildUrl(url, options);
-		const callback = createHttpResponseCallback(
+	public static putAsync(url: string, config: Config, options: Option): void {
+		const newUrl = this.buildUrl(url, options);
+		const callback = this.createHttpResponseCallback(
 			httpClient,
 			config.success,
 			config.error,
@@ -65,9 +75,9 @@ export class HttpAsyncClient {
 		}
 	};
 
-	patchAsync(url, config, options) {
-		const newUrl = buildUrl(url, options);
-		const callback = createHttpResponseCallback(
+	public static patchAsync(url: string, config: Config, options: Option): void {
+		const newUrl = this.buildUrl(url, options);
+		const callback = this.createHttpResponseCallback(
 			httpClient,
 			config.success,
 			config.error,
@@ -80,9 +90,9 @@ export class HttpAsyncClient {
 		}
 	};
 
-	deleteAsync(url, config, options) {
-		const newUrl = buildUrl(url, options);
-		const callback = createHttpResponseCallback(
+	public static deleteAsync(url: string, config: Config, options: Option): void {
+		const newUrl = this.buildUrl(url, options);
+		const callback = this.createHttpResponseCallback(
 			httpClient,
 			config.success,
 			config.error,
@@ -95,9 +105,9 @@ export class HttpAsyncClient {
 		}
 	};
 
-	headAsync(url, config, options) {
-		const newUrl = buildUrl(url, options);
-		const callback = createHttpResponseCallback(
+	public static headAsync(url: string, config: Config, options: Option): void {
+		const newUrl = this.buildUrl(url, options);
+		const callback = this.createHttpResponseCallback(
 			httpClient,
 			config.success,
 			config.error,
@@ -110,9 +120,9 @@ export class HttpAsyncClient {
 		}
 	};
 
-	traceAsync(url, config, options) {
-		const newUrl = buildUrl(url, options);
-		const callback = createHttpResponseCallback(
+	public static traceAsync(url: string, config: Config, options: Option): void {
+		const newUrl = this.buildUrl(url, options);
+		const callback = this.createHttpResponseCallback(
 			httpClient,
 			config.success,
 			config.error,
@@ -125,77 +135,78 @@ export class HttpAsyncClient {
 		}
 	};
 
-	execute() {
+	public static execute(): void {
 		httpClient.execute();
 	};
-}
 
-export function getInstance() {
-	return new HttpAsyncClient();
-};
 
-function createHttpResponseCallback(httpClient, successCallback, errorCallback, cancelCallback) {
-	return httpClient.createCallback(
-		createSuccessCallback(successCallback),
-		createErrorCallback(errorCallback),
-		createCancelCallback(cancelCallback)
-	);
-}
+	public static getInstance(): HttpAsyncClient {
+		return new HttpAsyncClient();
+	};
 
-function createSuccessCallback(callback) {
-	return "(function(httpResponse, isBinary, context) {\n"
-		+ "var response = {};\n"
-		+ "response.statusCode = httpResponse.getStatusLine().getStatusCode();\n"
-		+ "response.statusMessage = httpResponse.getStatusLine().getReasonPhrase();\n"
-		+ "response.protocol = httpResponse.getProtocolVersion();\n"
-		+ "response.binary = isBinary;\n"
-
-		+ "var headers = httpResponse.getAllHeaders();\n"
-		+ "response.headers = [];\n"
-		+ "for (var i = 0; i < headers.length; i ++) {\n"
-		+ "    response.headers.push({\n"
-		+ "        name: headers[i].getName(),\n"
-		+ "        value: headers[i].getValue()\n"
-		+ "    });\n"
-		+ "}\n"
-
-		+ "var entity = httpResponse.getEntity();\n"
-		+ "if (entity) {\n"
-		+ "    var inputStream = entity.getContent();\n"
-		+ "    if (isBinary) {\n"
-		+ "        response.data = org.apache.commons.io.IOUtils.toByteArray(inputStream);\n"
-		+ "    } else {\n"
-		+ "        response.text = org.apache.commons.io.IOUtils.toString(inputStream);\n"
-		+ "    }\n"
-		+ "}\n"
-
-		+ "(" + callback + ")(response, JSON.parse(context));\n"
-		+ "})(__context.get('response'), __context.get('httpClientRequestOptions').isBinary(), __context.get('httpClientRequestOptions').getContext());\n";
-}
-
-function createErrorCallback(callback) {
-	if (callback) {
-		return "(" + callback + ")(__context.get('exception'))";
+	private static createHttpResponseCallback(httpClient_: typeof httpClient, successCallback: Function, errorCallback: Function, cancelCallback: Function): typeof httpClient{
+		return httpClient_.createCallback(
+			this.createSuccessCallback(successCallback),
+			this.createErrorCallback(errorCallback),
+			this.createCancelCallback(cancelCallback)
+		);
 	}
-}
 
-function createCancelCallback(callback) {
-	if (callback) {
-		return "(" + callback + ")()";
-	}
-}
+	private static createSuccessCallback(callback: Function): string {
+		return "(function(httpResponse, isBinary, context) {\n"
+			+ "var response = {};\n"
+			+ "response.statusCode = httpResponse.getStatusLine().getStatusCode();\n"
+			+ "response.statusMessage = httpResponse.getStatusLine().getReasonPhrase();\n"
+			+ "response.protocol = httpResponse.getProtocolVersion();\n"
+			+ "response.binary = isBinary;\n"
 
-function buildUrl(url, options) {
-	if (options === undefined || options === null || options.params === undefined || options.params === null || options.params.length === 0) {
-		return url;
+			+ "var headers = httpResponse.getAllHeaders();\n"
+			+ "response.headers = [];\n"
+			+ "for (var i = 0; i < headers.length; i ++) {\n"
+			+ "    response.headers.push({\n"
+			+ "        name: headers[i].getName(),\n"
+			+ "        value: headers[i].getValue()\n"
+			+ "    });\n"
+			+ "}\n"
+
+			+ "var entity = httpResponse.getEntity();\n"
+			+ "if (entity) {\n"
+			+ "    var inputStream = entity.getContent();\n"
+			+ "    if (isBinary) {\n"
+			+ "        response.data = org.apache.commons.io.IOUtils.toByteArray(inputStream);\n"
+			+ "    } else {\n"
+			+ "        response.text = org.apache.commons.io.IOUtils.toString(inputStream);\n"
+			+ "    }\n"
+			+ "}\n"
+
+			+ "(" + callback + ")(response, JSON.parse(context));\n"
+			+ "})(__context.get('response'), __context.get('httpClientRequestOptions').isBinary(), __context.get('httpClientRequestOptions').getContext());\n";
 	}
-	let newUrl = url;
-	for (let i = 0; i < options.params.length; i ++) {
-		if (i === 0) {
-			newUrl += '?' + options.params[i].name + '=' + options.params[i].value;
-		} else {
-			newUrl += '&' + options.params[i].name + '=' + options.params[i].value;
+
+	private static createErrorCallback(callback: Function): string {
+		if (callback) {
+			return "(" + callback + ")(__context.get('exception'))";
 		}
 	}
-	return newUrl;
+
+	private static createCancelCallback(callback: Function): string {
+		if (callback) {
+			return "(" + callback + ")()";
+		}
+	}
+
+	private static buildUrl(url: string, options: Option): string {
+		if (options === undefined || options === null || options.params === undefined || options.params === null || options.params.length === 0) {
+			return url;
+		}
+		let newUrl = url;
+		for (let i = 0; i < options.params.length; i ++) {
+			if (i === 0) {
+				newUrl += '?' + options.params[i].name + '=' + options.params[i].value;
+			} else {
+				newUrl += '&' + options.params[i].name + '=' + options.params[i].value;
+			}
+		}
+		return newUrl;
+	}
 }

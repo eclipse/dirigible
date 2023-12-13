@@ -1,15 +1,20 @@
-import * as response from "../response";
-import * as request from "../request";
+import {request, response} from "..";
 import { ResourceMappings } from "./resource-mappings";
 import * as logging from "@dirigible/log/logging";
 const { match } = dirigibleRequire("http/path-to-regexp/6.2.1/index.js");
 
 const logger = logging.getLogger('http.rs.controller');
 
-function getRequest() {
+interface Option {
+    params: Array<{ name: string, value: string }>;
+    d: string;
+}
+
+
+function getRequest(): typeof request {
     return request;
 }
-function getResponse() {
+function getResponse(): typeof response {
     return response;
 }
 
@@ -19,13 +24,12 @@ function getResponse() {
  * @param {Object|ResourceMappings} [oMappings] configuration object or configuration builder with configuration() getter function
  *
  */
-export function service(oConfig?) {
+export function service(oConfig?: Object | ResourceMappings): HttpController {
     let config;
     if (oConfig !== undefined) {
-        if (typeof oConfig === 'object' || oConfig instanceof ResourceMappings) {
-            config = oConfig;
-        }
+        config = oConfig;
     }
+
     return new HttpController(config);
 }
 
@@ -42,7 +46,7 @@ export class HttpController {
  * @param {ResourceMappings|Object} [oMappings] the mappings configuration for this controller.
  *
  */
-    constructor(oMappings) {
+    constructor(oMappings: Object | ResourceMappings) {
         if (oMappings instanceof ResourceMappings) {
             this.resourceMappings = oMappings;
         } else if (typeof oMappings === 'object' || 'undefined') {
@@ -67,14 +71,14 @@ export class HttpController {
 
     }
 
-    listen(request, response) {
-        return this.execute(request, response);
+    listen(request_: typeof request, response_: typeof response): void {
+        this.execute(request_, response_);
     }
 
-    execute(request?, response?) {
-        request = request || getRequest();
-        const requestPath = request.getResourcePath();
-        const method = request.getMethod().toLowerCase();
+    execute(request_?: typeof request, response_?: typeof response): void | Function {
+        request_ = request_ || getRequest();
+        const requestPath = request_.getResourcePath();
+        const method = request_.getMethod().toLowerCase();
         const _oConfiguration = this.resourceMappings.configuration();
 
         const matches: any[] = matchRequestUrl(requestPath, method, _oConfiguration);
@@ -83,25 +87,25 @@ export class HttpController {
             const verbHandlers = _oConfiguration[matches[0].d][method];
             if (verbHandlers) {
                 resourceHandler = verbHandlers.filter((handlerDef) => {
-                    return matchMediaType(request, handlerDef.produces, handlerDef.consumes);
+                    return matchMediaType(request_, handlerDef.produces, handlerDef.consumes);
                 })[0];
             }
         }
 
-        response = response || getResponse();
-        const queryParams = request.getQueryParametersMap() || {};
-        const acceptsHeader = normalizeMediaTypeHeaderValue(request.getHeader('Accept')) || '[]';
-        const contentTypeHeader = normalizeMediaTypeHeaderValue(request.getHeader('Content-Type')) || '[]';
+        response_ = response_ || getResponse();
+        const queryParams = request_.getQueryParametersMap() || {};
+        const acceptsHeader = normalizeMediaTypeHeaderValue(request_.getHeader('Accept')) || '[]';
+        const contentTypeHeader = normalizeMediaTypeHeaderValue(request_.getHeader('Content-Type')) || '[]';
         const resourcePath = requestPath;
 
         if (resourceHandler) {
             const ctx = {
                 "pathParameters": {},
                 "queryParameters": {},
-                "response": response,
-                "res": response,
-                "request": request,
-                "req": request
+                "response": response_,
+                "res": response_,
+                "request": request_,
+                "req": request_
             };
             if (matches[0].pathParams) {
                 ctx.pathParameters = matches[0].pathParams;
@@ -120,11 +124,11 @@ export class HttpController {
                 accepts: acceptsHeader
             });
             _finally = resourceHandler.finally || noop;
-            const callbackArgs = [ctx, request, response, resourceHandler, this];
+            const callbackArgs = [ctx, request_, response_, resourceHandler, this];
             try {
                 logger.trace('Before serving request for Resource[{}], Method[{}], Content-Type[{}], Accept[{}]', resourcePath, method.toUpperCase(), contentTypeHeader, acceptsHeader);
                 _before.apply(this, callbackArgs);
-                if (!response.isCommitted()) {
+                if (!response_.isCommitted()) {
                     logger.trace('Serving request for Resource[{}], Method[{}], Content-Type[{}], Accept[{}]', resourcePath, method.toUpperCase(), contentTypeHeader, acceptsHeader);
                     _serve.apply(this, callbackArgs);
                     logger.trace('Serving request for Resource[{}], Method[{}], Content-Type[{}], Accept[{}] finished', resourcePath, method.toUpperCase(), contentTypeHeader, acceptsHeader);
@@ -147,15 +151,15 @@ export class HttpController {
             }
         } else {
             logger.error('No suitable resource handler for Resource[' + resourcePath + '], Method[' + method.toUpperCase() + '], Content-Type[' + contentTypeHeader + '], Accept[' + acceptsHeader + '] found');
-            this.sendError(response.BAD_REQUEST, undefined, 'Bad Request', 'No suitable processor for this request.');
+            this.sendError(response_.BAD_REQUEST, undefined, 'Bad Request', 'No suitable processor for this request.');
         }
     }
 
-    mappings() {
+    mappings(): ResourceMappings {
         return this.resourceMappings;
     };
 
-    sendError(httpErrorCode, applicationErrorCode, errorName, errorDetails) {
+    sendError(httpErrorCode: number, applicationErrorCode: number, errorName: string, errorDetails: string): void {
         const clientAcceptMediaTypes = normalizeMediaTypeHeaderValue(request.getHeader('Accept')) || ['application/json'];
         const isHtml = clientAcceptMediaTypes.some((acceptMediaType) => isMimeTypeCompatible('*/html', acceptMediaType));
         response.setStatus(httpErrorCode || response.INTERNAL_SERVER_ERROR);
@@ -174,15 +178,17 @@ export class HttpController {
         this.closeResponse();
     };
 
-    closeResponse() {
+    closeResponse(): void {
         response.flush();
         response.close();
     };
 }
 
-function matchedRouteDefinitionsSorter(p, n) {
-    p.w = calculateMatchedRouteWeight(p);
-    n.w = calculateMatchedRouteWeight(n);
+function matchedRouteDefinitionsSorter(p_: Option, n_: Option): number { // TODO kakvo e p_ i n_ ?
+    const p = { ...p_, w : 0 };
+    const n = { ...n_, w : 0 };
+    p.w = calculateMatchedRouteWeight(p_);
+    n.w = calculateMatchedRouteWeight(n_);
 
     if (n.w === p.w) {
         //the one with less placeholders wins
@@ -199,16 +205,16 @@ function matchedRouteDefinitionsSorter(p, n) {
     return n.w - p.w;
 }
 
-function calculateMatchedRouteWeight(matchedRoute) {
+function calculateMatchedRouteWeight(matchedRoute: Option): number {
     return (matchedRoute.params && matchedRoute.params.length > 0) ? 0 : 1; // always prefer exact route definitions - set weight to 1
 }
 
-function transformPathParamsDeclaredInBraces(pathDefinition) {
+function transformPathParamsDeclaredInBraces(pathDefinition: string) {
     const pathParamsInBracesMatcher = /({(\w*\*?)})/g; // matches cases like '/api/{pathParam}' or '/api/{pathParam*}'
     return pathDefinition.replace(pathParamsInBracesMatcher, ":$2"); // transforms matched cases to '/api/:pathParam' or '/api/:pathParam*'
 }
 
-function matchRequestUrl(requestPath, method, cfg) {
+function matchRequestUrl(requestPath: string, method, cfg: Object) { //TODO whats method?
     return Object.entries(cfg)
         .filter(([_, handlers]) => handlers && handlers[method])
         .map(([path, _]) => path)
@@ -216,7 +222,7 @@ function matchRequestUrl(requestPath, method, cfg) {
         .sort(matchedRouteDefinitionsSorter);
 }
 
-function matchingRouteDefinitionsReducer(matchedDefinitions, definedPath, requestPath) {
+function matchingRouteDefinitionsReducer(matchedDefinitions: Array<{p: string, d: string, pathParams: Array<string>}> , definedPath: string, requestPath: string) {
     const matches = match(transformPathParamsDeclaredInBraces(definedPath));
     const matched = matches(requestPath);
     if (matched) {
@@ -230,17 +236,18 @@ function matchingRouteDefinitionsReducer(matchedDefinitions, definedPath, reques
     return matchedDefinitions;
 }
 
-function normalizeMediaTypeHeaderValue(sMediaType) {
-    if (sMediaType === undefined || sMediaType === null)
-        return;
-    sMediaType = sMediaType.split(',');//convert to array
-    sMediaType = sMediaType.map((mimeTypeEntry) => {
+function normalizeMediaTypeHeaderValue(sMediaType: string ): Array<string>  {
+    if (!sMediaType)
+        return [];
+
+    let new_sMediaType = sMediaType.split(',');//convert to array
+    new_sMediaType = new_sMediaType.map((mimeTypeEntry) => {
         return mimeTypeEntry.replace('\\', '').split(';')[0].trim();//remove escaping, remove quality or other atributes
     });
-    return sMediaType;
+    return new_sMediaType;
 };
 
-function isMimeTypeCompatible(source, target) {
+function isMimeTypeCompatible(source: string, target: string): boolean {
     if (source === target)
         return true;
     const targetM = target.split('/');
@@ -249,16 +256,19 @@ function isMimeTypeCompatible(source, target) {
         return true;
     if ((targetM[1] === '*' && targetM[0] === sourceM[0]) || (sourceM[1] === '*' && targetM[0] === sourceM[0]))
         return true;
+
+    return false; //TODO: didn't return false here before.. why?
 };
 
-const catchErrorHandler = function (logctx, ctx, err, request, response) {
+//TODO what are the params here? Why is request called when never used?
+const catchErrorHandler = function (logctx: any | undefined, ctx: any | undefined, err: Error | undefined, _request: typeof request | undefined, response_: typeof response | undefined): void {
     if (ctx.suppressStack) {
         const detailsMsg = (ctx.errorName || "") + (ctx.errorCode ? " [" + ctx.errorCode + "]" : "") + (ctx.errorMessage ? ": " + ctx.errorMessage : "");
         logger.info('Serving resource[{}], Verb[{}], Content-Type[{}], Accept[{}] finished in error. {}', logctx.path, logctx.method, logctx.contentType, logctx.accepts, detailsMsg);
     } else
         logger.error('Serving resource[' + logctx.path + '], Verb[' + logctx.method + '], Content-Type[' + logctx.contentType + '], Accept[' + logctx.accepts + '] finished in error', err);
 
-    const httpErrorCode = ctx.httpErrorCode || response.INTERNAL_SERVER_ERROR;
+    const httpErrorCode = ctx.httpErrorCode || response_.INTERNAL_SERVER_ERROR;
     const errorMessage = ctx.errorMessage || (err && err.message);
     const errorName = ctx.errorName || (err && err.name);
     const errorCode = ctx.errorCode;
@@ -266,9 +276,9 @@ const catchErrorHandler = function (logctx, ctx, err, request, response) {
 };
 
 //find MIME types intersections
-const matchMediaType = function (request, producesMediaTypes, consumesMediaTypes) {
+const matchMediaType = function (request_: typeof request, producesMediaTypes: Array<string>, consumesMediaTypes: Array<string>): boolean {
     let isProduceMatched = false;
-    const acceptsMediaTypes = normalizeMediaTypeHeaderValue(request.getHeader('Accept'));
+    const acceptsMediaTypes = normalizeMediaTypeHeaderValue(request_.getHeader('Accept'));
     if (!acceptsMediaTypes || acceptsMediaTypes.indexOf('*/*') > -1) { //output media type is not restricted
         isProduceMatched = true;
     } else {
@@ -284,7 +294,7 @@ const matchMediaType = function (request, producesMediaTypes, consumesMediaTypes
     }
 
     let isConsumeMatched = false;
-    const contentTypeMediaTypes = normalizeMediaTypeHeaderValue(request.getContentType());
+    const contentTypeMediaTypes = normalizeMediaTypeHeaderValue(request_.getContentType());
     if (!consumesMediaTypes || consumesMediaTypes.indexOf('*') > -1) { //input media type is not restricted
         isConsumeMatched = true;
     } else {

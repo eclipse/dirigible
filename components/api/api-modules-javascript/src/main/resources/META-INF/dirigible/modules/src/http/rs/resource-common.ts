@@ -1,3 +1,5 @@
+import { ResourceMethod } from "./resource-method";
+
 /**
  * Commmon function for initializng the callback functions in the ResourceMethod instances.
  *
@@ -6,11 +8,8 @@
  * @returns {ResourceMethod} The ResourceMethod instance to which the function is bound.
  * @private
  */
-export function handlerFunction(thiz, configuration, sHandlerFuncName, fHandler) {
+export function handlerFunction(thiz, configuration: Object, sHandlerFuncName: string, fHandler: Function): ResourceMethod{
     if (fHandler !== undefined) {
-        if (typeof fHandler !== 'function') {
-            throw Error('Invalid argument: ' + sHandlerFuncName + ' method argument must be valid javascript function, but instead is ' + (typeof fHandler));
-        }
         configuration[sHandlerFuncName] = fHandler;
     }
 
