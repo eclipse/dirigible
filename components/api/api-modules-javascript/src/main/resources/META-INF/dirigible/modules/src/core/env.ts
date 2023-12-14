@@ -17,11 +17,11 @@ const EnvFacade = Java.type("org.eclipse.dirigible.components.api.core.EnvFacade
 
 export class Env{
 
-	static get(name: string): string {
+	public static get(name: string): string {
 		return EnvFacade.get(name);
 	};
 
-	static list(): string {
+	public static list(): string {
 		return EnvFacade.list();
 	};
 }

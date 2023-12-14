@@ -17,11 +17,11 @@ const ContextFacade = Java.type("org.eclipse.dirigible.components.api.core.Conte
 
 export class Context{
 
-	static get(name: string): object {
+	public static get(name: string): object {
 		return ContextFacade.get(name);
 	};
 
-	static set(name: string, value: object): void {
+	public static set(name: string, value: object): void {
 		ContextFacade.set(name, value);
 	};
 }

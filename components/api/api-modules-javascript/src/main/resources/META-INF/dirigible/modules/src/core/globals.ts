@@ -17,15 +17,15 @@ const GlobalsFacade = Java.type("org.eclipse.dirigible.components.api.core.Globa
 
 export class Globals{
 
-	static get(name: string): string {
+	public static get(name: string): string {
 		return GlobalsFacade.get(name);
 	};
 
-	static set(name: string, value: string): void {
+	public static set(name: string, value: string): void {
 		GlobalsFacade.set(name, value);
 	};
 
-	static list(): string {
+	public static list(): string {
 		return GlobalsFacade.list();
 	};
 }
