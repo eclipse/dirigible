@@ -267,6 +267,8 @@ export class ResourceMethod {
                 if (mt === null || mt.length < 2)
                     throw Error('Invalid argument. Not a valid MIME type format type/subtype: ' + mimeType);
                 //TODO: stricter checks
+
+                
             });
 
             if (!this.configuration()[mimeSettingName])

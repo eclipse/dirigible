@@ -43,7 +43,7 @@ export class Decorators {
         }
     }
 
-    private static handleRequest(req: typeof request, res: typeof response, ctx, handler): void {//TODO what are the types of ctx and handler?
+    private static handleRequest(req: typeof request, res: typeof response, ctx, handler): void {//TODO: what are the types of ctx and handler?
         const body = req.json();
         const maybeResponseBody = handler.apply(instance || {}, [body, ctx, req, res]);
         if (maybeResponseBody) {

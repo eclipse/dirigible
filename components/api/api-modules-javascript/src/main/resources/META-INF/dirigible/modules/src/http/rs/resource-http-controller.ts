@@ -209,12 +209,12 @@ function calculateMatchedRouteWeight(matchedRoute: Option): number {
     return (matchedRoute.params && matchedRoute.params.length > 0) ? 0 : 1; // always prefer exact route definitions - set weight to 1
 }
 
-function transformPathParamsDeclaredInBraces(pathDefinition: string) {
+function transformPathParamsDeclaredInBraces(pathDefinition: string): string {
     const pathParamsInBracesMatcher = /({(\w*\*?)})/g; // matches cases like '/api/{pathParam}' or '/api/{pathParam*}'
     return pathDefinition.replace(pathParamsInBracesMatcher, ":$2"); // transforms matched cases to '/api/:pathParam' or '/api/:pathParam*'
 }
 
-function matchRequestUrl(requestPath: string, method, cfg: Object) { //TODO whats method?
+function matchRequestUrl(requestPath: string, method, cfg: Object) { //TODO whats the method return type?
     return Object.entries(cfg)
         .filter(([_, handlers]) => handlers && handlers[method])
         .map(([path, _]) => path)
@@ -222,7 +222,7 @@ function matchRequestUrl(requestPath: string, method, cfg: Object) { //TODO what
         .sort(matchedRouteDefinitionsSorter);
 }
 
-function matchingRouteDefinitionsReducer(matchedDefinitions: Array<{p: string, d: string, pathParams: Array<string>}> , definedPath: string, requestPath: string) {
+function matchingRouteDefinitionsReducer(matchedDefinitions: Array<{p: string, d: string, pathParams: Array<string>}> , definedPath: string, requestPath: string): Array<{p: string, d: string, pathParams: Array<string>}> {
     const matches = match(transformPathParamsDeclaredInBraces(definedPath));
     const matched = matches(requestPath);
     if (matched) {
@@ -257,10 +257,10 @@ function isMimeTypeCompatible(source: string, target: string): boolean {
     if ((targetM[1] === '*' && targetM[0] === sourceM[0]) || (sourceM[1] === '*' && targetM[0] === sourceM[0]))
         return true;
 
-    return false; //TODO: didn't return false here before.. why?
+    return false; //TODO: didn't return false here before.. was it intentional?
 };
 
-//TODO what are the params here? Why is request called when never used?
+//TODO what are the params [logctx, ctx] here? Why is request called when never used?
 const catchErrorHandler = function (logctx: any | undefined, ctx: any | undefined, err: Error | undefined, _request: typeof request | undefined, response_: typeof response | undefined): void {
     if (ctx.suppressStack) {
         const detailsMsg = (ctx.errorName || "") + (ctx.errorCode ? " [" + ctx.errorCode + "]" : "") + (ctx.errorMessage ? ": " + ctx.errorMessage : "");
