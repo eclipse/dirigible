@@ -8,9 +8,10 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 	}])
 	.controller('PageController', ['${dollar}scope', '${dollar}http', 'messageHub', 'entityApi', function (${dollar}scope, ${dollar}http, messageHub, entityApi) {
 
+		//-----------------Custom Actions-------------------//
 		${dollar}http.get("/services/js/resources-core/services/custom-actions.js?extensionPoint=${projectName}-custom-action").then(function (response) {
-			$scope.pageActions = response.data.filter(e => e.type === "page" || e.type === undefined);
-			$scope.entityActions = response.data.filter(e => e.type === "entity");
+			$scope.pageActions = response.data.filter(e => e.perspective === "${perspectiveName}" && e.view === "${name}" && (e.type === "page" || e.type === undefined));
+			$scope.entityActions = response.data.filter(e => e.perspective === "${perspectiveName}" && e.view === "${name}" && e.type === "entity");
 		});
 
 		$scope.triggerPageAction = function (actionId) {
@@ -34,6 +35,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				}
 			}
 		};
+		//-----------------Custom Actions-------------------//
 
 		function resetPagination() {
 			$scope.dataPage = 1;
