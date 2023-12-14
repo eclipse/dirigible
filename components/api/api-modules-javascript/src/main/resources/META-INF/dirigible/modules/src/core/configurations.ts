@@ -17,22 +17,22 @@ const Configuration = Java.type("org.eclipse.dirigible.commons.config.Configurat
 
 export class Configurations{
 
-	static get(key, defaultValue) {
+	public static get(key: string, defaultValue: string): string {
 		if (defaultValue) {
 			return Configuration.get(key, defaultValue);
 		}
 		return Configuration.get(key);
 	};
 
-	static set(key, value) {
+	public static set(key: string, value:string): void {
 		Configuration.set(key, value);
 	};
 
-	static remove(key) {
+	public static remove(key: string): void {
 		Configuration.remove(key);
 	};
 
-	static getKeys() {
+	public static getKeys(): Array<string> {
 		let keys = [];
 		let keysAsArray = Configuration.getKeys();
 		for (let i = 0; i < keysAsArray.length; i ++) {
@@ -41,31 +41,31 @@ export class Configurations{
 		return keys;
 	};
 
-	static load(path) {
+	public static load(path: string): void {
 		Configuration.load(path);
 	};
 
-	static update() {
+	public static update(): void {
 		Configuration.update();
 	};
 
-	static getOS() {
+	public static getOS(): string {
 		return Configuration.getOS();
 	}
 
-	static isOSWindows() {
+	public static isOSWindows():boolean {
 		return Configuration.isOSWindows();
 	}
 
-	static isOSMac() {
+	public static isOSMac():boolean {
 		return Configuration.isOSMac();
 	}
 
-	static isOSUNIX() {
+	public static isOSUNIX(): boolean {
 		return Configuration.isOSUNIX();
 	}
 
-	static isOSSolaris() {
+	public static isOSSolaris(): boolean {
 		return Configuration.isOSSolaris();
 	}
 
