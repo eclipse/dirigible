@@ -68,7 +68,7 @@ export class Response {
         HttpResponseFacade.close();
     };
 
-    public static addCookie(cookie: {}): void {
+    public static addCookie(cookie: Object): void {
         var cookieJson = JSON.stringify(cookie);
         HttpResponseFacade.addCookie(cookieJson);
     };

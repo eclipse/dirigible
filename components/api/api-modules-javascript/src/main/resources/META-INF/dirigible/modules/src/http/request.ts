@@ -38,12 +38,12 @@ export class Request {
         return HttpRequestFacade.getAuthType();
     };
 
-    public static getCookies(): string {
+    public static getCookies(): Object | Object[] {
         let cookiesJson = HttpRequestFacade.getCookies();
         return JSON.parse(cookiesJson);
     };
 
-    public static getAttributeNames(): string {
+    public static getAttributeNames(): Object | Object[] {
         let attrNamesJson = HttpRequestFacade.getAttributeNames();
         return JSON.parse(attrNamesJson);
     };
@@ -56,7 +56,7 @@ export class Request {
         return HttpRequestFacade.getContentLength();
     };
 
-    public static getHeaders(name: string): string {
+    public static getHeaders(name: string): Object | Object[] {
         let headersJson = HttpRequestFacade.getHeaders(name);
         return JSON.parse(headersJson);
     };
@@ -65,7 +65,7 @@ export class Request {
         return HttpRequestFacade.getContentType();
     };
 
-    public static getBytes(): string {
+    public static getBytes(): Object | Object[] {
         let bytesJson = HttpRequestFacade.getBytes();
         return JSON.parse(bytesJson);
     };
@@ -95,7 +95,7 @@ export class Request {
         return HttpRequestFacade.getParameter(name);
     };
 
-    public static getParameters(): string{
+    public static getParameters(): Object | Object[]{
         let paramsJson;
         paramsJson = HttpRequestFacade.getParameters();
         return JSON.parse(paramsJson);
@@ -105,17 +105,17 @@ export class Request {
         return HttpRequestFacade.getResourcePath();
     };
 
-    public static getHeaderNames(): string {
+    public static getHeaderNames(): Object | Object[] {
         let headerNamesJson = HttpRequestFacade.getHeaderNames();
         return JSON.parse(headerNamesJson);
     };
 
-    public static getParameterNames(): string {
+    public static getParameterNames(): Object | Object[] {
         let paramNamesJson = HttpRequestFacade.getParameterNames();
         return JSON.parse(paramNamesJson);
     };
 
-    public static getParameterValues(name: string): string {
+    public static getParameterValues(name: string): Object | Object[] {
         let paramValuesJson = HttpRequestFacade.getParameterValues(name);
         return JSON.parse(paramValuesJson);
     };
@@ -190,7 +190,7 @@ export class Request {
         HttpRequestFacade.removeAttribute(name);
     };
 
-    public static getLocale(): string {
+    public static getLocale(): Object | Object[] {
         let localeJson = HttpRequestFacade.getLocale();
         return JSON.parse(localeJson);
     };
