@@ -14,7 +14,7 @@
  *
  */
 import * as streams from "@dirigible/io/streams"
-import * as bytes from "@dirigible/io/bytes"
+import {bytes} from "@dirigible/io"
 const HttpUploadFacade = Java.type("org.eclipse.dirigible.components.api.http.HttpUploadFacade");
 
 export function isMultipartContent() {
