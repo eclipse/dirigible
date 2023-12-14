@@ -21,13 +21,13 @@ export class Decorators {
         router.execute();
     }
 
-    public static Get = this.createRequestDecorator("get")
-    public static Post = this.createRequestDecorator("post")
-    public static Put = this.createRequestDecorator("put")
-    public static Patch = this.createRequestDecorator("patch")
-    public static Delete = this.createRequestDecorator("delete")
-    public static Head = this.createRequestDecorator("head")
-    public static Options = this.createRequestDecorator("options")
+    public static readonly Get = Decorators.createRequestDecorator("get")
+    public static readonly Post = Decorators.createRequestDecorator("post")
+    public static readonly Put = Decorators.createRequestDecorator("put")
+    public static readonly Patch = Decorators.createRequestDecorator("patch")
+    public static readonly Delete = Decorators.createRequestDecorator("delete")
+    public static readonly Head = Decorators.createRequestDecorator("head")
+    public static readonly Options = Decorators.createRequestDecorator("options")
 
     private static createRequestDecorator(httpMethod:string): (path: string)=>(target, propertyKey, descriptor: PropertyDescriptor) => void {
         return function (path: string): (target, propertyKey, descriptor: PropertyDescriptor) => void {

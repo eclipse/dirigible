@@ -222,7 +222,7 @@ function matchRequestUrl(requestPath: string, method, cfg: Object) { //TODO what
         .sort(matchedRouteDefinitionsSorter);
 }
 
-function matchingRouteDefinitionsReducer(matchedDefinitions: Array<{p: string, d: string, pathParams: Array<string>}> , definedPath: string, requestPath: string): Array<{p: string, d: string, pathParams: Array<string>}> {
+function matchingRouteDefinitionsReducer(matchedDefinitions: Array<{p: string, d: string, pathParams: string[]}> , definedPath: string, requestPath: string): Array<{p: string, d: string, pathParams: string[]}> {
     const matches = match(transformPathParamsDeclaredInBraces(definedPath));
     const matched = matches(requestPath);
     if (matched) {
@@ -236,7 +236,7 @@ function matchingRouteDefinitionsReducer(matchedDefinitions: Array<{p: string, d
     return matchedDefinitions;
 }
 
-function normalizeMediaTypeHeaderValue(sMediaType: string ): Array<string>  {
+function normalizeMediaTypeHeaderValue(sMediaType: string ): string[]  {
     if (!sMediaType)
         return [];
 
@@ -276,7 +276,7 @@ const catchErrorHandler = function (logctx: any | undefined, ctx: any | undefine
 };
 
 //find MIME types intersections
-const matchMediaType = function (request_: typeof request, producesMediaTypes: Array<string>, consumesMediaTypes: Array<string>): boolean {
+const matchMediaType = function (request_: typeof request, producesMediaTypes: string[], consumesMediaTypes: string[]): boolean {
     let isProduceMatched = false;
     const acceptsMediaTypes = normalizeMediaTypeHeaderValue(request_.getHeader('Accept'));
     if (!acceptsMediaTypes || acceptsMediaTypes.indexOf('*/*') > -1) { //output media type is not restricted

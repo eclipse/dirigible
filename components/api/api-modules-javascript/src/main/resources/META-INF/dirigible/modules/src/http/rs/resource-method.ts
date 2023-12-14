@@ -140,7 +140,7 @@ export class ResourceMethod {
      * @returns {ResourceMethod} The ResourceMethod instance to which the function invocation is bound, for mehtod chaining.
      */
 
-    consumes(mimeTypes: Array<string>): ResourceMethod {
+    consumes(mimeTypes: string[]): ResourceMethod {
         return this.mimeSetting('consumes', mimeTypes);
     };
 
@@ -186,7 +186,7 @@ export class ResourceMethod {
      * @param {String[]} mimeTypes Sets the mime type(s) that this ResourceMethod request processing function may produce.
      * @returns {ResourceMethod} The ResourceMethod instance to which the function invocation is bound, for mehtod chaining.
      */
-    produces(mimeTypes: Array<string>): ResourceMethod {
+    produces(mimeTypes: string[]): ResourceMethod {
         return this.mimeSetting('produces', mimeTypes);
     };
     /**
@@ -253,7 +253,7 @@ export class ResourceMethod {
  * @returns {ResourceMethod} The ResourceMethod instance to which the function is bound.
  * @private
  */
-    private mimeSetting(mimeSettingName: string, mimeTypes: Array<string>): ResourceMethod {
+    private mimeSetting(mimeSettingName: string, mimeTypes: string[]): ResourceMethod {
 
         if (mimeTypes !== undefined) {
             if (typeof mimeTypes === 'string') {

@@ -25,7 +25,7 @@ export class Session {
 		return HttpSessionFacade.getAttribute(name);
 	};
 
-	public static getAttributeNames(): Array<string> {
+	public static getAttributeNames(): string[] {
 		const attrNames = HttpSessionFacade.getAttributeNamesJson();
 		if (attrNames) {
 			return JSON.parse(attrNames);

@@ -23,7 +23,7 @@ interface Option {
 
 
 export class HttpClient {
-    get(_url: string, options: Option): Object {
+    public get(_url: string, options: Option): Object {
         let url = buildUrl(_url, options);
         let opts = '{}';
         if (options) {
@@ -33,7 +33,7 @@ export class HttpClient {
         return JSON.parse(result);
     };
     
-    post(_url: string, options: Option): Object {
+    public post(_url: string, options: Option): Object {
         let url = buildUrl(_url, options);
         let opts = '{}';
         if (options) {
@@ -43,7 +43,7 @@ export class HttpClient {
         return JSON.parse(result);
     };
     
-    put(_url: string, options: Option): Object {
+    public put(_url: string, options: Option): Object {
         let url = buildUrl(_url, options);
         let opts = '{}';
         if (options) {
@@ -53,7 +53,7 @@ export class HttpClient {
         return JSON.parse(result);
     };
     
-    patch(_url: string, options: Option): Object {
+    public patch(_url: string, options: Option): Object {
         let url = buildUrl(_url, options);
         let opts = '{}';
         if (options) {
@@ -63,7 +63,7 @@ export class HttpClient {
         return JSON.parse(result);
     };
     
-    delete(_url: string, options: Option): Object {
+    public delete(_url: string, options: Option): Object {
         let url = buildUrl(_url, options);
         let opts = '{}';
         if (options) {
@@ -73,7 +73,7 @@ export class HttpClient {
         return JSON.parse(result);
     };
     
-    head(_url: string, options: Option): Object {
+    public head(_url: string, options: Option): Object {
         let url = buildUrl(_url, options);
         let opts = '{}';
         if (options) {
@@ -83,7 +83,7 @@ export class HttpClient {
         return JSON.parse(result);
     };
     
-    trace(_url: string, options: Option): Object { 
+    public trace(_url: string, options: Option): Object { 
         let url = buildUrl(_url, options);
         let opts = '{}';
         if (options) {

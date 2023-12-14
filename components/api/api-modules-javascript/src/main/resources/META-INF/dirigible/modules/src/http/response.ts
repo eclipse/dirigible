@@ -137,12 +137,12 @@ export class Response {
         HttpResponseFacade.setLocale(language, country, variant);
     };
 
-    public static getHeaders(name:string): Array<string> {
+    public static getHeaders(name:string): string[] {
         const headersJson = HttpResponseFacade.getHeaders(name);
         return JSON.parse(headersJson);
     };
 
-    public static getHeaderNames(): Array<string> {
+    public static getHeaderNames(): string[] {
         const headerNamesJson = HttpResponseFacade.getHeaderNames();
         return JSON.parse(headerNamesJson);
     };
@@ -159,214 +159,214 @@ export class Response {
     /**
      * Status code (202) indicating that a request was accepted for processing, but was not completed.
      */
-    public static ACCEPTED = 202;
+    public static readonly ACCEPTED = 202;
 
     /**
      * Status code (502) indicating that the HTTP server received an invalid response from a server it consulted when acting as a proxy or gateway.
      */
-    public static BAD_GATEWAY = 502;
+    public static readonly BAD_GATEWAY = 502;
 
     /**
      * Status code (400) indicating the request sent by the client was syntactically incorrect.
      */
-    public static BAD_REQUEST = 400;
+    public static readonly BAD_REQUEST = 400;
 
     /**
      * Status code (409) indicating that the request could not be completed due to a conflict with the current state of the resource.
      */
-    public static CONFLICT = 409;
+    public static readonly CONFLICT = 409;
 
     /**
      * Status code (100) indicating the client can continue.
      */
-    public static CONTINUE = 100;
+    public static readonly CONTINUE = 100;
 
     /**
      * Status code (201) indicating the request succeeded and created a new resource on the server.
      */
-    public static CREATED = 201;
+    public static readonly CREATED = 201;
 
     /**
      * Status code (417) indicating that the server could not meet the expectation given in the Expect request header.
      */
-    public static EXPECTATION_FAILED = 417;
+    public static readonly EXPECTATION_FAILED = 417;
 
     /**
      * Status code (403) indicating the server understood the request but refused to fulfill it.
      */
-    public static FORBIDDEN = 403;
+    public static readonly FORBIDDEN = 403;
 
     /**
      * Status code (302) indicating that the resource reside temporarily under a different URI.
      */
-    public static FOUND = 302;
+    public static readonly FOUND = 302;
 
     /**
      * Status code (504) indicating that the server did not receive a timely response from the upstream server while acting as a gateway or proxy.
      */
-    public static GATEWAY_TIMEOUT = 504;
+    public static readonly GATEWAY_TIMEOUT = 504;
 
     /**
      * Status code (410) indicating that the resource is no longer available at the server and no forwarding address is known.
      */
-    public static GONE = 410;
+    public static readonly GONE = 410;
 
     /**
      * Status code (505) indicating that the server does not support or refuses to support the HTTP protocol version that was used in the request message.
      */
-    public static HTTP_VERSION_NOT_SUPPORTED = 505;
+    public static readonly HTTP_VERSION_NOT_SUPPORTED = 505;
 
     /**
      * Status code (500) indicating an error inside the HTTP server which prevented it from fulfilling the request.
      */
-    public static INTERNAL_SERVER_ERROR = 500;
+    public static readonly INTERNAL_SERVER_ERROR = 500;
 
     /**
      * Status code (411) indicating that the request cannot be handled without a defined Content-Length.
      */
-    public static LENGTH_REQUIRED = 411;
+    public static readonly LENGTH_REQUIRED = 411;
 
     /**
      * Status code (405) indicating that the method specified in the Request-Line is not allowed for the resource identified by the Request-URI.
      */
-    public static METHOD_NOT_ALLOWED = 405;
+    public static readonly METHOD_NOT_ALLOWED = 405;
 
     /**
      * Status code (301) indicating that the resource has permanently moved to a new location, and that future references should use a new URI with their requests.
      */
-    public static MOVED_PERMANENTLY = 301;
+    public static readonly MOVED_PERMANENTLY = 301;
 
     /**
      * Status code (302) indicating that the resource has temporarily moved to another location, but that future references should still use the original URI to access the resource.
      */
-    public static MOVED_TEMPORARILY = 302;
+    public static readonly MOVED_TEMPORARILY = 302;
 
     /**
      * Status code (300) indicating that the requested resource corresponds to any one of a set of representations, each with its own specific location.
      */
-    public static MULTIPLE_CHOICES = 300;
+    public static readonly MULTIPLE_CHOICES = 300;
 
     /**
      * Status code (204) indicating that the request succeeded but that there was no new information to return.
      */
-    public static NO_CONTENT = 204;
+    public static readonly NO_CONTENT = 204;
 
     /**
      * Status code (203) indicating that the meta information presented by the client did not originate from the server.
      */
-    public static NON_AUTHORITATIVE_INFORMATION = 203;
+    public static readonly NON_AUTHORITATIVE_INFORMATION = 203;
 
     /**
      * Status code (406) indicating that the resource identified by the request is only capable of generating response entities which have content characteristics not acceptable according to the accept headers sent in the request.
      */
-    public static NOT_ACCEPTABLE = 406;
+    public static readonly NOT_ACCEPTABLE = 406;
 
     /**
      * Status code (404) indicating that the requested resource is not available.
      */
-    public static NOT_FOUND = 404;
+    public static readonly NOT_FOUND = 404;
 
     /**
      * Status code (501) indicating the HTTP server does not support the functionality needed to fulfill the request.
      */
-    public static NOT_IMPLEMENTED = 501;
+    public static readonly NOT_IMPLEMENTED = 501;
 
     /**
      * Status code (304) indicating that a conditional GET operation found that the resource was available and not modified.
      */
-    public static NOT_MODIFIED = 304;
+    public static readonly NOT_MODIFIED = 304;
 
     /**
      * Status code (200) indicating the request succeeded normally.
      */
-    public static OK = 200;
+    public static readonly OK = 200;
 
     /**
      * Status code (206) indicating that the server has fulfilled the partial GET request for the resource.
      */
-    public static PARTIAL_CONTENT = 206;
+    public static readonly PARTIAL_CONTENT = 206;
 
     /**
      * Status code (402) reserved for future use.
      */
-    public static PAYMENT_REQUIRED = 402;
+    public static readonly PAYMENT_REQUIRED = 402;
 
     /**
      * Status code (412) indicating that the precondition given in one or more of the request-header fields evaluated to false when it was tested on the server.
      */
-    public static PRECONDITION_FAILED = 412;
+    public static readonly PRECONDITION_FAILED = 412;
 
     /**
      * Status code (407) indicating that the client MUST first authenticate itself with the proxy.
      */
-    public static PROXY_AUTHENTICATION_REQUIRED = 407;
+    public static readonly PROXY_AUTHENTICATION_REQUIRED = 407;
 
     /**
      * Status code (413) indicating that the server is refusing to process the request because the request entity is larger than the server is willing or able to process.
      */
-    public static REQUEST_ENTITY_TOO_LARGE = 413;
+    public static readonly REQUEST_ENTITY_TOO_LARGE = 413;
 
     /**
      * Status code (408) indicating that the client did not produce a request within the time that the server was prepared to wait.
      */
-    public static REQUEST_TIMEOUT = 408;
+    public static readonly REQUEST_TIMEOUT = 408;
 
     /**
      * Status code (414) indicating that the server is refusing to service the request because the Request-URI is longer than the server is willing to interpret.
      */
-    public static REQUEST_URI_TOO_LONG = 414;
+    public static readonly REQUEST_URI_TOO_LONG = 414;
 
     /**
      * Status code (416) indicating that the server cannot serve the requested byte range.
      */
-    public static REQUESTED_RANGE_NOT_SATISFIABLE = 416;
+    public static readonly REQUESTED_RANGE_NOT_SATISFIABLE = 416;
 
     /**
      * Status code (205) indicating that the agent SHOULD reset the document view which caused the request to be sent.
      */
-    public static RESET_CONTENT = 205;
+    public static readonly RESET_CONTENT = 205;
 
     /**
      * Status code (303) indicating that the response to the request can be found under a different URI.
      */
-    public static SEE_OTHER = 303;
+    public static readonly SEE_OTHER = 303;
 
     /**
      * Status code (503) indicating that the HTTP server is temporarily overloaded, and unable to handle the request.
      */
-    public static SERVICE_UNAVAILABLE = 503;
+    public static readonly SERVICE_UNAVAILABLE = 503;
 
     /**
      * Status code (101) indicating the server is switching protocols according to Upgrade header.
      */
-    public static SWITCHING_PROTOCOLS = 101;
+    public static readonly SWITCHING_PROTOCOLS = 101;
 
     /**
      *  Status code (307) indicating that the requested resource resides temporarily under a different URI.
      */
-    public static TEMPORARY_REDIRECT = 307;
+    public static readonly TEMPORARY_REDIRECT = 307;
 
     /**
      *  Status code (401) indicating that the request requires HTTP authentication.
      */
-    public static UNAUTHORIZED = 401;
+    public static readonly UNAUTHORIZED = 401;
 
     /**
      *  Status code (415) indicating that the server is refusing to service the request because the entity of the request is in a format not supported by the requested resource for the requested method.
      */
-    public static UNSUPPORTED_MEDIA_TYPE = 415;
+    public static readonly UNSUPPORTED_MEDIA_TYPE = 415;
 
     /**
      *  Status code (305) indicating that the requested resource MUST be accessed through the proxy given by the Location field.
      */
-    public static USE_PROXY = 305;
+    public static readonly USE_PROXY = 305;
 
     /**
      * Mapping between HTTP response codes (string) and reason-pharses as defiend in rfc7231 section 6.1 (https://tools.ietf.org/html/rfc7231#section-6.1).
      * (See HttpCodesReasons.getReason for number based retrieval of reason-phrase for code)
      *
      */
-    public static HttpCodesReasons = {
+    public static readonly HttpCodesReasons = {
         "100": "Continue",
         "101": "Switching Protocols",
         "200": "OK",

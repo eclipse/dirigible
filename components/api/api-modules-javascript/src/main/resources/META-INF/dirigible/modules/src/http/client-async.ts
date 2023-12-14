@@ -20,9 +20,9 @@ const httpClient = SpringBeanProvider.getBean(HttpClientAsyncFacade.class);
 
 
 interface Config {
-	success: Function;
-	error: Function;
-	cancel: Function;
+	readonly success?: Function;
+	readonly error?: Function;
+	readonly cancel?: Function;
 }
 
 interface Option {
@@ -45,9 +45,9 @@ export class HttpAsyncClient {
 		}
 	};
 
-	public static postAsync(url: string, config: Config, options: Option): void {
-		const newUrl = this.buildUrl(url, options);
-		const callback = this.createHttpResponseCallback(
+	public postAsync(url: string, config: Config, options: Option): void {
+		const newUrl = HttpAsyncClient.buildUrl(url, options);
+		const callback = HttpAsyncClient.createHttpResponseCallback(
 			httpClient,
 			config.success,
 			config.error,
