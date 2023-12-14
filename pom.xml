@@ -425,6 +425,11 @@
 				<enabled>true</enabled>
 			</releases>
 		</repository>
+		<repository>
+			<id>github</id>
+			<name>GitHub dirigiblelabs/olingo-odata2</name>
+			<url>https://maven.pkg.github.com/dirigiblelabs/olingo-odata2</url>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -606,7 +611,7 @@
 		<license-maven-plugin.version>4.3</license-maven-plugin.version>
 		<persistence.api.version>2.2.3</persistence.api.version>
 		<jgit.version>6.8.0.202311291450-r</jgit.version>
-		<olingo.version>2.0.13</olingo.version>
+		<olingo.version>3.1.0</olingo.version>
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<mongodb.version>3.12.14</mongodb.version>
 		<liquibase-core.version>4.25.0</liquibase-core.version>
