@@ -17,30 +17,32 @@ const StreamsFacade = Java.type("org.eclipse.dirigible.components.api.io.Streams
  */
 export class InputStream {
 
-	constructor(public readonly native) {}
+	constructor(public readonly native) {
+		this.native = native;
+	}
 
-	read(): Array<bytes> | number {
+	public read(): Array<bytes> | number {
 		return StreamsFacade.read(this.native);
 	}
 
-	readBytes(): Array<bytes> {
+	public readBytes(): Array<bytes> {
 		const native = StreamsFacade.readBytes(this.native);
 		return bytes.toJavaScriptBytes(native);
 	}
 
-	readBytesNative(): Array<bytes>{
+	public readBytesNative(): Array<bytes>{
 		return StreamsFacade.readBytes(this.native);
 	}
 
-	readText(): string {
+	public readText(): string {
 		return StreamsFacade.readText(this.native);
 	}
 
-	close(): void {
+	public close(): void {
 		StreamsFacade.close(this.native);
 	}
 
-	isValid(): boolean {
+	public isValid(): boolean {
 		return this.native !== null;
 	}
 
@@ -53,44 +55,44 @@ export class OutputStream {
 
 	constructor(public readonly native) {}
 
-	write(byte: bytes): void {
+	public write(byte: bytes): void {
 		StreamsFacade.write(this.native, byte);
 	}
 
-	writeBytes(data): void {
+	public writeBytes(data): void {
 		const native = bytes.toJavaBytes(data);
 		StreamsFacade.writeBytes(this.native, native);
 	}
 
-	writeBytesNative(data: string): void {
+	public writeBytesNative(data: string): void {
 		StreamsFacade.writeBytes(this.native, data);
 	}
 
-	writeText(text: string): void {
+	public writeText(text: string): void {
 		StreamsFacade.writeText(this.native, text);
 	}
 
-	close(): void {
+	public close(): void {
 		StreamsFacade.close(this.native);
 	}
 
-	getBytes(): Array<bytes> {
+	public getBytes(): Array<bytes> {
 		const native = StreamsFacade.getBytes(this.native);
 		const data = bytes.toJavaScriptBytes(native);
 		return data;
 	}
 
-	getBytesNative(): Array<bytes> {
+	public getBytesNative(): Array<bytes> {
 		const native = StreamsFacade.getBytes(this.native);
 		return native;
 	}
 
-	getText(): string {
+	public getText(): string {
 		const value = StreamsFacade.getText(this.native);
 		return value;
 	}
 
-	isValid(): boolean {
+	public isValid(): boolean {
 		return this.native !== null;
 	}
 

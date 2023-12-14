@@ -30,28 +30,32 @@ export function createZipInputStream(inputStream: InputStream): ZipInputStream {
 
 class ZipInputStream {
 
-    constructor(private native) {}
+    private readonly native: any
 
-    getNextEntry(): ZipEntry {
+    constructor(native: any) {
+        this.native = native;
+    }
+
+    public getNextEntry(): ZipEntry {
         const native = this.native.getNextEntry();
         const zipEntry = new ZipEntry(native);
         return zipEntry;
     };
 
-    read(): Array<bytes> {
+    public read(): Array<bytes> {
         const native = ZipFacade.readNative(this.native);
         return bytes.toJavaScriptBytes(native);
     };
 
-    readNative(): Array<bytes> {
+    public readNative(): Array<bytes> {
         return ZipFacade.readNative(this.native);
     };
 
-    readText(): string {
+    public readText(): string {
         return ZipFacade.readText(this.native);
     };
 
-    close(): void {
+    public close(): void {
         this.native.close();
     };
 
@@ -64,33 +68,37 @@ export function createZipOutputStream(outputStream: OutputStream): ZipOutputStre
 
 class ZipOutputStream {
 
-    constructor(private native) {}
+    private readonly native: any
 
-    createZipEntry(name: string): ZipEntry {
+    constructor(native: any) {
+        this.native = native;
+    }
+
+    public createZipEntry(name: string): ZipEntry {
         const nativeNext = ZipFacade.createZipEntry(name);
         const zipEntry = new ZipEntry(nativeNext);
         this.native.putNextEntry(nativeNext);
         return zipEntry;
     };
 
-    write(data): void {
+    public write(data): void {
         const native = bytes.toJavaBytes(data);
         ZipFacade.writeNative(this.native, native);
     };
 
-    writeNative(data): void {
+    public writeNative(data): void {
         ZipFacade.writeNative(this.native, data);
     };
 
-    writeText(text: string): void {
+    public writeText(text: string): void {
         ZipFacade.writeText(this.native, text);
     };
 
-    closeEntry(): void {
+    public closeEntry(): void {
         this.native.closeEntry();
     };
 
-    close(): void {
+    public close(): void {
         this.native.finish();
         this.native.flush();
         this.native.close();
@@ -103,37 +111,41 @@ class ZipOutputStream {
  */
 class ZipEntry {
 
-    constructor(private native) {}
+    private readonly native: any
 
-    getName(): string {
+    constructor(native: any) {
+        this.native = native;
+    }
+
+    public getName(): string {
         return this.native.getName();
     };
 
-    getSize(): number {
+    public getSize(): number {
         return this.native.getSize();
     };
 
-    getCompressedSize(): number {
+    public getCompressedSize(): number {
         return this.native.getCompressedSize();
     };
 
-    getTime(): Date {
+    public getTime(): Date {
         return this.native.getTime();
     };
 
-    getCrc() {
+    public getCrc() {
         return this.native.getCrc();
     };
 
-    getComment() {
+    public getComment() {
         return this.native.getComment();
     };
 
-    isDirectory(): boolean {
+    public isDirectory(): boolean {
         return this.native.isDirectory();
     };
 
-    isValid(): typeof this.native {
+    public isValid(): typeof this.native {
         return this.native !== null;
     };
 
