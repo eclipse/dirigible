@@ -11,7 +11,7 @@
  */
 "use strict";
 
-import * as globals from "@dirigible/core/globals";
+import { globals } from "@dirigible/core"
 import * as mongodb from "./client"
 import * as dirigibleOrm from "@dirigible/db/orm";
 import * as logging from "@dirigible/log/logging";
