@@ -353,7 +353,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 
             // report results
             getErrors().forEach(e -> {
-                logger.error("Error occured during synchronization: " + e);
+                logger.error("Error occured during synchronization: ", e);
             });
         } finally {
             if (logger.isDebugEnabled()) {

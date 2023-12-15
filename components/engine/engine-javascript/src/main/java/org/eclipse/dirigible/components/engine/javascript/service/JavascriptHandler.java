@@ -100,21 +100,21 @@ public class JavascriptHandler {
                               value);
                 return transformValue(value);
             }
-        } catch (Exception e) {
-            if (e.getMessage() == null) {
+        } catch (Throwable ex) {
+            if (ex.getMessage() == null) {
                 logger.error("Null object has been found");
-                return e.getMessage();
+                return ex.getMessage();
             }
-            if (e.getMessage()
-                 .contains("consider publish")) {
-                logger.error(e.getMessage(), e);
-                return e.getMessage();
+            if (ex.getMessage()
+                  .contains("consider publish")) {
+                logger.error(ex.getMessage(), ex);
+                return ex.getMessage();
             }
             String errorMessage =
                     String.format("Error on processing JavaScript service from project: [%s], and path: [%s], with parameters: [%s]",
                             projectName, projectFilePath, projectFilePathParam);
-            logger.error(errorMessage, e);
-            throw new RuntimeException(e.getMessage(), e);
+            logger.error(errorMessage, ex);
+            throw new RuntimeException(ex.getMessage(), ex);
         }
     }
 
