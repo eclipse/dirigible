@@ -16,11 +16,6 @@
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<plugins>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-			</plugin>
 			<!-- Required when the java build version is 1.8 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
