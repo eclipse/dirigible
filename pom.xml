@@ -97,6 +97,10 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>net.revelc.code.formatter</groupId>
+				<artifactId>formatter-maven-plugin</artifactId>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -141,16 +145,23 @@
 					<artifactId>maven-failsafe-plugin</artifactId>
 				</plugin>
 				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>exec-maven-plugin</artifactId>
-				</plugin>
-				<plugin>
 					<groupId>net.revelc.code.formatter</groupId>
 					<artifactId>formatter-maven-plugin</artifactId>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<configFile>${formatter.location}</configFile>
+						<compilerSource>${formatter.java.version}</compilerSource>
+						<compilerCompliance>${formatter.java.version}</compilerCompliance>
+						<compilerTargetPlatform>${formatter.java.version}</compilerTargetPlatform>
+					</configuration>
+					<executions>
+						<execution>
+							<id>format-java-code</id>
+							<phase>process-sources</phase>
+							<goals>
+								<goal>format</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 				<plugin>
 					<groupId>com.github.spotbugs</groupId>
@@ -183,25 +194,6 @@
 			</properties>
 			<build>
 				<plugins>
-					<plugin>
-						<groupId>net.revelc.code.formatter</groupId>
-						<artifactId>formatter-maven-plugin</artifactId>
-						<configuration>
-							<configFile>${formatter.location}</configFile>
-							<compilerSource>${formatter.java.version}</compilerSource>
-							<compilerCompliance>${formatter.java.version}</compilerCompliance>
-							<compilerTargetPlatform>${formatter.java.version}</compilerTargetPlatform>
-						</configuration>
-						<executions>
-							<execution>
-								<id>format-java-code</id>
-								<phase>process-sources</phase>
-								<goals>
-									<goal>format</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
