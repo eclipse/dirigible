@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 import * as streams from "@dirigible/io/streams";
-import * as request from "@dirigible/http/request";
+import {request} from "@dirigible/http";
 import * as base64 from "@dirigible/utils/base64";
 const MessageFactory = Java.type("javax.xml.soap.MessageFactory");
 const MimeHeadersInternal = Java.type("javax.xml.soap.MimeHeaders");
