@@ -47,7 +47,7 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        os: [windows]
+        os: [ubuntu, windows]
     steps:
     - name: Setup Chrome
       uses: browser-actions/setup-chrome@v1.3.0
