@@ -61,22 +61,22 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.olingo</groupId>
+			<groupId>com.codbex.olingo</groupId>
 			<artifactId>olingo-odata2-annotation-processor-core</artifactId>
 			<version>${olingo.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.olingo</groupId>
+			<groupId>com.codbex.olingo</groupId>
 			<artifactId>olingo-odata2-api</artifactId>
 			<version>${olingo.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.olingo</groupId>
+			<groupId>com.codbex.olingo</groupId>
 			<artifactId>olingo-odata2-api-annotation</artifactId>
 			<version>${olingo.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.olingo</groupId>
+			<groupId>com.codbex.olingo</groupId>
 			<artifactId>olingo-odata2-annotation-processor-api</artifactId>
 			<version>${olingo.version}</version>
 		</dependency>

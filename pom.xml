@@ -132,7 +132,7 @@
 		<chemistry.version>1.1.0</chemistry.version>
 		<flowable.version>6.8.0</flowable.version>
 		<jgit.version>6.8.0.202311291450-r</jgit.version>
-		<olingo.version>3.1.0</olingo.version>
+		<olingo.version>3.1.3</olingo.version>
 		<mongodb.version>3.12.14</mongodb.version>
 		<commons-csv.version>1.10.0</commons-csv.version>
 

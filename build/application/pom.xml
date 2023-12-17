@@ -129,7 +129,7 @@
 
 		<!-- Olingo -->
 		<dependency>
-			<groupId>org.apache.olingo</groupId>
+			<groupId>com.codbex.olingo</groupId>
 			<artifactId>olingo-odata2-lib</artifactId>
 			<version>${olingo.version}</version>
 			<type>pom</type>
