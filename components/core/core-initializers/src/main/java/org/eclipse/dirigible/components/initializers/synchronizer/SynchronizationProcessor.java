@@ -515,7 +515,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
      * Register broken state.
      *
      * @param definition the definition
-     * @param e the e
+     * @param errorMessage the error message
      */
     public void registerBrokenState(Definition definition, String errorMessage) {
         registerBrokenState(definition, null, errorMessage);
