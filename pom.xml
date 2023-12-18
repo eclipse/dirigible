@@ -617,7 +617,7 @@
 		<ngdbc.version>2.19.15</ngdbc.version>
 
 		<jsr250-api.version>1.0</jsr250-api.version>
-		<lucene.version>9.9.0</lucene.version>
+		<lucene.version>9.9.1</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
 		<flowable.version>6.8.0</flowable.version>
 		<jaxb.version>2.3.0</jaxb.version>
