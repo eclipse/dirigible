@@ -10,15 +10,17 @@
  */
 package org.eclipse.dirigible.components.api.mongodb;
 
+import java.net.URI;
+
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.mongodb.jdbc.MongoDBConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoClient;
 
 /**
  * The Class MongoDBFacade.
@@ -45,14 +47,15 @@ public class MongoDBFacade {
     /**
      * Gets the client.
      *
+     * @param uri the uri
+     * @param user the user
+     * @param password the password
      * @return the client
      */
-    public static MongoClient getClient() {
-
-        String clientUri = Configuration.get(DIRIGIBLE_MONGODB_CLIENT_URI, CLIENT_URI);
-
-        MongoClient mongoClient = new MongoClient(new MongoClientURI(clientUri));
-
+    public static MongoClient getClient(String uri, String user, String password) {
+        String defaultUri = Configuration.get(DIRIGIBLE_MONGODB_CLIENT_URI, CLIENT_URI);
+        URI dbUri = URI.create(uri != null ? uri : defaultUri);
+        MongoClient mongoClient = MongoDBConnection.createMongoClient(dbUri.toString(), user, password);
         return mongoClient;
     }
 

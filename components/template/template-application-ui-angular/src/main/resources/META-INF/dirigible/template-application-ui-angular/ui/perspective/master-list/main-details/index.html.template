@@ -199,6 +199,13 @@
                 </fd-form-group>
             </fd-fieldset>
         </fd-scrollbar>
+
+        <footer class="fd-dialog__footer fd-bar fd-bar--footer" ng-show="entityActions.length && entity.${primaryKeysString}">
+            <div class="fd-bar__right">
+                <fd-button ng-repeat="action in entityActions" class="fd-dialog__decisive-button" compact="true" dg-type="emphasized" dg-label="{{action.label}}"
+                    ng-click="triggerEntityAction(action.id, next)"></fd-button>
+            </div>
+        </footer>
     </body>
 
 </html>

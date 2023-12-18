@@ -162,13 +162,21 @@ public class DataSourcesManager implements InitializingBean {
         HikariDataSource hds = new HikariDataSource(config);
 
         ManagedDataSource managedDataSource = new ManagedDataSource(hds);
-        ((GenericApplicationContext) applicationContext).getBeanFactory()
-                                                        .registerSingleton(name, managedDataSource);
+        registerDataSourceBean(name, managedDataSource);
         DATASOURCES.put(name, managedDataSource);
         if (logger.isInfoEnabled()) {
             logger.info("Initialized a datasource with name: " + name);
         }
         return managedDataSource;
+    }
+
+    private void registerDataSourceBean(String name, ManagedDataSource dataSource) {
+        if (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM.equals(name)) {
+            return; // bean already set by org.eclipse.dirigible.components.database.DataSourceSystemConfig
+        }
+
+        ((GenericApplicationContext) applicationContext).getBeanFactory()
+                                                        .registerSingleton(name, dataSource);
     }
 
     /**

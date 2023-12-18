@@ -22,6 +22,8 @@
 
 		<fd-toolbar has-title="true" ng-hide="data == null">
 			<fd-toolbar-title>Items ({{dataCount}})</fd-toolbar-title>
+			<fd-button ng-repeat="action in pageActions" compact="true" dg-type="transparent" dg-label="{{action.label}}" ng-click="triggerPageAction(action.id)"></fd-button>
+			<fd-toolbar-spacer></fd-toolbar-spacer>
 		</fd-toolbar>
 		<fd-scrollbar class="dg-full-height" ng-hide="data == null">
 			<table fd-table display-mode="compact" inner-borders="top" outer-borders="none">
@@ -102,6 +104,7 @@
 								</fd-popover-control>
 								<fd-popover-body dg-align="bottom-right">
 									<fd-menu aria-label="Table Row Menu" no-backdrop="true" no-shadow="true">
+										<fd-menu-item ng-repeat="action in entityActions" title="{{action.label}}" ng-click="triggerEntityAction(action.id, next)"></fd-menu-item>
 										<fd-menu-item title="View Details" ng-click="openDetails(next)"></fd-menu-item>
 									</fd-menu>
 								</fd-popover-body>
