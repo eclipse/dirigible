@@ -668,7 +668,7 @@
 		<flexmark.version>0.64.8</flexmark.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
 		<qldb.sdk.version>1.12.619</qldb.sdk.version>
-		<camel.version>3.21.2</camel.version>
+		<camel.version>3.21.3</camel.version>
 		<ftpserver.version>1.2.0</ftpserver.version>
 
 		<org.springdoc.openapi.ui.version>1.7.0</org.springdoc.openapi.ui.version>
