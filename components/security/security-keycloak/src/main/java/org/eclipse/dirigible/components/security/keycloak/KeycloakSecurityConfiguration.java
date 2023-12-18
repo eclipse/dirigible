@@ -25,7 +25,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-class KeycloakSecurityConfiguration {
+public class KeycloakSecurityConfiguration {
 
     @Bean
     SecurityFilterChain configure(HttpSecurity http) throws Exception {

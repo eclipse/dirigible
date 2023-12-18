@@ -20,7 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Profile("oauth")
 @Configuration
-class OAuth2SecurityConfiguration {
+public class OAuth2SecurityConfiguration {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
