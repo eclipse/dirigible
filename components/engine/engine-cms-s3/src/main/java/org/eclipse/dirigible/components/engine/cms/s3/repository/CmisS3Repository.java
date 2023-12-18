@@ -10,16 +10,30 @@
  */
 package org.eclipse.dirigible.components.engine.cms.s3.repository;
 
+import org.eclipse.dirigible.components.api.s3.S3Facade;
+
+import java.io.IOException;
+
 /**
  * The Class CmisS3Repository.
  */
 public class CmisS3Repository implements CmisRepository {
 
     /**
-     * Instantiates a new cmis s3 repository.
-     *
+     * The S3Facade representation of repository.
      */
-    public CmisS3Repository() {}
+    private String S3_ROOT = "/";
+
+    /**
+     * Instantiates a new cmis s3 repository.
+     */
+    public CmisS3Repository(String root) throws IOException {
+        super();
+        if (!S3Facade.exists(S3_ROOT)) {
+            S3Facade.put(root, new byte[0]);
+        }
+        this.S3_ROOT = root;
+    }
 
     /**
      * Gets the session.

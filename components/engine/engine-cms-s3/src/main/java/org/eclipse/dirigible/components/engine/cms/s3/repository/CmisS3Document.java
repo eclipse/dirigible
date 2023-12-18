@@ -13,63 +13,63 @@ package org.eclipse.dirigible.components.engine.cms.s3.repository;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import org.apache.commons.io.FilenameUtils;
+import org.eclipse.dirigible.components.api.s3.S3Facade;
 import org.eclipse.dirigible.components.engine.cms.CmisDocument;
-import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.IResource;
 
 /**
  * The Class CmisDocument.
  */
 public class CmisS3Document extends CmisS3Object implements CmisDocument {
 
-    /** The session. */
+    /**
+     * The session.
+     */
     private CmisS3Session session;
 
-    /** The internal resource. */
-    private IResource internalResource;
-
-    /** The repository. */
-    private IRepository repository;
+    private String internalResource;
 
     /**
-     * Instantiates a new document.
-     *
-     * @param session the session
-     * @param internalResource the internal resource
-     * @throws IOException Signals that an I/O exception has occurred.
+     * The internal resource.
      */
-    public CmisS3Document(CmisS3Session session, IResource internalResource) throws IOException {
-        super(session, internalResource.getPath());
-        this.session = session;
-        // this.repository = (IRepository) session.getCmisRepository()
-        // .getInternalObject();
-        this.internalResource = internalResource;
-    }
+    private S3Facade s3Facade;
+
+//        /**
+//     * Instantiates a new document.
+//     *
+//     * @param session the session
+//     * @param internalResource the internal resource
+//     * @throws IOException Signals that an I/O exception has occurred.
+//     */
+//    public CmisS3Document(CmisS3Session session, IResource internalResource) throws IOException {
+//        super(session, internalResource.getPath());
+//        this.session = session;
+//        this.repository = (IRepository) session.getCmisRepository().getInternalObject();
+//        this.internalResource = internalResource;
+//    }
 
     /**
      * Instantiates a new document.
      *
      * @param session the session
-     * @param id the idx
+     * @param id      the idx
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public CmisS3Document(CmisS3Session session, String id) throws IOException {
         super(session, id);
         id = sanitize(id);
         this.session = session;
-        // this.repository = (IRepository) session.getCmisRepository()
-        // .getInternalObject();
-        this.internalResource = this.repository.getResource(id);
+        this.internalResource = id;
     }
 
-    /**
-     * Gets the internal folder.
-     *
-     * @return the internal folder
-     */
-    public IResource getInternalFolder() {
-        return internalResource;
-    }
+//    /**
+//     * Gets the internal folder.
+//     *
+//     * @return the internal folder
+//     */
+//    public IResource getInternalFolder() {
+//        return internalResource;
+//    }
 
     /**
      * Checks if is collection.
@@ -88,8 +88,10 @@ public class CmisS3Document extends CmisS3Object implements CmisDocument {
      * @throws IOException IO Exception
      */
     public CmisS3ContentStream getContentStream() throws IOException {
-        byte[] content = this.internalResource.getContent();
-        return new CmisS3ContentStream(session, this.internalResource.getName(), content.length, this.internalResource.getContentType(),
+        byte[] content = s3Facade.get(this.internalResource);
+        String contentType = getContentType(this.internalResource);
+        String name = getResourceName(this.internalResource);
+        return new CmisS3ContentStream(session, name, content.length, contentType,
                 new ByteArrayInputStream(content));
     }
 
@@ -99,7 +101,14 @@ public class CmisS3Document extends CmisS3Object implements CmisDocument {
      * @return the path
      */
     public String getPath() {
-        return this.internalResource.getPath();
+        return this.internalResource;
     }
 
+    private String getContentType(String resource) {
+        return FilenameUtils.getExtension(resource);
+    }
+
+    private String getResourceName(String resource) {
+        return FilenameUtils.getName(resource);
+    }
 }

@@ -15,6 +15,8 @@ import org.eclipse.dirigible.components.engine.cms.s3.provider.CmsProviderS3;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.IOException;
+
 /**
  * The Class CmsS3Config.
  */
@@ -27,7 +29,7 @@ public class CmsS3Config {
      * @return the cms provider
      */
     @Bean("cms-provider-s3")
-    public CmsProvider getCmsProvider() {
+    public CmsProvider getCmsProvider() throws IOException {
         return new CmsProviderS3();
     }
 

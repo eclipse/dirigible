@@ -18,68 +18,71 @@ import java.util.Map;
 
 import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.components.api.s3.S3Facade;
 import org.eclipse.dirigible.components.engine.cms.CmisConstants;
 import org.eclipse.dirigible.components.engine.cms.CmisFolder;
-import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.IResource;
+import software.amazon.awssdk.services.s3.model.S3Object;
 
 /**
  * The Class CmisS3Folder.
  */
 public class CmisS3Folder extends CmisS3Object implements CmisFolder {
 
-    /** The session. */
+    /**
+     * The session.
+     */
     private CmisS3Session session;
 
-    /** The internal folder. */
+    /**
+     * The internal folder.
+     */
 
-    private ICollection internalFolder;
+    private String internalFolder;
 
-    /** The repository. */
-    private IRepository repository;
-
-    /** The root folder. */
+    /**
+     * The root folder.
+     */
     private boolean rootFolder = false;
 
-    /**
-     * Instantiates a new folder.
-     *
-     * @param session the session
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public CmisS3Folder(CmisS3Session session) throws IOException {
-        super(session, IRepository.SEPARATOR);
-        this.session = session;
-        // this.repository = (IRepository) session.getCmisRepository()
-        // .getInternalObject();
-        this.internalFolder = repository.getRoot();
-        this.rootFolder = true;
-    }
+//    /**
+//     * Instantiates a new folder.
+//     *
+//     * @param session the session
+//     * @throws IOException Signals that an I/O exception has occurred.
+//     */
+//    public CmisS3Folder(CmisS3Session session) throws IOException {
+//        super(session, IRepository.SEPARATOR);
+//        this.session = session;
+//        // this.repository = (IRepository) session.getCmisRepository()
+//        // .getInternalObject();
+//        this.internalFolder = repository.getRoot();
+//        this.rootFolder = true;
+//    }
+
+//    /**
+//     * Instantiates a new folder.
+//     *
+//     * @param session the session
+//     * @param internalCollection the internal collection
+//     * @throws IOException Signals that an I/O exception has occurred.
+//     */
+//    public CmisS3Folder(CmisS3Session session, ICollection internalCollection) throws IOException {
+//        super(session, internalCollection.getPath());
+//        if (IRepository.SEPARATOR.equals(internalCollection.getPath())) {
+//            this.rootFolder = true;
+//        }
+//        this.session = session;
+//        // this.repository = (IRepository) session.getCmisRepository()
+//        // .getInternalObject();
+//        this.internalFolder = internalCollection;
+//    }
 
     /**
      * Instantiates a new folder.
      *
      * @param session the session
-     * @param internalCollection the internal collection
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public CmisS3Folder(CmisS3Session session, ICollection internalCollection) throws IOException {
-        super(session, internalCollection.getPath());
-        if (IRepository.SEPARATOR.equals(internalCollection.getPath())) {
-            this.rootFolder = true;
-        }
-        this.session = session;
-        // this.repository = (IRepository) session.getCmisRepository()
-        // .getInternalObject();
-        this.internalFolder = internalCollection;
-    }
-
-    /**
-     * Instantiates a new folder.
-     *
-     * @param session the session
-     * @param id the id
+     * @param id      the id
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public CmisS3Folder(CmisS3Session session, String id) throws IOException {
@@ -89,9 +92,7 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
             this.rootFolder = true;
         }
         this.session = session;
-        // this.repository = (IRepository) session.getCmisRepository()
-        // .getInternalObject();
-        this.internalFolder = this.repository.getCollection(id);
+        this.internalFolder = id;
     }
 
     /**
@@ -99,7 +100,7 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
      *
      * @return the internal folder
      */
-    public ICollection getInternalFolder() {
+    public String getInternalFolder() {
         return internalFolder;
     }
 
@@ -120,8 +121,8 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
      */
     @Override
     public String getPath() {
-        return this.getInternalEntity()
-                   .getPath();
+        //TODO check again what path we might get, probably just name/id
+        return this.getInternalEntity();
     }
 
     /**
@@ -133,14 +134,16 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
      */
     public CmisS3Folder createFolder(Map<String, String> properties) throws IOException {
         String name = properties.get(CmisConstants.NAME);
-        return new CmisS3Folder(this.session, this.internalFolder.createCollection(name));
+        //TODO check properties
+        S3Facade.put(name, properties.get("contentStream").getBytes());
+        return new CmisS3Folder(this.session, this.internalFolder);
     }
 
     /**
      * Creates a new document under this CmisS3Folder.
      *
-     * @param properties the properties
-     * @param contentStream the content stream
+     * @param properties      the properties
+     * @param contentStream   the content stream
      * @param versioningState the version state
      * @return CmisDocument
      * @throws IOException IO Exception
@@ -150,8 +153,8 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
         String name = properties.get(CmisConstants.NAME);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         IOUtils.copy(contentStream.getStream(), out);
-        return new CmisS3Document(this.session,
-                this.internalFolder.createResource(name, out.toByteArray(), true, contentStream.getMimeType()));
+        S3Facade.put(name, out.toByteArray());
+        return new CmisS3Document(this.session, name);
     }
 
     /**
@@ -162,13 +165,13 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
      */
     public List<CmisS3Object> getChildren() throws IOException {
         List<CmisS3Object> children = new ArrayList<CmisS3Object>();
-        List<ICollection> collections = this.internalFolder.getCollections();
-        for (ICollection collection : collections) {
-            children.add(new CmisS3Folder(this.session, collection));
-        }
-        List<IResource> resources = this.internalFolder.getResources();
-        for (IResource resource : resources) {
-            children.add(new CmisS3Document(this.session, resource));
+        List<S3Object> s3CurrentFolderObjects = S3Facade.listObjects(this.internalFolder);
+        for (S3Object s3Object : s3CurrentFolderObjects) {
+            if (s3Object.key().endsWith("/")) {
+                children.add(new CmisS3Folder(this.session, s3Object.key()));
+            } else {
+                children.add(new CmisS3Document(this.session, s3Object.key()));
+            }
         }
         return children;
     }
@@ -183,17 +186,17 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
         return rootFolder;
     }
 
-    /**
-     * Returns the parent CmisS3Folder of this CmisS3Folder.
-     *
-     * @return CmisS3Folder
-     * @throws IOException IO Exception
-     */
-    public CmisS3Folder getFolderParent() throws IOException {
-        if (this.internalFolder.getParent() != null) {
-            return new CmisS3Folder(this.session, this.internalFolder.getParent());
-        }
-        return new CmisS3Folder(this.session);
-    }
+//    /**
+//     * Returns the parent CmisS3Folder of this CmisS3Folder.
+//     *
+//     * @return CmisS3Folder
+//     * @throws IOException IO Exception
+//     */
+//    public CmisS3Folder getFolderParent() throws IOException {
+//        if (this.internalFolder.getParent() != null) {
+//            return new CmisS3Folder(this.session, this.internalFolder.getParent());
+//        }
+//        return new CmisS3Folder(this.session);
+//    }
 
 }

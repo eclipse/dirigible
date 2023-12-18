@@ -10,41 +10,48 @@
  */
 package org.eclipse.dirigible.components.engine.cms.s3.provider;
 
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.engine.cms.CmsProvider;
 import org.eclipse.dirigible.components.engine.cms.s3.repository.CmisRepository;
+import org.eclipse.dirigible.components.engine.cms.s3.repository.CmisRepositoryFactory;
 import org.eclipse.dirigible.components.engine.cms.s3.repository.CmisS3Session;
+
+import java.io.IOException;
 
 /**
  * The Class CmsProviderS3.
  */
 public class CmsProviderS3 implements CmsProvider {
 
-    /** The Constant CMS. */
+    /**
+     * The Constant CMS.
+     */
     private static final String CMS = "cms"; //$NON-NLS-1$
 
-    /** The Constant NAME. */
+    /**
+     * The Constant NAME.
+     */
     public static final String NAME = "repository"; //$NON-NLS-1$
 
-    /** The Constant TYPE. */
+    /**
+     * The Constant TYPE.
+     */
     public static final String TYPE = "s3"; //$NON-NLS-1$
 
-    /** The cmis repository. */
+    /**
+     * The cmis repository.
+     */
     private CmisRepository cmisRepository;
+
+    /**
+     * The S3Facade
+     */
+    private String S3_ROOT = "/";
 
     /**
      * Instantiates a new cms provider s3.
      */
-    public CmsProviderS3() {
-        //
-        // String rootFolder = Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER, "target/dirigible");
-        // boolean absolute =
-        // Boolean.parseBoolean(Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE, "false"));
-        //
-        // String repositoryFolder = rootFolder + File.separator + CMS;
-        //
-        // IRepository repository = new LocalRepository(repositoryFolder, absolute);
-        // this.cmisRepository = CmisRepositoryFactory.createCmisRepository(repository);
+    public CmsProviderS3() throws IOException {
+        this.cmisRepository = CmisRepositoryFactory.createCmisRepository(S3_ROOT);
     }
 
     /**

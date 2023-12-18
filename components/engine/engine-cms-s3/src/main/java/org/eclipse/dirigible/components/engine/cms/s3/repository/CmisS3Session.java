@@ -10,6 +10,8 @@
  */
 package org.eclipse.dirigible.components.engine.cms.s3.repository;
 
+import org.eclipse.dirigible.components.api.s3.S3Facade;
+import org.eclipse.dirigible.components.engine.cms.CmisConstants;
 import org.eclipse.dirigible.components.engine.cms.CmisSession;
 
 import java.io.IOException;
@@ -19,7 +21,9 @@ import java.io.IOException;
  */
 public class CmisS3Session implements CmisSession {
 
-    /** The cmis repository. */
+    /**
+     * The cmis repository.
+     */
     private CmisRepository cmisRepository;
 
     /**
@@ -59,15 +63,16 @@ public class CmisS3Session implements CmisSession {
         return new CmisS3ObjectFactory(this);
     }
 
-    /**
-     * Returns the root folder of this repository.
-     *
-     * @return CmisS3Folder
-     * @throws IOException IO Exception
-     */
-    public CmisS3Folder getRootFolder() throws IOException {
-        return new CmisS3Folder(this);
-    }
+//    /**
+//     * Returns the root folder of this repository.
+//     *
+//     * @return CmisS3Folder
+//     * @throws IOException IO Exception
+//     */
+    //TODO CHECK IF CAN GET ROOT FOLDER
+//    public CmisS3Folder getRootFolder() throws IOException {
+//        return new CmisS3Folder(this);
+//    }
 
     /**
      * Returns a CMIS Object by name.
@@ -79,17 +84,18 @@ public class CmisS3Session implements CmisSession {
     @Override
     public CmisS3Object getObject(String id) throws IOException {
         CmisS3Object cmisObject = new CmisS3Object(this, id);
-        // if (!cmisObject.getInternalEntity()
-        // .exists()) {
-        // throw new IOException(String.format("Object with id: %s does not exist", id));
-        // }
-        // if (CmisConstants.OBJECT_TYPE_FOLDER.equals(cmisObject.getType()
-        // .getId())) {
-        // return new CmisS3Folder(this, id);
-        // } else if (CmisConstants.OBJECT_TYPE_DOCUMENT.equals(cmisObject.getType()
-        // .getId())) {
-        // return new CmisS3Document(this, id);
-        // }
+        //TODO with S3Facade check if entity with path(a.excel;a/b.excel) exists
+//        if (!S3Facade.exists(id)) {
+//            throw new IOException(String.format("Object with id: %s does not exist", id));
+//        }
+        if (CmisConstants.OBJECT_TYPE_FOLDER.equals(cmisObject.getType().getId())) {
+            // id is string with eg "a.txt"
+            return new CmisS3Folder(this, id);
+        } else if (CmisConstants.OBJECT_TYPE_DOCUMENT.equals(cmisObject.getType().getId())) {
+            // id is string with eg. "test.txt"
+            return new CmisS3Document(this, id);
+        }
+        // a/b/c/
         return cmisObject;
     }
 

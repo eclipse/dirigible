@@ -31,7 +31,7 @@ public class CmisS3ObjectFactory {
     }
 
     /**
-     * Creates a new Object object.
+     * Creates a new S3Object object.
      *
      * @param filename the filename
      * @param length the length

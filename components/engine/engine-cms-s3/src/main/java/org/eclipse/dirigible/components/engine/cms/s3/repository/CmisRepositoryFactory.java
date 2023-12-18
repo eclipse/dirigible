@@ -10,7 +10,9 @@
  */
 package org.eclipse.dirigible.components.engine.cms.s3.repository;
 
-import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.components.api.s3.S3Facade;
+
+import java.io.IOException;
 
 /**
  * A factory for creating CmisRepository objects.
@@ -22,8 +24,8 @@ public class CmisRepositoryFactory {
      *
      * @return the cmis repository
      */
-    public static CmisRepository createCmisRepository() {
-        return new CmisS3Repository();
+    public static CmisRepository createCmisRepository(String root) throws IOException {
+        return new CmisS3Repository(root);
     }
 
 }

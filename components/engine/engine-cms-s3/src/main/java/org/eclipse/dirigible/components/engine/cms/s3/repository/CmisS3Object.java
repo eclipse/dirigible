@@ -11,46 +11,59 @@
 package org.eclipse.dirigible.components.engine.cms.s3.repository;
 
 import java.io.IOException;
+import java.io.InputStream;
 
+import org.eclipse.dirigible.components.api.s3.S3Facade;
 import org.eclipse.dirigible.components.engine.cms.CmisObject;
 import org.eclipse.dirigible.components.engine.cms.ObjectType;
 import org.eclipse.dirigible.repository.api.IEntity;
+import software.amazon.awssdk.services.s3.model.S3Object;
 
 /**
  * The Class CmisS3Object.
  */
 public class CmisS3Object implements CmisObject {
 
-    /** The session. */
+    /**
+     * The session.
+     */
     private CmisS3Session session;
 
-    /** The internal entity. */
-    private IEntity internalEntity;
+    /**
+     * The internal entity.
+     */
+    private String internalEntity;
 
-    /** The type collection. */
+    /**
+     * The type collection.
+     */
     private boolean typeCollection = false;
 
     /**
      * Instantiates a new cmis object.
      *
      * @param session the session
-     * @param path the path
+     * @param path    the path
      * @throws IOException Signals that an I/O exception has occurred.
      */
+    // Example:
+    // a/b/c/x.doc
+    // a/b/y.doc
+    // a/z.doc
+    // search for a/ -> b; z.doc
+    //TODO check if trailing / and isEmpty() is folder else document
+    //id = path
+    //name = last string after /
     public CmisS3Object(CmisS3Session session, String path) throws IOException {
-        //
-        // super();
-        // this.session = session;
-        // path = sanitize(path);
-        // IRepository repository = ((IRepository) session.getCmisRepository()
-        // .getInternalObject());
-        // if (repository.hasCollection(path)) {
-        // this.internalEntity = repository.getCollection(path);
-        // this.typeCollection = true;
-        // } else if (repository.hasResource(path)) {
-        // this.internalEntity = repository.getResource(path);
-        // this.typeCollection = false;
-        // }
+        super();
+        this.session = session;
+        path = sanitize(path);
+        this.internalEntity = path;
+        if (path.endsWith("/")) {
+            this.typeCollection = true;
+        } else {
+            this.typeCollection = false;
+        }
     }
 
     /**
@@ -58,7 +71,7 @@ public class CmisS3Object implements CmisObject {
      *
      * @return the internal entity
      */
-    public IEntity getInternalEntity() {
+    public String getInternalEntity() {
         return internalEntity;
     }
 
@@ -89,8 +102,7 @@ public class CmisS3Object implements CmisObject {
      */
     @Override
     public String getId() {
-        return this.getInternalEntity()
-                   .getPath();
+        return this.getInternalEntity();
     }
 
     /**
@@ -100,12 +112,7 @@ public class CmisS3Object implements CmisObject {
      */
     @Override
     public String getName() {
-        if ("".equals(this.getInternalEntity()
-                          .getName())) {
-            return "root";
-        }
-        return this.getInternalEntity()
-                   .getName();
+        return this.getInternalEntity();
     }
 
     /**
@@ -125,8 +132,7 @@ public class CmisS3Object implements CmisObject {
      */
     @Override
     public void delete() throws IOException {
-        this.getInternalEntity()
-            .delete();
+        S3Facade.delete(this.getInternalEntity());
     }
 
     /**
@@ -148,8 +154,8 @@ public class CmisS3Object implements CmisObject {
      */
     @Override
     public void rename(String newName) throws IOException {
-        this.getInternalEntity()
-            .renameTo(newName);
+        //TODO see how to rename from S3Facade
+        //this.getInternalEntity().renameTo(newName);
     }
 
 }

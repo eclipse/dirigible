@@ -33,27 +33,21 @@ public class S3Facade implements InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(S3Facade.class);
     private static S3Facade INSTANCE;
 
-//    private static final String BUCKET = "cmis-bucket";
-//    private static final Region AWS_DEFAULT_REGION = Region.EU_CENTRAL_1;
-//    private static final Region AWS_REGION = Region.EU_CENTRAL_1;
-//    private static final String AWS_ACCESS_KEY_ID = "AKIA5QLC4KLZEU447GW4";
-//    private static final String AWS_SECRET_ACCESS_KEY = "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";
-//    private static final String BUCKET_URL_PATH = "https://cmis-bucket.s3.eu-central-1.amazonaws.com/";
-
-        private static final String BUCKET = Configuration.get("BUCKET");
-        private static final String AWS_ACCESS_KEY_ID = Configuration.get("AWS_ACCESS_KEY_ID");
-        private static final Region AWS_DEFAULT_REGION = Region.of(Configuration.get("AWS_DEFAULT_REGION"));
-        private static final Region AWS_REGION = Region.of(Configuration.get("AWS_DEFAULT_REGION"));
-        private static final String AWS_SECRET_ACCESS_KEY = Configuration.get("AWS_SECRET_ACCESS_KEY");
-        private static final String BUCKET_URL_PATH = Configuration.get("BUCKET_URL_PATH");
+    private static final String BUCKET = Configuration.get("BUCKET");
+    private static final String AWS_ACCESS_KEY_ID = Configuration.get("AWS_ACCESS_KEY_ID");
+    private static final Region AWS_DEFAULT_REGION = Region.of(Configuration.get("AWS_DEFAULT_REGION"));
+    private static final Region AWS_REGION = Region.of(Configuration.get("AWS_DEFAULT_REGION"));
+    private static final String AWS_SECRET_ACCESS_KEY = Configuration.get("AWS_SECRET_ACCESS_KEY");
+    private static final String BUCKET_URL_PATH = Configuration.get("BUCKET_URL_PATH");
 
     private static S3Client s3;
+
     static {
         AwsBasicCredentials credentials = AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
         s3 = S3Client.builder()
-                     .region(AWS_DEFAULT_REGION)
-                     .credentialsProvider(StaticCredentialsProvider.create(credentials))
-                     .build();
+                .region(AWS_DEFAULT_REGION)
+                .credentialsProvider(StaticCredentialsProvider.create(credentials))
+                .build();
     }
 
     @Override
@@ -61,7 +55,7 @@ public class S3Facade implements InitializingBean {
         INSTANCE = this;
     }
 
-    public static S3Facade get(){
+    public static S3Facade get() {
         return INSTANCE;
     }
 
@@ -76,20 +70,6 @@ public class S3Facade implements InitializingBean {
     }
 
     public static void uploadDirectory(String sourceDirectory) {
-//        S3AsyncClient s3AsyncClient =
-//                S3AsyncClient.crtBuilder()
-//                             .credentialsProvider(StaticCredentialsProvider.create(
-//                                     AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)))
-//                             .region(AWS_DEFAULT_REGION)
-//                             .targetThroughputInGbps(20.0)
-//                             .minimumPartSizeInBytes(8 * MB)
-//                             .build();
-//
-//        S3TransferManager transferManager =
-//                S3TransferManager.builder()
-//                                 .s3Client(s3AsyncClient)
-//                                 .build();
-
         S3TransferManager transferManager = S3TransferManager.create();
 
         DirectoryUpload directoryUpload =
@@ -103,13 +83,13 @@ public class S3Facade implements InitializingBean {
 
     public static void delete(String name) {
 
-        if(name.endsWith("/")){
+        if (name.endsWith("/")) {
             deleteFolder(name);
-        }else {
+        } else {
             DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
-                                                                   .bucket(BUCKET)
-                                                                   .key(name)
-                                                                   .build();
+                    .bucket(BUCKET)
+                    .key(name)
+                    .build();
 
             s3.deleteObject(objectRequest);
         }
@@ -119,9 +99,9 @@ public class S3Facade implements InitializingBean {
 
         ResponseInputStream<GetObjectResponse> response =
                 s3.getObject(GetObjectRequest.builder()
-                                             .bucket(BUCKET)
-                                             .key(name)
-                                             .build());
+                        .bucket(BUCKET)
+                        .key(name)
+                        .build());
 
         return response.readAllBytes();
     }
@@ -131,9 +111,22 @@ public class S3Facade implements InitializingBean {
         put(name, inputStream);
     }
 
-    public static List<S3Object> listObjects() {
+    public static List<S3Object> listObjectsInRoot() {
         ListObjectsV2Request listObjectsV2Request = ListObjectsV2Request.builder()
                 .bucket(BUCKET)
+                .build();
+        ListObjectsV2Response listObjectsV2Response = s3.listObjectsV2(listObjectsV2Request);
+
+        List<S3Object> contents = listObjectsV2Response.contents();
+
+        logger.info("Number of objects in the bucket: " + contents.stream().count());
+        return contents;
+    }
+
+    public static List<S3Object> listObjects(String path) {
+        ListObjectsV2Request listObjectsV2Request = ListObjectsV2Request.builder()
+                .bucket(BUCKET)
+                .prefix(path)
                 .build();
         ListObjectsV2Response listObjectsV2Response = s3.listObjectsV2(listObjectsV2Request);
 
@@ -164,7 +157,7 @@ public class S3Facade implements InitializingBean {
     }
 
     public static boolean exists(String name) {
-        List<S3Object> bucketObjects = listObjects();
+        List<S3Object> bucketObjects = listObjectsInRoot();
 
         for (S3Object bucketObject : bucketObjects) {
             if (bucketObject.key().equals(name)) {
