@@ -28,7 +28,7 @@ function setETag() {
 for (let i = 0; i < menuExtensions.length; i++) {
 	let module = menuExtensions[i];
 	try {
-		menuExtension = require(module);
+		const menuExtension = require(module);
 		let menu = menuExtension.getMenu();
 		mainmenu.push(menu);
 	} catch (error) {
