@@ -29,12 +29,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @ConditionalOnProperty(name = "basic.enabled", havingValue = "true")
-public class BasicAuthSecurityConfiguration {
+class BasicAuthSecurityConfiguration {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors(Customizer.withDefaults())
-            .csrf((csrf) -> csrf.disable())
+            .csrf(csrf -> csrf.disable())
             .httpBasic(Customizer.withDefaults())
             .formLogin(Customizer.withDefaults())
             .logout(logout -> logout.deleteCookies("JSESSIONID"))

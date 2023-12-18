@@ -11,22 +11,22 @@
 package org.eclipse.dirigible.components.security.oauth2;
 
 import org.eclipse.dirigible.components.base.http.access.HttpSecurityURIConfigurator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+@Profile("oauth")
 @Configuration
-@ConditionalOnProperty(name = "oauth2.enabled", havingValue = "true")
-public class OAuth2SecurityConfiguration {
+class OAuth2SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.cors(Customizer.withDefaults())
-            .csrf((csrf) -> csrf.disable())
+            .csrf(csrf -> csrf.disable())
             .headers(headers -> headers.frameOptions(frameOpts -> frameOpts.disable()))
             .oauth2Login(Customizer.withDefaults());
 

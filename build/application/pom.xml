@@ -15,11 +15,6 @@
 	<packaging>jar</packaging>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-properties-migrator</artifactId>
-			<scope>runtime</scope>
-		</dependency>
 		<!-- Platform -->
 		<dependency>
 			<groupId>org.slf4j</groupId>

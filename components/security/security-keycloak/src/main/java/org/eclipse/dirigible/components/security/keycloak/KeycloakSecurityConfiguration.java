@@ -10,7 +10,36 @@
  */
 package org.eclipse.dirigible.components.security.keycloak;
 
-// TODO: to be adapted
+import org.eclipse.dirigible.components.base.http.access.HttpSecurityURIConfigurator;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Profile("keycloak")
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
 class KeycloakSecurityConfiguration {
 
+    @Bean
+    SecurityFilterChain configure(HttpSecurity http) throws Exception {
+        http//
+            .authorizeHttpRequests(authz -> authz.requestMatchers("/oauth2/**", "/login/**")
+                                                 .permitAll())
+            .csrf(csrf -> csrf.disable())
+            .headers(headers -> headers.frameOptions(frameOpts -> frameOpts.sameOrigin()))
+            .oauth2Client(Customizer.withDefaults())
+            .oauth2Login(Customizer.withDefaults())
+            .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
+
+        HttpSecurityURIConfigurator.configure(http);
+
+        return http.build();
+    }
 }
