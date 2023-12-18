@@ -10,7 +10,7 @@
                 },
                 {
                     "os": "windows",
-                    "command": "tsc"
+                    "command": "cmd /c tsc"
                 }
             ],
             "registry": "true"
