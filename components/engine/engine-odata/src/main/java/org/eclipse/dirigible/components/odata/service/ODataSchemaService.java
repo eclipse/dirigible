@@ -12,12 +12,9 @@ package org.eclipse.dirigible.components.odata.service;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.odata.domain.ODataSchema;
 import org.eclipse.dirigible.components.odata.repository.ODataSchemaRepository;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,33 +26,14 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class ODataSchemaService implements ArtefactService<ODataSchema>, InitializingBean {
+public class ODataSchemaService implements ArtefactService<ODataSchema> {
 
-    /** The instance. */
-    private static ODataSchemaService INSTANCE;
+    private final ODataSchemaRepository odataSchemaRepository;
 
-    /**
-     * After properties set.
-     *
-     * @throws Exception the exception
-     */
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        INSTANCE = this;
+    ODataSchemaService(ODataSchemaRepository odataSchemaRepository) {
+        this.odataSchemaRepository = odataSchemaRepository;
     }
 
-    /**
-     * Gets the.
-     *
-     * @return the o data schema service
-     */
-    public static ODataSchemaService get() {
-        return INSTANCE;
-    }
-
-    /** The ODataSchema repository. */
-    @Autowired
-    private ODataSchemaRepository odataSchemaRepository;
 
     /**
      * Gets the all.
@@ -89,9 +67,8 @@ public class ODataSchemaService implements ArtefactService<ODataSchema>, Initial
         Optional<ODataSchema> odataSchema = odataSchemaRepository.findById(id);
         if (odataSchema.isPresent()) {
             return odataSchema.get();
-        } else {
-            throw new IllegalArgumentException("OData Schema with id does not exist: " + id);
         }
+        throw new IllegalArgumentException("OData Schema with id does not exist: " + id);
     }
 
     /**
@@ -108,9 +85,8 @@ public class ODataSchemaService implements ArtefactService<ODataSchema>, Initial
         Optional<ODataSchema> odataSchema = odataSchemaRepository.findOne(example);
         if (odataSchema.isPresent()) {
             return odataSchema.get();
-        } else {
-            throw new IllegalArgumentException("OData Schema with name does not exist: " + name);
         }
+        throw new IllegalArgumentException("OData Schema with name does not exist: " + name);
     }
 
     /**
@@ -125,8 +101,7 @@ public class ODataSchemaService implements ArtefactService<ODataSchema>, Initial
         ODataSchema filter = new ODataSchema();
         filter.setLocation(location);
         Example<ODataSchema> example = Example.of(filter);
-        List<ODataSchema> list = odataSchemaRepository.findAll(example);
-        return list;
+        return odataSchemaRepository.findAll(example);
     }
 
     /**
