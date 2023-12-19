@@ -10,7 +10,7 @@
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
