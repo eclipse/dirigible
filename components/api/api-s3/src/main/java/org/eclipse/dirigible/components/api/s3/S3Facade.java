@@ -21,6 +21,7 @@ import software.amazon.awssdk.transfer.s3.model.UploadDirectoryRequest;
 import software.amazon.awssdk.utils.IoUtils;
 
 import java.io.*;
+import java.net.URI;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +46,8 @@ public class S3Facade implements InitializingBean {
     static {
         AwsBasicCredentials credentials = AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
         s3 = S3Client.builder()
+                //for local testing with localstack
+                //.endpointOverride(URI.create("https://s3.localhost.localstack.cloud:4566"))
                 .region(AWS_DEFAULT_REGION)
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
                 .build();
@@ -126,8 +129,9 @@ public class S3Facade implements InitializingBean {
     public static List<S3Object> listObjects(String path) {
         ListObjectsV2Request listObjectsV2Request = ListObjectsV2Request.builder()
                 .bucket(BUCKET)
-                .prefix(path)
+                .prefix("/".equals(path) ? null : path)
                 .build();
+
         ListObjectsV2Response listObjectsV2Response = s3.listObjectsV2(listObjectsV2Request);
 
         List<S3Object> contents = listObjectsV2Response.contents();

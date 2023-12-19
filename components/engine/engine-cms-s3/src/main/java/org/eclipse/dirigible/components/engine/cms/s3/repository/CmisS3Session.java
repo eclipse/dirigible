@@ -63,16 +63,16 @@ public class CmisS3Session implements CmisSession {
         return new CmisS3ObjectFactory(this);
     }
 
-//    /**
-//     * Returns the root folder of this repository.
-//     *
-//     * @return CmisS3Folder
-//     * @throws IOException IO Exception
-//     */
-    //TODO CHECK IF CAN GET ROOT FOLDER
-//    public CmisS3Folder getRootFolder() throws IOException {
-//        return new CmisS3Folder(this);
-//    }
+    /**
+     * Returns the root folder of this repository.
+     *
+     * @return CmisS3Folder
+     * @throws IOException IO Exception
+     */
+
+    public CmisS3Folder getRootFolder() throws IOException {
+        return new CmisS3Folder(this);
+    }
 
     /**
      * Returns a CMIS Object by name.
