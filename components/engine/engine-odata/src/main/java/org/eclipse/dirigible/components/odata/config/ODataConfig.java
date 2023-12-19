@@ -35,7 +35,7 @@ class ODataConfig {
         bean.addInitParameter("jakarta.ws.rs.Application", "org.apache.olingo.odata2.core.rest.app.ODataApplication");
         bean.addInitParameter("org.apache.olingo.odata2.service.factory",
                 "org.eclipse.dirigible.components.odata.factory.DirigibleODataServiceFactory");
-        bean.setLoadOnStartup(1);
+        bean.setLoadOnStartup(Integer.MAX_VALUE);
         return bean;
     }
 

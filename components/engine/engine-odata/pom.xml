@@ -1,64 +1,80 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <parent>
-        <artifactId>dirigible-components-parent</artifactId>
-        <groupId>org.eclipse.dirigible</groupId>
-        <version>10.0.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
-    </parent>
-    
-    <name>Components - Engine - OData</name>
-    <artifactId>dirigible-components-engine-odata</artifactId>
-    <modelVersion>4.0.0</modelVersion>
-    
-    <dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>dirigible-components-parent</artifactId>
+		<groupId>org.eclipse.dirigible</groupId>
+		<version>10.0.0-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
 
-    	<!-- Components -->
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-components-core-base</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-components-core-database</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-components-core-repository</artifactId>
-        </dependency>
-        
-        <!-- Data -->
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-components-data-structures</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-components-data-sources</artifactId>
-        </dependency>
-        
-        <!-- Engine -->
+	<name>Components - Engine - OData</name>
+	<artifactId>dirigible-components-engine-odata</artifactId>
+	<modelVersion>4.0.0</modelVersion>
+
+	<dependencies>
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-frontend-jaxrs</artifactId>
+			<version>${cxf.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-transports-http</artifactId>
+			<version>${cxf.version}</version>
+		</dependency>
+
+		<!-- Components -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-core-base</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-core-database</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-core-repository</artifactId>
+		</dependency>
+
+		<!-- Data -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-data-structures</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-data-sources</artifactId>
+		</dependency>
+
+		<!-- Engine -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-javascript</artifactId>
 		</dependency>
-		
+
 		<!-- API -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-security</artifactId>
 		</dependency>
-        
-        <!-- Libraries -->
+
+		<!-- Libraries -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-odata-core</artifactId>
 		</dependency>
-        
-    </dependencies>
 
-    <properties>
-        <license.header.location>../../../licensing-header.txt</license.header.location>
-        <parent.pom.folder>../../../</parent.pom.folder>
-    </properties>
+	</dependencies>
+
+	<properties>
+		<cxf.version>4.0.3</cxf.version>
+		<license.header.location>../../../licensing-header.txt</license.header.location>
+		<parent.pom.folder>../../../</parent.pom.folder>
+	</properties>
 </project>

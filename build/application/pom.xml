@@ -15,10 +15,6 @@
 	<packaging>jar</packaging>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-engine-odata</artifactId>
-		</dependency>
 		<!-- Platform -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
