@@ -13,6 +13,7 @@ package org.eclipse.dirigible.integration.tests.api;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import java.util.stream.Stream;
+import org.eclipse.dirigible.DirigibleApplication;
 import org.eclipse.dirigible.components.base.http.access.DirigibleRole.RoleNames;
 import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,10 +21,13 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+@SpringBootTest(webEnvironment = WebEnvironment.MOCK, classes = DirigibleApplication.class)
 class SecurityIT extends IntegrationTest {
 
     @Autowired
@@ -37,19 +41,21 @@ class SecurityIT extends IntegrationTest {
     }
 
     private static Stream<Arguments> providePublicEndpointsParams() {
-        return Stream.of(Arguments.of("/actuator/health", HttpStatus.OK), //
+        return Stream.of(//
+                Arguments.of("/actuator/health", HttpStatus.OK), //
+                Arguments.of("/login", HttpStatus.OK), //
                 Arguments.of("/error.html", HttpStatus.OK));
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"/spring-admin", "/actuator/heapdump"})
+    @ValueSource(strings = {"/spring-admin", "/actuator/info"})
     void testProtectedEndpointWithoutUnauthenticatedRequest(String path) throws Exception {
         mvc.perform(get(path))
            .andExpect(status().isUnauthorized());
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"/actuator/heapdump"})
+    @ValueSource(strings = {"/actuator/info"})
     @WithMockUser(username = "user_without_roles", roles = {"SOME_UNUSED_ROLE"})
     void testProtectedEndpointsWithUnauthorizedUser(String path) throws Exception {
         mvc.perform(get(path))
@@ -66,7 +72,7 @@ class SecurityIT extends IntegrationTest {
 
     private static Stream<Arguments> provideOperatorEndpointsParams() {
         return Stream.of(Arguments.of("/spring-admin", HttpStatus.NOT_FOUND), //
-                Arguments.of("/actuator/heapdump", HttpStatus.OK));
+                Arguments.of("/actuator/info", HttpStatus.OK));
     }
 
     @ParameterizedTest
