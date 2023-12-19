@@ -74,7 +74,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>3.2.3</version>
 				<configuration>
 					<skipITs>${skipITs}</skipITs>
 				</configuration>
@@ -90,7 +89,6 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
-				<version>${exec.maven.plugin}</version>
 				<configuration>
 					<skip>${skipITs}</skip>
 				</configuration>
