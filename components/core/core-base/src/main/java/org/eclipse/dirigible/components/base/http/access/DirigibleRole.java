@@ -26,8 +26,8 @@ public enum DirigibleRole {
 
     @SuppressWarnings("hiding")
     public static class RoleNames {
-        public static final String OPERATOR = "OPERATOR";
-        public static final String DEVELOPER = "DEVELOPER";
+        public static final String OPERATOR = "Operator";
+        public static final String DEVELOPER = "Developer";
 
     }
 }
