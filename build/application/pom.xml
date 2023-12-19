@@ -210,7 +210,7 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-mongodb-jdbc</artifactId>
@@ -251,6 +251,12 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.graalvm.buildtools</groupId>
+				<artifactId>native-maven-plugin</artifactId>
+				<version>0.9.28</version>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
@@ -290,6 +296,71 @@
 			</resource>
 		</resources>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>native</id>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-jar-plugin</artifactId>
+							<configuration>
+								<archive>
+									<manifestEntries>
+										<Spring-Boot-Native-Processed>true</Spring-Boot-Native-Processed>
+									</manifestEntries>
+								</archive>
+							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.springframework.boot</groupId>
+							<artifactId>spring-boot-maven-plugin</artifactId>
+							<configuration>
+								<image>
+									<builder>
+										paketobuildpacks/builder-jammy-tiny:latest</builder>
+									<env>
+										<BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+									</env>
+								</image>
+							</configuration>
+							<executions>
+								<execution>
+									<id>process-aot</id>
+									<goals>
+										<goal>process-aot</goal>
+									</goals>
+								</execution>
+							</executions>
+						</plugin>
+						<plugin>
+							<groupId>org.graalvm.buildtools</groupId>
+							<artifactId>native-maven-plugin</artifactId>
+							<version>0.9.28</version>
+							<configuration>
+								<classesDirectory>
+									${project.build.outputDirectory}</classesDirectory>
+								<metadataRepository>
+									<enabled>true</enabled>
+								</metadataRepository>
+								<requiredVersion>22.3</requiredVersion>
+							</configuration>
+							<executions>
+								<execution>
+									<id>add-reachability-metadata</id>
+									<goals>
+										<goal>add-reachability-metadata</goal>
+									</goals>
+								</execution>
+							</executions>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+	</profiles>
 
 	<properties>
 		<license.header.location>../../licensing-header.txt</license.header.location>
