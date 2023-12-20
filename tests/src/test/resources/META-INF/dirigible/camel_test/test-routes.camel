@@ -1,0 +1,33 @@
+- route:
+    id: route-e308
+    from:
+      uri: platform-http:/camelTest
+      id: from-48ea
+      steps:
+        - setProperty:
+            name: resource
+            id: setProperty-8ed5
+            expression:
+              constant:
+                expression: camel_test/calledFromCamel.js
+                id: constant-f4ba
+        - to:
+            uri: class:org.eclipse.dirigible.components.engine.camel.invoke.Invoker
+            id: to-5fb3
+            parameters:
+              method: invoke
+- route:
+    id: route-bda8
+    from:
+      uri: direct:inbound1
+      id: from-3850
+      steps:
+        - log:
+            message: '[CamelTest] Route inbound1 called with message: ${body}'
+            id: log-be9c
+        - setBody:
+            id: setBody-0552
+            expression:
+              simple:
+                expression: ${body} -> camel route inbound1 handled this message
+                id: simple-57b6

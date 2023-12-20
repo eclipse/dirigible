@@ -23,6 +23,8 @@ import java.util.Map;
 @Component
 public class Invoker {
 
+    private DirigibleJavascriptCodeRunner runner;
+
     private final CamelProcessor processor;
 
     @Autowired
@@ -30,18 +32,37 @@ public class Invoker {
         this.processor = processor;
     }
 
-    public void invoke(Message camelMessage) {
+    public Object invoke(Message camelMessage) {
+        resetCodeRunner();
         String resourcePath = (String) camelMessage.getExchange()
                                                    .getProperty("resource");
         String messageBody = camelMessage.getBody(String.class);
-        try (var runner = new DirigibleJavascriptCodeRunner()) {
-            var module = runner.run(Path.of(resourcePath));
-            runner.runMethod(module, "onMessage", messageBody);
+
+        var module = runner.run(Path.of(resourcePath));
+        var result = runner.runMethod(module, "onMessage", messageBody);
+
+        if (result.isNull()) {
+            return Void.TYPE;
+        } else if (result.isException()) {
+            throw result.throwException();
+        } else {
+            return result.as(Object.class);
         }
+    }
+
+    private void resetCodeRunner() {
+        close();
+        runner = new DirigibleJavascriptCodeRunner();
     }
 
     @CalledFromJS
     public Object invokeRoute(String routeId, Object payload, Map<String, Object> headers) {
         return processor.invokeRoute(routeId, payload, headers);
+    }
+
+    public void close() {
+        if (runner != null) {
+            runner.close();
+        }
     }
 }
