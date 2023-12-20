@@ -11,12 +11,15 @@
 package org.eclipse.dirigible.components.engine.camel.invoke;
 
 import org.apache.camel.Message;
+import org.apache.camel.component.platform.http.springboot.PlatformHttpMessage;
 import org.eclipse.dirigible.components.engine.camel.processor.CamelProcessor;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.javascript.CalledFromJS;
+import org.graalvm.polyglot.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
 
@@ -32,21 +35,36 @@ public class Invoker {
         this.processor = processor;
     }
 
-    public Object invoke(Message camelMessage) {
+    public void invoke(Message camelMessage) throws IOException {
         resetCodeRunner();
         String resourcePath = (String) camelMessage.getExchange()
                                                    .getProperty("resource");
-        String messageBody = camelMessage.getBody(String.class);
 
         var module = runner.run(Path.of(resourcePath));
-        var result = runner.runMethod(module, "onMessage", messageBody);
+        var result = runner.runMethod(module, "onMessage", wrapCamelMessage(camelMessage));
 
-        if (result.isNull()) {
-            return Void.TYPE;
-        } else if (result.isException()) {
-            throw result.throwException();
+        camelMessage.getExchange()
+                    .setMessage(unwrapCamelMessage(result));
+    }
+
+    private Value wrapCamelMessage(Message camelMessage) {
+        var context = runner.getCodeRunner()
+                            .getGraalContext();
+        context.eval("js", "const IntegrationMessage = require( \"integrations\").IntegrationMessage");
+        context.getBindings("js")
+               .putMember("camelMessage", camelMessage);
+        Value wrappedCamelMessage = context.eval("js", " new IntegrationMessage(camelMessage)");
+        context.getBindings("js")
+               .removeMember("camelMessage");
+        return wrappedCamelMessage;
+    }
+
+    private Message unwrapCamelMessage(Value wrappedCamelMessage) {
+        if (!wrappedCamelMessage.isNull() && wrappedCamelMessage.canInvokeMember("getCamelMessage")) {
+            return wrappedCamelMessage.invokeMember("getCamelMessage")
+                                      .as(Message.class);
         } else {
-            return result.as(Object.class);
+            throw new IllegalStateException("Unexpected @dirigible/integrations onMessage() return type");
         }
     }
 
