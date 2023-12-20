@@ -16,7 +16,7 @@
 import * as configurations from "@dirigible/core/configurations";
 const JobFacade = Java.type("org.eclipse.dirigible.components.api.job.JobFacade");
 
-export function getJobs() {
+export function getJobs(): Array<Job> {
     let jobs = new Array();
     let list = JSON.parse(JobFacade.getJobs());
     for (let i in list) {
@@ -27,38 +27,38 @@ export function getJobs() {
     return jobs;
 };
 
-export function getJob(name) {
+export function getJob(name: string): Job {
     let jobData = JobFacade.getJob(name);
     let data = JSON.parse(jobData);
     let job = new Job(data);
     return job;
 };
 
-export function enable(name) {
+export function enable(name: string): void{
     JobFacade.enable(name);
 };
 
-export function disable(name) {
+export function disable(name: string): void {
     JobFacade.disable(name);
 };
 
-export function trigger(name, parameters) {
+export function trigger(name: string, parameters: Object): void {
     JobFacade.trigger(name, JSON.stringify(parameters));
 };
 
-export function log(name, message) {
+export function log(name: string, message: string): void {
     JobFacade.log(name, message);
 };
 
-export function error(name, message) {
+export function error(name: string, message: string): void {
     JobFacade.error(name, message);
 };
 
-export function warn(name, message) {
+export function warn(name: string, message: string): void {
     JobFacade.warn(name, message);
 };
 
-export function info(name, message) {
+export function info(name: string, message: string): void {
     JobFacade.info(name, message);
 };
 
@@ -69,55 +69,55 @@ class Job {
 
     constructor(private data) { }
 
-    getName() {
+    public getName() {
         return this.data.name;
     };
 
-    getGroup() {
+    public getGroup() {
         return this.data.group;
     };
 
-    getClazz() {
+    public getClazz() {
         return this.data.clazz;
     };
 
-    getDescription() {
+    public getDescription() {
         return this.data.description;
     };
 
-    getExpression() {
+    public getExpression() {
         return this.data.expression;
     };
 
-    getHandler() {
+    public getHandler() {
         return this.data.handler;
     };
 
-    getEngine() {
+    public getEngine() {
         return this.data.engine;
     };
 
-    getSingleton() {
+    public getSingleton() {
         return this.data.singleton;
     };
 
-    getEnabled() {
+    public getEnabled() {
         return this.data.enabled;
     };
 
-    getCreatedBy() {
+    public getCreatedBy() {
         return this.data.createdBy;
     };
 
-    getCreatedAt() {
+    public getCreatedAt() {
         return this.data.createdAt;
     };
 
-    getParameters() {
+    public getParameters() {
         return new JobParameters(this.data.parameters);
     };
 
-    getParameter(name) {
+    public getParameter(name) {
         if (this.data) {
             for (let i in this.data.parameters) {
                 if (this.data.parameters[i].name === name) {
@@ -131,31 +131,31 @@ class Job {
         return null;
     };
 
-    enable() {
+    public enable() {
         JobFacade.enable(this.getName());
     };
 
-    disable() {
+    public disable() {
         JobFacade.disable(this.getName());
     };
 
-    trigger(parameters) {
+    public trigger(parameters) {
         JobFacade.trigger(this.getName(), JSON.stringify(parameters));
     };
 
-    log(message) {
+    public log(message) {
         JobFacade.log(this.getName(), message);
     };
 
-    error(message) {
+    public error(message) {
         JobFacade.error(this.getName(), message);
     };
 
-    warn(message) {
+    public warn(message) {
         JobFacade.warn(this.getName(), message);
     };
 
-    info(message) {
+    public info(message) {
         JobFacade.info(this.getName(), message);
     };
 
@@ -168,11 +168,11 @@ class JobParameters {
 
     constructor(private data) { }
 
-    get(i) {
+    public get(i) {
         return new JobParameter(this.data[i]);
     };
 
-    count() {
+    public count() {
         return this.data.length;
     };
 
@@ -185,23 +185,23 @@ class JobParameter {
 
     constructor(private data) { }
 
-    getName() {
+    public getName() {
         return this.data.name;
     };
 
-    getDescription() {
+    public getDescription() {
         return this.data.description;
     };
 
-    getType() {
+    public getType() {
         return this.data.type;
     };
 
-    getDefaultValue() {
+    public getDefaultValue() {
         return this.data.defaultValue;
     };
 
-    getChoices() {
+    public getChoices() {
         return this.data.choices;
     };
 
