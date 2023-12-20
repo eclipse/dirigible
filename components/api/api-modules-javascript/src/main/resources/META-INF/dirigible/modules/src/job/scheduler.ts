@@ -69,55 +69,55 @@ class Job {
 
     constructor(private data) { }
 
-    public getName() {
+    public getName(): string {
         return this.data.name;
     };
 
-    public getGroup() {
+    public getGroup(): string {
         return this.data.group;
     };
 
-    public getClazz() {
+    public getClazz(): string {
         return this.data.clazz;
     };
 
-    public getDescription() {
+    public getDescription(): string {
         return this.data.description;
     };
 
-    public getExpression() {
+    public getExpression(): string {
         return this.data.expression;
     };
 
-    public getHandler() {
+    public getHandler(): string {
         return this.data.handler;
     };
 
-    public getEngine() {
+    public getEngine(): string {
         return this.data.engine;
     };
 
-    public getSingleton() {
+    public getSingleton(): boolean {
         return this.data.singleton;
     };
 
-    public getEnabled() {
+    public getEnabled(): boolean {
         return this.data.enabled;
     };
 
-    public getCreatedBy() {
+    public getCreatedBy(): string {
         return this.data.createdBy;
     };
 
-    public getCreatedAt() {
+    public getCreatedAt(): number {
         return this.data.createdAt;
     };
 
-    public getParameters() {
+    public getParameters(): JobParameters {
         return new JobParameters(this.data.parameters);
     };
 
-    public getParameter(name) {
+    public getParameter(name): string {
         if (this.data) {
             for (let i in this.data.parameters) {
                 if (this.data.parameters[i].name === name) {
@@ -131,31 +131,31 @@ class Job {
         return null;
     };
 
-    public enable() {
+    public enable(): void {
         JobFacade.enable(this.getName());
     };
 
-    public disable() {
+    public disable(): void {
         JobFacade.disable(this.getName());
     };
 
-    public trigger(parameters) {
+    public trigger(parameters): void {
         JobFacade.trigger(this.getName(), JSON.stringify(parameters));
     };
 
-    public log(message) {
+    public log(message): void {
         JobFacade.log(this.getName(), message);
     };
 
-    public error(message) {
+    public error(message): void {
         JobFacade.error(this.getName(), message);
     };
 
-    public warn(message) {
+    public warn(message): void {
         JobFacade.warn(this.getName(), message);
     };
 
-    public info(message) {
+    public info(message): void {
         JobFacade.info(this.getName(), message);
     };
 
@@ -168,11 +168,11 @@ class JobParameters {
 
     constructor(private data) { }
 
-    public get(i) {
+    public get(i): JobParameter {
         return new JobParameter(this.data[i]);
     };
 
-    public count() {
+    public count(): number {
         return this.data.length;
     };
 
@@ -185,23 +185,23 @@ class JobParameter {
 
     constructor(private data) { }
 
-    public getName() {
+    public getName(): string {
         return this.data.name;
     };
 
-    public getDescription() {
+    public getDescription(): string {
         return this.data.description;
     };
 
-    public getType() {
+    public getType(): string {
         return this.data.type;
     };
 
-    public getDefaultValue() {
+    public getDefaultValue(): string {
         return this.data.defaultValue;
     };
 
-    public getChoices() {
+    public getChoices(): string[] {
         return this.data.choices;
     };
 
