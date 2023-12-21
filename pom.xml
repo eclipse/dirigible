@@ -71,7 +71,7 @@
 	<description>Dirigible Parent</description>
 	<groupId>org.eclipse.dirigible</groupId>
 	<artifactId>dirigible-parent</artifactId>
-	<version>9.0.0-SNAPSHOT</version>
+	<version>10.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<inceptionYear>2010</inceptionYear>
@@ -617,7 +617,7 @@
 		<ngdbc.version>2.19.15</ngdbc.version>
 
 		<jsr250-api.version>1.0</jsr250-api.version>
-		<lucene.version>9.9.0</lucene.version>
+		<lucene.version>9.9.1</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
 		<flowable.version>6.8.0</flowable.version>
 		<jaxb.version>2.3.0</jaxb.version>
@@ -658,7 +658,7 @@
 
 		<spring.boot.version>2.7.18</spring.boot.version>
 
-		<keycloak.keycloak-spring-boot-starter>23.0.2</keycloak.keycloak-spring-boot-starter>
+		<keycloak.keycloak-spring-boot-starter>23.0.3</keycloak.keycloak-spring-boot-starter>
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<graalvm.version>23.1.1</graalvm.version>
 		<guava.version>32.1.3-jre</guava.version>
@@ -667,7 +667,7 @@
 		<wikitext.version>3.0.48.202308291007</wikitext.version>
 		<flexmark.version>0.64.8</flexmark.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.619</qldb.sdk.version>
+		<qldb.sdk.version>1.12.620</qldb.sdk.version>
 		<camel.version>3.21.2</camel.version>
 		<ftpserver.version>1.2.0</ftpserver.version>
 
