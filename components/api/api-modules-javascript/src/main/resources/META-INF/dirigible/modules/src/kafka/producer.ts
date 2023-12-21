@@ -12,19 +12,19 @@
 
 const KafkaFacade = Java.type("org.eclipse.dirigible.components.api.kafka.KafkaFacade");
 
-export function topic(destination, configuration) {
+export function topic(destination: string, configuration: string): Topic {
     return new Topic(destination, configuration);
 };
 
-export function close(configuration) {
+export function close(configuration: string): void {
     KafkaFacade.closeProducer(configuration);
 };
 
 class Topic {
 
-    constructor(private destination, private configuration) { }
+    constructor(private destination: string, private configuration: string) { }
 
-    send(key, value) {
+    public send(key:string, value: string) {
         KafkaFacade.send(this.destination, key, value, this.configuration);
     };
 };
