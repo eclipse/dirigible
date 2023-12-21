@@ -11,8 +11,8 @@
 package org.eclipse.dirigible.components.engine.cms.s3.repository;
 
 import org.eclipse.dirigible.components.api.s3.S3Facade;
-import org.eclipse.dirigible.components.engine.cms.CmisConstants;
 import org.eclipse.dirigible.components.engine.cms.CmisSession;
+import org.eclipse.dirigible.repository.api.IRepository;
 
 import java.io.IOException;
 
@@ -83,20 +83,23 @@ public class CmisS3Session implements CmisSession {
      */
     @Override
     public CmisS3Object getObject(String id) throws IOException {
-        CmisS3Object cmisObject = new CmisS3Object(this, id);
-        //TODO with S3Facade check if entity with path(a.excel;a/b.excel) exists
-//        if (!S3Facade.exists(id)) {
-//            throw new IOException(String.format("Object with id: %s does not exist", id));
-//        }
-        if (CmisConstants.OBJECT_TYPE_FOLDER.equals(cmisObject.getType().getId())) {
-            // id is string with eg "a.txt"
-            return new CmisS3Folder(this, id);
-        } else if (CmisConstants.OBJECT_TYPE_DOCUMENT.equals(cmisObject.getType().getId())) {
-            // id is string with eg. "test.txt"
-            return new CmisS3Document(this, id);
+        String path = id;
+        if (path.equals("/")) {
+            return new CmisS3Folder(this, id, path);
         }
-        // a/b/c/
-        return cmisObject;
+        if (!path.startsWith("/")) {
+            path = IRepository.SEPARATOR + id;
+        }
+        if (S3Facade.exists(path)) {
+            if (path.endsWith("/")) {
+                return new CmisS3Folder(this, path, CmisS3Utils.findCurrentFolder(path));
+            } else {
+                return new CmisS3Document(this, path, CmisS3Utils.findCurrentFile(path));
+            }
+        } else if (S3Facade.exists(path + "/")) {
+            return new CmisS3Folder(this, path, CmisS3Utils.findCurrentFolder(path + "/"));
+        }
+        return new CmisS3Document(this, id, id);
     }
 
     /**
@@ -108,7 +111,11 @@ public class CmisS3Session implements CmisSession {
      */
     @Override
     public CmisS3Object getObjectByPath(String path) throws IOException {
+        // Just for debugging
+//        if(!path.equals("__internal/roles-access.json")) {
+//            return getObject(path);
+//        }
+//        return new CmisS3Object(this, "/", "/");
         return getObject(path);
     }
-
 }

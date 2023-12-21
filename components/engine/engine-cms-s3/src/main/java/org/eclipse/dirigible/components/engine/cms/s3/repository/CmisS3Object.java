@@ -30,49 +30,36 @@ public class CmisS3Object implements CmisObject {
     private CmisS3Session session;
 
     /**
-     * The internal entity.
-     */
-    private String internalEntity;
-
-    /**
      * The type collection.
      */
     private boolean typeCollection = false;
 
     /**
+     * The id/path of the object.
+     */
+    private String id;
+
+    private String name;
+
+    /**
      * Instantiates a new cmis object.
      *
      * @param session the session
-     * @param path    the path
+     * @param id    the path
+     * @param name the name
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    // Example:
-    // a/b/c/x.doc
-    // a/b/y.doc
-    // a/z.doc
-    // search for a/ -> b; z.doc
-    //TODO check if trailing / and isEmpty() is folder else document
-    //id = path
-    //name = last string after /
-    public CmisS3Object(CmisS3Session session, String path) throws IOException {
+    public CmisS3Object(CmisS3Session session, String id, String name) throws IOException {
         super();
         this.session = session;
-        path = sanitize(path);
-        this.internalEntity = path;
-        if (path.endsWith("/")) {
+        id = sanitize(id);
+        this.id = id;
+        this.name = name;
+        if (id.endsWith("/")) {
             this.typeCollection = true;
         } else {
             this.typeCollection = false;
         }
-    }
-
-    /**
-     * Gets the internal entity.
-     *
-     * @return the internal entity
-     */
-    public String getInternalEntity() {
-        return internalEntity;
     }
 
     /**
@@ -102,7 +89,7 @@ public class CmisS3Object implements CmisObject {
      */
     @Override
     public String getId() {
-        return this.getInternalEntity();
+        return this.id;
     }
 
     /**
@@ -112,7 +99,7 @@ public class CmisS3Object implements CmisObject {
      */
     @Override
     public String getName() {
-        return this.getInternalEntity();
+        return this.name;
     }
 
     /**
@@ -132,7 +119,12 @@ public class CmisS3Object implements CmisObject {
      */
     @Override
     public void delete() throws IOException {
-        S3Facade.delete(this.getInternalEntity());
+        String cmisPath = this.id.substring(1);
+        if(this.typeCollection){
+            S3Facade.deleteFolder(cmisPath);
+        }else {
+            S3Facade.delete(cmisPath);
+        }
     }
 
     /**
@@ -155,7 +147,7 @@ public class CmisS3Object implements CmisObject {
     @Override
     public void rename(String newName) throws IOException {
         //TODO see how to rename from S3Facade
-        //this.getInternalEntity().renameTo(newName);
+        //S3Facade.update();
     }
 
 }

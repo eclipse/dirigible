@@ -32,11 +32,9 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
      */
     private CmisS3Session session;
 
-    /**
-     * The internal folder.
-     */
+    private String id;
 
-    private String internalFolder;
+    private String name;
 
     /**
      * Is root folder.
@@ -55,29 +53,12 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public CmisS3Folder(CmisS3Session session) throws IOException {
-        super(session, IRepository.SEPARATOR);
+        super(session, IRepository.SEPARATOR, IRepository.SEPARATOR);
         this.session = session;
-        this.internalFolder = ROOT;
+        this.id = ROOT;
+        this.name = ROOT;
         this.rootFolder = true;
     }
-
-//    /**
-//     * Instantiates a new folder.
-//     *
-//     * @param session the session
-//     * @param internalCollection the internal collection
-//     * @throws IOException Signals that an I/O exception has occurred.
-//     */
-//    public CmisS3Folder(CmisS3Session session, ICollection internalCollection) throws IOException {
-//        super(session, internalCollection.getPath());
-//        if (IRepository.SEPARATOR.equals(internalCollection.getPath())) {
-//            this.rootFolder = true;
-//        }
-//        this.session = session;
-//        // this.repository = (IRepository) session.getCmisRepository()
-//        // .getInternalObject();
-//        this.internalFolder = internalCollection;
-//    }
 
     /**
      * Instantiates a new folder.
@@ -86,23 +67,15 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
      * @param id      the id
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public CmisS3Folder(CmisS3Session session, String id) throws IOException {
-        super(session, id);
+    public CmisS3Folder(CmisS3Session session, String id, String name) throws IOException {
+        super(session, id, name);
         id = sanitize(id);
         if (IRepository.SEPARATOR.equals(id)) {
             this.rootFolder = true;
         }
         this.session = session;
-        this.internalFolder = id;
-    }
-
-    /**
-     * Gets the internal folder.
-     *
-     * @return the internal folder
-     */
-    public String getInternalFolder() {
-        return internalFolder;
+        this.id = id;
+        this.name = name;
     }
 
     /**
@@ -122,8 +95,11 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
      */
     @Override
     public String getPath() {
-        //TODO check again what path we might get, probably just name/id
-        return this.getInternalEntity();
+        return this.id;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     /**
@@ -136,17 +112,15 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
     public CmisS3Folder createFolder(Map<String, String> properties) throws IOException {
         String folderName;
         String name = properties.get(CmisConstants.NAME);
-        if (!Objects.equals(this.internalFolder, ROOT)) {
-            String fromRootPath = this.internalFolder + name + IRepository.SEPARATOR;
-
-            //remove root "/" as it interferes with the UI
+        if (!Objects.equals(this.id, ROOT)) {
+            String fromRootPath = this.id + name + IRepository.SEPARATOR;
             folderName = fromRootPath.startsWith(IRepository.SEPARATOR) ? fromRootPath.substring(1) : fromRootPath;
-            S3Facade.put(folderName, new byte[0]);
-            return new CmisS3Folder(this.session, fromRootPath);
+            S3Facade.put(folderName, new byte[0], "");
+            return new CmisS3Folder(this.session, fromRootPath, folderName);
         } else {
             folderName = name + IRepository.SEPARATOR;
-            S3Facade.put(folderName, new byte[0]);
-            return new CmisS3Folder(this.session, folderName);
+            S3Facade.put(folderName, new byte[0], "");
+            return new CmisS3Folder(this.session, folderName, folderName);
         }
     }
 
@@ -165,15 +139,15 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         IOUtils.copy(contentStream.getStream(), out);
         String folderName;
-        if (!Objects.equals(this.internalFolder, ROOT)) {
-            String fromRootPath = this.internalFolder + name;
+        if (!Objects.equals(this.id, ROOT)) {
+            String fromRootPath = this.id + name;
             folderName = fromRootPath.startsWith(IRepository.SEPARATOR) ? fromRootPath.substring(1) : fromRootPath;
-            S3Facade.put(folderName, out.toByteArray());
+            S3Facade.put(folderName, out.toByteArray(), contentStream.getMimeType());
         } else {
-            folderName = this.internalFolder + name;
-            S3Facade.put(folderName, out.toByteArray());
+            folderName = this.id + name;
+            S3Facade.put(folderName, out.toByteArray(), contentStream.getMimeType());
         }
-        return new CmisS3Document(this.session, folderName);
+        return new CmisS3Document(this.session, IRepository.SEPARATOR + folderName, name);
     }
 
     /**
@@ -186,22 +160,24 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
         List<CmisS3Object> children = new ArrayList<CmisS3Object>();
 
         String path;
-        if (this.internalFolder.startsWith(IRepository.SEPARATOR) && this.internalFolder.length() > 1) {
-            path = this.internalFolder.substring(1);
+        if (this.id.startsWith(IRepository.SEPARATOR) && this.id.length() > 1) {
+            path = this.id.substring(1);
         } else {
-            path = this.internalFolder;
+            path = this.id;
         }
 
         List<S3Object> s3CurrentFolderObjects = S3Facade.listObjects(path);
-
         for (S3Object s3Object : s3CurrentFolderObjects) {
-            if (s3Object.key().equals(path)) {
-                return children;
-            }
-            if (s3Object.key().endsWith(IRepository.SEPARATOR)) {
-                children.add(new CmisS3Folder(this.session, s3Object.key()));
-            } else {
-                children.add(new CmisS3Document(this.session, s3Object.key()));
+            int segmentsPath = CmisS3Utils.pathSegmentsLength(path);
+            int segmentsObject = CmisS3Utils.pathSegmentsLength(s3Object.key());
+            if (segmentsObject == segmentsPath + 1) {
+                if (s3Object.key().endsWith(IRepository.SEPARATOR)) {
+                    if (!s3Object.key().equals(path)) {
+                        children.add(new CmisS3Folder(this.session, this.id, CmisS3Utils.findCurrentFolder((s3Object.key()))));
+                    }
+                } else {
+                    children.add(new CmisS3Document(this.session, this.id, CmisS3Utils.findCurrentFile(s3Object.key())));
+                }
             }
         }
         return children;
@@ -224,45 +200,9 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
      * @throws IOException IO Exception
      */
     public CmisS3Folder getFolderParent() throws IOException {
-        if (findParentFolder(this.internalFolder) != null) {
-            return new CmisS3Folder(this.session, findParentFolder(this.internalFolder));
+        if (CmisS3Utils.findParentFolder(this.id) != null) {
+            return new CmisS3Folder(this.session, this.id, CmisS3Utils.findCurrentFolder(this.id));
         }
         return new CmisS3Folder(this.session);
     }
-
-    private static String findParentFolder(String folderPath) {
-        if (Objects.equals(folderPath, ROOT)) {
-            return null;
-        }
-
-        String[] parts = folderPath.split(IRepository.SEPARATOR);
-        if (parts.length >= 3) {
-            int secondToLastIndex = parts.length - 2;
-            return parts[secondToLastIndex] + IRepository.SEPARATOR;
-        } else {
-            return IRepository.SEPARATOR;
-        }
-    }
-
-//    private String findParentFolder(String folderPath) {
-//        String[] pathElements = folderPath.split("/");
-//
-//        if (folderPath.equals("/")) {
-//            return "/";
-//        }
-//
-//        // Find the last non-empty element without using a for loop
-//        String secondToLastElement = Arrays.stream(pathElements)
-//                .filter(s -> !s.isEmpty())
-//                .skip(Math.max(0, pathElements.length - 2)) // Skip to the second-to-last element
-//                .findFirst()
-//                .orElse(null);
-//
-//        if (secondToLastElement == null) {
-//            return null;
-//        }
-//
-//        return secondToLastElement + "/";
-//    }
-
 }

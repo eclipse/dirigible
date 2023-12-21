@@ -27,26 +27,9 @@ public class CmisS3Document extends CmisS3Object implements CmisDocument {
      */
     private CmisS3Session session;
 
-    private String internalResource;
+    private String id;
 
-    /**
-     * The internal resource.
-     */
-    private S3Facade s3Facade;
-
-//        /**
-//     * Instantiates a new document.
-//     *
-//     * @param session the session
-//     * @param internalResource the internal resource
-//     * @throws IOException Signals that an I/O exception has occurred.
-//     */
-//    public CmisS3Document(CmisS3Session session, IResource internalResource) throws IOException {
-//        super(session, internalResource.getPath());
-//        this.session = session;
-//        this.repository = (IRepository) session.getCmisRepository().getInternalObject();
-//        this.internalResource = internalResource;
-//    }
+    private String name;
 
     /**
      * Instantiates a new document.
@@ -55,21 +38,13 @@ public class CmisS3Document extends CmisS3Object implements CmisDocument {
      * @param id      the idx
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public CmisS3Document(CmisS3Session session, String id) throws IOException {
-        super(session, id);
+    public CmisS3Document(CmisS3Session session, String id, String name) throws IOException {
+        super(session, id, name);
         id = sanitize(id);
         this.session = session;
-        this.internalResource = id;
+        this.id = id;
+        this.name = name;
     }
-
-//    /**
-//     * Gets the internal folder.
-//     *
-//     * @return the internal folder
-//     */
-//    public IResource getInternalFolder() {
-//        return internalResource;
-//    }
 
     /**
      * Checks if is collection.
@@ -88,10 +63,9 @@ public class CmisS3Document extends CmisS3Object implements CmisDocument {
      * @throws IOException IO Exception
      */
     public CmisS3ContentStream getContentStream() throws IOException {
-        byte[] content = s3Facade.get(this.internalResource);
-        String contentType = getContentType(this.internalResource);
-        String name = getResourceName(this.internalResource);
-        return new CmisS3ContentStream(session, name, content.length, contentType,
+        byte[] content = S3Facade.get(this.id.substring(1));
+        String contentType = getContentType(this.id.substring(1));
+        return new CmisS3ContentStream(session, this.name, content.length, contentType,
                 new ByteArrayInputStream(content));
     }
 
@@ -101,14 +75,14 @@ public class CmisS3Document extends CmisS3Object implements CmisDocument {
      * @return the path
      */
     public String getPath() {
-        return this.internalResource;
+        return this.id;
     }
 
     private String getContentType(String resource) {
-        return FilenameUtils.getExtension(resource);
+        return S3Facade.getObjectContentType(resource);
     }
 
     private String getResourceName(String resource) {
-        return FilenameUtils.getName(resource);
+        return this.name;
     }
 }

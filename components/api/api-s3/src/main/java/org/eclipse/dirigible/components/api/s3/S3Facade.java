@@ -6,24 +6,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.s3.paginators.ListObjectsV2Iterable;
 import software.amazon.awssdk.transfer.s3.S3TransferManager;
 import software.amazon.awssdk.transfer.s3.model.DirectoryUpload;
 import software.amazon.awssdk.transfer.s3.model.UploadDirectoryRequest;
-import software.amazon.awssdk.utils.IoUtils;
 
 import java.io.*;
 import java.net.URI;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -45,12 +45,18 @@ public class S3Facade implements InitializingBean {
 
     static {
         AwsBasicCredentials credentials = AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
-        s3 = S3Client.builder()
-                //for local testing with localstack
-                //.endpointOverride(URI.create("https://s3.localhost.localstack.cloud:4566"))
-                .region(AWS_DEFAULT_REGION)
-                .credentialsProvider(StaticCredentialsProvider.create(credentials))
-                .build();
+        if (Configuration.get("DIRIGIBLE_S3_PROVIDER").equals("aws")) {
+            s3 = S3Client.builder()
+                    .region(AWS_DEFAULT_REGION)
+                    .credentialsProvider(StaticCredentialsProvider.create(credentials))
+                    .build();
+        } else if (Configuration.get("DIRIGIBLE_S3_PROVIDER").equals("localstack")) {
+            s3 = S3Client.builder()
+                    .region(AWS_DEFAULT_REGION)
+                    .endpointOverride(URI.create("https://s3.localhost.localstack.cloud:4566"))
+                    .credentialsProvider(StaticCredentialsProvider.create(credentials))
+                    .build();
+        }
     }
 
     @Override
@@ -62,13 +68,20 @@ public class S3Facade implements InitializingBean {
         return INSTANCE;
     }
 
-    public static void put(String name, byte[] input) throws IOException {
-
-        PutObjectRequest objectRequest = PutObjectRequest.builder()
-                .bucket(BUCKET)
-                .key(name)
-                .build();
-
+    public static void put(String name, byte[] input, String contentType) {
+        PutObjectRequest objectRequest;
+        if (name.endsWith("/")) {
+            objectRequest = PutObjectRequest.builder()
+                    .bucket(BUCKET)
+                    .key(name)
+                    .build();
+        } else {
+            objectRequest = PutObjectRequest.builder()
+                    .bucket(BUCKET)
+                    .key(name)
+                    .contentType(contentType)
+                    .build();
+        }
         s3.putObject(objectRequest, RequestBody.fromBytes(input));
     }
 
@@ -111,19 +124,8 @@ public class S3Facade implements InitializingBean {
 
     public static void update(String name, byte[] inputStream) throws IOException {
         // will upload the updated object to S3, overwriting the existing object
-        put(name, inputStream);
-    }
-
-    public static List<S3Object> listObjectsInRoot() {
-        ListObjectsV2Request listObjectsV2Request = ListObjectsV2Request.builder()
-                .bucket(BUCKET)
-                .build();
-        ListObjectsV2Response listObjectsV2Response = s3.listObjectsV2(listObjectsV2Request);
-
-        List<S3Object> contents = listObjectsV2Response.contents();
-
-        logger.info("Number of objects in the bucket: " + contents.stream().count());
-        return contents;
+        // TODO fix update
+        put(name, inputStream, "");
     }
 
     public static List<S3Object> listObjects(String path) {
@@ -160,15 +162,41 @@ public class S3Facade implements InitializingBean {
         s3Client.deleteObjects(deleteObjectsRequest);
     }
 
-    public static boolean exists(String name) {
-        List<S3Object> bucketObjects = listObjectsInRoot();
-
-        for (S3Object bucketObject : bucketObjects) {
-            if (bucketObject.key().equals(name)) {
-                return true;
-            }
+    public static boolean exists(String keyName) {
+        if (keyName.startsWith("/")) {
+            keyName = keyName.substring(1);
         }
-        return false;
+        try {
+            HeadObjectRequest objectRequest = HeadObjectRequest.builder()
+                    .key(keyName)
+                    .bucket(BUCKET)
+                    .build();
+
+            HeadObjectResponse objectHead = s3.headObject(objectRequest);
+            String type = objectHead.contentType();
+            return true;
+        } catch (S3Exception e) {
+            return false;
+        }
     }
 
+    public static String getObjectContentType(String keyName) {
+        if (keyName.startsWith("/")) {
+            keyName = keyName.substring(1);
+        }
+        try {
+            HeadObjectRequest objectRequest = HeadObjectRequest.builder()
+                    .key(keyName)
+                    .bucket(BUCKET)
+                    .build();
+
+            HeadObjectResponse objectHead = s3.headObject(objectRequest);
+
+            Map<String, String> as = objectHead.metadata();
+            return objectHead.contentType();
+        } catch (S3Exception e) {
+            logger.error(e.awsErrorDetails().errorMessage());
+            return "";
+        }
+    }
 }
