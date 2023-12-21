@@ -12,16 +12,25 @@
 
 const LogFacade = Java.type("org.eclipse.dirigible.components.api.log.LogFacade");
 
-export function getLogger(loggerName) {
+export function getLogger(loggerName: string) : {
+		setLevel: (level: string) => any;
+		log: (msg: string, level: string) => void;
+		debug: (msg: string, ..._: string[]) => void;
+		info: (msg: string, ..._: string[]) => void;
+		trace: (msg: string, ..._: string[]) => void;
+		warn: (msg: string, ..._: string[]) => void;
+		error: (msg: string, ..._: string[]) => void;
+	}
+{
 
 	//"at obj.f2 (:29:9)" - length 8
 	//"at :36:4"		  - length 8
 	//"at Error (native)" - length 6
 	const v8_stack_el_regex = /^\s*at ?(.*?) ((.*?)\s*(?:\()?(?:(.*?))(?::(\d+))?(?::(\d+))(?:\))?|\((native)\))$/;
-	const parseIntoStackTraceElementsV8 = function (stack) {
-		let lines = stack.split("\n");
+	const parseIntoStackTraceElementsV8 = function (stack: string): { fileName: string; lineNumber: string; declaringClass: any; methodName: string; }[] {
+		let lines_string = stack.split("\n");
 		let stackLineIdx = 0;
-		lines = lines.map(function (line) {
+		let lines = lines_string.map( line => {
 			if (stackLineIdx > 0 || line.trim().length < 1) {
 				const _segmenets = line.trim().match(v8_stack_el_regex);
 				if (_segmenets === null)
@@ -46,7 +55,7 @@ export function getLogger(loggerName) {
 			}
 			stackLineIdx++;
 			return;
-		}).filter(function (el) {
+		}).filter( (el) => {
 			return el !== undefined;
 		});
 		return lines;
@@ -78,7 +87,7 @@ export function getLogger(loggerName) {
 		//TODO
 	};
 
-	const resolveError = function (err) {
+	const resolveError = function (err: Error): { message: string, stack: any[] } {
 		let stack = [];
 		if (__engine === 'v8') {
 			stack = parseIntoStackTraceElementsV8(err.stack);
@@ -92,11 +101,11 @@ export function getLogger(loggerName) {
 	};
 
 	return {
-		setLevel: function(level){
+		setLevel: function(level: string) {
 			LogFacade.setLevel(loggerName, level);
 			return this;
 		},
-		log: function(msg, level){
+		log: function(msg: string, level: string): void{
 			const args = Array.prototype.slice.call(arguments);
 			let msgParameters = [];
 			let errObjectJson = null;
@@ -114,27 +123,27 @@ export function getLogger(loggerName) {
 			}
 			LogFacade.log(loggerName, level, msg, JSON.stringify(msgParameters), errObjectJson);
 		},
-		debug: function(msg, ..._){
+		debug: function(msg: string, ..._): void{
 			const args = Array.prototype.slice.call(arguments);
 			args.splice(1, 0, 'DEBUG');//insert DEBUG on second position in arguments array
 			this.log.apply(this, args);
 		},
-		info: function(msg, ..._){
+		info: function(msg: string, ..._): void{
 			const args = Array.prototype.slice.call(arguments);
 			args.splice(1, 0, 'INFO');//insert INFO on second position in arguments array
 			this.log.apply(this, args);
 		},
-		trace: function(msg, ..._){
+		trace: function(msg: string, ..._): void{
 			const args = Array.prototype.slice.call(arguments);
 			args.splice(1, 0, 'TRACE');//insert TRACE on second position in arguments array
 			this.log.apply(this, args);
 		},
-		warn: function(msg, ..._){
+		warn: function(msg: string, ..._): void{
 			const args = Array.prototype.slice.call(arguments);
 			args.splice(1, 0, 'WARN');//insert WARN on second position in arguments array
 			this.log.apply(this, args);
 		},
-		error: function(msg, ..._){
+		error: function(msg: string, ..._): void{
 			const args = Array.prototype.slice.call(arguments);
 			args.splice(1, 0, 'ERROR');//insert ERROR on second position in arguments array
 			this.log.apply(this, args);
