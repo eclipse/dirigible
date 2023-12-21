@@ -38,27 +38,29 @@ export function getAccessDefinitions(path, method) {
  */
 class Session {
 
-    constructor(private native) {}
+	constructor(public native: any) {
+		this.native = native;
+	}
 	
-	getRepositoryInfo() {
+	getRepositoryInfo(): RepositoryInfo {
 		var native = this.native.getRepositoryInfo();
 		var repositoryInfo = new RepositoryInfo(native);
 		return repositoryInfo;
 	};
 
-	getRootFolder() {
+	getRootFolder(): Folder {
 		var native = this.native.getRootFolder();
         var rootFolder = new Folder(native, null);
 		return rootFolder;
 	};
 
-	getObjectFactory() {
+	getObjectFactory(): ObjectFactory {
 		var native = this.native.getObjectFactory();
 		var objectFactory = new ObjectFactory(native);
 		return objectFactory;
 	};
 
-	getObject(objectId) {
+	getObject(objectId: number): Folder | Document {
 		var objectInstance = this.native.getObject(objectId);
 		var objectInstanceType = objectInstance.getType();
 		var objectInstanceTypeId = objectInstanceType.getId();
@@ -72,7 +74,7 @@ class Session {
 		throw new Error("Unsupported CMIS object type: " + objectInstanceTypeId);
 	};
 
-	getObjectByPath(path) {
+	getObjectByPath(path: string): Folder | Document {
 		var allowed = CmisFacade.isAllowed(path, CMIS_METHOD_READ);
 		if (!allowed) {
 			throw new Error("Read access not allowed on: " + path);
@@ -96,13 +98,15 @@ class Session {
  */
 class RepositoryInfo {
 
-    constructor(private native) {}
+	constructor(public native: any) {
+		this.native = native;
+	}
 
-	getId() {
+	getId(): number {
 		return this.native.getId();
 	};
 
-	getName() {
+	getName(): string {
 		return this.native.getName();
 	};
 }
@@ -112,17 +116,20 @@ class RepositoryInfo {
  */
 class Folder {
 
-    constructor(private native, private path) {}
+    constructor(public native: any, public path: any) {
+		this.native = native;
+		this.path = path;
+	}
 	
-	getId() {
+	getId(): number {
 		return this.native.getId();
 	};
 
-	getName() {
+	getName(): string {
 		return this.native.getName();
 	};
 
-	createFolder(properties) {
+	createFolder(properties): Folder {
 		var allowed = CmisFacade.isAllowed(this.getPath(), CMIS_METHOD_WRITE);
 		if (!allowed) {
 			throw new Error("Write access not allowed on: " + this.getPath());
@@ -138,7 +145,7 @@ class Folder {
 		return folder;
 	};
 
-	createDocument(properties, contentStream, versioningState) {
+	createDocument(properties, contentStream: ContentStream, versioningState): Document {
 		var allowed = CmisFacade.isAllowed(this.getPath(), CMIS_METHOD_WRITE);
 		if (!allowed) {
 			throw new Error("Write access not allowed on: " + this.getPath());
@@ -156,7 +163,7 @@ class Folder {
 		return document;
 	};
 
-	getChildren() {
+	getChildren(): Array<any> {
 		var allowed = CmisFacade.isAllowed(this.getPath(), CMIS_METHOD_READ);
 		if (!allowed) {
 			throw new Error("Read access not allowed on: " + this.getPath());
@@ -172,15 +179,15 @@ class Folder {
 		return children;
 	};
 
-	getPath() {
+	getPath(): string {
 		return this.path;
 	};
 
-	isRootFolder() {
+	isRootFolder(): boolean {
 		return this.native.isRootFolder();
 	};
 
-	getFolderParent() {
+	getFolderParent(): Folder {
 		var native = this.native.getFolderParent();
 		var folder = new Folder(native, null);
 		return folder;
@@ -194,7 +201,7 @@ class Folder {
 		return this.native.delete();
 	};
 
-	rename(newName) {
+	rename(newName: string) {
 		var allowed = CmisFacade.isAllowed(this.getPath(), CMIS_METHOD_WRITE);
 		if (!allowed) {
 			throw new Error("Write access not allowed on: " + this.getPath());
@@ -211,7 +218,7 @@ class Folder {
 		return this.native.deleteTree(true, unifiedObjectDelete, true);
 	};
 
-	getType() {
+	getType(): TypeDefinition {
 		var native = this.native.getType();
 		var type = new TypeDefinition(native);
 		return type;
@@ -223,17 +230,19 @@ class Folder {
  */
 class CmisObject {
 
-    constructor(private native) {}
+	constructor(public native: any) {
+		this.native = native;
+	}
 
-	getId() {
+	getId(): number {
 		return this.native.getId();
 	};
 
-	getName() {
+	getName(): string {
 		return this.native.getName();
 	};
 
-	getPath() {
+	getPath(): string {
 		//this is caused by having different underlying native objects in different environments.
 	    if (this.native.getPath) {
 	        return this.native.getPath();
@@ -247,7 +256,7 @@ class CmisObject {
 	    throw new Error(`Path not found for CmisObject with id ${this.getId()}`);
 	}
 
-	getType() {
+	getType(): TypeDefinition {
 		var native = this.native.getType();
 		var type = new TypeDefinition(native);
 		return type;
@@ -257,7 +266,7 @@ class CmisObject {
 		return this.native.delete();
 	};
 
-	rename(newName) {
+	rename(newName: string) {
 		return this.native.rename(newName);
 	};
 
@@ -268,9 +277,11 @@ class CmisObject {
  */
 class ObjectFactory {
 
-    constructor(private native) {}
+    constructor(public native: any) {
+		this.native = native;
+	}
 
-	createContentStream(filename, length, mimetype, inputStream) {
+	createContentStream(filename: string, length: number, mimetype: TypeDefinition, inputStream: streams.InputStream): ContentStream {
 		var native = this.native.createContentStream(filename, length, mimetype, inputStream.native);
 		var contentStream = new ContentStream(native);
 		return contentStream;
@@ -282,9 +293,11 @@ class ObjectFactory {
  */
 class ContentStream {
 
-    constructor(private native) {}
+	constructor(public native: any) {
+		this.native = native;
+	}
 
-	getStream() {
+	getStream(): streams.InputStream {
 		const native = this.native.getStream();
 		return new streams.InputStream(native);
 	};
@@ -299,23 +312,26 @@ class ContentStream {
  */
 class Document {
 
-    constructor(private native, private path) {}
+    constructor(public native: any, public path: string) {
+		this.native = native;
+		this.path = path;
+	}
 
-	getId() {
+	getId(): number {
 		return this.native.getId();
 	};
 
-	getName() {
+	getName(): string {
 		return this.native.getName();
 	};
 
-	getType() {
+	getType(): TypeDefinition {
         var native = this.native.getType();
 		var type = new TypeDefinition(native);
 		return type;
 	};
 
-	getPath() {
+	getPath(): string {
     	return this.path;
     };
 
@@ -327,7 +343,7 @@ class Document {
 		return this.native.delete(true);
 	};
 
-	getContentStream() {
+	getContentStream(): ContentStream {
 		var native = this.native.getContentStream();
 		if (native !== null) {
 			var contentStream = new ContentStream(native);
@@ -336,11 +352,11 @@ class Document {
 		return null;
 	};
 
-	getSize() {
+	getSize(): number {
 		return this.native.getSize();
 	};
 
-	rename(newName) {
+	rename(newName: string) {
 	    var allowed = CmisFacade.isAllowed(this.getPath(), CMIS_METHOD_WRITE);
     	    if (!allowed) {
     		throw new Error("Write access not allowed on: " + this.getPath());
@@ -351,12 +367,15 @@ class Document {
 
 class TypeDefinition {
 
-    constructor(private native) {}
+	constructor(public native: any) {
+		this.native = native;
+	}
 
-	getId() {
+	getId(): number {
 		return this.native.getId();
 	};
 }
+
 // CONSTANTS
 
 export const METHOD_READ = CMIS_METHOD_READ;
