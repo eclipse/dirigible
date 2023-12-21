@@ -30,7 +30,7 @@
 
 import * as Common from '../common/common.js';
 import * as Components from '../components/components.js';
-import * as Extensions from '../extensions/extensions.js';
+import {extensions as Extensions} from '../extensions';
 import * as Host from '../host/host.js';
 import * as SDK from '../sdk/sdk.js';
 import * as UI from '../ui/ui.js';

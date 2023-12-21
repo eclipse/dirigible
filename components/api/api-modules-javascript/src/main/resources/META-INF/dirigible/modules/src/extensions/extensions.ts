@@ -16,12 +16,17 @@
 
 const ExtensionsFacade = Java.type("org.eclipse.dirigible.components.api.extensions.ExtensionsFacade");
 
-export function getExtensions(extensionPoint) {
-	const extensions = ExtensionsFacade.getExtensions(extensionPoint);
-	return JSON.parse(JSON.stringify(extensions));
-};
+export class Extensions {
 
-export function getExtensionPoints() {
-	const extensionPoints = ExtensionsFacade.getExtensionPoints();
-	return JSON.parse(JSON.stringify(extensionPoints));
-};
+	public static getExtensions(extensionPoint: string): string[] {
+		const extensions = ExtensionsFacade.getExtensions(extensionPoint);
+		return JSON.parse(JSON.stringify(extensions));
+	};
+
+	
+	public static getExtensionPoints(): string[] {
+		const extensionPoints = ExtensionsFacade.getExtensionPoints();
+		return JSON.parse(JSON.stringify(extensionPoints));
+	};
+}
+	
