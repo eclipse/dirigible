@@ -36,6 +36,7 @@ The project started as an internal SAP initiative to address the extension and a
 	- [Run](#run)
 		- [Standalone](#standalone)
 		- [Docker](#docker)
+        - [Native image](#native-image)
   	- [Code formatting](#code-formatting)
   	- [Spring Boot Admin](#spring-boot-admin)
 - [Additional Information](#additional-information)
@@ -148,7 +149,6 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 5. Login with user: `admin` and password `admin`
 6. REST API description in an OpenAPI format can be found at: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html "http://localhost:8080/swagger-ui/index.html")
 
-
 #### Docker
 
 ##### Prerequisites
@@ -176,6 +176,27 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 3. Open a web browser and go to: [http://localhost:8080](http://localhost:8080 "http://localhost:8080")
 
 4. Optionally you can enhance and customize the Dockerfile from [here](https://github.com/eclipse/dirigible/blob/master/build/application/Dockerfile)
+
+#### Native image
+##### Prerequisites
+- [Install SDKMAN](https://sdkman.io)
+- Install GraalVM: `sdk install java 21.0.1-graal`
+- Make sure that `JAVA_HOME` and `PATH` env variables point to your graalvm jdk from the previous step
+
+##### Steps
+- Execute the following on your github repo root folder
+```
+# build dirigible fat jar
+mvn -T 1C clean install -D maven.test.skip=true -D skipTests -D maven.javadoc.skip=true -D license.skip=true
+
+rm -rf dirigible
+
+# build native image
+native-image -jar 'build/application/target/dirigible-application-10.0.0-SNAPSHOT-executable.jar' -o dirigible
+
+# start dirigible
+./dirigible
+```
 
 #### PostgreSQL
 
