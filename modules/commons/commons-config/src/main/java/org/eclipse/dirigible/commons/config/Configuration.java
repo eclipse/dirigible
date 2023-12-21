@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.commons.config;
 
 import static java.text.MessageFormat.format;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -21,7 +20,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -345,7 +343,7 @@ public class Configuration {
      * @return true, if the OAuth authentication is enabled
      */
     public static boolean isOAuthAuthenticationEnabled() {
-        return Boolean.parseBoolean(get("DIRIGIBLE_OAUTH_ENABLED", Boolean.FALSE.toString()));
+        return isActiveSpringProfile("oauth");
     }
 
     /**
@@ -354,7 +352,11 @@ public class Configuration {
      * @return true, if the Keycloak authentication is enabled
      */
     public static boolean isKeycloakModeEnabled() {
-        return Boolean.parseBoolean(get("DIRIGIBLE_KEYCLOAK_ENABLED", Boolean.FALSE.toString()));
+        return isActiveSpringProfile("keycloak");
+    }
+
+    private static boolean isActiveSpringProfile(String profile) {
+        return get("spring.profiles.active", "").contains(profile) || get("spring_profiles_active", "").contains(profile);
     }
 
     /**
@@ -440,10 +442,10 @@ public class Configuration {
     }
 
     /** The Constant CONFIGURATION_PARAMETERS. */
-    private static final String[] CONFIGURATION_PARAMETERS = new String[] {"DIRIGIBLE_ANONYMOUS_USER_NAME_PROPERTY_NAME",
-            "DIRIGIBLE_BRANDING_NAME", "DIRIGIBLE_BRANDING_BRAND", "DIRIGIBLE_BRANDING_ICON", "DIRIGIBLE_BRANDING_WELCOME_PAGE_DEFAULT",
-            "DIRIGIBLE_GIT_ROOT_FOLDER", "DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER", "DIRIGIBLE_REGISTRY_IMPORT_WORKSPACE",
-            "DIRIGIBLE_REPOSITORY_PROVIDER", "DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_NAME", "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER",
+    private static final String[] CONFIGURATION_PARAMETERS = {"DIRIGIBLE_ANONYMOUS_USER_NAME_PROPERTY_NAME", "DIRIGIBLE_BRANDING_NAME",
+            "DIRIGIBLE_BRANDING_BRAND", "DIRIGIBLE_BRANDING_ICON", "DIRIGIBLE_BRANDING_WELCOME_PAGE_DEFAULT", "DIRIGIBLE_GIT_ROOT_FOLDER",
+            "DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER", "DIRIGIBLE_REGISTRY_IMPORT_WORKSPACE", "DIRIGIBLE_REPOSITORY_PROVIDER",
+            "DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_NAME", "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER",
             "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER_IS_ABSOLUTE", "DIRIGIBLE_MASTER_REPOSITORY_PROVIDER",
             "DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER", "DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION", "DIRIGIBLE_MASTER_REPOSITORY_JAR_PATH",
             "DIRIGIBLE_REPOSITORY_SEARCH_ROOT_FOLDER", "DIRIGIBLE_REPOSITORY_SEARCH_ROOT_FOLDER_IS_ABSOLUTE",
@@ -488,8 +490,7 @@ public class Configuration {
             "DIRIGIBLE_EXEC_COMMAND_LOGGING_ENABLED", "DIRIGIBLE_TERMINAL_ENABLED", "DIRIGIBLE_MAIL_CONFIG_PROVIDER",
             "DIRIGIBLE_MAIL_USERNAME", "DIRIGIBLE_MAIL_PASSWORD", "DIRIGIBLE_MAIL_TRANSPORT_PROTOCOL", "DIRIGIBLE_MAIL_SMTPS_HOST",
             "DIRIGIBLE_MAIL_SMTPS_PORT", "DIRIGIBLE_MAIL_SMTPS_AUTH", "DIRIGIBLE_MAIL_SMTP_HOST", "DIRIGIBLE_MAIL_SMTP_PORT",
-            "DIRIGIBLE_MAIL_SMTP_AUTH", "DIRIGIBLE_KEYCLOAK_ENABLED", "DIRIGIBLE_KEYCLOAK_REALM", "DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL",
-            "DIRIGIBLE_KEYCLOAK_SSL_REQUIRED", "DIRIGIBLE_KEYCLOAK_CLIENT_ID", "DIRIGIBLE_KEYCLOAK_CONFIDENTIAL_PORT",
+            "DIRIGIBLE_MAIL_SMTP_AUTH", "DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL", "DIRIGIBLE_KEYCLOAK_CLIENT_ID",
             "DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE", "DIRIGIBLE_CSV_DATA_BATCH_SIZE", "DIRIGIBLE_DESTINATION_CLIENT_ID",
             "DIRIGIBLE_DESTINATION_CLIENT_SECRET", "DIRIGIBLE_DESTINATION_URL", "DIRIGIBLE_DESTINATION_URI", "DIRIGIBLE_BASIC_ENABLED",
             "DIRIGIBLE_BASIC_USERNAME", "DIRIGIBLE_BASIC_PASSWORD", "DIRIGIBLE_FTP_USERNAME", "DIRIGIBLE_FTP_PASSWORD",
@@ -565,8 +566,7 @@ public class Configuration {
             for (Field field : FieldUtils.getAllFields(o.getClass())) {
                 Object v = FieldUtils.readField(field, o, true);
                 if (v != null) {
-                    if (v instanceof String) {
-                        String s = (String) v;
+                    if (v instanceof String s) {
                         if (s.startsWith("${") && s.endsWith("}")) {
                             if (s.indexOf("}.{") > 0) {
                                 String k = s.substring(2, s.indexOf("}.{"));

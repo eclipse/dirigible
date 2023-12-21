@@ -10,74 +10,50 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <name>Components - Engine - Camel</name>
-    <artifactId>dirigible-components-engine-camel</artifactId>
-    <packaging>jar</packaging>
+	<name>Components - Engine - Camel</name>
+	<artifactId>dirigible-components-engine-camel</artifactId>
+	<packaging>jar</packaging>
 
-    <dependencies>
+	<dependencies>
 
-        <!-- Core -->
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-components-core-base</artifactId>
-            <scope>compile</scope>
-        </dependency>
+		<!-- Core -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-core-base</artifactId>
+			<scope>compile</scope>
+		</dependency>
 
-        <!-- Library -->
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-rest</artifactId>
-            <version>${camel.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel.springboot</groupId>
-            <artifactId>camel-platform-http-starter</artifactId>
-            <version>${camel.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-http</artifactId>
-            <version>${camel.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-swagger-java</artifactId>
-            <version>${camel.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel.springboot</groupId>
-            <artifactId>camel-spring-boot-starter</artifactId>
-            <version>${camel.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel.springboot</groupId>
-            <artifactId>camel-jackson-starter</artifactId>
-            <version>${camel.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel.springboot</groupId>
-            <artifactId>camel-yaml-dsl-starter</artifactId>
-            <version>${camel.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-ftp</artifactId>
-            <version>${camel.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-sql</artifactId>
-            <version>${camel.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-components-engine-javascript</artifactId>
-        </dependency>
-    </dependencies>
+		<!-- Library -->
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-spring-boot-starter</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-spring-boot-starter</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-platform-http-starter</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-yaml-dsl-starter</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-engine-javascript</artifactId>
+		</dependency>
+	</dependencies>
 
-    <properties>
-        <license.header.location>../../../licensing-header.txt</license.header.location>
-        <parent.pom.folder>../../../</parent.pom.folder>
-    </properties>
+	<properties>
+		<license.header.location>../../../licensing-header.txt</license.header.location>
+		<parent.pom.folder>../../../</parent.pom.folder>
+	</properties>
 
 </project>

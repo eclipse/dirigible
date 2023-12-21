@@ -37,17 +37,17 @@ public class DirigibleApplication {
     }
 
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+    RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
     }
 
     @EventListener
-    public void onStartup(ApplicationReadyEvent event) {
+    void onStartup(@SuppressWarnings("unused") ApplicationReadyEvent event) {
         LOGGER.info("------------------------ Dirigible started ------------------------");
     }
 
     @EventListener
-    public void onShutdown(ContextClosedEvent event) {
+    void onShutdown(@SuppressWarnings("unused") ContextClosedEvent event) {
         LOGGER.info("------------------------ Dirigible stopped ------------------------");
     }
 }

@@ -17,19 +17,6 @@
 
     <build>
         <finalName>${project.artifactId}</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compiler.plugin.version}</version>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                    <debug>true</debug>
-                    <debuglevel>lines,vars,source</debuglevel>
-                </configuration>
-            </plugin>
-        </plugins>
     </build>
 
     <dependencies>

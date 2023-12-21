@@ -29,11 +29,6 @@
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-sql</artifactId>
 		</dependency>
-		<dependency>
-		    <groupId>org.eclipse.persistence</groupId>
-		    <artifactId>jakarta.persistence</artifactId>
-		    <version>${persistence.api.version}</version>
-		</dependency>
 
 		<!-- Test dependencies -->
 		<dependency>
@@ -49,7 +44,6 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>${h2database.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

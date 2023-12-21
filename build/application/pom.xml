@@ -15,7 +15,6 @@
 	<packaging>jar</packaging>
 
 	<dependencies>
-
 		<!-- Platform -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -114,7 +113,6 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>${h2database.version}</version>
 		</dependency>
 
 		<!-- WebJars -->
@@ -126,16 +124,10 @@
 
 		<!-- Olingo -->
 		<dependency>
-			<groupId>org.apache.olingo</groupId>
+			<groupId>com.codbex.olingo</groupId>
 			<artifactId>olingo-odata2-lib</artifactId>
 			<version>${olingo.version}</version>
 			<type>pom</type>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.ws.rs</groupId>
-					<artifactId>javax.ws.rs-api</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<!-- Core -->
@@ -212,7 +204,7 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-mongodb-jdbc</artifactId>
@@ -255,7 +247,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring.boot.version}</version>
 				<configuration>
 					<mainClass>org.eclipse.dirigible.DirigibleApplication</mainClass>
 				</configuration>
@@ -273,7 +264,6 @@
 			<plugin>
 				<groupId>pl.project13.maven</groupId>
 				<artifactId>git-commit-id-plugin</artifactId>
-				<version>${git-commit-id-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>get-the-git-infos</id>

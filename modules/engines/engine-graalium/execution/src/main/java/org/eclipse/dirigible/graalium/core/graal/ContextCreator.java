@@ -18,7 +18,7 @@ import org.graalvm.polyglot.HostAccess;
 import org.graalvm.polyglot.io.FileSystem;
 import org.graalvm.polyglot.io.IOAccess;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.function.Consumer;

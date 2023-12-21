@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -24,7 +26,7 @@
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-helpers</artifactId>
 		</dependency>
-		
+
 		<!-- Components -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
@@ -34,7 +36,7 @@
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-javascript</artifactId>
 		</dependency>
-		
+
 		<!-- API -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
@@ -44,13 +46,13 @@
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-io</artifactId>
 		</dependency>
-		
+
 		<!-- Test -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-test</artifactId>
 		</dependency>
-		
+
 		<!-- Libs -->
 		<dependency>
 			<groupId>commons-net</groupId>
@@ -60,20 +62,24 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpasyncclient</artifactId>
+			<version>4.1.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
+			<version>4.5.14</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpmime</artifactId>
+			<version>4.5.14</version>
 		</dependency>
 		<dependency>
-			<groupId>commons-fileupload</groupId>
-			<artifactId>commons-fileupload</artifactId>
-			<version>1.5</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-fileupload2-jakarta</artifactId>
+			<version>2.0.0-M1</version>
 		</dependency>
+
 
 	</dependencies>
 

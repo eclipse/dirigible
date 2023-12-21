@@ -10,7 +10,7 @@
  */
 package org.eclipse.dirigible.components.base.http.access;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.components.base.context.ContextException;
 import org.eclipse.dirigible.components.base.context.ThreadContextFacade;

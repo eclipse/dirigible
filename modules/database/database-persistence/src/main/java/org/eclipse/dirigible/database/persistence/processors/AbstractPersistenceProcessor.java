@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EnumType;
+import jakarta.persistence.EnumType;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;

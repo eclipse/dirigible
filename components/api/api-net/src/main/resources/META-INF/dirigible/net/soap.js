@@ -14,13 +14,13 @@ const request = require('http/request');
 const base64 = require("utils/base64");
 
 exports.createMessage = function() {
-	const internalFactory = javax.xml.soap.MessageFactory.newInstance();
+	const internalFactory = jakarta.xml.soap.MessageFactory.newInstance();
 	const internalMessage = internalFactory.createMessage();
 	return new Message(internalMessage);
 };
 
 exports.parseMessage = function(mimeHeaders, inputStream) {
-	const internalFactory = javax.xml.soap.MessageFactory.newInstance();
+	const internalFactory = jakarta.xml.soap.MessageFactory.newInstance();
 	if (inputStream.native) {
 		try {
 			const internalMessage = internalFactory.createMessage(mimeHeaders.native, inputStream.native);
@@ -46,7 +46,7 @@ exports.parseRequest = function() {
 };
 
 exports.createMimeHeaders = function() {
-	const internalMimeHeaders = javax.xml.soap.MimeHeaders();
+	const internalMimeHeaders = jakarta.xml.soap.MimeHeaders();
 	return new MimeHeaders(internalMimeHeaders);
 };
 
@@ -253,7 +253,7 @@ function Element(element) {
  * Call a given SOAP endpoint with a given request message
  */
 exports.call = function(message, url) {
-	const soapConnectionFactory = javax.xml.soap.SOAPConnectionFactory.newInstance();
+	const soapConnectionFactory = jakarta.xml.soap.SOAPConnectionFactory.newInstance();
 	const internalConnection = soapConnectionFactory.createConnection();
 	const internalResponse = internalConnection.call(message.native, url);
 	return new Message(internalResponse);

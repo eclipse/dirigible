@@ -8,10 +8,11 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.engine.camel.processor;
+package org.eclipse.dirigible.components.engine.camel.config;
 
 import org.apache.camel.Consumer;
 import org.apache.camel.component.platform.http.HttpEndpointModel;
+import org.eclipse.dirigible.components.engine.camel.processor.DirigibleHttpEndpointModel;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
