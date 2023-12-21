@@ -36,7 +36,7 @@ The project started as an internal SAP initiative to address the extension and a
 	- [Run](#run)
 		- [Standalone](#standalone)
 		- [Docker](#docker)
-        - [Native image](#native-image)
+		- [Native image](#native-image)
   	- [Code formatting](#code-formatting)
   	- [Spring Boot Admin](#spring-boot-admin)
 - [Additional Information](#additional-information)
