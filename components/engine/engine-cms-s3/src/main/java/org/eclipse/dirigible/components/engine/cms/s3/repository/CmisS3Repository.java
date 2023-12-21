@@ -29,9 +29,6 @@ public class CmisS3Repository implements CmisRepository {
      */
     public CmisS3Repository(String root) throws IOException {
         super();
-//        if (!S3Facade.exists(S3_ROOT)) {
-//            S3Facade.put(root, new byte[0]);
-//        }
         this.S3_ROOT = root;
     }
 

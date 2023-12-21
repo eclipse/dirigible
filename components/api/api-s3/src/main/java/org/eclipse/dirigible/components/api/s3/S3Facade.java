@@ -20,10 +20,8 @@ import software.amazon.awssdk.transfer.s3.model.UploadDirectoryRequest;
 import java.io.*;
 import java.net.URI;
 import java.nio.file.Paths;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -34,28 +32,32 @@ public class S3Facade implements InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(S3Facade.class);
     private static S3Facade INSTANCE;
 
-    private static final String BUCKET = Configuration.get("BUCKET");
+    private static final String BUCKET = Configuration.get("BUCKET", "cmis-bucket");
     private static final String AWS_ACCESS_KEY_ID = Configuration.get("AWS_ACCESS_KEY_ID");
-    private static final Region AWS_DEFAULT_REGION = Region.of(Configuration.get("AWS_DEFAULT_REGION"));
-    private static final Region AWS_REGION = Region.of(Configuration.get("AWS_DEFAULT_REGION"));
+    private static final Region AWS_DEFAULT_REGION = Region.of(Configuration.get("AWS_DEFAULT_REGION", "eu-central-1"));
     private static final String AWS_SECRET_ACCESS_KEY = Configuration.get("AWS_SECRET_ACCESS_KEY");
-    private static final String BUCKET_URL_PATH = Configuration.get("BUCKET_URL_PATH");
+    private static final String DIRIGIBLE_S3_PROVIDER = Configuration.get("DIRIGIBLE_S3_PROVIDER", "aws");
+    private static final String LOCALSTACK_URI = "https://s3.localhost.localstack.cloud:4566";
 
     private static S3Client s3;
 
     static {
-        AwsBasicCredentials credentials = AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
-        if (Configuration.get("DIRIGIBLE_S3_PROVIDER").equals("aws")) {
-            s3 = S3Client.builder()
-                    .region(AWS_DEFAULT_REGION)
-                    .credentialsProvider(StaticCredentialsProvider.create(credentials))
-                    .build();
-        } else if (Configuration.get("DIRIGIBLE_S3_PROVIDER").equals("localstack")) {
-            s3 = S3Client.builder()
-                    .region(AWS_DEFAULT_REGION)
-                    .endpointOverride(URI.create("https://s3.localhost.localstack.cloud:4566"))
-                    .credentialsProvider(StaticCredentialsProvider.create(credentials))
-                    .build();
+        if (AWS_ACCESS_KEY_ID == null || AWS_SECRET_ACCESS_KEY == null) {
+            logger.warn("AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY not set");
+        } else {
+            AwsBasicCredentials credentials = AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
+            if (DIRIGIBLE_S3_PROVIDER.equals("aws")) {
+                s3 = S3Client.builder()
+                        .region(AWS_DEFAULT_REGION)
+                        .credentialsProvider(StaticCredentialsProvider.create(credentials))
+                        .build();
+            } else if (DIRIGIBLE_S3_PROVIDER.equals("localstack")) {
+                s3 = S3Client.builder()
+                        .region(AWS_DEFAULT_REGION)
+                        .endpointOverride(URI.create(LOCALSTACK_URI))
+                        .credentialsProvider(StaticCredentialsProvider.create(credentials))
+                        .build();
+            }
         }
     }
 
@@ -198,5 +200,12 @@ public class S3Facade implements InitializingBean {
             logger.error(e.awsErrorDetails().errorMessage());
             return "";
         }
+    }
+
+    public static void setClientForTestContainer(URI localstackUri) {
+        s3 = S3Client.builder()
+                .region(AWS_DEFAULT_REGION)
+                .endpointOverride(localstackUri)
+                .build();
     }
 }

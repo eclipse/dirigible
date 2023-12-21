@@ -15,18 +15,10 @@
     <packaging>jar</packaging>
 
     <dependencies>
-
         <!-- Helpers -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-helpers</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <!-- Test -->
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-components-api-test</artifactId>
             <version>9.0.0-SNAPSHOT</version>
         </dependency>
 
@@ -43,12 +35,19 @@
             <version>2.21.38</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.amazonaws</groupId>-->
-<!--            <artifactId>aws-java-sdk-core</artifactId>-->
-<!--            <version>1.12.604</version>-->
-<!--            <scope>compile</scope>-->
-<!--        </dependency>-->
+        <!-- Test -->
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-api-test</artifactId>
+            <version>9.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>localstack</artifactId>
+            <version>1.19.3</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
