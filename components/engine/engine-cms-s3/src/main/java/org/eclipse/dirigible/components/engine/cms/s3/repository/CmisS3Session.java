@@ -112,10 +112,10 @@ public class CmisS3Session implements CmisSession {
     @Override
     public CmisS3Object getObjectByPath(String path) throws IOException {
         // Just for debugging
-//        if(!path.equals("__internal/roles-access.json")) {
-//            return getObject(path);
-//        }
-//        return new CmisS3Object(this, "/", "/");
+        // if(!path.equals("__internal/roles-access.json")) {
+        // return getObject(path);
+        // }
+        // return new CmisS3Object(this, "/", "/");
         return getObject(path);
     }
 }

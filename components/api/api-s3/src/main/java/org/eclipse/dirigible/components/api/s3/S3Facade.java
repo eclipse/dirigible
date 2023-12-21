@@ -48,15 +48,24 @@ public class S3Facade implements InitializingBean {
             AwsBasicCredentials credentials = AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
             if (DIRIGIBLE_S3_PROVIDER.equals("aws")) {
                 s3 = S3Client.builder()
-                        .region(AWS_DEFAULT_REGION)
-                        .credentialsProvider(StaticCredentialsProvider.create(credentials))
-                        .build();
+                             .region(AWS_DEFAULT_REGION)
+                             .credentialsProvider(StaticCredentialsProvider.create(credentials))
+                             .build();
             } else if (DIRIGIBLE_S3_PROVIDER.equals("localstack")) {
                 s3 = S3Client.builder()
-                        .region(AWS_DEFAULT_REGION)
-                        .endpointOverride(URI.create(LOCALSTACK_URI))
-                        .credentialsProvider(StaticCredentialsProvider.create(credentials))
-                        .build();
+                             .region(AWS_DEFAULT_REGION)
+                             .endpointOverride(URI.create(LOCALSTACK_URI))
+                             .credentialsProvider(StaticCredentialsProvider.create(credentials))
+                             .build();
+            }
+            CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
+                                                                         .bucket(BUCKET)
+                                                                         .build();
+
+            try {
+                s3.createBucket(createBucketRequest);
+            } catch (BucketAlreadyOwnedByYouException ignored) {
+                logger.info("Bucket: " + BUCKET + "already created");
             }
         }
     }
@@ -74,15 +83,15 @@ public class S3Facade implements InitializingBean {
         PutObjectRequest objectRequest;
         if (name.endsWith("/")) {
             objectRequest = PutObjectRequest.builder()
-                    .bucket(BUCKET)
-                    .key(name)
-                    .build();
+                                            .bucket(BUCKET)
+                                            .key(name)
+                                            .build();
         } else {
             objectRequest = PutObjectRequest.builder()
-                    .bucket(BUCKET)
-                    .key(name)
-                    .contentType(contentType)
-                    .build();
+                                            .bucket(BUCKET)
+                                            .key(name)
+                                            .contentType(contentType)
+                                            .build();
         }
         s3.putObject(objectRequest, RequestBody.fromBytes(input));
     }
@@ -90,13 +99,13 @@ public class S3Facade implements InitializingBean {
     public static void uploadDirectory(String sourceDirectory) {
         S3TransferManager transferManager = S3TransferManager.create();
 
-        DirectoryUpload directoryUpload =
-                transferManager.uploadDirectory(UploadDirectoryRequest.builder()
-                        .source(Paths.get(sourceDirectory))
-                        .bucket(BUCKET)
-                        .build());
+        DirectoryUpload directoryUpload = transferManager.uploadDirectory(UploadDirectoryRequest.builder()
+                                                                                                .source(Paths.get(sourceDirectory))
+                                                                                                .bucket(BUCKET)
+                                                                                                .build());
 
-        directoryUpload.completionFuture().join();
+        directoryUpload.completionFuture()
+                       .join();
     }
 
     public static void delete(String name) {
@@ -105,9 +114,9 @@ public class S3Facade implements InitializingBean {
             deleteFolder(name);
         } else {
             DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
-                    .bucket(BUCKET)
-                    .key(name)
-                    .build();
+                                                                   .bucket(BUCKET)
+                                                                   .key(name)
+                                                                   .build();
 
             s3.deleteObject(objectRequest);
         }
@@ -115,11 +124,10 @@ public class S3Facade implements InitializingBean {
 
     public static byte[] get(String name) throws IOException {
 
-        ResponseInputStream<GetObjectResponse> response =
-                s3.getObject(GetObjectRequest.builder()
-                        .bucket(BUCKET)
-                        .key(name)
-                        .build());
+        ResponseInputStream<GetObjectResponse> response = s3.getObject(GetObjectRequest.builder()
+                                                                                       .bucket(BUCKET)
+                                                                                       .key(name)
+                                                                                       .build());
 
         return response.readAllBytes();
     }
@@ -132,35 +140,45 @@ public class S3Facade implements InitializingBean {
 
     public static List<S3Object> listObjects(String path) {
         ListObjectsV2Request listObjectsV2Request = ListObjectsV2Request.builder()
-                .bucket(BUCKET)
-                .prefix("/".equals(path) ? null : path)
-                .build();
+                                                                        .bucket(BUCKET)
+                                                                        .prefix("/".equals(path) ? null : path)
+                                                                        .build();
 
         ListObjectsV2Response listObjectsV2Response = s3.listObjectsV2(listObjectsV2Request);
 
         List<S3Object> contents = listObjectsV2Response.contents();
 
-        logger.info("Number of objects in the bucket: " + contents.stream().count());
+        logger.info("Number of objects in the bucket: " + contents.stream()
+                                                                  .count());
         return contents;
     }
 
     public static void deleteFolder(String prefix) {
-        S3Client s3Client = S3Client.builder().region(AWS_DEFAULT_REGION).build();
-        ListObjectsV2Request request = ListObjectsV2Request.builder().bucket(BUCKET).prefix(prefix).build();
+        S3Client s3Client = S3Client.builder()
+                                    .region(AWS_DEFAULT_REGION)
+                                    .build();
+        ListObjectsV2Request request = ListObjectsV2Request.builder()
+                                                           .bucket(BUCKET)
+                                                           .prefix(prefix)
+                                                           .build();
         ListObjectsV2Iterable list = s3Client.listObjectsV2Paginator(request);
 
-        List<ObjectIdentifier> objectIdentifiers = list
-                .stream()
-                .flatMap(r -> r.contents().stream())
-                .map(o -> ObjectIdentifier.builder().key(o.key()).build())
-                .collect(Collectors.toList());
+        List<ObjectIdentifier> objectIdentifiers = list.stream()
+                                                       .flatMap(r -> r.contents()
+                                                                      .stream())
+                                                       .map(o -> ObjectIdentifier.builder()
+                                                                                 .key(o.key())
+                                                                                 .build())
+                                                       .collect(Collectors.toList());
 
-        if (objectIdentifiers.isEmpty()) return;
-        DeleteObjectsRequest deleteObjectsRequest = DeleteObjectsRequest
-                .builder()
-                .bucket(BUCKET)
-                .delete(Delete.builder().objects(objectIdentifiers).build())
-                .build();
+        if (objectIdentifiers.isEmpty())
+            return;
+        DeleteObjectsRequest deleteObjectsRequest = DeleteObjectsRequest.builder()
+                                                                        .bucket(BUCKET)
+                                                                        .delete(Delete.builder()
+                                                                                      .objects(objectIdentifiers)
+                                                                                      .build())
+                                                                        .build();
         s3Client.deleteObjects(deleteObjectsRequest);
     }
 
@@ -170,9 +188,9 @@ public class S3Facade implements InitializingBean {
         }
         try {
             HeadObjectRequest objectRequest = HeadObjectRequest.builder()
-                    .key(keyName)
-                    .bucket(BUCKET)
-                    .build();
+                                                               .key(keyName)
+                                                               .bucket(BUCKET)
+                                                               .build();
 
             HeadObjectResponse objectHead = s3.headObject(objectRequest);
             String type = objectHead.contentType();
@@ -188,24 +206,25 @@ public class S3Facade implements InitializingBean {
         }
         try {
             HeadObjectRequest objectRequest = HeadObjectRequest.builder()
-                    .key(keyName)
-                    .bucket(BUCKET)
-                    .build();
+                                                               .key(keyName)
+                                                               .bucket(BUCKET)
+                                                               .build();
 
             HeadObjectResponse objectHead = s3.headObject(objectRequest);
 
             Map<String, String> as = objectHead.metadata();
             return objectHead.contentType();
         } catch (S3Exception e) {
-            logger.error(e.awsErrorDetails().errorMessage());
+            logger.error(e.awsErrorDetails()
+                          .errorMessage());
             return "";
         }
     }
 
     public static void setClientForTestContainer(URI localstackUri) {
         s3 = S3Client.builder()
-                .region(AWS_DEFAULT_REGION)
-                .endpointOverride(localstackUri)
-                .build();
+                     .region(AWS_DEFAULT_REGION)
+                     .endpointOverride(localstackUri)
+                     .build();
     }
 }

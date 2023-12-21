@@ -45,7 +45,7 @@ public class CmisS3Object implements CmisObject {
      * Instantiates a new cmis object.
      *
      * @param session the session
-     * @param id    the path
+     * @param id the path
      * @param name the name
      * @throws IOException Signals that an I/O exception has occurred.
      */
@@ -120,9 +120,9 @@ public class CmisS3Object implements CmisObject {
     @Override
     public void delete() throws IOException {
         String cmisPath = this.id.substring(1);
-        if(this.typeCollection){
+        if (this.typeCollection) {
             S3Facade.deleteFolder(cmisPath);
-        }else {
+        } else {
             S3Facade.delete(cmisPath);
         }
     }
@@ -146,8 +146,8 @@ public class CmisS3Object implements CmisObject {
      */
     @Override
     public void rename(String newName) throws IOException {
-        //TODO see how to rename from S3Facade
-        //S3Facade.update();
+        // TODO see how to rename from S3Facade
+        // S3Facade.update();
     }
 
 }

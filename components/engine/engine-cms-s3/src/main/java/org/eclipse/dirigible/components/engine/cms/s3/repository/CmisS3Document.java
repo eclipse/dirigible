@@ -35,7 +35,7 @@ public class CmisS3Document extends CmisS3Object implements CmisDocument {
      * Instantiates a new document.
      *
      * @param session the session
-     * @param id      the idx
+     * @param id the idx
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public CmisS3Document(CmisS3Session session, String id, String name) throws IOException {
@@ -65,8 +65,7 @@ public class CmisS3Document extends CmisS3Object implements CmisDocument {
     public CmisS3ContentStream getContentStream() throws IOException {
         byte[] content = S3Facade.get(this.id.substring(1));
         String contentType = getContentType(this.id.substring(1));
-        return new CmisS3ContentStream(session, this.name, content.length, contentType,
-                new ByteArrayInputStream(content));
+        return new CmisS3ContentStream(session, this.name, content.length, contentType, new ByteArrayInputStream(content));
     }
 
     /**

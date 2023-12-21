@@ -40,20 +40,16 @@ public class S3FacadeTest {
     public static void setUp() {
         localstack.start();
         S3Facade.setClientForTestContainer(localstack.getEndpoint());
-        s3Client = S3Client
-                .builder()
-                .endpointOverride(localstack.getEndpoint())
-                .credentialsProvider(
-                        StaticCredentialsProvider.create(
-                                AwsBasicCredentials.create(localstack.getAccessKey(), localstack.getSecretKey())
-                        )
-                )
-                .region(Region.EU_CENTRAL_1)
-                .build();
+        s3Client = S3Client.builder()
+                           .endpointOverride(localstack.getEndpoint())
+                           .credentialsProvider(StaticCredentialsProvider.create(
+                                   AwsBasicCredentials.create(localstack.getAccessKey(), localstack.getSecretKey())))
+                           .region(Region.EU_CENTRAL_1)
+                           .build();
 
         CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
-                .bucket(BUCKET_NAME)
-                .build();
+                                                                     .bucket(BUCKET_NAME)
+                                                                     .build();
 
         s3Client.createBucket(createBucketRequest);
     }
@@ -73,11 +69,12 @@ public class S3FacadeTest {
         S3Facade.put(objectKey, inputData, contentType);
 
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                .bucket(BUCKET_NAME)
-                .key(objectKey)
-                .build();
+                                                            .bucket(BUCKET_NAME)
+                                                            .key(objectKey)
+                                                            .build();
 
-        GetObjectResponse getObjectResponse = s3Client.getObject(getObjectRequest).response();
+        GetObjectResponse getObjectResponse = s3Client.getObject(getObjectRequest)
+                                                      .response();
 
         assertEquals(contentType, getObjectResponse.contentType());
         assertEquals(inputData.length, getObjectResponse.contentLength());
@@ -98,21 +95,22 @@ public class S3FacadeTest {
 
     private static void deleteBucket(String bucketName) {
         ListObjectsV2Request listObjectsRequest = ListObjectsV2Request.builder()
-                .bucket(bucketName)
-                .build();
+                                                                      .bucket(bucketName)
+                                                                      .build();
 
         ListObjectsV2Response listObjectsResponse = s3Client.listObjectsV2(listObjectsRequest);
-        listObjectsResponse.contents().forEach(object -> {
-            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(object.key())
-                    .build();
-            s3Client.deleteObject(deleteObjectRequest);
-        });
+        listObjectsResponse.contents()
+                           .forEach(object -> {
+                               DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                                                                                            .bucket(bucketName)
+                                                                                            .key(object.key())
+                                                                                            .build();
+                               s3Client.deleteObject(deleteObjectRequest);
+                           });
 
         DeleteBucketRequest deleteBucketRequest = DeleteBucketRequest.builder()
-                .bucket(bucketName)
-                .build();
+                                                                     .bucket(bucketName)
+                                                                     .build();
         s3Client.deleteBucket(deleteBucketRequest);
     }
 }

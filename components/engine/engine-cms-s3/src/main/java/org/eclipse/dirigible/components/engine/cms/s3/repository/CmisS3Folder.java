@@ -64,7 +64,7 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
      * Instantiates a new folder.
      *
      * @param session the session
-     * @param id      the id
+     * @param id the id
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public CmisS3Folder(CmisS3Session session, String id, String name) throws IOException {
@@ -127,8 +127,8 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
     /**
      * Creates a new document under this CmisS3Folder.
      *
-     * @param properties      the properties
-     * @param contentStream   the content stream
+     * @param properties the properties
+     * @param contentStream the content stream
      * @param versioningState the version state
      * @return CmisDocument
      * @throws IOException IO Exception
@@ -171,8 +171,10 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
             int segmentsPath = CmisS3Utils.pathSegmentsLength(path);
             int segmentsObject = CmisS3Utils.pathSegmentsLength(s3Object.key());
             if (segmentsObject == segmentsPath + 1) {
-                if (s3Object.key().endsWith(IRepository.SEPARATOR)) {
-                    if (!s3Object.key().equals(path)) {
+                if (s3Object.key()
+                            .endsWith(IRepository.SEPARATOR)) {
+                    if (!s3Object.key()
+                                 .equals(path)) {
                         children.add(new CmisS3Folder(this.session, this.id, CmisS3Utils.findCurrentFolder((s3Object.key()))));
                     }
                 } else {
