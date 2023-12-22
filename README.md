@@ -23,7 +23,7 @@ From the end user's perspective (developer), Dirigible runs directly in the brow
 
 From the service provider's perspective (PaaS/SaaS), Dirigible packs all required components in a self-contained software bundle that can be deployed on a VM or Docker capable environment such as Kubernetes.
 
-Dirigible supports access to RDBMS via JDBC. Currently supported versions for RDBMS are PostgreSQL, HANA, Sybase ASE, MySQL, H2, and Derby.
+Dirigible supports access to RDBMS via JDBC. Currently supported versions for RDBMS are PostgreSQL, HANA, Sybase ASE, MySQL, H2, and Derby as well as NoSQL like MongoDB or pure OLAP like Snowflake.
 
 Dirigible promotes the In-System Programming development model, where you make dynamic alteration of the live system. To provide the self-contained bundle serving all the needed features for a business application, Dirigible packs various engines such as ActiveMQ, Quartz, Lucene, Flowable, Mylyn, GraalJS and others.
 
