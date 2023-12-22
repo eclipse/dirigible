@@ -44,30 +44,31 @@
 		<module>data/data-import</module>
 		<module>data/data-anonymize</module>
 
-		<!-- Engines -->
-		<module>engine/engine-javascript</module>
-		<module>engine/engine-typescript</module>
-		<module>engine/engine-python</module>
-		<module>engine/engine-web</module>
-		<module>engine/engine-template</module>
-		<module>engine/engine-template-velocity</module>
-		<module>engine/engine-template-mustache</module>
-		<module>engine/engine-template-javascript</module>
-		<module>engine/engine-wiki</module>
-		<module>engine/engine-command</module>
-		<module>engine/engine-bpm</module>
-		<module>engine/engine-bpm-flowable</module>
-		<module>engine/engine-cms</module>
-		<module>engine/engine-cms-internal</module>
-		<module>engine/engine-jobs</module>
-		<module>engine/engine-openapi</module>
-		<module>engine/engine-websockets</module>
-		<module>engine/engine-security</module>
-		<module>engine/engine-listeners</module>
-		<module>engine/engine-odata</module>
-		<module>engine/engine-camel</module>
-		<module>engine/engine-ftp</module>
-		<module>engine/engine-sftp</module>
+        <!-- Engines -->
+        <module>engine/engine-javascript</module>
+        <module>engine/engine-typescript</module>
+        <module>engine/engine-python</module>
+        <module>engine/engine-web</module>
+        <module>engine/engine-template</module>
+        <module>engine/engine-template-velocity</module>
+        <module>engine/engine-template-mustache</module>
+        <module>engine/engine-template-javascript</module>
+        <module>engine/engine-wiki</module>
+        <module>engine/engine-command</module>
+        <module>engine/engine-bpm</module>
+        <module>engine/engine-bpm-flowable</module>
+        <module>engine/engine-cms</module>
+        <module>engine/engine-cms-internal</module>
+        <module>engine/engine-cms-s3</module>
+        <module>engine/engine-jobs</module>
+        <module>engine/engine-openapi</module>
+        <module>engine/engine-websockets</module>
+        <module>engine/engine-security</module>
+        <module>engine/engine-listeners</module>
+        <module>engine/engine-odata</module>
+        <module>engine/engine-camel</module>
+        <module>engine/engine-ftp</module>
+        <module>engine/engine-sftp</module>
 
 		<!-- IDE -->
 		<module>ide/ide-workspace</module>
@@ -149,37 +150,38 @@
 		<module>ide/ide-ui-workspace-menu</module>
 		<module>ide/ide-ui-workspace-service</module>
 
-		<!-- API -->
-		<module>api/api-modules-javascript</module>
-		<module>api/api-modules-python</module>
-		<module>api/api-core</module>
-		<module>api/api-test</module>
-		<module>api/api-qunit</module>
-		<module>api/api-utils</module>
-		<module>api/api-io</module>
-		<module>api/api-job</module>
-		<module>api/api-bpm</module>
-		<module>api/api-cms</module>
-		<module>api/api-http</module>
-		<module>api/api-log</module>
-		<module>api/api-database</module>
-		<module>api/api-extensions</module>
-		<module>api/api-security</module>
-		<module>api/api-platform</module>
-		<module>api/api-indexing</module>
-		<module>api/api-net</module>
-		<module>api/api-git</module>
-		<module>api/api-messaging</module>
-		<module>api/api-etcd</module>
-		<module>api/api-template</module>
-		<module>api/api-mail</module>
-		<module>api/api-kafka</module>
-		<module>api/api-mongodb</module>
-		<module>api/api-rabbitmq</module>
-		<module>api/api-redis</module>
-		<module>api/api-qldb</module>
-		<module>api/api-pdf</module>
-		<module>api/api-junit</module>
+        <!-- API -->
+        <module>api/api-modules-javascript</module>
+        <module>api/api-modules-python</module>
+        <module>api/api-core</module>
+        <module>api/api-test</module>
+        <module>api/api-qunit</module>
+        <module>api/api-utils</module>
+        <module>api/api-io</module>
+        <module>api/api-job</module>
+        <module>api/api-bpm</module>
+        <module>api/api-cms</module>
+        <module>api/api-http</module>
+        <module>api/api-log</module>
+        <module>api/api-database</module>
+        <module>api/api-extensions</module>
+        <module>api/api-security</module>
+        <module>api/api-s3</module>
+        <module>api/api-platform</module>
+        <module>api/api-indexing</module>
+        <module>api/api-net</module>
+        <module>api/api-git</module>
+        <module>api/api-messaging</module>
+        <module>api/api-etcd</module>
+        <module>api/api-template</module>
+        <module>api/api-mail</module>
+        <module>api/api-kafka</module>
+        <module>api/api-mongodb</module>
+        <module>api/api-rabbitmq</module>
+        <module>api/api-redis</module>
+        <module>api/api-qldb</module>
+        <module>api/api-pdf</module>
+        <module>api/api-junit</module>
 
 		<!-- Resources -->
 		<module>resources/resources-core</module>
