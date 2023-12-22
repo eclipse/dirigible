@@ -36,8 +36,9 @@ The project started as an internal SAP initiative to address the extension and a
 	- [Run](#run)
 		- [Standalone](#standalone)
 		- [Docker](#docker)
-                - [Native image](#native-image)
-  	- [Code formatting](#code-formatting)	 
+		- [Native image](#native-image)
+  	- [Code formatting](#code-formatting)
+  	- [Spring Boot Admin](#spring-boot-admin)
 - [Additional Information](#additional-information)
 	- [License](#license)
 	- [Contributors](#contributors)
@@ -257,6 +258,15 @@ Please follow the steps bellow
 To format the code using Maven execute the following in the root dir of the project
 
 	mvn formatter:format
+
+### Spring Boot Admin
+If you want to enable [Spring Boot Admin](https://docs.spring-boot-admin.com/current/) for the Dirigible project, you need to build the project with maven profile `spring-boot-admin` and then activate spring profile `spring-boot-admin`.
+To do this, you have to execute the following commands:
+```
+mvn -T 1C clean install -P spring-boot-admin -D maven.test.skip=true -D skipTests -D maven.javadoc.skip=true -D license.skip=true
+
+java -jar -Dspring.profiles.active=spring-boot-admin build/application/target/dirigible-application-*-executable.jar
+```
 
 ## Additional Information
 

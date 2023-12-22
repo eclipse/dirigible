@@ -24,6 +24,7 @@ public class Dirigible {
     private static final String LOGIN_PAGE_TITLE = "Please sign in";
 
     private static final String ROOT_PATH = "/";
+    private static final String SPRING_BOOT_PATH = "/spring-admin";
 
     private static final String USERNAME = "admin";
     private static final String PASSWORD = "admin";
@@ -57,4 +58,11 @@ public class Dirigible {
         browser.enterTextInElementByAttributePattern(HtmlElementType.INPUT, HtmlAttribute.ID, PASSWORD_FIELD_ID, PASSWORD);
         browser.clickElementByAttributePatternAndText(HtmlElementType.BUTTON, HtmlAttribute.TYPE, SUBMIT_TYPE, SIGN_IN_BUTTON_TEXT);
     }
+
+    public void openSpringBootAdmin() {
+        browser.openPath(SPRING_BOOT_PATH);
+        login();
+    }
+
+
 }
