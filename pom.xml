@@ -99,6 +99,7 @@
 			</activation>
 			<properties>
 				<maven.javadoc.skip>true</maven.javadoc.skip>
+				<skipTCs>true</skipTCs>
 			</properties>
 			<build>
 				<plugins>
@@ -408,7 +409,43 @@
 				</plugins>
 			</build>
 		</profile>
-
+		<profile>
+			<id>testcontainers</id>
+			<properties>
+				<skipTCs>false</skipTCs>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<version>${maven.compiler.plugin.version}</version>
+						<configuration>
+							<source>${maven.compiler.source}</source>
+							<target>${maven.compiler.target}</target>
+							<debug>true</debug>
+							<debuglevel>lines,vars,source</debuglevel>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>${maven-surefire-plugin.version}</version>
+						<configuration>
+							<argLine>
+								--add-opens java.base/java.lang=ALL-UNNAMED
+								--add-opens java.base/java.math=ALL-UNNAMED
+								--add-opens java.base/java.util=ALL-UNNAMED
+								--add-opens
+								java.base/java.util.concurrent=ALL-UNNAMED
+								--add-opens java.base/java.net=ALL-UNNAMED
+								--add-opens java.base/java.text=ALL-UNNAMED
+							</argLine>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 
 	<repositories>

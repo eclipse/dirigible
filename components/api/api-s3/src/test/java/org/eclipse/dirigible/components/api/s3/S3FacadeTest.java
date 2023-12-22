@@ -10,6 +10,7 @@
  */
 package org.eclipse.dirigible.components.api.s3;
 
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,7 @@ public class S3FacadeTest {
 
     private static S3Client s3Client;
 
-    private static final String BUCKET_NAME = "cmis-bucket";
+    private static final String BUCKET_NAME = "test-cmis-bucket";
 
     private static DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:latest");
 
@@ -48,20 +49,18 @@ public class S3FacadeTest {
 
     @BeforeAll
     public static void setUp() {
+        System.setProperty("aws.accessKeyId", "localstack");
+        System.setProperty("aws.secretAccessKey", "localstack");
+        System.setProperty("DIRIGIBLE_S3_PROVIDER", "test");
+        Configuration.set("DIRIGIBLE_S3_BUCKET", BUCKET_NAME);
         localstack.start();
-        S3Facade.setClientForTestContainer(localstack.getEndpoint());
+        S3Facade.setClientForTestContainer(localstack.getEndpoint(), BUCKET_NAME);
         s3Client = S3Client.builder()
                            .endpointOverride(localstack.getEndpoint())
                            .credentialsProvider(StaticCredentialsProvider.create(
                                    AwsBasicCredentials.create(localstack.getAccessKey(), localstack.getSecretKey())))
                            .region(Region.EU_CENTRAL_1)
                            .build();
-
-        CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
-                                                                     .bucket(BUCKET_NAME)
-                                                                     .build();
-
-        s3Client.createBucket(createBucketRequest);
     }
 
     @AfterAll
