@@ -12,16 +12,18 @@ package org.eclipse.dirigible.components.engine.cms.internal.repository;
 
 import java.io.IOException;
 
+import org.eclipse.dirigible.components.engine.cms.CmisObject;
+import org.eclipse.dirigible.components.engine.cms.ObjectType;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
 
 /**
- * The Class CmisObject.
+ * The Class CmisInternalObject.
  */
-public class CmisObject {
+public class CmisInternalObject implements CmisObject {
 
     /** The session. */
-    private CmisSession session;
+    private CmisInternalSession session;
 
     /** The internal entity. */
     private IEntity internalEntity;
@@ -36,7 +38,7 @@ public class CmisObject {
      * @param path the path
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public CmisObject(CmisSession session, String path) throws IOException {
+    public CmisInternalObject(CmisInternalSession session, String path) throws IOException {
         super();
         this.session = session;
         path = sanitize(path);
@@ -51,15 +53,6 @@ public class CmisObject {
         }
     }
 
-    /**
-     * Sanitize.
-     *
-     * @param path the path
-     * @return the string
-     */
-    protected String sanitize(String path) {
-        return path.replace("\\", "");
-    }
 
     /**
      * Gets the internal entity.
@@ -71,20 +64,43 @@ public class CmisObject {
     }
 
     /**
-     * Returns the ID of this CmisObject.
+     * Checks if is collection.
+     *
+     * @return true, if is collection
+     */
+    protected boolean isCollection() {
+        return typeCollection;
+    }
+
+
+    /**
+     * Sanitize.
+     *
+     * @param path the path
+     * @return the string
+     */
+    @Override
+    public String sanitize(String path) {
+        return path.replace("\\", "");
+    }
+
+    /**
+     * Returns the ID of this CmisInternalObject.
      *
      * @return the Id
      */
+    @Override
     public String getId() {
         return this.getInternalEntity()
                    .getPath();
     }
 
     /**
-     * Returns the Name of this CmisObject.
+     * Returns the Name of this CmisInternalObject.
      *
      * @return the name
      */
+    @Override
     public String getName() {
         if ("".equals(this.getInternalEntity()
                           .getName())) {
@@ -95,49 +111,44 @@ public class CmisObject {
     }
 
     /**
-     * Returns the Type of this CmisObject.
+     * Returns the Type of this CmisInternalObject.
      *
      * @return the object type
      */
+    @Override
     public ObjectType getType() {
         return this.isCollection() ? ObjectType.FOLDER : ObjectType.DOCUMENT;
     }
 
     /**
-     * Checks if is collection.
-     *
-     * @return true, if is collection
-     */
-    protected boolean isCollection() {
-        return typeCollection;
-    }
-
-    /**
-     * Delete this CmisObject.
+     * Delete this CmisInternalObject.
      *
      * @throws IOException IO Exception
      */
+    @Override
     public void delete() throws IOException {
         this.getInternalEntity()
             .delete();
     }
 
     /**
-     * Delete this CmisObject.
+     * Delete this CmisInternalObject.
      *
      * @param allVersions whether to delete all versions
      * @throws IOException IO Exception
      */
+    @Override
     public void delete(boolean allVersions) throws IOException {
         delete();
     }
 
     /**
-     * Rename this CmisObject.
+     * Rename this CmisInternalObject.
      *
      * @param newName the new name
      * @throws IOException IO Exception
      */
+    @Override
     public void rename(String newName) throws IOException {
         this.getInternalEntity()
             .renameTo(newName);

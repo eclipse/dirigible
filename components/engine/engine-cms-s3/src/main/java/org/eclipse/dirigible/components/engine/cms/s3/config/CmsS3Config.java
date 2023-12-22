@@ -8,27 +8,29 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.engine.cms.internal.config;
+package org.eclipse.dirigible.components.engine.cms.s3.config;
 
 import org.eclipse.dirigible.components.engine.cms.CmsProvider;
-import org.eclipse.dirigible.components.engine.cms.internal.provider.CmsProviderInternal;
+import org.eclipse.dirigible.components.engine.cms.s3.provider.CmsProviderS3;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.IOException;
+
 /**
- * The Class CmsInternalConfig.
+ * The Class CmsS3Config.
  */
 @Configuration
-public class CmsInternalConfig {
+public class CmsS3Config {
 
     /**
      * Gets the cms provider.
      *
      * @return the cms provider
      */
-    @Bean("cms-provider-internal")
-    public CmsProvider getCmsProvider() {
-        return new CmsProviderInternal();
+    @Bean("cms-provider-s3")
+    public CmsProvider getCmsProvider() throws IOException {
+        return new CmsProviderS3();
     }
 
 }

@@ -18,6 +18,9 @@ public interface CmsProvider {
     /** The Constant DIRIGIBLE_CMS_PROVIDER_INTERNAL. */
     public static final String DIRIGIBLE_CMS_PROVIDER_INTERNAL = "internal"; //$NON-NLS-1$
 
+    /** The Constant DIRIGIBLE_CMS_PROVIDER_S3. */
+    public static final String DIRIGIBLE_CMS_PROVIDER_S3 = "s3"; //$NON-NLS-1$
+
     /** The Constant DIRIGIBLE_CMS_PROVIDER_DATABASE. */
     public static final String DIRIGIBLE_CMS_PROVIDER_DATABASE = "database"; //$NON-NLS-1$
 
@@ -54,5 +57,12 @@ public interface CmsProvider {
      * @return the session object
      */
     public Object getSession();
+
+    /**
+     * Getter for the underlying repository type object.
+     *
+     * @return the type of the object
+     */
+    public String getType();
 
 }

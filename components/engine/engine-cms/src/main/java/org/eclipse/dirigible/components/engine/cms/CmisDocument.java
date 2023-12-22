@@ -8,25 +8,13 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.engine.cms.internal.repository;
+package org.eclipse.dirigible.components.engine.cms;
 
-/**
- * The Interface CmisRepository.
- */
-public interface CmisRepository {
-
+public interface CmisDocument {
     /**
-     * Gets the session.
+     * Returns the Path of this CmisDocument.
      *
-     * @return the session
+     * @return the path
      */
-    public CmisInternalSession getSession();
-
-    /**
-     * Gets the internal object.
-     *
-     * @return the internal object
-     */
-    public Object getInternalObject();
-
+    public String getPath();
 }

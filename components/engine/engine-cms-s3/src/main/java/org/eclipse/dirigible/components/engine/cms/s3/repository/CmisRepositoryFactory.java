@@ -8,25 +8,24 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.engine.cms.internal.repository;
+package org.eclipse.dirigible.components.engine.cms.s3.repository;
+
+import org.eclipse.dirigible.components.api.s3.S3Facade;
+
+import java.io.IOException;
 
 /**
- * The Interface CmisRepository.
+ * A factory for creating CmisRepository objects.
  */
-public interface CmisRepository {
+public class CmisRepositoryFactory {
 
     /**
-     * Gets the session.
+     * Creates a new CmisRepository object.
      *
-     * @return the session
+     * @return the cmis repository
      */
-    public CmisInternalSession getSession();
-
-    /**
-     * Gets the internal object.
-     *
-     * @return the internal object
-     */
-    public Object getInternalObject();
+    public static CmisRepository createCmisRepository(String root) throws IOException {
+        return new CmisS3Repository(root);
+    }
 
 }

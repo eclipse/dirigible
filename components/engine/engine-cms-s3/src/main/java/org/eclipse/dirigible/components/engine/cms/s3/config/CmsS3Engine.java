@@ -8,25 +8,35 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.engine.cms.internal.repository;
+package org.eclipse.dirigible.components.engine.cms.s3.config;
+
+import org.eclipse.dirigible.components.base.artefact.Engine;
+import org.springframework.stereotype.Component;
 
 /**
- * The Interface CmisRepository.
+ * The Class CMSInternalEngine.
  */
-public interface CmisRepository {
+@Component
+public class CmsS3Engine implements Engine {
 
     /**
-     * Gets the session.
+     * Gets the name.
      *
-     * @return the session
+     * @return the name
      */
-    public CmisInternalSession getSession();
+    @Override
+    public String getName() {
+        return "Content (S3)";
+    }
 
     /**
-     * Gets the internal object.
+     * Gets the provider.
      *
-     * @return the internal object
+     * @return the provider
      */
-    public Object getInternalObject();
+    @Override
+    public String getProvider() {
+        return "Eclipse Dirigible";
+    }
 
 }

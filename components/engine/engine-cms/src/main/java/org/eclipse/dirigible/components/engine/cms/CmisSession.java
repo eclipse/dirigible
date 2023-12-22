@@ -8,25 +8,26 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.engine.cms.internal.repository;
+package org.eclipse.dirigible.components.engine.cms;
 
-/**
- * The Interface CmisRepository.
- */
-public interface CmisRepository {
+import java.io.IOException;
+
+public interface CmisSession {
+    /**
+     * Returns a CMIS Object by name.
+     *
+     * @param id the Id
+     * @return CMIS Object
+     * @throws IOException IO Exception
+     */
+    public CmisObject getObject(String id) throws IOException;
 
     /**
-     * Gets the session.
+     * Returns a CMIS Object by path.
      *
-     * @return the session
+     * @param path the path
+     * @return CMIS Object
+     * @throws IOException IO Exception
      */
-    public CmisInternalSession getSession();
-
-    /**
-     * Gets the internal object.
-     *
-     * @return the internal object
-     */
-    public Object getInternalObject();
-
+    public CmisObject getObjectByPath(String path) throws IOException;
 }
