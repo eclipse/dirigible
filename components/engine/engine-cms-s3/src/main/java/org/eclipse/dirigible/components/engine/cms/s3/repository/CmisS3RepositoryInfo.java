@@ -8,22 +8,24 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.engine.cms.internal.repository;
+package org.eclipse.dirigible.components.engine.cms.s3.repository;
+
+import org.eclipse.dirigible.components.engine.cms.CmisRepositoryInfo;
 
 /**
- * The Class RepositoryInfo.
+ * The Class CmisS3RepositoryInfo.
  */
-public class RepositoryInfo {
+public class CmisS3RepositoryInfo implements CmisRepositoryInfo {
 
     /** The session. */
-    private CmisSession session;
+    private CmisS3Session session;
 
     /**
      * Instantiates a new repository info.
      *
      * @param session the session
      */
-    public RepositoryInfo(CmisSession session) {
+    public CmisS3RepositoryInfo(CmisS3Session session) {
         super();
         this.session = session;
     }
@@ -33,11 +35,13 @@ public class RepositoryInfo {
      *
      * @return the Id
      */
+    // TODO FIX
     public String getId() {
-        return this.session.getCmisRepository()
-                           .getInternalObject()
-                           .getClass()
-                           .getCanonicalName();
+        // return this.session.getCmisRepository()
+        // .getInternalObject()
+        // .getClass()
+        // .getCanonicalName();
+        return "";
     }
 
     /**
@@ -45,11 +49,13 @@ public class RepositoryInfo {
      *
      * @return the Name
      */
+    // TODO FIX
     public String getName() {
-        return this.session.getCmisRepository()
-                           .getInternalObject()
-                           .getClass()
-                           .getCanonicalName();
+        // return this.session.getCmisRepository()
+        // .getInternalObject()
+        // .getClass()
+        // .getCanonicalName();
+        return "";
     }
 
 }
