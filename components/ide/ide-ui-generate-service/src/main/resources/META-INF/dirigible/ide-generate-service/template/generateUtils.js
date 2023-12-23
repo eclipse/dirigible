@@ -15,11 +15,11 @@ const templateEngines = dirigibleRequire("template/engines");
 exports.generateFiles = function (model, parameters, templateSources) {
     let generatedFiles = [];
 
-    const models = model.entities.filter(e => e.type !== "REPORT" && e.type !== "REPORT_FILTER");
+    const models = model.entities.filter(e => e.type !== "REPORT" && e.type !== "FILTER");
     const feedModels = model.entities.filter(e => e.feedUrl);
 
     const reportModels = model.entities.filter(e => e.type === "REPORT");
-    const reportFilterModels = model.entities.filter(e => e.type === "REPORT_FILTER");
+    const reportFilterModels = model.entities.filter(e => e.type === "FILTER");
     for (const filter of reportFilterModels) {
         const reportModelName = filter.properties.filter(e => e.relationshipType === "ASSOCIATION" && e.relationshipCardinality === "1_1").map(e => e.relationshipEntityName)[0];
         if (reportModelName) {
