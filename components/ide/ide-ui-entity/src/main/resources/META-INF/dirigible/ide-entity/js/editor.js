@@ -722,9 +722,9 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				// Adds child properties for new connections between entities
 				$scope.graph.addEdge = function (edge, parent, source, target, index) {
 
-					if (source.style && source.style.startsWith('projection')) {
-						return;
-					}
+					//if (source.style && source.style.startsWith('projection')) {
+					//	return;
+					//}
 
 					// Finds the primary key child of the target table
 					let primaryKey = null;
@@ -916,9 +916,9 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 							return;
 						}
 					}
-					if (cell.style && cell.style.startsWith('projection')) {
-						return;
-					}
+					//if (cell.style && cell.style.startsWith('projection')) {
+					//	return;
+					//}
 
 					if ($scope.graph.isHtmlLabel(cell)) {
 						if (cell) {

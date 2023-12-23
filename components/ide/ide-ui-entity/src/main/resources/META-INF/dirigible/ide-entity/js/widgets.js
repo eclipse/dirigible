@@ -33,10 +33,10 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 				return;
 			}
 
-			if (parent.style === "projection") {
-				showAlert('Drop', 'Drop target cannot be an Entity of type Projection', $scope);
-				return;
-			}
+			//if (parent.style === "projection") {
+			//	showAlert('Drop', 'Drop target cannot be an Entity of type Projection', $scope);
+			//	return;
+			//}
 
 			pt.x -= pstate.x;
 			pt.y -= pstate.y;
@@ -102,6 +102,14 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 					if (isEntity && style === 'copied') {
 						v1.style = 'copied';
 						v1.value.entityType = "COPIED";
+					}
+					
+					if (isEntity && style === 'projection') {
+						v1.style = 'projection';
+						v1.value.entityType = "PROJECTION";
+					}
+					if (!isEntity && style === 'projection') {
+						v1.style = 'projectionproperty';
 					}
 
 					var memento = undefined;
