@@ -33,16 +33,10 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 				return;
 			}
 
-			//if (parent.style === "projection") {
-			//	showAlert('Drop', 'Drop target cannot be an Entity of type Projection', $scope);
-			//	return;
-			//}
-
 			pt.x -= pstate.x;
 			pt.y -= pstate.y;
 
 			let columnCount = graph.model.getChildCount(parent) + 1;
-			//showPrompt('Enter name for new property', 'property'+columnCount, createNode);
 			createNode('property' + columnCount, prototype.style === 'copied', parent.style === 'projection', parent.style === 'extension');
 		} else {
 			let entitiesCount = 0;
@@ -53,8 +47,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 					entitiesCount++;
 				}
 			}
-			//showPrompt('Enter name for new entity', 'Entity'+(entitiesCount+1), createNode);
-			createNode('Entity' + (entitiesCount + 1), prototype.style); //  === 'copied', prototype.style === 'projection', prototype.style === 'extension'
+			createNode('Entity' + (entitiesCount + 1), prototype.style);
 
 
 			if (prototype.style === 'dependent') {
