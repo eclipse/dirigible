@@ -15,17 +15,17 @@ import java.io.InputStream;
 /**
  * A factory for creating Object objects.
  */
-public class ObjectFactory {
+public class CmisInternalObjectFactory {
 
     /** The session. */
-    private CmisSession session;
+    private CmisInternalSession session;
 
     /**
      * Instantiates a new object factory.
      *
      * @param session the session
      */
-    public ObjectFactory(CmisSession session) {
+    public CmisInternalObjectFactory(CmisInternalSession session) {
         super();
         this.session = session;
     }
@@ -39,8 +39,8 @@ public class ObjectFactory {
      * @param inputStream the input stream
      * @return the content stream
      */
-    public ContentStream createContentStream(String filename, long length, String mimetype, InputStream inputStream) {
-        return new ContentStream(this.session, filename, length, mimetype, inputStream);
+    public CmisInternalContentStream createContentStream(String filename, long length, String mimetype, InputStream inputStream) {
+        return new CmisInternalContentStream(this.session, filename, length, mimetype, inputStream);
     }
 
 }

@@ -26,7 +26,7 @@ public class CmsInternalConfig {
      *
      * @return the cms provider
      */
-    @Bean("CMS_PROVIDER")
+    @Bean("cms-provider-internal")
     public CmsProvider getCmsProvider() {
         return new CmsProviderInternal();
     }

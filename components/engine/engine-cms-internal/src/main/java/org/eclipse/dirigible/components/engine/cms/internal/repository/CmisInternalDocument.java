@@ -13,16 +13,17 @@ package org.eclipse.dirigible.components.engine.cms.internal.repository;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import org.eclipse.dirigible.components.engine.cms.CmisDocument;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 
 /**
- * The Class Document.
+ * The Class CmisDocument.
  */
-public class Document extends CmisObject {
+public class CmisInternalDocument extends CmisInternalObject implements CmisDocument {
 
     /** The session. */
-    private CmisSession session;
+    private CmisInternalSession session;
 
     /** The internal resource. */
     private IResource internalResource;
@@ -37,7 +38,7 @@ public class Document extends CmisObject {
      * @param internalResource the internal resource
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public Document(CmisSession session, IResource internalResource) throws IOException {
+    public CmisInternalDocument(CmisInternalSession session, IResource internalResource) throws IOException {
         super(session, internalResource.getPath());
         this.session = session;
         this.repository = (IRepository) session.getCmisRepository()
@@ -52,7 +53,7 @@ public class Document extends CmisObject {
      * @param id the id
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public Document(CmisSession session, String id) throws IOException {
+    public CmisInternalDocument(CmisInternalSession session, String id) throws IOException {
         super(session, id);
         id = sanitize(id);
         this.session = session;
@@ -81,19 +82,19 @@ public class Document extends CmisObject {
     }
 
     /**
-     * Returns the ContentStream representing the contents of this Document.
+     * Returns the CmisInternalContentStream representing the contents of this CmisDocument.
      *
      * @return Content Stream
      * @throws IOException IO Exception
      */
-    public ContentStream getContentStream() throws IOException {
+    public CmisInternalContentStream getContentStream() throws IOException {
         byte[] content = this.internalResource.getContent();
-        return new ContentStream(session, this.internalResource.getName(), content.length, this.internalResource.getContentType(),
-                new ByteArrayInputStream(content));
+        return new CmisInternalContentStream(session, this.internalResource.getName(), content.length,
+                this.internalResource.getContentType(), new ByteArrayInputStream(content));
     }
 
     /**
-     * Returns the Path of this Document.
+     * Returns the Path of this CmisDocument.
      *
      * @return the path
      */
