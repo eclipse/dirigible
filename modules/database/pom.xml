@@ -26,6 +26,7 @@
 		<module>database-sql-mongodb</module>
 		<module>database-mongodb-jdbc</module>
 		<module>database-sql-snowflake</module>
+		<module>database-sql-mariadb</module>
 	</modules>
 
 	<properties>
