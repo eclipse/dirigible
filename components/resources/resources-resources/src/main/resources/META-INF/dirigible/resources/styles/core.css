@@ -87,6 +87,10 @@ body.dg-light {
   z-index: 300;
 }
 
+.dg-pre-wrap {
+  white-space: pre-wrap;
+}
+
 iframe {
   display: block;
   border: none;

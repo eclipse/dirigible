@@ -1,0 +1,48 @@
+.fb-main-dnd-area {
+    min-width: 20rem;
+    border-radius: .188rem;
+    outline: .063rem dashed var(--sapTextColor, #e5e5e5);
+    padding-bottom: 2rem;
+}
+
+.fb-main-dnd-area[disabled] {
+    pointer-events: none;
+    outline-color: var(--sapErrorBorderColor, #bb0000);
+}
+
+.fb-control-wrapper {
+    padding: .188rem .375rem;
+    background-color: var(--sapBackgroundColor, #f7f7f7);
+}
+
+.fb-control-wrapper:hover,
+.fb-control-wrapper:focus-within,
+.fb-control-wrapper:active {
+    border-radius: .188rem;
+    outline: .063rem solid var(--sapContent_DragAndDropActiveColor, #0854a0);
+    outline-offset: -.063rem;
+}
+
+.fb-control-wrapper>* {
+    pointer-events: none;
+}
+
+.fb-main-dnd-area .dg-vbox,
+.fb-main-dnd-area .dg-hbox {
+    background-color: transparent;
+    border: .125rem solid var(--sapBackgroundColor, #e5e5e5);
+}
+
+.fb-main-dnd-area .dg-vbox:empty,
+.dg-hbox:empty {
+    padding-bottom: 2rem;
+    min-width: 2rem;
+}
+
+.fb-main-dnd-area .dg-vbox {
+    padding-bottom: 1.25rem;
+}
+
+.fb-main-dnd-area .dg-hbox {
+    padding-right: 1.25rem;
+}

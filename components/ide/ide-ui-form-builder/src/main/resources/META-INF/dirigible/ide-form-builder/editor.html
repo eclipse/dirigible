@@ -1,0 +1,304 @@
+<!DOCTYPE HTML>
+<!--
+  ~ Copyright (c) 2010-2024 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="app" ng-controller="DesignerController">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+        <title dg-view-title></title>
+        <script type="text/javascript" src="services/editor.js"></script>
+        <theme></theme>
+        <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
+        <script type="text/javascript" src="/services/web/ide-workspace-service/workspace.js"></script>
+        <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
+        <link type="text/css" rel="stylesheet" href="css/editor.css" />
+        <script type="text/javascript" src="js/editor.js"></script>
+    </head>
+
+    <body class="dg-vbox" dg-shortcut="'ctrl+s'" dg-shortcut-action="save()">
+        <fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
+            {{state.busyText}}
+        </fd-busy-indicator-extended>
+        <fd-message-page glyph="sap-icon--error" ng-if="state.error">
+            <fd-message-page-title>Editor encounterd an error!</fd-message-page-title>
+            <fd-message-page-subtitle>{{errorMessage}}</fd-message-page-subtitle>
+        </fd-message-page>
+
+        <fd-icon-tab-bar side-padding="sm" selected-tab-id="selectedTab" ng-show="!state.error && !state.isBusy">
+            <fd-icon-tab-bar-tablist>
+                <fd-icon-tab-bar-tab label="Designer" tab-id="designer" ng-click="switchTab('designer')">
+                </fd-icon-tab-bar-tab>
+                <fd-icon-tab-bar-tab label="Feeds" tab-id="feeds" ng-click="switchTab('feeds')">
+                </fd-icon-tab-bar-tab>
+                <fd-icon-tab-bar-tab label="Code" tab-id="code" ng-click="switchTab('code')">
+                </fd-icon-tab-bar-tab>
+                <fd-icon-tab-bar-tab label="Scripts" tab-id="scripts" ng-click="switchTab('scripts')">
+                </fd-icon-tab-bar-tab>
+            </fd-icon-tab-bar-tablist>
+            <fd-icon-tab-bar-panel class="dg-hbox" tab-id="designer" ng-show="selectedTab === 'designer'">
+                <fd-scrollbar class="dg-list-border-right">
+                    <fd-panel expanded="true" ng-repeat="(key, group) in builderComponents">
+                        <fd-panel-header>
+                            <fd-panel-expand></fd-panel-expand>
+                            <h4 fd-panel-title>{{key}}</h4>
+                        </fd-panel-header>
+                        <fd-panel-content aria-label="{{key}} Group Content"
+                            class="fd-padding--none dg-no-border-bottom">
+                            <fd-list>
+                                <fd-list-item ng-repeat="control in group" ng-on-dragstart="drag($event, control)"
+                                    draggable="true" title="{{control.description}}">
+                                    <fd-list-icon glyph="{{control.icon}}"
+                                        ng-attr-rotate="{{control.iconRotate ? '90' : undefined}}">
+                                    </fd-list-icon>
+                                    <fd-list-title>{{control.label}}</fd-list-title>
+                                </fd-list-item>
+                            </fd-list>
+                        </fd-panel-content>
+                    </fd-panel>
+                </fd-scrollbar>
+                <div style="flex:1">
+                    <fd-toolbar has-title="false">
+                        <fd-toolbar-spacer></fd-toolbar-spacer>
+                        <fd-button compact="true" dg-type="transparent" glyph="sap-icon--save" dg-label="Save"
+                            aria-label="save" ng-click="save()" state="{{ isFormValid() ? '' : 'disabled'}}">
+                        </fd-button>
+                        <!-- <fd-toolbar-separator></fd-toolbar-separator> -->
+                    </fd-toolbar>
+                    <fd-scrollbar class="fd-padding">
+                        <div id="formContainer" class="dg-checkered-bg dg-vbox fb-main-dnd-area dg-restrict-width"
+                            ng-attr-disabled="{{state.canSave === false || undefined}}" ng-on-drop="drop($event)"
+                            ng-on-dragover="allowDrop($event)" data-type="container-vbox">
+                        </div>
+                    </fd-scrollbar>
+                </div>
+                <fd-scrollbar class="dg-list-border-left">
+                    <fd-panel expanded="true">
+                        <fd-panel-header>
+                            <h4 fd-panel-title class="fd-padding-begin-end--sm">Properties</h4>
+                        </fd-panel-header>
+                        <fd-panel-content aria-label="Control properties" class="dg-no-border-bottom">
+                            <fd-fieldset ng-if="selectedCtrlId !== undefined" ng-form="forms.formProperties">
+                                <fd-form-group>
+                                    <div class="dg-fd-repeat"
+                                        ng-repeat="(key, item) in getProps(formModel, selectedCtrlId) track by $index">
+                                        <fd-form-item ng-if="item.type === 'text'">
+                                            <fd-form-label dg-colon="true" dg-required="item.required"
+                                                for="{{ 'p' + key }}">
+                                                {{ item.label }}
+                                            </fd-form-label>
+                                            <fd-form-input-message-group dg-inactive="{{ item.error ? false : true }}">
+                                                <fd-input id="{{ 'p' + key }}" type="text"
+                                                    placeholder="{{ item.placeholder}}"
+                                                    state="{{ item.error ? 'error' : '' }}" name="{{ 'p' + key }}"
+                                                    ng-required="item.required" ng-model="item.value" ng-trim="false"
+                                                    ng-minlength="item.minlength || 0"
+                                                    ng-maxlength="item.maxlength || -1"
+                                                    dg-input-rules="item.inputRules || {}"
+                                                    ng-change="item.error = !forms.formProperties['p' + key].$valid; fileChanged()">
+                                                </fd-input>
+                                                <fd-form-message dg-type="error">Incorrect input</fd-form-message>
+                                            </fd-form-input-message-group>
+                                        </fd-form-item>
+
+                                        <fd-form-item ng-if="item.type === 'textarea'">
+                                            <fd-form-label dg-colon="true" dg-required="item.required"
+                                                for="{{ 'p' + key }}">
+                                                {{ item.label }}
+                                            </fd-form-label>
+                                            <fd-form-input-message-group message-fixed="true"
+                                                dg-inactive="{{ item.error ? false : true }}">
+                                                <fd-textarea id="{{ item.id }}" style="min-height:13rem"
+                                                    placeholder="{{ item.placeholder}}"
+                                                    state="{{ item.error ? 'error' : '' }}" name="{{ 'p' + key }}"
+                                                    ng-required="item.required" ng-model="item.value" ng-trim="false"
+                                                    ng-minlength="item.minlength || 0"
+                                                    ng-attr-rows="{{item.rows || '1'}}"
+                                                    ng-maxlength="item.maxlength || -1"
+                                                    dg-input-rules="item.inputRules || {}"
+                                                    ng-change="item.error = !forms.formProperties['p' + key].$valid; fileChanged()">
+                                                </fd-textarea>
+                                                <fd-form-message dg-type="error">Incorrect input</fd-form-message>
+                                            </fd-form-input-message-group>
+                                        </fd-form-item>
+
+                                        <fd-form-item ng-if="item.type === 'number'">
+                                            <fd-form-label dg-colon="true" dg-required="item.required"
+                                                for="{{ 'p' + key }}">
+                                                {{ item.label }}
+                                            </fd-form-label>
+                                            <fd-step-input dg-id="{{ 'p' + key }}" ng-model="item.value"
+                                                state="{{ item.error ? 'error' : '' }}" name="{{ 'p' + key }}"
+                                                dg-required="item.required" ng-attr-dg-min="item.min"
+                                                ng-attr-dg-max="item.max" ng-attr-placeholder="{{ item.placeholder}}"
+                                                ng-change="item.error = !forms.formProperties['p' + key].$valid; fileChanged()"
+                                                ng-attr-dg-step="item.step">
+                                            </fd-step-input>
+                                        </fd-form-item>
+
+                                        <fd-form-item ng-if="item.type === 'checkbox'">
+                                            <fd-checkbox id="{{ 'p' + key }}" ng-model="item.value"
+                                                state="{'error' : item.error }">
+                                            </fd-checkbox>
+                                            <fd-checkbox-label for="{{ 'p' + key }}">{{ item.label }}
+                                            </fd-checkbox-label>
+                                        </fd-form-item>
+
+                                        <fd-form-item ng-if="item.type === 'dropdown'">
+                                            <fd-form-label dg-colon="true" dg-required="item.required"
+                                                for="{{ 'p' + key }}">
+                                                {{ item.label }}
+                                            </fd-form-label>
+                                            <fd-select dg-placeholder="{{ item.placeholder }}"
+                                                label-id="{{ 'p' + key }}" ng-required="item.required"
+                                                ng-model="item.value" dropdown-fixed="true">
+                                                <fd-option text="{{ menuItem.label }}" value="menuItem.value"
+                                                    ng-repeat="menuItem in item.items">
+                                                </fd-option>
+                                            </fd-select>
+                                        </fd-form-item>
+
+                                        <fd-form-item ng-if="item.type === 'list'">
+                                            <fd-toolbar class="fd-padding--none" no-bottom-border="true" compact="true"
+                                                has-title="false">
+                                                <span>{{ item.label }}</span>
+                                                <fd-toolbar-spacer></fd-toolbar-spacer>
+                                                <fd-button glyph="sap-icon--add" title="Add option to list"
+                                                    dg-type="transparent" dg-label="Add" aria-label="Add option to list"
+                                                    ng-click="addListItem(item.options)">
+                                                </fd-button>
+                                            </fd-toolbar>
+                                            <table fd-table display-mode="compact">
+                                                <thead fd-table-header>
+                                                    <tr fd-table-row>
+                                                        <th fd-table-header-cell content-type="checkbox"></th>
+                                                        <th fd-table-header-cell>Label</th>
+                                                        <th fd-table-header-cell>Value</th>
+                                                        <th fd-table-header-cell></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody fd-table-body>
+                                                    <tr fd-table-row hoverable="true"
+                                                        ng-repeat="listItem in item.options track by $index">
+                                                        <td fd-table-cell content-type="checkbox">
+                                                            <fd-checkbox id="{{listItem + $index}}"
+                                                                ng-checked="item.defaultValue === listItem.value"
+                                                                ng-click="item.defaultValue !== listItem.value ? item.defaultValue = listItem.value : item.defaultValue = undefined">
+                                                            </fd-checkbox>
+                                                            <fd-checkbox-label empty="true" for="{{listItem + $index}}">
+                                                            </fd-checkbox-label>
+                                                        </td>
+                                                        <td fd-table-cell>{{listItem.label}}</td>
+                                                        <td fd-table-cell>{{listItem.value}}</td>
+                                                        <td fd-table-cell fit-content="true">
+                                                            <fd-button glyph="sap-icon--edit" title="Edit option"
+                                                                dg-type="transparent" aria-label="Edit option"
+                                                                ng-click="editListItem(listItem)">
+                                                            </fd-button>
+                                                            <fd-button glyph="sap-icon--delete" title="Delete option"
+                                                                dg-type="transparent" aria-label="Delete option"
+                                                                ng-click="deleteListItem(item.options, $index)">
+                                                            </fd-button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </fd-form-item>
+                                    </div>
+                                </fd-form-group>
+                                <fd-form-group class="fd-margin-top--sm">
+                                    <fd-form-item>
+                                        <fd-button glyph="sap-icon--delete" dg-label="Delete control"
+                                            title="Delete control" dg-type="negative" aria-label="Delete control"
+                                            ng-click="deleteControl(selectedCtrlId)">
+                                        </fd-button>
+                                    </fd-form-item>
+                                </fd-form-group>
+                            </fd-fieldset>
+                            <fd-button ng-show="selectedContainerId" glyph="sap-icon--delete"
+                                dg-label="Delete container" title="Delete container" dg-type="negative"
+                                aria-label="Delete container" ng-click="deleteControl(selectedContainerId)">
+                            </fd-button>
+                        </fd-panel-content>
+                    </fd-panel>
+                </fd-scrollbar>
+            </fd-icon-tab-bar-panel>
+            <fd-icon-tab-bar-panel tab-id="feeds" ng-show="selectedTab === 'feeds'">
+                <fd-toolbar has-title="false">
+                    <fd-toolbar-spacer></fd-toolbar-spacer>
+                    <fd-button glyph="sap-icon--add" title="Add feed to list" dg-type="transparent" dg-label="Add"
+                        aria-label="Add feed to list" ng-click="addFeed()">
+                    </fd-button>
+                </fd-toolbar>
+                <table fd-table display-mode="compact" outer-borders="bottom">
+                    <thead fd-table-header>
+                        <tr fd-table-row>
+                            <th fd-table-header-cell>Name</th>
+                            <th fd-table-header-cell>URL</th>
+                            <th fd-table-header-cell></th>
+                        </tr>
+                    </thead>
+                    <tbody fd-table-body>
+                        <tr fd-table-row hoverable="false" ng-repeat="feed in formData.feeds track by $index">
+                            <td fd-table-cell>{{feed.name}}</td>
+                            <td fd-table-cell>{{feed.url}}</td>
+                            <td fd-table-cell fit-content="true">
+                                <fd-button glyph="sap-icon--edit" title="Edit feed" dg-type="transparent"
+                                    aria-label="Edit feed" ng-click="editFeed(feed)">
+                                </fd-button>
+                                <fd-button glyph="sap-icon--delete" title="Delete feed" dg-type="transparent"
+                                    aria-label="Delete feed" ng-click="deleteFeed($index)">
+                                </fd-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fd-icon-tab-bar-panel>
+            <fd-icon-tab-bar-panel class="dg-hbox" tab-id="code" ng-show="selectedTab === 'code'">
+                <fd-textarea name="formCode" ng-model="formData.code" ng-trim="false" ng-change="fileChanged()">
+                </fd-textarea>
+            </fd-icon-tab-bar-panel>
+            <fd-icon-tab-bar-panel tab-id="scripts" ng-show="selectedTab === 'scripts'">
+                <fd-toolbar has-title="false">
+                    <fd-toolbar-spacer></fd-toolbar-spacer>
+                    <fd-button glyph="sap-icon--add" title="Add script URL to list" dg-type="transparent" dg-label="Add"
+                        aria-label="Add script URL to list" ng-click="addScript()">
+                    </fd-button>
+                </fd-toolbar>
+                <table fd-table display-mode="compact" outer-borders="bottom">
+                    <thead fd-table-header>
+                        <tr fd-table-row>
+                            <th fd-table-header-cell>Name</th>
+                            <th fd-table-header-cell>URL</th>
+                            <th fd-table-header-cell></th>
+                        </tr>
+                    </thead>
+                    <tbody fd-table-body>
+                        <tr fd-table-row hoverable="false" ng-repeat="script in formData.scripts track by $index">
+                            <td fd-table-cell>{{script.name}}</td>
+                            <td fd-table-cell>{{script.url}}</td>
+                            <td fd-table-cell fit-content="true">
+                                <fd-button glyph="sap-icon--edit" title="Edit script" dg-type="transparent"
+                                    aria-label="Edit script" ng-click="editScript(script)">
+                                </fd-button>
+                                <fd-button glyph="sap-icon--delete" title="Delete script" dg-type="transparent"
+                                    aria-label="Delete script" ng-click="deleteScript($index)">
+                                </fd-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fd-icon-tab-bar-panel>
+        </fd-icon-tab-bar>
+    </body>
+
+</html>

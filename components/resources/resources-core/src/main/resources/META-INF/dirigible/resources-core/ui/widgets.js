@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2023 SAP and others.
+ * Copyright (c) 2010-2024 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -3544,7 +3544,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         }
     }]).directive('fdTitle', [function () {
         /**
-         * headerSize: Boolean - If specified overrides the size of the heading element. Must be a number between 1 and 6 inclusive
+         * headerSize: Number - If specified overrides the size of the heading element. Must be a number between 1 and 6 inclusive
          * dgWrap: Boolean - Whether or not the title should wrap
          */
         return {
@@ -3555,17 +3555,21 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             },
             link: function (scope, element) {
                 element.addClass('fd-title');
+                if (scope.dgWrap) element.addClass(`fd-title--wrap`);
 
-                if (scope.headerSize) {
-                    if (scope.headerSize >= 1 && scope.headerSize <= 6)
-                        element.addClass(`fd-title--h${scope.headerSize}`);
-                    else
-                        console.error(`fd-title error: 'header-size' must be a number between 1 and 6 inclusive`);
+                function setHeaderSize(newSize, oldSize) {
+                    if (scope.headerSize) {
+                        if (scope.headerSize >= 1 && scope.headerSize <= 6) {
+                            if (oldSize) element.removeClass(`fd-title--h${oldSize}`);
+                            element.addClass(`fd-title--h${scope.headerSize}`);
+                        } else
+                            console.error(`fd-title error: 'header-size' must be a number between 1 and 6 inclusive`);
+                    }
                 }
-
-                if (scope.dgWrap) {
-                    element.addClass(`fd-title--wrap`);
-                }
+                let headerSizeWatcher = scope.$watch('headerSize', setHeaderSize);
+                scope.$on('$destroy', function () {
+                    headerSizeWatcher();
+                });
             }
         }
     }]).directive('fdComboboxInput', ['uuid', 'classNames', '$window', function (uuid, classNames, $window) {
