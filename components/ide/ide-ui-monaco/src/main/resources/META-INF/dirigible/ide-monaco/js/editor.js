@@ -1050,14 +1050,31 @@ function isDirty(model) {
             noUnusedLocals: true,
             checkJs: true,
             noFallthroughCasesInSwitch: true,
-            module: (fileName?.endsWith(".mjs") === true) ? monaco.languages.typescript.ModuleKind.ESNext : monaco.languages.typescript.ModuleKind.CommonJS
+            module: (fileName?.endsWith(".mjs") === true) ? monaco.languages.typescript.ModuleKind.ESNext : monaco.languages.typescript.ModuleKind.CommonJS,
+            moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+            resolveJsonModule: true,
+            jsx: (fileName?.endsWith(".jsx") === true) ? "react" : undefined
         });
-        monaco.languages.typescript.javascriptDefaults.getCompilerOptions().moduleResolution = monaco.languages.typescript.ModuleResolutionKind.NodeJs;
-        monaco.languages.typescript.typescriptDefaults.getCompilerOptions().moduleResolution = monaco.languages.typescript.ModuleResolutionKind.NodeJs;
-        monaco.languages.typescript.typescriptDefaults.getCompilerOptions().jsx = (fileName?.endsWith(".tsx") === true) ? "react" : undefined;
-        monaco.languages.typescript.javascriptDefaults.getCompilerOptions().jsx = (fileName?.endsWith(".jsx") === true) ? "react" : undefined,
+        monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+            target: monaco.languages.typescript.ScriptTarget.ESNext,
+            strict: true,
+            strictNullChecks: true,
+            strictPropertyInitialization: true,
+            alwaysStrict: true,
+            allowNonTsExtensions: true,
+            allowUnreachableCode: false,
+            allowUnusedLabels: false,
+            noUnusedParameters: true,
+            noUnusedLocals: true,
+            checkJs: true,
+            noFallthroughCasesInSwitch: true,
+            module: monaco.languages.typescript.ModuleKind.ESNext,
+            moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+            resolveJsonModule: true,
+            jsx: (fileName?.endsWith(".tsx") === true) ? "react" : undefined
+        });
 
-            monaco.languages.html.registerHTMLLanguageService('xml', {}, { documentFormattingEdits: true });
+        monaco.languages.html.registerHTMLLanguageService('xml', {}, { documentFormattingEdits: true });
         monaco.languages.html.htmlDefaults.setOptions({
             format: {
                 tabSize: 2,
