@@ -20,15 +20,15 @@ export interface ${name}Filter {
 #foreach ($property in $filter.properties)
 #if(!$property.dataPrimaryKey)
 #if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-    readonly ${property.name}: string;
+    readonly ${property.name}?: string;
 #elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-    readonly ${property.name}: number;
+    readonly ${property.name}?: number;
 #elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-    readonly ${property.name}: Date;
+    readonly ${property.name}?: Date;
 #elseif($property.dataType == "BOOLEAN")
-    readonly ${property.name}: boolean;
+    readonly ${property.name}?: boolean;
 #else
-    readonly ${property.name}: unknown;
+    readonly ${property.name}?: unknown;
 #end
 #end
 #end
@@ -41,7 +41,7 @@ export interface ${name}PaginatedFilter extends ${name}Filter {
 
 export class ${name}Repository {
 
-    private readonly datasourceName: string;
+    private readonly datasourceName?: string;
 
     constructor(datasourceName?: string) {
         this.datasourceName = datasourceName;

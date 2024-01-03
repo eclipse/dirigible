@@ -38,9 +38,9 @@ jobs:
     - name: Install TypeScript compiler
       run: npm i -g typescript
     - name: Validate Java code formatting
-      run: mvn formatter:validate
+      run: mvn -T 1C formatter:validate
     - name: Maven Build
-      run: mvn clean install -D maven.javadoc.skip=false -U
+      run: mvn -T 1C clean install -D maven.javadoc.skip=false -U
       
   integration-tests:        
     runs-on: ${{ matrix.os }}-latest

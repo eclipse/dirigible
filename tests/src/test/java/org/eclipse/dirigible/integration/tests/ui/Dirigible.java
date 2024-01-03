@@ -46,7 +46,7 @@ public class Dirigible {
         login();
     }
 
-    private void login() {
+    public void login() {
         SelenideElement title = browser.waitUntilExist(HtmlElementType.TITLE);
         String pageTitle = title.getOwnText();
         if (!LOGIN_PAGE_TITLE.equals(pageTitle)) {
