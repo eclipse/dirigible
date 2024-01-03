@@ -37,12 +37,13 @@ public class Invoker {
     public void invoke(Message camelMessage) throws IOException {
         resetCodeRunner();
         String resourcePath = (String) camelMessage.getExchange()
-                .getProperty("resource");
+                                                   .getProperty("resource");
 
         var module = runner.run(Path.of(resourcePath));
         var result = runner.runMethod(module, "onMessage", wrapCamelMessage(camelMessage));
 
-        camelMessage.getExchange().setMessage(unwrapCamelMessage(result));
+        camelMessage.getExchange()
+                    .setMessage(unwrapCamelMessage(result));
     }
 
     private IntegrationMessage wrapCamelMessage(Message camelMessage) {
@@ -51,22 +52,20 @@ public class Invoker {
 
     private Message unwrapCamelMessage(Value value) {
         if (value == null || !value.isHostObject()) {
-            throw new IllegalStateException("Unexpected null value or return type received from " +
-                    "@dirigible/integrations::onMessage(). " +
-                    "Expected return type: org.eclipse.dirigible.components.engine.camel.invoke.IntegrationMessage");
+            throw new IllegalStateException("Unexpected null value or return type received from " + "@dirigible/integrations::onMessage(). "
+                    + "Expected return type: org.eclipse.dirigible.components.engine.camel.invoke.IntegrationMessage");
         }
 
         Object hostObject = value.asHostObject();
 
         if (!(hostObject instanceof IntegrationMessage integrationMessage)) {
-            throw new IllegalArgumentException("Unexpected return type received from " +
-                    "@dirigible/integrations::onMessage(). " +
-                    "Expected return type: org.eclipse.dirigible.components.engine.camel.invoke.IntegrationMessage");
+            throw new IllegalArgumentException("Unexpected return type received from " + "@dirigible/integrations::onMessage(). "
+                    + "Expected return type: org.eclipse.dirigible.components.engine.camel.invoke.IntegrationMessage");
         }
 
         if (integrationMessage.getCamelMessage() == null) {
-            throw new IllegalStateException("IntegrationMessage does not contain a valid Camel Message. " +
-                    "Expected a non-null Camel Message.");
+            throw new IllegalStateException(
+                    "IntegrationMessage does not contain a valid Camel Message. " + "Expected a non-null Camel Message.");
         }
 
         return integrationMessage.getCamelMessage();
