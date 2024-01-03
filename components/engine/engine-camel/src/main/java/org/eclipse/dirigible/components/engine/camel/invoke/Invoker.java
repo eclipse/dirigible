@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.components.engine.camel.invoke;
 
 import org.apache.camel.Message;
-import org.apache.camel.component.platform.http.springboot.PlatformHttpMessage;
 import org.eclipse.dirigible.components.engine.camel.processor.CamelProcessor;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.javascript.CalledFromJS;
