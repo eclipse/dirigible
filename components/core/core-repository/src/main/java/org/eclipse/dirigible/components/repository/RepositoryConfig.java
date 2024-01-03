@@ -22,7 +22,7 @@ public class RepositoryConfig {
 
 
     @Bean
-    IRepository repository() {
+    public IRepository repository() {
         String repoFolderPath = Configuration.get(Configuration.DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER, "target");
         boolean absolutePath = repoFolderPath.startsWith(File.separator);
         LocalRepository localRepository = new LocalRepository(repoFolderPath, absolutePath);
