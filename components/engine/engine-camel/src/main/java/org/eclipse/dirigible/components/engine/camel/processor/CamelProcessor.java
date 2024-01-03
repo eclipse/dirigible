@@ -13,6 +13,7 @@ package org.eclipse.dirigible.components.engine.camel.processor;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.camel.FluentProducerTemplate;
 import org.apache.camel.component.platform.http.springboot.CamelRequestHandlerMapping;
 import org.apache.camel.impl.engine.DefaultRoutesLoader;
@@ -23,6 +24,10 @@ import org.apache.camel.support.ResourceHelper;
 import org.eclipse.dirigible.components.engine.camel.domain.Camel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class CamelProcessor {
@@ -55,13 +60,13 @@ public class CamelProcessor {
 
     private void addAllRoutes() {
         camels.values()
-              .forEach(routesResource -> {
-                  try {
-                      loader.loadRoutes(routesResource);
-                  } catch (Exception e) {
-                      throw new CamelProcessorException(e);
-                  }
-              });
+                .forEach(routesResource -> {
+                    try {
+                        loader.loadRoutes(routesResource);
+                    } catch (Exception e) {
+                        throw new CamelProcessorException(e);
+                    }
+                });
     }
 
     private void removeAllRoutes() {
@@ -69,7 +74,7 @@ public class CamelProcessor {
             context.stopAllRoutes();
             context.removeAllRoutes();
             camelRequestHandlerMapping.getHandlerMethods()
-                                      .forEach((info, method) -> camelRequestHandlerMapping.unregisterMapping(info));
+                    .forEach((info, method) -> camelRequestHandlerMapping.unregisterMapping(info));
         } catch (Exception e) {
             throw new CamelProcessorException(e);
         }
@@ -78,9 +83,9 @@ public class CamelProcessor {
     public Object invokeRoute(String routeId, Object payload, Map<String, Object> headers) {
         try (FluentProducerTemplate producer = context.createFluentProducerTemplate()) {
             return producer.withHeaders(headers)
-                           .withBody(payload)
-                           .to(routeId)
-                           .request();
+                    .withBody(payload)
+                    .to(routeId)
+                    .request();
         } catch (IOException e) {
             throw new CamelProcessorException("Could not invoke route: " + routeId, e);
         }
