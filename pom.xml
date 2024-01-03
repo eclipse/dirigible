@@ -159,7 +159,7 @@
 		<logcaptor.version>2.9.2</logcaptor.version>
 		<mina-core.version>2.2.3</mina-core.version>
 		<sshd-core.version>2.11.0</sshd-core.version>
-		<icu4j.version>74.1</icu4j.version>
+		<icu4j.version>74.2</icu4j.version>
 		<velocity.version>2.3</velocity.version>
 		<wikitext.version>3.0.48.202308291007</wikitext.version>
 		<flexmark.version>0.64.8</flexmark.version>
