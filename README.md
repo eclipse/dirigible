@@ -258,6 +258,46 @@ To format the code using Maven execute the following in the root dir of the proj
 
 	mvn formatter:format
 
+### CMS with AWS S3
+
+Eclipse Dirigible's Document perspective can be used with [AWS S3](https://aws.amazon.com/s3/), providing you CMS with S3's cloud storage.
+
+#### Setup:
+- AWS account with generated credentials (AWS Acces Key, AWS Secret Key)
+- Set up the environment variables regarding CMS/CMS S3 exposed by Eclipse Dirigible. Full list can be found [here](https://www.dirigible.io/help/setup/setup-environment-variables/#cms).
+
+#### Usage:
+- Navigate to the `Document` perspective in your Eclipse Dirigible instance
+- Upload a file and you should see the file in the perspective as well as in the S3 bucket
+
+#### Test environment with LocalStack
+If you prefer working with a test environment you can use [LocalStack](https://www.localstack.cloud/).
+
+#### Setup:
+- Install LocalStack on your machine using the installation guide [here](https://docs.localstack.cloud/getting-started/installation/) or the following commands:
+  - MacOS - `brew install localstack/tap/localstack-cli`
+  - Linux -
+  
+      For `x86-64`:
+      ```
+       curl -Lo localstack-cli-3.0.2-linux-amd64-onefile.tar.gz \ 
+        https://github.com/localstack/localstack-cli/releases/download/v3.0.2/localstack-cli-3.0.2-linux-amd64-onefile.tar.gz
+      ```
+      For `ARM64`:
+      ```
+      curl -Lo localstack-cli-3.0.2-linux-arm64-onefile.tar.gz \
+        https://github.com/localstack/localstack-cli/releases/download/v3.0.2/localstack-cli-3.0.2-linux-arm64-onefile.tar.gz
+      ```
+    
+    Then extract the LocalStack CLI from the terminal:
+    
+    ```
+    sudo tar xvzf localstack-cli-3.0.2-linux-*-onefile.tar.gz -C /usr/local/bin
+    ```
+- Start `LocalStack` using - `localstack start -d`
+- Set up the environment variables, mainly `DIRIGIBLE_S3_PROVIDER=localstack`, exposed by Eclipse Dirigible
+
+
 ## Additional Information
 
 ### License
