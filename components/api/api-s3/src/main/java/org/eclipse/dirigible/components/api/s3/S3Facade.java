@@ -15,14 +15,11 @@ import java.net.URI;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -49,7 +46,6 @@ import software.amazon.awssdk.transfer.s3.S3TransferManager;
 import software.amazon.awssdk.transfer.s3.model.DirectoryUpload;
 import software.amazon.awssdk.transfer.s3.model.UploadDirectoryRequest;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class S3Facade.
  */

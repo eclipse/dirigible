@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @Component
 class CamelDataSourceLifecycleListener implements DataSourceLifecycleListener {
 
-
     private final SpringBootCamelContext camelContext;
     private final DataSourceInitializer dataSourceInitializer;
 

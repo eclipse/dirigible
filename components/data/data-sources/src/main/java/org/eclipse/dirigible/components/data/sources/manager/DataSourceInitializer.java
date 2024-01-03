@@ -41,7 +41,6 @@ public class DataSourceInitializer {
 
     private static final Map<String, javax.sql.DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<>());
 
-
     private final ApplicationContext applicationContext;
 
     /**

@@ -21,7 +21,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DataSourcesManager.
  */
@@ -35,7 +34,6 @@ public class DataSourcesManager implements InitializingBean {
     private final DataSourceService datasourceService;
 
     private final CustomDataSourcesService customDataSourcesService;
-
 
     private final DataSourceInitializer dataSourceInitializer;
 
