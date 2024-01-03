@@ -1,4 +1,7 @@
 exports.onMessage = (message) => {
-    console.log('[CamelTest] CalledFromCamel.js called with message: ' + message);
-    return message + " -> calledFromCamel.js handled this message";
+    let messageBody = message.getBodyAsString();
+    let modifiedMessageBody = messageBody + " -> calledFromCamel.js handled this message";
+    console.log('[CamelTest] CalledFromCamel.js called with message: ' + messageBody);
+    message.setBody(modifiedMessageBody);
+    return message;
 }
