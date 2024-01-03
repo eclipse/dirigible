@@ -11,22 +11,17 @@
 package org.eclipse.dirigible.components.base.home;
 
 import java.io.IOException;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * The Home Redirect.
  */
 @RestController
-@WebServlet(name = "HomeRedirectEndpoint", urlPatterns = {"/home"})
-public class HomeRedirectEndpoint {
+class HomeRedirectEndpoint {
 
     /** The Constant DIRIGIBLE_HOME_URL. */
     private static final String DIRIGIBLE_HOME_URL = "DIRIGIBLE_HOME_URL";
@@ -38,13 +33,10 @@ public class HomeRedirectEndpoint {
      * @param response the response
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    @RequestMapping("/home")
+    @RequestMapping(path = {"/home", "/", ""})
     void goHome(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String pathInfo = request.getPathInfo();
-        if ((pathInfo == null) || "".equals(pathInfo) || "/".equals(pathInfo)) {
-            String homeUrl = Configuration.get(DIRIGIBLE_HOME_URL);
-            response.sendRedirect(homeUrl);
-        }
+        String homeUrl = Configuration.get(DIRIGIBLE_HOME_URL);
+        response.sendRedirect(homeUrl);
     }
 
 }
