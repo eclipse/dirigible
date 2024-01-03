@@ -25,10 +25,6 @@ import org.eclipse.dirigible.components.engine.camel.domain.Camel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 @Component
 public class CamelProcessor {
     private final SpringBootCamelContext context;
