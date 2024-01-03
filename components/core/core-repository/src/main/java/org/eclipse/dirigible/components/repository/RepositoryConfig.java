@@ -18,7 +18,7 @@ import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.springframework.context.annotation.Bean;
 
 @org.springframework.context.annotation.Configuration
-class RepositoryConfig {
+public class RepositoryConfig {
 
 
     @Bean
