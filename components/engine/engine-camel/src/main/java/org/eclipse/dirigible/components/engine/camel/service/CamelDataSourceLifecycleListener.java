@@ -19,7 +19,7 @@ class CamelDataSourceLifecycleListener implements DataSourceLifecycleListener {
     }
 
     @Override
-    public void onSaved(DataSource dataSource) {
+    public void onSave(DataSource dataSource) {
         String dataSourceName = dataSource.getName();
         javax.sql.DataSource sqlDataSource = dataSourceInitializer.initialize(dataSource);
 
@@ -29,7 +29,7 @@ class CamelDataSourceLifecycleListener implements DataSourceLifecycleListener {
     }
 
     @Override
-    public void onDeleted(DataSource dataSource) {
+    public void onDelete(DataSource dataSource) {
         String dataSourceName = dataSource.getName();
         camelContext.getRegistry()
                     .unbind(dataSourceName);

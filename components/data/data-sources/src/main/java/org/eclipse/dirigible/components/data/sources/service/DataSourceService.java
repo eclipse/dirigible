@@ -139,7 +139,7 @@ public class DataSourceService implements ArtefactService<DataSource> {
     @Override
     public DataSource save(DataSource datasource) {
         DataSource savedDataSource = datasourceRepository.saveAndFlush(datasource);
-        dataSourceListeners.forEach(l -> l.onSaved(savedDataSource));
+        dataSourceListeners.forEach(l -> l.onSave(savedDataSource));
         return savedDataSource;
     }
 
@@ -151,7 +151,7 @@ public class DataSourceService implements ArtefactService<DataSource> {
     @Override
     public void delete(DataSource datasource) {
         datasourceRepository.delete(datasource);
-        dataSourceListeners.forEach(l -> l.onDeleted(datasource));
+        dataSourceListeners.forEach(l -> l.onDelete(datasource));
     }
 
 }

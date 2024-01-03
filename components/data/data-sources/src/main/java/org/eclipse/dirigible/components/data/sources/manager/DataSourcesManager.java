@@ -21,22 +21,19 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class DataSourcesManager.
  */
 @Component
 public class DataSourcesManager implements InitializingBean {
 
-    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DataSourcesManager.class);
 
-    /** The instance. */
     private static DataSourcesManager INSTANCE;
 
-    /** The datasource service. */
     private final DataSourceService datasourceService;
 
-    /** The custom data sources service. */
     private final CustomDataSourcesService customDataSourcesService;
 
 
@@ -47,7 +44,7 @@ public class DataSourcesManager implements InitializingBean {
      *
      * @param datasourceService the datasource service
      * @param customDataSourcesService the custom data sources service
-     * @param applicationContext
+     * @param dataSourceInitializer the data source initializer
      */
     @Autowired
     public DataSourcesManager(DataSourceService datasourceService, CustomDataSourcesService customDataSourcesService,
@@ -71,7 +68,7 @@ public class DataSourcesManager implements InitializingBean {
     /**
      * Gets the.
      *
-     * @return the dirigible O data service factory
+     * @return the data sources manager
      */
     public static DataSourcesManager get() {
         return INSTANCE;
@@ -84,7 +81,7 @@ public class DataSourcesManager implements InitializingBean {
      * @return the data source
      */
     public javax.sql.DataSource getDataSource(String name) {
-        return dataSourceInitializer.isAlreadyInitialized(name) ? dataSourceInitializer.getAlreadyInitializedDataSource(name)
+        return dataSourceInitializer.isInitialized(name) ? dataSourceInitializer.getInitializedDataSource(name)
                 : dataSourceInitializer.initialize(getDataSourceDefinition(name));
     }
 
@@ -98,9 +95,9 @@ public class DataSourcesManager implements InitializingBean {
     }
 
     /**
-     * Gets the system DB.
+     * Gets the system data source.
      *
-     * @return the system DB
+     * @return the system data source
      */
     public javax.sql.DataSource getSystemDataSource() {
         return getDataSource(getSystemDataSourceName());

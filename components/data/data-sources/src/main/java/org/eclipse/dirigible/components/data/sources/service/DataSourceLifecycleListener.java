@@ -4,8 +4,8 @@ import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 
 public interface DataSourceLifecycleListener {
 
-    void onSaved(DataSource dataSource);
+    void onSave(DataSource dataSource);
 
-    void onDeleted(DataSource dataSource);
+    void onDelete(DataSource dataSource);
 
 }

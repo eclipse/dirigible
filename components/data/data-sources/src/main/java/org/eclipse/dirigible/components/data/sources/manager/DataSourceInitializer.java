@@ -31,33 +31,39 @@ import org.springframework.stereotype.Component;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+/**
+ * The Class DataSourceInitializer.
+ */
 @Component
 public class DataSourceInitializer {
 
-    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DataSourceInitializer.class);
 
-    /** The Constant DATASOURCES. */
     private static final Map<String, javax.sql.DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<>());
 
 
     private final ApplicationContext applicationContext;
 
+    /**
+     * Instantiates a new data source initializer.
+     *
+     * @param applicationContext the application context
+     */
     DataSourceInitializer(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 
     /**
-     * Initialize data source.
+     * Initialize.
      *
-     * @param name the name
-     * @return the {@link javax.sql.DataSource}
+     * @param dataSource the data source
+     * @return the javax.sql. data source
      */
     public javax.sql.DataSource initialize(DataSource dataSource) {
         String name = dataSource.getName();
 
-        if (isAlreadyInitialized(name)) {
-            return getAlreadyInitializedDataSource(name);
+        if (isInitialized(name)) {
+            return getInitializedDataSource(name);
         }
 
         logger.info("Initializing a datasource with name: [{}]", name);
@@ -94,22 +100,36 @@ public class DataSourceInitializer {
         return managedDataSource;
     }
 
-    public boolean isAlreadyInitialized(String dataSourceName) {
+    /**
+     * Checks if is initialized.
+     *
+     * @param dataSourceName the data source name
+     * @return true, if is initialized
+     */
+    public boolean isInitialized(String dataSourceName) {
         return DATASOURCES.containsKey(dataSourceName);
     }
 
-    public javax.sql.DataSource getAlreadyInitializedDataSource(String dataSourceName) {
+    /**
+     * Gets the initialized data source.
+     *
+     * @param dataSourceName the data source name
+     * @return the initialized data source
+     */
+    public javax.sql.DataSource getInitializedDataSource(String dataSourceName) {
         return DATASOURCES.get(dataSourceName);
     }
 
-
     /**
-     * Prepare root folder.
+     * Removes the initialized data source.
      *
-     * @param name the name
-     * @return the string
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @param dataSourceName the data source name
      */
+    public void removeInitializedDataSource(String dataSourceName) {
+        DATASOURCES.remove(dataSourceName);
+    }
+
+
     private String prepareRootFolder(String name) throws IOException {
         String rootFolder = (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name))
                 ? DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
@@ -135,12 +155,6 @@ public class DataSourceInitializer {
         beanFactory.registerSingleton(name, dataSource);
     }
 
-    /**
-     * Gets the hikari properties.
-     *
-     * @param databaseName the database name
-     * @return the hikari properties
-     */
     private Map<String, String> getHikariProperties(String databaseName) {
         Map<String, String> properties = new HashMap<>();
         String hikariDelimiter = "_HIKARI_";
