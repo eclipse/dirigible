@@ -52,12 +52,26 @@ public class Invoker {
     }
 
     private Message unwrapCamelMessage(Value value) {
-        if (value.isHostObject()) {
-            IntegrationMessage integrationMessage = value.asHostObject();
-            return integrationMessage.getCamelMessage();
-        } else {
-            throw new IllegalStateException("Unexpected @dirigible/integrations onMessage() return type");
+        if (value == null || !value.isHostObject()) {
+            throw new IllegalStateException("Unexpected null value or return type received from " +
+                    "@dirigible/integrations::onMessage(). " +
+                    "Expected return type: org.eclipse.dirigible.components.engine.camel.invoke.IntegrationMessage");
         }
+
+        Object hostObject = value.asHostObject();
+
+        if (!(hostObject instanceof IntegrationMessage integrationMessage)) {
+            throw new IllegalArgumentException("Unexpected return type received from " +
+                    "@dirigible/integrations::onMessage(). " +
+                    "Expected return type: org.eclipse.dirigible.components.engine.camel.invoke.IntegrationMessage");
+        }
+
+        if (integrationMessage.getCamelMessage() == null) {
+            throw new IllegalStateException("IntegrationMessage does not contain a valid Camel Message. " +
+                    "Expected a non-null Camel Message.");
+        }
+
+        return integrationMessage.getCamelMessage();
     }
 
     private void resetCodeRunner() {

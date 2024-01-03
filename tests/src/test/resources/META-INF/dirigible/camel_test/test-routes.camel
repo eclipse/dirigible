@@ -9,7 +9,7 @@
             id: setProperty-8ed5
             expression:
               constant:
-                expression: camel_test/calledFromCamel.js
+                expression: camel_test/calledFromCamel.mjs
                 id: constant-f4ba
         - to:
             uri: class:org.eclipse.dirigible.components.engine.camel.invoke.Invoker

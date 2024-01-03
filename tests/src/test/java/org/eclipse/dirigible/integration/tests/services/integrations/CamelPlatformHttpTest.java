@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -24,7 +23,6 @@ import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class CamelPlatformHttpTest extends IntegrationTest {
 
     @Autowired
@@ -43,7 +41,7 @@ class CamelPlatformHttpTest extends IntegrationTest {
                                            .getResponse()
                                            .getContentAsString();
 
-        String expectedResponseBody = requestBody + " -> calledFromCamel.js handled this message";
+        String expectedResponseBody = requestBody + " -> calledFromCamel.mjs handled this message";
 
         assertEquals("Unexpected response from camel platform http endpoint", expectedResponseBody, actualResponseBody);
 

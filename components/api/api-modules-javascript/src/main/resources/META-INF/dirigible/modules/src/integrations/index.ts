@@ -10,3 +10,28 @@ export function invokeRoute(routeId, payload, headers) {
 export function getInvokingRouteMessage() {
     return __context.camelMessage;
 }
+
+export interface HeadersMap {
+    [key: string]: string | string[];
+}
+
+export interface IntegrationMessage {
+
+    constructor(message: any);
+
+    getBody(): any;
+
+    getBodyAsString(): string;
+
+    setBody(body: any): void;
+
+    getHeaders(): HeadersMap;
+
+    getHeader(key: string): string | string[];
+
+    setHeaders(headers: HeadersMap): void;
+
+    setHeader(key: string, value: string | string[]): void;
+
+    getCamelMessage(): typeof CamelMessage;
+}
