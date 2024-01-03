@@ -37,13 +37,12 @@ public class Invoker {
     public void invoke(Message camelMessage) throws IOException {
         resetCodeRunner();
         String resourcePath = (String) camelMessage.getExchange()
-                                                   .getProperty("resource");
+                .getProperty("resource");
 
         var module = runner.run(Path.of(resourcePath));
         var result = runner.runMethod(module, "onMessage", wrapCamelMessage(camelMessage));
 
-        camelMessage.getExchange()
-                    .setMessage(unwrapCamelMessage(result));
+        camelMessage.getExchange().setMessage(unwrapCamelMessage(result));
     }
 
     private IntegrationMessage wrapCamelMessage(Message camelMessage) {
