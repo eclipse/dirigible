@@ -15,6 +15,10 @@
     
     <dependencies>
     	
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-commons-config</artifactId>
+    	</dependency>
     	<!-- Components -->
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
