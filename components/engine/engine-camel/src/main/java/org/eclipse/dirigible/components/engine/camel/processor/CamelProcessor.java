@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.camel.FluentProducerTemplate;
+import org.apache.camel.Processor;
+import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.platform.http.springboot.CamelRequestHandlerMapping;
 import org.apache.camel.impl.engine.DefaultRoutesLoader;
 import org.apache.camel.spi.Resource;
@@ -76,7 +78,7 @@ public class CamelProcessor {
     }
 
     public Object invokeRoute(String routeId, Object payload, Map<String, Object> headers) {
-        try (FluentProducerTemplate producer = context.createFluentProducerTemplate();) {
+        try (FluentProducerTemplate producer = context.createFluentProducerTemplate()) {
             return producer.withHeaders(headers)
                            .withBody(payload)
                            .to(routeId)

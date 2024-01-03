@@ -1,7 +1,7 @@
 const SpringBeanProvider = Java.type("org.eclipse.dirigible.components.spring.SpringBeanProvider");
 const Invoker = Java.type('org.eclipse.dirigible.components.engine.camel.invoke.Invoker');
 const invoker = SpringBeanProvider.getBean(Invoker.class);
-const String = Java.type('java.lang.String');
+const CamelMessage = Java.type('org.apache.camel.Message');
 
 export function invokeRoute(routeId, payload, headers) {
     return invoker.invokeRoute(routeId, payload, headers);
@@ -11,53 +11,27 @@ export function getInvokingRouteMessage() {
     return __context.camelMessage;
 }
 
-// Define an interface for the headers
-export interface Headers {
-    [key: string]: any;
+export interface HeadersMap {
+    [key: string]: string | string[];
 }
 
-// Wrapper class for Camel Message
-export class IntegrationMessage {
-    private message: any; // Replace 'any' with the actual type of Camel Message
+export interface IntegrationMessage {
 
-    constructor(message: any) {
-        this.message = message;
-    }
+    constructor(message: any);
 
-    // Get the body of the message
-    getBody(): String {
-        return this.message.getBody(String.class);
-    }
+    getBody(): any;
 
-    // Set the body of the message
-    setBody(body: String): void {
-        this.message.setBody(body);
-    }
+    getBodyAsString(): string;
 
-    // Get headers of the message
-    getHeaders(): Headers {
-        const headers: Headers = {};
-        const headerNames = this.message.getHeaders().keySet().toArray();
-        for (const headerName of headerNames) {
-            headers[headerName] = this.message.getHeader(headerName);
-        }
-        return headers;
-    }
+    setBody(body: any): void;
 
-    // Set headers of the message
-    setHeaders(headers: Headers): void {
-        for (const [key, value] of Object.entries(headers)) {
-            this.message.setHeader(key, value);
-        }
-    }
+    getHeaders(): HeadersMap;
 
-    // Set header of the message
-    setHeader(key: String, value: any): void {
-        this.message.setHeader(key, value);
-    }
+    getHeader(key: string): string | string[];
 
-    // Returns the original camel message
-    getCamelMessage(): any {
-        return this.message;
-    }
+    setHeaders(headers: HeadersMap): void;
+
+    setHeader(key: string, value: string | string[]): void;
+
+    getCamelMessage(): typeof CamelMessage;
 }

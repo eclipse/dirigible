@@ -30,9 +30,6 @@ class CamelPlatformHttpTest extends IntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    // Test an HTTP/POST request towards a camel platform http route.
-    // The route sends the request towards a dirigible js file
-    // which responds by appending to the inbound message.
     @Test
     void postToJsTest() throws Exception {
         String requestBody = "initial message";

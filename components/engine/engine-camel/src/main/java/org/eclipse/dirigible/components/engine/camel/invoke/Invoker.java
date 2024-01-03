@@ -47,22 +47,35 @@ public class Invoker {
                     .setMessage(unwrapCamelMessage(result));
     }
 
-    private Value wrapCamelMessage(Message camelMessage) {
-        var context = runner.getCodeRunner()
-                            .getGraalContext();
-        context.eval("js", "const IntegrationMessage = require( \"integrations\").IntegrationMessage");
-        context.getBindings("js")
-               .putMember("camelMessage", camelMessage);
-        Value wrappedCamelMessage = context.eval("js", " new IntegrationMessage(camelMessage)");
-        context.getBindings("js")
-               .removeMember("camelMessage");
-        return wrappedCamelMessage;
+    // private Value wrapCamelMessage(Message camelMessage) {
+    // var context = runner.getCodeRunner()
+    // .getGraalContext();
+    // context.eval("js", "const IntegrationMessage = require( \"integrations\").IntegrationMessage");
+    // context.getBindings("js")
+    // .putMember("camelMessage", camelMessage);
+    // Value wrappedCamelMessage = context.eval("js", " new IntegrationMessage(camelMessage)");
+    // context.getBindings("js")
+    // .removeMember("camelMessage");
+    // return wrappedCamelMessage;
+    // }
+    //
+    // private Message unwrapCamelMessage(Value wrappedCamelMessage) {
+    // if (!wrappedCamelMessage.isNull() && wrappedCamelMessage.canInvokeMember("getCamelMessage")) {
+    // return wrappedCamelMessage.invokeMember("getCamelMessage")
+    // .as(Message.class);
+    // } else {
+    // throw new IllegalStateException("Unexpected @dirigible/integrations onMessage() return type");
+    // }
+    // }
+
+    private IntegrationMessage wrapCamelMessage(Message camelMessage) {
+        return new IntegrationMessage(camelMessage);
     }
 
-    private Message unwrapCamelMessage(Value wrappedCamelMessage) {
-        if (!wrappedCamelMessage.isNull() && wrappedCamelMessage.canInvokeMember("getCamelMessage")) {
-            return wrappedCamelMessage.invokeMember("getCamelMessage")
-                                      .as(Message.class);
+    private Message unwrapCamelMessage(Value value) {
+        if (value.isHostObject()) {
+            IntegrationMessage integrationMessage = value.asHostObject();
+            return integrationMessage.getCamelMessage();
         } else {
             throw new IllegalStateException("Unexpected @dirigible/integrations onMessage() return type");
         }

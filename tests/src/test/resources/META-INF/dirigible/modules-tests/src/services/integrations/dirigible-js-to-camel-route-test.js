@@ -1,8 +1,6 @@
 import { test, assertEquals } from "@dirigible/junit"
 import * as camel from "@dirigible/integrations"
 
-// Test the camel @dirigible/integrations js api with a call
-// to a direct route which responds by appending to the initial message.
 test('dirigible-js-to-camel-route-test', () => {
     const message = "Initial Message";
     const expected = message + " -> camel route inbound1 handled this message";
