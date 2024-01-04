@@ -117,7 +117,7 @@
 		<org.springdoc.openapi.ui.version>1.7.0</org.springdoc.openapi.ui.version>
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<graalvm.version>23.1.1</graalvm.version>
-		<guava.version>32.1.3-jre</guava.version>
+		<guava.version>33.0.0-jre</guava.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
 		<qldb.sdk.version>1.12.630</qldb.sdk.version>
 		<camel.version>4.2.0</camel.version>
