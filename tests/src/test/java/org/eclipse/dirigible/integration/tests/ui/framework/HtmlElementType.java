@@ -13,9 +13,9 @@ package org.eclipse.dirigible.integration.tests.ui.framework;
 public enum HtmlElementType {
     BUTTON("button"), //
     INPUT("input"), //
-    ANCHOR("a"), //
     HEADER5("h5"), //
-    TITLE("title");
+    TITLE("title"), //
+    ANCHOR("a");
 
     private final String type;
 

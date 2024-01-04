@@ -96,7 +96,7 @@ public class BrowserImpl implements Browser {
     }
 
     private By constructCssSelectorByTypeAndAttribute(HtmlElementType elementType, HtmlAttribute attribute, String attributePattern) {
-        String cssSelector = elementType.getType() + "[" + attribute.getAttribute() + "*=" + attributePattern + "]";
+        String cssSelector = elementType.getType() + "[" + attribute.getAttribute() + "*='" + attributePattern + "']";
         return Selectors.byCssSelector(cssSelector);
     }
 
@@ -139,5 +139,4 @@ public class BrowserImpl implements Browser {
         By cssSelector = Selectors.byCssSelector(elementType.getType());
         return Selenide.$(cssSelector);
     }
-
 }

@@ -37,7 +37,7 @@ public class HttpSecurityURIConfigurator {
             "/services/js/resources-core/**", //
             "/services/js/resources-core/**", //
             "/services/integrations/**", //
-            "/actuator/**"};
+            "/actuator/health"};
 
     private static final String[] AUTHENTICATED_PATTERNS = {//
             "/services/**", //
@@ -50,6 +50,10 @@ public class HttpSecurityURIConfigurator {
     private static final String[] DEVELOPER_PATTERNS = {//
             "/services/ide/**", //
             "/websockets/ide/**"};
+
+    private static final String[] OPERATOR_PATTERNS = {//
+            "/spring-admin/**", //
+            "/actuator/**"};
 
     /**
      * Configure.
@@ -68,7 +72,11 @@ public class HttpSecurityURIConfigurator {
 
              // "Developer" role required
              .requestMatchers(DEVELOPER_PATTERNS)
-             .hasRole("Developer")
+             .hasRole(DirigibleRole.DEVELOPER.getName())
+
+             // Spring Boot Admin
+             .requestMatchers(OPERATOR_PATTERNS)
+             .hasRole(DirigibleRole.OPERATOR.getName())
 
              // Deny all other requests
              .anyRequest()

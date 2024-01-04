@@ -43,6 +43,11 @@
 			<version>${selenide.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -114,6 +119,52 @@
 			<properties>
 				<skipITs>false</skipITs>
 			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<configuration>
+							<excludes>
+								<exclude>**/SpringBootAdminIT.java</exclude>
+							</excludes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>integration-tests-spring-boot-admin</id>
+			<properties>
+				<skipITs>false</skipITs>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>de.codecentric</groupId>
+					<artifactId>spring-boot-admin-starter-server</artifactId>
+					<version>${spring.admin.version}</version>
+					<scope>test</scope>
+				</dependency>
+				<dependency>
+					<groupId>de.codecentric</groupId>
+					<artifactId>spring-boot-admin-starter-client</artifactId>
+					<version>${spring.admin.version}</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<configuration>
+							<includes>
+								<include>**/SpringBootAdminIT.java</include>
+							</includes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 		<profile>
 			<id>Windows 11</id>
