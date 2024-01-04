@@ -236,28 +236,6 @@ native-image -jar 'build/application/target/dirigible-application-10.0.0-SNAPSHO
    
    > If you have started the Dirigible before, make sure to execute `mvn clean` before starting the Dirigible with the PostgreSQL
 
-### Code formatting
-In order to contribute to the project, you need to configure your java code formatter.
-Please follow the steps bellow
-#### Eclipse
-1. Window -> Preferences -> Java -> Code Style -> Formatter -> Import -> Select [this](https://github.com/eclipse/dirigible/blob/master/dirigible-formatter.xml) formatter
-![image](https://github.com/eclipse/dirigible/assets/5058839/275463e4-5795-423c-bc29-e2cfdae42630)
-
-2. Window -> Preferences -> Java -> Editor -> Save Actions -> Check `Perform the selected actions on save` -> Check `Format source code` -> Select -> `Format all lines`
-#### IntelliJ
-1. File (or IntelliJ IDEA if on MacOS) -> Settings -> Editor -> Code Style -> Java -> Scheme -> Import Scheme (from the settings button) -> Eclipse XML Profile -> Select [this](https://github.com/eclipse/dirigible/blob/master/dirigible-formatter.xml) formatter -> Copy to Project (from the settings button)
-![image](https://github.com/eclipse/dirigible/assets/5058839/bed1ab0a-b572-47e5-9e79-31d2644c4380)
-
-2.  File -> Settings -> Tools -> Actions on Save -> Check `Reformat code` 
-#### Visual Studio Code
-1. Install the extension [Language Support for Java(TM) by Red Hat](https://marketplace.visualstudio.com/items?itemName=redhat.java)
-2. File -> Preferences -> Settings -> java.format.settings.url: Set URL (or local file path) pointing to Eclipse Formatter Profile file.
-
-#### Maven
-To format the code using Maven execute the following in the root dir of the project
-
-	mvn formatter:format
-
 ### CMS with AWS S3
 
 Eclipse Dirigible's Document perspective can be used with [AWS S3](https://aws.amazon.com/s3/), providing you CMS with S3's cloud storage.
