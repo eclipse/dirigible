@@ -16,16 +16,19 @@
 
 const DatabaseFacade = Java.type("org.eclipse.dirigible.components.api.db.DatabaseFacade");
 
-export function execute(sql: string, parameters: Object | null, datasourceName: string) {
-	let resultset: string;
-	if (parameters) {
-		const params = JSON.stringify(parameters);
-		resultset = DatabaseFacade.query(sql,params,datasourceName);
-	} else {
-		resultset = DatabaseFacade.query(sql,null,datasourceName);
+export class Query {
+	public static execute(sql: string, parameters: Object | null, datasourceName: string): string {
+		let resultset: string;
+		if (parameters) {
+			const params = JSON.stringify(parameters);
+			resultset = DatabaseFacade.query(sql,params,datasourceName);
+		} else {
+			resultset = DatabaseFacade.query(sql,null,datasourceName);
+		}
+		if (resultset) {
+			return JSON.parse(resultset);
+		}
+		return resultset;
 	}
-	if (resultset) {
-		return JSON.parse(resultset);
-	}
-	return resultset;
 };
+
