@@ -16,7 +16,7 @@
 
 const DatabaseFacade = Java.type("org.eclipse.dirigible.components.api.db.DatabaseFacade");
 
-export function execute(sql, parameters, datasourceName) {
+export function execute(sql: string, parameters: Object | null, datasourceName: string) {
 	let resultset: string;
 	if (parameters) {
 		const params = JSON.stringify(parameters);
