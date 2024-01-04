@@ -12,14 +12,17 @@
 
 const DatabaseFacade = Java.type("org.eclipse.dirigible.components.api.db.DatabaseFacade");
 
-export function nextval(sequence, datasourceName = null, tableName = null) {
-	return DatabaseFacade.nextval(sequence, datasourceName, tableName);
-};
+export class Sequence {
+	public static nextval(sequence: string, datasourceName: string | null = null, tableName: string = null): number {
+		return DatabaseFacade.nextval(sequence, datasourceName, tableName);
+	};
 
-export function create(sequence, datasourceName = null) {
-	DatabaseFacade.createSequence(sequence, datasourceName);
-};
+	public static create(sequence: string, datasourceName: string | null = null): void {
+		DatabaseFacade.createSequence(sequence, datasourceName);  
+		//? in db facade there is no createSequence method with 2 string parameters
+	};
 
-export function drop(sequence, datasourceName = null) {
-	DatabaseFacade.dropSequence(sequence, datasourceName);
-};
+	public static drop(sequence: string, datasourceName: string | null = null): void {
+		DatabaseFacade.dropSequence(sequence, datasourceName);
+	};
+}

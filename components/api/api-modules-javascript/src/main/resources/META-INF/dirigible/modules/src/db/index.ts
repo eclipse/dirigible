@@ -4,7 +4,7 @@ export * as orm from "./orm";
 export * as ormstatements from "./ormstatements";
 export * as procedure from "./procedure";
 export * as query from "./query";
-export * as sequence from "./sequence";
+export { Sequence as sequence } from "./sequence";;
 export * as sql from "./sql";
 export * as store from "./store";
 export * as update from "./update";
