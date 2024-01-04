@@ -42,8 +42,10 @@ public class Invoker {
         var module = runner.run(Path.of(resourcePath));
         var result = runner.runMethod(module, "onMessage", wrapCamelMessage(camelMessage));
 
-        camelMessage.getExchange()
-                    .setMessage(unwrapCamelMessage(result));
+        if (result != null) {
+            camelMessage.getExchange()
+                        .setMessage(unwrapCamelMessage(result));
+        }
     }
 
     private IntegrationMessage wrapCamelMessage(Message camelMessage) {
@@ -51,24 +53,16 @@ public class Invoker {
     }
 
     private Message unwrapCamelMessage(Value value) {
-        if (value == null || !value.isHostObject()) {
-            throw new IllegalStateException("Unexpected null value or return type received from " + "@dirigible/integrations::onMessage(). "
-                    + "Expected return type: org.eclipse.dirigible.components.engine.camel.invoke.IntegrationMessage");
+        validateIntegrationMessage(value);
+        IntegrationMessage message = value.asHostObject();
+        return message.getCamelMessage();
+    }
+
+    private void validateIntegrationMessage(Value value) {
+        if (!value.isHostObject() || !(value.asHostObject() instanceof IntegrationMessage)) {
+            throw new IllegalArgumentException(
+                    "Unexpected return received from @dirigible/integrations::onMessage(). Expected return type: IntegrationMessage.");
         }
-
-        Object hostObject = value.asHostObject();
-
-        if (!(hostObject instanceof IntegrationMessage integrationMessage)) {
-            throw new IllegalArgumentException("Unexpected return type received from " + "@dirigible/integrations::onMessage(). "
-                    + "Expected return type: org.eclipse.dirigible.components.engine.camel.invoke.IntegrationMessage");
-        }
-
-        if (integrationMessage.getCamelMessage() == null) {
-            throw new IllegalStateException(
-                    "IntegrationMessage does not contain a valid Camel Message. " + "Expected a non-null Camel Message.");
-        }
-
-        return integrationMessage.getCamelMessage();
     }
 
     private void resetCodeRunner() {
