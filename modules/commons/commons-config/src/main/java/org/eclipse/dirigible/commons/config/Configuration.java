@@ -20,6 +20,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +36,11 @@ import org.slf4j.LoggerFactory;
  */
 public class Configuration {
 
+
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
+    private static final String MULTIVARIABLE_REGEX = "\\$\\{([^}]+)\\}";
+    private static final Pattern MULTIVARIABLE_PATTERN = Pattern.compile(MULTIVARIABLE_REGEX);
 
     /**
      * The Enum ConfigType.
@@ -578,13 +583,27 @@ public class Configuration {
                                 String k = s.substring(2, s.length() - 1);
                                 FieldUtils.writeField(field, o, Configuration.get(k), true);
                             }
+                        } else {
+                            Matcher matcher = MULTIVARIABLE_PATTERN.matcher(s);
+                            if (!matcher.find()) {
+                                continue;
+                            }
+
+                            String finalValue = s;
+                            do {
+                                String placeholder = matcher.group(0);
+                                String configName = matcher.group(1);
+                                finalValue = finalValue.replaceAll(Pattern.quote(placeholder), Configuration.get(configName));
+                            } while (matcher.find());
+                            FieldUtils.writeField(field, o, finalValue, true);
                         }
                     }
                 }
             }
-        } catch (SecurityException | IllegalArgumentException | IllegalAccessException e) {
+        } catch (SecurityException | IllegalArgumentException |
+
+                IllegalAccessException e) {
             logger.error(e.getMessage(), e);
         }
     }
-
 }
