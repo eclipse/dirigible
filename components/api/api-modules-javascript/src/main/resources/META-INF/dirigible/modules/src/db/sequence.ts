@@ -13,7 +13,7 @@
 const DatabaseFacade = Java.type("org.eclipse.dirigible.components.api.db.DatabaseFacade");
 
 export class Sequence {
-	public static nextval(sequence: string, datasourceName: string | null = null, tableName: string = null): number {
+	public static nextval(sequence: string, datasourceName: string | null = null, tableName: string | null = null): number {
 		return DatabaseFacade.nextval(sequence, datasourceName, tableName);
 	};
 
