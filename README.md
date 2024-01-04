@@ -311,6 +311,10 @@ This project is copyrighted by [SAP SE](http://www.sap.com/) or an SAP affiliate
 
 If you like to contribute to Dirigible, please read the [Contributor's guide](CONTRIBUTING.md).
 
+<a href="https://github.com/eclipse/dirigible/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=eclipse/dirigible" />
+</a>
+
 ### Attribution links
 
 Unicons by IconScout: [https://github.com/Iconscout/unicons](https://github.com/Iconscout/unicons)
