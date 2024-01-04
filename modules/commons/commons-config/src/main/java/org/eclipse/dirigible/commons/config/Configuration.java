@@ -585,12 +585,16 @@ public class Configuration {
                             }
                         } else {
                             Matcher matcher = MULTIVARIABLE_PATTERN.matcher(s);
+                            if (!matcher.find()) {
+                                continue;
+                            }
+
                             String finalValue = s;
-                            while (matcher.find()) {
+                            do {
                                 String placeholder = matcher.group(0);
                                 String configName = matcher.group(1);
                                 finalValue = finalValue.replaceAll(Pattern.quote(placeholder), Configuration.get(configName));
-                            }
+                            } while (matcher.find());
                             FieldUtils.writeField(field, o, finalValue, true);
                         }
                     }
