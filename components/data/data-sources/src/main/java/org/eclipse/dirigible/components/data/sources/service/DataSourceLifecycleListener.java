@@ -17,11 +17,10 @@ import org.eclipse.dirigible.components.data.sources.domain.DataSource;
  * The class that is interested in processing a dataSourceLifecycle
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addDataSourceLifecycleListener<code> method. When
+ * component's addDataSourceLifecycleListener method. When
  * the dataSourceLifecycle event occurs, that object's appropriate
  * method is invoked.
  *
- * @see DataSourceLifecycleEvent
  */
 public interface DataSourceLifecycleListener {
 
