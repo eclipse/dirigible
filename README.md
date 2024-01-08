@@ -236,27 +236,45 @@ native-image -jar 'build/application/target/dirigible-application-10.0.0-SNAPSHO
    
    > If you have started the Dirigible before, make sure to execute `mvn clean` before starting the Dirigible with the PostgreSQL
 
-### Code formatting
-In order to contribute to the project, you need to configure your java code formatter.
-Please follow the steps bellow
-#### Eclipse
-1. Window -> Preferences -> Java -> Code Style -> Formatter -> Import -> Select [this](https://github.com/eclipse/dirigible/blob/master/dirigible-formatter.xml) formatter
-![image](https://github.com/eclipse/dirigible/assets/5058839/275463e4-5795-423c-bc29-e2cfdae42630)
+### CMS with AWS S3
 
-2. Window -> Preferences -> Java -> Editor -> Save Actions -> Check `Perform the selected actions on save` -> Check `Format source code` -> Select -> `Format all lines`
-#### IntelliJ
-1. File (or IntelliJ IDEA if on MacOS) -> Settings -> Editor -> Code Style -> Java -> Scheme -> Import Scheme (from the settings button) -> Eclipse XML Profile -> Select [this](https://github.com/eclipse/dirigible/blob/master/dirigible-formatter.xml) formatter -> Copy to Project (from the settings button)
-![image](https://github.com/eclipse/dirigible/assets/5058839/bed1ab0a-b572-47e5-9e79-31d2644c4380)
+Eclipse Dirigible's Document perspective can be used with [AWS S3](https://aws.amazon.com/s3/), providing you CMS with S3's cloud storage.
 
-2.  File -> Settings -> Tools -> Actions on Save -> Check `Reformat code` 
-#### Visual Studio Code
-1. Install the extension [Language Support for Java(TM) by Red Hat](https://marketplace.visualstudio.com/items?itemName=redhat.java)
-2. File -> Preferences -> Settings -> java.format.settings.url: Set URL (or local file path) pointing to Eclipse Formatter Profile file.
+#### Setup:
+- AWS account with generated credentials (AWS Acces Key, AWS Secret Key)
+- Set up the environment variables regarding CMS/CMS S3 exposed by Eclipse Dirigible. Full list can be found [here](https://www.dirigible.io/help/setup/setup-environment-variables/#cms).
 
-#### Maven
-To format the code using Maven execute the following in the root dir of the project
+#### Usage:
+- Navigate to the `Document` perspective in your Eclipse Dirigible instance
+- Upload a file and you should see the file in the perspective as well as in the S3 bucket
 
-	mvn formatter:format
+#### Test environment with LocalStack
+If you prefer working with a test environment you can use [LocalStack](https://www.localstack.cloud/).
+
+#### Setup:
+- Install LocalStack on your machine using the installation guide [here](https://docs.localstack.cloud/getting-started/installation/) or the following commands:
+  - MacOS - `brew install localstack/tap/localstack-cli`
+  - Linux -
+  
+      For `x86-64`:
+      ```
+       curl -Lo localstack-cli-3.0.2-linux-amd64-onefile.tar.gz \ 
+        https://github.com/localstack/localstack-cli/releases/download/v3.0.2/localstack-cli-3.0.2-linux-amd64-onefile.tar.gz
+      ```
+      For `ARM64`:
+      ```
+      curl -Lo localstack-cli-3.0.2-linux-arm64-onefile.tar.gz \
+        https://github.com/localstack/localstack-cli/releases/download/v3.0.2/localstack-cli-3.0.2-linux-arm64-onefile.tar.gz
+      ```
+    
+    Then extract the LocalStack CLI from the terminal:
+    
+    ```
+    sudo tar xvzf localstack-cli-3.0.2-linux-*-onefile.tar.gz -C /usr/local/bin
+    ```
+- Start `LocalStack` using - `localstack start -d`
+- Set up the environment variables, mainly `DIRIGIBLE_S3_PROVIDER=localstack`, exposed by Eclipse Dirigible
+
 
 ## Additional Information
 
@@ -270,6 +288,10 @@ This project is copyrighted by [SAP SE](http://www.sap.com/) or an SAP affiliate
 ### Contributors
 
 If you like to contribute to Dirigible, please read the [Contributor's guide](CONTRIBUTING.md).
+
+<a href="https://github.com/eclipse/dirigible/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=eclipse/dirigible" />
+</a>
 
 ### Attribution links
 
@@ -285,3 +307,4 @@ Unicons by IconScout: [https://github.com/Iconscout/unicons](https://github.com/
 - Mailing List: [https://dev.eclipse.org/mailman/listinfo/dirigible-dev](https://dev.eclipse.org/mailman/listinfo/dirigible-dev)
 - Issues: [https://github.com/eclipse/dirigible/issues](https://github.com/eclipse/dirigible/issues)
 - Eclipse Foundation Help Desk: https://gitlab.eclipse.org/eclipsefdn/helpdesk
+
