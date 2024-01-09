@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.database.sql;
 
 import static java.text.MessageFormat.format;
-
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -186,7 +185,7 @@ public class DataTypeUtils {
             return DATABASE_TYPE_TO_DATA_TYPE.get(type)
                                              .toString();
         }
-        throw new SqlException(format("Type {0} not supported", type));
+        throw new SqlException(format("Type [{0}] not supported. Supported tpes [{1}]", type, DATABASE_TYPE_TO_DATA_TYPE));
     }
 
     /**

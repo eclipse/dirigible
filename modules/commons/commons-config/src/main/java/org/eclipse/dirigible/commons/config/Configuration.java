@@ -36,7 +36,6 @@ import org.slf4j.LoggerFactory;
  */
 public class Configuration {
 
-
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
     private static final String MULTIVARIABLE_REGEX = "\\$\\{([^}]+)\\}";
@@ -504,7 +503,6 @@ public class Configuration {
             "DIRIGIBLE_PUBLISH_DISABLED", "AWS_DEFAULT_REGION", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "DIRIGIBLE_S3_PROVIDER",
             "DIRIGIBLE_S3_BUCKET"};
 
-
     /**
      * Gets the os.
      *
@@ -594,7 +592,14 @@ public class Configuration {
                             do {
                                 String placeholder = matcher.group(0);
                                 String configName = matcher.group(1);
-                                finalValue = finalValue.replaceAll(Pattern.quote(placeholder), Configuration.get(configName));
+                                String replacement = Configuration.get(configName);
+                                if (null == replacement) {
+                                    logger.warn(
+                                            "Missing configuration with name: [{}]. The value will not be replaced for field [{}] with value [{}]",
+                                            configName, field.getName(), v);
+                                    continue;
+                                }
+                                finalValue = finalValue.replaceAll(Pattern.quote(placeholder), replacement);
                             } while (matcher.find());
                             FieldUtils.writeField(field, o, finalValue, true);
                         }

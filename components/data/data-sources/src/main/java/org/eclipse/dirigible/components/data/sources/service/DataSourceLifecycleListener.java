@@ -13,13 +13,10 @@ package org.eclipse.dirigible.components.data.sources.service;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 
 /**
- * The listener interface for receiving dataSourceLifecycle events.
- * The class that is interested in processing a dataSourceLifecycle
- * event implements this interface, and the object created
- * with that class is registered with a component using the
- * component's addDataSourceLifecycleListener method. When
- * the dataSourceLifecycle event occurs, that object's appropriate
- * method is invoked.
+ * The listener interface for receiving dataSourceLifecycle events. The class that is interested in
+ * processing a dataSourceLifecycle event implements this interface, and the object created with
+ * that class is registered with a component using the component's addDataSourceLifecycleListener
+ * method. When the dataSourceLifecycle event occurs, that object's appropriate method is invoked.
  *
  */
 public interface DataSourceLifecycleListener {
