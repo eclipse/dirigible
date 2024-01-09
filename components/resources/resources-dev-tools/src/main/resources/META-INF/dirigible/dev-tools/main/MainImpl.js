@@ -31,7 +31,7 @@
 import * as Bindings from '../bindings/bindings.js';
 import * as Common from '../common/common.js';
 import * as Components from '../components/components.js';
-import {extensions as Extensions} from '../extensions';
+import * as Extensions from '../extensions';
 import * as Host from '../host/host.js';
 import * as Persistence from '../persistence/persistence.js';
 import * as Platform from '../platform/platform.js';
