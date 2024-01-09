@@ -159,12 +159,14 @@ public class ConfigurationTest {
         Configuration.set("PORTUNUS_OPENCART_DB_HOST", "localhost");
         Configuration.set("PORTUNUS_OPENCART_DB_PORT", "3306");
         Configuration.set("PORTUNUS_OPENCART_DB_NAME", "bitnami_opencart");
+        Configuration.set("projectName", "my-test-project");
 
         class TestObject {
             String s1 = "s1";
             String s2 = "${S2_VALUE}";
             String s3 = "${S3_VALUE}.{s3}";
             String s4 = "jdbc:mariadb://${PORTUNUS_OPENCART_DB_HOST}:${PORTUNUS_OPENCART_DB_PORT}/${PORTUNUS_OPENCART_DB_NAME}";
+            String s5 = "${projectName} ${projectVersion} - Application View";
         }
         TestObject o = new TestObject();
         Configuration.configureObject(o);
@@ -173,5 +175,6 @@ public class ConfigurationTest {
         assertEquals("s2", o.s2);
         assertEquals("s3", o.s3);
         assertEquals("jdbc:mariadb://localhost:3306/bitnami_opencart", o.s4);
+        assertEquals("my-test-project ${projectVersion} - Application View", o.s5);
     }
 }
