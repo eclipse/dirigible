@@ -6,5 +6,5 @@ export * as procedure from "./procedure";
 export * as query from "./query";
 export * as sequence from "./sequence";
 export * as sql from "./sql";
-export * as store from "./store";
+export {Store as store} from "./store";
 export * as update from "./update";
