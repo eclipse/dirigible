@@ -24,21 +24,21 @@ const DestinationsFacade = Java.type("org.eclipse.dirigible.components.api.core.
 
 export class Destinations{
 
-    public static get (name) {
+    public static get (name: string) {
         if (this.isCloudEnvironment()) {
             return JSON.parse(this.getCloudDestination(name));
         }
         return JSON.parse(DestinationsFacade.get(name));
     };
 
-    public static set (name, destination) {
+    public static set (name: string, destination: object) {
         if (this.isCloudEnvironment()) {
             this.createOrUpdateCloudDestination(name, destination);
         }
         DestinationsFacade.set(name, JSON.stringify(destination));
     };
 
-    public static remove(name) {
+    public static remove(name: string) {
         if (!this.isCloudEnvironment()) {
             throw new Error("The delete destination operation is not supported for non-cloud environments");
         }
@@ -61,7 +61,7 @@ export class Destinations{
         return false;
     }
 
-    private static getCloudDestination(name) {
+    private static getCloudDestination(name: string) {
         let token = this.getOAuthToken();
 
         let destinationUrl = `${this.getDestinationsBasePath()}/${name}`;
@@ -95,7 +95,7 @@ export class Destinations{
         return `${configurations.get("DIRIGIBLE_DESTINATION_URI")}/destination-configuration/v1/subaccountDestinations`;
     }
 
-    private static createOrUpdateCloudDestination(name, destination) {
+    private static createOrUpdateCloudDestination(name: string, destination) {
         let isExistingDestination = true;
         try {
             this.getCloudDestination(name);
@@ -128,7 +128,7 @@ export class Destinations{
         }
     }
 
-    private static deleteCloudDestination(name) {
+    private static deleteCloudDestination(name: string) {
         let token = this.getOAuthToken();
         let requestOptions = {
             headers: [{
