@@ -39,12 +39,14 @@
  *
  *
  */
- import * as configurations from "@dirigible/core/configurations";
+
+import { DAO } from "./dao";
+import * as configurations from "@dirigible/core/configurations";
 const isCaseSensitive = configurations.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE");
 
-export function ORM(orm) {
+export function ORM(orm: ORMProperty): void {
 	this.orm = orm;
-	for (var i in orm) {
+	for (let i in orm) {
 		this[i] = orm[i];
 	}
 };
@@ -59,8 +61,33 @@ ORM.prototype.ASSOCIATION_TYPES_VALUES = Object.keys(ORM.prototype.ASSOCIATION_T
 	.map(function (key) {
 		return ORM.prototype.ASSOCIATION_TYPES[key];
 	});
+interface ORMProperty {
+	name: string;
+	table: string;
+	properties: Array<{
+		name: string;
+		column: string;
+		id: boolean;
+		required: boolean;
+		unique: boolean;
+		dbValue: Function;
+		value: Function;
+		allowedOps: Array<'insert' | 'update'>;
+	}>;
+	associations: Array<{
+		name: string;
+		joinKey: string;
+		key: string;
+		type: keyof typeof ORM.prototype.ASSOCIATION_TYPES;
+		targetDao: Function | typeof DAO;
+		joinDao: Function | typeof DAO;
+		defaults: Object;
+	}>;
+}
 
-ORM.prototype.getPrimaryKey = function () {
+
+
+ORM.prototype.getPrimaryKey = function (): ORMProperty['properties'][0] {
 	if (!this.idProperty) {
 		if (!this.properties || !this.properties.length)
 			throw new Error('Invalid orm configuration - no properties are defined');
@@ -74,7 +101,7 @@ ORM.prototype.getPrimaryKey = function () {
 	return this.idProperty;
 };
 
-ORM.prototype.isAutoIncrementPrimaryKey = function () {
+ORM.prototype.isAutoIncrementPrimaryKey = function (): boolean {
 	if (!this.autoIncrementPrimaryKeyProperty) {
 		if (!this.properties || !this.properties.length)
 			throw new Error('Invalid orm configuration - no properties are defined');
@@ -90,7 +117,7 @@ ORM.prototype.isAutoIncrementPrimaryKey = function () {
 	return this.autoIncrementPrimaryKeyProperty;
 };
 
-ORM.prototype.getProperty = function (name) {
+ORM.prototype.getProperty = function (name: string): ORMProperty['properties'][0] | undefined {
 	if (name === undefined)
 		throw new Error('Illegal argument: name[' + name + ']');
 	if (!this.properties || !this.properties.length)
@@ -101,7 +128,7 @@ ORM.prototype.getProperty = function (name) {
 	return property.length > 0 ? property[0] : undefined;
 };
 
-ORM.prototype.getMandatoryProperties = function () {
+ORM.prototype.getMandatoryProperties = function (): ORMProperty['properties'] {
 	if (!this.mandatoryProperties) {
 		if (!this.properties || !this.properties.length)
 			throw new Error('Invalid orm configuration - no properties are defined');
@@ -113,7 +140,7 @@ ORM.prototype.getMandatoryProperties = function () {
 	return this.mandatoryProperties;
 };
 
-ORM.prototype.getOptionalProperties = function () {
+ORM.prototype.getOptionalProperties = function (): ORMProperty['properties'] {
 	if (!this.optionalProperties) {
 		if (!this.properties || !this.properties.length)
 			throw new Error('Invalid orm configuration - no properties are defined');
@@ -125,7 +152,7 @@ ORM.prototype.getOptionalProperties = function () {
 	return this.optionalProperties;
 };
 
-ORM.prototype.getUniqueProperties = function () {
+ORM.prototype.getUniqueProperties = function (): ORMProperty['properties'] {
 	if (!this.uniqueProperties) {
 		if (!this.properties || !this.properties.length)
 			throw new Error('Invalid orm configuration - no properties are defined');
@@ -138,7 +165,7 @@ ORM.prototype.getUniqueProperties = function () {
 };
 
 //TODO: remove this or improve by key type.
-ORM.prototype.associationKeys = function () {
+ORM.prototype.associationKeys = function (): string[] {
 	let keys = [];
 	if (this.associations) {
 		keys = this.associations.map(function (assoc) {
@@ -148,7 +175,7 @@ ORM.prototype.associationKeys = function () {
 	return keys;
 };
 
-ORM.prototype.getAssociationNames = function () {
+ORM.prototype.getAssociationNames = function (): string[] {
 	let names = [];
 	if (this.associations) {
 		names = this.associations.map(function (assoc) {
@@ -159,7 +186,7 @@ ORM.prototype.getAssociationNames = function () {
 };
 
 
-ORM.prototype.getAssociation = function (associationName) {
+ORM.prototype.getAssociation = function (associationName: string): ORMProperty['associations'][0] | undefined {
 	if (this.associations) {
 		return this.associations
 			.filter(function (assoc) {
@@ -169,7 +196,7 @@ ORM.prototype.getAssociation = function (associationName) {
 	return;
 };
 
-ORM.prototype.validate = function () {
+ORM.prototype.validate = function (): void {
 	let i;
 	if (!this.table)
 		throw new Error('Illegal configuration: invalid property table[' + this.table + ']');
@@ -219,7 +246,7 @@ ORM.prototype.validate = function () {
 	}
 };
 
-ORM.prototype.toColumn = function (ormProperty) {
+ORM.prototype.toColumn = function (ormProperty): ORMProperty['properties'][0] | undefined {
 	let column;
 	if (ormProperty) {
 		column = {
@@ -234,9 +261,19 @@ ORM.prototype.toColumn = function (ormProperty) {
 	return column;
 };
 
-ORM.prototype.toTable = function () {
+
+interface ORMToTable { 
+	name: string; 
+	type: string; 
+	columns: ORMProperty['properties'][0] | null; 
+	constraints: { primarKeys: { columns: string; }[]; 
+	uniqueIndices: { columns: string; }[]; } | null; 
+}
+
+
+ORM.prototype.toTable = function (): ORMToTable {
 	let table = {
-		name: this.table,
+		name: this.table as string,
 		type: "TABLE",
 		columns: null,
 		constraints: null,
@@ -278,8 +315,11 @@ ORM.prototype.toTable = function () {
 	return table;
 };
 
-export function get(orm) {
+export function get(orm: ORMProperty) {
 	const _orm = new ORM(orm);
 	_orm.validate();
 	return _orm;
 };
+
+
+
