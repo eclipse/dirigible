@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.componenets.api.security;
 
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -43,7 +42,6 @@ public class SecuritySuiteTest {
     @Autowired
     protected WebApplicationContext wac;
 
-    @Disabled
     @Test
     public void executeSecurityTest() throws Exception {
         javascriptService.handleRequest("security-tests", "user-get-name.js", null, null, false);
