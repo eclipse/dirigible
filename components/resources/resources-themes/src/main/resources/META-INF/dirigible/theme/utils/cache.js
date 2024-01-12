@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-export const getCache = () => {
+exports.getCache = function() {
 	var native = org.eclipse.dirigible.commons.config.ResourcesCache.getThemeCache();
 	var cache = new Cache();
 	cache.native = native;

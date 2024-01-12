@@ -11,7 +11,7 @@
  */
 let extensions = require('extensions/extensions');
 
-export const getThemes = (legacy = true) => {
+exports.getThemes = function (legacy = true) {
 	let themes = [];
 	try {
 		let themeExtensions = extensions.getExtensions('ide-themes');
