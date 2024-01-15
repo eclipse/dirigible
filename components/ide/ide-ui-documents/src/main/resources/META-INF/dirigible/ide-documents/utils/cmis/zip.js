@@ -9,15 +9,14 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let streams = require("io/streams");
-let zip = require("io/zip");
-let folderUtils = require("ide-documents/utils/cmis/folder");
-let documentUtils = require("ide-documents/utils/cmis/document");
-let objectUtils = require("ide-documents/utils/cmis/object");
+import { zip } from "@dirigible/io";
+import * as folderUtils from "./folder";
+import * as documentUtils from "./document";
+import * as objectUtils from "./object";
 
 const SEPARATOR = '/';
 
-exports.unpackZip = function (folderPath, zip) {
+export const unpackZip = (folderPath, zip) => {
 	let inputStream = zip.getInputStream();
 	createEntries(inputStream, folderPath);
 
@@ -108,7 +107,7 @@ function getFullPathAndName(rootPath, fileFullName) {
 	return [fullPath, name];
 }
 
-exports.makeZip = function (folderPath, outputStream) {
+export const makeZip = (folderPath, outputStream) => {
 	let folder = folderUtils.getFolder(folderPath);
 	console.info("Creating zip for folder: " + folderPath);
 

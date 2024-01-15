@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.dts = `
+export const dts = `
 
 /// <reference path="java.lang.d.ts" />
 /// <reference path="java.time.d.ts" />

@@ -9,8 +9,9 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var database = require('db/database');
-var assertTrue = require('test/assert').assertTrue;
+import { database } from "@dirigible/db";
+import { assert } from "@dirigible/test";
+var assertTrue = assert.assertTrue;
 
 var datasources = database.getDataSources();
 

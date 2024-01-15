@@ -14,18 +14,25 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-const response = require("http/response");
-const extensions = require("extensions/extensions");
+import { response } from "@dirigible/http";
+import { extensions } from "@dirigible/extensions";
 
 let tiles = {};
 
 let tileExtensions = extensions.getExtensions("portal-tile");
-for (let i = 0; tileExtensions !== null && i < tileExtensions.length; i++) {
-    let tileExtension = require(tileExtensions[i]);
-    if (typeof tileExtension.getTile !== "function") {
-      continue;
+for (let i = 0; i < tileExtensions?.length; i++) {
+    let tile;
+    try {
+        let tileExtension = await import(tileExtensions[i]);
+        tile = tileExtension.getTile();
+    } catch (e) {
+        // Fallback for not migrated extensions
+        let tileExtension = require(tileExtensions[i]);
+        tile = tileExtension.getTile();
     }
-    let tile = tileExtension.getTile();
+    if (!tile) {
+        continue;
+    }
     if (!tiles[tile.group]) {
         tiles[tile.group] = [];
     }

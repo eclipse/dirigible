@@ -9,9 +9,9 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var query = require('db/query');
-var update = require('db/update');
-var assertTrue = require('test/assert').assertTrue;
+import { update, query } from "@dirigible/db";
+import { assert } from "@dirigible/test";
+var assertTrue = assert.assertTrue;
 
 update.execute("CREATE TABLE U (A INT, B VARCHAR(10))");
 update.execute("INSERT INTO U VALUES (1, 'ABC')");
