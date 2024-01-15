@@ -3,7 +3,7 @@ import { response } from "@dirigible/http";
 
 const artefacts = [];
 const artefactsExtensions = extensions.getExtensions("ide-operations-artefacts");
-for (let i = 0; i < artefactsExtensions.length; i++) {
+for (let i = 0; i < artefactsExtensions?.length; i++) {
     const { getArtefacts } = await import(`../../../${artefactsExtensions[i]}`);
     artefacts.push(...getArtefacts());
 }

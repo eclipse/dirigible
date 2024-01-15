@@ -11,9 +11,35 @@
  */
 // Deprecated, do not edit.
 
-let extensions = require('extensions/extensions');
+import { extensions } from '@dirigible/extensions';
 
-exports.getMenu = function () {
+
+const perspectiveExtensions = extensions.getExtensions('ide-perspective');
+let perspectiveExtensionDefinitions = [];
+
+for (let i = 0; i < perspectiveExtensions?.length; i++) {
+	try {
+		const perspectiveExtension = await import(`../../../${perspectiveExtensions[i]}`);
+		perspectiveExtensionDefinitions.push(perspectiveExtension.getPerspective());
+	} catch (e) {
+		// Fallback for not migrated extensions
+		perspectiveExtensionDefinitions.push(require(perspectiveExtensions[i]).getPerspective());
+	}
+}
+
+const viewExtensions = extensions.getExtensions('ide-view');
+let viewExtensionDefinitions = [];
+for (let i = 0; i < viewExtensions?.length; i++) {
+	try {
+		const viewExtension = await import(`../../../${viewExtensions[i]}`);
+		viewExtensionDefinitions.push(viewExtension.getView());
+	} catch (e) {
+		// Fallback for not migrated extensions
+		viewExtensionDefinitions.push(require(viewExtensions[i]).getView());
+	}
+}
+
+export const getMenu = () => {
 	let menu = {
 		"name": "Window",
 		"link": "#",
@@ -41,15 +67,6 @@ exports.getMenu = function () {
 		]
 	};
 
-
-
-	let perspectiveExtensions = extensions.getExtensions('ide-perspective');
-	let perspectiveExtensionDefinitions = [];
-
-	for (let i = 0; i < perspectiveExtensions.length; i++) {
-		let module = perspectiveExtensions[i];
-		perspectiveExtensionDefinitions.push(require(module).getPerspective());
-	}
 	perspectiveExtensionDefinitions = perspectiveExtensionDefinitions.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 	for (let i = 0; i < perspectiveExtensionDefinitions.length; i++) {
 		let perspectiveInfo = perspectiveExtensionDefinitions[i];
@@ -62,12 +79,6 @@ exports.getMenu = function () {
 		menu.items[0].items.push(perspectiveMenu);
 	}
 
-	let viewExtensions = extensions.getExtensions('ide-view');
-	let viewExtensionDefinitions = [];
-	for (let i = 0; i < viewExtensions.length; i++) {
-		let module = viewExtensions[i];
-		viewExtensionDefinitions.push(require(module).getView());
-	}
 	viewExtensionDefinitions = viewExtensionDefinitions.sort((a, b) => a.label.toLowerCase().localeCompare(b.label.toLowerCase()));
 	for (let i = 0; i < viewExtensionDefinitions.length; i++) {
 		let viewInfo = viewExtensionDefinitions[i];

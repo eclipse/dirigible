@@ -9,10 +9,9 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let extensions = require('extensions/extensions');
-let response = require('http/response');
-let request = require('http/request');
-let uuid = require('utils/uuid');
+import { extensions } from "@dirigible/extensions";
+import { request, response } from "@dirigible/http";
+import { uuid } from "@dirigible/utils";
 
 let views = [];
 let extensionPoint = request.getParameter('extensionPoint') || 'ide-view';
@@ -25,12 +24,17 @@ function setETag() {
 	response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
 }
 
-for (let i = 0; i < viewExtensions.length; i++) {
+for (let i = 0; i < viewExtensions?.length; i++) {
 	let module = viewExtensions[i];
 	try {
-		let viewExtension = require(module);
-		let view = viewExtension.getView();
-		views.push(view);
+		try {
+			const viewExtension = await import(`../../${module}`);
+			views.push(viewExtension.getView());
+		} catch (e) {
+			// Fallback for not migrated extensions
+			const viewExtension = require(module);
+			views.push(viewExtension.getView());
+		}
 
 		let duplication = false;
 		for (let i = 0; i < views.length; i++) {
