@@ -12,7 +12,7 @@
 
 const DatabaseFacade = Java.type("org.eclipse.dirigible.components.api.db.DatabaseFacade");
 
-export function execute(sql: string, parameters: Object, datasourceName: string): number {
+export function execute(sql: string, parameters: Object | null, datasourceName: string): number {
 	let result: number;
 	if (parameters) {
 		const params = JSON.stringify(parameters);
