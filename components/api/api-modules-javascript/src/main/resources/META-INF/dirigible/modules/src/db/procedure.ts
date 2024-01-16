@@ -15,84 +15,88 @@
  */
 import * as update from "./update";
 import * as database from "./database";
+type Parameter = Object[] | string[] | number[];
 
-export function create(sql, datasourceName) {
-    let parameters = [];
-    update.execute(sql, parameters, datasourceName);
-};
+export class Procedure {
+    public static create(sql: string, datasourceName: string): void {
+        let parameters = [];
+        update.execute(sql, parameters, datasourceName);
+    };
 
-export function execute(sql, parameters, datasourceName) {
-    let result = [];
 
-    let connection = null;
-    let callableStatement = null;
-    let resultSet = null;
+    public static execute(sql: string, parameters: Parameter, datasourceName: string): Object[] {
+        let result: Object[] = [];
 
-    if (parameters === undefined || parameters === null) {
-        parameters = [];
-    }
-    try {
-        let hasMoreResults = false;
+        let connection = null;
+        let callableStatement = null;
+        let resultSet = null;
 
-        connection = database.getConnection(datasourceName);
-        callableStatement = connection.prepareCall(sql);
-        let mappedParameters = parameters.map((parameter) => {
-            let mappedParameter = {
-                value: parameter,
-                type: ""
-            };
-            let parameterType = typeof parameter;
-            if (parameterType === "object") {
-                mappedParameter = parameter;
-            } else if (parameterType === "string") {
-                mappedParameter.type = "string";
-            } else if (parameterType === "number") {
-                mappedParameter.type = parameter % 1 === 0 ? "int" : "double";
-            } else {
-                throw new Error(`Procedure Call - Unsupported parameter type [${parameterType}]`);
-            }
-            return mappedParameter;
-        });
-        for (let i = 0; i < mappedParameters.length; i++) {
-            switch (mappedParameters[i].type) {
-                case "string":
-                    callableStatement.setString(i + 1, mappedParameters[i].value);
-                    break;
-                case "int":
-                case "integer":
-                case "number":
-                    callableStatement.setInt(i + 1, mappedParameters[i].value);
-                    break;
-                case "float":
-                    callableStatement.setFloat(i + 1, mappedParameters[i].value);
-                    break;
-                case "double":
-                    callableStatement.setDouble(i + 1, mappedParameters[i].value);
-                    break;
-            }
+        if (parameters === undefined || parameters === null) {
+            parameters = [];
         }
-        resultSet = callableStatement.executeQuery();
+        try {
+            let hasMoreResults = false;
 
-        do {
-            result.push(JSON.parse(resultSet.toJson()));
-            hasMoreResults = callableStatement.getMoreResults();
-            if (hasMoreResults) {
-                resultSet.close();
-                resultSet = callableStatement.getResultSet();
+            connection = database.getConnection(datasourceName);
+            callableStatement = connection.prepareCall(sql);
+            let mappedParameters = parameters.map((parameter) => {
+                let mappedParameter = {
+                    value: parameter,
+                    type: ""
+                };
+                let parameterType = typeof parameter;
+                if (parameterType === "object") {
+                    mappedParameter = parameter;
+                } else if (parameterType === "string") {
+                    mappedParameter.type = "string";
+                } else if (parameterType === "number") {
+                    mappedParameter.type = parameter % 1 === 0 ? "int" : "double";
+                } else {
+                    throw new Error(`Procedure Call - Unsupported parameter type [${parameterType}]`);
+                }
+                return mappedParameter;
+            });
+            for (let i = 0; i < mappedParameters.length; i++) {
+                switch (mappedParameters[i].type) {
+                    case "string":
+                        callableStatement.setString(i + 1, mappedParameters[i].value);
+                        break;
+                    case "int":
+                    case "integer":
+                    case "number":
+                        callableStatement.setInt(i + 1, mappedParameters[i].value);
+                        break;
+                    case "float":
+                        callableStatement.setFloat(i + 1, mappedParameters[i].value);
+                        break;
+                    case "double":
+                        callableStatement.setDouble(i + 1, mappedParameters[i].value);
+                        break;
+                }
             }
-        } while (hasMoreResults)
+            resultSet = callableStatement.executeQuery();
 
-        callableStatement.close();
-    } finally {
-        if (resultSet != null) {
-            resultSet.close();
-        }
-        if (callableStatement != null) {
+            do {
+                result.push(JSON.parse(resultSet.toJson()));
+                hasMoreResults = callableStatement.getMoreResults();
+                if (hasMoreResults) {
+                    resultSet.close();
+                    resultSet = callableStatement.getResultSet();
+                }
+            } while (hasMoreResults)
+
             callableStatement.close();
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (callableStatement != null) {
+                callableStatement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
         }
-        if (connection != null) {
-            connection.close();
-        }
-    }
-    return result;
-};
+        return result;
+    };
+}

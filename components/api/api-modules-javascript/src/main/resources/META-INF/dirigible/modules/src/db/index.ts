@@ -2,7 +2,7 @@ export * as dao from "./dao";
 export * as database from "./database";
 export * as orm from "./orm";
 export * as ormstatements from "./ormstatements";
-export * as procedure from "./procedure";
+export {Procedure as procedure} from "./procedure";
 export * as query from "./query";
 export * as sequence from "./sequence";
 export * as sql from "./sql";
