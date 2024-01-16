@@ -96,9 +96,7 @@ class Session {
  */
 class RepositoryInfo {
 
-	constructor(public native: any) {
-		this.native = native;
-	}
+	constructor(private native: any) {}
 
 	getId(): number {
 		return this.native.getId();
@@ -114,7 +112,7 @@ class RepositoryInfo {
  */
 class Folder {
 
-    constructor(public native: any, public path: any) {
+    constructor(private native: any, private path: any) {
 		this.native = native;
 		this.path = path;
 	}
@@ -228,7 +226,7 @@ class Folder {
  */
 class CmisObject {
 
-	constructor(public native: any) {
+	constructor(private native: any) {
 		this.native = native;
 	}
 
@@ -275,7 +273,7 @@ class CmisObject {
  */
 class ObjectFactory {
 
-    constructor(public native: any) {
+    constructor(private native: any) {
 		this.native = native;
 	}
 
@@ -310,7 +308,7 @@ class ContentStream {
  */
 class Document {
 
-    constructor(public native: any, public path: string) {
+    constructor(private native: any, private path: string) {
 		this.native = native;
 		this.path = path;
 	}
