@@ -75,7 +75,7 @@ class Websocket{
  */
 class WebsocketClient {
 
-	constructor(private session, private uri, private handler) { }
+	constructor(private session: null | any, private uri: string, private handler: string) { } // What should session be except any
 
 	send(text: string) {
 		if (!this.session || this.session === null) {
