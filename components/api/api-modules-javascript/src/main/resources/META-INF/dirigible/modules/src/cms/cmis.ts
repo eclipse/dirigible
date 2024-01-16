@@ -38,9 +38,7 @@ export function getAccessDefinitions(path, method) {
  */
 class Session {
 
-	constructor(public native: any) {
-		this.native = native;
-	}
+	constructor(private native: any) {}
 	
 	getRepositoryInfo(): RepositoryInfo {
 		var native = this.native.getRepositoryInfo();
@@ -288,7 +286,7 @@ class ObjectFactory {
 	};
 }
 
-/**
+/**s
  * ContentStream object
  */
 class ContentStream {
