@@ -107,19 +107,19 @@
 		<maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
 		<maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
 		<jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
-		<spotbugs-maven-plugin.version>4.8.2.0</spotbugs-maven-plugin.version>
+		<spotbugs-maven-plugin.version>4.8.3.0</spotbugs-maven-plugin.version>
 		<formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
 		<exec-maven-plugin.version>3.1.1</exec-maven-plugin.version>
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<license-maven-plugin.version>4.3</license-maven-plugin.version>
 
-		<spring.boot.version>3.2.0</spring.boot.version>
+		<spring.boot.version>3.2.1</spring.boot.version>
 		<org.springdoc.openapi.ui.version>1.7.0</org.springdoc.openapi.ui.version>
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<graalvm.version>23.1.1</graalvm.version>
 		<guava.version>33.0.0-jre</guava.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.634</qldb.sdk.version>
+		<qldb.sdk.version>1.12.637</qldb.sdk.version>
 		<camel.version>4.3.0</camel.version>
 		<ftpserver.version>1.2.0</ftpserver.version>
 		<activemq.version>6.0.1</activemq.version>
