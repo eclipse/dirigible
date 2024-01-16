@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -43,13 +44,16 @@ public class DataSourceInitializer {
 
     private final ApplicationContext applicationContext;
 
+    private final List<DataSourceInitializerContributor> contributors;
+
     /**
      * Instantiates a new data source initializer.
      *
      * @param applicationContext the application context
      */
-    DataSourceInitializer(ApplicationContext applicationContext) {
+    DataSourceInitializer(ApplicationContext applicationContext, List<DataSourceInitializerContributor> contributors) {
         this.applicationContext = applicationContext;
+        this.contributors = contributors;
     }
 
     /**
@@ -80,6 +84,8 @@ public class DataSourceInitializer {
         properties.put("dataSource.user", dataSource.getUsername());
         properties.put("dataSource.password", dataSource.getPassword());
         properties.put("dataSource.logWriter", new PrintWriter(System.out));
+
+        contributors.forEach(contributor -> contributor.contribute(dataSource, properties));
 
         Map<String, String> hikariProperties = getHikariProperties(name);
         hikariProperties.forEach(properties::setProperty);
