@@ -8,7 +8,7 @@
     <parent>
         <artifactId>dirigible-components-parent</artifactId>
         <groupId>org.eclipse.dirigible</groupId>
-        <version>9.0.0-SNAPSHOT</version>
+        <version>10.0.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -46,10 +46,6 @@
         	<artifactId>spring-boot-starter-validation</artifactId>
         	<exclusions>
         		<exclusion>
-        			<groupId>jakarta.validation</groupId>
-        			<artifactId>jakarta.validation-api</artifactId>
-        		</exclusion>
-        		<exclusion>
         			<groupId>org.apache.logging.log4j</groupId>
         			<artifactId>log4j-to-slf4j</artifactId>
         		</exclusion>
@@ -59,12 +55,6 @@
         	<groupId>org.springdoc</groupId>
         	<artifactId>springdoc-openapi-ui</artifactId>
         	<version>${org.springdoc.openapi.ui.version}</version>
-        	<exclusions>
-        		<exclusion>
-        			<groupId>jakarta.validation</groupId>
-        			<artifactId>jakarta.validation-api</artifactId>
-        		</exclusion>
-        	</exclusions>
         </dependency>
     </dependencies>
 

@@ -71,7 +71,7 @@
 	<description>Dirigible Parent</description>
 	<groupId>org.eclipse.dirigible</groupId>
 	<artifactId>dirigible-parent</artifactId>
-	<version>9.0.0-SNAPSHOT</version>
+	<version>10.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<inceptionYear>2010</inceptionYear>
@@ -91,6 +91,208 @@
 		<url>http://www.eclipse.org</url>
 	</organization>
 
+	<properties>
+		<project.title>Eclipse Dirigible</project.title>
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<java.version>17</java.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		
+		<maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
+		<maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
+		<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+		<maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
+		<maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
+		<maven-source-plugin.version>3.3.0</maven-source-plugin.version>
+		<jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
+		<spotbugs-maven-plugin.version>4.8.3.0</spotbugs-maven-plugin.version>
+		<formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
+		<exec-maven-plugin.version>3.1.1</exec-maven-plugin.version>
+		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
+		<license-maven-plugin.version>4.3</license-maven-plugin.version>
+
+		<spring.boot.version>3.2.1</spring.boot.version>
+		<org.springdoc.openapi.ui.version>1.7.0</org.springdoc.openapi.ui.version>
+		<c3p0.version>0.9.5.5</c3p0.version>
+		<graalvm.version>23.1.1</graalvm.version>
+		<guava.version>33.0.0-jre</guava.version>
+		<qldb.driver.version>2.3.1</qldb.driver.version>
+		<qldb.sdk.version>1.12.637</qldb.sdk.version>
+		<camel.version>4.3.0</camel.version>
+		<ftpserver.version>1.2.0</ftpserver.version>
+		<activemq.version>6.0.1</activemq.version>
+		<commons.io>2.15.1</commons.io>
+		<commons.lang3>3.14.0</commons.lang3>
+		<commons.exec>1.4.0</commons.exec>
+		<ngdbc.version>2.19.16</ngdbc.version>
+		<lucene.version>9.9.1</lucene.version>
+		<chemistry.version>1.1.0</chemistry.version>
+		<flowable.version>6.8.0</flowable.version>
+		<jgit.version>6.8.0.202311291450-r</jgit.version>
+		<olingo.version>3.1.3</olingo.version>
+		<mongodb.version>3.12.14</mongodb.version>
+		<commons-csv.version>1.10.0</commons-csv.version>
+
+		<jquery-ui.version>1.13.0</jquery-ui.version>
+		<sap-theming__theming-base-content.version>11.7.0</sap-theming__theming-base-content.version>
+		<fundamental-styles.version>0.30.2</fundamental-styles.version>
+		<angular-aria.version>1.8.2</angular-aria.version>
+		<split.js.version>1.6.5</split.js.version>
+		<diff.version>5.1.0</diff.version>
+		<monaco-editor.version>0.40.0</monaco-editor.version>
+		<requirejs.version>2.3.6</requirejs.version>
+		<jstree.version>3.3.12</jstree.version>
+		<jquery.version>3.6.0</jquery.version>
+		<jqplot.version>1.0.8r1250</jqplot.version>
+		<webjars.bootstrap.version>5.3.2</webjars.bootstrap.version>
+		<webjars.locator.version>0.50</webjars.locator.version>
+		<webjars.locator.core.version>0.55</webjars.locator.core.version>
+		<es5-shim.version>4.6.7</es5-shim.version>
+		<angular-file-upload.version>2.6.1</angular-file-upload.version>
+		<angularjs.version>1.8.2</angularjs.version>
+		<fontawesome.version>4.7.0</fontawesome.version>
+		<classgraph.version>4.8.165</classgraph.version>
+		<testcontainers.version>1.19.3</testcontainers.version>
+		<jetcd.core.version>0.7.7</jetcd.core.version>
+		<logcaptor.version>2.9.2</logcaptor.version>
+		<mina-core.version>2.2.3</mina-core.version>
+		<sshd-core.version>2.11.0</sshd-core.version>
+		<icu4j.version>74.2</icu4j.version>
+		<velocity.version>2.3</velocity.version>
+		<wikitext.version>3.0.48.202308291007</wikitext.version>
+		<flexmark.version>0.64.8</flexmark.version>
+		<snowflake.version>3.14.4</snowflake.version>
+
+		<profile.content.phase>none</profile.content.phase>
+
+		<content.scm.url>
+			https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
+		<content.scm.connection>
+			scm:git:https://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
+		<content.scm.developerConnection>
+			scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
+		<content.repository.branch>master</content.repository.branch>
+
+		<content.scm.server>github</content.scm.server>
+		<content.scm.checkoutDirectory>target</content.scm.checkoutDirectory>
+		<content.source.directory>target/${content.project.name}</content.source.directory>
+		<content.output.directory>
+			${basedir}/src/main/resources/META-INF/dirigible/${content.project.name}</content.output.directory>
+
+		<license.header.location>licensing-header.txt</license.header.location>
+
+		<parent.pom.folder>./</parent.pom.folder>
+		<formatter.location>${parent.pom.folder}/dirigible-formatter.xml</formatter.location>
+		<formatter.java.version>${java.version}</formatter.java.version>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>net.revelc.code.formatter</groupId>
+				<artifactId>formatter-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<version>${spring.boot.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>pl.project13.maven</groupId>
+					<artifactId>git-commit-id-plugin</artifactId>
+					<version>${git-commit-id-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>${exec-maven-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>com.mycila</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>${license-maven-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven-compiler-plugin.version}</version>
+					<configuration>
+						<parameters>true</parameters>
+						<source>${maven.compiler.source}</source>
+						<target>${maven.compiler.target}</target>
+						<debug>true</debug>
+						<debuglevel>lines,vars,source</debuglevel>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>${maven-javadoc-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven-surefire-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>${maven-failsafe-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>net.revelc.code.formatter</groupId>
+					<artifactId>formatter-maven-plugin</artifactId>
+					<version>${formatter-maven-plugin.version}</version>
+					<configuration>
+						<configFile>${formatter.location}</configFile>
+						<compilerSource>${formatter.java.version}</compilerSource>
+						<compilerCompliance>${formatter.java.version}</compilerCompliance>
+						<compilerTargetPlatform>${formatter.java.version}</compilerTargetPlatform>
+					</configuration>
+					<executions>
+						<execution>
+							<id>format-java-code</id>
+							<phase>process-sources</phase>
+							<goals>
+								<goal>format</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>com.github.spotbugs</groupId>
+					<artifactId>spotbugs-maven-plugin</artifactId>
+					<version>${spotbugs-maven-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${jacoco-maven-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>${maven-source-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>${maven-gpg-plugin.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
 	<profiles>
 		<profile>
 			<id>default</id>
@@ -99,44 +301,13 @@
 			</activation>
 			<properties>
 				<maven.javadoc.skip>true</maven.javadoc.skip>
+				<skipTCs>true</skipTCs>
 			</properties>
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>net.revelc.code.formatter</groupId>
-						<artifactId>formatter-maven-plugin</artifactId>
-						<version>2.23.0</version>
-						<configuration>
-							<configFile>${formatter.location}</configFile>
-							<compilerSource>${formatter.java.version}</compilerSource>
-							<compilerCompliance>${formatter.java.version}</compilerCompliance>
-							<compilerTargetPlatform>${formatter.java.version}</compilerTargetPlatform>
-						</configuration>
-						<executions>
-							<execution>
-								<id>format-java-code</id>
-								<phase>process-sources</phase>
-								<goals>
-									<goal>format</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<version>${maven.compiler.plugin.version}</version>
-						<configuration>
-							<source>${maven.compiler.source}</source>
-							<target>${maven.compiler.target}</target>
-							<debug>true</debug>
-							<debuglevel>lines,vars,source</debuglevel>
-						</configuration>
-					</plugin>
-					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
-						<version>${maven-surefire-plugin.version}</version>
 						<configuration>
 							<argLine>
 								--add-opens java.base/java.lang=ALL-UNNAMED
@@ -152,7 +323,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.6.3</version>
 						<configuration>
 							<source>${java.version}</source>
 						</configuration>
@@ -175,6 +345,10 @@
 							</dependency>
 						</dependencies>
 					</plugin>
+					<plugin>
+						<groupId>com.mycila</groupId>
+						<artifactId>license-maven-plugin</artifactId>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -189,7 +363,6 @@
 					<plugin>
 						<groupId>com.mycila</groupId>
 						<artifactId>license-maven-plugin</artifactId>
-						<version>${license-maven-plugin.version}</version>
 						<inherited>true</inherited>
 						<configuration>
 							<header>${license.header.location}</header>
@@ -227,6 +400,8 @@
 									**/src/main/resources/META-INF/dirigible/template-mobile-hello-world/node_modules/**</exclude>
 								<exclude>
 									**/src/main/resources/META-INF/dirigible/utils/jsonpath.js</exclude>
+								<exclude>
+									**/src/main/resources/META-INF/dirigible/ide-designer/designer/**</exclude>
 							</excludes>
 							<skipExistingHeaders>true</skipExistingHeaders>
 						</configuration>
@@ -247,17 +422,6 @@
 							</execution>
 						</executions>
 					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<version>${maven.compiler.plugin.version}</version>
-						<configuration>
-							<source>${maven.compiler.source}</source>
-							<target>${maven.compiler.target}</target>
-							<debug>true</debug>
-							<debuglevel>lines,vars,source</debuglevel>
-						</configuration>
-					</plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -269,30 +433,16 @@
 			</activation>
 			<build>
 				<plugins>
-
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<version>${maven.compiler.plugin.version}</version>
-						<configuration>
-							<source>${maven.compiler.source}</source>
-							<target>${maven.compiler.target}</target>
-							<debug>true</debug>
-							<debuglevel>lines,vars,source</debuglevel>
-						</configuration>
-					</plugin>
-
 					<plugin>
 						<groupId>com.github.spotbugs</groupId>
 						<artifactId>spotbugs-maven-plugin</artifactId>
-						<version>4.8.2.0</version>
 						<dependencies>
 							<!-- overwrite dependency on spotbugs if you want to
 							specify the version of spotbugs -->
 							<dependency>
 								<groupId>com.github.spotbugs</groupId>
 								<artifactId>spotbugs</artifactId>
-								<version>4.8.2</version>
+								<version>4.8.3</version>
 							</dependency>
 						</dependencies>
 					</plugin>
@@ -309,7 +459,6 @@
 					<plugin>
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
-						<version>0.8.11</version>
 						<executions>
 							<execution>
 								<goals>
@@ -338,19 +487,7 @@
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<version>${maven.compiler.plugin.version}</version>
-						<configuration>
-							<source>${maven.compiler.source}</source>
-							<target>${maven.compiler.target}</target>
-							<debug>true</debug>
-							<debuglevel>lines,vars,source</debuglevel>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>3.3.0</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -363,7 +500,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.6.3</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -386,7 +522,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>3.1.0</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -408,7 +543,43 @@
 				</plugins>
 			</build>
 		</profile>
-
+		<profile>
+			<id>testcontainers</id>
+			<properties>
+				<skipTCs>false</skipTCs>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<version>${maven.compiler.plugin.version}</version>
+						<configuration>
+							<source>${maven.compiler.source}</source>
+							<target>${maven.compiler.target}</target>
+							<debug>true</debug>
+							<debuglevel>lines,vars,source</debuglevel>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>${maven-surefire-plugin.version}</version>
+						<configuration>
+							<argLine>
+								--add-opens java.base/java.lang=ALL-UNNAMED
+								--add-opens java.base/java.math=ALL-UNNAMED
+								--add-opens java.base/java.util=ALL-UNNAMED
+								--add-opens
+								java.base/java.util.concurrent=ALL-UNNAMED
+								--add-opens java.base/java.net=ALL-UNNAMED
+								--add-opens java.base/java.text=ALL-UNNAMED
+							</argLine>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 
 	<repositories>
@@ -421,6 +592,11 @@
 			<releases>
 				<enabled>true</enabled>
 			</releases>
+		</repository>
+		<repository>
+			<id>github</id>
+			<name>GitHub dirigiblelabs/olingo-odata2</name>
+			<url>https://maven.pkg.github.com/dirigiblelabs/olingo-odata2</url>
 		</repository>
 	</repositories>
 
@@ -462,25 +638,16 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -494,12 +661,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>javax.annotation</groupId>
-			<artifactId>jsr250-api</artifactId>
-			<version>${jsr250-api.version}</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
@@ -510,18 +671,12 @@
 
 		<!-- Java 11 Dependencies -->
 		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-core</artifactId>
-			<version>${jaxb.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-impl</artifactId>
-			<version>${jaxb.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>jakarta.xml.ws</groupId>
@@ -535,7 +690,6 @@
 		<dependency>
 			<groupId>net.bytebuddy</groupId>
 			<artifactId>byte-buddy</artifactId>
-			<version>1.14.10</version>
 		</dependency>
 
 		<!-- Test Dependencies -->
@@ -554,16 +708,18 @@
 			<artifactId>mockito-core</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-inline</artifactId>
-			<scope>test</scope>
-		</dependency>
 		<!-- End Test Dependencies -->
 	</dependencies>
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring.boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-application</artifactId>
@@ -575,13 +731,7 @@
 				<version>5.10.1</version>
 				<scope>test</scope>
 			</dependency>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-dependencies</artifactId>
-				<version>${spring.boot.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
+
 			<dependency>
 				<groupId>org.seleniumhq.selenium</groupId>
 				<artifactId>selenium-java</artifactId>
@@ -591,112 +741,4 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<properties>
-		<project.title>Eclipse Dirigible</project.title>
-
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-		<java.version>17</java.version>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
-
-		<maven.resource.plugin.version>3.3.1</maven.resource.plugin.version>
-		<maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
-		<maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
-		<maven.scm.plugin.version>2.0.0</maven.scm.plugin.version>
-		<scmVersionType>branch</scmVersionType>
-		<commons.io>2.15.1</commons.io>
-		<commons.lang3>3.14.0</commons.lang3>
-		<commons.exec>1.3</commons.exec>
-		<hamcrest.all.version>1.3</hamcrest.all.version>
-		<retrofit.version>1.8.0</retrofit.version>
-		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
-
-		<h2database.version>2.2.224</h2database.version>
-		<ngdbc.version>2.19.11</ngdbc.version>
-
-		<jsr250-api.version>1.0</jsr250-api.version>
-		<lucene.version>9.9.0</lucene.version>
-		<chemistry.version>1.1.0</chemistry.version>
-		<flowable.version>6.8.0</flowable.version>
-		<jaxb.version>2.3.0</jaxb.version>
-		<license-maven-plugin.version>4.3</license-maven-plugin.version>
-		<persistence.api.version>2.2.3</persistence.api.version>
-		<jgit.version>6.8.0.202311291450-r</jgit.version>
-		<olingo.version>2.0.13</olingo.version>
-		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
-		<mongodb.version>3.12.14</mongodb.version>
-		<liquibase-core.version>4.25.0</liquibase-core.version>
-		<commons-csv.version>1.10.0</commons-csv.version>
-		<jquery-ui.version>1.13.0</jquery-ui.version>
-		<sap-theming__theming-base-content.version>11.7.0</sap-theming__theming-base-content.version>
-		<fundamental-styles.version>0.30.2</fundamental-styles.version>
-		<angular-aria.version>1.8.2</angular-aria.version>
-		<split.js.version>1.6.5</split.js.version>
-		<diff.version>5.1.0</diff.version>
-		<monaco-editor.version>0.40.0</monaco-editor.version>
-		<requirejs.version>2.3.6</requirejs.version>
-		<jstree.version>3.3.12</jstree.version>
-		<jquery.version>3.6.0</jquery.version>
-		<jqplot.version>1.0.8r1250</jqplot.version>
-		<webjars.bootstrap.version>5.3.2</webjars.bootstrap.version>
-		<webjars.locator.version>0.50</webjars.locator.version>
-		<webjars.locator.core.version>0.55</webjars.locator.core.version>
-		<es5-shim.version>4.6.7</es5-shim.version>
-		<angular-file-upload.version>2.6.1</angular-file-upload.version>
-		<angularjs.version>1.8.2</angularjs.version>
-		<fontawesome.version>4.7.0</fontawesome.version>
-		<classgraph.version>4.8.165</classgraph.version>
-		<commons-compress.version>1.22</commons-compress.version>
-		<testcontainers.version>1.19.3</testcontainers.version>
-		<jetcd.core.version>0.7.6</jetcd.core.version>
-		<logcaptor.version>2.9.2</logcaptor.version>
-		<exec.maven.plugin>3.1.1</exec.maven.plugin>
-		<mina-core.version>2.2.3</mina-core.version>
-		<sshd-core.version>2.11.0</sshd-core.version>
-
-		<spring.boot.version>2.7.18</spring.boot.version>
-
-		<keycloak.keycloak-spring-boot-starter>23.0.1</keycloak.keycloak-spring-boot-starter>
-		<c3p0.version>0.9.5.5</c3p0.version>
-		<graalvm.version>23.1.1</graalvm.version>
-		<guava.version>32.1.3-jre</guava.version>
-		<icu4j.version>74.1</icu4j.version>
-		<velocity.version>2.3</velocity.version>
-		<wikitext.version>3.0.48.202308291007</wikitext.version>
-		<flexmark.version>0.64.8</flexmark.version>
-		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.607</qldb.sdk.version>
-		<camel.version>3.21.2</camel.version>
-		<ftpserver.version>1.2.0</ftpserver.version>
-
-		<org.springdoc.openapi.ui.version>1.7.0</org.springdoc.openapi.ui.version>
-
-		<sonar.organization>eclipse</sonar.organization>
-		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-
-		<profile.content.phase>none</profile.content.phase>
-
-		<content.scm.url>
-			https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
-		<content.scm.connection>
-			scm:git:https://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
-		<content.scm.developerConnection>
-			scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
-		<content.repository.branch>master</content.repository.branch>
-
-		<content.scm.server>github</content.scm.server>
-		<content.scm.checkoutDirectory>target</content.scm.checkoutDirectory>
-		<content.source.directory>target/${content.project.name}</content.source.directory>
-		<content.output.directory>
-			${basedir}/src/main/resources/META-INF/dirigible/${content.project.name}</content.output.directory>
-
-		<license.header.location>licensing-header.txt</license.header.location>
-
-		<parent.pom.folder>./</parent.pom.folder>
-		<formatter.location>${parent.pom.folder}/dirigible-formatter.xml</formatter.location>
-		<formatter.java.version>${java.version}</formatter.java.version>
-	</properties>
 </project>
-

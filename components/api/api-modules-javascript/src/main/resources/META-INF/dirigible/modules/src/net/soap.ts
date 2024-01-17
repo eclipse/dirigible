@@ -12,9 +12,9 @@
 import * as streams from "@dirigible/io/streams";
 import {request} from "@dirigible/http";
 import * as base64 from "@dirigible/utils/base64";
-const MessageFactory = Java.type("javax.xml.soap.MessageFactory");
-const MimeHeadersInternal = Java.type("javax.xml.soap.MimeHeaders");
-const SOAPConnectionFactory = Java.type("javax.xml.soap.SOAPConnectionFactory");
+const MessageFactory = Java.type("jakarta.xml.soap.MessageFactory");
+const MimeHeadersInternal = Java.type("jakarta.xml.soap.MimeHeaders");
+const SOAPConnectionFactory = Java.type("jakarta.xml.soap.SOAPConnectionFactory");
 
 export function createMessage() {
 	const internalFactory = MessageFactory.newInstance();

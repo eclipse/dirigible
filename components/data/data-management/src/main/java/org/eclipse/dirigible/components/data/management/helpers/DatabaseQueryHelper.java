@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NavigableMap;
 import java.util.TreeMap;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -115,12 +114,7 @@ public class DatabaseQueryHelper {
                 }
             }
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(sql);
-            }
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
+            logger.error("Failed to execute SQL [{}]", sql, e);
             callback.error(e);
         }
     }

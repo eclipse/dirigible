@@ -12,7 +12,7 @@ package org.eclipse.dirigible.components.openapi.domain;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * The Class OpenAPI.

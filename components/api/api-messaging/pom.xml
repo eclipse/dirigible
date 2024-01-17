@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-components-parent</artifactId>
-		<version>9.0.0-SNAPSHOT</version>
+		<version>10.0.0-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -38,12 +38,6 @@
 		</dependency>
 
 		<!-- Libraries -->
-		<dependency>
-			<groupId>javax.websocket</groupId>
-			<artifactId>javax.websocket-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

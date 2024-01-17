@@ -22,7 +22,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -69,12 +68,12 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
     /**
      * The Constant CSVIM_SYNCHRONIZED.
      */
-    private static final List<String> CSVIM_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
+    private static final List<String> CSVIM_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<>());
 
     /**
      * The Constant CSV_SYNCHRONIZED.
      */
-    private static final List<String> CSV_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
+    private static final List<String> CSV_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<>());
 
     /** The csvimsynchronizer service. */
     private final CsvimService csvimService;
@@ -85,7 +84,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
     /**
      * The datasources manager.
      */
-    private DataSourcesManager datasourcesManager;
+    private final DataSourcesManager datasourcesManager;
 
     /**
      * The synchronization callback.
@@ -95,7 +94,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
     /**
      * The csvim processor.
      */
-    private CsvimProcessor csvimProcessor;
+    private final CsvimProcessor csvimProcessor;
 
     /**
      * Instantiates a new csvim synchronizer.
@@ -187,19 +186,10 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
                          }
                      });
             }
-
             Csvim result = getService().save(csvim);
             return List.of(result);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
-            if (logger.isErrorEnabled()) {
-                logger.error("csvim: {}", csvim);
-            }
-            if (logger.isErrorEnabled()) {
-                logger.error("content: {}", new String(content));
-            }
+            logger.error("Failed to save CSVIM [{}], content: [{}]", csvim, new String(content), e);
             throw new ParseException(e.getMessage(), 0);
         }
     }
@@ -241,12 +231,11 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
         try (Connection connection = datasourcesManager.getDefaultDataSource()
                                                        .getConnection()) {
             Csvim csvim;
-            if (wrapper.getArtefact() instanceof Csvim) {
-                csvim = (Csvim) wrapper.getArtefact();
-            } else {
+            if (!(wrapper.getArtefact() instanceof Csvim)) {
                 throw new UnsupportedOperationException(String.format("Trying to process %s as Csvim", wrapper.getArtefact()
                                                                                                               .getClass()));
             }
+            csvim = (Csvim) wrapper.getArtefact();
 
             switch (flow) {
                 case CREATE:
@@ -277,9 +266,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
 
             return true;
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
+            logger.error(e.getMessage(), e);
             callback.addError(e.getMessage());
             callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
             return false;
@@ -299,24 +286,18 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
             for (Csvim c : csvims) {
                 if (!CSVIM_SYNCHRONIZED.contains(c.getLocation())) {
                     csvimService.delete(c);
-                    if (logger.isWarnEnabled()) {
-                        logger.warn("Cleaned up CSVIM file from location: {}", c.getLocation());
-                    }
+                    logger.warn("Cleaned up CSVIM file from location: {}", c.getLocation());
                 }
             }
             List<Csv> csvs = csvService.getAll();
             for (Csv csv : csvs) {
                 if (!CSV_SYNCHRONIZED.contains(csv.getLocation())) {
                     csvService.delete(csv);
-                    if (logger.isWarnEnabled()) {
-                        logger.warn("Cleaned up CSV file from location: {}", csv.getLocation());
-                    }
+                    logger.warn("Cleaned up CSV file from location: {}", csv.getLocation());
                 }
             }
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
+            logger.error("Failed to cleanup csvim [{}]", csvim, e);
             callback.addError(e.getMessage());
             callback.registerState(this, csvim, ArtefactLifecycle.DELETED, e.getMessage());
         }
@@ -352,7 +333,6 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
         return Csvim.ARTEFACT_TYPE;
     }
 
-
     /**
      * Execute csvim.
      *
@@ -376,11 +356,10 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
                     }
                     byte[] content;
                     IResource resource = CsvimProcessor.getCsvResource(file);
-                    if (resource.exists()) {
-                        content = csvimProcessor.getCsvContent(resource);
-                    } else {
+                    if (!resource.exists()) {
                         throw new Exception("CSV does not exist: " + fileLocation);
                     }
+                    content = csvimProcessor.getCsvContent(resource);
                     csv.setContent(content);
                     csv.setLocation(file.getLocation());
                     csv.setType(Csv.ARTEFACT_TYPE);
@@ -394,9 +373,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
 
                     csvService.save(csv);
                 } catch (SQLException | IOException e) {
-                    if (logger.isErrorEnabled()) {
-                        logger.error(String.format("An error occurred while trying to execute the data import: %s", e.getMessage()), e);
-                    }
+                    logger.error("An error occurred while trying to execute the data import of file [{}]", file, e);
                 }
             }
         }
@@ -418,16 +395,13 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
                     String fileLocation = file.getLocation();
                     byte[] content;
                     IResource resource = CsvimProcessor.getCsvResource(file);
-                    if (resource.exists()) {
-                        content = csvimProcessor.getCsvContent(resource);
-                    } else {
+                    if (!resource.exists()) {
                         throw new Exception("CSV does not exist: " + fileLocation);
                     }
+                    content = csvimProcessor.getCsvContent(resource);
                     csvimProcessor.process(file, new ByteArrayInputStream(content), connection);
                 } catch (SQLException | IOException e) {
-                    if (logger.isErrorEnabled()) {
-                        logger.error(String.format("An error occurred while trying to execute the data import: %s", e.getMessage()), e);
-                    }
+                    logger.error("An error occurred while trying to execute the data import of CSVIM [{}]", csvim, e);
                 }
             }
         }

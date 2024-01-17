@@ -33,16 +33,10 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 				return;
 			}
 
-			if (parent.style === "projection") {
-				showAlert('Drop', 'Drop target cannot be an Entity of type Projection', $scope);
-				return;
-			}
-
 			pt.x -= pstate.x;
 			pt.y -= pstate.y;
 
 			let columnCount = graph.model.getChildCount(parent) + 1;
-			//showPrompt('Enter name for new property', 'property'+columnCount, createNode);
 			createNode('property' + columnCount, prototype.style === 'copied', parent.style === 'projection', parent.style === 'extension');
 		} else {
 			let entitiesCount = 0;
@@ -53,8 +47,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 					entitiesCount++;
 				}
 			}
-			//showPrompt('Enter name for new entity', 'Entity'+(entitiesCount+1), createNode);
-			createNode('Entity' + (entitiesCount + 1), prototype.style); //  === 'copied', prototype.style === 'projection', prototype.style === 'extension'
+			createNode('Entity' + (entitiesCount + 1), prototype.style);
 
 
 			if (prototype.style === 'dependent') {
@@ -65,7 +58,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 				$scope.$cell.value.entityType = "REPORT";
 			} else if (prototype.style === 'filter') {
 				$scope.$cell = graph.getSelectionCell();
-				$scope.$cell.value.entityType = "REPORT_FILTER";
+				$scope.$cell.value.entityType = "FILTER";
 			} else if (prototype.style === 'setting') {
 				$scope.$cell = graph.getSelectionCell();
 				$scope.$cell.value.entityType = "SETTING";
@@ -102,6 +95,14 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 					if (isEntity && style === 'copied') {
 						v1.style = 'copied';
 						v1.value.entityType = "COPIED";
+					}
+					
+					if (isEntity && style === 'projection') {
+						v1.style = 'projection';
+						v1.value.entityType = "PROJECTION";
+					}
+					if (!isEntity && style === 'projection') {
+						v1.style = 'projectionproperty';
 					}
 
 					var memento = undefined;

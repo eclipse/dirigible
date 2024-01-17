@@ -43,7 +43,7 @@ exports.get = function (moduleName) {
             saveModuleInfo(moduleInfo);
         }
     } catch (e) {
-        console.error(`Error occured ${e}`);
+        console.error(`Error occured: [${e}]`);
     }
     return moduleInfo;
 };

@@ -13,7 +13,7 @@ package org.eclipse.dirigible.components.listeners.service;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import javax.jms.JMSException;
+import jakarta.jms.JMSException;
 import org.eclipse.dirigible.components.listeners.util.LogsAsserter;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.javascript.modules.Module;

@@ -15,8 +15,11 @@ import * as globals from "@dirigible/core/globals";
 import * as mongodb from "./client"
 import * as dirigibleOrm from "@dirigible/db/orm";
 import * as logging from "@dirigible/log/logging";
+import * as configurations from "@dirigible/core/configurations";
 
-const mongoClient = mongodb.getClient();
+const dbUri = configurations.get("DIRIGIBLE_MONGODB_CLIENT_URI", "mongodb://localhost:27017");
+
+const mongoClient = mongodb.getClient(dbUri, null, null);
 const db = mongoClient.getDB();
 
 export class DAO {

@@ -63,6 +63,7 @@ class FileItem {
     }
 
     public getOriginalFilename(): string {
+
         return this.native.getOriginalFilename();
     }
 

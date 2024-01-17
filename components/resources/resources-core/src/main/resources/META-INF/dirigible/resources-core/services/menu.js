@@ -19,8 +19,8 @@ let mainmenu = [];
 let menuExtensions = extensions.getExtensions(menuExtensionId);
 
 function setETag() {
-	let maxAge = 30 * 24 * 60 * 60;
-	let etag = uuid.random();
+	const maxAge = 30 * 24 * 60 * 60;
+	const etag = uuid.random();
 	response.setHeader("ETag", etag);
 	response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
 }
@@ -28,8 +28,8 @@ function setETag() {
 for (let i = 0; i < menuExtensions.length; i++) {
 	let module = menuExtensions[i];
 	try {
-		menuExtension = require(module);
-		let menu = menuExtension.getMenu();
+		const menuExtension = require(module);
+		const menu = menuExtension.getMenu();
 		mainmenu.push(menu);
 	} catch (error) {
 		console.error('Error occured while loading metadata for the menu: ' + module);

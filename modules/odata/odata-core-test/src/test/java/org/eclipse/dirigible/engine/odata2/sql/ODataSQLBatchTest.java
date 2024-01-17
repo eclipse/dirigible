@@ -38,7 +38,7 @@ import org.eclipse.dirigible.engine.odata2.sql.entities.Driver;
 import org.eclipse.dirigible.engine.odata2.sql.entities.Owner;
 import org.junit.Test;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.*;

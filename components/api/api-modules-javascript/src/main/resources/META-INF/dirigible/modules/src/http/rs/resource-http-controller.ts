@@ -1,7 +1,8 @@
 import {request, response} from "..";
 import { ResourceMappings } from "./resource-mappings";
 import * as logging from "@dirigible/log/logging";
-const { match } = dirigibleRequire("http/path-to-regexp/6.2.1/index.js");
+
+const { match } = dirigibleRequire("modules/src/http/path-to-regexp/6.2.1/index.js");
 
 const logger = logging.getLogger('http.rs.controller');
 

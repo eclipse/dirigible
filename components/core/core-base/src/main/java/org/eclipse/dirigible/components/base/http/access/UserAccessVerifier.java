@@ -10,7 +10,7 @@
  */
 package org.eclipse.dirigible.components.base.http.access;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * The Interface UserAccessVerifier.
