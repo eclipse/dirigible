@@ -28,3 +28,9 @@ export class Extensions {
 		return JSON.parse(JSON.stringify(extensionPoints));
 	}
 }
+
+// @ts-ignore
+if (typeof module !== 'undefined') {
+	// @ts-ignore
+	module.exports = Extensions;
+}

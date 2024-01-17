@@ -28,7 +28,7 @@ const PRIORITY_MODULES = [
     "security/user"
 ];
 
-exports.get = function (moduleName) {
+export const get = (moduleName) => {
     let moduleInfo = loadModuleInfo(moduleName);
     try {
         let resource = repository.getResource(`${PATH_REGISTRY_PUBLIC}/${moduleName}.js`);
@@ -48,7 +48,7 @@ exports.get = function (moduleName) {
     return moduleInfo;
 };
 
-exports.refresh = function () {
+export const refresh = () => {
     modulesParser.getModules()
         .sort((a, b) => {
             let isPriorityModuleA = PRIORITY_MODULES.includes(a.name);
@@ -62,12 +62,12 @@ exports.refresh = function () {
         })
         .forEach(e => {
             console.debug(`Refreshing ModuleInfo: ${e.name}`);
-            exports.get(e.name)
+            get(e.name)
         });
     console.debug("Refreshing ModuleInfo Finished");
 };
 
-exports.clear = function () {
+export const clear = () => {
     let keys = config.getKeys().filter(e => e.startsWith(MODULE_INFO_PREFIX));
     keys.forEach(key => config.remove(key));
 };

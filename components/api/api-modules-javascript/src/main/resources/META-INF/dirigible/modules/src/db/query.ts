@@ -28,3 +28,9 @@ export class Query {
 		return JSON.parse(resultset);
 	}
 }
+
+// @ts-ignore
+if (typeof module !== 'undefined') {
+	// @ts-ignore
+	module.exports = Query;
+}

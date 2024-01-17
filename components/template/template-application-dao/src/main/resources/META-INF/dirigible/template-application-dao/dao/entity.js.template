@@ -1,9 +1,9 @@
 #if($dataCount)
-const query = require("db/query");
+import { query } from "@dirigible/db";
 #end
-const producer = require("messaging/producer");
-const extensions = require('extensions/extensions');
-const daoApi = require("db/dao");
+import { producer } from "@dirigible/messaging";
+import { extensions } from "@dirigible/extensions";
+import { dao as daoApi } from "@dirigible/db";
 #set($isEntityUtilsEnabled = "false")
 #foreach ($property in $properties)
 #if($property.dataType == "DATE" || $property.dataType == "BOOLEAN")
@@ -12,7 +12,7 @@ const daoApi = require("db/dao");
 #end
 #end
 #if($isEntityUtilsEnabled == "true")
-const EntityUtils = require("${projectName}/gen/dao/utils/EntityUtils");
+import * as EntityUtils from "../utils/EntityUtils";
 #end
 #if($roleRead && $roleRead != "" || $roleWrite && $roleWrite != "") 
 #set($isEntitySecurityEnabled = "true")
@@ -24,7 +24,7 @@ const EntityUtils = require("${projectName}/gen/dao/utils/EntityUtils");
 #end
 #end
 #if($isEntitySecurityEnabled || $isEntityPropertySecurityEnabled)
-const user = require("security/user");
+import { user } from "@dirigible/security";
 
 function ForbiddenError(message) {
     this.name = "ForbiddenError";
@@ -63,7 +63,7 @@ let dao = daoApi.create({
 ]
 });
 
-exports.list = function(settings) {
+export const list = (settings) => {
 #if($roleRead && $roleRead != "") 
 	if (!user.isInRole("${roleRead}")) {
 		throw new ForbiddenError("You do not have the required role to call this function");
@@ -100,9 +100,9 @@ exports.list = function(settings) {
 #else
 	return dao.list(settings);
 #end
-};
+}
 
-exports.get = function(id) {
+export const get = (id) => {
 #if($roleRead && $roleRead != "") 
 	if (!user.isInRole("${roleRead}")) {
 		throw new ForbiddenError("You do not have the required role to call this function");
@@ -137,9 +137,9 @@ exports.get = function(id) {
 #else
 	return dao.find(id);
 #end
-};
+}
 
-exports.create = function(entity) {
+export const create = (entity) => {
 #if($roleWrite && $roleWrite != "") 
 	if (!user.isInRole("${roleWrite}")) {
 		throw new ForbiddenError("You do not have the required role to call this function");
@@ -192,9 +192,9 @@ exports.create = function(entity) {
 		}
 	});
 	return id;
-};
+}
 
-exports.update = function(entity) {
+export const update = (entity) => {
 #if($roleWrite && $roleWrite != "") 
 	if (!user.isInRole("${roleWrite}")) {
 		throw new ForbiddenError("You do not have the required role to call this function");
@@ -241,9 +241,9 @@ exports.update = function(entity) {
 #end
 		}
 	});
-};
+}
 
-exports.delete = function(id) {
+export const remove = (id) => {
 	let entity = dao.find(id);
 #if($roleWrite && $roleWrite != "") 
 	if (!user.isInRole("${roleWrite}")) {
@@ -265,10 +265,10 @@ exports.delete = function(id) {
 #end
 		}
 	});
-};
+}
 
 #if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
-exports.count = function (#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end) {
+export const count = (#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end) => {
 	let resultSet = query.execute('SELECT COUNT(*) AS COUNT FROM "${tablePrefix}_${dataName}" WHERE #foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")"${property.dataName}"#end#end = ?', [#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end]);
 	if (resultSet !== null && resultSet[0] !== null) {
 		if (resultSet[0].COUNT !== undefined && resultSet[0].COUNT !== null) {
@@ -278,14 +278,14 @@ exports.count = function (#foreach ($property in $properties)#if($property.relat
 		}
 	}
 	return 0;
-};
+}
 #else
-exports.count = function() {
+export const count = () => {
 	return dao.count();
-};
+}
 #end
 
-exports.customDataCount = function() {
+export const customDataCount = () => {
 #if($dataCount)
 	let resultSet = query.execute('${dataCount}');
 	if (resultSet !== null && resultSet[0] !== null) {
@@ -299,22 +299,34 @@ exports.customDataCount = function() {
 #else
 	return dao.count();
 #end
+}
+
+const triggerExtensions = [];
+const extensionModules = extensions.getExtensions("${projectName}/${perspectiveName}/${name}");
+for (let i = 0; i < extensionModules.length; i ++) {
+	const module = extensionModules[i];
+	try {
+		let extensionModule = await import(`../../${module}`);
+		if (typeof extensionModule.trigger !== "function") {
+			extensionModule = require(module);
+		}
+		if (typeof extensionModule.trigger === "function") {
+			triggerExtensions.push(extensionModule);
+		} else {
+			console.error(`Extension '${module}', doesn't provide trigger() function`);
+		}
+	} catch (e) {
+		console.error(`Error occurred while importing extension '${module}'`, e);
+	}
 };
 
-function triggerEvent(data) {
-	let triggerExtensions = extensions.getExtensions("${projectName}/${perspectiveName}/${name}");
-	try {
-		for (let i=0; i < triggerExtensions.length; i++) {
-			let module = triggerExtensions[i];
-			let triggerExtension = require(module);
-			try {
-				triggerExtension.trigger(data);
-			} catch (error) {
-				console.error(error);
-			}			
-		}
-	} catch (error) {
-		console.error(error);
-	}
+const triggerEvent = (data) => {
+	triggerExtensions.forEach(triggerExtension => {
+		try {
+			triggerExtension.trigger(data);
+		} catch (error) {
+			console.error(error);
+		}			
+	});
 	producer.queue("${projectName}/${perspectiveName}/${name}").send(JSON.stringify(data));
 }
