@@ -163,6 +163,7 @@
 		<velocity.version>2.3</velocity.version>
 		<wikitext.version>3.0.48.202308291007</wikitext.version>
 		<flexmark.version>0.64.8</flexmark.version>
+		<snowflake.version>3.14.4</snowflake.version>
 
 		<profile.content.phase>none</profile.content.phase>
 

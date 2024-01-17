@@ -209,16 +209,16 @@
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-mongodb-jdbc</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>net.snowflake</groupId>
+			<artifactId>snowflake-jdbc</artifactId>
+			<version>${snowflake.version}</version>
+		</dependency>
 		<!--
 		<dependency>
 			<groupId>com.sap.cloud.db.jdbc</groupId>
 			<artifactId>ngdbc</artifactId>
 			<version>${ngdbc.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>net.snowflake</groupId>
-		    <artifactId>snowflake-jdbc</artifactId>
-		    <version>${snowflake.version}</version>
 		</dependency>
 		-->
 
