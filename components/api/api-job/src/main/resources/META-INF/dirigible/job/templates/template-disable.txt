@@ -1,0 +1,10 @@
+Dear Administrator,
+
+The execution of the job [{{job.name}}] has been disabled.
+
+You can investigate further at:
+
+{{job.scheme}}://{{job.host}}:{{job.port}}/services/web/ide-jobs/view/jobs.html
+
+Regards,
+Your Job Engine
