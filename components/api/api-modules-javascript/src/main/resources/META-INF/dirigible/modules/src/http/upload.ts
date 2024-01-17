@@ -83,7 +83,7 @@ class FileItem {
         return bytes.toJavaScriptBytes(data);
     }
 
-    public getBytesNative() { // TODO pitaj tuk za bytes
+    public getBytesNative(): any {
         return this.native.getBytes();
     }
 
