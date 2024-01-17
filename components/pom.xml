@@ -43,6 +43,7 @@
 		<module>data/data-export</module>
 		<module>data/data-import</module>
 		<module>data/data-anonymize</module>
+		<module>data/data-source-snowpark</module>
 
         <!-- Engines -->
         <module>engine/engine-javascript</module>
@@ -646,6 +647,11 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-data-anonymize</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-data-source-snowpark</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
