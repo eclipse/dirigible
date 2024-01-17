@@ -16,7 +16,7 @@
 import * as configurations from "@dirigible/core/configurations";
 const JobFacade = Java.type("org.eclipse.dirigible.components.api.job.JobFacade");
 
-export function getJobs(): Array<Job> {
+export function getJobs(): Job[] {
     let jobs = new Array();
     let list = JSON.parse(JobFacade.getJobs());
     for (let i in list) {
