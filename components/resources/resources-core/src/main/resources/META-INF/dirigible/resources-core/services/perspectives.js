@@ -9,10 +9,9 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let extensions = require('extensions/extensions');
-let response = require('http/response');
-let request = require('http/request');
-let uuid = require('utils/uuid');
+import { extensions } from "@dirigible/extensions";
+import { request, response } from "@dirigible/http";
+import { uuid } from "@dirigible/utils";
 
 let perspectives = [];
 let extensionPoint = request.getParameter('extensionPoint') || 'ide-perspective';
@@ -25,12 +24,17 @@ function setETag() {
 	response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
 }
 
-for (let i = 0; i < perspectiveExtensions.length; i++) {
+for (let i = 0; i < perspectiveExtensions?.length; i++) {
 	let module = perspectiveExtensions[i];
 	try {
-		let perspectiveExtension = require(module);
-		let perspective = perspectiveExtension.getPerspective();
-		perspectives.push(perspective);
+		try {
+			const perspectiveExtension = await import(`../../${module}`);
+			perspectives.push(perspectiveExtension.getPerspective());
+		} catch (e) {
+			// Fallback for not migrated extensions
+			const perspectiveExtension = require(module);
+			perspectives.push(perspectiveExtension.getPerspective());
+		}
 
 		let duplication = false;
 		for (let i = 0; i < perspectives.length; i++) {

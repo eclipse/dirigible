@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let response = dirigibleRequire("http/response");
-let modulesParser = dirigibleRequire("ide-monaco-extensions/api/utils/modulesParser");
+import { response } from "@dirigible/http";
+import * as modulesParser from "./utils/modulesParser";
 let modules = modulesParser.getModules();
 response.setContentType("application/json");
 response.println(JSON.stringify(modules));

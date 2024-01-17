@@ -9,10 +9,9 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const request = require("http/request");
-const extensions = require('extensions/extensions');
-const response = require('http/response');
-const uuid = require('utils/uuid');
+import { request, response } from "@dirigible/http";
+import { extensions } from "@dirigible/extensions";
+import { uuid } from "@dirigible/utils";
 
 const menuExtensionId = request.getParameter("id");
 let mainmenu = [];
@@ -25,12 +24,17 @@ function setETag() {
 	response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
 }
 
-for (let i = 0; i < menuExtensions.length; i++) {
+for (let i = 0; i < menuExtensions?.length; i++) {
 	let module = menuExtensions[i];
 	try {
-		const menuExtension = require(module);
-		const menu = menuExtension.getMenu();
-		mainmenu.push(menu);
+		try {
+			const menuExtension = await import(`../../${module}`);
+			mainmenu.push(menuExtension.getMenu());
+		} catch (e) {
+			// Fallback for not migrated extensions
+			const menuExtension = require(module);
+			mainmenu.push(menuExtension.getMenu());
+		}
 	} catch (error) {
 		console.error('Error occured while loading metadata for the menu: ' + module);
 		console.error(error);

@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let config = dirigibleRequire("core/configurations");
+import { configurations as config } from "@dirigible/core";
 
 let DIRIGIBLE_DOCUMENTS_EXT_CONTENT_TYPE_MS_ENABLED = "DIRIGIBLE_DOCUMENTS_EXT_CONTENT_TYPE_MS_ENABLED";
 
@@ -27,10 +27,10 @@ function getContentType(fileName, contentType) {
 	return contentType;
 }
 
-exports.getContentTypeBeforeUpload = function (fileName, contentType) {
+export const getContentTypeBeforeUpload = (fileName, contentType) => {
 	return getContentType(fileName, contentType);
 };
 
-exports.getContentTypeBeforeDownload = function (fileName, contentType) {
+export const getContentTypeBeforeDownload = (fileName, contentType) => {
 	return getContentType(fileName, contentType);
 };

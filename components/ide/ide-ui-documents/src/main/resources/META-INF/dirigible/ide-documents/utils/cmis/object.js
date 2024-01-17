@@ -9,10 +9,10 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let cmis = require("cms/cmis");
+import { cmis } from "@dirigible/cms";
 let cmisSession = cmis.getSession();
 
-exports.getObject = function (path) {
+export const getObject = (path) => {
 	try {
 		if (path === null || path === undefined) {
 			return null;
@@ -24,7 +24,7 @@ exports.getObject = function (path) {
 	return null;
 };
 
-exports.existObject = function (path) {
+export const existObject = (path) => {
 	try {
 		if (path === null || path === undefined) {
 			return null;
@@ -35,14 +35,14 @@ exports.existObject = function (path) {
 	}
 };
 
-exports.getById = function (id) {
+export const getById = (id) => {
 	return cmisSession.getObject(id);
 };
 
-exports.deleteObject = function (object) {
+export const deleteObject = (object) => {
 	object.delete();
 };
 
-exports.renameObject = function (object, newName) {
+export const renameObject = (object, newName) => {
 	object.rename(newName);
 };

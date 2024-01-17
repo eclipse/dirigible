@@ -9,9 +9,9 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let extensions = require('extensions/extensions');
-let response = require('http/response');
-let uuid = require('utils/uuid');
+import { extensions } from "@dirigible/extensions";
+import { response } from "@dirigible/http";
+import { uuid } from "@dirigible/utils";
 
 let editors = [];
 let editorExtensions = extensions.getExtensions('ide-editor');
@@ -23,12 +23,17 @@ function setETag() {
 	response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
 }
 
-for (let i = 0; editorExtensions != null && i < editorExtensions.length; i++) {
+for (let i = 0; i < editorExtensions?.length; i++) {
 	let module = editorExtensions[i];
 	try {
-		let editorExtension = require(module);
-		let editor = editorExtension.getEditor();
-		editors.push(editor);
+		try {
+			const editorExtension = await import(`../../${module}`);
+			editors.push(editorExtension.getEditor());
+		} catch (e) {
+			// Fallback for not migrated extensions
+			const editorExtension = require(module);
+			editors.push(editorExtension.getEditor());
+		}
 
 		let duplication = false;
 		for (let i = 0; i < editors.length; i++) {
