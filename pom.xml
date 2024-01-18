@@ -120,7 +120,7 @@
 		<graalvm.version>23.1.1</graalvm.version>
 		<guava.version>33.0.0-jre</guava.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.637</qldb.sdk.version>
+		<qldb.sdk.version>1.12.639</qldb.sdk.version>
 		<camel.version>4.3.0</camel.version>
 		<ftpserver.version>1.2.0</ftpserver.version>
 		<activemq.version>6.0.1</activemq.version>
