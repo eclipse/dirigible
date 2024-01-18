@@ -15,19 +15,22 @@
 
 const MessagingFacade = Java.type("org.eclipse.dirigible.components.api.messaging.MessagingFacade");
 
-export function queue(destination) {
-    return new Queue(destination);
-};
+export class Consumer{
 
-export function topic(destination) {
-    return new Topic(destination);
-};
+    public static queue(destination: string): Queue {
+        return new Queue(destination);
+    };
+
+    public static topic(destination: string): Topic {
+        return new Topic(destination);
+    };
+}
 
 class Queue {
 
-    constructor(private destination) { }
+    constructor(private destination: string) { }
     
-    receive(timeout) {
+    receive(timeout: number) {
         if (!timeout) {
             timeout = 1000;
         }
@@ -37,9 +40,9 @@ class Queue {
 
 class Topic {
 
-    constructor(private destination) { }
+    constructor(private destination: string) { }
 
-    receive(timeout) {
+    receive(timeout: number) {
         if (!timeout) {
             timeout = 1000;
         }
