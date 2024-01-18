@@ -15,28 +15,31 @@
 
 const MessagingFacade = Java.type("org.eclipse.dirigible.components.api.messaging.MessagingFacade");
 
-export function queue(destination) {
-	return new Queue(destination);
-};
+export class Producer{
 
-export function topic(destination) {
-	return new Topic(destination);
-};
+	public static queue(destination: string) {
+		return new Queue(destination);
+	};
+
+	public static topic(destination: string) {
+		return new Topic(destination);
+	};
+}
 
 class Queue {
 
-    constructor(private destination) {}
+    constructor(private destination: string) {}
 
-	send(message) {
+	send(message: string) {
 		MessagingFacade.sendToQueue(this.destination, message);
 	};
 }
 
 class Topic {
 
-    constructor(private destination) {}
+    constructor(private destination: string) {}
 
-	send(message) {
+	send(message: string) {
 		MessagingFacade.sendToTopic(this.destination, message);
 	};
 }
