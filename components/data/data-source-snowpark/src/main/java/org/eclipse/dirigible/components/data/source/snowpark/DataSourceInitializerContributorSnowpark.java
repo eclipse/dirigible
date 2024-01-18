@@ -20,13 +20,13 @@ public class DataSourceInitializerContributorSnowpark implements DataSourceIniti
         if ("Snowflake".equalsIgnoreCase(datasource.getName())) {
             Map<String, String> env = System.getenv();
             try {
-                String url = "jdbc:snowflake://" + env.getOrDefault("SNOWFLAKE_ACCOUNT", null) + ".snowflakecomputing.com/";
+                String url = "jdbc:snowflake://" + env.getOrDefault("SNOWFLAKE_ACCOUNT", "") + ".snowflakecomputing.com/";
                 if (Files.exists(Paths.get("/snowflake/session/token"))) {
                     properties.put("CLIENT_SESSION_KEEP_ALIVE", true);
                     properties.put("account", env.get("SNOWFLAKE_ACCOUNT"));
                     properties.put("authenticator", "OAUTH");
                     properties.put("token", new String(Files.readAllBytes(Paths.get("/snowflake/session/token"))));
-                    properties.put("warehouse", env.getOrDefault("SNOWFLAKE_WAREHOUSE", null));
+                    properties.put("warehouse", env.getOrDefault("SNOWFLAKE_WAREHOUSE", ""));
                     properties.put("db", env.get("SNOWFLAKE_DATABASE"));
                     properties.put("schema", env.get("SNOWFLAKE_SCHEMA"));
                     url = "jdbc:snowflake://" + env.get("SNOWFLAKE_HOST") + ":" + env.get("SNOWFLAKE_PORT");
@@ -34,12 +34,12 @@ public class DataSourceInitializerContributorSnowpark implements DataSourceIniti
                     properties.put("dataSource.url", url);
                 } else {
                     properties.put("CLIENT_SESSION_KEEP_ALIVE", true);
-                    properties.put("account", env.getOrDefault("SNOWFLAKE_ACCOUNT", null));
-                    properties.put("user", env.getOrDefault("SNOWFLAKE_USER", null));
-                    properties.put("password", env.getOrDefault("SNOWFLAKE_PASSWORD", null));
-                    properties.put("warehouse", env.getOrDefault("SNOWFLAKE_WAREHOUSE", null));
-                    properties.put("db", env.getOrDefault("SNOWFLAKE_DATABASE", null));
-                    properties.put("schema", env.getOrDefault("SNOWFLAKE_SCHEMA", null));
+                    properties.put("account", env.getOrDefault("SNOWFLAKE_ACCOUNT", ""));
+                    properties.put("user", env.getOrDefault("SNOWFLAKE_USER", ""));
+                    properties.put("password", env.getOrDefault("SNOWFLAKE_PASSWORD", ""));
+                    properties.put("warehouse", env.getOrDefault("SNOWFLAKE_WAREHOUSE", ""));
+                    properties.put("db", env.getOrDefault("SNOWFLAKE_DATABASE", ""));
+                    properties.put("schema", env.getOrDefault("SNOWFLAKE_SCHEMA", ""));
                     properties.put("jdbcUrl", url);
                     properties.put("dataSource.url", url);
                 }
