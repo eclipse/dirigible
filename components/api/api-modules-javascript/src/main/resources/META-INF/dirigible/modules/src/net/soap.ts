@@ -16,7 +16,7 @@ const MessageFactory = Java.type("javax.xml.soap.MessageFactory");
 const MimeHeadersInternal = Java.type("javax.xml.soap.MimeHeaders");
 const SOAPConnectionFactory = Java.type("javax.xml.soap.SOAPConnectionFactory");
 
-class Soap{
+export class Soap{
 
 	public static createMessage(): Message {
 		const internalFactory = MessageFactory.newInstance();

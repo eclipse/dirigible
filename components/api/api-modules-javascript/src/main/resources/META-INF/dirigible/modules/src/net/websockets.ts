@@ -12,7 +12,7 @@
 
 const WebsocketsFacade = Java.type("org.eclipse.dirigible.components.api.websockets.WebsocketsFacade");
 
-class Websocket{
+export class Websocket{
 
 	public static createWebsocket(uri: string, handler: string): WebsocketClient {
 		const session = WebsocketsFacade.createWebsocket(uri, handler);
