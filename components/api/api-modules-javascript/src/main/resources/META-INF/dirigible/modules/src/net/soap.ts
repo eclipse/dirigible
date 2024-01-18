@@ -16,42 +16,45 @@ const MessageFactory = Java.type("javax.xml.soap.MessageFactory");
 const MimeHeadersInternal = Java.type("javax.xml.soap.MimeHeaders");
 const SOAPConnectionFactory = Java.type("javax.xml.soap.SOAPConnectionFactory");
 
-export function createMessage() {
-	const internalFactory = MessageFactory.newInstance();
-	const internalMessage = internalFactory.createMessage();
-	return new Message(internalMessage);
-};
+class Soap{
 
-export function parseMessage(mimeHeaders, inputStream) {
-	const internalFactory = MessageFactory.newInstance();
-	if (inputStream.native) {
-		try {
-			const internalMessage = internalFactory.createMessage(mimeHeaders.native, inputStream.native);
-			const internalPart = internalMessage.getSOAPPart();
-			internalPart.getEnvelope();
-			return new Message(internalMessage);
-		} catch (e) {
-			console.error(e);
-			throw new Error("Input provided is null or in a worng format. HTTP method used must be POST. " + e.message);
+	public static createMessage(): Message {
+		const internalFactory = MessageFactory.newInstance();
+		const internalMessage = internalFactory.createMessage();
+		return new Message(internalMessage);
+	};
+
+	public static parseMessage(mimeHeaders: MimeHeaders, inputStream: streams.InputStream): Message {
+		const internalFactory = MessageFactory.newInstance();
+		if (inputStream.native) {
+			try {
+				const internalMessage = internalFactory.createMessage(mimeHeaders.native, inputStream.native);
+				const internalPart = internalMessage.getSOAPPart();
+				internalPart.getEnvelope();
+				return new Message(internalMessage);
+			} catch (e) {
+				console.error(e);
+				throw new Error("Input provided is null or in a worng format. HTTP method used must be POST. " + e.message);
+			}
 		}
-	}
-	throw new Error("Input provided is null.");
-};
+		throw new Error("Input provided is null.");
+	};
 
-export function parseRequest() {
-	if (request.getMethod().toUpperCase() !== "POST") {
-		throw new Error("HTTP method used must be POST.");
-	}
+	public static parseRequest(): Message {
+		if (request.getMethod().toUpperCase() !== "POST") {
+			throw new Error("HTTP method used must be POST.");
+		}
 
-	const inputStream = request.getInputStream();
-	const mimeHeaders = {};//export function createMimeHeaders();
-	return parseMessage(mimeHeaders, inputStream);
-};
+		const inputStream = request.getInputStream();
+		const mimeHeaders = {};//export function createMimeHeaders();
+		return this.parseMessage(mimeHeaders, inputStream);
+	};
 
-export function createMimeHeaders() {
-	const internalMimeHeaders = new MimeHeadersInternal();
-	return new MimeHeaders(internalMimeHeaders);
-};
+	public static createMimeHeaders(): MimeHeaders {
+		const internalMimeHeaders = new MimeHeadersInternal();
+		return new MimeHeaders(internalMimeHeaders);
+	};
+}
 
 
 /**
@@ -59,7 +62,7 @@ export function createMimeHeaders() {
  */
 class Message {
 
-	constructor(private native) { }
+	constructor(private native: any) { }
 
 	getPart() {
 		const internalPart = this.native.getSOAPPart();
@@ -257,10 +260,10 @@ class Element {
 /**
  * Call a given SOAP endpoint with a given request message
  */
-export function call(message, url) {
+export function call(message: Message, url: string) {
 	const soapConnectionFactory = SOAPConnectionFactory.newInstance();
 	const internalConnection = soapConnectionFactory.createConnection();
-	const internalResponse = internalConnection.call(message.native, url);
+	const internalResponse = internalConnection.call(message.native, url); // Trying to access private parameter of class Message!
 	return new Message(internalResponse);
 };
 
