@@ -15,6 +15,7 @@ import java.util.Properties;
 import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,13 +45,13 @@ public class DataSourceSystemConfig {
     public HikariDataSource getDataSource() {
         DataSourceProperties dataSourceProperties = new DataSourceProperties();
         dataSourceProperties.setName("SystemDB");
-        dataSourceProperties.setDriverClassName("org.h2.Driver");
-        dataSourceProperties.setUrl("jdbc:h2:file:./target/dirigible/h2/SystemDB");
-        dataSourceProperties.setUsername("sa");
-        dataSourceProperties.setPassword("");
+        dataSourceProperties.setDriverClassName(Configuration.get("DIRIGIBLE_DATASOURCE_SYSTEM_DRIVER", "org.h2.Driver"));
+        dataSourceProperties.setUrl(Configuration.get("DIRIGIBLE_DATASOURCE_SYSTEM_URL", "jdbc:h2:file:./target/dirigible/h2/SystemDB"));
+        dataSourceProperties.setUsername(Configuration.get("DIRIGIBLE_DATASOURCE_SYSTEM_USERNAME", "sa"));
+        dataSourceProperties.setPassword(Configuration.get("DIRIGIBLE_DATASOURCE_SYSTEM_PASSWORD", ""));
         return dataSourceProperties.initializeDataSourceBuilder()
-                                   .type(HikariDataSource.class)
-                                   .build();
+                .type(HikariDataSource.class)
+                .build();
     }
 
     @Bean(name = "entityManagerFactory")
