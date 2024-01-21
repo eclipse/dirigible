@@ -11,20 +11,19 @@
 package org.eclipse.dirigible.components.data.sources.manager;
 
 import static java.text.MessageFormat.format;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
+
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.database.DatabaseParameters;
+import org.springframework.core.env.Environment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
@@ -45,6 +44,9 @@ public class DataSourceInitializer {
     private final ApplicationContext applicationContext;
 
     private final List<DataSourceInitializerContributor> contributors;
+
+    @Autowired
+    private Environment environment;
 
     /**
      * Instantiates a new data source initializer.
@@ -78,6 +80,8 @@ public class DataSourceInitializer {
             }
         }
         Properties properties = new Properties();
+        Properties contributed = new Properties();
+
         properties.put("driverClassName", dataSource.getDriver());
         properties.put("jdbcUrl", dataSource.getUrl());
         properties.put("dataSource.url", dataSource.getUrl());
@@ -85,16 +89,79 @@ public class DataSourceInitializer {
         properties.put("dataSource.password", dataSource.getPassword());
         properties.put("dataSource.logWriter", new PrintWriter(System.out));
 
-        contributors.forEach(contributor -> contributor.contribute(dataSource, properties));
+        logger.info("---------PRINT PROPERTIES BEFORE CONTRIBUTE----------");
+        Set<String> propertyNames = properties.stringPropertyNames();
+        for (String propertyName : propertyNames) {
+            String propertyValue = properties.getProperty(propertyName);
+            logger.info(propertyName + ": " + propertyValue);
+        }
+        logger.info("---------END PROPERTIES BEFORE CONTRIBUTE----------");
+
+        contributors.forEach(contributor -> contributor.contribute(dataSource, contributed));
 
         Map<String, String> hikariProperties = getHikariProperties(name);
         hikariProperties.forEach(properties::setProperty);
 
-        HikariConfig config = new HikariConfig(properties);
+        // if (contributed.containsKey("jdbcUrl") && contributed.containsKey("dataSource.url") &&
+        // contributed.containsKey("url")) {
+        // properties.put("url", contributed.get("url"));
+        // properties.put("jdbcUrl", contributed.get("jdbcUrl"));
+        // properties.put("dataSource.url", contributed.get("dataSource.url"));
+        //
+        //
+        // //TODO CHECK
+        // properties.put("dataSource.user", dataSource.getUsername());
+        // properties.put("dataSource.password", dataSource.getPassword());
+        // }
+        //
+        logger.info("--------- PRINT CONTRIBUTED ----------");
+        Set<String> contributedNames = contributed.stringPropertyNames();
+        for (String contributedName : contributedNames) {
+            String contributedValue = contributed.getProperty(contributedName);
+            logger.info(contributedName + ": " + contributedValue);
+        }
+        logger.info("---------END CONTRIBUTED----------");
+        HikariConfig config;
+
+        if (dataSource.getName()
+                      .startsWith("SNOWFLAKE_")) {
+            config = new HikariConfig(contributed);
+            config.setDriverClassName(dataSource.getDriver());
+            config.setJdbcUrl(contributed.get("jdbcUrl")
+                                         .toString());
+        } else {
+            properties.putAll(contributed);
+            config = new HikariConfig(properties);
+            dataSource.getProperties()
+                      .forEach(dsp -> config.addDataSourceProperty(dsp.getName(), dsp.getValue()));
+        }
+
         config.setPoolName(name);
         config.setAutoCommit(true);
-        dataSource.getProperties()
-                  .forEach(dsp -> config.addDataSourceProperty(dsp.getName(), dsp.getValue()));
+        // config.setUsername(dataSource.getUsername());
+        // config.setPassword(dataSource.getPassword());
+
+        logger.info("--------- PRINT CONFIG ----------");
+        Set<String> configNames = config.getDataSourceProperties()
+                                        .stringPropertyNames();
+        for (String configName : configNames) {
+            String configValue = config.getDataSourceProperties()
+                                       .getProperty(configName);
+            logger.info(configName + ": " + configValue);
+        }
+        logger.info("CONFIG URL: {}", config.getJdbcUrl());
+        logger.info("CONFIG USERNAME: {}", config.getUsername());
+        logger.info("CONFIG PASSWORD: {}", config.getPassword());
+        logger.info("---------END CONFIG----------");
+
+        logger.info("--------- PRINT ENVIRONMENT VARIABLES ----------");
+        Map<String, String> envMap = System.getenv();
+
+        for (String envName : envMap.keySet()) {
+            logger.info("{} = {}", envName, envMap.get(envName));
+        }
+        logger.info("--------- END ENVIRONMENT VARIABLES ----------");
+
         HikariDataSource hds = new HikariDataSource(config);
 
         ManagedDataSource managedDataSource = new ManagedDataSource(hds);

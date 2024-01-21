@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -35,6 +36,7 @@ import com.zaxxer.hikari.HikariDataSource;
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager",
         basePackages = {"org.eclipse.dirigible.components"})
+@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class DataSourceSystemConfig {
 
     @Value("${dirigible.scan.packages:org.eclipse.dirigible.components}")
