@@ -134,7 +134,7 @@
 		<classgraph.version>4.8.165</classgraph.version>
 		
 		<mina-core.version>2.2.3</mina-core.version>
-		<sshd-core.version>2.11.0</sshd-core.version>
+		<sshd-core.version>2.12.0</sshd-core.version>
 		<ftpserver.version>1.2.0</ftpserver.version>
 		
 		<activemq.version>6.0.1</activemq.version>
