@@ -18,19 +18,13 @@ import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.javascript.CalledFromJS;
 import org.graalvm.polyglot.Value;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
 
-@Scope("prototype")
 @Component
 public class Invoker {
-
-    private DirigibleJavascriptCodeRunner runner;
-
     private final CamelProcessor processor;
 
     @Autowired
@@ -38,8 +32,8 @@ public class Invoker {
         this.processor = processor;
     }
 
-    public void invoke(Message camelMessage) throws IOException {
-        resetCodeRunner();
+    public void invoke(Message camelMessage) {
+        DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner();
         String resourcePath = (String) camelMessage.getExchange()
                                                    .getProperty("resource");
 
@@ -54,16 +48,16 @@ public class Invoker {
                         .addOnCompletion(new Synchronization() {
                             @Override
                             public void onComplete(Exchange exchange) {
-                                closeRunner();
+                                runner.close();
                             }
 
                             @Override
                             public void onFailure(Exchange exchange) {
-                                closeRunner();
+                                runner.close();
                             }
                         });
         } else {
-            closeRunner();
+            runner.close();
         }
     }
 
@@ -87,15 +81,5 @@ public class Invoker {
     @CalledFromJS
     public Object invokeRoute(String routeId, Object payload, Map<String, Object> headers) {
         return processor.invokeRoute(routeId, payload, headers);
-    }
-
-    private void resetCodeRunner() {
-        runner = new DirigibleJavascriptCodeRunner();
-    }
-
-    private void closeRunner() {
-        if (runner != null) {
-            runner.close();
-        }
     }
 }
