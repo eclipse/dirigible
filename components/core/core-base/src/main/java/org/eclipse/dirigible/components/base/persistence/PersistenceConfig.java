@@ -20,6 +20,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
  * The Class PersistenceConfig.
  */
 @Configuration
+@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 class PersistenceConfig {
 
     /**

@@ -36,7 +36,6 @@ import com.zaxxer.hikari.HikariDataSource;
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager",
         basePackages = {"org.eclipse.dirigible.components"})
-@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class DataSourceSystemConfig {
 
     @Value("${dirigible.scan.packages:org.eclipse.dirigible.components}")

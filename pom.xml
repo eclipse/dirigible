@@ -148,7 +148,7 @@
 
 		<mongodb.version>3.12.14</mongodb.version>
 		<ngdbc.version>2.19.16</ngdbc.version>
-		<snowflake.version>3.14.4</snowflake.version>
+		<snowflake.version>3.13.34</snowflake.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
 		<qldb.sdk.version>1.12.634</qldb.sdk.version>
 		<jetcd.core.version>0.7.7</jetcd.core.version>
