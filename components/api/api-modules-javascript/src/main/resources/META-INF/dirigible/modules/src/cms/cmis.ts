@@ -101,7 +101,7 @@ class Session {
 		let folder = this.getRootFolder();
 		for (const next of segments) {
 			const properties = {
-				[OBJECT_TYPE_ID]: OBJECT_TYPE_DOCUMENT,
+				[OBJECT_TYPE_ID]: OBJECT_TYPE_FOLDER,
 				[NAME]: next
 			};
 			folder = folder.createFolder(properties);

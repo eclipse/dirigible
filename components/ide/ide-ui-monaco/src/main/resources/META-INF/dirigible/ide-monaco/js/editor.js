@@ -1070,6 +1070,7 @@ function isDirty(model) {
             noFallthroughCasesInSwitch: true,
             module: monaco.languages.typescript.ModuleKind.ESNext,
             moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+            esModuleInterop: true,
             resolveJsonModule: true,
             jsx: (fileName?.endsWith(".tsx") === true) ? "react" : undefined
         });
