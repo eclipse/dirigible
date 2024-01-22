@@ -114,7 +114,7 @@
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<license-maven-plugin.version>4.3</license-maven-plugin.version>
 
-		<spring.boot.version>3.2.0</spring.boot.version>
+		<spring.boot.version>3.2.2</spring.boot.version>
 		<org.springdoc.openapi.ui.version>1.7.0</org.springdoc.openapi.ui.version>
 		
 		<graalvm.version>23.1.1</graalvm.version>
