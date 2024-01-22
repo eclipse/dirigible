@@ -10,18 +10,22 @@
  */
 package org.eclipse.dirigible.components.engine.camel.invoke;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.camel.spi.Synchronization;
 import org.eclipse.dirigible.components.engine.camel.processor.CamelProcessor;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.javascript.CalledFromJS;
 import org.graalvm.polyglot.Value;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
 
+@Scope("prototype")
 @Component
 public class Invoker {
 
@@ -45,6 +49,21 @@ public class Invoker {
         if (result != null) {
             camelMessage.getExchange()
                         .setMessage(unwrapCamelMessage(result));
+            camelMessage.getExchange()
+                        .getExchangeExtension()
+                        .addOnCompletion(new Synchronization() {
+                            @Override
+                            public void onComplete(Exchange exchange) {
+                                closeRunner();
+                            }
+
+                            @Override
+                            public void onFailure(Exchange exchange) {
+                                closeRunner();
+                            }
+                        });
+        } else {
+            closeRunner();
         }
     }
 
@@ -65,17 +84,16 @@ public class Invoker {
         }
     }
 
-    private void resetCodeRunner() {
-        close();
-        runner = new DirigibleJavascriptCodeRunner();
-    }
-
     @CalledFromJS
     public Object invokeRoute(String routeId, Object payload, Map<String, Object> headers) {
         return processor.invokeRoute(routeId, payload, headers);
     }
 
-    public void close() {
+    private void resetCodeRunner() {
+        runner = new DirigibleJavascriptCodeRunner();
+    }
+
+    private void closeRunner() {
         if (runner != null) {
             runner.close();
         }
