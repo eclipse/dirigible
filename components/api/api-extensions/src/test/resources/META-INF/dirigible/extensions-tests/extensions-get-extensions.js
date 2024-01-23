@@ -9,13 +9,9 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var sequence = require('db/sequence');
+var extensions = require('extensions/extensions');
 var assertEquals = require('test/assert').assertEquals;
 
-sequence.create('mysequence');
-var zero = sequence.nextval('mysequence');
-var one = sequence.nextval('mysequence');
-sequence.drop('mysequence');
+var result = extensions.getExtensions('test_extpoint1');
 
-assertEquals(zero, 1);
-assertEquals(one, 2);
+assertEquals(result[0], "/test_ext_module1");

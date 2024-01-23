@@ -20,7 +20,6 @@ import org.eclipse.dirigible.components.extensions.repository.ExtensionPointRepo
 import org.eclipse.dirigible.components.extensions.repository.ExtensionRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,13 +74,16 @@ public class ExtensionsSuiteTest {
 
     @Test
     public void executeExtensionsTest() throws Exception {
-        javascriptService.handleRequest("extensions-tests", "extensions-get-extension-points-extensions.js", null, null, false);
+        javascriptService.handleRequest("extensions-tests", "extensions-get-extension-points.js", null, null, false);
+        javascriptService.handleRequest("extensions-tests", "extensions-get-extensions.js", null, null, false);
     }
 
-    @Disabled
     @Test
     public void executeExtensionsMockTest() throws Exception {
-        mockMvc.perform(get("/services/js/extensions-tests/extensions-get-extension-points-extensions.js"))
+        mockMvc.perform(get("/services/js/extensions-tests/extensions-get-extension-points.js"))
+               .andDo(print())
+               .andExpect(status().is2xxSuccessful());
+        mockMvc.perform(get("/services/js/extensions-tests/extensions-get-extensions.js"))
                .andDo(print())
                .andExpect(status().is2xxSuccessful());
     }
