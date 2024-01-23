@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let user = require('security/user');
-let response = require('http/response');
+import { user } from "@dirigible/security";
+import { response } from "@dirigible/http";
 
 response.setContentType("text/plain");
 response.println(user.getName());

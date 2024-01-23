@@ -9,14 +9,13 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const extensions = require('extensions/extensions');
-const response = require('http/response');
-const request = require('http/request');
-const uuid = require("utils/uuid");
+import { extensions } from "@dirigible/extensions";
+import { request, response } from "@dirigible/http";
+import { uuid } from "@dirigible/utils";
 
 const customActions = [];
 const extensionPoint = request.getParameter('extensionPoint');
-const customActionExtensions = extensions.getExtensions(extensionPoint);
+const customActionExtensions = await extensions.loadExtensionModules(extensionPoint);
 
 function setETag() {
     const maxAge = 30 * 24 * 60 * 60;
@@ -25,16 +24,8 @@ function setETag() {
     response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
 }
 
-for (let i = 0; i < customActionExtensions.length; i++) {
-    const module = customActionExtensions[i];
-    try {
-        const customActionExtension = require(module);
-        const action = customActionExtension.getAction();
-        customActions.push(action);
-    } catch (error) {
-        console.error('Error occured while loading metadata for the window: ' + module);
-        console.error(error);
-    }
+for (let i = 0; i < customActionExtensions?.length; i++) {
+    customActions.push(customActionExtensions[i].getAction());
 }
 
 customActions.sort(function (a, b) {
