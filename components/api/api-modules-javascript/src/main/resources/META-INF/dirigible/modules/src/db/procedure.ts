@@ -13,12 +13,12 @@
  * API Procedure
  *
  */
-import * as update from "./update";
+import { Update } from "./update";
 import * as database from "./database";
 
 export function create(sql, datasourceName) {
     let parameters = [];
-    update.execute(sql, parameters, datasourceName);
+    Update.execute(sql, parameters, datasourceName);
 };
 
 export function execute(sql, parameters, datasourceName) {
