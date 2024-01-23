@@ -10,7 +10,7 @@ Get-ChildItem -Recurse -Include *.ts -Exclude *.d.ts | ForEach-Object {
 
     esbuild $_.FullName --outfile=$mjsOutputFile --sourcemap=inline --format=esm --target=es2022
     
-    esbuild $_.FullName --outfile=$cjsOutputFile --sourcemap=inline --bundle --format=cjs --target=es2022
+    esbuild $_.FullName --outfile=$cjsOutputFile --sourcemap=inline --format=cjs --target=es2022
 }
 
 # build dts

@@ -15,7 +15,7 @@ import { uuid } from "@dirigible/utils";
 
 let dialogWindows = [];
 let extensionPoint = request.getParameter('extensionPoint') || 'ide-dialog-window';
-let dialogWindowExtensions = extensions.getExtensions(extensionPoint);
+let dialogWindowExtensions = await extensions.loadExtensionModules(extensionPoint);
 
 function setETag() {
     let maxAge = 30 * 24 * 60 * 60;
@@ -25,20 +25,7 @@ function setETag() {
 }
 
 for (let i = 0; i < dialogWindowExtensions?.length; i++) {
-    let module = dialogWindowExtensions[i];
-    try {
-        try {
-			const dialogWindowExtension = await import(`../../${module}`);
-			mainmenu.push(dialogWindowExtension.getDialogWindow());
-		} catch (e) {
-			// Fallback for not migrated extensions
-			const dialogWindowExtension = require(module);
-			dialogWindows.push(dialogWindowExtension.getDialogWindow());
-		}
-    } catch (error) {
-        console.error('Error occured while loading metadata for the window: ' + module);
-        console.error(error);
-    }
+    dialogWindows.push(dialogWindowExtensions[i].getDialogWindow());
 }
 
 dialogWindows.sort(function (p, n) {

@@ -13,14 +13,9 @@ import { extensions } from '@dirigible/extensions';
 
 let contentTypeExtension = null;
 
-const contentTypeExtensions = extensions.getExtensions('ide-documents-content-type');
+const contentTypeExtensions = await extensions.loadExtensionModules('ide-documents-content-type');
 if (contentTypeExtensions !== null && contentTypeExtensions.length > 0) {
-	try {
-		contentTypeExtension = await import(`../../${contentTypeExtensions[0]}`);
-	} catch (e) {
-		// Fallback for not migrated extensions
-		contentTypeExtension = require(contentTypeExtensions[0]);
-	}
+	contentTypeExtension = contentTypeExtensions[0];
 }
 
 export const getContentTypeBeforeUpload = (fileName, contentType) => {

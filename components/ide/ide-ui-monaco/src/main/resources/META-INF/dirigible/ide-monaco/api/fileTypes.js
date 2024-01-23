@@ -1,20 +1,13 @@
 import { response } from "@dirigible/http"
 import { extensions } from "@dirigible/extensions";
 
-let fileTypeExtensions = extensions.getExtensions("ide-file-types");
+const fileTypeExtensions = await extensions.loadExtensionModules("ide-file-types");
 
-let mappings = {};
+const mappings = {};
 for (let i = 0; i < fileTypeExtensions?.length; i++) {
-    let fileTypes;
-    try {
-        let extension = await import(`../../${fileTypeExtensions[i]}`);
-        fileTypes = extension.getFileTypes();
-    } catch (e) {
-        // Fallback for not migrated extensions
-        let extension = require(fileTypeExtensions[i]);
-        fileTypes = extension.getFileTypes();
-    }
-    for (let fileExtension in fileTypes) {
+    const fileTypes = fileTypeExtensions[i].getFileTypes();
+
+    for (const fileExtension in fileTypes) {
         if (!mappings[fileExtension]) {
             mappings[fileExtension] = fileTypes[fileExtension];
         }

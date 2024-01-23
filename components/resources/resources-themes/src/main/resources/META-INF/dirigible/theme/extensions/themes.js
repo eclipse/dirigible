@@ -12,17 +12,10 @@
 import { extensions } from "@dirigible/extensions";
 
 const allThemes = [];
-const themeExtensions = extensions.getExtensions('ide-themes');
+const themeExtensions = await extensions.loadExtensionModules('ide-themes');
 try {
 	for (let i = 0; i < themeExtensions?.length; i++) {
-		try {
-			let themeExtension = await import(themeExtensions[i]);
-			allThemes.push(themeExtension.getTheme());
-		} catch (e) {
-			// Fallback for not migrated extensions
-			let themeExtension = require(themeExtensions[i]);
-			allThemes.push(themeExtension.getTheme());
-		}
+		allThemes.push(themeExtensions[i].getTheme());
 	}
 } catch (e) {
 	console.error('Error while loading theme modules: ' + e);

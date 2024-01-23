@@ -14,7 +14,7 @@ import { response } from "@dirigible/http";
 import { uuid } from "@dirigible/utils";
 
 let editors = [];
-let editorExtensions = extensions.getExtensions('ide-editor');
+let editorExtensions = await extensions.loadExtensionModules('ide-editor');
 
 function setETag() {
 	let maxAge = 30 * 24 * 60 * 60;
@@ -24,39 +24,24 @@ function setETag() {
 }
 
 for (let i = 0; i < editorExtensions?.length; i++) {
-	let module = editorExtensions[i];
-	try {
-		try {
-			const editorExtension = await import(`../../${module}`);
-			editors.push(editorExtension.getEditor());
-		} catch (e) {
-			// Fallback for not migrated extensions
-			const editorExtension = require(module);
-			editors.push(editorExtension.getEditor());
-		}
-
-		let duplication = false;
-		for (let i = 0; i < editors.length; i++) {
-			for (let j = 0; j < editors.length; j++) {
-				if (i !== j) {
-					if (editors[i].id === editors[j].id) {
-						if (editors[i].link !== editors[j].link) {
-							console.error('Duplication at editor with id: [' + editors[i].id + '] pointing to links: ['
-								+ editors[i].link + '] and [' + editors[j].link + ']');
-						}
-						duplication = true;
-						break;
+	editors.push(editorExtensions[i].getEditor());
+	let duplication = false;
+	for (let i = 0; i < editors.length; i++) {
+		for (let j = 0; j < editors.length; j++) {
+			if (i !== j) {
+				if (editors[i].id === editors[j].id) {
+					if (editors[i].link !== editors[j].link) {
+						console.error('Duplication at editor with id: [' + editors[i].id + '] pointing to links: ['
+							+ editors[i].link + '] and [' + editors[j].link + ']');
 					}
+					duplication = true;
+					break;
 				}
 			}
-			if (duplication) {
-				break;
-			}
 		}
-
-	} catch (error) {
-		console.error('Error occured while loading metadata for the editor: ' + module);
-		console.error(error);
+		if (duplication) {
+			break;
+		}
 	}
 }
 

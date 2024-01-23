@@ -13,19 +13,12 @@ import { registry } from "@dirigible/platform";
 import { extensions } from "@dirigible/extensions";
 
 let modules = [];
-const apiModulesExtensions = extensions.getExtensions("api-modules");
-const extModulesExtensions = extensions.getExtensions("ext-modules");
+const apiModulesExtensions = await extensions.loadExtensionModules("api-modules");
+const extModulesExtensions = await extensions.loadExtensionModules("ext-modules");
 const apis = apiModulesExtensions.concat(extModulesExtensions);
 
-await apis.forEach(async function (apiModule) {
-    try {
-        let module = await import(`../../../${apiModule}`);
-        modules = modules.concat(module.getContent());
-    } catch (e) {
-        // Fallback for not migrated extensions
-        let module = require(apiModule);
-        modules = modules.concat(module.getContent());
-    }
+apis.forEach(function (apiModule) {
+    modules = modules.concat(apiModule.getContent());
 });
 
 export const getModules = () => {

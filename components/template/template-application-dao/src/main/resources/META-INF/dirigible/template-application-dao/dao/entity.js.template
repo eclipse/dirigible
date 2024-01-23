@@ -303,24 +303,7 @@ export const customDataCount = () => {
 
 
 const triggerEvent = async(data) => {
-	const triggerExtensions = [];
-	const extensionModules = extensions.getExtensions("${projectName}/${perspectiveName}/${name}");
-	for (let i = 0; i < extensionModules.length; i ++) {
-		const module = extensionModules[i];
-		try {
-			let extensionModule = await import(`../../../../${module}`);
-			if (typeof extensionModule.trigger !== "function") {
-				extensionModule = require(module);
-			}
-			if (typeof extensionModule.trigger === "function") {
-				triggerExtensions.push(extensionModule);
-			} else {
-				console.error(`Extension '${module}', doesn't provide trigger() function`);
-			}
-		} catch (e) {
-			console.error(`Error occurred while importing extension '${module}'`, e);
-		}
-	};
+	const triggerExtensions = await extensions.loadExtensionModules("${projectName}/${perspectiveName}/${name}", ["trigger]);
 	triggerExtensions.forEach(triggerExtension => {
 		try {
 			triggerExtension.trigger(data);

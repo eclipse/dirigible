@@ -11,41 +11,17 @@
  */
 import { extensions } from "@dirigible/extensions";
 
-let perspectiveExtensions = extensions.getExtensions('ide-perspective');
+let perspectiveExtensions = await extensions.loadExtensionModules('ide-perspective');
 let perspectiveExtensionDefinitions = [];
 
 for (let i = 0; i < perspectiveExtensions?.length; i++) {
-	let module = perspectiveExtensions[i];
-	try {
-		try {
-			const perspectiveExtension = await import(module);
-			perspectiveExtensionDefinitions.push(perspectiveExtension.getPerspective());
-		} catch (e) {
-			// Fallback for not migrated extensions
-			perspectiveExtensionDefinitions.push(require(module).getPerspective());
-		}
-	} catch (error) {
-		console.error('Error occured while loading metadata for the menu for perspective: ' + module);
-		console.error(error);
-	}
+	perspectiveExtensionDefinitions.push(perspectiveExtensions[i].getPerspective());
 }
 
-let viewExtensions = extensions.getExtensions('ide-view');
+let viewExtensions = await extensions.loadExtensionModules('ide-view');
 let viewExtensionDefinitions = [];
 for (let i = 0; i < viewExtensions.length; i++) {
-	let module = viewExtensions[i];
-	try {
-		try {
-			const viewExtension = await import(module);
-			viewExtensionDefinitions.push(viewExtension.getView());
-		} catch (e) {
-			// Fallback for not migrated extensions
-			viewExtensionDefinitions.push(require(module).getView());
-		}
-	} catch (error) {
-		console.error('Error occured while loading metadata for the menu for view: ' + module);
-		console.error(error);
-	}
+	viewExtensionDefinitions.push(viewExtensions[i].getView());
 }
 export const getMenu = () => {
 	let menu = {

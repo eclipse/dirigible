@@ -13,30 +13,17 @@
 
 import { extensions } from '@dirigible/extensions';
 
-
-const perspectiveExtensions = extensions.getExtensions('ide-perspective');
-let perspectiveExtensionDefinitions = [];
+const perspectiveExtensions = await extensions.loadExtensionModules('ide-perspective');
+const perspectiveExtensionDefinitions = [];
 
 for (let i = 0; i < perspectiveExtensions?.length; i++) {
-	try {
-		const perspectiveExtension = await import(`../../../${perspectiveExtensions[i]}`);
-		perspectiveExtensionDefinitions.push(perspectiveExtension.getPerspective());
-	} catch (e) {
-		// Fallback for not migrated extensions
-		perspectiveExtensionDefinitions.push(require(perspectiveExtensions[i]).getPerspective());
-	}
+	perspectiveExtensionDefinitions.push(perspectiveExtensions[i].getPerspective());
 }
 
-const viewExtensions = extensions.getExtensions('ide-view');
-let viewExtensionDefinitions = [];
+const viewExtensions = await extensions.loadExtensionModules('ide-view');
+const viewExtensionDefinitions = [];
 for (let i = 0; i < viewExtensions?.length; i++) {
-	try {
-		const viewExtension = await import(`../../../${viewExtensions[i]}`);
-		viewExtensionDefinitions.push(viewExtension.getView());
-	} catch (e) {
-		// Fallback for not migrated extensions
-		viewExtensionDefinitions.push(require(viewExtensions[i]).getView());
-	}
+	viewExtensionDefinitions.push(viewExtensions[i].getView());
 }
 
 export const getMenu = () => {

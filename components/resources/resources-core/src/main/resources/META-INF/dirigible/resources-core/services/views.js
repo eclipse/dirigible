@@ -15,7 +15,7 @@ import { uuid } from "@dirigible/utils";
 
 let views = [];
 let extensionPoint = request.getParameter('extensionPoint') || 'ide-view';
-let viewExtensions = extensions.getExtensions(extensionPoint);
+let viewExtensions = await extensions.loadExtensionModules(extensionPoint);
 
 function setETag() {
 	let maxAge = 30 * 24 * 60 * 60;
@@ -25,38 +25,24 @@ function setETag() {
 }
 
 for (let i = 0; i < viewExtensions?.length; i++) {
-	let module = viewExtensions[i];
-	try {
-		try {
-			const viewExtension = await import(`../../${module}`);
-			views.push(viewExtension.getView());
-		} catch (e) {
-			// Fallback for not migrated extensions
-			const viewExtension = require(module);
-			views.push(viewExtension.getView());
-		}
-
-		let duplication = false;
-		for (let i = 0; i < views.length; i++) {
-			for (let j = 0; j < views.length; j++) {
-				if (i !== j) {
-					if (views[i].id === views[j].id) {
-						if (views[i].link !== views[j].link) {
-							console.error('Duplication at view with id: [' + views[i].id + '] pointing to links: ['
-								+ views[i].link + '] and [' + views[j].link + ']');
-						}
-						duplication = true;
-						break;
+	views.push(viewExtensions[i].getView());
+	let duplication = false;
+	for (let i = 0; i < views.length; i++) {
+		for (let j = 0; j < views.length; j++) {
+			if (i !== j) {
+				if (views[i].id === views[j].id) {
+					if (views[i].link !== views[j].link) {
+						console.error('Duplication at view with id: [' + views[i].id + '] pointing to links: ['
+							+ views[i].link + '] and [' + views[j].link + ']');
 					}
+					duplication = true;
+					break;
 				}
 			}
-			if (duplication) {
-				break;
-			}
 		}
-	} catch (error) {
-		console.error('Error occured while loading metadata for the view: ' + module);
-		console.error(error);
+		if (duplication) {
+			break;
+		}
 	}
 }
 response.setContentType("application/json");

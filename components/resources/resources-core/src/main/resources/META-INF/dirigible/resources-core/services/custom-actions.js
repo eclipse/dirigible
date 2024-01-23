@@ -15,7 +15,7 @@ import { uuid } from "@dirigible/utils";
 
 const customActions = [];
 const extensionPoint = request.getParameter('extensionPoint');
-const customActionExtensions = extensions.getExtensions(extensionPoint);
+const customActionExtensions = await extensions.loadExtensionModules(extensionPoint);
 
 function setETag() {
     const maxAge = 30 * 24 * 60 * 60;
@@ -25,20 +25,7 @@ function setETag() {
 }
 
 for (let i = 0; i < customActionExtensions?.length; i++) {
-    const module = customActionExtensions[i];
-    try {
-        try {
-			const customActionExtension = await import(`../../${module}`);
-			customActions.push(customActionExtension.getAction());
-		} catch (e) {
-			// Fallback for not migrated extensions
-			const customActionExtension = require(module);
-			customActions.push(customActionExtension.getAction());
-		}
-    } catch (error) {
-        console.error('Error occured while loading metadata for the window: ' + module);
-        console.error(error);
-    }
+    customActions.push(customActionExtensions[i].getAction());
 }
 
 customActions.sort(function (a, b) {

@@ -15,7 +15,7 @@ import { uuid } from "@dirigible/utils";
 
 let perspectives = [];
 let extensionPoint = request.getParameter('extensionPoint') || 'ide-perspective';
-let perspectiveExtensions = extensions.getExtensions(extensionPoint);
+let perspectiveExtensions = await extensions.loadExtensionModules(extensionPoint);
 
 function setETag() {
 	let maxAge = 30 * 24 * 60 * 60;
@@ -25,38 +25,24 @@ function setETag() {
 }
 
 for (let i = 0; i < perspectiveExtensions?.length; i++) {
-	let module = perspectiveExtensions[i];
-	try {
-		try {
-			const perspectiveExtension = await import(`../../${module}`);
-			perspectives.push(perspectiveExtension.getPerspective());
-		} catch (e) {
-			// Fallback for not migrated extensions
-			const perspectiveExtension = require(module);
-			perspectives.push(perspectiveExtension.getPerspective());
-		}
-
-		let duplication = false;
-		for (let i = 0; i < perspectives.length; i++) {
-			for (let j = 0; j < perspectives.length; j++) {
-				if (i !== j) {
-					if (perspectives[i].name === perspectives[j].name) {
-						if (perspectives[i].link !== perspectives[j].link) {
-							console.error('Duplication at perspective with name: [' + perspectives[i].name + '] pointing to links: ['
-								+ perspectives[i].link + '] and [' + perspectives[j].link + ']');
-						}
-						duplication = true;
-						break;
+	perspectives.push(perspectiveExtensions[i].getPerspective());
+	let duplication = false;
+	for (let i = 0; i < perspectives.length; i++) {
+		for (let j = 0; j < perspectives.length; j++) {
+			if (i !== j) {
+				if (perspectives[i].name === perspectives[j].name) {
+					if (perspectives[i].link !== perspectives[j].link) {
+						console.error('Duplication at perspective with name: [' + perspectives[i].name + '] pointing to links: ['
+							+ perspectives[i].link + '] and [' + perspectives[j].link + ']');
 					}
+					duplication = true;
+					break;
 				}
 			}
-			if (duplication) {
-				break;
-			}
 		}
-	} catch (error) {
-		console.error('Error occured while loading metadata for the perspective: ' + module);
-		console.error(error);
+		if (duplication) {
+			break;
+		}
 	}
 }
 

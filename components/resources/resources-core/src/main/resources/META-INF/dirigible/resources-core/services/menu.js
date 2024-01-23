@@ -15,7 +15,7 @@ import { uuid } from "@dirigible/utils";
 
 const menuExtensionId = request.getParameter("id");
 let mainmenu = [];
-let menuExtensions = extensions.getExtensions(menuExtensionId);
+let menuExtensions = await extensions.loadExtensionModules(menuExtensionId);
 
 function setETag() {
 	const maxAge = 30 * 24 * 60 * 60;
@@ -25,20 +25,7 @@ function setETag() {
 }
 
 for (let i = 0; i < menuExtensions?.length; i++) {
-	let module = menuExtensions[i];
-	try {
-		try {
-			const menuExtension = await import(`../../${module}`);
-			mainmenu.push(menuExtension.getMenu());
-		} catch (e) {
-			// Fallback for not migrated extensions
-			const menuExtension = require(module);
-			mainmenu.push(menuExtension.getMenu());
-		}
-	} catch (error) {
-		console.error('Error occured while loading metadata for the menu: ' + module);
-		console.error(error);
-	}
+	mainmenu.push(menuExtensions[i].getMenu());
 }
 
 mainmenu.sort(function (p, n) {

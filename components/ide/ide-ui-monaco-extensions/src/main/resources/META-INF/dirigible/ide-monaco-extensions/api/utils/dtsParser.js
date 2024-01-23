@@ -15,20 +15,12 @@ import { extensions } from "@dirigible/extensions";
 // Returns the path to d.ts foreach modules.json entry where isPackageDescription = true
 let dtsPaths = [];
 
-let apiModulesExtensions = extensions.getExtensions("api-modules");
-let extModulesExtensions = extensions.getExtensions("ext-modules");
+let apiModulesExtensions = await extensions.loadExtensionModules("api-modules");
+let extModulesExtensions = await extensions.loadExtensionModules("ext-modules");
 let apis = apiModulesExtensions.concat(extModulesExtensions);
 
-await apis.forEach(async function (apiModule) {
-    let content;
-    try {
-        let module = await import(`../../../${apiModule}`);
-        content = module.getContent();
-    } catch (e) {
-        // Fallback for not migrated extensions
-        let module = require(apiModule);
-        content = module.getContent();
-    }
+apis.forEach(function (apiModule) {
+    const content = apiModule.getContent();
 
     for (let [property, value] of Object.entries(content)) {
         let isPackageDescription = value["isPackageDescription"];

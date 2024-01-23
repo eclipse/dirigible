@@ -19,17 +19,10 @@ import { extensions } from "@dirigible/extensions";
 
 let tiles = {};
 
-let tileExtensions = extensions.getExtensions("portal-tile");
+let tileExtensions = await extensions.loadExtensionModules("portal-tile");
 for (let i = 0; i < tileExtensions?.length; i++) {
-    let tile;
-    try {
-        let tileExtension = await import(tileExtensions[i]);
-        tile = tileExtension.getTile();
-    } catch (e) {
-        // Fallback for not migrated extensions
-        let tileExtension = require(tileExtensions[i]);
-        tile = tileExtension.getTile();
-    }
+    let tile = tileExtensions[i].getTile();
+
     if (!tile) {
         continue;
     }
