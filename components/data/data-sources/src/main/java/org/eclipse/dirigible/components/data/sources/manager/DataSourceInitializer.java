@@ -92,7 +92,7 @@ public class DataSourceInitializer {
         HikariConfig config;
 
         if (dataSource.getName()
-                      .startsWith("SNOWFLAKE_")) {
+                      .startsWith("SNOWFLAKE")) {
             config = new HikariConfig(contributed);
             config.setDriverClassName(dataSource.getDriver());
             config.setJdbcUrl(contributed.get("jdbcUrl")

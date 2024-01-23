@@ -29,7 +29,7 @@ public class DataSourceInitializerContributorSnowpark implements DataSourceIniti
 
     @Override
     public void contribute(DataSource dataSource, Properties properties) {
-        if ("SNOWFLAKE_DIRIGIBLE".equalsIgnoreCase(dataSource.getName())) {
+        if (dataSource.getName().startsWith("SNOWFLAKE")) {
             Map<String, String> env = System.getenv();
             try {
                 String url = "jdbc:snowflake://" + env.getOrDefault("SNOWFLAKE_ACCOUNT", "") + ".snowflakecomputing.com/";
