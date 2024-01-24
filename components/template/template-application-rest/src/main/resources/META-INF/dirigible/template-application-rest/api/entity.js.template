@@ -1,7 +1,7 @@
 #set($dollar = '$' )
-const rs = require("http/rs");
-const dao = require("${projectName}/gen/dao/${perspectiveName}/${name}");
-const http = require("${projectName}/gen/api/utils/http");
+import { rs } from "@dirigible/http";
+import * as dao from "../../dao/${perspectiveName}/${name}";
+import * as http from "../utils/http";
 
 #foreach ($property in $properties)
 #if($property.widgetPattern && $property.widgetPattern != "")
@@ -117,7 +117,7 @@ rs.service()
 			let id = ctx.pathParameters.id;
 			let entity = dao.get(id);
 			if (entity) {
-				dao.delete(id);
+				dao.remove(id);
 				http.sendResponseNoContent();
 			} else {
 				http.sendResponseNotFound("${name} not found");

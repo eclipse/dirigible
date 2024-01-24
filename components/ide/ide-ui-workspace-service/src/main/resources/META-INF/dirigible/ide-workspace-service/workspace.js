@@ -11,7 +11,7 @@
  */
 angular.module('ideWorkspace', [])
     .provider('workspaceApi', function WorkspaceApiProvider() {
-        this.workspacesServiceUrl = '/services/ide/workspaces/';
+        this.workspacesServiceUrl = '/services/ide/workspaces';
         this.workspaceManagerServiceUrl = '/services/ide/workspace';
         this.workspaceSearchServiceUrl = '/services/ide/workspace-search';
         this.$get = ['$http', function workspaceApiFactory($http) {

@@ -20,7 +20,6 @@ import java.sql.Types;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.commons.api.helpers.DateTimeUtils;
@@ -352,11 +351,23 @@ public class CsvProcessor {
         } else if (Types.CHAR == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             preparedStatement.setString(i, sanitize(value));
         } else if (Types.DATE == DataTypeUtils.getSqlTypeByDataType(dataType)) {
-            preparedStatement.setDate(i, DateTimeUtils.parseDate(value));
+            if (value.equals("")) {
+                preparedStatement.setNull(i, DataTypeUtils.getSqlTypeByDataType(dataType));
+            } else {
+                preparedStatement.setDate(i, DateTimeUtils.parseDate(value));
+            }
         } else if (Types.TIME == DataTypeUtils.getSqlTypeByDataType(dataType)) {
-            preparedStatement.setTime(i, DateTimeUtils.parseTime(value));
+            if (value.equals("")) {
+                preparedStatement.setNull(i, DataTypeUtils.getSqlTypeByDataType(dataType));
+            } else {
+                preparedStatement.setTime(i, DateTimeUtils.parseTime(value));
+            }
         } else if (Types.TIMESTAMP == DataTypeUtils.getSqlTypeByDataType(dataType)) {
-            preparedStatement.setTimestamp(i, DateTimeUtils.parseDateTime(value));
+            if (value.equals("")) {
+                preparedStatement.setNull(i, DataTypeUtils.getSqlTypeByDataType(dataType));
+            } else {
+                preparedStatement.setTimestamp(i, DateTimeUtils.parseDateTime(value));
+            }
         } else if (Types.INTEGER == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             value = numberize(value);
             preparedStatement.setInt(i, Integer.parseInt(value));

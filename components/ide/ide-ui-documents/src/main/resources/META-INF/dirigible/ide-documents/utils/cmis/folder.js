@@ -9,9 +9,9 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let cmis = require("cms/cmis");
-let user = require("security/user");
-let objectUtils = require("ide-documents/utils/cmis/object");
+import { cmis } from "@dirigible/cms";
+import { user } from "@dirigible/security";
+import * as objectUtils from "./object";
 
 let cmisSession = cmis.getSession();
 
@@ -87,11 +87,11 @@ function FolderSerializer(cmisFolder) {
 	this.children = this.children.sort((x, y) => x.path > y.path ? 1 : -1);
 }
 
-exports.readFolder = function (folder) {
+export const readFolder = (folder) => {
 	return new FolderSerializer(folder);
 };
 
-exports.createFolder = function (parentFolder, name) {
+export const createFolder = (parentFolder, name) => {
 	let properties = {};
 	properties[cmis.OBJECT_TYPE_ID] = cmis.OBJECT_TYPE_FOLDER;
 	properties[cmis.NAME] = name;
@@ -100,29 +100,29 @@ exports.createFolder = function (parentFolder, name) {
 	return new FolderSerializer(newFolder);
 };
 
-exports.getFolderOrRoot = function (folderPath) {
+export const getFolderOrRoot = (folderPath) => {
 	if (folderPath === null) {
 		let rootFolder = cmisSession.getRootFolder();
 		return rootFolder;
 	}
 	let folder = null;
 	try {
-		folder = exports.getFolder(folderPath);
+		folder = getFolder(folderPath);
 	} catch (e) {
 		folder = cmisSession.getRootFolder();
 	}
 	return folder;
 };
 
-exports.getFolder = function (path) {
+export const getFolder = (path) => {
 	return objectUtils.getObject(path);
 };
 
-exports.existFolder = function (path) {
+export const existFolder = (path) => {
 	return objectUtils.existObject(path);
 };
 
-exports.deleteTree = function (folder) {
+export const deleteTree = (folder) => {
 	folder.deleteTree();
 };
 

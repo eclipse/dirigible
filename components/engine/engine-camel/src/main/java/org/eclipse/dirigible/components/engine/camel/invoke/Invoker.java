@@ -10,10 +10,13 @@
  */
 package org.eclipse.dirigible.components.engine.camel.invoke;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.camel.spi.Synchronization;
 import org.eclipse.dirigible.components.engine.camel.processor.CamelProcessor;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.javascript.CalledFromJS;
+import org.graalvm.polyglot.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +25,6 @@ import java.util.Map;
 
 @Component
 public class Invoker {
-
     private final CamelProcessor processor;
 
     @Autowired
@@ -31,12 +33,48 @@ public class Invoker {
     }
 
     public void invoke(Message camelMessage) {
+        DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner();
         String resourcePath = (String) camelMessage.getExchange()
                                                    .getProperty("resource");
-        String messageBody = camelMessage.getBody(String.class);
-        try (var runner = new DirigibleJavascriptCodeRunner()) {
-            var module = runner.run(Path.of(resourcePath));
-            runner.runMethod(module, "onMessage", messageBody);
+
+        var module = runner.run(Path.of(resourcePath));
+        var result = runner.runMethod(module, "onMessage", wrapCamelMessage(camelMessage));
+
+        if (result != null) {
+            camelMessage.getExchange()
+                        .setMessage(unwrapCamelMessage(result));
+            camelMessage.getExchange()
+                        .getExchangeExtension()
+                        .addOnCompletion(new Synchronization() {
+                            @Override
+                            public void onComplete(Exchange exchange) {
+                                runner.close();
+                            }
+
+                            @Override
+                            public void onFailure(Exchange exchange) {
+                                runner.close();
+                            }
+                        });
+        } else {
+            runner.close();
+        }
+    }
+
+    private IntegrationMessage wrapCamelMessage(Message camelMessage) {
+        return new IntegrationMessage(camelMessage);
+    }
+
+    private Message unwrapCamelMessage(Value value) {
+        validateIntegrationMessage(value);
+        IntegrationMessage message = value.asHostObject();
+        return message.getCamelMessage();
+    }
+
+    private void validateIntegrationMessage(Value value) {
+        if (!value.isHostObject() || !(value.asHostObject() instanceof IntegrationMessage)) {
+            throw new IllegalArgumentException(
+                    "Unexpected return received from @dirigible/integrations::onMessage(). Expected return type: IntegrationMessage.");
         }
     }
 

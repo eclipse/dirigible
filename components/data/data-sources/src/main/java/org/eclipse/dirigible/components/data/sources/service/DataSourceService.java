@@ -12,11 +12,9 @@ package org.eclipse.dirigible.components.data.sources.service;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.repository.DataSourceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,9 +28,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DataSourceService implements ArtefactService<DataSource> {
 
-    /** The datasource repository. */
-    @Autowired
-    private DataSourceRepository datasourceRepository;
+
+
+    private final DataSourceRepository datasourceRepository;
+    private final List<DataSourceLifecycleListener> dataSourceListeners;
+
+    DataSourceService(DataSourceRepository datasourceRepository, List<DataSourceLifecycleListener> dataSourceListeners) {
+        this.datasourceRepository = datasourceRepository;
+        this.dataSourceListeners = dataSourceListeners;
+    }
 
     /**
      * Gets the all.
@@ -69,9 +73,8 @@ public class DataSourceService implements ArtefactService<DataSource> {
         Optional<DataSource> table = datasourceRepository.findById(id);
         if (table.isPresent()) {
             return table.get();
-        } else {
-            throw new IllegalArgumentException("DataSource with id does not exist: " + id);
         }
+        throw new IllegalArgumentException("DataSource with id does not exist: " + id);
     }
 
     /**
@@ -89,9 +92,8 @@ public class DataSourceService implements ArtefactService<DataSource> {
         Optional<DataSource> table = datasourceRepository.findOne(example);
         if (table.isPresent()) {
             return table.get();
-        } else {
-            throw new IllegalArgumentException("DataSource with name does not exist: " + name);
         }
+        throw new IllegalArgumentException("DataSource with name does not exist: " + name);
     }
 
     /**
@@ -106,8 +108,7 @@ public class DataSourceService implements ArtefactService<DataSource> {
         DataSource filter = new DataSource();
         filter.setLocation(location);
         Example<DataSource> example = Example.of(filter);
-        List<DataSource> list = datasourceRepository.findAll(example);
-        return list;
+        return datasourceRepository.findAll(example);
     }
 
     /**
@@ -137,7 +138,9 @@ public class DataSourceService implements ArtefactService<DataSource> {
      */
     @Override
     public DataSource save(DataSource datasource) {
-        return datasourceRepository.saveAndFlush(datasource);
+        DataSource savedDataSource = datasourceRepository.saveAndFlush(datasource);
+        dataSourceListeners.forEach(l -> l.onSave(savedDataSource));
+        return savedDataSource;
     }
 
     /**
@@ -148,6 +151,7 @@ public class DataSourceService implements ArtefactService<DataSource> {
     @Override
     public void delete(DataSource datasource) {
         datasourceRepository.delete(datasource);
+        dataSourceListeners.forEach(l -> l.onDelete(datasource));
     }
 
 }

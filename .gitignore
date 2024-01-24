@@ -8,7 +8,9 @@ bin/
 .history
 .vscode
 node_modules
-build/
+**/build
+build/application/dirigible
+!/build
 
 # files
 .DS_Store

@@ -9,9 +9,9 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let cmis = require("cms/cmis");
-let streams = require("io/streams");
-let objectUtils = require("ide-documents/utils/cmis/object");
+import { cmis } from "@dirigible/cms";
+import { streams } from "@dirigible/io";
+import * as objectUtils from "./object";
 const path = org.eclipse.dirigible.repository.api.RepositoryPath;
 
 let cmisSession = cmis.getSession();
@@ -21,7 +21,7 @@ function DocumentSerializer(cmisDocument) {
 	this.name = cmisDocument.getName();
 }
 
-exports.uploadDocument = function (folder, document) {
+export const uploadDocument = (folder, document) => {
 	let fileName = getDocumentFileName(document);
 	let mimetype = document.getContentType();
 	let size = document.getSize();
@@ -30,7 +30,7 @@ exports.uploadDocument = function (folder, document) {
 	return new DocumentSerializer(newDocument);
 };
 
-exports.uploadDocumentOverwrite = function (folder, document) {
+export const uploadDocumentOverwrite = (folder, document) => {
 	let timestamp = new Date().getTime();
 	if (document.name === null || document.name === undefined) {
 		document.name = document.getName();
@@ -39,7 +39,7 @@ exports.uploadDocumentOverwrite = function (folder, document) {
 	let oldName = document.name;
 
 	document.name = newName;
-	exports.uploadDocument(folder, document);
+	uploadDocument(folder, document);
 
 	try {
 		let docPath = path.normalizePath(folder.getPath(), oldName)
@@ -67,26 +67,26 @@ function createDocument(folder, fileName, size, mimetype, inputStream) {
 	return newDocument;
 }
 
-exports.getDocumentStream = function (document) {
+export const getDocumentStream = (document) => {
 	let contentStream = document.getContentStream();
 	return contentStream;
 };
 
-exports.getDocNameAndStream = function (document) {
-	let stream = exports.getDocumentStream(document);
+export const getDocNameAndStream = (document) => {
+	let stream = getDocumentStream(document);
 	let name = document.getName();
 	return [name, stream];
 };
 
-exports.getDocument = function (path) {
+export const getDocument = (path) => {
 	return objectUtils.getObject(path);
 }
 
-exports.existDocument = function (path) {
+export const existDocument = (path) => {
 	return objectUtils.existObject(path);
 }
 
-exports.createFromBytes = function (folder, fileName, bytes) {
+export const createFromBytes = (folder, fileName, bytes) => {
 	let inputStream = streams.createByteArrayInputStream(bytes);
 	let mimeType = "application/octet-stream";
 

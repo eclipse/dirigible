@@ -13,16 +13,17 @@
  * API Procedure
  *
  */
-import * as update from "./update";
+import { Update } from "./update";
 import * as database from "./database";
+
 type Parameter = Object[] | string[] | number[];
 
 export class Procedure {
+
     public static create(sql: string, datasourceName: string): void {
         let parameters = [];
-        update.execute(sql, parameters, datasourceName);
-    };
-
+        Update.execute(sql, parameters, datasourceName);
+    }
 
     public static execute(sql: string, parameters: Parameter, datasourceName: string): Object[] {
         let result: Object[] = [];
@@ -98,5 +99,5 @@ export class Procedure {
             }
         }
         return result;
-    };
+    }
 }

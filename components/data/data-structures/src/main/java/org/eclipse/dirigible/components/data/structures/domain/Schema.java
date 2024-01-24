@@ -14,14 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.hibernate.annotations.LazyCollection;
@@ -33,7 +33,7 @@ import com.google.gson.annotations.Expose;
  * The Class Schema.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_DATA_SCHEMAS")
+@jakarta.persistence.Table(name = "DIRIGIBLE_DATA_SCHEMAS")
 public class Schema extends Artefact {
 
     /** The Constant ARTEFACT_TYPE. */

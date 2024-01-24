@@ -14,8 +14,8 @@ const MongoDBFacade = Java.type("org.eclipse.dirigible.components.api.mongodb.Mo
 const TimeUnit = Java.type("java.util.concurrent.TimeUnit");
 import * as uuid from "@dirigible/utils/uuid";
 
-export function getClient() {
-    var native = MongoDBFacade.getClient();
+export function getClient(uri: string, user: string, password: string) {
+    var native = MongoDBFacade.getClient(uri, user, password);
     return new Client(native);
 };
 

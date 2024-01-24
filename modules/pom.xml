@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-parent</artifactId>
-		<version>9.0.0-SNAPSHOT</version>
+		<version>10.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -95,6 +95,11 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-database-sql-mysql</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-database-sql-mariadb</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -201,11 +206,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
-				<artifactId>dirigible-components-engine-odata</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-engine-camel</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -247,6 +247,11 @@
 			</dependency>
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-engine-odata</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-engine-graalium-execution</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -256,14 +261,14 @@
 				<version>${project.version}</version>
 				<type>pom</type>
 			</dependency>
-			
+
 			<!-- Mail -->
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-api-mail</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			
+
 			<!-- OData -->
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
@@ -275,7 +280,7 @@
 				<artifactId>dirigible-odata-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			
+
 			<!-- Repository -->
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>

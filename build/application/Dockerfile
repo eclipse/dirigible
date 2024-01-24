@@ -8,4 +8,4 @@ RUN npm i -g esbuild
 RUN npm i -g typescript
 
 COPY target/dirigible-application-*-executable.jar dirigible.jar
-ENTRYPOINT ["java","-jar","/dirigible.jar"]
+ENTRYPOINT ["java", "--add-opens", "java.base/java.lang=ALL-UNNAMED", "--add-opens", "java.base/java.lang.reflect=ALL-UNNAMED", "--add-opens", "java.base/java.nio=ALL-UNNAMED", "-jar", "/dirigible.jar"]

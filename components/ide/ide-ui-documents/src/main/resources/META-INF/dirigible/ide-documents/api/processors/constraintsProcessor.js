@@ -9,12 +9,11 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let repositoryManager = require("platform/repository");
-let documentsUtils = require("ide-documents/utils/cmis/document");
-let folderUtils = require("ide-documents/utils/cmis/folder");
-let objectUtils = require("ide-documents/utils/cmis/object");
-let bytes = require("io/bytes");
-let streams = require("io/streams");
+import { repository as repositoryManager } from "@dirigible/platform";
+import * as documentsUtils from "../../utils/cmis/document";
+import * as folderUtils from "../../utils/cmis/folder";
+import * as objectUtils from "../../utils/cmis/object";
+import { bytes, streams } from "@dirigible/io";
 
 const INTERNAL_FOLDER = "__internal";
 const INTERNAL_FOLDER_LOCATION = INTERNAL_FOLDER;
@@ -53,7 +52,7 @@ function updateAccessDefinitionsInCMS(data) {
     documentsUtils.uploadDocument(folder, document);
 }
 
-exports.getAccessDefinitions = function () {
+export const getAccessDefinitions = () => {
 	let content = {
         constraints: []
     };
@@ -71,7 +70,7 @@ exports.getAccessDefinitions = function () {
     return content;
 };
 
-exports.updateAccessDefinitions = function (accessDefinitions) {
+export const updateAccessDefinitions = (accessDefinitions) => {
     let path = "/registry/public/ide-documents/security/roles.access";
     let content = JSON.stringify(accessDefinitions);
     let resource = repositoryManager.getResource(path);
