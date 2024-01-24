@@ -20,6 +20,7 @@ import java.sql.Types;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.commons.api.helpers.DateTimeUtils;
@@ -81,8 +82,8 @@ public class CsvProcessor {
         InsertBuilder insertBuilder = new InsertBuilder(SqlFactory.deriveDialect(connection));
         insertBuilder.into(tableMetadata.getName());
 
-        for (String columnName : headerNames) {
-            insertBuilder.column("\"" + columnName + "\"")
+        for (ColumnMetadata columnMetadata : availableTableColumns) {
+            insertBuilder.column("\"" + columnMetadata.getName() + "\"")
                          .value("?");
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertBuilder.generate())) {
@@ -134,12 +135,13 @@ public class CsvProcessor {
         UpdateBuilder updateBuilder = new UpdateBuilder(SqlFactory.deriveDialect(connection));
         updateBuilder.table(tableMetadata.getName());
 
-        for (String columnName : headerNames) {
-            if (columnName.equals(pkName)) {
+        for (ColumnMetadata columnMetadata : availableTableColumns) {
+            if (columnMetadata.getName()
+                              .equals(pkName)) {
                 continue;
             }
 
-            updateBuilder.set("\"" + columnName + "\"", "?");
+            updateBuilder.set("\"" + columnMetadata.getName() + "\"", "?");
         }
 
         if (pkName != null) {

@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.components.data.csvim.processor;
 
 import static org.eclipse.dirigible.components.api.platform.RepositoryFacade.getResource;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -94,7 +96,7 @@ public class CsvimProcessor {
      * The Constant ERROR_MESSAGE_DIFFERENT_COLUMNS_SIZE.
      */
     private static final String ERROR_MESSAGE_DIFFERENT_COLUMNS_SIZE =
-            "Error while trying to process CSV record with Id [%s] from location [%s]. The number of CSV items should be equal to the number of columns of the database entity.";
+            "Error while trying to process CSV record from location [%s]. The number of CSV items should be equal to the number of columns of the database entity.";
 
     /**
      * The Constant ERROR_MESSAGE_INSERT_RECORD.
@@ -128,6 +130,9 @@ public class CsvimProcessor {
      */
     private final CsvProcessor csvProcessor;
 
+    /** The strict mode. */
+    private boolean strictMode;
+
     /**
      * Instantiates a new csvim processor.
      *
@@ -136,6 +141,20 @@ public class CsvimProcessor {
     @Autowired
     public CsvimProcessor(CsvProcessor csvProcessor) {
         this.csvProcessor = csvProcessor;
+        this.strictMode = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_CSV_STRICT_MODE", "false"));
+    }
+
+    /**
+     * Checks if is strict mode.
+     *
+     * @return true, if is strict mode
+     */
+    public boolean isStrictMode() {
+        return strictMode;
+    }
+
+    void setStrictMode(boolean strictMode) {
+        this.strictMode = strictMode;
     }
 
     /**
@@ -173,6 +192,13 @@ public class CsvimProcessor {
         for (CSVRecord csvRecord : csvParser) {
             countAll++;
             countBatch++;
+            if (csvRecord.size() != tableColumns.size()) {
+                if (isStrictMode()) {
+                    CsvimUtils.logProcessorErrors(String.format(PROBLEM_MESSAGE_DIFFERENT_COLUMNS_SIZE, csvFile.getFile()),
+                            ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
+                    throw new Exception(String.format(ERROR_MESSAGE_DIFFERENT_COLUMNS_SIZE, csvFile.getFile()));
+                }
+            }
             if (skipComparing) {
                 recordsToInsert.add(csvRecord);
             } else {
@@ -181,11 +207,6 @@ public class CsvimProcessor {
                 if (pkValueForCSVRecord == null) {
                     recordsToInsert.add(csvRecord);
                 } else {
-                    if (csvRecord.size() != tableColumns.size()) {
-                        CsvimUtils.logProcessorErrors(String.format(PROBLEM_MESSAGE_DIFFERENT_COLUMNS_SIZE, pkValueForCSVRecord),
-                                ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
-                        throw new Exception(String.format(ERROR_MESSAGE_DIFFERENT_COLUMNS_SIZE, pkValueForCSVRecord, csvFile.getFile()));
-                    }
                     if (!recordExists(tableName, pkNameForCSVRecord, pkValueForCSVRecord, connection)) {
                         recordsToInsert.add(csvRecord);
                     } else {

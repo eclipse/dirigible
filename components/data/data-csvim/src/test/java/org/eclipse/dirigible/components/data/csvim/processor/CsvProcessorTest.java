@@ -11,22 +11,16 @@
 package org.eclipse.dirigible.components.data.csvim.processor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayInputStream;
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Set;
 
 import javax.sql.DataSource;
 
-import org.assertj.core.api.ByteArrayAssert;
-import org.eclipse.dirigible.components.data.csvim.domain.Csv;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
-import org.eclipse.dirigible.components.data.csvim.domain.Csvim;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -63,7 +57,8 @@ public class CsvProcessorTest {
             connection.createStatement()
                       .execute("CREATE TABLE CSV_A (A1 INT PRIMARY KEY, A2 VARCHAR(20), A3 VARCHAR(20))");
             try {
-                byte[] content = "A1,A2,A3\n1,a2_1,a3_1\n2,a2_2,a2_3".getBytes();
+                csvimProcessor.setStrictMode(true);
+                byte[] content = "A1,A2,A3\n1,a2_1,a3_1\n2,a2_2,a3_2".getBytes();
                 CsvFile csvFile = new CsvFile(null, "CSV_A", null, "import", true, true, ",", "\"", null, false, null);
                 csvimProcessor.process(csvFile, new ByteArrayInputStream(content), connection);
                 ResultSet rs = connection.createStatement()
@@ -95,6 +90,7 @@ public class CsvProcessorTest {
             connection.createStatement()
                       .execute("CREATE TABLE CSV_A (A1 INT PRIMARY KEY, A2 VARCHAR(20), A3 VARCHAR(20))");
             try {
+                csvimProcessor.setStrictMode(true);
                 byte[] content = "A1,A2\n1,a2_1\n2,a2_2".getBytes();
                 CsvFile csvFile = new CsvFile(null, "CSV_A", null, "import", true, true, ",", "\"", null, false, null);
                 try {
@@ -107,6 +103,87 @@ public class CsvProcessorTest {
                 if (rs.next()) {
                     int c = rs.getInt(1);
                     assertEquals(0, c, "Data has been imported from CSV file CSV_A.csv in a strict mode and wrong CSV file");
+                }
+            } catch (Exception e) {
+                fail(e.getMessage(), e);
+            } finally {
+                connection.createStatement()
+                          .execute("DROP TABLE CSV_A");
+            }
+
+        }
+    }
+
+    /**
+     * Import strict negative.
+     *
+     * @throws SQLException the SQL exception
+     */
+    @Test
+    public void importNonStrictMode() throws SQLException {
+        try (Connection connection = datasource.getConnection()) {
+            connection.createStatement()
+                      .execute("CREATE TABLE CSV_A (A1 INT PRIMARY KEY, A2 VARCHAR(20), A3 VARCHAR(20))");
+            try {
+                csvimProcessor.setStrictMode(false);
+                byte[] content = "A1,A2\n1,a2_1\n2,a2_2".getBytes();
+                CsvFile csvFile = new CsvFile(null, "CSV_A", null, "import", true, true, ",", "\"", null, false, null);
+                try {
+                    csvimProcessor.process(csvFile, new ByteArrayInputStream(content), connection);
+                } catch (Exception e) {
+                    //
+                }
+                ResultSet rs = connection.createStatement()
+                                         .executeQuery("SELECT COUNT(*) FROM CSV_A");
+                if (rs.next()) {
+                    int c = rs.getInt(1);
+                    assertEquals(2, c, "No data has been imported from CSV file CSV_A.csv");
+                } else {
+                    fail("No data has been imported from CSV file CSV_A.csv");
+                }
+            } catch (Exception e) {
+                fail(e.getMessage(), e);
+            } finally {
+                connection.createStatement()
+                          .execute("DROP TABLE CSV_A");
+            }
+
+        }
+    }
+
+    /**
+     * Import strict negative.
+     *
+     * @throws SQLException the SQL exception
+     */
+    @Test
+    public void importNonStrictModeScrumbled() throws SQLException {
+        try (Connection connection = datasource.getConnection()) {
+            connection.createStatement()
+                      .execute("CREATE TABLE CSV_A (A1 INT PRIMARY KEY, A2 VARCHAR(20), A3 VARCHAR(20))");
+            try {
+                csvimProcessor.setStrictMode(false);
+                byte[] content = "A1,A3,A2,A4\n1,a3_1,a2_1,a4_1\n2,a3_2,a2_3,a4_1".getBytes();
+                CsvFile csvFile = new CsvFile(null, "CSV_A", null, "import", true, true, ",", "\"", null, false, null);
+                try {
+                    csvimProcessor.process(csvFile, new ByteArrayInputStream(content), connection);
+                } catch (Exception e) {
+                    //
+                }
+                ResultSet rs = connection.createStatement()
+                                         .executeQuery("SELECT COUNT(*) FROM CSV_A");
+                if (rs.next()) {
+                    int c = rs.getInt(1);
+                    assertEquals(2, c, "No data has been imported from CSV file CSV_A.csv");
+
+                    rs = connection.createStatement()
+                                   .executeQuery("SELECT * FROM CSV_A");
+                    if (rs.next()) {
+                        assertEquals("a2_1", rs.getString("A2"));
+                        assertEquals("a3_1", rs.getString("A3"));
+                    }
+                } else {
+                    fail("No data has been imported from CSV file CSV_A.csv");
                 }
             } catch (Exception e) {
                 fail(e.getMessage(), e);
