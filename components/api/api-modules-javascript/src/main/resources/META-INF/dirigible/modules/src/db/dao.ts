@@ -13,10 +13,10 @@
 
 import * as dirigibleOrm from "./orm";
 import * as dirigibleOrmStatements from "./ormstatements";
-import * as sequences from "./sequence";
+import { Sequence } from "./sequence";
 import * as database from "./database";
 import { Query } from "@dirigible/db";
-import { execute as execUpdate } from "./update";
+import { Update } from "./update";
 import * as logging from "@dirigible/log/logging";
 import * as globals from "@dirigible/core/globals";
 import * as configurations from "@dirigible/core/configurations";
@@ -29,10 +29,10 @@ export function DAO(orm, logCtxName, dataSourceName){
 	this.orm = dirigibleOrm.get(orm);
 	this.sequenceName = this.orm.table+'_'+this.orm.getPrimaryKey().name.toUpperCase();
 	this.dropIdGenerator = function(){
-		return sequences.drop(this.sequenceName, dataSourceName);
+		return Sequence.drop(this.sequenceName, dataSourceName);
 	};
 	this.generateId = function(){
-		return sequences.nextval(this.sequenceName, dataSourceName, this.orm.table);
+		return Sequence.nextval(this.sequenceName, this.orm.table, dataSourceName);
 	};
 
 	const conn = database.getConnection(dataSourceName);
@@ -87,7 +87,7 @@ export function DAO(orm, logCtxName, dataSourceName){
 		if(sql.toLowerCase().startsWith('select')){
 	 		result = Query.execute(sql, _parameterBindings, dataSourceName);
 	 	} else {
-	 		result = execUpdate(sql, _parameterBindings, dataSourceName);
+	 		result = Update.execute(sql, _parameterBindings, dataSourceName);
 	 	}
 
 	 	return result !== null ? result : [];
