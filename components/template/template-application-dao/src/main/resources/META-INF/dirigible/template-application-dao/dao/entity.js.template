@@ -303,7 +303,7 @@ export const customDataCount = () => {
 
 
 const triggerEvent = async(data) => {
-	const triggerExtensions = await extensions.loadExtensionModules("${projectName}/${perspectiveName}/${name}", ["trigger]);
+	const triggerExtensions = await extensions.loadExtensionModules("${projectName}/${perspectiveName}/${name}", ["trigger"]);
 	triggerExtensions.forEach(triggerExtension => {
 		try {
 			triggerExtension.trigger(data);
