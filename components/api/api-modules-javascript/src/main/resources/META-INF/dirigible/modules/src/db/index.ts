@@ -8,6 +8,7 @@ export { Sequence as sequence } from "./sequence";
 export * from "./query";
 export { Query as query } from "./query";
 export * as sql from "./sql";
-export * as store from "./store";
+export * from "./store";
+export { Store as store } from "./store";
 export * from "./update";
 export { Update as update } from "./update";
