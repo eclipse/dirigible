@@ -56,8 +56,8 @@
 
  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -100,15 +100,15 @@
 		<java.version>17</java.version>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
-		
+
 		<maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
 		<maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
 		<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
 		<maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
-		<maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
 		<maven-source-plugin.version>3.3.0</maven-source-plugin.version>
+		<maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
 		<jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
-		<spotbugs-maven-plugin.version>4.8.2.0</spotbugs-maven-plugin.version>
+		<spotbugs-maven-plugin.version>4.8.3.0</spotbugs-maven-plugin.version>
 		<formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
 		<exec-maven-plugin.version>3.1.1</exec-maven-plugin.version>
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
@@ -116,9 +116,9 @@
 
 		<spring.boot.version>3.2.0</spring.boot.version>
 		<org.springdoc.openapi.ui.version>1.7.0</org.springdoc.openapi.ui.version>
-		
+
 		<graalvm.version>23.1.1</graalvm.version>
-		
+
 		<commons.io>2.15.1</commons.io>
 		<commons.lang3>3.14.0</commons.lang3>
 		<commons.exec>1.4.0</commons.exec>
@@ -126,32 +126,32 @@
 		<chemistry.version>1.1.0</chemistry.version>
 		<jgit.version>6.8.0.202311291450-r</jgit.version>
 		<olingo.version>3.1.3</olingo.version>
-		
+
 		<commons-csv.version>1.10.0</commons-csv.version>
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<guava.version>33.0.0-jre</guava.version>
 		<icu4j.version>74.2</icu4j.version>
 		<classgraph.version>4.8.165</classgraph.version>
-		
+
 		<mina-core.version>2.2.3</mina-core.version>
-		<sshd-core.version>2.11.0</sshd-core.version>
+		<sshd-core.version>2.12.0</sshd-core.version>
 		<ftpserver.version>1.2.0</ftpserver.version>
-		
+
 		<activemq.version>6.0.1</activemq.version>
-		
+
 		<flowable.version>6.8.0</flowable.version>
-		
+
 		<camel.version>4.3.0</camel.version>
-		
+
 		<velocity.version>2.3</velocity.version>
 		<wikitext.version>3.0.48.202308291007</wikitext.version>
 		<flexmark.version>0.64.8</flexmark.version>
-		
+
 		<mongodb.version>3.12.14</mongodb.version>
 		<ngdbc.version>2.19.16</ngdbc.version>
 		<snowflake.version>3.13.34</snowflake.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.634</qldb.sdk.version>
+		<qldb.sdk.version>1.12.641</qldb.sdk.version>
 		<jetcd.core.version>0.7.7</jetcd.core.version>
 
 		<jquery-ui.version>1.13.0</jquery-ui.version>
@@ -172,7 +172,7 @@
 		<angular-file-upload.version>2.6.1</angular-file-upload.version>
 		<angularjs.version>1.8.2</angularjs.version>
 		<fontawesome.version>4.7.0</fontawesome.version>
-		
+
 		<testcontainers.version>1.19.3</testcontainers.version>
 		<logcaptor.version>2.9.2</logcaptor.version>
 

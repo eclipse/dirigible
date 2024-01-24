@@ -99,14 +99,14 @@ importView.controller('ImportViewController', [
                     item.headers = {
                         'Dirigible-Editor': 'Editor'
                     };
-                    item.url = new UriBuilder().path(transportApi.getFileImportUrl().split('/')).path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path(item.name).path('/').build();
+                    item.url = new UriBuilder().path(transportApi.getFileImportUrl().split('/')).path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path(item.name).build();
                 } else if ($scope.inDialog && $scope.importType === 'data') {
                     item.headers = {
                         'Dirigible-Editor': 'Editor'
                     };
-                    item.url = new UriBuilder().path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path(item.name).path('/').build();
+                    item.url = new UriBuilder().path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path(item.name).build();
                 } else {
-                    item.url = new UriBuilder().path(transportApi.getZipImportUrl().split('/')).path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path('/').build();
+                    item.url = new UriBuilder().path(transportApi.getZipImportUrl().split('/')).path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).build();
                 }
             }
         };

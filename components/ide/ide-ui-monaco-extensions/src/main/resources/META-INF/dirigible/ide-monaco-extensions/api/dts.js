@@ -9,9 +9,9 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const response = dirigibleRequire("http/response");
-const dtsParser = dirigibleRequire("ide-monaco-extensions/api/utils/dtsParser");
-const javaDtsData = dirigibleRequire("ide-monaco-extensions/api/java-dts-data");
+import { response } from "@dirigible/http";
+import * as dtsParser from "./utils/dtsParser";
+import * as javaDtsData from "./java-dts-data";
 
 const dtsPaths = dtsParser.getDtsPaths();
 const coreModulesDtsContent = dtsParser.getDtsFileContents(dtsPaths);

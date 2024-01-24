@@ -9,15 +9,15 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let objectUtils = require("ide-documents/utils/cmis/object");
-let folderUtils = require("ide-documents/utils/cmis/folder");
-let documentUtils = require("ide-documents/utils/cmis/document");
-let contentTypeHandler = require("ide-documents/utils/content-type-handler");
-let registry = require("platform/registry");
-let { formatPath } = require("ide-documents/utils/string");
-let user = require("security/user");
+import * as objectUtils from "../../utils/cmis/object";
+import * as folderUtils from "../../utils/cmis/folder";
+import * as documentUtils from "../../utils/cmis/document";
+import * as contentTypeHandler from "../../utils/content-type-handler";
+import { registry } from "@dirigible/platform";
+import { formatPath } from "../../utils/string";
+import { user } from "@dirigible/security";
 
-exports.get = function (path) {
+export const get = (path) => {
 	let document = documentUtils.getDocument(path);
 	let nameAndStream = documentUtils.getDocNameAndStream(document);
 	let contentStream = nameAndStream[1];
@@ -31,14 +31,14 @@ exports.get = function (path) {
 	return result;
 };
 
-exports.list = function (path) {
+export const list = (path) => {
 	let folder = folderUtils.getFolderOrRoot(path);
 	let result = folderUtils.readFolder(folder);
 	filterByAccessDefinitions(result);
 	return result;
 };
 
-exports.create = function (path, documents, overwrite) {
+export const create = (path, documents, overwrite) => {
 	let result = [];
 	for (let i = 0; i < documents.size(); i++) {
 		let folder = folderUtils.getFolder(path);
@@ -51,18 +51,18 @@ exports.create = function (path, documents, overwrite) {
 	return result;
 };
 
-exports.createFolder = function (path, name) {
+export const createFolder = (path, name) => {
 	let folder = folderUtils.getFolderOrRoot(path);
 	let result = folderUtils.createFolder(folder, name);
 	return result;
 };
 
-exports.rename = function (path, name) {
+export const rename = (path, name) => {
 	let object = objectUtils.getObject(path);
 	objectUtils.renameObject(object, name);
 };
 
-exports.delete = function (objects, forceDelete) {
+export const remove = (objects, forceDelete) => {
 	for (let i in objects) {
 		let object = objectUtils.getObject(objects[i]);
 		let isFolder = object.getType().getId() === 'cmis:folder';
