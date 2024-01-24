@@ -9,11 +9,19 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let registry = dirigibleRequire("platform/registry");
-let extensions = dirigibleRequire("extensions/extensions");
+import { registry } from "@dirigible/platform";
+import { extensions } from "@dirigible/extensions";
 
-exports.getModules = function () {
-    let modules = [];
+let modules = [];
+const apiModulesExtensions = await extensions.loadExtensionModules("api-modules");
+const extModulesExtensions = await extensions.loadExtensionModules("ext-modules");
+const apis = apiModulesExtensions.concat(extModulesExtensions);
+
+apis.forEach(function (apiModule) {
+    modules = modules.concat(apiModule.getContent());
+});
+
+export const getModules = () => {
     let javaScriptFiles = registry.find("/", "*.js");
 
     for (let i = 0; i < javaScriptFiles.length; i++) {
@@ -25,14 +33,6 @@ exports.getModules = function () {
         }
     }
 
-    let apiModulesExtensions = extensions.getExtensions("api-modules");
-    let extModulesExtensions = extensions.getExtensions("ext-modules");
-    let apis = apiModulesExtensions.concat(extModulesExtensions);
-
-    apis.forEach(function (apiModule) {
-        let module = dirigibleRequire(apiModule);
-        modules = modules.concat(module.getContent());
-    });
     return modules;
 }
 

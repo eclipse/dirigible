@@ -1,5 +1,19 @@
 {
     "compilerOptions": {
-        "module": "ESNext"
+        "module": "ESNext",
+        "target": "ES6",
+        "moduleResolution": "Node",
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
+        "paths": {
+            "@dirigible/*": [
+                "../modules/src/*"
+            ]
+        },
+        "types": [
+            "../modules/types"
+        ]
     }
 }

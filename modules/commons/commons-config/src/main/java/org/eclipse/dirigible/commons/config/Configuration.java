@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.commons.config;
 
 import static java.text.MessageFormat.format;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -21,7 +20,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +38,10 @@ public class Configuration {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
+    private static final String MULTIVARIABLE_REGEX = "\\$\\{([^}]+)\\}";
+    private static final Pattern MULTIVARIABLE_PATTERN = Pattern.compile(MULTIVARIABLE_REGEX);
+
+    public static final String DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER = "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER";
 
     /**
      * The Enum ConfigType.
@@ -345,7 +349,7 @@ public class Configuration {
      * @return true, if the OAuth authentication is enabled
      */
     public static boolean isOAuthAuthenticationEnabled() {
-        return Boolean.parseBoolean(get("DIRIGIBLE_OAUTH_ENABLED", Boolean.FALSE.toString()));
+        return isActiveSpringProfile("oauth");
     }
 
     /**
@@ -354,7 +358,11 @@ public class Configuration {
      * @return true, if the Keycloak authentication is enabled
      */
     public static boolean isKeycloakModeEnabled() {
-        return Boolean.parseBoolean(get("DIRIGIBLE_KEYCLOAK_ENABLED", Boolean.FALSE.toString()));
+        return isActiveSpringProfile("keycloak");
+    }
+
+    private static boolean isActiveSpringProfile(String profile) {
+        return get("spring.profiles.active", "").contains(profile) || get("spring_profiles_active", "").contains(profile);
     }
 
     /**
@@ -440,30 +448,29 @@ public class Configuration {
     }
 
     /** The Constant CONFIGURATION_PARAMETERS. */
-    private static final String[] CONFIGURATION_PARAMETERS = new String[] {"DIRIGIBLE_ANONYMOUS_USER_NAME_PROPERTY_NAME",
-            "DIRIGIBLE_BRANDING_NAME", "DIRIGIBLE_BRANDING_BRAND", "DIRIGIBLE_BRANDING_ICON", "DIRIGIBLE_BRANDING_WELCOME_PAGE_DEFAULT",
-            "DIRIGIBLE_GIT_ROOT_FOLDER", "DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER", "DIRIGIBLE_REGISTRY_IMPORT_WORKSPACE",
-            "DIRIGIBLE_REPOSITORY_PROVIDER", "DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_NAME", "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER",
-            "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER_IS_ABSOLUTE", "DIRIGIBLE_MASTER_REPOSITORY_PROVIDER",
-            "DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER", "DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION", "DIRIGIBLE_MASTER_REPOSITORY_JAR_PATH",
-            "DIRIGIBLE_REPOSITORY_SEARCH_ROOT_FOLDER", "DIRIGIBLE_REPOSITORY_SEARCH_ROOT_FOLDER_IS_ABSOLUTE",
-            "DIRIGIBLE_REPOSITORY_SEARCH_INDEX_LOCATION", "DIRIGIBLE_DATABASE_PROVIDER", "DIRIGIBLE_DATABASE_DEFAULT_SET_AUTO_COMMIT",
-            "DIRIGIBLE_DATABASE_DEFAULT_MAX_CONNECTIONS_COUNT", "DIRIGIBLE_DATABASE_DEFAULT_WAIT_TIMEOUT",
-            "DIRIGIBLE_DATABASE_DEFAULT_WAIT_COUNT", "DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES", "DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT",
-            "DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER_DEFAULT",
-            "DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT", "DIRIGIBLE_DATABASE_H2_DRIVER", "DIRIGIBLE_DATABASE_H2_URL",
-            "DIRIGIBLE_DATABASE_H2_USERNAME", "DIRIGIBLE_DATABASE_H2_PASSWORD", "DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE",
-            "DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE", "DIRIGIBLE_MONGODB_CLIENT_URI", "DIRIGIBLE_MONGODB_DATABASE_DEFAULT",
-            "DIRIGIBLE_SCHEDULER_MEMORY_STORE", "DIRIGIBLE_SCHEDULER_DATASOURCE_TYPE", "DIRIGIBLE_SCHEDULER_DATASOURCE_NAME",
-            "DIRIGIBLE_SCHEDULER_DATABASE_DELEGATE", "DIRIGIBLE_SCHEDULER_LOGS_RETANTION_PERIOD", "DIRIGIBLE_SCHEDULER_EMAIL_SENDER",
-            "DIRIGIBLE_SCHEDULER_EMAIL_RECIPIENTS", "DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_ERROR", "DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_NORMAL",
-            "DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_ERROR", "DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_NORMAL", "DIRIGIBLE_SCHEDULER_EMAIL_URL_SCHEME",
-            "DIRIGIBLE_SCHEDULER_EMAIL_URL_HOST", "DIRIGIBLE_SCHEDULER_EMAIL_URL_PORT", "DIRIGIBLE_SYNCHRONIZER_IGNORE_DEPENDENCIES",
-            "DIRIGIBLE_SYNCHRONIZER_EXCLUDE_PATHS", "DIRIGIBLE_HOME_URL", "DIRIGIBLE_JOB_EXPRESSION_BPM",
-            "DIRIGIBLE_JOB_EXPRESSION_DATA_STRUCTURES", "DIRIGIBLE_JOB_EXPRESSION_EXTENSIONS", "DIRIGIBLE_JOB_EXPRESSION_JOBS",
-            "DIRIGIBLE_JOB_EXPRESSION_MESSAGING", "DIRIGIBLE_JOB_EXPRESSION_MIGRATIONS", "DIRIGIBLE_JOB_EXPRESSION_ODATA",
-            "DIRIGIBLE_JOB_EXPRESSION_PUBLISHER", "DIRIGIBLE_JOB_EXPRESSION_SECURITY", "DIRIGIBLE_JOB_EXPRESSION_REGISTRY",
-            "DIRIGIBLE_JOB_DEFAULT_TIMEOUT", "DIRIGIBLE_CMS_PROVIDER", "DIRIGIBLE_CMS_ROLES_ENABLED", "DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER",
+    private static final String[] CONFIGURATION_PARAMETERS = {"DIRIGIBLE_ANONYMOUS_USER_NAME_PROPERTY_NAME", "DIRIGIBLE_BRANDING_NAME",
+            "DIRIGIBLE_BRANDING_BRAND", "DIRIGIBLE_BRANDING_ICON", "DIRIGIBLE_BRANDING_WELCOME_PAGE_DEFAULT", "DIRIGIBLE_GIT_ROOT_FOLDER",
+            "DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER", "DIRIGIBLE_REGISTRY_IMPORT_WORKSPACE", "DIRIGIBLE_REPOSITORY_PROVIDER",
+            "DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_NAME", DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER, "DIRIGIBLE_MASTER_REPOSITORY_PROVIDER",
+            "DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION", "DIRIGIBLE_MASTER_REPOSITORY_JAR_PATH", "DIRIGIBLE_REPOSITORY_SEARCH_ROOT_FOLDER",
+            "DIRIGIBLE_REPOSITORY_SEARCH_ROOT_FOLDER_IS_ABSOLUTE", "DIRIGIBLE_REPOSITORY_SEARCH_INDEX_LOCATION",
+            "DIRIGIBLE_DATABASE_PROVIDER", "DIRIGIBLE_DATABASE_DEFAULT_SET_AUTO_COMMIT", "DIRIGIBLE_DATABASE_DEFAULT_MAX_CONNECTIONS_COUNT",
+            "DIRIGIBLE_DATABASE_DEFAULT_WAIT_TIMEOUT", "DIRIGIBLE_DATABASE_DEFAULT_WAIT_COUNT", "DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES",
+            "DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT", "DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE",
+            "DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER_DEFAULT", "DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT", "DIRIGIBLE_DATABASE_H2_DRIVER",
+            "DIRIGIBLE_DATABASE_H2_URL", "DIRIGIBLE_DATABASE_H2_USERNAME", "DIRIGIBLE_DATABASE_H2_PASSWORD",
+            "DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE", "DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE", "DIRIGIBLE_MONGODB_CLIENT_URI",
+            "DIRIGIBLE_MONGODB_DATABASE_DEFAULT", "DIRIGIBLE_SCHEDULER_MEMORY_STORE", "DIRIGIBLE_SCHEDULER_DATASOURCE_TYPE",
+            "DIRIGIBLE_SCHEDULER_DATASOURCE_NAME", "DIRIGIBLE_SCHEDULER_DATABASE_DELEGATE", "DIRIGIBLE_SCHEDULER_LOGS_RETANTION_PERIOD",
+            "DIRIGIBLE_SCHEDULER_EMAIL_SENDER", "DIRIGIBLE_SCHEDULER_EMAIL_RECIPIENTS", "DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_ERROR",
+            "DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_NORMAL", "DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_ERROR",
+            "DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_NORMAL", "DIRIGIBLE_SCHEDULER_EMAIL_URL_SCHEME", "DIRIGIBLE_SCHEDULER_EMAIL_URL_HOST",
+            "DIRIGIBLE_SCHEDULER_EMAIL_URL_PORT", "DIRIGIBLE_SYNCHRONIZER_IGNORE_DEPENDENCIES", "DIRIGIBLE_SYNCHRONIZER_EXCLUDE_PATHS",
+            "DIRIGIBLE_HOME_URL", "DIRIGIBLE_JOB_EXPRESSION_BPM", "DIRIGIBLE_JOB_EXPRESSION_DATA_STRUCTURES",
+            "DIRIGIBLE_JOB_EXPRESSION_EXTENSIONS", "DIRIGIBLE_JOB_EXPRESSION_JOBS", "DIRIGIBLE_JOB_EXPRESSION_MESSAGING",
+            "DIRIGIBLE_JOB_EXPRESSION_MIGRATIONS", "DIRIGIBLE_JOB_EXPRESSION_ODATA", "DIRIGIBLE_JOB_EXPRESSION_PUBLISHER",
+            "DIRIGIBLE_JOB_EXPRESSION_SECURITY", "DIRIGIBLE_JOB_EXPRESSION_REGISTRY", "DIRIGIBLE_JOB_DEFAULT_TIMEOUT",
+            "DIRIGIBLE_CMS_PROVIDER", "DIRIGIBLE_CMS_ROLES_ENABLED", "DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER",
             "DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE", "DIRIGIBLE_CMS_MANAGED_CONFIGURATION_JNDI_NAME",
             "DIRIGIBLE_CMS_MANAGED_CONFIGURATION_AUTH_METHOD", "DIRIGIBLE_CMS_MANAGED_CONFIGURATION_NAME",
             "DIRIGIBLE_CMS_MANAGED_CONFIGURATION_KEY", "DIRIGIBLE_CMS_MANAGED_CONFIGURATION_DESTINATION",
@@ -488,13 +495,13 @@ public class Configuration {
             "DIRIGIBLE_EXEC_COMMAND_LOGGING_ENABLED", "DIRIGIBLE_TERMINAL_ENABLED", "DIRIGIBLE_MAIL_CONFIG_PROVIDER",
             "DIRIGIBLE_MAIL_USERNAME", "DIRIGIBLE_MAIL_PASSWORD", "DIRIGIBLE_MAIL_TRANSPORT_PROTOCOL", "DIRIGIBLE_MAIL_SMTPS_HOST",
             "DIRIGIBLE_MAIL_SMTPS_PORT", "DIRIGIBLE_MAIL_SMTPS_AUTH", "DIRIGIBLE_MAIL_SMTP_HOST", "DIRIGIBLE_MAIL_SMTP_PORT",
-            "DIRIGIBLE_MAIL_SMTP_AUTH", "DIRIGIBLE_KEYCLOAK_ENABLED", "DIRIGIBLE_KEYCLOAK_REALM", "DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL",
-            "DIRIGIBLE_KEYCLOAK_SSL_REQUIRED", "DIRIGIBLE_KEYCLOAK_CLIENT_ID", "DIRIGIBLE_KEYCLOAK_CONFIDENTIAL_PORT",
+            "DIRIGIBLE_MAIL_SMTP_AUTH", "DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL", "DIRIGIBLE_KEYCLOAK_CLIENT_ID",
             "DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE", "DIRIGIBLE_CSV_DATA_BATCH_SIZE", "DIRIGIBLE_DESTINATION_CLIENT_ID",
             "DIRIGIBLE_DESTINATION_CLIENT_SECRET", "DIRIGIBLE_DESTINATION_URL", "DIRIGIBLE_DESTINATION_URI", "DIRIGIBLE_BASIC_ENABLED",
             "DIRIGIBLE_BASIC_USERNAME", "DIRIGIBLE_BASIC_PASSWORD", "DIRIGIBLE_FTP_USERNAME", "DIRIGIBLE_FTP_PASSWORD",
             "DIRIGIBLE_FTP_PORT", "DIRIGIBLE_SFTP_USERNAME", "DIRIGIBLE_SFTP_PASSWORD", "DIRIGIBLE_SFTP_PORT", "SERVER_MAXHTTPHEADERSIZE",
-            "DIRIGIBLE_PUBLISH_DISABLED"};
+            "DIRIGIBLE_PUBLISH_DISABLED", "AWS_DEFAULT_REGION", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "DIRIGIBLE_S3_PROVIDER",
+            "DIRIGIBLE_S3_BUCKET"};
 
     /**
      * Gets the os.
@@ -565,8 +572,7 @@ public class Configuration {
             for (Field field : FieldUtils.getAllFields(o.getClass())) {
                 Object v = FieldUtils.readField(field, o, true);
                 if (v != null) {
-                    if (v instanceof String) {
-                        String s = (String) v;
+                    if (v instanceof String s) {
                         if (s.startsWith("${") && s.endsWith("}")) {
                             if (s.indexOf("}.{") > 0) {
                                 String k = s.substring(2, s.indexOf("}.{"));
@@ -576,13 +582,34 @@ public class Configuration {
                                 String k = s.substring(2, s.length() - 1);
                                 FieldUtils.writeField(field, o, Configuration.get(k), true);
                             }
+                        } else {
+                            Matcher matcher = MULTIVARIABLE_PATTERN.matcher(s);
+                            if (!matcher.find()) {
+                                continue;
+                            }
+
+                            String finalValue = s;
+                            do {
+                                String placeholder = matcher.group(0);
+                                String configName = matcher.group(1);
+                                String replacement = Configuration.get(configName);
+                                if (null == replacement) {
+                                    logger.warn(
+                                            "Missing configuration with name: [{}]. The value will not be replaced for field [{}] with value [{}]",
+                                            configName, field.getName(), v);
+                                    continue;
+                                }
+                                finalValue = finalValue.replaceAll(Pattern.quote(placeholder), replacement);
+                            } while (matcher.find());
+                            FieldUtils.writeField(field, o, finalValue, true);
                         }
                     }
                 }
             }
-        } catch (SecurityException | IllegalArgumentException | IllegalAccessException e) {
+        } catch (SecurityException | IllegalArgumentException |
+
+                IllegalAccessException e) {
             logger.error(e.getMessage(), e);
         }
     }
-
 }

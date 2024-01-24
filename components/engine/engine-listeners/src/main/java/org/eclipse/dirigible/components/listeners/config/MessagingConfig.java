@@ -11,9 +11,6 @@
 package org.eclipse.dirigible.components.listeners.config;
 
 import java.io.File;
-import javax.jms.Connection;
-import javax.jms.JMSException;
-import javax.jms.Session;
 import javax.sql.DataSource;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerService;
@@ -26,6 +23,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import jakarta.jms.Connection;
+import jakarta.jms.JMSException;
+import jakarta.jms.Session;
 
 /**
  * The Class MessagingConfig.
@@ -89,7 +89,7 @@ class MessagingConfig {
      * @return the session
      */
     @Bean("ActiveMQSession")
-    Session createConnection(@Qualifier("ActiveMQConnection") Connection connection) {
+    Session createSession(@Qualifier("ActiveMQConnection") Connection connection) {
         try {
             return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         } catch (JMSException ex) {

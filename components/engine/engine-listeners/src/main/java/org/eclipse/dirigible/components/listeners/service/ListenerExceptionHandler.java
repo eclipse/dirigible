@@ -10,8 +10,8 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
-import javax.jms.ExceptionListener;
-import javax.jms.JMSException;
+import jakarta.jms.ExceptionListener;
+import jakarta.jms.JMSException;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
 import org.slf4j.Logger;

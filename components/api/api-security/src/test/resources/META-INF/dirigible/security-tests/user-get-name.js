@@ -9,7 +9,8 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var user = require('security/user');
-var assertEquals = require('test/assert').assertEquals;
+import { user } from "@dirigible/security";
+import { assert } from "@dirigible/test";
+const assertEquals = assert.assertEquals;
 
 assertEquals(user.getName(), 'guest');

@@ -59,10 +59,6 @@ class FileItem {
     }
 
     public getName() {
-        return this.native.getName();
-    }
-
-    public getOriginalFilename() {
         return this.native.getOriginalFilename();
     }
 

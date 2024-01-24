@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import javax.persistence.GenerationType;
+import jakarta.persistence.GenerationType;
 
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;

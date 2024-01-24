@@ -1,3 +1,5 @@
+set -e
+
 # clean
 rm -rf ./dist
 

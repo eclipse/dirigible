@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.repository.local;
 
 import java.util.concurrent.atomic.AtomicLong;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
@@ -28,12 +27,6 @@ public class LocalRepository extends FileSystemRepository {
 
     /** The Constant TYPE. */
     public static final String TYPE = "local";
-
-    /** The Constant DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER. */
-    public static final String DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER = "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER"; //$NON-NLS-1$
-
-    /** The Constant DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER_IS_ABSOLUTE. */
-    public static final String DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER_IS_ABSOLUTE = "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER_IS_ABSOLUTE"; //$NON-NLS-1$
 
     /** The Constant lastModified. */
     private static final AtomicLong lastModified = new AtomicLong(0);

@@ -11,9 +11,22 @@
  */
 // Deprecated, do not edit.
 
-let extensions = require('extensions/extensions');
+import { extensions } from '@dirigible/extensions';
 
-exports.getMenu = function () {
+const perspectiveExtensions = await extensions.loadExtensionModules('ide-perspective');
+const perspectiveExtensionDefinitions = [];
+
+for (let i = 0; i < perspectiveExtensions?.length; i++) {
+	perspectiveExtensionDefinitions.push(perspectiveExtensions[i].getPerspective());
+}
+
+const viewExtensions = await extensions.loadExtensionModules('ide-view');
+const viewExtensionDefinitions = [];
+for (let i = 0; i < viewExtensions?.length; i++) {
+	viewExtensionDefinitions.push(viewExtensions[i].getView());
+}
+
+export const getMenu = () => {
 	let menu = {
 		"name": "Window",
 		"link": "#",
@@ -41,15 +54,6 @@ exports.getMenu = function () {
 		]
 	};
 
-
-
-	let perspectiveExtensions = extensions.getExtensions('ide-perspective');
-	let perspectiveExtensionDefinitions = [];
-
-	for (let i = 0; i < perspectiveExtensions.length; i++) {
-		let module = perspectiveExtensions[i];
-		perspectiveExtensionDefinitions.push(require(module).getPerspective());
-	}
 	perspectiveExtensionDefinitions = perspectiveExtensionDefinitions.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 	for (let i = 0; i < perspectiveExtensionDefinitions.length; i++) {
 		let perspectiveInfo = perspectiveExtensionDefinitions[i];
@@ -62,12 +66,6 @@ exports.getMenu = function () {
 		menu.items[0].items.push(perspectiveMenu);
 	}
 
-	let viewExtensions = extensions.getExtensions('ide-view');
-	let viewExtensionDefinitions = [];
-	for (let i = 0; i < viewExtensions.length; i++) {
-		let module = viewExtensions[i];
-		viewExtensionDefinitions.push(require(module).getView());
-	}
 	viewExtensionDefinitions = viewExtensionDefinitions.sort((a, b) => a.label.toLowerCase().localeCompare(b.label.toLowerCase()));
 	for (let i = 0; i < viewExtensionDefinitions.length; i++) {
 		let viewInfo = viewExtensionDefinitions[i];

@@ -10,9 +10,13 @@
  */
 package org.eclipse.dirigible.components.engine.camel.processor;
 
-import org.apache.camel.CamelContext;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.camel.FluentProducerTemplate;
 import org.apache.camel.component.platform.http.springboot.CamelRequestHandlerMapping;
+import org.apache.camel.impl.engine.DefaultRoutesLoader;
 import org.apache.camel.spi.Resource;
 import org.apache.camel.spi.RoutesLoader;
 import org.apache.camel.spring.boot.SpringBootCamelContext;
@@ -21,28 +25,20 @@ import org.eclipse.dirigible.components.engine.camel.domain.Camel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 @Component
 public class CamelProcessor {
     private final SpringBootCamelContext context;
     private final CamelRequestHandlerMapping camelRequestHandlerMapping;
-    private final Map<String, DataSource> datasources;
 
     private final RoutesLoader loader;
 
     private final Map<Long, Resource> camels = new HashMap<>();
 
     @Autowired
-    public CamelProcessor(CamelContext context, CamelRequestHandlerMapping camelRequestHandlerMapping,
-            Map<String, DataSource> datasources) {
-        this.context = context.adapt(SpringBootCamelContext.class);
+    public CamelProcessor(SpringBootCamelContext context, CamelRequestHandlerMapping camelRequestHandlerMapping) {
+        this.context = context;
         this.camelRequestHandlerMapping = camelRequestHandlerMapping;
-        this.datasources = datasources;
-        loader = this.context.getRoutesLoader();
+        loader = new DefaultRoutesLoader(context);
     }
 
     public void onCreateOrUpdate(Camel camel) {
@@ -81,7 +77,7 @@ public class CamelProcessor {
     }
 
     public Object invokeRoute(String routeId, Object payload, Map<String, Object> headers) {
-        try (FluentProducerTemplate producer = context.createFluentProducerTemplate();) {
+        try (FluentProducerTemplate producer = context.createFluentProducerTemplate()) {
             return producer.withHeaders(headers)
                            .withBody(payload)
                            .to(routeId)

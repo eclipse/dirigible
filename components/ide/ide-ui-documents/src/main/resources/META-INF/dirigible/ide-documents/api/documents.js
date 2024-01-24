@@ -9,18 +9,16 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let rs = require("http/rs");
-let user = require("security/user");
-let registry = require("platform/registry");
-let streams = require("io/streams");
-let upload = require('http/upload');
+import { rs } from "@dirigible/http";
+import { streams } from "@dirigible/io";
+import { upload } from '@dirigible/http';
 
-let documentsProcessor = require("ide-documents/api/processors/documentsProcessor");
-let imageProcessor = require("ide-documents/api/processors/imageProcessor");
+import * as documentsProcessor from "./processors/documentsProcessor";
+import * as imageProcessor from "./processors/imageProcessor";
 
-let zipUtils = require("ide-documents/utils/cmis/zip");
+import * as zipUtils from "../utils/cmis/zip";
 
-let { replaceAll, unescapePath, getNameFromPath } = require("ide-documents/utils/string");
+import { unescapePath, getNameFromPath } from "../utils/string";
 
 rs.service()
 	.resource("")
@@ -66,7 +64,7 @@ rs.service()
 		let forceDelete = ctx.queryParameters.force === "true" ? true : false;
 		let objects = request.getJSON();
 
-		documentsProcessor.delete(objects, forceDelete);
+		documentsProcessor.remove(objects, forceDelete);
 
 		response.setStatus(response.NO_CONTENT);
 	})

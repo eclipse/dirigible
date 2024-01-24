@@ -151,8 +151,6 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 		$scope.saveModel = function () {
 			let schema = createModel($scope.graph);
 			saveContents(schema, $scope.dataParameters.file);
-			// let modelJson = createModelJson($scope.graph);
-			// saveContents(modelJson, modelFile);
 		};
 
 		$scope.chooseTemplate = function (project, filePath, params) {
@@ -319,7 +317,6 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 
 				if (cell.entityType === 'DEPENDENT') {
 					$scope.graph.getSelectionCell().style = 'dependent';
-					//$scope.graph.getSelectionCell().children.forEach(cell => cell.style = 'copiedproperty');
 					$scope.graph.refresh();
 				} else if (cell.entityType === 'COPIED') {
 					$scope.graph.getSelectionCell().style = 'copied';
@@ -722,10 +719,6 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				// Adds child properties for new connections between entities
 				$scope.graph.addEdge = function (edge, parent, source, target, index) {
 
-					if (source.style && source.style.startsWith('projection')) {
-						return;
-					}
-
 					// Finds the primary key child of the target table
 					let primaryKey = null;
 					let childCount = $scope.graph.model.getChildCount(target);
@@ -889,15 +882,6 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				let spacer = document.createElement('div');
 				spacer.style.display = 'inline';
 				spacer.style.padding = '8px';
-				//		addToolbarButton(editor, toolbar, 'test', 'Test', 'wrench', true);
-				//		// Defines a new test action
-				//		editor.addAction('test', function(editor, cell) {
-				//			if (!cell) {
-				//				cell = $scope.graph.getSelectionCell();
-				//			}
-				//			$scope.$apply();
-				//			$('#entityPropertiesOpen').click();
-				//		});
 
 				// Defines a new save action
 				editor.addAction('save', function (editor, cell) {
@@ -915,9 +899,6 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 							);
 							return;
 						}
-					}
-					if (cell.style && cell.style.startsWith('projection')) {
-						return;
 					}
 
 					if ($scope.graph.isHtmlLabel(cell)) {
@@ -1109,7 +1090,6 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				// Defines a new save action
 				editor.addAction('paste', function (editor, cell) {
 					mxClipboard.paste($scope.graph);
-					//			document.execCommand("paste");
 				});
 
 				$scope.save = function () {

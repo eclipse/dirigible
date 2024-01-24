@@ -9,11 +9,10 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let streams = require("io/streams");
-let imageIO = require("io/image");
-let documentUtils = require("ide-documents/utils/cmis/document");
+import { streams, image as imageIO } from "@dirigible/io";
+import * as documentUtils from "./document";
 
-exports.uploadImageWithResize = function (folder, name, image, width, height) {
+export const uploadImageWithResize = (folder, name, image, width, height) => {
     let mimetype = image.getContentType();
     let originalInputStream = image.getInputStream();
     let inputStream = new streams.InputStream();

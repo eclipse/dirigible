@@ -12,9 +12,9 @@ package org.eclipse.dirigible.components.listeners.config;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verifyNoInteractions;
-import javax.jms.Connection;
-import javax.jms.JMSException;
-import javax.jms.Session;
+import jakarta.jms.Connection;
+import jakarta.jms.JMSException;
+import jakarta.jms.Session;
 import org.apache.activemq.broker.BrokerService;
 import org.eclipse.dirigible.components.listeners.service.ListenersManager;
 import org.junit.jupiter.api.Test;
