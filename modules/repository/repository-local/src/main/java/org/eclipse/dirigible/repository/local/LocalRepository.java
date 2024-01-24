@@ -64,6 +64,19 @@ public class LocalRepository extends FileSystemRepository {
     }
 
     /**
+     * Instantiates a new local repository.
+     *
+     * @param rootFolder the root folder
+     * @param absolute the absolute
+     * @param versioned the versioned
+     * @throws LocalRepositoryException the local repository exception
+     */
+    public LocalRepository(String rootFolder, boolean absolute, boolean versioned) throws LocalRepositoryException {
+        super(rootFolder, absolute, versioned);
+        lastModified.set(System.currentTimeMillis());
+    }
+
+    /**
      * Initialize.
      */
     /*

@@ -47,7 +47,8 @@ public class CmsProviderInternal implements CmsProvider {
 
         String repositoryFolder = rootFolder + File.separator + CMS;
 
-        IRepository repository = new LocalRepository(repositoryFolder, absolute);
+        boolean versioningEnabled = Boolean.parseBoolean(Configuration.get(DIRIGIBLE_CMS_INTERNAL_VERSIONING_ENABLED, "false"));
+        IRepository repository = new LocalRepository(repositoryFolder, absolute, versioningEnabled);
         this.cmisRepository = CmisRepositoryFactory.createCmisRepository(repository);
     }
 
