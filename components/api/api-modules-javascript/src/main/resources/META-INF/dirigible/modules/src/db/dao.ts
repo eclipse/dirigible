@@ -13,7 +13,7 @@
 
 import * as dirigibleOrm from "./orm";
 import * as dirigibleOrmStatements from "./ormstatements";
-import * as sequences from "./sequence";
+import { Sequence } from "./sequence";
 import * as database from "./database";
 import { Query } from "@dirigible/db";
 import { Update } from "./update";
@@ -29,10 +29,10 @@ export function DAO(orm, logCtxName, dataSourceName){
 	this.orm = dirigibleOrm.get(orm);
 	this.sequenceName = this.orm.table+'_'+this.orm.getPrimaryKey().name.toUpperCase();
 	this.dropIdGenerator = function(){
-		return sequences.drop(this.sequenceName, dataSourceName);
+		return Sequence.drop(this.sequenceName, dataSourceName);
 	};
 	this.generateId = function(){
-		return sequences.nextval(this.sequenceName, dataSourceName, this.orm.table);
+		return Sequence.nextval(this.sequenceName, this.orm.table, dataSourceName);
 	};
 
 	const conn = database.getConnection(dataSourceName);
