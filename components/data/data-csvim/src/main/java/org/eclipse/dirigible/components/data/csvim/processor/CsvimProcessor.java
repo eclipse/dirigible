@@ -8,7 +8,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.data.csvim.synchronizer;
+package org.eclipse.dirigible.components.data.csvim.processor;
 
 import static org.eclipse.dirigible.components.api.platform.RepositoryFacade.getResource;
 import java.io.IOException;
@@ -276,6 +276,14 @@ public class CsvimProcessor {
         return resource.getContent();
     }
 
+    /**
+     * Gets the csv parser.
+     *
+     * @param csvFile the csv file
+     * @param contentAsInputStream the content as input stream
+     * @return the csv parser
+     * @throws Exception the exception
+     */
     private CSVParser getCsvParser(CsvFile csvFile, InputStream contentAsInputStream) throws Exception {
         try {
             CSVFormat csvFormat = createCSVFormat(csvFile);

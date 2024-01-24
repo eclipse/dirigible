@@ -11,8 +11,8 @@
 package org.eclipse.dirigible.components.data.csvim.utils;
 
 import org.eclipse.dirigible.components.api.platform.ProblemsFacade;
-import org.eclipse.dirigible.components.data.csvim.synchronizer.CsvProcessor;
-import org.eclipse.dirigible.components.data.csvim.synchronizer.CsvimProcessor;
+import org.eclipse.dirigible.components.data.csvim.processor.CsvProcessor;
+import org.eclipse.dirigible.components.data.csvim.processor.CsvimProcessor;
 import org.eclipse.dirigible.components.data.management.domain.TableMetadata;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;

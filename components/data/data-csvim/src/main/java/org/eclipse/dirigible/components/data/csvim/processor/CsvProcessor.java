@@ -8,7 +8,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.data.csvim.synchronizer;
+package org.eclipse.dirigible.components.data.csvim.processor;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
