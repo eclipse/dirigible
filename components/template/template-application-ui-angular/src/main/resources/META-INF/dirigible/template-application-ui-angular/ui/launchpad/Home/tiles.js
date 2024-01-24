@@ -3,18 +3,18 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-const response = dirigibleRequire("http/response");
-const extensions = dirigibleRequire("extensions/extensions");
+import { response } from "@dirigible/http";
+import { extensions } from "@dirigible/extensions";
 
 let tiles = {};
 
-let tileExtensions = extensions.getExtensions("${projectName}-tile");
-for (let i = 0; tileExtensions !== null && i < tileExtensions.length; i++) {
-    let tileExtension = dirigibleRequire(tileExtensions[i]);
-    if (typeof tileExtension.getTile !== "function") {
+let tileExtensions = await extensions.loadExtensionModules("${projectName}-tile");
+for (let i = 0; i < tileExtensions?.length; i++) {
+    let tile = tileExtensions[i].getTile();
+
+    if (!tile) {
         continue;
     }
-    let tile = tileExtension.getTile();
     if (!tiles[tile.group]) {
         tiles[tile.group] = [];
     }

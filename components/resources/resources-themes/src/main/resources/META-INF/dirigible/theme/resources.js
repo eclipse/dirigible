@@ -9,13 +9,13 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let rs = require('http/rs');
-let escape = require('utils/escape');
-let streams = require('io/streams');
-let repositoryManager = require('platform/repository');
-let configurations = require('core/configurations');
-let themesManager = require('theme/extensions/themes');
-let cacheUtils = require('theme/utils/cache');
+import { rs } from "@dirigible/http";
+import { escape } from "@dirigible/utils";
+import { streams } from "@dirigible/io";
+import { repository as repositoryManager } from "@dirigible/platform";
+import { configurations } from "@dirigible/core";
+import * as themesManager from "./extensions/themes";
+import * as cacheUtils from "./utils/cache";
 
 let THEME_CACHE = cacheUtils.getCache();
 

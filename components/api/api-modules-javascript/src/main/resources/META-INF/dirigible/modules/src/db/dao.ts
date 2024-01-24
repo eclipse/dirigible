@@ -15,8 +15,8 @@ import * as dirigibleOrm from "./orm";
 import * as dirigibleOrmStatements from "./ormstatements";
 import * as sequences from "./sequence";
 import * as database from "./database";
-import { execute as execQuery } from "./query";
-import { execute as execUpdate } from "./update";
+import { Query } from "@dirigible/db";
+import { Update } from "./update";
 import * as logging from "@dirigible/log/logging";
 import * as globals from "@dirigible/core/globals";
 import * as configurations from "@dirigible/core/configurations";
@@ -85,9 +85,9 @@ export function DAO(orm, logCtxName, dataSourceName){
 		let result;
 
 		if(sql.toLowerCase().startsWith('select')){
-	 		result = execQuery(sql, _parameterBindings, dataSourceName);
+	 		result = Query.execute(sql, _parameterBindings, dataSourceName);
 	 	} else {
-	 		result = execUpdate(sql, _parameterBindings, dataSourceName);
+	 		result = Update.execute(sql, _parameterBindings, dataSourceName);
 	 	}
 
 	 	return result !== null ? result : [];

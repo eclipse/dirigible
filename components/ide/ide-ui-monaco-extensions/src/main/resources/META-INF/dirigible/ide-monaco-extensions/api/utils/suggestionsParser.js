@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let contentManager = dirigibleRequire("platform/registry");
-let acorn = dirigibleRequire("acornjs/acorn");
+import { registry as contentManager } from "@dirigible/platform";
+let acorn = require("acornjs/acorn");
 
 const COMMENTS_OFFSET_LENGTH = 12;
 
@@ -18,7 +18,7 @@ String.prototype.replaceAll = function (search, replacement) {
     return this.replace(new RegExp(search, 'g'), replacement);
 };
 
-exports.parse = function (moduleName) {
+export const parse = (moduleName) => {
     let content = contentManager.getText(moduleName + ".js");
     let comments = [];
     let nodes = acorn.parse(content, {

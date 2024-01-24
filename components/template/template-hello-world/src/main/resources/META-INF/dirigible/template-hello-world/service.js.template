@@ -1,4 +1,4 @@
-var response = require("http/response");
+const response = require("http/response");
 
 response.println("Hello World!");
 response.flush();

@@ -29,7 +29,7 @@ angular.module('edmReference', ['ideUI', 'ideView'])
         $scope.loadModels = function () {
             $http({
                 method: 'POST',
-                url: '/services/ide/workspace-find/',
+                url: '/services/ide/workspace-find',
                 headers: {
                     'X-CSRF-Token': 'Fetch',
                     'Dirigible-Editor': 'EntityDataModeler',

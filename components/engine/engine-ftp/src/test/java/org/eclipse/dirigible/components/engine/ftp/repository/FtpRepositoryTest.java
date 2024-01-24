@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.apache.ftpserver.ftplet.Authority;
 import org.eclipse.dirigible.components.engine.ftp.domain.FtpUser;

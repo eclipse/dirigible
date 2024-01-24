@@ -1,5 +1,5 @@
 import { Controller, Get } from "@dirigible/http"
-import { ${name}Repository, ${name}Filter, ${name}PaginatedFilter } from "../../dao/entities/${name}Repository";
+import { ${name}Repository, ${name}Filter, ${name}PaginatedFilter } from "../../dao/${perspectiveName}/${name}Repository";
 
 @Controller
 class ${name}Service {
@@ -7,7 +7,7 @@ class ${name}Service {
     private readonly repository = new ${name}Repository();
 
     @Get("/")
-    public filter(_, ctx) {
+    public filter(_: any, ctx: any) {
         const filter: ${name}PaginatedFilter = {
 #foreach ($property in $filter.properties)
 #if(!$property.dataPrimaryKey)
@@ -32,7 +32,7 @@ class ${name}Service {
     }
 
     @Get("/count")
-    public count(_, ctx) {
+    public count(_: any, ctx: any) {
         const filter: ${name}Filter = {
 #foreach ($property in $filter.properties)
 #if(!$property.dataPrimaryKey)
