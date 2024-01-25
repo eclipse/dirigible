@@ -13,14 +13,13 @@ package org.eclipse.dirigible.components.database;
 import java.util.Properties;
 
 import jakarta.persistence.EntityManagerFactory;
+
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -45,13 +44,13 @@ public class DataSourceSystemConfig {
     public HikariDataSource getDataSource() {
         DataSourceProperties dataSourceProperties = new DataSourceProperties();
         dataSourceProperties.setName("SystemDB");
-        dataSourceProperties.setDriverClassName(Configuration.get("DIRIGIBLE_DATASOURCE_SYSTEM_DRIVER", "org.h2.Driver"));
-        dataSourceProperties.setUrl(Configuration.get("DIRIGIBLE_DATASOURCE_SYSTEM_URL", "jdbc:h2:file:./target/dirigible/h2/SystemDB"));
-        dataSourceProperties.setUsername(Configuration.get("DIRIGIBLE_DATASOURCE_SYSTEM_USERNAME", "sa"));
-        dataSourceProperties.setPassword(Configuration.get("DIRIGIBLE_DATASOURCE_SYSTEM_PASSWORD", ""));
+        dataSourceProperties.setDriverClassName(Configuration.get("DIRIGIBLE_DATABASE_SYSTEM_DRIVER", "org.h2.Driver"));
+        dataSourceProperties.setUrl(Configuration.get("DIRIGIBLE_DATABASE_SYSTEM_URL", "jdbc:h2:file:./target/dirigible/h2/SystemDB"));
+        dataSourceProperties.setUsername(Configuration.get("DIRIGIBLE_DATABASE_SYSTEM_USERNAME", "sa"));
+        dataSourceProperties.setPassword(Configuration.get("DIRIGIBLE_DATABASE_SYSTEM_PASSWORD", ""));
         return dataSourceProperties.initializeDataSourceBuilder()
-                .type(HikariDataSource.class)
-                .build();
+                                   .type(HikariDataSource.class)
+                                   .build();
     }
 
     @Bean(name = "entityManagerFactory")
