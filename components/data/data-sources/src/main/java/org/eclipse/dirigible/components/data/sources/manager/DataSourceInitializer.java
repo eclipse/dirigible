@@ -11,15 +11,12 @@
 package org.eclipse.dirigible.components.data.sources.manager;
 
 import static java.text.MessageFormat.format;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
+
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.database.DatabaseParameters;
@@ -78,6 +75,8 @@ public class DataSourceInitializer {
             }
         }
         Properties properties = new Properties();
+        Properties contributed = new Properties();
+
         properties.put("driverClassName", dataSource.getDriver());
         properties.put("jdbcUrl", dataSource.getUrl());
         properties.put("dataSource.url", dataSource.getUrl());
@@ -85,16 +84,28 @@ public class DataSourceInitializer {
         properties.put("dataSource.password", dataSource.getPassword());
         properties.put("dataSource.logWriter", new PrintWriter(System.out));
 
-        contributors.forEach(contributor -> contributor.contribute(dataSource, properties));
+        contributors.forEach(contributor -> contributor.contribute(dataSource, contributed));
 
         Map<String, String> hikariProperties = getHikariProperties(name);
         hikariProperties.forEach(properties::setProperty);
 
-        HikariConfig config = new HikariConfig(properties);
+        HikariConfig config;
+
+        if (dataSource.getName()
+                      .startsWith("SNOWFLAKE")) {
+            config = new HikariConfig(contributed);
+            config.setDriverClassName(dataSource.getDriver());
+            config.setJdbcUrl(contributed.get("jdbcUrl")
+                                         .toString());
+        } else {
+            properties.putAll(contributed);
+            config = new HikariConfig(properties);
+            dataSource.getProperties()
+                      .forEach(dsp -> config.addDataSourceProperty(dsp.getName(), dsp.getValue()));
+        }
+
         config.setPoolName(name);
         config.setAutoCommit(true);
-        dataSource.getProperties()
-                  .forEach(dsp -> config.addDataSourceProperty(dsp.getName(), dsp.getValue()));
         HikariDataSource hds = new HikariDataSource(config);
 
         ManagedDataSource managedDataSource = new ManagedDataSource(hds);

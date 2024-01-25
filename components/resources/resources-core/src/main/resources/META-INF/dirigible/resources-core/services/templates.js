@@ -11,11 +11,32 @@
  */
 // Deprecated, do not edit.
 
-let extensions = require('extensions/extensions');
-let response = require('http/response');
-let uuid = require('utils/uuid');
+import { extensions } from "@dirigible/extensions";
+import { response, rs } from "@dirigible/http";
+import { uuid } from "@dirigible/utils";
 
-let rs = require("http/rs");
+const templates = [];
+const templateExtensions = extensions.getExtensions('ide-template');
+for (let i = 0; i < templateExtensions?.length; i++) {
+	const module = templateExtensions[i];
+	try {
+		try {
+			const templateExtension = await import(`../../${module}`);
+			const template = templateExtension.getTemplate();
+			template.id = module;
+			templates.push(template);
+		} catch (e) {
+			// Fallback for not migrated extensions
+			const templateExtension = require(module);
+			const template = templateExtension.getTemplate();
+			template.id = module;
+			templates.push(template);
+		}
+	} catch (error) {
+		console.error('Error occured while loading metadata for the template: ' + module);
+		console.error(error);
+	}
+}
 
 rs.service()
 	.resource("")
@@ -46,7 +67,7 @@ rs.service()
 		response.println(JSON.stringify(count));
 	})
 	.resource("countFileTemplates")
-	.get(function (ctx, request, response) {
+	.get(async function (ctx, request, response) {
 		let templates = getTemplates();
 		let count = 0;
 		templates.forEach(template => { if (template.extension) count++; });
@@ -58,20 +79,6 @@ rs.service()
 	.execute();
 
 function getTemplates() {
-	let templates = [];
-	let templateExtensions = extensions.getExtensions('ide-template');
-	for (let i = 0; i < templateExtensions.length; i++) {
-		let module = templateExtensions[i];
-		try {
-			let templateExtension = require(module);
-			let template = templateExtension.getTemplate();
-			template.id = module;
-			templates.push(template);
-		} catch (error) {
-			console.error('Error occured while loading metadata for the template: ' + module);
-			console.error(error);
-		}
-	}
 	return templates;
 }
 

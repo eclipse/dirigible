@@ -9,14 +9,13 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let extensions = require('extensions/extensions');
-let response = require('http/response');
-let request = require('http/request');
-let uuid = require("utils/uuid");
+import { extensions } from "@dirigible/extensions";
+import { request, response } from "@dirigible/http";
+import { uuid } from "@dirigible/utils";
 
 let dialogWindows = [];
 let extensionPoint = request.getParameter('extensionPoint') || 'ide-dialog-window';
-let dialogWindowExtensions = extensions.getExtensions(extensionPoint);
+let dialogWindowExtensions = await extensions.loadExtensionModules(extensionPoint);
 
 function setETag() {
     let maxAge = 30 * 24 * 60 * 60;
@@ -25,16 +24,8 @@ function setETag() {
     response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
 }
 
-for (let i = 0; i < dialogWindowExtensions.length; i++) {
-    let module = dialogWindowExtensions[i];
-    try {
-        let dialogWindowExtension = require(module);
-        let window = dialogWindowExtension.getDialogWindow();
-        dialogWindows.push(window);
-    } catch (error) {
-        console.error('Error occured while loading metadata for the window: ' + module);
-        console.error(error);
-    }
+for (let i = 0; i < dialogWindowExtensions?.length; i++) {
+    dialogWindows.push(dialogWindowExtensions[i].getDialogWindow());
 }
 
 dialogWindows.sort(function (p, n) {

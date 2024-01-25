@@ -26,7 +26,8 @@ public class RepositoryConfig {
         String repoFolderPath = Configuration.get(Configuration.DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER, "target");
         Path path = Paths.get(repoFolderPath);
         boolean absolutePath = path.isAbsolute();
-        LocalRepository localRepository = new LocalRepository(repoFolderPath, absolutePath);
+        boolean versioningEnabled = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_REPOSITORY_VERSIONING_ENABLED", "false"));
+        LocalRepository localRepository = new LocalRepository(repoFolderPath, absolutePath, versioningEnabled);
 
         // To be removed once moved to Spring entirely
         StaticObjects.set(StaticObjects.REPOSITORY, localRepository);

@@ -9,38 +9,37 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const registry = dirigibleRequire("platform/registry");
-const extensions = dirigibleRequire("extensions/extensions");
+import { registry } from "@dirigible/platform";
+import { extensions } from "@dirigible/extensions";
 
 // Returns the path to d.ts foreach modules.json entry where isPackageDescription = true
-exports.getDtsPaths = function () {
-    let dtsPaths = [];
+let dtsPaths = [];
 
-    let apiModulesExtensions = extensions.getExtensions("api-modules");
-    let extModulesExtensions = extensions.getExtensions("ext-modules");
-    let apis = apiModulesExtensions.concat(extModulesExtensions);
+let apiModulesExtensions = await extensions.loadExtensionModules("api-modules");
+let extModulesExtensions = await extensions.loadExtensionModules("ext-modules");
+let apis = apiModulesExtensions.concat(extModulesExtensions);
 
-    apis.forEach(function (apiModule) {
-        let module = dirigibleRequire(apiModule);
-        let content = module.getContent();
+apis.forEach(function (apiModule) {
+    const content = apiModule.getContent();
 
-        for (let [property, value] of Object.entries(content)) {
-            let isPackageDescription = value["isPackageDescription"];
-            let shouldBeUnexposedToESM = value["shouldBeUnexposedToESM"];
-            if (shouldBeUnexposedToESM) {
-                continue;
-            }
-            if (typeof isPackageDescription === 'boolean' && isPackageDescription === true) {
-                dtsPaths.push(value["dtsPath"])
-            }
+    for (let [property, value] of Object.entries(content)) {
+        let isPackageDescription = value["isPackageDescription"];
+        let shouldBeUnexposedToESM = value["shouldBeUnexposedToESM"];
+        if (shouldBeUnexposedToESM) {
+            continue;
         }
-    });
+        if (typeof isPackageDescription === 'boolean' && isPackageDescription === true) {
+            dtsPaths.push(value["dtsPath"])
+        }
+    }
+});
 
+export const getDtsPaths = () => {
     return dtsPaths;
 }
 
 // Returns the concatenated file content.
-exports.getDtsFileContents = function (paths) {
+export const getDtsFileContents = (paths) => {
     let result = ""
     for (const path of paths) {
         result = result.concat(registry.getText(path) + "\n");
