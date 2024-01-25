@@ -58,7 +58,7 @@ export function getDataSources(): Object {
 	return datasources;
 };
 
-export function createDataSource(name: string, driver: string, url: string, username: string, password: string, properties: string) {
+export function createDataSource(name: string, driver: string, url: string, username: string, password: string, properties: string): void {
 	throw new Error("Deprecated");
 };
 
