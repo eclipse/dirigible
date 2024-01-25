@@ -18,8 +18,7 @@ import * as database from "./database";
 import { Query } from "@dirigible/db";
 import { Update } from "./update";
 import * as logging from "@dirigible/log/logging";
-import * as globals from "@dirigible/core/globals";
-import * as configurations from "@dirigible/core/configurations";
+import { configurations, globals } from "@dirigible/core";
 
 
 export function DAO(orm, logCtxName, dataSourceName){

@@ -13,7 +13,7 @@
  * API Job
  */
 
-import * as configurations from "@dirigible/core/configurations";
+import { configurations } from "@dirigible/core";
 const JobFacade = Java.type("org.eclipse.dirigible.components.api.job.JobFacade");
 
 export function getJobs() {
