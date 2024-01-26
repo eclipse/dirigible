@@ -117,7 +117,7 @@
 		<spring.boot.version>3.2.2</spring.boot.version>
 		<org.springdoc.openapi.ui.version>1.7.0</org.springdoc.openapi.ui.version>
 
-		<graalvm.version>23.1.1</graalvm.version>
+		<graalvm.version>23.1.2</graalvm.version>
 
 		<commons.io>2.15.1</commons.io>
 		<commons.lang3>3.14.0</commons.lang3>
