@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2024 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const editorView = angular.module('app', ['ideUI', 'ideView', 'ideWorkspace']);
+const editorView = angular.module('app', ['ideUI', 'ideView', 'ideWorkspace', 'codeEditor']);
 
 editorView.controller('DesignerController', ['$scope', '$window', '$document', '$timeout', '$compile', 'uuid', 'messageHub', 'ViewParameters', 'workspaceApi', function ($scope, $window, $document, $timeout, $compile, uuid, messageHub, ViewParameters, workspaceApi) {
     let csrfToken;
@@ -1120,6 +1120,7 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
                     controlType: model[i].type,
                 };
                 for (const key in model[i].$scope.props) {
+                    //@ts-ignore
                     controlObj[key] = model[i].$scope.props[key].value;
                 }
                 formJson.push(controlObj);
@@ -1174,8 +1175,10 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
     };
 
     $scope.fileChanged = function () {
-        $scope.isFileChanged = true;
-        messageHub.setEditorDirty($scope.dataParameters.file, $scope.isFileChanged);
+        if (!$scope.isFileChanged) {
+            $scope.isFileChanged = true;
+            messageHub.setEditorDirty($scope.dataParameters.file, $scope.isFileChanged);
+        }
     };
 
     $scope.deleteControlFromModel = function (id, model) {

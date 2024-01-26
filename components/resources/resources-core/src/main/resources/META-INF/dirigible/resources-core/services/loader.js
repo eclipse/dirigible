@@ -135,6 +135,10 @@ function getLocations(scriptId) {
                 "/resources/styles/widgets.css",
                 "/resources/styles/perspective.css",
             ];
+        case "code-editor-js":
+            return ["/ide-monaco/embeddable/editor.js", "/monaco-editor/0.40.0/min/vs/loader.js", "/monaco-editor/0.40.0/min/vs/editor/editor.main.nls.js", "/monaco-editor/0.40.0/min/vs/editor/editor.main.js"];
+        case "code-editor-css":
+            return ["/ide-monaco/css/embeddable.css", "/monaco-editor/0.40.0/min/vs/editor/editor.main.css"];
     }
 }
 

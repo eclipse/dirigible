@@ -18,9 +18,12 @@
         <title dg-view-title></title>
         <script type="text/javascript" src="services/editor.js"></script>
         <theme></theme>
+        <link type="text/css" rel="stylesheet" data-name="vs/editor/editor.main"
+            href="/services/js/resources-core/services/loader.js?id=code-editor-css" />
+        <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
         <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
         <script type="text/javascript" src="/services/web/ide-workspace-service/workspace.js"></script>
-        <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
+        <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=code-editor-js"></script>
         <link type="text/css" rel="stylesheet" href="css/editor.css" />
         <script type="text/javascript" src="js/editor.js"></script>
     </head>
@@ -264,8 +267,8 @@
                 </table>
             </fd-icon-tab-bar-panel>
             <fd-icon-tab-bar-panel class="dg-hbox" tab-id="code" ng-show="selectedTab === 'code'">
-                <fd-textarea name="formCode" ng-model="formData.code" ng-trim="false" ng-change="fileChanged()">
-                </fd-textarea>
+                <code-editor name="formCode" code-lang="javascript" ng-model="formData.code"
+                    on-model-change="fileChanged"></code-editor>
             </fd-icon-tab-bar-panel>
             <fd-icon-tab-bar-panel tab-id="scripts" ng-show="selectedTab === 'scripts'">
                 <fd-toolbar has-title="false">
