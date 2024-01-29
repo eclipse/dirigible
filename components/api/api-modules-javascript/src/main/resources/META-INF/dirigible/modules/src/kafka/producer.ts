@@ -36,5 +36,11 @@ class Topic {
 
     public send(key: string, value: string) {
         KafkaFacade.send(this.destination, key, value, JSON.stringify(this.configuration));
-    };
-};
+    }
+}
+
+// @ts-ignore
+if (typeof module !== 'undefined') {
+	// @ts-ignore
+	module.exports = Producer;
+}
