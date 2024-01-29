@@ -812,6 +812,11 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			});
 			children = children.concat(functionsChildren);
 
+			let sequenceChildren = f.sequences.map(function (_sequence) {
+				return build(_sequence)
+			});
+			children = children.concat(sequenceChildren);
+
 			icon = 'sap-icon--database';
 		} else if (f.kind == 'table' && (f.type === 'TABLE' || f.type === 'BASE TABLE')) {
 			children = [
@@ -839,14 +844,19 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			icon = 'sap-icon--locked';
 		} else if (f.kind == 'procedure') { // && f.type === 'XXX'
 			children = [
-				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] },
+				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] }
 			];
 			icon = 'sap-icon--workflow-tasks';
 		} else if (f.kind == 'function') { // && f.type === 'XXX'
 			children = [
-				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] },
+				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] }
 			];
 			icon = 'sap-icon--settings';
+		} else if (f.kind == 'sequence') { // && f.type === 'XXX'
+			children = [
+				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] }
+			];
+			icon = 'sap-icon--number-sign';
 		} else if (f.kind == 'column') {
 			icon = 'sap-icon--grid';
 			name += ` [<i>${data.type}</i>(<i>${data.size}</i>)]`;

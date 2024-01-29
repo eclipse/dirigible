@@ -10,23 +10,14 @@
  */
 package org.eclipse.dirigible.components.data.management.helpers;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.components.data.management.domain.DatabaseMetadata;
-import org.eclipse.dirigible.components.data.management.domain.FunctionMetadata;
-import org.eclipse.dirigible.components.data.management.domain.NoSQLTableMetadata;
-import org.eclipse.dirigible.components.data.management.domain.ProcedureMetadata;
-import org.eclipse.dirigible.components.data.management.domain.SchemaMetadata;
-import org.eclipse.dirigible.components.data.management.domain.TableMetadata;
+import org.eclipse.dirigible.components.data.management.domain.*;
 import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.eclipse.dirigible.components.database.DatabaseNameNormalizer;
 import org.eclipse.dirigible.database.sql.DatabaseType;
@@ -282,6 +273,35 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
             }
         }
 
+        return result;
+    }
+
+    public static List<SequenceMetadata> listSequences (Connection connection)
+            throws SQLException {
+
+        DatabaseMetaData dmd = connection.getMetaData();
+
+        List<SequenceMetadata> result = new ArrayList<SequenceMetadata>();
+
+        String query = null;
+
+        if (!dmd.getDatabaseProductName().equals("MongoDB")) {
+            query = "SELECT * FROM information_schema.sequences";
+        }
+
+        ResultSet rs = null;
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    String sequenceName = resultSet.getString("sequence_name");
+                    result.add(new SequenceMetadata(sequenceName));
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+        }
         return result;
     }
 
