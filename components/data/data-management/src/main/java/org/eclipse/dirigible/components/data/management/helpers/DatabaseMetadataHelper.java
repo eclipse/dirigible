@@ -276,8 +276,7 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         return result;
     }
 
-    public static List<SequenceMetadata> listSequences (Connection connection)
-            throws SQLException {
+    public static List<SequenceMetadata> listSequences(Connection connection) throws SQLException {
 
         DatabaseMetaData dmd = connection.getMetaData();
 
@@ -285,7 +284,8 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
 
         String query = null;
 
-        if (!dmd.getDatabaseProductName().equals("MongoDB")) {
+        if (!dmd.getDatabaseProductName()
+                .equals("MongoDB")) {
             query = "SELECT * FROM information_schema.sequences";
         }
 

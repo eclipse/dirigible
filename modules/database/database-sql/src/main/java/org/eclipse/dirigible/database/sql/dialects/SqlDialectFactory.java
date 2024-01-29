@@ -40,11 +40,11 @@ public class SqlDialectFactory {
                                        .getDatabaseProductName();
         ISqlDialect dialect = databaseTypeMappings.get(productName);
         if (dialect == null) {
-        	getDefaultDatabaseTypeMappings();
-        	dialect = databaseTypeMappings.get(productName);
-        	if (dialect == null) {
-        		throw new RuntimeException("Database dialect for " + productName + " is not avalable.");
-        	}
+            getDefaultDatabaseTypeMappings();
+            dialect = databaseTypeMappings.get(productName);
+            if (dialect == null) {
+                throw new RuntimeException("Database dialect for " + productName + " is not avalable.");
+            }
         }
         return dialect;
     }
@@ -55,7 +55,7 @@ public class SqlDialectFactory {
     // Lifted from Activiti
     static Map<String, ISqlDialect> databaseTypeMappings = Collections.synchronizedMap(new HashMap<String, ISqlDialect>());
     static {
-    	getDefaultDatabaseTypeMappings();
+        getDefaultDatabaseTypeMappings();
     }
 
     /**
