@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 import * as streams from "@dirigible/io/streams";
-import * as bytes from "@dirigible/io/bytes";
+import {bytes} from "@dirigible/io";
 const DigestFacade = Java.type("org.eclipse.dirigible.components.api.utils.DigestFacade");
 
 /**

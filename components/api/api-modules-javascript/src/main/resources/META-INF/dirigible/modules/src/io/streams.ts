@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import * as bytes from "@dirigible/io/bytes";
+import {bytes} from ".";
 const StreamsFacade = Java.type("org.eclipse.dirigible.components.api.io.StreamsFacade");
 
 /**
@@ -17,30 +17,32 @@ const StreamsFacade = Java.type("org.eclipse.dirigible.components.api.io.Streams
  */
 export class InputStream {
 
-	constructor(private native) {}
+	constructor(public readonly native) {
+		this.native = native;
+	}
 
-	read() {
+	public read(): Array<bytes> | number {
 		return StreamsFacade.read(this.native);
 	}
 
-	readBytes() {
+	public readBytes(): Array<bytes> {
 		const native = StreamsFacade.readBytes(this.native);
 		return bytes.toJavaScriptBytes(native);
 	}
 
-	readBytesNative() {
+	public readBytesNative(): Array<bytes>{
 		return StreamsFacade.readBytes(this.native);
 	}
 
-	readText() {
+	public readText(): string {
 		return StreamsFacade.readText(this.native);
 	}
 
-	close() {
+	public close(): void {
 		StreamsFacade.close(this.native);
 	}
 
-	isValid() {
+	public isValid(): boolean {
 		return this.native !== null;
 	}
 
@@ -53,61 +55,61 @@ export class OutputStream {
 
 	constructor(public readonly native) {}
 
-	write(byte) {
+	public write(byte: bytes): void {
 		StreamsFacade.write(this.native, byte);
 	}
 
-	writeBytes(data) {
+	public writeBytes(data): void {
 		const native = bytes.toJavaBytes(data);
 		StreamsFacade.writeBytes(this.native, native);
 	}
 
-	writeBytesNative(data) {
+	public writeBytesNative(data: string): void {
 		StreamsFacade.writeBytes(this.native, data);
 	}
 
-	writeText(text) {
+	public writeText(text: string): void {
 		StreamsFacade.writeText(this.native, text);
 	}
 
-	close() {
+	public close(): void {
 		StreamsFacade.close(this.native);
 	}
 
-	getBytes() {
+	public getBytes(): Array<bytes> {
 		const native = StreamsFacade.getBytes(this.native);
 		const data = bytes.toJavaScriptBytes(native);
 		return data;
 	}
 
-	getBytesNative() {
+	public getBytesNative(): Array<bytes> {
 		const native = StreamsFacade.getBytes(this.native);
 		return native;
 	}
 
-	getText() {
+	public getText(): string {
 		const value = StreamsFacade.getText(this.native);
 		return value;
 	}
 
-	isValid() {
+	public isValid(): boolean {
 		return this.native !== null;
 	}
 
 };
 
-export function copy(input, output) {
+export function copy(input: InputStream, output: OutputStream): void {
 	StreamsFacade.copy(input.native, output.native);
 };
 
-export function copyLarge(input, output) {
+export function copyLarge(input: InputStream, output: OutputStream): void {
 	StreamsFacade.copyLarge(input.native, output.native);
 };
 
 /**
  * Get an ByteArrayInputStream for the provided resource
  */
-export function getResourceAsByteArrayInputStream(path) {
+export function getResourceAsByteArrayInputStream(path: string): InputStream {
 	const native = StreamsFacade.getResourceAsByteArrayInputStream(path);
 	return new InputStream(native);
 };
@@ -115,7 +117,7 @@ export function getResourceAsByteArrayInputStream(path) {
 /**
  * Create an ByteArrayInputStream for byte array provided
  */
-export function createByteArrayInputStream(data) {
+export function createByteArrayInputStream(data): InputStream {
 	const array = bytes.toJavaBytes(data);
 	const native = StreamsFacade.createByteArrayInputStream(array);
 	return new InputStream(native);
@@ -125,7 +127,7 @@ export function createByteArrayInputStream(data) {
 /**
  * Create a ByteArrayOutputStream
  */
-export function createByteArrayOutputStream() {
+export function createByteArrayOutputStream(): OutputStream {
 	const native = StreamsFacade.createByteArrayOutputStream();
 	return new OutputStream(native);
 };
@@ -133,7 +135,7 @@ export function createByteArrayOutputStream() {
 /**
  * Create an InputStream object by a native InputStream
  */
-export function createInputStream(native) {
+export function createInputStream(native): InputStream {
 	const inputStream = new InputStream(native);
 	return inputStream;
 };
@@ -141,7 +143,7 @@ export function createInputStream(native) {
 /**
  * Create an OutputStream object by a native OutputStream
  */
-export function createOutputStream(native) {
+export function createOutputStream(native): OutputStream {
 	const outputStream = new OutputStream(native);
 	return outputStream;
 };

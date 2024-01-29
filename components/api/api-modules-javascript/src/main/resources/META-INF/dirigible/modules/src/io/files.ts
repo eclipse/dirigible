@@ -13,161 +13,165 @@
  * API Files
  */
 import * as streams from "@dirigible/io/streams";
-import * as bytes from "@dirigible/io/bytes";
+import {bytes} from ".";
+
 const FilesFacade = Java.type("org.eclipse.dirigible.components.api.io.FilesFacade");
 const File = Java.type("java.io.File")
 
-export function exists(path){
-	return FilesFacade.exists(path);
-};
+export class Files{
 
-export function isExecutable(path) {
-	return FilesFacade.isExecutable(path);
-};
+	public static separator = File.separator;
+	
+	public static exists(path: string): boolean{
+		return FilesFacade.exists(path);
+	};
 
-export function isReadable(path) {
-	return FilesFacade.isReadable(path);
-};
+	public static isExecutable(path: string): boolean {
+		return FilesFacade.isExecutable(path);
+	};
 
-export function isWritable(path) {
-	return FilesFacade.isWritable(path);
-};
+	public static isReadable(path: string): boolean {
+		return FilesFacade.isReadable(path);
+	};
 
-export function isHidden(path) {
-	return FilesFacade.isHidden(path);
-};
+	public static isWritable(path: string): boolean {
+		return FilesFacade.isWritable(path);
+	};
 
-export function isDirectory(path) {
-	return FilesFacade.isDirectory(path);
-};
+	public static isHidden(path: string): boolean {
+		return FilesFacade.isHidden(path);
+	};
 
-export function isFile(path) {
-	return FilesFacade.isFile(path);
-};
+	public static isDirectory(path: string): boolean {
+		return FilesFacade.isDirectory(path);
+	};
 
-export function isSameFile(path1, path2) {
-	return FilesFacade.isSameFile(path1, path2);
-};
+	public static isFile(path: string): boolean {
+		return FilesFacade.isFile(path);
+	};
 
-export function getCanonicalPath(path) {
-	return FilesFacade.getCanonicalPath(path);
-};
+	public static isSameFile(path1: string, path2: string): boolean {
+		return FilesFacade.isSameFile(path1, path2);
+	};
 
-export function getName(path) {
-	return FilesFacade.getName(path);
-};
+	public static getCanonicalPath(path: string): string {
+		return FilesFacade.getCanonicalPath(path);
+	};
 
-export function getParentPath(path) {
-	return FilesFacade.getParentPath(path);
-};
+	public static getName(path: string): string {
+		return FilesFacade.getName(path);
+	};
 
-export function readBytes(path){
-	const native = FilesFacade.readBytes(path);
-	const data = bytes.toJavaScriptBytes(native);
-	return data;
-};
+	public static getParentPath(path: string): string {
+		return FilesFacade.getParentPath(path);
+	};
 
-export function readBytesNative(path){
-	return FilesFacade.readBytes(path);
-};
+	public static readBytes(path: string): Array<bytes> {
+		const native = FilesFacade.readBytes(path);
+		const data = bytes.toJavaScriptBytes(native);
+		return data;
+	};
 
-export function readText(path){
-	return FilesFacade.readText(path);
-};
+	public static readBytesNative(path: string): Array<bytes>{
+		return FilesFacade.readBytes(path);
+	};
 
-export function writeBytes(path, data){
-	const native = bytes.toJavaBytes(data);
-	FilesFacade.writeBytesNative(path, native);
-};
+	public static readText(path: string): string{
+		return FilesFacade.readText(path);
+	};
 
-export function writeBytesNative(path, data){
-	FilesFacade.writeBytesNative(path, data);
-};
+	public static writeBytes(path: string, data): void{
+		const native = bytes.toJavaBytes(data);
+		FilesFacade.writeBytesNative(path, native);
+	};
 
-export function writeText(path, text) {
-	FilesFacade.writeText(path, text);
-};
+	public static writeBytesNative(path: string, data): void{
+		FilesFacade.writeBytesNative(path, data);
+	};
 
-export function getLastModified(path) {
-	return new Date(FilesFacade.getLastModified(path));
-};
+	public static writeText(path: string, text: string): void {
+		FilesFacade.writeText(path, text);
+	};
 
-export function setLastModified(path, time) {
-	FilesFacade.setLastModified(path, time.getMilliseconds());
-};
+	public static getLastModified(path: string): Date {
+		return new Date(FilesFacade.getLastModified(path));
+	};
 
-export function getOwner(path) {
-	return FilesFacade.getOwner(path);
-};
+	public static setLastModified(path: string, time: Date): void {
+		FilesFacade.setLastModified(path, time.getMilliseconds());
+	};
 
-export function setOwner(path, owner) {
-	FilesFacade.setOwner(path, owner);
-};
+	public static getOwner(path: string): string {
+		return FilesFacade.getOwner(path);
+	};
 
-export function getPermissions(path) {
-	return FilesFacade.getPermissions(path);
-};
+	public static setOwner(path: string, owner: string): void {
+		FilesFacade.setOwner(path, owner);
+	};
 
-export function setPermissions(path, permissions) {
-	FilesFacade.setPermissions(path, permissions);
-};
+	public static getPermissions(path: string): string {
+		return FilesFacade.getPermissions(path);
+	};
 
-export function size(path) {
-	return FilesFacade.size(path);
-};
+	public static setPermissions(path: string, permissions: string): void {
+		FilesFacade.setPermissions(path, permissions);
+	};
 
-export function createFile(path) {
-	FilesFacade.createFile(path);
-};
+	public static size(path: string): number {
+		return FilesFacade.size(path);
+	};
 
-export function createDirectory(path) {
-	FilesFacade.createDirectory(path);
-};
+	public static createFile(path: string): void {
+		FilesFacade.createFile(path);
+	};
 
-export function copy(source, target) {
-	FilesFacade.copy(source, target);
-};
+	public static createDirectory(path: string): void {
+		FilesFacade.createDirectory(path);
+	};
 
-export function move(source, target) {
-	FilesFacade.move(source, target);
-};
+	public static copy(source: string, target: string): void {
+		FilesFacade.copy(source, target);
+	};
 
-export function deleteFile(path) {
-	FilesFacade.deleteFile(path);
-};
+	public static move(source: string, target: string): void {
+		FilesFacade.move(source, target);
+	};
 
-export function deleteDirectory(path, forced) {
-	FilesFacade.deleteDirectory(path, forced);
-};
+	public deleteFile(path: string): void {
+		FilesFacade.deleteFile(path);
+	};
 
-export function createTempFile(prefix, suffix) {
-	return FilesFacade.createTempFile(prefix, suffix);
-};
+	public static deleteDirectory(path: string, forced: boolean): void {
+		FilesFacade.deleteDirectory(path, forced);
+	};
 
-export function createTempDirectory(prefix) {
-	return FilesFacade.createTempDirectory(prefix);
-};
+	public static createTempFile(prefix: string, suffix: string): string {
+		return FilesFacade.createTempFile(prefix, suffix);
+	};
 
-export function createInputStream(path) {
-	const native = FilesFacade.createInputStream(path);
-	return new streams.InputStream(native);
-};
+	public static createTempDirectory(prefix: string): string {
+		return FilesFacade.createTempDirectory(prefix);
+	};
 
-export function createOutputStream(path) {
-	const native = FilesFacade.createOutputStream(path);
-	return new streams.OutputStream(native);
-};
+	public static createInputStream(path: string): streams.InputStream {
+		const native = FilesFacade.createInputStream(path);
+		return new streams.InputStream(native);
+	};
 
-export function traverse(path) {
-	return FilesFacade.traverse(path);
-};
+	public static createOutputStream(path: string): streams.OutputStream {
+		const native = FilesFacade.createOutputStream(path);
+		return new streams.OutputStream(native);
+	};
 
-export function list(path) {
-	return JSON.parse(FilesFacade.list(path)).map(e => e.path);
-};
+	public static traverse(path: string): string {
+		return FilesFacade.traverse(path);
+	};
 
-export function find(path, pattern) {
-	return JSON.parse(FilesFacade.find(path, pattern));
-};
+	public static list(path: string): JSON {
+		return JSON.parse(FilesFacade.list(path)).map(e => e.path);
+	};
 
-export const separator = File.separator;
+	public static find(path: string, pattern: string): string {
+		return JSON.parse(FilesFacade.find(path, pattern));
+	};
+}
