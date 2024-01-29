@@ -151,7 +151,7 @@
 		<ngdbc.version>2.19.16</ngdbc.version>
 		<snowflake.version>3.13.34</snowflake.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.644</qldb.sdk.version>
+		<qldb.sdk.version>1.12.641</qldb.sdk.version>
 		<jetcd.core.version>0.7.7</jetcd.core.version>
 
 		<jquery-ui.version>1.13.0</jquery-ui.version>
@@ -745,7 +745,7 @@
 			<dependency>
 				<groupId>org.seleniumhq.selenium</groupId>
 				<artifactId>selenium-java</artifactId>
-				<version>4.17.0</version>
+				<version>4.16.1</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>

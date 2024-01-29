@@ -24,12 +24,14 @@
             </div>
 
             <fd-fieldset class="fd-margin--md" ng-form="formFieldset">
-                <fd-form-group dg-header="Report Filter" name="entityForm">
+                <fd-form-group dg-header="Report Filter" name="entityForm" class="fd-container fd-form-layout-grid-container fd-form-group">
 #foreach ($property in $filter.properties)
 #if(!$property.dataAutoIncrement && !$property.dataPrimaryKey)
 #if($property.widgetType == "DROPDOWN")
-                    <fd-form-item horizontal="false">
-                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                    <fd-form-item class="fd-row fd-form-item">
+                    	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        </div>
                         <fd-combobox-input id="id${property.name}"
                             name="${property.name}"
                             state="{{ formErrors.${property.name} ? 'error' : '' }}"
@@ -44,20 +46,24 @@
                         </fd-combobox-input>
                     </fd-form-item>
 #elseif($property.widgetType == "CHECKBOX")
-                    <fd-form-item>
-                        <fd-checkbox id="id${property.name}"
-                            compact="false"
-                            ng-required="${property.dataNotNull}"
-#if($property.isCalculatedProperty == "true")
-                            ng-disabled="true"
-#end
-                            ng-model="entity.${property.name}">
-                        </fd-checkbox>
+                    <fd-form-item class="fd-row fd-form-item">
+                    	<div class="fd-col fd-col-md--2">
+	                        <fd-checkbox id="id${property.name}"
+	                            compact="false"
+	                            ng-required="${property.dataNotNull}"
+	#if($property.isCalculatedProperty == "true")
+	                            ng-disabled="true"
+	#end
+	                            ng-model="entity.${property.name}">
+	                        </fd-checkbox>
+	                    </div>
                         <fd-checkbox-label for="id${property.name}" dg-required="${property.dataNotNull}">${property.widgetLabel}</fd-checkbox-label>
                     </fd-form-item>
 #elseif($property.widgetType == "COLOR")
-                    <fd-form-item horizontal="false">
-                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                    <fd-form-item class="fd-row fd-form-item">
+                    	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        </div>
                         <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
                             <fd-input id="id${property.name}"
                                 name="${property.name}"
@@ -75,8 +81,10 @@
                         </fd-form-input-message-group>
                     </fd-form-item>
 #elseif($property.widgetType == "NUMBER")
-                    <fd-form-item horizontal="false">
-                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                    <fd-form-item class="fd-row fd-form-item">
+                    	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        </div>
                         <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
                             <fd-input id="id${property.name}"
                                 name="${property.name}"
@@ -88,14 +96,17 @@
                                 ng-readonly="true"
 #end
                                 type="number"
-                                placeholder="Enter ${property.widgetLabel}">
+                                placeholder="Enter ${property.widgetLabel}"
+                                class="right-align">
                             </fd-input>
                             <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
                         </fd-form-input-message-group>
                     </fd-form-item>
 #elseif($property.widgetType == "MONTH")
-                    <fd-form-item horizontal="false">
-                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                    <fd-form-item class="fd-row fd-form-item">
+                    	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        </div>
                         <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
                             <fd-input id="id${property.name}"
                                 name="${property.name}"
@@ -112,8 +123,10 @@
                         </fd-form-input-message-group>
                     </fd-form-item>
 #elseif($property.widgetType == "WEEK")
-                    <fd-form-item horizontal="false">
-                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                    <fd-form-item class="fd-row fd-form-item">
+                    	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        </div>
                         <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
                             <fd-input id="id${property.name}"
                                 name="${property.name}"
@@ -130,8 +143,10 @@
                         </fd-form-input-message-group>
                     </fd-form-item>
 #elseif($property.widgetType == "TIME")
-                    <fd-form-item horizontal="false">
-                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                    <fd-form-item class="fd-row fd-form-item">
+                    	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        </div>
                         <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
                             <fd-input id="id${property.name}"
                                 name="${property.name}"
@@ -148,8 +163,10 @@
                         </fd-form-input-message-group>
                     </fd-form-item>
 #elseif($property.widgetType == "DATETIME-LOCAL")
-                    <fd-form-item horizontal="false">
-                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                    <fd-form-item class="fd-row fd-form-item">
+                    	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        </div>
                         <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
                             <fd-input id="id${property.name}"
                                 name="${property.name}"
@@ -166,8 +183,10 @@
                         </fd-form-input-message-group>
                     </fd-form-item>
 #elseif($property.widgetType == "DATE")
-                    <fd-form-item horizontal="false">
-                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                    <fd-form-item class="fd-row fd-form-item">
+                    	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        </div>
                         <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
                             <fd-input id="id${property.name}"
                                 name="${property.name}"
@@ -184,8 +203,10 @@
                         </fd-form-input-message-group>
                     </fd-form-item>
 #elseif($property.widgetType == "TEXTAREA")
-					<fd-form-item horizontal="false">
-						<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+					<fd-form-item class="fd-row fd-form-item">
+						<div class="fd-col fd-col-md--2">
+							<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+						</div>
 						<fd-textarea id="id${property.name}"
 							name="${property.name}"
 							state="{{ formErrors.${property.name} ? 'error' : '' }}"
@@ -201,10 +222,12 @@
 							placeholder="Enter ${property.widgetLabel}">
 						</fd-textarea>
 						<fd-form-message dg-type="error" ng-show="formErrors.${property.name}">Incorrect Input</fd-form-message>
-					</fd-form-item horizontal="false">
+					</fd-form-item>
 #elseif($property.widgetType == "TEL")
-                    <fd-form-item horizontal="false">
-                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                    <fd-form-item class="fd-row fd-form-item">
+                    	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        </div>
                         <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
                             <fd-input id="id${property.name}"
                                 name="${property.name}"
@@ -225,8 +248,10 @@
                         </fd-form-input-message-group>
                     </fd-form-item>
 #elseif($property.widgetType == "URL")
-                    <fd-form-item horizontal="false">
-                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                    <fd-form-item class="fd-row fd-form-item">
+                    	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        </div>
                         <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
                             <fd-input id="id${property.name}"
                                 name="${property.name}"
@@ -247,8 +272,10 @@
                         </fd-form-input-message-group>
                     </fd-form-item>
 #elseif($property.widgetType == "EMAIL")
-                    <fd-form-item horizontal="false">
-                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                    <fd-form-item class="fd-row fd-form-item">
+                    	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        </div>
                         <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
                             <fd-input id="id${property.name}"
                                 name="${property.name}"
@@ -269,8 +296,10 @@
                         </fd-form-input-message-group>
                     </fd-form-item>
 #else
-                    <fd-form-item horizontal="false">
-                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                    <fd-form-item class="fd-row fd-form-item">
+                    	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        </div>
                         <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
                             <fd-input id="id${property.name}"
                                 name="${property.name}"

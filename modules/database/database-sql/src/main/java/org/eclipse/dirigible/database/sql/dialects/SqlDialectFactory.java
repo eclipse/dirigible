@@ -25,9 +25,7 @@ import org.eclipse.dirigible.database.sql.ISqlDialectProvider;
  */
 public class SqlDialectFactory {
 
-    /**
-     * The Constant ACCESS_MANAGERS.
-     */
+    /** The Constant ACCESS_MANAGERS. */
     private static final ServiceLoader<ISqlDialectProvider> SQL_PROVIDERS = ServiceLoader.load(ISqlDialectProvider.class);
 
     /**
@@ -42,24 +40,22 @@ public class SqlDialectFactory {
                                        .getDatabaseProductName();
         ISqlDialect dialect = databaseTypeMappings.get(productName);
         if (dialect == null) {
-            getDefaultDatabaseTypeMappings();
-            dialect = databaseTypeMappings.get(productName);
-            if (dialect == null) {
-                throw new RuntimeException("Database dialect for " + productName + " is not avalable.");
-            }
+        	getDefaultDatabaseTypeMappings();
+        	dialect = databaseTypeMappings.get(productName);
+        	if (dialect == null) {
+        		throw new RuntimeException("Database dialect for " + productName + " is not avalable.");
+        	}
         }
         return dialect;
     }
 
 
-    /**
-     * The Constant databaseTypeMappings.
-     */
+
+    /** The Constant databaseTypeMappings. */
     // Lifted from Activiti
     static Map<String, ISqlDialect> databaseTypeMappings = Collections.synchronizedMap(new HashMap<String, ISqlDialect>());
-
     static {
-        getDefaultDatabaseTypeMappings();
+    	getDefaultDatabaseTypeMappings();
     }
 
     /**
