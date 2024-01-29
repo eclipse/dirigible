@@ -87,6 +87,12 @@ public class BrowserImpl implements Browser {
         clickElement(element);
     }
 
+    @Override
+    public void clickElementByTypeAndText(HtmlElementType elementType, String text) {
+        SelenideElement element = getElementByAttributeAndText(elementType, text);
+        element.click();
+    }
+
     private SelenideElement getElementByAttributePatternAndText(HtmlElementType elementType, HtmlAttribute attribute, String pattern,
             String text) {
         By selector = constructCssSelectorByTypeAndAttribute(elementType, attribute, pattern);

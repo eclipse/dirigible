@@ -26,4 +26,6 @@ public interface Browser {
 
     SelenideElement waitUntilExist(HtmlElementType elementType);
 
+    void clickElementByTypeAndText(HtmlElementType span, String string);
+
 }
