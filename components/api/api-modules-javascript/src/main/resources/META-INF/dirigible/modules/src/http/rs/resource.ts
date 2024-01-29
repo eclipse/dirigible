@@ -9,13 +9,13 @@ import { ResourceMethod } from "./resource-method";
  * @returns {Resource} the resource instance for method chaining
  */
 export class Resource {
-	sPath: any;
-	cfg: any;
+	sPath: string;
+	cfg: Object;
 	controller: any;
 	execute: any;
 	mappings: any;
 
-	constructor(sPath, oConfiguration, controller, mappings) {
+	constructor(sPath: string, oConfiguration: Object, controller, mappings) {
 		this.sPath = sPath;
 		this.cfg = oConfiguration || {};
 		if (controller) {
@@ -35,7 +35,7 @@ export class Resource {
  * @param {string} [sPath] the path property to be set for this resource
  * @returns {Resource|string} the resource instance for method chaining, or the path set for this resource
  */
-	path(sPath) {
+	path(sPath: string): Resource|string {
 		if (arguments.length === 0)
 			return this.sPath;
 		this.sPath = sPath;
@@ -51,7 +51,8 @@ export class Resource {
 	 * @param {Object|Object[]} oConfiguration - the handler specification(s) for this HTTP method. Can be a single object or array.
 	 * @returns {ResourceMethod|Object[]}
 	 */
-	method(sHttpMethod, oConfiguration?) {
+	//TODO: return type must only be ResourceMethod because of the "return this.method(sMethodName).serve(args[0]);" in the buildMethod method
+	method(sHttpMethod: string, oConfiguration?: Object|Object[]): ResourceMethod { 
 		if (sHttpMethod === undefined)
 			throw new Error('Illegal sHttpMethod argument: ' + sHttpMethod);
 
@@ -60,10 +61,10 @@ export class Resource {
 		if (!this.cfg[method])
 			this.cfg[method] = [];
 
-		let arrConfig = oConfiguration || {};
-		if (!Array.isArray(arrConfig)) {
-			arrConfig = [arrConfig];
-		}
+		let arrConfig;
+		if (!Array.isArray(oConfiguration)) {
+			arrConfig = [arrConfig || {}];
+		} else arrConfig = oConfiguration;
 		const handlers: any[] = [];
 		arrConfig.forEach((handlerSpec) => {
 			const _h = this.find(sHttpMethod, handlerSpec.consumes, handlerSpec.produces);
@@ -81,11 +82,11 @@ export class Resource {
 		return handlers.length > 1 ? handlers : handlers[0];
 	};
 
-	private buildMethod(sMethodName, ...args) {
+	private buildMethod(sMethodName: string, ...args): ResourceMethod {
 		if (args.length > 0) {
-			if (typeof args[0] === 'function')
+			if (typeof args[0] === 'function') {
 				return this.method(sMethodName).serve(args[0]);
-			else if (typeof args[0] === 'object')
+			} else if (typeof args[0] === 'object')
 				return this.method(sMethodName, args[0]);
 			else
 				throw Error('Invalid argument: Resource.' + sMethodName + ' method first argument must be valid javascript function or configuration object, but instead is ' + (typeof args[0]) + ' ' + args[0]);
@@ -101,7 +102,7 @@ export class Resource {
 	 *
 	 * @param {Function|Object} [fServeCb|oConfiguration] serve function callback or oConfiguraiton to initilaize the method
 	 */
-	get() {
+	get(): ResourceMethod {
 		return this.buildMethod('get', ...arguments);
 	};
 	/**
@@ -111,7 +112,7 @@ export class Resource {
 	 *
 	 * @param {Function|Object} [fServeCb|oConfiguration] serve function callback or oConfiguraiton to initilaize the method
 	 */
-	post() {
+	post(): ResourceMethod {
 		return this.buildMethod('post', ...arguments);
 	};
 	/**
@@ -121,7 +122,7 @@ export class Resource {
 	 *
 	 * @param {Function|Object} [fServeCb|oConfiguration] serve function callback or oConfiguraiton to initilaize the method
 	 */
-	put() {
+	put(): ResourceMethod {
 		return this.buildMethod('put', ...arguments);
 	};
 	/**
@@ -131,11 +132,11 @@ export class Resource {
 	 *
 	 * @param {Function|Object} [fServeCb|oConfiguration] serve function callback or oConfiguraiton to initilaize the method
 	 */
-	delete() {
+	delete(): ResourceMethod {
 		return this.buildMethod('delete', ...arguments);
 	};
 
-	remove() {
+	remove(): ResourceMethod {
 		return this.buildMethod('delete', ...arguments);
 	}
 
@@ -177,7 +178,7 @@ export class Resource {
 	 *
 	 * @param {Function|String}
 	 */
-	redirect(fRedirector) {
+	redirect(fRedirector: Function|string): ResourceMethod {
 		if (typeof fRedirector === 'string') {
 			fRedirector = function () {
 				return fRedirector;

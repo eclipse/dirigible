@@ -1,10 +1,11 @@
 import { Resource } from "./resource";
+import { HttpController } from "./resource-http-controller";
 
 
 export class ResourceMappings {
-    resources: any = {};
-    controller: any;
-    execute: any;
+    resources: {} = {};
+    controller: HttpController;
+    execute: Function;
 
     /**
  * Constructor function for ResourceMappings instances.
@@ -19,7 +20,7 @@ export class ResourceMappings {
  * @returns {ResourceMappings}
  * @static
  */
-    constructor(oConfiguration, controller) {
+    constructor(oConfiguration: Object, controller: HttpController) {
         if (oConfiguration) {
             Object.keys(oConfiguration).forEach((sPath) => {
                 this.resources[sPath] = this.resource(sPath, oConfiguration[sPath]);
@@ -40,7 +41,7 @@ export class ResourceMappings {
  *
  * @returns {Resource}
  */
-    path(sPath, oConfiguration) {
+    path(sPath: string, oConfiguration: Object): Resource {
         if (sPath !== "" && sPath[0] === "/") {
             sPath = sPath.substring(1); // transform "/test" into "test"
         }
@@ -52,18 +53,18 @@ export class ResourceMappings {
         return this.resources[sPath];
     };
     
-    resourcePath(sPath, oConfiguration) {
+    resourcePath(sPath: string, oConfiguration: Object): Resource {
         return this.path(sPath, oConfiguration);
     }
 
-    resource(sPath, oConfiguration) {
+    resource(sPath: string, oConfiguration: Object): Resource {
         return this.path(sPath, oConfiguration);
     }
 
     /**
      * Returns the configuration object for this ResourceMappings.
      */
-    configuration() {
+    configuration(): Object {
         const _cfg = {};
         Object.keys(this.resources).forEach((sPath) => {
             _cfg[sPath] = this.resources[sPath].configuration();
@@ -74,7 +75,7 @@ export class ResourceMappings {
     /**
      * Removes all but GET resource handlers.
      */
-    readonly() {
+    readonly(): ResourceMappings {
         Object.keys(this.resources).forEach((sPath) => {
             this.resources[sPath].readonly();
         });
@@ -84,7 +85,7 @@ export class ResourceMappings {
     /**
      * Disables resource handling specifications mathcing the arguments, effectively removing them from this API.
      */
-    disable(sPath, sVerb, arrConsumes, arrProduces) {
+    disable(sPath: string, sVerb: string, arrConsumes: [], arrProduces: string[]): ResourceMappings {
         Object.keys(this.resources[sPath]).forEach(function (resource) {
             resource.disable(sVerb, arrConsumes, arrProduces);
         }.bind(this));
@@ -94,7 +95,7 @@ export class ResourceMappings {
     /**
      * Provides a reference to a handler specification matching the supplied arguments.
      */
-    find(sPath, sVerb, arrConsumes, arrProduces) {
+    find(sPath: string, sVerb: string, arrConsumes: [], arrProduces: []): Resource {
         if (this.resources[sPath]) {
             const hit = this.resources[sPath].find(sVerb, arrConsumes, arrProduces);
             if (hit)

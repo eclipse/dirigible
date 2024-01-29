@@ -16,8 +16,14 @@
 
 const HttpClientFacade = Java.type("org.eclipse.dirigible.components.api.http.HttpClientFacade");
 
+
+interface Option {
+	params: Array<{name: string, value: string}>;
+}
+
+
 export class HttpClient {
-    get(_url, options) {
+    public get(_url: string, options: Option): Object {
         let url = buildUrl(_url, options);
         let opts = '{}';
         if (options) {
@@ -27,7 +33,7 @@ export class HttpClient {
         return JSON.parse(result);
     };
     
-    post(_url, options) {
+    public post(_url: string, options: Option): Object {
         let url = buildUrl(_url, options);
         let opts = '{}';
         if (options) {
@@ -37,7 +43,7 @@ export class HttpClient {
         return JSON.parse(result);
     };
     
-    put(_url, options) {
+    public put(_url: string, options: Option): Object {
         let url = buildUrl(_url, options);
         let opts = '{}';
         if (options) {
@@ -47,7 +53,7 @@ export class HttpClient {
         return JSON.parse(result);
     };
     
-    patch(_url, options) {
+    public patch(_url: string, options: Option): Object {
         let url = buildUrl(_url, options);
         let opts = '{}';
         if (options) {
@@ -57,7 +63,7 @@ export class HttpClient {
         return JSON.parse(result);
     };
     
-    delete(_url, options) {
+    public delete(_url: string, options: Option): Object {
         let url = buildUrl(_url, options);
         let opts = '{}';
         if (options) {
@@ -67,7 +73,7 @@ export class HttpClient {
         return JSON.parse(result);
     };
     
-    head(_url, options) {
+    public head(_url: string, options: Option): Object {
         let url = buildUrl(_url, options);
         let opts = '{}';
         if (options) {
@@ -77,7 +83,7 @@ export class HttpClient {
         return JSON.parse(result);
     };
     
-    trace(_url, options) {
+    public trace(_url: string, options: Option): Object { 
         let url = buildUrl(_url, options);
         let opts = '{}';
         if (options) {
@@ -90,7 +96,7 @@ export class HttpClient {
 
 
 
-function buildUrl(url, options) {
+function buildUrl(url: string, options: Option): string {
     if (options === undefined || options === null || options.params === undefined || options.params === null || options.params.length === 0) {
         return url;
     }
