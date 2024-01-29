@@ -20,7 +20,7 @@ export class Consumer {
     }
 }
 
-export class Topic {
+class Topic {
     private destination: string;
     private configuration: { [key: string]: string } = {};
 
@@ -40,6 +40,6 @@ export class Topic {
 
 // @ts-ignore
 if (typeof module !== 'undefined') {
-	// @ts-ignore
-	module.exports = Consumer;
+    // @ts-ignore
+    module.exports = Consumer;
 }
