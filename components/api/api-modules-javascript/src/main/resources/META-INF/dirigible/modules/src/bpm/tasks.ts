@@ -15,23 +15,20 @@
 
 const BpmFacade = Java.type("org.eclipse.dirigible.components.api.bpm.BpmFacade");
 
-export class Tasks{
+export function list() {
+	var tasks = BpmFacade.getTasks();
+	return JSON.parse(tasks);
+};
 
-	public static list(): JSON {
-		var tasks = BpmFacade.getTasks();
-		return JSON.parse(tasks);
-	};
+export function getTaskVariables(taskId) {
+	var variables = BpmFacade.getTaskVariables(taskId);
+	return JSON.parse(variables);
+};
 
-	public static getTaskVariables(taskId: string): JSON {
-		var variables = BpmFacade.getTaskVariables(taskId);
-		return JSON.parse(variables);
-	};
+export function setTaskVariables(taskId, variables) {
+	BpmFacade.setTaskVariables(taskId, JSON.stringify(variables));
+};
 
-	public static setTaskVariables(taskId: string, variables: string): void {
-		BpmFacade.setTaskVariables(taskId, JSON.stringify(variables));
-	};
-
-	public static completeTask(taskId: string, variables: string): void {
-		BpmFacade.completeTask(taskId, JSON.stringify(variables));
-	};
-}
+export function completeTask(taskId, variables) {
+	BpmFacade.completeTask(taskId, JSON.stringify(variables));
+};
