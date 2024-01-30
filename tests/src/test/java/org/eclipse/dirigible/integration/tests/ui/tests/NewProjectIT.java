@@ -40,9 +40,10 @@ public class NewProjectIT extends UserInterfaceIntegrationTest {
 
         browser.enterTextInElementByAttributePattern(HtmlElementType.INPUT, HtmlAttribute.ID, "pgfi1", NEW_TEST_NAME);
 
-        // browser.clickElementByTypeAndText(HtmlElementType.BUTTON, "Create");
+        //         browser.clickElementByAttributePatternAndText(HtmlElementType.BUTTON, HtmlAttribute.TYPE, "submit", "Create");
         $(".fd-dialog__decisive-button.fd-button.fd-button--emphasized").click();
 
         TimeUnit.SECONDS.sleep(10);
+
     }
 }
