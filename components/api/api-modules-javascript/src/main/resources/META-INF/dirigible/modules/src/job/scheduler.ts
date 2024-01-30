@@ -65,7 +65,7 @@ export class Scheduler {
 /**
  * Job object
  */
-export class Job {
+class Job {
 
     private data: any;
 
