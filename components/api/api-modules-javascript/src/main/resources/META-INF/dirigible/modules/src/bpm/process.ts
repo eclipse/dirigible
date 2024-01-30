@@ -46,129 +46,101 @@ export function getExecutionContext() {
  */
 class ExecutionContext {
 
-	constructor(public data: any) {
-		this.data = data;
-	}
+	constructor(private data) { }
 
-	public getId(): number {
+	getId() {
 		return this.data.id;
 	}
-	
-	public isActive(): boolean {
+	isActive() {
 		return this.data.isActive;
 	}
-	
-	public isScope(): boolean {
+	isScope() {
 		return this.data.isScope;
 	}
-
-	public isConcurrent(): boolean {
+	isConcurrent() {
 		return this.data.isConcurrent;
 	}
-
-	public isEnded(): boolean {
+	isEnded() {
 		return this.data.isEnded;
 	}
-
-	public isEventScope(): boolean {
+	isEventScope() {
 		return this.data.isEventScope;
 	}
-
-	public isMultiInstanceRoot(): boolean {
+	isMultiInstanceRoot() {
 		return this.data.isMultiInstanceRoot;
 	}
-
-	public isCountEnabled(): boolean {
+	isCountEnabled() {
 		return this.data.isCountEnabled;
 	}
-
-	public suspensionState() {
+	suspensionState() {
 		return this.data.suspensionState;
 	}
-	
-	public startTime() {
+	startTime() {
 		return this.data.startTime;
 	}
-	
-	public eventSubscriptionCount(): number {
+	eventSubscriptionCount() {
 		return this.data.eventSubscriptionCount;
 	}
-	
-	public taskCount():number {
+	taskCount() {
 		return this.data.taskCount;
 	}
-	
-	public jobCount(): number {
+	jobCount() {
 		return this.data.jobCount;
 	}
-	
-	public timerJobCount(): number {
+	timerJobCount() {
 		return this.data.timerJobCount;
 	}
-	
-	public suspendedJobCount(): number {
+	suspendedJobCount() {
 		return this.data.suspendedJobCount;
 	}
-	
-	public deadLetterJobCount(): number {
+	deadLetterJobCount() {
 		return this.data.deadLetterJobCount;
 	}
-
-	public variableCount(): number {
+	variableCount() {
 		return this.data.variableCount;
 	}
-
-	public identityLinkCount(): number {
+	identityLinkCount() {
 		return this.data.identityLinkCount;
 	}
-
-	public processDefinitionId(): number {
+	processDefinitionId() {
 		return this.data.processDefinitionId;
 	}
-
-	public processDefinitionKey() {
+	processDefinitionKey() {
 		return this.data.processDefinitionKey;
 	}
-
-	public activityId(): number {
+	activityId() {
 		return this.data.activityId;
 	}
-
-	public processInstanceId(): number {
+	processInstanceId() {
 		return this.data.processInstanceId;
 	}
-
-	public parentId(): number {
+	parentId() {
 		return this.data.parentId;
 	}
-
-	public rootProcessInstanceId(): number {
+	rootProcessInstanceId() {
 		return this.data.rootProcessInstanceId;
 	}
-
-	public forcedUpdate() {
+	forcedUpdate() {
 		return this.data.forcedUpdate;
 	}
-
-	public revision() {
+	revision() {
 		return this.data.revision;
 	}
-
-	public tenantId() {
+	tenantId() {
 		return this.data.tenantId;
 	}
 
 }
 
-export function getVariable(processInstanceId: string, variableName: string): object {
+export function getVariable(processInstanceId, variableName) {
 	var variableValue = BpmFacade.getVariable(processInstanceId, variableName);
 	return variableValue;
 }
 
-export function setVariable(processInstanceId: string, variableName: string, variableValue: object): void {
+export function setVariable(processInstanceId, variableName, variableValue) {
 	BpmFacade.setVariable(processInstanceId, variableName, variableValue);
 }
 
-export function removeVariable(processInstanceId: string, variableName: string): void {
+export function removeVariable(processInstanceId, variableName) {
 	BpmFacade.removeVariable(processInstanceId, variableName);
 }
