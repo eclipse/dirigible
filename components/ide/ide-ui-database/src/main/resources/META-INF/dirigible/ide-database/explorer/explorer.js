@@ -718,7 +718,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		let tableParent = $scope.jstreeWidget.jstree(true).get_node(data.node.parent);
 		let topLevelSchemaNode = tableParent.parents.find(parentId => {
 			let node = $scope.jstreeWidget.jstree(true).get_node(parentId);
-			return node.original.kind === 'schema' && node.text !== 'Tables';
+			return (node.original.kind === 'schema' || node.original.kind === 'nosql') && node.text !== 'Tables';
 		});
 
 		let schemaParent;
