@@ -11,11 +11,11 @@
  */
 "use strict";
 
-import * as logging from "@dirigible/log/logging";
+import { Logging } from "@dirigible/log";
 import * as sql from "./sql";
 
 export function ORMStatements(orm, dialect){
-	this.$log = logging.getLogger('db.dao.ormstatements');
+	this.$log = Logging.getLogger('db.dao.ormstatements');
 	this.orm = orm;
 	this.orm.tableName = this.orm.table;
 	this.orm.properties.forEach(function(property) {

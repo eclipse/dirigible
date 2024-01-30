@@ -14,7 +14,7 @@
 import { globals } from "@dirigible/core"
 import * as mongodb from "./client"
 import * as dirigibleOrm from "@dirigible/db/orm";
-import * as logging from "@dirigible/log/logging";
+import { Logging } from "@dirigible/log";
 import { Configurations } from "@dirigible/core";
 
 const dbUri = Configurations.get("DIRIGIBLE_MONGODB_CLIENT_URI", "mongodb://localhost:27017");
@@ -39,7 +39,7 @@ export class DAO {
             if (this.orm.table)
                 loggerName = 'mongodb.dao.' + (this.orm.table.toLowerCase());
         }
-        this.$log = logging.getLogger(loggerName);
+        this.$log = Logging.getLogger(loggerName);
     }
 
     notify(event, ...a) {
