@@ -24,6 +24,11 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		type: "spinner",
 		li_attr: { spinner: true },
 	};
+	$scope.spinnerForeignKeys = {
+		text: "Loading Foreign Keys...",
+		type: "spinner",
+		li_attr: { spinner: true },
+	};
 	$scope.jstreeConfig = {
 		core: {
 			check_callback: true,
@@ -78,6 +83,9 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			},
 			indices: {
 				icon: "sap-icon--table-row",
+			},
+			foreignKeys: {
+				icon: "sap-icon--two-keys",
 			},
 			schema: {
 				icon: "sap-icon--database",
@@ -636,6 +644,8 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			expandColumns(event, data);
 		} else if (data.node.children.length === 1 && $scope.jstreeWidget.jstree(true).get_text(data.node.children[0]) === "Loading Indices...") {
 			expandIndices(event, data);
+		} else if (data.node.children.length === 1 && $scope.jstreeWidget.jstree(true).get_text(data.node.children[0]) === "Loading Foreign Keys...") {
+			expandForeignKeys(event, data);
 		}
 	});
 
@@ -761,13 +771,30 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 
 		$scope.jstreeWidget.jstree("delete_node", $scope.jstreeWidget.jstree(true).get_node(data.node.children[0]));
 		let position = 'last';
-
 		$http.get(databasesSvcUrl + $scope.selectedDatabase + '/' + $scope.selectedDatasource
 			+ '/' + schemaParent + '/' + tableParent.text)
 			.then(function (data) {
 				data.data.indices.forEach(function (index) {
 					let nodeText = index.name;
 					let newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + index.name, "icon": "sap-icon--bullet-text" };
+					$scope.jstreeWidget.jstree("create_node", parent, newNode, position, false, false);
+				})
+			});
+	}
+
+	let expandForeignKeys = function (evt, data) {
+		let parent = $scope.jstreeWidget.jstree(true).get_node(data.node);
+		let tableParent = $scope.jstreeWidget.jstree(true).get_node(data.node.parent);
+		let schemaParent = $scope.jstreeWidget.jstree(true).get_text(tableParent.parent);
+
+		$scope.jstreeWidget.jstree("delete_node", $scope.jstreeWidget.jstree(true).get_node(data.node.children[0]));
+		let position = 'last';
+		$http.get(databasesSvcUrl + $scope.selectedDatabase + '/' + $scope.selectedDatasource
+			+ '/' + schemaParent + '/' + tableParent.text)
+			.then(function (data) {
+				data.data.foreignKeys.forEach(function (foreignKey) {
+					let nodeText = foreignKey.name;
+					let newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + foreignKey.name, "icon": "sap-icon--bullet-text" };
 					$scope.jstreeWidget.jstree("create_node", parent, newNode, position, false, false);
 				})
 			});
@@ -812,11 +839,17 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			});
 			children = children.concat(functionsChildren);
 
+			let sequenceChildren = f.sequences.map(function (_sequence) {
+				return build(_sequence)
+			});
+			children = children.concat(sequenceChildren);
+
 			icon = 'sap-icon--database';
 		} else if (f.kind == 'table' && (f.type === 'TABLE' || f.type === 'BASE TABLE')) {
 			children = [
 				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] },
 				{ text: "Indices", "icon": "sap-icon--table-row", children: [$scope.spinnerIndices] },
+				{ text: "Foreign Keys", "icon": "sap-icon--two-keys", children: [$scope.spinnerForeignKeys] }
 			];
 			icon = 'sap-icon--table-view';
 		} else if (f.kind == 'table' && f.type === 'VIEW') {
@@ -839,14 +872,19 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			icon = 'sap-icon--locked';
 		} else if (f.kind == 'procedure') { // && f.type === 'XXX'
 			children = [
-				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] },
+				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] }
 			];
 			icon = 'sap-icon--workflow-tasks';
 		} else if (f.kind == 'function') { // && f.type === 'XXX'
 			children = [
-				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] },
+				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] }
 			];
 			icon = 'sap-icon--settings';
+		} else if (f.kind == 'sequence') { // && f.type === 'XXX'
+			children = [
+				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] }
+			];
+			icon = 'sap-icon--number-sign';
 		} else if (f.kind == 'column') {
 			icon = 'sap-icon--grid';
 			name += ` [<i>${data.type}</i>(<i>${data.size}</i>)]`;
