@@ -11,9 +11,11 @@
  */
 /**
  * API Database
- *
+ * 
  */
 import * as bytes from "@dirigible/io/bytes";
+import { InputStream } from "@dirigible/io/streams";
+import { numeric } from "@dirigible/utils/alphanumeric";
 const DatabaseFacade = Java.type("org.eclipse.dirigible.components.api.db.DatabaseFacade");
 const DatabaseResultSetHelper = Java.type("org.eclipse.dirigible.components.data.management.helpers.DatabaseResultSetHelper");
 const JSqlDate = Java.type("java.sql.Date");
@@ -44,11 +46,11 @@ const SQLTypes = Object.freeze({
 	"BIT": -7
 });
 
-export function getDatabaseTypes() {
+export function getDatabaseTypes(): void {
 	throw new Error("Deprecated");
 };
 
-export function getDataSources() {
+export function getDataSources(): Object {
 	const datasources = DatabaseFacade.getDataSources();
 	if (datasources) {
 		return JSON.parse(datasources);
@@ -56,11 +58,11 @@ export function getDataSources() {
 	return datasources;
 };
 
-export function createDataSource(name, driver, url, username, password, properties) {
+export function createDataSource(name: string, driver: string, url: string, username: string, password: string, properties: string): void {
 	throw new Error("Deprecated");
 };
 
-export function getMetadata(datasourceName) {
+export function getMetadata(datasourceName: string): Object {
 	let metadata;
 	if (datasourceName) {
 		metadata = DatabaseFacade.getMetadata(datasourceName);
@@ -74,7 +76,7 @@ export function getMetadata(datasourceName) {
 	return metadata;
 };
 
-export function getProductName(datasourceName) {
+export function getProductName(datasourceName?: string): string {
 	let productName;
 	if (datasourceName) {
 		productName = DatabaseFacade.getProductName(datasourceName);
@@ -83,144 +85,158 @@ export function getProductName(datasourceName) {
 	}
 	return productName;
 };
+ 
 
-export function getConnection(datasourceName) {
-	const connection = new Connection();
-	var native;
-	if (datasourceName) {
-		native = DatabaseFacade.getConnection(datasourceName);
-	} else {
-		native = DatabaseFacade.getConnection();
-	}
-	connection.native = native;
+export function getConnection(datasourceName?: string): Connection {
+	const connection = new Connection(datasourceName);
+
 	return connection;
 };
 
 /**
  * Connection object
  */
-function Connection() {
+export class Connection {
+	public native;
 
-	this.prepareStatement = function (sql) {
+	constructor(datasourceName? : string) {
+		if(datasourceName) {
+			this.native = DatabaseFacade.getConnection(datasourceName);
+		} else {
+			this.native = DatabaseFacade.getConnection();
+		}
+	}
+
+	public prepareStatement(sql: string): PreparedStatement {
 		const preparedStatement = new PreparedStatement();
 		const native = this.native.prepareStatement(sql);
 		preparedStatement.native = native;
 		return preparedStatement;
 	};
 
-	this.prepareCall = function (sql) {
+	public prepareCall(sql: string): CallableStatement {
 		const callableStatement = new CallableStatement();
 		const native = this.native.prepareCall(sql);
 		callableStatement.native = native;
 		return callableStatement;
 	};
 
-	this.close = function () {
+	public close(): void {
 		if (!this.isClosed()) {
 			this.native.close();
 		}
 	};
 
-	this.commit = function () {
+	public commit (): void {
 		this.native.commit();
 	};
 
-	this.getAutoCommit = function () {
+	public getAutoCommit (): boolean {
 		return this.native.getAutoCommit();
 	};
 
-	this.getCatalog = function () {
+	public getCatalog (): string {
 		return this.native.getCatalog();
 	};
 
-	this.getSchema = function () {
+	public getSchema (): string {
 		return this.native.getSchema();
 	};
 
-	this.getTransactionIsolation = function () {
+	public getTransactionIsolation (): number {
 		return this.native.getTransactionIsolation();
 	};
 
-	this.isClosed = function () {
+	public isClosed (): boolean {
 		return this.native.isClosed();
 	};
 
-	this.isReadOnly = function () {
+	public isReadOnly (): boolean {
 		return this.native.isReadOnly();
 	};
 
-	this.isValid = function () {
+	public isValid (): boolean {
 		return this.native.isValid();
 	};
 
-	this.rollback = function () {
-		return this.native.rollback();
+	public rollback (): void {
+		this.native.rollback();
 	};
 
-	this.setAutoCommit = function (autoCommit) {
+	public setAutoCommit (autoCommit: boolean): void {
 		this.native.setAutoCommit(autoCommit);
 	};
 
-	this.setCatalog = function (catalog) {
+	public setCatalog (catalog: string): void {
 		this.native.setCatalog(catalog);
 	};
 
-	this.setReadOnly = function (readOnly) {
+	public setReadOnly (readOnly: boolean): void {
 		this.native.setReadOnly(readOnly);
 	};
 
-	this.setSchema = function (schema) {
+	public setSchema (schema: string): void {
 		this.native.setSchema(schema);
 	};
 
-	this.setTransactionIsolation = function (transactionIsolation) {
+	public setTransactionIsolation (transactionIsolation: number): void {
 		this.native.setTransactionIsolation(transactionIsolation);
 	};
+
+	public getMetaData (): any /*: DatabaseMetaData*/ {
+		return this.native.getMetaData();
+	}
 }
 
 /**
  * Statement object
  */
-function PreparedStatement(internalStatement?) {
+class PreparedStatement {
+	public native;
+	public internalStatement;
 
-	this.close = function () {
+	constructor(internalStatement?: string) {
+		this.internalStatement = internalStatement;
+	}
+
+	public close(): void {
 		this.native.close();
 	};
 
-	this.getResultSet = function () {
+	public getResultSet(): ResultSet {
 		const resultset = new ResultSet();
 		const native = this.native.getResultSet();
 		resultset.native = native;
 		return resultset;
 	};
 
-	this.execute = function () {
+	public execute(): boolean {
 		return this.native.execute();
 	};
 
-	this.executeQuery = function () {
+	public executeQuery(): ResultSet {
 		const resultset = new ResultSet();
 		resultset.native = this.native.executeQuery();
 		return resultset;
 	};
 
-	this.executeUpdate = function () {
+	public executeUpdate(): number {
 		return this.native.executeUpdate();
 	};
 
-	this.setNull = function (index, sqlType) {
+	public setNull(index: number, sqlType: number): void {
 		this.native.setNull(index, sqlType);
 	};
 
-	this.setBinaryStream = function (parameter, inputStream, length) {
+	public setBinaryStream(parameterIndex: number, inputStream: InputStream, length?: number): void {
 		if (length) {
-			this.native.setBinaryStream(parameter, inputStream, length);
+			this.native.setBinaryStream(parameterIndex, inputStream, length);
 		} else {
-			this.native.setBinaryStream(parameter, inputStream);
+			this.native.setBinaryStream(parameterIndex, inputStream);
 		}
 	};
 
-	this.setBoolean = function (index, value) {
+	public setBoolean(index: number, value?: boolean): void {
 		if (value !== null && value !== undefined) {
 			this.native.setBoolean(index, value);
 		} else {
@@ -228,7 +244,7 @@ function PreparedStatement(internalStatement?) {
 		}
 	};
 
-	this.setByte = function (index, value) {
+	public setByte(index: number, value?: any /*: byte*/): void {
 		if (value !== null && value !== undefined) {
 			this.native.setByte(index, value);
 		} else {
@@ -236,7 +252,7 @@ function PreparedStatement(internalStatement?) {
 		}
 	};
 
-	this.setBlob = function (index, value) {
+	public setBlob(index: number, value?: Blob): void {
 		if (value !== null && value !== undefined) {
 			let blob = createBlobValue(this.native, value);
 			this.native.setBlob(index, blob);
@@ -245,7 +261,7 @@ function PreparedStatement(internalStatement?) {
 		}
 	};
 
-	this.setClob = function (index, value) {
+	public setClob(index: number, value?: any /*: Clob*/): void {
 		if (value !== null && value !== undefined) {
 			let clob = createClobValue(this.native, value);
 			this.native.setClob(index, clob);
@@ -254,7 +270,7 @@ function PreparedStatement(internalStatement?) {
 		}
 	};
 
-	this.setNClob = function (index, value) {
+	public setNClob(index: number, value?: any /*: NClob*/): void {
 		if (value !== null && value !== undefined) {
 			let nclob = createNClobValue(this.native, value);
 			this.native.setNClob(index, nclob);
@@ -263,7 +279,7 @@ function PreparedStatement(internalStatement?) {
 		}
 	};
 
-	this.setBytesNative = function (index, value) {
+	public setBytesNative(index: number, value?: any[] /*byte[]*/): void {
 		if (value !== null && value !== undefined) {
 			this.native.setBytes(index, value);
 		} else {
@@ -271,7 +287,7 @@ function PreparedStatement(internalStatement?) {
 		}
 	};
 
-	this.setBytes = function (index, value) {
+	public setBytes(index: number, value?: any[] /*byte[]*/): void {
 		if (value !== null && value !== undefined) {
 			var data = bytes.toJavaBytes(value);
 			this.native.setBytes(index, data);
@@ -280,7 +296,7 @@ function PreparedStatement(internalStatement?) {
 		}
 	};
 
-	this.setDate = function (index, value) {
+	public setDate(index: number, value?: string | Date): void {
 		if (value !== null && value !== undefined) {
 			let date = getDateValue(value);
 			let dateInstance = new JSqlDate(date.getTime());
@@ -290,7 +306,7 @@ function PreparedStatement(internalStatement?) {
 		}
 	};
 
-	this.setDouble = function (index, value) {
+	public setDouble(index: number, value?: number): void {
 		if (value !== null && value !== undefined) {
 			this.native.setDouble(index, value);
 		} else {
@@ -298,7 +314,7 @@ function PreparedStatement(internalStatement?) {
 		}
 	};
 
-	this.setFloat = function (index, value) {
+	public setFloat(index: number, value: number) {
 		if (value !== null && value !== undefined) {
 			this.native.setFloat(index, value);
 		} else {
@@ -306,7 +322,7 @@ function PreparedStatement(internalStatement?) {
 		}
 	};
 
-	this.setInt = function (index, value) {
+	public setInt(index: number, value?: number) {
 		if (value !== null && value !== undefined) {
 			this.native.setInt(index, value);
 		} else {
@@ -314,8 +330,8 @@ function PreparedStatement(internalStatement?) {
 		}
 	};
 
-	this.setLong = function (index, value) {
-		index = parseInt(index, 10); //Rhino things..
+	public setLong(index: string | number, value?: number) {
+		index = parseInt("" + index, 10); //Rhino things..
 		if (value !== null && value !== undefined) {
 			this.native.setLong(index, value);
 		} else {
@@ -323,7 +339,7 @@ function PreparedStatement(internalStatement?) {
 		}
 	};
 
-	this.setShort = function (index, value) {
+	public setShort(index: number, value?: number) {
 		if (value !== null && value !== undefined) {
 			this.native.setShort(index, value);
 		} else {
@@ -331,7 +347,7 @@ function PreparedStatement(internalStatement?) {
 		}
 	};
 
-	this.setString = function (index, value) {
+	public setString(index: number, value?: string) {
 		if (value !== null && value !== undefined) {
 			this.native.setString(index, value);
 		} else {
@@ -339,7 +355,7 @@ function PreparedStatement(internalStatement?) {
 		}
 	};
 
-	this.setTime = function (index, value) {
+	public setTime(index: number, value?: string | Date) {
 		if (value !== null && value !== undefined) {
 			let date = getDateValue(value);
 			let timeInstance = new JSqlTime(date.getTime());
@@ -349,7 +365,7 @@ function PreparedStatement(internalStatement?) {
 		}
 	};
 
-	this.setTimestamp = function (index, value) {
+	public setTimestamp(index: number, value?: string | Date) {
 		if (value !== null && value !== undefined) {
 			let date = getDateValue(value);
 			let timestampInstance = new JSqlTimestamp(date.getTime());
@@ -359,7 +375,7 @@ function PreparedStatement(internalStatement?) {
 		}
 	};
 
-	this.setBigDecimal = function (index, value) {
+	public setBigDecimal(index: number, value?: number /*: BigDecimal*/) {
 		if (value !== null && value !== undefined) {
 			this.native.setBigDecimal(index, value);
 		} else {
@@ -367,7 +383,7 @@ function PreparedStatement(internalStatement?) {
 		}
 	};
 
-	this.setNString = function (index, value) {
+	public setNString(index: number, value?: string) {
 		if (value !== null && value !== undefined) {
 			this.native.setNString(index, value);
 		} else {
@@ -375,389 +391,390 @@ function PreparedStatement(internalStatement?) {
 		}
 	};
 
-	this.execute = function () {
-		return this.native.execute();
-	};
-
-	this.addBatch = function () {
+	public addBatch() {
 		this.native.addBatch();
 	};
 
-	this.executeBatch = function () {
+	public executeBatch() {
 		return this.native.executeBatch();
 	};
 
-	this.getMetaData = function () {
+	public getMetaData() {
 		return this.native.getMetaData();
 	};
 
-	this.getMoreResults = function () {
+	public getMoreResults() {
 		return this.native.getMoreResults();
 	};
 
-	this.getParameterMetaData = function () {
+	public getParameterMetaData() {
 		return this.native.getParameterMetaData();
 	};
 
-	this.getSQLWarning = function () {
+	public getSQLWarning() {
 		return this.native.getWarnings();
 	};
 
-	this.isClosed = function () {
+	public isClosed() {
 		return this.native.isClosed();
 	};
 }
 
-function CallableStatement() {
+class CallableStatement {
+	public native;
 
-	this.getResultSet = function () {
+	// constructor() {
+
+	// }
+
+	public getResultSet() {
 		const resultset = new ResultSet();
 		resultset.native = this.native.getResultSet();
 		return resultset;
 	};
 
-	this.executeQuery = function () {
+	public executeQuery(): ResultSet {
 		const resultset = new ResultSet();
 		resultset.native = this.native.executeQuery();
 		return resultset;
 	};
 
-	this.executeUpdate = function () {
+	public executeUpdate(): number {
 		return this.native.executeUpdate();
 	};
 
-	this.registerOutParameter = function (parameterIndex, sqlType) {
+	public registerOutParameter(parameterIndex: number, sqlType: keyof typeof SQLTypes | number) {
 		this.native.registerOutParameter(parameterIndex, sqlType);
 	};
 
-	this.registerOutParameterByScale = function (parameterIndex, sqlType, scale) {
+	public registerOutParameterByScale(parameterIndex: number, sqlType: keyof typeof SQLTypes | number, scale: number) {
 		this.native.registerOutParameter(parameterIndex, sqlType, scale);
 	};
 
-	this.registerOutParameterByTypeName = function (parameterIndex, sqlType, typeName) {
+	public registerOutParameterByTypeName(parameterIndex: number, sqlType: keyof typeof SQLTypes | number, typeName: string) {
 		this.native.registerOutParameter(parameterIndex, sqlType, typeName);
 	};
 
-	this.wasNull = function () {
+	public wasNull() {
 		return this.native.wasNull();
 	};
 
-	this.getString = function (parameter) {
-		return this.native.getString(parameter);
+	public getString(parameterIndex: number): string {
+		return this.native.getString(parameterIndex);
 	};
 
-	this.getBoolean = function (parameter) {
-		return this.native.getBoolean(parameter);
+	public getBoolean(parameterIndex: number): boolean {
+		return this.native.getBoolean(parameterIndex);
 	};
 
-	this.getByte = function (parameter) {
-		return this.native.getByte(parameter);
+	public getByte(parameterIndex: number): any /*: byte*/ {
+		return this.native.getByte(parameterIndex);
 	};
 
-	this.getShort = function (parameter) {
-		return this.native.getShort(parameter);
+	public getShort(parameterIndex: number): number {
+		return this.native.getShort(parameterIndex);
 	};
 
-	this.getInt = function (parameter) {
-		return this.native.getInt(parameter);
+	public getInt(parameterIndex: number): number {
+		return this.native.getInt(parameterIndex);
 	};
 
-	this.getLong = function (parameter) {
-		return this.native.getLong(parameter);
+	public getLong(parameterIndex: number): number {
+		return this.native.getLong(parameterIndex);
 	};
 
-	this.getFloat = function (parameter) {
-		return this.native.getFloat(parameter);
+	public getFloat(parameterIndex: number): number {
+		return this.native.getFloat(parameterIndex);
 	};
 
-	this.getDouble = function (parameter) {
-		return this.native.getDouble(parameter);
+	public getDouble(parameterIndex: number): number {
+		return this.native.getDouble(parameterIndex);
 	};
 
-	this.getDate = function (parameter) {
-		return this.native.getDate(parameter);
+	public getDate(parameterIndex: number): Date {
+		return this.native.getDate(parameterIndex);
 	};
 
-	this.getTime = function (parameter) {
-		return this.native.getTime(parameter);
+	public getTime(parameterIndex: number): Date {
+		return this.native.getTime(parameterIndex);
 	};
 
-	this.getTimestamp = function (parameter) {
-		return this.native.getTimestamp(parameter);
+	public getTimestamp(parameterIndex: number): Date {
+		return this.native.getTimestamp(parameterIndex);
 	};
 
-	this.getObject = function (parameter) {
-		return this.native.getObject(parameter);
+	public getObject(parameterIndex: number): any {
+		return this.native.getObject(parameterIndex);
 	};
 
-	this.getBigDecimal = function (parameter) {
-		return this.native.getBigDecimal(parameter);
+	public getBigDecimal(parameterIndex: number): number /*: sql.BigDecimal*/ {
+		return this.native.getBigDecimal(parameterIndex);
 	};
 
-	this.getRef = function (parameter) {
-		return this.native.getRef(parameter);
+	public getRef(parameterIndex: number): any /*: sql.Ref*/ {
+		return this.native.getRef(parameterIndex);
 	};
 
-	this.getBytes = function (parameter) {
-		let data = this.native.getBytes(parameter);
+	public getBytes(parameterIndex: number): any[] /*: byte[]*/ {
+		let data = this.native.getBytes(parameterIndex);
 		return bytes.toJavaScriptBytes(data);
 	};
 
-	this.getBytesNative = function (parameter) {
-		return this.native.getBytes(parameter);
+	public getBytesNative(parameterIndex: number): any[] /*: byte[]*/ {
+		return this.native.getBytes(parameterIndex);
 	};
 
-	this.getBlob = function (parameter) {
-		let data = readBlobValue(this.native.getBlob(parameter));
+	public getBlob(parameterIndex: number): any /*: sql.Blob*/ {
+		let data = readBlobValue(this.native.getBlob(parameterIndex));
 		return bytes.toJavaScriptBytes(data);
 	};
 
-	this.getBlobNative = function (parameter) {
-		return readBlobValue(this.native.getBlob(parameter));
+	public getBlobNative(parameterIndex: number): any /*: sql.Blob*/ {
+		return readBlobValue(this.native.getBlob(parameterIndex));
 	};
 
-	this.getClob = function (parameter) {
-		return readClobValue(this.native.getClob(parameter));
+	public getClob(parameterIndex: number): any /*: sql.Clob*/ {
+		return readClobValue(this.native.getClob(parameterIndex));
 	};
 
-	this.getNClob = function (parameter) {
-		return readNClobValue(this.native.getNClob(parameter));
+	public getNClob(parameterIndex: string | number): any /*: sql.NClob*/ {
+		return readNClobValue(this.native.getNClob(parameterIndex));
 	};
 
-	this.getNString = function (parameter) {
-		return this.native.getNString(parameter);
+	public getNString(parameterIndex: string | number): string {
+		return this.native.getNString(parameterIndex);
 	};
 
-	this.getArray = function (parameter) {
-		return this.native.getArray(parameter);
+	public getArray(parameterIndex: string | number): any /*: sql.Array*/ {
+		return this.native.getArray(parameterIndex);
 	};
 
-	this.getURL = function (parameter) {
-		return this.native.getURL(parameter);
+	public getURL(parameterIndex: string | number): URL {
+		return this.native.getURL(parameterIndex);
 	};
 
-	this.getRowId = function (parameter) {
-		return this.native.getRowId(parameter);
+	public getRowId(parameterIndex: string | number): any /*: sql.RowId*/ {
+		return this.native.getRowId(parameterIndex);
 	};
 
-	this.getSQLXML = function (parameter) {
-		return this.native.getSQLXML(parameter);
+	public getSQLXML(parameterIndex: string | number): any /*: sql.SQLXML*/ {
+		return this.native.getSQLXML(parameterIndex);
 	};
 
-	this.setURL = function (parameter, value) {
-		this.native.setURL(parameter, value);
+	public setURL(parameterIndex: string, value: URL): void {
+		this.native.setURL(parameterIndex, value);
 	};
 
-	this.setNull = function (parameter, sqlTypeStr, typeName) {
-		const sqlType = Number.isInteger(sqlTypeStr) ? sqlTypeStr : SQLTypes[sqlTypeStr];
+	public setNull(parameterIndex: string, sqlTypeStr: keyof typeof SQLTypes | number, typeName?: string): void {
+		const sqlType: number = Number.isInteger(sqlTypeStr) ? sqlTypeStr : SQLTypes[sqlTypeStr];
 		if (typeName !== undefined && typeName !== null) {
-			this.native.setNull(parameter, sqlType, typeName);
+			this.native.setNull(parameterIndex, sqlType, typeName);
 		} else {
-			this.native.setNull(parameter, sqlType);
+			this.native.setNull(parameterIndex, sqlType);
 		}
 	};
 
-	this.setBoolean = function (parameter, value) {
+	public setBoolean(parameterIndex: string, value?: boolean): void {
 		if (value !== null && value !== undefined) {
-			this.native.setBoolean(parameter, value);
+			this.native.setBoolean(parameterIndex, value);
 		} else {
-			this.setNull(parameter, SQLTypes.BOOLEAN);
+			this.setNull(parameterIndex, SQLTypes.BOOLEAN);
 		}
 	};
 
-	this.setByte = function (parameter, value) {
+	public setByte(parameterIndex: string, value?: any /*: byte*/): void {
 		if (value !== null && value !== undefined) {
-			this.native.setByte(parameter, value);
+			this.native.setByte(parameterIndex, value);
 		} else {
-			this.setNull(parameter, SQLTypes.BIT);
+			this.setNull(parameterIndex, SQLTypes.BIT);
 		}
 	};
 
-	this.setShort = function (parameter, value) {
+	public setShort(parameterIndex: string, value?: number): void {
 		if (value !== null && value !== undefined) {
-			this.native.setShort(parameter, value);
+			this.native.setShort(parameterIndex, value);
 		} else {
-			this.setNull(parameter, SQLTypes.SMALLINT);
+			this.setNull(parameterIndex, SQLTypes.SMALLINT);
 		}
 	};
 
-	this.setInt = function (parameter, value) {
+	public setInt(parameterIndex: string, value?: number): void {
 		if (value !== null && value !== undefined) {
-			this.native.setInt(parameter, value);
+			this.native.setInt(parameterIndex, value);
 		} else {
-			this.setNull(parameter, SQLTypes.INTEGER);
+			this.setNull(parameterIndex, SQLTypes.INTEGER);
 		}
 	};
 
-	this.setLong = function (parameter, value) {
+	public setLong(parameterIndex: string, value?: number): void {
 		if (value !== null && value !== undefined) {
-			this.native.setLong(parameter, value);
+			this.native.setLong(parameterIndex, value);
 		} else {
-			this.setNull(parameter, SQLTypes.BIGINT);
+			this.setNull(parameterIndex, SQLTypes.BIGINT);
 		}
 	};
 
-	this.setFloat = function (parameter, value) {
+	public setFloat(parameterIndex: string, value?: number): void {
 		if (value !== null && value !== undefined) {
-			this.native.setFloat(parameter, value);
+			this.native.setFloat(parameterIndex, value);
 		} else {
-			this.setNull(parameter, SQLTypes.FLOAT);
+			this.setNull(parameterIndex, SQLTypes.FLOAT);
 		}
 	};
 
-	this.setDouble = function (parameter, value) {
+	public setDouble(parameterIndex: string, value?: number): void {
 		if (value !== null && value !== undefined) {
-			this.native.setDouble(parameter, value);
+			this.native.setDouble(parameterIndex, value);
 		} else {
-			this.setNull(parameter, SQLTypes.DOUBLE);
+			this.setNull(parameterIndex, SQLTypes.DOUBLE);
 		}
 	};
 
-	this.setBigDecimal = function (parameter, value) {
+	public setBigDecimal(parameterIndex: string, value?: number /*: BigDecimal*/): void {
 		if (value !== null && value !== undefined) {
-			this.native.setBigDecimal(parameter, value);
+			this.native.setBigDecimal(parameterIndex, value);
 		} else {
-			this.setNull(parameter, SQLTypes.DECIMAL);
+			this.setNull(parameterIndex, SQLTypes.DECIMAL);
 		}
 	};
 
-	this.setString = function (parameter, value) {
+	public setString(parameterIndex: string, value?: string): void {
 		if (value !== null && value !== undefined) {
-			this.native.setString(parameter, value);
+			this.native.setString(parameterIndex, value);
 		} else {
-			this.setNull(parameter, SQLTypes.VARCHAR);
+			this.setNull(parameterIndex, SQLTypes.VARCHAR);
 		}
 	};
 
-	this.setBytes = function (parameter, value) {
+	public setBytes(parameterIndex: string, value?: any[] /*byte[]*/): void {
 		if (value !== null && value !== undefined) {
-			this.native.setBytes(parameter, value);
+			this.native.setBytes(parameterIndex, value);
 		} else {
-			this.setNull(parameter, SQLTypes.ARRAY);
+			this.setNull(parameterIndex, SQLTypes.ARRAY);
 		}
 	};
 
-	this.setDate = function (parameter, value) {
+	public setDate(parameterIndex: string, value?: string | Date): void {
 		if (value !== null && value !== undefined) {
 			let date = getDateValue(value);
 			let dateInstance = new JSqlDate(date.getTime());
-			this.native.setDate(parameter, dateInstance);
+			this.native.setDate(parameterIndex, dateInstance);
 		} else {
-			this.setNull(parameter, SQLTypes.DATE);
+			this.setNull(parameterIndex, SQLTypes.DATE);
 		}
 	};
 
-	this.setTime = function (parameter, value) {
+	public setTime(parameterIndex: string, value?: string | Date): void {
 		if (value !== null && value !== undefined) {
 			let date = getDateValue(value);
 			let timeInstance = new JSqlTime(date.getTime());
-			this.native.setTime(parameter, timeInstance);
+			this.native.setTime(parameterIndex, timeInstance);
 		} else {
-			this.setNull(parameter, SQLTypes.TIME);
+			this.setNull(parameterIndex, SQLTypes.TIME);
 		}
 	};
 
-	this.setTimestamp = function (parameter, value) {
+	public setTimestamp(parameterIndex: string, value?: string | Date): void {
 		if (value !== null && value !== undefined) {
 			let date = getDateValue(value);
 			let timestampInstance = new JSqlTimestamp(date.getTime());
-			this.native.setTimestamp(parameter, timestampInstance);
+			this.native.setTimestamp(parameterIndex, timestampInstance);
 		} else {
-			this.setNull(parameter, SQLTypes.TIMESTAMP);
+			this.setNull(parameterIndex, SQLTypes.TIMESTAMP);
 		}
 	};
 
-	this.setAsciiStream = function (parameter, inputStream, length) {
+	public setAsciiStream(parameterIndex: string, inputStream: InputStream, length: number): void {
 		if (length) {
-			this.native.setAsciiStream(parameter, inputStream, length);
+			this.native.setAsciiStream(parameterIndex, inputStream, length);
 		} else {
-			this.native.setAsciiStream(parameter, inputStream);
+			this.native.setAsciiStream(parameterIndex, inputStream);
 		}
 	};
 
-	this.setBinaryStream = function (parameter, inputStream, length) {
+	public setBinaryStream(parameterIndex: string, inputStream: InputStream, length: number): void {
 		if (length) {
-			this.native.setBinaryStream(parameter, inputStream, length);
+			this.native.setBinaryStream(parameterIndex, inputStream, length);
 		} else {
-			this.native.setBinaryStream(parameter, inputStream);
+			this.native.setBinaryStream(parameterIndex, inputStream);
 		}
 	};
 
-	this.setObject = function (parameter, value, targetSqlType, scale) {
+	public setObject(parameterIndex: string, value: Object, targetSqlType: number, scale: number): void {
 		if (scale !== undefined && scale !== null && targetSqlType !== undefined && targetSqlType !== null) {
-			this.native.setObject(parameter, value, targetSqlType, scale);
+			this.native.setObject(parameterIndex, value, targetSqlType, scale);
 		} else if (targetSqlType !== undefined && targetSqlType !== null) {
-			this.native.setObject(parameter, value, targetSqlType);
+			this.native.setObject(parameterIndex, value, targetSqlType);
 		} else {
-			this.native.setObject(parameter, value);
+			this.native.setObject(parameterIndex, value);
 		}
 	};
 
-	this.setRowId = function (parameter, value) {
-		this.native.setRowId(parameter, value);
+	public setRowId(parameterIndex: string, value: number /*: RowId*/): void {
+		this.native.setRowId(parameterIndex, value);
 	};
 
-	this.setNString = function (parameter, value) {
+	public setNString(parameterIndex: string, value: string): void {
 		if (value !== null && value !== undefined) {
-			this.native.setNString(parameter, value);
+			this.native.setNString(parameterIndex, value);
 		} else {
-			this.setNull(parameter, SQLTypes.NVARCHAR);
+			this.setNull(parameterIndex, SQLTypes.NVARCHAR);
 		}
 	};
 
-	this.setSQLXML = function (parameter, value) {
+	public setSQLXML(parameterIndex: string, value: any /*: SQLXML*/): void {
 		if (value !== null && value !== undefined) {
-			this.native.setSQLXML(parameter, value);
+			this.native.setSQLXML(parameterIndex, value);
 		} else {
 			throw Error("Nullable SQLXML type not supported.");
 		}
 	};
 
-	this.setBlob = function (parameter, value) {
+	public setBlob(parameterIndex: string, value: any /*Blob */): void{
 		if (value !== null && value !== undefined) {
 			let blob = createBlobValue(this.native, value);
-			this.native.setBlob(parameter, blob);
+			this.native.setBlob(parameterIndex, blob);
 		} else {
-			this.setNull(parameter, SQLTypes.BLOB);
+			this.setNull(parameterIndex, SQLTypes.BLOB);
 		}
 	};
 
-	this.setClob = function (parameter, value) {
+	public setClob(parameterIndex: string, value: any /*: Clob*/): void {
 		if (value !== null && value !== undefined) {
 			let clob = createClobValue(this.native, value);
-			this.native.setClob(parameter, clob);
+			this.native.setClob(parameterIndex, clob);
 		} else {
-			this.setNull(parameter, SQLTypes.CLOB);
+			this.setNull(parameterIndex, SQLTypes.CLOB);
 		}
 	};
 
-	this.setNClob = function (parameter, value) {
+	public setNClob(parameterIndex: string, value: any /*: NClob*/): void {
 		if (value !== null && value !== undefined) {
 			let nclob = createNClobValue(this.native, value);
-			this.native.setNClob(parameter, nclob);
+			this.native.setNClob(parameterIndex, nclob);
 		} else {
-			this.setNull(parameter, SQLTypes.NCLOB);
+			this.setNull(parameterIndex, SQLTypes.NCLOB);
 		}
 	};
 
-	this.execute = function () {
+	public execute(): boolean {
 		return this.native.execute();
 	};
 
-	this.getMoreResults = function () {
+	public getMoreResults(): boolean /* unsure about here */ {
 		return this.native.getMoreResults();
 	};
 
-	this.getParameterMetaData = function () {
+	public getParameterMetaData(): any /*: ParameterMetaData*/ {
 		return this.native.getParameterMetaData();
 	};
 
-	this.isClosed = function () {
+	public isClosed(): boolean {
 		return this.native.isClosed();
 	};
 
 
-	this.close = function () {
+	public close(): void {
 		this.native.close();
 	};
 }
@@ -765,130 +782,136 @@ function CallableStatement() {
 /**
  * ResultSet object
  */
-function ResultSet(internalResultset?) {
+class ResultSet {
+	public native;
+	public internalResultset;
 
-	this.toJson = function (limited) {
+	constructor(internalResultset?) {
+		this.internalResultset = internalResultset;
+	}
+
+	public toJson(limited: boolean): void {
 		if (limited === undefined || limited === false) {
 			limited = false;
 		}
-		return DatabaseResultSetHelper.toJson(this.native, limited, false);
+		DatabaseResultSetHelper.toJson(this.native, limited, false);
 	};
 
-	this.close = function () {
+	public close(): void {
 		this.native.close();
 	};
 
-	this.getBigDecimal = function (identifier) {
+	public getBigDecimal(identifier: number): any /*: BigDecimal*/ {
 		return this.native.getBigDecimal(identifier);
 	};
 
-	this.getBoolean = function (identifier) {
+	public getBoolean(identifier: number): boolean {
 		return this.native.getBoolean(identifier);
 	};
 
-	this.getByte = function (identifier) {
+	public getByte(identifier: number): any /*: byte*/ {
 		return this.native.getByte(identifier);
 	};
 
-	this.getBytes = function (identifier) {
+	public getBytes(identifier: number): any[] /*: byte[]*/ {
 		let data = this.native.getBytes(identifier);
 		return bytes.toJavaScriptBytes(data);
 	};
 
-	this.getBytesNative = function (identifier) {
+	public getBytesNative(identifier: number): any[] /*: byte[]*/ {
 		return this.native.getBytes(identifier);
 	};
 
-	this.getBlob = function (identifier) {
+	public getBlob(identifier: number): any /*: sql.Blob*/ {
 		let data = readBlobValue(this.native.getBlob(identifier));
 		return bytes.toJavaScriptBytes(data);
 	};
 
-	this.getBlobNative = function (identifier) {
+	public getBlobNative(identifier: number): any /*: sql.Blob*/ {
 		return readBlobValue(this.native.getBlob(identifier));
 	};
 
-	this.getClob = function (identifier) {
+	public getClob(identifier: number): any /*: sql.Clob*/ {
 		return readClobValue(this.native.getClob(identifier));
 	};
 
-	this.getNClob = function (columnIndex) {
+	public getNClob(columnIndex: number): any /*: sql.NClob*/ {
 		return readNClobValue(this.native.getNClob(columnIndex));
 	}
 
-	this.getDate = function (identifier) {
+	public getDate(identifier: number): Date | null {
 		const dateInstance = this.native.getDate(identifier);
 		return dateInstance !== null && dateInstance !== undefined ? new Date(dateInstance.getTime()) : null;
 	};
 
-	this.getDouble = function (identifier) {
+	public getDouble(identifier: number): number {
 		return this.native.getDouble(identifier);
 	};
 
-	this.getFloat = function (identifier) {
+	public getFloat(identifier: number): number {
 		return this.native.getFloat(identifier);
 	};
 
-	this.getInt = function (identifier) {
+	public getInt(identifier: number): number {
 		return this.native.getInt(identifier);
 	};
 
-	this.getLong = function (identifier) {
+	public getLong(identifier: number): number {
 		return this.native.getLong(identifier);
 	};
 
-	this.getShort = function (identifier) {
+	public getShort(identifier: number): number {
 		return this.native.getShort(identifier);
 	};
 
-	this.getString = function (identifier) {
+	public getString(identifier: number): string {
 		return this.native.getString(identifier);
 	};
 
-	this.getTime = function (identifier) {
+	public getTime(identifier: number): Date | null {
 		const dateInstance = this.native.getTime(identifier);
 		return dateInstance !== null && dateInstance !== undefined ? new Date(dateInstance.getTime()) : null;
 	};
 
-	this.getTimestamp = function (identifier) {
+	public getTimestamp(identifier: number): Date | null {
 		const dateInstance = this.native.getTimestamp(identifier);
 		return dateInstance !== null && dateInstance !== undefined ? new Date(dateInstance.getTime()) : null;
 	};
 
-	this.isAfterLast = function () {
+	public isAfterLast(): boolean {
 		return this.native.isAfterLast();
 	};
 
-	this.isBeforeFirst = function () {
+	public isBeforeFirst(): boolean {
 		return this.native.isBeforeFirst();
 	};
 
-	this.isClosed = function () {
+	public isClosed(): boolean {
 		return this.native.isClosed();
 	};
 
-	this.isFirst = function () {
+	public isFirst(): boolean {
 		return this.native.isFirst();
 	};
 
-	this.isLast = function () {
+	public isLast(): boolean {
 		return this.native.isLast();
 	};
 
-	this.next = function () {
+	public next(): boolean {
 		return this.native.next();
 	};
 
-	this.getMetaData = function () {
+	public getMetaData(): any /*: ResultSetMetaData*/ {
 		return this.native.getMetaData();
 	}
 
-	this.getNString = function (columnIndex) {
+	public getNString(columnIndex: number): string {
 		return this.native.getNString(columnIndex);
 	}
 }
 
-function isHanaDatabase(connection) {
+function isHanaDatabase(connection: Connection): boolean {
 	let isHanaDatabase = false;
 	let metadata = connection.getMetaData();
 	if (metadata !== null && metadata !== undefined) {
@@ -897,11 +920,11 @@ function isHanaDatabase(connection) {
 	return isHanaDatabase;
 }
 
-function readBlobValue(value) {
+function readBlobValue(value: any /*: Blob*/) {
 	return value.getBytes(1, value.length());
 }
 
-function createBlobValue(native, value) {
+function createBlobValue(native, value: any /*byte[] */): any /*: Blob*/ {
 	try {
 		let connection = native.getConnection();
 		if (connection === null || connection === undefined) {
@@ -932,11 +955,11 @@ function createBlobValue(native, value) {
 	}
 }
 
-function readClobValue(value) {
+function readClobValue(value: any /*: Clob*/): string {
 	return value.getSubString(1, value.length());
 }
 
-function createClobValue(native, value) {
+function createClobValue(native, value: string): any /*: Clob*/ {
 	try {
 		let connection = native.getConnection();
 		if (connection === null || connection === undefined) {
@@ -967,11 +990,11 @@ function createClobValue(native, value) {
 	}
 }
 
-function readNClobValue(value) {
+function readNClobValue(value: any /*: NClob*/): string {
 	return value.getSubString(1, value.length());
 }
 
-function createNClobValue(native, value) {
+function createNClobValue(native, value: string): any /*: NClob*/ {
 	try {
 		let connection = native.getConnection();
 		if (connection === null || connection === undefined) {
@@ -1002,7 +1025,7 @@ function createNClobValue(native, value) {
 	}
 }
 
-function getDateValue(value) {
+function getDateValue(value: string | Date): Date {
 	if (typeof value === "string") {
 		return new Date(value);
 	}
