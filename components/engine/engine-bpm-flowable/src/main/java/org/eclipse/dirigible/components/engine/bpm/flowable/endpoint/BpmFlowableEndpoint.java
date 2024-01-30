@@ -116,14 +116,14 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
      * Get the BPM model source.
      *
      * @param workspace the workspace
-     * @param project   the project
-     * @param path      the path
+     * @param project the project
+     * @param path the path
      * @return the response
      * @throws JsonProcessingException exception
      */
     @GetMapping(value = "/models/{workspace}/{project}/{*path}", produces = "application/json")
     public ResponseEntity<ObjectNode> getModel(@PathVariable("workspace") String workspace, @PathVariable("project") String project,
-                                               @PathVariable("path") String path) throws JsonProcessingException {
+            @PathVariable("path") String path) throws JsonProcessingException {
 
         path = sanitizePath(path);
 
@@ -157,16 +157,16 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
      * Save the BPM model source.
      *
      * @param workspace the workspace
-     * @param project   the project
-     * @param path      the path
-     * @param payload   the payload
+     * @param project the project
+     * @param path the path
+     * @param payload the payload
      * @return the response
      * @throws URISyntaxException in case of an error
-     * @throws IOException        exception
+     * @throws IOException exception
      */
     @PostMapping(value = "/models/{workspace}/{project}/{*path}", produces = "application/json")
     public ResponseEntity<URI> saveModel(@PathVariable("workspace") String workspace, @PathVariable("project") String project,
-                                         @PathVariable("path") String path, @RequestParam("json_xml") String payload) throws URISyntaxException, IOException {
+            @PathVariable("path") String path, @RequestParam("json_xml") String payload) throws URISyntaxException, IOException {
 
         path = sanitizePath(path);
 
@@ -207,13 +207,13 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
     /**
      * Gets the process definitions.
      *
-     * @param id  the id
+     * @param id the id
      * @param key the key
      * @return the process definitions
      */
     @GetMapping(value = "/bpm-processes/definition")
     public ResponseEntity<ProcessDefinitionData> getProcessDefinition(@Nullable @RequestParam("id") Optional<String> id,
-                                                                      @Nullable @RequestParam("key") Optional<String> key) {
+            @Nullable @RequestParam("key") Optional<String> key) {
         if (key.isPresent()) {
             return ResponseEntity.ok(getBpmService().getProcessDefinitionByKey(key.get()));
         } else if (id.isPresent()) {
@@ -226,12 +226,12 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
      * Gets the processes keys.
      *
      * @param businessKey the business key
-     * @param key         the key
+     * @param key the key
      * @return the processes keys
      */
     @GetMapping(value = "/bpm-processes/instances")
     public ResponseEntity<List<ProcessInstanceData>> getProcessesInstances(@Nullable @RequestParam("id") Optional<String> businessKey,
-                                                                           @Nullable @RequestParam("key") Optional<String> key) {
+            @Nullable @RequestParam("key") Optional<String> key) {
         if (key.isPresent()) {
             return ResponseEntity.ok(getBpmService().getProcessInstanceByKey(key.get()));
         } else if (businessKey.isPresent()) {
@@ -262,11 +262,11 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 
         BpmService bpmService = getBpmService();
         List<VariableInstance> variables = bpmService.getBpmProviderFlowable()
-                .getProcessEngine()
-                .getRuntimeService()
-                .createVariableInstanceQuery()
-                .processInstanceId(id)
-                .list();
+                                                     .getProcessEngine()
+                                                     .getRuntimeService()
+                                                     .createVariableInstanceQuery()
+                                                     .processInstanceId(id)
+                                                     .list();
 
         return ResponseEntity.ok(variables);
     }
@@ -285,20 +285,20 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
         RepositoryService repositoryService = processEngine.getRepositoryService();
 
         ProcessDefinition process = repositoryService.createProcessDefinitionQuery()
-                .processDefinitionKey(processDefinitionKey)
-                .latestVersion()
-                .singleResult();
+                                                     .processDefinitionKey(processDefinitionKey)
+                                                     .latestVersion()
+                                                     .singleResult();
 
         if (process != null) {
             String deploymentId = process.getDeploymentId();
             String diagramResourceName = process.getDiagramResourceName();
 
             byte[] imageBytes = repositoryService.getResourceAsStream(deploymentId, diagramResourceName)
-                    .readAllBytes();
+                                                 .readAllBytes();
 
             return ResponseEntity.ok(imageBytes);
         }
-        return ResponseEntity.ok(new byte[]{});
+        return ResponseEntity.ok(new byte[] {});
     }
 
     /**
@@ -342,7 +342,7 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
                         "Process instance with id '" + processInstanceData.getId() + "' has no graphical notation defined.");
             }
         }
-        return ResponseEntity.ok(new byte[]{});
+        return ResponseEntity.ok(new byte[] {});
     }
 
 }
