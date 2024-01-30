@@ -21,7 +21,7 @@ const MUSTACHE_FILE_EXTENSION = ".mustache";
 
 const TemplateEnginesFacade = Java.type("org.eclipse.dirigible.components.api.templates.TemplateEnginesFacade");
 
-export class Engines {
+export class TemplateEngines {
 
     public static getDefaultEngine(): TemplateEngine {
         return this.getVelocityEngine();
@@ -86,5 +86,5 @@ class TemplateEngine {
 // @ts-ignore
 if (typeof module !== 'undefined') {
 	// @ts-ignore
-	module.exports = Engines;
+	module.exports = TemplateEngines;
 }
