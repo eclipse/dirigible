@@ -17,6 +17,7 @@
 
 import * as streams from "@dirigible/io/streams";
 const CmisFacade = Java.type("org.eclipse.dirigible.components.api.cms.CmisFacade");
+const Gson = Java.type("com.google.gson.Gson");
 const HashMap = Java.type("java.util.HashMap");
 
 export class Cmis {
@@ -83,8 +84,9 @@ export class Cmis {
 		return new Session(native);
 	}
 
-	public getAccessDefinitions(path: string, method: string): AccessDefinition[] {
-		return CmisFacade.getAccessDefinitions(path, method);
+	public static getAccessDefinitions(path: string, method: string): AccessDefinition[] {
+		const accessDefinitions = CmisFacade.getAccessDefinitions(path, method);
+		return JSON.parse(new Gson().toJson(accessDefinitions));
 	}
 }
 
@@ -198,7 +200,7 @@ class RepositoryInfo {
 /**
  * Folder object
  */
-class Folder {
+export class Folder {
 	private native: any;
 	private path: any;
 
@@ -399,7 +401,7 @@ class ContentStream {
 /**
  * Document object
  */
-class Document {
+export class Document {
 
 	private native: any;
 	private path: string;
