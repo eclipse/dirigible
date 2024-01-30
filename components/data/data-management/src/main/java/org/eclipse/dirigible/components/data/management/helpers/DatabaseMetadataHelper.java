@@ -486,6 +486,19 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
     }
 
     /**
+     * The Interface IndicesIteratorCallback.
+     */
+    public interface ForeignKeysIteratorCallback {
+
+        /**
+         * On index.
+         *
+         * @param fkName the index name
+         */
+        void onIndex(String fkName);
+    }
+
+    /**
      * Iterate table definition.
      *
      * @param connection the connection
@@ -497,7 +510,8 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
      * @throws SQLException the SQL exception
      */
     public static void iterateTableDefinition(Connection connection, String catalogName, String schemaName, String tableName,
-            ColumnsIteratorCallback columnsIteratorCallback, IndicesIteratorCallback indicesIteratorCallback) throws SQLException {
+            ColumnsIteratorCallback columnsIteratorCallback, IndicesIteratorCallback indicesIteratorCallback,
+            ForeignKeysIteratorCallback foreignKeysIteratorCallback) throws SQLException {
 
         DatabaseMetaData dmd = connection.getMetaData();
 
@@ -512,6 +526,11 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         ResultSet indexes = dmd.getIndexInfo(catalogName, schemaName, DatabaseNameNormalizer.normalizeTableName(tableName), false, false);
         if (indexes == null) {
             throw new SQLException("DatabaseMetaData.getIndexInfo returns null");
+        }
+
+        ResultSet foreignKeys = dmd.getImportedKeys(catalogName, schemaName, DatabaseNameNormalizer.normalizeTableName(tableName));
+        if (foreignKeys == null) {
+            throw new SQLException("DatabaseMetaData.getImportedKeys returns null");
         }
 
         try {
@@ -537,9 +556,15 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
                             indexes.getInt(PAGES_INDEX) + EMPTY, indexes.getString(FILTER_CONDITION));
                 }
             }
+            while (foreignKeys.next()) {
+                if (foreignKeysIteratorCallback != null) {
+                    foreignKeysIteratorCallback.onIndex(foreignKeys.getString(FK_NAME));
+                }
+            }
         } finally {
             columns.close();
             indexes.close();
+            foreignKeys.close();
             pks.close();
         }
     }
