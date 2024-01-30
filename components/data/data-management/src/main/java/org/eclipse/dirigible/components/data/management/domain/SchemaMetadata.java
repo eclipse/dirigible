@@ -43,6 +43,9 @@ public class SchemaMetadata {
     /** The functions. */
     private List<FunctionMetadata> functions;
 
+    /** The functions. */
+    private List<SequenceMetadata> sequences;
+
     /**
      * Instantiates a new schema metadata.
      *
@@ -72,6 +75,15 @@ public class SchemaMetadata {
             this.functions = DatabaseMetadataHelper.listFunctions(connection, catalogName, name, nameFilter);
         } catch (Exception e) {
             this.functions = new ArrayList<FunctionMetadata>();
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage());
+            }
+        }
+
+        try {
+            this.sequences = DatabaseMetadataHelper.listSequences(connection);
+        } catch (Exception e) {
+            this.sequences = new ArrayList<SequenceMetadata>();
             if (logger.isErrorEnabled()) {
                 logger.error(e.getMessage());
             }
