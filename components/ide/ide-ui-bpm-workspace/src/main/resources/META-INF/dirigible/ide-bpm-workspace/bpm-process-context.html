@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="ide-bpm-process-context"
+      ng-controller="IDEBpmProcessContextViewController as instances">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+    <title dg-view-title></title>
+    <script type="text/javascript" src="services/bpm-process-context-view.js"></script>
+    <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
+    <theme></theme>
+    <script type="text/javascript" src="/webjars/jstree/jstree.min.js"></script>
+    <script type="text/javascript" src="/services/web/resources-core/ui/widgets/indicator.plugin.js"></script>
+    <link type="text/css" rel="stylesheet" href="/services/web/resources/styles/jstree.css" />
+    <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
+    <script type="text/javascript" src="js/bpm-process-context.js"></script>
+</head>
+
+<body class="dg-vbox">
+<fd-toolbar compact="true">
+    <fd-toolbar-spacer></fd-toolbar-spacer>
+    <fd-button compact="true" dg-type="transparent" glyph="sap-icon--refresh" title="Refresh"
+               aria-label="Refresh" ng-click="reload()"></fd-button>
+    <fd-toolbar-separator></fd-toolbar-separator>
+    <fd-button compact="true" dg-type="{{ instances.displaySearch ? 'emphasized' : 'transparent' }}"
+               glyph="sap-icon--search" title="Toggle search" aria-label="Toggle search"
+               ng-click="instances.toggleSearch()">
+    </fd-button>
+</fd-toolbar>
+<fd-toolbar ng-show="instances.displaySearch">
+    <fd-input type="search" placeholder="Search" ng-keyup="instances.inputSearchKeyUp($event)"
+              ng-model="instances.searchText">
+    </fd-input>
+</fd-toolbar>
+<fd-scrollbar class="dg-fill-parent">
+    <table fd-table outer-borders="none" display-mode="compact" class="dg-list-border-bottom">
+        <thead fd-table-header sticky="true">
+        <tr fd-table-row>
+            <th fd-table-header-cell>Id</th>
+            <th fd-table-header-cell>Process Instance Id</th>
+            <th fd-table-header-cell>Name</th>
+            <th fd-table-header-cell>Type</th>
+            <th fd-table-header-cell>Value</th>
+        </tr>
+        </thead>
+        <tbody fd-table-body>
+        <tr fd-table-row ng-repeat="next in instances.instancesList track by next.id" hoverable="true"
+            activable="true" dg-selected="next.selected" ng-click="instances.selectionChanged(next)">
+
+            <td fd-table-cell>{{next.id}}</td>
+            <td fd-table-cell>{{next.processInstanceId}}</td>
+            <td fd-table-cell>{{next.name}}</td>
+            <td fd-table-cell>{{next.typeName}}</td>
+            <td fd-table-cell>{{next.value}}</td>
+        </tr>
+        <tr ng-if="instances.instancesList.length === 0" fd-table-row>
+            <td fd-table-cell no-data="true">{{instances.getNoDataMessage()}}</td>
+        </tr>
+        </tbody>
+    </table>
+</fd-scrollbar>
+</body>
+
+</html>
