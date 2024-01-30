@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.getSelectedText;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class NewProjectIT extends UserInterfaceIntegrationTest {
@@ -27,7 +29,6 @@ public class NewProjectIT extends UserInterfaceIntegrationTest {
         createNewProject();
 
         browser.assertElementExistsByTypeAndText(HtmlElementType.ANCHOR, NEW_TEST_NAME);
-
     }
 
     void createNewProject() throws InterruptedException {
@@ -39,9 +40,7 @@ public class NewProjectIT extends UserInterfaceIntegrationTest {
 
         browser.enterTextInElementByAttributePattern(HtmlElementType.INPUT, HtmlAttribute.ID, "pgfi1", NEW_TEST_NAME);
 
-        // String buttonText =
-        // $(".fd-dialog__decisive-button.fd-button.fd-button--emphasized").getAttribute("text");
-        // browser.clickElementByTypeAndText(HtmlElementType.BUTTON, buttonText);
+        // browser.clickElementByTypeAndText(HtmlElementType.BUTTON, "Create");
         $(".fd-dialog__decisive-button.fd-button.fd-button--emphasized").click();
 
         TimeUnit.SECONDS.sleep(10);
