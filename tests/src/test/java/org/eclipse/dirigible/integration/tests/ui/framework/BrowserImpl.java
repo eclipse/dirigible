@@ -20,6 +20,7 @@ import com.codeborne.selenide.Selectors;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
+import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 public class BrowserImpl implements Browser {
 
@@ -55,7 +56,14 @@ public class BrowserImpl implements Browser {
     }
 
     private String createAppUrl(String path) {
+        if (StringUtils.isBlank(path)) {
+            return createAppUrlByAbsolutePath("");
+        }
         String absolutePath = path.startsWith(PATH_SEPARATOR) ? path : PATH_SEPARATOR + path;
+        return createAppUrlByAbsolutePath(absolutePath);
+    }
+
+    private String createAppUrlByAbsolutePath(String absolutePath) {
         return "http://localhost:" + localServerPort + absolutePath;
     }
 

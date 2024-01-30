@@ -75,6 +75,9 @@ public class CsvRecord {
     public String getCsvValueForColumn(String columnName) {
         if (headerNames.size() > 0) {
             int csvValueIndex = headerNames.indexOf(columnName);
+            if (csvValueIndex == -1) {
+                return null;
+            }
             return csvRecord.get(csvValueIndex);
         }
 

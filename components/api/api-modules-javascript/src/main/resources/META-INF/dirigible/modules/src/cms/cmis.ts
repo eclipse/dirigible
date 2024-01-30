@@ -23,7 +23,7 @@ const Gson = Java.type("com.google.gson.Gson");
 const HashMap = Java.type("java.util.HashMap");
 
 export function getSession() {
-    const native = CmisFacade.getSession();
+	const native = CmisFacade.getSession();
 	var session = new Session(native);
 	return session;
 };
@@ -48,7 +48,7 @@ class Session {
 
 	getRootFolder(): Folder {
 		var native = this.native.getRootFolder();
-        var rootFolder = new Folder(native, null);
+		var rootFolder = new Folder(native, null);
 		return rootFolder;
 	};
 
@@ -89,6 +89,30 @@ class Session {
 		}
 		throw new Error("Unsupported CMIS object type: " + objectInstanceTypeId);
 	};
+
+	createFolder(location: string): Folder {
+		if (location.startsWith("/")) {
+			location = location.substring(1, location.length);
+		}
+		if (location.endsWith("/")) {
+			location = location.substring(0, location.length - 1);
+		}
+		const segments = location.split("/");
+		let folder = this.getRootFolder();
+		for (const next of segments) {
+			const properties = {
+				[OBJECT_TYPE_ID]: OBJECT_TYPE_FOLDER,
+				[NAME]: next
+			};
+			folder = folder.createFolder(properties);
+		}
+		return folder;
+	}
+
+	createDocument(location: string, properties, contentStream, versioningState): Document {
+		const folder = this.createFolder(location);
+		return folder.createDocument(properties, contentStream, versioningState);
+	}
 }
 
 /**
@@ -132,9 +156,9 @@ class Folder {
 		}
 		var mapInstance = new HashMap();
 		for (var property in properties) {
-		    if (properties.hasOwnProperty(property)) {
-		    	mapInstance.put(property, properties[property]);
-		    }
+			if (properties.hasOwnProperty(property)) {
+				mapInstance.put(property, properties[property]);
+			}
 		}
 		var native = this.native.createFolder(mapInstance);
 		var folder = new Folder(native, null);
@@ -148,12 +172,12 @@ class Folder {
 		}
 		var mapInstance = new HashMap();
 		for (var property in properties) {
-		    if (properties.hasOwnProperty(property)) {
-		    	mapInstance.put(property, properties[property]);
-		    }
+			if (properties.hasOwnProperty(property)) {
+				mapInstance.put(property, properties[property]);
+			}
 		}
 		var state = CmisFacade.getVersioningState(versioningState);
-		
+
 		var native = this.native.createDocument(mapInstance, contentStream.native, state);
 		var document = new Document(native, null);
 		return document;
@@ -204,7 +228,7 @@ class Folder {
 		}
 		return this.native.rename(newName);
 	};
-	
+
 	deleteTree() {
 		var allowed = CmisFacade.isAllowed(this.getPath(), CMIS_METHOD_WRITE);
 		if (!allowed) {
@@ -240,16 +264,16 @@ class CmisObject {
 
 	getPath(): string {
 		//this is caused by having different underlying native objects in different environments.
-	    if (this.native.getPath) {
-	        return this.native.getPath();
-	    }
+		if (this.native.getPath) {
+			return this.native.getPath();
+		}
 
 		//Apache Chemistry CmisObject has no getPath() but getPaths() - https://chemistry.apache.org/docs/cmis-samples/samples/retrieve-objects/index.html
-	    if (this.native.getPaths) {
-	        return this.native.getPaths()[0];
-	    }
+		if (this.native.getPaths) {
+			return this.native.getPaths()[0];
+		}
 
-	    throw new Error(`Path not found for CmisObject with id ${this.getId()}`);
+		throw new Error(`Path not found for CmisObject with id ${this.getId()}`);
 	}
 
 	getType(): TypeDefinition {
@@ -332,10 +356,10 @@ class Document {
     };
 
 	delete() {
-	    var allowed = CmisFacade.isAllowed(this.getPath(), CMIS_METHOD_WRITE);
-       	    if (!allowed) {
-            	throw new Error("Write access not allowed on: " + this.getPath());
-            }
+		var allowed = CmisFacade.isAllowed(this.getPath(), CMIS_METHOD_WRITE);
+		if (!allowed) {
+			throw new Error("Write access not allowed on: " + this.getPath());
+		}
 		return this.native.delete(true);
 	};
 

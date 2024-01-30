@@ -10,7 +10,7 @@
                 },
                 {
                     "os": "windows",
-                    "command": "esbuild index.tsx --bundle --outfile=dist\\index.js --loader:.js=jsx --format=esm"
+                    "command": "cmd /c esbuild index.tsx --bundle --outfile=dist\\index.js --loader:.js=jsx --format=esm"
                 }
             ],
             "publish": "true"

@@ -64,7 +64,11 @@ public class ManagedDataSource implements DataSource {
      */
     @Override
     public Connection getConnection() throws SQLException {
-        return getConnection(null, null);
+        Connection connection = originalDataSource.getConnection();
+
+        enhanceConnection(connection);
+
+        return connection;
     }
 
     /**
@@ -82,7 +86,20 @@ public class ManagedDataSource implements DataSource {
      */
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        Connection connection = originalDataSource.getConnection();
+        Connection connection = originalDataSource.getConnection(username, password);
+
+        enhanceConnection(connection);
+
+        return connection;
+    }
+
+    /**
+     * Enhance connection.
+     *
+     * @param connection the connection
+     * @throws SQLException the SQL exception
+     */
+    private void enhanceConnection(Connection connection) throws SQLException {
 
         if (this.databaseName == null) {
             this.databaseName = connection.getMetaData()
@@ -108,8 +125,6 @@ public class ManagedDataSource implements DataSource {
             }
             connection.setClientInfo("XS_APPLICATIONUSER", userName);
         }
-
-        return connection;
     }
 
     /**

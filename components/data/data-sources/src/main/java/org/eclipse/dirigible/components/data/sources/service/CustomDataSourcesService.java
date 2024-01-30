@@ -46,7 +46,7 @@ public class CustomDataSourcesService {
                 if (logger.isInfoEnabled()) {
                     logger.info("Initializing a custom datasource with name: " + name);
                 }
-                initializeDataSource(name);
+                saveDataSource(name);
             }
         } else {
             if (logger.isTraceEnabled()) {
@@ -61,12 +61,12 @@ public class CustomDataSourcesService {
     }
 
     /**
-     * Initialize data source.
+     * Save data source model.
      *
      * @param name the name
      * @return the data source
      */
-    private void initializeDataSource(String name) {
+    private void saveDataSource(String name) {
         String databaseDriver = Configuration.get(name + "_DRIVER");
         String databaseUrl = Configuration.get(name + "_URL");
         String databaseUsername = Configuration.get(name + "_USERNAME");

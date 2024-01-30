@@ -12,11 +12,11 @@ package org.eclipse.dirigible.components.listeners.service;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import javax.jms.JMSException;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-import javax.jms.Topic;
+import jakarta.jms.JMSException;
+import jakarta.jms.Queue;
+import jakarta.jms.Session;
+import jakarta.jms.TextMessage;
+import jakarta.jms.Topic;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -49,7 +49,7 @@ class MessageProducerTest {
 
     /** The jsm producer. */
     @Mock
-    private javax.jms.MessageProducer jsmProducer;
+    private jakarta.jms.MessageProducer jsmProducer;
 
     /** The queue. */
     @Mock

@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
@@ -142,8 +141,8 @@ public class JavascriptEndpoint extends BaseEndpoint {
     public ResponseEntity<?> postFile(@PathVariable("projectName") String projectName,
             @PathVariable("projectFilePath") String projectFilePath,
             @Nullable @RequestParam(required = false) MultiValueMap<String, String> params,
-            @Validated @RequestParam("file") MultipartFile file) {
-        return executeJavaScript(projectName, projectFilePath, params, new MultipartFile[] {file});
+            @Validated @RequestParam("file") MultipartFile[] file) {
+        return executeJavaScript(projectName, projectFilePath, params, file);
     }
 
     /**
