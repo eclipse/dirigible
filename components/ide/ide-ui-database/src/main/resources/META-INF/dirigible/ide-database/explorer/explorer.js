@@ -893,7 +893,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			children = types.map((type, index) => {
 				return {
 					text: type,
-					icon: "sap-icon--folder-full",
+					icon: "sap-icon--folder",
 					children: f[type.toLowerCase()].map(item => build(item))
 				};
 			});
