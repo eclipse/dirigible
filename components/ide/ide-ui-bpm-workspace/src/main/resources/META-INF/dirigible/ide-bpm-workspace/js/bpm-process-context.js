@@ -22,7 +22,7 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
     }
 
     this.getNoDataMessage = function () {
-        return this.filterBy ? 'No variables found.' : 'No variables have been detected.';
+        return 'No variables have been detected.';
     }
 
     messageHub.onDidReceiveMessage('instance.selected', function (msg) {
