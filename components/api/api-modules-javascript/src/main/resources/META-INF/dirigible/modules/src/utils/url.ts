@@ -12,11 +12,11 @@
 
 const UrlFacade = Java.type("org.eclipse.dirigible.components.api.utils.UrlFacade");
 
-export function encode(input, charset) {
+export function encode(input, charset?) {
 	return UrlFacade.encode(input, charset);
 };
 
-export function decode(input, charset) {
+export function decode(input, charset?) {
 	return UrlFacade.decode(input, charset);
 };
 

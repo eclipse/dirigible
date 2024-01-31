@@ -25,25 +25,44 @@ import org.slf4j.LoggerFactory;
  */
 public class SchemaMetadata {
 
-    /** The Constant logger. */
+    /**
+     * The Constant logger.
+     */
     private static final Logger logger = LoggerFactory.getLogger(SchemaMetadata.class);
 
-    /** The name. */
+    /**
+     * The name.
+     */
     private String name;
 
-    /** The kind. */
+    /**
+     * The kind.
+     */
     private String kind = "schema";
 
-    /** The tables. */
+    /**
+     * The tables.
+     */
     private List<TableMetadata> tables;
 
-    /** The procedures. */
+    /**
+     * The views.
+     */
+    private List<TableMetadata> views;
+
+    /**
+     * The procedures.
+     */
     private List<ProcedureMetadata> procedures;
 
-    /** The functions. */
+    /**
+     * The functions.
+     */
     private List<FunctionMetadata> functions;
 
-    /** The functions. */
+    /**
+     * The functions.
+     */
     private List<SequenceMetadata> sequences;
 
     /**
@@ -60,7 +79,22 @@ public class SchemaMetadata {
 
         this.name = name;
 
-        this.tables = DatabaseMetadataHelper.listTables(connection, catalogName, name, nameFilter);
+        List<TableMetadata> allTables = DatabaseMetadataHelper.listTables(connection, catalogName, name, nameFilter);
+        List<TableMetadata> allTablesTypeTable = new ArrayList<>();
+        List<TableMetadata> allTablesTypeViews = new ArrayList<>();
+
+        allTables.forEach(tableMetadata -> {
+            logger.info("Table name: {}  Table type: {}", tableMetadata.getName(), tableMetadata.getType());
+            if (!tableMetadata.getType()
+                              .equals("VIEW")) {
+                allTablesTypeTable.add(tableMetadata);
+            } else {
+                allTablesTypeViews.add(tableMetadata);
+            }
+        });
+
+        this.tables = allTablesTypeTable;
+        this.views = allTablesTypeViews;
 
         try {
             this.procedures = DatabaseMetadataHelper.listProcedures(connection, catalogName, name, nameFilter);
@@ -116,7 +150,6 @@ public class SchemaMetadata {
     public List<TableMetadata> getTables() {
         return tables;
     }
-
 
 
     /**

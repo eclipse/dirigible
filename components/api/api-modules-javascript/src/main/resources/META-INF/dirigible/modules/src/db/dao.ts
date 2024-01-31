@@ -17,9 +17,8 @@ import { Sequence } from "./sequence";
 import * as database from "./database";
 import { Query } from "@dirigible/db";
 import { Update } from "./update";
-import * as logging from "@dirigible/log/logging";
-import * as globals from "@dirigible/core/globals";
-import * as configurations from "@dirigible/core/configurations";
+import { Logging } from "@dirigible/log";
+import { configurations, globals } from "@dirigible/core";
 
 
 export function DAO(orm, logCtxName, dataSourceName){
@@ -49,7 +48,7 @@ export function DAO(orm, logCtxName, dataSourceName){
 		if(this.orm.table)
 			loggerName = 'db.dao.'+(this.orm.table.toLowerCase());
 	}
-	this.$log = logging.getLogger(loggerName);
+	this.$log = Logging.getLogger(loggerName);
 
 	this.execute = function(sqlBuilder, parameterBindings){
 		const sql = sqlBuilder.build();
