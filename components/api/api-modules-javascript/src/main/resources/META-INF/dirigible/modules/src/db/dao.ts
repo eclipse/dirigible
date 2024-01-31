@@ -59,7 +59,7 @@ export function DAO(orm, logCtxName, dataSourceName){
 		const parameters = sqlBuilder.parameters && sqlBuilder.parameters();
 		const _parameterBindings = [];
 		debugger
-		if (parameterBindings.$filter && parameters && parameters.length > 0) {
+		if (parameterBindings?.$filter && parameters && parameters.length > 0) {
 			if (parameterBindings.$filter.equals) {
 				const propertiesKeys = Object.keys(parameterBindings.$filter.equals);
 				const addedPropertiesKeys = [];
@@ -859,7 +859,7 @@ DAO.prototype.list = function(settings) {
 
     //simplistic filtering of (only) string properties with like
 	debugger
-	if (settings.$filter?.contains) {
+	if (settings?.$filter?.contains) {
 		const containsPropertiesKeys = Object.keys(settings.$filter.contains);
 		containsPropertiesKeys.forEach(e => {
 			const prop = this.ormstatements.orm.getProperty(e);

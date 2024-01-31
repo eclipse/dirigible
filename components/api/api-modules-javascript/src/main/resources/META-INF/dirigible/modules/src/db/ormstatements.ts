@@ -130,7 +130,7 @@ ORMStatements.prototype.list= function(settings){
 
     //add where clause for any fields
 	debugger
-	if (settings.$filter) {
+	if (settings?.$filter) {
 		const equalsPropertiesKeys = Object.keys(settings.$filter.equals ?? []);
 		const notEqualsPropertiesKeys = Object.keys(settings.$filter.notEquals ?? []);
 		const containsPropertiesKeys = Object.keys(settings.$filter.contains ?? []);
@@ -174,7 +174,7 @@ ORMStatements.prototype.list= function(settings){
 	if(propertyDefinitions.length>0){
 		for(i = 0; i<propertyDefinitions.length; i++){
 			const def = propertyDefinitions[i];
-			if(settings.$filter && settings.$filter.indexOf(def.name)>-1){
+			if(settings?.$filter && settings.$filter?.indexOf(def.name)>-1){
 	    		builder.where(def.column + ' LIKE ?', [def]);
 	   		} else {
 				const val = settings[def.name];
