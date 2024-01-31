@@ -162,6 +162,8 @@ ORMStatements.prototype.list= function(settings){
 		greaterThanOrEqualProperties.forEach(e => builder.where(`${e.column} >= ?`, [e]));
 		lessThanOrEqualProperties.forEach(e => builder.where(`${e.column} <= ?`, [e]));
 	}
+
+	// TODO: The following code might not be needed anymore
 	const propertyDefinitions = this.orm.properties.filter(function (property) {
 		for (var settingName in settings) {
 			if (settingName === property.name)
@@ -174,16 +176,6 @@ ORMStatements.prototype.list= function(settings){
 			const def = propertyDefinitions[i];
 			if(settings.$filter && settings.$filter.indexOf(def.name)>-1){
 	    		builder.where(def.column + ' LIKE ?', [def]);
-			} else if(settings.$gt && settings.$gt.indexOf(def.name)>-1){
-	    		builder.where(def.column + ' > ?', [def]);
-			} else if(settings.$ge && settings.$ge.indexOf(def.name)>-1){
-	    		builder.where(def.column + ' >= ?', [def]);
-			} else if(settings.$lt && settings.$lt.indexOf(def.name)>-1){
-	    		builder.where(def.column + ' < ?', [def]);
-			} else if(settings.$le && settings.$le.indexOf(def.name)>-1){
-	    		builder.where(def.column + ' <= ?', [def]);
-			} else if(settings.$ne && settings.$ne.indexOf(def.name)>-1){
-	    		builder.where(def.column + ' != ?', [def]);
 	   		} else {
 				const val = settings[def.name];
 				if(val === null || val === undefined){

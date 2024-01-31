@@ -177,7 +177,8 @@ export function DAO(orm, logCtxName, dataSourceName){
 		// 	});
 		}
 
-		// Left for compatibility 
+		// TODO: The following code might not be needed anymore
+		// Left for backward compatibility
 		if(parameters && parameters.length>0){
 		 	for(var i = 0; i< parameters.length; i++){
 		 		var val;
