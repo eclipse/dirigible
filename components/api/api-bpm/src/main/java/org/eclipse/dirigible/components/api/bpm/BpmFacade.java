@@ -185,7 +185,7 @@ public class BpmFacade implements InitializingBean {
      * @param taskId the task id
      * @param variables serialized as JSON string
      */
-    public static void getTaskVariables(String taskId, String variables) {
+    public static void setTaskVariables(String taskId, String variables) {
         BpmFacade.get()
                  .getBpmProviderFlowable()
                  .setTaskVariables(taskId, variables);
