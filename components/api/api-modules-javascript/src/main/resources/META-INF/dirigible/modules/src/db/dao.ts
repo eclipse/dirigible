@@ -57,9 +57,128 @@ export function DAO(orm, logCtxName, dataSourceName){
 		this.$log.trace('Executing SQL Statement: {}', sql);
 
 		const parameters = sqlBuilder.parameters && sqlBuilder.parameters();
-		let _parameterBindings;
+		const _parameterBindings = [];
+		debugger
+		if (parameterBindings.$filter && parameters && parameters.length > 0) {
+			if (parameterBindings.$filter.equals) {
+				const propertiesKeys = Object.keys(parameterBindings.$filter.equals);
+				const addedPropertiesKeys = [];
+				parameters.forEach(e => {
+					if (propertiesKeys.includes(e.name) && !addedPropertiesKeys.includes(e.name)) {
+						_parameterBindings.push({
+							type: e.type,
+							value: parseValue(e.type, parameterBindings.$filter.equals[e.name])
+						});
+						addedPropertiesKeys.push(e.name);
+					}
+				})
+			}
+			if (parameterBindings.$filter.notEquals) {
+				const propertiesKeys = Object.keys(parameterBindings.$filter.notEquals);
+				const addedPropertiesKeys = [];
+				parameters.forEach(e => {
+					if (propertiesKeys.includes(e.name) && !addedPropertiesKeys.includes(e.name)) {
+						_parameterBindings.push({
+							type: e.type,
+							value: parseValue(e.type, parameterBindings.$filter.notEquals[e.name])
+						});
+						addedPropertiesKeys.push(e.name);
+					}
+				})
+			}
+			if (parameterBindings.$filter.contains) {
+				const propertiesKeys = Object.keys(parameterBindings.$filter.contains);
+				const addedPropertiesKeys = [];
+				parameters.forEach(e => {
+					if (propertiesKeys.includes(e.name) && !addedPropertiesKeys.includes(e.name)) {
+						_parameterBindings.push({
+							type: e.type,
+							value: parseValue(e.type, parameterBindings.$filter.contains[e.name])
+						});
+						addedPropertiesKeys.push(e.name);
+					}
+				})
+			}
+			if (parameterBindings.$filter.greaterThan) {
+				const propertiesKeys = Object.keys(parameterBindings.$filter.greaterThan);
+				const addedPropertiesKeys = [];
+				parameters.forEach(e => {
+					if (propertiesKeys.includes(e.name) && !addedPropertiesKeys.includes(e.name)) {
+						_parameterBindings.push({
+							type: e.type,
+							value: parseValue(e.type, parameterBindings.$filter.greaterThan[e.name])
+						});
+						addedPropertiesKeys.push(e.name);
+					}
+				})
+			}
+			if (parameterBindings.$filter.lessThan) {
+				const propertiesKeys = Object.keys(parameterBindings.$filter.lessThan);
+				const addedPropertiesKeys = [];
+				parameters.forEach(e => {
+					if (propertiesKeys.includes(e.name) && !addedPropertiesKeys.includes(e.name)) {
+						_parameterBindings.push({
+							type: e.type,
+							value: parseValue(e.type, parameterBindings.$filter.lessThan[e.name])
+						});
+						addedPropertiesKeys.push(e.name);
+					}
+				})
+			}
+			if (parameterBindings.$filter.greaterThanOrEqual) {
+				const propertiesKeys = Object.keys(parameterBindings.$filter.greaterThanOrEqual);
+				const addedPropertiesKeys = [];
+				parameters.forEach(e => {
+					if (propertiesKeys.includes(e.name) && !addedPropertiesKeys.includes(e.name)) {
+						_parameterBindings.push({
+							type: e.type,
+							value: parseValue(e.type, parameterBindings.$filter.greaterThanOrEqual[e.name])
+						});
+						addedPropertiesKeys.push(e.name);
+					}
+				})
+			}
+			if (parameterBindings.$filter.lessThanOrEqual) {
+				const propertiesKeys = Object.keys(parameterBindings.$filter.lessThanOrEqual);
+				const addedPropertiesKeys = [];
+				parameters.forEach(e => {
+					if (propertiesKeys.includes(e.name) && !addedPropertiesKeys.includes(e.name)) {
+						_parameterBindings.push({
+							type: e.type,
+							value: parseValue(e.type, parameterBindings.$filter.lessThanOrEqual[e.name])
+						});
+						addedPropertiesKeys.push(e.name);
+					}
+				})
+			}
+		// 	parameters.forEach(e => {
+		// 		let value;
+		// 		if (parameterBindings.$filter?.equals?.[e.name]) {
+		// 			value = parameterBindings.$filter.equals[e.name];
+		// 		} else if (parameterBindings.$filter?.notEquals?.[e.name]) {
+		// 			value = parameterBindings.$filter.notEquals[e.name];
+		// 		} else if (parameterBindings.$filter?.contains?.[e.name]) {
+		// 			value = parameterBindings.$filter.contains[e.name];
+		// 		} else if (parameterBindings.$filter?.greaterThan?.[e.name]) {
+		// 			value = parameterBindings.$filter.greaterThan[e.name];
+		// 		} else if (parameterBindings.$filter?.lessThan?.[e.name]) {
+		// 			value = parameterBindings.$filter.lessThan[e.name];
+		// 		} else if (parameterBindings.$filter?.greaterThanOrEqual?.[e.name]) {
+		// 			value = parameterBindings.$filter.greaterThanOrEqual[e.name];
+		// 		} else if (parameterBindings.$filter?.lessThanOrEqual?.[e.name]) {
+		// 			value = parameterBindings.$filter.lessThanOrEqual[e.name];
+		// 		}
+		// 		if (value !== null && value !== undefined) {
+		// 			_parameterBindings.push({
+		// 				type: e.type,
+		// 				value: parseValue(e.type, value)
+		// 			});
+		// 		}
+		// 	});
+		}
+
+		// Left for compatibility 
 		if(parameters && parameters.length>0){
-	 		_parameterBindings = [];
 		 	for(var i = 0; i< parameters.length; i++){
 		 		var val;
 		 		if(parameterBindings){
@@ -655,6 +774,33 @@ DAO.prototype.count = function() {
  * - $limit
  * - $offset
  */
+/**
+ * settings = {
+		$filter: {
+			equals: {
+				Country: 'Italy'
+			},
+			notEquals: {
+				Disabled: false
+			},
+			contains: {
+				Address: 'Str.'
+			},
+			greaterThan: {
+				Vacation: 20
+			},
+			lessThan: {
+				Salary: 20000
+			},
+			greaterThanOrEqual: {
+				StartDate: new Date()
+			},
+			lessThanOrEqual: {
+				StartDate: new Date()
+			}
+		}
+	}
+ */
 DAO.prototype.list = function(settings) {
 
 	let key;
@@ -711,33 +857,44 @@ DAO.prototype.list = function(settings) {
 	}
 
     //simplistic filtering of (only) string properties with like
-	if(settings.$filter){
-		if(settings.$filter.indexOf(',')>-1){
-			settings.$filter = settings.$filter.split(',');
-		} else {
-			settings.$filter = [settings.$filter];
-		}
-		settings.$filter = settings.$filter.filter(function(filterField){
-			const prop = this.ormstatements.orm.getProperty(filterField);
-			if(prop===undefined || prop.type.toUpperCase()!=='VARCHAR' || settings[prop.name]===undefined)
-				return false;
-			settings[prop.name] = '%' + settings[prop.name] + '%';
-			return true;
-		}.bind(this));
+	debugger
+	if (settings.$filter?.contains) {
+		const containsPropertiesKeys = Object.keys(settings.$filter.contains);
+		containsPropertiesKeys.forEach(e => {
+			const prop = this.ormstatements.orm.getProperty(e);
+			if (prop?.type.toUpperCase() === 'VARCHAR' || prop?.type.toUpperCase() === 'CHAR') {
+				settings.$filter.contains[e] = `%${settings.$filter.contains[e]}%`;
+			}
+		})
 	}
+	// if(settings.$filter){
+	// 	if(settings.$filter.indexOf(',')>-1){
+	// 		settings.$filter = settings.$filter.split(',');
+	// 	} else {
+	// 		settings.$filter = [settings.$filter];
+	// 	}
+	// 	debugger
+	// 	settings.$filter = (settings.$filter.contains ?? []).filter(function(filterField){
+	// 		const prop = this.ormstatements.orm.getProperty(filterField);
+	// 		if(prop===undefined || prop.type.toUpperCase()!=='VARCHAR' || settings[prop.name]===undefined)
+	// 			return false;
+	// 		settings[prop.name] = '%' + settings[prop.name] + '%';
+	// 		return true;
+	// 	}.bind(this));
+	// }
 
 	var parametericStatement = this.ormstatements.list.apply(this.ormstatements, [settings]);
 
 	//cleanup filtering value expressions if any and convert to Number
-	for(let key in settings){
-		const s = settings[key];
-		if(String(s).startsWith('>') || String(s).startsWith('<'))//TODO: improve
-			settings[key] = s.substring(1,s.length).trim();
-		const p = this.orm.getProperty(key);
-		if(p && p.type!=='VARCHAR' && !isNaN(s)){
-			settings[key] = +s;
-		}
-	}
+	// for(let key in settings){
+	// 	const s = settings[key];
+	// 	if(String(s).startsWith('>') || String(s).startsWith('<'))//TODO: improve
+	// 		settings[key] = s.substring(1,s.length).trim();
+	// 	const p = this.orm.getProperty(key);
+	// 	if(p && p.type!=='VARCHAR' && !isNaN(s)){
+	// 		settings[key] = +s;
+	// 	}
+	// }
 
   try {
     let entities = [];
