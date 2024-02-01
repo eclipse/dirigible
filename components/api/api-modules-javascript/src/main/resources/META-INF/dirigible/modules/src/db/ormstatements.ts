@@ -151,11 +151,22 @@ ORMStatements.prototype.list= function(settings){
 			const value = settings.$filter.equals[e.name];
 			if (value === null || value === undefined) {
 				builder.where(e.column + ' IS NULL', [e]);
+			} else if (Array.isArray(value)) {
+				builder.where(`${e.column} IN (${value.map(v => '?').join(', ')})`, [e])
 			} else {
 				builder.where(`${e.column} = ?`, [e])
 			}
 		});
-		notEqualsProperties.forEach(e => builder.where(`${e.column} != ?`, [e]));
+		notEqualsProperties.forEach(e => {
+			const value = settings.$filter.notEquals[e.name];
+			if (value === null || value === undefined) {
+				builder.where(e.column + ' IS NOT NULL', [e]);
+			} else if (Array.isArray(value)) {
+				builder.where(`${e.column} NOT IN (${value.map(v => '?').join(', ')})`, [e])
+			} else {
+				builder.where(`${e.column} != ?`, [e])
+			}
+		});
 		containsProperties.forEach(e => builder.where(`${e.column} LIKE ?`, [e]));
 		greaterThanProperties.forEach(e => builder.where(`${e.column} > ?`, [e]));
 		lessThanProperties.forEach(e => builder.where(`${e.column} < ?`, [e]));

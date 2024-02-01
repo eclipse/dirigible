@@ -65,10 +65,20 @@ export function DAO(orm, logCtxName, dataSourceName){
 				const addedPropertiesKeys = [];
 				parameters.forEach(e => {
 					if (propertiesKeys.includes(e.name) && !addedPropertiesKeys.includes(e.name)) {
-						_parameterBindings.push({
-							type: e.type,
-							value: parseValue(e.type, parameterBindings.$filter.equals[e.name])
-						});
+						const value = parameterBindings.$filter.equals[e.name];
+						if (Array.isArray(value)) {
+							value.forEach(v => {
+								_parameterBindings.push({
+									type: e.type,
+									value: parseValue(e.type, v)
+								});
+							});
+						} else {
+							_parameterBindings.push({
+								type: e.type,
+								value: parseValue(e.type, value)
+							});
+						}
 						addedPropertiesKeys.push(e.name);
 					}
 				})
@@ -78,10 +88,20 @@ export function DAO(orm, logCtxName, dataSourceName){
 				const addedPropertiesKeys = [];
 				parameters.forEach(e => {
 					if (propertiesKeys.includes(e.name) && !addedPropertiesKeys.includes(e.name)) {
-						_parameterBindings.push({
-							type: e.type,
-							value: parseValue(e.type, parameterBindings.$filter.notEquals[e.name])
-						});
+						const value = parameterBindings.$filter.notEquals[e.name];
+						if (Array.isArray(value)) {
+							value.forEach(v => {
+								_parameterBindings.push({
+									type: e.type,
+									value: parseValue(e.type, v)
+								});
+							});
+						} else {
+							_parameterBindings.push({
+								type: e.type,
+								value: parseValue(e.type, value)
+							});
+						}
 						addedPropertiesKeys.push(e.name);
 					}
 				})
