@@ -172,8 +172,7 @@ export function DAO(orm, logCtxName, dataSourceName){
 			}
 		}
 
-		// TODO: The following code might not be needed anymore
-		// Left for backward compatibility
+		// Left for backward compatibility -> it seems that the find() method uses it, might be removed once refactored
 		if(parameters && parameters.length>0){
 		 	for(var i = 0; i< parameters.length; i++){
 		 		var val;
