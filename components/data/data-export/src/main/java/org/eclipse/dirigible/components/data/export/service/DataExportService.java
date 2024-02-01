@@ -28,14 +28,18 @@ import org.eclipse.dirigible.components.api.platform.WorkspaceFacade;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper;
+import org.eclipse.dirigible.components.data.management.load.DataSourceMetadataLoader;
 import org.eclipse.dirigible.components.data.management.service.DatabaseDefinitionService;
 import org.eclipse.dirigible.components.data.management.service.DatabaseExecutionService;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
+import org.eclipse.dirigible.components.data.structures.domain.Table;
+import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
 import org.eclipse.dirigible.components.data.transfer.service.DataTransferSchemaTopologyService;
 import org.eclipse.dirigible.components.ide.workspace.domain.File;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
 import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,6 +87,11 @@ public class DataExportService {
     private final DataTransferSchemaTopologyService dataTransferSchemaTopologyService;
 
     /**
+     * The data source metadata loader service.
+     */
+    private final DataSourceMetadataLoader dataSourceMetadataLoader;
+
+    /**
      * Instantiates a new data export service.
      *
      * @param datasourceManager the datasource manager
@@ -90,16 +99,18 @@ public class DataExportService {
      * @param databaseExecutionService the database execution service
      * @param databaseDefinitionService the database definition service
      * @param dataTransferSchemaTopologyService the data transfer schema topology service
+     * @param dataSourceMetadataLoader the data source metadata loader service
      */
     @Autowired
     public DataExportService(DataSourcesManager datasourceManager, WorkspaceService workspaceService,
             DatabaseExecutionService databaseExecutionService, DatabaseDefinitionService databaseDefinitionService,
-            DataTransferSchemaTopologyService dataTransferSchemaTopologyService) {
+            DataTransferSchemaTopologyService dataTransferSchemaTopologyService, DataSourceMetadataLoader dataSourceMetadataLoader) {
         this.datasourceManager = datasourceManager;
         this.workspaceService = workspaceService;
         this.databaseExecutionService = databaseExecutionService;
         this.databaseDefinitionService = databaseDefinitionService;
         this.dataTransferSchemaTopologyService = dataTransferSchemaTopologyService;
+        this.dataSourceMetadataLoader = dataSourceMetadataLoader;
     }
 
     /**
@@ -174,7 +185,7 @@ public class DataExportService {
                 project.createFile(schema + ".csvim", csvimContent.toString()
                                                                   .getBytes());
 
-                logger.info(format("Created requested files in Project [{1}] in Workspace [{2}]", project.getName(), workspace.getName()));
+                logger.info(format("Created requested files in Project [{0}] in Workspace [{1}]", project.getName(), workspace.getName()));
             }
         } catch (SQLException e) {
             if (logger.isErrorEnabled()) {
@@ -214,6 +225,104 @@ public class DataExportService {
     }
 
     /**
+     * Export metadata as project.
+     *
+     * @param datasource the datasource
+     * @param schema the schema
+     * @return the workspace path of the file
+     * @throws SQLException the SQL exception
+     */
+    public String exportSchemaTopology(String datasource, String schema) throws SQLException {
+        javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
+        if (dataSource != null) {
+            List<String> sorted = dataTransferSchemaTopologyService.sortTopologically(dataSource, schema);
+            return sorted.stream()
+                         .collect(Collectors.joining("\n"));
+        }
+        return "DataSource does not exist: " + datasource;
+    }
+
+    public void exportSchemaModel(String datasource, String schema) {
+        try {
+            javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
+
+            Workspace workspace;
+            Project project;
+
+            workspace = WorkspaceFacade.createWorkspace(schema);
+            project = workspace.createProject(schema);
+
+            List<Table> model = dataSourceMetadataLoader.loadSchemaMetadata(schema, dataSource);
+            model.forEach(m -> {
+                m.setType(m.getKind());
+                if (ISqlKeywords.METADATA_TABLE_STRUCTURES.contains(m.getType())) {
+                    m.setType(ISqlKeywords.METADATA_TABLE);
+                }
+            });
+
+            JsonArray entitiesArray = new JsonArray();
+            JsonArray perspectivesArray = new JsonArray();
+            JsonArray navigationsArray = new JsonArray();
+
+            JsonObject modelObject = new JsonObject();
+            modelObject.add("entities", entitiesArray);
+            modelObject.add("perspectives", perspectivesArray);
+            modelObject.add("navigations", navigationsArray);
+
+            JsonObject schemaModel = new JsonObject();
+            schemaModel.add("model", modelObject);
+
+            if (dataSource != null) {
+                for (Table table : model) {
+                    addTableMetadataInModel(table, entitiesArray);
+                }
+            }
+
+            project.createFile(schema + ".model", schemaModel.toString()
+                                                             .getBytes());
+
+            logger.info(format("Created requested files in Project [{0}] in Workspace [{1}]", project.getName(), workspace.getName()));
+        } catch (SQLException e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage());
+            }
+        }
+    }
+
+    private void addTableMetadataInModel(Table table, JsonArray entitiesArray) {
+        JsonObject tableObject = new JsonObject();
+        JsonArray tableColumns = new JsonArray();
+
+        for (TableColumn column : table.getColumns()) {
+            JsonObject columnObject = populateColumnData(column);
+            tableColumns.add(columnObject);
+        }
+
+        tableObject.add("properties", tableColumns);
+        tableObject.addProperty("caption", "Manage entity " + table.getName());
+        tableObject.addProperty("dataName", table.getName()
+                                                 .toUpperCase());
+
+        entitiesArray.add(tableObject);
+    }
+
+    private JsonObject populateColumnData(TableColumn column) {
+        JsonObject columnObject = new JsonObject();
+        columnObject.addProperty("calculatedPropertyExpression", "");
+        columnObject.addProperty("dataAutoIncrement", column.isPrimaryKey());
+        columnObject.addProperty("dataLength", column.getLength());
+        columnObject.addProperty("dataName", column.getName()
+                                                   .toUpperCase());
+        columnObject.addProperty("dataNullable", column.isNullable());
+        columnObject.addProperty("dataPrimaryKey", column.isPrimaryKey());
+        columnObject.addProperty("dataType", column.getType());
+        columnObject.addProperty("dataUnique", column.isUnique());
+        columnObject.addProperty("isCalculatedProperty", "");
+        columnObject.addProperty("name", column.getName());
+        return columnObject;
+    }
+
+    /**
      * Transform csv files to json.
      *
      * @param csvFiles the csvFiles
@@ -244,23 +353,5 @@ public class DataExportService {
         csvFile.setDelimEnclosing("\"");
         csvFile.setDistinguishEmptyFromNull(true);
 
-    }
-
-    /**
-     * Export metadata as project.
-     *
-     * @param datasource the datasource
-     * @param schema the schema
-     * @return the workspace path of the file
-     * @throws SQLException the SQL exception
-     */
-    public String exportSchemaTopology(String datasource, String schema) throws SQLException {
-        javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
-        if (dataSource != null) {
-            List<String> sorted = dataTransferSchemaTopologyService.sortTopologically(dataSource, schema);
-            return sorted.stream()
-                         .collect(Collectors.joining("\n"));
-        }
-        return "DataSource does not exist: " + datasource;
     }
 }
