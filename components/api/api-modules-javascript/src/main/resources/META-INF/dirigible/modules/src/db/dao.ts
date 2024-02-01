@@ -80,7 +80,7 @@ export function DAO(orm, logCtxName, dataSourceName){
 						}
 						addedPropertiesKeys.push(e.name);
 					}
-				})
+				});
 			}
 			if (parameterBindings.$filter.notEquals) {
 				const propertiesKeys = Object.keys(parameterBindings.$filter.notEquals);
@@ -103,7 +103,7 @@ export function DAO(orm, logCtxName, dataSourceName){
 						}
 						addedPropertiesKeys.push(e.name);
 					}
-				})
+				});
 			}
 			if (parameterBindings.$filter.contains) {
 				const propertiesKeys = Object.keys(parameterBindings.$filter.contains);
@@ -116,7 +116,7 @@ export function DAO(orm, logCtxName, dataSourceName){
 						});
 						addedPropertiesKeys.push(e.name);
 					}
-				})
+				});
 			}
 			if (parameterBindings.$filter.greaterThan) {
 				const propertiesKeys = Object.keys(parameterBindings.$filter.greaterThan);
@@ -129,7 +129,7 @@ export function DAO(orm, logCtxName, dataSourceName){
 						});
 						addedPropertiesKeys.push(e.name);
 					}
-				})
+				});
 			}
 			if (parameterBindings.$filter.lessThan) {
 				const propertiesKeys = Object.keys(parameterBindings.$filter.lessThan);
@@ -142,7 +142,7 @@ export function DAO(orm, logCtxName, dataSourceName){
 						});
 						addedPropertiesKeys.push(e.name);
 					}
-				})
+				});
 			}
 			if (parameterBindings.$filter.greaterThanOrEqual) {
 				const propertiesKeys = Object.keys(parameterBindings.$filter.greaterThanOrEqual);
@@ -155,7 +155,7 @@ export function DAO(orm, logCtxName, dataSourceName){
 						});
 						addedPropertiesKeys.push(e.name);
 					}
-				})
+				});
 			}
 			if (parameterBindings.$filter.lessThanOrEqual) {
 				const propertiesKeys = Object.keys(parameterBindings.$filter.lessThanOrEqual);
@@ -168,7 +168,7 @@ export function DAO(orm, logCtxName, dataSourceName){
 						});
 						addedPropertiesKeys.push(e.name);
 					}
-				})
+				});
 			}
 		}
 
