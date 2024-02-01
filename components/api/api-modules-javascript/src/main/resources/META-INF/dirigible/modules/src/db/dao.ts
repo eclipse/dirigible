@@ -58,7 +58,6 @@ export function DAO(orm, logCtxName, dataSourceName){
 
 		const parameters = sqlBuilder.parameters && sqlBuilder.parameters();
 		const _parameterBindings = [];
-		debugger
 		if (parameterBindings?.$filter && parameters && parameters.length > 0) {
 			if (parameterBindings.$filter.equals) {
 				const propertiesKeys = Object.keys(parameterBindings.$filter.equals);
@@ -171,30 +170,6 @@ export function DAO(orm, logCtxName, dataSourceName){
 					}
 				})
 			}
-		// 	parameters.forEach(e => {
-		// 		let value;
-		// 		if (parameterBindings.$filter?.equals?.[e.name]) {
-		// 			value = parameterBindings.$filter.equals[e.name];
-		// 		} else if (parameterBindings.$filter?.notEquals?.[e.name]) {
-		// 			value = parameterBindings.$filter.notEquals[e.name];
-		// 		} else if (parameterBindings.$filter?.contains?.[e.name]) {
-		// 			value = parameterBindings.$filter.contains[e.name];
-		// 		} else if (parameterBindings.$filter?.greaterThan?.[e.name]) {
-		// 			value = parameterBindings.$filter.greaterThan[e.name];
-		// 		} else if (parameterBindings.$filter?.lessThan?.[e.name]) {
-		// 			value = parameterBindings.$filter.lessThan[e.name];
-		// 		} else if (parameterBindings.$filter?.greaterThanOrEqual?.[e.name]) {
-		// 			value = parameterBindings.$filter.greaterThanOrEqual[e.name];
-		// 		} else if (parameterBindings.$filter?.lessThanOrEqual?.[e.name]) {
-		// 			value = parameterBindings.$filter.lessThanOrEqual[e.name];
-		// 		}
-		// 		if (value !== null && value !== undefined) {
-		// 			_parameterBindings.push({
-		// 				type: e.type,
-		// 				value: parseValue(e.type, value)
-		// 			});
-		// 		}
-		// 	});
 		}
 
 		// TODO: The following code might not be needed anymore
@@ -795,33 +770,6 @@ DAO.prototype.count = function() {
  * - $limit
  * - $offset
  */
-/**
- * settings = {
-		$filter: {
-			equals: {
-				Country: 'Italy'
-			},
-			notEquals: {
-				Disabled: false
-			},
-			contains: {
-				Address: 'Str.'
-			},
-			greaterThan: {
-				Vacation: 20
-			},
-			lessThan: {
-				Salary: 20000
-			},
-			greaterThanOrEqual: {
-				StartDate: new Date()
-			},
-			lessThanOrEqual: {
-				StartDate: new Date()
-			}
-		}
-	}
- */
 DAO.prototype.list = function(settings) {
 
 	let key;
@@ -878,7 +826,6 @@ DAO.prototype.list = function(settings) {
 	}
 
     //simplistic filtering of (only) string properties with like
-	debugger
 	if (settings?.$filter?.contains) {
 		const containsPropertiesKeys = Object.keys(settings.$filter.contains);
 		containsPropertiesKeys.forEach(e => {
@@ -888,34 +835,8 @@ DAO.prototype.list = function(settings) {
 			}
 		})
 	}
-	// if(settings.$filter){
-	// 	if(settings.$filter.indexOf(',')>-1){
-	// 		settings.$filter = settings.$filter.split(',');
-	// 	} else {
-	// 		settings.$filter = [settings.$filter];
-	// 	}
-	// 	debugger
-	// 	settings.$filter = (settings.$filter.contains ?? []).filter(function(filterField){
-	// 		const prop = this.ormstatements.orm.getProperty(filterField);
-	// 		if(prop===undefined || prop.type.toUpperCase()!=='VARCHAR' || settings[prop.name]===undefined)
-	// 			return false;
-	// 		settings[prop.name] = '%' + settings[prop.name] + '%';
-	// 		return true;
-	// 	}.bind(this));
-	// }
 
 	var parametericStatement = this.ormstatements.list.apply(this.ormstatements, [settings]);
-
-	//cleanup filtering value expressions if any and convert to Number
-	// for(let key in settings){
-	// 	const s = settings[key];
-	// 	if(String(s).startsWith('>') || String(s).startsWith('<'))//TODO: improve
-	// 		settings[key] = s.substring(1,s.length).trim();
-	// 	const p = this.orm.getProperty(key);
-	// 	if(p && p.type!=='VARCHAR' && !isNaN(s)){
-	// 		settings[key] = +s;
-	// 	}
-	// }
 
   try {
     let entities = [];

@@ -129,7 +129,6 @@ ORMStatements.prototype.list= function(settings){
 	}
 
     //add where clause for any fields
-	debugger
 	if (settings?.$filter) {
 		const equalsPropertiesKeys = Object.keys(settings.$filter.equals ?? []);
 		const notEqualsPropertiesKeys = Object.keys(settings.$filter.notEquals ?? []);
