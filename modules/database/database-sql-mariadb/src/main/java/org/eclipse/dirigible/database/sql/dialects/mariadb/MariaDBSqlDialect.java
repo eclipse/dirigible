@@ -198,4 +198,9 @@ public class MariaDBSqlDialect extends
         return true;
     }
 
+    @Override
+    public MariaDBSelectBuilder select() {
+        return new MariaDBSelectBuilder(this);
+    }
+
 }
