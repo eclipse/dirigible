@@ -522,7 +522,6 @@ public class DatabaseFacade implements InitializingBean {
                             value = new Timestamp(Long.parseLong(valueElement.getAsJsonPrimitive()
                                                                              .getAsString()));
                         } catch (NumberFormatException e) {
-                            // assume date string in ISO format e.g. 2018-05-22T21:00:00.000Z
                             String timestampString = valueElement.getAsJsonPrimitive()
                                                                  .getAsString();
                             value = new Timestamp(getTime(timestampString));
@@ -665,6 +664,7 @@ public class DatabaseFacade implements InitializingBean {
 
     private static long getTime(String timestampString) {
         try {
+            // assume date string in ISO format e.g. 2018-05-22T21:00:00.000Z
             Calendar calendar = jakarta.xml.bind.DatatypeConverter.parseDateTime(timestampString);
             return calendar.getTime()
                            .getTime();
