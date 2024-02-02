@@ -84,7 +84,6 @@ public class SchemaMetadata {
         List<TableMetadata> allTablesTypeViews = new ArrayList<>();
 
         allTables.forEach(tableMetadata -> {
-            logger.info("Table name: {}  Table type: {}", tableMetadata.getName(), tableMetadata.getType());
             if (!tableMetadata.getType()
                               .equals("VIEW")) {
                 allTablesTypeTable.add(tableMetadata);
@@ -115,7 +114,7 @@ public class SchemaMetadata {
         }
 
         try {
-            this.sequences = DatabaseMetadataHelper.listSequences(connection);
+            this.sequences = DatabaseMetadataHelper.listSequences(connection, name);
         } catch (Exception e) {
             this.sequences = new ArrayList<SequenceMetadata>();
             if (logger.isErrorEnabled()) {
