@@ -139,6 +139,14 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
      * @return the transformed string
      */
     protected String encapsulateMany(String line) {
+        return encapsulateMany(line, '"');
+    }
+
+    protected String encapsulateWhere(String where) {
+        return encapsulateMany(where, '`');
+    }
+
+    private String encapsulateMany(String line, char escapeChar) {
         String lineWithoughContentBetweenSingleQuotes = String.join("", line.split(contentBetweenSingleQuotes.toString()));
         String regex = "([^a-zA-Z0-9_#$::']+)'*\\1*";
         String[] words = lineWithoughContentBetweenSingleQuotes.split(regex);
@@ -148,26 +156,10 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
                 continue;
             }
             if (!"".equals(word.trim()) && !functionsNames.contains(word.toLowerCase())) {
-                line = line.replace(word, "\"" + word + "\"");
+                line = line.replace(word, escapeChar + word + escapeChar);
             }
         }
         return line;
-    }
-
-    protected String encapsulateWhere(String where) {
-        String lineWithoughContentBetweenSingleQuotes = String.join("", where.split(contentBetweenSingleQuotes.toString()));
-        String regex = "([^a-zA-Z0-9_#$::']+)'*\\1*";
-        String[] words = lineWithoughContentBetweenSingleQuotes.split(regex);
-        Set<Set> functionsNames = getDialect().getFunctionsNames();
-        for (String word : words) {
-            if (isNumeric(word) || isValue(word)) {
-                continue;
-            }
-            if (!"".equals(word.trim()) && !functionsNames.contains(word.toLowerCase())) {
-                where = where.replace(word, "`" + word + "`");
-            }
-        }
-        return where;
     }
 
     /**
