@@ -143,7 +143,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
     }
 
     protected String encapsulateWhere(String where) {
-        return encapsulateMany(where, '`');
+        return encapsulateMany(where, '"');
     }
 
     protected String encapsulateMany(String line, char escapeChar) {
