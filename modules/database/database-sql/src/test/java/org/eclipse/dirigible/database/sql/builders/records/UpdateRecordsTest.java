@@ -12,7 +12,6 @@ package org.eclipse.dirigible.database.sql.builders.records;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
@@ -36,7 +35,6 @@ public class UpdateRecordsTest {
         assertNotNull(sql);
         assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John'", sql);
     }
-
 
     /**
      * Update simple case sensitive.
@@ -131,7 +129,7 @@ public class UpdateRecordsTest {
 
             assertNotNull(sql);
             assertEquals(
-                    "UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"LAST_NAME\" = 'Smith' WHERE (\"AGE\" > ?) AND (\"COMPANY\" = 'SAP')",
+                    "UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"LAST_NAME\" = 'Smith' WHERE (`AGE` > ?) AND (`COMPANY` = 'SAP')",
                     sql);
         } finally {
             Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
@@ -180,7 +178,7 @@ public class UpdateRecordsTest {
 
             assertNotNull(sql);
             assertEquals(
-                    "UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"SALARY\" = SELECT MAX(\"SALARY\") FROM \"BENEFITS\" WHERE (\"COMPANY\" = 'SAP')",
+                    "UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"SALARY\" = SELECT MAX(\"SALARY\") FROM \"BENEFITS\" WHERE (`COMPANY` = 'SAP')",
                     sql);
         } finally {
             Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
@@ -232,7 +230,7 @@ public class UpdateRecordsTest {
 
             assertNotNull(sql);
             assertEquals(
-                    "UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"LAST_NAME\" = 'Smith' WHERE (\"PRICE\" > ? OR \"AMOUNT\" < ? AND \"COMPANY\" = 'SAP')",
+                    "UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"LAST_NAME\" = 'Smith' WHERE (`PRICE` > ? OR `AMOUNT` < ? AND `COMPANY` = 'SAP')",
                     sql);
         } finally {
             Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");

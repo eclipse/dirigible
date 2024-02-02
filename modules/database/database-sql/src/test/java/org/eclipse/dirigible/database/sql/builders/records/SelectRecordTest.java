@@ -12,7 +12,6 @@ package org.eclipse.dirigible.database.sql.builders.records;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
@@ -473,7 +472,7 @@ public class SelectRecordTest {
                                    .build();
 
             assertNotNull(sql);
-            assertEquals("SELECT \"FIRST_NAME\" FROM \"CUSTOMERS\" WHERE (\"PRICE\" > ?)", sql);
+            assertEquals("SELECT \"FIRST_NAME\" FROM \"CUSTOMERS\" WHERE (`PRICE` > ?)", sql);
         } finally {
             Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
         }
@@ -592,7 +591,7 @@ public class SelectRecordTest {
                                    .build();
 
             assertNotNull(sql);
-            assertEquals("SELECT \"FIRST_NAME1$\" FROM \"CUSTOMERS\" WHERE (\"PRICE_BASIC1$\" LIKE ?)", sql);
+            assertEquals("SELECT \"FIRST_NAME1$\" FROM \"CUSTOMERS\" WHERE (`PRICE_BASIC1$` LIKE ?)", sql);
         } finally {
             Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
         }
@@ -614,7 +613,7 @@ public class SelectRecordTest {
                                    .build();
 
             assertNotNull(sql);
-            assertEquals("SELECT \"FIRST_NAME1$\" FROM \"CUSTOMERS\" WHERE (\"PRICE_BASIC1$\" LIKE ?) AND (\"PRICE_BASIC2$\" == 0)", sql);
+            assertEquals("SELECT \"FIRST_NAME1$\" FROM \"CUSTOMERS\" WHERE (`PRICE_BASIC1$` LIKE ?) AND (`PRICE_BASIC2$` == 0)", sql);
         } finally {
             Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
         }
@@ -636,7 +635,7 @@ public class SelectRecordTest {
                                    .build();
 
             assertNotNull(sql);
-            assertEquals("SELECT \"FIRST_NAME\" FROM \"PUBLIC\".\"CUSTOMERS\" WHERE (\"PRICE_BASIC\" LIKE ?)", sql);
+            assertEquals("SELECT \"FIRST_NAME\" FROM \"PUBLIC\".\"CUSTOMERS\" WHERE (`PRICE_BASIC` LIKE ?)", sql);
         } finally {
             Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
         }
