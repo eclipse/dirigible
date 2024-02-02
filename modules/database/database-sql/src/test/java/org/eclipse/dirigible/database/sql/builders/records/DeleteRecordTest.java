@@ -65,7 +65,7 @@ public class DeleteRecordTest {
                                    .build();
 
             assertNotNull(sql);
-            assertEquals("DELETE FROM \"CUSTOMERS\" WHERE (`PRICE_BASIC1$` LIKE ?)", sql);
+            assertEquals("DELETE FROM \"CUSTOMERS\" WHERE (\"PRICE_BASIC1$\" LIKE ?)", sql);
         } finally {
             Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
         }
@@ -85,7 +85,7 @@ public class DeleteRecordTest {
                                    .build();
 
             assertNotNull(sql);
-            assertEquals("DELETE FROM \"CUSTOMERS\" WHERE (`id`= 'asas.as.as:asas`,_!@#$%^&*()+-::/\\')", sql);
+            assertEquals("DELETE FROM \"CUSTOMERS\" WHERE (\"id\"= 'asas.as.as:asas`,_!@#$%^&*()+-::/\\')", sql);
         } finally {
             Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
         }
@@ -105,7 +105,7 @@ public class DeleteRecordTest {
                                    .build();
 
             assertNotNull(sql);
-            assertEquals("DELETE FROM \"CUSTOMERS\" WHERE (`id` in('as', 'bd'))", sql);
+            assertEquals("DELETE FROM \"CUSTOMERS\" WHERE (\"id\" in('as', 'bd'))", sql);
         } finally {
             Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
         }
