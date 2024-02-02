@@ -9,10 +9,7 @@ import org.openqa.selenium.By;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.getSelectedText;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NewProjectIT extends UserInterfaceIntegrationTest {
