@@ -115,14 +115,14 @@
 		<license-maven-plugin.version>4.3</license-maven-plugin.version>
 
 		<spring.boot.version>3.2.0</spring.boot.version>
-		<org.springdoc.openapi.ui.version>1.7.0</org.springdoc.openapi.ui.version>
+		<springdoc.version>2.3.0</springdoc.version>
 
 		<graalvm.version>23.1.1</graalvm.version>
 
 		<commons.io>2.15.1</commons.io>
 		<commons.lang3>3.14.0</commons.lang3>
 		<commons.exec>1.4.0</commons.exec>
-		<lucene.version>9.9.1</lucene.version>
+		<lucene.version>9.9.2</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
 		<jgit.version>6.8.0.202311291450-r</jgit.version>
 		<olingo.version>3.1.3</olingo.version>
@@ -151,7 +151,7 @@
 		<ngdbc.version>2.19.16</ngdbc.version>
 		<snowflake.version>3.13.34</snowflake.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.641</qldb.sdk.version>
+		<qldb.sdk.version>1.12.651</qldb.sdk.version>
 		<jetcd.core.version>0.7.7</jetcd.core.version>
 
 		<jquery-ui.version>1.13.0</jquery-ui.version>
@@ -679,14 +679,13 @@
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
 
-		<!-- Java 11 Dependencies -->
 		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-core</artifactId>
+		    <groupId>jakarta.xml.bind</groupId>
+		    <artifactId>jakarta.xml.bind-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-impl</artifactId>
+		    <groupId>org.glassfish.jaxb</groupId>
+		    <artifactId>jaxb-runtime</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>jakarta.xml.ws</groupId>
@@ -738,7 +737,7 @@
 			<dependency>
 				<groupId>org.junit.vintage</groupId>
 				<artifactId>junit-vintage-engine</artifactId>
-				<version>5.10.1</version>
+				<version>5.10.2</version>
 				<scope>test</scope>
 			</dependency>
 

@@ -42,8 +42,8 @@ public class HttpSecurityURIConfigurator {
     private static final String[] AUTHENTICATED_PATTERNS = {//
             "/services/**", //
             "/websockets/**", //
-            "/v3/api-docs/swagger-config", //
-            "/v3/api-docs/**", //
+            "/api-docs/swagger-config", //
+            "/api-docs/**", //
             "/odata/**", //
             "/swagger-ui/**"};
 

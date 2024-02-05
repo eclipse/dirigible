@@ -11,10 +11,18 @@
  */
 exports.process = function (model, parameters) {
     model.entities.forEach(e => {
-        if (e.dataCount && parameters.tablePrefix) {
+        if (parameters.dataSource && !e.dataSource) {
+            e.dataSource = parameters.dataSource;
+        }
+        let tablePrefix = parameters.tablePrefix ? parameters.tablePrefix : '';
+        if (tablePrefix !== '' && !tablePrefix.endsWith("_")) {
+            tablePrefix = `${tablePrefix}_`;
+        }
+        parameters.tablePrefix = tablePrefix;
+        if (e.dataCount) {
             e.dataCount = e.dataCount.replaceAll("${tablePrefix}", parameters.tablePrefix);
         }
-        if (e.dataQuery && parameters.tablePrefix) {
+        if (e.dataQuery) {
             e.dataQuery = e.dataQuery.replaceAll("${tablePrefix}", parameters.tablePrefix);
         }
 

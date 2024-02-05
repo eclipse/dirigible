@@ -451,7 +451,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							messageHub.postMessage('database.metadata.project.export.schema', sqlCommand);
 						}.bind(this)
 					};
-					ctxmenu.exportMetadataInProject = {
+					ctxmenu.exportTopologicalOrder = {
 						"separator_before": false,
 						"label": "Export Topological Order",
 						"action": function (data) {
@@ -459,6 +459,16 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							let node = tree.get_node(data.reference);
 							let sqlCommand = node.original.text;
 							messageHub.postMessage('database.metadata.project.export.topology', sqlCommand);
+						}.bind(this)
+					};
+					ctxmenu.exportAsModel = {
+						"separator_before": false,
+						"label": "Export Schema as Model",
+						"action": function (data) {
+							let tree = $.jstree.reference(data.reference);
+							let node = tree.get_node(data.reference);
+							let sqlCommand = node.original.text;
+							messageHub.postMessage('database.metadata.project.export.model', sqlCommand);
 						}.bind(this)
 					};
 					ctxmenu.dropScript = {
@@ -893,7 +903,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			children = types.map((type, index) => {
 				return {
 					text: type,
-					icon: "sap-icon--folder-full",
+					icon: "sap-icon--folder",
 					children: f[type.toLowerCase()].map(item => build(item))
 				};
 			});
