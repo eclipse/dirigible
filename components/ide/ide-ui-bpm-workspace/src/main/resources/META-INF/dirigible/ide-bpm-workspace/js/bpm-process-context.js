@@ -1,4 +1,4 @@
-let ideBpmProcessContextView = angular.module('ide-bpm-process-context', ['ideUI', 'ideView', 'ui.bootstrap']);
+let ideBpmProcessContextView = angular.module('ide-bpm-process-context', ['ideUI', 'ideView']);
 
 ideBpmProcessContextView.config(["messageHubProvider", function (messageHubProvider) {
     messageHubProvider.eventIdPrefix = 'bpm';
