@@ -79,7 +79,7 @@ function onGenerateModel(context, request, response) {
 
     createFile(workspace, project, gen + ".gen", JSON.stringify(parameters, null, 2));
 
-    lifecycle.publish(workspace, project);
+    lifecycle.publish(user.getName(), workspace, project);
 
     response.setStatus(response.CREATED);
 
