@@ -62,6 +62,11 @@ public class DataExportService {
     private static final Logger logger = LoggerFactory.getLogger(DataExportService.class);
 
     /**
+     * The Constant DEFAULT_WORKSPACE_NAME.
+     */
+    private static final String DEFAULT_WORKSPACE_NAME = "workspace";
+
+    /**
      * The data sources manager.
      */
     private final DataSourcesManager datasourceManager;
@@ -124,7 +129,6 @@ public class DataExportService {
             javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
             if (dataSource != null) {
                 Workspace workspace;
-                Project project;
                 ArrayList<CsvFile> csvFiles = new ArrayList<>();
 
                 String metadata = DatabaseMetadataHelper.getMetadataAsJson(dataSource);
@@ -133,8 +137,13 @@ public class DataExportService {
                                             .get("schemas")
                                             .getAsJsonArray();
 
-                workspace = WorkspaceFacade.createWorkspace(schema);
-                project = workspace.createProject(schema);
+                if (workspaceService.existsWorkspace(DEFAULT_WORKSPACE_NAME)) {
+                    workspace = WorkspaceFacade.getWorkspace(DEFAULT_WORKSPACE_NAME);
+                } else {
+                    workspace = WorkspaceFacade.createWorkspace(schema.toLowerCase());
+                }
+
+                Project project = workspace.createProject(schema);
 
                 for (int i = 0; i < schemes.size(); i++) {
                     JsonObject scheme = schemes.get(i)
@@ -182,6 +191,7 @@ public class DataExportService {
                     }
                 }
                 JsonObject csvimContent = transformCsvFilesToJson(csvFiles);
+
                 project.createFile(schema + ".csvim", csvimContent.toString()
                                                                   .getBytes());
 
@@ -207,20 +217,18 @@ public class DataExportService {
         Workspace workspace;
         Project project;
         File file;
-        if (!workspaceService.existsWorkspace(schema)) {
-            workspace = WorkspaceFacade.createWorkspace(schema);
-            project = workspace.createProject(schema);
-            file = project.createFile(schema + ".schema", schemaMetadata.getBytes());
-            logger.info(format("Created file [{0}] in Project [{1}] in Workspace [{2}]", file.getName(), project.getName(),
-                    workspace.getName()));
+
+        if (workspaceService.existsWorkspace(DEFAULT_WORKSPACE_NAME)) {
+            workspace = WorkspaceFacade.getWorkspace(DEFAULT_WORKSPACE_NAME);
         } else {
-            logger.warn(
-                    format("File with name [{0}] in Project [{1}] in Workspace [{2}] already exists and new metadata could not be exported",
-                            schema + ".schema", schema, schema));
-            project = workspaceService.getProject(schema, schema);
-            file = project.find(schema + ".schema")
-                          .get(0);
+            workspace = WorkspaceFacade.createWorkspace(schema);
         }
+
+        project = workspace.createProject(schema);
+        file = project.createFile(schema + ".schema", schemaMetadata.getBytes());
+        logger.info(
+                format("Created file [{0}] in Project [{1}] in Workspace [{2}]", file.getName(), project.getName(), workspace.getName()));
+
         return file.getWorkspacePath();
     }
 
@@ -242,15 +250,16 @@ public class DataExportService {
         return "DataSource does not exist: " + datasource;
     }
 
+    /**
+     * Export schema as model.
+     *
+     * @param datasource the datasource
+     * @param schema the schema
+     */
+
     public void exportSchemaModel(String datasource, String schema) {
         try {
             javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
-
-            Workspace workspace;
-            Project project;
-
-            workspace = WorkspaceFacade.createWorkspace(schema);
-            project = workspace.createProject(schema);
 
             List<Table> model = dataSourceMetadataLoader.loadSchemaMetadata(schema, dataSource);
             model.forEach(m -> {
@@ -277,6 +286,16 @@ public class DataExportService {
                     addTableMetadataInModel(table, entitiesArray);
                 }
             }
+
+            Workspace workspace;
+
+            if (workspaceService.existsWorkspace(DEFAULT_WORKSPACE_NAME)) {
+                workspace = WorkspaceFacade.getWorkspace(DEFAULT_WORKSPACE_NAME);
+            } else {
+                workspace = WorkspaceFacade.createWorkspace(schema.toLowerCase());
+            }
+
+            Project project = workspace.createProject(schema);
 
             project.createFile(schema + ".model", schemaModel.toString()
                                                              .getBytes());
