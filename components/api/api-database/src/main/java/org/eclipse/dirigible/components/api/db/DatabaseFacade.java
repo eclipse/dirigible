@@ -24,6 +24,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
@@ -54,6 +58,9 @@ public class DatabaseFacade implements InitializingBean {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DatabaseFacade.class);
+
+    private static final SimpleDateFormat SIMPLE_DATE_FORMAT_WITHOUT_ZONE =
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
 
     /** The database facade. */
     private static DatabaseFacade INSTANCE;
@@ -557,11 +564,9 @@ public class DatabaseFacade implements InitializingBean {
                             value = new Timestamp(Long.parseLong(valueElement.getAsJsonPrimitive()
                                                                              .getAsString()));
                         } catch (NumberFormatException e) {
-                            // assume date string in ISO format e.g. 2018-05-22T21:00:00.000Z
-                            value = new Timestamp(jakarta.xml.bind.DatatypeConverter.parseDateTime(valueElement.getAsJsonPrimitive()
-                                                                                                               .getAsString())
-                                                                                    .getTime()
-                                                                                    .getTime());
+                            String timestampString = valueElement.getAsJsonPrimitive()
+                                                                 .getAsString();
+                            value = new Timestamp(getTime(timestampString));
                         }
                         preparedStatement.setTimestamp(i++, value);
                     } else {
@@ -695,6 +700,24 @@ public class DatabaseFacade implements InitializingBean {
                 }
             } else {
                 throw new IllegalArgumentException("Parameters must contain primitives and objects only");
+            }
+        }
+    }
+
+    private static long getTime(String timestampString) {
+        try {
+            // assume date string in ISO format e.g. 2018-05-22T21:00:00.000Z
+            Calendar calendar = jakarta.xml.bind.DatatypeConverter.parseDateTime(timestampString);
+            return calendar.getTime()
+                           .getTime();
+        } catch (IllegalArgumentException ex) {
+            logger.debug("Failed to parse timestamp string [{}]", timestampString, ex);
+
+            try {
+                java.util.Date date = SIMPLE_DATE_FORMAT_WITHOUT_ZONE.parse(timestampString);
+                return date.getTime();
+            } catch (ParseException e) {
+                throw new IllegalArgumentException("Cannot get time from timestamp string " + timestampString, e);
             }
         }
     }
