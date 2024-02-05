@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="ide-bpm-process-context"
-      ng-controller="IDEBpmProcessContextViewController as variables">
+      ng-controller="IDEBpmProcessContextViewController">
 
 <head>
     <meta charset="utf-8" />
@@ -16,13 +16,16 @@
     <link type="text/css" rel="stylesheet" href="/services/web/resources/styles/jstree.css" />
     <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
     <script type="text/javascript" src="js/bpm-process-context.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.3/ui-bootstrap-tpls.min.js"></script>
 </head>
 
 <body class="dg-vbox">
 <fd-toolbar compact="true">
     <fd-toolbar-spacer></fd-toolbar-spacer>
+    <fd-button compact="true" dg-type="transparent" state="{{ currentProcessInstanceId !== null ? '' : 'disabled' }}" glyph="sap-icon--add" title="Add"
+               aria-label="Add" ng-click="openAddDialog()"></fd-button>
     <fd-button compact="true" dg-type="transparent" glyph="sap-icon--refresh" title="Refresh"
-               aria-label="Refresh" ng-click="variables.reload()"></fd-button>
+               aria-label="Refresh" ng-click="reload()"></fd-button>
 </fd-toolbar>
 <fd-scrollbar class="dg-fill-parent">
     <table fd-table outer-borders="none" display-mode="compact" class="dg-list-border-bottom">
@@ -36,7 +39,7 @@
         </tr>
         </thead>
         <tbody fd-table-body>
-        <tr fd-table-row ng-repeat="next in variables.variablesList track by next.id" hoverable="true">
+        <tr fd-table-row ng-repeat="next in variablesList track by next.id" hoverable="true">
 
             <td fd-table-cell>{{next.id}}</td>
             <td fd-table-cell>{{next.processInstanceId}}</td>
@@ -44,8 +47,8 @@
             <td fd-table-cell>{{next.typeName}}</td>
             <td fd-table-cell>{{next.value}}</td>
         </tr>
-        <tr ng-if="variables.variablesList.length === 0" fd-table-row>
-            <td fd-table-cell no-data="true">{{variables.getNoDataMessage()}}</td>
+        <tr ng-if="variablesList.length === 0" fd-table-row>
+            <td fd-table-cell no-data="true">{{getNoDataMessage()}}</td>
         </tr>
         </tbody>
     </table>
