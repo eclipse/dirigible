@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.database.sql.builders;
 
 import java.util.List;
-
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 
 /**
@@ -98,7 +97,7 @@ public abstract class AbstractQuerySqlBuilder extends AbstractSqlBuilder {
     private String traverseWheres(List<String> wheres) {
         StringBuilder snippet = new StringBuilder();
         for (String where : wheres) {
-            where = isCaseSensitive() ? encapsulateMany(where) : where;
+            where = isCaseSensitive() ? encapsulateWhere(where) : where;
 
             snippet.append(where)
                    .append(SPACE)

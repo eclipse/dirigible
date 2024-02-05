@@ -115,7 +115,7 @@
 		<license-maven-plugin.version>4.3</license-maven-plugin.version>
 
 		<spring.boot.version>3.2.0</spring.boot.version>
-		<org.springdoc.openapi.ui.version>1.7.0</org.springdoc.openapi.ui.version>
+		<springdoc.version>2.3.0</springdoc.version>
 
 		<graalvm.version>23.1.1</graalvm.version>
 
@@ -679,14 +679,13 @@
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
 
-		<!-- Java 11 Dependencies -->
 		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-core</artifactId>
+		    <groupId>jakarta.xml.bind</groupId>
+		    <artifactId>jakarta.xml.bind-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-impl</artifactId>
+		    <groupId>org.glassfish.jaxb</groupId>
+		    <artifactId>jaxb-runtime</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>jakarta.xml.ws</groupId>

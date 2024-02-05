@@ -21,12 +21,15 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 import javax.sql.DataSource;
 import org.apache.commons.io.output.WriterOutputStream;
 import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
@@ -295,6 +298,45 @@ public class DatabaseFacade implements InitializingBean {
      */
     public static final String query(String sql) throws Exception {
         return query(sql, null, null);
+    }
+
+    // =========== Insert ===========
+
+    /**
+     * Executes SQL insert.
+     *
+     * @param sql the insert statement to be executed
+     * @param parameters statement parameters
+     * @param datasourceName the datasource name
+     * @return the generated IDs
+     * @throws SQLException if an error occur
+     * @throws IllegalArgumentException if the provided datasouce is not found
+     * @throws RuntimeException if an error occur
+     */
+    public static final List<Long> insert(String sql, String parameters, String datasourceName)
+            throws SQLException, IllegalArgumentException, RuntimeException {
+        DataSource dataSource = getDataSource(datasourceName);
+        if (dataSource == null) {
+            throw new IllegalArgumentException("DataSource [" + datasourceName + "] not known.");
+        }
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            if (parameters != null) {
+                setParameters(parameters, preparedStatement);
+            }
+            int updatedRows = preparedStatement.executeUpdate();
+            List<Long> generatedIds = new ArrayList<>(updatedRows);
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                while (generatedKeys.next()) {
+                    generatedIds.add(generatedKeys.getLong(1));
+                }
+                return generatedIds;
+            }
+        } catch (SQLException | RuntimeException ex) {
+            logger.error("Failed to execute insert statement [{}] in data source [{}].", sql, datasourceName, ex);
+            throw ex;
+        }
     }
 
     // =========== Update ===========
