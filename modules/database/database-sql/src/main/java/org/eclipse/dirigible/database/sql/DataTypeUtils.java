@@ -409,7 +409,7 @@ public class DataTypeUtils {
      */
     public static boolean isCharacterVarying(String dataType) {
         return DataType.CHARACTER_VARYING.toString()
-                .equals(dataType);
+                                         .equals(dataType);
     }
 
     /**

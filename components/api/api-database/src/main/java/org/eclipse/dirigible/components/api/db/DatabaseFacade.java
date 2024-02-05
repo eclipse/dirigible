@@ -442,11 +442,11 @@ public class DatabaseFacade implements InitializingBean {
                     preparedStatement.setString(i++, value);
                 } else if (DataTypeUtils.isCharacterVarying(dataType)) {
                     if (!valueElement.isJsonPrimitive() || !valueElement.getAsJsonPrimitive()
-                            .isString()) {
+                                                                        .isString()) {
                         throw new IllegalArgumentException("Wrong value of the parameter of type CHARACTER VARYING");
                     }
                     String value = valueElement.getAsJsonPrimitive()
-                            .getAsString();
+                                               .getAsString();
                     preparedStatement.setString(i++, value);
                 } else if (DataTypeUtils.isNvarchar(dataType)) {
                     if (!valueElement.isJsonPrimitive() || !valueElement.getAsJsonPrimitive()
