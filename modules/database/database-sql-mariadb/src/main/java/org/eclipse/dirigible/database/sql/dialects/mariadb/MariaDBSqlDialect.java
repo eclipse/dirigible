@@ -20,16 +20,14 @@ import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
-import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
-import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
 import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
 
 /**
  * The MariaDB SQL Dialect.
  */
 public class MariaDBSqlDialect extends
-        DefaultSqlDialect<MariaDBSelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, MariaDBCreateBranchingBuilder, AlterBranchingBuilder, MariaDBDropBranchingBuilder, MariaDBNextValueSequenceBuilder, MariaDBLastValueIdentityBuilder> {
+        DefaultSqlDialect<MariaDBSelectBuilder, InsertBuilder, MariaDBUpdateBuilder, MariaDBDeleteBuilder, MariaDBCreateBranchingBuilder, AlterBranchingBuilder, MariaDBDropBranchingBuilder, MariaDBNextValueSequenceBuilder, MariaDBLastValueIdentityBuilder> {
 
     /** The Constant MARIADB_KEYWORD_IDENTITY. */
     private static final String MARIA_DB_KEYWORD_IDENTITY = "AUTO_INCREMENT";
@@ -201,6 +199,21 @@ public class MariaDBSqlDialect extends
     @Override
     public MariaDBSelectBuilder select() {
         return new MariaDBSelectBuilder(this);
+    }
+
+    @Override
+    public MariaDBUpdateBuilder update() {
+        return new MariaDBUpdateBuilder(this);
+    }
+
+    @Override
+    public MariaDBDeleteBuilder delete() {
+        return new MariaDBDeleteBuilder(this);
+    }
+
+    @Override
+    public MariaDBInsertBuilder insert() {
+        return new MariaDBInsertBuilder(this);
     }
 
 }
