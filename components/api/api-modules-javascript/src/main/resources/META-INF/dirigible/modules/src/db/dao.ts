@@ -200,7 +200,7 @@ export function DAO(orm, logCtxName, dataSourceName) {
 
 		if (sql.toLowerCase().startsWith('select')) {
 			result = Query.execute(sql, _parameterBindings, dataSourceName);
-		} if (sql.toLowerCase().startsWith('insert')) {
+		} else if (sql.toLowerCase().startsWith('insert')) {
 			result = Insert.execute(sql, _parameterBindings, dataSourceName);
 		} else {
 			result = Update.execute(sql, _parameterBindings, dataSourceName);
