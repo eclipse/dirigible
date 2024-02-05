@@ -137,11 +137,8 @@ public class DataExportService {
                                             .get("schemas")
                                             .getAsJsonArray();
 
-                if (workspaceService.existsWorkspace(DEFAULT_WORKSPACE_NAME)) {
-                    workspace = WorkspaceFacade.getWorkspace(DEFAULT_WORKSPACE_NAME);
-                } else {
-                    workspace = WorkspaceFacade.createWorkspace(schema.toLowerCase());
-                }
+                workspace = workspaceService.existsWorkspace(DEFAULT_WORKSPACE_NAME) ? WorkspaceFacade.getWorkspace(DEFAULT_WORKSPACE_NAME)
+                        : WorkspaceFacade.createWorkspace(DEFAULT_WORKSPACE_NAME);
 
                 Project project = workspace.createProject(schema);
 
@@ -218,11 +215,8 @@ public class DataExportService {
         Project project;
         File file;
 
-        if (workspaceService.existsWorkspace(DEFAULT_WORKSPACE_NAME)) {
-            workspace = WorkspaceFacade.getWorkspace(DEFAULT_WORKSPACE_NAME);
-        } else {
-            workspace = WorkspaceFacade.createWorkspace(schema);
-        }
+        workspace = workspaceService.existsWorkspace(DEFAULT_WORKSPACE_NAME) ? WorkspaceFacade.getWorkspace(DEFAULT_WORKSPACE_NAME)
+                : WorkspaceFacade.createWorkspace(DEFAULT_WORKSPACE_NAME);
 
         project = workspace.createProject(schema);
         file = project.createFile(schema + ".schema", schemaMetadata.getBytes());
@@ -289,11 +283,8 @@ public class DataExportService {
 
             Workspace workspace;
 
-            if (workspaceService.existsWorkspace(DEFAULT_WORKSPACE_NAME)) {
-                workspace = WorkspaceFacade.getWorkspace(DEFAULT_WORKSPACE_NAME);
-            } else {
-                workspace = WorkspaceFacade.createWorkspace(schema.toLowerCase());
-            }
+            workspace = workspaceService.existsWorkspace(DEFAULT_WORKSPACE_NAME) ? WorkspaceFacade.getWorkspace(DEFAULT_WORKSPACE_NAME)
+                    : WorkspaceFacade.createWorkspace(DEFAULT_WORKSPACE_NAME);
 
             Project project = workspace.createProject(schema);
 
