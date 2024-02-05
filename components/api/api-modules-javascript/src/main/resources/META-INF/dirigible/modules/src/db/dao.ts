@@ -17,6 +17,7 @@ import { Sequence } from "./sequence";
 import * as database from "./database";
 import { Query } from "@dirigible/db";
 import { Update } from "./update";
+import { Insert } from "./insert";
 import { Logging } from "@dirigible/log";
 import { configurations, globals } from "@dirigible/core";
 
@@ -199,6 +200,8 @@ export function DAO(orm, logCtxName, dataSourceName) {
 
 		if (sql.toLowerCase().startsWith('select')) {
 			result = Query.execute(sql, _parameterBindings, dataSourceName);
+		} if (sql.toLowerCase().startsWith('insert')) {
+			result = Insert.execute(sql, _parameterBindings, dataSourceName);
 		} else {
 			result = Update.execute(sql, _parameterBindings, dataSourceName);
 		}
@@ -353,10 +356,15 @@ DAO.prototype.insert = function (_entity) {
 			}
 
 			const updatedRecordCount = this.execute(parametericStatement, dbEntity);
+			
+			if (!this.orm.isAutoIncrementPrimaryKey() && isNotEmptyArray(updatedRecordCount)) {
+				const id = updatedRecordCount[0];
+				dbEntity[this.orm.getPrimaryKey().name] = id;
+			}
 
 			this.notify('afterInsert', dbEntity);
 			this.notify('beforeInsertAssociationSets', dbEntity);
-			if (updatedRecordCount > 0 && this.orm.associations && Object.keys(this.orm.associations).length) {
+			if ((updatedRecordCount > 0 || isNotEmptyArray(updatedRecordCount)) && this.orm.associations && Object.keys(this.orm.associations).length) {
 				//Insert dependencies if any are provided inline with this entity
 				this.$log.trace('Inserting association sets for {}[{}]', this.orm.table, dbEntity[this.orm.getPrimaryKey().name]);
 				for (const idx in Object.keys(this.orm.associations)) {
@@ -387,7 +395,7 @@ DAO.prototype.insert = function (_entity) {
 				}
 			}
 
-			if (updatedRecordCount > 0) {
+			if (updatedRecordCount > 0 || isNotEmptyArray(updatedRecordCount)) {
 				ids.push(dbEntity[this.orm.getPrimaryKey().name]);
 				this.$log.trace('{}[] entity inserted', this.orm.table, dbEntity[this.orm.getPrimaryKey().name]);
 			} else {
@@ -414,6 +422,10 @@ DAO.prototype.insert = function (_entity) {
 	else
 		return ids;
 };
+
+function isNotEmptyArray(array){
+	return Array.isArray(array) && array.length > 0;
+}
 
 /**
  * Update entity from a JSON object. Returns the id of the updated entity.
