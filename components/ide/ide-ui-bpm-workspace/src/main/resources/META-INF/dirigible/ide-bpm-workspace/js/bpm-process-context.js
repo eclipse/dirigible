@@ -4,7 +4,7 @@ ideBpmProcessContextView.config(["messageHubProvider", function (messageHubProvi
     messageHubProvider.eventIdPrefix = 'bpm';
 }]);
 
-ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$scope', '$http', '$timeout', '$modal', 'messageHub', function ($scope, $http, $timeout, $modal, messageHub,) {
+ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$scope', '$http', '$timeout', 'messageHub', function ($scope, $http, $timeout, messageHub,) {
 
     $scope.variablesList = [];
     $scope.currentProcessInstanceId = null;
