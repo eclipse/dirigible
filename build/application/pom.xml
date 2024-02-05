@@ -102,13 +102,6 @@
 			<artifactId>jackson-datatype-joda</artifactId>
 		</dependency>
 
-		<!-- Swagger -->
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>${org.springdoc.openapi.ui.version}</version>
-		</dependency>
-
 		<!-- Data Access -->
 		<dependency>
 			<groupId>com.h2database</groupId>

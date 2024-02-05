@@ -17,10 +17,11 @@ IDEBPMWorkspacePerspective.config(["messageHubProvider", function (messageHubPro
 
 IDEBPMWorkspacePerspective.controller("BpmWorkspaceViewController", ["$scope", function ($scope) {
     $scope.layoutModel = {
-        views: ["bpm-process-definitions-view", "bpm-process-instances-view", "bpm-image-viewer", "bpm-user-tasks"],
+        views: ["bpm-process-definitions-view", "bpm-process-instances-view", "bpm-process-context-view", "bpm-image-viewer", "bpm-user-tasks"],
         viewSettings: {
             "bpm-process-definitions-view": { expanded: true },
             "bpm-process-instances-view": { expanded: true },
+            "bpm-process-context-view": { expanded: true },
             "bpm-image-viewer": { closable: false },
         },
         layoutSettings: {

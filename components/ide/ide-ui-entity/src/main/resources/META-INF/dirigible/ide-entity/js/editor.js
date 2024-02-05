@@ -874,9 +874,6 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				keyProperty.style = 'extensionproperty';
 				extension.insert(keyProperty);
 
-
-
-
 				// Creates a new DIV that is used as a toolbar and adds
 				// toolbar buttons.
 				let spacer = document.createElement('div');
@@ -1177,6 +1174,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 			$scope.graph.model.addListener(mxEvent.START_EDIT, function (sender, evt) {
 				messageHub.setEditorDirty($scope.dataParameters.file, true);
 			});
+			$scope.graph.enterStopsCellEditing = true;
 		}
 
 		function deserializeFilter(graph) {

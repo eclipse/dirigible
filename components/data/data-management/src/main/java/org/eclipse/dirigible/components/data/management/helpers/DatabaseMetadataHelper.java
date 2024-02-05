@@ -10,23 +10,14 @@
  */
 package org.eclipse.dirigible.components.data.management.helpers;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.components.data.management.domain.DatabaseMetadata;
-import org.eclipse.dirigible.components.data.management.domain.FunctionMetadata;
-import org.eclipse.dirigible.components.data.management.domain.NoSQLTableMetadata;
-import org.eclipse.dirigible.components.data.management.domain.ProcedureMetadata;
-import org.eclipse.dirigible.components.data.management.domain.SchemaMetadata;
-import org.eclipse.dirigible.components.data.management.domain.TableMetadata;
+import org.eclipse.dirigible.components.data.management.domain.*;
 import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.eclipse.dirigible.components.database.DatabaseNameNormalizer;
 import org.eclipse.dirigible.database.sql.DatabaseType;
@@ -285,6 +276,45 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         return result;
     }
 
+    public static List<SequenceMetadata> listSequences(Connection connection, String name) throws SQLException {
+
+        DatabaseMetaData dmd = connection.getMetaData();
+
+        List<SequenceMetadata> result = new ArrayList<SequenceMetadata>();
+
+        String query = null;
+
+        if (dmd.getDatabaseProductName()
+               .equals("MariaDB")) {
+            query = String.format(
+                    "SELECT column_name FROM information_schema.columns WHERE table_schema = \'%s\' AND extra = 'auto_increment'", name);
+        } else if (!dmd.getDatabaseProductName()
+                       .equals("MongoDB")) {
+            query = "SELECT * FROM information_schema.sequences";
+        }
+
+        ResultSet rs = null;
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    String sequenceName;
+                    if (dmd.getDatabaseProductName()
+                           .equals("MariaDB")) {
+                        sequenceName = resultSet.getString("column_name");
+                    } else {
+                        sequenceName = resultSet.getString("sequence_name");
+                    }
+                    result.add(new SequenceMetadata(sequenceName));
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+        }
+        return result;
+    }
+
 
     /**
      * Describe table.
@@ -486,6 +516,19 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
     }
 
     /**
+     * The Interface IndicesIteratorCallback.
+     */
+    public interface ForeignKeysIteratorCallback {
+
+        /**
+         * On index.
+         *
+         * @param fkName the index name
+         */
+        void onIndex(String fkName);
+    }
+
+    /**
      * Iterate table definition.
      *
      * @param connection the connection
@@ -497,7 +540,8 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
      * @throws SQLException the SQL exception
      */
     public static void iterateTableDefinition(Connection connection, String catalogName, String schemaName, String tableName,
-            ColumnsIteratorCallback columnsIteratorCallback, IndicesIteratorCallback indicesIteratorCallback) throws SQLException {
+            ColumnsIteratorCallback columnsIteratorCallback, IndicesIteratorCallback indicesIteratorCallback,
+            ForeignKeysIteratorCallback foreignKeysIteratorCallback) throws SQLException {
 
         DatabaseMetaData dmd = connection.getMetaData();
 
@@ -512,6 +556,11 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         ResultSet indexes = dmd.getIndexInfo(catalogName, schemaName, DatabaseNameNormalizer.normalizeTableName(tableName), false, false);
         if (indexes == null) {
             throw new SQLException("DatabaseMetaData.getIndexInfo returns null");
+        }
+
+        ResultSet foreignKeys = dmd.getImportedKeys(catalogName, schemaName, DatabaseNameNormalizer.normalizeTableName(tableName));
+        if (foreignKeys == null) {
+            throw new SQLException("DatabaseMetaData.getImportedKeys returns null");
         }
 
         try {
@@ -537,9 +586,15 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
                             indexes.getInt(PAGES_INDEX) + EMPTY, indexes.getString(FILTER_CONDITION));
                 }
             }
+            while (foreignKeys.next()) {
+                if (foreignKeysIteratorCallback != null) {
+                    foreignKeysIteratorCallback.onIndex(foreignKeys.getString(FK_NAME));
+                }
+            }
         } finally {
             columns.close();
             indexes.close();
+            foreignKeys.close();
             pks.close();
         }
     }

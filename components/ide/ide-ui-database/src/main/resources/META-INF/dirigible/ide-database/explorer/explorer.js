@@ -24,6 +24,11 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		type: "spinner",
 		li_attr: { spinner: true },
 	};
+	$scope.spinnerForeignKeys = {
+		text: "Loading Foreign Keys...",
+		type: "spinner",
+		li_attr: { spinner: true },
+	};
 	$scope.jstreeConfig = {
 		core: {
 			check_callback: true,
@@ -78,6 +83,9 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			},
 			indices: {
 				icon: "sap-icon--table-row",
+			},
+			foreignKeys: {
+				icon: "sap-icon--two-keys",
 			},
 			schema: {
 				icon: "sap-icon--database",
@@ -147,7 +155,6 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		contextmenu: {
 			items: function (node) {
 				let ctxmenu = {};
-
 				// Select contents
 				if (node.original.type === 'table'
 					|| node.original.type === 'base table'
@@ -158,8 +165,11 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 						"action": function (data) {
 							let tree = $.jstree.reference(data.reference);
 							let node = tree.get_node(data.reference);
-							let parentNodeName = tree.get_text(node.parent);
-							let sqlCommand = "SELECT * FROM \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\";\n";
+
+							let topLevelSchemaNode = node.parents.find(parentId => tree.get_node(parentId).original.kind === 'schema');
+							let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
+
+							let sqlCommand = "SELECT * FROM \"" + topLevelSchemaName + "\"" + "." + "\"" + node.original.text + "\";\n";
 							messageHub.postMessage('database.sql.execute', sqlCommand);
 						}.bind(this)
 					};
@@ -180,7 +190,10 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							"action": function (data) {
 								let tree = $.jstree.reference(data.reference);
 								let node = tree.get_node(data.reference);
-								let parentNodeName = tree.get_text(node.parent);
+
+								let topLevelSchemaNode = node.parents.find(parentId => tree.get_node(parentId).original.kind === 'schema');
+								let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
+
 								let columns = tree.get_node(node.children[0]);
 								let sqlCommand = "SELECT ";
 								for (let i = 0; i < columns.children.length; i++) {
@@ -188,7 +201,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 									sqlCommand += ", ";
 								}
 								sqlCommand = sqlCommand.substring(0, sqlCommand.length - 2);
-								sqlCommand += " FROM \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\";\n";
+								sqlCommand += " FROM \"" + topLevelSchemaName + "\"" + "." + "\"" + node.original.text + "\";\n";
 								messageHub.postMessage('database.sql.script', sqlCommand);
 								$scope.jstreeWidget.jstree(true).refresh();
 
@@ -205,9 +218,11 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							"action": function (data) {
 								let tree = $.jstree.reference(data.reference);
 								let node = tree.get_node(data.reference);
-								let parentNodeName = tree.get_text(node.parent);
+								let topLevelSchemaNode = node.parents.find(parentId => tree.get_node(parentId).original.kind === 'schema');
+								let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
+
 								let columns = tree.get_node(node.children[0]);
-								let sqlCommand = "INSERT INTO \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\" (";
+								let sqlCommand = "INSERT INTO \"" + topLevelSchemaName + "\"" + "." + "\"" + node.original.text + "\" (";
 								for (let i = 0; i < columns.children.length; i++) {
 									sqlCommand += "\"" + tree.get_node(columns.children[i]).original.column.name + "\"";
 									sqlCommand += ", ";
@@ -236,9 +251,12 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							"action": function (data) {
 								let tree = $.jstree.reference(data.reference);
 								let node = tree.get_node(data.reference);
-								let parentNodeName = tree.get_text(node.parent);
+
+								let topLevelSchemaNode = node.parents.find(parentId => tree.get_node(parentId).original.kind === 'schema');
+								let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
+
 								let columns = tree.get_node(node.children[0]);
-								let sqlCommand = "UPDATE \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\" SET ";
+								let sqlCommand = "UPDATE \"" + topLevelSchemaName + "\"" + "." + "\"" + node.original.text + "\" SET ";
 								for (let i = 0; i < columns.children.length; i++) {
 									sqlCommand += "\"" + tree.get_node(columns.children[i]).original.column.name + "\"" +
 										" = '" + tree.get_node(columns.children[i]).original.column.type
@@ -269,9 +287,12 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							"action": function (data) {
 								let tree = $.jstree.reference(data.reference);
 								let node = tree.get_node(data.reference);
-								let parentNodeName = tree.get_text(node.parent);
+
+								let topLevelSchemaNode = node.parents.find(parentId => tree.get_node(parentId).original.kind === 'schema');
+								let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
+
 								let columns = tree.get_node(node.children[0]);
-								let sqlCommand = "DELETE FROM \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
+								let sqlCommand = "DELETE FROM \"" + topLevelSchemaName + "\"" + "." + "\"" + node.original.text + "\"";
 								sqlCommand += " WHERE ";
 								for (let i = 0; i < columns.children.length; i++) {
 									sqlCommand += "\"" + tree.get_node(columns.children[i]).original.column.name + "\"" +
@@ -293,8 +314,11 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 						"action": function (data) {
 							let tree = $.jstree.reference(data.reference);
 							let node = tree.get_node(data.reference);
-							let parentNodeName = tree.get_text(node.parent);
-							let sqlCommand = parentNodeName + "." + node.original.text;
+
+							let topLevelSchemaNode = node.parents.find(parentId => tree.get_node(parentId).original.kind === 'schema');
+							let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
+
+							let sqlCommand = topLevelSchemaName + "." + node.original.text;
 							messageHub.postMessage('database.data.export.artifact', sqlCommand);
 						}.bind(this)
 					};
@@ -307,8 +331,11 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							"action": function (data) {
 								let tree = $.jstree.reference(data.reference);
 								let node = tree.get_node(data.reference);
-								let parentNodeName = tree.get_text(node.parent);
-								let sqlCommand = parentNodeName + "." + node.original.text;
+
+								let topLevelSchemaNode = node.parents.find(parentId => tree.get_node(parentId).original.kind === 'schema');
+								let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
+
+								let sqlCommand = topLevelSchemaName + "." + node.original.text;
 								messageHub.postMessage('database.data.import.artifact', sqlCommand);
 							}.bind(this)
 						};
@@ -321,8 +348,11 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 						"action": function (data) {
 							let tree = $.jstree.reference(data.reference);
 							let node = tree.get_node(data.reference);
-							let parentNodeName = tree.get_text(node.parent);
-							let sqlCommand = parentNodeName + "." + node.original.text;
+
+							let topLevelSchemaNode = node.parents.find(parentId => tree.get_node(parentId).original.kind === 'schema');
+							let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
+
+							let sqlCommand = topLevelSchemaName + "." + node.original.text;
 							messageHub.postMessage('database.metadata.export.artifact', sqlCommand);
 						}.bind(this)
 					};
@@ -335,8 +365,11 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							"action": function (data) {
 								let tree = $.jstree.reference(data.reference);
 								let node = tree.get_node(data.reference);
-								let parentNodeName = tree.get_text(node.parent);
-								let sqlCommand = "DROP TABLE \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\" CASCADE;\n";
+
+								let topLevelSchemaNode = node.parents.find(parentId => tree.get_node(parentId).original.kind === 'schema');
+								let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
+
+								let sqlCommand = "DROP TABLE \"" + topLevelSchemaName + "\"" + "." + "\"" + node.original.text + "\" CASCADE;\n";
 								messageHub.postMessage('database.sql.script', sqlCommand);
 							}.bind(this)
 						};
@@ -349,8 +382,12 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							"action": function (data) {
 								let tree = $.jstree.reference(data.reference);
 								let node = tree.get_node(data.reference);
-								let parentNodeName = tree.get_text(node.parent);
-								let sqlCommand = "DROP VIEW \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\";\n";
+								//let parentNodeName = tree.get_text(node.parent);
+
+								let topLevelSchemaNode = node.parents.find(parentId => tree.get_node(parentId).original.kind === 'schema');
+								let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
+
+								let sqlCommand = "DROP VIEW \"" + topLevelSchemaName + "\"" + "." + "\"" + node.original.text + "\";\n";
 								messageHub.postMessage('database.sql.script', sqlCommand);
 							}.bind(this)
 						};
@@ -454,8 +491,9 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 						"action": function (data) {
 							let tree = $.jstree.reference(data.reference);
 							let node = tree.get_node(data.reference);
-							let parentNodeName = tree.get_text(node.parent);
-							let sqlCommand = parentNodeName + "." + node.original.text;
+							let topLevelSchemaNode = node.parents.find(parentId => tree.get_node(parentId).original.kind === 'schema');
+							let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
+							let sqlCommand = topLevelSchemaName + "." + node.original.text;
 							messageHub.postMessage('database.data.export.artifact', sqlCommand);
 						}.bind(this)
 					};
@@ -466,13 +504,14 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 						"action": function (data) {
 							let tree = $.jstree.reference(data.reference);
 							let node = tree.get_node(data.reference);
-							let parentNodeName = tree.get_text(node.parent);
-							let sqlCommand = parentNodeName + "." + node.original.text;
+							let topLevelSchemaNode = node.parents.find(parentId => tree.get_node(parentId).original.kind === 'schema');
+							let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
+							let sqlCommand = topLevelSchemaName + "." + node.original.text;
 							messageHub.postMessage('database.data.import.artifact', sqlCommand);
 						}.bind(this)
 					};
 				}
-				
+
 				// Column related actions
 				if (node.original.kind === 'column') {
 					ctxmenu.anonymizeFullName = {
@@ -586,7 +625,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			}
 		}
 	};
-	
+
 	let anonymizeMenu = function(node, data, type) {
 		let tree = $.jstree.reference(data.reference);
 		let columnNode = tree.get_node(data.reference);
@@ -608,7 +647,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		parameters.type = type;
 		messageHub.postMessage('database.data.anonymize.column', parameters);
 	}
-	
+
 	let findParentTableOfColumn = function(tree, node) {
 		let maybe = tree.get_node(node.parent);
 		if (!maybe.original.type && "Columns" === maybe.text) {
@@ -619,7 +658,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		}
 		return findParentTableOfColumn(tree, maybe);
 	}
-	
+
 	let findParentSchemaOfColumn = function(tree, node) {
 		let maybe = tree.get_node(node.parent);
 		if (!maybe.original.type && "Columns" === maybe.text) {
@@ -636,6 +675,8 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			expandColumns(event, data);
 		} else if (data.node.children.length === 1 && $scope.jstreeWidget.jstree(true).get_text(data.node.children[0]) === "Loading Indices...") {
 			expandIndices(event, data);
+		} else if (data.node.children.length === 1 && $scope.jstreeWidget.jstree(true).get_text(data.node.children[0]) === "Loading Foreign Keys...") {
+			expandForeignKeys(event, data);
 		}
 	});
 
@@ -675,10 +716,21 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 	let expandColumns = function (evt, data) {
 		let parent = $scope.jstreeWidget.jstree(true).get_node(data.node);
 		let tableParent = $scope.jstreeWidget.jstree(true).get_node(data.node.parent);
-		let schemaParent = $scope.jstreeWidget.jstree(true).get_text(tableParent.parent);
+		let topLevelSchemaNode = tableParent.parents.find(parentId => {
+			let node = $scope.jstreeWidget.jstree(true).get_node(parentId);
+			return (node.original.kind === 'schema' || node.original.kind === 'nosql') && node.text !== 'Tables';
+		});
+
+		let schemaParent;
+
+		if (topLevelSchemaNode) {
+			schemaParent = $scope.jstreeWidget.jstree(true).get_text(topLevelSchemaNode);
+		} else {
+			schemaParent = $scope.jstreeWidget.jstree(true).get_text(tableParent.parent);
+		}
 
 		$scope.jstreeWidget.jstree("delete_node", $scope.jstreeWidget.jstree(true).get_node(data.node.children[0]));
-		
+
 		$http.get(databasesSvcUrl + $scope.selectedDatabase + '/' + $scope.selectedDatasource
 			+ '/' + schemaParent + '/' + tableParent.text + "?kind=" + tableParent.original.kind.toUpperCase())
 			.then(function (data) {
@@ -687,7 +739,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 				})
 			});
 	}
-	
+
 	let expandColumn = function(parent, column) {
 		let position = 'last';
 		let icon = "sap-icon--grid";
@@ -744,7 +796,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			kind: column.kind,
 			name: column.name,
 			key: column.key
-			
+
 		};
 		$scope.jstreeWidget.jstree("create_node", parent, newNode, position, false, false);
 		if (column.columns) {
@@ -757,17 +809,56 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 	let expandIndices = function (evt, data) {
 		let parent = $scope.jstreeWidget.jstree(true).get_node(data.node);
 		let tableParent = $scope.jstreeWidget.jstree(true).get_node(data.node.parent);
-		let schemaParent = $scope.jstreeWidget.jstree(true).get_text(tableParent.parent);
+		let topLevelSchemaNode = tableParent.parents.find(parentId => {
+			let node = $scope.jstreeWidget.jstree(true).get_node(parentId);
+			return node.original.kind === 'schema' && node.text !== 'Tables';
+		});
+
+		let schemaParent;
+
+		if (topLevelSchemaNode) {
+			schemaParent = $scope.jstreeWidget.jstree(true).get_text(topLevelSchemaNode);
+		} else {
+			schemaParent = $scope.jstreeWidget.jstree(true).get_text(tableParent.parent);
+		}
 
 		$scope.jstreeWidget.jstree("delete_node", $scope.jstreeWidget.jstree(true).get_node(data.node.children[0]));
 		let position = 'last';
-
 		$http.get(databasesSvcUrl + $scope.selectedDatabase + '/' + $scope.selectedDatasource
 			+ '/' + schemaParent + '/' + tableParent.text)
 			.then(function (data) {
 				data.data.indices.forEach(function (index) {
 					let nodeText = index.name;
 					let newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + index.name, "icon": "sap-icon--bullet-text" };
+					$scope.jstreeWidget.jstree("create_node", parent, newNode, position, false, false);
+				})
+			});
+	}
+
+	let expandForeignKeys = function (evt, data) {
+		let parent = $scope.jstreeWidget.jstree(true).get_node(data.node);
+		let tableParent = $scope.jstreeWidget.jstree(true).get_node(data.node.parent);
+		let topLevelSchemaNode = tableParent.parents.find(parentId => {
+			let node = $scope.jstreeWidget.jstree(true).get_node(parentId);
+			return node.original.kind === 'schema' && node.text !== 'Tables';
+		});
+
+		let schemaParent;
+
+		if (topLevelSchemaNode) {
+			schemaParent = $scope.jstreeWidget.jstree(true).get_text(topLevelSchemaNode);
+		} else {
+			schemaParent = $scope.jstreeWidget.jstree(true).get_text(tableParent.parent);
+		}
+
+		$scope.jstreeWidget.jstree("delete_node", $scope.jstreeWidget.jstree(true).get_node(data.node.children[0]));
+		let position = 'last';
+		$http.get(databasesSvcUrl + $scope.selectedDatabase + '/' + $scope.selectedDatasource
+			+ '/' + schemaParent + '/' + tableParent.text)
+			.then(function (data) {
+				data.data.foreignKeys.forEach(function (foreignKey) {
+					let nodeText = foreignKey.name;
+					let newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + foreignKey.name, "icon": "sap-icon--bullet-text" };
 					$scope.jstreeWidget.jstree("create_node", parent, newNode, position, false, false);
 				})
 			});
@@ -797,26 +888,22 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		let icon = 'sap-icon--grid';
 		let name = f.name;
 		if (f.kind == 'schema') {
-			let tablesChildren = f.tables.map(function (_table) {
-				return build(_table)
-			});
-			children = children.concat(tablesChildren);
+			const types = ["Tables", "Views", "Procedures", "Functions", "Sequences"];
 
-			let proceduresChildren = f.procedures.map(function (_procedure) {
-				return build(_procedure)
+			children = types.map((type, index) => {
+				return {
+					text: type,
+					icon: "sap-icon--folder",
+					children: f[type.toLowerCase()].map(item => build(item))
+				};
 			});
-			children = children.concat(proceduresChildren);
-
-			let functionsChildren = f.functions.map(function (_function) {
-				return build(_function)
-			});
-			children = children.concat(functionsChildren);
 
 			icon = 'sap-icon--database';
 		} else if (f.kind == 'table' && (f.type === 'TABLE' || f.type === 'BASE TABLE')) {
 			children = [
 				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] },
 				{ text: "Indices", "icon": "sap-icon--table-row", children: [$scope.spinnerIndices] },
+				{ text: "Foreign Keys", "icon": "sap-icon--two-keys", children: [$scope.spinnerForeignKeys] }
 			];
 			icon = 'sap-icon--table-view';
 		} else if (f.kind == 'table' && f.type === 'VIEW') {
@@ -838,15 +925,11 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			];
 			icon = 'sap-icon--locked';
 		} else if (f.kind == 'procedure') { // && f.type === 'XXX'
-			children = [
-				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] },
-			];
 			icon = 'sap-icon--workflow-tasks';
 		} else if (f.kind == 'function') { // && f.type === 'XXX'
-			children = [
-				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] },
-			];
 			icon = 'sap-icon--settings';
+		} else if (f.kind == 'sequence') { // && f.type === 'XXX'
+			icon = 'sap-icon--number-sign';
 		} else if (f.kind == 'column') {
 			icon = 'sap-icon--grid';
 			name += ` [<i>${data.type}</i>(<i>${data.size}</i>)]`;

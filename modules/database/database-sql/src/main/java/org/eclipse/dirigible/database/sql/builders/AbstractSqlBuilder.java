@@ -12,7 +12,6 @@ package org.eclipse.dirigible.database.sql.builders;
 
 import java.util.Set;
 import java.util.regex.Pattern;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.ISqlBuilder;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
@@ -23,8 +22,7 @@ import org.eclipse.dirigible.database.sql.ISqlDialect;
 public abstract class AbstractSqlBuilder implements ISqlBuilder {
 
     /** The dialect. */
-    private ISqlDialect dialect;
-
+    private final ISqlDialect dialect;
 
     /**
      * Instantiates a new abstract sql builder.
@@ -108,7 +106,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
     }
 
     /** The column pattern. */
-    private Pattern columnPattern = Pattern.compile("^(?![0-9]*$)[a-zA-Z0-9_#$]+$");
+    private final Pattern columnPattern = Pattern.compile("^(?![0-9]*$)[a-zA-Z0-9_#$]+$");
 
     /**
      * Gets the escape symbol.
@@ -141,6 +139,14 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
      * @return the transformed string
      */
     protected String encapsulateMany(String line) {
+        return encapsulateMany(line, '"');
+    }
+
+    protected String encapsulateWhere(String where) {
+        return encapsulateMany(where, '"');
+    }
+
+    protected String encapsulateMany(String line, char escapeChar) {
         String lineWithoughContentBetweenSingleQuotes = String.join("", line.split(contentBetweenSingleQuotes.toString()));
         String regex = "([^a-zA-Z0-9_#$::']+)'*\\1*";
         String[] words = lineWithoughContentBetweenSingleQuotes.split(regex);
@@ -150,7 +156,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
                 continue;
             }
             if (!"".equals(word.trim()) && !functionsNames.contains(word.toLowerCase())) {
-                line = line.replace(word, "\"" + word + "\"");
+                line = line.replace(word, escapeChar + word + escapeChar);
             }
         }
         return line;
@@ -159,10 +165,10 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
     /**
      * The Regex find the content between single quotes.
      */
-    private Pattern contentBetweenSingleQuotes = Pattern.compile("'([^']*?)'");
+    private final Pattern contentBetweenSingleQuotes = Pattern.compile("'([^']*?)'");
 
     /** The numeric pattern. */
-    private Pattern numericPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+    private final Pattern numericPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
 
     /**
      * Check whether the string is a number.

@@ -12,22 +12,20 @@ package org.eclipse.dirigible.components.ide.problems.domain;
 
 import java.sql.Timestamp;
 
+import org.eclipse.dirigible.components.api.security.UserFacade;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-
-import org.eclipse.dirigible.components.api.security.UserFacade;
 
 /**
  * The Class Problem.
  */
 @Entity
-@Table(name = "DIRIGIBLE_PROBLEMS",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"PROBLEM_LOCATION", "PROBLEM_TYPE", "PROBLEM_LINE", "PROBLEM_COLUMN"}))
+@Table(name = "DIRIGIBLE_PROBLEMS")
 public class Problem {
 
     /**
