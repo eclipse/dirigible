@@ -135,6 +135,9 @@ function createModel(graph) {
 					if (property.widgetType !== null) {
 						model.push(' widgetType="' + _.escape(property.widgetType) + '"');
 					}
+					if (property.widgetSize !== null) {
+						model.push(' widgetSize="' + _.escape(property.widgetSize) + '"');
+					}
 					if (property.widgetLength !== null) {
 						model.push(' widgetLength="' + _.escape(property.widgetLength) + '"');
 					}
