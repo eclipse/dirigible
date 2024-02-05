@@ -34,13 +34,13 @@ function ForbiddenError(message) {
 #end
 
 let dao = daoApi.create({
-	table: "${tablePrefix}_${dataName}",
+	table: "${tablePrefix}${dataName}",
 	properties: [
 #foreach ($property in $properties)
 #if($foreach.isFirst())
 		{
 #else
- {
+ 		{
 #end
 			name: "${property.name}",
 			column: "${property.dataName}",
@@ -60,8 +60,11 @@ let dao = daoApi.create({
 #end
 		}#if($foreach.hasNext),#end
 #end
-]
-});
+#if($dataSource)
+]}, null, "${dataSource}");
+#else
+]});
+#end
 
 export const list = (settings) => {
 #if($roleRead && $roleRead != "") 
@@ -179,7 +182,7 @@ export const create = (entity) => {
 	let id = dao.insert(entity);
 	triggerEvent({
 		operation: "create",
-		table: "${tablePrefix}_${dataName}",
+		table: "${tablePrefix}${dataName}",
 		entity: entity,
 		key: {
 #foreach ($property in $properties)
@@ -229,7 +232,7 @@ export const update = (entity) => {
 	dao.update(entity);
 	triggerEvent({
 		operation: "update",
-		table: "${tablePrefix}_${dataName}",
+		table: "${tablePrefix}${dataName}",
 		entity: entity,
 		key: {
 #foreach ($property in $properties)
@@ -253,7 +256,7 @@ export const remove = (id) => {
 	dao.remove(id);
 	triggerEvent({
 		operation: "delete",
-		table: "${tablePrefix}_${dataName}",
+		table: "${tablePrefix}${dataName}",
 		entity: entity,
 		key: {
 #foreach ($property in $properties)
@@ -269,7 +272,7 @@ export const remove = (id) => {
 
 #if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
 export const count = (#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end) => {
-	let resultSet = query.execute('SELECT COUNT(*) AS COUNT FROM "${tablePrefix}_${dataName}" WHERE #foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")"${property.dataName}"#end#end = ?', [#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end]);
+	let resultSet = query.execute('SELECT COUNT(*) AS COUNT FROM "${tablePrefix}${dataName}" WHERE #foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")"${property.dataName}"#end#end = ?', [#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end]);
 	if (resultSet !== null && resultSet[0] !== null) {
 		if (resultSet[0].COUNT !== undefined && resultSet[0].COUNT !== null) {
 			return resultSet[0].COUNT;
