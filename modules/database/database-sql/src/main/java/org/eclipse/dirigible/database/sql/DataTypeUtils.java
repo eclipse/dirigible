@@ -402,6 +402,17 @@ public class DataTypeUtils {
     }
 
     /**
+     * Checks if is varchar.
+     *
+     * @param dataType the data type
+     * @return true, if is varchar
+     */
+    public static boolean isCharacterVarying(String dataType) {
+        return DataType.CHARACTER_VARYING.toString()
+                .equals(dataType);
+    }
+
+    /**
      * Checks if is nvarchar.
      *
      * @param dataType the data type

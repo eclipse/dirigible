@@ -299,26 +299,48 @@ public class DataExportService {
         }
 
         tableObject.add("properties", tableColumns);
-        tableObject.addProperty("caption", "Manage entity " + table.getName());
-        tableObject.addProperty("dataName", table.getName()
-                                                 .toUpperCase());
+        populateTableProperties(tableObject, table);
 
         entitiesArray.add(tableObject);
+    }
+
+    private void populateTableProperties(JsonObject tableObject, Table table){
+        tableObject.addProperty("caption", "Manage entity " + table.getName());
+        tableObject.addProperty("dataCount", "SELECT COUNT(*) AS COUNT FROM \"${tablePrefix}_" + table.getName().toUpperCase() + "\"");
+        tableObject.addProperty("dataName", table.getName().toUpperCase());
+        tableObject.addProperty("dataQuery", "");
+        tableObject.addProperty("icon", "cubes");
+        tableObject.addProperty("layoutType", "MANAGE");
+        tableObject.addProperty("menuIndex", table.getName().toLowerCase());
+        tableObject.addProperty("menuKey", table.getName().toLowerCase());
+        tableObject.addProperty("menuLabel", table.getName().toLowerCase());
+        tableObject.addProperty("name", table.getName().toLowerCase());
+        tableObject.addProperty("navigationPath", "/Home");
+        tableObject.addProperty("perspectiveIcon", "/services/web/resources/unicons/arrows-resize-v.svg");  // should not be hardcoded
+        tableObject.addProperty("perspectiveName", table.getName().toLowerCase());
+        tableObject.addProperty("perspectiveOrder", "");
+        tableObject.addProperty("title", table.getName().toUpperCase());
+        tableObject.addProperty("tooltip", table.getName().toUpperCase());
+        tableObject.addProperty("type", "PRIMARY");
     }
 
     private JsonObject populateColumnData(TableColumn column) {
         JsonObject columnObject = new JsonObject();
         columnObject.addProperty("calculatedPropertyExpression", "");
-        columnObject.addProperty("dataAutoIncrement", column.isPrimaryKey());
+        columnObject.addProperty("dataAutoIncrement", String.valueOf(column.isPrimaryKey()));
         columnObject.addProperty("dataLength", column.getLength());
         columnObject.addProperty("dataName", column.getName()
                                                    .toUpperCase());
-        columnObject.addProperty("dataNullable", column.isNullable());
-        columnObject.addProperty("dataPrimaryKey", column.isPrimaryKey());
+        columnObject.addProperty("dataNullable", String.valueOf(column.isNullable()));
+        columnObject.addProperty("dataPrimaryKey", String.valueOf(column.isPrimaryKey()));
         columnObject.addProperty("dataType", column.getType());
-        columnObject.addProperty("dataUnique", column.isUnique());
-        columnObject.addProperty("isCalculatedProperty", "");
+        columnObject.addProperty("dataUnique", String.valueOf(column.isUnique()));
+        columnObject.addProperty("isCalculatedProperty", "false");
         columnObject.addProperty("name", column.getName());
+        columnObject.addProperty("widgetIsMajor", "true");
+        columnObject.addProperty("widgetLength", column.getLength());
+        columnObject.addProperty("widgetType", "TEXTBOX");
+
         return columnObject;
     }
 
