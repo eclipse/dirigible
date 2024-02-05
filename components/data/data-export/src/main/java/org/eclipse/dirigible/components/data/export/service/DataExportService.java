@@ -251,7 +251,7 @@ public class DataExportService {
      * @param schema the schema
      */
 
-    public void exportSchemaModel(String datasource, String schema) {
+    public void exportSchemaAsModel(String datasource, String schema) {
         try {
             javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
 

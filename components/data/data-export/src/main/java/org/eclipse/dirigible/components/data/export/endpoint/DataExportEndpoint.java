@@ -128,7 +128,7 @@ public class DataExportEndpoint {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
         }
 
-        dataExportService.exportSchemaModel(datasource, schema);
+        dataExportService.exportSchemaAsModel(datasource, schema);
 
         return ResponseEntity.ok(new URI("/" + BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspaces" + "/" + schema));
     }
