@@ -317,9 +317,7 @@ public class DataExportService {
 
     private void populateTableProperties(JsonObject tableObject, Table table) {
         tableObject.addProperty("caption", "Manage entity " + table.getName());
-        tableObject.addProperty("dataCount", "SELECT COUNT(*) AS COUNT FROM \"${tablePrefix}_" + table.getName()
-                                                                                                      .toUpperCase()
-                + "\"");
+        tableObject.addProperty("dataCount", "SELECT COUNT(*) AS COUNT FROM \"${tablePrefix}" + table.getName() + "\"");
         tableObject.addProperty("dataName", table.getName());
         tableObject.addProperty("dataQuery", "");
         tableObject.addProperty("icon", "cubes");
