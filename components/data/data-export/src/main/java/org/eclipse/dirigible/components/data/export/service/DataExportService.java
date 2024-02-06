@@ -27,6 +27,7 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.api.platform.WorkspaceFacade;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
+import org.eclipse.dirigible.components.data.management.domain.DatabaseMetadata;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.components.data.management.load.DataSourceMetadataLoader;
 import org.eclipse.dirigible.components.data.management.service.DatabaseDefinitionService;
@@ -140,7 +141,7 @@ public class DataExportService {
                 workspace = workspaceService.existsWorkspace(DEFAULT_WORKSPACE_NAME) ? WorkspaceFacade.getWorkspace(DEFAULT_WORKSPACE_NAME)
                         : WorkspaceFacade.createWorkspace(DEFAULT_WORKSPACE_NAME);
 
-                Project project = workspace.createProject(schema);
+                Project project = workspace.createProject(datasource);
 
                 for (int i = 0; i < schemes.size(); i++) {
                     JsonObject scheme = schemes.get(i)
@@ -181,7 +182,7 @@ public class DataExportService {
                         databaseExecutionService.executeStatement(dataSource, sql, true, false, true, false, output);
                         String tableExport = sw.toString();
 
-                        file = project.createFile(schema + "." + artifact + ".csv", tableExport.getBytes());
+                        file = project.createFile(schema.toLowerCase() + "." + artifact.toLowerCase() + ".csv", tableExport.getBytes());
 
                         setCsvFileFields(csvFile, schema, artifact, file.getProjectPath());
                         csvFiles.add(csvFile);
@@ -218,8 +219,8 @@ public class DataExportService {
         workspace = workspaceService.existsWorkspace(DEFAULT_WORKSPACE_NAME) ? WorkspaceFacade.getWorkspace(DEFAULT_WORKSPACE_NAME)
                 : WorkspaceFacade.createWorkspace(DEFAULT_WORKSPACE_NAME);
 
-        project = workspace.createProject(schema);
-        file = project.createFile(schema + ".schema", schemaMetadata.getBytes());
+        project = workspace.createProject(datasource);
+        file = project.createFile(datasource.toLowerCase() + "_" + schema.toLowerCase() + ".schema", schemaMetadata.getBytes());
         logger.info(
                 format("Created file [{0}] in Project [{1}] in Workspace [{2}]", file.getName(), project.getName(), workspace.getName()));
 
@@ -286,10 +287,10 @@ public class DataExportService {
             workspace = workspaceService.existsWorkspace(DEFAULT_WORKSPACE_NAME) ? WorkspaceFacade.getWorkspace(DEFAULT_WORKSPACE_NAME)
                     : WorkspaceFacade.createWorkspace(DEFAULT_WORKSPACE_NAME);
 
-            Project project = workspace.createProject(schema);
+            Project project = workspace.createProject(datasource);
 
-            project.createFile(schema + ".model", schemaModel.toString()
-                                                             .getBytes());
+            project.createFile(datasource.toLowerCase() + "_" + schema.toLowerCase() + ".model", schemaModel.toString()
+                                                                                                            .getBytes());
 
             logger.info(format("Created requested files in Project [{0}] in Workspace [{1}]", project.getName(), workspace.getName()));
         } catch (SQLException e) {
