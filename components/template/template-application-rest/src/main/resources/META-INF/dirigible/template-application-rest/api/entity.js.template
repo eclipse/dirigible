@@ -1,7 +1,9 @@
 #set($dollar = '$' )
 import { rs } from "@dirigible/http";
-import * as dao from "../../dao/${perspectiveName}/${name}";
+import { ${name}Repository } from "../../dao/${perspectiveName}/${name}Repository";
 import * as http from "../utils/http";
+
+const dao = new ${name}Repository();
 
 #foreach ($property in $properties)
 #if($property.widgetPattern && $property.widgetPattern != "")
@@ -17,7 +19,7 @@ rs.service()
 			for (let i = 0; i < parameters.length; i ++) {
 				queryOptions[parameters[i]] = request.getParameter(parameters[i]);
 			}
-			let entities = dao.list(queryOptions);
+			let entities = dao.findAll(queryOptions);
 			http.sendResponseOk(entities);
 		})
 		.produces(["application/json"])
@@ -55,7 +57,7 @@ rs.service()
 	.resource("{id}")
 		.get(function(ctx) {
 			let id = ctx.pathParameters.id;
-			let entity = dao.get(id);
+			let entity = dao.findById(id);
 			if (entity) {
 			    http.sendResponseOk(entity);
 			} else {
@@ -115,9 +117,9 @@ rs.service()
 	.resource("{id}")
 		.delete(function(ctx) {
 			let id = ctx.pathParameters.id;
-			let entity = dao.get(id);
+			let entity = dao.findById(id);
 			if (entity) {
-				dao.remove(id);
+				dao.deleteById(id);
 				http.sendResponseNoContent();
 			} else {
 				http.sendResponseNotFound("${name} not found");

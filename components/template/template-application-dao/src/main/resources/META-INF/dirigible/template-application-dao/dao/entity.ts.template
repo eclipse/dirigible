@@ -1,0 +1,559 @@
+#if($dataCount)
+import { query } from "@dirigible/db";
+#end
+import { producer } from "@dirigible/messaging";
+import { extensions } from "@dirigible/extensions";
+import { dao as daoApi } from "@dirigible/db";
+#set($isEntityUtilsEnabled = "false")
+#foreach ($property in $properties)
+#if($property.dataType == "DATE" || $property.dataType == "BOOLEAN")
+#set($isEntityUtilsEnabled = "true")
+#break
+#end
+#end
+#if($isEntityUtilsEnabled == "true")
+import { EntityUtils } from "../utils/EntityUtils";
+#end
+#if($roleRead && $roleRead != "" || $roleWrite && $roleWrite != "") 
+#set($isEntitySecurityEnabled = "true")
+#end
+#foreach ($property in $properties)
+#if($property.roleRead && $property.roleRead != ""|| $property.roleWrite && $property.roleWrite != "")
+#set($isEntityPropertySecurityEnabled = "true")
+#break
+#end
+#end
+#if($isEntitySecurityEnabled || $isEntityPropertySecurityEnabled)
+import { user } from "@dirigible/security";
+
+function ForbiddenError(message) {
+    this.name = "ForbiddenError";
+    this.message = message;
+    this.stack = (new Error()).stack;
+}
+#end
+
+export interface ${name}Entity {
+#foreach ($property in $properties)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+#if($property.isCalculatedProperty)
+	${property.name}?: string;
+#else
+	readonly #if($property.dataNotNull || $property.dataPrimaryKey)${property.name}: string;#else${property.name}?: string;#end
+#end
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+#if($property.isCalculatedProperty)
+    ${property.name}?: number;
+#else
+    readonly #if($property.dataNotNull || $property.dataPrimaryKey)${property.name}: number;#else${property.name}?: number;#end
+#end
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+#if($property.isCalculatedProperty)
+    ${property.name}?: Date;
+#else
+    readonly #if($property.dataNotNull || $property.dataPrimaryKey)${property.name}: Date;#else${property.name}?: Date;#end
+#end
+#elseif($property.dataType == "BOOLEAN")
+#if($property.isCalculatedProperty)
+    ${property.name}?: boolean;
+#else
+    readonly #if($property.dataNotNull || $property.dataPrimaryKey)${property.name}: boolean;#else${property.name}?: boolean;#end
+#end
+#else
+#if($property.isCalculatedProperty)
+    ${property.name}?: unknown;
+#else
+    readonly #if($property.dataNotNull || $property.dataPrimaryKey)${property.name}: unknown;#else${property.name}?: unknown;#end
+#end
+#end
+#end
+}
+
+export interface ${name}EntityOptions {
+	$filter?: {
+		equals?: {
+#foreach ($property in $properties)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+			${property.name}?: string | string[];
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+			${property.name}?: number | number[];
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+			${property.name}?: Date | Date[];
+#elseif($property.dataType == "BOOLEAN")
+			${property.name}?: boolean | boolean[];
+#else
+			${property.name}?: unknown | unknown[];
+#end
+#end
+		};
+		notEquals?: {
+#foreach ($property in $properties)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+			${property.name}?: string | string[];
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+			${property.name}?: number | number[];
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+			${property.name}?: Date | Date[];
+#elseif($property.dataType == "BOOLEAN")
+			${property.name}?: boolean | boolean[];
+#else
+			${property.name}?: unknown | unknown[];
+#end
+#end
+		};
+		contains?: {
+#foreach ($property in $properties)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+			${property.name}?: string;
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+			${property.name}?: number;
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+			${property.name}?: Date;
+#elseif($property.dataType == "BOOLEAN")
+			${property.name}?: boolean;
+#else
+			${property.name}?: unknown;
+#end
+#end
+		};
+		greaterThan?: {
+#foreach ($property in $properties)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+			${property.name}?: string;
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+			${property.name}?: number;
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+			${property.name}?: Date;
+#elseif($property.dataType == "BOOLEAN")
+			${property.name}?: boolean;
+#else
+			${property.name}?: unknown;
+#end
+#end
+		};
+		greaterThanOrEqual?: {
+#foreach ($property in $properties)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+			${property.name}?: string;
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+			${property.name}?: number;
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+			${property.name}?: Date;
+#elseif($property.dataType == "BOOLEAN")
+			${property.name}?: boolean;
+#else
+			${property.name}?: unknown;
+#end
+#end
+		};
+		lessThan?: {
+#foreach ($property in $properties)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+			${property.name}?: string;
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+			${property.name}?: number;
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+			${property.name}?: Date;
+#elseif($property.dataType == "BOOLEAN")
+			${property.name}?: boolean;
+#else
+			${property.name}?: unknown;
+#end
+#end
+		};
+		lessThanOrEqual?: {
+#foreach ($property in $properties)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+			${property.name}?: string;
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+			${property.name}?: number;
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+			${property.name}?: Date;
+#elseif($property.dataType == "BOOLEAN")
+			${property.name}?: boolean;
+#else
+			${property.name}?: unknown;
+#end
+#end
+		};
+	},
+	$select?: (keyof ${name}Entity)[],
+	$sort?: string | (keyof ${name}Entity)[],
+	$order?: 'asc' | 'desc',
+	$offset?: number,
+	$limit?: number,
+}
+
+interface ${name}EntityEvent {
+	readonly operation: 'create' | 'update' | 'delete';
+	readonly table: string;
+	readonly entity: Partial<${name}Entity>;
+	readonly key: {
+		name: string;
+		column: string;
+#foreach ($property in $properties)
+#if($property.dataPrimaryKey)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+		value: string;
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+		value: number;
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+		value: Date;
+#elseif($property.dataType == "BOOLEAN")
+		value: boolean;
+#else
+		value: unknown;
+#end
+#end
+#end
+	}
+}
+
+export class ${name}Repository {
+
+	public static readonly DEFINITION = {
+		table: "${tablePrefix}${dataName}",
+		properties: [
+#foreach ($property in $properties)
+#if($foreach.isFirst())
+			{
+#else
+			{
+#end
+				name: "${property.name}",
+				column: "${property.dataName}",
+				type: "${property.dataType}",
+#if($property.dataPrimaryKey)
+				id: true,
+#end
+#if($property.dataPrimaryKey)
+#if($property.dataAutoIncrement)
+				autoIncrement: true,
+#else
+				autoIncrement: false,
+#end
+#end
+#if($property.dataNotNull)
+				required: true
+#end
+			}#if($foreach.hasNext),#end
+#end
+		]
+	};
+
+	private readonly dao;
+
+	constructor(dataSource#if($dataSource) = "${dataSource}"#else?: string#end) {
+		this.dao = daoApi.create(${name}Repository.DEFINITION, null, dataSource);
+	}
+
+	public findAll(options?: ${name}EntityOptions): ${name}Entity[] {
+#if($roleRead && $roleRead != "") 
+		if (!user.isInRole("${roleRead}")) {
+			throw new ForbiddenError("You do not have the required role to call this function");
+		}
+#end
+#if($isEntityUtilsEnabled == "true")
+		return this.dao.list(options).map((e: ${name}Entity) => {
+#foreach ($property in $properties)
+#if($property.roleRead)
+			if (!user.isInRole("${property.roleRead}")) {
+				delete e.$property.name;
+			}
+#end
+#if($property.dataType == "DATE")
+			EntityUtils.setDate(e, "${property.name}");
+#end
+#if($property.dataType == "BOOLEAN")
+			EntityUtils.setBoolean(e, "${property.name}");
+#end
+#end
+			return e;
+		});
+#elseif($isEntityPropertySecurityEnabled == "true")
+		return this.dao.list(options).map(function(e: ${name}Entity) => {
+#foreach ($property in $properties)
+#if($property.roleRead && $property.roleRead != "")
+			if (!user.isInRole("${property.roleRead}")) {
+				delete e.$property.name;
+			}
+#end
+#end
+			return e;
+		});
+#else
+		return this.dao.list(options);
+#end
+	}
+
+#foreach ($property in $properties)
+#if($property.dataPrimaryKey)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+	public findById(id: string): ${name}Entity | undefined {
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+	public findById(id: number): ${name}Entity | undefined {
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+	public findById(id: Date): ${name}Entity | undefined {
+#elseif($property.dataType == "BOOLEAN")
+	public findById(id: boolean): ${name}Entity | undefined {
+#else
+	public findById(id: unknown): ${name}Entity | undefined {
+#end
+#end
+#end
+#if($roleRead && $roleRead != "") 
+		if (!user.isInRole("${roleRead}")) {
+			throw new ForbiddenError("You do not have the required role to call this function");
+		}
+#end
+#if($isEntityUtilsEnabled == "true")
+		const entity = this.dao.find(id);
+#foreach ($property in $properties)
+#if($property.roleRead && $property.roleRead != "")
+		if (!user.isInRole("${property.roleRead}")) {
+			delete entity.$property.name;
+		}
+#end
+#if($property.dataType == "DATE")
+		EntityUtils.setDate(entity, "${property.name}");
+#end
+#if($property.dataType == "BOOLEAN")
+		EntityUtils.setBoolean(entity, "${property.name}");
+#end
+#end
+		return entity ?? undefined;
+#elseif($isEntityPropertySecurityEnabled == "true")
+		const entity = this.dao.find(id);
+#foreach ($property in $properties)
+#if($property.roleRead && $property.roleRead != "")
+		if (!user.isInRole("${property.roleRead}")) {
+			delete entity.$property.name;
+		}
+#end
+#end
+		return entity ?? undefined;
+#else
+		const entity = this.dao.find(id);
+		return entity ?? undefined;
+#end
+	}
+
+#foreach ($property in $properties)
+#if($property.dataPrimaryKey)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+	public create(entity: Omit<${name}Entity, '${property.name}'>): string {
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+	public create(entity: Omit<${name}Entity, '${property.name}'>): number {
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+	public create(entity: Omit<${name}Entity, '${property.name}'>): Date {
+#elseif($property.dataType == "BOOLEAN")
+	public create(entity: Omit<${name}Entity, '${property.name}'>): boolean {
+#else
+	public create(entity: Omit<${name}Entity, '${property.name}'>): unknown {
+#end
+#end
+#end
+#if($roleWrite && $roleWrite != "") 
+		if (!user.isInRole("${roleWrite}")) {
+			throw new ForbiddenError("You do not have the required role to call this function");
+		}
+#end
+#if($isEntityUtilsEnabled == "true")
+#foreach ($property in $properties)
+#if($property.dataType == "DATE")
+		EntityUtils.setLocalDate(entity, "${property.name}");
+#end
+#if($property.dataType == "BOOLEAN")
+		EntityUtils.setBoolean(entity, "${property.name}");
+#end
+#end
+#end
+#foreach ($property in $properties)
+#if($property.isCalculatedProperty)
+		entity["${property.name}"] = ${property.calculatedPropertyExpression};
+#end
+#end
+#if($isEntityPropertySecurityEnabled == "true")
+#foreach ($property in $properties)
+#if($property.roleWrite && $property.roleWrite != "")
+		if (!user.isInRole("${property.roleWrite}")) {
+			delete entity.$property.name;
+		}
+#end
+#end
+#end
+#foreach ($property in $properties)
+#if($property.dataDefaultValue)
+		if (!entity.${property.name}) {
+			entity.${property.name} = "${property.dataDefaultValue}";
+		}
+#end
+#end
+		const id = this.dao.insert(entity);
+		this.triggerEvent({
+			operation: "create",
+			table: "${tablePrefix}${dataName}",
+			entity: entity,
+			key: {
+#foreach ($property in $properties)
+#if($property.dataPrimaryKey)
+				name: "${property.name}",
+				column: "${property.dataName}",
+				value: id
+#end
+#end
+			}
+		});
+		return id;
+	}
+
+	public update(entity: ${name}Entity): void {
+#if($roleWrite && $roleWrite != "") 
+		if (!user.isInRole("${roleWrite}")) {
+			throw new ForbiddenError("You do not have the required role to call this function");
+		}
+#end
+#if($isEntityPropertySecurityEnabled == "true")
+		const oldEntity = this.dao.find(entity.#foreach ($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end);
+#foreach ($property in $properties)
+#if($property.roleWrite && $property.roleWrite != "")
+		if (!user.isInRole("${property.roleWrite}")) {
+			delete entity.$property.name;
+		}
+#end
+#end
+		entity = Object.assign(oldEntity, entity);
+#end
+#if($isEntityUtilsEnabled == "true")
+#foreach ($property in $properties)
+#if($property.dataType == "DATE")
+		// EntityUtils.setLocalDate(entity, "${property.name}");
+#end
+#if($property.dataType == "BOOLEAN")
+		EntityUtils.setBoolean(entity, "${property.name}");
+#end
+#end
+#end
+#foreach ($property in $properties)
+#if($property.isCalculatedProperty)
+		entity["${property.name}"] = ${property.calculatedPropertyExpression};
+#end
+#end
+		this.dao.update(entity);
+		this.triggerEvent({
+			operation: "update",
+			table: "${tablePrefix}${dataName}",
+			entity: entity,
+			key: {
+#foreach ($property in $properties)
+#if($property.dataPrimaryKey)
+				name: "${property.name}",
+				column: "${property.dataName}",
+				value: entity.${property.name}
+#end
+#end
+			}
+		});
+	}
+
+#foreach ($property in $properties)
+#if($property.dataPrimaryKey)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+	public deleteById(id: string): void {
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+	public deleteById(id: number): void {
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+	public deleteById(id: Date): void {
+#elseif($property.dataType == "BOOLEAN")
+	public deleteById(id: boolean): void {
+#else
+	public deleteById(id: unknown): void {
+#end
+#end
+#end
+		const entity = this.dao.find(id);
+#if($roleWrite && $roleWrite != "") 
+		if (!user.isInRole("${roleWrite}")) {
+			throw new ForbiddenError("You do not have the required role to call this function");
+		}
+#end
+		this.dao.remove(id);
+		this.triggerEvent({
+			operation: "delete",
+			table: "${tablePrefix}${dataName}",
+			entity: entity,
+			key: {
+#foreach ($property in $properties)
+#if($property.dataPrimaryKey)
+				name: "${property.name}",
+				column: "${property.dataName}",
+				value: id
+#end
+#end
+			}
+		});
+	}
+
+#if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
+
+
+#foreach ($property in $properties)
+#if($property.relationshipType == "COMPOSITION")
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+	public count(${property.name}: string): number {
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+	public count(${property.name}: number): number {
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+	public count(${property.name}: Date): number {
+#elseif($property.dataType == "BOOLEAN")
+	public count(${property.name}: boolean): number {
+#else
+	public count(${property.name}: unknown): number {
+#end
+#end
+#end
+		const resultSet = query.execute('SELECT COUNT(*) AS COUNT FROM "${tablePrefix}${dataName}" WHERE #foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")"${property.dataName}"#end#end = ?', [#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end]);
+		if (resultSet !== null && resultSet[0] !== null) {
+			if (resultSet[0].COUNT !== undefined && resultSet[0].COUNT !== null) {
+				return resultSet[0].COUNT;
+			} else if (resultSet[0].count !== undefined && resultSet[0].count !== null) {
+				return resultSet[0].count;
+			}
+		}
+		return 0;
+	}
+#else
+	public count(): number {
+		return this.dao.count();
+	}
+#end
+
+	public customDataCount(): number {
+#if($dataCount)
+		const resultSet = query.execute('${dataCount}');
+		if (resultSet !== null && resultSet[0] !== null) {
+			if (resultSet[0].COUNT !== undefined && resultSet[0].COUNT !== null) {
+				return resultSet[0].COUNT;
+			} else if (resultSet[0].count !== undefined && resultSet[0].count !== null) {
+				return resultSet[0].count;
+			}
+		}
+		return 0;
+#else
+		return this.dao.count();
+#end
+	}
+
+
+	private async triggerEvent(data: ${name}EntityEvent) {
+		const triggerExtensions = await extensions.loadExtensionModules("${projectName}/${perspectiveName}/${name}", ["trigger"]);
+		triggerExtensions.forEach(triggerExtension => {
+			try {
+				triggerExtension.trigger(data);
+			} catch (error) {
+				console.error(error);
+			}			
+		});
+		producer.queue("${projectName}/${perspectiveName}/${name}").send(JSON.stringify(data));
+	}
+}
