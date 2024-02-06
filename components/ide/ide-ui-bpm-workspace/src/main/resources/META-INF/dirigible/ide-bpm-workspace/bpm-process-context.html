@@ -21,6 +21,8 @@
 <body class="dg-vbox">
 <fd-toolbar compact="true">
     <fd-toolbar-spacer></fd-toolbar-spacer>
+    <fd-button compact="true" dg-type="transparent" state="{{ selectedVariable !== null ? '' : 'disabled' }}" glyph="sap-icon--edit" title="Edit"
+               aria-label="Edit" ng-click="openEditDialog()"></fd-button>
     <fd-button compact="true" dg-type="transparent" state="{{ currentProcessInstanceId !== null ? '' : 'disabled' }}" glyph="sap-icon--add" title="Add"
                aria-label="Add" ng-click="openAddDialog()"></fd-button>
     <fd-button compact="true" dg-type="transparent" glyph="sap-icon--refresh" title="Refresh"
@@ -38,8 +40,7 @@
         </tr>
         </thead>
         <tbody fd-table-body>
-        <tr fd-table-row ng-repeat="next in variablesList track by next.id" hoverable="true">
-
+        <tr fd-table-row ng-repeat="next in variablesList track by next.id" hoverable="true" activable="true" dg-selected="next.selected" ng-click="selectionChanged(next)">
             <td fd-table-cell>{{next.id}}</td>
             <td fd-table-cell>{{next.processInstanceId}}</td>
             <td fd-table-cell>{{next.name}}</td>

@@ -8,6 +8,13 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
 
     $scope.variablesList = [];
     $scope.currentProcessInstanceId = null;
+    $scope.selectedVariable = null;
+
+    $scope.selectionChanged = function (variable) {
+        $scope.variablesList.forEach(variable => variable.selected = false);
+        $scope.selectedVariable = variable;
+        $scope.selectedVariable.selected = true;
+    }
 
     $scope.reload = function () {
         console.log("Reloading data for current process instance id: " + $scope.currentProcessInstanceId)
@@ -79,6 +86,54 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
             "The variable will be added to the context of the currently selected process instance"
         );
     }
+
+    $scope.openEditDialog = function () {
+        messageHub.showFormDialog(
+            "processContextVariableEdit",
+            "Edit existing process context variable",
+            [{
+                id: "prcva",
+                type: "input",
+                label: "Name",
+                placeholder: `${$scope.selectedVariable.name}`
+            },
+            {
+                id: "prcvb",
+                type: "input",
+                label: "Value",
+                value: `${$scope.selectedVariable.value}`
+            }],
+            [{
+                id: "b1",
+                type: "emphasized",
+                label: "Edit",
+            },
+            {
+                id: "b2",
+                type: "transparent",
+                label: "Cancel",
+            }],
+            "bpm.dialogs.variable.edit",
+            "Applying data...",
+            "",
+            "The value of the currently selected process context variable would be changed"
+        );
+    }
+
+    messageHub.onDidReceiveMessage(
+        "bpm.dialogs.variable.edit",
+        function (msg) {
+            if (msg.data.buttonId === "b1") {
+                const varName = msg.data.formData[0].value;
+                const varValue = msg.data.formData[1].value;
+                //$scope.addProcessVariable($scope.currentProcessInstanceId, varName, varValue);
+                alert(varName + " " + varValue);
+            } else {
+                messageHub.hideFormDialog("processContextVariableAdd");
+            }
+        },
+        true
+    );
 
     messageHub.onDidReceiveMessage(
         "bpm.dialogs.variable.add",
