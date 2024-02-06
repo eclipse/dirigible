@@ -320,8 +320,7 @@ public class DataExportService {
         tableObject.addProperty("dataCount", "SELECT COUNT(*) AS COUNT FROM \"${tablePrefix}_" + table.getName()
                                                                                                       .toUpperCase()
                 + "\"");
-        tableObject.addProperty("dataName", table.getName()
-                                                 .toUpperCase());
+        tableObject.addProperty("dataName", table.getName());
         tableObject.addProperty("dataQuery", "");
         tableObject.addProperty("icon", "cubes");
         tableObject.addProperty("layoutType", "MANAGE");
@@ -350,8 +349,7 @@ public class DataExportService {
         columnObject.addProperty("calculatedPropertyExpression", "");
         columnObject.addProperty("dataAutoIncrement", String.valueOf(column.isPrimaryKey()));
         columnObject.addProperty("dataLength", column.getLength());
-        columnObject.addProperty("dataName", column.getName()
-                                                   .toUpperCase());
+        columnObject.addProperty("dataName", column.getName());
         columnObject.addProperty("dataNullable", String.valueOf(column.isNullable()));
         columnObject.addProperty("dataPrimaryKey", String.valueOf(column.isPrimaryKey()));
         columnObject.addProperty("dataType", column.getType());
