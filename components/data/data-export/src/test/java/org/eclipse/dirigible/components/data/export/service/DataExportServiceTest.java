@@ -97,7 +97,7 @@ public class DataExportServiceTest {
     public void exportMetadataAsProjectTest() throws SQLException {
         String filePath = dataExportService.exportMetadataAsProject("TestDB", "INFORMATION_SCHEMA");
         Workspace workspace = workspaceService.getWorkspace("workspace");
-        Project project = workspace.getProject("INFORMATION_SCHEMA");
+        Project project = workspace.getProject("TestDB");
         List<File> files = project.getFiles();
         File foundFile = null;
 
@@ -120,13 +120,13 @@ public class DataExportServiceTest {
     public void exportSchemaAsModelTest() {
         dataExportService.exportSchemaAsModel("TestDB", "INFORMATION_SCHEMA");
         Workspace workspace = workspaceService.getWorkspace("workspace");
-        Project project = workspace.getProject("INFORMATION_SCHEMA");
+        Project project = workspace.getProject("TestDB");
         List<File> files = project.getFiles();
         File foundFile = null;
 
         for (File file : files) {
             if (file.getName()
-                    .equals("INFORMATION_SCHEMA.model")) {
+                    .equals("testdb_information_schema.model")) {
                 foundFile = file;
                 break;
             }
