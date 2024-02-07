@@ -47,10 +47,10 @@
 	Upload to Maven Central:
 		mvn javadoc:jar
 		mvn deploy -P release -DskipTests
-		
+
 	Tests coverage report generation
 		mvn clean -B package -P coverage
-		
+
 	Static checks analysis
 		mvn clean install -P spotbugs
 
@@ -642,8 +642,9 @@
 		<module>modules</module>
 		<module>components</module>
 		<module>build</module>
-		<module>tests</module>
+<!--		<module>integration-tests</module>-->
 		<module>dependencies</module>
+		<module>tests</module>
 	</modules>
 
 	<dependencies>

@@ -8,19 +8,22 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.integration.tests.ui.framework;
+package org.eclipse.dirigible.tests.framework;
 
-public enum HtmlAttribute {
-    ID("id"), //
-    TYPE("type");
+public enum HtmlElementType {
+    BUTTON("button"), //
+    INPUT("input"), //
+    ANCHOR("a"), //
+    HEADER5("h5"), //
+    TITLE("title");
 
-    private final String attribute;
+    private final String type;
 
-    HtmlAttribute(String attribute) {
-        this.attribute = attribute;
+    HtmlElementType(String type) {
+        this.type = type;
     }
 
-    public String getAttribute() {
-        return attribute;
+    public String getType() {
+        return type;
     }
 }

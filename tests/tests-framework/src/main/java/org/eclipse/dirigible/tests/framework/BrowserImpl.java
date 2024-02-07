@@ -8,19 +8,14 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.integration.tests.ui.framework;
+package org.eclipse.dirigible.tests.framework;
 
-import java.util.concurrent.TimeUnit;
+import com.codeborne.selenide.*;
+import com.nimbusds.oauth2.sdk.util.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeOptions;
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.Selectors;
-import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.WebDriverRunner;
-import com.nimbusds.oauth2.sdk.util.StringUtils;
+
+import java.util.concurrent.TimeUnit;
 
 public class BrowserImpl implements Browser {
 
