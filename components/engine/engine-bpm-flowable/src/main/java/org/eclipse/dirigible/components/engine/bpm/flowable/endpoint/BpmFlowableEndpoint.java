@@ -267,7 +267,7 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
     }
 
     @PostMapping(value = "/bpm-processes/instance/{id}/variables")
-    public ResponseEntity<Void> addProcessInstanceVariables(@PathVariable("id") String id, @RequestBody VariableData variableData) {
+    public ResponseEntity<Void> upsertProcessInstanceVariables(@PathVariable("id") String id, @RequestBody VariableData variableData) {
 
         BpmService bpmService = getBpmService();
         bpmService.getBpmProviderFlowable()

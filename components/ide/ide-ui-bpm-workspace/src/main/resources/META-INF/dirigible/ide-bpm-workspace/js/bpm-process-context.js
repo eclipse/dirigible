@@ -28,7 +28,7 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
                 });
     }
 
-    $scope.addProcessVariable = function(processInstanceId, varName, varValue) {
+    $scope.upsertProcessVariable = function(processInstanceId, varName, varValue, dialogId) {
         const apiUrl = '/services/ide/bpm/bpm-processes/instance/' + processInstanceId + '/variables';
         const requestBody = { 'name': varName, 'value': varValue };
 
@@ -41,9 +41,9 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
             }
         })
         .then((response) => {
-            console.log('Successfully added variable with name [' + varName + '] and value [' + varValue + ']');
+            console.log('Successfully modified variable with name [' + varName + '] and value [' + varValue + ']');
             $scope.reload();
-            messageHub.hideFormDialog("processContextVariableAdd");
+            messageHub.hideFormDialog(dialogId);
         })
         .catch((error) => {
             console.error('Error making POST request:', error);
@@ -81,23 +81,15 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
                 label: "Cancel",
             }],
             "bpm.dialogs.variable.add",
-            "Applying data...",
-            "",
-            "The variable will be added to the context of the currently selected process instance"
+            "Saving..."
         );
     }
 
     $scope.openEditDialog = function () {
         messageHub.showFormDialog(
             "processContextVariableEdit",
-            "Edit existing process context variable",
+            `Edit variable [${$scope.selectedVariable.name}]`,
             [{
-                id: "prcva",
-                type: "input",
-                label: "Name",
-                placeholder: `${$scope.selectedVariable.name}`
-            },
-            {
                 id: "prcvb",
                 type: "input",
                 label: "Value",
@@ -106,7 +98,7 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
             [{
                 id: "b1",
                 type: "emphasized",
-                label: "Edit",
+                label: "Save",
             },
             {
                 id: "b2",
@@ -114,9 +106,7 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
                 label: "Cancel",
             }],
             "bpm.dialogs.variable.edit",
-            "Applying data...",
-            "",
-            "The value of the currently selected process context variable would be changed"
+            "Saving..."
         );
     }
 
@@ -124,12 +114,10 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
         "bpm.dialogs.variable.edit",
         function (msg) {
             if (msg.data.buttonId === "b1") {
-                const varName = msg.data.formData[0].value;
-                const varValue = msg.data.formData[1].value;
-                //$scope.addProcessVariable($scope.currentProcessInstanceId, varName, varValue);
-                alert(varName + " " + varValue);
+                const varValue = msg.data.formData[0].value;
+                $scope.upsertProcessVariable($scope.currentProcessInstanceId, $scope.selectedVariable.name, varValue, "processContextVariableEdit");
             } else {
-                messageHub.hideFormDialog("processContextVariableAdd");
+                messageHub.hideFormDialog("processContextVariableEdit");
             }
         },
         true
@@ -141,7 +129,7 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
             if (msg.data.buttonId === "b1") {
                 const varName = msg.data.formData[0].value;
                 const varValue = msg.data.formData[1].value;
-                $scope.addProcessVariable($scope.currentProcessInstanceId, varName, varValue);
+                $scope.upsertProcessVariable($scope.currentProcessInstanceId, varName, varValue, "processContextVariableAdd");
             } else {
                 messageHub.hideFormDialog("processContextVariableAdd");
             }
