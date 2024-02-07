@@ -21,8 +21,15 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 import javax.sql.DataSource;
 import org.apache.commons.io.output.WriterOutputStream;
 import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
@@ -51,6 +58,9 @@ public class DatabaseFacade implements InitializingBean {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DatabaseFacade.class);
+
+    private static final SimpleDateFormat SIMPLE_DATE_FORMAT_WITHOUT_ZONE =
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
 
     /** The database facade. */
     private static DatabaseFacade INSTANCE;
@@ -290,6 +300,45 @@ public class DatabaseFacade implements InitializingBean {
         return query(sql, null, null);
     }
 
+    // =========== Insert ===========
+
+    /**
+     * Executes SQL insert.
+     *
+     * @param sql the insert statement to be executed
+     * @param parameters statement parameters
+     * @param datasourceName the datasource name
+     * @return the generated IDs
+     * @throws SQLException if an error occur
+     * @throws IllegalArgumentException if the provided datasouce is not found
+     * @throws RuntimeException if an error occur
+     */
+    public static final List<Long> insert(String sql, String parameters, String datasourceName)
+            throws SQLException, IllegalArgumentException, RuntimeException {
+        DataSource dataSource = getDataSource(datasourceName);
+        if (dataSource == null) {
+            throw new IllegalArgumentException("DataSource [" + datasourceName + "] not known.");
+        }
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            if (parameters != null) {
+                setParameters(parameters, preparedStatement);
+            }
+            int updatedRows = preparedStatement.executeUpdate();
+            List<Long> generatedIds = new ArrayList<>(updatedRows);
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                while (generatedKeys.next()) {
+                    generatedIds.add(generatedKeys.getLong(1));
+                }
+                return generatedIds;
+            }
+        } catch (SQLException | RuntimeException ex) {
+            logger.error("Failed to execute insert statement [{}] in data source [{}].", sql, datasourceName, ex);
+            throw ex;
+        }
+    }
+
     // =========== Update ===========
 
     /**
@@ -440,10 +489,18 @@ public class DatabaseFacade implements InitializingBean {
                     String value = valueElement.getAsJsonPrimitive()
                                                .getAsString();
                     preparedStatement.setString(i++, value);
+                } else if (DataTypeUtils.isCharacterVarying(dataType)) {
+                    if (!valueElement.isJsonPrimitive() || !valueElement.getAsJsonPrimitive()
+                                                                        .isString()) {
+                        throw new IllegalArgumentException("Wrong value of the parameter of type CHARACTER VARYING");
+                    }
+                    String value = valueElement.getAsJsonPrimitive()
+                                               .getAsString();
+                    preparedStatement.setString(i++, value);
                 } else if (DataTypeUtils.isNvarchar(dataType)) {
                     if (!valueElement.isJsonPrimitive() || !valueElement.getAsJsonPrimitive()
                                                                         .isString()) {
-                        throw new IllegalArgumentException("Wrong value of the parameter of type VARCHAR");
+                        throw new IllegalArgumentException("Wrong value of the parameter of type NVARCHAR");
                     }
                     String value = valueElement.getAsJsonPrimitive()
                                                .getAsString();
@@ -515,11 +572,9 @@ public class DatabaseFacade implements InitializingBean {
                             value = new Timestamp(Long.parseLong(valueElement.getAsJsonPrimitive()
                                                                              .getAsString()));
                         } catch (NumberFormatException e) {
-                            // assume date string in ISO format e.g. 2018-05-22T21:00:00.000Z
-                            value = new Timestamp(jakarta.xml.bind.DatatypeConverter.parseDateTime(valueElement.getAsJsonPrimitive()
-                                                                                                               .getAsString())
-                                                                                    .getTime()
-                                                                                    .getTime());
+                            String timestampString = valueElement.getAsJsonPrimitive()
+                                                                 .getAsString();
+                            value = new Timestamp(getTime(timestampString));
                         }
                         preparedStatement.setTimestamp(i++, value);
                     } else {
@@ -653,6 +708,24 @@ public class DatabaseFacade implements InitializingBean {
                 }
             } else {
                 throw new IllegalArgumentException("Parameters must contain primitives and objects only");
+            }
+        }
+    }
+
+    private static long getTime(String timestampString) {
+        try {
+            // assume date string in ISO format e.g. 2018-05-22T21:00:00.000Z
+            Calendar calendar = jakarta.xml.bind.DatatypeConverter.parseDateTime(timestampString);
+            return calendar.getTime()
+                           .getTime();
+        } catch (IllegalArgumentException ex) {
+            logger.debug("Failed to parse timestamp string [{}]", timestampString, ex);
+
+            try {
+                java.util.Date date = SIMPLE_DATE_FORMAT_WITHOUT_ZONE.parse(timestampString);
+                return date.getTime();
+            } catch (ParseException e) {
+                throw new IllegalArgumentException("Cannot get time from timestamp string " + timestampString, e);
             }
         }
     }

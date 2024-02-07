@@ -16,12 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import java.util.*;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ProcessDefinitionData;
@@ -36,8 +31,8 @@ import org.flowable.engine.ProcessEngineConfiguration;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.repository.ProcessDefinition;
-import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.image.ProcessDiagramGenerator;
+import org.flowable.variable.api.persistence.entity.VariableInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,18 +61,26 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "bpm")
 public class BpmFlowableEndpoint extends BaseEndpoint {
 
-    /** The Constant logger. */
+    /**
+     * The Constant logger.
+     */
     private static final Logger logger = LoggerFactory.getLogger(BpmFlowableEndpoint.class);
 
-    /** The bpm provider flowable. */
+    /**
+     * The bpm provider flowable.
+     */
     @Autowired
     private BpmProviderFlowable bpmProviderFlowable;
 
-    /** The bpm service. */
+    /**
+     * The bpm service.
+     */
     @Autowired
     private BpmService bpmService;
 
-    /** The workspace service. */
+    /**
+     * The workspace service.
+     */
     @Autowired
     private WorkspaceService workspaceService;
 
@@ -246,6 +249,26 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
     @GetMapping(value = "/bpm-processes/instance/{id}")
     public ResponseEntity<ProcessInstanceData> getProcessesInstances(@PathVariable("id") String id) {
         return ResponseEntity.ok(getBpmService().getProcessInstanceById(id));
+    }
+
+    /**
+     * List active process instance variables
+     *
+     * @param id the process instance id
+     * @return process variables list
+     */
+    @GetMapping(value = "/bpm-processes/instance/{id}/variables")
+    public ResponseEntity<List<VariableInstance>> getProcessInstanceVariables(@PathVariable("id") String id) {
+
+        BpmService bpmService = getBpmService();
+        List<VariableInstance> variables = bpmService.getBpmProviderFlowable()
+                                                     .getProcessEngine()
+                                                     .getRuntimeService()
+                                                     .createVariableInstanceQuery()
+                                                     .processInstanceId(id)
+                                                     .list();
+
+        return ResponseEntity.ok(variables);
     }
 
     /**
