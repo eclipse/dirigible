@@ -4,7 +4,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 		messageHubProvider.eventIdPrefix = '${projectName}.${perspectiveName}.${name}';
 	}])
 	.config(["entityApiProvider", function (entityApiProvider) {
-		entityApiProvider.baseUrl = "/services/js/${projectName}/gen/api/${perspectiveName}/${name}.js";
+		entityApiProvider.baseUrl = "/services/ts/${projectName}/gen/api/${perspectiveName}/${name}Service.ts";
 	}])
 	.controller('PageController', ['$scope', '${dollar}http', 'messageHub', 'entityApi', function ($scope, ${dollar}http, messageHub, entityApi) {
 
@@ -182,7 +182,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN")
 
-		${dollar}http.get("/services/js/${projectName}/gen/api/${property.relationshipEntityPerspectiveName}/${property.relationshipEntityName}.js").then(function (response) {
+		${dollar}http.get("/services/ts/${projectName}/gen/api/${property.relationshipEntityPerspectiveName}/${property.relationshipEntityName}Service.ts").then(function (response) {
 			${dollar}scope.options${property.name} = response.data.map(e => {
 				return {
 					value: e.${property.widgetDropDownKey},

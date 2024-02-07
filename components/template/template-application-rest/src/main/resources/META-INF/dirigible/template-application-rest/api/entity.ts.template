@@ -1,0 +1,160 @@
+#set($dollar = '$' )
+#foreach ($property in $properties)
+#if($property.widgetPattern && $property.widgetPattern != "")
+#set($isEntityPropertyPropertyEnabled = "true")
+#break
+#end 
+#end
+import { Controller, Get, Post, Put, Delete, response } from "@dirigible/http"
+import { ${name}Repository, ${name}EntityOptions } from "../../dao/${perspectiveName}/${name}Repository";
+import { HttpUtils } from "../utils/HttpUtils";
+
+#if($isEntityPropertyPropertyEnabled)
+class ValidationError extends Error {
+    readonly name = "ValidationError";
+    readonly stack = (new Error()).stack;
+
+    constructor(message: string) {
+        super(message);
+    }
+}
+
+#end
+@Controller
+class ${name}Service {
+
+    private readonly repository = new ${name}Repository();
+
+    @Get("/")
+    public getAll(_: any, ctx: any) {
+        try {
+            const options: ${name}EntityOptions = {
+                $limit: ctx.queryParameters["$limit"] ? parseInt(ctx.queryParameters["$limit"]) : undefined,
+                $offset: ctx.queryParameters["$offset"] ? parseInt(ctx.queryParameters["$offset"]) : undefined
+            };
+
+            return this.repository.findAll(options);
+        } catch (error: any) {
+            this.handleError(error);
+        }
+    }
+
+    @Post("/")
+    public create(entity: any) {
+        try {
+#if($isEntityPropertyPropertyEnabled)
+            this.validateEntity(entity);
+#end
+            entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end = this.repository.create(entity);
+            response.setHeader("Content-Location", "/services/ts/${projectName}/gen/api/${perspectiveName}/${name}Service.ts/" + entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end);
+            response.setStatus(response.CREATED);
+            return entity;
+        } catch (error: any) {
+            this.handleError(error);
+        }
+    }
+
+#if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
+    @Get("/count/:${masterEntityId}")
+    public count(_: any, ctx: any) {
+        try {
+            let ${masterEntityId} = parseInt(ctx.pathParameters.${masterEntityId});
+            ${masterEntityId} = isNaN(${masterEntityId}) ? ctx.pathParameters.${masterEntityId} : ${masterEntityId};
+            return this.repository.count(${masterEntityId});
+        } catch (error: any) {
+            this.handleError(error);
+        }
+    }
+#else
+    @Get("/count")
+    public count() {
+        try {
+            return this.repository.count();
+        } catch (error: any) {
+            this.handleError(error);
+        }
+    }
+#end
+
+    @Get("/:id")
+    public getById(_: any, ctx: any) {
+        try {
+#foreach ($property in $properties)
+#if($property.dataPrimaryKey)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+            const id = ctx.pathParameters.id;
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+            const id = parseInt(ctx.pathParameters.id);
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+            const id = new Date(parseInt(ctx.pathParameters.id));
+#elseif($property.dataType == "BOOLEAN")
+            const id = ctx.pathParameters.id === "true";
+#else
+            const id = ctx.pathParameters.id;
+#end
+#end
+#end
+            const entity = this.repository.findById(id);
+            if (entity) {
+                return entity
+            } else {
+                HttpUtils.sendResponseNotFound("${name} not found");
+            }
+        } catch (error: any) {
+            this.handleError(error);
+        }
+    }
+
+    @Put("/:id")
+    public update(entity: any, ctx: any) {
+        try {
+            entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end = ctx.pathParameters.id;
+#if($isEntityPropertyPropertyEnabled)
+            this.validateEntity(entity);
+#end
+            this.repository.update(entity);
+            return entity;
+        } catch (error: any) {
+            this.handleError(error);
+        }
+    }
+
+    @Delete("/:id")
+    public deleteById(_: any, ctx: any) {
+        try {
+            const id = ctx.pathParameters.id;
+            const entity = this.repository.findById(id);
+            if (entity) {
+                this.repository.deleteById(id);
+                HttpUtils.sendResponseNoContent();
+            } else {
+                HttpUtils.sendResponseNotFound("${name} not found");
+            }
+        } catch (error: any) {
+            this.handleError(error);
+        }
+    }
+
+    private handleError(error: any) {
+        if (error.name === "ForbiddenError") {
+            HttpUtils.sendForbiddenRequest(error.message);
+        } else if (error.name === "ValidationError") {
+            HttpUtils.sendResponseBadRequest(error.message);
+        } else {
+            HttpUtils.sendInternalServerError(error.message);
+        }
+    }
+#if($isEntityPropertyPropertyEnabled)
+
+    private validateEntity(entity: any): void {
+#foreach ($property in $properties)
+#if($property.widgetPattern && $property.widgetPattern != "")
+        isValid = isValid && entity.${property.name} && entity.${property.name}.match(/^${property.widgetPattern}${dollar}/) !== null;
+        if (entity.${property.name} === undefined || entity.${property.name}.match(/^${property.widgetPattern}${dollar}/) === null) {
+            throw new ValidationError(`The '${property.name}' values doesn't match the required pattern '${property.widgetPattern}'`);
+        }
+#end 
+#end
+    }
+#end
+}

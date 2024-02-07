@@ -18,13 +18,13 @@ exports.getTemplate = function (parameters) {
     const daoTemplate = daoTemplateManager.getTemplate(parameters);
 
     let templateSources = [{
-        location: "/template-application-rest/api/utils/http.js.template",
+        location: "/template-application-rest/api/utils/HttpUtils.ts.template",
         action: "copy",
-        rename: "gen/api/utils/http.js",
+        rename: "gen/api/utils/HttpUtils.ts",
     }, {
-        location: "/template-application-rest/api/entity.js.template",
+        location: "/template-application-rest/api/entity.ts.template",
         action: "generate",
-        rename: "gen/api/{{perspectiveName}}/{{name}}.js",
+        rename: "gen/api/{{perspectiveName}}/{{name}}Service.ts",
         engine: "velocity",
         collection: "models"
     }, {
@@ -37,14 +37,12 @@ exports.getTemplate = function (parameters) {
         location: "/template-application-dao/project.json.template",
         action: "generate",
         rename: "project.json",
-        engine: "velocity",
-        collection: "reportModels"
+        engine: "velocity"
     }, {
         location: "/template-application-dao/tsconfig.json.template",
         action: "generate",
         rename: "tsconfig.json",
-        engine: "velocity",
-        collection: "reportModels"
+        engine: "velocity"
     }];
     templateSources = templateSources.concat(daoTemplate.sources);
 
