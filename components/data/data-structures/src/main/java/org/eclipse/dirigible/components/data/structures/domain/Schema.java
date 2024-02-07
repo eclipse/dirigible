@@ -46,9 +46,9 @@ public class Schema extends Artefact {
     private Long id;
 
     /** The dataSource */
-    @Column(name = "dataSource", nullable = false)
+    @Column(name = "datasource", nullable = false)
     @Expose
-    private String dataSource;
+    private String datasource;
 
     /** The tables. */
     @OneToMany(mappedBy = "schemaReference", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -167,12 +167,12 @@ public class Schema extends Artefact {
         return null;
     }
 
-    public String getDataSource() {
-        return dataSource;
+    public String getDatasource() {
+        return datasource;
     }
 
     public void setDataSource(String dataSource) {
-        this.dataSource = dataSource;
+        this.datasource = dataSource;
     }
 
     /**
@@ -182,7 +182,7 @@ public class Schema extends Artefact {
      */
     @Override
     public String toString() {
-        return "Schema [id=" + id + ", tables=" + tables + ", views=" + views + ", dataSource=" + dataSource + ", location=" + location
+        return "Schema [id=" + id + ", tables=" + tables + ", views=" + views + ", datasource=" + datasource + ", location=" + location
                 + ", name=" + name + ", type=" + type + ", description=" + description + ", key=" + key + ", dependencies=" + dependencies
                 + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
     }

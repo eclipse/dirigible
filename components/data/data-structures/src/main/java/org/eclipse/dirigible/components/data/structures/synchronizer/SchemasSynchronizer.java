@@ -275,7 +275,7 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
                                                                                                            .getClass()));
         }
 
-        try (Connection connection = datasourcesManager.getDataSource(schema.getDataSource())
+        try (Connection connection = datasourcesManager.getDataSource(schema.getDatasource())
                                                        .getConnection()) {
             switch (flow) {
                 case CREATE:
@@ -428,7 +428,7 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
                                    .get("structures")
                                    .getAsJsonArray();
         String dataSource = root.getAsJsonObject()
-                                .get("dataSource")
+                                .get("datasource")
                                 .getAsString();
         result.setDataSource(dataSource);
         for (int i = 0; i < structures.size(); i++) {

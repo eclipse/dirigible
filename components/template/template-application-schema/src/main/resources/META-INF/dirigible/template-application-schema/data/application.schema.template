@@ -95,8 +95,8 @@
         ]
     },
     #if($dataSource)
-    "dataSource": "${dataSource}"
+    "datasource": "${dataSource}"
     #else
-    "dataSource": "DefaultDB"
+    "datasource": "DefaultDB"
     #end
 }
