@@ -36,34 +36,90 @@ function ForbiddenError(message) {
 export interface ${name}Entity {
 #foreach ($property in $properties)
 #if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-#if($property.isCalculatedProperty)
-    ${property.name}?: string;
+#if($property.dataNotNull || $property.dataPrimaryKey)
+#if($property.dataPrimaryKey)
+    readonly ${property.name}: string;
 #else
-    readonly #if($property.dataNotNull || $property.dataPrimaryKey)${property.name}: string;#else${property.name}?: string;#end
+    ${property.name}: string;
+#end
+#else
+    ${property.name}?: string;
 #end
 #elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-#if($property.isCalculatedProperty)
-    ${property.name}?: number;
+#if($property.dataNotNull || $property.dataPrimaryKey)
+#if($property.dataPrimaryKey)
+    readonly ${property.name}: number;
 #else
-    readonly #if($property.dataNotNull || $property.dataPrimaryKey)${property.name}: number;#else${property.name}?: number;#end
+    ${property.name}: number;
+#end
+#else
+    ${property.name}?: number;
 #end
 #elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-#if($property.isCalculatedProperty)
-    ${property.name}?: Date;
+#if($property.dataNotNull || $property.dataPrimaryKey)
+#if($property.dataPrimaryKey)
+    readonly ${property.name}: Date;
 #else
-    readonly #if($property.dataNotNull || $property.dataPrimaryKey)${property.name}: Date;#else${property.name}?: Date;#end
+    ${property.name}: Date;
+#end
+#else
+    ${property.name}?: Date;
 #end
 #elseif($property.dataType == "BOOLEAN")
-#if($property.isCalculatedProperty)
-    ${property.name}?: boolean;
+#if($property.dataNotNull || $property.dataPrimaryKey)
+#if($property.dataPrimaryKey)
+    readonly ${property.name}: boolean;
 #else
-    readonly #if($property.dataNotNull || $property.dataPrimaryKey)${property.name}: boolean;#else${property.name}?: boolean;#end
+    ${property.name}: boolean;
 #end
 #else
-#if($property.isCalculatedProperty)
+    ${property.name}?: boolean;
+#end
+#else
+#if($property.dataNotNull || $property.dataPrimaryKey)
+#if($property.dataPrimaryKey)
+    readonly ${property.name}: unknown;
+#else
+    ${property.name}: unknown;
+#end
+#else
     ${property.name}?: unknown;
+#end
+#end
+#end
+}
+
+export interface ${name}CreateEntity {
+#foreach ($property in $properties)
+#if(!$property.dataPrimaryKey && !$property.isCalculatedProperty)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+    readonly #if($property.dataNotNull)${property.name}: string;#else${property.name}?: string;#end
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+    readonly #if($property.dataNotNull)${property.name}: number;#else${property.name}?: number;#end
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+    readonly #if($property.dataNotNull)${property.name}: Date;#else${property.name}?: Date;#end
+#elseif($property.dataType == "BOOLEAN")
+    readonly #if($property.dataNotNull)${property.name}: boolean;#else${property.name}?: boolean;#end
 #else
     readonly #if($property.dataNotNull || $property.dataPrimaryKey)${property.name}: unknown;#else${property.name}?: unknown;#end
+#end
+#end
+#end
+}
+
+export interface ${name}UpdateEntity extends ${name}CreateEntity {
+#foreach ($property in $properties)
+#if($property.dataPrimaryKey)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+    readonly ${property.name}: string;
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+    readonly ${property.name}: number;
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+    readonly ${property.name}: Date;
+#elseif($property.dataType == "BOOLEAN")
+    readonly ${property.name}: boolean;
+#else
+    readonly ${property.name}: unknown;
 #end
 #end
 #end
@@ -341,15 +397,15 @@ export class ${name}Repository {
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
 #if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-    public create(entity: Omit<${name}Entity, '${property.name}'>): string {
+    public create(entity: ${name}CreateEntity): string {
 #elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-    public create(entity: Omit<${name}Entity, '${property.name}'>): number {
+    public create(entity: ${name}CreateEntity): number {
 #elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-    public create(entity: Omit<${name}Entity, '${property.name}'>): Date {
+    public create(entity: ${name}CreateEntity): Date {
 #elseif($property.dataType == "BOOLEAN")
-    public create(entity: Omit<${name}Entity, '${property.name}'>): boolean {
+    public create(entity: ${name}CreateEntity): boolean {
 #else
-    public create(entity: Omit<${name}Entity, '${property.name}'>): unknown {
+    public create(entity: ${name}CreateEntity): unknown {
 #end
 #end
 #end
@@ -370,7 +426,7 @@ export class ${name}Repository {
 #end
 #foreach ($property in $properties)
 #if($property.isCalculatedProperty)
-        entity["${property.name}"] = ${property.calculatedPropertyExpression};
+        (entity as ${name}Entity).${property.name} = ${property.calculatedPropertyExpression};
 #end
 #end
 #if($isEntityPropertySecurityEnabled == "true")
@@ -407,7 +463,7 @@ export class ${name}Repository {
         return id;
     }
 
-    public update(entity: ${name}Entity): void {
+    public update(entity: ${name}UpdateEntity): void {
 #if($roleWrite && $roleWrite != "") 
         if (!user.isInRole("${roleWrite}")) {
             throw new ForbiddenError("You do not have the required role to call this function");
@@ -436,7 +492,7 @@ export class ${name}Repository {
 #end
 #foreach ($property in $properties)
 #if($property.isCalculatedProperty)
-        entity["${property.name}"] = ${property.calculatedPropertyExpression};
+        (entity as ${name}Entity).${property.name} = ${property.calculatedPropertyExpression};
 #end
 #end
         this.dao.update(entity);
@@ -454,6 +510,35 @@ export class ${name}Repository {
 #end
             }
         });
+    }
+
+#foreach ($property in $properties)
+#if($property.dataPrimaryKey)
+#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+    public upsert(entity: ${name}CreateEntity | ${name}UpdateEntity): string {
+#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+    public upsert(entity: ${name}CreateEntity | ${name}UpdateEntity): number {
+#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+    public upsert(entity: ${name}CreateEntity | ${name}UpdateEntity): Date {
+#elseif($property.dataType == "BOOLEAN")
+    public upsert(entity: ${name}CreateEntity | ${name}UpdateEntity): boolean {
+#else
+    public upsert(entity: ${name}CreateEntity | ${name}UpdateEntity): unknown {
+#end
+#end
+#end
+        const id = (entity as ${name}UpdateEntity).#foreach ($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end;
+        if (!id) {
+            return this.create(entity);
+        }
+
+        const existingEntity = this.findById(id);
+        if (existingEntity) {
+            this.update(entity as ${name}UpdateEntity);
+            return id;
+        } else {
+            return this.create(entity);
+        }
     }
 
 #foreach ($property in $properties)
