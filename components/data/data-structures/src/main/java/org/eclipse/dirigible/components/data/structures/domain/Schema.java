@@ -45,6 +45,11 @@ public class Schema extends Artefact {
     @Column(name = "SCHEMA_ID", nullable = false)
     private Long id;
 
+    /** The dataSource */
+    @Column(name = "datasource", nullable = false)
+    @Expose
+    private String datasource;
+
     /** The tables. */
     @OneToMany(mappedBy = "schemaReference", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -58,7 +63,7 @@ public class Schema extends Artefact {
     private List<View> views = new ArrayList<View>();
 
     /**
-     * Instantiates a new table.
+     * Instantiates a new schema.
      *
      * @param location the location
      * @param name the name
@@ -162,6 +167,14 @@ public class Schema extends Artefact {
         return null;
     }
 
+    public String getDatasource() {
+        return datasource;
+    }
+
+    public void setDataSource(String dataSource) {
+        this.datasource = dataSource;
+    }
+
     /**
      * To string.
      *
@@ -169,9 +182,9 @@ public class Schema extends Artefact {
      */
     @Override
     public String toString() {
-        return "Schema [id=" + id + ", tables=" + tables + ", views=" + views + ", location=" + location + ", name=" + name + ", type="
-                + type + ", description=" + description + ", key=" + key + ", dependencies=" + dependencies + ", createdBy=" + createdBy
-                + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
+        return "Schema [id=" + id + ", tables=" + tables + ", views=" + views + ", datasource=" + datasource + ", location=" + location
+                + ", name=" + name + ", type=" + type + ", description=" + description + ", key=" + key + ", dependencies=" + dependencies
+                + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
     }
 
 }
