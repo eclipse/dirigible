@@ -9,4 +9,6 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-dirigibleRequire(__context.get("handler")).onMessage(__context.get("message"), __context.get("from"));
+(await import(__context.get("handler"))).onMessage(__context.get("message"), __context.get("from"));
+
+export {}
