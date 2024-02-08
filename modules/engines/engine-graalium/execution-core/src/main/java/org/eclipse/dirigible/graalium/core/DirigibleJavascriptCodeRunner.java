@@ -171,24 +171,33 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
 
     public Module run(Path codeFilePath) {
         var pathAsString = codeFilePath.toString();
+        ModuleType moduleType = pathAsString.endsWith(MJS_EXT) || pathAsString.endsWith((TS_EXT)) ? ModuleType.ESM : ModuleType.CJS;
         if (pathAsString.endsWith(TS_EXT)) {
             pathAsString = transformTypeScriptHandlerPathIfNecessary(pathAsString);
         }
         Source source = prepareSource(Path.of(pathAsString));
         Value module = run(source);
-        ModuleType moduleType = pathAsString.endsWith(MJS_EXT) ? ModuleType.ESM : ModuleType.CJS;
         return new Module(module, moduleType);
     }
 
     public Value runMethod(Module codeModule, String methodName, Object... args) {
         return switch (codeModule.moduleType()) {
-            case CJS, ESM -> runEsmMethod(codeModule.module(), methodName, args);
+            case CJS -> runCjsMethod(codeModule.module(), methodName, args);
+            case ESM -> runEsmMethod(codeModule.module(), methodName, args);
             default -> throw new IllegalArgumentException("Unsupported module type: " + codeModule.moduleType());
         };
     }
 
     private Value runEsmMethod(Value module, String methodName, Object... args) {
         Value onMessage = module.getMember(methodName);
+        return onMessage.execute(args);
+    }
+
+    private Value runCjsMethod(Value module, String methodName, Object... args) {
+        Value onMessage = module.getContext()
+                                .getBindings("js")
+                                .getMember("exports")
+                                .getMember(methodName);
         return onMessage.execute(args);
     }
 
