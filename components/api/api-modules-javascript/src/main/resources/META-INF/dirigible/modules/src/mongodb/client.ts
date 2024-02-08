@@ -428,7 +428,7 @@ class DBObject {
         return this.native.get(key);
     }
 
-    put(key, value) {
+    put(key: string, value: any): any {
         if (!key) {
             throw new Error("The key parameter must be provided");
         }
@@ -438,13 +438,13 @@ class DBObject {
         return this.native.put(key, value);
     }
 
-    removeField(key) {
+    removeField(key: string): any {
         return this.native.removeField(key);
     }
 
 }
 
-function extract(dbObject) {
+function extract(dbObject: DBObject): {} {
     if (!dbObject.native) {
         return {};
     }
@@ -454,7 +454,7 @@ function extract(dbObject) {
     }
 }
 
-function implicit(object) {
+function implicit(object: any): DBObject {
     if (!object) {
         return object;
     }
