@@ -31,9 +31,9 @@ public class DirigibleModuleResolver implements ModuleResolver {
 
     /** The Constant DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN. */
     private static final Pattern DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN = Pattern.compile("(sdk)(\\/)(\\w+)"); // e.g.
-                                                                                                                       // sdk/core
-                                                                                                                       // => $1=dirigible
-                                                                                                                       // $2=/ $3=core
+                                                                                                                // sdk/core
+                                                                                                                // => $1=dirigible
+                                                                                                                // $2=/ $3=core
 
     /** The dirigible module ESM proxy generator. */
     private final DirigibleModuleESMProxyGenerator dirigibleModuleESMProxyGenerator;
@@ -75,7 +75,7 @@ public class DirigibleModuleResolver implements ModuleResolver {
     public Path resolve(String moduleToResolve) {
         Matcher modulePathMatcher = DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN.matcher(moduleToResolve);
         if (!modulePathMatcher.matches()) {
-            throw new RuntimeException("Found invalid Dirigible core modules path!");
+            throw new RuntimeException("Found invalid Dirigible core modules path: " + moduleToResolve);
         }
 
         String coreModuleName = modulePathMatcher.group(3);

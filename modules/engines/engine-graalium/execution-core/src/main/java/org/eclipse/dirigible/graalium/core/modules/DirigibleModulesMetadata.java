@@ -18,12 +18,10 @@ import java.util.List;
 public class DirigibleModulesMetadata {
 
     /** The Constant PURE_ESM_MODULES. */
-    private static final List<String> PURE_ESM_MODULES = List.of("sdk/http", "sdk/io", "sdk/bpm", "sdk/cms",
-            "sdk/core", "sdk/db", "sdk/etcd", "sdk/extensions", "sdk/git", "sdk/indexing",
-            "sdk/job", "sdk/kafka", "sdk/log", "sdk/mail", "sdk/messaging", "sdk/mongodb",
-            "sdk/net", "sdk/pdf", "sdk/platform", "sdk/qldb", "sdk/rabbitmq", "sdk/redis",
-            "sdk/user", "sdk/template", "sdk/utils", "sdk/junit", "sdk/integrations",
-            "sdk/security");
+    private static final List<String> PURE_ESM_MODULES = List.of("sdk/http", "sdk/io", "sdk/bpm", "sdk/cms", "sdk/core", "sdk/db",
+            "sdk/etcd", "sdk/extensions", "sdk/git", "sdk/indexing", "sdk/job", "sdk/kafka", "sdk/log", "sdk/mail", "sdk/messaging",
+            "sdk/mongodb", "sdk/net", "sdk/pdf", "sdk/platform", "sdk/qldb", "sdk/rabbitmq", "sdk/redis", "sdk/user", "sdk/template",
+            "sdk/utils", "sdk/junit", "sdk/integrations", "sdk/security");
 
     /**
      * Checks if is pure esm module.

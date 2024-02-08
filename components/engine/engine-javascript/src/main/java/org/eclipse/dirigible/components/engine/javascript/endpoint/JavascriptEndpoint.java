@@ -364,7 +364,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
             Path relativePath = dtsDirRoot.relativize(dtsPath);
             String filePath = "file:///node_modules/sdk/" + relativePath;
             String moduleName = ("sdk/" + relativePath).replace("index.d.ts", "")
-                                                              .replace(".d.ts", "");
+                                                       .replace(".d.ts", "");
             return new Dts(content, moduleName, filePath);
         }
 
