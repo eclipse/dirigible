@@ -14,12 +14,12 @@ const MongoDBFacade = Java.type("org.eclipse.dirigible.components.api.mongodb.Mo
 const TimeUnit = Java.type("java.util.concurrent.TimeUnit");
 import * as uuid from "@dirigible/utils/uuid";
 
-export function getClient() {
+export function getClient(): Client {
     var native = MongoDBFacade.getClient();
     return new Client(native);
 };
 
-export function createBasicDBObject() {
+export function createBasicDBObject(): DBObject {
     var native = MongoDBFacade.createBasicDBObject();
     var dbObject = new DBObject(native);
     extract(dbObject);
@@ -31,9 +31,9 @@ export function createBasicDBObject() {
  */
 class Client {
 
-    constructor(private native) { }
+    constructor(private native: any) { }
 
-    getDB(name?) {
+    getDB(name?: string): DB {
 
         var native = null;
         if (name) {
@@ -53,9 +53,9 @@ class Client {
  */
 class DB {
 
-    constructor(private native) { }
+    constructor(private native: any) { }
 
-    getCollection(name) {
+    getCollection(name?: string): DBCollection {
         var native = this.native.getCollection(name);
         return new DBCollection(native);
     };
@@ -67,14 +67,14 @@ class DB {
  */
 class DBCollection {
 
-    constructor(private native) { }
+    constructor(private native: any) { }
 
-    insert(dbObject) {
+    insert(dbObject: DBObject): void {
         dbObject = implicit(dbObject);
         this.native.insert(dbObject.native);
     };
 
-    find(query?, projection?) {
+    find(query?, projection?): DBCursor {
         query = implicit(query);
         projection = implicit(projection);
 
@@ -92,7 +92,7 @@ class DBCollection {
         return new DBCursor(native);
     };
 
-    findOne(query, projection, sort) {
+    findOne(query, projection, sort): DBObject {
         query = implicit(query);
         projection = implicit(projection);
         var dbObject = createBasicDBObject();
@@ -115,7 +115,7 @@ class DBCollection {
         return dbObject;
     };
 
-    findOneById(id, projection?) {
+    findOneById(id, projection?): DBObject {
         projection = implicit(projection);
         var dbObject = createBasicDBObject();
         var native = null;
@@ -133,7 +133,7 @@ class DBCollection {
         return dbObject;
     };
 
-    count(query?) {
+    count(query?): number {
         query = implicit(query);
         if (query) {
             return this.native.count(query.native);
@@ -141,7 +141,7 @@ class DBCollection {
         return this.native.count();
     };
 
-    getCount(query) {
+    getCount(query): number {
         query = implicit(query);
         if (query) {
             return this.native.getCount(query.native);
@@ -163,7 +163,7 @@ class DBCollection {
         }
     };
 
-    createIndexForField(name) {
+    createIndexForField(name: string): void {
         if (name) {
             this.native.createIndex(name);
         } else {
@@ -171,7 +171,7 @@ class DBCollection {
         }
     };
 
-    distinct(name, query, keys) {
+    distinct(name: string, query, keys): void {
         query = implicit(query);
         if (name) {
             if (query) {
@@ -184,7 +184,7 @@ class DBCollection {
         }
     };
 
-    dropIndex(index) {
+    dropIndex(index: number): void {
         if (index) {
             this.native.dropIndex(index);
         } else {
@@ -192,7 +192,7 @@ class DBCollection {
         }
     };
 
-    dropIndexByName(name) {
+    dropIndexByName(name: string): void {
         if (name) {
             this.native.dropIndex(name);
         } else {
@@ -200,25 +200,25 @@ class DBCollection {
         }
     };
 
-    dropIndexes() {
+    dropIndexes(): void {
         this.native.dropIndexes();
     };
 
-    remove(query) {
+    remove(query): void {
         query = implicit(query);
         this.native.remove(query.native);
     };
 
-    rename(newName) {
+    rename(newName: string): void {
         this.native.rename(newName);
     };
 
-    save(dbObject) {
+    save(dbObject: DBObject): void {
         dbObject = implicit(dbObject);
         this.native.save(dbObject.native);
     };
 
-    update(query, update, upsert?, multi?) {
+    update(query, update, upsert?, multi?): void {
         query = implicit(query);
         update = implicit(update);
         if (query) {
@@ -240,7 +240,7 @@ class DBCollection {
         }
     };
 
-    updateMulti(query, update) {
+    updateMulti(query, update): void {
         query = implicit(query);
         update = implicit(update);
         if (query) {
@@ -254,7 +254,7 @@ class DBCollection {
         }
     };
 
-    getNextId() {
+    getNextId(): number {
         var cursor = this.find({}, { "_id": 1 }).sort({ "_id": -1 }).limit(1);
         if (!cursor.hasNext()) {
             return 1;
@@ -263,7 +263,7 @@ class DBCollection {
         }
     }
 
-    generateUUID() {
+    generateUUID(): string {
         return uuid.random();
     }
 
@@ -274,16 +274,16 @@ class DBCollection {
  */
 class DBCursor {
 
-    constructor(private native) { }
+    constructor(private native: any) { }
 
-    one() {
+    one(): DBObject {
         var native = this.native.one();
         var dbObject = new DBObject(native);
         extract(dbObject);
         return dbObject;
     };
 
-    batchSize(numberOfElements) {
+    batchSize(numberOfElements: number): DBCursor {
         if (!numberOfElements) {
             throw new Error("The numberOfElements parameter must be provided");
         }
@@ -291,20 +291,20 @@ class DBCursor {
         return this;
     };
 
-    getBatchSize() {
+    getBatchSize(): number {
         return this.native.getBatchSize();
     };
 
-    getCollection() {
+    getCollection(): DBCollection {
         var native = this.native.getCollection();
         return new DBCollection(native);
     };
 
-    getCursorId() {
+    getCursorId(): number {
         return this.native.getCursorId();
     };
 
-    getKeysWanted() {
+    getKeysWanted(): DBObject {
         var native = this.native.getKeysWanted();
         var dbObject = new DBObject(native);
         extract(dbObject);
@@ -315,33 +315,33 @@ class DBCursor {
         return this.native.getLimit();
     };
 
-    close() {
+    close(): void {
         this.native.close();
     };
 
-    hasNext() {
+    hasNext(): boolean {
         return this.native.hasNext();
     };
 
-    next() {
+    next(): DBObject {
         var native = this.native.next();
         var dbObject = new DBObject(native);
         extract(dbObject);
         return dbObject;
     };
 
-    getQuery() {
+    getQuery(): DBObject {
         var native = this.native.getQuery();
         var dbObject = new DBObject(native);
         extract(dbObject);
         return dbObject;
     };
 
-    length() {
+    length(): number {
         return this.native.length();
     };
 
-    sort(orderBy) {
+    sort(orderBy): DBCursor {
         orderBy = implicit(orderBy);
         if (!orderBy) {
             throw new Error("The orderBy parameter must be provided");
@@ -350,7 +350,7 @@ class DBCursor {
         return this;
     };
 
-    limit(limit) {
+    limit(limit): DBCursor {
         if (!limit) {
             throw new Error("The limit parameter must be provided");
         }
@@ -358,7 +358,7 @@ class DBCursor {
         return this;
     };
 
-    min(min) {
+    min(min): DBCursor {
         if (!min) {
             throw new Error("The min parameter must be provided");
         }
@@ -366,7 +366,7 @@ class DBCursor {
         return this;
     };
 
-    max(max) {
+    max(max): DBCursor {
         if (!max) {
             throw new Error("The max parameter must be provided");
         }
@@ -374,7 +374,7 @@ class DBCursor {
         return this;
     };
 
-    maxTime(maxTime) {
+    maxTime(maxTime): DBCursor {
         if (!maxTime) {
             throw new Error("The maxTime parameter must be provided");
         }
@@ -382,11 +382,11 @@ class DBCursor {
         return this;
     };
 
-    size() {
+    size(): number {
         return this.native.size();
     };
 
-    skip(numberOfElements) {
+    skip(numberOfElements: number): DBCursor {
         if (!numberOfElements) {
             throw new Error("The numberOfElements parameter must be provided");
         }
@@ -401,30 +401,30 @@ class DBCursor {
  */
 class DBObject {
 
-    constructor(public native) { }
+    constructor(public native: any) { }
 
-    append(key, value) {
+    append(key: string, value: any): DBObject {
         this.native.append(key, value);
         return this;
     };
 
-    toJson() {
+    toJson(): Object {
         return this.native.toJson();
     }
 
-    markAsPartialObject() {
+    markAsPartialObject(): void {
         this.native.markAsPartialObject();
     }
 
-    isPartialObject() {
+    isPartialObject(): boolean {
         return this.native.isPartialObject();
     }
 
-    containsField(key) {
+    containsField(key: string): boolean {
         return this.native.containsField(key);
     }
 
-    get(key) {
+    get(key: string): any {
         return this.native.get(key);
     }
 
