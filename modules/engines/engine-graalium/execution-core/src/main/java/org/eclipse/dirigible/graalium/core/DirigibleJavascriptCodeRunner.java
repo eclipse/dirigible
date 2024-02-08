@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.graalium.core.globals.DirigibleContextGlobalObject;
@@ -38,6 +39,9 @@ import org.graalvm.polyglot.Value;
  * The Class DirigibleJavascriptCodeRunner.
  */
 public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> {
+
+    /** ESM files extension */
+    private static final String JS_EXT = ".js";
 
     /** ESM files extension */
     private static final String MJS_EXT = ".mjs";
@@ -178,22 +182,13 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
 
     public Value runMethod(Module codeModule, String methodName, Object... args) {
         return switch (codeModule.moduleType()) {
-            case CJS -> runCjsMethod(codeModule.module(), methodName, args);
-            case ESM -> runEsmMethod(codeModule.module(), methodName, args);
+            case CJS, ESM -> runEsmMethod(codeModule.module(), methodName, args);
             default -> throw new IllegalArgumentException("Unsupported module type: " + codeModule.moduleType());
         };
     }
 
     private Value runEsmMethod(Value module, String methodName, Object... args) {
         Value onMessage = module.getMember(methodName);
-        return onMessage.execute(args);
-    }
-
-    private Value runCjsMethod(Value module, String methodName, Object... args) {
-        Value onMessage = module.getContext()
-                                .getBindings("js")
-                                .getMember("exports")
-                                .getMember(methodName);
         return onMessage.execute(args);
     }
 
@@ -241,10 +236,7 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
     }
 
     private static String transformTypeScriptHandlerPathIfNecessary(String handlerPath) {
-        if (handlerPath.endsWith(TS_EXT)) {
-            return handlerPath.substring(0, handlerPath.length() - TS_EXT.length()) + MJS_EXT;
-        }
-        return handlerPath;
+        return handlerPath.endsWith(TS_EXT) ? handlerPath.replaceAll(Pattern.quote(TS_EXT), JS_EXT) : handlerPath;
     }
 
     /**
