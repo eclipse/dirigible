@@ -1,7 +1,7 @@
 import * as response from "../response";
 import * as request from "../request";
 import { ResourceMappings } from "./resource-mappings";
-import { Logging } from "@dirigible/log";
+import { Logging } from "sdk/log";
 
 const { match } = dirigibleRequire("modules/src/http/path-to-regexp/6.2.1/index.js");
 

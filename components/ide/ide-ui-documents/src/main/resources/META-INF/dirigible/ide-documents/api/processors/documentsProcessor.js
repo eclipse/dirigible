@@ -13,9 +13,9 @@ import * as objectUtils from "../../utils/cmis/object";
 import * as folderUtils from "../../utils/cmis/folder";
 import * as documentUtils from "../../utils/cmis/document";
 import * as contentTypeHandler from "../../utils/content-type-handler";
-import { registry } from "@dirigible/platform";
+import { registry } from "sdk/platform";
 import { formatPath } from "../../utils/string";
-import { user } from "@dirigible/security";
+import { user } from "sdk/security";
 
 export const get = (path) => {
 	let document = documentUtils.getDocument(path);

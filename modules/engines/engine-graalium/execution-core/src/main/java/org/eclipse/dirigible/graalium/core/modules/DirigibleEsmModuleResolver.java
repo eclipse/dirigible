@@ -24,12 +24,12 @@ import java.util.regex.Pattern;
 public class DirigibleEsmModuleResolver implements ModuleResolver {
 
     /** The Constant DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN. */
-    private static final Pattern DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN = Pattern.compile("(@dirigible)/(\\w+)(?:/(.+))?"); // e.g.
-                                                                                                                             // @dirigible/core/module/submodule
-                                                                                                                             // =>
-                                                                                                                             // $1=dirigible
-                                                                                                                             // $2=core
-                                                                                                                             // $3=module/submodule
+    private static final Pattern DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN = Pattern.compile("(sdk)/(\\w+)(?:/(.+))?"); // e.g.
+                                                                                                                      // sdk/core/module/submodule
+                                                                                                                      // =>
+                                                                                                                      // $1=dirigible
+                                                                                                                      // $2=core
+                                                                                                                      // $3=module/submodule
 
     /** The source provider. */
     private final JavascriptSourceProvider sourceProvider;
@@ -51,7 +51,7 @@ public class DirigibleEsmModuleResolver implements ModuleResolver {
      */
     @Override
     public boolean isResolvable(String moduleToResolve) {
-        return moduleToResolve.contains("@dirigible") && DirigibleModulesMetadata.isPureEsmModule(moduleToResolve);
+        return moduleToResolve.contains("sdk") && DirigibleModulesMetadata.isPureEsmModule(moduleToResolve);
     }
 
     /**

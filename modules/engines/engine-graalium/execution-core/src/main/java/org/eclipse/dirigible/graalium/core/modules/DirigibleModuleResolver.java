@@ -27,13 +27,13 @@ import org.eclipse.dirigible.graalium.core.javascript.modules.ModuleResolver;
 public class DirigibleModuleResolver implements ModuleResolver {
 
     /** The Constant DIRIGIBLE_CORE_MODULE_SIGNATURE. */
-    private static final String DIRIGIBLE_CORE_MODULE_SIGNATURE = "@dirigible";
+    private static final String DIRIGIBLE_CORE_MODULE_SIGNATURE = "sdk";
 
     /** The Constant DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN. */
-    private static final Pattern DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN = Pattern.compile("(@dirigible)(\\/)(\\w+)"); // e.g.
-                                                                                                                       // @dirigible/core
-                                                                                                                       // => $1=dirigible
-                                                                                                                       // $2=/ $3=core
+    private static final Pattern DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN = Pattern.compile("(sdk)(\\/)(\\w+)"); // e.g.
+                                                                                                                // sdk/core
+                                                                                                                // => $1=dirigible
+                                                                                                                // $2=/ $3=core
 
     /** The dirigible module ESM proxy generator. */
     private final DirigibleModuleESMProxyGenerator dirigibleModuleESMProxyGenerator;

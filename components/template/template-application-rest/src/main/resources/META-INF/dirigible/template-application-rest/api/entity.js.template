@@ -1,5 +1,5 @@
 #set($dollar = '$' )
-import { rs } from "@dirigible/http";
+import { rs } from "sdk/http";
 import * as dao from "../../dao/${perspectiveName}/${name}";
 import * as http from "../utils/http";
 

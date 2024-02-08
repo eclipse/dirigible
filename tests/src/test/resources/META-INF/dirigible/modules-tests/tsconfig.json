@@ -14,7 +14,7 @@
             "./types"
         ],
         "paths": {
-            "@dirigible/*": [
+            "sdk/*": [
                 "./src/*",
                 "./../../../../../../../components/api/api-modules-javascript/src/main/resources/META-INF/dirigible/modules/src/*"
             ]

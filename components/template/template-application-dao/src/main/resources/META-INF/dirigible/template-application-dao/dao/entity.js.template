@@ -1,9 +1,9 @@
 #if($dataCount)
-import { query } from "@dirigible/db";
+import { query } from "sdk/db";
 #end
-import { producer } from "@dirigible/messaging";
-import { extensions } from "@dirigible/extensions";
-import { dao as daoApi } from "@dirigible/db";
+import { producer } from "sdk/messaging";
+import { extensions } from "sdk/extensions";
+import { dao as daoApi } from "sdk/db";
 #set($isEntityUtilsEnabled = "false")
 #foreach ($property in $properties)
 #if($property.dataType == "DATE" || $property.dataType == "BOOLEAN")
@@ -24,7 +24,7 @@ import * as EntityUtils from "../utils/EntityUtils";
 #end
 #end
 #if($isEntitySecurityEnabled || $isEntityPropertySecurityEnabled)
-import { user } from "@dirigible/security";
+import { user } from "sdk/security";
 
 function ForbiddenError(message) {
     this.name = "ForbiddenError";

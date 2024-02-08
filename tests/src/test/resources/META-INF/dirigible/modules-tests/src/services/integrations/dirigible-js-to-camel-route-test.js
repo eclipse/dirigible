@@ -1,5 +1,5 @@
-import { test, assertEquals } from "@dirigible/junit"
-import * as camel from "@dirigible/integrations"
+import { test, assertEquals } from "sdk/junit"
+import * as camel from "sdk/integrations"
 
 test('dirigible-js-to-camel-route-test', () => {
     const message = "Initial Message";

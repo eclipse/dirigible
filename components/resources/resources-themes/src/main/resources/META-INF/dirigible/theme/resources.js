@@ -9,11 +9,11 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { rs } from "@dirigible/http";
-import { escape } from "@dirigible/utils";
-import { streams } from "@dirigible/io";
-import { repository as repositoryManager } from "@dirigible/platform";
-import { configurations } from "@dirigible/core";
+import { rs } from "sdk/http";
+import { escape } from "sdk/utils";
+import { streams } from "sdk/io";
+import { repository as repositoryManager } from "sdk/platform";
+import { configurations } from "sdk/core";
 import * as themesManager from "./extensions/themes";
 import * as cacheUtils from "./utils/cache";
 

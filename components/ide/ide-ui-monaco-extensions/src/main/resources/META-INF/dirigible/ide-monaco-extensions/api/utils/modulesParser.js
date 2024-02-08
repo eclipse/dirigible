@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { registry } from "@dirigible/platform";
-import { extensions } from "@dirigible/extensions";
+import { registry } from "sdk/platform";
+import { extensions } from "sdk/extensions";
 
 let modules = [];
 const apiModulesExtensions = await extensions.loadExtensionModules("api-modules");

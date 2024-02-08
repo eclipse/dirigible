@@ -1,4 +1,4 @@
-import {test, assertTrue} from "@dirigible/junit"
+import {test, assertTrue} from "sdk/junit"
 
 test('test-case1', () => {
     assertTrue(true);

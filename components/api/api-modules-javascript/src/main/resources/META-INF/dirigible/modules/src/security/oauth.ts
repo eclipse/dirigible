@@ -1,5 +1,5 @@
-import { client as httpClient} from "@dirigible/http"
-import { url } from "@dirigible/utils"
+import { client as httpClient} from "sdk/http"
+import { url } from "sdk/utils"
 
 export interface OAuthClientConfig {
     readonly url: string;

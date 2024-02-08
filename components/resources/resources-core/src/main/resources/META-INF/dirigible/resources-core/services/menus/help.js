@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { configurations as config } from "@dirigible/core";
+import { configurations as config } from "sdk/core";
 
 const defaultMenuItems = [
 	{
