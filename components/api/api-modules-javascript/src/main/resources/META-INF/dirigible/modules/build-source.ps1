@@ -10,9 +10,6 @@ Get-ChildItem -Recurse -Include *.ts -Exclude *.d.ts | ForEach-Object {
 
     esbuild $_.FullName --outfile=$mjsOutputFile --sourcemap=inline --format=esm --target=es2022
     
-    if ($cjsOutputFile -contains "wrappers") {
-        return
-    }
     esbuild $_.FullName --outfile=$cjsOutputFile --sourcemap=inline --format=cjs --target=es2022
 }
 
