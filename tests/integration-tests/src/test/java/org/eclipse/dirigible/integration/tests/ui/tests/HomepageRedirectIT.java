@@ -11,7 +11,7 @@
 package org.eclipse.dirigible.integration.tests.ui.tests;
 
 import org.eclipse.dirigible.integration.tests.ui.Dirigible;
-import org.eclipse.dirigible.integration.tests.ui.framework.HtmlElementType;
+import org.eclipse.dirigible.tests.framework.HtmlElementType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

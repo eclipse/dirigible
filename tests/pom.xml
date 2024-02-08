@@ -14,14 +14,11 @@
         <module>tests-framework</module>
     </modules>
     <groupId>org.eclipse.dirigible.tests</groupId>
-    <artifactId>tests</artifactId>
+    <artifactId>dirigible-tests</artifactId>
     <packaging>pom</packaging>
 
     <properties>
-        <license.header.location>../licensing-header.txt</license.header.location>
-        <parent.pom.folder>../</parent.pom.folder>
-        <skipITs>true</skipITs>
-        <selenide.version>7.0.4</selenide.version>
+        <license.header.location>../../licensing-header.txt</license.header.location>
     </properties>
 
 </project>

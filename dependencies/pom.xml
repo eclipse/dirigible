@@ -41,8 +41,8 @@
 			</dependency>
 			<dependency>
 				<groupId>org.eclipse.dirigible.tests</groupId>
-				<artifactId>dirigible-tests-framework</artifactId>
-				<version>10.0.0-SNAPSHOT</version>
+				<artifactId>dirigible-tests</artifactId>
+				<version>${project.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

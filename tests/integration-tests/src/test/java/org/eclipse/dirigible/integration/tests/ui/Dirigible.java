@@ -10,9 +10,9 @@
  */
 package org.eclipse.dirigible.integration.tests.ui;
 
-import org.eclipse.dirigible.integration.tests.ui.framework.Browser;
-import org.eclipse.dirigible.integration.tests.ui.framework.HtmlAttribute;
-import org.eclipse.dirigible.integration.tests.ui.framework.HtmlElementType;
+import org.eclipse.dirigible.tests.framework.Browser;
+import org.eclipse.dirigible.tests.framework.HtmlAttribute;
+import org.eclipse.dirigible.tests.framework.HtmlElementType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.codeborne.selenide.SelenideElement;
