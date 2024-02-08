@@ -9,9 +9,9 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { request, response } from "@dirigible/http";
-import { extensions } from "@dirigible/extensions";
-import { uuid } from "@dirigible/utils";
+import { request, response } from "sdk/http";
+import { extensions } from "sdk/extensions";
+import { uuid } from "sdk/utils";
 
 const menuExtensionId = request.getParameter("id");
 let mainmenu = [];

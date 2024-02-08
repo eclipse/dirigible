@@ -12,8 +12,8 @@
 /**
  * API Files
  */
-import * as streams from "@dirigible/io/streams";
-import * as bytes from "@dirigible/io/bytes";
+import * as streams from "sdk/io/streams";
+import * as bytes from "sdk/io/bytes";
 const FilesFacade = Java.type("org.eclipse.dirigible.components.api.io.FilesFacade");
 const File = Java.type("java.io.File")
 

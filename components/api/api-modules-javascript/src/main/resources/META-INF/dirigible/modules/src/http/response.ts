@@ -14,7 +14,7 @@
  *
  */
 
-import * as streams from "@dirigible/io/streams"
+import * as streams from "sdk/io/streams"
 const HttpResponseFacade = Java.type("org.eclipse.dirigible.components.api.http.HttpResponseFacade");
 const OutputStreamWriter = Java.type("java.io.OutputStreamWriter");
 const StandardCharsets = Java.type("java.nio.charset.StandardCharsets");

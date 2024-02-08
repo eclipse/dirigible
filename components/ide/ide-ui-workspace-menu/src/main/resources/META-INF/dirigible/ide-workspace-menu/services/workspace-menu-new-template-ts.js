@@ -13,6 +13,6 @@ exports.getTemplate = () => ({
     "name": "typescript",
     "label": "TypeScript Service",
     "extension": "ts",
-    "data": 'import {response} from "@dirigible/http";\n\nresponse.println("Hello World!");',
+    "data": 'import {response} from "sdk/http";\n\nresponse.println("Hello World!");',
     "order": 2
 });

@@ -15,9 +15,9 @@
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-import { configurations } from "@dirigible/core";
-import { client as httpClient } from "@dirigible/http";
-import { OAuthClient } from "@dirigible/security";
+import { configurations } from "sdk/core";
+import { client as httpClient } from "sdk/http";
+import { OAuthClient } from "sdk/security";
 
 const JClass = Java.type("java.lang.Class");
 const DestinationsFacade = Java.type("org.eclipse.dirigible.components.api.core.DestinationsFacade");

@@ -1,6 +1,6 @@
-import { response, rs } from "@dirigible/http";
-import { workspace, lifecycle } from "@dirigible/platform";
-import { user } from "@dirigible/security";
+import { response, rs } from "sdk/http";
+import { workspace, lifecycle } from "sdk/platform";
+import { user } from "sdk/security";
 
 class HttpError extends Error {
 
