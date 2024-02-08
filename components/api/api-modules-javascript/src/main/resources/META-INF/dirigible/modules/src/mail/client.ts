@@ -13,8 +13,9 @@
 const Properties = Java.type("java.util.Properties");
 const MailFacade = Java.type("org.eclipse.dirigible.components.api.mail.MailFacade");
 
-export function getClient(options) {
+export function getClient(options: object): MailClient {
     let native = null;
+
     if (options) {
         native = MailFacade.getInstance(toJavaProperties(options));
     } else {
@@ -28,15 +29,15 @@ export function sendMultipart(from, recipients, subject, parts) {
     mailClient.sendMultipart(from, recipients, subject, parts);
 };
 
-export function send(from, recipients, subject, text, subType) {
+export function send(from, recipients, subject, text: string, subType: string) {
     const mailClient = this.getClient();
     mailClient.send(from, recipients, subject, text, subType);
 };
 
 class MailClient {
-    constructor(private native) {}
+    constructor(private native: any) {}
 
-    send(from, _recipients, subject, text, contentType) {
+    send(from: object, _recipients: object | string, subject: object, text: string, contentType: string): void {
         switch (contentType) {
             case "html":
                 contentType = "text/html";
@@ -62,7 +63,7 @@ class MailClient {
         }
     };
 
-    sendMultipart(from, _recipients, subject, parts) {
+    sendMultipart(from: object, _recipients: object | string, subject: object, parts: {}): void {
         let recipients = processRecipients(_recipients);
         try {
             return this.native.send(from, recipients.to, recipients.cc, recipients.bcc, subject, stringifyPartData(parts));
@@ -73,8 +74,8 @@ class MailClient {
     };
 }
 
-function stringifyPartData(parts) {
-    parts.forEach(function (part) {
+function stringifyPartData(parts: any): JSON {
+    parts.forEach(function (part: any) {
         if (part.data) {
             part.data = JSON.stringify(part.data);
         }
@@ -83,7 +84,7 @@ function stringifyPartData(parts) {
     return parts;
 }
 
-function processRecipients(recipients) {
+function processRecipients(recipients: string | object) {
     let to = [];
     let cc = [];
     let bcc = [];
@@ -102,7 +103,7 @@ function processRecipients(recipients) {
     return {to: to, cc: cc, bcc: bcc};
 }
 
-function toJavaProperties(properties) {
+function toJavaProperties(properties: any) {
     const javaProperties = new Properties();
     Object.keys(properties).forEach(function (e) {
         javaProperties.put(e, properties[e]);
@@ -110,7 +111,7 @@ function toJavaProperties(properties) {
     return javaProperties;
 }
 
-function parseRecipients(recipients, type) {
+function parseRecipients(recipients: object, type: any): any {
     const objectType = typeof recipients[type];
     if (objectType === "string") {
         return [recipients[type]];
