@@ -1,4 +1,4 @@
-import { response } from "@dirigible/http";
+import { response } from "sdk/http";
 
 export class HttpUtils {
 

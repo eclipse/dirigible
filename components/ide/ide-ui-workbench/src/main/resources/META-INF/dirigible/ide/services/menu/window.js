@@ -11,7 +11,7 @@
  */
 // Deprecated, do not edit.
 
-import { extensions } from '@dirigible/extensions';
+import { extensions } from 'sdk/extensions';
 
 const perspectiveExtensions = await extensions.loadExtensionModules('ide-perspective');
 const perspectiveExtensionDefinitions = [];

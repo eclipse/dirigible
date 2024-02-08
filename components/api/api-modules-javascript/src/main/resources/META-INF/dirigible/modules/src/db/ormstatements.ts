@@ -11,7 +11,7 @@
  */
 "use strict";
 
-import { Logging } from "@dirigible/log";
+import { Logging } from "sdk/log";
 import * as sql from "./sql";
 
 export function ORMStatements(orm, dialect) {

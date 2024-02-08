@@ -39,7 +39,7 @@
  *
  *
  */
-import { configurations } from "@dirigible/core";
+import { configurations } from "sdk/core";
 const isCaseSensitive = configurations.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE");
 
 export function ORM(orm) {

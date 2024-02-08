@@ -12,7 +12,7 @@
 exports.getContent = function() {
 	return [
 		{
-			"name": "@dirigible/test",
+			"name": "sdk/test",
 			"description": "Dirigible Test Module",
 			"isPackageDescription": true,
 			"dtsPath": "test/extensions/test.d.ts"

@@ -10,9 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-import * as registry from "@dirigible/platform/registry";
-import * as xml from "@dirigible/utils/xml";
-import { TemplateEngines } from "@dirigible/template";
+import * as registry from "sdk/platform/registry";
+import * as xml from "sdk/utils/xml";
+import { TemplateEngines } from "sdk/template";
 const PDFFacade = Java.type("org.eclipse.dirigible.components.api.pdf.PDFFacade");
 
 const TEMPLATE_PATH_TABLE = "pdf/templates/table.xml";

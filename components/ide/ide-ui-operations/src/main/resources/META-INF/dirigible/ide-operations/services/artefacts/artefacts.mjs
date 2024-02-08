@@ -1,5 +1,5 @@
-import { extensions } from "@dirigible/extensions";
-import { response } from "@dirigible/http";
+import { extensions } from "sdk/extensions";
+import { response } from "sdk/http";
 
 const artefacts = [];
 const artefactsExtensions = await extensions.loadExtensionModules("ide-operations-artefacts");

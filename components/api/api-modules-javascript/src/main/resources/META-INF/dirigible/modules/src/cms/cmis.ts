@@ -15,7 +15,7 @@
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-import * as streams from "@dirigible/io/streams";
+import * as streams from "sdk/io/streams";
 const CmisFacade = Java.type("org.eclipse.dirigible.components.api.cms.CmisFacade");
 const Gson = Java.type("com.google.gson.Gson");
 const HashMap = Java.type("java.util.HashMap");

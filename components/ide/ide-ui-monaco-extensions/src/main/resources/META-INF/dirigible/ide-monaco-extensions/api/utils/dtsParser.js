@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { registry } from "@dirigible/platform";
-import { extensions } from "@dirigible/extensions";
+import { registry } from "sdk/platform";
+import { extensions } from "sdk/extensions";
 
 // Returns the path to d.ts foreach modules.json entry where isPackageDescription = true
 let dtsPaths = [];
