@@ -14,7 +14,7 @@
  *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
-import * as repository from "@dirigible/platform/repository";
+import * as repository from "sdk/platform/repository";
 
 const REGISTRY_PUBLIC = "/registry/public/";
 const MUSTACHE_FILE_EXTENSION = ".mustache";

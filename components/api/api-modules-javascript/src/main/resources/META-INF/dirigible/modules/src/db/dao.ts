@@ -15,11 +15,11 @@ import * as dirigibleOrm from "./orm";
 import * as dirigibleOrmStatements from "./ormstatements";
 import { Sequence } from "./sequence";
 import * as database from "./database";
-import { Query } from "@dirigible/db";
+import { Query } from "sdk/db";
 import { Update } from "./update";
 import { Insert } from "./insert";
-import { Logging } from "@dirigible/log";
-import { configurations, globals } from "@dirigible/core";
+import { Logging } from "sdk/log";
+import { configurations, globals } from "sdk/core";
 
 
 export function DAO(orm, logCtxName, dataSourceName) {

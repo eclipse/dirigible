@@ -13,7 +13,7 @@
  * API Job
  */
 
-import { configurations } from "@dirigible/core";
+import { configurations } from "sdk/core";
 const JobFacade = Java.type("org.eclipse.dirigible.components.api.job.JobFacade");
 
 export class Scheduler {

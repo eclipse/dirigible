@@ -1,4 +1,4 @@
-import { Controller, Get } from "@dirigible/http"
+import { Controller, Get } from "sdk/http"
 import { ${name}Repository, ${name}Filter, ${name}PaginatedFilter } from "../../dao/${perspectiveName}/${name}Repository";
 
 @Controller

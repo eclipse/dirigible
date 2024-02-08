@@ -1,5 +1,5 @@
-import { response } from "@dirigible/http";
-import { database } from "@dirigible/db";
+import { response } from "sdk/http";
+import { database } from "sdk/db";
 
 let extensionPoints = [];
 

@@ -1,4 +1,4 @@
-import { query } from "@dirigible/db";
+import { query } from "sdk/db";
 import { Utils } from "../Utils.mjs";
 
 export const getArtefacts = () => {

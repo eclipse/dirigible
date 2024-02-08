@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { response } from "@dirigible/http";
+import { response } from "sdk/http";
 import * as modulesParser from "./utils/modulesParser";
 let modules = modulesParser.getModules();
 response.setContentType("application/json");
