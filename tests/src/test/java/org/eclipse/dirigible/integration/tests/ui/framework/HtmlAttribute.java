@@ -12,7 +12,8 @@ package org.eclipse.dirigible.integration.tests.ui.framework;
 
 public enum HtmlAttribute {
     ID("id"), //
-    TYPE("type");
+    TYPE("type"), //
+    ARIA_LABEL("aria-label"), PLACEHOLDER("placeholder");
 
     private final String attribute;
 

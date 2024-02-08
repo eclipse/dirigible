@@ -22,6 +22,8 @@ public interface Browser {
 
     void assertElementExistsByTypeAndText(HtmlElementType elementType, String text);
 
+    void clickElementByTypeAndText(HtmlElementType span, String string);
+
     String getPageTitle();
 
     SelenideElement waitUntilExist(HtmlElementType elementType);

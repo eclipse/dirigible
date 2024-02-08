@@ -112,6 +112,12 @@ public class BrowserImpl implements Browser {
         element.should(Condition.exist);
     }
 
+    @Override
+    public void clickElementByTypeAndText(HtmlElementType elementType, String text) {
+        SelenideElement element = getElementByAttributeAndText(elementType, text);
+        element.click();
+    }
+
     private SelenideElement getElementByAttributeAndText(HtmlElementType elementType, String text) {
         By selector = constructCssSelectorByType(elementType);
         ElementsCollection options = Selenide.$$(selector);
