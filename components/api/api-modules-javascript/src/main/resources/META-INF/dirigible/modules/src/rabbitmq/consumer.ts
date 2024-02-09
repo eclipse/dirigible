@@ -17,11 +17,11 @@
 const RabbitMQFacade = Java.type("org.eclipse.dirigible.components.api.rabbitmq.RabbitMQFacade");
 
 export class Consumers{
-	public static startListening(queue, handler){
+	public static startListening(queue: string, handler: string): void{
 		return RabbitMQFacade.startListening(queue, handler);
 	}
 
-	public static stopListening(queue, handler){
+	public static stopListening(queue: string, handler: string): void{
 		return RabbitMQFacade.stopListening(queue, handler);
 	}
 }
