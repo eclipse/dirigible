@@ -12,7 +12,7 @@
     "schema": {
         "structures": [
 #foreach ($model in $models)
-#if($model.type != "REPORT" && $model.type != "FILTER")
+#if($model.type != "REPORT" && $model.type != "FILTER" && $model.disableGeneration != "true")
             {
                 "name": "${tablePrefix}${model.dataName}",
                 "type": "TABLE",

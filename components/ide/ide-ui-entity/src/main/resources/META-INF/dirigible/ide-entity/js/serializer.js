@@ -27,10 +27,12 @@ function createModel(graph) {
 			child.value.tooltip = child.value.tooltip ? child.value.tooltip : child.value.name;
 			child.value.menuKey = child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase();
 			child.value.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
+			child.value.disableGeneration = child.value.disableGeneration ? child.value.disableGeneration : "false";
 			let entityContent = '  <entity name="' + _.escape(child.value.name) +
 				'" dataName="' + _.escape(child.value.dataName) +
 				'" dataCount="' + _.escape(child.value.dataCount) +
 				'" dataQuery="' + _.escape(child.value.dataQuery) +
+				'" disableGeneration="' + _.escape(child.value.disableGeneration) +
 				'" type="' + _.escape(child.value.entityType ? child.value.entityType : 'PRIMARY') +
 				'" title="' + _.escape(child.value.title) +
 				'" caption="' + _.escape(child.value.caption) +

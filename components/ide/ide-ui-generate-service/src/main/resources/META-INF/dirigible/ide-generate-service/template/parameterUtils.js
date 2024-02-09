@@ -37,7 +37,7 @@ exports.process = function (model, parameters) {
                 }
             }
         }
-
+        e.referencedProjections = [];
         e.properties.forEach(p => {
             p.dataNotNull = p.dataNullable === "false";
             p.dataAutoIncrement = p.dataAutoIncrement === "true";
@@ -93,6 +93,17 @@ exports.process = function (model, parameters) {
                     }
                 }
             }
+
+            model.entities.forEach(ep => {
+                if(p.relationshipEntityName === ep.name){
+                    if(ep.projectionReferencedModel) {
+                        e.referencedProjections.push({
+                            name: ep.name,
+                            project: ep.projectionReferencedModel.split('/')[2]
+                        })
+                    }
+                }
+            })
         });
     });
 

@@ -15,7 +15,7 @@ const templateEngines = dirigibleRequire("template/engines");
 exports.generateFiles = function (model, parameters, templateSources) {
     let generatedFiles = [];
 
-    const models = model.entities.filter(e => e.type !== "REPORT" && e.type !== "FILTER");
+    const models = model.entities.filter(e => e.type !== "REPORT" && e.type !== "FILTER" && e.disableGeneration !== "true");
     const feedModels = model.entities.filter(e => e.feedUrl);
 
     const reportModels = model.entities.filter(e => e.type === "REPORT");

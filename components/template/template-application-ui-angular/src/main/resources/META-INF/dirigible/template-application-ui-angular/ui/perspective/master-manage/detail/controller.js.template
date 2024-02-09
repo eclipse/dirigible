@@ -197,19 +197,47 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 		$scope.options${property.name} = [];
 #end
 #end
-#foreach ($property in $properties)
-#if($property.widgetType == "DROPDOWN")
 
-		${dollar}http.get("/services/ts/${projectName}/gen/api/${property.relationshipEntityPerspectiveName}/${property.relationshipEntityName}Service.ts").then(function (response) {
-			${dollar}scope.options${property.name} = response.data.map(e => {
-				return {
-					value: e.${property.widgetDropDownKey},
-					text: e.${property.widgetDropDownValue}
-				}
-			});
-		});
+#foreach ($property in $properties)
+#if ($property.widgetType == "DROPDOWN")
+#if ($referencedProjections.length != 0)
+#set ($foundReferenceProjection = false)
+#foreach ($referencedProjection in $referencedProjections)
+                #if ($referencedProjection.name == $property.relationshipEntityName && !$foundReferenceProjection)
+         ${dollar}http.get("/services/ts/${referencedProjection.project}/gen/api/${property.relationshipEntityPerspectiveName}/${property.relationshipEntityName}Service.ts").then(function (response) {
+                 ${dollar}scope.options${property.name} = response.data.map(e => {
+                     return {
+                         value: e.${property.widgetDropDownKey},
+                         text: e.${property.widgetDropDownValue}
+                     }
+                 });
+             });
+#set ($foundReferenceProjection = true)
 #end
 #end
+#if (!$foundReferenceProjection)
+      ${dollar}http.get("/services/ts/${projectName}/gen/api/${property.relationshipEntityPerspectiveName}/${property.relationshipEntityName}Service.ts").then(function (response) {
+              ${dollar}scope.options${property.name} = response.data.map(e => {
+                  return {
+                      value: e.${property.widgetDropDownKey},
+                      text: e.${property.widgetDropDownValue}
+                  }
+              });
+          });
+#end
+#else
+      ${dollar}http.get("/services/ts/${projectName}/gen/api/${property.relationshipEntityPerspectiveName}/${property.relationshipEntityName}Service.ts").then(function (response) {
+              ${dollar}scope.options${property.name} = response.data.map(e => {
+                  return {
+                      value: e.${property.widgetDropDownKey},
+                      text: e.${property.widgetDropDownValue}
+                  }
+              });
+          });
+#end
+#end
+#end
+
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN")
 		${dollar}scope.options${property.name}Value = function (optionKey) {

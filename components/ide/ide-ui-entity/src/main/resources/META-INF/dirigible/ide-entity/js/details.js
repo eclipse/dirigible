@@ -130,6 +130,7 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
                         dataCount: $scope.dataParameters.dataCount,
                         dataQuery: $scope.dataParameters.dataQuery,
                         dataSource: $scope.dataParameters.dataSource,
+                        disableGeneration: $scope.dataParameters.disableGeneration,
                         title: $scope.dataParameters.title,
                         caption: $scope.dataParameters.caption,
                         tooltip: $scope.dataParameters.tooltip,

@@ -38,6 +38,7 @@ Entity.prototype.roleRead = null;
 Entity.prototype.roleWrite = null;
 Entity.prototype.projectionReferencedModel = null;
 Entity.prototype.projectionReferencedEntity = null;
+Entity.prototype.referenceProjections = [];
 
 Entity.prototype.clone = function () {
 	return mxUtils.clone(this);
@@ -67,7 +68,7 @@ Property.prototype.relationshipEntityName = null;
 Property.prototype.relationshipEntityPerspectiveName = null;
 Property.prototype.widgetType = 'TEXTBOX';
 Property.prototype.widgetLength = '20';
-Property.prototype.widgetPattern = null; // the input validation patern
+Property.prototype.widgetPattern = null; // the input validation pattern
 Property.prototype.widgetService = null; // the service used to fill in the widget if any
 Property.prototype.widgetIsMajor = 'true'; // whether this property will be shown in e.g. a list of entities table
 Property.prototype.widgetSection = null; // the name of the grouping section
