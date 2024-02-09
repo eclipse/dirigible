@@ -20,9 +20,9 @@ const mongoClient = mongodb.getClient();
 const db = mongoClient.getDB();
 
 export class DAO {
-    $log;
+    $log: any;
 
-    constructor(private orm, logCtxName, dataSourceName, databaseType) {
+    constructor(private orm, logCtxName: string, dataSourceName: string, databaseType: string) {
         if (orm === undefined) {
             throw Error('Illegal argument: orm[' + orm + ']');
         }
@@ -39,7 +39,7 @@ export class DAO {
         this.$log = logging.getLogger(loggerName);
     }
 
-    notify(event, ...a) {
+    notify(event: string, ...a: any): void {
         var func = this[event];
         if (!this[event])
             return;
@@ -50,7 +50,7 @@ export class DAO {
     };
     
     //Prepare a JSON object for insert into DB
-    createNoSQLEntity(entity) {
+    createNoSQLEntity(entity: any): {} {
         var persistentItem = {};
         var mandatories = this.orm.getMandatoryProperties();
         for (var i = 0; i < mandatories.length; i++) {
@@ -73,7 +73,7 @@ export class DAO {
         return persistentItem;
     };
     
-    validateEntity(entity, skip) {
+    validateEntity(entity: any, skip: any): void {
         if (entity === undefined || entity === null) {
             throw new Error('Illegal argument: entity is ' + entity);
         }
@@ -97,7 +97,7 @@ export class DAO {
         }
     };
     
-    insert(_entity) {
+    insert(_entity: any): any {
     
         var entities = _entity;
         if (_entity.constructor !== Array) {
@@ -161,7 +161,7 @@ export class DAO {
     };
     
     // update entity from a JSON object. Returns the id of the updated entity.
-    update(entity) {
+    update(entity: any): DAO {
     
         this.$log.info('Updating {}[{}] entity', this.orm.table, entity !== undefined ? entity[this.orm.getPrimaryKey().name] : entity);
     
@@ -198,7 +198,7 @@ export class DAO {
     };
     
     // delete entity by id, or array of ids, or delete all (if not argument is provided).
-    remove(id) {
+    remove(id: number): void {
     
         var ids = [];
         if (arguments.length === 0) {
@@ -220,7 +220,7 @@ export class DAO {
     
         for (var i = 0; i < ids.length; i++) {
     
-            var id = ids[i];
+            var id: number = ids[i];
     
             if (ids.length > 1)
                 this.$log.info('Deleting {}[{}] entity', this.orm.table, id);
@@ -245,7 +245,7 @@ export class DAO {
     
     };
     
-    expand(expansionPath, context) {
+    expand(expansionPath: string, context: any): void {
         this.$log.info('Expanding for association path {} and context entity {}', expansionPath, (typeof arguments[1] !== 'object' ? 'id ' : '') + JSON.stringify(arguments[1]));
         throw Error("Not implemented.");
     };
@@ -255,7 +255,7 @@ export class DAO {
         If requested as expanded the returned entity will comprise associated (dependent) entities too. Expand can be a string tha tis a valid association name defined in this dao orm or
         an array of such names.
     */
-    find(id, expand, select) {
+    find(id: number, expand: any, select: any): any {
     
         if (typeof arguments[0] === 'object') {
             id = arguments[0].id;
@@ -270,7 +270,7 @@ export class DAO {
         }
     
         try {
-            var entity;
+            var entity: any;
             if (select !== undefined) {
                 if (select.constructor !== Array) {
                     if (select.constructor === String) {
@@ -313,7 +313,7 @@ export class DAO {
         }
     };
     
-    count() {
+    count(): number {
     
         this.$log.info('Counting ' + this.orm.table + ' entities');
     
@@ -342,7 +342,7 @@ export class DAO {
      * - $limit
      * - $offset
      */
-    list(settings) {
+    list(settings: any): any[] {
     
         settings = settings || {};
     
@@ -444,7 +444,7 @@ export class DAO {
  * oDefinition can be table definition or standard orm definition object. Or it can be a valid path to
  * a .table file, or any other text file contianing a standard dao orm definition.
  */
-export function create(oDefinition, logCtxName, dataSourceName, databaseType) {
+export function create(oDefinition: any, logCtxName: string, dataSourceName: string, databaseType: string): DAO {
     var orm;
 
     orm = oDefinition;

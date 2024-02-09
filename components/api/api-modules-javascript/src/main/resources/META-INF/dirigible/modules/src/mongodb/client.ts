@@ -69,7 +69,7 @@ class DBCollection {
 
     constructor(private native: any) { }
 
-    insert(dbObject: DBObject): void {
+    insert(dbObject: any): void {
         dbObject = implicit(dbObject);
         this.native.insert(dbObject.native);
     };
