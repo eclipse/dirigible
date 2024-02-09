@@ -41,7 +41,7 @@
 			</dependency>
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
-				<artifactId>dirigible-integration-tests</artifactId>
+				<artifactId>dirigible-tests</artifactId>
 				<version>${project.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
