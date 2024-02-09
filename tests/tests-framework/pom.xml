@@ -18,9 +18,8 @@
     </build>
 
     <properties>
-        <license.header.location>../../../licensing-header.txt</license.header.location>
+        <license.header.location>../../licensing-header.txt</license.header.location>
         <parent.pom.folder>../../</parent.pom.folder>
-        <skipITs>true</skipITs>
     </properties>
     <dependencies>
         <dependency>
