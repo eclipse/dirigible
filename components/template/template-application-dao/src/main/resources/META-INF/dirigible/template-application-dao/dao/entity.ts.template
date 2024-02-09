@@ -262,6 +262,7 @@ export class ${name}Repository {
 #end
 #foreach ($property in $properties)
 #if($property.isCalculatedProperty)
+        // @ts-ignore
         (entity as ${name}Entity).${property.name} = ${property.calculatedPropertyExpression};
 #end
 #end
@@ -328,6 +329,7 @@ export class ${name}Repository {
 #end
 #foreach ($property in $properties)
 #if($property.isCalculatedProperty)
+        // @ts-ignore
         (entity as ${name}Entity).${property.name} = ${property.calculatedPropertyExpression};
 #end
 #end
