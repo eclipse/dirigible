@@ -9,6 +9,7 @@
  * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.integration.tests.ui.tests;
+
 import org.eclipse.dirigible.tests.framework.Browser;
 import org.eclipse.dirigible.tests.framework.BrowserImpl;
 import org.eclipse.dirigible.integration.tests.IntegrationTest;

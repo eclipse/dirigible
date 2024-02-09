@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.eclipse.dirigible.tests</groupId>
-        <artifactId>dirigible-tests</artifactId>
+        <groupId>org.eclipse.dirigible</groupId>
+        <artifactId>dirigible-integration-tests</artifactId>
         <version>10.0.0-SNAPSHOT</version>
     </parent>
 
@@ -19,7 +19,8 @@
 
     <properties>
         <license.header.location>../../../licensing-header.txt</license.header.location>
-        <parent.pom.folder>../../../</parent.pom.folder>
+        <parent.pom.folder>../../</parent.pom.folder>
+        <skipITs>true</skipITs>
     </properties>
     <dependencies>
         <dependency>

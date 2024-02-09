@@ -40,8 +40,8 @@
 				<scope>import</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.eclipse.dirigible.tests</groupId>
-				<artifactId>dirigible-tests</artifactId>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-integration-tests</artifactId>
 				<version>${project.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
