@@ -642,7 +642,6 @@
 		<module>modules</module>
 		<module>components</module>
 		<module>build</module>
-<!--		<module>integration-tests</module>-->
 		<module>dependencies</module>
 		<module>tests</module>
 	</modules>

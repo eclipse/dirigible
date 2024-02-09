@@ -11,14 +11,14 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <name>Integration Tests</name>
-    <artifactId>dirigible-integration-tests</artifactId>
-    <description>Integration tests packaged with Dirigible</description>
+    <name>Tests - Modules</name>
+    <artifactId>dirigible-tests</artifactId>
+    <description>Test packages</description>
     <packaging>pom</packaging>
 
     <modules>
         <module>tests-framework</module>
-        <module>integrations</module>
+        <module>tests-integrations</module>
     </modules>
 
     <properties>
