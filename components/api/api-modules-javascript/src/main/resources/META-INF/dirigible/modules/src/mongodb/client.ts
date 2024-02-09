@@ -74,7 +74,7 @@ class DBCollection {
         this.native.insert(dbObject.native);
     };
 
-    find(query?, projection?): DBCursor {
+    find(query?: any, projection?: any): DBCursor {
         query = implicit(query);
         projection = implicit(projection);
 
@@ -92,7 +92,7 @@ class DBCollection {
         return new DBCursor(native);
     };
 
-    findOne(query, projection, sort): DBObject {
+    findOne(query: any, projection: any, sort: any): DBObject {
         query = implicit(query);
         projection = implicit(projection);
         var dbObject = createBasicDBObject();
@@ -115,7 +115,7 @@ class DBCollection {
         return dbObject;
     };
 
-    findOneById(id, projection?): DBObject {
+    findOneById(id: any, projection?: any): DBObject {
         projection = implicit(projection);
         var dbObject = createBasicDBObject();
         var native = null;
@@ -133,7 +133,7 @@ class DBCollection {
         return dbObject;
     };
 
-    count(query?): number {
+    count(query?: any): number {
         query = implicit(query);
         if (query) {
             return this.native.count(query.native);
@@ -141,7 +141,7 @@ class DBCollection {
         return this.native.count();
     };
 
-    getCount(query): number {
+    getCount(query: any): number {
         query = implicit(query);
         if (query) {
             return this.native.getCount(query.native);
@@ -149,7 +149,7 @@ class DBCollection {
         return this.native.getCount();
     };
 
-    createIndex(keys, options) {
+    createIndex(keys: any, options: any) {
         keys = implicit(keys);
         options = implicit(options);
         if (keys) {
@@ -171,7 +171,7 @@ class DBCollection {
         }
     };
 
-    distinct(name: string, query, keys): void {
+    distinct(name: string, query: any, keys: any): void {
         query = implicit(query);
         if (name) {
             if (query) {
@@ -204,7 +204,7 @@ class DBCollection {
         this.native.dropIndexes();
     };
 
-    remove(query): void {
+    remove(query: any): void {
         query = implicit(query);
         this.native.remove(query.native);
     };
@@ -218,7 +218,7 @@ class DBCollection {
         this.native.save(dbObject.native);
     };
 
-    update(query, update, upsert?, multi?): void {
+    update(query: any, update: any, upsert?: any, multi?: any): void {
         query = implicit(query);
         update = implicit(update);
         if (query) {
@@ -240,7 +240,7 @@ class DBCollection {
         }
     };
 
-    updateMulti(query, update): void {
+    updateMulti(query: any, update: any): void {
         query = implicit(query);
         update = implicit(update);
         if (query) {
@@ -341,7 +341,7 @@ class DBCursor {
         return this.native.length();
     };
 
-    sort(orderBy): DBCursor {
+    sort(orderBy: any): DBCursor {
         orderBy = implicit(orderBy);
         if (!orderBy) {
             throw new Error("The orderBy parameter must be provided");
@@ -350,7 +350,7 @@ class DBCursor {
         return this;
     };
 
-    limit(limit): DBCursor {
+    limit(limit: number): DBCursor {
         if (!limit) {
             throw new Error("The limit parameter must be provided");
         }
@@ -358,7 +358,7 @@ class DBCursor {
         return this;
     };
 
-    min(min): DBCursor {
+    min(min: number): DBCursor {
         if (!min) {
             throw new Error("The min parameter must be provided");
         }
@@ -366,7 +366,7 @@ class DBCursor {
         return this;
     };
 
-    max(max): DBCursor {
+    max(max: number): DBCursor {
         if (!max) {
             throw new Error("The max parameter must be provided");
         }
@@ -374,7 +374,7 @@ class DBCursor {
         return this;
     };
 
-    maxTime(maxTime): DBCursor {
+    maxTime(maxTime: number): DBCursor {
         if (!maxTime) {
             throw new Error("The maxTime parameter must be provided");
         }
