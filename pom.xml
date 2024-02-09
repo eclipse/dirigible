@@ -173,7 +173,7 @@
 		<angularjs.version>1.8.2</angularjs.version>
 		<fontawesome.version>4.7.0</fontawesome.version>
 
-		<testcontainers.version>1.19.3</testcontainers.version>
+		<testcontainers.version>1.19.5</testcontainers.version>
 		<logcaptor.version>2.9.2</logcaptor.version>
 
 		<profile.content.phase>none</profile.content.phase>
