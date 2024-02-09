@@ -81,13 +81,11 @@ class ${name}Service {
         try {
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-            const id = ctx.pathParameters.id;
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+#if($property.dataTypeTypescript == "number")
             const id = parseInt(ctx.pathParameters.id);
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+#elseif($property.dataTypeTypescript == "Date")
             const id = new Date(parseInt(ctx.pathParameters.id));
-#elseif($property.dataType == "BOOLEAN")
+#elseif($property.dataTypeTypescript == "boolean")
             const id = ctx.pathParameters.id === "true";
 #else
             const id = ctx.pathParameters.id;

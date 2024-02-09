@@ -2,34 +2,14 @@ import { database } from "sdk/db";
 
 export interface ${name} {
 #foreach ($property in $properties)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-    readonly ${property.name}: string;
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-    readonly ${property.name}: number;
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-    readonly ${property.name}: Date;
-#elseif($property.dataType == "BOOLEAN")
-    readonly ${property.name}: boolean;
-#else
-    readonly ${property.name}: unknown;
-#end
+    readonly ${property.name}: ${property.dataTypeTypescript};
 #end
 }
 
 export interface ${name}Filter {
 #foreach ($property in $filter.properties)
 #if(!$property.dataPrimaryKey)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-    readonly ${property.name}?: string;
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-    readonly ${property.name}?: number;
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-    readonly ${property.name}?: Date;
-#elseif($property.dataType == "BOOLEAN")
-    readonly ${property.name}?: boolean;
-#else
-    readonly ${property.name}?: unknown;
-#end
+    readonly ${property.name}?: ${property.dataTypeTypescript};
 #end
 #end
 }
@@ -120,25 +100,25 @@ export class ${name}Repository {
             while (resultSet.next()) {
                 data.push({
 #foreach ($property in $properties)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+#if($property.dataTypeJava == "string")
                     ${property.name}: resultSet.getString("${property.name}")#if($foreach.hasNext),#end
-#elseif($property.dataType == "INTEGER")
+#elseif($property.dataTypeJava == "int")
                     ${property.name}: resultSet.getInt("${property.name}")#if($foreach.hasNext),#end
-#elseif($property.dataType == "BIGINT")
+#elseif($property.dataTypeJava == "long")
                     ${property.name}: resultSet.getLong("${property.name}")#if($foreach.hasNext),#end
-#elseif($property.dataType == "SMALLINT" || $property.dataType == "TINYINT")
+#elseif($property.dataTypeJava == "short")
                     ${property.name}: resultSet.getShort("${property.name}")#if($foreach.hasNext),#end
-#elseif($property.dataType == "REAL")
+#elseif($property.dataTypeJava == "float")
                     ${property.name}: resultSet.getFloat("${property.name}")#if($foreach.hasNext),#end
-#elseif($property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+#elseif($property.dataTypeJava == "double")
                     ${property.name}: resultSet.getDouble("${property.name}")#if($foreach.hasNext),#end
-#elseif($property.dataType == "DATE")
+#elseif($property.dataTypeJava == "date")
                     ${property.name}: resultSet.getDate("${property.name}")#if($foreach.hasNext),#end
-#elseif($property.dataType == "TIME")
+#elseif($property.dataTypeJava == "time")
                     ${property.name}: resultSet.getTime("${property.name}")#if($foreach.hasNext),#end
-#elseif($property.dataType == "TIMESTAMP")
+#elseif($property.dataTypeJava == "timestamp")
                     ${property.name}: resultSet.getTimestamp("${property.name}")#if($foreach.hasNext),#end
-#elseif($property.dataType == "BOOLEAN")
+#elseif($property.dataTypeJava == "boolean")
                     ${property.name}: resultSet.getBoolean("${property.name}")#if($foreach.hasNext),#end
 #else
                     ${property.name}: "Not-Supported-Data-Type"#if($foreach.hasNext),#end
@@ -171,43 +151,43 @@ export class ${name}Repository {
             let paramIndex = 1;
 #foreach ($property in $filter.properties)
 #if(!$property.dataPrimaryKey)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+#if($property.dataTypeJava == "string")
             if (filter.${property.name}) {
                 statement.setString(paramIndex++, filter.${property.name});
             }
-#elseif($property.dataType == "INTEGER")
+#elseif($property.dataTypeJava == "int")
             if (filter.${property.name}) {
                 statement.setInt(paramIndex++, filter.${property.name});
             }
-#elseif($property.dataType == "BIGINT")
+#elseif($property.dataTypeJava == "long")
             if (filter.${property.name}) {
                 statement.setLong(paramIndex++, filter.${property.name});
             }
-#elseif($property.dataType == "SMALLINT" || $property.dataType == "TINYINT")
+#elseif($property.dataTypeJava == "short")
             if (filter.${property.name}) {
                 statement.setShort(paramIndex++, filter.${property.name});
             }
-#elseif($property.dataType == "REAL")
+#elseif($property.dataTypeJava == "float")
             if (filter.${property.name}) {
                 statement.setFloat(paramIndex++, filter.${property.name});
             }
-#elseif($property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+#elseif($property.dataTypeJava == "double")
             if (filter.${property.name}) {
                 statement.setDouble(paramIndex++, filter.${property.name});
             }
-#elseif($property.dataType == "DATE")
+#elseif($property.dataTypeJava == "date")
             if (filter.${property.name}) {
                 statement.setDate(paramIndex++, filter.${property.name});
             }
-#elseif($property.dataType == "TIME")
+#elseif($property.dataTypeJava == "time")
             if (filter.${property.name}) {
                 statement.setTime(paramIndex++, filter.${property.name});
             }
-#elseif($property.dataType == "TIMESTAMP")
+#elseif($property.dataTypeJava == "timestamp")
             if (filter.${property.name}) {
                 statement.setTimestamp(paramIndex++, filter.${property.name});
             }
-#elseif($property.dataType == "BOOLEAN")
+#elseif($property.dataTypeJava == "boolean")
             if (filter.${property.name}) {
                 statement.setBoolean(paramIndex++, filter.${property.name});
             }
