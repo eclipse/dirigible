@@ -48,6 +48,89 @@ exports.process = function (model, parameters) {
             p.widgetIsMajor = p.widgetIsMajor === "true";
             p.widgetLabel = p.widgetLabel ? p.widgetLabel : p.name;
 
+            switch (p.dataType.toUpperCase()) {
+                case "TINYINT":
+                case "INT1":
+                case "SMALLINT":
+                case "INT2":
+                case "SMALLSERIAL":
+                    p.dataTypeJava = "short";
+                    p.dataTypeTypescript = "number";
+                    break;
+                case "MEDIUMINT":
+                case "INT3":
+                case "INT":
+                case "INT4":
+                case "INTEGER":
+                case "SERIAL":
+                    p.dataTypeJava = "int";
+                    p.dataTypeTypescript = "number";
+                    break;
+                case "BIGINT":
+                case "INT8":
+                case "BIGSERIAL":
+                    p.dataTypeJava = "long";
+                    p.dataTypeTypescript = "number";
+                    break;
+                case "DECIMAL":
+                case "DEC":
+                case "NUMERIC":
+                case "FIXED":
+                case "DOUBLE":
+                case "DOUBLE PRECISION":
+                case "REAL":
+                    p.dataTypeJava = "double";
+                    p.dataTypeTypescript = "number";
+                    break;
+                case "FLOAT":
+                case "MONEY":
+                    p.dataTypeJava = "float";
+                    p.dataTypeTypescript = "number";
+                    break;
+                case "CHAR":
+                case "ENUM":
+                case "INET4":
+                case "INET6":
+                case "TEXT":
+                case "TINYTEXT":
+                case "MEDIUMTEXT":
+                case "LONGTEXT":
+                case "VARCHAR":
+                case "LONG VARCHAR":
+                case "CHARACTER VARYING":
+                case "CHARACTER":
+                case "BPCHAR":
+                    p.dataTypeJava = "string";
+                    p.dataTypeTypescript = "string";
+                    break;
+                case "DATE":
+                    p.dataTypeJava = "date";
+                    p.dataTypeTypescript = "Date";
+                    break;
+                case "TIME":
+                case "TIME WITH TIME ZONE":
+                    p.dataTypeJava = "time";
+                    p.dataTypeTypescript = "Date";
+                    break;
+                case "DATETIME":
+                case "TIMESTAMP":
+                case "TIMESTAMP WITH TIME ZONE":
+                    p.dataTypeJava = "timestamp";
+                    p.dataTypeTypescript = "Date";
+                    break;
+                case "BOOLEAN":
+                    p.dataTypeJava = "boolean";
+                    p.dataTypeTypescript = "boolean";
+                    break;
+                case "NULL":
+                    p.dataTypeJava = "null";
+                    p.dataTypeTypescript = "null";
+                    break;
+                default:
+                    p.dataTypeTypescript = "unknown";
+
+            }
+
             if (p.dataPrimaryKey) {
                 if (e.primaryKeys === undefined) {
                     e.primaryKeys = [];
@@ -65,14 +148,14 @@ exports.process = function (model, parameters) {
             if (p.widgetType == "DROPDOWN") {
                 e.hasDropdowns = true;
             }
-            if (p.dataType === "CHAR" || p.dataType === "VARCHAR") {
+            if (p.dataTypeTypescript === "string") {
                 // TODO minLength is not available in the model and can't be determined
                 p.minLength = 0;
                 p.maxLength = -1;
                 let widgetLength = parseInt(p.widgetLength);
                 let dataLength = parseInt(p.dataLength)
                 p.maxLength = dataLength > widgetLength ? widgetLength : dataLength;
-            } else if (p.dataType === "DATE" || p.dataType === "TIME" || p.dataType === "TIMESTAMP") {
+            } else if (p.dataTypeTypescript === "Date") {
                 p.isDateType = true;
                 e.hasDates = true;
             }

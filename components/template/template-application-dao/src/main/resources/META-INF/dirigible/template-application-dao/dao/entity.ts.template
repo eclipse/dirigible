@@ -35,56 +35,12 @@ function ForbiddenError(message) {
 
 export interface ${name}Entity {
 #foreach ($property in $properties)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-#if($property.dataNotNull || $property.dataPrimaryKey)
 #if($property.dataPrimaryKey)
-    readonly ${property.name}: string;
+    readonly ${property.name}: ${property.dataTypeTypescript};
+#elseif($property.dataNotNull)
+    ${property.name}: ${property.dataTypeTypescript};
 #else
-    ${property.name}: string;
-#end
-#else
-    ${property.name}?: string;
-#end
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-#if($property.dataNotNull || $property.dataPrimaryKey)
-#if($property.dataPrimaryKey)
-    readonly ${property.name}: number;
-#else
-    ${property.name}: number;
-#end
-#else
-    ${property.name}?: number;
-#end
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-#if($property.dataNotNull || $property.dataPrimaryKey)
-#if($property.dataPrimaryKey)
-    readonly ${property.name}: Date;
-#else
-    ${property.name}: Date;
-#end
-#else
-    ${property.name}?: Date;
-#end
-#elseif($property.dataType == "BOOLEAN")
-#if($property.dataNotNull || $property.dataPrimaryKey)
-#if($property.dataPrimaryKey)
-    readonly ${property.name}: boolean;
-#else
-    ${property.name}: boolean;
-#end
-#else
-    ${property.name}?: boolean;
-#end
-#else
-#if($property.dataNotNull || $property.dataPrimaryKey)
-#if($property.dataPrimaryKey)
-    readonly ${property.name}: unknown;
-#else
-    ${property.name}: unknown;
-#end
-#else
-    ${property.name}?: unknown;
-#end
+    ${property.name}?: ${property.dataTypeTypescript};
 #end
 #end
 }
@@ -92,17 +48,7 @@ export interface ${name}Entity {
 export interface ${name}CreateEntity {
 #foreach ($property in $properties)
 #if(!$property.dataPrimaryKey && !$property.isCalculatedProperty)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-    readonly #if($property.dataNotNull)${property.name}: string;#else${property.name}?: string;#end
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-    readonly #if($property.dataNotNull)${property.name}: number;#else${property.name}?: number;#end
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-    readonly #if($property.dataNotNull)${property.name}: Date;#else${property.name}?: Date;#end
-#elseif($property.dataType == "BOOLEAN")
-    readonly #if($property.dataNotNull)${property.name}: boolean;#else${property.name}?: boolean;#end
-#else
-    readonly #if($property.dataNotNull || $property.dataPrimaryKey)${property.name}: unknown;#else${property.name}?: unknown;#end
-#end
+    readonly #if($property.dataNotNull)${property.name}: ${property.dataTypeTypescript};#else${property.name}?: ${property.dataTypeTypescript};#end
 #end
 #end
 }
@@ -110,17 +56,7 @@ export interface ${name}CreateEntity {
 export interface ${name}UpdateEntity extends ${name}CreateEntity {
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-    readonly ${property.name}: string;
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-    readonly ${property.name}: number;
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-    readonly ${property.name}: Date;
-#elseif($property.dataType == "BOOLEAN")
-    readonly ${property.name}: boolean;
-#else
-    readonly ${property.name}: unknown;
-#end
+    readonly ${property.name}: ${property.dataTypeTypescript};
 #end
 #end
 }
@@ -129,107 +65,37 @@ export interface ${name}EntityOptions {
     $filter?: {
         equals?: {
 #foreach ($property in $properties)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-            ${property.name}?: string | string[];
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-            ${property.name}?: number | number[];
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-            ${property.name}?: Date | Date[];
-#elseif($property.dataType == "BOOLEAN")
-            ${property.name}?: boolean | boolean[];
-#else
-            ${property.name}?: unknown | unknown[];
-#end
+            ${property.name}?: ${property.dataTypeTypescript} | ${property.dataTypeTypescript}[];
 #end
         };
         notEquals?: {
 #foreach ($property in $properties)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-            ${property.name}?: string | string[];
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-            ${property.name}?: number | number[];
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-            ${property.name}?: Date | Date[];
-#elseif($property.dataType == "BOOLEAN")
-            ${property.name}?: boolean | boolean[];
-#else
-            ${property.name}?: unknown | unknown[];
-#end
+            ${property.name}?: ${property.dataTypeTypescript} | ${property.dataTypeTypescript}[];
 #end
         };
         contains?: {
 #foreach ($property in $properties)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-            ${property.name}?: string;
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-            ${property.name}?: number;
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-            ${property.name}?: Date;
-#elseif($property.dataType == "BOOLEAN")
-            ${property.name}?: boolean;
-#else
-            ${property.name}?: unknown;
-#end
+            ${property.name}?: ${property.dataTypeTypescript};
 #end
         };
         greaterThan?: {
 #foreach ($property in $properties)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-            ${property.name}?: string;
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-            ${property.name}?: number;
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-            ${property.name}?: Date;
-#elseif($property.dataType == "BOOLEAN")
-            ${property.name}?: boolean;
-#else
-            ${property.name}?: unknown;
-#end
+            ${property.name}?: ${property.dataTypeTypescript};
 #end
         };
         greaterThanOrEqual?: {
 #foreach ($property in $properties)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-            ${property.name}?: string;
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-            ${property.name}?: number;
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-            ${property.name}?: Date;
-#elseif($property.dataType == "BOOLEAN")
-            ${property.name}?: boolean;
-#else
-            ${property.name}?: unknown;
-#end
+            ${property.name}?: ${property.dataTypeTypescript};
 #end
         };
         lessThan?: {
 #foreach ($property in $properties)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-            ${property.name}?: string;
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-            ${property.name}?: number;
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-            ${property.name}?: Date;
-#elseif($property.dataType == "BOOLEAN")
-            ${property.name}?: boolean;
-#else
-            ${property.name}?: unknown;
-#end
+            ${property.name}?: ${property.dataTypeTypescript};
 #end
         };
         lessThanOrEqual?: {
 #foreach ($property in $properties)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-            ${property.name}?: string;
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-            ${property.name}?: number;
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-            ${property.name}?: Date;
-#elseif($property.dataType == "BOOLEAN")
-            ${property.name}?: boolean;
-#else
-            ${property.name}?: unknown;
-#end
+            ${property.name}?: ${property.dataTypeTypescript};
 #end
         };
     },
@@ -249,17 +115,7 @@ interface ${name}EntityEvent {
         column: string;
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-        value: string;
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-        value: number;
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-        value: Date;
-#elseif($property.dataType == "BOOLEAN")
-        value: boolean;
-#else
-        value: unknown;
-#end
+        value: ${property.dataTypeTypescript};
 #end
 #end
     }
@@ -344,17 +200,7 @@ export class ${name}Repository {
 
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-    public findById(id: string): ${name}Entity | undefined {
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-    public findById(id: number): ${name}Entity | undefined {
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-    public findById(id: Date): ${name}Entity | undefined {
-#elseif($property.dataType == "BOOLEAN")
-    public findById(id: boolean): ${name}Entity | undefined {
-#else
-    public findById(id: unknown): ${name}Entity | undefined {
-#end
+    public findById(id: ${property.dataTypeTypescript}): ${name}Entity | undefined {
 #end
 #end
 #if($roleRead && $roleRead != "") 
@@ -396,17 +242,7 @@ export class ${name}Repository {
 
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-    public create(entity: ${name}CreateEntity): string {
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-    public create(entity: ${name}CreateEntity): number {
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-    public create(entity: ${name}CreateEntity): Date {
-#elseif($property.dataType == "BOOLEAN")
-    public create(entity: ${name}CreateEntity): boolean {
-#else
-    public create(entity: ${name}CreateEntity): unknown {
-#end
+    public create(entity: ${name}CreateEntity): ${property.dataTypeTypescript} {
 #end
 #end
 #if($roleWrite && $roleWrite != "") 
@@ -426,6 +262,7 @@ export class ${name}Repository {
 #end
 #foreach ($property in $properties)
 #if($property.isCalculatedProperty)
+        // @ts-ignore
         (entity as ${name}Entity).${property.name} = ${property.calculatedPropertyExpression};
 #end
 #end
@@ -492,6 +329,7 @@ export class ${name}Repository {
 #end
 #foreach ($property in $properties)
 #if($property.isCalculatedProperty)
+        // @ts-ignore
         (entity as ${name}Entity).${property.name} = ${property.calculatedPropertyExpression};
 #end
 #end
@@ -514,17 +352,7 @@ export class ${name}Repository {
 
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-    public upsert(entity: ${name}CreateEntity | ${name}UpdateEntity): string {
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-    public upsert(entity: ${name}CreateEntity | ${name}UpdateEntity): number {
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-    public upsert(entity: ${name}CreateEntity | ${name}UpdateEntity): Date {
-#elseif($property.dataType == "BOOLEAN")
-    public upsert(entity: ${name}CreateEntity | ${name}UpdateEntity): boolean {
-#else
-    public upsert(entity: ${name}CreateEntity | ${name}UpdateEntity): unknown {
-#end
+    public upsert(entity: ${name}CreateEntity | ${name}UpdateEntity): ${property.dataTypeTypescript} {
 #end
 #end
         const id = (entity as ${name}UpdateEntity).#foreach ($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end;
@@ -543,17 +371,7 @@ export class ${name}Repository {
 
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-    public deleteById(id: string): void {
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-    public deleteById(id: number): void {
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-    public deleteById(id: Date): void {
-#elseif($property.dataType == "BOOLEAN")
-    public deleteById(id: boolean): void {
-#else
-    public deleteById(id: unknown): void {
-#end
+    public deleteById(id: ${property.dataTypeTypescript}): void {
 #end
 #end
         const entity = this.dao.find(id);
@@ -584,17 +402,7 @@ export class ${name}Repository {
 
 #foreach ($property in $properties)
 #if($property.relationshipType == "COMPOSITION")
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
-    public count(${property.name}: string): number {
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
-    public count(${property.name}: number): number {
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
-    public count(${property.name}: Date): number {
-#elseif($property.dataType == "BOOLEAN")
-    public count(${property.name}: boolean): number {
-#else
-    public count(${property.name}: unknown): number {
-#end
+    public count(${property.name}: ${property.dataTypeTypescript}): number {
 #end
 #end
         const resultSet = query.execute('SELECT COUNT(*) AS COUNT FROM "${tablePrefix}${dataName}" WHERE #foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")"${property.dataName}"#end#end = ?', [#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end]);
@@ -628,7 +436,6 @@ export class ${name}Repository {
         return this.dao.count();
 #end
     }
-
 
     private async triggerEvent(data: ${name}EntityEvent) {
         const triggerExtensions = await extensions.loadExtensionModules("${projectName}/${perspectiveName}/${name}", ["trigger"]);
