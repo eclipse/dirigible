@@ -19,6 +19,7 @@
 		<fd-toolbar has-title="true">
 			<fd-toolbar-title>Items ({{dataCount}})</fd-toolbar-title>
 			<fd-button ng-repeat="action in pageActions" compact="true" dg-type="transparent" dg-label="{{action.label}}" ng-click="triggerPageAction(action.id)"></fd-button>
+			<fd-button compact="true" dg-type="transparent" dg-label="Filter" ng-click="openFilter()"></fd-button>
 			<fd-toolbar-spacer></fd-toolbar-spacer>
 			<fd-button compact="true" dg-type="transparent" dg-label="Create" ng-click="createEntity()"></fd-button>
 		</fd-toolbar>

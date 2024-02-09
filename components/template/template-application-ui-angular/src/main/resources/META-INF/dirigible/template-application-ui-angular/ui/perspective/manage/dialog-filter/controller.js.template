@@ -1,0 +1,94 @@
+#set($dollar = '$')
+angular.module('page', ["ideUI", "ideView", "entityApi"])
+	.config(["messageHubProvider", function (messageHubProvider) {
+		messageHubProvider.eventIdPrefix = '${projectName}.${perspectiveName}.${name}';
+	}])
+	.config(["entityApiProvider", function (entityApiProvider) {
+		entityApiProvider.baseUrl = "/services/ts/${projectName}/gen/api/${perspectiveName}/${name}Service.ts";
+	}])
+	.controller('PageController', ['$scope', 'messageHub', 'entityApi', function ($scope, messageHub, entityApi) {
+
+		$scope.entity = {};
+		$scope.formErrors = {};
+
+		if (window != null && window.frameElement != null && window.frameElement.hasAttribute("data-parameters")) {
+			let dataParameters = window.frameElement.getAttribute("data-parameters");
+			if (dataParameters) {
+				let params = JSON.parse(dataParameters);
+#foreach ($property in $properties)
+#if($property.isDateType)
+				if (params.entity.${property.name}) {
+					params.entity.${property.name} = new Date(params.entity.${property.name});
+				}
+#end
+#end
+				$scope.selectedMainEntityKey = params.selectedMainEntityKey;
+				$scope.selectedMainEntityId = params.selectedMainEntityId;
+#foreach ($property in $properties)
+#if($property.widgetType == "DROPDOWN")
+				$scope.options${property.name} = params.options${property.name};
+#end
+#end
+			}
+		}
+
+		$scope.isValid = function (isValid, property) {
+			${dollar}scope.formErrors[property] = !isValid ? true : undefined;
+			for (let next in ${dollar}scope.formErrors) {
+				if (${dollar}scope.formErrors[next] === true) {
+					${dollar}scope.isFormValid = false;
+					return;
+				}
+			}
+			${dollar}scope.isFormValid = true;
+		};
+
+		$scope.filter = function () {
+			let entity = $scope.entity;
+			const filter = {
+				$filter: {
+					equals: {
+					},
+					notEquals: {
+					},
+					contains: {
+					},
+					greaterThan: {
+					},
+					greaterThanOrEqual: {
+					},
+					lessThan: {
+					},
+					lessThanOrEqual: {
+					}
+				},
+			};
+#foreach ($property in $properties)
+#if($property.dataTypeTypescript == 'number')
+			if (entity.${property.name}) {
+				filter.${dollar}filter.equals.${property.name} = entity.${property.name};
+			}
+#elseif($property.dataTypeTypescript == 'string')
+			if (entity.${property.name}) {
+				filter.${dollar}filter.contains.${property.name} = entity.${property.name};
+			}
+#end
+#end
+			messageHub.postMessage("entitySearch", filter);
+			$scope.cancel();
+		};
+
+		$scope.resetFilter = function () {
+			$scope.entity = {};
+			$scope.filter();
+		};
+
+		$scope.cancel = function () {
+			messageHub.closeDialogWindow("${name}-filter");
+		};
+
+		$scope.clearErrorMessage = function () {
+			$scope.errorMessage = null;
+		};
+
+	}]);

@@ -52,6 +52,14 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 		messageHub.onDidReceiveMessage("entityUpdated", function (msg) {
 			$scope.loadPage($scope.dataPage);
 		});
+
+		messageHub.onDidReceiveMessage("entitySearch", function (msg) {
+			resetPagination();
+			const filter = msg.data;
+			filter.${dollar}offset = $scope.dataCount;
+			filter.${dollar}limit = $scope.dataLimit;
+			${dollar}scope.search(filter);
+		});
 		//-----------------Events-------------------//
 
 		$scope.loadPage = function (pageNumber) {
@@ -86,6 +94,33 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				});
 			});
 		};
+		$scope.search = function (filter) {
+			$scope.filter = filter;
+			entityApi.search(filter).then(function (response) {
+				if (response.status != 200) {
+					messageHub.showAlertError("${name}", `Unable to filter ${name}: '${response.message}'`);
+					return;
+				}
+				if (response.status != 200) {
+					messageHub.showAlertError("${name}", `Unable to list ${name}: '${response.message}'`);
+					return;
+				}
+#if($hasDates)
+
+				response.data.forEach(e => {
+#foreach ($property in $properties)
+#if($property.isDateType)
+					if (e.${property.name}) {
+						e.${property.name} = new Date(e.${property.name});
+					}
+#end
+#end
+				});
+
+#end
+				$scope.data = response.data;
+			});
+		};
 		$scope.loadPage($scope.dataPage);
 
 		$scope.selectEntity = function (entity) {
@@ -97,6 +132,18 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			messageHub.showDialogWindow("${name}-details", {
 				action: "select",
 				entity: entity,
+#if($hasDropdowns)
+#foreach ($property in $properties)
+#if($property.widgetType == "DROPDOWN")
+				options${property.name}: $scope.options${property.name},
+#end
+#end
+#end
+			});
+		};
+
+		$scope.openFilter = function (entity) {
+			messageHub.showDialogWindow("${name}-filter", {
 #if($hasDropdowns)
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN")

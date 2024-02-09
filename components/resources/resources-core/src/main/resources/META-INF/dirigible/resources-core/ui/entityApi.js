@@ -52,6 +52,18 @@ angular.module('entityApi', [])
                     });
             }.bind(this);
 
+            const search = function (entity) {
+                const url = `${this.baseUrl}/search`;
+                const body = JSON.stringify(entity);
+                return $http.post(url, body)
+                    .then(function (response) {
+                        return { status: response.status, data: response.data };
+                    }, function (response) {
+                        console.error('Entity service:', response);
+                        return { status: response.status, message: response.data ? response.data.message : '' };
+                    });
+            }.bind(this);
+
             const create = function (entity) {
                 const url = this.baseUrl;
                 const body = JSON.stringify(entity);
@@ -91,6 +103,7 @@ angular.module('entityApi', [])
                 count: count,
                 list: list,
                 filter: filter,
+                search: search,
                 create: create,
                 update: update,
                 'delete': deleteEntity
