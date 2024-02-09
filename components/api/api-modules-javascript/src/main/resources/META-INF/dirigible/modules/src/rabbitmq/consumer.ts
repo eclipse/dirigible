@@ -16,10 +16,12 @@
 
 const RabbitMQFacade = Java.type("org.eclipse.dirigible.components.api.rabbitmq.RabbitMQFacade");
 
-export function startListening(queue, handler){
-	return RabbitMQFacade.startListening(queue, handler);
-}
+export class Consumers{
+	public static startListening(queue, handler){
+		return RabbitMQFacade.startListening(queue, handler);
+	}
 
-export function stopListening(queue, handler){
-	return RabbitMQFacade.stopListening(queue, handler);
+	public static stopListening(queue, handler){
+		return RabbitMQFacade.stopListening(queue, handler);
+	}
 }
