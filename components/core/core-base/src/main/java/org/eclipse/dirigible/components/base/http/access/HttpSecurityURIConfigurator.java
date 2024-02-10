@@ -10,6 +10,7 @@
  */
 package org.eclipse.dirigible.components.base.http.access;
 
+import org.eclipse.dirigible.components.base.http.roles.Roles;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 /**
@@ -66,9 +67,9 @@ public class HttpSecurityURIConfigurator {
              .requestMatchers(AUTHENTICATED_PATTERNS)
              .authenticated()
 
-             // "Developer" role required
+             // "DEVELOPER" role required
              .requestMatchers(DEVELOPER_PATTERNS)
-             .hasRole("Developer")
+             .hasRole(Roles.DEVELOPER.name())
 
              // Deny all other requests
              .anyRequest()
