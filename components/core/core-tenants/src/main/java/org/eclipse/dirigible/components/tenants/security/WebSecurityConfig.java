@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
+ */
 package org.eclipse.dirigible.components.tenants.security;
 
 import org.eclipse.dirigible.components.base.http.access.HttpSecurityURIConfigurator;
@@ -16,16 +26,33 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * The Class WebSecurityConfig.
+ */
 @Configuration
 @EnableWebSecurity
 @ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
 public class WebSecurityConfig {
+
+    /** The tenant repository. */
     private final TenantRepository tenantRepository;
 
+    /**
+     * Instantiates a new web security config.
+     *
+     * @param tenantRepository the tenant repository
+     */
     public WebSecurityConfig(TenantRepository tenantRepository) {
         this.tenantRepository = tenantRepository;
     }
 
+    /**
+     * Filter chain.
+     *
+     * @param http the http
+     * @return the security filter chain
+     * @throws Exception the exception
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // @formatter:off
@@ -46,6 +73,11 @@ public class WebSecurityConfig {
         return http.build();
     }
 
+    /**
+     * Password encoder.
+     *
+     * @return the b crypt password encoder
+     */
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

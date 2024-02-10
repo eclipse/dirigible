@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
+ */
 package org.eclipse.dirigible.components.tenants.security;
 
 import static org.eclipse.dirigible.components.base.http.roles.Roles.ADMINISTRATOR;
@@ -14,15 +24,32 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * The Class CustomUserDetailsService.
+ */
 @Service
 @ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
 public class CustomUserDetailsService implements UserDetailsService {
+
+    /** The user repository. */
     private final UserRepository userRepository;
 
+    /**
+     * Instantiates a new custom user details service.
+     *
+     * @param userRepository the user repository
+     */
     public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Load user by username.
+     *
+     * @param email the email
+     * @return the user details
+     * @throws UsernameNotFoundException the username not found exception
+     */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         var tenant = TenantContext.getCurrentTenant();
@@ -34,6 +61,13 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
     }
 
+    /**
+     * Load user.
+     *
+     * @param email the email
+     * @param tenant the tenant
+     * @return the user details
+     */
     private UserDetails loadUser(String email, String tenant) {
         var user = userRepository.findUser(email, tenant)
                                  .orElseThrow(() -> new UsernameNotFoundException("'" + email + "' / '" + tenant + "' was not found."));
@@ -46,6 +80,12 @@ public class CustomUserDetailsService implements UserDetailsService {
                 auths);
     }
 
+    /**
+     * Load general admin.
+     *
+     * @param email the email
+     * @return the user details
+     */
     private UserDetails loadGeneralAdmin(String email) {
         var admin = userRepository.findGeneralAdmin(email)
                                   .orElseThrow(() -> new UsernameNotFoundException("'" + email + "' was not found as a general admin."));

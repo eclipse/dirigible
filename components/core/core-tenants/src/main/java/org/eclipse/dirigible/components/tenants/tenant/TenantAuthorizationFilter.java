@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
+ */
 package org.eclipse.dirigible.components.tenants.tenant;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -15,9 +25,23 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * The Class TenantAuthorizationFilter.
+ */
 public class TenantAuthorizationFilter extends OncePerRequestFilter {
+
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = Logger.getLogger(TenantAuthorizationFilter.class.getName());
 
+    /**
+     * Do filter internal.
+     *
+     * @param request the request
+     * @param response the response
+     * @param chain the chain
+     * @throws ServletException the servlet exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
@@ -36,6 +60,12 @@ public class TenantAuthorizationFilter extends OncePerRequestFilter {
         }
     }
 
+    /**
+     * Should not filter.
+     *
+     * @param request the request
+     * @return true, if successful
+     */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         return request.getRequestURI()
