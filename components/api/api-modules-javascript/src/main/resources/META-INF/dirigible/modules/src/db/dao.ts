@@ -113,7 +113,7 @@ export function DAO(orm, logCtxName, dataSourceName) {
 					if (propertiesKeys.includes(e.name) && !addedPropertiesKeys.includes(e.name)) {
 						_parameterBindings.push({
 							type: e.type,
-							value: parseValue(e.type, parameterBindings.$filter.contains[e.name])
+							value: `%${parameterBindings.$filter.contains[e.name]}%`
 						});
 						addedPropertiesKeys.push(e.name);
 					}
@@ -835,17 +835,6 @@ DAO.prototype.list = function (settings) {
 
 	if (settings.$select !== undefined && expand !== undefined) {
 		settings.$select.push(this.orm.getPrimaryKey().name);
-	}
-
-	//simplistic filtering of (only) string properties with like
-	if (settings?.$filter?.contains) {
-		const containsPropertiesKeys = Object.keys(settings.$filter.contains);
-		containsPropertiesKeys.forEach(e => {
-			const prop = this.ormstatements.orm.getProperty(e);
-			if (prop?.type.toUpperCase() === 'VARCHAR' || prop?.type.toUpperCase() === 'CHAR') {
-				settings.$filter.contains[e] = `%${settings.$filter.contains[e]}%`;
-			}
-		})
 	}
 
 	var parametericStatement = this.ormstatements.list.apply(this.ormstatements, [settings]);
