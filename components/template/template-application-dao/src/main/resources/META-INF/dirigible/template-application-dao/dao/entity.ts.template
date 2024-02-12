@@ -402,26 +402,30 @@ export class ${name}Repository {
 
 #foreach ($property in $properties)
 #if($property.relationshipType == "COMPOSITION")
-    public count(${property.name}: ${property.dataTypeTypescript}): number {
+    public count(${property.name}: ${property.dataTypeTypescript}, options): number {
 #end
 #end
-        const resultSet = query.execute('SELECT COUNT(*) AS COUNT FROM "${tablePrefix}${dataName}" WHERE #foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")"${property.dataName}"#end#end = ?', [#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end]);
-        if (resultSet !== null && resultSet[0] !== null) {
-            if (resultSet[0].COUNT !== undefined && resultSet[0].COUNT !== null) {
-                return resultSet[0].COUNT;
-            } else if (resultSet[0].count !== undefined && resultSet[0].count !== null) {
-                return resultSet[0].count;
-            }
+        if (!options.$filter) {
+            options.$filter = {};
         }
-        return 0;
+        if (!options.$filter.equals) {
+            options.$filter.equals = {}
+        }
+
+#foreach ($property in $properties)
+#if($property.relationshipType == "COMPOSITION")
+        options.$filter.equals.${property.name} = ${property.name};
+#end
+#end
+        return this.dao.count(options);;
     }
 #else
-    public count(): number {
-        return this.dao.count();
+    public count(options?: ${name}EntityOptions): number {
+        return this.dao.count(options);
     }
 #end
 
-    public customDataCount(): number {
+    public customDataCount(options?: ${name}EntityOptions): number {
 #if($dataCount)
         const resultSet = query.execute('${dataCount}');
         if (resultSet !== null && resultSet[0] !== null) {
@@ -433,7 +437,7 @@ export class ${name}Repository {
         }
         return 0;
 #else
-        return this.dao.count();
+        return this.dao.count(options);
 #end
     }
 

@@ -356,7 +356,7 @@ DAO.prototype.insert = function (_entity) {
 			}
 
 			const updatedRecordCount = this.execute(parametericStatement, dbEntity);
-			
+
 			if (!this.orm.isAutoIncrementPrimaryKey() && isNotEmptyArray(updatedRecordCount)) {
 				const id = updatedRecordCount[0];
 				dbEntity[this.orm.getPrimaryKey().name] = id;
@@ -423,7 +423,7 @@ DAO.prototype.insert = function (_entity) {
 		return ids;
 };
 
-function isNotEmptyArray(array){
+function isNotEmptyArray(array) {
 	return Array.isArray(array) && array.length > 0;
 }
 
@@ -747,9 +747,10 @@ DAO.prototype.find = function (id, expand, select) {
 	}
 };
 
-DAO.prototype.count = function () {
+DAO.prototype.count = function (settings?) {
+	settings = settings || {};
 
-	const parametericStatement = this.ormstatements.count.apply(this.ormstatements);
+	const parametericStatement = this.ormstatements.count.apply(this.ormstatements, [settings]);
 	this.$log.trace('Counting ' + this.orm.table + ' entities');
 
 	let count = 0;

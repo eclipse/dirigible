@@ -65,11 +65,31 @@ class ${name}Service {
             this.handleError(error);
         }
     }
+
+    @Post("/count/:${masterEntityId}")
+    public countWithFilter(filter: any, ctx: any) {
+        try {
+            let ${masterEntityId} = parseInt(ctx.pathParameters.${masterEntityId});
+            ${masterEntityId} = isNaN(${masterEntityId}) ? ctx.pathParameters.${masterEntityId} : ${masterEntityId};
+            return this.repository.count(${masterEntityId}, filter);
+        } catch (error: any) {
+            this.handleError(error);
+        }
+    }
 #else
     @Get("/count")
     public count() {
         try {
             return this.repository.count();
+        } catch (error: any) {
+            this.handleError(error);
+        }
+    }
+
+    @Post("/count")
+    public countWithFilter(filter: any) {
+        try {
+            return this.repository.count(filter);
         } catch (error: any) {
             this.handleError(error);
         }
