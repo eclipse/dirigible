@@ -187,19 +187,23 @@ exports.process = function (model, parameters) {
             })
 
             if (p.widgetType == "DROPDOWN") {
+                let projectNameString = "\"/services/ts/" +`${parameters.projectName}` + "/gen/api/" + `${p.relationshipEntityPerspectiveName}` + "/" + `${p.relationshipEntityName}` + "Service.ts\"";
+
                 e.hasDropdowns = true;
 
                 if (e.referencedProjections.length !== 0) {
                     let foundReferenceProjection = false;
                     e.referencedProjections.forEach(referencedProjection => {
                         if (referencedProjection.name === p.relationshipEntityName && !foundReferenceProjection) {
-                            p.widgetDropdownUrl = referencedProjection.project;
+                            p.widgetDropdownUrl = "\"/services/ts/" + `${referencedProjection.project}` + "/gen/api/" + `${p.relationshipEntityPerspectiveName}` + "/" + `${p.relationshipEntityName}` + "Service.ts\"";
                             foundReferenceProjection = true;
                         }
                     });
                     if (!foundReferenceProjection) {
-                        return;
+                        p.widgetDropdownUrl = projectNameString;
                     }
+                }else{
+                    p.widgetDropdownUrl = projectNameString
                 }
             }
         });
