@@ -49,8 +49,10 @@ public class DataTypeUtils {
         DATABASE_TYPE_TO_DATA_TYPE.put(Types.NVARCHAR, DataType.NVARCHAR);
         DATABASE_TYPE_TO_DATA_TYPE.put(Types.CHAR, DataType.CHAR);
         DATABASE_TYPE_TO_DATA_TYPE.put(Types.TIMESTAMP, DataType.TIMESTAMP);
+        DATABASE_TYPE_TO_DATA_TYPE.put(Types.TIMESTAMP, DataType.DATETIME);
         DATABASE_TYPE_TO_DATA_TYPE.put(Types.TIME, DataType.TIME);
         DATABASE_TYPE_TO_DATA_TYPE.put(Types.INTEGER, DataType.INTEGER);
+        DATABASE_TYPE_TO_DATA_TYPE.put(Types.INTEGER, DataType.INT);
         DATABASE_TYPE_TO_DATA_TYPE.put(Types.BIGINT, DataType.BIGINT);
         DATABASE_TYPE_TO_DATA_TYPE.put(Types.SMALLINT, DataType.SMALLINT);
         DATABASE_TYPE_TO_DATA_TYPE.put(Types.REAL, DataType.REAL);
@@ -332,6 +334,8 @@ public class DataTypeUtils {
      */
     public static boolean isInteger(String dataType) {
         return DataType.INTEGER.toString()
+                               .equals(dataType)
+                || DataType.INT.toString()
                                .equals(dataType);
     }
 
@@ -355,6 +359,17 @@ public class DataTypeUtils {
     public static boolean isTimestamp(String dataType) {
         return DataType.TIMESTAMP.toString()
                                  .equals(dataType);
+    }
+
+    /**
+     * Checks if is datetime.
+     *
+     * @param dataType the data type
+     * @return true, if is datetime
+     */
+    public static boolean isDateTime(String dataType) {
+        return DataType.DATETIME.toString()
+                                .equals(dataType);
     }
 
     /**
@@ -399,6 +414,17 @@ public class DataTypeUtils {
     public static boolean isVarchar(String dataType) {
         return DataType.VARCHAR.toString()
                                .equals(dataType);
+    }
+
+    /**
+     * Checks if is text.
+     *
+     * @param dataType the data type
+     * @return true, if is text
+     */
+    public static boolean isText(String dataType) {
+        return DataType.TEXT.toString()
+                            .equals(dataType);
     }
 
     /**

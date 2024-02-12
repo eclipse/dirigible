@@ -18,6 +18,9 @@ public enum DataType {
     /** The varchar. */
     VARCHAR("VARCHAR"),
 
+    /** The text. */
+    TEXT("TEXT"),
+
     /** The char. */
     CHAR("CHAR"),
 
@@ -30,11 +33,17 @@ public enum DataType {
     /** The time. */
     TIME("TIME"),
 
+    /** The datetime. */
+    DATETIME("DATETIME"),
+
     /** The timestamp. */
     TIMESTAMP("TIMESTAMP"),
 
     /** The integer. */
     INTEGER("INTEGER"),
+
+    /** The int. */
+    INT("INT"),
 
     /** The tinyint. */
     TINYINT("TINYINT"),
@@ -127,7 +136,7 @@ public enum DataType {
     NUMERIC("NUMERIC");
 
     /** The name. */
-    private String name;
+    private final String name;
 
     /**
      * Instantiates a new data type.
@@ -152,6 +161,7 @@ public enum DataType {
      *
      * @return the string
      */
+    @Override
     public String toString() {
         return name;
     }
@@ -171,6 +181,5 @@ public enum DataType {
         }
         throw new IllegalArgumentException("DataType not found: " + name);
     }
-
 
 }
