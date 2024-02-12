@@ -23,12 +23,6 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>com.codeborne</groupId>
-            <artifactId>selenide-core</artifactId>
-            <version>7.0.6</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>oauth2-oidc-sdk</artifactId>
             <version>9.43.3</version>
@@ -43,6 +37,12 @@
             <artifactId>testng</artifactId>
             <version>RELEASE</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.codeborne</groupId>
+            <artifactId>selenide</artifactId>
+            <version>7.0.4</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
