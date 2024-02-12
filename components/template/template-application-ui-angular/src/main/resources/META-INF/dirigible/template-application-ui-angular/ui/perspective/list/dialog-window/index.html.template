@@ -33,7 +33,7 @@
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
-                        <div class="fd-col fd-col-md--8">
+                        <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--8 #end">
 	                        <fd-combobox-input id="id${property.name}"
 	                            name="${property.name}"
 	                            ng-required="true"
@@ -49,7 +49,7 @@
                     	<div class="fd-col fd-col-md--2">
                         	<fd-checkbox id="id${property.name}" compact="false" ng-required="${property.dataNotNull}" ng-model="entity.${property.name}"></fd-checkbox>
                         </div>
-                        <div class="fd-col fd-col-md--8">
+                        <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--8 #end">
                         	<fd-checkbox-label for="id${property.name}" dg-required="${property.dataNotNull}">${property.widgetLabel}</fd-checkbox-label>
                         </div>
                     </fd-form-item>
@@ -58,7 +58,7 @@
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
-                        <div class="fd-col fd-col-md--2">
+                        <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--4 #end">
 	                        <fd-input id="id${property.name}"
 	                            name="${property.name}"
 	                            ng-required="${property.dataNotNull}"
@@ -74,7 +74,7 @@
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
-                        <div class="fd-col fd-col-md--4">
+                        <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--4 #end">
 	                        <fd-input id="id${property.name}"
 	                            name="${property.name}"
 	                            ng-required="${property.dataNotNull}"
@@ -91,7 +91,7 @@
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
-                        <div class="fd-col fd-col-md--2">
+                        <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--2 #end">
 	                        <fd-input id="id${property.name}"
 	                            name="${property.name}"
 	                            ng-required="${property.dataNotNull}"
@@ -106,7 +106,7 @@
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
-                        <div class="fd-col fd-col-md--2">
+                        <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--2 #end">
 	                        <fd-input id="id${property.name}"
 	                            name="${property.name}"
 	                            ng-required="${property.dataNotNull}"
@@ -121,7 +121,7 @@
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
-                        <div class="fd-col fd-col-md--2">
+                        <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--2 #end">
 	                        <fd-input id="id${property.name}"
 	                            name="${property.name}"
 	                            ng-required="${property.dataNotNull}"
@@ -136,7 +136,7 @@
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
-                        <div class="fd-col fd-col-md--2">
+                        <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--2 #end">
 	                        <fd-input id="id${property.name}"
 	                            name="${property.name}"
 	                            ng-required="${property.dataNotNull}"
@@ -151,7 +151,7 @@
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
-                        <div class="fd-col fd-col-md--2">
+                        <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--2 #end">
 	                        <fd-input id="id${property.name}"
 	                            name="${property.name}"
 	                            ng-required="${property.dataNotNull}"
@@ -166,7 +166,7 @@
 						<div class="fd-col fd-col-md--2">
 							<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
 						</div>
-						<div class="fd-col fd-col-md--8">
+						<div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--8 #end">
 							<fd-textarea id="id${property.name}"
 								name="${property.name}"
 								ng-required="${property.dataNotNull}"
@@ -181,7 +181,7 @@
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
-                        <div class="fd-col fd-col-md--4">
+                        <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--4 #end">
 	                        <fd-input id="id${property.name}"
 	                            name="${property.name}"
 	                            ng-required="${property.dataNotNull}"
@@ -197,7 +197,7 @@
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
-                        <div class="fd-col fd-col-md--8">
+                        <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--8 #end">
 	                        <fd-input id="id${property.name}"
 	                            name="${property.name}"
 	                            ng-required="${property.dataNotNull}"
@@ -213,7 +213,7 @@
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
-                        <div class="fd-col fd-col-md--4">
+                        <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--4 #end">
 	                        <fd-input id="id${property.name}"
 	                            name="${property.name}"
 	                            ng-required="${property.dataNotNull}"
@@ -229,7 +229,7 @@
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
-                        <div class="fd-col fd-col-md--8">
+                        <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--8 #end">
 	                        <fd-input id="id${property.name}"
 	                            name="${property.name}"
 	                            ng-required="${property.dataNotNull}"
