@@ -44,7 +44,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-tests-framework</artifactId>
+			<artifactId>dirigible-tests</artifactId>
 			<version>10.0.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>

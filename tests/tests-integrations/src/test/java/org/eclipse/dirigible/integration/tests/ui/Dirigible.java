@@ -10,9 +10,7 @@
  */
 package org.eclipse.dirigible.integration.tests.ui;
 
-import org.eclipse.dirigible.tests.framework.Browser;
-import org.eclipse.dirigible.tests.framework.HtmlAttribute;
-import org.eclipse.dirigible.tests.framework.HtmlElementType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.codeborne.selenide.SelenideElement;
@@ -46,7 +44,7 @@ public class Dirigible {
     }
 
     public void login() {
-        SelenideElement title = browser.waitUntilExist(HtmlElementType.TITLE);
+        SelenideElement title = browser.waitUntilExist(HtmlElementTypе.TITLE);
         String pageTitle = title.getOwnText();
         if (!LOGIN_PAGE_TITLE.equals(pageTitle)) {
             LOGGER.info("Skipping login");
