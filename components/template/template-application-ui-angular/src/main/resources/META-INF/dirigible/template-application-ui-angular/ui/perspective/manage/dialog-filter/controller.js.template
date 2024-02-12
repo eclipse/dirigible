@@ -22,6 +22,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				}
 #end
 #end
+				$scope.entity = params.entity ?? {};
 				$scope.selectedMainEntityKey = params.selectedMainEntityKey;
 				$scope.selectedMainEntityId = params.selectedMainEntityId;
 #foreach ($property in $properties)
@@ -74,7 +75,10 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			}
 #end
 #end
-			messageHub.postMessage("entitySearch", filter);
+			messageHub.postMessage("entitySearch", {
+				entity: entity,
+				filter: filter
+			});
 			$scope.cancel();
 		};
 

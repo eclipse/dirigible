@@ -405,6 +405,9 @@ export class ${name}Repository {
     public count(${property.name}: ${property.dataTypeTypescript}, options): number {
 #end
 #end
+        if (!options) {
+            options = {};
+        }
         if (!options.$filter) {
             options.$filter = {};
         }
@@ -417,7 +420,7 @@ export class ${name}Repository {
         options.$filter.equals.${property.name} = ${property.name};
 #end
 #end
-        return this.dao.count(options);;
+        return this.dao.count(options);
     }
 #else
     public count(options?: ${name}EntityOptions): number {

@@ -46,21 +46,25 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 
 		//-----------------Events-------------------//
 		messageHub.onDidReceiveMessage("entityCreated", function (msg) {
-			$scope.loadPage($scope.dataPage);
+			$scope.loadPage($scope.dataPage, $scope.filter);
 		});
 
 		messageHub.onDidReceiveMessage("entityUpdated", function (msg) {
-			$scope.loadPage($scope.dataPage);
+			$scope.loadPage($scope.dataPage, $scope.filter);
 		});
 
 		messageHub.onDidReceiveMessage("entitySearch", function (msg) {
 			resetPagination();
-			$scope.filter = msg.data;
+			$scope.filter = msg.data.filter;
+			$scope.filterEntity = msg.data.entity;
 			$scope.loadPage($scope.dataPage, $scope.filter);
 		});
 		//-----------------Events-------------------//
 
 		$scope.loadPage = function (pageNumber, filter) {
+			if (!filter && $scope.filter) {
+				filter = $scope.filter;
+			}
 			$scope.dataPage = pageNumber;
 			entityApi.count(filter).then(function (response) {
 				if (response.status != 200) {
@@ -72,6 +76,8 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				let limit = $scope.dataLimit;
 				let request;
 				if (filter) {
+					filter.$offset = offset;
+					filter.$limit = limit;
 					request = entityApi.search(filter);
 				} else {
 					request = entityApi.list(offset, limit);
@@ -98,7 +104,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				});
 			});
 		};
-		$scope.loadPage($scope.dataPage);
+		$scope.loadPage($scope.dataPage, $scope.filter);
 
 		$scope.selectEntity = function (entity) {
 			$scope.selectedEntity = entity;
@@ -121,6 +127,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 
 		$scope.openFilter = function (entity) {
 			messageHub.showDialogWindow("${name}-filter", {
+				entity: $scope.filterEntity,
 #if($hasDropdowns)
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN")
@@ -182,7 +189,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 							messageHub.showAlertError("${name}", `Unable to delete ${name}: '${response.message}'`);
 							return;
 						}
-						$scope.loadPage($scope.dataPage);
+						$scope.loadPage($scope.dataPage, $scope.filter);
 						messageHub.postMessage("clearDetails");
 					});
 				}
