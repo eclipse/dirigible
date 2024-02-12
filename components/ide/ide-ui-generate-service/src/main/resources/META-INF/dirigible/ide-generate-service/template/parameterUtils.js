@@ -47,6 +47,7 @@ exports.process = function (model, parameters) {
             p.isCalculatedProperty = p.isCalculatedProperty === "true";
             p.widgetIsMajor = p.widgetIsMajor === "true";
             p.widgetLabel = p.widgetLabel ? p.widgetLabel : p.name;
+            p.widgetDropdownUrl = "";
 
             switch (p.dataType.toUpperCase()) {
                 case "TINYINT":
@@ -145,9 +146,6 @@ exports.process = function (model, parameters) {
                 // e.masterEntityPrimaryKey = model.entities.filter(m => m.name === e.masterEntity)[0].properties.filter(k => k.dataPrimaryKey)[0].name;
             }
 
-            if (p.widgetType == "DROPDOWN") {
-                e.hasDropdowns = true;
-            }
             if (p.dataTypeTypescript === "string") {
                 // TODO minLength is not available in the model and can't be determined
                 p.minLength = 0;
@@ -178,8 +176,8 @@ exports.process = function (model, parameters) {
             }
 
             model.entities.forEach(ep => {
-                if(p.relationshipEntityName === ep.name){
-                    if(ep.projectionReferencedModel) {
+                if (p.relationshipEntityName === ep.name) {
+                    if (ep.projectionReferencedModel) {
                         e.referencedProjections.push({
                             name: ep.name,
                             project: ep.projectionReferencedModel.split('/')[2]
@@ -187,6 +185,23 @@ exports.process = function (model, parameters) {
                     }
                 }
             })
+
+            if (p.widgetType == "DROPDOWN") {
+                e.hasDropdowns = true;
+
+                if (e.referencedProjections.length !== 0) {
+                    let foundReferenceProjection = false;
+                    e.referencedProjections.forEach(referencedProjection => {
+                        if (referencedProjection.name === p.relationshipEntityName && !foundReferenceProjection) {
+                            p.widgetDropdownUrl = referencedProjection.project;
+                            foundReferenceProjection = true;
+                        }
+                    });
+                    if (!foundReferenceProjection) {
+                        return;
+                    }
+                }
+            }
         });
     });
 

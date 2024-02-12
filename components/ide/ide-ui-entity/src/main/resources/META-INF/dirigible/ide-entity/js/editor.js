@@ -295,7 +295,6 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				cell.value.dataName = msg.data.dataName;
 				cell.value.dataCount = msg.data.dataCount;
 				cell.value.dataQuery = msg.data.dataQuery;
-				cell.value.dataSource = msg.data.dataSource;
 				cell.value.disableGeneration = msg.data.disableGeneration;
 				cell.value.title = msg.data.title;
 				cell.value.caption = msg.data.caption;
@@ -961,7 +960,6 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 									dataName: cell.value.dataName,
 									dataCount: cell.value.dataCount,
 									dataQuery: cell.value.dataQuery,
-									dataSource: cell.value.dataSource,
 									disableGeneration: cell.value.disableGeneration,
 									title: cell.value.title,
 									caption: cell.value.caption,
