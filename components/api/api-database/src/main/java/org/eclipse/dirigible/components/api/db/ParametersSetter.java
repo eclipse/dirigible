@@ -23,18 +23,18 @@ import com.google.gson.JsonObject;
 class ParametersSetter {
 
     private static final Set<ParamSetter> paramSetters = Set.of(//
-            new BooleanSetter(), //
-            new TinyIntSetter(), //
-            new IntegerSetter(), //
-            new DoubleSetter(), //
+            new BooleanParamSetter(), //
+            new TinyIntParamSetter(), //
+            new IntegerParamSetter(), //
+            new DoubleParamSetter(), //
             new TextParamSetter(), //
             new DateParamSetter(), //
-            new TimestampSetter(), //
+            new TimestampParamSetter(), //
             new TimeParamSetter(), //
-            new SmallIntSetter(), //
-            new BigIntSetter(), //
-            new RealSetter(), //
-            new BlobSetter());
+            new SmallIntParamSetter(), //
+            new BigIntParamSetter(), //
+            new RealParamSetter(), //
+            new BlobParamSetter());
 
     static void setParameters(String parameters, PreparedStatement preparedStatement) throws SQLException {
         JsonElement parametersElement = GsonHelper.parseJson(parameters);
@@ -228,8 +228,8 @@ class ParametersSetter {
         }
     }
 
-    private static class TimestampSetter extends BaseParamSetter {
-        private static final Logger logger = LoggerFactory.getLogger(TimestampSetter.class);
+    private static class TimestampParamSetter extends BaseParamSetter {
+        private static final Logger logger = LoggerFactory.getLogger(TimestampParamSetter.class);
 
         private static final SimpleDateFormat SIMPLE_DATE_FORMAT_WITHOUT_ZONE =
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
@@ -324,7 +324,7 @@ class ParametersSetter {
         }
     }
 
-    private static class IntegerSetter extends BaseParamSetter {
+    private static class IntegerParamSetter extends BaseParamSetter {
 
         @Override
         public boolean isApplicable(String dataType) {
@@ -352,7 +352,7 @@ class ParametersSetter {
         }
     }
 
-    private static class TinyIntSetter extends BaseParamSetter {
+    private static class TinyIntParamSetter extends BaseParamSetter {
 
         @Override
         public boolean isApplicable(String dataType) {
@@ -380,7 +380,7 @@ class ParametersSetter {
         }
     }
 
-    private static class SmallIntSetter extends BaseParamSetter {
+    private static class SmallIntParamSetter extends BaseParamSetter {
 
         @Override
         public boolean isApplicable(String dataType) {
@@ -408,7 +408,7 @@ class ParametersSetter {
         }
     }
 
-    private static class BigIntSetter extends BaseParamSetter {
+    private static class BigIntParamSetter extends BaseParamSetter {
 
         @Override
         public boolean isApplicable(String dataType) {
@@ -437,7 +437,7 @@ class ParametersSetter {
         }
     }
 
-    private static class RealSetter extends BaseParamSetter {
+    private static class RealParamSetter extends BaseParamSetter {
 
         @Override
         public boolean isApplicable(String dataType) {
@@ -466,7 +466,7 @@ class ParametersSetter {
         }
     }
 
-    private static class DoubleSetter extends BaseParamSetter {
+    private static class DoubleParamSetter extends BaseParamSetter {
 
         @Override
         public boolean isApplicable(String dataType) {
@@ -495,7 +495,7 @@ class ParametersSetter {
         }
     }
 
-    private static class BooleanSetter extends BaseParamSetter {
+    private static class BooleanParamSetter extends BaseParamSetter {
 
         @Override
         public boolean isApplicable(String dataType) {
@@ -523,7 +523,7 @@ class ParametersSetter {
         }
     }
 
-    private static class BlobSetter extends BaseParamSetter {
+    private static class BlobParamSetter extends BaseParamSetter {
 
         @Override
         public boolean isApplicable(String dataType) {
