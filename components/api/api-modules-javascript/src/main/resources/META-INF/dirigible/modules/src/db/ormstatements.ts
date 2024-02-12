@@ -107,14 +107,11 @@ ORMStatements.prototype.find = function (params) {
 ORMStatements.prototype.count = function (settings) {
 	const builder = this.dialect.select().column('COUNT(*)').from(this.orm.table);
 	addFilter(this.orm, builder, settings);
-	addLimitAndOffset(builder, settings);
 	return builder;
 };
 ORMStatements.prototype.list = function (settings) {
 	let i;
 	settings = settings || {};
-	const limit = settings.$limit ?? settings.limit;
-	const offset = settings.$offset ?? settings.offset;
 	const sort = settings.$sort || settings.sort;
 	const order = settings.$order || settings.order;
 	const selectedFields = settings.$select || settings.select;
