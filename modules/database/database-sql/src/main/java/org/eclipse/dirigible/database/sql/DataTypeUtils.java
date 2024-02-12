@@ -256,8 +256,7 @@ public class DataTypeUtils {
      * @return true, if is blob
      */
     public static boolean isBlob(String dataType) {
-        return DataType.BLOB.toString()
-                            .equals(dataType);
+        return DataType.BLOB.isOfType(dataType);
     }
 
     /**
@@ -267,8 +266,7 @@ public class DataTypeUtils {
      * @return true, if is boolean
      */
     public static boolean isBoolean(String dataType) {
-        return DataType.BOOLEAN.toString()
-                               .equals(dataType);
+        return DataType.BOOLEAN.isOfType(dataType);
     }
 
     /**
@@ -278,8 +276,7 @@ public class DataTypeUtils {
      * @return true, if is double
      */
     public static boolean isDouble(String dataType) {
-        return DataType.DOUBLE.toString()
-                              .equals(dataType);
+        return DataType.DOUBLE.isOfType(dataType);
     }
 
     /**
@@ -289,8 +286,7 @@ public class DataTypeUtils {
      * @return true, if is real
      */
     public static boolean isReal(String dataType) {
-        return DataType.REAL.toString()
-                            .equals(dataType);
+        return DataType.REAL.isOfType(dataType);
     }
 
     /**
@@ -300,8 +296,7 @@ public class DataTypeUtils {
      * @return true, if is real
      */
     public static boolean isFloat(String dataType) {
-        return DataType.FLOAT.toString()
-                             .equals(dataType);
+        return DataType.FLOAT.isOfType(dataType);
     }
 
     /**
@@ -311,8 +306,7 @@ public class DataTypeUtils {
      * @return true, if is bigint
      */
     public static boolean isBigint(String dataType) {
-        return DataType.BIGINT.toString()
-                              .equals(dataType);
+        return DataType.BIGINT.isOfType(dataType);
     }
 
     /**
@@ -322,8 +316,7 @@ public class DataTypeUtils {
      * @return true, if is smallint
      */
     public static boolean isSmallint(String dataType) {
-        return DataType.SMALLINT.toString()
-                                .equals(dataType);
+        return DataType.SMALLINT.isOfType(dataType);
     }
 
     /**
@@ -333,10 +326,7 @@ public class DataTypeUtils {
      * @return true, if is integer
      */
     public static boolean isInteger(String dataType) {
-        return DataType.INTEGER.toString()
-                               .equals(dataType)
-                || DataType.INT.toString()
-                               .equals(dataType);
+        return DataType.INTEGER.isOfType(dataType) || DataType.INT.isOfType(dataType);
     }
 
     /**
@@ -346,8 +336,7 @@ public class DataTypeUtils {
      * @return true, if is tinyint
      */
     public static boolean isTinyint(String dataType) {
-        return DataType.TINYINT.toString()
-                               .equals(dataType);
+        return DataType.TINYINT.isOfType(dataType);
     }
 
     /**
@@ -357,8 +346,7 @@ public class DataTypeUtils {
      * @return true, if is timestamp
      */
     public static boolean isTimestamp(String dataType) {
-        return DataType.TIMESTAMP.toString()
-                                 .equals(dataType);
+        return DataType.TIMESTAMP.isOfType(dataType);
     }
 
     /**
@@ -368,8 +356,7 @@ public class DataTypeUtils {
      * @return true, if is datetime
      */
     public static boolean isDateTime(String dataType) {
-        return DataType.DATETIME.toString()
-                                .equals(dataType);
+        return DataType.DATETIME.isOfType(dataType);
     }
 
     /**
@@ -379,8 +366,7 @@ public class DataTypeUtils {
      * @return true, if is time
      */
     public static boolean isTime(String dataType) {
-        return DataType.TIME.toString()
-                            .equals(dataType);
+        return DataType.TIME.isOfType(dataType);
     }
 
     /**
@@ -390,8 +376,7 @@ public class DataTypeUtils {
      * @return true, if is date
      */
     public static boolean isDate(String dataType) {
-        return DataType.DATE.toString()
-                            .equals(dataType);
+        return DataType.DATE.isOfType(dataType);
     }
 
     /**
@@ -401,8 +386,7 @@ public class DataTypeUtils {
      * @return true, if is char
      */
     public static boolean isChar(String dataType) {
-        return DataType.CHAR.toString()
-                            .equals(dataType);
+        return DataType.CHAR.isOfType(dataType);
     }
 
     /**
@@ -412,8 +396,7 @@ public class DataTypeUtils {
      * @return true, if is varchar
      */
     public static boolean isVarchar(String dataType) {
-        return DataType.VARCHAR.toString()
-                               .equals(dataType);
+        return DataType.VARCHAR.isOfType(dataType);
     }
 
     /**
@@ -423,8 +406,7 @@ public class DataTypeUtils {
      * @return true, if is text
      */
     public static boolean isText(String dataType) {
-        return DataType.TEXT.toString()
-                            .equals(dataType);
+        return DataType.TEXT.isOfType(dataType);
     }
 
     /**
@@ -434,8 +416,7 @@ public class DataTypeUtils {
      * @return true, if is varchar
      */
     public static boolean isCharacterVarying(String dataType) {
-        return DataType.CHARACTER_VARYING.toString()
-                                         .equals(dataType);
+        return DataType.CHARACTER_VARYING.isOfType(dataType);
     }
 
     /**
@@ -445,8 +426,7 @@ public class DataTypeUtils {
      * @return true, if is varchar
      */
     public static boolean isNvarchar(String dataType) {
-        return DataType.NVARCHAR.toString()
-                                .equals(dataType);
+        return DataType.NVARCHAR.isOfType(dataType);
     }
 
     /**
@@ -456,8 +436,7 @@ public class DataTypeUtils {
      * @return true, if is decimal
      */
     public static boolean isDecimal(String dataType) {
-        return DataType.DECIMAL.toString()
-                               .equals(dataType);
+        return DataType.DECIMAL.isOfType(dataType);
     }
 
     /**
@@ -467,8 +446,7 @@ public class DataTypeUtils {
      * @return true, if is bit
      */
     public static boolean isBit(String dataType) {
-        return DataType.BIT.toString()
-                           .equals(dataType);
+        return DataType.BIT.isOfType(dataType);
     }
 
     /**
@@ -478,7 +456,6 @@ public class DataTypeUtils {
      * @return true, if is array
      */
     public static boolean isArray(String dataType) {
-        return DataType.ARRAY.toString()
-                             .equals(dataType);
+        return DataType.ARRAY.isOfType(dataType);
     }
 }

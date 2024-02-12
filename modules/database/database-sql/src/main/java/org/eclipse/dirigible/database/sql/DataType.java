@@ -182,4 +182,8 @@ public enum DataType {
         throw new IllegalArgumentException("DataType not found: " + name);
     }
 
+    public boolean isOfType(String dataType) {
+        return name.equalsIgnoreCase(null != dataType ? dataType.trim() : dataType);
+    }
+
 }
