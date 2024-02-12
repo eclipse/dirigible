@@ -354,6 +354,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				cell.value.dataScale = msg.data.dataScale;
 				cell.value.dataDefaultValue = msg.data.dataDefaultValue;
 				cell.value.widgetType = msg.data.widgetType;
+				cell.value.widgetSize = msg.data.widgetSize;
 				cell.value.widgetLength = msg.data.widgetLength;
 				cell.value.widgetLabel = msg.data.widgetLabel;
 				cell.value.widgetShortLabel = msg.data.widgetShortLabel;
@@ -921,6 +922,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 									dataScale: cell.value.dataScale,
 									dataDefaultValue: cell.value.dataDefaultValue,
 									widgetType: cell.value.widgetType,
+									widgetSize: cell.value.widgetSize,
 									widgetLength: cell.value.widgetLength,
 									widgetLabel: cell.value.widgetLabel,
 									widgetShortLabel: cell.value.widgetShortLabel,
