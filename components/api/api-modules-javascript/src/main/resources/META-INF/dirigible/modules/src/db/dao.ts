@@ -755,7 +755,7 @@ DAO.prototype.count = function (settings?) {
 
 	let count = 0;
 	try {
-		const rs = this.execute(parametericStatement);
+		const rs = this.execute(parametericStatement, settings);
 		if (rs.length > 0) {
 			//expectaion is that there is a single object in the result set with a single porperty
 			const key = Object.keys(rs[0])[0];
