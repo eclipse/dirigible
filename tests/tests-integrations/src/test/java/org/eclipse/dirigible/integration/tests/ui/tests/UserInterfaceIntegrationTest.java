@@ -10,9 +10,10 @@
  */
 package org.eclipse.dirigible.integration.tests.ui.tests;
 
+
+import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.eclipse.dirigible.tests.framework.Browser;
 import org.eclipse.dirigible.tests.framework.BrowserImpl;
-import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
