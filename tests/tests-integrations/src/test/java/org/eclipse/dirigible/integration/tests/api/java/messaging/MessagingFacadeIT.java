@@ -18,11 +18,8 @@ import org.eclipse.dirigible.components.api.messaging.TimeoutException;
 import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.testcontainers.shaded.org.awaitility.Awaitility;
 
-@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 class MessagingFacadeIT extends IntegrationTest {
 
     private static final String TEST_MESSAGE = "Test message";
