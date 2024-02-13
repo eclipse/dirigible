@@ -28,7 +28,18 @@ class ${name}Service {
     @Get("/")
     public getAll(_: any, ctx: any) {
         try {
+#if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
+            let ${masterEntityId} = parseInt(ctx.queryParameters.${masterEntityId});
+            ${masterEntityId} = isNaN(${masterEntityId}) ? ctx.queryParameters.${masterEntityId} : ${masterEntityId};
+#end
             const options: ${name}EntityOptions = {
+#if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
+                $filter: {
+                    equals: {
+                        ${masterEntityId}: ${masterEntityId}
+                    }
+                },
+#end
                 $limit: ctx.queryParameters["$limit"] ? parseInt(ctx.queryParameters["$limit"]) : undefined,
                 $offset: ctx.queryParameters["$offset"] ? parseInt(ctx.queryParameters["$offset"]) : undefined
             };
@@ -54,18 +65,6 @@ class ${name}Service {
         }
     }
 
-#if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
-    @Get("/count/:${masterEntityId}")
-    public count(_: any, ctx: any) {
-        try {
-            let ${masterEntityId} = parseInt(ctx.pathParameters.${masterEntityId});
-            ${masterEntityId} = isNaN(${masterEntityId}) ? ctx.pathParameters.${masterEntityId} : ${masterEntityId};
-            return this.repository.count(${masterEntityId});
-        } catch (error: any) {
-            this.handleError(error);
-        }
-    }
-#else
     @Get("/count")
     public count() {
         try {
@@ -74,7 +73,24 @@ class ${name}Service {
             this.handleError(error);
         }
     }
-#end
+
+    @Post("/count")
+    public countWithFilter(filter: any) {
+        try {
+            return this.repository.count(filter);
+        } catch (error: any) {
+            this.handleError(error);
+        }
+    }
+
+    @Post("/search")
+    public search(filter: any) {
+        try {
+            return this.repository.findAll(filter);
+        } catch (error: any) {
+            this.handleError(error);
+        }
+    }
 
     @Get("/:id")
     public getById(_: any, ctx: any) {
