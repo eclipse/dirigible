@@ -10,23 +10,13 @@
  */
 package org.eclipse.dirigible.integration.tests.ui.tests;
 
-
 import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.eclipse.dirigible.tests.framework.Browser;
-import org.eclipse.dirigible.tests.framework.BrowserImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.beans.factory.annotation.Autowired;
 
 abstract class UserInterfaceIntegrationTest extends IntegrationTest {
 
-    @LocalServerPort
-    private int localServerPort;
-
+    @Autowired
     protected Browser browser;
-
-    @BeforeEach
-    final void initBrowser() {
-        this.browser = new BrowserImpl(localServerPort);
-    }
 
 }

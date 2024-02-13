@@ -14,6 +14,9 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
@@ -22,7 +25,9 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 
-public class BrowserImpl implements Browser {
+@Lazy
+@Component
+class BrowserImpl implements Browser {
 
     private static final String BROWSER = "chrome";
     private static final long SELENIDE_TIMEOUT_MILLIS = TimeUnit.SECONDS.toMillis(5);
@@ -35,11 +40,8 @@ public class BrowserImpl implements Browser {
         Configuration.browserCapabilities = new ChromeOptions().addArguments("--remote-allow-origins=*");
     }
 
-    private final int localServerPort;
-
-    public BrowserImpl(int localServerPort) {
-        this.localServerPort = localServerPort;
-    }
+    @LocalServerPort
+    private int localServerPort;
 
     @Override
     public void openPath(String path) {

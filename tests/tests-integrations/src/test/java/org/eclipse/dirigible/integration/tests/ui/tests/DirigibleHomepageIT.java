@@ -12,19 +12,15 @@ package org.eclipse.dirigible.integration.tests.ui.tests;
 
 import org.eclipse.dirigible.integration.tests.ui.Dirigible;
 import org.eclipse.dirigible.tests.framework.HtmlElementType;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 class DirigibleHomepageIT extends UserInterfaceIntegrationTest {
 
     private static final String ECLIPSE_DIRIGIBLE_HEADER = "Eclipse Dirigible";
 
+    @Autowired
     private Dirigible dirigible;
-
-    @BeforeEach
-    void setUp() {
-        this.dirigible = new Dirigible(browser);
-    }
 
     @Test
     void testOpenHomepage() {
