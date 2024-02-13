@@ -65,6 +65,12 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			});
 		});
 
+		messageHub.onDidReceiveMessage("entitySearch", function (msg) {
+			resetPagination();
+			$scope.filter = msg.data.filter;
+			$scope.filterEntity = msg.data.entity;
+			$scope.loadPage($scope.dataPage, $scope.filter);
+		});
 		//-----------------Events-------------------//
 
 		$scope.loadPage = function (pageNumber, filter) {
