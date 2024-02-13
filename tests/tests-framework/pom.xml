@@ -7,6 +7,7 @@
         <groupId>org.eclipse.dirigible</groupId>
         <artifactId>dirigible-tests</artifactId>
         <version>10.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <name>Tests - Framework</name>

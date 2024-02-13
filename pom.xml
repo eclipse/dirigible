@@ -606,7 +606,7 @@
 		<repository>
 			<id>github</id>
 			<name>GitHub dirigiblelabs/olingo-odata2</name>
-			<url>https://maven.pkg.github.com/dirigiblelabs/olingo-odata2</url>
+<!--			<url>https://maven.pkg.github.com/dirigiblelabs/olingo-odata2</url>-->
 		</repository>
 	</repositories>
 

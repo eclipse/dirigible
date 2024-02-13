@@ -44,7 +44,7 @@
 				<artifactId>dirigible-tests</artifactId>
 				<version>10.0.0-SNAPSHOT</version>
 				<type>pom</type>
-				<scope>test</scope>
+				<scope>import</scope>
 			</dependency>
 
 			<dependency>
