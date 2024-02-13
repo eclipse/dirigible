@@ -59,6 +59,32 @@ exports.getSources = function (parameters) {
 			collection: "uiListModels"
 		},
 		{
+			location: "/template-application-ui-angular/ui/perspective/list/dialog-filter/controller.js.template",
+			action: "generate",
+			engine: "velocity",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-filter/controller.js",
+			collection: "uiListModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/list/dialog-filter/index.html.template",
+			action: "generate",
+			engine: "velocity",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-filter/index.html",
+			collection: "uiListModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/list/dialog-filter/view.extension",
+			action: "generate",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-filter/view.extension",
+			collection: "uiListModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/list/dialog-filter/view.js",
+			action: "generate",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-filter/view.js",
+			collection: "uiListModels"
+		},
+		{
 			location: "/template-application-ui-angular/ui/perspective/list/controller.js.template",
 			action: "generate",
 			engine: "velocity",
