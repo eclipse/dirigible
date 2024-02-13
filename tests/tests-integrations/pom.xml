@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -14,7 +14,6 @@
 		<license.header.location>../../licensing-header.txt</license.header.location>
 		<parent.pom.folder>../../</parent.pom.folder>
 		<skipITs>true</skipITs>
-		<selenide.version>7.0.4</selenide.version>
 	</properties>
 
 	<name>Tests - Integration Tests</name>
@@ -31,6 +30,12 @@
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-tests-framework</artifactId>
 			<scope>test</scope>
+			<classifier>tests</classifier>
+		</dependency>
+		<dependency>
+			<groupId>com.codeborne</groupId>
+			<artifactId>selenide</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -43,17 +48,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.codeborne</groupId>
-			<artifactId>selenide</artifactId>
-			<version>${selenide.version}</version>
+			<groupId>org.apache.httpcomponents.client5</groupId>
+			<artifactId>httpclient5</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible.tests</groupId>
-			<artifactId>dirigible-tests-framework</artifactId>
-			<version>10.0.0-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
+
 	</dependencies>
 
 	<dependencyManagement>

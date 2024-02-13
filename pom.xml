@@ -603,11 +603,6 @@
 				<enabled>true</enabled>
 			</releases>
 		</repository>
-		<repository>
-			<id>github</id>
-			<name>GitHub dirigiblelabs/olingo-odata2</name>
-<!--			<url>https://maven.pkg.github.com/dirigiblelabs/olingo-odata2</url>-->
-		</repository>
 	</repositories>
 
 	<pluginRepositories>

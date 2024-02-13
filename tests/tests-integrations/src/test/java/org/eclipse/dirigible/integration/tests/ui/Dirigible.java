@@ -15,7 +15,6 @@ import org.eclipse.dirigible.tests.framework.HtmlAttribute;
 import org.eclipse.dirigible.tests.framework.HtmlElementType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.codeborne.selenide.SelenideElement;
 
 public class Dirigible {
 
@@ -46,8 +45,7 @@ public class Dirigible {
     }
 
     public void login() {
-        SelenideElement title = browser.waitUntilExist(HtmlElementType.TITLE);
-        String pageTitle = title.getOwnText();
+        String pageTitle = browser.getPageTitle();
         if (!LOGIN_PAGE_TITLE.equals(pageTitle)) {
             LOGGER.info("Skipping login");
             return;

@@ -10,12 +10,17 @@
  */
 package org.eclipse.dirigible.tests.framework;
 
-import com.codeborne.selenide.*;
-import com.nimbusds.oauth2.sdk.util.StringUtils;
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeOptions;
-
-import java.util.concurrent.TimeUnit;
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.Selectors;
+import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 
 public class BrowserImpl implements Browser {
 
@@ -122,17 +127,6 @@ public class BrowserImpl implements Browser {
     @Override
     public String getPageTitle() {
         return Selenide.title();
-    }
-
-    @Override
-    public SelenideElement waitUntilExist(HtmlElementType elementType) {
-        SelenideElement element = getElementByType(elementType);
-        return element.should(Condition.exist);
-    }
-
-    private SelenideElement getElementByType(HtmlElementType elementType) {
-        By cssSelector = Selectors.byCssSelector(elementType.getType());
-        return Selenide.$(cssSelector);
     }
 
 }

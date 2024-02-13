@@ -10,8 +10,6 @@
  */
 package org.eclipse.dirigible.tests.framework;
 
-import com.codeborne.selenide.SelenideElement;
-
 public interface Browser {
 
     void openPath(String path);
@@ -23,7 +21,5 @@ public interface Browser {
     void assertElementExistsByTypeAndText(HtmlElementType elementType, String text);
 
     String getPageTitle();
-
-    SelenideElement waitUntilExist(HtmlElementType elementType);
 
 }
