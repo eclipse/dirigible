@@ -348,7 +348,7 @@ class ParametersSetter {
      * The Class TimestampParamSetter.
      */
     private static class TimestampParamSetter extends BaseParamSetter {
-        
+
         /** The Constant logger. */
         private static final Logger logger = LoggerFactory.getLogger(TimestampParamSetter.class);
 

@@ -14,7 +14,7 @@ package org.eclipse.dirigible.components.engine.bpm.flowable.dto;
  * The Class VariableData.
  */
 public class VariableData {
-    
+
     /** The name. */
     private String name;
 
