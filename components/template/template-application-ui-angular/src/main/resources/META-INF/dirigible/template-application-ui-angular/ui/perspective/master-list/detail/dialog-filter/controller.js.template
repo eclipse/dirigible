@@ -17,8 +17,11 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				let params = JSON.parse(dataParameters);
 #foreach ($property in $properties)
 #if($property.isDateType)
-				if (params?.entity?.${property.name}) {
-					params.entity.${property.name} = new Date(params.entity.${property.name});
+				if (params?.entity?.${property.name}From) {
+					params.entity.${property.name}From = new Date(params.entity.${property.name}From);
+				}
+				if (params?.entity?.${property.name}To) {
+					params.entity.${property.name}To = new Date(params.entity.${property.name}To);
 				}
 #end
 #end
@@ -65,13 +68,20 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				},
 			};
 #foreach ($property in $properties)
-#if($property.dataTypeTypescript == 'number')
+#if($property.dataTypeTypescript == 'number' || $property.dataTypeTypescript == 'boolean')
 			if (entity.${property.name}) {
 				filter.${dollar}filter.equals.${property.name} = entity.${property.name};
 			}
 #elseif($property.dataTypeTypescript == 'string')
 			if (entity.${property.name}) {
 				filter.${dollar}filter.contains.${property.name} = entity.${property.name};
+			}
+#elseif($property.dataTypeTypescript == 'Date')
+			if (entity.${property.name}From) {
+				filter.${dollar}filter.greaterThanOrEqual.${property.name} = entity.${property.name}From;
+			}
+			if (entity.${property.name}To) {
+				filter.${dollar}filter.lessThanOrEqual.${property.name} = entity.${property.name}To;
 			}
 #end
 #end
