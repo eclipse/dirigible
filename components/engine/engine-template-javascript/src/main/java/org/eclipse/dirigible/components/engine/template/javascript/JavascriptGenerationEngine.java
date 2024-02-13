@@ -16,9 +16,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.components.engine.template.TemplateEngine;
+import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
+import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.graalvm.polyglot.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -74,14 +79,19 @@ public class JavascriptGenerationEngine implements TemplateEngine {
     @Override
     public byte[] generate(Map<String, Object> parameters, String location, byte[] input, String sm, String em) throws IOException {
         try {
-            Map<Object, Object> context = new HashMap<Object, Object>();
-            BiConsumer<Object, Object> action = new ContextBiConsumer(context);
-            parameters.forEach(action);
-            RepositoryPath path = new RepositoryPath((String) parameters.get("handler"));
-            Object result = javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
-            // String result = ScriptEngineExecutorsManager.evalModule((String) parameters.get("handler"),
-            // context).toString();
-            return (result != null && result instanceof String) ? ((String) result).getBytes(StandardCharsets.UTF_8) : new byte[] {};
+            // Map<Object, Object> context = new HashMap<Object, Object>();
+            // BiConsumer<Object, Object> action = new ContextBiConsumer(context);
+            // parameters.forEach(action);
+
+            try (DirigibleJavascriptCodeRunner runner = createJSCodeRunner()) {
+                String handlerPath = location.startsWith(IRepository.SEPARATOR) ? location.substring(1) : location;
+                Module module = runner.run(handlerPath);
+                Value result = runner.runMethod(module, "generate", GsonHelper.toJson(parameters));
+                return (result != null) ? result.asString()
+                                                .getBytes()
+                        : new byte[] {};
+            }
+
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new IOException("Could not evaluate template by Javascript: " + location, ex);
@@ -114,6 +124,15 @@ public class JavascriptGenerationEngine implements TemplateEngine {
         public void accept(Object k, Object v) {
             this.context.put(k, v);
         }
+    }
+
+    /**
+     * Creates the JS code runner.
+     *
+     * @return the dirigible javascript code runner
+     */
+    DirigibleJavascriptCodeRunner createJSCodeRunner() {
+        return new DirigibleJavascriptCodeRunner();
     }
 
 }
