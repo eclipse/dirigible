@@ -47,10 +47,10 @@
 	Upload to Maven Central:
 		mvn javadoc:jar
 		mvn deploy -P release -DskipTests
-		
+
 	Tests coverage report generation
 		mvn clean -B package -P coverage
-		
+
 	Static checks analysis
 		mvn clean install -P spotbugs
 
@@ -603,11 +603,6 @@
 				<enabled>true</enabled>
 			</releases>
 		</repository>
-		<repository>
-			<id>github</id>
-			<name>GitHub dirigiblelabs/olingo-odata2</name>
-			<url>https://maven.pkg.github.com/dirigiblelabs/olingo-odata2</url>
-		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -642,8 +637,8 @@
 		<module>modules</module>
 		<module>components</module>
 		<module>build</module>
-		<module>tests</module>
 		<module>dependencies</module>
+		<module>tests</module>
 	</modules>
 
 	<dependencies>
