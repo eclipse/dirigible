@@ -397,36 +397,9 @@ export class ${name}Repository {
         });
     }
 
-#if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
-
-
-#foreach ($property in $properties)
-#if($property.relationshipType == "COMPOSITION")
-    public count(${property.name}: ${property.dataTypeTypescript}, options): number {
-#end
-#end
-        if (!options) {
-            options = {};
-        }
-        if (!options.$filter) {
-            options.$filter = {};
-        }
-        if (!options.$filter.equals) {
-            options.$filter.equals = {}
-        }
-
-#foreach ($property in $properties)
-#if($property.relationshipType == "COMPOSITION")
-        options.$filter.equals.${property.name} = ${property.name};
-#end
-#end
-        return this.dao.count(options);
-    }
-#else
     public count(options?: ${name}EntityOptions): number {
         return this.dao.count(options);
     }
-#end
 
     public customDataCount(options?: ${name}EntityOptions): number {
 #if($dataCount)

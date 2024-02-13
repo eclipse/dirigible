@@ -6,7 +6,7 @@
 const viewData = {
     id: "{{name}}-filter",
     label: "{{name}} Filter",
-    link: "/services/web/{{projectName}}/gen/ui/{{perspectiveName}}/{{name}}/dialog-filter/index.html",
+    link: "/services/web/{{projectName}}/gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-filter/index.html",
     perspectiveName: "{{perspectiveName}}"
 };
 

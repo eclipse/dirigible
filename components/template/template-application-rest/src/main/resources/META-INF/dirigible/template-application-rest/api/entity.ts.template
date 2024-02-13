@@ -65,29 +65,6 @@ class ${name}Service {
         }
     }
 
-#if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
-    @Get("/count/:${masterEntityId}")
-    public count(_: any, ctx: any) {
-        try {
-            let ${masterEntityId} = parseInt(ctx.pathParameters.${masterEntityId});
-            ${masterEntityId} = isNaN(${masterEntityId}) ? ctx.pathParameters.${masterEntityId} : ${masterEntityId};
-            return this.repository.count(${masterEntityId});
-        } catch (error: any) {
-            this.handleError(error);
-        }
-    }
-
-    @Post("/count/:${masterEntityId}")
-    public countWithFilter(filter: any, ctx: any) {
-        try {
-            let ${masterEntityId} = parseInt(ctx.pathParameters.${masterEntityId});
-            ${masterEntityId} = isNaN(${masterEntityId}) ? ctx.pathParameters.${masterEntityId} : ${masterEntityId};
-            return this.repository.count(${masterEntityId}, filter);
-        } catch (error: any) {
-            this.handleError(error);
-        }
-    }
-#else
     @Get("/count")
     public count() {
         try {
@@ -105,7 +82,6 @@ class ${name}Service {
             this.handleError(error);
         }
     }
-#end
 
     @Post("/search")
     public search(filter: any) {

@@ -186,14 +186,12 @@ function getDetails(parameters) {
         {
             location: "/template-application-ui-angular/ui/perspective/master-list/detail/dialog-filter/view.extension",
             action: "generate",
-            engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-filter/view.extension",
             collection: "uiListDetailsModels"
         },
         {
             location: "/template-application-ui-angular/ui/perspective/master-list/detail/dialog-filter/view.js",
             action: "generate",
-            engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-filter/view.js",
             collection: "uiListDetailsModels"
         }

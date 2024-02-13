@@ -17,7 +17,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				let params = JSON.parse(dataParameters);
 #foreach ($property in $properties)
 #if($property.isDateType)
-				if (params.entity.${property.name}) {
+				if (params?.entity?.${property.name}) {
 					params.entity.${property.name} = new Date(params.entity.${property.name});
 				}
 #end
