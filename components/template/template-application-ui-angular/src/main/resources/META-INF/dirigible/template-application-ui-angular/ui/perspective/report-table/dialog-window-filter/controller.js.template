@@ -83,14 +83,13 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 #foreach ($property in $filter.properties)
 #if($property.widgetType == "DROPDOWN")
 
-		${dollar}http.get("/services/ts/${projectName}/gen/api/${property.relationshipEntityPerspectiveName}/${property.relationshipEntityName}Service.ts").then(function (response) {
+		${dollar}http.get(${property.widgetDropdownUrl}).then(function (response) {
 			${dollar}scope.options${property.name} = response.data.map(e => {
 				return {
 					value: e.${property.widgetDropDownKey},
 					text: e.${property.widgetDropDownValue}
 				}
 			});
-			${dollar}scope.entity.${property.name} = ${dollar}scope.${property.name}Value;
 		});
 #end
 #end
