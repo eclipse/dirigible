@@ -148,7 +148,7 @@ class Project {
 		return this.native.deleteFolder(path);
 	};
 
-	createFile(path: string, input: string): File {
+	createFile(path: string, input: any): File {
 		const native = this.native.createFile(path, input);
 		return new File(native);
 	};
@@ -178,14 +178,14 @@ class Project {
  */
 class Folders {
 
-	constructor(private native) { }
+	constructor(private native: any) { }
 
-	size() {
+	size(): number {
 		const size = this.native.size();
 		return size;
 	};
 
-	get(index) {
+	get(index: number): Folder {
 		const native = this.native.get(index);
 		return new Folder(native);
 	};
@@ -197,14 +197,14 @@ class Folders {
  */
 class Files {
 
-	constructor(private native) { }
+	constructor(private native: any) { }
 
-	size() {
+	size(): number {
 		const size = this.native.size();
 		return size;
 	};
 
-	get(index) {
+	get(index: number): File {
 		const native = this.native.get(index);
 		return new File(native);
 	};
@@ -216,66 +216,66 @@ class Files {
  */
 class Folder {
 
-	constructor(private native) { }
+	constructor(private native: any) { }
 
-	getName() {
+	getName(): string {
 		const collection = this.native.getInternal();
 		const name = collection.getName();
 		return name;
 	};
 
-	getPath() {
+	getPath(): string {
 		const collection = this.native.getInternal();
 		return collection.getPath();
 	};
 
-	createFolder(path) {
+	createFolder(path: string): Folder {
 		const native = this.native.createFolder(path);
 		return new Folder(native);
 	};
 
-	exists() {
+	exists(): boolean {
 		return this.native.exists();
 	};
 
-	existsFolder(path) {
+	existsFolder(path: string): boolean {
 		return this.native.existsFolder(path);
 	};
 
-	getFolder(path) {
+	getFolder(path: string): Folder {
 		const native = this.native.getFolder(path);
 		return new Folder(native);
 	};
 
-	getFolders(path) {
+	getFolders(path: string): Folders {
 		const native = this.native.getFolders(path);
 		return new Folders(native);
 	};
 
-	deleteFolder(path) {
+	deleteFolder(path: string): void {
 		return this.native.deleteFolder(path);
 	};
 
-	createFile(path, input) {
+	createFile(path: string, input: any): File {
 		const native = this.native.createFile(path, input);
 		return new File(native);
 	};
 
-	existsFile(path) {
+	existsFile(path: string): boolean {
 		return this.native.existsFile(path);
 	};
 
-	getFile(path) {
+	getFile(path: string): File {
 		const native = this.native.getFile(path);
 		return new File(native);
 	};
 
-	getFiles(path) {
+	getFiles(path: string): Files {
 		const native = this.native.getFiles(path);
 		return new Files(native);
 	};
 
-	deleteFile(path) {
+	deleteFile(path: string): void {
 		return this.native.deleteFile(path);
 	};
 
@@ -286,27 +286,27 @@ class Folder {
  */
 class File {
 
-	constructor(private native) { }
+	constructor(private native: any) { }
 
-	getName() {
+	getName(): string {
 		const collection = this.native.getInternal();
 		return collection.getName();
 	};
 
-	getPath() {
+	getPath(): string {
 		const collection = this.native.getInternal();
 		return collection.getPath();
 	};
 
-	getContentType() {
+	getContentType(): string {
 		return this.native.getContentType();
 	};
 
-	isBinary() {
+	isBinary(): boolean {
 		return this.native.isBinary();
 	};
 
-	getContent() {
+	getContent(): any {
 		const output = WorkspaceFacade.getContent(this.native);
 		if (output) {
 			output;
@@ -314,22 +314,22 @@ class File {
 		return output;
 	};
 
-	getText() {
+	getText(): string {
 		const bytesOutput = this.getContent();
 		return bytes.byteArrayToText(bytesOutput);
 	};
 
-	setContent(input) {
+	setContent(input: any): any {
 		const output = WorkspaceFacade.setContent(this.native, input);
 		return output;
 	};
 
-	setText(input) {
+	setText(input: any): any {
 		const bytesInput = bytes.textToByteArray(input);
 		return this.setContent(bytesInput);
 	};
 
-	exists() {
+	exists(): boolean {
 		return this.native.exists();
 	};
 }
