@@ -9,30 +9,34 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
+import { json } from "@dirigible/http/response";
 import * as bytes from "@dirigible/io/bytes";
+import { workspace } from ".";
 const WorkspaceFacade = Java.type("org.eclipse.dirigible.components.api.platform.WorkspaceFacade");
 
-export function createWorkspace(name) {
-	const native = WorkspaceFacade.createWorkspace(name);
-	return new Workspace(native);
-};
+export class Workspaces{
+	public static createWorkspace(name: string): Workspace {
+		return new Workspace(WorkspaceFacade.createWorkspace(name));
+	};
 
-export function getWorkspace(name) {
-	const native = WorkspaceFacade.getWorkspace(name);
-	return new Workspace(native);
-};
+	public static getWorkspace(name: string): Workspace {
+		return new Workspace(WorkspaceFacade.getWorkspace(name));
+	};
 
-export function getWorkspacesNames() {
-	const workspacesNames = WorkspaceFacade.getWorkspacesNames();
-	if (workspacesNames) {
-		return JSON.parse(workspacesNames);
-	}
-	return workspacesNames;
-};
+	public static getWorkspacesNames(): JSON | any {
+		let workspacesNames = WorkspaceFacade.getWorkspacesNames();
 
-export function deleteWorkspace(name) {
-	WorkspaceFacade.deleteWorkspace(name);
-};
+		if (workspacesNames) {
+			return JSON.parse(workspacesNames);
+		}
+
+		return workspacesNames;
+	};
+
+	public static deleteWorkspace(name: string): void {
+		WorkspaceFacade.deleteWorkspace(name);
+	};
+}
 
 /**
  * Workspace object
