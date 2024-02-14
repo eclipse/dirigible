@@ -91,7 +91,7 @@
 #elseif($property.widgetType == "CHECKBOX")
 						<td fd-table-cell ng-click="openDetails(next)" hoverable="true" activable="true">
 							<fd-checkbox id="id${property.name}" compact="false" ng-disabled="true" ng-model="next.${property.name}"></fd-checkbox>
-							<fd-checkbox-label for="id${property.name}"></fd-checkbox-label>
+							<fd-checkbox-label for="id${property.name}" empty="true"></fd-checkbox-label>
 						</td>
 #else
 						<td fd-table-cell ng-click="openDetails(next)" hoverable="true" activable="true">{{next.${property.name}}}</td>
