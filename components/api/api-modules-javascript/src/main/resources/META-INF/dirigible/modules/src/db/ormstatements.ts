@@ -104,14 +104,14 @@ ORMStatements.prototype.find = function (params) {
 		.where(this.orm.getPrimaryKey().column + "=?", [this.orm.getPrimaryKey()]);
 	return builder;
 };
-ORMStatements.prototype.count = function () {
-	return this.dialect.select().column('COUNT(*)').from(this.orm.table);
+ORMStatements.prototype.count = function (settings) {
+	const builder = this.dialect.select().column('COUNT(*)').from(this.orm.table);
+	addFilter(this.orm, builder, settings);
+	return builder;
 };
 ORMStatements.prototype.list = function (settings) {
 	let i;
 	settings = settings || {};
-	const limit = settings.$limit ?? settings.limit;
-	const offset = settings.$offset ?? settings.offset;
 	const sort = settings.$sort || settings.sort;
 	const order = settings.$order || settings.order;
 	const selectedFields = settings.$select || settings.select;
@@ -129,49 +129,7 @@ ORMStatements.prototype.list = function (settings) {
 	}
 
 	//add where clause for any fields
-	if (settings?.$filter) {
-		const equalsPropertiesKeys = Object.keys(settings.$filter.equals ?? []);
-		const notEqualsPropertiesKeys = Object.keys(settings.$filter.notEquals ?? []);
-		const containsPropertiesKeys = Object.keys(settings.$filter.contains ?? []);
-		const greaterThanPropertiesKeys = Object.keys(settings.$filter.greaterThan ?? []);
-		const lessThanPropertiesKeys = Object.keys(settings.$filter.lessThan ?? []);
-		const greaterThanOrEqualPropertiesKeys = Object.keys(settings.$filter.greaterThanOrEqual ?? []);
-		const lessThanOrEqualPropertiesKeys = Object.keys(settings.$filter.lessThanOrEqual ?? []);
-
-		const equalsProperties = this.orm.properties.filter(e => equalsPropertiesKeys.includes(e.name));
-		const notEqualsProperties = this.orm.properties.filter(e => notEqualsPropertiesKeys.includes(e.name));
-		const containsProperties = this.orm.properties.filter(e => containsPropertiesKeys.includes(e.name));
-		const greaterThanProperties = this.orm.properties.filter(e => greaterThanPropertiesKeys.includes(e.name));
-		const lessThanProperties = this.orm.properties.filter(e => lessThanPropertiesKeys.includes(e.name));
-		const greaterThanOrEqualProperties = this.orm.properties.filter(e => greaterThanOrEqualPropertiesKeys.includes(e.name));
-		const lessThanOrEqualProperties = this.orm.properties.filter(e => lessThanOrEqualPropertiesKeys.includes(e.name));
-
-		equalsProperties.forEach(e => {
-			const value = settings.$filter.equals[e.name];
-			if (value === null || value === undefined) {
-				builder.where(e.column + ' IS NULL', [e]);
-			} else if (Array.isArray(value)) {
-				builder.where(`${e.column} IN (${value.map(v => '?').join(', ')})`, [e])
-			} else {
-				builder.where(`${e.column} = ?`, [e])
-			}
-		});
-		notEqualsProperties.forEach(e => {
-			const value = settings.$filter.notEquals[e.name];
-			if (value === null || value === undefined) {
-				builder.where(e.column + ' IS NOT NULL', [e]);
-			} else if (Array.isArray(value)) {
-				builder.where(`${e.column} NOT IN (${value.map(v => '?').join(', ')})`, [e])
-			} else {
-				builder.where(`${e.column} != ?`, [e])
-			}
-		});
-		containsProperties.forEach(e => builder.where(`${e.column} LIKE ?`, [e]));
-		greaterThanProperties.forEach(e => builder.where(`${e.column} > ?`, [e]));
-		lessThanProperties.forEach(e => builder.where(`${e.column} < ?`, [e]));
-		greaterThanOrEqualProperties.forEach(e => builder.where(`${e.column} >= ?`, [e]));
-		lessThanOrEqualProperties.forEach(e => builder.where(`${e.column} <= ?`, [e]));
-	}
+	addFilter(this.orm, builder, settings);
 
 	// TODO: The following code might not be needed anymore
 	const propertyDefinitions = this.orm.properties.filter(function (property) {
@@ -221,12 +179,65 @@ ORMStatements.prototype.list = function (settings) {
 
 		}
 	}
-	if (limit !== undefined && offset !== undefined) {
-		builder.limit(parseInt(limit, 10)).offset(parseInt(offset, 10));
-	}
+	addLimitAndOffset(builder, settings);
 	return builder;
 };
 
+
+function addFilter(orm, builder, settings) {
+	//add where clause for any fields
+	if (settings?.$filter) {
+		const equalsPropertiesKeys = Object.keys(settings.$filter.equals ?? []);
+		const notEqualsPropertiesKeys = Object.keys(settings.$filter.notEquals ?? []);
+		const containsPropertiesKeys = Object.keys(settings.$filter.contains ?? []);
+		const greaterThanPropertiesKeys = Object.keys(settings.$filter.greaterThan ?? []);
+		const lessThanPropertiesKeys = Object.keys(settings.$filter.lessThan ?? []);
+		const greaterThanOrEqualPropertiesKeys = Object.keys(settings.$filter.greaterThanOrEqual ?? []);
+		const lessThanOrEqualPropertiesKeys = Object.keys(settings.$filter.lessThanOrEqual ?? []);
+
+		const equalsProperties = orm.properties.filter(e => equalsPropertiesKeys.includes(e.name));
+		const notEqualsProperties = orm.properties.filter(e => notEqualsPropertiesKeys.includes(e.name));
+		const containsProperties = orm.properties.filter(e => containsPropertiesKeys.includes(e.name));
+		const greaterThanProperties = orm.properties.filter(e => greaterThanPropertiesKeys.includes(e.name));
+		const lessThanProperties = orm.properties.filter(e => lessThanPropertiesKeys.includes(e.name));
+		const greaterThanOrEqualProperties = orm.properties.filter(e => greaterThanOrEqualPropertiesKeys.includes(e.name));
+		const lessThanOrEqualProperties = orm.properties.filter(e => lessThanOrEqualPropertiesKeys.includes(e.name));
+
+		equalsProperties.forEach(e => {
+			const value = settings.$filter.equals[e.name];
+			if (value === null || value === undefined) {
+				builder.where(e.column + ' IS NULL', [e]);
+			} else if (Array.isArray(value)) {
+				builder.where(`${e.column} IN (${value.map(v => '?').join(', ')})`, [e])
+			} else {
+				builder.where(`${e.column} = ?`, [e])
+			}
+		});
+		notEqualsProperties.forEach(e => {
+			const value = settings.$filter.notEquals[e.name];
+			if (value === null || value === undefined) {
+				builder.where(e.column + ' IS NOT NULL', [e]);
+			} else if (Array.isArray(value)) {
+				builder.where(`${e.column} NOT IN (${value.map(v => '?').join(', ')})`, [e])
+			} else {
+				builder.where(`${e.column} != ?`, [e])
+			}
+		});
+		containsProperties.forEach(e => builder.where(`${e.column} LIKE ?`, [e]));
+		greaterThanProperties.forEach(e => builder.where(`${e.column} > ?`, [e]));
+		lessThanProperties.forEach(e => builder.where(`${e.column} < ?`, [e]));
+		greaterThanOrEqualProperties.forEach(e => builder.where(`${e.column} >= ?`, [e]));
+		lessThanOrEqualProperties.forEach(e => builder.where(`${e.column} <= ?`, [e]));
+	}
+}
+
+function addLimitAndOffset(builder, settings) {
+	const limit = settings.$limit ?? settings.limit;
+	const offset = settings.$offset ?? settings.offset;
+	if (limit !== undefined && offset !== undefined) {
+		builder.limit(parseInt(limit, 10)).offset(parseInt(offset, 10));
+	}
+}
 export function create(orm, connection) {
 	let dialect;
 	if (connection) {

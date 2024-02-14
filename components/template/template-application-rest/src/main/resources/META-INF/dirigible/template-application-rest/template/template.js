@@ -34,10 +34,10 @@ exports.getTemplate = function (parameters) {
         engine: "velocity",
         collection: "reportModels"
     }, {
-        location: "/template-application-dao/project.json.template",
+        location: "/template-application-dao/project.json.mjs",
         action: "generate",
         rename: "project.json",
-        engine: "velocity"
+        engine: "javascript"
     }, {
         location: "/template-application-dao/tsconfig.json.template",
         action: "generate",

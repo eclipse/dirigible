@@ -46,17 +46,27 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 
 		//-----------------Events-------------------//
 		messageHub.onDidReceiveMessage("entityCreated", function (msg) {
-			$scope.loadPage($scope.dataPage);
+			$scope.loadPage($scope.dataPage, $scope.filter);
 		});
 
 		messageHub.onDidReceiveMessage("entityUpdated", function (msg) {
-			$scope.loadPage($scope.dataPage);
+			$scope.loadPage($scope.dataPage, $scope.filter);
+		});
+
+		messageHub.onDidReceiveMessage("entitySearch", function (msg) {
+			resetPagination();
+			$scope.filter = msg.data.filter;
+			$scope.filterEntity = msg.data.entity;
+			$scope.loadPage($scope.dataPage, $scope.filter);
 		});
 		//-----------------Events-------------------//
 
-		$scope.loadPage = function (pageNumber) {
+		$scope.loadPage = function (pageNumber, filter) {
+			if (!filter && $scope.filter) {
+				filter = $scope.filter;
+			}
 			$scope.dataPage = pageNumber;
-			entityApi.count().then(function (response) {
+			entityApi.count(filter).then(function (response) {
 				if (response.status != 200) {
 					messageHub.showAlertError("${name}", `Unable to count ${name}: '${response.message}'`);
 					return;
@@ -64,9 +74,17 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				$scope.dataCount = response.data;
 				let offset = (pageNumber - 1) * $scope.dataLimit;
 				let limit = $scope.dataLimit;
-				entityApi.list(offset, limit).then(function (response) {
+				let request;
+				if (filter) {
+					filter.$offset = offset;
+					filter.$limit = limit;
+					request = entityApi.search(filter);
+				} else {
+					request = entityApi.list(offset, limit);
+				}
+				request.then(function (response) {
 					if (response.status != 200) {
-						messageHub.showAlertError("${name}", `Unable to list ${name}: '${response.message}'`);
+						messageHub.showAlertError("${name}", `Unable to list/filter ${name}: '${response.message}'`);
 						return;
 					}
 #if($hasDates)
@@ -86,7 +104,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				});
 			});
 		};
-		$scope.loadPage($scope.dataPage);
+		$scope.loadPage($scope.dataPage, $scope.filter);
 
 		$scope.selectEntity = function (entity) {
 			$scope.selectedEntity = entity;
@@ -97,6 +115,19 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			messageHub.showDialogWindow("${name}-details", {
 				action: "select",
 				entity: entity,
+#if($hasDropdowns)
+#foreach ($property in $properties)
+#if($property.widgetType == "DROPDOWN")
+				options${property.name}: $scope.options${property.name},
+#end
+#end
+#end
+			});
+		};
+
+		$scope.openFilter = function (entity) {
+			messageHub.showDialogWindow("${name}-filter", {
+				entity: $scope.filterEntity,
 #if($hasDropdowns)
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN")
@@ -158,7 +189,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 							messageHub.showAlertError("${name}", `Unable to delete ${name}: '${response.message}'`);
 							return;
 						}
-						$scope.loadPage($scope.dataPage);
+						$scope.loadPage($scope.dataPage, $scope.filter);
 						messageHub.postMessage("clearDetails");
 					});
 				}
@@ -172,10 +203,11 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 		$scope.options${property.name} = [];
 #end
 #end
-#foreach ($property in $properties)
-#if($property.widgetType == "DROPDOWN")
 
-		${dollar}http.get("/services/ts/${projectName}/gen/api/${property.relationshipEntityPerspectiveName}/${property.relationshipEntityName}Service.ts").then(function (response) {
+#foreach ($property in $properties)
+#if ($property.widgetType == "DROPDOWN")
+
+		${dollar}http.get(${property.widgetDropdownUrl}).then(function (response) {
 			${dollar}scope.options${property.name} = response.data.map(e => {
 				return {
 					value: e.${property.widgetDropDownKey},
@@ -185,6 +217,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 		});
 #end
 #end
+
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN")
 		${dollar}scope.options${property.name}Value = function (optionKey) {

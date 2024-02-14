@@ -30,8 +30,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+/**
+ * The Class ParametersSetter.
+ */
 class ParametersSetter {
 
+    /** The Constant paramSetters. */
     private static final Set<ParamSetter> paramSetters = Set.of(//
             new BooleanParamSetter(), //
             new TinyIntParamSetter(), //
@@ -46,6 +50,13 @@ class ParametersSetter {
             new RealParamSetter(), //
             new BlobParamSetter());
 
+    /**
+     * Sets the parameters.
+     *
+     * @param parameters the parameters
+     * @param preparedStatement the prepared statement
+     * @throws SQLException the SQL exception
+     */
     static void setParameters(String parameters, PreparedStatement preparedStatement) throws SQLException {
         JsonElement parametersElement = GsonHelper.parseJson(parameters);
         if (!(parametersElement instanceof JsonArray parametersArray)) {
@@ -59,6 +70,14 @@ class ParametersSetter {
         }
     }
 
+    /**
+     * Sets the parameter.
+     *
+     * @param preparedStatement the prepared statement
+     * @param paramIndex the param index
+     * @param parameterElement the parameter element
+     * @throws SQLException the SQL exception
+     */
     private static void setParameter(PreparedStatement preparedStatement, int paramIndex, JsonElement parameterElement)
             throws SQLException {
         if (parameterElement.isJsonPrimitive()) {
@@ -74,6 +93,14 @@ class ParametersSetter {
         throw new IllegalArgumentException("Parameters must contain primitives and objects only");
     }
 
+    /**
+     * Sets the json primitive param.
+     *
+     * @param preparedStatement the prepared statement
+     * @param paramIndex the param index
+     * @param parameterElement the parameter element
+     * @throws SQLException the SQL exception
+     */
     private static void setJsonPrimitiveParam(PreparedStatement preparedStatement, int paramIndex, JsonElement parameterElement)
             throws SQLException {
         if (parameterElement.getAsJsonPrimitive()
@@ -97,6 +124,14 @@ class ParametersSetter {
         throw new IllegalArgumentException("Parameter type unkown");
     }
 
+    /**
+     * Sets the number.
+     *
+     * @param preparedStatement the prepared statement
+     * @param paramIndex the param index
+     * @param parameterElement the parameter element
+     * @throws SQLException the SQL exception
+     */
     private static void setNumber(PreparedStatement preparedStatement, int paramIndex, JsonElement parameterElement) throws SQLException {
         boolean isNumberParameterSet = false;
         int numberIndex = paramIndex;
@@ -137,6 +172,14 @@ class ParametersSetter {
         }
     }
 
+    /**
+     * Sets the json object param.
+     *
+     * @param preparedStatement the prepared statement
+     * @param paramIndex the param index
+     * @param parameterElement the parameter element
+     * @throws SQLException the SQL exception
+     */
     private static void setJsonObjectParam(PreparedStatement preparedStatement, int paramIndex, JsonElement parameterElement)
             throws SQLException {
         JsonObject jsonObject = parameterElement.getAsJsonObject();
@@ -165,28 +208,73 @@ class ParametersSetter {
 
     }
 
+    /**
+     * The Interface ParamSetter.
+     */
     private interface ParamSetter {
 
+        /**
+         * Checks if is applicable.
+         *
+         * @param dataType the data type
+         * @return true, if is applicable
+         */
         boolean isApplicable(String dataType);
 
+        /**
+         * Sets the param.
+         *
+         * @param sourceParam the source param
+         * @param paramIndex the param index
+         * @param preparedStatement the prepared statement
+         * @param dataType the data type
+         * @throws SQLException the SQL exception
+         */
         void setParam(JsonElement sourceParam, int paramIndex, PreparedStatement preparedStatement, String dataType) throws SQLException;
     }
 
+    /**
+     * The Class BaseParamSetter.
+     */
     private static abstract class BaseParamSetter implements ParamSetter {
 
+        /**
+         * Throw wrong value.
+         *
+         * @param sourceParam the source param
+         * @param dataType the data type
+         */
         protected void throwWrongValue(JsonElement sourceParam, String dataType) {
             throw new IllegalArgumentException("Wrong value [" + sourceParam + "] for parameter of type " + dataType);
         }
     }
 
+    /**
+     * The Class TextParamSetter.
+     */
     private static class TextParamSetter extends BaseParamSetter {
 
+        /**
+         * Checks if is applicable.
+         *
+         * @param dataType the data type
+         * @return true, if is applicable
+         */
         @Override
         public boolean isApplicable(String dataType) {
             return DataTypeUtils.isVarchar(dataType) || DataTypeUtils.isText(dataType) || DataTypeUtils.isChar(dataType)
                     || DataTypeUtils.isNvarchar(dataType) || DataTypeUtils.isCharacterVarying(dataType);
         }
 
+        /**
+         * Sets the param.
+         *
+         * @param sourceParam the source param
+         * @param paramIndex the param index
+         * @param preparedStatement the prepared statement
+         * @param dataType the data type
+         * @throws SQLException the SQL exception
+         */
         @Override
         public void setParam(JsonElement sourceParam, int paramIndex, PreparedStatement preparedStatement, String dataType)
                 throws SQLException {
@@ -200,13 +288,31 @@ class ParametersSetter {
         }
     }
 
+    /**
+     * The Class DateParamSetter.
+     */
     private static class DateParamSetter extends BaseParamSetter {
 
+        /**
+         * Checks if is applicable.
+         *
+         * @param dataType the data type
+         * @return true, if is applicable
+         */
         @Override
         public boolean isApplicable(String dataType) {
             return DataTypeUtils.isDate(dataType);
         }
 
+        /**
+         * Sets the param.
+         *
+         * @param sourceParam the source param
+         * @param paramIndex the param index
+         * @param preparedStatement the prepared statement
+         * @param dataType the data type
+         * @throws SQLException the SQL exception
+         */
         @Override
         public void setParam(JsonElement sourceParam, int paramIndex, PreparedStatement preparedStatement, String dataType)
                 throws SQLException {
@@ -238,17 +344,38 @@ class ParametersSetter {
         }
     }
 
+    /**
+     * The Class TimestampParamSetter.
+     */
     private static class TimestampParamSetter extends BaseParamSetter {
+
+        /** The Constant logger. */
         private static final Logger logger = LoggerFactory.getLogger(TimestampParamSetter.class);
 
+        /** The Constant SIMPLE_DATE_FORMAT_WITHOUT_ZONE. */
         private static final SimpleDateFormat SIMPLE_DATE_FORMAT_WITHOUT_ZONE =
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
 
+        /**
+         * Checks if is applicable.
+         *
+         * @param dataType the data type
+         * @return true, if is applicable
+         */
         @Override
         public boolean isApplicable(String dataType) {
             return DataTypeUtils.isTimestamp(dataType) || DataTypeUtils.isDateTime(dataType);
         }
 
+        /**
+         * Sets the param.
+         *
+         * @param sourceParam the source param
+         * @param paramIndex the param index
+         * @param preparedStatement the prepared statement
+         * @param dataType the data type
+         * @throws SQLException the SQL exception
+         */
         @Override
         public void setParam(JsonElement sourceParam, int paramIndex, PreparedStatement preparedStatement, String dataType)
                 throws SQLException {
@@ -276,6 +403,12 @@ class ParametersSetter {
             throwWrongValue(sourceParam, dataType);
         }
 
+        /**
+         * Gets the time.
+         *
+         * @param timestampString the timestamp string
+         * @return the time
+         */
         private long getTime(String timestampString) {
             try {
                 // assume date string in ISO format e.g. 2018-05-22T21:00:00.000Z
@@ -295,13 +428,31 @@ class ParametersSetter {
         }
     }
 
+    /**
+     * The Class TimeParamSetter.
+     */
     private static class TimeParamSetter extends BaseParamSetter {
 
+        /**
+         * Checks if is applicable.
+         *
+         * @param dataType the data type
+         * @return true, if is applicable
+         */
         @Override
         public boolean isApplicable(String dataType) {
             return DataTypeUtils.isTime(dataType);
         }
 
+        /**
+         * Sets the param.
+         *
+         * @param sourceParam the source param
+         * @param paramIndex the param index
+         * @param preparedStatement the prepared statement
+         * @param dataType the data type
+         * @throws SQLException the SQL exception
+         */
         @Override
         public void setParam(JsonElement sourceParam, int paramIndex, PreparedStatement preparedStatement, String dataType)
                 throws SQLException {
@@ -334,13 +485,31 @@ class ParametersSetter {
         }
     }
 
+    /**
+     * The Class IntegerParamSetter.
+     */
     private static class IntegerParamSetter extends BaseParamSetter {
 
+        /**
+         * Checks if is applicable.
+         *
+         * @param dataType the data type
+         * @return true, if is applicable
+         */
         @Override
         public boolean isApplicable(String dataType) {
             return DataTypeUtils.isInteger(dataType);
         }
 
+        /**
+         * Sets the param.
+         *
+         * @param sourceParam the source param
+         * @param paramIndex the param index
+         * @param preparedStatement the prepared statement
+         * @param dataType the data type
+         * @throws SQLException the SQL exception
+         */
         @Override
         public void setParam(JsonElement sourceParam, int paramIndex, PreparedStatement preparedStatement, String dataType)
                 throws SQLException {
@@ -362,13 +531,31 @@ class ParametersSetter {
         }
     }
 
+    /**
+     * The Class TinyIntParamSetter.
+     */
     private static class TinyIntParamSetter extends BaseParamSetter {
 
+        /**
+         * Checks if is applicable.
+         *
+         * @param dataType the data type
+         * @return true, if is applicable
+         */
         @Override
         public boolean isApplicable(String dataType) {
             return DataTypeUtils.isTinyint(dataType);
         }
 
+        /**
+         * Sets the param.
+         *
+         * @param sourceParam the source param
+         * @param paramIndex the param index
+         * @param preparedStatement the prepared statement
+         * @param dataType the data type
+         * @throws SQLException the SQL exception
+         */
         @Override
         public void setParam(JsonElement sourceParam, int paramIndex, PreparedStatement preparedStatement, String dataType)
                 throws SQLException {
@@ -390,13 +577,31 @@ class ParametersSetter {
         }
     }
 
+    /**
+     * The Class SmallIntParamSetter.
+     */
     private static class SmallIntParamSetter extends BaseParamSetter {
 
+        /**
+         * Checks if is applicable.
+         *
+         * @param dataType the data type
+         * @return true, if is applicable
+         */
         @Override
         public boolean isApplicable(String dataType) {
             return DataTypeUtils.isSmallint(dataType);
         }
 
+        /**
+         * Sets the param.
+         *
+         * @param sourceParam the source param
+         * @param paramIndex the param index
+         * @param preparedStatement the prepared statement
+         * @param dataType the data type
+         * @throws SQLException the SQL exception
+         */
         @Override
         public void setParam(JsonElement sourceParam, int paramIndex, PreparedStatement preparedStatement, String dataType)
                 throws SQLException {
@@ -418,13 +623,31 @@ class ParametersSetter {
         }
     }
 
+    /**
+     * The Class BigIntParamSetter.
+     */
     private static class BigIntParamSetter extends BaseParamSetter {
 
+        /**
+         * Checks if is applicable.
+         *
+         * @param dataType the data type
+         * @return true, if is applicable
+         */
         @Override
         public boolean isApplicable(String dataType) {
             return DataTypeUtils.isBigint(dataType);
         }
 
+        /**
+         * Sets the param.
+         *
+         * @param sourceParam the source param
+         * @param paramIndex the param index
+         * @param preparedStatement the prepared statement
+         * @param dataType the data type
+         * @throws SQLException the SQL exception
+         */
         @Override
         public void setParam(JsonElement sourceParam, int paramIndex, PreparedStatement preparedStatement, String dataType)
                 throws SQLException {
@@ -447,13 +670,31 @@ class ParametersSetter {
         }
     }
 
+    /**
+     * The Class RealParamSetter.
+     */
     private static class RealParamSetter extends BaseParamSetter {
 
+        /**
+         * Checks if is applicable.
+         *
+         * @param dataType the data type
+         * @return true, if is applicable
+         */
         @Override
         public boolean isApplicable(String dataType) {
             return DataTypeUtils.isReal(dataType);
         }
 
+        /**
+         * Sets the param.
+         *
+         * @param sourceParam the source param
+         * @param paramIndex the param index
+         * @param preparedStatement the prepared statement
+         * @param dataType the data type
+         * @throws SQLException the SQL exception
+         */
         @Override
         public void setParam(JsonElement sourceParam, int paramIndex, PreparedStatement preparedStatement, String dataType)
                 throws SQLException {
@@ -476,13 +717,31 @@ class ParametersSetter {
         }
     }
 
+    /**
+     * The Class DoubleParamSetter.
+     */
     private static class DoubleParamSetter extends BaseParamSetter {
 
+        /**
+         * Checks if is applicable.
+         *
+         * @param dataType the data type
+         * @return true, if is applicable
+         */
         @Override
         public boolean isApplicable(String dataType) {
             return DataTypeUtils.isDouble(dataType) | DataTypeUtils.isDecimal(dataType);
         }
 
+        /**
+         * Sets the param.
+         *
+         * @param sourceParam the source param
+         * @param paramIndex the param index
+         * @param preparedStatement the prepared statement
+         * @param dataType the data type
+         * @throws SQLException the SQL exception
+         */
         @Override
         public void setParam(JsonElement sourceParam, int paramIndex, PreparedStatement preparedStatement, String dataType)
                 throws SQLException {
@@ -505,13 +764,31 @@ class ParametersSetter {
         }
     }
 
+    /**
+     * The Class BooleanParamSetter.
+     */
     private static class BooleanParamSetter extends BaseParamSetter {
 
+        /**
+         * Checks if is applicable.
+         *
+         * @param dataType the data type
+         * @return true, if is applicable
+         */
         @Override
         public boolean isApplicable(String dataType) {
             return DataTypeUtils.isBoolean(dataType);
         }
 
+        /**
+         * Sets the param.
+         *
+         * @param sourceParam the source param
+         * @param paramIndex the param index
+         * @param preparedStatement the prepared statement
+         * @param dataType the data type
+         * @throws SQLException the SQL exception
+         */
         @Override
         public void setParam(JsonElement sourceParam, int paramIndex, PreparedStatement preparedStatement, String dataType)
                 throws SQLException {
@@ -533,13 +810,31 @@ class ParametersSetter {
         }
     }
 
+    /**
+     * The Class BlobParamSetter.
+     */
     private static class BlobParamSetter extends BaseParamSetter {
 
+        /**
+         * Checks if is applicable.
+         *
+         * @param dataType the data type
+         * @return true, if is applicable
+         */
         @Override
         public boolean isApplicable(String dataType) {
             return DataTypeUtils.isBlob(dataType);
         }
 
+        /**
+         * Sets the param.
+         *
+         * @param sourceParam the source param
+         * @param paramIndex the param index
+         * @param preparedStatement the prepared statement
+         * @param dataType the data type
+         * @throws SQLException the SQL exception
+         */
         @Override
         public void setParam(JsonElement sourceParam, int paramIndex, PreparedStatement preparedStatement, String dataType)
                 throws SQLException {
