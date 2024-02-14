@@ -15,6 +15,8 @@
 
 const CommandFacade = Java.type("org.eclipse.dirigible.components.api.platform.CommandFacade");
 
-export function execute(command, add, remove) {
-	return CommandFacade.execute(command, add, remove);
-};
+export class Command{
+	public static execute(command: string, add: any, remove: any): string {
+		return CommandFacade.execute(command, add, remove);
+	};
+}
