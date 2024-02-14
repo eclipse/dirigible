@@ -43,44 +43,44 @@ export class Workspaces{
  */
 class Workspace {
 
-	constructor(private native) { }
+	constructor(private native: any) { }
 
-	getProjects() {
+	getProjects(): Projects {
 		const native = this.native.getProjects();
 		return new Projects(native);
 	};
 
-	createProject(name) {
+	createProject(name: string): Project {
 		const native = this.native.createProject(name);
 		return new Project(native);
 	};
 
-	getProject(name) {
+	getProject(name: string): Project {
 		const native = this.native.getProject(name);
 		return new Project(native);
 	};
 
-	deleteProject(name) {
+	deleteProject(name: string): void {
 		this.native.deleteProject(name);
 	};
 
-	exists() {
+	exists(): boolean {
 		return this.native.exists();
 	};
 
-	existsFolder(path) {
+	existsFolder(path: string): boolean {
 		return this.native.existsFolder(path);
 	};
 
-	existsFile(path) {
+	existsFile(path: string): boolean {
 		return this.native.existsFile(path);
 	};
 
-	copyProject(source, target) {
+	copyProject(source: string, target: string): void {
 		this.native.copyProject(source, target);
 	};
 
-	moveProject(source, target) {
+	moveProject(source: string, target: string): void {
 		this.native.moveProject(source, target);
 	};
 
@@ -91,13 +91,13 @@ class Workspace {
  */
 class Projects {
 
-	constructor(private native) { }
+	constructor(private native: any) { }
 
-	size() {
+	size(): number {
 		return this.native.size();
 	};
 
-	get(index) {
+	get(index: string): Project {
 		const native = this.native.get(index);
 		return new Project(native);
 	};
