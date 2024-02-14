@@ -12,16 +12,18 @@
 
 const LifecycleFacade = Java.type("org.eclipse.dirigible.components.api.platform.LifecycleFacade");
 
-export function publish(user, workspace, project) {
-    if (!project) {
-        project = "*";
-    }
-    return LifecycleFacade.publish(user, workspace, project);
-};
+export class LifeCycle{
+    public static publish(user: string, workspace: string, project: string): boolean {
+        if (!project) {
+            project = "*";
+        }
+        return LifecycleFacade.publish(user, workspace, project);
+    };
 
-export function unpublish(project) {
-    if (!project) {
-        project = "*";
-    }
-    return LifecycleFacade.unpublish(project);
-};
+    public static unpublish(project: string): boolean {
+        if (!project) {
+            project = "*";
+        }
+        return LifecycleFacade.unpublish(project);
+    };
+}
