@@ -73,7 +73,7 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--4 #end">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
@@ -97,7 +97,7 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--4 #end">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
@@ -122,7 +122,7 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--2 #end">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
@@ -145,7 +145,7 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--2 #end">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
@@ -168,7 +168,7 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--2 #end">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
@@ -191,7 +191,7 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--2 #end">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
@@ -214,7 +214,7 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--2 #end">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
@@ -252,7 +252,7 @@
 								dg-input-rules="{ patterns: ['${property.inputRule}'] }"
 								placeholder="Enter ${property.widgetLabel}">
 							</fd-textarea>
-							<fd-form-message dg-type="error" ng-show="formErrors.${property.name}">Incorrect Input</fd-form-message>
+							<fd-form-message dg-type="error" ng-show="!forms.details['${property.name}'].$valid">Incorrect Input</fd-form-message>
 						</div>
 					</fd-form-item>
 #elseif($property.widgetType == "TEL")
@@ -261,7 +261,7 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--4 #end">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
@@ -288,7 +288,7 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--8 #end">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
@@ -315,7 +315,7 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--4 #end">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
@@ -342,7 +342,7 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--8 #end">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"

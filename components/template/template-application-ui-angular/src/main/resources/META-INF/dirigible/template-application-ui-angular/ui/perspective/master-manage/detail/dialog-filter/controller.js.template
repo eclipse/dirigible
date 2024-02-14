@@ -9,7 +9,9 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 	.controller('PageController', ['$scope', 'messageHub', 'entityApi', function ($scope, messageHub, entityApi) {
 
 		$scope.entity = {};
-		$scope.formErrors = {};
+		$scope.forms = {
+			details: {},
+		};
 
 		if (window != null && window.frameElement != null && window.frameElement.hasAttribute("data-parameters")) {
 			let dataParameters = window.frameElement.getAttribute("data-parameters");
@@ -35,17 +37,6 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 #end
 			}
 		}
-
-		$scope.isValid = function (isValid, property) {
-			${dollar}scope.formErrors[property] = !isValid ? true : undefined;
-			for (let next in ${dollar}scope.formErrors) {
-				if (${dollar}scope.formErrors[next] === true) {
-					${dollar}scope.isFormValid = false;
-					return;
-				}
-			}
-			${dollar}scope.isFormValid = true;
-		};
 
 		$scope.filter = function () {
 			let entity = $scope.entity;
