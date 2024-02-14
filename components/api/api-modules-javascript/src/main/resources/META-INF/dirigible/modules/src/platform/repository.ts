@@ -12,221 +12,223 @@
 import * as bytes from "@dirigible/io/bytes";
 const RepositoryFacade = Java.type("org.eclipse.dirigible.components.api.platform.RepositoryFacade");
 
-export function getResource(path) {
-	const resourceInstance = RepositoryFacade.getResource(path);
-	return new Resource(resourceInstance);
-};
+export class Repository{
+	public static getResource(path: string): Resource {
+		const resourceInstance = RepositoryFacade.getResource(path);
+		return new Resource(resourceInstance);
+	};
 
-export function createResource(path, content, contentType) {
-	const resourceInstance = RepositoryFacade.createResource(path, content, contentType);
-	return new Resource(resourceInstance);
-};
+	public static createResource(path: string, content: string, contentType: string): Resource {
+		const resourceInstance = RepositoryFacade.createResource(path, content, contentType);
+		return new Resource(resourceInstance);
+	};
 
-export function createResourceNative(path, content, contentType) {
-	const resourceInstance = RepositoryFacade.createResourceNative(path, content, contentType);
-	return new Resource(resourceInstance);
-};
+	public static createResourceNative(path: string, content: any, contentType: string): Resource {
+		const resourceInstance = RepositoryFacade.createResourceNative(path, content, contentType);
+		return new Resource(resourceInstance);
+	};
 
-export function updateResource(path, content) {
-	const resourceInstance = RepositoryFacade.updateResource(path, content);
-	return new Resource(resourceInstance);
-};
+	public static updateResource(path: string, content: string): Resource {
+		const resourceInstance = RepositoryFacade.updateResource(path, content);
+		return new Resource(resourceInstance);
+	};
 
-export function updateResourceNative(path, content) {
-	const resourceInstance = RepositoryFacade.updateResourceNative(path, content);
-	return new Resource(resourceInstance);
-};
+	public static updateResourceNative(path: string, content: any): Resource {
+		const resourceInstance = RepositoryFacade.updateResourceNative(path, content);
+		return new Resource(resourceInstance);
+	};
 
-export function deleteResource(path) {
-	RepositoryFacade.deleteResource(path);
-};
+	public static deleteResource(path: string): void {
+		RepositoryFacade.deleteResource(path);
+	};
 
-export function getCollection(path) {
-	const collectionInstance = RepositoryFacade.getCollection(path);
-	return new Collection(collectionInstance);
-};
+	public static getCollection(path: string): Collection {
+		const collectionInstance = RepositoryFacade.getCollection(path);
+		return new Collection(collectionInstance);
+	};
 
-export function createCollection(path) {
-	const collectionInstance = RepositoryFacade.createCollection(path);
-	return new Collection(collectionInstance);
-};
+	public static createCollection(path: string): Collection {
+		const collectionInstance = RepositoryFacade.createCollection(path);
+		return new Collection(collectionInstance);
+	};
 
-export function deleteCollection(path) {
-	RepositoryFacade.deleteCollection(path);
-};
+	public static deleteCollection(path: string): void {
+		RepositoryFacade.deleteCollection(path);
+	};
 
-export function find(path, pattern) {
-	return JSON.parse(RepositoryFacade.find(path, pattern));
-};
+	public static find(path: string, pattern: string): string {
+		return JSON.parse(RepositoryFacade.find(path, pattern));
+	};
+}
 
 class Resource {
 
-	constructor(private native) { }
+	constructor(private native: any) { }
 
-	getName() {
+	getName(): string {
 		return this.native.getName();
 	};
 
-	getPath() {
+	getPath(): string {
 		return this.native.getPath();
 	};
 
-	getParent() {
+	getParent(): Collection {
 		const collectionInstance = this.native.getParent();
 		return new Collection(collectionInstance);
 	};
 
-	getInformation() {
+	getInformation(): EntityInformation {
 		const informationInstance = this.native.getInformation();
 		return new EntityInformation(informationInstance);
 	};
 
-	create() {
+	create(): void {
 		this.native.create();
 	};
 
-	delete() {
+	delete(): void {
 		this.native.delete();
 	};
 
-	renameTo(name) {
+	renameTo(name: string): void {
 		this.native.renameTo(name);
 	};
 
-	moveTo(path) {
+	moveTo(path: string): void {
 		this.native.moveTo(path);
 	};
 
-	copyTo(path) {
+	copyTo(path: string): void {
 		this.native.copyTo(path);
 	};
 
-	exists() {
+	exists(): boolean {
 		return this.native.exists();
 	};
 
-	isEmpty() {
+	isEmpty(): boolean {
 		return this.native.isEmpty();
 	};
 
-	getText() {
+	getText(): string {
 		return bytes.byteArrayToText(this.getContent());
 	};
 
-	getContent() {
+	getContent(): any {
 		let nativeContent = this.native.getContent();
 		return bytes.toJavaScriptBytes(nativeContent);
 	};
 
-	getContentNative() {
+	getContentNative(): any {
 		return this.native.getContent();
 	};
 
-	setText(text) {
+	setText(text: string): void {
 		let content = bytes.textToByteArray(text);
 		this.setContent(content);
 	};
 
-	setContent(content) {
+	setContent(content: any): void {
 		let nativeContent = bytes.toJavaBytes(content);
 		this.native.setContent(nativeContent);
 	};
 
-	setContentNative(content) {
+	setContentNative(content: any): void {
 		this.native.setContent(content);
 	};
 
-	isBinary() {
+	isBinary(): void {
 		this.native.isBinary();
 	};
 
-	getContentType() {
+	getContentType(): void {
 		this.native.getContentType();
 	};
 }
 
 class Collection {
 
-	constructor(private native) { }
+	constructor(private native: any) { }
 
-	getName() {
+	getName(): string {
 		return this.native.getName();
 	};
 
-	getPath() {
+	getPath(): string {
 		return this.native.getPath();
 	};
 
-	getParent() {
+	getParent(): Collection {
 		const collectionInstance = this.native.getParent();
 		return new Collection(collectionInstance);
 	};
 
-	getInformation() {
+	getInformation(): EntityInformation {
 		const informationInstance = this.native.getInformation();
 		return new EntityInformation(informationInstance);
 	};
 
-	create() {
+	create(): void {
 		this.native.create();
 	};
 
-	delete() {
+	delete(): void {
 		this.native.delete();
 	};
 
-	renameTo(name) {
+	renameTo(name: string): void {
 		this.native.renameTo(name);
 	};
 
-	moveTo(path) {
+	moveTo(path: string): void {
 		this.native.moveTo(path);
 	};
 
-	copyTo(path) {
+	copyTo(path: string): void {
 		this.native.copyTo(path);
 	};
 
-	exists() {
+	exists(): boolean {
 		return this.native.exists();
 	};
 
-	isEmpty() {
+	isEmpty(): boolean {
 		return this.native.isEmpty();
 	};
 
-	getCollectionsNames() {
+	getCollectionsNames(): any {
 		return this.native.getCollectionsNames();
 	};
 
-	createCollection(name) {
+	createCollection(name: string): Collection {
 		const collectionInstance = this.native.createCollection(name);
 		return new Collection(collectionInstance);
 	};
 
-	getCollection(name) {
+	getCollection(name: string): Collection {
 		const collectionInstance = this.native.getCollection(name);
 		return new Collection(collectionInstance);
 	};
 
-	removeCollection(name) {
+	removeCollection(name: string): void {
 		this.native.removeCollection(name);
 	};
 
-	getResourcesNames() {
+	getResourcesNames(): any {
 		return this.native.getResourcesNames();
 	};
 
-	getResource(name) {
+	getResource(name: string): Resource {
 		const resourceInstance = this.native.getResource(name);
 		return new Resource(resourceInstance);
 	};
 
-	removeResource(name) {
+	removeResource(name: string): void {
 		this.native.removeResource(name);
 	};
 
-	createResource(name, content) {
+	createResource(name: string, content: string): Resource {
 		const resourceInstance = this.native.createResource(name, content);
 		return new Resource(resourceInstance);
 	};
@@ -234,37 +236,37 @@ class Collection {
 
 class EntityInformation {
 
-	constructor(private native) { }
+	constructor(private native: any) { }
 
-	getName() {
+	getName(): string {
 		return this.native.getName();
 	};
 
-	getPath() {
+	getPath(): string {
 		return this.native.getPath();
 	};
 
-	getPermissions() {
+	getPermissions(): string {
 		return this.native.getPermissions();
 	};
 
-	getSize() {
+	getSize(): number {
 		return this.native.getSize();
 	};
 
-	getCreatedBy() {
+	getCreatedBy(): string {
 		return this.native.getCreatedBy();
 	};
 
-	getCreatedAt() {
+	getCreatedAt(): string {
 		return this.native.getCreatedAt();
 	};
 
-	getModifiedBy() {
+	getModifiedBy(): string {
 		return this.native.getModifiedBy();
 	};
 
-	getModifiedAt() {
+	getModifiedAt(): string {
 		return this.native.getModifiedAt();
 	};
 }
