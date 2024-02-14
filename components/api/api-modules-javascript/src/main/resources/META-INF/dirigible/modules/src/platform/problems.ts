@@ -16,39 +16,42 @@ export const ACTIVE = "ACTIVE";
 export const SOLVED = "SOLVED";
 export const IGNORED = "IGNORED";
 
-export function save(location, type, line, column, cause, expected, category, module, source, program) {
-   ProblemsFacade.save(location, type, line, column, cause, expected,
-      category, module, source, program);
-};
+export class Problems{
+   public static save(location: string, type: string, line: string, column: string, 
+      cause: string, expected: string, category: string, module: string, source: string, program: string): void {
+      ProblemsFacade.save(location, type, line, column, cause, expected,
+         category, module, source, program);
+   };
 
-export function findProblem(id) {
-   return ProblemsFacade.findProblem(id);
-};
+   public static findProblem(id: number): string {
+      return ProblemsFacade.findProblem(id);
+   };
 
-export function fetchAllProblems() {
-   return ProblemsFacade.fetchAllProblems();
-};
+   public static fetchAllProblems(): string {
+      return ProblemsFacade.fetchAllProblems();
+   };
 
-export function fetchProblemsBatch(condition, limit) {
-   return ProblemsFacade.fetchProblemsBatch(condition, limit);
-};
+   public static fetchProblemsBatch(condition: string, limit: number): string {
+      return ProblemsFacade.fetchProblemsBatch(condition, limit);
+   };
 
-export function deleteProblem(id) {
-   ProblemsFacade.deleteProblem(id);
-};
+   public static deleteProblem(id: number): void {
+      ProblemsFacade.deleteProblem(id);
+   };
 
-export function deleteAllByStatus(status) {
-   ProblemsFacade.deleteAllByStatus(status);
-};
+   public static deleteAllByStatus(status: string): void {
+      ProblemsFacade.deleteAllByStatus(status);
+   };
 
-export function clearAllProblems() {
-   ProblemsFacade.clearAllProblems();
-};
+   public static clearAllProblems(): void {
+      ProblemsFacade.clearAllProblems();
+   };
 
-export function updateStatus(id, status) {
-   ProblemsFacade.updateStatus(id, status);
-};
+   public static updateStatus(id: number, status: string): void {
+      ProblemsFacade.updateStatus(id, status);
+   };
 
-export function updateStatusMultiple(ids, status) {
-   ProblemsFacade.updateStatusMultiple(ids, status);
-};
+   public static updateStatusMultiple(ids: any, status: string): void {
+      ProblemsFacade.updateStatusMultiple(ids, status);
+   };
+}
