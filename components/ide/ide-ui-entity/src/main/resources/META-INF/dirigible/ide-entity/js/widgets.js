@@ -121,7 +121,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 						if (style !== 'projection') {
 							if (v1.children && v1.children.length > 0) {
 								if (!v1.children[0].value.isSQL) {
-									v1.children[0].value.name = name.toLowerCase();
+									v1.children[0].value.name = 'Id';
 								}
 							}
 						} else {
