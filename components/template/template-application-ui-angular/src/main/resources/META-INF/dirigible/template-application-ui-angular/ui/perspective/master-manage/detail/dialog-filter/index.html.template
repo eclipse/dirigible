@@ -16,7 +16,7 @@
         <script type="text/javascript" src="controller.js"></script>
     </head>
 
-    <body class="dg-vbox" dg-contextmenu="contextMenuContent">
+    <body class="dg-vbox">
         <fd-scrollbar class="dg-full-height">
             <div class="fd-margin--md fd-message-strip fd-message-strip--error fd-message-strip--dismissible"
                 role="alert" ng-show="errorMessage">
@@ -26,11 +26,11 @@
             </div>
 
             <fd-fieldset class="fd-margin--md" ng-form="formFieldset">
-                <fd-form-group dg-header="${name} Filter" name="entityForm" class="fd-container fd-form-layout-grid-container fd-form-group">
+                <fd-form-group dg-header="${name} Filter" name="entityForm" class="fd-container fd-form-layout-grid-container">
 #foreach ($property in $properties)
 #if(!$property.dataAutoIncrement)
 #if($property.widgetType == "DROPDOWN")
-                    <fd-form-item class="fd-row fd-form-item">
+                    <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
@@ -47,20 +47,19 @@
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "CHECKBOX")
-                    <fd-form-item class="fd-row fd-form-item">
-                    	<div class="fd-col fd-col-md--2">
-	                        <fd-checkbox id="id${property.name}"
+                    <fd-form-item class="fd-row">
+                    	<div class="fd-col fd-col-md--2"></div>
+	                    <div class="fd-col fd-col-md--8">
+							<fd-checkbox id="id${property.name}"
 	                            compact="false"
 	                            ng-required="${property.dataNotNull}"
 								ng-model="entity.${property.name}">
 	                        </fd-checkbox>
-	                    </div>
-	                    <div class="fd-col fd-col-md--8">
                         	<fd-checkbox-label for="id${property.name}" dg-required="${property.dataNotNull}">${property.widgetLabel}</fd-checkbox-label>
                         </div>
                     </fd-form-item>
 #elseif($property.widgetType == "COLOR")
-                    <fd-form-item class="fd-row fd-form-item">
+                    <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
@@ -85,7 +84,7 @@
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "NUMBER")
-                    <fd-form-item class="fd-row fd-form-item">
+                    <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
@@ -111,7 +110,7 @@
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "MONTH")
-                    <fd-form-item class="fd-row fd-form-item">
+                    <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
@@ -135,7 +134,7 @@
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "WEEK")
-                    <fd-form-item class="fd-row fd-form-item">
+                    <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
@@ -159,7 +158,7 @@
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "TIME")
-                    <fd-form-item class="fd-row fd-form-item">
+                    <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
@@ -183,7 +182,7 @@
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "DATETIME-LOCAL")
-                    <fd-form-item class="fd-row fd-form-item">
+                    <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}From" dg-required="${property.dataNotNull}" dg-colon="true">From ${property.widgetLabel}</fd-form-label>
                         </div>
@@ -228,7 +227,7 @@
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "DATE")
-                    <fd-form-item class="fd-row fd-form-item">
+                    <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}From" dg-required="${property.dataNotNull}" dg-colon="true">From ${property.widgetLabel}</fd-form-label>
                         </div>
@@ -273,7 +272,7 @@
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "TEXTAREA")
-					<fd-form-item class="fd-row fd-form-item">
+					<fd-form-item class="fd-row">
 						<div class="fd-col fd-col-md--2">
 							<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
 						</div>
@@ -298,7 +297,7 @@
 						</div>
 					</fd-form-item>
 #elseif($property.widgetType == "TEL")
-                    <fd-form-item class="fd-row fd-form-item">
+                    <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
@@ -326,7 +325,7 @@
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "URL")
-                    <fd-form-item class="fd-row fd-form-item">
+                    <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
@@ -354,7 +353,7 @@
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "EMAIL")
-                    <fd-form-item class="fd-row fd-form-item">
+                    <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
@@ -382,7 +381,7 @@
 	                    </div>
                     </fd-form-item>
 #else
-                    <fd-form-item class="fd-row fd-form-item">
+                    <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
@@ -412,6 +411,7 @@
 #end
 #end
 #end
+                </fd-form-group>
             </fd-fieldset>
         </fd-scrollbar>
 
