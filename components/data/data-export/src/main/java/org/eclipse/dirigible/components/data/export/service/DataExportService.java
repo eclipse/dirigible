@@ -344,7 +344,8 @@ public class DataExportService {
 
     private JsonObject populateColumnData(TableColumn column) {
         JsonObject columnObject = new JsonObject();
-        columnObject.addProperty("calculatedPropertyExpression", "");
+        columnObject.addProperty("calculatedPropertyExpressionCreate", "");
+        columnObject.addProperty("calculatedPropertyExpressionUpdate", "");
         columnObject.addProperty("dataAutoIncrement", String.valueOf(column.isPrimaryKey()));
         columnObject.addProperty("dataLength", column.getLength());
         columnObject.addProperty("dataName", column.getName());

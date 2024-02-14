@@ -50,7 +50,8 @@ function Property(name) {
 }
 
 Property.prototype.isCalculatedProperty = false;
-Property.prototype.calculatedPropertyExpression = null;
+Property.prototype.calculatedPropertyExpressionCreate = null;
+Property.prototype.calculatedPropertyExpressionUpdate = null;
 Property.prototype.dataName = null;
 Property.prototype.dataType = 'VARCHAR';
 Property.prototype.dataLength = '20';

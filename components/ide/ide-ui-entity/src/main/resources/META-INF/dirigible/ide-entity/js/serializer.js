@@ -90,7 +90,8 @@ function createModel(graph) {
 
 					model.push('    <property name="' + _.escape(property.name) +
 						'" isCalculatedProperty="' + _.escape(property.isCalculatedProperty) +
-						'" calculatedPropertyExpression="' + _.escape(property.calculatedPropertyExpression) +
+						'" calculatedPropertyExpressionCreate="' + _.escape(property.calculatedPropertyExpressionCreate) +
+						'" calculatedPropertyExpressionUpdate="' + _.escape(property.calculatedPropertyExpressionUpdate) +
 						'" dataName="' + _.escape(property.dataName) +
 						'" dataType="' + _.escape(property.dataType) + '"');
 					if (property.dataLength !== null) {
@@ -344,7 +345,8 @@ function getPerspectiveOrder(graph, child) {
 // 					// General
 // 					property.name = _.escape(childProperty.name);
 // 					property.isCalculatedProperty = _.escape(childProperty.isCalculatedProperty);
-// 					property.calculatedPropertyExpression = _.escape(childProperty.calculatedPropertyExpression);
+// 					property.calculatedPropertyExpressionCreate = _.escape(childProperty.calculatedPropertyExpressionCreate);
+// 					property.calculatedPropertyExpressionUpdate = _.escape(childProperty.calculatedPropertyExpressionUpdate);
 
 // 					// Data Properties
 // 					property.dataName = _.escape(childProperty.dataName ? childProperty.dataName : JSON.stringify(childProperty.name).replace(/\W/g, '').toUpperCase());
