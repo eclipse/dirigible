@@ -12,19 +12,21 @@
 import * as bytes from "@dirigible/io/bytes";
 const RegistryFacade = Java.type("org.eclipse.dirigible.components.api.platform.RegistryFacade");
 
-export function getContent(path) {
-	const nativeContent = RegistryFacade.getContent(path);
-	return bytes.toJavaScriptBytes(nativeContent);
-};
+export class Registry{
+	public static getContent(path: string): any {
+		const nativeContent = RegistryFacade.getContent(path);
+		return bytes.toJavaScriptBytes(nativeContent);
+	};
 
-export function getContentNative(path) {
-	return RegistryFacade.getContent(path);
-};
+	public static getContentNative(path: string): any {
+		return RegistryFacade.getContent(path);
+	};
 
-export function getText(path) {
-	return RegistryFacade.getText(path);
-};
+	public static getText(path: string): string {
+		return RegistryFacade.getText(path);
+	};
 
-export function find(path, pattern) {
-	return JSON.parse(RegistryFacade.find(path, pattern));
-};
+	public static find(path: string, pattern: string): JSON {
+		return JSON.parse(RegistryFacade.find(path, pattern));
+	};
+}
