@@ -8,11 +8,11 @@
  *
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
- */
+ */ 
 
 const EtcdFacade = Java.type("org.eclipse.dirigible.components.api.etcd.EtcdFacade");
 
-export function getClient() {
+export function getClient(): Client {
     const native = EtcdFacade.getClient();
     var client = new Client(native);
     return client;
@@ -20,61 +20,40 @@ export function getClient() {
 
 class Client {
 
-    constructor(private native) { }
-
-    putStringValue(key, value) {
-        if (typeof (key) !== 'string') {
-            return new Error('Key is not a string.');
-        } else if (typeof (value) !== 'string') {
-            return new Error('Value is not a string.');
-        } else {
-            this.native.put(StringToByteSequence(key), StringToByteSequence(value));
-        }
+    constructor(private native: any) {
+        this.native = native;
     }
 
-    putByteArrayValue(key, value) {
-        if (typeof (key) !== 'string') {
-            return new Error('Key is not a string.');
-        } else if (!(value instanceof Int8Array)) {
-            return new Error('Value is not a Int8Array.');
-        } else {
-            this.native.put(StringToByteSequence(key), ByteArrayToByteSequence(value));
-        }
+    putStringValue(key: string, value: string): void {
+        this.native.put(StringToByteSequence(key), StringToByteSequence(value));
     }
 
-    getHeader(key) {
+    putByteArrayValue(key: string, value: Int8Array): void {
+        this.native.put(StringToByteSequence(key), ByteArrayToByteSequence(value));
+    }
+
+    getHeader(key: string): Header {
         return this.get(key, this.native).getHeader();
     }
 
-    getKvsStringValue(key) {
-        if (typeof (key) !== 'string') {
-            return new Error('Key is not a string.');
-        } else {
-            return this.get(key, this.native).getKvsString();
-        }
+    getKvsStringValue(key: string): {[key: string]: any} {
+        return this.get(key, this.native).getKvsString();
     }
 
-    getKvsByteArrayValue(key) {
-        if (typeof (key) !== 'string') {
-            return new Error('Key is not a string.');
-        } else {
+    getKvsByteArrayValue(key: string): {[key: string]: Int8Array}{
             return this.get(key, this.native).getKvsByteArray();
-        }
     }
 
-    getCount(key) {
+    getCount(key: string): number {
         return this.get(key, this.native).getCount();
     }
 
-    delete(key) {
-        if (typeof (key) !== 'string') {
-            return new Error('Key is not a string.');
-        } else {
-            this.native.delete(StringToByteSequence(key));
-        }
+    delete(key: string): void {
+        this.native.delete(StringToByteSequence(key));
     }
 
-    private get(key, native) {
+    //? is native needed as a parameter?
+    private get(key: string, native?: any): GetResponse {
         var etcdCompletableFuture = native.get(StringToByteSequence(key));
         var native = etcdCompletableFuture.get();
         var etcdGetReponse = new GetResponse(native);
@@ -86,66 +65,68 @@ class GetResponse {
 
     constructor(private native) { }
 
-    getHeader() {
+    getHeader(): Header {
         var native = this.native.getHeader();
         var header = new Header(native);
         return header;
     }
 
-    getKvsString() {
+    getKvsString(): {[key: string]: string} {
         return KeyValueObjectString(this.native.getKvs());
     }
 
-    getKvsByteArray() {
+    getKvsByteArray(): {[key: string]: Int8Array}{
         return KeyValueObjectByteArray(this.native.getKvs());
     }
-    getCount() {
+    getCount(): number {
         return this.native.getCount();
     }
 }
 
 class Header {
-    constructor(private native) { }
+    constructor(private native) { 
+        this.native = native;
+    }
 
-    getRevision() {
+    getRevision(): number {
         return this.native.getRevision();
     }
 
-    getClusterId() {
+    getClusterId(): number {
         return this.native.getClusterId();
     }
 
-    getMemberId() {
+    getMemberId(): number {
         return this.native.getMemberId();
     }
 
-    getRaftTerm() {
+    getRaftTerm(): number {
         return this.native.getRaftTerm();
     }
 }
 
-function StringToByteSequence(str) {
+function StringToByteSequence(str: string): any /* ByteSequence */ {
     return EtcdFacade.stringToByteSequence(str);
 }
 
-function ByteArrayToByteSequence(arr) {
+function ByteArrayToByteSequence(arr: Int8Array): any /* ByteSequence */{
     return EtcdFacade.byteArrayToByteSequence(arr);
 }
 
-function ByteSequenceToString(value) {
+function ByteSequenceToString(value): string {
     return EtcdFacade.byteSequenceToString(value);
 }
 
-function KeyValueObjectString(kvsList) {
+function KeyValueObjectString(kvsList): {[key: string]: string} {
     return KeyValueObject(kvsList, ByteSequenceToString);
 }
 
-function KeyValueObjectByteArray(kvsList) {
+function KeyValueObjectByteArray(kvsList): {[key: string]: Int8Array} {
     return KeyValueObject(kvsList, BytesToArray);
 }
 
-function KeyValueObject(kvsList, func) {
-    var kvObject = {};
+function KeyValueObject(kvsList, func: Function): {[key: string]: any} {
+    var kvObject: {[key: string]: any} = {};
     kvsList.forEach(kvs => {
         var key = ByteSequenceToString(kvs.getKey());
         var value = func(kvs.getValue());
@@ -155,7 +136,7 @@ function KeyValueObject(kvsList, func) {
     return kvObject;
 }
 
-function BytesToArray(value) {
+function BytesToArray(value): Int8Array {
     var array = value.getBytes();
     var result = new Int8Array(array.length);
     for (var i = 0; i < array.length; i++) {
