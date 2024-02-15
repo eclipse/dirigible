@@ -27,10 +27,12 @@ function createModel(graph) {
 			child.value.tooltip = child.value.tooltip ? child.value.tooltip : child.value.name;
 			child.value.menuKey = child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase();
 			child.value.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
+			child.value.disableGeneration = child.value.disableGeneration ? child.value.disableGeneration : "false";
 			let entityContent = '  <entity name="' + _.escape(child.value.name) +
 				'" dataName="' + _.escape(child.value.dataName) +
 				'" dataCount="' + _.escape(child.value.dataCount) +
 				'" dataQuery="' + _.escape(child.value.dataQuery) +
+				'" disableGeneration="' + _.escape(child.value.disableGeneration) +
 				'" type="' + _.escape(child.value.entityType ? child.value.entityType : 'PRIMARY') +
 				'" title="' + _.escape(child.value.title) +
 				'" caption="' + _.escape(child.value.caption) +
@@ -88,7 +90,8 @@ function createModel(graph) {
 
 					model.push('    <property name="' + _.escape(property.name) +
 						'" isCalculatedProperty="' + _.escape(property.isCalculatedProperty) +
-						'" calculatedPropertyExpression="' + _.escape(property.calculatedPropertyExpression) +
+						'" calculatedPropertyExpressionCreate="' + _.escape(property.calculatedPropertyExpressionCreate) +
+						'" calculatedPropertyExpressionUpdate="' + _.escape(property.calculatedPropertyExpressionUpdate) +
 						'" dataName="' + _.escape(property.dataName) +
 						'" dataType="' + _.escape(property.dataType) + '"');
 					if (property.dataLength !== null) {
@@ -134,6 +137,9 @@ function createModel(graph) {
 					}
 					if (property.widgetType !== null) {
 						model.push(' widgetType="' + _.escape(property.widgetType) + '"');
+					}
+					if (property.widgetSize !== null) {
+						model.push(' widgetSize="' + _.escape(property.widgetSize) + '"');
 					}
 					if (property.widgetLength !== null) {
 						model.push(' widgetLength="' + _.escape(property.widgetLength) + '"');
@@ -339,7 +345,8 @@ function getPerspectiveOrder(graph, child) {
 // 					// General
 // 					property.name = _.escape(childProperty.name);
 // 					property.isCalculatedProperty = _.escape(childProperty.isCalculatedProperty);
-// 					property.calculatedPropertyExpression = _.escape(childProperty.calculatedPropertyExpression);
+// 					property.calculatedPropertyExpressionCreate = _.escape(childProperty.calculatedPropertyExpressionCreate);
+// 					property.calculatedPropertyExpressionUpdate = _.escape(childProperty.calculatedPropertyExpressionUpdate);
 
 // 					// Data Properties
 // 					property.dataName = _.escape(childProperty.dataName ? childProperty.dataName : JSON.stringify(childProperty.name).replace(/\W/g, '').toUpperCase());

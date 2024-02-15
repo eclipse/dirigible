@@ -261,9 +261,9 @@ export class ${name}Repository {
 #end
 #end
 #foreach ($property in $properties)
-#if($property.isCalculatedProperty)
+#if($property.isCalculatedProperty && $property.calculatedPropertyExpressionCreate != "")
         // @ts-ignore
-        (entity as ${name}Entity).${property.name} = ${property.calculatedPropertyExpression};
+        (entity as ${name}Entity).${property.name} = ${property.calculatedPropertyExpressionCreate};
 #end
 #end
 #if($isEntityPropertySecurityEnabled == "true")
@@ -328,9 +328,9 @@ export class ${name}Repository {
 #end
 #end
 #foreach ($property in $properties)
-#if($property.isCalculatedProperty)
+#if($property.isCalculatedProperty && $property.calculatedPropertyExpressionUpdate != "")
         // @ts-ignore
-        (entity as ${name}Entity).${property.name} = ${property.calculatedPropertyExpression};
+        (entity as ${name}Entity).${property.name} = ${property.calculatedPropertyExpressionUpdate};
 #end
 #end
         this.dao.update(entity);
@@ -397,31 +397,11 @@ export class ${name}Repository {
         });
     }
 
-#if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
-
-
-#foreach ($property in $properties)
-#if($property.relationshipType == "COMPOSITION")
-    public count(${property.name}: ${property.dataTypeTypescript}): number {
-#end
-#end
-        const resultSet = query.execute('SELECT COUNT(*) AS COUNT FROM "${tablePrefix}${dataName}" WHERE #foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")"${property.dataName}"#end#end = ?', [#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end]);
-        if (resultSet !== null && resultSet[0] !== null) {
-            if (resultSet[0].COUNT !== undefined && resultSet[0].COUNT !== null) {
-                return resultSet[0].COUNT;
-            } else if (resultSet[0].count !== undefined && resultSet[0].count !== null) {
-                return resultSet[0].count;
-            }
-        }
-        return 0;
+    public count(options?: ${name}EntityOptions): number {
+        return this.dao.count(options);
     }
-#else
-    public count(): number {
-        return this.dao.count();
-    }
-#end
 
-    public customDataCount(): number {
+    public customDataCount(options?: ${name}EntityOptions): number {
 #if($dataCount)
         const resultSet = query.execute('${dataCount}');
         if (resultSet !== null && resultSet[0] !== null) {
@@ -433,7 +413,7 @@ export class ${name}Repository {
         }
         return 0;
 #else
-        return this.dao.count();
+        return this.dao.count(options);
 #end
     }
 

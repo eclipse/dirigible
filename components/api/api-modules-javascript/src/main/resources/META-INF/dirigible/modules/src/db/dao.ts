@@ -113,7 +113,7 @@ export function DAO(orm, logCtxName, dataSourceName) {
 					if (propertiesKeys.includes(e.name) && !addedPropertiesKeys.includes(e.name)) {
 						_parameterBindings.push({
 							type: e.type,
-							value: parseValue(e.type, parameterBindings.$filter.contains[e.name])
+							value: `%${parameterBindings.$filter.contains[e.name]}%`
 						});
 						addedPropertiesKeys.push(e.name);
 					}
@@ -356,7 +356,7 @@ DAO.prototype.insert = function (_entity) {
 			}
 
 			const updatedRecordCount = this.execute(parametericStatement, dbEntity);
-			
+
 			if (!this.orm.isAutoIncrementPrimaryKey() && isNotEmptyArray(updatedRecordCount)) {
 				const id = updatedRecordCount[0];
 				dbEntity[this.orm.getPrimaryKey().name] = id;
@@ -423,7 +423,7 @@ DAO.prototype.insert = function (_entity) {
 		return ids;
 };
 
-function isNotEmptyArray(array){
+function isNotEmptyArray(array) {
 	return Array.isArray(array) && array.length > 0;
 }
 
@@ -747,14 +747,15 @@ DAO.prototype.find = function (id, expand, select) {
 	}
 };
 
-DAO.prototype.count = function () {
+DAO.prototype.count = function (settings?) {
+	settings = settings || {};
 
-	const parametericStatement = this.ormstatements.count.apply(this.ormstatements);
+	const parametericStatement = this.ormstatements.count.apply(this.ormstatements, [settings]);
 	this.$log.trace('Counting ' + this.orm.table + ' entities');
 
 	let count = 0;
 	try {
-		const rs = this.execute(parametericStatement);
+		const rs = this.execute(parametericStatement, settings);
 		if (rs.length > 0) {
 			//expectaion is that there is a single object in the result set with a single porperty
 			const key = Object.keys(rs[0])[0];
@@ -834,17 +835,6 @@ DAO.prototype.list = function (settings) {
 
 	if (settings.$select !== undefined && expand !== undefined) {
 		settings.$select.push(this.orm.getPrimaryKey().name);
-	}
-
-	//simplistic filtering of (only) string properties with like
-	if (settings?.$filter?.contains) {
-		const containsPropertiesKeys = Object.keys(settings.$filter.contains);
-		containsPropertiesKeys.forEach(e => {
-			const prop = this.ormstatements.orm.getProperty(e);
-			if (prop?.type.toUpperCase() === 'VARCHAR' || prop?.type.toUpperCase() === 'CHAR') {
-				settings.$filter.contains[e] = `%${settings.$filter.contains[e]}%`;
-			}
-		})
 	}
 
 	var parametericStatement = this.ormstatements.list.apply(this.ormstatements, [settings]);
