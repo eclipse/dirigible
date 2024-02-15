@@ -78,6 +78,7 @@ public class DataTypeUtils {
 
         STRING_TO_DATABASE_TYPE.put("BIT", Types.BIT);
         STRING_TO_DATABASE_TYPE.put("SMALLINT", Types.SMALLINT);
+        STRING_TO_DATABASE_TYPE.put("TINYINT", Types.SMALLINT);
         STRING_TO_DATABASE_TYPE.put("INTEGER", Types.INTEGER);
         STRING_TO_DATABASE_TYPE.put("INT", Types.INTEGER);
         STRING_TO_DATABASE_TYPE.put("INT2", Types.INTEGER);

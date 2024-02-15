@@ -230,15 +230,16 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
      */
     @Override
     public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-        try (Connection connection = datasourcesManager.getDefaultDataSource()
-                                                       .getConnection()) {
-            Csvim csvim;
-            if (!(wrapper.getArtefact() instanceof Csvim)) {
-                throw new UnsupportedOperationException(String.format("Trying to process %s as Csvim", wrapper.getArtefact()
-                                                                                                              .getClass()));
-            }
-            csvim = (Csvim) wrapper.getArtefact();
-
+        Csvim csvim;
+        if (!(wrapper.getArtefact() instanceof Csvim)) {
+            throw new UnsupportedOperationException(String.format("Trying to process %s as Csvim", wrapper.getArtefact()
+                                                                                                          .getClass()));
+        }
+        csvim = (Csvim) wrapper.getArtefact();
+        try (Connection connection = (csvim.getDatasource() == null ? datasourcesManager.getDefaultDataSource()
+                                                                                        .getConnection()
+                : datasourcesManager.getDataSource(csvim.getDatasource())
+                                    .getConnection())) {
             switch (flow) {
                 case CREATE:
                     if (csvim.getLifecycle()
