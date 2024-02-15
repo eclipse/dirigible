@@ -9,12 +9,14 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 	.controller('PageController', ['$scope', 'messageHub', 'entityApi', function ($scope, messageHub, entityApi) {
 
 		$scope.entity = {};
+		$scope.forms = {
+			details: {},
+		};
 		$scope.formHeaders = {
 			select: "${name} Details",
 			create: "Create ${name}",
 			update: "Update ${name}"
 		};
-		$scope.formErrors = {};
 		$scope.action = 'select';
 
 		if (window != null && window.frameElement != null && window.frameElement.hasAttribute("data-parameters")) {
@@ -22,15 +24,6 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			if (dataParameters) {
 				let params = JSON.parse(dataParameters);
 				$scope.action = params.action;
-				if ($scope.action == "create") {
-					$scope.formErrors = {
-#foreach ($property in $properties)
-#if(!$property.dataAutoIncrement && $property.dataNotNull)
-						${property.name}: true,
-#end
-#end
-					};
-				}
 #foreach ($property in $properties)
 #if($property.isDateType)
 				if (params.entity.${property.name}) {
@@ -48,17 +41,6 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 #end
 			}
 		}
-
-		$scope.isValid = function (isValid, property) {
-			${dollar}scope.formErrors[property] = !isValid ? true : undefined;
-			for (let next in ${dollar}scope.formErrors) {
-				if (${dollar}scope.formErrors[next] === true) {
-					${dollar}scope.isFormValid = false;
-					return;
-				}
-			}
-			${dollar}scope.isFormValid = true;
-		};
 
 		$scope.create = function () {
 			let entity = $scope.entity;

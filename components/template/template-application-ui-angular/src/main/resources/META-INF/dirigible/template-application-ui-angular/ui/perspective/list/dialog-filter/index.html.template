@@ -25,7 +25,7 @@
 		        </fd-button>
             </div>
 
-            <fd-fieldset class="fd-margin--md" ng-form="formFieldset">
+            <fd-fieldset class="fd-margin--md" ng-form="forms.details">
                 <fd-form-group dg-header="${name} Filter" name="entityForm" class="fd-container fd-form-layout-grid-container">
 #foreach ($property in $properties)
 #if(!$property.dataAutoIncrement)
@@ -37,9 +37,8 @@
                         <div class="fd-col fd-col-md--8">
 	                        <fd-combobox-input id="id${property.name}"
 	                            name="${property.name}"
-	                            state="{{ formErrors.${property.name} ? 'error' : '' }}"
-	                            ng-required="true"
-	                            ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
+	                            state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
+	                            ng-required="${property.dataNotNull}"
 	                            ng-model="entity.${property.name}"
 	                            dropdown-items="options${property.name}"
 	                            dg-placeholder="Search ${property.widgetLabel} ...">
@@ -64,12 +63,11 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--4">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
-	                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.dataNotNull}"
-	                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
 	                                ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -89,24 +87,19 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--4">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
-	                            <fd-input id="id${property.name}"
-	                                name="${property.name}"
-	                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
-									ng-required="${property.dataNotNull}"
-	                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
-	                                ng-model="entity.${property.name}"
+	                        <fd-step-input dg-id="id${property.name}"
+								name="${property.name}"
+								state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
+								dg-required="${property.dataNotNull}"
+								ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
-	                                ng-readonly="true"
+								is-readonly="true"
 	#else
-	                                ng-readonly="action === 'select'"
+								is-readonly="action === 'select'"
 	#end
-	                                type="number"
-	                                placeholder="Enter ${property.widgetLabel}"
-	                                class="right-align">
-	                            </fd-input>
-	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
-	                        </fd-form-input-message-group>
+								placeholder="Enter ${property.widgetLabel}"
+								>
+							</fd-step-input>
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "MONTH")
@@ -115,12 +108,11 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
-	                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.dataNotNull}"
-	                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
 	                                ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -139,12 +131,11 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
-	                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.dataNotNull}"
-	                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
 	                                ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -163,12 +154,11 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
-	                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.dataNotNull}"
-	                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
 	                                ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -187,12 +177,11 @@
                         	<fd-form-label for="id${property.name}From" dg-required="${property.dataNotNull}" dg-colon="true">From ${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}From"
 	                                name="${property.name}"
-	                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.dataNotNull}"
-	                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
 	                                ng-model="entity.${property.name}From"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -208,12 +197,11 @@
                         	<fd-form-label for="id${property.name}To" dg-required="${property.dataNotNull}" dg-colon="true">To ${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}To"
 	                                name="${property.name}"
-	                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.dataNotNull}"
-	                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
 	                                ng-model="entity.${property.name}To"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -232,12 +220,11 @@
                         	<fd-form-label for="id${property.name}From" dg-required="${property.dataNotNull}" dg-colon="true">From ${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}From"
 	                                name="${property.name}"
-	                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.dataNotNull}"
-	                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
 	                                ng-model="entity.${property.name}From"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -253,12 +240,11 @@
                         	<fd-form-label for="id${property.name}To" dg-required="${property.dataNotNull}" dg-colon="true">To ${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}To"
 	                                name="${property.name}"
-	                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.dataNotNull}"
-	                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
 	                                ng-model="entity.${property.name}To"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -279,9 +265,8 @@
 						<div class="fd-col fd-col-md--8">
 							<fd-textarea id="id${property.name}"
 								name="${property.name}"
-								state="{{ formErrors.${property.name} ? 'error' : '' }}"
+								state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 								ng-required="${property.dataNotNull}"
-								ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
 								ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 	                            ng-readonly="true"
@@ -293,7 +278,7 @@
 								dg-input-rules="{ patterns: ['${property.inputRule}'] }"
 								placeholder="Enter ${property.widgetLabel}">
 							</fd-textarea>
-							<fd-form-message dg-type="error" ng-show="formErrors.${property.name}">Incorrect Input</fd-form-message>
+							<fd-form-message dg-type="error" ng-show="!forms.details['${property.name}'].$valid">Incorrect Input</fd-form-message>
 						</div>
 					</fd-form-item>
 #elseif($property.widgetType == "TEL")
@@ -302,12 +287,11 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--4">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
-	                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.dataNotNull}"
-	                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
 	                                ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -330,12 +314,11 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--8">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
-	                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.dataNotNull}"
-	                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
 	                                ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -358,12 +341,11 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--4">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
-	                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.dataNotNull}"
-	                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
 	                                ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -386,12 +368,11 @@
                         	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--8">
-	                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
-	                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.dataNotNull}"
-	                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
 	                                ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
