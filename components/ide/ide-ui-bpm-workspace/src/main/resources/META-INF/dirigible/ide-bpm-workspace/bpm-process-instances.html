@@ -36,6 +36,10 @@
                 glyph="sap-icon--search" title="Toggle search" aria-label="Toggle search"
                 ng-click="instances.toggleSearch()">
             </fd-button>
+            <fd-toolbar-separator></fd-toolbar-separator>
+            <fd-button compact="true" state="{{ instances.selectedProcessInstanceId !== null ? '' : 'disabled' }}" glyph="sap-icon--restart"
+                       title="Retry" aria-label="Retry" ng-click="instances.retry()">
+            </fd-button>
         </fd-toolbar>
         <fd-toolbar ng-show="instances.displaySearch">
             <fd-input type="search" placeholder="Search" ng-keyup="instances.inputSearchKeyUp($event)"

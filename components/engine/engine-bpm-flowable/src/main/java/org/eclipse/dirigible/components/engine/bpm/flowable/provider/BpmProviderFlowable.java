@@ -161,6 +161,8 @@ public class BpmProviderFlowable implements BpmProvider {
                 cfg.setDatabaseSchemaUpdate(updateSchema ? ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE
                         : ProcessEngineConfiguration.DB_SCHEMA_UPDATE_FALSE);
 
+                cfg.setAsyncExecutorActivate(true);
+                cfg.setAsyncFailedJobWaitTime(1);
                 processEngine = cfg.buildProcessEngine();
                 if (logger.isInfoEnabled()) {
                     logger.info("Done initializng the Flowable Process Engine.");
