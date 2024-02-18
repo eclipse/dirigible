@@ -59,6 +59,12 @@
                         <span class="fd-icon-tab-bar__tag">Security</span>
                     </a>
                 </li>
+                <li role="presentation" class="fd-icon-tab-bar__item">
+                    <a role="tab" class="fd-icon-tab-bar__tab" href="#section4" ng-click="tabNumber = 5"
+                        ng-attr-aria-selected="{{ tabNumber === 5 ? true : undefined }}" id="tab6">
+                        <span class="fd-icon-tab-bar__tag">Imports</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <fd-scrollbar class="fd-padding dg-full-height" ng-show="!state.error && !state.isBusy">
@@ -343,7 +349,7 @@
                     </fd-form-item>
                 </fd-form-group>
             </section>
-            <section role="tabpanel" class="fd-icon-tab-bar__panel" id="section3" aria-labelledby="tab4"
+            <section role="tabpanel" class="fd-icon-tab-bar__panel" id="section4" aria-labelledby="tab4"
                 ng-show="tabNumber === 3">
                 <fd-form-group ng-if="dialogType === 'entity'">
                     <fd-form-item>
@@ -379,7 +385,7 @@
                     </fd-form-item>
                 </fd-form-group>
             </section>
-            <section role="tabpanel" class="fd-icon-tab-bar__panel" id="section3" aria-labelledby="tab5"
+            <section role="tabpanel" class="fd-icon-tab-bar__panel" id="section5" aria-labelledby="tab5"
                 ng-show="tabNumber === 4">
                 <fd-form-group>
                     <fd-form-item>
@@ -392,6 +398,17 @@
                         <fd-form-label for="swr" dg-required="true" dg-colon="true">Write role</fd-form-label>
                         <fd-input id="swr" type="text" ng-required="true" ng-model="dataParameters.roleWrite"
                             placeholder="role name">
+                        </fd-input>
+                    </fd-form-item>
+                </fd-form-group>
+            </section>
+            <section role="tabpanel" class="fd-icon-tab-bar__panel" id="section6" aria-labelledby="tab6"
+                ng-show="tabNumber === 5">
+                <fd-form-group ng-if="dialogType === 'entity'">
+                    <fd-form-item>
+                        <fd-form-label for="importscode" dg-required="true" dg-colon="true">Imports</fd-form-label>
+                        <fd-textarea id="importscode" placeholder="imports code"
+                            ng-model="dataParameters.importsCode" rows="10"></fd-textarea>
                         </fd-input>
                     </fd-form-item>
                 </fd-form-group>
