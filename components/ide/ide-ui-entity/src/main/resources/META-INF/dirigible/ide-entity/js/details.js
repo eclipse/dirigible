@@ -158,6 +158,7 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
                     messageHub.postMessage('edm.editor.property', {
                         cellId: $scope.dataParameters.cellId,
                         name: $scope.dataParameters.name,
+                        isRequiredProperty: $scope.dataParameters.isRequiredProperty,
                         isCalculatedProperty: $scope.dataParameters.isCalculatedProperty,
                         calculatedPropertyExpressionCreate: $scope.dataParameters.calculatedPropertyExpressionCreate,
                         calculatedPropertyExpressionUpdate: $scope.dataParameters.calculatedPropertyExpressionUpdate,
