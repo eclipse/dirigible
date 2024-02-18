@@ -342,6 +342,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 			function (msg) {
 				let cell = $scope.graph.model.getCell(msg.data.cellId);
 				cell.value.name = msg.data.name;
+				cell.value.isRequiredProperty = msg.data.isRequiredProperty;
 				cell.value.isCalculatedProperty = msg.data.isCalculatedProperty;
 				cell.value.calculatedPropertyExpressionCreate = msg.data.calculatedPropertyExpressionCreate;
 				cell.value.calculatedPropertyExpressionUpdate = msg.data.calculatedPropertyExpressionUpdate;
@@ -915,6 +916,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 									dialogType: 'property',
 									cellId: cell.id,
 									name: cell.value.name,
+									isRequiredProperty: cell.value.isRequiredProperty,
 									isCalculatedProperty: cell.value.isCalculatedProperty,
 									calculatedPropertyExpressionCreate: cell.value.calculatedPropertyExpressionCreate,
 									calculatedPropertyExpressionUpdate: cell.value.calculatedPropertyExpressionUpdate,

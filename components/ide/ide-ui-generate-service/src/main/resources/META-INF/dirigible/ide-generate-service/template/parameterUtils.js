@@ -44,6 +44,7 @@ exports.process = function (model, parameters) {
             p.dataNullable = p.dataNullable === "true";
             p.dataPrimaryKey = p.dataPrimaryKey === "true";
             p.dataUnique = p.dataUnique === "true";
+            p.isRequiredProperty = p.isRequiredProperty === "true";
             p.isCalculatedProperty = p.isCalculatedProperty === "true";
             p.widgetIsMajor = p.widgetIsMajor === "true";
             p.widgetLabel = p.widgetLabel ? p.widgetLabel : p.name;

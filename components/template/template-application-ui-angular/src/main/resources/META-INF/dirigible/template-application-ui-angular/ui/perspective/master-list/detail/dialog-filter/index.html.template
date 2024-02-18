@@ -32,13 +32,13 @@
 #if($property.widgetType == "DROPDOWN")
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        	<fd-form-label for="id${property.name}" dg-required="${property.isRequiredProperty}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--8">
 	                        <fd-combobox-input id="id${property.name}"
 	                            name="${property.name}"
 	                            state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
-	                            ng-required="${property.dataNotNull}"
+	                            ng-required="${property.isRequiredProperty}"
 	                            ng-model="entity.${property.name}"
 	                            dropdown-items="options${property.name}"
 	                            dg-placeholder="Search ${property.widgetLabel} ...">
@@ -51,23 +51,23 @@
 	                    <div class="fd-col fd-col-md--8">
 							<fd-checkbox id="id${property.name}"
 	                            compact="false"
-	                            ng-required="${property.dataNotNull}"
+	                            ng-required="${property.isRequiredProperty}"
 								ng-model="entity.${property.name}">
 	                        </fd-checkbox>
-                        	<fd-checkbox-label for="id${property.name}" dg-required="${property.dataNotNull}">${property.widgetLabel}</fd-checkbox-label>
+                        	<fd-checkbox-label for="id${property.name}" dg-required="${property.isRequiredProperty}">${property.widgetLabel}</fd-checkbox-label>
                         </div>
                     </fd-form-item>
 #elseif($property.widgetType == "COLOR")
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        	<fd-form-label for="id${property.name}" dg-required="${property.isRequiredProperty}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--4">
 	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
-									ng-required="${property.dataNotNull}"
+									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -84,13 +84,13 @@
 #elseif($property.widgetType == "NUMBER")
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        	<fd-form-label for="id${property.name}" dg-required="${property.isRequiredProperty}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--4">
 	                        <fd-step-input dg-id="id${property.name}"
 								name="${property.name}"
 								state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
-								dg-required="${property.dataNotNull}"
+								dg-required="${property.isRequiredProperty}"
 								ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 								is-readonly="true"
@@ -105,14 +105,14 @@
 #elseif($property.widgetType == "MONTH")
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        	<fd-form-label for="id${property.name}" dg-required="${property.isRequiredProperty}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
 	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
-									ng-required="${property.dataNotNull}"
+									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -128,14 +128,14 @@
 #elseif($property.widgetType == "WEEK")
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        	<fd-form-label for="id${property.name}" dg-required="${property.isRequiredProperty}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
 	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
-									ng-required="${property.dataNotNull}"
+									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -151,14 +151,14 @@
 #elseif($property.widgetType == "TIME")
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        	<fd-form-label for="id${property.name}" dg-required="${property.isRequiredProperty}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
 	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
-									ng-required="${property.dataNotNull}"
+									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -174,14 +174,14 @@
 #elseif($property.widgetType == "DATETIME-LOCAL")
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${property.name}From" dg-required="${property.dataNotNull}" dg-colon="true">From ${property.widgetLabel}</fd-form-label>
+                        	<fd-form-label for="id${property.name}From" dg-required="${property.isRequiredProperty}" dg-colon="true">From ${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
 	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}From"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
-									ng-required="${property.dataNotNull}"
+									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}From"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -194,14 +194,14 @@
 	                        </fd-form-input-message-group>
 	                    </div>
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${property.name}To" dg-required="${property.dataNotNull}" dg-colon="true">To ${property.widgetLabel}</fd-form-label>
+                        	<fd-form-label for="id${property.name}To" dg-required="${property.isRequiredProperty}" dg-colon="true">To ${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
 	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}To"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
-									ng-required="${property.dataNotNull}"
+									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}To"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -217,14 +217,14 @@
 #elseif($property.widgetType == "DATE")
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${property.name}From" dg-required="${property.dataNotNull}" dg-colon="true">From ${property.widgetLabel}</fd-form-label>
+                        	<fd-form-label for="id${property.name}From" dg-required="${property.isRequiredProperty}" dg-colon="true">From ${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
 	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}From"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
-									ng-required="${property.dataNotNull}"
+									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}From"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -237,14 +237,14 @@
 	                        </fd-form-input-message-group>
 	                    </div>
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${property.name}To" dg-required="${property.dataNotNull}" dg-colon="true">To ${property.widgetLabel}</fd-form-label>
+                        	<fd-form-label for="id${property.name}To" dg-required="${property.isRequiredProperty}" dg-colon="true">To ${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
 	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}To"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
-									ng-required="${property.dataNotNull}"
+									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}To"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -260,13 +260,13 @@
 #elseif($property.widgetType == "TEXTAREA")
 					<fd-form-item class="fd-row">
 						<div class="fd-col fd-col-md--2">
-							<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+							<fd-form-label for="id${property.name}" dg-required="${property.isRequiredProperty}" dg-colon="true">${property.widgetLabel}</fd-form-label>
 						</div>
 						<div class="fd-col fd-col-md--8">
 							<fd-textarea id="id${property.name}"
 								name="${property.name}"
 								state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
-								ng-required="${property.dataNotNull}"
+								ng-required="${property.isRequiredProperty}"
 								ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 	                            ng-readonly="true"
@@ -284,14 +284,14 @@
 #elseif($property.widgetType == "TEL")
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        	<fd-form-label for="id${property.name}" dg-required="${property.isRequiredProperty}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--4">
 	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
-									ng-required="${property.dataNotNull}"
+									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -311,14 +311,14 @@
 #elseif($property.widgetType == "URL")
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        	<fd-form-label for="id${property.name}" dg-required="${property.isRequiredProperty}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--8">
 	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
-									ng-required="${property.dataNotNull}"
+									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -338,14 +338,14 @@
 #elseif($property.widgetType == "EMAIL")
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        	<fd-form-label for="id${property.name}" dg-required="${property.isRequiredProperty}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--4">
 	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
-									ng-required="${property.dataNotNull}"
+									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"
@@ -365,14 +365,14 @@
 #else
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        	<fd-form-label for="id${property.name}" dg-required="${property.isRequiredProperty}" dg-colon="true">${property.widgetLabel}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--8">
 	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
-									ng-required="${property.dataNotNull}"
+									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}"
 	#if($property.isCalculatedProperty == "true")
 	                                ng-readonly="true"

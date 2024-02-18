@@ -93,11 +93,18 @@
                             placeholder="Property name"></fd-input>
                     </fd-form-item>
                     <fd-form-item class="fd-margin-top--tiny">
+                        <fd-checkbox id="generalRequired" compact="false" ng-required="true"
+                            ng-model="dataParameters.isRequiredProperty" data-ng-true-value="'true'"
+                            data-ng-false-value="'false'">
+                        </fd-checkbox>
+                        <fd-checkbox-label for="generalRequired" dg-required="false">Required</fd-checkbox-label>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
                         <fd-checkbox id="generalCalc" compact="false" ng-required="true"
                             ng-model="dataParameters.isCalculatedProperty" data-ng-true-value="'true'"
                             data-ng-false-value="'false'">
                         </fd-checkbox>
-                        <fd-checkbox-label for="generalCalc" dg-required="true">Calculated</fd-checkbox-label>
+                        <fd-checkbox-label for="generalCalc" dg-required="false">Calculated</fd-checkbox-label>
                     </fd-form-item>
                     <fd-form-item ng-show="dataParameters.isCalculatedProperty === 'true'" class="fd-margin-top--tiny">
                         <fd-form-label for="generalCpeC" dg-colon="true">Calculated property expression for Create</fd-form-label>
