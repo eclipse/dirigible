@@ -77,6 +77,10 @@ function createModel(graph) {
 			if (child.value.projectionReferencedEntity && child.value.projectionReferencedEntity !== "") {
 				entityContent += ' projectionReferencedEntity="' + child.value.projectionReferencedEntity + '"';
 			}
+			if (child.value.importsCode && child.value.importsCode !== "") {
+				child.value.importsCode = btoa(child.value.importsCode);
+				entityContent += ' importsCode="' + child.value.importsCode + '"';
+			}
 
 			entityContent += '>\n';
 			model.push(entityContent);
@@ -241,6 +245,9 @@ function createModel(graph) {
 			}
 			if (child.value.feedPassword) {
 				child.value.feedPassword = atob(child.value.feedPassword);
+			}
+			if (child.value.importsCode) {
+				child.value.importsCode = atob(child.value.importsCode);
 			}
 		}
 	}
