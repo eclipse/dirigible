@@ -57,5 +57,6 @@
                 ]
             }
         ]
-    }
+    },
+    "datasource": "DefaultDB"
 }

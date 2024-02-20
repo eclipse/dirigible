@@ -21,7 +21,6 @@ import javax.sql.DataSource;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -29,9 +28,10 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 
 /**
  * The Class ObjectStore.
@@ -110,13 +110,12 @@ public class DataStore {
     /**
      * Initialize.
      */
-    public void initialize() {
+    public synchronized void initialize() {
         if (this.dataSource == null) {
             this.dataSource = datasourcesManager.getDefaultDataSource();
         }
-
-        Configuration configuration = new Configuration().setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect")
-                                                         .setProperty("hibernate.show_sql", "true")
+        Configuration configuration = new Configuration().setProperty(Environment.DIALECT, "org.hibernate.dialect.H2Dialect")
+                                                         .setProperty(Environment.SHOW_SQL, "true")
                                                          .setProperty("hibernate.hbm2ddl.auto", "update")
                                                          .setProperty("hibernate.current_session_context_class",
                                                                  "org.hibernate.context.internal.ThreadLocalSessionContext");
@@ -125,8 +124,11 @@ public class DataStore {
 
         StandardServiceRegistryBuilder serviceRegistryBuilder = new StandardServiceRegistryBuilder();
         serviceRegistryBuilder.applySetting(Environment.DATASOURCE, getDataSource());
+        serviceRegistryBuilder.applySetting(Environment.JAKARTA_JTA_DATASOURCE, getDataSource());
         serviceRegistryBuilder.applySettings(configuration.getProperties());
+
         StandardServiceRegistry serviceRegistry = serviceRegistryBuilder.build();
+
         sessionFactory = configuration.buildSessionFactory(serviceRegistry);
     }
 
@@ -273,56 +275,15 @@ public class DataStore {
      * @return the list
      */
     public List<Map> list(String type) {
-        return list(type, getDataSource());
-    }
+        try (Session session = sessionFactory.openSession();
+                EntityManager entityManager = session.getEntityManagerFactory()
+                                                     .createEntityManager()) {
 
-    /**
-     * List.
-     *
-     * @param type the type
-     * @param datasource the datasource
-     * @return the list
-     */
-    public List<Map> list(String type, DataSource datasource) {
-        try (Session session = sessionFactory.openSession()) {
-            return session.createCriteria(type)
-                          .list();
-        }
-    }
-
-    /**
-     * Criteria.
-     *
-     * @param type the type
-     * @param restrictions the restrictions
-     * @param aliases the aliases
-     * @return the list
-     */
-    public List<Map> criteria(String type, Map<String, String> restrictions, Map<String, String> aliases) {
-        return criteria(type, restrictions, aliases, getDataSource());
-    }
-
-    /**
-     * Criteria.
-     *
-     * @param type the type
-     * @param restrictions the restrictions
-     * @param aliases the aliases
-     * @param datasource the datasource
-     * @return the list
-     */
-    public List<Map> criteria(String type, Map<String, String> restrictions, Map<String, String> aliases, DataSource datasource) {
-        try (Session session = sessionFactory.openSession()) {
-            Criteria criteria = session.createCriteria(type);
-            if (aliases != null) {
-                aliases.entrySet()
-                       .forEach(e -> criteria.createAlias(e.getKey(), e.getValue()));
+            if (!mappings.containsKey(type)) {
+                throw new IllegalArgumentException("There is not entity of type " + type);
             }
-            if (restrictions != null) {
-                restrictions.entrySet()
-                            .forEach(e -> criteria.add(Restrictions.like(e.getKey(), e.getValue())));
-            }
-            return criteria.list();
+            Query query = entityManager.createQuery("from " + type + " c");
+            return query.getResultList();
         }
     }
 
@@ -364,3 +325,5 @@ public class DataStore {
     // }
 
 }
+
+

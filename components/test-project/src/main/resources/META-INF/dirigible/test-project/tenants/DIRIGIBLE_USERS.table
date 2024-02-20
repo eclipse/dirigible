@@ -1,0 +1,38 @@
+{
+    "name": "DIRIGIBLE_USERS",
+    "type": "TABLE",
+    "columns": [
+        {
+            "type": "INTEGER",
+            "length": 0,
+            "primaryKey": true,
+            "identity": true,
+            "nullable": true,
+            "name": "USER_ID"
+        },
+        {
+            "type": "INTEGER",
+            "length": 0,
+            "nullable": true,
+            "name": "USER_TENANT_ID"
+        },
+        {
+            "type": "VARCHAR",
+            "length": 100,
+            "nullable": true,
+            "name": "USER_EMAIL"
+        },
+        {
+            "type": "VARCHAR",
+            "length": 100,
+            "nullable": true,
+            "name": "USER_PASSWORD"
+        },
+        {
+            "type": "VARCHAR",
+            "length": 100,
+            "nullable": true,
+            "name": "USER_ROLE"
+        }
+    ]
+}

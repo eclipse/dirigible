@@ -36,8 +36,8 @@ public class CmisInternalRepository implements CmisRepository {
      * @return the session
      */
     @Override
-    public CmisSession getSession() {
-        return new CmisSession(this);
+    public CmisInternalSession getSession() {
+        return new CmisInternalSession(this);
     }
 
     /**

@@ -11,11 +11,9 @@
 package org.eclipse.dirigible.components.odata.factory;
 
 import static org.eclipse.dirigible.engine.odata2.sql.processor.DefaultSQLProcessor.DEFAULT_DATA_SOURCE_CONTEXT_KEY;
-
+import java.io.InputStream;
 import java.util.ServiceLoader;
-
 import javax.sql.DataSource;
-
 import org.apache.olingo.odata2.api.ODataCallback;
 import org.apache.olingo.odata2.api.ODataService;
 import org.apache.olingo.odata2.api.ODataServiceFactory;
@@ -36,31 +34,29 @@ import org.eclipse.dirigible.engine.odata2.sql.api.OData2EventHandler;
 import org.eclipse.dirigible.engine.odata2.sql.processor.DefaultSQLProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * A factory for creating DirigibleODataService objects.
  */
+@Component
 public class DirigibleODataServiceFactory extends ODataServiceFactory {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DirigibleODataServiceFactory.class);
 
-    /**
-     * Gets the data sources manager.
-     *
-     * @return the data sources manager
-     */
-    public DataSourcesManager getDataSourcesManager() {
-        return DataSourcesManager.get();
+    private static DataSourcesManager dataSourcesManager;
+    private static ODataMetadataService odataMetadataService;
+
+    public DirigibleODataServiceFactory() {
+        // called by ODataServlet
     }
 
-    /**
-     * Gets the odata metadata service.
-     *
-     * @return the odata metadata service
-     */
-    public ODataMetadataService getODataMetadataService() {
-        return ODataMetadataService.get();
+    @Autowired
+    public DirigibleODataServiceFactory(DataSourcesManager dataSourcesManager, ODataMetadataService odataMetadataService) {
+        DirigibleODataServiceFactory.dataSourcesManager = dataSourcesManager;
+        DirigibleODataServiceFactory.odataMetadataService = odataMetadataService;
     }
 
     /**
@@ -84,7 +80,8 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
     public ODataService createService(ODataContext ctx) throws ODataException {
         try {
             EdmProvider edmProvider = new EdmxProvider();
-            ((EdmxProvider) edmProvider).parse(getODataMetadataService().getMetadata(), false);
+            InputStream metadata = odataMetadataService.getMetadata();
+            ((EdmxProvider) edmProvider).parse(metadata, false);
 
             setDefaultDataSource(ctx);
 
@@ -143,7 +140,7 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
      */
     private void setDefaultDataSource(ODataContext ctx) throws ODataException {
         DataSource dataSource;
-        dataSource = getDataSourcesManager().getDefaultDataSource();
+        dataSource = dataSourcesManager.getDefaultDataSource();
         ctx.setParameter(DEFAULT_DATA_SOURCE_CONTEXT_KEY, dataSource);
     }
 

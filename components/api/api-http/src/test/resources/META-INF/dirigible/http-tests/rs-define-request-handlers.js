@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-var rs = require("http/rs");
+import { rs } from "sdk/http";
 
 rs.service()
     .resource("")

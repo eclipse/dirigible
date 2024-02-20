@@ -1,0 +1,25 @@
+{
+	"datasource": "SystemDB",
+	"files": [
+	  {
+	    "table": "DIRIGIBLE_TENANTS",
+	    "schema": "PUBLIC",
+	    "file": "/test-project/tenants/tenants.csv",
+	    "header": true,
+	    "useHeaderNames": true,
+	    "delimField": ",",
+	    "delimEnclosing": "\"",
+	    "distinguishEmptyFromNull": true
+	  },
+	  {
+	    "table": "DIRIGIBLE_USERS",
+	    "schema": "PUBLIC",
+	    "file": "/test-project/tenants/users.csv",
+	    "header": true,
+	    "useHeaderNames": true,
+	    "delimField": ",",
+	    "delimEnclosing": "\"",
+	    "distinguishEmptyFromNull": false
+	  }
+	]
+}

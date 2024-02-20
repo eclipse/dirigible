@@ -83,12 +83,13 @@ function fixPath(path, mod) {
         "template",
         "utils",
         "junit",
-        "integrations"
+        "integrations",
+        "security"
     ];
 
     let fixedPath = path;
-    if (fixedPath.startsWith("@dirigible")) {
-        fixedPath = fixedPath.substring("@dirigible".length)
+    if (fixedPath.startsWith("sdk")) {
+        fixedPath = fixedPath.substring("sdk".length)
     }
 
     for (const mod of mods) {

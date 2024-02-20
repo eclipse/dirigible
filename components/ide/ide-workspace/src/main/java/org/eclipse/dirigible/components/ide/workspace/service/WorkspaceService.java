@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
@@ -778,7 +777,7 @@ public class WorkspaceService {
                     }
                 } catch (Exception | Error e) {
                     if (logger.isErrorEnabled()) {
-                        logger.error(e.getMessage(), e);
+                        logger.error("Workspace On Save Extension {} failed with: {}.", module, e.getMessage(), e);
                     }
                 }
             }

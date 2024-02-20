@@ -36,8 +36,10 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
             { value: "PRIMARY", label: "Primary Entity" },
             { value: "DEPENDENT", label: "Dependent Entity" },
             { value: "REPORT", label: "Report Entity" },
-            { value: "REPORT_FILTER", label: "Report Filter Entity" },
-            { value: "SETTING", label: "Setting Entity" }
+            { value: "FILTER", label: "Filter Entity" },
+            { value: "SETTING", label: "Setting Entity" },
+            { value: "PROJECTION", label: "Projection Entity" },
+            { value: "EXTENSION", label: "Extension Entity" }
         ];
         $scope.layoutTypes = [
             { value: "MANAGE", label: "Manage Entities" },
@@ -87,6 +89,12 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
             { value: "URL", label: "URL" },
             { value: "WEEK", label: "Week" }
         ];
+        $scope.widgetSizes = [
+            { value: "fd-col-md--2 fd-col--3", label: "Small" },
+            { value: "fd-col-md--4 fd-col--6", label: "Medium" },
+            { value: "fd-col-md--6 fd-col--9", label: "Large" },
+            { value: "fd-col-md--8 fd-col--12", label: "XLarge" }
+        ];
         $scope.majorTypes = [
             { value: "true", label: "Show in table header" },
             { value: "false", label: "Show in form only" }
@@ -127,6 +135,7 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
                         dataName: $scope.dataParameters.dataName,
                         dataCount: $scope.dataParameters.dataCount,
                         dataQuery: $scope.dataParameters.dataQuery,
+                        disableGeneration: $scope.dataParameters.disableGeneration,
                         title: $scope.dataParameters.title,
                         caption: $scope.dataParameters.caption,
                         tooltip: $scope.dataParameters.tooltip,
@@ -144,13 +153,16 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
                         feedPath: $scope.dataParameters.feedPath,
                         roleRead: $scope.dataParameters.roleRead,
                         roleWrite: $scope.dataParameters.roleWrite,
+                        importsCode: $scope.dataParameters.importsCode
                     }, true);
                 } else {
                     messageHub.postMessage('edm.editor.property', {
                         cellId: $scope.dataParameters.cellId,
                         name: $scope.dataParameters.name,
+                        isRequiredProperty: $scope.dataParameters.isRequiredProperty,
                         isCalculatedProperty: $scope.dataParameters.isCalculatedProperty,
-                        calculatedPropertyExpression: $scope.dataParameters.calculatedPropertyExpression,
+                        calculatedPropertyExpressionCreate: $scope.dataParameters.calculatedPropertyExpressionCreate,
+                        calculatedPropertyExpressionUpdate: $scope.dataParameters.calculatedPropertyExpressionUpdate,
                         dataName: $scope.dataParameters.dataName,
                         dataType: $scope.dataParameters.dataType,
                         dataLength: $scope.dataParameters.dataLength,
@@ -162,6 +174,7 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
                         dataScale: $scope.dataParameters.dataScale,
                         dataDefaultValue: $scope.dataParameters.dataDefaultValue,
                         widgetType: $scope.dataParameters.widgetType,
+                        widgetSize: $scope.dataParameters.widgetSize,
                         widgetLength: $scope.dataParameters.widgetLength,
                         widgetLabel: $scope.dataParameters.widgetLabel,
                         widgetShortLabel: $scope.dataParameters.widgetShortLabel,

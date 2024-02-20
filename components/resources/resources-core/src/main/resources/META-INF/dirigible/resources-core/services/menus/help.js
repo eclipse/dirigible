@@ -9,6 +9,8 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
+import { configurations as config } from "sdk/core";
+
 const defaultMenuItems = [
 	{
 		label: "Help Portal",
@@ -47,9 +49,7 @@ const defaultMenuItems = [
 	}
 ];
 
-let config = require("core/configurations");
-
-exports.getMenu = function () {
+export const getMenu = () => {
 	let menu = {
 		label: "Help",
 		order: 900,

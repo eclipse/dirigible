@@ -23,9 +23,6 @@ public class FileSystemMasterRepository extends FileSystemRepository implements 
     /** The Constant TYPE. */
     public static final String TYPE = "filesystem";
 
-    /** The Constant DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER. */
-    public static final String DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER = "DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER";
-
     /** The Constant DIRIGIBLE_MASTER_ROOT_FOLDER_DEFAULT. */
     private static final String DIRIGIBLE_MASTER_ROOT_FOLDER_DEFAULT = "dirigible_master";
 
@@ -44,9 +41,7 @@ public class FileSystemMasterRepository extends FileSystemRepository implements 
      *
      * @throws LocalRepositoryException the local repository exception
      */
-    public FileSystemMasterRepository() throws LocalRepositoryException {
-        super();
-    }
+    public FileSystemMasterRepository() throws LocalRepositoryException {}
 
     /**
      * Gets the repository root folder.

@@ -10,15 +10,25 @@
  */
 package org.eclipse.dirigible.components.data.csvim.domain;
 
-import com.google.gson.annotations.Expose;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import javax.annotation.Nullable;
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.annotations.Expose;
+
+import jakarta.annotation.Nullable;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 /**
  * The Csvim Entity.
@@ -46,6 +56,13 @@ public class Csvim extends Artefact {
     @Column(name = "CSVIM_VERSION", columnDefinition = "VARCHAR")
     @Expose
     private String version;
+
+    /**
+     * The datasource.
+     */
+    @Column(name = "CSVIM_DATASOURCE", columnDefinition = "VARCHAR")
+    @Expose
+    private String datasource;
 
     /**
      * The csv file definitions.
@@ -110,6 +127,24 @@ public class Csvim extends Artefact {
      */
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    /**
+     * Gets the datasource.
+     *
+     * @return the datasource
+     */
+    public String getDatasource() {
+        return datasource;
+    }
+
+    /**
+     * Sets the datasource.
+     *
+     * @param datasource the new datasource
+     */
+    public void setDatasource(String datasource) {
+        this.datasource = datasource;
     }
 
     /**

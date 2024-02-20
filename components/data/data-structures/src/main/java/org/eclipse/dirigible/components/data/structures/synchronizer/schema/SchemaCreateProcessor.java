@@ -12,7 +12,6 @@ package org.eclipse.dirigible.components.data.structures.synchronizer.schema;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
 import org.eclipse.dirigible.components.data.structures.domain.Schema;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.data.structures.domain.View;
@@ -21,6 +20,7 @@ import org.eclipse.dirigible.components.data.structures.synchronizer.table.Table
 import org.eclipse.dirigible.components.data.structures.synchronizer.table.TableForeignKeysCreateProcessor;
 import org.eclipse.dirigible.components.data.structures.synchronizer.view.ViewCreateProcessor;
 import org.eclipse.dirigible.components.data.structures.synchronizer.view.ViewDropProcessor;
+import org.eclipse.dirigible.database.sql.SqlException;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,10 +60,8 @@ public class SchemaCreateProcessor {
                     }
                     TableAlterProcessor.execute(connection, tableModel);
                 }
-            } catch (SQLException e) {
-                if (logger.isErrorEnabled()) {
-                    logger.error(e.getMessage(), e);
-                }
+            } catch (SQLException | SqlException ex) {
+                logger.error("Failed to alter table [{}]", tableModel, ex);
             }
         }
 

@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Map;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.data.store.DataStore;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,14 +25,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataStoreFacade implements InitializingBean {
 
-    /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(DataStoreFacade.class);
-
     /** The data sore facade. */
     private static DataStoreFacade INSTANCE;
 
     /** The data store. */
-    private DataStore dataStore;
+    private final DataStore dataStore;
 
     /**
      * Instantiates a new data store facade.

@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.eclipse.dirigible.components.jobs.domain.JobLog;
 import org.junit.jupiter.api.AfterEach;

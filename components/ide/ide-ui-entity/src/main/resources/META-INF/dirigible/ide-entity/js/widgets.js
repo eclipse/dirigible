@@ -33,28 +33,21 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 				return;
 			}
 
-			if (parent.style === "projection") {
-				showAlert('Drop', 'Drop target cannot be an Entity of type Projection', $scope);
-				return;
-			}
-
 			pt.x -= pstate.x;
 			pt.y -= pstate.y;
 
 			let columnCount = graph.model.getChildCount(parent) + 1;
-			//showPrompt('Enter name for new property', 'property'+columnCount, createNode);
-			createNode('property' + columnCount, prototype.style === 'copied', parent.style === 'projection', parent.style === 'extension');
+			createNode('Property' + columnCount, prototype.style);
 		} else {
-			let entitiesCount = 0;
-			let childCount = graph.model.getChildCount(parent);
+			//let entitiesCount = 0;
+			//let childCount = graph.model.getChildCount(parent);
 
-			for (let i = 0; i < childCount; i++) {
-				if (!graph.model.isEdge(graph.model.getChildAt(parent, i))) {
-					entitiesCount++;
-				}
-			}
-			//showPrompt('Enter name for new entity', 'Entity'+(entitiesCount+1), createNode);
-			createNode('Entity' + (entitiesCount + 1), prototype.style); //  === 'copied', prototype.style === 'projection', prototype.style === 'extension'
+			//for (let i = 0; i < childCount; i++) {
+			//	if (!graph.model.isEdge(graph.model.getChildAt(parent, i))) {
+			//		entitiesCount++;
+			//	}
+			//}
+			createNode('Entity' + Math.floor((Math.random() * 100000) + 1), prototype.style);
 
 
 			if (prototype.style === 'dependent') {
@@ -65,7 +58,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 				$scope.$cell.value.entityType = "REPORT";
 			} else if (prototype.style === 'filter') {
 				$scope.$cell = graph.getSelectionCell();
-				$scope.$cell.value.entityType = "REPORT_FILTER";
+				$scope.$cell.value.entityType = "FILTER";
 			} else if (prototype.style === 'setting') {
 				$scope.$cell = graph.getSelectionCell();
 				$scope.$cell.value.entityType = "SETTING";
@@ -104,6 +97,14 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 						v1.value.entityType = "COPIED";
 					}
 
+					if (isEntity && style === 'projection') {
+						v1.style = 'projection';
+						v1.value.entityType = "PROJECTION";
+					}
+					if (!isEntity && style === 'projection') {
+						v1.style = 'projectionproperty';
+					}
+
 					var memento = undefined;
 					if (parent.geometry && parent.geometry.width) {
 						memento = parent.geometry.width;
@@ -120,7 +121,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 						if (style !== 'projection') {
 							if (v1.children && v1.children.length > 0) {
 								if (!v1.children[0].value.isSQL) {
-									v1.children[0].value.name = name.toLowerCase() + 'Id';
+									v1.children[0].value.name = 'Id';
 								}
 							}
 						} else {

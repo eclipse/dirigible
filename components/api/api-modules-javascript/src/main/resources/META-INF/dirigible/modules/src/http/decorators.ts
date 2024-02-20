@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-import * as rs from "@dirigible/http/rs"
+import * as rs from "sdk/http/rs"
 
 const router = rs.service();
 let instance = null;

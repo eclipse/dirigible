@@ -23,6 +23,7 @@ import java.util.Set;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.data.management.domain.DatabaseMetadata;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
@@ -411,7 +412,13 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
         List<String> tableNames = new ArrayList<String>();
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetaData = connection.getMetaData();
-            ResultSet schemas = databaseMetaData.getSchemas(null, schemaName);
+            ResultSet schemas;
+            if (!databaseMetaData.getDatabaseProductName()
+                                 .equals("MariaDB")) {
+                schemas = databaseMetaData.getSchemas(null, schemaName);
+            } else {
+                schemas = databaseMetaData.getCatalogs();
+            }
             if (schemas.next()) {
 
                 ResultSet rs =

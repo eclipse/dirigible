@@ -9,10 +9,10 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let documentUtils = require("ide-documents/utils/cmis/document");
-let imageUtils = require("ide-documents/utils/cmis/image");
+import * as documentUtils from "../../utils/cmis/document";
+import * as imageUtils from "../../utils/cmis/image";
 
-exports.resize = function (path, documents, width, height) {
+export const resize = (path, documents, width, height) => {
     let result = [];
     for (let i = 0; i < documents.size(); i++) {
         let folder = folderUtils.getFolder(path);

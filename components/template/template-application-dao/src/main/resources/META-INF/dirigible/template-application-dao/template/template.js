@@ -19,9 +19,9 @@ exports.getTemplate = function (parameters) {
         description: "Application with DAO",
         extension: "model",
         sources: [{
-            location: "/template-application-dao/dao/entity.js.template",
+            location: "/template-application-dao/dao/entity.ts.template",
             action: "generate",
-            rename: "gen/dao/{{perspectiveName}}/{{name}}.js",
+            rename: "gen/dao/{{perspectiveName}}/{{name}}Repository.ts",
             engine: "velocity",
             collection: "models"
         }, {
@@ -31,17 +31,15 @@ exports.getTemplate = function (parameters) {
             engine: "velocity",
             collection: "reportModels"
         }, {
-            location: "/template-application-dao/project.json.template",
+            location: "/template-application-dao/project.json.mjs",
             action: "generate",
             rename: "project.json",
-            engine: "velocity",
-            collection: "reportModels"
+            engine: "javascript",
         }, {
             location: "/template-application-dao/tsconfig.json.template",
             action: "generate",
             rename: "tsconfig.json",
-            engine: "velocity",
-            collection: "reportModels"
+            engine: "velocity"
         }, {
             location: "/template-application-dao/dao/entity.extensionpoint.template",
             action: "generate",
@@ -49,14 +47,20 @@ exports.getTemplate = function (parameters) {
             engine: "velocity",
             collection: "models"
         }, {
-            location: "/template-application-dao/dao/utils/EntityUtils.js.template",
+            location: "/template-application-dao/dao/utils/EntityUtils.ts.template",
             action: "copy",
-            rename: "gen/dao/utils/EntityUtils.js"
+            rename: "gen/dao/utils/EntityUtils.ts"
         }],
         parameters: [{
             name: "tablePrefix",
             label: "Table Prefix",
-            placeholder: "Table prefix"
+            placeholder: "Table prefix",
+            required: false
+        }, {
+            name: "dataSource",
+            label: "Data Source",
+            placeholder: "Data Source (DefaultDB)",
+            required: false
         }]
     };
 };
