@@ -38,9 +38,9 @@ jobs:
     - name: Install TypeScript compiler
       run: npm i -g typescript
     - name: Validate Java code formatting
-      run: mvn formatter:validate
+      run: mvn -T 1C formatter:validate
     - name: Maven Build
-      run: mvn clean install -D maven.javadoc.skip=false -U
+      run: mvn -T 1C clean install -D maven.javadoc.skip=false -U
       
   integration-tests:        
     runs-on: ${{ matrix.os }}-latest
@@ -82,7 +82,7 @@ jobs:
     - name: Install TypeScript compiler
       run: npm i -g typescript
     - name: Maven Build
-      run: mvn -T 1C clean install -D maven.test.skip=true -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
+      run: mvn -T 1C clean install -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
     - name: Integration tests
       run: mvn -f tests/pom.xml verify -P integration-tests
     - name: Upload selenide screenshots

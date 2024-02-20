@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper.ColumnsIteratorCallback;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper.IndicesIteratorCallback;
+import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper.ForeignKeysIteratorCallback;
 
 /**
  * The Table Metadata transport object.
@@ -38,6 +39,9 @@ public class TableMetadata {
 
     /** The indices. */
     private List<IndexMetadata> indices;
+
+    /** The indices. */
+    private List<ForeignKeyMetadata> foreignKeys;
 
     /** The kind. */
     private String kind = "table";
@@ -63,6 +67,7 @@ public class TableMetadata {
 
         this.columns = new ArrayList<ColumnMetadata>();
         this.indices = new ArrayList<IndexMetadata>();
+        this.foreignKeys = new ArrayList<ForeignKeyMetadata>();
 
         if (deep) {
             DatabaseMetadataHelper.iterateTableDefinition(connection, catalogName, schemaName, name, new ColumnsIteratorCallback() {
@@ -79,6 +84,11 @@ public class TableMetadata {
                     indices.add(new IndexMetadata(indexName, indexType, columnName, isNonUnique, indexQualifier, ordinalPosition, sortOrder,
                             cardinality != null ? Integer.parseInt(cardinality) : 0, pagesIndex != null ? Integer.parseInt(pagesIndex) : 0,
                             filterCondition));
+                }
+            }, new ForeignKeysIteratorCallback() {
+                @Override
+                public void onIndex(String fkName) {
+                    foreignKeys.add(new ForeignKeyMetadata(fkName));
                 }
             });
         }

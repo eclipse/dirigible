@@ -19,15 +19,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
-import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.eclipse.dirigible.components.database.DatabaseNameNormalizer;
+import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.DataTypeUtils;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
+import org.eclipse.dirigible.database.sql.SqlException;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.table.AlterTableBuilder;
 import org.slf4j.Logger;
@@ -58,23 +58,25 @@ public class TableAlterProcessor {
         if (caseSensitive) {
             tableName = "\"" + tableName + "\"";
         }
-        if (logger.isInfoEnabled()) {
-            logger.info("Processing Alter Table: " + tableName);
-        }
+        logger.info("Processing Alter Table: " + tableName);
 
-        Map<String, String> columnDefinitions = new HashMap<String, String>();
+        Map<String, String> columnDefinitions = new HashMap<>();
         DatabaseMetaData dmd = connection.getMetaData();
         ResultSet rsColumns = dmd.getColumns(null, null, DatabaseNameNormalizer.normalizeTableName(tableName), null);
         while (rsColumns.next()) {
-            // String typeName =
-            // nativeDialect.getDataTypeName(DataTypeUtils.getDatabaseType(rsColumns.getInt(5)));
-            String typeName = DataTypeUtils.getDatabaseTypeName(rsColumns.getInt(5));
-            columnDefinitions.put(rsColumns.getString(4)
-                                           .toUpperCase(),
-                    typeName);
+            int columnType = rsColumns.getInt(5);
+            String columnName = rsColumns.getString(4)
+                                         .toUpperCase();
+            try {
+                String typeName = DataTypeUtils.getDatabaseTypeName(columnType);
+                columnDefinitions.put(columnName, typeName);
+            } catch (SqlException ex) {
+                String errorMessage = "Missing type for column [" + columnName + "] and type [" + columnType + "]";
+                throw new SqlException(errorMessage, ex);
+            }
         }
 
-        List<String> modelColumnNames = new ArrayList<String>();
+        List<String> modelColumnNames = new ArrayList<>();
 
         // ADD iteration
         for (TableColumn columnModel : tableModel.getColumns()) {

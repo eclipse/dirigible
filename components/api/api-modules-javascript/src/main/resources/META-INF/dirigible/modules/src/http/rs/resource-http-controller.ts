@@ -1,10 +1,11 @@
 import * as response from "../response";
 import * as request from "../request";
 import { ResourceMappings } from "./resource-mappings";
-import * as logging from "@dirigible/log/logging";
-const { match } = dirigibleRequire("http/path-to-regexp/6.2.1/index.js");
+import { Logging } from "sdk/log";
 
-const logger = logging.getLogger('http.rs.controller');
+const { match } = dirigibleRequire("modules/src/http/path-to-regexp/6.2.1/index.js");
+
+const logger = Logging.getLogger('http.rs.controller');
 
 function getRequest() {
     return request;

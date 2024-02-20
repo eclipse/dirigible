@@ -10,10 +10,9 @@
  */
 package org.eclipse.dirigible.components.engine.python;
 
+import static org.eclipse.dirigible.graalium.core.graal.ValueTransformer.transformValue;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
-
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.graalium.core.modules.DirigibleSourceProvider;
 import org.eclipse.dirigible.graalium.core.python.GraalPyCodeRunner;
@@ -41,8 +40,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
-import static org.eclipse.dirigible.graalium.core.graal.ValueTransformer.transformValue;
 
 @RestController
 @RequestMapping({BaseEndpoint.PREFIX_ENDPOINT_SECURED + "py", BaseEndpoint.PREFIX_ENDPOINT_PUBLIC + "py"})
@@ -73,8 +70,8 @@ public class PythonEndpoint extends BaseEndpoint {
     public ResponseEntity<?> postFile(@PathVariable("projectName") String projectName,
             @PathVariable("projectFilePath") String projectFilePath,
             @Nullable @RequestParam(required = false) MultiValueMap<String, String> params,
-            @Validated @RequestParam("file") MultipartFile file) {
-        return executePython(projectName, projectFilePath, params, new MultipartFile[] {file});
+            @Validated @RequestParam("file") MultipartFile[] file) {
+        return executePython(projectName, projectFilePath, params, file);
     }
 
     @PutMapping(HTTP_PATH_MATCHER)

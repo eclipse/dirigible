@@ -10,7 +10,7 @@
  */
 package org.eclipse.dirigible.components.api.messaging;
 
-import javax.jms.JMSException;
+import jakarta.jms.JMSException;
 import org.eclipse.dirigible.components.listeners.service.MessageConsumer;
 import org.eclipse.dirigible.components.listeners.service.MessageProducer;
 import org.springframework.beans.factory.annotation.Autowired;

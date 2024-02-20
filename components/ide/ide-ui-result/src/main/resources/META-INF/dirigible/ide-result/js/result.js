@@ -305,6 +305,27 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         });
     }, true);
 
+    messageHub.onDidReceiveMessage("database.metadata.project.export.model", function (command) {
+        let schema = command.data;
+        let url = "/services/data/project/model/" + $scope.datasource + "/" +    schema;
+        $http({
+            method: 'PUT',
+            url: url,
+            headers: {
+                'X-Requested-With': 'Fetch',
+                'X-CSRF-Token': csrfToken
+            }
+        }).then(function (resourceURI) {
+            let fileURL = window.location.protocol + '//' + window.location.host + `/services/ide/workspaces/${schema}/${schema}`
+            let msg = `Created requested file in Project [${schema}] in Workspace [${schema}]. \n To access it it please go to: ${fileURL}`;
+            console.info(msg);
+            messageHub.showAlertSuccess('Export', msg);
+        }).catch(function (err) {
+            messageHub.showAlertError("Export error", "Error in exporting data in project");
+            console.error("Error in exporting data in project", err);
+        });
+    }, true);
+
     messageHub.onDidReceiveMessage("database.metadata.export.artifact", function (command) {
         let artifact = command.data.split('.');
         let url = "/services/data/definition/" + $scope.datasource + "/" + artifact[0] + "/" + artifact[1];

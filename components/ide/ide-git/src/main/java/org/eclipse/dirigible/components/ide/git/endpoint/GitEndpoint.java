@@ -11,13 +11,9 @@
 package org.eclipse.dirigible.components.ide.git.endpoint;
 
 import static java.text.MessageFormat.format;
-
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.validation.Valid;
-
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.api.security.UserFacade;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
@@ -42,8 +38,6 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,8 +51,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
 import com.google.gson.JsonObject;
+import jakarta.validation.Valid;
 
 /**
  * Front facing REST service serving the Git commands.
@@ -67,12 +61,8 @@ import com.google.gson.JsonObject;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "git/{workspace}")
 public class GitEndpoint {
 
-
-    /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(GitEndpoint.class);
-
     /** The git service. */
-    private GitService gitService;
+    private final GitService gitService;
 
     /**
      * Instantiates a new git endpoint.
@@ -581,9 +571,8 @@ public class GitEndpoint {
         ProjectOriginUrls originUrls = gitService.getOriginUrls(workspace, project);
         if (originUrls != null) {
             return ResponseEntity.ok(originUrls);
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not a git project");
         }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not a git project");
     }
 
     /**
@@ -651,9 +640,8 @@ public class GitEndpoint {
         GitDiffModel diff = gitService.getFileDiff(workspace, repositoryName, path);
         if (diff != null) {
             return ResponseEntity.ok(GsonHelper.toJson(diff));
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not a git project");
         }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not a git project");
     }
 
     /**
@@ -671,9 +659,8 @@ public class GitEndpoint {
         List<GitCommitInfo> history = gitService.getHistory(workspace, project, path);
         if (history != null) {
             return ResponseEntity.ok(GsonHelper.toJson(history));
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not a git project");
         }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not a git project");
     }
 
     /**

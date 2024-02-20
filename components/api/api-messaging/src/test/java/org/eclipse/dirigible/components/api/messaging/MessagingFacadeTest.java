@@ -15,7 +15,7 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import javax.jms.JMSException;
+import jakarta.jms.JMSException;
 import org.eclipse.dirigible.components.listeners.service.MessageConsumer;
 import org.eclipse.dirigible.components.listeners.service.MessageProducer;
 import org.eclipse.dirigible.components.listeners.service.TimeoutException;

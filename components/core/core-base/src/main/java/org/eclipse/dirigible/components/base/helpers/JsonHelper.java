@@ -12,11 +12,11 @@ package org.eclipse.dirigible.components.base.helpers;
 
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 /**
  * The GsonHelper utility class.
@@ -60,7 +60,11 @@ public class JsonHelper {
      * @return the t
      */
     public static <T> T fromJson(String src, Class<T> classOfT) {
-        return GSON.fromJson(src, classOfT);
+        try {
+            return GSON.fromJson(src, classOfT);
+        } catch (JsonSyntaxException ex) {
+            throw new JsonSyntaxException("Failed to deserialize json [" + src + "] to " + classOfT.getCanonicalName(), ex);
+        }
     }
 
     /**

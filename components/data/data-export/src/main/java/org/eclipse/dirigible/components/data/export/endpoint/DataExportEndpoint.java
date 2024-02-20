@@ -14,7 +14,6 @@ package org.eclipse.dirigible.components.data.export.endpoint;
 import static java.text.MessageFormat.format;
 
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
@@ -106,6 +105,30 @@ public class DataExportEndpoint {
         }
 
         dataExportService.exportSchemaInCsvs(datasource, schema);
+
+        return ResponseEntity.ok(new URI("/" + BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspaces" + "/" + schema));
+    }
+
+    /**
+     * Export schema data in project as model.
+     *
+     * @param datasource the datasource
+     * @param schema the schema name
+     * @return the response
+     * @throws URISyntaxException the URI syntax exception
+     * @throws SQLException the SQL exception
+     */
+
+    @PutMapping(value = "/model/{datasource}/{schema}")
+    public ResponseEntity<URI> exportSchemaAsModel(@PathVariable("datasource") String datasource, @PathVariable("schema") String schema)
+            throws SQLException, URISyntaxException {
+
+        if (!databaseMetadataService.existsDataSourceMetadata(datasource)) {
+            String error = format("Datasource {0} does not exist.", datasource);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
+        }
+
+        dataExportService.exportSchemaAsModel(datasource, schema);
 
         return ResponseEntity.ok(new URI("/" + BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspaces" + "/" + schema));
     }

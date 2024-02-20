@@ -11,8 +11,10 @@
 package org.eclipse.dirigible.components.data.export.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.repository.DataSourceRepository;
@@ -20,6 +22,7 @@ import org.eclipse.dirigible.components.ide.workspace.domain.File;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
 import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -76,6 +79,15 @@ public class DataExportServiceTest {
         datasourceRepository.save(datasource);
     }
 
+
+    /**
+     * Cleanup.
+     */
+    @AfterEach
+    public void cleanUp() {
+        datasourceRepository.deleteAll();
+    }
+
     /**
      * Export metadata as project test.
      *
@@ -84,11 +96,43 @@ public class DataExportServiceTest {
     @Test
     public void exportMetadataAsProjectTest() throws SQLException {
         String filePath = dataExportService.exportMetadataAsProject("TestDB", "INFORMATION_SCHEMA");
-        Workspace workspace = workspaceService.getWorkspace("INFORMATION_SCHEMA");
-        Project project = workspace.getProject("INFORMATION_SCHEMA");
-        File file = project.getFiles()
-                           .get(0);
-        assertEquals(file.getWorkspacePath(), filePath);
+        Workspace workspace = workspaceService.getWorkspace("workspace");
+        Project project = workspace.getProject("TestDB");
+        List<File> files = project.getFiles();
+        File foundFile = null;
+
+        for (File file : files) {
+            if (file.getWorkspacePath()
+                    .equals(filePath)) {
+                foundFile = file;
+                break;
+            }
+        }
+
+        assertNotNull(foundFile);
+        assertEquals(foundFile.getWorkspacePath(), filePath);
+    }
+
+    /**
+     * Export schema as model test.
+     */
+    @Test
+    public void exportSchemaAsModelTest() {
+        dataExportService.exportSchemaAsModel("TestDB", "INFORMATION_SCHEMA");
+        Workspace workspace = workspaceService.getWorkspace("workspace");
+        Project project = workspace.getProject("TestDB");
+        List<File> files = project.getFiles();
+        File foundFile = null;
+
+        for (File file : files) {
+            if (file.getName()
+                    .equals("testdb_information_schema.model")) {
+                foundFile = file;
+                break;
+            }
+        }
+
+        assertNotNull(foundFile);
     }
 
     /**

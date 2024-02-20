@@ -90,33 +90,76 @@ function FileIO() {
     this.loadText = function (file) {
         return new Promise((resolve, reject) => {
             if (file) {
-                let project = this.resolveGitProjectName();
-                let url;
-                if (project) {
-                    let workspace = file.replace('\\', '/').split('/')[1];
-                    url = `${gitApiUrl}/${workspace}/${project}/diff?path=${file.replace(`/${workspace}/`, '')}`;
-                } else {
-                    url = resourceApiUrl + file;
+                const gitProject = this.resolveGitProjectName();
+                let resourceUrl = resourceApiUrl + file;
+                let gitResourceUrl;
+                if (gitProject) {
+                    const gitFolder = "/.git/";
+                    const isGitFolderLocation = file.indexOf(gitFolder) > 0;
+                    if (isGitFolderLocation) {
+                        file = file.substring(file.indexOf(gitFolder) + gitFolder.length);
+                    }
+                    const workspace = file.replace('\\', '/').split('/')[1];
+
+                    let path;
+                    if (isGitFolderLocation) {
+                        path = file.substring(file.indexOf(gitProject) + gitProject.length + 1);
+                        resourceUrl = `${resourceApiUrl}/${workspace}/${path}`;
+                    } else {
+                        path = file.substring(file.indexOf(`/${workspace}/`) + `/${workspace}/`.length);
+                    }
+                    gitResourceUrl = `${gitApiUrl}/${workspace}/${gitProject}/diff?path=${path}`;
                 }
                 const xhr = new XMLHttpRequest();
-                xhr.open("GET", url);
+                xhr.open("GET", gitProject ? gitResourceUrl : resourceUrl);
                 xhr.setRequestHeader("X-CSRF-Token", "Fetch");
                 xhr.setRequestHeader('Dirigible-Editor', 'Monaco');
                 xhr.onload = () => {
                     if (xhr.status === 200) {
-                        if (project) {
-                            let fileObject = JSON.parse(xhr.responseText);
-                            resolve({
-                                isGit: true,
-                                git: fileObject.original || "", // File is not in git
-                                modified: fileObject.modified,
-                            });
+                        if (gitProject) {
+                            const fileObject = JSON.parse(xhr.responseText);
+
+                            if (isTypeScriptFile(file)) {
+                                const xhr = new XMLHttpRequest();
+                                xhr.open("GET", resourceUrl);
+                                xhr.setRequestHeader("X-CSRF-Token", "Fetch");
+                                xhr.setRequestHeader('Dirigible-Editor', 'Monaco');
+                                xhr.onload = () => {
+                                    if (xhr.status === 200) {
+                                        const typeScriptMetadata = JSON.parse(xhr.responseText);
+                                        resolve({
+                                            isGit: true,
+                                            git: fileObject.original || "", // File is not in git
+                                            modified: fileObject.modified,
+                                            ...typeScriptMetadata
+                                        });
+                                    }
+                                };
+                                xhr.onerror = () => reject(`HTTP ${xhr.status} - ${xhr.statusText}`);
+                                xhr.send();
+                            } else {
+                                resolve({
+                                    isGit: true,
+                                    git: fileObject.original || "", // File is not in git
+                                    modified: fileObject.modified,
+                                });
+                            }
                         } else {
-                            resolve({
-                                isGit: false,
-                                git: "",
-                                modified: xhr.responseText,
-                            });
+                            if (isTypeScriptFile(file)) {
+                                const typeScriptMetadata = JSON.parse(xhr.responseText);
+                                resolve({
+                                    isGit: false,
+                                    git: "",
+                                    modified: typeScriptMetadata.sourceCode,
+                                    ...typeScriptMetadata
+                                });
+                            } else {
+                                resolve({
+                                    isGit: false,
+                                    git: "",
+                                    modified: xhr.responseText,
+                                });
+                            }
                         }
                     } else {
                         if (xhr.responseText)
@@ -661,13 +704,13 @@ function isDirty(model) {
                     })
                     .then((editor) => {
                         _editor = editor;
-                        return _fileObject.modified;
+                        return _fileObject;
                     })
-                    .then((fileTextOrJson) => {
+                    .then((fileMetadata) => {
                         if (fileName) {
                             let fileType = _fileType;
 
-                            const fileText = isTypeScriptFile(fileName) ? JSON.parse(fileTextOrJson).sourceCode : fileTextOrJson;
+                            const fileText = fileMetadata.modified;
 
                             let moduleImports = getModuleImports(fileText);
                             codeCompletionAssignments = parseAssignments(acornLoose, fileText);
@@ -729,12 +772,10 @@ function isDirty(model) {
                             });
 
                             if (isTypeScriptFile(fileName)) {
-                                const importedFiles = JSON.parse(fileTextOrJson).importedFilesNames;
-                                const loadImportedFiles = (isReload) => {
+                                const loadImportedFiles = (isReload, importedFiles) => {
                                     for (const importedFile of importedFiles) {
                                         fileIO.loadText(importedFile)
-                                            .then((fileObject) => {
-                                                const importedFile = JSON.parse(fileObject.modified);
+                                            .then((importedFile) => {
                                                 const uri = new monaco.Uri().with({ path: `/${importedFile.workspace}/${importedFile.project}/${importedFile.filePath}` });
                                                 if (isReload) {
                                                     const model = monaco.editor.getModel(uri);
@@ -742,15 +783,18 @@ function isDirty(model) {
                                                 } else {
                                                     monaco.editor.createModel(importedFile.sourceCode, fileType, uri);
                                                 }
+                                                if (importedFile.importedFilesNames?.length > 0) {
+                                                    loadImportedFiles(isReload, importedFile.importedFilesNames);
+                                                }
                                             })
                                             .catch((status) => {
                                                 console.error(status);
                                             })
                                     }
                                 };
-                                loadImportedFiles(false);
+                                loadImportedFiles(false, fileMetadata.importedFilesNames);
                                 messageHub.subscribe(() => {
-                                    loadImportedFiles(true);
+                                    loadImportedFiles(true, fileMetadata.importedFilesNames);
                                 }, "ide.ts.reload")
                             }
 
@@ -1006,14 +1050,32 @@ function isDirty(model) {
             noUnusedLocals: true,
             checkJs: true,
             noFallthroughCasesInSwitch: true,
-            module: (fileName?.endsWith(".mjs") === true) ? monaco.languages.typescript.ModuleKind.ESNext : monaco.languages.typescript.ModuleKind.CommonJS
+            module: (fileName?.endsWith(".mjs") === true) ? monaco.languages.typescript.ModuleKind.ESNext : monaco.languages.typescript.ModuleKind.CommonJS,
+            moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+            resolveJsonModule: true,
+            jsx: (fileName?.endsWith(".jsx") === true) ? "react" : undefined
         });
-        monaco.languages.typescript.javascriptDefaults.getCompilerOptions().moduleResolution = monaco.languages.typescript.ModuleResolutionKind.NodeJs;
-        monaco.languages.typescript.typescriptDefaults.getCompilerOptions().moduleResolution = monaco.languages.typescript.ModuleResolutionKind.NodeJs;
-        monaco.languages.typescript.typescriptDefaults.getCompilerOptions().jsx = (fileName?.endsWith(".tsx") === true) ? "react" : undefined;
-        monaco.languages.typescript.javascriptDefaults.getCompilerOptions().jsx = (fileName?.endsWith(".jsx") === true) ? "react" : undefined,
+        monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+            target: monaco.languages.typescript.ScriptTarget.ESNext,
+            strict: true,
+            strictNullChecks: true,
+            strictPropertyInitialization: true,
+            alwaysStrict: true,
+            allowNonTsExtensions: true,
+            allowUnreachableCode: false,
+            allowUnusedLabels: false,
+            noUnusedParameters: true,
+            noUnusedLocals: true,
+            checkJs: true,
+            noFallthroughCasesInSwitch: true,
+            module: monaco.languages.typescript.ModuleKind.ESNext,
+            moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+            esModuleInterop: true,
+            resolveJsonModule: true,
+            jsx: (fileName?.endsWith(".tsx") === true) ? "react" : undefined
+        });
 
-            monaco.languages.html.registerHTMLLanguageService('xml', {}, { documentFormattingEdits: true });
+        monaco.languages.html.registerHTMLLanguageService('xml', {}, { documentFormattingEdits: true });
         monaco.languages.html.htmlDefaults.setOptions({
             format: {
                 tabSize: 2,

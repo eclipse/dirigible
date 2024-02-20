@@ -4,24 +4,42 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 		messageHubProvider.eventIdPrefix = '${projectName}.${perspectiveName}.${name}';
 	}])
 	.config(["entityApiProvider", function (entityApiProvider) {
-		entityApiProvider.baseUrl = "/services/js/${projectName}/gen/api/${perspectiveName}/${name}.js";
+		entityApiProvider.baseUrl = "/services/ts/${projectName}/gen/api/${perspectiveName}/${name}Service.ts";
 	}])
-	.controller('PageController', ['$scope', 'messageHub', 'entityApi', function ($scope, messageHub, entityApi) {
+	.controller('PageController', ['$scope', '$http', 'messageHub', 'entityApi', function ($scope, $http, messageHub, entityApi) {
 
 		$scope.entity = {};
+		$scope.forms = {
+			details: {},
+		};
 		$scope.formHeaders = {
 			select: "${name} Details",
 			create: "Create ${name}",
 			update: "Update ${name}"
 		};
-		$scope.formErrors = {};
 		$scope.action = 'select';
+
+		//-----------------Custom Actions-------------------//
+		${dollar}http.get("/services/js/resources-core/services/custom-actions.js?extensionPoint=${projectName}-custom-action").then(function (response) {
+			$scope.entityActions = response.data.filter(e => e.perspective === "${perspectiveName}" && e.view === "${name}" && e.type === "entity");
+		});
+
+		$scope.triggerEntityAction = function (actionId, selectedEntity) {
+			for (const next of $scope.entityActions) {
+				if (next.id === actionId) {
+					messageHub.showDialogWindow("${projectName}-custom-action", {
+						src: `${dollar}{next.link}?id=${dollar}{${dollar}scope.entity.${primaryKeysString}}`,
+					});
+					break;
+				}
+			}
+		};
+		//-----------------Custom Actions-------------------//
 
 		//-----------------Events-------------------//
 		messageHub.onDidReceiveMessage("clearDetails", function (msg) {
 			$scope.$apply(function () {
 				$scope.entity = {};
-				$scope.formErrors = {};
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN")
 				$scope.options${property.name} = [];
@@ -59,14 +77,6 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 #end
 #end
 				$scope.action = 'create';
-				// Set Errors for required fields only
-				$scope.formErrors = {
-#foreach ($property in $properties)
-#if(!$property.dataAutoIncrement && $property.dataNotNull)
-					${property.name}: true,
-#end
-#end
-				};
 			});
 		});
 
@@ -89,17 +99,6 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			});
 		});
 		//-----------------Events-------------------//
-
-		${dollar}scope.isValid = function (isValid, property) {
-			${dollar}scope.formErrors[property] = !isValid ? true : undefined;
-			for (let next in ${dollar}scope.formErrors) {
-				if (${dollar}scope.formErrors[next] === true) {
-					${dollar}scope.isFormValid = false;
-					return;
-				}
-			}
-			${dollar}scope.isFormValid = true;
-		};
 
 		$scope.create = function () {
 			entityApi.create($scope.entity).then(function (response) {

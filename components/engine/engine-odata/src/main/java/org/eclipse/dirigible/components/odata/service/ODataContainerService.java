@@ -12,12 +12,9 @@ package org.eclipse.dirigible.components.odata.service;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.odata.domain.ODataContainer;
 import org.eclipse.dirigible.components.odata.repository.ODataContainerRepository;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,33 +26,13 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class ODataContainerService implements ArtefactService<ODataContainer>, InitializingBean {
+public class ODataContainerService implements ArtefactService<ODataContainer> {
 
-    /** The instance. */
-    private static ODataContainerService INSTANCE;
+    private final ODataContainerRepository odataContainerRepository;
 
-    /**
-     * After properties set.
-     *
-     * @throws Exception the exception
-     */
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        INSTANCE = this;
+    public ODataContainerService(ODataContainerRepository odataContainerRepository) {
+        this.odataContainerRepository = odataContainerRepository;
     }
-
-    /**
-     * Gets the.
-     *
-     * @return the o data container service
-     */
-    public static ODataContainerService get() {
-        return INSTANCE;
-    }
-
-    /** The ODataContainer repository. */
-    @Autowired
-    private ODataContainerRepository odataContainerRepository;
 
     /**
      * Gets the all.
@@ -89,9 +66,8 @@ public class ODataContainerService implements ArtefactService<ODataContainer>, I
         Optional<ODataContainer> odataContainer = odataContainerRepository.findById(id);
         if (odataContainer.isPresent()) {
             return odataContainer.get();
-        } else {
-            throw new IllegalArgumentException("OData Container with id does not exist: " + id);
         }
+        throw new IllegalArgumentException("OData Container with id does not exist: " + id);
     }
 
     /**
@@ -108,9 +84,8 @@ public class ODataContainerService implements ArtefactService<ODataContainer>, I
         Optional<ODataContainer> odataContainer = odataContainerRepository.findOne(example);
         if (odataContainer.isPresent()) {
             return odataContainer.get();
-        } else {
-            throw new IllegalArgumentException("OData Container with name does not exist: " + name);
         }
+        throw new IllegalArgumentException("OData Container with name does not exist: " + name);
     }
 
     /**
@@ -125,8 +100,7 @@ public class ODataContainerService implements ArtefactService<ODataContainer>, I
         ODataContainer filter = new ODataContainer();
         filter.setLocation(location);
         Example<ODataContainer> example = Example.of(filter);
-        List<ODataContainer> list = odataContainerRepository.findAll(example);
-        return list;
+        return odataContainerRepository.findAll(example);
     }
 
     /**

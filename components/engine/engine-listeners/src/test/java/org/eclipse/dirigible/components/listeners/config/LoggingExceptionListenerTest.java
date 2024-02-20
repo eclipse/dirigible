@@ -10,7 +10,7 @@
  */
 package org.eclipse.dirigible.components.listeners.config;
 
-import javax.jms.JMSException;
+import jakarta.jms.JMSException;
 import org.eclipse.dirigible.components.listeners.util.LogsAsserter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
