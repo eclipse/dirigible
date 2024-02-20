@@ -13,6 +13,9 @@
 import * as bytes from "@dirigible/io/bytes";
 const QRCodeFacade = Java.type("org.eclipse.dirigible.components.api.utils.QRCodeFacade");
 
-export function generateQRCode(text){
-    return bytes.toJavaScriptBytes(QRCodeFacade.generateQRCode(text));
-};
+export class QrCode{
+
+    public static generateQRCode(text: string): any{
+        return bytes.toJavaScriptBytes(QRCodeFacade.generateQRCode(text));
+    };
+}
