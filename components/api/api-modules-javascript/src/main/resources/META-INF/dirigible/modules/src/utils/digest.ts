@@ -18,14 +18,14 @@ export class Digest{
 	/**
 	 * Calculate MD5 digest from input (text or byte array) and return result as byte array
 	 */
-	public static md5(input) {
+	public static md5(input: any): any {
 		return bytes.toJavaScriptBytes(this.md5AsNativeBytes(input));
 	};
 
 	/**
 	 * Calculate MD5 digest from input (text or byte array) and return result as 16 elements java native byte array
 	 */
-	public static md5AsNativeBytes(input) {
+	public static md5AsNativeBytes(input: any): any {
 		const data = input;
 		let native;
 		if (typeof data === 'string') {
@@ -43,7 +43,7 @@ export class Digest{
 	/**
 	 * Calculate MD5 digest from input (text or byte array) and return result as 32 character hex string
 	 */
-	public static md5Hex(input) {
+	public static md5Hex(input: any): any {
 		const data = input;
 		let native;
 		if (typeof data === 'string') {
@@ -61,14 +61,14 @@ export class Digest{
 	/**
 	 * Calculate SHA1 digest from input (text or byte array) and return result as 20 elements byte array
 	 */
-	public static sha1(input) {
+	public static sha1(input: any): any {
 		return bytes.toJavaScriptBytes(this.sha1AsNativeBytes(input));
 	};
 
 	/**
 	 * Calculate SHA1 digest from input (text or byte array) and return result as 20 elements java native byte array
 	 */
-	public static sha1AsNativeBytes(input) {
+	public static sha1AsNativeBytes(input: any): any {
 		const data = input;
 		let native;
 		if (typeof data === 'string') {
@@ -86,14 +86,14 @@ export class Digest{
 	/**
 	 * Calculate SHA256 digest from input (text or byte array) and return result as 32 elements byte array
 	 */
-	public static sha256(input) {
+	public static sha256(input: any): any {
 		return bytes.toJavaScriptBytes(this.sha256AsNativeBytes(input));
 	};
 
 	/**
 	 * Calculate SHA256 digest from input (text or byte array) and return result as 32 elements java native byte array
 	 */
-	public static sha256AsNativeBytes(input) {
+	public static sha256AsNativeBytes(input: any): any {
 		const data = input;
 		let native;
 		if (typeof data === 'string') {
@@ -111,14 +111,14 @@ export class Digest{
 	/**
 	 * Calculate SHA384 digest from input (text or byte array) and return result as 48 elements byte array
 	 */
-	public static sha384(input) {
+	public static sha384(input: any): any {
 		return bytes.toJavaScriptBytes(this.sha384AsNativeBytes(input));
 	};
 
 	/**
 	 * Calculate SHA384 digest from input (text or byte array) and return result as 48 elements java native byte array
 	 */
-	public static sha384AsNativeBytes(input) {
+	public static sha384AsNativeBytes(input: any): any {
 		const data = input;
 		let native;
 		if (typeof data === 'string') {
@@ -136,14 +136,14 @@ export class Digest{
 	/**
 	 * Calculate SHA512 digest from input (text or byte array) and return result as 64 elements byte array
 	 */
-	public static sha512(input) {
+	public static sha512(input: any): any {
 		return bytes.toJavaScriptBytes(this.sha512AsNativeBytes(input));
 	};
 
 	/**
 	 * Calculate SHA512 digest from input (text or byte array) and return result as 64 elements java native byte array
 	 */
-	public static sha512AsNativeBytes(input) {
+	public static sha512AsNativeBytes(input: any): any {
 		const data = input;
 		let native;
 		if (typeof data === 'string') {
@@ -161,7 +161,7 @@ export class Digest{
 	/**
 	 * Calculate SHA1 digest from input (text or byte array) and return result as 40 character hex string
 	 */
-	public static sha1Hex(input) {
+	public static sha1Hex(input: any): any {
 		const data = input;
 		let native;
 		if (typeof data === 'string') {
