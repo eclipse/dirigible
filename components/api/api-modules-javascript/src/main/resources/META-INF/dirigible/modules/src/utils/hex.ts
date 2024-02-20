@@ -14,61 +14,64 @@ import * as bytes from "@dirigible/io/bytes";
 
 const HexFacade = Java.type("org.eclipse.dirigible.components.api.utils.HexFacade");
 
-/**
- * Encode the input (text or byte array) as text
- */
-export function encode(input) {
-	return bytes.byteArrayToText(encodeAsNativeBytes(input));
-};
+export class Hex{
 
-/**
- * Encode the input (text or byte array) as byte array
- */
-export function encodeAsBytes(input) {
-	return bytes.toJavaScriptBytes(encodeAsNativeBytes(input));
-};
+	/**
+	 * Encode the input (text or byte array) as text
+	 */
+	public static encode(input) {
+		return bytes.byteArrayToText(this.encodeAsNativeBytes(input));
+	};
 
-/**
- * Encode the input (text or byte array) as java native byte array
- */
-export function encodeAsNativeBytes(input) {
-	const data = input;
-	let native;
-	if (typeof data === 'string') {
-		const baos = streams.createByteArrayOutputStream();
-		baos.writeText(data);
-		native = baos.getBytesNative();
-	} else if (Array.isArray(data)) {
-		native = bytes.toJavaBytes(data);
-	}
+	/**
+	 * Encode the input (text or byte array) as byte array
+	 */
+	public static encodeAsBytes(input) {
+		return bytes.toJavaScriptBytes(this.encodeAsNativeBytes(input));
+	};
 
-	const output = HexFacade.encodeNative(native);
-	return output;
-};
+	/**
+	 * Encode the input (text or byte array) as java native byte array
+	 */
+	public static encodeAsNativeBytes(input) {
+		const data = input;
+		let native;
+		if (typeof data === 'string') {
+			const baos = streams.createByteArrayOutputStream();
+			baos.writeText(data);
+			native = baos.getBytesNative();
+		} else if (Array.isArray(data)) {
+			native = bytes.toJavaBytes(data);
+		}
 
-/**
- * Decode the input (text or byte array) as text
- */
-export function decode(input) {
-	const output = decodeAsNativeBytes(input);
-	if (output) {
-		return bytes.toJavaScriptBytes(output);
-	}
-	return output;
-};
+		const output = HexFacade.encodeNative(native);
+		return output;
+	};
 
-/**
- * Decode the input (text or byte array) as java native byte array
- */
-export function decodeAsNativeBytes(input) {
-	const data = input;
-	let native;
-	if (typeof data === 'string') {
-		const baos = streams.createByteArrayOutputStream();
-		baos.writeText(data);
-		native = baos.getBytesNative();
-	} else if (Array.isArray(data)) {
-		native = bytes.toJavaBytes(data);
-	}
-	return HexFacade.decodeNative(native);
-};
+	/**
+	 * Decode the input (text or byte array) as text
+	 */
+	public static decode(input) {
+		const output = this.decodeAsNativeBytes(input);
+		if (output) {
+			return bytes.toJavaScriptBytes(output);
+		}
+		return output;
+	};
+
+	/**
+	 * Decode the input (text or byte array) as java native byte array
+	 */
+	public static decodeAsNativeBytes(input) {
+		const data = input;
+		let native;
+		if (typeof data === 'string') {
+			const baos = streams.createByteArrayOutputStream();
+			baos.writeText(data);
+			native = baos.getBytesNative();
+		} else if (Array.isArray(data)) {
+			native = bytes.toJavaBytes(data);
+		}
+		return HexFacade.decodeNative(native);
+	};
+}
