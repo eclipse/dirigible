@@ -14,23 +14,23 @@ const UrlFacade = Java.type("org.eclipse.dirigible.components.api.utils.UrlFacad
 
 export class Url{
 
-	public static encode(input, charset) {
+	public static encode(input: string, charset: string): string {
 		return UrlFacade.encode(input, charset);
 	};
 
-	public static decode(input, charset) {
+	public static decode(input: string, charset: string): string {
 		return UrlFacade.decode(input, charset);
 	};
 
-	public static escape(input) {
+	public static escape(input: string): string {
 		return UrlFacade.escape(input);
 	};
 
-	public static escapePath(input) {
+	public static escapePath(input: string): string {
 		return UrlFacade.escapePath(input);
 	};
 
-	public static escapeForm(input) {
+	public static escapeForm(input: string): string {
 		return UrlFacade.escapeForm(input);
 	};
 }
