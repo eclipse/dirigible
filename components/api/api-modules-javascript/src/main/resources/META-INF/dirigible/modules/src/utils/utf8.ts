@@ -12,23 +12,26 @@
 
 const UTF8Facade = Java.type("org.eclipse.dirigible.components.api.utils.UTF8Facade");
 
-/**
- * Encode the input (text or byte array) as text
- */
- export function encode(input) {
-	return UTF8Facade.encode(input);
-}
+export class Utf8{
 
-/**
- * Decode the input (text or byte array) as text
- */
-export function decode(input) {
-	return UTF8Facade.decode(input);
-}
+	/**
+	 * Encode the input (text or byte array) as text
+	 */
+	public static encode(input: string): any {
+		return UTF8Facade.encode(input);
+	}
 
-/**
- * Decode the input byte array as text
- */
-export function bytesToString(bytes, offset, length) {
-    return UTF8Facade.bytesToString(bytes, offset, length);
+	/**
+	 * Decode the input (text or byte array) as text
+	 */
+	public static decode(input: any): string {
+		return UTF8Facade.decode(input);
+	}
+
+	/**
+	 * Decode the input byte array as text
+	 */
+	public static bytesToString(bytes: any, offset: number, length: number): string {
+		return UTF8Facade.bytesToString(bytes, offset, length);
+	}
 }
