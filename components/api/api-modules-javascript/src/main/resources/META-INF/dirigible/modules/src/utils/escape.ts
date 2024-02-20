@@ -12,97 +12,97 @@
 
 const EscapeFacade = Java.type("org.eclipse.dirigible.components.api.utils.EscapeFacade");
 
-export function escapeCsv(input) {
+export function escapeCsv(input: string): string {
 	return EscapeFacade.escapeCsv(input);
 };
 
 /**
  * Escapes a Javascript string
  */
-export function escapeJavascript(input) {
+export function escapeJavascript(input: string): string {
 	return EscapeFacade.escapeJavascript(input);
 };
 
 /**
  * Escapes a HTML3 string
  */
-export function escapeHtml3(input) {
+export function escapeHtml3(input: string): string {
 	return EscapeFacade.escapeHtml3(input);
 };
 
 /**
  * Escapes a HTML4 string
  */
-export function escapeHtml4(input) {
+export function escapeHtml4(input: string): string {
 	return EscapeFacade.escapeHtml4(input);
 };
 
 /**
  * Escapes a Java string
  */
-export function escapeJava(input) {
+export function escapeJava(input: string): string {
 	return EscapeFacade.escapeJava(input);
 };
 
 /**
  * Escapes a JSON string
  */
-export function escapeJson(input) {
+export function escapeJson(input: string): string {
 	return EscapeFacade.escapeJson(input);
 };
 
 /**
  * Escapes a XML string
  */
-export function escapeXml(input) {
+export function escapeXml(input: string): string {
 	return EscapeFacade.escapeXml(input);
 };
 
 /**
  * Unescapes a CSV string
  */
-export function unescapeCsv(input) {
+export function unescapeCsv(input: string): string {
 	return EscapeFacade.unescapeCsv(input);
 };
 
 /**
  * Unescapes a Javascript string
  */
-export function unescapeJavascript(input) {
+export function unescapeJavascript(input: string): string {
 	return EscapeFacade.unescapeJavascript(input);
 };
 
 /**
  * Unescapes a HTML3 string
  */
-export function unescapeHtml3(input) {
+export function unescapeHtml3(input: string): string {
 	return EscapeFacade.unescapeHtml3(input);
 };
 
 /**
  * Unescapes a HTML4 string
  */
-export function unescapeHtml4(input) {
+export function unescapeHtml4(input: string): string {
 	return EscapeFacade.unescapeHtml4(input);
 };
 
 /**
  * Unescapes a Java string
  */
-export function unescapeJava(input) {
+export function unescapeJava(input: string): string {
 	return EscapeFacade.unescapeJava(input);
 };
 
 /**
  * Unescapes a JSON string
  */
-export function unescapeJson(input) {
+export function unescapeJson(input: string): string {
 	return EscapeFacade.unescapeJson(input);
 };
 
 /**
  * Unescapes a XML string
  */
-export function unescapeXml(input) {
+export function unescapeXml(input: string): string {
 	return EscapeFacade.unescapeXml(input);
 };
