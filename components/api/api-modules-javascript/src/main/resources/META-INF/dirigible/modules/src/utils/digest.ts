@@ -13,163 +13,166 @@ import * as streams from "@dirigible/io/streams";
 import * as bytes from "@dirigible/io/bytes";
 const DigestFacade = Java.type("org.eclipse.dirigible.components.api.utils.DigestFacade");
 
-/**
- * Calculate MD5 digest from input (text or byte array) and return result as byte array
- */
-export function md5(input) {
-	return bytes.toJavaScriptBytes(md5AsNativeBytes(input));
-};
+export class Digest{
 
-/**
- * Calculate MD5 digest from input (text or byte array) and return result as 16 elements java native byte array
- */
-export function md5AsNativeBytes(input) {
-	const data = input;
-	let native;
-	if (typeof data === 'string') {
-		var baos = streams.createByteArrayOutputStream();
-		baos.writeText(data);
-		native = baos.getBytesNative();
-	} else if (Array.isArray(data)) {
-		native = bytes.toJavaBytes(data);
-	}
+	/**
+	 * Calculate MD5 digest from input (text or byte array) and return result as byte array
+	 */
+	public static md5(input) {
+		return bytes.toJavaScriptBytes(this.md5AsNativeBytes(input));
+	};
 
-	const output = DigestFacade.md5(native);
-	return output;
-};
+	/**
+	 * Calculate MD5 digest from input (text or byte array) and return result as 16 elements java native byte array
+	 */
+	public static md5AsNativeBytes(input) {
+		const data = input;
+		let native;
+		if (typeof data === 'string') {
+			var baos = streams.createByteArrayOutputStream();
+			baos.writeText(data);
+			native = baos.getBytesNative();
+		} else if (Array.isArray(data)) {
+			native = bytes.toJavaBytes(data);
+		}
 
-/**
- * Calculate MD5 digest from input (text or byte array) and return result as 32 character hex string
- */
-export function md5Hex(input) {
-	const data = input;
-	let native;
-	if (typeof data === 'string') {
-		const baos = streams.createByteArrayOutputStream();
-		baos.writeText(data);
-		native = baos.getBytesNative();
-	} else if (Array.isArray(data)) {
-		native = bytes.toJavaBytes(data);
-	}
+		const output = DigestFacade.md5(native);
+		return output;
+	};
 
-	const output = DigestFacade.md5Hex(native);
-	return output;
-};
+	/**
+	 * Calculate MD5 digest from input (text or byte array) and return result as 32 character hex string
+	 */
+	public static md5Hex(input) {
+		const data = input;
+		let native;
+		if (typeof data === 'string') {
+			const baos = streams.createByteArrayOutputStream();
+			baos.writeText(data);
+			native = baos.getBytesNative();
+		} else if (Array.isArray(data)) {
+			native = bytes.toJavaBytes(data);
+		}
 
-/**
- * Calculate SHA1 digest from input (text or byte array) and return result as 20 elements byte array
- */
-export function sha1(input) {
-	return bytes.toJavaScriptBytes(sha1AsNativeBytes(input));
-};
+		const output = DigestFacade.md5Hex(native);
+		return output;
+	};
 
-/**
- * Calculate SHA1 digest from input (text or byte array) and return result as 20 elements java native byte array
- */
-export function sha1AsNativeBytes(input) {
-	const data = input;
-	let native;
-	if (typeof data === 'string') {
-		const baos = streams.createByteArrayOutputStream();
-		baos.writeText(data);
-		native = baos.getBytesNative();
-	} else if (Array.isArray(data)) {
-		native = bytes.toJavaBytes(data);
-	}
+	/**
+	 * Calculate SHA1 digest from input (text or byte array) and return result as 20 elements byte array
+	 */
+	public static sha1(input) {
+		return bytes.toJavaScriptBytes(this.sha1AsNativeBytes(input));
+	};
 
-	const output = DigestFacade.sha1(native);
-	return output;
-};
+	/**
+	 * Calculate SHA1 digest from input (text or byte array) and return result as 20 elements java native byte array
+	 */
+	public static sha1AsNativeBytes(input) {
+		const data = input;
+		let native;
+		if (typeof data === 'string') {
+			const baos = streams.createByteArrayOutputStream();
+			baos.writeText(data);
+			native = baos.getBytesNative();
+		} else if (Array.isArray(data)) {
+			native = bytes.toJavaBytes(data);
+		}
 
-/**
- * Calculate SHA256 digest from input (text or byte array) and return result as 32 elements byte array
- */
-export function sha256(input) {
-	return bytes.toJavaScriptBytes(sha256AsNativeBytes(input));
-};
+		const output = DigestFacade.sha1(native);
+		return output;
+	};
 
-/**
- * Calculate SHA256 digest from input (text or byte array) and return result as 32 elements java native byte array
- */
-export function sha256AsNativeBytes(input) {
-	const data = input;
-	let native;
-	if (typeof data === 'string') {
-		const baos = streams.createByteArrayOutputStream();
-		baos.writeText(data);
-		native = baos.getBytesNative();
-	} else if (Array.isArray(data)) {
-		native = bytes.toJavaBytes(data);
-	}
+	/**
+	 * Calculate SHA256 digest from input (text or byte array) and return result as 32 elements byte array
+	 */
+	public static sha256(input) {
+		return bytes.toJavaScriptBytes(this.sha256AsNativeBytes(input));
+	};
 
-	const output = DigestFacade.sha256(native);
-	return output;
-};
+	/**
+	 * Calculate SHA256 digest from input (text or byte array) and return result as 32 elements java native byte array
+	 */
+	public static sha256AsNativeBytes(input) {
+		const data = input;
+		let native;
+		if (typeof data === 'string') {
+			const baos = streams.createByteArrayOutputStream();
+			baos.writeText(data);
+			native = baos.getBytesNative();
+		} else if (Array.isArray(data)) {
+			native = bytes.toJavaBytes(data);
+		}
 
-/**
- * Calculate SHA384 digest from input (text or byte array) and return result as 48 elements byte array
- */
-export function sha384(input) {
-	return bytes.toJavaScriptBytes(sha384AsNativeBytes(input));
-};
+		const output = DigestFacade.sha256(native);
+		return output;
+	};
 
-/**
- * Calculate SHA384 digest from input (text or byte array) and return result as 48 elements java native byte array
- */
-export function sha384AsNativeBytes(input) {
-	const data = input;
-	let native;
-	if (typeof data === 'string') {
-		const baos = streams.createByteArrayOutputStream();
-		baos.writeText(data);
-		native = baos.getBytesNative();
-	} else if (Array.isArray(data)) {
-		native = bytes.toJavaBytes(data);
-	}
+	/**
+	 * Calculate SHA384 digest from input (text or byte array) and return result as 48 elements byte array
+	 */
+	public static sha384(input) {
+		return bytes.toJavaScriptBytes(this.sha384AsNativeBytes(input));
+	};
 
-	const output = DigestFacade.sha384(native);
-	return output;
-};
+	/**
+	 * Calculate SHA384 digest from input (text or byte array) and return result as 48 elements java native byte array
+	 */
+	public static sha384AsNativeBytes(input) {
+		const data = input;
+		let native;
+		if (typeof data === 'string') {
+			const baos = streams.createByteArrayOutputStream();
+			baos.writeText(data);
+			native = baos.getBytesNative();
+		} else if (Array.isArray(data)) {
+			native = bytes.toJavaBytes(data);
+		}
 
-/**
- * Calculate SHA512 digest from input (text or byte array) and return result as 64 elements byte array
- */
-export function sha512(input) {
-	return bytes.toJavaScriptBytes(sha512AsNativeBytes(input));
-};
+		const output = DigestFacade.sha384(native);
+		return output;
+	};
 
-/**
- * Calculate SHA512 digest from input (text or byte array) and return result as 64 elements java native byte array
- */
-export function sha512AsNativeBytes(input) {
-	const data = input;
-	let native;
-	if (typeof data === 'string') {
-		const baos = streams.createByteArrayOutputStream();
-		baos.writeText(data);
-		native = baos.getBytesNative();
-	} else if (Array.isArray(data)) {
-		native = bytes.toJavaBytes(data);
-	}
+	/**
+	 * Calculate SHA512 digest from input (text or byte array) and return result as 64 elements byte array
+	 */
+	public static sha512(input) {
+		return bytes.toJavaScriptBytes(this.sha512AsNativeBytes(input));
+	};
 
-	const output = DigestFacade.sha512(native);
-	return output;
-};
+	/**
+	 * Calculate SHA512 digest from input (text or byte array) and return result as 64 elements java native byte array
+	 */
+	public static sha512AsNativeBytes(input) {
+		const data = input;
+		let native;
+		if (typeof data === 'string') {
+			const baos = streams.createByteArrayOutputStream();
+			baos.writeText(data);
+			native = baos.getBytesNative();
+		} else if (Array.isArray(data)) {
+			native = bytes.toJavaBytes(data);
+		}
 
-/**
- * Calculate SHA1 digest from input (text or byte array) and return result as 40 character hex string
- */
-export function sha1Hex(input) {
-	const data = input;
-	let native;
-	if (typeof data === 'string') {
-		const baos = streams.createByteArrayOutputStream();
-		baos.writeText(data);
-		native = baos.getBytesNative();
-	} else if (Array.isArray(data)) {
-		native = bytes.toJavaBytes(data);
-	}
+		const output = DigestFacade.sha512(native);
+		return output;
+	};
 
-	const output = DigestFacade.sha1Hex(native);
-	return output;
-};
+	/**
+	 * Calculate SHA1 digest from input (text or byte array) and return result as 40 character hex string
+	 */
+	public static sha1Hex(input) {
+		const data = input;
+		let native;
+		if (typeof data === 'string') {
+			const baos = streams.createByteArrayOutputStream();
+			baos.writeText(data);
+			native = baos.getBytesNative();
+		} else if (Array.isArray(data)) {
+			native = bytes.toJavaBytes(data);
+		}
+
+		const output = DigestFacade.sha1Hex(native);
+		return output;
+	};
+}
