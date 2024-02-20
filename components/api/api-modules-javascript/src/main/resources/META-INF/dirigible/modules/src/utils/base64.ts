@@ -18,21 +18,21 @@ export class Base64{
 	/**
 	 * Encode the input (text or byte array) as text
 	 */
-	public static encode(input) {
+	public static encode(input: any): string {
 		return bytes.byteArrayToText(this.encodeAsNativeBytes(input));
 	};
 
 	/**
 	 * Encode the input (text or byte array) as byte array
 	 */
-	public static encodeAsBytes(input) {
+	public static encodeAsBytes(input: any): any {
 		return bytes.toJavaScriptBytes(this.encodeAsNativeBytes(input));
 	};
 
 	/**
 	 * Encode the input (text or byte array) as java native byte array
 	 */
-	public static encodeAsNativeBytes(input) {
+	public static encodeAsNativeBytes(input: any): any {
 		const data = input;
 		let native;
 		if (typeof data === 'string') {
@@ -50,7 +50,7 @@ export class Base64{
 	/**
 	 * Decode the input (text or byte array) as text
 	 */
-	public static decode(input) {
+	public static decode(input: any): any {
 		const output = this.decodeAsNativeBytes(input);
 		if (output) {
 			return bytes.toJavaScriptBytes(output);
@@ -61,7 +61,7 @@ export class Base64{
 	/**
 	 * Decode the input (text or byte array) as java native byte array
 	 */
-	public static decodeAsNativeBytes(input) {
+	public static decodeAsNativeBytes(input: any): any {
 		const data = input;
 		let native;
 		if (typeof data === 'string') {
