@@ -1,1 +1,1 @@
-export * as user from "./user";
+export {Security as user} from "./user";
