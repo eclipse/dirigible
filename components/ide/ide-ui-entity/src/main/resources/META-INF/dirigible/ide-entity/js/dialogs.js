@@ -37,7 +37,9 @@ function openReferEntity(title, message, $scope, graph) {
 						let newProperty = property.clone();
 
 						for (let attributeName in projectionProperty) {
-							newProperty.value[attributeName] = projectionProperty[attributeName];
+							if (attributeName !== "id") {
+								newProperty.value[attributeName] = projectionProperty[attributeName];	
+							}
 						}
 
 						newProperty.style = 'projectionproperty';
@@ -90,7 +92,9 @@ function openCopiedEntity(title, message, $scope, graph) {
 						let newProperty = property.clone();
 
 						for (let attributeName in projectionProperty) {
-							newProperty.value[attributeName] = projectionProperty[attributeName];
+							if (attributeName !== "id") {
+								newProperty.value[attributeName] = projectionProperty[attributeName];
+							}
 						}
 
 						//newProperty.style = 'property';

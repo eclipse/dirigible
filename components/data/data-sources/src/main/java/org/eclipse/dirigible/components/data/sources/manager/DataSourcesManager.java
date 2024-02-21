@@ -89,7 +89,7 @@ public class DataSourcesManager implements InitializingBean {
      * @return the default data source
      */
     public javax.sql.DataSource getDefaultDataSource() {
-        return getDataSource(getDefaultDataSourceName());
+        return getDataSource(dataSourceInitializer.getDefaultDataSourceName());
     }
 
     /**
@@ -98,7 +98,7 @@ public class DataSourcesManager implements InitializingBean {
      * @return the system data source
      */
     public javax.sql.DataSource getSystemDataSource() {
-        return getDataSource(getSystemDataSourceName());
+        return getDataSource(dataSourceInitializer.getSystemDataSourceName());
     }
 
 
@@ -121,26 +121,6 @@ public class DataSourcesManager implements InitializingBean {
             }
             throw e;
         }
-    }
-
-    /**
-     * Gets the default data source name.
-     *
-     * @return the default data source name
-     */
-    public String getDefaultDataSourceName() {
-        return Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT,
-                DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
-    }
-
-    /**
-     * Gets the system data source name.
-     *
-     * @return the system data source name
-     */
-    public String getSystemDataSourceName() {
-        return Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_NAME_SYSTEM,
-                DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM);
     }
 
 }

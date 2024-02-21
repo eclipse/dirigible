@@ -71,7 +71,7 @@
 	<description>Dirigible Parent</description>
 	<groupId>org.eclipse.dirigible</groupId>
 	<artifactId>dirigible-parent</artifactId>
-	<version>10.0.0-SNAPSHOT</version>
+	<version>11.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<inceptionYear>2010</inceptionYear>
@@ -128,7 +128,7 @@
 		<olingo.version>3.1.3</olingo.version>
 
 		<commons-csv.version>1.10.0</commons-csv.version>
-		<c3p0.version>0.9.5.5</c3p0.version>
+		<c3p0.version>0.10.0-pre2</c3p0.version>
 		<guava.version>33.0.0-jre</guava.version>
 		<icu4j.version>74.2</icu4j.version>
 		<classgraph.version>4.8.165</classgraph.version>
@@ -151,7 +151,7 @@
 		<ngdbc.version>2.19.16</ngdbc.version>
 		<snowflake.version>3.13.34</snowflake.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.656</qldb.sdk.version>
+		<qldb.sdk.version>1.12.660</qldb.sdk.version>
 		<jetcd.core.version>0.7.7</jetcd.core.version>
 
 		<jquery-ui.version>1.13.0</jquery-ui.version>

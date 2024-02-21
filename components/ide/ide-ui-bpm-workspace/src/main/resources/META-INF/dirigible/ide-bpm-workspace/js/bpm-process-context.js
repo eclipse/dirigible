@@ -19,6 +19,13 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
 
     $scope.variablesList = [];
     $scope.currentProcessInstanceId = null;
+    $scope.selectedVariable = null;
+
+    $scope.selectionChanged = function (variable) {
+        $scope.variablesList.forEach(variable => variable.selected = false);
+        $scope.selectedVariable = variable;
+        $scope.selectedVariable.selected = true;
+    }
 
     $scope.reload = function () {
         console.log("Reloading data for current process instance id: " + $scope.currentProcessInstanceId)
@@ -32,7 +39,7 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
                 });
     }
 
-    $scope.addProcessVariable = function(processInstanceId, varName, varValue) {
+    $scope.upsertProcessVariable = function(processInstanceId, varName, varValue, dialogId) {
         const apiUrl = '/services/ide/bpm/bpm-processes/instance/' + processInstanceId + '/variables';
         const requestBody = { 'name': varName, 'value': varValue };
 
@@ -45,9 +52,9 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
             }
         })
         .then((response) => {
-            console.log('Successfully added variable with name [' + varName + '] and value [' + varValue + ']');
+            console.log('Successfully modified variable with name [' + varName + '] and value [' + varValue + ']');
             $scope.reload();
-            messageHub.hideFormDialog("processContextVariableAdd");
+            messageHub.hideFormDialog(dialogId);
         })
         .catch((error) => {
             console.error('Error making POST request:', error);
@@ -85,11 +92,47 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
                 label: "Cancel",
             }],
             "bpm.dialogs.variable.add",
-            "Applying data...",
-            "",
-            "The variable will be added to the context of the currently selected process instance"
+            "Saving..."
         );
     }
+
+    $scope.openEditDialog = function () {
+        messageHub.showFormDialog(
+            "processContextVariableEdit",
+            `Edit variable [${$scope.selectedVariable.name}]`,
+            [{
+                id: "prcvb",
+                type: "input",
+                label: "Value",
+                value: `${$scope.selectedVariable.value}`
+            }],
+            [{
+                id: "b1",
+                type: "emphasized",
+                label: "Save",
+            },
+            {
+                id: "b2",
+                type: "transparent",
+                label: "Cancel",
+            }],
+            "bpm.dialogs.variable.edit",
+            "Saving..."
+        );
+    }
+
+    messageHub.onDidReceiveMessage(
+        "bpm.dialogs.variable.edit",
+        function (msg) {
+            if (msg.data.buttonId === "b1") {
+                const varValue = msg.data.formData[0].value;
+                $scope.upsertProcessVariable($scope.currentProcessInstanceId, $scope.selectedVariable.name, varValue, "processContextVariableEdit");
+            } else {
+                messageHub.hideFormDialog("processContextVariableEdit");
+            }
+        },
+        true
+    );
 
     messageHub.onDidReceiveMessage(
         "bpm.dialogs.variable.add",
@@ -97,7 +140,7 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
             if (msg.data.buttonId === "b1") {
                 const varName = msg.data.formData[0].value;
                 const varValue = msg.data.formData[1].value;
-                $scope.addProcessVariable($scope.currentProcessInstanceId, varName, varValue);
+                $scope.upsertProcessVariable($scope.currentProcessInstanceId, varName, varValue, "processContextVariableAdd");
             } else {
                 messageHub.hideFormDialog("processContextVariableAdd");
             }

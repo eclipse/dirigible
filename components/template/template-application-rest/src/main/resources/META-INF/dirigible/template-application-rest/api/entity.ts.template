@@ -8,6 +8,10 @@
 import { Controller, Get, Post, Put, Delete, response } from "sdk/http"
 import { ${name}Repository, ${name}EntityOptions } from "../../dao/${perspectiveName}/${name}Repository";
 import { HttpUtils } from "../utils/HttpUtils";
+#if($importsCode && $importsCode != "")
+// custom imports
+${importsCode}
+#end
 
 #if($isEntityPropertyPropertyEnabled)
 class ValidationError extends Error {

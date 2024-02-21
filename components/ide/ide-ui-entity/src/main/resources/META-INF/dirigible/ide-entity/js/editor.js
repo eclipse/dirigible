@@ -313,6 +313,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				cell.value.feedPath = msg.data.feedPath;
 				cell.value.roleRead = msg.data.roleRead;
 				cell.value.roleWrite = msg.data.roleWrite;
+				cell.value.importsCode = msg.data.importsCode;
 
 				$scope.graph.model.setValue(cell, cell.value.clone());
 
@@ -342,8 +343,10 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 			function (msg) {
 				let cell = $scope.graph.model.getCell(msg.data.cellId);
 				cell.value.name = msg.data.name;
+				cell.value.isRequiredProperty = msg.data.isRequiredProperty;
 				cell.value.isCalculatedProperty = msg.data.isCalculatedProperty;
-				cell.value.calculatedPropertyExpression = msg.data.calculatedPropertyExpression;
+				cell.value.calculatedPropertyExpressionCreate = msg.data.calculatedPropertyExpressionCreate;
+				cell.value.calculatedPropertyExpressionUpdate = msg.data.calculatedPropertyExpressionUpdate;
 				cell.value.dataName = msg.data.dataName;
 				cell.value.dataType = msg.data.dataType;
 				cell.value.dataLength = msg.data.dataLength;
@@ -431,7 +434,9 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 						let newProperty = property.clone();
 
 						for (let attributeName in msg.data.entityProperties[i]) {
-							newProperty.value[attributeName] = msg.data.entityProperties[i][attributeName];
+							if (attributeName !== "id") {
+								newProperty.value[attributeName] = msg.data.entityProperties[i][attributeName];
+							}
 						}
 						newProperty.style = 'projectionproperty';
 						cell.insert(newProperty);
@@ -472,7 +477,9 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 						let newProperty = property.clone();
 
 						for (let attributeName in msg.data.entityProperties[i]) {
-							newProperty.value[attributeName] = msg.data.entityProperties[i][attributeName];
+							if (attributeName !== "id") {
+								newProperty.value[attributeName] = msg.data.entityProperties[i][attributeName];
+							}
 						}
 						cell.insert(newProperty);
 					}
@@ -702,7 +709,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				addSidebarIcon($scope.graph, sidebar, entity, ICON_ENTITY, 'Drag this to the diagram to create a new Entity', $scope);
 
 				// Adds sidebar icon for the property object
-				let propertyObject = new Property('propertyName');
+				let propertyObject = new Property('PropertyName');
 				let property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
 				property.setVertex(true);
 				property.setConnectable(false);
@@ -711,7 +718,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 
 				// Adds primary key field into entity
 				let firstProperty = property.clone();
-				firstProperty.value.name = 'entityNameId';
+				firstProperty.value.name = 'Id';
 				firstProperty.value.dataType = 'INTEGER';
 				firstProperty.value.dataLength = 0;
 				firstProperty.value.dataPrimaryKey = 'true';
@@ -743,9 +750,9 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 					try {
 						let prop1 = $scope.graph.model.cloneCell(property);
 						if (target.style && target.style.startsWith('projection')) {
-							prop1.value.name = primaryKey.parent.value.projectionReferencedEntity + primaryKey.value.name;
+							prop1.value.name = primaryKey.parent.value.projectionReferencedEntity;
 						} else {
-							prop1.value.name = primaryKey.parent.value.name + primaryKey.value.name;
+							prop1.value.name = primaryKey.parent.value.name;
 						}
 						prop1.value.dataType = primaryKey.value.dataType;
 						prop1.value.dataLength = primaryKey.value.dataLength;
@@ -770,7 +777,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 
 				// Adds primary key field into entity
 				firstProperty = property.clone();
-				firstProperty.value.name = 'entityNameId';
+				firstProperty.value.name = 'Id';
 				firstProperty.value.dataType = 'INTEGER';
 				firstProperty.value.dataLength = 0;
 				firstProperty.value.dataPrimaryKey = 'true';
@@ -787,7 +794,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 
 				// Adds primary key field into entity
 				firstProperty = property.clone();
-				firstProperty.value.name = 'entityNameId';
+				firstProperty.value.name = 'Id';
 				firstProperty.value.dataType = 'INTEGER';
 				firstProperty.value.dataLength = 0;
 				firstProperty.value.dataPrimaryKey = 'true';
@@ -804,7 +811,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 
 				// Adds primary key field into entity
 				firstProperty = property.clone();
-				firstProperty.value.name = 'entityNameId';
+				firstProperty.value.name = 'Id';
 				firstProperty.value.dataType = 'INTEGER';
 				firstProperty.value.dataLength = 0;
 				firstProperty.value.dataPrimaryKey = 'true';
@@ -821,7 +828,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 
 				// Adds primary key field into entity
 				firstProperty = property.clone();
-				firstProperty.value.name = 'entityNameId';
+				firstProperty.value.name = 'Id';
 				firstProperty.value.dataType = 'INTEGER';
 				firstProperty.value.dataLength = 0;
 				firstProperty.value.dataPrimaryKey = 'true';
@@ -910,8 +917,10 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 									dialogType: 'property',
 									cellId: cell.id,
 									name: cell.value.name,
+									isRequiredProperty: cell.value.isRequiredProperty,
 									isCalculatedProperty: cell.value.isCalculatedProperty,
-									calculatedPropertyExpression: cell.value.calculatedPropertyExpression,
+									calculatedPropertyExpressionCreate: cell.value.calculatedPropertyExpressionCreate,
+									calculatedPropertyExpressionUpdate: cell.value.calculatedPropertyExpressionUpdate,
 									dataName: cell.value.dataName,
 									dataType: cell.value.dataType,
 									dataLength: cell.value.dataLength,
@@ -982,6 +991,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 									roleWrite: cell.value.roleWrite,
 									perspectives: $scope.graph.model.perspectives,
 									navigations: $scope.graph.model.navigations,
+									importsCode: cell.value.importsCode
 								},
 								null,
 								false,
@@ -1200,6 +1210,9 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 					}
 					if (child.value.feedSchedule && child.value.feedSchedule !== "") {
 						child.value.feedSchedule = atob(child.value.feedSchedule);
+					}
+					if (child.value.importsCode && child.value.importsCode !== "") {
+						child.value.importsCode = atob(child.value.importsCode);
 					}
 				}
 			}
