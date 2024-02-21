@@ -12,7 +12,7 @@
 
 const RedisFacade = Java.type("org.eclipse.dirigible.components.api.redis.RedisFacade");
 
-export function getClient() {
+export function getClient(): Client {
     const native = RedisFacade.getClient();
     return new Client(native);
 };
@@ -21,69 +21,69 @@ class Client {
     
     constructor(private native) {}
 
-    append(key, value) {
+    append(key: string, value: string): number {
         return this.native.append(key, value);
     };
 
-    bitcount(key) {
+    bitcount(key: string): number {
         return this.native.bitcount(key);
     };
 
-    decr(key) {
+    decr(key: string): number {
         return this.native.decr(key);
     };
 
-    del(key) {
+    del(key: string): number {
         return this.native.del(key);
     };
 
-    exists(key) {
+    exists(key: string): boolean {
         return this.native.exists(key);
     };
 
-    get(key) {
+    get(key: string): string {
         return this.native.get(key);
     };
 
-    incr(key) {
+    incr(key: string): number {
         return this.native.incr(key);
     };
 
-    keys(pattern) {
+    keys(pattern: string): string[] {
         return this.native.keys(pattern);
     };
 
-    set(key, value) {
+    set(key: string, value: string): string {
         return this.native.set(key, value);
     };
 
     // Lists
 
-    lindex(key, index) {
+    lindex(key: string, index: number): string {
         return this.native.lindex(key, index);
     };
 
-    llen(key) {
+    llen(key: string): number {
         return this.native.llen(key);
     };
 
-    lpop(key) {
+    lpop(key: string): string {
         return this.native.lpop(key);
     };
 
-    lpush(key, value) {
+    lpush(key: string, value: string): number {
         return this.native.lpush(key, value);
     };
 
-    lrange(key, start, stop) {
+    lrange(key: string, start: number, stop: number): string[] {
         return this.native.lrange(key, start, stop);
     };
 
-    rpop(key) {
+    rpop(key: string): string {
         return this.native.rpop(key);
     };
 
-    rpush(key, value) {
+    rpush(key: string, value: string): number {
         return this.native.rpush(key, value);
     };
 }
