@@ -313,6 +313,20 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
         }
     }
 
+    @GetMapping(value = "/bpm-processes/instance/{id}/jobs")
+    public ResponseEntity<List<Job>> getDeadLetterJobs(@PathVariable("id") String id) {
+
+        BpmService bpmService = getBpmService();
+        List<Job> jobs = bpmService.getBpmProviderFlowable()
+                                   .getProcessEngine()
+                                   .getManagementService()
+                                   .createDeadLetterJobQuery()
+                                   .processInstanceId(id)
+                                   .list();
+
+        return ResponseEntity.ok(jobs);
+    }
+
     /**
      * Gets the process image.
      *
