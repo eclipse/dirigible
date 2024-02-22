@@ -58,6 +58,13 @@ public class Csvim extends Artefact {
     private String version;
 
     /**
+     * The datasource.
+     */
+    @Column(name = "CSVIM_DATASOURCE", columnDefinition = "VARCHAR")
+    @Expose
+    private String datasource;
+
+    /**
      * The csv file definitions.
      */
     @OneToMany(mappedBy = "csvim", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -120,6 +127,24 @@ public class Csvim extends Artefact {
      */
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    /**
+     * Gets the datasource.
+     *
+     * @return the datasource
+     */
+    public String getDatasource() {
+        return datasource;
+    }
+
+    /**
+     * Sets the datasource.
+     *
+     * @param datasource the new datasource
+     */
+    public void setDatasource(String datasource) {
+        this.datasource = datasource;
     }
 
     /**

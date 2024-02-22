@@ -8,7 +8,7 @@
             "DOM"
         ],
         "paths": {
-            "@dirigible/*": [
+            "sdk/*": [
                 "../modules/src/*"
             ]
         },

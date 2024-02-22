@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.components.security.config;
 
 import org.eclipse.dirigible.components.security.filter.SecurityFilter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,7 @@ import org.springframework.context.annotation.Configuration;
  * The Class SecurityFilterConfig.
  */
 @Configuration
+@ConditionalOnProperty(name = "tenants.enabled", havingValue = "false")
 public class SecurityFilterConfig {
 
     /**

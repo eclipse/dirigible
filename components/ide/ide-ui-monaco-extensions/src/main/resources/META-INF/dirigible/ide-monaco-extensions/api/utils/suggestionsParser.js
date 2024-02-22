@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { registry as contentManager } from "@dirigible/platform";
+import { registry as contentManager } from "sdk/platform";
 let acorn = require("acornjs/acorn");
 
 const COMMENTS_OFFSET_LENGTH = 12;

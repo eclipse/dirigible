@@ -1,3 +1,14 @@
+/*
+ * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
 let ideBpmProcessContextView = angular.module('ide-bpm-process-context', ['ideUI', 'ideView']);
 
 ideBpmProcessContextView.config(["messageHubProvider", function (messageHubProvider) {
@@ -6,35 +17,142 @@ ideBpmProcessContextView.config(["messageHubProvider", function (messageHubProvi
 
 ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$scope', '$http', '$timeout', 'messageHub', function ($scope, $http, $timeout, messageHub,) {
 
-    this.variablesList = [];
-    this.currentProcessInstanceId = null;
+    $scope.variablesList = [];
+    $scope.currentProcessInstanceId = null;
+    $scope.selectedVariable = null;
 
-    this.reload = function () {
-        console.log("Reloading data for current process instance id: " + this.currentProcessInstanceId)
-        this.fetchData(this.currentProcessInstanceId);
+    $scope.selectionChanged = function (variable) {
+        $scope.variablesList.forEach(variable => variable.selected = false);
+        $scope.selectedVariable = variable;
+        $scope.selectedVariable.selected = true;
+    }
+
+    $scope.reload = function () {
+        console.log("Reloading data for current process instance id: " + $scope.currentProcessInstanceId)
+        $scope.fetchData($scope.currentProcessInstanceId);
     };
 
-    this.fetchData = function(processInstanceId) {
+    $scope.fetchData = function(processInstanceId) {
         $http.get('/services/ide/bpm/bpm-processes/instance/' + processInstanceId + '/variables', { params: { 'limit': 100 } })
                 .then((response) => {
-                    $scope.variables.variablesList = response.data;
+                    $scope.variablesList = response.data;
                 });
     }
 
-    this.getNoDataMessage = function () {
+    $scope.upsertProcessVariable = function(processInstanceId, varName, varValue, dialogId) {
+        const apiUrl = '/services/ide/bpm/bpm-processes/instance/' + processInstanceId + '/variables';
+        const requestBody = { 'name': varName, 'value': varValue };
+
+        $http({
+            method: 'POST',
+            url: apiUrl,
+            data: requestBody,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response) => {
+            console.log('Successfully modified variable with name [' + varName + '] and value [' + varValue + ']');
+            $scope.reload();
+            messageHub.hideFormDialog(dialogId);
+        })
+        .catch((error) => {
+            console.error('Error making POST request:', error);
+        });
+    }
+
+    $scope.getNoDataMessage = function () {
         return 'No variables have been detected.';
     }
 
-    messageHub.onDidReceiveMessage('instance.selected', function (msg) {
-        $scope.$apply(function () {
-            if (!msg.data.hasOwnProperty('instance')) {
-                $scope.state.error = true;
-                $scope.errorMessage = "The 'definition' parameter is missing.";
+    $scope.openAddDialog = function () {
+        messageHub.showFormDialog(
+            "processContextVariableAdd",
+            "Add new process context variable",
+            [{
+                id: "prcva",
+                type: "input",
+                label: "Name",
+                placeholder: 'Variable name'
+            },
+            {
+                id: "prcvb",
+                type: "input",
+                label: "Value",
+                placeholder: 'Variable value'
+            }],
+            [{
+                id: "b1",
+                type: "emphasized",
+                label: "Add",
+            },
+            {
+                id: "b2",
+                type: "transparent",
+                label: "Cancel",
+            }],
+            "bpm.dialogs.variable.add",
+            "Saving..."
+        );
+    }
+
+    $scope.openEditDialog = function () {
+        messageHub.showFormDialog(
+            "processContextVariableEdit",
+            `Edit variable [${$scope.selectedVariable.name}]`,
+            [{
+                id: "prcvb",
+                type: "input",
+                label: "Value",
+                value: `${$scope.selectedVariable.value}`
+            }],
+            [{
+                id: "b1",
+                type: "emphasized",
+                label: "Save",
+            },
+            {
+                id: "b2",
+                type: "transparent",
+                label: "Cancel",
+            }],
+            "bpm.dialogs.variable.edit",
+            "Saving..."
+        );
+    }
+
+    messageHub.onDidReceiveMessage(
+        "bpm.dialogs.variable.edit",
+        function (msg) {
+            if (msg.data.buttonId === "b1") {
+                const varValue = msg.data.formData[0].value;
+                $scope.upsertProcessVariable($scope.currentProcessInstanceId, $scope.selectedVariable.name, varValue, "processContextVariableEdit");
             } else {
-                var processInstanceId = msg.data.instance;
-                $scope.variables.currentProcessInstanceId = processInstanceId;
-                $scope.variables.fetchData(processInstanceId);
+                messageHub.hideFormDialog("processContextVariableEdit");
             }
+        },
+        true
+    );
+
+    messageHub.onDidReceiveMessage(
+        "bpm.dialogs.variable.add",
+        function (msg) {
+            if (msg.data.buttonId === "b1") {
+                const varName = msg.data.formData[0].value;
+                const varValue = msg.data.formData[1].value;
+                $scope.upsertProcessVariable($scope.currentProcessInstanceId, varName, varValue, "processContextVariableAdd");
+            } else {
+                messageHub.hideFormDialog("processContextVariableAdd");
+            }
+        },
+        true
+    );
+
+    messageHub.onDidReceiveMessage('instance.selected', function (msg) {
+        const processInstanceId = msg.data.instance;
+        $scope.fetchData(processInstanceId);
+        $scope.$apply(function () {
+            $scope.currentProcessInstanceId = processInstanceId;
         });
     });
 }]);

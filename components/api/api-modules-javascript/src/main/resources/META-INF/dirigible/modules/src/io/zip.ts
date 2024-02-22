@@ -12,7 +12,7 @@
 /**
  * API Zip
  */
-import * as bytes from "@dirigible/io/bytes";
+import * as bytes from "sdk/io/bytes";
 const ZipFacade = Java.type("org.eclipse.dirigible.components.api.io.ZipFacade");
 
 export function zip(sourcePath, zipTargetPath) {

@@ -11,9 +11,9 @@
  */
 // Deprecated, do not edit.
 
-import { extensions } from "@dirigible/extensions";
-import { response, rs } from "@dirigible/http";
-import { uuid } from "@dirigible/utils";
+import { extensions } from "sdk/extensions";
+import { response, rs } from "sdk/http";
+import { uuid } from "sdk/utils";
 
 const templates = [];
 const templateExtensions = extensions.getExtensions('ide-template');

@@ -1,5 +1,5 @@
-import { response } from "@dirigible/http"
-import { extensions } from "@dirigible/extensions";
+import { response } from "sdk/http"
+import { extensions } from "sdk/extensions";
 
 const fileTypeExtensions = await extensions.loadExtensionModules("ide-file-types");
 

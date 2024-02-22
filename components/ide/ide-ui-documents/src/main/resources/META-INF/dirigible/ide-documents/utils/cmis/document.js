@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { cmis } from "@dirigible/cms";
-import { streams } from "@dirigible/io";
+import { cmis } from "sdk/cms";
+import { streams } from "sdk/io";
 import * as objectUtils from "./object";
 const path = org.eclipse.dirigible.repository.api.RepositoryPath;
 

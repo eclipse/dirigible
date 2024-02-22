@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-import { rs } from "@dirigible/http";
+import { rs } from "sdk/http";
 
 rs.service()
     .resource("")

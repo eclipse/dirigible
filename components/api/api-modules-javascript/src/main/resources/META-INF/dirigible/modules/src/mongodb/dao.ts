@@ -11,11 +11,11 @@
  */
 "use strict";
 
-import { globals } from "@dirigible/core"
+import { globals } from "sdk/core"
 import * as mongodb from "./client"
-import * as dirigibleOrm from "@dirigible/db/orm";
-import { Logging } from "@dirigible/log";
-import { Configurations } from "@dirigible/core";
+import * as dirigibleOrm from "sdk/db/orm";
+import { Logging } from "sdk/log";
+import { Configurations } from "sdk/core";
 
 const dbUri = Configurations.get("DIRIGIBLE_MONGODB_CLIENT_URI", "mongodb://localhost:27017");
 

@@ -21,6 +21,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ProcessDefinitionData;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ProcessInstanceData;
+import org.eclipse.dirigible.components.engine.bpm.flowable.dto.VariableData;
 import org.eclipse.dirigible.components.engine.bpm.flowable.provider.BpmProviderFlowable;
 import org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmService;
 import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
@@ -40,13 +41,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -269,6 +264,19 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
                                                      .list();
 
         return ResponseEntity.ok(variables);
+    }
+
+    @PostMapping(value = "/bpm-processes/instance/{id}/variables")
+    public ResponseEntity<Void> addProcessInstanceVariables(@PathVariable("id") String id, @RequestBody VariableData variableData) {
+
+        BpmService bpmService = getBpmService();
+        bpmService.getBpmProviderFlowable()
+                  .getProcessEngine()
+                  .getRuntimeService()
+                  .setVariable(id, variableData.getName(), variableData.getValue());
+
+        return ResponseEntity.ok()
+                             .build();
     }
 
     /**

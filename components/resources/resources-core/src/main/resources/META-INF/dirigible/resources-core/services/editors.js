@@ -9,9 +9,9 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { extensions } from "@dirigible/extensions";
-import { response } from "@dirigible/http";
-import { uuid } from "@dirigible/utils";
+import { extensions } from "sdk/extensions";
+import { response } from "sdk/http";
+import { uuid } from "sdk/utils";
 
 let editors = [];
 let editorExtensions = await extensions.loadExtensionModules('ide-editor');

@@ -3,8 +3,8 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-import { response } from "@dirigible/http";
-import { extensions } from "@dirigible/extensions";
+import { response } from "sdk/http";
+import { extensions } from "sdk/extensions";
 
 let tiles = {};
 

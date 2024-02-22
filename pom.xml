@@ -47,10 +47,10 @@
 	Upload to Maven Central:
 		mvn javadoc:jar
 		mvn deploy -P release -DskipTests
-		
+
 	Tests coverage report generation
 		mvn clean -B package -P coverage
-		
+
 	Static checks analysis
 		mvn clean install -P spotbugs
 
@@ -71,7 +71,7 @@
 	<description>Dirigible Parent</description>
 	<groupId>org.eclipse.dirigible</groupId>
 	<artifactId>dirigible-parent</artifactId>
-	<version>10.0.0-SNAPSHOT</version>
+	<version>11.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<inceptionYear>2010</inceptionYear>
@@ -108,7 +108,7 @@
 		<maven-source-plugin.version>3.3.0</maven-source-plugin.version>
 		<maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
 		<jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
-		<spotbugs-maven-plugin.version>4.8.3.0</spotbugs-maven-plugin.version>
+		<spotbugs-maven-plugin.version>4.8.3.1</spotbugs-maven-plugin.version>
 		<formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
 		<exec-maven-plugin.version>3.1.1</exec-maven-plugin.version>
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
@@ -128,7 +128,7 @@
 		<olingo.version>3.1.3</olingo.version>
 
 		<commons-csv.version>1.10.0</commons-csv.version>
-		<c3p0.version>0.9.5.5</c3p0.version>
+		<c3p0.version>0.10.0-pre2</c3p0.version>
 		<guava.version>33.0.0-jre</guava.version>
 		<icu4j.version>74.2</icu4j.version>
 		<classgraph.version>4.8.165</classgraph.version>
@@ -151,7 +151,7 @@
 		<ngdbc.version>2.19.16</ngdbc.version>
 		<snowflake.version>3.13.34</snowflake.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.650</qldb.sdk.version>
+		<qldb.sdk.version>1.12.660</qldb.sdk.version>
 		<jetcd.core.version>0.7.7</jetcd.core.version>
 
 		<jquery-ui.version>1.13.0</jquery-ui.version>
@@ -173,7 +173,7 @@
 		<angularjs.version>1.8.2</angularjs.version>
 		<fontawesome.version>4.7.0</fontawesome.version>
 
-		<testcontainers.version>1.19.3</testcontainers.version>
+		<testcontainers.version>1.19.5</testcontainers.version>
 		<logcaptor.version>2.9.2</logcaptor.version>
 
 		<profile.content.phase>none</profile.content.phase>
@@ -603,11 +603,6 @@
 				<enabled>true</enabled>
 			</releases>
 		</repository>
-		<repository>
-			<id>github</id>
-			<name>GitHub dirigiblelabs/olingo-odata2</name>
-			<url>https://maven.pkg.github.com/dirigiblelabs/olingo-odata2</url>
-		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -642,8 +637,8 @@
 		<module>modules</module>
 		<module>components</module>
 		<module>build</module>
-		<module>tests</module>
 		<module>dependencies</module>
+		<module>tests</module>
 	</modules>
 
 	<dependencies>
@@ -737,7 +732,7 @@
 			<dependency>
 				<groupId>org.junit.vintage</groupId>
 				<artifactId>junit-vintage-engine</artifactId>
-				<version>5.10.1</version>
+				<version>5.10.2</version>
 				<scope>test</scope>
 			</dependency>
 

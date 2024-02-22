@@ -14,7 +14,7 @@
  *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
-import * as repository from "@dirigible/platform/repository";
+import * as repository from "sdk/platform/repository";
 
 const REGISTRY_PUBLIC = "/registry/public/";
 const MUSTACHE_FILE_EXTENSION = ".mustache";
@@ -42,8 +42,8 @@ export class TemplateEngines {
         return new TemplateEngine(engine, "javascript");
     }
 
-    public static generate(template: string, parameters: { [key: string]: any }): string {
-        return this.getDefaultEngine().generate(template, parameters);
+    public static generate(location: string, template: string, parameters: { [key: string]: any }): string {
+        return this.getDefaultEngine().generate(location, template, parameters);
     }
 
     public static generateFromFile(location: string, parameters: { [key: string]: any }): string | undefined {
@@ -52,7 +52,7 @@ export class TemplateEngines {
             const isMustacheTemplate = location.endsWith(MUSTACHE_FILE_EXTENSION);
             const engine = isMustacheTemplate ? this.getMustacheEngine() : this.getDefaultEngine();
             const template = resource.getText();
-            return engine.generate(template, parameters);
+            return engine.generate(location, template, parameters);
         }
         return undefined;
     }
@@ -70,8 +70,8 @@ class TemplateEngine {
         this.em = type === "mustache" ? "}}" : null;
     }
 
-    public generate(template: string, parameters: { [key: string]: any }): string {
-        return this.engine.generate(template, JSON.stringify(parameters), this.sm, this.em);
+    public generate(location: string, template: string, parameters: { [key: string]: any }): string {
+        return this.engine.generate(location, template, JSON.stringify(parameters), this.sm, this.em);
     }
 
     public setSm(sm: any) {

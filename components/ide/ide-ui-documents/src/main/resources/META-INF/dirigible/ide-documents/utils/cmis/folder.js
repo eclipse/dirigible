@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { cmis } from "@dirigible/cms";
-import { user } from "@dirigible/security";
+import { cmis } from "sdk/cms";
+import { user } from "sdk/security";
 import * as objectUtils from "./object";
 
 let cmisSession = cmis.getSession();
