@@ -223,7 +223,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 scope.inputRules = parseFn(scope);
 
                 function validation(modelValue, viewValue) {
-                    if (viewValue) {
+                    if (viewValue !== undefined || viewValue !== null || viewValue !== '') {
                         let isValid = true;
                         if (scope.inputRules.excluded) isValid = !scope.inputRules.excluded.includes(viewValue);
                         if (isValid && scope.inputRules.patterns) {
@@ -3614,7 +3614,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     }
 
                     ngModel.$isEmpty = function (value) {
-                        return !value || (scope.multiSelect && value.length === 0);
+                        return (value === null || value === undefined || value === '') || (scope.multiSelect && value.length === 0);
                     }
 
                     ngModel.$render = function () {
