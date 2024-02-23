@@ -16,7 +16,7 @@
 
 const IndexingFacade = Java.type("org.eclipse.dirigible.components.api.indexing.IndexingFacade");
 
-class Searcher{
+export class Searcher{
 
 	public static search(index: string, term: string): JSON {
 		const results = IndexingFacade.search(index, term);
