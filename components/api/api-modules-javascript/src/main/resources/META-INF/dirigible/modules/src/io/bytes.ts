@@ -26,7 +26,7 @@ const BytesFacade = Java.type("org.eclipse.dirigible.components.api.io.BytesFaca
 
 export class Bytes{
 
-   public static toJavaScriptBytes(internalBytes: Array<bytes>): Array<bytes> {
+   public static toJavaScriptBytes(internalBytes: any): any {
        const bytes = [];
        for (let i=0; i<internalBytes.length; i++) {
            bytes.push(internalBytes[i]);
@@ -34,7 +34,7 @@ export class Bytes{
        return bytes;
    };
 
-    public static toJavaBytes(bytes: Array<bytes>): typeof JArray {
+    public static toJavaBytes(bytes: any): any {
        const internalBytes = JArray.newInstance(JByte.TYPE, bytes.length);
        for (let i=0; i<bytes.length; i++) {
            internalBytes[i] = bytes[i];
@@ -45,7 +45,7 @@ export class Bytes{
    /**
     * Convert the Java byte array to a native JavaScript one. To be used internally by the API layer
     */
-   public static textToByteArray(text: string): Array<bytes> {
+   public static textToByteArray(text: string): any {
        const javaString = new JString(text);
        const native = BytesFacade.textToByteArray(text);
        return this.toJavaScriptBytes(native);
@@ -54,7 +54,7 @@ export class Bytes{
    /**
     * Converts a text to a byte array
     */
-   public static byteArrayToText(data: Array<bytes>): string {
+   public static byteArrayToText(data: any): string {
        const native = this.toJavaBytes(data);
        return String.fromCharCode.apply(String, this.toJavaScriptBytes(native));
    };
@@ -62,14 +62,14 @@ export class Bytes{
    /**
     * Converts an integer to a byte array
     */
-   public static intToByteArray(value: number, byteOrder: string): Array<bytes> {
+   public static intToByteArray(value: number, byteOrder: string): any {
        return BytesFacade.intToByteArray(value, byteOrder)
    }
 
    /**
     * Converts a byte array to integer
     */
-   public static byteArrayToInt(data: Array<bytes>, byteOrder: string): number {
+   public static byteArrayToInt(data: any, byteOrder: string): number {
        return BytesFacade.byteArrayToInt(data, byteOrder);
    }
 
