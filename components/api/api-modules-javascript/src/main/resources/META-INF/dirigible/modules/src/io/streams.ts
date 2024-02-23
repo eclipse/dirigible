@@ -17,20 +17,18 @@ const StreamsFacade = Java.type("org.eclipse.dirigible.components.api.io.Streams
  */
 export class InputStream {
 
-	constructor(public readonly native) {
-		this.native = native;
-	}
+	constructor(public readonly native: any){}
 
-	public read(): Array<bytes> | number {
+	public read(): any | number {
 		return StreamsFacade.read(this.native);
 	}
 
-	public readBytes(): Array<bytes> {
+	public readBytes(): any {
 		const native = StreamsFacade.readBytes(this.native);
 		return bytes.toJavaScriptBytes(native);
 	}
 
-	public readBytesNative(): Array<bytes>{
+	public readBytesNative(): any{
 		return StreamsFacade.readBytes(this.native);
 	}
 
@@ -53,13 +51,13 @@ export class InputStream {
  */
 export class OutputStream {
 
-	constructor(public readonly native) {}
+	constructor(public readonly native: any) {}
 
-	public write(byte: bytes): void {
+	public write(byte: any): void {
 		StreamsFacade.write(this.native, byte);
 	}
 
-	public writeBytes(data): void {
+	public writeBytes(data: any): void {
 		const native = bytes.toJavaBytes(data);
 		StreamsFacade.writeBytes(this.native, native);
 	}
@@ -76,13 +74,13 @@ export class OutputStream {
 		StreamsFacade.close(this.native);
 	}
 
-	public getBytes(): Array<bytes> {
+	public getBytes(): any {
 		const native = StreamsFacade.getBytes(this.native);
 		const data = bytes.toJavaScriptBytes(native);
 		return data;
 	}
 
-	public getBytesNative(): Array<bytes> {
+	public getBytesNative(): any {
 		const native = StreamsFacade.getBytes(this.native);
 		return native;
 	}
@@ -98,52 +96,55 @@ export class OutputStream {
 
 };
 
-export function copy(input: InputStream, output: OutputStream): void {
-	StreamsFacade.copy(input.native, output.native);
-};
+export class Streams{
 
-export function copyLarge(input: InputStream, output: OutputStream): void {
-	StreamsFacade.copyLarge(input.native, output.native);
-};
+	public static copy(input: InputStream, output: OutputStream): void {
+		StreamsFacade.copy(input.native, output.native);
+	};
 
-/**
- * Get an ByteArrayInputStream for the provided resource
- */
-export function getResourceAsByteArrayInputStream(path: string): InputStream {
-	const native = StreamsFacade.getResourceAsByteArrayInputStream(path);
-	return new InputStream(native);
-};
+	public static copyLarge(input: InputStream, output: OutputStream): void {
+		StreamsFacade.copyLarge(input.native, output.native);
+	};
 
-/**
- * Create an ByteArrayInputStream for byte array provided
- */
-export function createByteArrayInputStream(data): InputStream {
-	const array = bytes.toJavaBytes(data);
-	const native = StreamsFacade.createByteArrayInputStream(array);
-	return new InputStream(native);
-};
+	/**
+	 * Get an ByteArrayInputStream for the provided resource
+	 */
+	public static getResourceAsByteArrayInputStream(path: string): InputStream {
+		const native = StreamsFacade.getResourceAsByteArrayInputStream(path);
+		return new InputStream(native);
+	};
+
+	/**
+	 * Create an ByteArrayInputStream for byte array provided
+	 */
+	public static createByteArrayInputStream(data: any): InputStream {
+		const array = bytes.toJavaBytes(data);
+		const native = StreamsFacade.createByteArrayInputStream(array);
+		return new InputStream(native);
+	};
 
 
-/**
- * Create a ByteArrayOutputStream
- */
-export function createByteArrayOutputStream(): OutputStream {
-	const native = StreamsFacade.createByteArrayOutputStream();
-	return new OutputStream(native);
-};
+	/**
+	 * Create a ByteArrayOutputStream
+	 */
+	public static createByteArrayOutputStream(): OutputStream {
+		const native = StreamsFacade.createByteArrayOutputStream();
+		return new OutputStream(native);
+	};
 
-/**
- * Create an InputStream object by a native InputStream
- */
-export function createInputStream(native): InputStream {
-	const inputStream = new InputStream(native);
-	return inputStream;
-};
+	/**
+	 * Create an InputStream object by a native InputStream
+	 */
+	public static createInputStream(native: InputStream): InputStream {
+		const inputStream = new InputStream(native);
+		return inputStream;
+	};
 
-/**
- * Create an OutputStream object by a native OutputStream
- */
-export function createOutputStream(native): OutputStream {
-	const outputStream = new OutputStream(native);
-	return outputStream;
-};
+	/**
+	 * Create an OutputStream object by a native OutputStream
+	 */
+	public static createOutputStream(native: OutputStream): OutputStream {
+		const outputStream = new OutputStream(native);
+		return outputStream;
+	};
+}
