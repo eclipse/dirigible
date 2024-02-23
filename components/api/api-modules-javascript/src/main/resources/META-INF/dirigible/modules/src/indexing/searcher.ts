@@ -23,17 +23,17 @@ export class Searcher{
 		return JSON.parse(results);
 	};
 
-	public static before(index: string, date: any): JSON {
+	public static before(index: string, date: Date): JSON {
 		const results = IndexingFacade.before(index, '' + date.getTime());
 		return JSON.parse(results);
 	};
 
-	public static after(index: string, date: any): JSON {
+	public static after(index: string, date: Date): JSON {
 		const results = IndexingFacade.after(index, '' + date.getTime());
 		return JSON.parse(results);
 	};
 
-	public static between(index: string, lower: any, upper: any): JSON {
+	public static between(index: string, lower: Date, upper: Date): JSON {
 		const results = IndexingFacade.between(index, '' + lower.getTime(), '' + upper.getTime());
 		return JSON.parse(results);
 	};
