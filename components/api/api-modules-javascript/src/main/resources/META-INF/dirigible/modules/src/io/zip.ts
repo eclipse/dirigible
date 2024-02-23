@@ -16,25 +16,25 @@ import {bytes} from ".";
 import { InputStream, OutputStream } from "./streams";
 const ZipFacade = Java.type("org.eclipse.dirigible.components.api.io.ZipFacade");
 
-export function zip(sourcePath: string, zipTargetPath: string): void {
-    ZipFacade.exportZip(sourcePath, zipTargetPath);
-};
-export function unzip(zipPath: string, targetPath: string): void {
-    ZipFacade.importZip(zipPath, targetPath);
-};
+export class Zip{
 
-export function createZipInputStream(inputStream: InputStream): ZipInputStream {
-    const native = ZipFacade.createZipInputStream(inputStream.native);
-    return new ZipInputStream(native);
-};
+    public static zip(sourcePath: string, zipTargetPath: string): void {
+        ZipFacade.exportZip(sourcePath, zipTargetPath);
+    };
+
+    public static unzip(zipPath: string, targetPath: string): void {
+        ZipFacade.importZip(zipPath, targetPath);
+    };
+
+    public static createZipInputStream(inputStream: InputStream): ZipInputStream {
+        const native = ZipFacade.createZipInputStream(inputStream.native);
+        return new ZipInputStream(native);
+    };
+}
 
 class ZipInputStream {
 
-    private readonly native: any
-
-    constructor(native: any) {
-        this.native = native;
-    }
+    constructor(private native: any){}
 
     public getNextEntry(): ZipEntry {
         const native = this.native.getNextEntry();
@@ -42,12 +42,12 @@ class ZipInputStream {
         return zipEntry;
     };
 
-    public read(): Array<bytes> {
+    public read(): any {
         const native = ZipFacade.readNative(this.native);
         return bytes.toJavaScriptBytes(native);
     };
 
-    public readNative(): Array<bytes> {
+    public readNative(): any {
         return ZipFacade.readNative(this.native);
     };
 
@@ -68,11 +68,7 @@ export function createZipOutputStream(outputStream: OutputStream): ZipOutputStre
 
 class ZipOutputStream {
 
-    private readonly native: any
-
-    constructor(native: any) {
-        this.native = native;
-    }
+   constructor(private native: any){}
 
     public createZipEntry(name: string): ZipEntry {
         const nativeNext = ZipFacade.createZipEntry(name);
@@ -81,12 +77,12 @@ class ZipOutputStream {
         return zipEntry;
     };
 
-    public write(data): void {
+    public write(data: any): void {
         const native = bytes.toJavaBytes(data);
         ZipFacade.writeNative(this.native, native);
     };
 
-    public writeNative(data): void {
+    public writeNative(data: any): void {
         ZipFacade.writeNative(this.native, data);
     };
 
@@ -111,11 +107,7 @@ class ZipOutputStream {
  */
 class ZipEntry {
 
-    private readonly native: any
-
-    constructor(native: any) {
-        this.native = native;
-    }
+    constructor(private native: any){}
 
     public getName(): string {
         return this.native.getName();
@@ -133,11 +125,11 @@ class ZipEntry {
         return this.native.getTime();
     };
 
-    public getCrc() {
+    public getCrc(): any {
         return this.native.getCrc();
     };
 
-    public getComment() {
+    public getComment(): Comment {
         return this.native.getComment();
     };
 
@@ -145,7 +137,7 @@ class ZipEntry {
         return this.native.isDirectory();
     };
 
-    public isValid(): typeof this.native {
+    public isValid(): boolean {
         return this.native !== null;
     };
 
