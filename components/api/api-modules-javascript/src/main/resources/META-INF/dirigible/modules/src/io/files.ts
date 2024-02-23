@@ -66,13 +66,13 @@ export class Files{
 		return FilesFacade.getParentPath(path);
 	};
 
-	public static readBytes(path: string): Array<bytes> {
+	public static readBytes(path: string): any {
 		const native = FilesFacade.readBytes(path);
 		const data = bytes.toJavaScriptBytes(native);
 		return data;
 	};
 
-	public static readBytesNative(path: string): Array<bytes>{
+	public static readBytesNative(path: string): any{
 		return FilesFacade.readBytes(path);
 	};
 
@@ -80,12 +80,12 @@ export class Files{
 		return FilesFacade.readText(path);
 	};
 
-	public static writeBytes(path: string, data): void{
+	public static writeBytes(path: string, data: any): void{
 		const native = bytes.toJavaBytes(data);
 		FilesFacade.writeBytesNative(path, native);
 	};
 
-	public static writeBytesNative(path: string, data): void{
+	public static writeBytesNative(path: string, data: any): void{
 		FilesFacade.writeBytesNative(path, data);
 	};
 
