@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.components.engine.bpm.flowable.delegate;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ActionData;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ExecutionData;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
@@ -89,23 +90,32 @@ public class DirigibleCallDelegate implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) {
 
-        try {
-            Map<Object, Object> context = new HashMap<>();
-            ExecutionData executionData = new ExecutionData();
-            BeanUtils.copyProperties(execution, executionData);
-            context.put("execution", GsonHelper.toJson(executionData));
-            if (type == null) {
-                type = new FixedValue("javascript");
-            }
-            if (handler == null) {
-                throw new BpmnError("Handler cannot be null at the call delegate.");
-            }
+        // try {
 
-            executeJSHandler(context);
+        String action = (String) execution.getVariable("action");
 
-        } catch (Exception e) {
-            throw new BpmnError(e.getMessage());
+        if (ActionData.Action.SKIP.getActionName()
+                                  .equals(action)) {
+            execution.setVariable("action", null);
+            return;
         }
+
+        Map<Object, Object> context = new HashMap<>();
+        ExecutionData executionData = new ExecutionData();
+        BeanUtils.copyProperties(execution, executionData);
+        context.put("execution", GsonHelper.toJson(executionData));
+        if (type == null) {
+            type = new FixedValue("javascript");
+        }
+        if (handler == null) {
+            throw new BpmnError("Handler cannot be null at the call delegate.");
+        }
+
+        executeJSHandler(context);
+
+        // } catch (Exception e) {
+        // throw new BpmnError(e.getMessage());
+        // }
     }
 
     /**

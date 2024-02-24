@@ -318,6 +318,35 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
                               1);
             return ResponseEntity.ok()
                                  .build();
+        } else if (SKIP.getActionName()
+                       .equals(actionData.getAction())) {
+
+            BpmService bpmService = getBpmService();
+            bpmService.getBpmProviderFlowable()
+                      .getProcessEngine()
+                      .getRuntimeService()
+                      .setVariable(id, "action", SKIP.getActionName());
+
+            List<Job> jobs = bpmService.getBpmProviderFlowable()
+                                       .getProcessEngine()
+                                       .getManagementService()
+                                       .createDeadLetterJobQuery()
+                                       .processInstanceId(id)
+                                       .list();
+
+            if (jobs.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                     .body("No dead letter jobs found for process instance id [" + id + "]");
+            }
+
+            bpmService.getBpmProviderFlowable()
+                      .getProcessEngine()
+                      .getManagementService()
+                      .moveDeadLetterJobToExecutableJob(jobs.get(0)
+                                                            .getId(),
+                              1);
+            return ResponseEntity.ok()
+                                 .build();
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                  .body("Invalid action id provided [" + actionData.getAction() + "]");

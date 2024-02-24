@@ -85,6 +85,27 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
         });
     }
 
+    this.skip = function() {
+        const apiUrl = '/services/ide/bpm/bpm-processes/instance/' + this.selectedProcessInstanceId;
+        const requestBody = { 'action': 'SKIP'};
+
+        $http({
+            method: 'POST',
+            url: apiUrl,
+            data: requestBody,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response) => {
+            console.log('Successfully skipped process instance with id [' + this.processInstanceId + ']');
+            $scope.reload();
+        })
+        .catch((error) => {
+            console.error('Error making POST request:', error);
+        });
+    }
+
     this.selectAllChanged = function () {
         for (let instance of this.instancesList) {
             instance.selected = this.selectAll;
