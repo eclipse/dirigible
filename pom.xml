@@ -110,7 +110,7 @@
 		<jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
 		<spotbugs-maven-plugin.version>4.8.3.1</spotbugs-maven-plugin.version>
 		<formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
-		<exec-maven-plugin.version>3.1.1</exec-maven-plugin.version>
+		<exec-maven-plugin.version>3.2.0</exec-maven-plugin.version>
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<license-maven-plugin.version>4.3</license-maven-plugin.version>
 
