@@ -32,7 +32,6 @@
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-tests-framework</artifactId>
 				<version>${project.version}</version>
-				<classifier>tests</classifier>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
