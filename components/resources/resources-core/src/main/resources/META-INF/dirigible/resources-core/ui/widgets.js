@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2023 SAP and others.
+ * Copyright (c) 2010-2024 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -223,7 +223,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 scope.inputRules = parseFn(scope);
 
                 function validation(modelValue, viewValue) {
-                    if (viewValue !== undefined || viewValue !== null || viewValue !== '') {
+                    if (!attr.required && (viewValue === undefined || viewValue === null || viewValue === '')) return true;
+                    else if (viewValue !== undefined || viewValue !== null || viewValue !== '') {
                         let isValid = true;
                         if (scope.inputRules.excluded) isValid = !scope.inputRules.excluded.includes(viewValue);
                         if (isValid && scope.inputRules.patterns) {
