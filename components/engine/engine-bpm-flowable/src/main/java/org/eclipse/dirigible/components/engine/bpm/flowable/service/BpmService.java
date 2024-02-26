@@ -15,10 +15,8 @@ import static java.text.MessageFormat.format;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ProcessDefinitionData;
@@ -35,6 +33,7 @@ import org.flowable.editor.language.json.converter.BpmnJsonConverter;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.job.api.Job;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +54,8 @@ public class BpmService {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(BpmService.class);
+
+    public static final String DIRIGIBLE_BPM_INTERNAL_SKIP_STEP = "DIRIGIBLE_BPM_INTERNAL_SKIP_STEP";
 
     /** The workspace service. */
     private WorkspaceService workspaceService;
@@ -330,6 +331,26 @@ public class BpmService {
             results.add(processInstanceData);
         }
         return results;
+    }
+
+    public List<Job> getDeadLetterJobs(String processInstanceId) {
+        return getBpmProviderFlowable().getProcessEngine()
+                                       .getManagementService()
+                                       .createDeadLetterJobQuery()
+                                       .processInstanceId(processInstanceId)
+                                       .list();
+    }
+
+    public void retryDeadLetterJob(Job job, int numberOfRetries) {
+        getBpmProviderFlowable().getProcessEngine()
+                                .getManagementService()
+                                .moveDeadLetterJobToExecutableJob(job.getId(), numberOfRetries);
+    }
+
+    public void addProcessInstanceVariable(String processInstanceId, String key, String value) {
+        getBpmProviderFlowable().getProcessEngine()
+                                .getRuntimeService()
+                                .setVariable(processInstanceId, key, value);
     }
 
     /**

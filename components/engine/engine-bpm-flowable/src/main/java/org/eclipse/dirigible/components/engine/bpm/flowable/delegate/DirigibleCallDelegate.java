@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.components.engine.bpm.flowable.delegate;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ActionData;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ExecutionData;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
@@ -28,6 +27,9 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import static org.eclipse.dirigible.components.engine.bpm.flowable.dto.ActionData.Action.SKIP;
+import static org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmService.DIRIGIBLE_BPM_INTERNAL_SKIP_STEP;
 
 /**
  * The Class DirigibleCallDelegate.
@@ -90,13 +92,10 @@ public class DirigibleCallDelegate implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) {
 
-        // try {
-
-        String action = (String) execution.getVariable("action");
-
-        if (ActionData.Action.SKIP.getActionName()
-                                  .equals(action)) {
-            execution.setVariable("action", null);
+        String action = (String) execution.getVariable(DIRIGIBLE_BPM_INTERNAL_SKIP_STEP);
+        if (SKIP.getActionName()
+                .equals(action)) {
+            execution.removeVariable(DIRIGIBLE_BPM_INTERNAL_SKIP_STEP);
             return;
         }
 
@@ -110,12 +109,7 @@ public class DirigibleCallDelegate implements JavaDelegate {
         if (handler == null) {
             throw new BpmnError("Handler cannot be null at the call delegate.");
         }
-
         executeJSHandler(context);
-
-        // } catch (Exception e) {
-        // throw new BpmnError(e.getMessage());
-        // }
     }
 
     /**
