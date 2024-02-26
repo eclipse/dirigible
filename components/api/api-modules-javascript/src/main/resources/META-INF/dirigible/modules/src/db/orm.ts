@@ -61,7 +61,7 @@ ORM.prototype.ASSOCIATION_TYPES_VALUES = Object.keys(ORM.prototype.ASSOCIATION_T
 	.map(function (key) {
 		return ORM.prototype.ASSOCIATION_TYPES[key];
 	});
-interface ORMProperty {
+export interface ORMProperty {
 	name: string;
 	table: string;
 	properties: Array<{
