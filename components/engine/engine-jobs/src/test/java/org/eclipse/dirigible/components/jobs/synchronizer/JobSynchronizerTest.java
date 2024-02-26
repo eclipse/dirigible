@@ -112,7 +112,7 @@ public class JobSynchronizerTest {
     @Test
     public void load() throws ParseException {
         String content =
-                "{\"expression\":\"0/1 * * * * ?\",\"group\":\"dirigible-defined\",\"handler\":\"test/handler.js\",\"description\":\"Control Job\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
+                "{\"expression\":\"0/1 * * * * ?\",\"group\":\"defined\",\"handler\":\"test/handler.js\",\"description\":\"Control Job\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
         List<Job> list = jobSynchronizer.parse("/test/control.job", content.getBytes());
         assertNotNull(list);
         assertEquals("/test/control.job", list.get(0)
