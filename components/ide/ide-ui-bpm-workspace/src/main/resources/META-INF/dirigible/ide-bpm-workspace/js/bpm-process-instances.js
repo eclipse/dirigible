@@ -65,29 +65,15 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
     }
 
     this.retry = function() {
-        const apiUrl = '/services/ide/bpm/bpm-processes/instance/' + this.selectedProcessInstanceId;
-        const requestBody = { 'action': 'RETRY'};
-
-        $http({
-            method: 'POST',
-            url: apiUrl,
-            data: requestBody,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((response) => {
-            console.log('Successfully retried process instance with id [' + this.processInstanceId + ']');
-            $scope.reload();
-        })
-        .catch((error) => {
-            console.error('Error making POST request:', error);
-        });
+        this.executeAction({ 'action': 'RETRY'});
     }
 
     this.skip = function() {
+        this.executeAction({ 'action': 'SKIP'});
+    }
+
+    this.executeAction = function(requestBody) {
         const apiUrl = '/services/ide/bpm/bpm-processes/instance/' + this.selectedProcessInstanceId;
-        const requestBody = { 'action': 'SKIP'};
 
         $http({
             method: 'POST',
@@ -98,7 +84,7 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
             }
         })
         .then((response) => {
-            console.log('Successfully skipped process instance with id [' + this.processInstanceId + ']');
+            console.log('Successfully executed ' + JSON.stringify(requestBody) + ' process instance with id [' + this.processInstanceId + ']');
             $scope.reload();
         })
         .catch((error) => {
