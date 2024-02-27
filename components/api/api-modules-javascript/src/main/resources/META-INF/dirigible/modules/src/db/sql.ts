@@ -20,7 +20,7 @@ const DatabaseFacade = Java.type("org.eclipse.dirigible.components.api.db.Databa
 /**
  * Select object
  */
-class Select {
+export class Select {
 	private native: any;
 	private _parameters: any[];
 	public build: Function;
@@ -236,7 +236,7 @@ class Select {
 /**
  * Insert object
  */
-class Insert {
+export class Insert {
 	private native: any;
 	private _parameters: any[];
 	public build: Function;
@@ -283,7 +283,7 @@ class Insert {
 /**
  * Update object
  */
-class Update {
+export class Update {
 	private native: any;
 	private _parameters: any[];
 	public build: Function;
@@ -330,7 +330,7 @@ class Update {
 /**
  * Delete object
 */
-class Delete {
+export class Delete {
 	private native: any;
 	private _parameters: any[];
 	public build: Function;
@@ -366,7 +366,7 @@ class Delete {
 /**
  * Nextval object
  */
-class Nextval {
+export class Nextval {
 	public name: string;
 	private native: any;
 	public build: Function;
@@ -385,7 +385,7 @@ type DataType = "VARCHAR" | "CHAR" | "DATE" | "SECONDDATE" | "TIME" | "TIMESTAMP
 /**
  * CreateTable object
 */
-class CreateTable {
+export class CreateTable {
 	private native: any;
 	public build: Function;
 
@@ -756,7 +756,7 @@ class CreateTable {
 /**
  * CreateView object
  */
-class CreateView {
+export class CreateView {
 	private native: any;
 	private _parameters: any[];
 	public build: Function;
@@ -785,7 +785,7 @@ class CreateView {
 /**
  * CreateSequence object
  */
-class CreateSequence {
+export class CreateSequence {
 	private native: any;
 	public build: Function;
 
@@ -800,7 +800,7 @@ class CreateSequence {
 /**
  * Create object
  */
-class Create {
+export class Create {
 	private native: any;
 	private connection: any;
 
@@ -828,7 +828,7 @@ class Create {
 /**
  * DropTable object
  */
-class DropTable {
+export class DropTable {
 	private native: any;
 	public build: Function;
 
@@ -844,7 +844,7 @@ class DropTable {
 /**
  * DropView object
  */
-class DropView {
+export class DropView {
 	private native: any;
 	public build: Function;
 
@@ -860,7 +860,7 @@ class DropView {
 /**
  * DropSequence object
  */
-class DropSequence {
+export class DropSequence {
 	private native: any;
 	public build: Function;
 
@@ -903,12 +903,12 @@ class Drop {
 /**
  * Dialect object
  */
-class Dialect {
+export class Dialect {
 	private native: any;
 	private connection: any;
 	private _parameters: any[];
 
-	constructor(connection?) {
+	constructor(connection?: { native: any }) {
 		if (connection) {
 			this.native = DatabaseFacade.getNative(connection.native);
 		} else {
@@ -958,6 +958,6 @@ class Dialect {
 }
 
 
-export function getDialect(connection?): Dialect {
+export function getDialect(connection?: { native: any }): Dialect {
 	return new Dialect(connection);
 };
