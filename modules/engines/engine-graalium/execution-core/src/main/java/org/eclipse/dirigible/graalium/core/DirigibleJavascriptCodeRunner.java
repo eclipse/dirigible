@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.graalium.core.globals.DirigibleContextGlobalObject;
@@ -38,6 +39,9 @@ import org.graalvm.polyglot.Value;
  * The Class DirigibleJavascriptCodeRunner.
  */
 public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> {
+
+    /** ESM files extension */
+    private static final String JS_EXT = ".js";
 
     /** ESM files extension */
     private static final String MJS_EXT = ".mjs";
@@ -167,12 +171,12 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
 
     public Module run(Path codeFilePath) {
         var pathAsString = codeFilePath.toString();
+        ModuleType moduleType = pathAsString.endsWith(MJS_EXT) || pathAsString.endsWith((TS_EXT)) ? ModuleType.ESM : ModuleType.CJS;
         if (pathAsString.endsWith(TS_EXT)) {
             pathAsString = transformTypeScriptHandlerPathIfNecessary(pathAsString);
         }
         Source source = prepareSource(Path.of(pathAsString));
         Value module = run(source);
-        ModuleType moduleType = pathAsString.endsWith(MJS_EXT) ? ModuleType.ESM : ModuleType.CJS;
         return new Module(module, moduleType);
     }
 
@@ -241,10 +245,7 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
     }
 
     private static String transformTypeScriptHandlerPathIfNecessary(String handlerPath) {
-        if (handlerPath.endsWith(TS_EXT)) {
-            return handlerPath.substring(0, handlerPath.length() - TS_EXT.length()) + MJS_EXT;
-        }
-        return handlerPath;
+        return handlerPath.endsWith(TS_EXT) ? handlerPath.replaceAll(Pattern.quote(TS_EXT), JS_EXT) : handlerPath;
     }
 
     /**

@@ -11,85 +11,35 @@
 package org.eclipse.dirigible.components.security.keycloak;
 
 import org.eclipse.dirigible.components.base.http.access.HttpSecurityURIConfigurator;
-import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
-import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
-import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
-import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
-import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 
-@KeycloakConfiguration
-@ConditionalOnProperty(name = "keycloak.enabled", havingValue = "true")
-public class KeycloakSecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter {
+@Profile("keycloak")
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+public class KeycloakSecurityConfiguration {
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) {
-        KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
-        keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(new SimpleAuthorityMapper()); // prefix = "ROLE_
-        auth.authenticationProvider(keycloakAuthenticationProvider);
-    }
+    @Bean
+    SecurityFilterChain configure(HttpSecurity http) throws Exception {
+        http//
+            .authorizeHttpRequests(authz -> authz.requestMatchers("/oauth2/**", "/login/**")
+                                                 .permitAll())
+            .csrf(csrf -> csrf.disable())
+            .headers(headers -> headers.frameOptions(frameOpts -> frameOpts.sameOrigin()))
+            .oauth2Client(Customizer.withDefaults())
+            .oauth2Login(Customizer.withDefaults())
+            .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
 
-    @Override
-    protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
-        return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
-        http.csrf()
-            .disable();
-        http.headers()
-            .frameOptions()
-            .sameOrigin();
         HttpSecurityURIConfigurator.configure(http);
 
-        // http
-        // .authorizeRequests()
-        // .antMatchers("/").permitAll()
-        // .antMatchers("/home").permitAll()
-        // .antMatchers("/logout").permitAll()
-        // .antMatchers("/index-busy.html").permitAll()
-        //
-        // .antMatchers("/stomp").permitAll()
-        //
-        // .antMatchers("/error/**").permitAll()
-        // .antMatchers("/error.html").permitAll()
-        //
-        // // Public
-        // .antMatchers("/favicon.ico").permitAll()
-        // .antMatchers("/public/**").permitAll()
-        // .antMatchers("/webjars/**").permitAll()
-        //
-        // .antMatchers("/services/core/theme/**").permitAll()
-        // .antMatchers("/services/core/version/**").permitAll()
-        // .antMatchers("/services/core/healthcheck/**").permitAll()
-        // .antMatchers("/services/web/resources/**").permitAll()
-        // .antMatchers("/services/web/resources-core/**").permitAll()
-        // .antMatchers("/services/js/resources-core/**").permitAll()
-        //
-        // .antMatchers("/actuator/**").permitAll()
-        //
-        // // Authenticated
-        // .antMatchers("/services/**").authenticated()
-        // .antMatchers("/websockets/**").authenticated()
-        // .antMatchers("/odata/**").authenticated()
-        //
-        // // "Developer" role required
-        // .antMatchers("/services/ide/**").hasRole("Developer")
-        // .antMatchers("/websockets/ide/**").hasRole("Developer")
-
-        // "Operator" role required
-        // .antMatchers("/services/ops/**").hasRole("Operator")
-        // .antMatchers("/services/transport/**").hasRole("Operator")
-        // .antMatchers("/websockets/ops/**").hasRole("Operator")
-
-        // Deny all other requests
-        // .anyRequest().denyAll();
+        return http.build();
     }
 }

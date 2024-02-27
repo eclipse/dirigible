@@ -11,9 +11,6 @@
 package org.eclipse.dirigible.components.listeners.config;
 
 import java.io.File;
-import javax.jms.Connection;
-import javax.jms.JMSException;
-import javax.jms.Session;
 import javax.sql.DataSource;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerService;
@@ -26,6 +23,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import jakarta.jms.Connection;
+import jakarta.jms.JMSException;
+import jakarta.jms.Session;
 
 /**
  * The Class MessagingConfig.
@@ -62,19 +62,21 @@ class MessagingConfig {
     BrokerService createBrokerService(@Qualifier("SystemDB") DataSource dataSource) {
         try {
             BrokerService broker = new BrokerService();
-            if (Boolean.parseBoolean(
-                    org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE", "true"))) {
-                PersistenceAdapter persistenceAdapter = new JDBCPersistenceAdapter(dataSource, new OpenWireFormat());
-                broker.setPersistenceAdapter(persistenceAdapter);
-            }
-            broker.setPersistent(true);
-            broker.setUseJmx(false);
-            PListStore pListStore = new PListStoreImpl();
-            pListStore.setDirectory(new File(LOCATION_TEMP_STORE));
-            broker.setTempDataStore(pListStore);
-            broker.addConnector(CONNECTOR_URL);
+            if (!broker.isStarted()) {
+                if (Boolean.parseBoolean(
+                        org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE", "true"))) {
+                    PersistenceAdapter persistenceAdapter = new JDBCPersistenceAdapter(dataSource, new OpenWireFormat());
+                    broker.setPersistenceAdapter(persistenceAdapter);
+                }
+                broker.setPersistent(true);
+                broker.setUseJmx(false);
+                PListStore pListStore = new PListStoreImpl();
+                pListStore.setDirectory(new File(LOCATION_TEMP_STORE));
+                broker.setTempDataStore(pListStore);
+                broker.addConnector(CONNECTOR_URL);
 
-            broker.start();
+                broker.start();
+            }
 
             return broker;
         } catch (Exception ex) {
@@ -89,7 +91,7 @@ class MessagingConfig {
      * @return the session
      */
     @Bean("ActiveMQSession")
-    Session createConnection(@Qualifier("ActiveMQConnection") Connection connection) {
+    Session createSession(@Qualifier("ActiveMQConnection") Connection connection) {
         try {
             return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         } catch (JMSException ex) {

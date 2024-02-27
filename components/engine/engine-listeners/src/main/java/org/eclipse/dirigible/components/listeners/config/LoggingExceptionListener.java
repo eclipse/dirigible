@@ -10,8 +10,8 @@
  */
 package org.eclipse.dirigible.components.listeners.config;
 
-import javax.jms.ExceptionListener;
-import javax.jms.JMSException;
+import jakarta.jms.ExceptionListener;
+import jakarta.jms.JMSException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

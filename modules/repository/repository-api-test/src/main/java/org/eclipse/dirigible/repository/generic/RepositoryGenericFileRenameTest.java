@@ -18,7 +18,7 @@ import static org.junit.Assert.fail;
 
 import java.util.Random;
 
-import javax.xml.bind.DatatypeConverter;
+import jakarta.xml.bind.DatatypeConverter;
 
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;

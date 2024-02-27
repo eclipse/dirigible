@@ -168,6 +168,32 @@ function getDetails(parameters) {
             engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-window/view.js",
             collection: "uiListDetailsModels"
+        },
+        {
+            location: "/template-application-ui-angular/ui/perspective/master-list/detail/dialog-filter/controller.js.template",
+            action: "generate",
+            engine: "velocity",
+            rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-filter/controller.js",
+            collection: "uiListDetailsModels"
+        },
+        {
+            location: "/template-application-ui-angular/ui/perspective/master-list/detail/dialog-filter/index.html.template",
+            action: "generate",
+            engine: "velocity",
+            rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-filter/index.html",
+            collection: "uiListDetailsModels"
+        },
+        {
+            location: "/template-application-ui-angular/ui/perspective/master-list/detail/dialog-filter/view.extension",
+            action: "generate",
+            rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-filter/view.extension",
+            collection: "uiListDetailsModels"
+        },
+        {
+            location: "/template-application-ui-angular/ui/perspective/master-list/detail/dialog-filter/view.js",
+            action: "generate",
+            rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-filter/view.js",
+            collection: "uiListDetailsModels"
         }
     ];
 }

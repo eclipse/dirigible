@@ -25,23 +25,45 @@ import org.slf4j.LoggerFactory;
  */
 public class SchemaMetadata {
 
-    /** The Constant logger. */
+    /**
+     * The Constant logger.
+     */
     private static final Logger logger = LoggerFactory.getLogger(SchemaMetadata.class);
 
-    /** The name. */
+    /**
+     * The name.
+     */
     private String name;
 
-    /** The kind. */
+    /**
+     * The kind.
+     */
     private String kind = "schema";
 
-    /** The tables. */
+    /**
+     * The tables.
+     */
     private List<TableMetadata> tables;
 
-    /** The procedures. */
+    /**
+     * The views.
+     */
+    private List<TableMetadata> views;
+
+    /**
+     * The procedures.
+     */
     private List<ProcedureMetadata> procedures;
 
-    /** The functions. */
+    /**
+     * The functions.
+     */
     private List<FunctionMetadata> functions;
+
+    /**
+     * The functions.
+     */
+    private List<SequenceMetadata> sequences;
 
     /**
      * Instantiates a new schema metadata.
@@ -57,7 +79,21 @@ public class SchemaMetadata {
 
         this.name = name;
 
-        this.tables = DatabaseMetadataHelper.listTables(connection, catalogName, name, nameFilter);
+        List<TableMetadata> allTables = DatabaseMetadataHelper.listTables(connection, catalogName, name, nameFilter);
+        List<TableMetadata> allTablesTypeTable = new ArrayList<>();
+        List<TableMetadata> allTablesTypeViews = new ArrayList<>();
+
+        allTables.forEach(tableMetadata -> {
+            if (!tableMetadata.getType()
+                              .equals("VIEW")) {
+                allTablesTypeTable.add(tableMetadata);
+            } else {
+                allTablesTypeViews.add(tableMetadata);
+            }
+        });
+
+        this.tables = allTablesTypeTable;
+        this.views = allTablesTypeViews;
 
         try {
             this.procedures = DatabaseMetadataHelper.listProcedures(connection, catalogName, name, nameFilter);
@@ -72,6 +108,15 @@ public class SchemaMetadata {
             this.functions = DatabaseMetadataHelper.listFunctions(connection, catalogName, name, nameFilter);
         } catch (Exception e) {
             this.functions = new ArrayList<FunctionMetadata>();
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage());
+            }
+        }
+
+        try {
+            this.sequences = DatabaseMetadataHelper.listSequences(connection, name);
+        } catch (Exception e) {
+            this.sequences = new ArrayList<SequenceMetadata>();
             if (logger.isErrorEnabled()) {
                 logger.error(e.getMessage());
             }
@@ -105,7 +150,23 @@ public class SchemaMetadata {
         return tables;
     }
 
+    /**
+     * Gets the views.
+     *
+     * @return the views
+     */
+    public List<TableMetadata> getViews() {
+        return views;
+    }
 
+    /**
+     * Sets the views.
+     *
+     * @param views the new views
+     */
+    public void setViews(List<TableMetadata> views) {
+        this.views = views;
+    }
 
     /**
      * Get the procedures metadata.
@@ -123,6 +184,24 @@ public class SchemaMetadata {
      */
     public List<FunctionMetadata> getFunctions() {
         return functions;
+    }
+
+    /**
+     * Gets the sequences.
+     *
+     * @return the sequences
+     */
+    public List<SequenceMetadata> getSequences() {
+        return sequences;
+    }
+
+    /**
+     * Sets the sequences.
+     *
+     * @param sequences the new sequences
+     */
+    public void setSequences(List<SequenceMetadata> sequences) {
+        this.sequences = sequences;
     }
 
     /**

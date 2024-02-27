@@ -9,22 +9,22 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.replaceAll = function (string, find, replace) {
+export const replaceAll = (string, find, replace) => {
 	return string.replace(new RegExp(find, 'g'), replace);
 };
 
-exports.unescapePath = function (path) {
+export const unescapePath = (path) => {
 	return path.replace(/\\/g, '');
 };
 
-exports.getNameFromPath = function (path) {
+export const getNameFromPath = (path) => {
 	let splittedFullName = path.split("/");
 	let name = splittedFullName[splittedFullName.length - 1];
 	return (!name || name.lenght === 0) ? "root" : name;
 };
 
-exports.formatPath = function (path) {
-	path = exports.replaceAll(path, "//", "/");
+export const formatPath = (path) => {
+	path = replaceAll(path, "//", "/");
 	if (!path.startsWith("/")) {
 		path = "/" + path;
 	}

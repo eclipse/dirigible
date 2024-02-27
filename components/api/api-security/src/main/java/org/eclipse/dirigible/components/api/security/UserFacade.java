@@ -15,8 +15,8 @@ import static java.text.MessageFormat.format;
 import java.util.List;
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.websocket.Session;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.websocket.Session;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.api.http.HttpRequestFacade;

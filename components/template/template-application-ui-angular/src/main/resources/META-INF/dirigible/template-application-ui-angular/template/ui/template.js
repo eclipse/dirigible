@@ -15,6 +15,7 @@ const reportTableTemplate = require("template-application-ui-angular/template/ui
 const launchpad = dirigibleRequire("template-application-ui-angular/template/ui/launchpad");
 // const tiles = require("template-application-ui-angular/template/ui/tiles");
 // const menu = require("template-application-ui-angular/template/ui/menu");
+const customAction = require("template-application-ui-angular/template/ui/customAction");
 
 exports.getSources = function (parameters) {
     var sources = [];
@@ -30,5 +31,6 @@ exports.getSources = function (parameters) {
     // sources = sources.concat(perspective.getSources(parameters));
     // sources = sources.concat(tiles.getSources(parameters));
     // sources = sources.concat(menu.getSources(parameters));
+    sources = sources.concat(customAction.getSources(parameters));
     return sources;
 };

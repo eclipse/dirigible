@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
@@ -142,8 +141,8 @@ public class JavascriptEndpoint extends BaseEndpoint {
     public ResponseEntity<?> postFile(@PathVariable("projectName") String projectName,
             @PathVariable("projectFilePath") String projectFilePath,
             @Nullable @RequestParam(required = false) MultiValueMap<String, String> params,
-            @Validated @RequestParam("file") MultipartFile file) {
-        return executeJavaScript(projectName, projectFilePath, params, new MultipartFile[] {file});
+            @Validated @RequestParam("file") MultipartFile[] file) {
+        return executeJavaScript(projectName, projectFilePath, params, file);
     }
 
     /**
@@ -363,9 +362,9 @@ public class JavascriptEndpoint extends BaseEndpoint {
         static Dts fromDtsPath(Path dtsDirRoot, Path dtsPath) {
             String content = readAllText(dtsPath);
             Path relativePath = dtsDirRoot.relativize(dtsPath);
-            String filePath = "file:///node_modules/@dirigible/" + relativePath;
-            String moduleName = ("@dirigible/" + relativePath).replace("index.d.ts", "")
-                                                              .replace(".d.ts", "");
+            String filePath = "file:///node_modules/sdk/" + relativePath;
+            String moduleName = ("sdk/" + relativePath).replace("index.d.ts", "")
+                                                       .replace(".d.ts", "");
             return new Dts(content, moduleName, filePath);
         }
 

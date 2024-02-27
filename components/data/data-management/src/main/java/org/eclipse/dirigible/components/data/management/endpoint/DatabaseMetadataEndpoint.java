@@ -63,7 +63,7 @@ public class DatabaseMetadataEndpoint extends BaseEndpoint {
      * @throws SQLException the SQL exception
      */
     @GetMapping(value = "/{datasource}", produces = "application/json")
-    public ResponseEntity<String> getSchemaMetadata(@PathVariable("datasource") String datasource) throws SQLException {
+    public ResponseEntity<String> getDataSourceMetadata(@PathVariable("datasource") String datasource) throws SQLException {
         return ResponseEntity.ok(databasesService.getDataSourceMetadata(datasource));
     }
 
@@ -94,8 +94,19 @@ public class DatabaseMetadataEndpoint extends BaseEndpoint {
     @GetMapping(value = "/{datasource}/{schema}/{structure}", produces = "application/json")
     public ResponseEntity<String> getStructureMetadata(@PathVariable("datasource") String datasource, @PathVariable("schema") String schema,
             @PathVariable("structure") String structure, @Nullable @RequestParam("kind") String kind) throws SQLException {
-
         return ResponseEntity.ok(databasesService.getStructureMetadata(datasource, schema, structure, kind));
+    }
+
+    /**
+     * Invalidates the metadata cache.
+     *
+     * @return the response entity
+     */
+    @GetMapping(value = "/invalidate-cache")
+    public ResponseEntity<Void> invalidateCache() {
+        databasesService.invalidateCache();
+        return ResponseEntity.noContent()
+                             .<Void>build();
     }
 
 }

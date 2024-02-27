@@ -14,5 +14,5 @@ var assertEquals = require('test/assert').assertEquals;
 
 session.setAttribute('attr1', 'value1');
 
-assertEquals(JSON.stringify(session.getAttributeNames()), '["SPRING_SECURITY_CONTEXT","invocation.count","attr1"]');
+assertEquals(JSON.stringify(session.getAttributeNames()), '["invocation.count","attr1"]');
 

@@ -27,7 +27,13 @@ exports.getTemplate = function (parameters) {
         parameters: [{
             name: "tablePrefix",
             label: "Table Prefix",
-            placeholder: "Table prefix"
+            placeholder: "Table prefix",
+            required: false
+        }, {
+            name: "dataSource",
+            label: "Data Source",
+            placeholder: "Data Source (DefaultDB)",
+            required: false
         }]
     };
 };

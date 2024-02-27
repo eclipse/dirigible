@@ -87,7 +87,7 @@ public class DataExportEndpointTest {
         mockMvc.perform(put("/services/data/project/csv/{datasource}/{schema}", "TestDB", "INFORMATION_SCHEMA").with(csrf()))
                .andDo(print())
                .andExpect(status().isOk());
-        Workspace workspace = workspaceService.getWorkspace("INFORMATION_SCHEMA");
+        Workspace workspace = workspaceService.getWorkspace("workspace");
         assertNotNull(workspace);
         Project project = workspace.getProject("INFORMATION_SCHEMA");
         assertNotNull(project);
@@ -103,7 +103,23 @@ public class DataExportEndpointTest {
         mockMvc.perform(put("/services/data/project/metadata/{datasource}/{schema}", "TestDB", "INFORMATION_SCHEMA").with(csrf()))
                .andDo(print())
                .andExpect(status().isOk());
-        Workspace workspace = workspaceService.getWorkspace("INFORMATION_SCHEMA");
+        Workspace workspace = workspaceService.getWorkspace("workspace");
+        assertNotNull(workspace);
+        Project project = workspace.getProject("INFORMATION_SCHEMA");
+        assertNotNull(project);
+    }
+
+    /**
+     * Export schema as model test.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void exportSchemaAsModelTest() throws Exception {
+        mockMvc.perform(put("/services/data/project/model/{datasource}/{schema}", "TestDB", "INFORMATION_SCHEMA").with(csrf()))
+               .andDo(print())
+               .andExpect(status().isOk());
+        Workspace workspace = workspaceService.getWorkspace("workspace");
         assertNotNull(workspace);
         Project project = workspace.getProject("INFORMATION_SCHEMA");
         assertNotNull(project);

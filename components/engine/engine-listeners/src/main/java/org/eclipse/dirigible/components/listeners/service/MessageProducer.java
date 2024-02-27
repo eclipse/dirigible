@@ -10,16 +10,16 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
-import javax.jms.DeliveryMode;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Session;
-import javax.jms.TextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import jakarta.jms.DeliveryMode;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.Session;
+import jakarta.jms.TextMessage;
 
 /**
  * The Class MessageProducer.
@@ -75,16 +75,13 @@ public class MessageProducer {
      * @throws JMSException the JMS exception
      */
     private void sendMessage(String message, Destination destination) throws JMSException {
-        javax.jms.MessageProducer producer = session.createProducer(destination);
-        try {
+        try (jakarta.jms.MessageProducer producer = session.createProducer(destination)) {
             producer.setDeliveryMode(DeliveryMode.PERSISTENT);
 
             TextMessage textMessage = session.createTextMessage(message);
 
             producer.send(textMessage);
             LOGGER.trace("Message sent in [{}]", destination);
-        } finally {
-            producer.close();
         }
     }
 

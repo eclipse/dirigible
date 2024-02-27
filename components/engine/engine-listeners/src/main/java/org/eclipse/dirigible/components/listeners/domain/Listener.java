@@ -14,7 +14,7 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 
 import com.google.gson.annotations.Expose;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * The Class Listener.

@@ -1,5 +1,5 @@
-import { Controller, Get } from "@dirigible/http"
-import { ${name}Repository, ${name}Filter, ${name}PaginatedFilter } from "../../dao/entities/${name}Repository";
+import { Controller, Get } from "sdk/http"
+import { ${name}Repository, ${name}Filter, ${name}PaginatedFilter } from "../../dao/${perspectiveName}/${name}Repository";
 
 @Controller
 class ${name}Service {
@@ -7,18 +7,18 @@ class ${name}Service {
     private readonly repository = new ${name}Repository();
 
     @Get("/")
-    public filter(_, ctx) {
+    public filter(_: any, ctx: any) {
         const filter: ${name}PaginatedFilter = {
 #foreach ($property in $filter.properties)
 #if(!$property.dataPrimaryKey)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+#if($property.dataTypeTypescript == "string")
             ${property.name}: ctx.queryParameters.${property.name} ? ctx.queryParameters.${property.name} : undefined,
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+#elseif($property.dataTypeTypescript == "number")
             ${property.name}: ctx.queryParameters.${property.name} ? parseInt(ctx.queryParameters.${property.name}) : undefined,
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+#elseif($property.dataTypeTypescript == "Date")
             ${property.name}: ctx.queryParameters.${property.name} ? new Date(parseInt(ctx.queryParameters.${property.name})) : undefined,
-#elseif($property.dataType == "BOOLEAN")
-            ${property.name}: ctx.queryParameters.${property.name} ? !!ctx.queryParameters.${property.name} : undefined,
+#elseif($property.dataTypeTypescript == "boolean")
+            ${property.name}: ctx.queryParameters.${property.name} !== undefined && ctx.queryParameters.${property.name} !== null ? ctx.queryParameters.${property.name} === "true" : undefined,
 #else
             ${property.name}: ctx.queryParameters.${property.name} ? ctx.queryParameters.${property.name} as unknown: undefined,
 #end
@@ -32,17 +32,17 @@ class ${name}Service {
     }
 
     @Get("/count")
-    public count(_, ctx) {
+    public count(_: any, ctx: any) {
         const filter: ${name}Filter = {
 #foreach ($property in $filter.properties)
 #if(!$property.dataPrimaryKey)
-#if($property.dataType == "VARCHAR" || $property.dataType == "CHAR")
+#if($property.dataTypeTypescript == "string")
             ${property.name}: ctx.queryParameters.${property.name} ? ctx.queryParameters.${property.name} : undefined,
-#elseif($property.dataType == "INTEGER" || $property.dataType == "BIGINT" || $property.dataType == "SMALLINT" || $property.dataType == "TINYINT" || $property.dataType == "REAL" || $property.dataType == "DOUBLE" || $property.dataType == "DECIMAL")
+#elseif($property.dataTypeTypescript == "number")
             ${property.name}: ctx.queryParameters.${property.name} ? parseInt(ctx.queryParameters.${property.name}) : undefined,
-#elseif($property.dataType == "DATE" || $property.dataType == "TIME" || $property.dataType == "TIMESTAMP")
+#elseif($property.dataTypeTypescript == "Date")
             ${property.name}: ctx.queryParameters.${property.name} ? new Date(parseInt(ctx.queryParameters.${property.name})) : undefined,
-#elseif($property.dataType == "BOOLEAN")
+#elseif($property.dataTypeTypescript == "boolean")
             ${property.name}: ctx.queryParameters.${property.name} ? !!ctx.queryParameters.${property.name} : undefined,
 #else
             ${property.name}: ctx.queryParameters.${property.name} ? ctx.queryParameters.${property.name} as unknown: undefined,

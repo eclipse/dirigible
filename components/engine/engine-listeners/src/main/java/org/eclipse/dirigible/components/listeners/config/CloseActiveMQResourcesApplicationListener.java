@@ -10,9 +10,6 @@
  */
 package org.eclipse.dirigible.components.listeners.config;
 
-import javax.jms.Connection;
-import javax.jms.JMSException;
-import javax.jms.Session;
 import org.apache.activemq.broker.BrokerService;
 import org.eclipse.dirigible.components.listeners.service.ListenersManager;
 import org.slf4j.Logger;
@@ -24,6 +21,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextStoppedEvent;
 import org.springframework.stereotype.Component;
+import jakarta.jms.Connection;
+import jakarta.jms.JMSException;
+import jakarta.jms.Session;
 
 /**
  * The listener interface for receiving closeActiveMQResourcesApplication events. The class that is

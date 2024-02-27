@@ -11,42 +11,31 @@
 package org.eclipse.dirigible.components.api.db;
 
 import static java.text.MessageFormat.format;
-
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.Iterator;
-
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import javax.sql.DataSource;
-
 import org.apache.commons.io.output.WriterOutputStream;
-import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseResultSetHelper;
 import org.eclipse.dirigible.components.data.management.service.DatabaseDefinitionService;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.database.persistence.processors.identity.PersistenceNextValueIdentityProcessor;
-import org.eclipse.dirigible.database.sql.DataTypeUtils;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 /**
  * The Class DatabaseFacade.
@@ -61,10 +50,10 @@ public class DatabaseFacade implements InitializingBean {
     private static DatabaseFacade INSTANCE;
 
     /** The database definition service. */
-    private DatabaseDefinitionService databaseDefinitionService;
+    private final DatabaseDefinitionService databaseDefinitionService;
 
     /** The data sources manager. */
-    private DataSourcesManager dataSourcesManager;
+    private final DataSourcesManager dataSourcesManager;
 
     /**
      * Instantiates a new database facade.
@@ -150,8 +139,7 @@ public class DatabaseFacade implements InitializingBean {
             String error = format("DataSource {0} not known.", datasourceName);
             throw new IllegalArgumentException(error);
         }
-        String metadata = DatabaseMetadataHelper.getMetadataAsJson(dataSource);
-        return metadata;
+        return DatabaseMetadataHelper.getMetadataAsJson(dataSource);
     }
 
     /**
@@ -166,8 +154,7 @@ public class DatabaseFacade implements InitializingBean {
             String error = format("No default DataSource has been configured.");
             throw new IllegalArgumentException(error);
         }
-        String metadata = DatabaseMetadataHelper.getMetadataAsJson(dataSource);
-        return metadata;
+        return DatabaseMetadataHelper.getMetadataAsJson(dataSource);
     }
 
     /**
@@ -183,8 +170,7 @@ public class DatabaseFacade implements InitializingBean {
             String error = format("DataSource {0} not known.", datasourceName);
             throw new IllegalArgumentException(error);
         }
-        String productName = DatabaseMetadataHelper.getProductName(dataSource);
-        return productName;
+        return DatabaseMetadataHelper.getProductName(dataSource);
     }
 
     /**
@@ -199,8 +185,7 @@ public class DatabaseFacade implements InitializingBean {
             String error = format("No default DataSource has been configured.");
             throw new IllegalArgumentException(error);
         }
-        String productName = DatabaseMetadataHelper.getProductName(dataSource);
-        return productName;
+        return DatabaseMetadataHelper.getProductName(dataSource);
     }
 
     /**
@@ -246,7 +231,7 @@ public class DatabaseFacade implements InitializingBean {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             try {
                 if (parameters != null) {
-                    setParameters(parameters, preparedStatement);
+                    ParametersSetter.setParameters(parameters, preparedStatement);
                 }
                 ResultSet resultSet = preparedStatement.executeQuery();
                 StringWriter sw = new StringWriter();
@@ -266,6 +251,9 @@ public class DatabaseFacade implements InitializingBean {
                     preparedStatement.close();
                 }
             }
+        } catch (Exception ex) {
+            logger.error("Failed to execute query statement [{}] in data source [{}].", sql, datasourceName, ex);
+            throw ex;
         } finally {
             if (connection != null) {
                 connection.close();
@@ -296,6 +284,45 @@ public class DatabaseFacade implements InitializingBean {
         return query(sql, null, null);
     }
 
+    // =========== Insert ===========
+
+    /**
+     * Executes SQL insert.
+     *
+     * @param sql the insert statement to be executed
+     * @param parameters statement parameters
+     * @param datasourceName the datasource name
+     * @return the generated IDs
+     * @throws SQLException if an error occur
+     * @throws IllegalArgumentException if the provided datasouce is not found
+     * @throws RuntimeException if an error occur
+     */
+    public static final List<Long> insert(String sql, String parameters, String datasourceName)
+            throws SQLException, IllegalArgumentException, RuntimeException {
+        DataSource dataSource = getDataSource(datasourceName);
+        if (dataSource == null) {
+            throw new IllegalArgumentException("DataSource [" + datasourceName + "] not known.");
+        }
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            if (parameters != null) {
+                ParametersSetter.setParameters(parameters, preparedStatement);
+            }
+            int updatedRows = preparedStatement.executeUpdate();
+            List<Long> generatedIds = new ArrayList<>(updatedRows);
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                while (generatedKeys.next()) {
+                    generatedIds.add(generatedKeys.getLong(1));
+                }
+                return generatedIds;
+            }
+        } catch (SQLException | RuntimeException ex) {
+            logger.error("Failed to execute insert statement [{}] in data source [{}].", sql, datasourceName, ex);
+            throw ex;
+        }
+    }
+
     // =========== Update ===========
 
     /**
@@ -319,7 +346,7 @@ public class DatabaseFacade implements InitializingBean {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             try {
                 if (parameters != null) {
-                    setParameters(parameters, preparedStatement);
+                    ParametersSetter.setParameters(parameters, preparedStatement);
                 }
                 return preparedStatement.executeUpdate();
             } finally {
@@ -327,6 +354,9 @@ public class DatabaseFacade implements InitializingBean {
                     preparedStatement.close();
                 }
             }
+        } catch (Exception ex) {
+            logger.error("Failed to execute update statement [{}] in data source [{}].", sql, datasourceName, ex);
+            throw ex;
         } finally {
             if (connection != null) {
                 connection.close();
@@ -358,317 +388,6 @@ public class DatabaseFacade implements InitializingBean {
     }
 
     /**
-     * Sets the parameters.
-     *
-     * @param parameters the parameters
-     * @param preparedStatement the prepared statement
-     * @throws SQLException the SQL exception
-     */
-    private static void setParameters(String parameters, PreparedStatement preparedStatement) throws SQLException {
-        JsonElement parametersElement = GsonHelper.parseJson(parameters);
-        if (parametersElement instanceof JsonArray) {
-            JsonArray parametersArray = (JsonArray) parametersElement;
-            Iterator<JsonElement> iterator = parametersArray.iterator();
-            int i = 1;
-            while (iterator.hasNext()) {
-                JsonElement parameterElement = iterator.next();
-                if (parameterElement.isJsonPrimitive()) {
-                    if (parameterElement.getAsJsonPrimitive()
-                                        .isBoolean()) {
-                        preparedStatement.setBoolean(i++, parameterElement.getAsBoolean());
-                    } else if (parameterElement.getAsJsonPrimitive()
-                                               .isString()) {
-                        preparedStatement.setString(i++, parameterElement.getAsString());
-                    } else if (parameterElement.getAsJsonPrimitive()
-                                               .isNumber()) {
-                        boolean isNumberParameterSet = false;
-                        int numberIndex = i++;
-                        try {
-                            preparedStatement.setInt(numberIndex, parameterElement.getAsInt());
-                            isNumberParameterSet = true;
-                        } catch (SQLException | ClassCastException e) {
-                            // Do nothing
-                        }
-
-                        if (!isNumberParameterSet) {
-                            try {
-                                preparedStatement.setShort(numberIndex, parameterElement.getAsShort());
-                                isNumberParameterSet = true;
-                            } catch (SQLException | ClassCastException e) {
-                                // Do nothing
-                            }
-                        }
-                        if (!isNumberParameterSet) {
-                            try {
-                                preparedStatement.setLong(numberIndex, parameterElement.getAsLong());
-                                isNumberParameterSet = true;
-                            } catch (SQLException | ClassCastException e) {
-                                // Do nothing
-                            }
-                        }
-                        if (!isNumberParameterSet) {
-                            try {
-                                preparedStatement.setBigDecimal(numberIndex, parameterElement.getAsBigDecimal());
-                                isNumberParameterSet = true;
-                            } catch (SQLException | ClassCastException e) {
-                                // Do nothing
-                            }
-                        }
-                        if (!isNumberParameterSet) {
-                            preparedStatement.setObject(numberIndex, parameterElement.getAsNumber()
-                                                                                     .toString());
-                        }
-                    } else {
-                        throw new IllegalArgumentException("Parameter type unkown");
-                    }
-                } else if (parameterElement.isJsonObject()) {
-                    JsonObject jsonObject = parameterElement.getAsJsonObject();
-                    JsonElement typeElement = jsonObject.get("type");
-                    JsonElement valueElement = jsonObject.get("value");
-
-                    if (typeElement.isJsonPrimitive() && typeElement.getAsJsonPrimitive()
-                                                                    .isString()) {
-                        String dataType = typeElement.getAsJsonPrimitive()
-                                                     .getAsString();
-
-                        if (valueElement.isJsonNull()) {
-                            Integer sqlType = DataTypeUtils.getSqlTypeByDataType(dataType);
-                            preparedStatement.setNull(i++, sqlType);
-                        } else if (DataTypeUtils.isVarchar(dataType)) {
-                            if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                              .isString()) {
-                                String value = valueElement.getAsJsonPrimitive()
-                                                           .getAsString();
-                                preparedStatement.setString(i++, value);
-                            } else {
-                                throw new IllegalArgumentException("Wrong value of the parameter of type VARCHAR");
-                            }
-                        } else if (DataTypeUtils.isNvarchar(dataType)) {
-                            if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                              .isString()) {
-                                String value = valueElement.getAsJsonPrimitive()
-                                                           .getAsString();
-                                preparedStatement.setString(i++, value);
-                            } else {
-                                throw new IllegalArgumentException("Wrong value of the parameter of type VARCHAR");
-                            }
-                        } else if (DataTypeUtils.isChar(dataType)) {
-                            if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                              .isString()) {
-                                String value = valueElement.getAsJsonPrimitive()
-                                                           .getAsString();
-                                preparedStatement.setString(i++, value);
-                            } else {
-                                throw new IllegalArgumentException("Wrong value of the parameter of type CHAR");
-                            }
-                        } else if (DataTypeUtils.isDate(dataType)) {
-                            if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                              .isNumber()) {
-                                Date value = new Date(valueElement.getAsJsonPrimitive()
-                                                                  .getAsLong());
-                                preparedStatement.setDate(i++, value);
-                            } else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                                     .isString()) {
-                                Date value = null;
-                                try {
-                                    value = new Date(Long.parseLong(valueElement.getAsJsonPrimitive()
-                                                                                .getAsString()));
-                                } catch (NumberFormatException e) {
-                                    // assume date string in ISO format e.g. 2018-05-22T21:00:00.000Z
-                                    value = new Date(javax.xml.bind.DatatypeConverter.parseDateTime(valueElement.getAsJsonPrimitive()
-                                                                                                                .getAsString())
-                                                                                     .getTime()
-                                                                                     .getTime());
-                                }
-                                preparedStatement.setDate(i++, value);
-                            } else {
-                                throw new IllegalArgumentException("Wrong value of the parameter of type DATE");
-                            }
-                        } else if (DataTypeUtils.isTime(dataType)) {
-                            if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                              .isNumber()) {
-                                Time value = new Time(valueElement.getAsJsonPrimitive()
-                                                                  .getAsLong());
-                                preparedStatement.setTime(i++, value);
-                            } else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                                     .isString()) {
-                                Time value = null;
-                                try {
-                                    value = new Time(Long.parseLong(valueElement.getAsJsonPrimitive()
-                                                                                .getAsString()));
-                                } catch (NumberFormatException e) {
-                                    // assume XSDTime
-                                    value = new Time(javax.xml.bind.DatatypeConverter.parseTime(valueElement.getAsJsonPrimitive()
-                                                                                                            .getAsString())
-                                                                                     .getTime()
-                                                                                     .getTime());
-                                }
-                                preparedStatement.setTime(i++, value);
-                            } else {
-                                throw new IllegalArgumentException("Wrong value of the parameter of type TIME");
-                            }
-                        } else if (DataTypeUtils.isTimestamp(dataType)) {
-                            if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                              .isNumber()) {
-                                Timestamp value = new Timestamp(valueElement.getAsJsonPrimitive()
-                                                                            .getAsLong());
-                                preparedStatement.setTimestamp(i++, value);
-                            } else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                                     .isString()) {
-                                Timestamp value = null;
-                                try {
-                                    value = new Timestamp(Long.parseLong(valueElement.getAsJsonPrimitive()
-                                                                                     .getAsString()));
-                                } catch (NumberFormatException e) {
-                                    // assume date string in ISO format e.g. 2018-05-22T21:00:00.000Z
-                                    value = new Timestamp(javax.xml.bind.DatatypeConverter.parseDateTime(valueElement.getAsJsonPrimitive()
-                                                                                                                     .getAsString())
-                                                                                          .getTime()
-                                                                                          .getTime());
-                                }
-                                preparedStatement.setTimestamp(i++, value);
-                            } else {
-                                throw new IllegalArgumentException("Wrong value of the parameter of type TIMESTAMP");
-                            }
-                        } else if (DataTypeUtils.isInteger(dataType)) {
-                            if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                              .isNumber()) {
-                                Integer value = valueElement.getAsJsonPrimitive()
-                                                            .getAsInt();
-                                preparedStatement.setInt(i++, value);
-                            } else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                                     .isString()) {
-                                Integer value = Integer.parseInt(valueElement.getAsJsonPrimitive()
-                                                                             .getAsString());
-                                preparedStatement.setInt(i++, value);
-                            } else {
-                                throw new IllegalArgumentException("Wrong value of the parameter of type INTEGER");
-                            }
-                        } else if (DataTypeUtils.isTinyint(dataType)) {
-                            if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                              .isNumber()) {
-                                byte value = (byte) valueElement.getAsJsonPrimitive()
-                                                                .getAsInt();
-                                preparedStatement.setByte(i++, value);
-                            } else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                                     .isString()) {
-                                byte value = (byte) Integer.parseInt(valueElement.getAsJsonPrimitive()
-                                                                                 .getAsString());
-                                preparedStatement.setByte(i++, value);
-                            } else {
-                                throw new IllegalArgumentException("Wrong value of the parameter of type TINYINT");
-                            }
-                        } else if (DataTypeUtils.isSmallint(dataType)) {
-                            if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                              .isNumber()) {
-                                short value = (short) valueElement.getAsJsonPrimitive()
-                                                                  .getAsInt();
-                                preparedStatement.setShort(i++, value);
-                            } else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                                     .isString()) {
-                                short value = (short) Integer.parseInt(valueElement.getAsJsonPrimitive()
-                                                                                   .getAsString());
-                                preparedStatement.setShort(i++, value);
-                            } else {
-                                throw new IllegalArgumentException("Wrong value of the parameter of type SHORT");
-                            }
-                        } else if (DataTypeUtils.isBigint(dataType)) {
-                            if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                              .isNumber()) {
-                                Long value = valueElement.getAsJsonPrimitive()
-                                                         .getAsBigInteger()
-                                                         .longValue();
-                                preparedStatement.setLong(i++, value);
-                            } else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                                     .isString()) {
-                                Long value = Long.parseLong(valueElement.getAsJsonPrimitive()
-                                                                        .getAsString());
-                                preparedStatement.setLong(i++, value);
-                            } else {
-                                throw new IllegalArgumentException("Wrong value of the parameter of type LONG");
-                            }
-                        } else if (DataTypeUtils.isReal(dataType)) {
-                            if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                              .isNumber()) {
-                                Float value = valueElement.getAsJsonPrimitive()
-                                                          .getAsNumber()
-                                                          .floatValue();
-                                preparedStatement.setFloat(i++, value);
-                            } else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                                     .isString()) {
-                                Float value = Float.parseFloat(valueElement.getAsJsonPrimitive()
-                                                                           .getAsString());
-                                preparedStatement.setFloat(i++, value);
-                            } else {
-                                throw new IllegalArgumentException("Wrong value of the parameter of type REAL");
-                            }
-                        } else if (DataTypeUtils.isDouble(dataType)) {
-                            if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                              .isNumber()) {
-                                Double value = valueElement.getAsJsonPrimitive()
-                                                           .getAsNumber()
-                                                           .doubleValue();
-                                preparedStatement.setDouble(i++, value);
-                            } else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                                     .isString()) {
-                                Double value = Double.parseDouble(valueElement.getAsJsonPrimitive()
-                                                                              .getAsString());
-                                preparedStatement.setDouble(i++, value);
-                            } else {
-                                throw new IllegalArgumentException("Wrong value of the parameter of type DOUBLE");
-                            }
-                        } else if (DataTypeUtils.isDecimal(dataType)) {
-                            if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                              .isNumber()) {
-                                Double value = valueElement.getAsJsonPrimitive()
-                                                           .getAsNumber()
-                                                           .doubleValue();
-                                preparedStatement.setDouble(i++, value);
-                            } else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                                     .isString()) {
-                                Double value = Double.parseDouble(valueElement.getAsJsonPrimitive()
-                                                                              .getAsString());
-                                preparedStatement.setDouble(i++, value);
-                            } else {
-                                throw new IllegalArgumentException("Wrong value of the parameter of type DECIMAL");
-                            }
-                        } else if (DataTypeUtils.isBoolean(dataType)) {
-                            if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                              .isNumber()) {
-                                Boolean value = valueElement.getAsJsonPrimitive()
-                                                            .getAsBoolean();
-                                preparedStatement.setBoolean(i++, value);
-                            } else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive()
-                                                                                     .isString()) {
-                                Boolean value = Boolean.parseBoolean(valueElement.getAsJsonPrimitive()
-                                                                                 .getAsString());
-                                preparedStatement.setBoolean(i++, value);
-                            } else {
-                                throw new IllegalArgumentException("Wrong value of the parameter of type BOOLEAN");
-                            }
-                        } else if (DataTypeUtils.isBlob(dataType)) {
-                            if (valueElement.isJsonArray()) {
-                                byte[] bytes = BytesHelper.jsonToBytes(valueElement.getAsJsonArray()
-                                                                                   .toString());
-                                preparedStatement.setBinaryStream(i, new ByteArrayInputStream(bytes), bytes.length);
-                            }
-                        } else {
-                            throw new IllegalArgumentException(
-                                    "Parameter 'type'[" + dataType + "] must be a string representing a valid database type name");
-                        }
-                    } else {
-                        throw new IllegalArgumentException("Parameter 'type' must be a string representing the database type name");
-                    }
-                } else {
-                    throw new IllegalArgumentException("Parameters must contain primitives and objects only");
-                }
-            }
-        } else {
-            throw new IllegalArgumentException("Parameters must be provided as a JSON array, e.g. [1, 'John', 9876]");
-        }
-    }
-
-    /**
      * Gets the connection.
      *
      * @param datasourceName the datasource name
@@ -681,9 +400,7 @@ public class DatabaseFacade implements InitializingBean {
             String error = format("DataSource {0} not known.", datasourceName);
             throw new IllegalArgumentException(error);
         }
-        Connection connection = dataSource.getConnection();
-
-        return connection;
+        return dataSource.getConnection();
     }
 
     /**
@@ -752,8 +469,7 @@ public class DatabaseFacade implements InitializingBean {
                 // assuming the sequence objects are not supported by the underlying database
                 PersistenceNextValueIdentityProcessor persistenceNextValueIdentityProcessor =
                         new PersistenceNextValueIdentityProcessor(null);
-                long id = persistenceNextValueIdentityProcessor.nextval(connection, sequence);
-                return id;
+                return persistenceNextValueIdentityProcessor.nextval(connection, sequence);
             }
         } finally {
             if (connection != null) {
@@ -855,6 +571,10 @@ public class DatabaseFacade implements InitializingBean {
         try {
             connection = dataSource.getConnection();
             createSequenceInternal(sequence, start, connection, null);
+
+        } catch (Exception ex) {
+            logger.error("Failed to create sequence [{}] in data source [{}].", sequence, datasourceName, ex);
+            throw ex;
         } finally {
             if (connection != null) {
                 connection.close();
@@ -911,6 +631,10 @@ public class DatabaseFacade implements InitializingBean {
                     preparedStatement.close();
                 }
             }
+
+        } catch (Exception ex) {
+            logger.error("Failed to drop sequence [{}] in data source [{}].", sequence, datasourceName, ex);
+            throw ex;
         } finally {
             if (connection != null) {
                 connection.close();
@@ -928,9 +652,7 @@ public class DatabaseFacade implements InitializingBean {
         dropSequence(sequence, null);
     }
 
-
     // =========== SQL ===========
-
 
     /**
      * Gets the default SQL factory.
@@ -952,6 +674,5 @@ public class DatabaseFacade implements InitializingBean {
     public static SqlFactory getNative(Connection connection) throws SQLException {
         return SqlFactory.getNative(connection);
     }
-
 
 }

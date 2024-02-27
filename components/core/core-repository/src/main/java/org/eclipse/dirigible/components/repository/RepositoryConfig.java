@@ -10,21 +10,28 @@
  */
 package org.eclipse.dirigible.components.repository;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@org.springframework.context.annotation.Configuration
 public class RepositoryConfig {
 
     @Bean
     public IRepository repository() {
-        LocalRepository localRepository = new LocalRepository("target");
+        String repoFolderPath = Configuration.get(Configuration.DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER, "target");
+        Path path = Paths.get(repoFolderPath);
+        boolean absolutePath = path.isAbsolute();
+        boolean versioningEnabled = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_REPOSITORY_VERSIONING_ENABLED", "false"));
+        LocalRepository localRepository = new LocalRepository(repoFolderPath, absolutePath, versioningEnabled);
+
         // To be removed once moved to Spring entirely
         StaticObjects.set(StaticObjects.REPOSITORY, localRepository);
+
         return localRepository;
     }
-
 }

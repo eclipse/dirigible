@@ -10,6 +10,10 @@
  */
 package org.eclipse.dirigible.components.engine.javascript.service;
 
+import static org.eclipse.dirigible.graalium.core.graal.ValueTransformer.transformValue;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Map;
 import org.eclipse.dirigible.components.base.http.access.UserRequestVerifier;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
@@ -19,12 +23,6 @@ import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Map;
-
-import static org.eclipse.dirigible.graalium.core.graal.ValueTransformer.transformValue;
 
 /**
  * The Class JavascriptHandler.
@@ -102,24 +100,22 @@ public class JavascriptHandler {
                               value);
                 return transformValue(value);
             }
-        } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                if (e.getMessage() == null) {
-                    logger.error("Null object has been found");
-                    return e.getMessage();
-                } else if (e.getMessage()
-                            .contains("consider publish")) {
-                    logger.error(e.getMessage());
-                    return e.getMessage();
-                } else {
-                    logger.error("Error on processing JavaScript service from project: [{}], and path: [{}], with parameters: [{}]",
-                            projectName, projectFilePath, projectFilePathParam);
-                    logger.error(e.getMessage(), e);
-                    throw new RuntimeException(e);
-                }
+        } catch (Throwable ex) {
+            if (ex.getMessage() == null) {
+                logger.error("Null object has been found");
+                return ex.getMessage();
             }
+            if (ex.getMessage()
+                  .contains("consider publish")) {
+                logger.error(ex.getMessage(), ex);
+                return ex.getMessage();
+            }
+            String errorMessage =
+                    String.format("Error on processing JavaScript service from project: [%s], and path: [%s], with parameters: [%s]",
+                            projectName, projectFilePath, projectFilePathParam);
+            logger.error(errorMessage, ex);
+            throw new RuntimeException(ex.getMessage(), ex);
         }
-        return "";
     }
 
     /**

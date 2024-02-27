@@ -9,10 +9,9 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const request = require("http/request");
-const response = require("http/response");
-const registry = require("platform/registry");
-const uuid = require("utils/uuid");
+import { request, response } from "sdk/http";
+import { registry } from "sdk/platform";
+import { uuid } from "sdk/utils";
 
 const COOKIE_PREFIX = "DIRIGIBLE.resources-core.loader.";
 

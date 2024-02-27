@@ -63,25 +63,39 @@ import com.google.gson.JsonObject;
 @Order(SynchronizersOrder.SCHEMA)
 public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Schema> {
 
-    /** The Constant logger. */
+    /**
+     * The Constant logger.
+     */
     private static final Logger logger = LoggerFactory.getLogger(SchemasSynchronizer.class);
 
-    /** The Constant FILE_EXTENSION_SCHEMA. */
+    /**
+     * The Constant FILE_EXTENSION_SCHEMA.
+     */
     private static final String FILE_EXTENSION_SCHEMA = ".schema";
 
-    /** The schema service. */
+    /**
+     * The schema service.
+     */
     private SchemaService schemaService;
 
-    /** The table service. */
+    /**
+     * The table service.
+     */
     private TableService tableService;
 
-    /** The view service. */
+    /**
+     * The view service.
+     */
     private ViewService viewService;
 
-    /** The datasources manager. */
+    /**
+     * The datasources manager.
+     */
     private DataSourcesManager datasourcesManager;
 
-    /** The synchronization callback. */
+    /**
+     * The synchronization callback.
+     */
     private SynchronizerCallback callback;
 
     /**
@@ -253,17 +267,16 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
     @Override
     public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
 
-        try (Connection connection = datasourcesManager.getDefaultDataSource()
+        Schema schema = null;
+        if (wrapper.getArtefact() instanceof Schema) {
+            schema = (Schema) wrapper.getArtefact();
+        } else {
+            throw new UnsupportedOperationException(String.format("Trying to process %s as Schema", wrapper.getArtefact()
+                                                                                                           .getClass()));
+        }
+
+        try (Connection connection = datasourcesManager.getDataSource(schema.getDatasource())
                                                        .getConnection()) {
-
-            Schema schema = null;
-            if (wrapper.getArtefact() instanceof Schema) {
-                schema = (Schema) wrapper.getArtefact();
-            } else {
-                throw new UnsupportedOperationException(String.format("Trying to process %s as Schema", wrapper.getArtefact()
-                                                                                                               .getClass()));
-            }
-
             switch (flow) {
                 case CREATE:
                     if (schema.getLifecycle()
@@ -414,6 +427,10 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
                                    .getAsJsonObject()
                                    .get("structures")
                                    .getAsJsonArray();
+        String dataSource = root.getAsJsonObject()
+                                .get("datasource")
+                                .getAsString();
+        result.setDataSource(dataSource);
         for (int i = 0; i < structures.size(); i++) {
             JsonObject structure = structures.get(i)
                                              .getAsJsonObject();

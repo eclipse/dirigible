@@ -20,7 +20,7 @@ public interface CmisRepository {
      *
      * @return the session
      */
-    public CmisSession getSession();
+    public CmisInternalSession getSession();
 
     /**
      * Gets the internal object.

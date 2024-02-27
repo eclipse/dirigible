@@ -5,21 +5,30 @@ angular.module('entityApi', [])
 
             const count = function (idOrFilter) {
                 let url = `${this.baseUrl}/count`;
-                if (idOrFilter != null && typeof idOrFilter === 'object') {
+                const bodyFilter = idOrFilter && typeof idOrFilter === 'object' && idOrFilter.$filter ? idOrFilter : undefined;
+
+                if (!bodyFilter && idOrFilter != null && typeof idOrFilter === 'object') {
                     const query = Object.keys(idOrFilter).map(e => idOrFilter[e] ? `${e}=${idOrFilter[e]}` : null).filter(e => e !== null).join('&');
                     if (query) {
                         url = `${this.baseUrl}/count?${query}`;
                     }
-                } else if (idOrFilter != null) {
+                } else if (!bodyFilter && idOrFilter) {
                     url = `${this.baseUrl}/count/${idOrFilter}`;
                 }
-                return $http.get(url, { headers: { 'describe': 'application/json' } })
-                    .then(function successCallback(response) {
-                        return { status: response.status, data: response.data };
-                    }, function errorCallback(response) {
-                        console.error('Entity Service:', response);
-                        return { status: response.status, message: response.data ? response.data.message : '' };
-                    });
+
+                let request;
+                if (bodyFilter) {
+                    request = $http.post(url, JSON.stringify(bodyFilter), { headers: { 'describe': 'application/json' } });
+                } else {
+                    request = $http.get(url, { headers: { 'describe': 'application/json' } });
+                }
+
+                return request.then(function successCallback(response) {
+                    return { status: response.status, data: response.data };
+                }, function errorCallback(response) {
+                    console.error('Entity Service:', response);
+                    return { status: response.status, message: response.data ? response.data.message : '' };
+                });
             }.bind(this);
 
             const list = function (offsetOrFilter, limit) {
@@ -47,6 +56,18 @@ angular.module('entityApi', [])
                     .then(function successCallback(response) {
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
+                        console.error('Entity service:', response);
+                        return { status: response.status, message: response.data ? response.data.message : '' };
+                    });
+            }.bind(this);
+
+            const search = function (entity) {
+                const url = `${this.baseUrl}/search`;
+                const body = JSON.stringify(entity);
+                return $http.post(url, body)
+                    .then(function (response) {
+                        return { status: response.status, data: response.data };
+                    }, function (response) {
                         console.error('Entity service:', response);
                         return { status: response.status, message: response.data ? response.data.message : '' };
                     });
@@ -91,6 +112,7 @@ angular.module('entityApi', [])
                 count: count,
                 list: list,
                 filter: filter,
+                search: search,
                 create: create,
                 update: update,
                 'delete': deleteEntity

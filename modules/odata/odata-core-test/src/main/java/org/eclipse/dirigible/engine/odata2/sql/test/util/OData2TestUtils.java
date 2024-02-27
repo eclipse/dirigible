@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 import org.apache.olingo.odata2.annotation.processor.core.util.AnnotationHelper;
 import org.apache.olingo.odata2.api.edm.EdmEntitySet;
