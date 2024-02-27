@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.components.engine.bpm.flowable.endpoint;
 
 import static java.text.MessageFormat.format;
+import static org.eclipse.dirigible.components.engine.bpm.flowable.dto.ActionData.Action.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +20,7 @@ import java.net.URISyntaxException;
 import java.util.*;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
+import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ActionData;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ProcessDefinitionData;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ProcessInstanceData;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.VariableData;
@@ -33,6 +35,7 @@ import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.image.ProcessDiagramGenerator;
+import org.flowable.job.api.Job;
 import org.flowable.variable.api.persistence.entity.VariableInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -266,6 +269,11 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
         return ResponseEntity.ok(variables);
     }
 
+    /**
+     * Add or update active process instance variable
+     *
+     * @param id the process instance id
+     */
     @PostMapping(value = "/bpm-processes/instance/{id}/variables")
     public ResponseEntity<Void> addProcessInstanceVariables(@PathVariable("id") String id, @RequestBody VariableData variableData) {
 
@@ -277,6 +285,63 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 
         return ResponseEntity.ok()
                              .build();
+    }
+
+    /**
+     * Execute action on active process instance variable
+     *
+     * @param id the process instance id
+     * @param actionData the action to be executed, possible values: RETRY
+     */
+    @PostMapping(value = "/bpm-processes/instance/{id}")
+    public ResponseEntity<String> executeProcessInstanceAction(@PathVariable("id") String id, @RequestBody ActionData actionData) {
+
+        if (RETRY.getActionName()
+                 .equals(actionData.getAction())) {
+            BpmService bpmService = getBpmService();
+            List<Job> jobs = bpmService.getBpmProviderFlowable()
+                                       .getProcessEngine()
+                                       .getManagementService()
+                                       .createDeadLetterJobQuery()
+                                       .processInstanceId(id)
+                                       .list();
+            if (jobs.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                     .body("No dead letter jobs found for process instance id [" + id + "]");
+            }
+
+            bpmService.getBpmProviderFlowable()
+                      .getProcessEngine()
+                      .getManagementService()
+                      .moveDeadLetterJobToExecutableJob(jobs.get(0)
+                                                            .getId(),
+                              1);
+            return ResponseEntity.ok()
+                                 .build();
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                 .body("Invalid action id provided [" + actionData.getAction() + "]");
+        }
+    }
+
+    /**
+     * List dead-letter jobs for an active process instance variables.
+     *
+     * @param id the process instance id
+     * @return list of dead-letter jobs
+     */
+    @GetMapping(value = "/bpm-processes/instance/{id}/jobs")
+    public ResponseEntity<List<Job>> getDeadLetterJobs(@PathVariable("id") String id) {
+
+        BpmService bpmService = getBpmService();
+        List<Job> jobs = bpmService.getBpmProviderFlowable()
+                                   .getProcessEngine()
+                                   .getManagementService()
+                                   .createDeadLetterJobQuery()
+                                   .processInstanceId(id)
+                                   .list();
+
+        return ResponseEntity.ok(jobs);
     }
 
     /**

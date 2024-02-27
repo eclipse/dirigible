@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="ide-bpm-process-jobs"
+      ng-controller="IDEBpmProcessJobsViewController">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+    <title dg-view-title></title>
+    <script type="text/javascript" src="services/bpm-process-jobs-view.js"></script>
+    <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
+    <theme></theme>
+    <script type="text/javascript" src="/webjars/jstree/jstree.min.js"></script>
+    <script type="text/javascript" src="/services/web/resources-core/ui/widgets/indicator.plugin.js"></script>
+    <link type="text/css" rel="stylesheet" href="/services/web/resources/styles/jstree.css" />
+    <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
+    <script type="text/javascript" src="js/bpm-process-jobs.js"></script>
+</head>
+
+<body class="dg-vbox">
+<fd-scrollbar class="dg-fill-parent">
+    <table fd-table outer-borders="none" display-mode="compact" class="dg-list-border-bottom">
+        <thead fd-table-header sticky="true">
+        <tr fd-table-row>
+            <th fd-table-header-cell>Id</th>
+            <th fd-table-header-cell>Process Instance Id</th>
+            <th fd-table-header-cell>Execution Id</th>
+            <th fd-table-header-cell>Exception message</th>
+            <th fd-table-header-cell>Stacktrace</th>
+        </tr>
+        </thead>
+        <tbody fd-table-body>
+        <tr fd-table-row ng-repeat="next in jobsList track by next.id" hoverable="false" activable="false">
+            <td fd-table-cell>{{next.id}}</td>
+            <td fd-table-cell>{{next.processInstanceId}}</td>
+            <td fd-table-cell>{{next.executionId}}</td>
+            <td fd-table-cell>{{next.exceptionMessage}}</td>
+            <td fd-table-cell>{{next.exceptionStacktrace}}</td>
+        </tr>
+        <tr ng-if="jobsList.length === 0" fd-table-row>
+            <td fd-table-cell no-data="true">{{getNoDataMessage()}}</td>
+        </tr>
+        </tbody>
+    </table>
+</fd-scrollbar>
+</body>
+</html>

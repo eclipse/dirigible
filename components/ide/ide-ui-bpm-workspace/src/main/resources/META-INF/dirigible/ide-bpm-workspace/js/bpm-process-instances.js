@@ -24,6 +24,7 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
     this.instancesList = [];
     this.pageSize = 10;
     this.currentPage = 1;
+    this.selectedProcessInstanceId = null;
 
     this.currentFetchDataInstance = null;
 
@@ -63,6 +64,27 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
         this.displaySearch = !this.displaySearch;
     }
 
+    this.retry = function() {
+        const apiUrl = '/services/ide/bpm/bpm-processes/instance/' + this.selectedProcessInstanceId;
+        const requestBody = { 'action': 'RETRY'};
+
+        $http({
+            method: 'POST',
+            url: apiUrl,
+            data: requestBody,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response) => {
+            console.log('Successfully retried process instance with id [' + this.processInstanceId + ']');
+            $scope.reload();
+        })
+        .catch((error) => {
+            console.error('Error making POST request:', error);
+        });
+    }
+
     this.selectAllChanged = function () {
         for (let instance of this.instancesList) {
             instance.selected = this.selectAll;
@@ -74,6 +96,7 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
         messageHub.postMessage('diagram.instance', { instance: instance.id });
         messageHub.postMessage('instance.selected', { instance: instance.id });
         instance.selected = true;
+        this.selectedProcessInstanceId = instance.id;
 
     }
 
