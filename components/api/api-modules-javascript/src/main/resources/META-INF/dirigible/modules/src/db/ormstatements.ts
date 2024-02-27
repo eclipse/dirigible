@@ -13,19 +13,21 @@
 
 import * as logging from "@dirigible/log/logging";
 import * as sql from "./sql";
+import { ORMProperty } from "./orm";
 
-export function ORMStatements(orm, dialect){
+export function ORMStatements(orm: ORMProperty, dialect: sql.Dialect): void {
 	this.$log = logging.getLogger('db.dao.ormstatements');
 	this.orm = orm;
 	this.orm.tableName = this.orm.table;
-	this.orm.properties.forEach(function(property) {
+	this.orm.properties.forEach((property) => {
 		property.columnName = property.column;
 	});
 	this.dialect = dialect || sql.getDialect();
 };
 ORMStatements.prototype.constructor = ORMStatements;
 
-ORMStatements.prototype.createTable = function(){
+
+ORMStatements.prototype.createTable = function(): sql.CreateTable{
 	const builder = this.dialect.create().table(this.orm.table);
 
 	this.orm.properties.forEach(function(property){
@@ -47,11 +49,13 @@ ORMStatements.prototype.createTable = function(){
 	return builder;
 };
 
-ORMStatements.prototype.dropTable = function(){
+
+ORMStatements.prototype.dropTable = function(): sql.DropTable{
 	return this.dialect.drop().table(this.orm.table);
 };
 
-ORMStatements.prototype.insert = function(){
+
+ORMStatements.prototype.insert = function(): sql.Insert{
 	const builder = this.dialect.insert().into(this.orm.table);
 	this.orm.properties.forEach(function(property){
 		builder.column(property.column).value('?', property);
@@ -59,7 +63,8 @@ ORMStatements.prototype.insert = function(){
     return builder;
 };
 
-ORMStatements.prototype.update = function(entity){
+
+ORMStatements.prototype.update = function(entity: Object): sql.Update{
 	if(!entity)
 		throw Error('Illegal argument: entity[' + entity + ']');
 
@@ -74,7 +79,9 @@ ORMStatements.prototype.update = function(entity){
 	builder.where(pkProperty.column+'=?', [pkProperty]);
 	return builder;
 };
-ORMStatements.prototype["delete"] = ORMStatements.prototype.remove = function(){
+
+
+ORMStatements.prototype["delete"] = ORMStatements.prototype.remove = function(): sql.Delete {
 	const builder = this.dialect.delete().from(this.orm.table);
 	if(arguments[0]!==undefined){
 		let filterFieldNames = arguments[0];
@@ -89,7 +96,9 @@ ORMStatements.prototype["delete"] = ORMStatements.prototype.remove = function(){
 	}
 	return builder;
 };
-ORMStatements.prototype.find = function(params){
+
+
+ORMStatements.prototype.find = function(params?: { select: sql.Select }): sql.Select{
 	let builder = this.dialect.select();
 	if(params!==undefined && params.select!==undefined){
 		const selectedFields = params.select.constructor === Array ? params.select : [params.select];
@@ -100,14 +109,21 @@ ORMStatements.prototype.find = function(params){
 			builder = builder.column(property.column);
 		}
 	}
+
 	builder = builder.from(this.orm.table)
 		.where(this.orm.getPrimaryKey().column + "=?", [this.orm.getPrimaryKey()]);
 	return builder;
 };
-ORMStatements.prototype.count = function(){
+
+
+ORMStatements.prototype.count = function(): sql.Select{
 	return this.dialect.select().column('COUNT(*)').from(this.orm.table);
 };
-ORMStatements.prototype.list= function(settings){
+
+
+type ORMListSettings = { $limit?: string, $offset?: string, $sort?: string, $order?: string, $select?: string[], $filter?: string[],
+	limit?: string, offset?: string, sort?: string, order?: string, select?: string[], filter?: string[]};
+ORMStatements.prototype.list= function(settings: ORMListSettings): sql.Select{
 	let i;
 	settings = settings || {};
 	const limit = settings.$limit || settings.limit;
@@ -129,13 +145,14 @@ ORMStatements.prototype.list= function(settings){
 	}
 
     //add where clause for any fields
-	const propertyDefinitions = this.orm.properties.filter(function (property) {
+	const propertyDefinitions = this.orm.properties.filter((property: ORMProperty) => {
 		for (var settingName in settings) {
 			if (settingName === property.name)
 				return true;
 		}
 		return false;
 	});
+
 	if(propertyDefinitions.length>0){
 		for(i = 0; i<propertyDefinitions.length; i++){
 			const def = propertyDefinitions[i];
@@ -182,7 +199,7 @@ ORMStatements.prototype.list= function(settings){
     return builder;
 };
 
-export function create(orm, connection){
+export function create(orm: ORMProperty, connection?: { native: any }): typeof ORMStatements{
 	let dialect;
 	if(connection) {
 		dialect = sql.getDialect(connection);
