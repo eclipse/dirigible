@@ -77,6 +77,10 @@ function createModel(graph) {
 			if (child.value.projectionReferencedEntity && child.value.projectionReferencedEntity !== "") {
 				entityContent += ' projectionReferencedEntity="' + child.value.projectionReferencedEntity + '"';
 			}
+			if (child.value.importsCode && child.value.importsCode !== "") {
+				child.value.importsCode = btoa(child.value.importsCode);
+				entityContent += ' importsCode="' + child.value.importsCode + '"';
+			}
 
 			entityContent += '>\n';
 			model.push(entityContent);
@@ -89,6 +93,7 @@ function createModel(graph) {
 					property.dataName = property.dataName ? property.dataName : _.escape(child.value.dataName).toUpperCase() + "_" + JSON.stringify(property.name).replace(/\W/g, '').toUpperCase();
 
 					model.push('    <property name="' + _.escape(property.name) +
+						'" isRequiredProperty="' + _.escape(property.isRequiredProperty) +
 						'" isCalculatedProperty="' + _.escape(property.isCalculatedProperty) +
 						'" calculatedPropertyExpressionCreate="' + _.escape(property.calculatedPropertyExpressionCreate) +
 						'" calculatedPropertyExpressionUpdate="' + _.escape(property.calculatedPropertyExpressionUpdate) +
@@ -241,6 +246,9 @@ function createModel(graph) {
 			if (child.value.feedPassword) {
 				child.value.feedPassword = atob(child.value.feedPassword);
 			}
+			if (child.value.importsCode) {
+				child.value.importsCode = atob(child.value.importsCode);
+			}
 		}
 	}
 
@@ -273,125 +281,3 @@ function getPerspectiveOrder(graph, child) {
 	return perspectiveOrder;
 }
 
-// function createModelJson(graph) {
-// 	var root = {};
-// 	root.model = {};
-// 	root.model.entities = [];
-// 	var parent = graph.getDefaultParent();
-// 	var childCount = graph.model.getChildCount(parent);
-// 	var compositions = {};
-
-// 	for (var i=0; i<childCount; i++) {
-// 		var child = graph.model.getChildAt(parent, i);
-// 		if (graph.model.isEdge(child)) {
-// 			// Relationship Properties
-// 			var relationName = child.name ? child.name : child.source.parent.value.name+'_'+ child.target.parent.value.name;
-// 			child.source.value.relationshipName = _.escape(relationName);
-// 			child.source.value.relationshipEntityName = _.escape(child.target.parent.value.name);
-// 			child.source.value.relationshipEntityPerspectiveName = _.escape(child.target.parent.value.perspectiveName);
-// 			child.source.value.widgetDropDownKey = _.escape(child.source.value.widgetDropDownKey ? child.source.value.widgetDropDownKey : child.target.value.name);
-// 			child.source.value.widgetDropDownValue = _.escape(child.source.value.widgetDropDownValue ? child.source.value.widgetDropDownValue : child.target.value.name);
-// 			child.source.value.feedPropertyName = _.escape(child.target.parent.value.feedPropertyName);
-
-// 			if (child.source.value.relationshipType === 'COMPOSITION') {
-// 				var composition = {};
-// 				composition.entityName = _.escape(child.source.parent.value.name);
-// 				composition.entityProperty = _.escape(child.source.value.name);
-// 				composition.localProperty = _.escape(child.target.value.name);
-// 				if (!compositions[child.target.parent.value.name]) {
-// 					compositions[child.target.parent.value.name] = [];
-// 				}
-// 				compositions[child.target.parent.value.name].push(composition);
-// 			}
-// 		}
-// 	}
-
-// 	for (var i=0; i<childCount; i++) {
-// 		var child = graph.model.getChildAt(parent, i);
-// 		if (!graph.model.isEdge(child)) {
-// 			var entity = {};
-// 			entity.name = _.escape(child.value.name);
-// 			entity.dataName = _.escape(child.value.dataName ? child.value.dataName : JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase());
-// 			entity.dataCount = _.escape(child.value.dataCount ? child.value.dataCount : 'SELECT COUNT(*) FROM ' + JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase());
-// 			entity.dataQuery = _.escape(child.value.dataQuery);
-// 			entity.type = _.escape(child.value.entityType ? child.value.entityType : "PRIMARY");
-// 			entity.title = _.escape(child.value.title ? child.value.title : child.value.name);
-// 			entity.tooltip = _.escape(child.value.tooltip ? child.value.tooltip : child.value.name);
-// 			entity.icon = _.escape(child.value.icon);
-// 			entity.menuKey = _.escape(child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase());
-// 			entity.menuLabel = _.escape(child.value.menuLabel ? child.value.menuLabel : child.value.name);
-// 			entity.menuIndex = child.value.menuIndex ? child.value.menuIndex : 100;
-// 			entity.layoutType = child.value.layoutType;
-// 			entity.perspectiveName = _.escape(child.value.perspectiveName);
-// 			entity.perspectiveIcon = _.escape(child.value.perspectiveIcon);
-// 			entity.perspectiveOrder = _.escape(child.value.perspectiveOrder);
-// 			entity.feedUrl = child.value.feedUrl ? btoa(child.value.feedUrl) : null;
-// 			entity.feedUsername = child.value.feedUsername ? btoa(child.value.feedUsername) : null;
-// 			entity.feedPassword = child.value.feedPassword ? btoa(child.value.feedPassword) : null;
-// 			entity.feedSchedule = child.value.feedSchedule ? _.escape(child.value.feedSchedule) : null;
-// 			entity.feedPath = child.value.feedPath ? _.escape(child.value.feedPath) : null;
-// 			entity.properties = [];
-
-// 			if (compositions[entity.name]) {
-// 				entity.compositions = compositions[entity.name];
-// 			}
-
-// 			var propertyCount = graph.model.getChildCount(child);
-// 			if (propertyCount > 0) {
-// 				for (var j=0; j<propertyCount; j++) {
-// 					var childProperty = graph.model.getChildAt(child, j).value;
-// 					var property = {};
-
-// 					// General
-// 					property.name = _.escape(childProperty.name);
-// 					property.isCalculatedProperty = _.escape(childProperty.isCalculatedProperty);
-// 					property.calculatedPropertyExpressionCreate = _.escape(childProperty.calculatedPropertyExpressionCreate);
-// 					property.calculatedPropertyExpressionUpdate = _.escape(childProperty.calculatedPropertyExpressionUpdate);
-
-// 					// Data Properties
-// 					property.dataName = _.escape(childProperty.dataName ? childProperty.dataName : JSON.stringify(childProperty.name).replace(/\W/g, '').toUpperCase());
-// 					property.dataType = childProperty.dataType;
-// 					property.dataLength = childProperty.dataLength;
-// 					property.dataDefaultValue = _.escape(childProperty.dataDefaultValue);
-// 					property.dataPrimaryKey = childProperty.dataPrimaryKey ? childProperty.dataPrimaryKey : "false";
-// 					property.dataAutoIncrement = childProperty.dataAutoIncrement ? childProperty.dataAutoIncrement : "false";
-// 					property.dataNotNull = childProperty.dataNotNull ? childProperty.dataNotNull : "false";
-// 					property.dataUnique = childProperty.dataUnique ? childProperty.dataUnique : "false";
-// 					property.dataPrecision = childProperty.dataPrecision;
-// 					property.dataScale = childProperty.dataScale;
-
-// 					// Relationship Properties
-// 					property.relationshipType = childProperty.relationshipType;
-// 					property.relationshipCardinality = childProperty.relationshipCardinality;
-// 					property.relationshipName = _.escape(childProperty.relationshipName);
-// 					property.relationshipEntityName = _.escape(childProperty.relationshipEntityName);
-// 					property.relationshipEntityPerspectiveName = _.escape(childProperty.relationshipEntityPerspectiveName);
-
-// 					// Widget Properties
-// 					property.widgetType = childProperty.widgetType;
-// 					property.widgetLength = childProperty.widgetLength;
-// 					property.widgetLabel = _.escape(childProperty.widgetLabel ? childProperty.widgetLabel : childProperty.name);
-// 					property.widgetShortLabel = _.escape(childProperty.widgetShortLabel ? childProperty.widgetShortLabel : childProperty.name);
-// 					property.widgetPattern = _.escape(childProperty.widgetPattern);
-// 					property.widgetFormat = _.escape(childProperty.widgetFormat);
-// 					property.widgetSection = _.escape(childProperty.widgetSection);
-// 					property.widgetService = _.escape(childProperty.widgetService);
-// 					property.widgetIsMajor = childProperty.widgetIsMajor ? childProperty.widgetIsMajor : "false";
-// 					property.widgetDropDownKey = _.escape(childProperty.widgetDropDownKey);
-// 					property.widgetDropDownValue = _.escape(childProperty.widgetDropDownValue);
-
-// 					// Feed Properties
-// 					property.feedPropertyName = _.escape(childProperty.feedPropertyName);
-
-// 					entity.properties.push(property);
-// 				}
-// 			}
-
-// 			root.model.entities.push(entity);
-// 		}
-// 	}
-
-// 	var serialized = JSON.stringify(root, null, 4);
-
-// 	return serialized;
-// }

@@ -39,6 +39,7 @@ Entity.prototype.roleWrite = null;
 Entity.prototype.projectionReferencedModel = null;
 Entity.prototype.projectionReferencedEntity = null;
 Entity.prototype.referenceProjections = [];
+Entity.prototype.importsCode = null;
 
 Entity.prototype.clone = function () {
 	return mxUtils.clone(this);
@@ -49,6 +50,7 @@ function Property(name) {
 	this.name = name;
 }
 
+Property.prototype.isRequiredProperty = false;
 Property.prototype.isCalculatedProperty = false;
 Property.prototype.calculatedPropertyExpressionCreate = null;
 Property.prototype.calculatedPropertyExpressionUpdate = null;

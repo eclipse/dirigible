@@ -313,6 +313,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				cell.value.feedPath = msg.data.feedPath;
 				cell.value.roleRead = msg.data.roleRead;
 				cell.value.roleWrite = msg.data.roleWrite;
+				cell.value.importsCode = msg.data.importsCode;
 
 				$scope.graph.model.setValue(cell, cell.value.clone());
 
@@ -342,6 +343,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 			function (msg) {
 				let cell = $scope.graph.model.getCell(msg.data.cellId);
 				cell.value.name = msg.data.name;
+				cell.value.isRequiredProperty = msg.data.isRequiredProperty;
 				cell.value.isCalculatedProperty = msg.data.isCalculatedProperty;
 				cell.value.calculatedPropertyExpressionCreate = msg.data.calculatedPropertyExpressionCreate;
 				cell.value.calculatedPropertyExpressionUpdate = msg.data.calculatedPropertyExpressionUpdate;
@@ -915,6 +917,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 									dialogType: 'property',
 									cellId: cell.id,
 									name: cell.value.name,
+									isRequiredProperty: cell.value.isRequiredProperty,
 									isCalculatedProperty: cell.value.isCalculatedProperty,
 									calculatedPropertyExpressionCreate: cell.value.calculatedPropertyExpressionCreate,
 									calculatedPropertyExpressionUpdate: cell.value.calculatedPropertyExpressionUpdate,
@@ -988,6 +991,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 									roleWrite: cell.value.roleWrite,
 									perspectives: $scope.graph.model.perspectives,
 									navigations: $scope.graph.model.navigations,
+									importsCode: cell.value.importsCode
 								},
 								null,
 								false,
@@ -1206,6 +1210,9 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 					}
 					if (child.value.feedSchedule && child.value.feedSchedule !== "") {
 						child.value.feedSchedule = atob(child.value.feedSchedule);
+					}
+					if (child.value.importsCode && child.value.importsCode !== "") {
+						child.value.importsCode = atob(child.value.importsCode);
 					}
 				}
 			}

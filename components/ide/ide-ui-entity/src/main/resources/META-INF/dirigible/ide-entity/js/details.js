@@ -153,11 +153,13 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
                         feedPath: $scope.dataParameters.feedPath,
                         roleRead: $scope.dataParameters.roleRead,
                         roleWrite: $scope.dataParameters.roleWrite,
+                        importsCode: $scope.dataParameters.importsCode
                     }, true);
                 } else {
                     messageHub.postMessage('edm.editor.property', {
                         cellId: $scope.dataParameters.cellId,
                         name: $scope.dataParameters.name,
+                        isRequiredProperty: $scope.dataParameters.isRequiredProperty,
                         isCalculatedProperty: $scope.dataParameters.isCalculatedProperty,
                         calculatedPropertyExpressionCreate: $scope.dataParameters.calculatedPropertyExpressionCreate,
                         calculatedPropertyExpressionUpdate: $scope.dataParameters.calculatedPropertyExpressionUpdate,

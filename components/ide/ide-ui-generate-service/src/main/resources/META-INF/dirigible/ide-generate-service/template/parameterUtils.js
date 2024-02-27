@@ -37,6 +37,12 @@ exports.process = function (model, parameters) {
                 }
             }
         }
+        if (e.importsCode && e.importsCode !== "") {
+            let base64 = require("utils/base64");
+            let bytes = require("io/bytes");
+            e.importsCode = bytes.byteArrayToText(base64.decode(e.importsCode));
+        }
+        
         e.referencedProjections = [];
         e.properties.forEach(p => {
             p.dataNotNull = p.dataNullable === "false";
@@ -44,6 +50,7 @@ exports.process = function (model, parameters) {
             p.dataNullable = p.dataNullable === "true";
             p.dataPrimaryKey = p.dataPrimaryKey === "true";
             p.dataUnique = p.dataUnique === "true";
+            p.isRequiredProperty = p.isRequiredProperty === "true";
             p.isCalculatedProperty = p.isCalculatedProperty === "true";
             p.widgetIsMajor = p.widgetIsMajor === "true";
             p.widgetLabel = p.widgetLabel ? p.widgetLabel : p.name;

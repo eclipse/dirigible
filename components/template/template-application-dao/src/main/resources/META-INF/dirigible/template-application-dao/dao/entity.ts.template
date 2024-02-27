@@ -32,6 +32,10 @@ function ForbiddenError(message) {
     this.stack = (new Error()).stack;
 }
 #end
+#if($importsCode && $importsCode != "")
+// custom imports
+${importsCode}
+#end
 
 export interface ${name}Entity {
 #foreach ($property in $properties)

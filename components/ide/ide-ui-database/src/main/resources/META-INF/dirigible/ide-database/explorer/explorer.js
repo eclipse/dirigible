@@ -12,6 +12,7 @@
 const database = angular.module('database', ['ideUI', 'ideView']);
 database.controller('DatabaseController', function ($scope, $http, messageHub) {
 	let databasesSvcUrl = "/services/data/";
+	let databasesInvalidateSvcUrl = "/services/data/metadata/invalidate-cache";
 	$scope.selectedDatabase;
 	$scope.jstreeWidget = angular.element('#dgDatabases');
 	$scope.spinnerColumns = {
@@ -1003,10 +1004,19 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		'ide-databases.explorer.refresh',
 		function () {
 			$scope.$apply(function () {
-				$scope.getDatabases();
+				$scope.refresh();
 			});
 		},
 		true
 	);
+	
+	$scope.refresh = function () {
+		$scope.invalidateCache();
+		$scope.getDatabases();
+	}
+	
+	$scope.invalidateCache = function () {
+		$http.get(databasesInvalidateSvcUrl);
+	}
 
 });
