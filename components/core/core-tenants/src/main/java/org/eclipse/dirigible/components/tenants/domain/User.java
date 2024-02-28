@@ -10,9 +10,7 @@
  */
 package org.eclipse.dirigible.components.tenants.domain;
 
-import org.eclipse.dirigible.components.base.http.roles.Roles;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,9 +32,9 @@ public class User {
 
     /** The id. */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "USER_ID", nullable = false)
-    private long id;
+    private String id;
 
     /** The tenant. */
     @ManyToOne(fetch = FetchType.LAZY)
@@ -51,10 +49,6 @@ public class User {
     @Column(name = "USER_PASSWORD", nullable = false)
     private String password;
 
-    /** The role. */
-    @Column(name = "USER_ROLE", nullable = false)
-    private Roles role;
-
     /**
      * Instantiates a new user.
      */
@@ -68,11 +62,10 @@ public class User {
      * @param password the password
      * @param role the role
      */
-    public User(Tenant tenant, String email, String password, Roles role) {
+    public User(Tenant tenant, String email, String password) {
         this.tenant = tenant;
         this.email = email;
         this.password = password;
-        this.role = role;
     }
 
     /**
@@ -80,7 +73,7 @@ public class User {
      *
      * @return the id
      */
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -89,7 +82,7 @@ public class User {
      *
      * @param id the new id
      */
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -147,21 +140,4 @@ public class User {
         this.password = password;
     }
 
-    /**
-     * Gets the role.
-     *
-     * @return the role
-     */
-    public Roles getRole() {
-        return role;
-    }
-
-    /**
-     * Sets the role.
-     *
-     * @param role the new role
-     */
-    public void setRole(Roles role) {
-        this.role = role;
-    }
 }

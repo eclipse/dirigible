@@ -10,82 +10,57 @@
  */
 package org.eclipse.dirigible.components.tenants.tenant;
 
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class TenantContext.
  */
 public class TenantContext {
 
-    /** The Constant currentTenant. */
-    private static final ThreadLocal<String> currentTenant = new ThreadLocal<>();
+    private static final Logger LOGGER = LoggerFactory.getLogger(TenantContext.class);
 
     /** The Constant currentTenantId. */
-    private static final ThreadLocal<Long> currentTenantId = new ThreadLocal<>();
+    private static final ThreadLocal<Tenant> currentTenant = new ThreadLocal<>();
 
-    /** The Constant currentTenants. */
-    private static final ThreadLocal<List<String>> currentTenants = new ThreadLocal<>();
+    public static boolean isNotInitialized() {
+        return !isInitialized();
+    }
+
+    public static boolean isInitialized() {
+        return null != currentTenant.get();
+    }
 
     /**
      * Gets the current tenant.
      *
      * @return the current tenant
      */
-    public static String getCurrentTenant() {
-        return currentTenant.get();
+    public static Tenant getCurrentTenant() {
+        Tenant tenant = currentTenant.get();
+        if (null == tenant) {
+            throw new IllegalStateException("Attempting to get current tenant but it is not initialized yet.");
+        }
+        LOGGER.debug("Getting current tenant [{}]", tenant);
+        return tenant;
     }
 
     /**
      * Sets the current tenant.
      *
-     * @param tenant the new current tenant
+     * @param tenantId the new current tenant
      */
-    public static void setCurrentTenant(String tenant) {
+    public static void setCurrentTenant(Tenant tenant) {
+        LOGGER.debug("Setting current tenant to [{}]", tenant);
         currentTenant.set(tenant);
-    }
-
-    /**
-     * Gets the current tenant id.
-     *
-     * @return the current tenant id
-     */
-    public static Long getCurrentTenantId() {
-        return currentTenantId.get();
-    }
-
-    /**
-     * Sets the current tenant id.
-     *
-     * @param tenantId the new current tenant id
-     */
-    public static void setCurrentTenantId(Long tenantId) {
-        currentTenantId.set(tenantId);
-    }
-
-    /**
-     * Gets the current tenants.
-     *
-     * @return the current tenants
-     */
-    public static List<String> getCurrentTenants() {
-        return currentTenants.get();
-    }
-
-    /**
-     * Sets the current tenants.
-     *
-     * @param tenants the new current tenants
-     */
-    public static void setCurrentTenants(List<String> tenants) {
-        currentTenants.set(tenants);
     }
 
     /**
      * Clear.
      */
     public static void clear() {
+        LOGGER.debug("Clearing current tenant [{}]", currentTenant.get());
         currentTenant.set(null);
-        currentTenantId.set(null);
-        currentTenants.set(null);
     }
+
 }
