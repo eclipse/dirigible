@@ -10,7 +10,7 @@
  */
 package org.eclipse.dirigible.components.tenants.service;
 
-import org.eclipse.dirigible.components.base.http.roles.Roles;
+import org.eclipse.dirigible.components.tenants.domain.Tenant;
 import org.eclipse.dirigible.components.tenants.domain.User;
 import org.eclipse.dirigible.components.tenants.exceptions.TenantNotFoundException;
 import org.eclipse.dirigible.components.tenants.repository.TenantRepository;
@@ -56,9 +56,9 @@ public class UserService {
      * @param tenantId the tenant id
      * @param role the role
      */
-    public void createNewUser(String email, String password, long tenantId, Roles role) {
-        var tenant = tenantRepository.findById(tenantId)
-                                     .orElseThrow(() -> new TenantNotFoundException("Tenant " + tenantId + " not found."));
-        userRepository.save(new User(tenant, email, passwordEncoder.encode(password), role));
+    public void createNewUser(String email, String password, String tenantId) {
+        Tenant tenant = tenantRepository.findById(tenantId)
+                                        .orElseThrow(() -> new TenantNotFoundException("Tenant " + tenantId + " not found."));
+        userRepository.save(new User(tenant, email, passwordEncoder.encode(password)));
     }
 }

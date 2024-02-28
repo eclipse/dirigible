@@ -11,15 +11,14 @@
 package org.eclipse.dirigible.components.tenants.tenant;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
-
 import java.io.IOException;
 import java.util.Objects;
-import java.util.logging.Logger;
-
 import org.eclipse.dirigible.components.tenants.security.CustomUserDetails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,8 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 public class TenantAuthorizationFilter extends OncePerRequestFilter {
 
-    /** The Constant LOGGER. */
-    private static final Logger LOGGER = Logger.getLogger(TenantAuthorizationFilter.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(TenantAuthorizationFilter.class);
 
     /**
      * Do filter internal.
@@ -45,17 +43,17 @@ public class TenantAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        var tenantId = TenantContext.getCurrentTenantId();
-        var authentication = SecurityContextHolder.getContext()
-                                                  .getAuthentication();
-        var user = authentication == null ? null : (CustomUserDetails) authentication.getPrincipal();
-        var userTenantId = user == null ? null : user.getTenantId();
+        Tenant tenant = TenantContext.getCurrentTenant();
+        Authentication authentication = SecurityContextHolder.getContext()
+                                                             .getAuthentication();
+        CustomUserDetails userDetails = authentication == null ? null : (CustomUserDetails) authentication.getPrincipal();
+        var userTenantId = userDetails == null ? null : userDetails.getTenantId();
 
-        if (user == null || Objects.equals(tenantId, userTenantId)) {
+        if (userDetails == null || Objects.equals(tenant.getId(), userTenantId)) {
             chain.doFilter(request, response);
         } else {
-            LOGGER.warning("Attempted cross-tenant access. User ID '" + user.getUserId() + "', User's Tenant ID '" + user.getTenantId()
-                    + "', Target Tenant ID '" + tenantId + "'.");
+            LOGGER.warn("Attempted cross-tenant access. User ID [{}], User's Tenant ID [{}], Target tenant [{}]", userDetails.getUserId(),
+                    userDetails.getTenantId(), tenant);
             response.setStatus(FORBIDDEN.value());
         }
     }
