@@ -11,20 +11,19 @@
 package org.eclipse.dirigible.components.tenants.repository;
 
 import java.util.Optional;
-
 import org.eclipse.dirigible.components.tenants.domain.Tenant;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * The Interface TenantRepository.
  */
-public interface TenantRepository extends JpaRepository<Tenant, Long> {
+public interface TenantRepository extends JpaRepository<Tenant, String> {
 
     /**
-     * Find by slug.
+     * Find by subdomain.
      *
-     * @param slug the slug
+     * @param subdomain the subdomain
      * @return the optional
      */
-    Optional<Tenant> findBySlug(String slug);
+    Optional<Tenant> findBySubdomain(String subdomain);
 }

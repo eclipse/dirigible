@@ -10,11 +10,12 @@
  */
 package org.eclipse.dirigible.components.tenants.security;
 
-import static org.eclipse.dirigible.components.base.http.roles.Roles.ADMINISTRATOR;
-
-import java.util.ArrayList;
-
+import java.util.Set;
+import java.util.stream.Collectors;
+import org.eclipse.dirigible.components.tenants.domain.User;
 import org.eclipse.dirigible.components.tenants.repository.UserRepository;
+import org.eclipse.dirigible.components.tenants.repository.UserRoleAssignmentRepository;
+import org.eclipse.dirigible.components.tenants.tenant.Tenant;
 import org.eclipse.dirigible.components.tenants.tenant.TenantContext;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,64 +34,43 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     /** The user repository. */
     private final UserRepository userRepository;
+    private final UserRoleAssignmentRepository userRoleAssignmentRepository;
 
-    /**
-     * Instantiates a new custom user details service.
-     *
-     * @param userRepository the user repository
-     */
-    public CustomUserDetailsService(UserRepository userRepository) {
+    public CustomUserDetailsService(UserRepository userRepository, UserRoleAssignmentRepository userRoleAssignmentRepository) {
         this.userRepository = userRepository;
+        this.userRoleAssignmentRepository = userRoleAssignmentRepository;
     }
 
     /**
      * Load user by username.
      *
-     * @param email the email
+     * @param username the email
      * @return the user details
      * @throws UsernameNotFoundException the username not found exception
      */
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        var tenant = TenantContext.getCurrentTenant();
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Tenant tenant = TenantContext.getCurrentTenant();
 
-        if (tenant != null) {
-            return loadUser(email, tenant);
-        } else {
-            return loadGeneralAdmin(email);
-        }
-    }
+        User user = userRepository.findUserByTenantId(username, tenant.getId())
+                                  .orElseThrow(() -> new UsernameNotFoundException(
+                                          "User with username [" + username + "] in tenant [" + tenant + "] was not found."));
 
-    /**
-     * Load user.
-     *
-     * @param email the email
-     * @param tenant the tenant
-     * @return the user details
-     */
-    private UserDetails loadUser(String email, String tenant) {
-        var user = userRepository.findUser(email, tenant)
-                                 .orElseThrow(() -> new UsernameNotFoundException("'" + email + "' / '" + tenant + "' was not found."));
+        Set<String> userRoles = getUserRoles(user);
+        Set<GrantedAuthority> auths = userRoles.stream()
+                                               .map(r -> new SimpleGrantedAuthority(r))
+                                               .collect(Collectors.toSet());
 
-        var auths = new ArrayList<GrantedAuthority>();
-        auths.add(new SimpleGrantedAuthority(user.getRole()
-                                                 .getRoleName()));
         return new CustomUserDetails(user.getEmail(), user.getPassword(), user.getId(), user.getTenant()
                                                                                             .getId(),
                 auths);
     }
 
-    /**
-     * Load general admin.
-     *
-     * @param email the email
-     * @return the user details
-     */
-    private UserDetails loadGeneralAdmin(String email) {
-        var admin = userRepository.findGeneralAdmin(email)
-                                  .orElseThrow(() -> new UsernameNotFoundException("'" + email + "' was not found as a general admin."));
-        var auths = new ArrayList<GrantedAuthority>();
-        auths.add(new SimpleGrantedAuthority(ADMINISTRATOR.getRoleName()));
-        return new CustomUserDetails(admin.getEmail(), admin.getPassword(), admin.getId(), null, auths);
+    private Set<String> getUserRoles(User user) {
+        return userRoleAssignmentRepository.findByUser(user)
+                                           .stream()
+                                           .map(a -> a.getRole()
+                                                      .getName())
+                                           .collect(Collectors.toSet());
     }
 }

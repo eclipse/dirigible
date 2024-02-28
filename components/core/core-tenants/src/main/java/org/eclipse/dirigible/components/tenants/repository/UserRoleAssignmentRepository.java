@@ -8,19 +8,14 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.tenants.tenant;
+package org.eclipse.dirigible.components.tenants.repository;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.List;
+import org.eclipse.dirigible.components.tenants.domain.User;
+import org.eclipse.dirigible.components.tenants.domain.UserRoleAssignment;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-/**
- * The Interface TenantId.
- */
-@Target(ElementType.PARAMETER)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface TenantId {
+public interface UserRoleAssignmentRepository extends JpaRepository<UserRoleAssignment, Long> {
+
+    List<UserRoleAssignment> findByUser(User user);
 }

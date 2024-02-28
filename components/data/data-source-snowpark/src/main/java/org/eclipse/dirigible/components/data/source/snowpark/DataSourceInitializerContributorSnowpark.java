@@ -10,17 +10,15 @@
  */
 package org.eclipse.dirigible.components.data.source.snowpark;
 
-import org.eclipse.dirigible.components.data.sources.domain.DataSource;
-import org.eclipse.dirigible.components.data.sources.manager.DataSourceInitializerContributor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Configuration;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Properties;
+import org.eclipse.dirigible.components.data.sources.manager.DataSourceInitializerContributor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class DataSourceInitializerContributorSnowpark implements DataSourceInitializerContributor {
@@ -28,9 +26,8 @@ public class DataSourceInitializerContributorSnowpark implements DataSourceIniti
     private static final Logger logger = LoggerFactory.getLogger(DataSourceInitializerContributorSnowpark.class);
 
     @Override
-    public void contribute(DataSource dataSource, Properties properties) {
-        if (dataSource.getName()
-                      .startsWith("SNOWFLAKE")) {
+    public void contribute(String dataSourceName, Properties properties) {
+        if (dataSourceName.startsWith("SNOWFLAKE")) {
             Map<String, String> env = System.getenv();
             try {
                 String url;
@@ -59,7 +56,7 @@ public class DataSourceInitializerContributorSnowpark implements DataSourceIniti
                     properties.put("dataSource.url", url);
                 }
             } catch (IOException ex) {
-                logger.error("Invalid configuration for the datasource: [{}]", dataSource.getName(), ex);
+                logger.error("Invalid configuration for the datasource: [{}]", dataSourceName, ex);
             }
         }
     }

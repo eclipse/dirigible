@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.components.tenants.domain;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,13 +31,13 @@ public class Tenant {
 
     /** The id. */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "TENANT_ID", nullable = false)
-    private long id;
+    private String id;
 
     /** The slug. */
-    @Column(name = "TENANT_SLUG", unique = true, nullable = false)
-    private String slug;
+    @Column(name = "TENANT_SUBDOMAIN", unique = true, nullable = false)
+    private String subdomain;
 
     /** The name. */
     @Column(name = "TENANT_NAME", nullable = false)
@@ -49,57 +48,33 @@ public class Tenant {
      */
     public Tenant() {}
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getSubdomain() {
+        return subdomain;
+    }
+
+    public void setSubdomain(String subdomain) {
+        this.subdomain = subdomain;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     /**
      * Gets the id.
      *
      * @return the id
      */
-    public long getId() {
-        return id;
-    }
-
-    /**
-     * Sets the id.
-     *
-     * @param id the new id
-     */
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    /**
-     * Gets the slug.
-     *
-     * @return the slug
-     */
-    public String getSlug() {
-        return slug;
-    }
-
-    /**
-     * Sets the slug.
-     *
-     * @param slug the new slug
-     */
-    public void setSlug(String slug) {
-        this.slug = slug;
-    }
-
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the name.
-     *
-     * @param name the new name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
 }

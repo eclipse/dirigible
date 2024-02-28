@@ -13,7 +13,7 @@ package org.eclipse.dirigible.components.tenants.security;
 import org.eclipse.dirigible.components.base.http.access.HttpSecurityURIConfigurator;
 import org.eclipse.dirigible.components.tenants.repository.TenantRepository;
 import org.eclipse.dirigible.components.tenants.tenant.TenantAuthorizationFilter;
-import org.eclipse.dirigible.components.tenants.tenant.TenantFilter;
+import org.eclipse.dirigible.components.tenants.tenant.TenantContextInitFilter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,7 +61,7 @@ public class WebSecurityConfig {
 //                    .authenticationEntryPoint(httpStatusEntryPoint())
 //                    .and()
                 .csrf(csrf -> csrf.disable())
-                .addFilterBefore(new TenantFilter(tenantRepository), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new TenantContextInitFilter(tenantRepository), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new TenantAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .formLogin(Customizer.withDefaults())
                 .logout(logout -> logout.deleteCookies("JSESSIONID"))

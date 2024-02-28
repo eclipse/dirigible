@@ -15,13 +15,11 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
@@ -58,7 +56,7 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
     /**
      * The security role service.
      */
-    private RoleService securityRoleService;
+    private final RoleService securityRoleService;
 
     /**
      * The synchronization callback.
@@ -84,7 +82,6 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
     public ArtefactService<Role> getService() {
         return securityRoleService;
     }
-
 
     /**
      * Checks if is accepted.
@@ -125,7 +122,7 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
         for (Role role : roles) {
             Configuration.configureObject(role);
             role.setLocation(location);
-            role.setName(roleIndex.toString());
+            role.setName(role.getName());
             role.setType(Role.ARTEFACT_TYPE);
             role.updateKey();
 

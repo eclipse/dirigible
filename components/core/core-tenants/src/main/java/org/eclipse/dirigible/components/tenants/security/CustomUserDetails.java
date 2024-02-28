@@ -20,10 +20,10 @@ import org.springframework.security.core.userdetails.User;
 public class CustomUserDetails extends User {
 
     /** The user id. */
-    private final long userId;
+    private final String userId;
 
     /** The tenant id. */
-    private final Long tenantId;
+    private final String tenantId;
 
     /**
      * Instantiates a new custom user details.
@@ -34,7 +34,7 @@ public class CustomUserDetails extends User {
      * @param tenantId the tenant id
      * @param authorities the authorities
      */
-    public CustomUserDetails(String username, String password, long userId, Long tenantId,
+    public CustomUserDetails(String username, String password, String userId, String tenantId,
             Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
         this.userId = userId;
@@ -46,7 +46,7 @@ public class CustomUserDetails extends User {
      *
      * @return the user id
      */
-    public long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
@@ -55,7 +55,7 @@ public class CustomUserDetails extends User {
      *
      * @return the tenant id
      */
-    public Long getTenantId() {
+    public String getTenantId() {
         return tenantId;
     }
 }
