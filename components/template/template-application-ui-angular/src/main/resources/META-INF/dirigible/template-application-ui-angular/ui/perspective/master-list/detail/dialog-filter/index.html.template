@@ -28,7 +28,7 @@
             <fd-fieldset class="fd-margin--md" ng-form="forms.details">
                 <fd-form-group dg-header="${name} Filter" name="entityForm" class="fd-container fd-form-layout-grid-container">
 #foreach ($property in $properties)
-#if(!$property.dataAutoIncrement)
+#if(!$property.dataAutoIncrement && $property.name != $masterEntityId)
 #if($property.widgetType == "DROPDOWN")
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
