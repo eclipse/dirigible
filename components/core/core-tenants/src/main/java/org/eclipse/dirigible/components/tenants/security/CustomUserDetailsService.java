@@ -52,7 +52,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Tenant tenant = TenantContext.getCurrentTenant();
 
-        User user = userRepository.findUserByTenantId(username, tenant.getId())
+        User user = userRepository.findUserByUsernameAndTenantId(username, tenant.getId())
                                   .orElseThrow(() -> new UsernameNotFoundException(
                                           "User with username [" + username + "] in tenant [" + tenant + "] was not found."));
 
@@ -61,9 +61,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                                                .map(r -> new SimpleGrantedAuthority(r))
                                                .collect(Collectors.toSet());
 
-        return new CustomUserDetails(user.getEmail(), user.getPassword(), user.getId(), user.getTenant()
-                                                                                            .getId(),
-                auths);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), auths);
     }
 
     private Set<String> getUserRoles(User user) {
