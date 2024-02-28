@@ -13,10 +13,8 @@ package org.eclipse.dirigible.components.tenants.repository;
 import java.util.Optional;
 import org.eclipse.dirigible.components.tenants.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 public interface UserRepository extends JpaRepository<User, String> {
 
-    @Query("SELECT user FROM User AS user INNER JOIN FETCH user.tenant" + " WHERE user.email = :email" + " AND user.tenant.id = :tenantId")
-    Optional<User> findUserByTenantId(String email, String tenantId);
+    Optional<User> findUserByUsernameAndTenantId(String username, String tenantId);
 }

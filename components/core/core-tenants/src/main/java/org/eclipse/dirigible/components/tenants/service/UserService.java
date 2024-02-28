@@ -51,14 +51,14 @@ public class UserService {
     /**
      * Creates the new user.
      *
-     * @param email the email
+     * @param username the username
      * @param password the password
      * @param tenantId the tenant id
      * @param role the role
      */
-    public void createNewUser(String email, String password, String tenantId) {
+    public void createNewUser(String username, String password, String tenantId) {
         Tenant tenant = tenantRepository.findById(tenantId)
                                         .orElseThrow(() -> new TenantNotFoundException("Tenant " + tenantId + " not found."));
-        userRepository.save(new User(tenant, email, passwordEncoder.encode(password)));
+        userRepository.save(new User(tenant, username, passwordEncoder.encode(password)));
     }
 }
