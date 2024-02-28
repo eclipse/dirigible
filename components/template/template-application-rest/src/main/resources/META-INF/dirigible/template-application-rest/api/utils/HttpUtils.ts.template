@@ -12,14 +12,14 @@ export class HttpUtils {
         HttpUtils.sendResponse(201, entity);
     }
 
-    // HTTP 200
+    // HTTP 204
     public static sendResponseNoContent(): void {
         HttpUtils.sendResponse(204);
     }
 
     // HTTP 400
     public static sendResponseBadRequest(message): void {
-        HttpUtils.sendResponse(404, {
+        HttpUtils.sendResponse(400, {
             "code": 400,
             "message": message
         });
