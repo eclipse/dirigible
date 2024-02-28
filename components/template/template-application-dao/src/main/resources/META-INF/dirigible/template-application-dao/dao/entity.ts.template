@@ -430,6 +430,6 @@ export class ${name}Repository {
                 console.error(error);
             }            
         });
-        producer.queue("${projectName}/${perspectiveName}/${name}").send(JSON.stringify(data));
+        producer.topic("${projectName}/${perspectiveName}/${name}").send(JSON.stringify(data));
     }
 }
