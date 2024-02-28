@@ -8,21 +8,9 @@ exports.getTemplate = function () {
 		"name": "Hello World",
 		"description": "Hello World Template",
 		"sources": [{
-			"location": "/template-hello-world/project.json.template",
-			"action": "generate",
-			"rename": "project.json"
-		}, {
-			"location": "/template-hello-world/tsconfig.json.template",
-			"action": "copy",
-			"rename": "tsconfig.json"
-		}, {
-			"location": "/template-hello-world/service.ts.template",
-			"action": "copy",
-			"rename": "{{fileName}}-typescript.ts"
-		}, {
 			"location": "/template-hello-world/service.mjs.template",
 			"action": "copy",
-			"rename": "{{fileName}}-javascript.mjs"
+			"rename": "{{fileName}}.mjs"
 		}],
 		"parameters": [],
 		"order": -1

@@ -4,5 +4,3 @@ let httpResponse = client.get("https://services.odata.org/V4/Northwind/Northwind
 
 response.println(httpResponse.statusMessage);
 response.println(httpResponse.text);
-response.flush();
-response.close();

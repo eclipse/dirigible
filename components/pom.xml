@@ -221,6 +221,7 @@
 		<module>template/template-job</module>
 		<module>template/template-listener</module>
 		<module>template/template-websocket</module>
+		<module>template/template-typescript</module>
 
 		<!-- Groups -->
 		<module>group/group-api-core</module>
@@ -1232,6 +1233,11 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-template-websocket</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-typescript</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			
