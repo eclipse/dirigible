@@ -22,7 +22,7 @@ import * as globals from "@dirigible/core/globals";
 import * as configurations from "@dirigible/core/configurations";
 
 
-export function DAO(orm, logCtxName, dataSourceName){
+export function DAO(orm: any, logCtxName: string, dataSourceName: string): void{
 	if(orm === undefined)
 		throw Error('Illegal argument: orm['+ orm + ']');
 
@@ -51,7 +51,7 @@ export function DAO(orm, logCtxName, dataSourceName){
 	}
 	this.$log = logging.getLogger(loggerName);
 
-	this.execute = function(sqlBuilder, parameterBindings){
+	this.execute = function(sqlBuilder: any, parameterBindings: any): any{
 		const sql = sqlBuilder.build();
 		if(sql === undefined || sql.length<1)
 			throw Error("Illegal argument: sql from statement builder is invalid["+sql+"]");
@@ -93,7 +93,7 @@ export function DAO(orm, logCtxName, dataSourceName){
 	 	return result !== null ? result : [];
 	};
 
-	function parseValue(type, value) {
+	function parseValue(type: string, value: any): any {
 		switch (type.toUpperCase()) {
 			case 'INTEGER':
 				return parseInt(value);
@@ -108,7 +108,7 @@ export function DAO(orm, logCtxName, dataSourceName){
 	}
 };
 
-DAO.prototype.notify = function(event){
+DAO.prototype.notify = function(event: string): void{
 	const func = this[event];
 	if(!this[event])
 		return;
@@ -121,7 +121,7 @@ DAO.prototype.notify = function(event){
 /**
  * Prepare a JSON object for insert into DB
  */
-DAO.prototype.createSQLEntity = function(entity) {
+DAO.prototype.createSQLEntity = function(entity: any): {} {
 	let i;
 	const persistentItem = {};
 	const mandatories = this.orm.getMandatoryProperties();
@@ -146,7 +146,7 @@ DAO.prototype.createSQLEntity = function(entity) {
 /**
  * Create entity as JSON object from ResultSet current Row
  */
-DAO.prototype.createEntity = function(resultSetEntry, entityPropertyNames) {
+DAO.prototype.createEntity = function(resultSetEntry: any, entityPropertyNames: any): any {
 	const entity = {};
 	let properties = this.orm.properties;
 	if(entityPropertyNames && entityPropertyNames.length>0){
@@ -174,7 +174,7 @@ DAO.prototype.createEntity = function(resultSetEntry, entityPropertyNames) {
     return entity;
 };
 
-DAO.prototype.validateEntity = function(entity, skip){
+DAO.prototype.validateEntity = function(entity: any, skip: any): void{
 	if(entity === undefined || entity === null){
 		throw new Error('Illegal argument: entity is ' + entity);
 	}
@@ -198,7 +198,7 @@ DAO.prototype.validateEntity = function(entity, skip){
 	}
 };
 
-DAO.prototype.insert = function(_entity){
+DAO.prototype.insert = function(_entity: any): any{
 
 	const ids = [];
 	let entities = _entity;
@@ -305,7 +305,7 @@ DAO.prototype.insert = function(_entity){
 /**
  * Update entity from a JSON object. Returns the id of the updated entity.
  */
-DAO.prototype.update = function(entity) {
+DAO.prototype.update = function(entity: any): any {
 
 	this.$log.trace('Updating {}[{}] entity', this.orm.table, entity!==undefined?entity[this.orm.getPrimaryKey().name]:entity);
 
@@ -345,7 +345,7 @@ DAO.prototype.update = function(entity) {
 /**
  * Delete entity by id, or array of ids, or delete all (if not argument is provided)
  */ 
-DAO.prototype.remove = function() {
+DAO.prototype.remove = function(): any {
 
 	let ids = [];
 	if(arguments.length===0){
@@ -438,11 +438,12 @@ DAO.prototype.remove = function() {
 
 };
 
-DAO.prototype.expand = function(expansionPath, context){
-	let i;
-	let settings;
-	let key;
-	let joinId;
+DAO.prototype.expand = function(expansionPath: string | any, context: string): any{
+	let i: number;
+	let settings: any;
+	let key: any
+	let joinId: any;
+	
 	this.$log.trace('Expanding for association path {} and context entity {}', expansionPath, (typeof arguments[1] !== 'object' ? 'id ': '') + JSON.stringify(arguments[1]));
 	if(!expansionPath || !expansionPath.length){
 		throw new Error('Illegal argument: expansionPath['+expansionPath+']');
@@ -533,7 +534,7 @@ DAO.prototype.expand = function(expansionPath, context){
  * If requested as expanded the returned entity will comprise associated (dependent) entities too. 
  * Expand can be a string tha tis a valid association name defined in this dao orm or an array of such names.
  */
-DAO.prototype.find = function(id, expand, select) {
+DAO.prototype.find = function(id: any, expand: any, select: any): any {
 	if(typeof arguments[0] === 'object'){
 		id = arguments[0].id;
 		expand = arguments[0].$expand || arguments[0].expand;
@@ -656,9 +657,9 @@ DAO.prototype.count = function() {
  * - $limit
  * - $offset
  */
-DAO.prototype.list = function(settings) {
+DAO.prototype.list = function(settings: any): any {
 
-	let key;
+	let key: string;
 	settings = settings || {};
 
 	const expand = settings.$expand || settings.expand;
@@ -745,7 +746,7 @@ DAO.prototype.list = function(settings) {
 
 	  const resultSet = this.execute(parametericStatement, settings);
 
-	  resultSet.forEach(function(rsEntry){
+	  resultSet.forEach(function(rsEntry: any): void{
       var entity = this.createEntity(rsEntry, settings.$select);
       if(expand){
         var associationNames = this.orm.getAssociationNames();
@@ -769,7 +770,7 @@ DAO.prototype.list = function(settings) {
   }
 };
 
-DAO.prototype.existsTable = function() {
+DAO.prototype.existsTable = function(): boolean {
 	this.$log.trace('Check exists table ' + this.orm.table);
     try {
 		const parametericStatement = this.ormstatements.count.apply(this.ormstatements);
@@ -780,7 +781,7 @@ DAO.prototype.existsTable = function() {
     }
 };
 
-DAO.prototype.createTable = function() {
+DAO.prototype.createTable = function(): any {
 	this.$log.trace('Creating table {}', this.orm.table);
 	const parametericStatement = this.ormstatements.createTable.apply(this.ormstatements);
 	try {
@@ -793,7 +794,7 @@ DAO.prototype.createTable = function() {
     }
 };
 
-DAO.prototype.dropTable = function(dropIdSequence) {
+DAO.prototype.dropTable = function(dropIdSequence: any): any {
 	this.$log.trace('Dropping table {}.', this.orm.table);
 	const parametericStatement = this.ormstatements.dropTable.apply(this.ormstatements);
 	try {
@@ -823,8 +824,8 @@ DAO.prototype.dropTable = function(dropIdSequence) {
  * oDefinition can be table definition or standard orm definition object. Or it can be a valid path to
  * a .table file, or any other text file contianing a standard dao orm definition.
  */
-export function create(oDefinition, logCtxName, dataSourceName){
-	let orm;
+export function create(oDefinition: any, logCtxName: string, dataSourceName: string): any{
+	let orm: any;
 		orm = oDefinition;
 		
 	if (!dataSourceName || dataSourceName === null) {
@@ -847,6 +848,6 @@ export function create(oDefinition, logCtxName, dataSourceName){
 	return new DAO(orm, logCtxName, dataSourceName);
 };
 
-export function dao(oDefinition, logCtxName, dataSourceName) {
+export function dao(oDefinition: any, logCtxName: string, dataSourceName: string): any {
 	return create(oDefinition, logCtxName, dataSourceName)
 }
