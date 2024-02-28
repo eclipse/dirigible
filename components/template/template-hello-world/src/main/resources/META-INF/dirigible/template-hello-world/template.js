@@ -18,15 +18,11 @@ exports.getTemplate = function () {
 		}, {
 			"location": "/template-hello-world/service.ts.template",
 			"action": "copy",
-			"rename": "{{fileName}}-ts.ts"
+			"rename": "{{fileName}}-typescript.ts"
 		}, {
 			"location": "/template-hello-world/service.mjs.template",
 			"action": "copy",
-			"rename": "{{fileName}}.mjs"
-		}, {
-			"location": "/template-hello-world/service.js.template",
-			"action": "copy",
-			"rename": "{{fileName}}.js"
+			"rename": "{{fileName}}-javascript.mjs"
 		}],
 		"parameters": [],
 		"order": -1
