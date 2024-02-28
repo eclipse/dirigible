@@ -65,14 +65,14 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
     }
 
     this.retry = function() {
-        this.executeAction({ 'action': 'RETRY'});
+        this.executeAction({ 'action': 'RETRY'}, 'RETRY');
     }
 
     this.skip = function() {
-        this.executeAction({ 'action': 'SKIP'});
+        this.executeAction({ 'action': 'SKIP'}, 'SKIP');
     }
 
-    this.executeAction = function(requestBody) {
+    this.executeAction = function(requestBody, actionName) {
         const apiUrl = '/services/ide/bpm/bpm-processes/instance/' + this.selectedProcessInstanceId;
 
         $http({
@@ -84,10 +84,12 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
             }
         })
         .then((response) => {
-            console.log('Successfully executed ' + JSON.stringify(requestBody) + ' process instance with id [' + this.processInstanceId + ']');
+            messageHub.showAlertSuccess("Action confirmation", actionName + " triggered successfully!")
+            console.log('Successfully executed ' + actionName + ' process instance with id [' + $scope.processInstanceId + ']');
             $scope.reload();
         })
         .catch((error) => {
+            messageHub.showAlertError("Action failed", actionName + ' operation failed. Error message ' + error.message);
             console.error('Error making POST request:', error);
         });
     }
