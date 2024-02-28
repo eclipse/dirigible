@@ -49,12 +49,12 @@ public class DataSourceInitializerContributorSnowpark implements DataSourceIniti
                 } else {
                     properties.put("dataSource.CLIENT_SESSION_KEEP_ALIVE", true);
                     properties.put("dataSource.account", env.getOrDefault("SNOWFLAKE_ACCOUNT", ""));
-                    properties.put("dataSource.user", env.getOrDefault("SNOWFLAKE_USERNAME", ""));
-                    properties.put("dataSource.password", env.getOrDefault("SNOWFLAKE_PASSWORD", ""));
+                    properties.put("dataSource.user", env.getOrDefault("SNOWFLAKE_USERNAME", dataSource.getUsername()));
+                    properties.put("dataSource.password", env.getOrDefault("SNOWFLAKE_PASSWORD", dataSource.getPassword()));
                     properties.put("dataSource.warehouse", env.getOrDefault("SNOWFLAKE_WAREHOUSE", ""));
                     properties.put("dataSource.db", env.getOrDefault("SNOWFLAKE_DATABASE", ""));
                     properties.put("dataSource.schema", env.getOrDefault("SNOWFLAKE_SCHEMA", ""));
-                    url = env.get("SNOWFLAKE_URL");
+                    url = env.getOrDefault("SNOWFLAKE_URL", dataSource.getUrl());
                     properties.put("jdbcUrl", url);
                     properties.put("dataSource.url", url);
                 }
