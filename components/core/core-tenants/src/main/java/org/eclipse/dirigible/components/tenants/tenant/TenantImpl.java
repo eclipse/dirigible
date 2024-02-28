@@ -4,7 +4,8 @@ import java.util.Objects;
 
 class TenantImpl implements Tenant {
 
-    // the ID must matach the one declared in src/main/resources/META-INF/dirigible/tenants/tenants.csv
+    // default tenant details must matach the one declared in
+    // src/main/resources/META-INF/dirigible/tenants/tenants.csv
     private static final String DEFAULT_TENANT_ID = "defaultTenant";
     private static final String DEFAULT_TENANT_NAME = "The default tenant";
     private static final String DEFAULT_TENANT_SUBDOMAIN = "default";

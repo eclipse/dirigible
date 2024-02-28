@@ -26,7 +26,7 @@ import jakarta.persistence.UniqueConstraint;
  * The Class User.
  */
 @Entity
-@Table(name = "DIRIGIBLE_USERS", uniqueConstraints = {@UniqueConstraint(columnNames = {"USER_TENANT_ID", "USER_EMAIL"})})
+@Table(name = "DIRIGIBLE_USERS", uniqueConstraints = {@UniqueConstraint(columnNames = {"USER_TENANT_ID", "USER_USERNAME"})})
 @ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
 public class User {
 
@@ -42,8 +42,8 @@ public class User {
     private Tenant tenant;
 
     /** The email. */
-    @Column(name = "USER_EMAIL", nullable = false)
-    private String email;
+    @Column(name = "USER_USERNAME", nullable = false)
+    private String username;
 
     /** The password. */
     @Column(name = "USER_PASSWORD", nullable = false)
@@ -58,13 +58,12 @@ public class User {
      * Instantiates a new user.
      *
      * @param tenant the tenant
-     * @param email the email
+     * @param username the username
      * @param password the password
-     * @param role the role
      */
-    public User(Tenant tenant, String email, String password) {
+    public User(Tenant tenant, String username, String password) {
         this.tenant = tenant;
-        this.email = email;
+        this.username = username;
         this.password = password;
     }
 
@@ -105,21 +104,21 @@ public class User {
     }
 
     /**
-     * Gets the email.
+     * Gets the username.
      *
-     * @return the email
+     * @return the username
      */
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
     /**
-     * Sets the email.
+     * Sets the username.
      *
-     * @param email the new email
+     * @param username the new username
      */
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
