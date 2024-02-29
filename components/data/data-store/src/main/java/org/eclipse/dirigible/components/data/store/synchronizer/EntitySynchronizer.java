@@ -16,14 +16,12 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
-
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.data.store.DataStore;
@@ -42,7 +40,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.ENTITY)
-public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Entity> {
+public class EntitySynchronizer<A extends Artefact> extends BaseSynchronizer<Entity> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(EntitySynchronizer.class);
@@ -51,10 +49,10 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
     public static final String FILE_EXTENSION_ENTITY = ".hbm.xml";
 
     /** The entity service. */
-    private EntityService entityService;
+    private final EntityService entityService;
 
     /** The object store. */
-    private DataStore dataStore;
+    private final DataStore dataStore;
 
     /** The synchronization callback. */
     private SynchronizerCallback callback;
@@ -186,14 +184,13 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
         Entity entity = null;
-        if (wrapper.getArtefact() instanceof Entity) {
-            entity = (Entity) wrapper.getArtefact();
-        } else {
+        if (!(wrapper.getArtefact() instanceof Entity)) {
             throw new UnsupportedOperationException(String.format("Trying to process %s as Entity", wrapper.getArtefact()
                                                                                                            .getClass()));
         }
+        entity = (Entity) wrapper.getArtefact();
 
         switch (flow) {
             case CREATE:

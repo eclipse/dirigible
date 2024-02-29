@@ -1,5 +1,6 @@
 package org.eclipse.dirigible.components.tenants.tenant;
 
+import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -15,17 +15,15 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
-
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.websockets.domain.Websocket;
@@ -43,7 +41,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.WEBSOCKET)
-public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<Websocket> {
+public class WebsocketsSynchronizer<A extends Artefact> extends BaseSynchronizer<Websocket> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(WebsocketsSynchronizer.class);
@@ -148,7 +146,7 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
         return true;
     }

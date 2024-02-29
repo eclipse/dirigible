@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
+import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.data.sources.manager.TenantDataSourceNameManager;
@@ -14,7 +15,6 @@ import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
 import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.eclipse.dirigible.components.tenants.provisioning.TenantProvisioningException;
 import org.eclipse.dirigible.components.tenants.provisioning.TenantProvisioningStep;
-import org.eclipse.dirigible.components.tenants.tenant.Tenant;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +27,13 @@ class DefaultDataSourceProvisioning implements TenantProvisioningStep {
 
     private final DataSourcesManager dataSourcesManager;
     private final DataSourceService dataSourceService;
+    private final TenantDataSourceNameManager tenantDataSourceNameManager;
 
-    DefaultDataSourceProvisioning(DataSourcesManager dataSourcesManager, DataSourceService dataSourceService) {
+    DefaultDataSourceProvisioning(DataSourcesManager dataSourcesManager, DataSourceService dataSourceService,
+            TenantDataSourceNameManager tenantDataSourceNameManager) {
         this.dataSourcesManager = dataSourcesManager;
         this.dataSourceService = dataSourceService;
+        this.tenantDataSourceNameManager = tenantDataSourceNameManager;
     }
 
     @Override
@@ -128,7 +131,7 @@ class DefaultDataSourceProvisioning implements TenantProvisioningStep {
         datasource.setSchema(schema);
         datasource.setProperties(defaultDS.getProperties());
 
-        String name = TenantDataSourceNameManager.createName(tenant, defaultDS.getName());
+        String name = tenantDataSourceNameManager.createName(tenant, defaultDS.getName());
         datasource.setName(name);
 
         datasource.updateKey();

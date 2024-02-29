@@ -22,7 +22,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -31,7 +30,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.data.csvim.domain.Csv;
@@ -55,7 +54,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.CSVIM)
-public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim> {
+public class CsvimSynchronizer<A extends Artefact> extends BaseSynchronizer<Csvim> {
 
     /**
      * The Constant logger.
@@ -229,7 +228,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
         Csvim csvim;
         if (!(wrapper.getArtefact() instanceof Csvim)) {
             throw new UnsupportedOperationException(String.format("Trying to process %s as Csvim", wrapper.getArtefact()

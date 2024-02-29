@@ -12,11 +12,11 @@ package org.eclipse.dirigible.components.tenants.security;
 
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.eclipse.dirigible.components.base.tenant.Tenant;
+import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.tenants.domain.User;
 import org.eclipse.dirigible.components.tenants.repository.UserRepository;
 import org.eclipse.dirigible.components.tenants.repository.UserRoleAssignmentRepository;
-import org.eclipse.dirigible.components.tenants.tenant.Tenant;
-import org.eclipse.dirigible.components.tenants.tenant.TenantContext;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,10 +35,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     /** The user repository. */
     private final UserRepository userRepository;
     private final UserRoleAssignmentRepository userRoleAssignmentRepository;
+    private final TenantContext tenantContext;
 
-    public CustomUserDetailsService(UserRepository userRepository, UserRoleAssignmentRepository userRoleAssignmentRepository) {
+    public CustomUserDetailsService(UserRepository userRepository, UserRoleAssignmentRepository userRoleAssignmentRepository,
+            TenantContext tenantContext) {
         this.userRepository = userRepository;
         this.userRoleAssignmentRepository = userRoleAssignmentRepository;
+        this.tenantContext = tenantContext;
     }
 
     /**
@@ -50,7 +53,7 @@ public class CustomUserDetailsService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Tenant tenant = TenantContext.getCurrentTenant();
+        Tenant tenant = tenantContext.getCurrentTenant();
 
         User user = userRepository.findUserByUsernameAndTenantId(username, tenant.getId())
                                   .orElseThrow(() -> new UsernameNotFoundException(

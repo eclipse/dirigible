@@ -47,14 +47,18 @@ public class DataSourceInitializer {
 
     private final List<DataSourceInitializerContributor> contributors;
 
+    private final TenantDataSourceNameManager tenantDataSourceNameManager;
+
     /**
      * Instantiates a new data source initializer.
      *
      * @param applicationContext the application context
      */
-    DataSourceInitializer(ApplicationContext applicationContext, List<DataSourceInitializerContributor> contributors) {
+    DataSourceInitializer(ApplicationContext applicationContext, List<DataSourceInitializerContributor> contributors,
+            TenantDataSourceNameManager tenantDataSourceNameManager) {
         this.applicationContext = applicationContext;
         this.contributors = contributors;
+        this.tenantDataSourceNameManager = tenantDataSourceNameManager;
     }
 
     /**
@@ -131,7 +135,7 @@ public class DataSourceInitializer {
      * @return true, if is initialized
      */
     public boolean isInitialized(String dataSourceName) {
-        String name = TenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
+        String name = tenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
         return DATASOURCES.containsKey(name);
 
     }
@@ -143,7 +147,7 @@ public class DataSourceInitializer {
      * @return the initialized data source
      */
     public javax.sql.DataSource getInitializedDataSource(String dataSourceName) {
-        String name = TenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
+        String name = tenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
         return DATASOURCES.get(name);
     }
 
@@ -153,7 +157,7 @@ public class DataSourceInitializer {
      * @param dataSourceName the data source name
      */
     public void removeInitializedDataSource(String dataSourceName) {
-        String name = TenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
+        String name = tenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
         DATASOURCES.remove(name);
     }
 

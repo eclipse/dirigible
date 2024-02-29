@@ -26,7 +26,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
@@ -58,7 +58,7 @@ import com.google.gson.JsonObject;
  */
 @Component
 @Order(SynchronizersOrder.SCHEMA)
-public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Schema> {
+public class SchemasSynchronizer<A extends Artefact> extends BaseSynchronizer<Schema> {
 
     /**
      * The Constant logger.
@@ -262,7 +262,11 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
      * @return true, if successful
      */
     @Override
+<<<<<<< Upstream, based on dirigible-official/master
     public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+=======
+    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+>>>>>>> ef993c1 more generic approach for multitenant synchronizers support
 
         Schema schema = null;
         if (!(wrapper.getArtefact() instanceof Schema)) {
@@ -294,6 +298,7 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
                         executeSchemaUpdate(connection, schema);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     }
+<<<<<<< Upstream, based on dirigible-official/master
                     if (schema.getLifecycle()
                               .equals(ArtefactLifecycle.MODIFIED)) {
                         return false;
@@ -302,6 +307,12 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
                 case DELETE:
                     if (ArtefactLifecycle.CREATED.equals(schema.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(schema.getLifecycle())
                             || ArtefactLifecycle.FAILED.equals(schema.getLifecycle())) {
+=======
+                    break;
+                case DELETE:
+                    if (ArtefactLifecycle.CREATED.equals(schema.getLifecycle())
+                            || ArtefactLifecycle.UPDATED.equals(schema.getLifecycle())) {
+>>>>>>> ef993c1 more generic approach for multitenant synchronizers support
                         executeSchemaDrop(connection, schema);
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
                         break;
@@ -600,6 +611,11 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
                                .get("query")
                                .getAsString());
         view.updateKey();
+    }
+
+    @Override
+    public boolean isMultitenant() {
+        return true;
     }
 
 }

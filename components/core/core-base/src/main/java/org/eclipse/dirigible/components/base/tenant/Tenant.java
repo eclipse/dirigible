@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.components.tenants.tenant;
+package org.eclipse.dirigible.components.base.tenant;
 
 /**
  * The Interface Tenant.

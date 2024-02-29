@@ -24,7 +24,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
@@ -46,7 +46,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.VIEW)
-public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View> {
+public class ViewsSynchronizer<A extends Artefact> extends BaseSynchronizer<View> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(ViewsSynchronizer.class);
@@ -182,7 +182,11 @@ public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View>
      * @return true, if successful
      */
     @Override
+<<<<<<< Upstream, based on dirigible-official/master
     public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+=======
+    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+>>>>>>> ef993c1 more generic approach for multitenant synchronizers support
 
         try (Connection connection = datasourcesManager.getDefaultDataSource()
                                                        .getConnection()) {
@@ -223,6 +227,7 @@ public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View>
                         executeViewUpdate(connection, view);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     }
+<<<<<<< Upstream, based on dirigible-official/master
                     if (ArtefactLifecycle.FAILED.equals(view.getLifecycle())) {
                         return false;
                     }
@@ -230,6 +235,11 @@ public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View>
                 case DELETE:
                     if (ArtefactLifecycle.CREATED.equals(view.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(view.getLifecycle())
                             || ArtefactLifecycle.FAILED.equals(view.getLifecycle())) {
+=======
+                    break;
+                case DELETE:
+                    if (ArtefactLifecycle.CREATED.equals(view.getLifecycle())) {
+>>>>>>> ef993c1 more generic approach for multitenant synchronizers support
                         if (SqlFactory.getNative(connection)
                                       .existsTable(connection, view.getName())) {
                             executeViewDrop(connection, view);
@@ -342,6 +352,11 @@ public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View>
     @Override
     public String getArtefactType() {
         return View.ARTEFACT_TYPE;
+    }
+
+    @Override
+    public boolean isMultitenant() {
+        return true;
     }
 
 }

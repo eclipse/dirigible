@@ -24,7 +24,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
@@ -54,7 +54,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.TABLE)
-public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Table> {
+public class TablesSynchronizer<A extends Artefact> extends BaseSynchronizer<Table> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(TablesSynchronizer.class);
@@ -305,7 +305,11 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
      * @return true, if successful
      */
     @Override
+<<<<<<< Upstream, based on dirigible-official/master
     public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+=======
+    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+>>>>>>> ef993c1 more generic approach for multitenant synchronizers support
 
         try (Connection connection = datasourcesManager.getDefaultDataSource()
                                                        .getConnection()) {
@@ -357,6 +361,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
                         executeTableUpdate(connection, table);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     }
+<<<<<<< Upstream, based on dirigible-official/master
                     if (ArtefactLifecycle.FAILED.equals(table.getLifecycle())) {
                         return false;
                     }
@@ -364,6 +369,11 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
                 case DELETE:
                     if (ArtefactLifecycle.CREATED.equals(table.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(table.getLifecycle())
                             || ArtefactLifecycle.FAILED.equals(table.getLifecycle())) {
+=======
+                    break;
+                case DELETE:
+                    if (ArtefactLifecycle.CREATED.equals(table.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(table.getLifecycle())) {
+>>>>>>> ef993c1 more generic approach for multitenant synchronizers support
                         if (SqlFactory.getNative(connection)
                                       .existsTable(connection, table.getName())) {
                             if (SqlFactory.deriveDialect(connection)
@@ -544,4 +554,8 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
         return Table.ARTEFACT_TYPE;
     }
 
+    @Override
+    public boolean isMultitenant() {
+        return true;
+    }
 }

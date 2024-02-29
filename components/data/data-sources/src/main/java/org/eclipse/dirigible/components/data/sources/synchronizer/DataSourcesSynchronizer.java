@@ -23,7 +23,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
@@ -42,7 +42,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.DATASOURCE)
+<<<<<<< Upstream, based on dirigible-official/master
 public class DataSourcesSynchronizer<A extends Artefact> extends <DataSource> {
+=======
+public class DataSourcesSynchronizer<A extends Artefact> extends BaseSynchronizer<DataSource> {
+>>>>>>> ef993c1 more generic approach for multitenant synchronizers support
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DataSourcesSynchronizer.class);
@@ -179,7 +183,7 @@ public class DataSourcesSynchronizer<A extends Artefact> extends <DataSource> {
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
         try {
             DataSource datasource = null;
             if (!(wrapper.getArtefact() instanceof DataSource)) {

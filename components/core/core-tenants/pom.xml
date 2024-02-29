@@ -28,12 +28,6 @@
 			<artifactId>dirigible-components-engine-security</artifactId>
 		</dependency>
 		
-		<!-- Components -->
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-core-base</artifactId>
-		</dependency>
-
 		<!-- Database -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
