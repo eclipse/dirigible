@@ -67,11 +67,14 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
             LOGGER.warn("Tried to reach unregistered tenant with host [{}]", request.getServerName());
             return;
         }
-        TenantContext.setCurrentTenant(currentTenant.get());
+
         try {
-            chain.doFilter(request, response);
-        } finally {
-            TenantContext.clear();
+            TenantContext.execute(currentTenant.get(), () -> chain.doFilter(request, response));
+
+        } catch (ServletException | IOException | RuntimeException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new ServletException(ex.getMessage(), ex);
         }
     }
 

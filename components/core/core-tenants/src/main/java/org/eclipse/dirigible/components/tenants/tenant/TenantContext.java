@@ -21,14 +21,24 @@ public class TenantContext {
     private static final Logger LOGGER = LoggerFactory.getLogger(TenantContext.class);
 
     /** The Constant currentTenantId. */
-    private static final ThreadLocal<Tenant> currentTenant = new ThreadLocal<>();
+    private static final ThreadLocal<Tenant> currentTenantHolder = new ThreadLocal<>();
 
+    /**
+     * Checks if is not initialized.
+     *
+     * @return true, if is not initialized
+     */
     public static boolean isNotInitialized() {
         return !isInitialized();
     }
 
+    /**
+     * Checks if is initialized.
+     *
+     * @return true, if is initialized
+     */
     public static boolean isInitialized() {
-        return null != currentTenant.get();
+        return null != currentTenantHolder.get();
     }
 
     /**
@@ -37,7 +47,7 @@ public class TenantContext {
      * @return the current tenant
      */
     public static Tenant getCurrentTenant() {
-        Tenant tenant = currentTenant.get();
+        Tenant tenant = currentTenantHolder.get();
         if (null == tenant) {
             throw new IllegalStateException("Attempting to get current tenant but it is not initialized yet.");
         }
@@ -46,21 +56,63 @@ public class TenantContext {
     }
 
     /**
+     * This method will execute callable.call() method on behalf of the specified tenant.
+     *
+     * @param <Result> the result of the called callable
+     * @param tenant the tenant
+     * @param callable the callable
+     * @return the result
+     * @throws Exception the exception which is thrown by the passed callable
+     */
+    public static <Result> Result execute(Tenant tenant, java.util.concurrent.Callable<Result> callable) throws Exception {
+        Tenant currentTenant = isInitialized() ? getCurrentTenant() : null;
+        setCurrentTenant(tenant);
+        try {
+            return callable.call();
+        } finally {
+            setCurrentTenant(currentTenant);
+        }
+    }
+
+    /**
+     * This method will execute callable.call() method on behalf of the specified tenant.
+     *
+     * @param tenant the tenant
+     * @param callable the callable
+     * @throws Exception the exception which is thrown by the passed callable
+     */
+    public static void execute(Tenant tenant, Callable callable) throws Exception {
+        Tenant currentTenant = isInitialized() ? getCurrentTenant() : null;
+        setCurrentTenant(tenant);
+        try {
+            callable.call();
+        } finally {
+            setCurrentTenant(currentTenant);
+        }
+    }
+
+    /**
+     * The Interface Callable.
+     */
+    @FunctionalInterface
+    public interface Callable {
+
+        /**
+         * Call.
+         *
+         * @throws Exception the exception
+         */
+        void call() throws Exception;
+    }
+
+    /**
      * Sets the current tenant.
      *
      * @param tenantId the new current tenant
      */
-    public static void setCurrentTenant(Tenant tenant) {
+    private static void setCurrentTenant(Tenant tenant) {
         LOGGER.debug("Setting current tenant to [{}]", tenant);
-        currentTenant.set(tenant);
-    }
-
-    /**
-     * Clear.
-     */
-    public static void clear() {
-        LOGGER.debug("Clearing current tenant [{}]", currentTenant.get());
-        currentTenant.set(null);
+        currentTenantHolder.set(tenant);
     }
 
 }
