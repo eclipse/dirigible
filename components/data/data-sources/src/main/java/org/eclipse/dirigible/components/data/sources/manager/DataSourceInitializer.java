@@ -71,20 +71,8 @@ public class DataSourceInitializer {
             return getInitializedDataSource(dataSource.getName());
         }
 
-        if (isSystemDataSource(dataSource.getName()) || TenantContext.isNotInitialized()) {
-
-            return initDataSource(dataSource.getName(), dataSource.getDriver(), dataSource.getUrl(), dataSource.getUsername(),
-                    dataSource.getPassword(), dataSource.getProperties());
-        }
-
-        String initialDataSourceName = dataSource.getName();
-        String tenantDataSourceName = getTenantDataSourceName(initialDataSourceName);
-
-        String url = dataSource.getUrl()
-                               .replace(initialDataSourceName, tenantDataSourceName);
-
-        return initDataSource(tenantDataSourceName, dataSource.getDriver(), url, dataSource.getUsername(), dataSource.getPassword(),
-                dataSource.getProperties());
+        return initDataSource(dataSource.getName(), dataSource.getDriver(), dataSource.getUrl(), dataSource.getUsername(),
+                dataSource.getPassword(), dataSource.getProperties());
     }
 
     private boolean isSystemDataSource(String dataSourceName) {
@@ -238,7 +226,7 @@ public class DataSourceInitializer {
             return dataSourceName;
         }
         Tenant tenant = TenantContext.getCurrentTenant();
-        return tenant.isDefault() ? dataSourceName : tenant.getId() + "_" + dataSourceName;
+        return TenantDataSourceNameManager.createName(tenant, dataSourceName);
     }
 
 }

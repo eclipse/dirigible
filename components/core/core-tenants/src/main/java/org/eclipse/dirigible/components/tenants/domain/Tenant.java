@@ -13,6 +13,8 @@ package org.eclipse.dirigible.components.tenants.domain;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -43,38 +45,90 @@ public class Tenant {
     @Column(name = "TENANT_NAME", nullable = false)
     private String name;
 
+    @Column(name = "TENANT_STATUS", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TenantStatus status;
+
     /**
      * Instantiates a new tenant.
      */
     public Tenant() {}
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getSubdomain() {
-        return subdomain;
-    }
-
-    public void setSubdomain(String subdomain) {
-        this.subdomain = subdomain;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     /**
      * Gets the id.
      *
      * @return the id
      */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Sets the id.
+     *
+     * @param id the new id
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    /**
+     * Gets the subdomain.
+     *
+     * @return the subdomain
+     */
+    public String getSubdomain() {
+        return subdomain;
+    }
+
+    /**
+     * Sets the subdomain.
+     *
+     * @param subdomain the new subdomain
+     */
+    public void setSubdomain(String subdomain) {
+        this.subdomain = subdomain;
+    }
+
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the name.
+     *
+     * @param name the new name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Gets the status.
+     *
+     * @return the status
+     */
+    public TenantStatus getStatus() {
+        return status;
+    }
+
+    /**
+     * Sets the status.
+     *
+     * @param status the new status
+     */
+    public void setStatus(TenantStatus status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Tenant [id=" + id + ", subdomain=" + subdomain + ", name=" + name + ", status=" + status + "]";
+    }
+
 }
