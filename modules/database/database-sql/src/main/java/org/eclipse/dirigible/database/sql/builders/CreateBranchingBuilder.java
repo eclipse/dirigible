@@ -18,6 +18,7 @@ import org.eclipse.dirigible.database.sql.builders.synonym.CreateSynonymBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTemporaryTableBuilder;
 import org.eclipse.dirigible.database.sql.builders.tableType.CreateTableTypeBuilder;
+import org.eclipse.dirigible.database.sql.builders.user.CreateUserBuilder;
 import org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder;
 
 /**
@@ -113,6 +114,17 @@ public class CreateBranchingBuilder extends AbstractSqlBuilder {
      */
     public CreateSchemaBuilder schema(String schema) {
         return new CreateSchemaBuilder(getDialect(), schema);
+    }
+
+    /**
+     * User.
+     *
+     * @param userId the user id
+     * @param password the password
+     * @return the creates the user builder
+     */
+    public CreateUserBuilder user(String userId, String password) {
+        return new CreateUserBuilder(getDialect(), userId, password);
     }
 
     /**
