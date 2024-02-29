@@ -248,7 +248,7 @@
 								dg-input-rules="{ patterns: ['${property.inputRule}'] }"
 								placeholder="Enter ${property.widgetLabel}">
 							</fd-textarea>
-							<fd-form-message dg-type="error" ng-show="!forms.details['${property.name}'].$valid">Incorrect Input</fd-form-message>
+							<fd-form-message dg-type="error" ng-show="!forms.details['${property.name}'].$valid">The value doesn't match the required pattern '${property.inputRule}'</fd-form-message>
 						</div>
 					</fd-form-item>
 #elseif($property.widgetType == "TEL")
@@ -277,7 +277,7 @@
 	                                type="tel"
 	                                placeholder="Enter ${property.widgetLabel}">
 	                            </fd-input>
-	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
+	                            <fd-form-message dg-type="error">The value doesn't match the required pattern '${property.inputRule}'</fd-form-message>
 	                        </fd-form-input-message-group>
 	                    </div>
                     </fd-form-item>
@@ -307,7 +307,7 @@
 	                                type="url"
 	                                placeholder="Enter ${property.widgetLabel}">
 	                            </fd-input>
-	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
+	                            <fd-form-message dg-type="error">The value doesn't match the required pattern '${property.inputRule}'</fd-form-message>
 	                        </fd-form-input-message-group>
 	                    </div>
                     </fd-form-item>
@@ -337,7 +337,7 @@
 	                                type="email"
 	                                placeholder="Enter ${property.widgetLabel}">
 	                            </fd-input>
-	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
+	                            <fd-form-message dg-type="error">The value doesn't match the required pattern '${property.inputRule}'</fd-form-message>
 	                        </fd-form-input-message-group>
 	                    </div>
                     </fd-form-item>
@@ -364,7 +364,7 @@
 	                                type="text"
 	                                placeholder="Enter ${property.widgetLabel}">
 	                            </fd-input>
-	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
+	                            <fd-form-message dg-type="error">The value doesn't match the required pattern '${property.inputRule}'</fd-form-message>
 	                        </fd-form-input-message-group>
 	                    </div>
                     </fd-form-item>
