@@ -1137,4 +1137,18 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             },
             templateUrl: '/services/web/resources-core/ui/templates/ideStatusBar.html'
         }
-    }]);
+    }])
+    .directive('dgEmbeddablePerspective', [function () {
+	    return {
+	        restrict: 'A',
+	        link: function () {
+	            const urlParams = new URLSearchParams(window.location.search);
+	            const embedded = urlParams.get('embedded');
+	            if (embedded !== null && embedded !== undefined) {
+	                const styleSheet = document.createElement("style");
+	                styleSheet.innerText = '.dg-main-header, .dg-statusbar, .dg-main-container>.dg-sidebar { display: none !important; }';
+	                document.head.appendChild(styleSheet);
+	            }
+	        }
+	    }
+	}]);
