@@ -17,13 +17,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
@@ -57,10 +55,10 @@ public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View>
     private static final String FILE_EXTENSION_VIEW = ".view";
 
     /** The view service. */
-    private ViewService viewService;
+    private final ViewService viewService;
 
     /** The datasources manager. */
-    private DataSourcesManager datasourcesManager;
+    private final DataSourcesManager datasourcesManager;
 
     /** The synchronization callback. */
     private SynchronizerCallback callback;
@@ -190,12 +188,11 @@ public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View>
                                                        .getConnection()) {
 
             View view = null;
-            if (wrapper.getArtefact() instanceof View) {
-                view = (View) wrapper.getArtefact();
-            } else {
+            if (!(wrapper.getArtefact() instanceof View)) {
                 throw new UnsupportedOperationException(String.format("Trying to process %s as View", wrapper.getArtefact()
                                                                                                              .getClass()));
             }
+            view = (View) wrapper.getArtefact();
 
             switch (flow) {
                 case CREATE:

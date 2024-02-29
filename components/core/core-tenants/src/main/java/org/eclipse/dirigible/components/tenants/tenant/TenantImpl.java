@@ -55,4 +55,21 @@ class TenantImpl implements Tenant {
     static Tenant createFromEntity(org.eclipse.dirigible.components.tenants.domain.Tenant tenant) {
         return new TenantImpl(tenant.getId(), tenant.getName(), tenant.getSubdomain());
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        TenantImpl other = (TenantImpl) obj;
+        return Objects.equals(id, other.id);
+    }
 }

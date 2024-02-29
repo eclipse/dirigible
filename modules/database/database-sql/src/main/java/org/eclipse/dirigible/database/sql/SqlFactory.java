@@ -11,9 +11,7 @@
 package org.eclipse.dirigible.database.sql;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
@@ -339,7 +337,5 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
     public String getDatabaseType(Connection connection) {
         return this.dialect.getDatabaseType(connection);
     }
-
-
 
 }

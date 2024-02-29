@@ -17,7 +17,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
@@ -64,10 +63,10 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
     private static final String FILE_EXTENSION_TABLE = ".table";
 
     /** The table service. */
-    private TableService tableService;
+    private final TableService tableService;
 
     /** The datasources manager. */
-    private DataSourcesManager datasourcesManager;
+    private final DataSourcesManager datasourcesManager;
 
     /** The synchronization callback. */
     private SynchronizerCallback callback;
@@ -312,12 +311,11 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
                                                        .getConnection()) {
 
             Table table = null;
-            if (wrapper.getArtefact() instanceof Table) {
-                table = (Table) wrapper.getArtefact();
-            } else {
+            if (!(wrapper.getArtefact() instanceof Table)) {
                 throw new UnsupportedOperationException(String.format("Trying to process %s as Table", wrapper.getArtefact()
                                                                                                               .getClass()));
             }
+            table = (Table) wrapper.getArtefact();
 
             switch (flow) {
                 case CREATE:

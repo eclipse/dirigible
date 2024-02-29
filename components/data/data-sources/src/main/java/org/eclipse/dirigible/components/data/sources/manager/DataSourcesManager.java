@@ -10,7 +10,6 @@
  */
 package org.eclipse.dirigible.components.data.sources.manager;
 
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.service.CustomDataSourcesService;
 import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
@@ -101,8 +100,6 @@ public class DataSourcesManager implements InitializingBean {
         return getDataSource(dataSourceInitializer.getSystemDataSourceName());
     }
 
-
-
     /**
      * Gets the data source definition.
      *
@@ -110,14 +107,16 @@ public class DataSourcesManager implements InitializingBean {
      * @return the data source definition
      */
     public DataSource getDataSourceDefinition(String name) {
+        String dataSourceName = TenantDataSourceNameManager.getTenantDataSourceName(name);
         try {
-            return datasourceService.findByName(name);
+            return datasourceService.findByName(dataSourceName);
         } catch (Exception e) {
-            if (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name)) {
+            if (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(dataSourceName)) {
                 if (logger.isErrorEnabled()) {
-                    logger.error("DataSource cannot be initialized, hence fail over database is started as a backup - " + name);
+                    logger.error("DataSource cannot be initialized, hence fail over database is started as a backup - " + dataSourceName);
                 }
-                return new DataSource(name, name, name, "org.h2.Driver", "jdbc:h2:~/DefaultDBFailOver", "sa", "");
+                return new DataSource(dataSourceName, dataSourceName, dataSourceName, "org.h2.Driver", "jdbc:h2:~/DefaultDBFailOver", "sa",
+                        "");
             }
             throw e;
         }

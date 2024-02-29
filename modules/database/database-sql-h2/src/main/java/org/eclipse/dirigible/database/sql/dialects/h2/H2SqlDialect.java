@@ -156,13 +156,4 @@ public class H2SqlDialect extends
         return false;
     }
 
-    @Override
-    public String addCurrenctSchema(String jdbcUrl, String schema) {
-        return jdbcUrl + ";SCHEMA=" + escapeSchema(schema);
-    }
-
-    private String escapeSchema(String schema) {
-        return getEscapeSymbol() + schema + getEscapeSymbol();
-    }
-
 }

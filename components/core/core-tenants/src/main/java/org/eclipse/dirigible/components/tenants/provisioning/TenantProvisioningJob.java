@@ -20,8 +20,7 @@ class TenantProvisioningJob {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TenantProvisioningJob.class);
 
-    // TODO return to 15min before merge
-    private static final long _15_MINS = 1 * 60 * 1000;
+    private static final long _15_MINS = 15 * 60 * 1000;
     private static final long JOB_EXECUTION_INTERVAL_MINUTES = _15_MINS;
     private static final long _10_SECONDS = 10 * 1000;
     private static final long JOB_EXECUTION_INITIAL_DELAY_SECONDS = _10_SECONDS;

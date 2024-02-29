@@ -64,6 +64,10 @@ public class DataSource extends Artefact {
     @Encrypted
     private String password;
 
+    @Column(name = "DS_SCHEMA", columnDefinition = "VARCHAR", nullable = true, length = 64)
+    @Expose
+    private String schema;
+
     /** The properties. */
     @OneToMany(mappedBy = "datasource", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -231,10 +235,33 @@ public class DataSource extends Artefact {
         return property;
     }
 
+    /**
+     * Gets the schema.
+     *
+     * @return the schema
+     */
+    public String getSchema() {
+        return schema;
+    }
+
+    /**
+     * Sets the schema.
+     *
+     * @param schema the new schema
+     */
+    public void setSchema(String schema) {
+        this.schema = schema;
+    }
+
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     @Override
     public String toString() {
-        return "DataSource [id=" + id + ", driver=" + driver + ", url=" + url + ", username=" + username + ", properties=" + properties
-                + "]";
+        return "DataSource [id=" + id + ", driver=" + driver + ", url=" + url + ", username=" + username + ", schema=" + schema
+                + ", properties=" + properties + "]";
     }
 
 }

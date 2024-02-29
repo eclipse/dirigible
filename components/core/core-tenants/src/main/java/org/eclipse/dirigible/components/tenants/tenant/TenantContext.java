@@ -10,18 +10,33 @@
  */
 package org.eclipse.dirigible.components.tenants.tenant;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import org.eclipse.dirigible.components.tenants.domain.TenantStatus;
+import org.eclipse.dirigible.components.tenants.repository.TenantRepository;
+import org.eclipse.dirigible.components.tenants.tenant.TenantContext.CallableNoResultAndException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * The Class TenantContext.
  */
+@Component
 public class TenantContext {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TenantContext.class);
 
     /** The Constant currentTenantId. */
     private static final ThreadLocal<Tenant> currentTenantHolder = new ThreadLocal<>();
+
+    private static TenantRepository tenantRepository;
+
+    @Autowired
+    TenantContext(TenantRepository tenantRepository) {
+        TenantContext.tenantRepository = tenantRepository;
+    }
 
     /**
      * Checks if is not initialized.
@@ -81,7 +96,7 @@ public class TenantContext {
      * @param callable the callable
      * @throws Exception the exception which is thrown by the passed callable
      */
-    public static void execute(Tenant tenant, Callable callable) throws Exception {
+    public static void execute(Tenant tenant, CallableNoResultAndException callable) throws Exception {
         Tenant currentTenant = isInitialized() ? getCurrentTenant() : null;
         setCurrentTenant(tenant);
         try {
@@ -92,20 +107,6 @@ public class TenantContext {
     }
 
     /**
-     * The Interface Callable.
-     */
-    @FunctionalInterface
-    public interface Callable {
-
-        /**
-         * Call.
-         *
-         * @throws Exception the exception
-         */
-        void call() throws Exception;
-    }
-
-    /**
      * Sets the current tenant.
      *
      * @param tenantId the new current tenant
@@ -113,6 +114,23 @@ public class TenantContext {
     private static void setCurrentTenant(Tenant tenant) {
         LOGGER.debug("Setting current tenant to [{}]", tenant);
         currentTenantHolder.set(tenant);
+    }
+
+    public static void executeForEachTenant(CallableNoResultAndException callable) throws Exception {
+        List<Tenant> tenants = tenantRepository.findByStatus(TenantStatus.PROVISIONED)
+                                               .stream()
+                                               .map(TenantImpl::createFromEntity)
+                                               .collect(Collectors.toList());
+        LOGGER.info("Will execute code for tenants [{}]", tenants);
+        for (Tenant tenant : tenants) {
+            execute(tenant, callable);
+        }
+    }
+
+    @FunctionalInterface
+    public interface CallableNoResultAndException {
+
+        void call() throws Exception;
     }
 
 }

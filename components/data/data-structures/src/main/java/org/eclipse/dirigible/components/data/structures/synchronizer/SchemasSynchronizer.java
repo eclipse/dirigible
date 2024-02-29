@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.components.data.structures.synchronizer;
 
 import static java.text.MessageFormat.format;
-
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -20,7 +19,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -49,7 +47,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -76,22 +73,22 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
     /**
      * The schema service.
      */
-    private SchemaService schemaService;
+    private final SchemaService schemaService;
 
     /**
      * The table service.
      */
-    private TableService tableService;
+    private final TableService tableService;
 
     /**
      * The view service.
      */
-    private ViewService viewService;
+    private final ViewService viewService;
 
     /**
      * The datasources manager.
      */
-    private DataSourcesManager datasourcesManager;
+    private final DataSourcesManager datasourcesManager;
 
     /**
      * The synchronization callback.
@@ -268,12 +265,11 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
     public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
 
         Schema schema = null;
-        if (wrapper.getArtefact() instanceof Schema) {
-            schema = (Schema) wrapper.getArtefact();
-        } else {
+        if (!(wrapper.getArtefact() instanceof Schema)) {
             throw new UnsupportedOperationException(String.format("Trying to process %s as Schema", wrapper.getArtefact()
                                                                                                            .getClass()));
         }
+        schema = (Schema) wrapper.getArtefact();
 
         try (Connection connection = datasourcesManager.getDataSource(schema.getDatasource())
                                                        .getConnection()) {
@@ -496,7 +492,6 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
                 }
             }
         }
-
 
         return result;
     }
