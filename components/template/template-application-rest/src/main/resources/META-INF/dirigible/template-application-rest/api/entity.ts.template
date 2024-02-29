@@ -6,12 +6,15 @@
 #end 
 #end
 import { Controller, Get, Post, Put, Delete, response } from "sdk/http"
+import { Extensions } from "sdk/extensions"
 import { ${name}Repository, ${name}EntityOptions } from "../../dao/${perspectiveName}/${name}Repository";
 import { HttpUtils } from "../utils/HttpUtils";
 #if($importsCode && $importsCode != "")
 // custom imports
 ${importsCode}
 #end
+
+const validationModules = await Extensions.loadExtensionModules("${projectName}-${perspectiveName}-${name}", ["validate"]);
 
 #if($isEntityPropertyPropertyEnabled)
 class ValidationError extends Error {
@@ -57,9 +60,7 @@ class ${name}Service {
     @Post("/")
     public create(entity: any) {
         try {
-#if($isEntityPropertyPropertyEnabled)
             this.validateEntity(entity);
-#end
             entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end = this.repository.create(entity);
             response.setHeader("Content-Location", "/services/ts/${projectName}/gen/api/${perspectiveName}/${name}Service.ts/" + entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end);
             response.setStatus(response.CREATED);
@@ -127,9 +128,7 @@ class ${name}Service {
     public update(entity: any, ctx: any) {
         try {
             entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end = ctx.pathParameters.id;
-#if($isEntityPropertyPropertyEnabled)
             this.validateEntity(entity);
-#end
             this.repository.update(entity);
             return entity;
         } catch (error: any) {
@@ -162,17 +161,27 @@ class ${name}Service {
             HttpUtils.sendInternalServerError(error.message);
         }
     }
-#if($isEntityPropertyPropertyEnabled)
 
     private validateEntity(entity: any): void {
 #foreach ($property in $properties)
-#if($property.widgetPattern && $property.widgetPattern != "")
-        isValid = isValid && entity.${property.name} && entity.${property.name}.match(/^${property.widgetPattern}${dollar}/) !== null;
-        if (entity.${property.name} === undefined || entity.${property.name}.match(/^${property.widgetPattern}${dollar}/) === null) {
-            throw new ValidationError(`The '${property.name}' values doesn't match the required pattern '${property.widgetPattern}'`);
+#if($property.isRequiredProperty)
+        if (entity.${property.name} === null || entity.${property.name} === undefined) {
+            throw new ValidationError(`The '${property.name}' property is required, provide a valid value`);
         }
-#end 
 #end
+#if($property.dataTypeTypescript == "string")
+        if (entity.${property.name}.length > ${property.dataLength}) {
+            throw new ValidationError(`The '${property.name}' exceeds the maximum length of [${property.dataLength}] characters`);
+        }
+#end
+#if($property.widgetPattern && $property.widgetPattern != "")
+        if (!RegExp(/${property.widgetPattern}/).test(entity.${property.name})) {
+            throw new ValidationError(`The value provided for the '${property.name}' property ('[${dollar}{entity.${property.name}}]') doesn't match the required pattern '${property.widgetPattern}'`);
+        }
+#end
+#end
+        for (const next of validationModules) {
+            next.validate(entity);
+        }
     }
-#end
 }
