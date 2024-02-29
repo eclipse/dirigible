@@ -35,7 +35,7 @@ class TenantsProvisioner {
         LOGGER.info("Starting provisioning process for tenant [{}]...", tenant);
 
         try {
-            org.eclipse.dirigible.components.tenants.tenant.Tenant t = tenantFactory.createFromEntity(tenant);
+            org.eclipse.dirigible.components.base.tenant.Tenant t = tenantFactory.createFromEntity(tenant);
             provisioningSteps.forEach(step -> step.execute(t));
 
             tenant.setStatus(TenantStatus.PROVISIONED);

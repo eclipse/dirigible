@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 
@@ -31,7 +30,7 @@ public class TopologyFactory {
      * @param synchronizers the synchronizers
      * @return the list of topology wrappers
      */
-    public static final List<TopologyWrapper<? extends Artefact>> wrap(Collection<Artefact> artefacts,
+    public static final List<TopologyWrapper<? extends Artefact>> wrap(Collection<? extends Artefact> artefacts,
             List<Synchronizer<Artefact>> synchronizers) {
         List<TopologyWrapper<? extends Artefact>> list = new ArrayList<TopologyWrapper<? extends Artefact>>();
         Map<String, TopologyWrapper<? extends Artefact>> wrappers = new HashMap<String, TopologyWrapper<? extends Artefact>>();

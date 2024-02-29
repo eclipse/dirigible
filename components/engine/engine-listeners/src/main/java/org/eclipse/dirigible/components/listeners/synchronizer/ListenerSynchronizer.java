@@ -22,7 +22,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.LISTENER)
-public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Listener> {
+public class ListenerSynchronizer<A extends Artefact> extends BaseSynchronizer<Listener> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(ListenerSynchronizer.class);
@@ -155,7 +155,7 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
         Listener listener = null;
         if (!(wrapper.getArtefact() instanceof Listener)) {
             throw new UnsupportedOperationException(String.format("Trying to process %s as Listener", wrapper.getArtefact()

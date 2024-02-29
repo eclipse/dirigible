@@ -1,6 +1,7 @@
 package org.eclipse.dirigible.components.tenants.tenant;
 
 import java.util.Objects;
+import org.eclipse.dirigible.components.base.tenant.Tenant;
 
 class TenantImpl implements Tenant {
 

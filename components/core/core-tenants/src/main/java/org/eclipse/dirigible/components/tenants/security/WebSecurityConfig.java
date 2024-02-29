@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.components.tenants.security;
 
 import org.eclipse.dirigible.components.base.http.access.HttpSecurityURIConfigurator;
-import org.eclipse.dirigible.components.tenants.repository.TenantRepository;
 import org.eclipse.dirigible.components.tenants.tenant.TenantContextInitFilter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -31,18 +30,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
 public class WebSecurityConfig {
 
-    /** The tenant repository. */
-    private final TenantRepository tenantRepository;
-
-    /**
-     * Instantiates a new web security config.
-     *
-     * @param tenantRepository the tenant repository
-     */
-    public WebSecurityConfig(TenantRepository tenantRepository) {
-        this.tenantRepository = tenantRepository;
-    }
-
     /**
      * Filter chain.
      *
@@ -51,11 +38,11 @@ public class WebSecurityConfig {
      * @throws Exception the exception
      */
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http, TenantContextInitFilter tenantContextInitFilter) throws Exception {
         http.cors(Customizer.withDefaults())
             .httpBasic(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable())
-            .addFilterBefore(new TenantContextInitFilter(tenantRepository), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(tenantContextInitFilter, UsernamePasswordAuthenticationFilter.class)
             .formLogin(Customizer.withDefaults())
             .logout(logout -> logout.deleteCookies("JSESSIONID"))
             .headers(headers -> headers.frameOptions(frameOpts -> frameOpts.disable()));

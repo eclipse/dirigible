@@ -15,21 +15,18 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
-
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.extensions.domain.Extension;
-import org.eclipse.dirigible.components.extensions.domain.ExtensionPoint;
 import org.eclipse.dirigible.components.extensions.service.ExtensionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +41,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.EXTENSION)
-public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<Extension> {
+public class ExtensionsSynchronizer<A extends Artefact> extends BaseSynchronizer<Extension> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(ExtensionsSynchronizer.class);
@@ -53,7 +50,7 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
     public static final String FILE_EXTENSION_EXTENSION = ".extension";
 
     /** The extension service. */
-    private ExtensionService extensionService;
+    private final ExtensionService extensionService;
 
     /** The synchronization callback. */
     private SynchronizerCallback callback;
@@ -77,7 +74,6 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
     public ArtefactService<Extension> getService() {
         return extensionService;
     }
-
 
     /**
      * Checks if is accepted.
@@ -173,14 +169,13 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
         Extension extension = null;
-        if (wrapper.getArtefact() instanceof Extension) {
-            extension = (Extension) wrapper.getArtefact();
-        } else {
+        if (!(wrapper.getArtefact() instanceof Extension)) {
             throw new UnsupportedOperationException(String.format("Trying to process %s as Extension", wrapper.getArtefact()
                                                                                                               .getClass()));
         }
+        extension = (Extension) wrapper.getArtefact();
 
         switch (flow) {
             case CREATE:

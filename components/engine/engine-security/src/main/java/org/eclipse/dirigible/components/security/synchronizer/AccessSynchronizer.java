@@ -16,16 +16,14 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.security.domain.Access;
@@ -45,7 +43,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Order(SynchronizersOrder.ACCESS)
-public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Access> {
+public class AccessSynchronizer<A extends Artefact> extends BaseSynchronizer<Access> {
 
     /**
      * The Constant logger.
@@ -60,7 +58,7 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
     /**
      * The security access service.
      */
-    private AccessService securityAccessService;
+    private final AccessService securityAccessService;
 
     /**
      * The synchronization callback.
@@ -86,7 +84,6 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
     public ArtefactService<Access> getService() {
         return securityAccessService;
     }
-
 
     /**
      * Checks if is accepted.
@@ -187,7 +184,7 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
         return true;
     }

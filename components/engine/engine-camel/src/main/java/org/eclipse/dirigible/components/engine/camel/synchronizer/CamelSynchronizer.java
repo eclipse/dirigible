@@ -10,12 +10,16 @@
  */
 package org.eclipse.dirigible.components.engine.camel.synchronizer;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.engine.camel.domain.Camel;
 import org.eclipse.dirigible.components.engine.camel.processor.CamelProcessor;
@@ -26,14 +30,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.List;
-
 @Component
 @Order(250)
-public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel> {
+public class CamelSynchronizer<A extends Artefact> extends BaseSynchronizer<Camel> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(CamelSynchronizer.class);
@@ -113,15 +112,14 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
     }
 
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
         try {
             Camel camel = null;
-            if (wrapper.getArtefact() instanceof Camel) {
-                camel = (Camel) wrapper.getArtefact();
-            } else {
+            if (!(wrapper.getArtefact() instanceof Camel)) {
                 throw new UnsupportedOperationException(String.format("Trying to process %s as Camel", wrapper.getArtefact()
                                                                                                               .getClass()));
             }
+            camel = (Camel) wrapper.getArtefact();
 
             switch (flow) {
                 case CREATE:

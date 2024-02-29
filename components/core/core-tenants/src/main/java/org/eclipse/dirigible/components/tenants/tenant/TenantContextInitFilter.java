@@ -13,9 +13,12 @@ package org.eclipse.dirigible.components.tenants.tenant;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import org.eclipse.dirigible.components.base.tenant.Tenant;
+import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.tenants.repository.TenantRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -27,6 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
 /**
  * The Class TenantContextInitFilter.
  */
+@Component
 public class TenantContextInitFilter extends OncePerRequestFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TenantContextInitFilter.class);
@@ -38,14 +42,16 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
 
     /** The tenant repository. */
     private final TenantRepository tenantRepository;
+    private final TenantContext tenantContext;
 
     /**
      * Instantiates a new tenant filter.
      *
      * @param tenantRepository the tenant repository
      */
-    public TenantContextInitFilter(TenantRepository tenantRepository) {
+    public TenantContextInitFilter(TenantRepository tenantRepository, TenantContext tenantContext) {
         this.tenantRepository = tenantRepository;
+        this.tenantContext = tenantContext;
     }
 
     /**
@@ -69,7 +75,7 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
         }
 
         try {
-            TenantContext.execute(currentTenant.get(), () -> chain.doFilter(request, response));
+            tenantContext.execute(currentTenant.get(), () -> chain.doFilter(request, response));
 
         } catch (ServletException | IOException | RuntimeException ex) {
             throw ex;

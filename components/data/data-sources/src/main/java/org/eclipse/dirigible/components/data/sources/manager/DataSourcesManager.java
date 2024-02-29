@@ -31,10 +31,9 @@ public class DataSourcesManager implements InitializingBean {
     private static DataSourcesManager INSTANCE;
 
     private final DataSourceService datasourceService;
-
     private final CustomDataSourcesService customDataSourcesService;
-
     private final DataSourceInitializer dataSourceInitializer;
+    private final TenantDataSourceNameManager tenantDataSourceNameManager;
 
     /**
      * Instantiates a new data sources manager.
@@ -45,10 +44,11 @@ public class DataSourcesManager implements InitializingBean {
      */
     @Autowired
     public DataSourcesManager(DataSourceService datasourceService, CustomDataSourcesService customDataSourcesService,
-            DataSourceInitializer dataSourceInitializer) {
+            DataSourceInitializer dataSourceInitializer, TenantDataSourceNameManager tenantDataSourceNameManager) {
         this.datasourceService = datasourceService;
         this.customDataSourcesService = customDataSourcesService;
         this.dataSourceInitializer = dataSourceInitializer;
+        this.tenantDataSourceNameManager = tenantDataSourceNameManager;
         this.customDataSourcesService.initialize();
     }
 
@@ -107,7 +107,7 @@ public class DataSourcesManager implements InitializingBean {
      * @return the data source definition
      */
     public DataSource getDataSourceDefinition(String name) {
-        String dataSourceName = TenantDataSourceNameManager.getTenantDataSourceName(name);
+        String dataSourceName = tenantDataSourceNameManager.getTenantDataSourceName(name);
         try {
             return datasourceService.findByName(dataSourceName);
         } catch (Exception e) {

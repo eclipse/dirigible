@@ -16,15 +16,13 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.engine.wiki.domain.Markdown;
@@ -43,7 +41,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.MARKDOWN)
-public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Markdown> {
+public class MarkdownSynchronizer<A extends Artefact> extends BaseSynchronizer<Markdown> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(MarkdownSynchronizer.class);
@@ -54,10 +52,10 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
     private static final String FILE_EXTENSION_MARKDOWN = ".md";
 
     /** The markdown service. */
-    private MarkdownService markdownService;
+    private final MarkdownService markdownService;
 
     /** The wiki service. */
-    private WikiService wikiService;
+    private final WikiService wikiService;
 
     /** The synchronization callback. */
     private SynchronizerCallback callback;
@@ -192,14 +190,13 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
         Markdown wiki = null;
-        if (wrapper.getArtefact() instanceof Markdown) {
-            wiki = (Markdown) wrapper.getArtefact();
-        } else {
+        if (!(wrapper.getArtefact() instanceof Markdown)) {
             throw new UnsupportedOperationException(String.format("Trying to process %s as Markdown", wrapper.getArtefact()
                                                                                                              .getClass()));
         }
+        wiki = (Markdown) wrapper.getArtefact();
 
         switch (flow) {
             case CREATE:

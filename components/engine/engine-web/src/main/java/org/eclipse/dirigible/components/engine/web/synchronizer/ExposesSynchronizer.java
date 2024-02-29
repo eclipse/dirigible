@@ -15,21 +15,20 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.project.ProjectMetadata;
-import org.eclipse.dirigible.components.project.ProjectMetadataUtils;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.engine.web.domain.Expose;
 import org.eclipse.dirigible.components.engine.web.exposure.ExposeManager;
 import org.eclipse.dirigible.components.engine.web.service.ExposeService;
+import org.eclipse.dirigible.components.project.ProjectMetadata;
+import org.eclipse.dirigible.components.project.ProjectMetadataUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.EXPOSE)
-public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Expose> {
+public class ExposesSynchronizer<A extends Artefact> extends BaseSynchronizer<Expose> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(ExposesSynchronizer.class);
@@ -52,7 +51,7 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
     public static final String FILE_NAME = "project.json";
 
     /** The expose service. */
-    private ExposeService exposeService;
+    private final ExposeService exposeService;
 
     /** The synchronization callback. */
     private SynchronizerCallback callback;
@@ -76,7 +75,6 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
     public ArtefactService<Expose> getService() {
         return exposeService;
     }
-
 
     /**
      * Checks if is accepted.
@@ -175,14 +173,13 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
         Expose expose = null;
-        if (wrapper.getArtefact() instanceof Expose) {
-            expose = (Expose) wrapper.getArtefact();
-        } else {
+        if (!(wrapper.getArtefact() instanceof Expose)) {
             throw new UnsupportedOperationException(String.format("Trying to process %s as Expose", wrapper.getArtefact()
                                                                                                            .getClass()));
         }
+        expose = (Expose) wrapper.getArtefact();
 
         switch (flow) {
             case CREATE:
