@@ -24,15 +24,12 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.domain.DataSourceProperty;
 import org.eclipse.dirigible.components.database.DatabaseParameters;
-import org.eclipse.dirigible.components.tenants.tenant.Tenant;
-import org.eclipse.dirigible.components.tenants.tenant.TenantContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
-import com.google.common.base.Objects;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -72,15 +69,11 @@ public class DataSourceInitializer {
         }
 
         return initDataSource(dataSource.getName(), dataSource.getDriver(), dataSource.getUrl(), dataSource.getUsername(),
-                dataSource.getPassword(), dataSource.getProperties());
-    }
-
-    private boolean isSystemDataSource(String dataSourceName) {
-        return Objects.equal(dataSourceName, getSystemDataSourceName());
+                dataSource.getPassword(), dataSource.getSchema(), dataSource.getProperties());
     }
 
     @SuppressWarnings("resource")
-    private ManagedDataSource initDataSource(String name, String driver, String url, String username, String password,
+    private ManagedDataSource initDataSource(String name, String driver, String url, String username, String password, String schema,
             List<DataSourceProperty> additionalProperties) {
         logger.info("Initializing a datasource with name: [{}]", name);
         if ("org.h2.Driver".equals(driver)) {
@@ -118,6 +111,7 @@ public class DataSourceInitializer {
             additionalProperties.forEach(dsp -> config.addDataSourceProperty(dsp.getName(), dsp.getValue()));
         }
 
+        config.setSchema(schema);
         config.setPoolName(name);
         config.setAutoCommit(true);
         HikariDataSource hds = new HikariDataSource(config);
@@ -137,7 +131,7 @@ public class DataSourceInitializer {
      * @return true, if is initialized
      */
     public boolean isInitialized(String dataSourceName) {
-        String name = getTenantDataSourceName(dataSourceName);
+        String name = TenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
         return DATASOURCES.containsKey(name);
 
     }
@@ -149,7 +143,7 @@ public class DataSourceInitializer {
      * @return the initialized data source
      */
     public javax.sql.DataSource getInitializedDataSource(String dataSourceName) {
-        String name = getTenantDataSourceName(dataSourceName);
+        String name = TenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
         return DATASOURCES.get(name);
     }
 
@@ -159,7 +153,7 @@ public class DataSourceInitializer {
      * @param dataSourceName the data source name
      */
     public void removeInitializedDataSource(String dataSourceName) {
-        String name = getTenantDataSourceName(dataSourceName);
+        String name = TenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
         DATASOURCES.remove(name);
     }
 
@@ -219,14 +213,6 @@ public class DataSourceInitializer {
               .forEach(key -> properties.put(key, Configuration.get(databaseKeyPrefix + key)));
 
         return properties;
-    }
-
-    private String getTenantDataSourceName(String dataSourceName) {
-        if (isSystemDataSource(dataSourceName) || TenantContext.isNotInitialized()) {
-            return dataSourceName;
-        }
-        Tenant tenant = TenantContext.getCurrentTenant();
-        return TenantDataSourceNameManager.createName(tenant, dataSourceName);
     }
 
 }

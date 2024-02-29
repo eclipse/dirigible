@@ -188,14 +188,14 @@ public class PostgresSqlDialect extends
         boolean exists = false;
         ResultSet resultSet = null;
 
-        table = normalizeTableName(table);
+        String normalizeTableName = normalizeTableName(table);
         DatabaseMetaData metadata = connection.getMetaData();
 
-        resultSet = metadata.getTables(null, null, DefaultSqlDialect.normalizeTableName(table),
-                ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
+        String schema = connection.getSchema();
+        resultSet = metadata.getTables(null, schema, normalizeTableName, ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
         exists = resultSet != null && resultSet.next();
         if (!exists) {
-            resultSet = metadata.getTables(null, null, DefaultSqlDialect.normalizeTableName(table.toLowerCase()),
+            resultSet = metadata.getTables(null, schema, DefaultSqlDialect.normalizeTableName(normalizeTableName.toLowerCase()),
                     ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
             exists = resultSet != null && resultSet.next();
         }

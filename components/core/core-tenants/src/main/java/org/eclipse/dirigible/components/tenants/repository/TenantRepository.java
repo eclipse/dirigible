@@ -10,8 +10,8 @@
  */
 package org.eclipse.dirigible.components.tenants.repository;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import org.eclipse.dirigible.components.tenants.domain.Tenant;
 import org.eclipse.dirigible.components.tenants.domain.TenantStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -35,5 +35,5 @@ public interface TenantRepository extends JpaRepository<Tenant, String> {
      * @param status the status
      * @return the sets the
      */
-    Set<Tenant> findByStatus(TenantStatus status);
+    List<Tenant> findByStatus(TenantStatus status);
 }

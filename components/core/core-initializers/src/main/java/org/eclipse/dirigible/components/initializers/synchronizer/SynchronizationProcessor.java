@@ -366,6 +366,9 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
             getErrors().forEach(e -> {
                 logger.error("Error occured during synchronization: [{}]", e);
             });
+
+            logger.debug("Processing synchronizers completed!");
+
         } finally {
             if (logger.isDebugEnabled()) {
                 int countCreated = 0;

@@ -42,7 +42,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.DATASOURCE)
-public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer<DataSource> {
+public class DataSourcesSynchronizer<A extends Artefact> extends <DataSource> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DataSourcesSynchronizer.class);
@@ -51,7 +51,7 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
     public static final String FILE_DATASOURCE_EXTENSION = ".datasource";
 
     /** The datasource service. */
-    private DataSourceService dataSourceService;
+    private final DataSourceService dataSourceService;
 
     /** The synchronization callback. */
     private SynchronizerCallback callback;
@@ -182,12 +182,11 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
     public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
         try {
             DataSource datasource = null;
-            if (wrapper.getArtefact() instanceof DataSource) {
-                datasource = (DataSource) wrapper.getArtefact();
-            } else {
+            if (!(wrapper.getArtefact() instanceof DataSource)) {
                 throw new UnsupportedOperationException(String.format("Trying to process %s as DataSource", wrapper.getArtefact()
                                                                                                                    .getClass()));
             }
+            datasource = (DataSource) wrapper.getArtefact();
 
             switch (flow) {
                 case CREATE:

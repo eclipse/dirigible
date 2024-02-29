@@ -275,13 +275,4 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
      */
     void importData(Connection connection, String table, InputStream input) throws Exception;
 
-    /**
-     * Add current schema to JDBC URL
-     *
-     * @param jdbcUrl
-     * @param schema
-     * @return
-     */
-    String addCurrenctSchema(String jdbcUrl, String schema);
-
 }

@@ -321,7 +321,7 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
      */
     @Override
     public boolean exists(Connection connection, String table, int type) throws SQLException {
-        return exists(connection, null, table, type);
+        return exists(connection, connection.getSchema(), table, type);
     }
 
     /**
@@ -337,13 +337,13 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
     @Override
     public boolean exists(Connection connection, String schema, String table, int type) throws SQLException {
         boolean exists = false;
-        table = normalizeTableName(table);
+        String normalizeTableName = normalizeTableName(table);
         DatabaseMetaData metadata = connection.getMetaData();
         ResultSet resultSet =
-                metadata.getTables(null, schema, normalizeTableName(table), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
+                metadata.getTables(null, schema, normalizeTableName, ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
         exists = resultSet != null && resultSet.next();
         if (!exists) {
-            resultSet = metadata.getTables(null, null, normalizeTableName(table.toUpperCase()),
+            resultSet = metadata.getTables(null, schema, normalizeTableName.toUpperCase(),
                     ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
             exists = resultSet != null && resultSet.next();
         }
@@ -701,15 +701,6 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
     @Override
     public void importData(Connection connection, String table, InputStream input) throws Exception {
         throw new SQLFeatureNotSupportedException();
-    }
-
-    @Override
-    public String addCurrenctSchema(String jdbcUrl, String schema) {
-        return jdbcUrl + (jdbcUrl.contains("?") ? '&' : '?') + ("currentSchema=" + escapeSchema(schema));
-    }
-
-    private String escapeSchema(String schema) {
-        return getEscapeSymbol() + schema + getEscapeSymbol();
     }
 
 }
