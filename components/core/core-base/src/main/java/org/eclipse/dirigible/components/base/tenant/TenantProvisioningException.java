@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.components.tenants.provisioning;
+package org.eclipse.dirigible.components.base.tenant;
 
 public class TenantProvisioningException extends RuntimeException {
 

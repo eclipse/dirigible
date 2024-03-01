@@ -10,7 +10,10 @@
  */
 package org.eclipse.dirigible.components.initializers.definition;
 
+import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -19,5 +22,8 @@ import org.springframework.stereotype.Repository;
 @Repository("definitionRepository")
 public interface DefinitionRepository extends JpaRepository<Definition, Long> {
 
-}
+    @Modifying
+    @Query("update Definition d set d.checksum = :checksum where d.type in :types")
+    void updateChecksums(String checksum, Set<String> types);
 
+}
