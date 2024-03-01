@@ -8,22 +8,26 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.spring.BeanProvider;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.base.tenant.TenantResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class BaseSynchronizer<A extends Artefact> implements Synchronizer<A> {
+
+    private static final Logger logger = LoggerFactory.getLogger(BaseSynchronizer.class);
 
     @Override
     public final boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
         if (!isMultitenant()) {
             return completeImpl(wrapper, flow);
         }
-        ArtefactLifecycle lifecycle = wrapper.getArtefact()
-                                             .getLifecycle();
+        Artefact artefact = wrapper.getArtefact();
+        ArtefactLifecycle lifecycle = artefact.getLifecycle();
+        logger.info("[{} will complete artifact with lifecycle [{}] in phase [{}]]", this, lifecycle, flow);
 
         TenantContext tenantContext = BeanProvider.getTenantContext();
         List<TenantResult<Boolean>> results = tenantContext.executeForEachTenant(() -> {
 
-            wrapper.getArtefact()
-                   .setLifecycle(lifecycle);
+            artefact.setLifecycle(lifecycle);
             return completeImpl(wrapper, flow);
         });
 

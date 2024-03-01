@@ -23,4 +23,9 @@ class TenantResultImpl<Result> implements TenantResult<Result> {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "TenantResultImpl [tenant=" + tenant + ", result=" + result + "]";
+    }
+
 }
