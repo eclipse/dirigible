@@ -2,6 +2,8 @@ package org.eclipse.dirigible.components.tenants.provisioning;
 
 import java.util.List;
 import java.util.Set;
+import org.eclipse.dirigible.components.base.tenant.TenantPostProvisioningStep;
+import org.eclipse.dirigible.components.base.tenant.TenantProvisioningStep;
 import org.eclipse.dirigible.components.tenants.domain.Tenant;
 import org.eclipse.dirigible.components.tenants.domain.TenantStatus;
 import org.eclipse.dirigible.components.tenants.repository.TenantRepository;
@@ -17,18 +19,28 @@ class TenantsProvisioner {
 
     private final TenantRepository tenantRepository;
     private final Set<TenantProvisioningStep> provisioningSteps;
+    private final Set<TenantPostProvisioningStep> postProvisioningSteps;
     private final TenantFactory tenantFactory;
 
-    TenantsProvisioner(TenantRepository tenantRepository, Set<TenantProvisioningStep> provisioningSteps, TenantFactory tenantFactory) {
+    TenantsProvisioner(TenantRepository tenantRepository, Set<TenantProvisioningStep> provisioningSteps,
+            Set<TenantPostProvisioningStep> postProvisioningSteps, TenantFactory tenantFactory) {
         this.tenantRepository = tenantRepository;
         this.provisioningSteps = provisioningSteps;
+        this.postProvisioningSteps = postProvisioningSteps;
         this.tenantFactory = tenantFactory;
     }
 
     public void provision() {
         List<Tenant> tenants = tenantRepository.findByStatus(TenantStatus.INITIAL);
         LOGGER.info("Tenants applicable for provisioning [{}]", tenants);
+
         tenants.forEach(this::provisionTenant);
+
+        if (!tenants.isEmpty()) {
+            LOGGER.info("Starting post provisioning process...");
+            postProvisioningSteps.forEach(this::callPostProvisioningStep);
+            LOGGER.info("Post provisioning process has completed.");
+        }
     }
 
     private void provisionTenant(Tenant tenant) {
@@ -44,6 +56,14 @@ class TenantsProvisioner {
             LOGGER.info("Tenant [{}] has been provisioned successfully.", tenant);
         } catch (RuntimeException ex) {
             LOGGER.error("Failed to provision tenant [{}]", tenant, ex);
+        }
+    }
+
+    private void callPostProvisioningStep(TenantPostProvisioningStep step) {
+        try {
+            step.execute();
+        } catch (RuntimeException ex) {
+            LOGGER.error("PostProvisioning step [{}] has failed.", step, ex);
         }
     }
 

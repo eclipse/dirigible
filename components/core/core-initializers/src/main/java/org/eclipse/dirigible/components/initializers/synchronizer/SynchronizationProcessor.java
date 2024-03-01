@@ -129,10 +129,17 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
         }
     }
 
+    public void forceProcessSynchronizers() {
+        this.synchronizationWatcher.force();
+        processing.set(false);
+        processSynchronizers();
+    }
+
     /**
      * Process synchronizers.
      */
-    public synchronized void processSynchronizers() {
+    public void processSynchronizers() {
+        logger.debug("Processing synchronizers...");
 
         if (!this.synchronizationWatcher.isModified() && initialized.get()) {
             logger.debug("Skipped synchronization as no changes in the Registry.");
@@ -150,8 +157,6 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
         }
 
         processing.set(true);
-
-        logger.debug("Processing synchronizers started...");
 
         try {
 
