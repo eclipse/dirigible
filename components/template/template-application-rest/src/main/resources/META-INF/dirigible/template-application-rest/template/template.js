@@ -22,6 +22,14 @@ exports.getTemplate = function (parameters) {
         action: "copy",
         rename: "gen/api/utils/HttpUtils.ts",
     }, {
+        location: "/template-application-rest/api/utils/ForbiddenError.ts.template",
+        action: "copy",
+        rename: "gen/api/utils/ForbiddenError.ts",
+    }, {
+        location: "/template-application-rest/api/utils/ValidationError.ts.template",
+        action: "copy",
+        rename: "gen/api/utils/ValidationError.ts",
+    }, {
         location: "/template-application-rest/api/entity.ts.template",
         action: "generate",
         rename: "gen/api/{{perspectiveName}}/{{name}}Service.ts",

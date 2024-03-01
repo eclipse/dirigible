@@ -4,12 +4,15 @@
  * Do not modify the content as it may be re-generated again.
  */
 const viewData = {
-    id: "{{name}}",
-    label: "{{name}}",
+    id: "${name}",
+    label: "${name}",
     factory: "frame",
-    region: "left",
-    link: "/services/web/{{projectName}}/gen/ui/{{perspectiveName}}/{{name}}/index.html",
-    perspectiveName: "{{perspectiveName}}"
+    region: "center",
+    link: "/services/web/${projectName}/gen/ui/${perspectiveName}/${name}/index.html",
+    perspectiveName: "${perspectiveName}",
+#if($perspectiveRole)
+    role: "${perspectiveRole}",
+#end
 };
 
 if (typeof exports !== 'undefined') {

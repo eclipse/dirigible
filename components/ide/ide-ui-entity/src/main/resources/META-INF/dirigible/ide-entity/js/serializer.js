@@ -45,7 +45,8 @@ function createModel(graph) {
 				'" navigationPath="' + _.escape(child.value.navigationPath) +
 				'" perspectiveName="' + _.escape(child.value.perspectiveName) +
 				'" perspectiveIcon="' + getPerspectiveIcon(graph, child) +
-				'" perspectiveOrder="' + getPerspectiveOrder(graph, child) + '"';
+				'" perspectiveOrder="' + getPerspectiveOrder(graph, child) +
+				'" perspectiveRole="' + getPerspectiveRole(graph, child) + '"';
 
 			if (child.value.feedUrl && child.value.feedUrl !== "") {
 				child.value.feedUrl = btoa(child.value.feedUrl);
@@ -262,7 +263,6 @@ function getPerspectiveIcon(graph, child) {
 	for (let i = 0; i < perspectives.length; i++) {
 		if (perspectiveName === _.escape(perspectives[i].id)) {
 			perspectiveIcon = perspectives[i].icon;
-
 		}
 	}
 	return perspectiveIcon;
@@ -275,9 +275,20 @@ function getPerspectiveOrder(graph, child) {
 	for (let i = 0; i < perspectives.length; i++) {
 		if (perspectiveName === _.escape(perspectives[i].id)) {
 			perspectiveOrder = perspectives[i].order;
-
 		}
 	}
 	return perspectiveOrder;
+}
+
+function getPerspectiveRole(graph, child) {
+	let perspectiveName = _.escape(child.value.perspectiveName);
+	let perspectiveRole = _.escape(child.value.perspectiveRole);
+	let perspectives = graph.getModel().perspectives || [];
+	for (let i = 0; i < perspectives.length; i++) {
+		if (perspectiveName === _.escape(perspectives[i].id)) {
+			perspectiveRole = perspectives[i].role;
+		}
+	}
+	return perspectiveRole ? perspectiveRole : '';
 }
 

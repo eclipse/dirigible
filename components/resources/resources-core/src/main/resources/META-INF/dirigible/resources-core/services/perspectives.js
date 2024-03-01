@@ -12,6 +12,7 @@
 import { extensions } from "sdk/extensions";
 import { request, response } from "sdk/http";
 import { uuid } from "sdk/utils";
+import { user } from "sdk/security";
 
 let perspectives = [];
 let extensionPoint = request.getParameter('extensionPoint') || 'ide-perspective';
@@ -25,7 +26,12 @@ function setETag() {
 }
 
 for (let i = 0; i < perspectiveExtensions?.length; i++) {
-	perspectives.push(perspectiveExtensions[i].getPerspective());
+	const perspective = perspectiveExtensions[i].getPerspective();
+	if (perspective.role && user.isInRole(perspective.role)) {
+		perspectives.push(perspective);
+	} else if (perspective.role === undefined) {
+		perspectives.push(perspective);
+	}
 	let duplication = false;
 	for (let i = 0; i < perspectives.length; i++) {
 		for (let j = 0; j < perspectives.length; j++) {

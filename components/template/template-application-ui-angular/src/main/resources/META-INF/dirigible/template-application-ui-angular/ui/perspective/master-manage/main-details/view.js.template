@@ -4,12 +4,15 @@
  * Do not modify the content as it may be re-generated again.
  */
 const viewData = {
-    id: "${name}",
+    id: "${name}-details",
     label: "${name}",
     factory: "frame",
-    region: "bottom",
-    link: "/services/web/${projectName}/gen/ui/${perspectiveName}/${masterEntity}/${name}/index.html",
-    perspectiveName: "#if($hasReferencedProjection)${referencedProjectionPerspectiveName}#else${perspectiveName}#end"
+    region: "center",
+    link: "/services/web/${projectName}/gen/ui/${perspectiveName}/${name}/main-details/index.html",
+    perspectiveName: "${perspectiveName}",
+#if($perspectiveRole)
+    role: "${perspectiveRole}",
+#end
 };
 
 if (typeof exports !== 'undefined') {

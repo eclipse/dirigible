@@ -12,6 +12,7 @@
 import { extensions } from "sdk/extensions";
 import { request, response } from "sdk/http";
 import { uuid } from "sdk/utils";
+import { user } from "sdk/security";
 
 let views = [];
 let extensionPoint = request.getParameter('extensionPoint') || 'ide-view';
@@ -25,7 +26,12 @@ function setETag() {
 }
 
 for (let i = 0; i < viewExtensions?.length; i++) {
-	views.push(viewExtensions[i].getView());
+	const view = viewExtensions[i].getView();
+	if (view.role && user.isInRole(view.role)) {
+		views.push(view);
+	} else if (view.role === undefined) {
+		views.push(view);
+	}
 	let duplication = false;
 	for (let i = 0; i < views.length; i++) {
 		for (let j = 0; j < views.length; j++) {

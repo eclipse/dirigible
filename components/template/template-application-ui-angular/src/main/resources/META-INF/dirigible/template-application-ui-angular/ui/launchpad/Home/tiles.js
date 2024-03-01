@@ -5,6 +5,7 @@
  */
 import { response } from "sdk/http";
 import { extensions } from "sdk/extensions";
+import { user } from "sdk/security";
 
 let tiles = {};
 
@@ -12,7 +13,7 @@ let tileExtensions = await extensions.loadExtensionModules("${projectName}-tile"
 for (let i = 0; i < tileExtensions?.length; i++) {
     let tile = tileExtensions[i].getTile();
 
-    if (!tile) {
+    if (!tile || (tile.role && !user.isInRole(tile.role))) {
         continue;
     }
     if (!tiles[tile.group]) {
