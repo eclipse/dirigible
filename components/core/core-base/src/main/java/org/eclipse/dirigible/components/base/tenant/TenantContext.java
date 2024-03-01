@@ -10,7 +10,7 @@
  */
 package org.eclipse.dirigible.components.base.tenant;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface TenantContext {
 
@@ -57,21 +57,10 @@ public interface TenantContext {
     /**
      * This method will execute callable.call() for each provisioned tenant.
      *
+     * @param <Result>
      * @param callable
-     * @return the result of the last tenant execution or empty Optional if there are no tenants
+     * @return the results of the tenant executions
      */
-    <Result> Optional<Result> executeForEachTenant(CallableResultAndNoException<Result> callable);
-
-    @FunctionalInterface
-    public interface CallableResultAndNoException<Result> {
-
-        Result call();
-    }
-
-    @FunctionalInterface
-    public interface CallableNoResultAndException {
-
-        void call() throws Exception;
-    }
+    <Result> List<TenantResult<Result>> executeForEachTenant(CallableResultAndNoException<Result> callable);
 
 }

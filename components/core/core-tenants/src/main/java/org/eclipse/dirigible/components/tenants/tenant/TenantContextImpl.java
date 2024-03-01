@@ -10,33 +10,29 @@
  */
 package org.eclipse.dirigible.components.tenants.tenant;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+import org.eclipse.dirigible.components.base.tenant.CallableNoResultAndException;
+import org.eclipse.dirigible.components.base.tenant.CallableResultAndNoException;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
+import org.eclipse.dirigible.components.base.tenant.TenantResult;
 import org.eclipse.dirigible.components.tenants.domain.TenantStatus;
 import org.eclipse.dirigible.components.tenants.repository.TenantRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * The Class TenantContextImpl.
- */
 @Component
 class TenantContextImpl implements TenantContext {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TenantContextImpl.class);
 
-    /** The Constant currentTenantId. */
     private static final ThreadLocal<Tenant> currentTenantHolder = new ThreadLocal<>();
 
     private final TenantRepository tenantRepository;
 
-    @Autowired
     TenantContextImpl(TenantRepository tenantRepository) {
         this.tenantRepository = tenantRepository;
     }
@@ -89,20 +85,19 @@ class TenantContextImpl implements TenantContext {
     }
 
     @Override
-    public <Result> Optional<Result> executeForEachTenant(CallableResultAndNoException<Result> callable) {
+    public <Result> List<TenantResult<Result>> executeForEachTenant(CallableResultAndNoException<Result> callable) {
         List<Tenant> tenants = tenantRepository.findByStatus(TenantStatus.PROVISIONED)
                                                .stream()
                                                .map(TenantImpl::createFromEntity)
                                                .collect(Collectors.toList());
-        LOGGER.info("Will execute code for tenants [{}]", tenants);
-        for (Iterator<Tenant> it = tenants.iterator(); it.hasNext();) {
-            Tenant tenant = it.next();
+        LOGGER.info("Will execute code for tenants [{}]...", tenants);
+        List<TenantResult<Result>> results = new ArrayList<>(tenants.size());
+
+        tenants.forEach(tenant -> {
             Result result = execute(tenant, callable);
-            if (!it.hasNext()) { // the last element
-                return Optional.of(result);
-            }
-        }
-        return Optional.empty();
+            results.add(new TenantResultImpl<>(tenant, result));
+        });
+        return results;
     }
 
 }

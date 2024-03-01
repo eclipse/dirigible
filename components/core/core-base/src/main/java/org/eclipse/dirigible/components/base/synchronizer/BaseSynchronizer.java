@@ -1,12 +1,13 @@
 package org.eclipse.dirigible.components.base.synchronizer;
 
-import java.util.Optional;
+import java.util.List;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.spring.BeanProvider;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
+import org.eclipse.dirigible.components.base.tenant.TenantResult;
 
 public abstract class BaseSynchronizer<A extends Artefact> implements Synchronizer<A> {
 
@@ -17,14 +18,18 @@ public abstract class BaseSynchronizer<A extends Artefact> implements Synchroniz
         }
         ArtefactLifecycle lifecycle = wrapper.getArtefact()
                                              .getLifecycle();
+
         TenantContext tenantContext = BeanProvider.getTenantContext();
-        Optional<Boolean> result = tenantContext.executeForEachTenant(() -> {
+        List<TenantResult<Boolean>> results = tenantContext.executeForEachTenant(() -> {
 
             wrapper.getArtefact()
                    .setLifecycle(lifecycle);
             return completeImpl(wrapper, flow);
         });
-        return result.orElse(true);
+
+        return results.stream()
+                      .map(TenantResult<Boolean>::getResult)
+                      .allMatch(r -> Boolean.TRUE.equals(r));
     }
 
     @Override
