@@ -10,23 +10,50 @@
  */
 package org.eclipse.dirigible.components.engine.bpm.flowable.dto;
 
+/**
+ * The Class ActionData.
+ */
 public class ActionData {
 
+    /** The action. */
     private String action;
 
+    /**
+     * Gets the action.
+     *
+     * @return the action
+     */
     public String getAction() {
         return action;
     }
 
+    /**
+     * The Enum Action.
+     */
     public enum Action {
-        RETRY("RETRY"), SKIP("SKIP");
 
+        /** The retry. */
+        RETRY("RETRY"),
+        /** The skip. */
+        SKIP("SKIP");
+
+        /** The action name. */
         private final String actionName;
 
+        /**
+         * Instantiates a new action.
+         *
+         * @param actionName the action name
+         */
         Action(String actionName) {
             this.actionName = actionName;
         }
 
+        /**
+         * Gets the action name.
+         *
+         * @return the action name
+         */
         public String getActionName() {
             return actionName;
         }

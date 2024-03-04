@@ -54,6 +54,7 @@ public class BpmService {
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(BpmService.class);
 
+    /** The Constant DIRIGIBLE_BPM_INTERNAL_SKIP_STEP. */
     public static final String DIRIGIBLE_BPM_INTERNAL_SKIP_STEP = "DIRIGIBLE_BPM_INTERNAL_SKIP_STEP";
 
     /** The workspace service. */
@@ -347,7 +348,7 @@ public class BpmService {
     }
 
     /**
-     * Retry dead-letter job by moving it back to active state
+     * Retry dead-letter job by moving it back to active state.
      *
      * @param job the job instance
      * @param numberOfRetries desired number of retries
@@ -359,7 +360,7 @@ public class BpmService {
     }
 
     /**
-     * Add or update variable in the process context
+     * Add or update variable in the process context.
      *
      * @param processInstanceId the process instance id
      * @param key variable key

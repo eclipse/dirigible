@@ -279,7 +279,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 
                 // Processing of cross-synchronizer artefacts once again due to eventual dependency issues
                 int crossRetryCount = Configuration.getAsInt("DIRIGIBLE_SYNCHRONIZER_CROSS_RETRY_COUNT", 10);
-                int crossRetryInterval = Configuration.getAsInt("DIRIGIBLE_SYNCHRONIZER_CROSS_RETRY_interval", 10000);
+                int crossRetryInterval = Configuration.getAsInt("DIRIGIBLE_SYNCHRONIZER_CROSS_RETRY_INTERVAL", 10000);
                 int retryCount = 0;
                 if (undepleted.size() > 0) {
                     logger.warn("Cross-processing of undepleated artefacts...");

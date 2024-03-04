@@ -251,7 +251,7 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
     }
 
     /**
-     * List active process instance variables
+     * List active process instance variables.
      *
      * @param id the process instance id
      * @return process variables list
@@ -271,9 +271,11 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
     }
 
     /**
-     * Add or update active process instance variable
+     * Add or update active process instance variable.
      *
      * @param id the process instance id
+     * @param variableData the variable data
+     * @return the response entity
      */
     @PostMapping(value = "/bpm-processes/instance/{id}/variables")
     public ResponseEntity<Void> addProcessInstanceVariables(@PathVariable("id") String id, @RequestBody VariableData variableData) {
@@ -283,10 +285,11 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
     }
 
     /**
-     * Execute action on active process instance variable
+     * Execute action on active process instance variable.
      *
      * @param id the process instance id
      * @param actionData the action to be executed, possible values: RETRY
+     * @return the response entity
      */
     @PostMapping(value = "/bpm-processes/instance/{id}")
     public ResponseEntity<String> executeProcessInstanceAction(@PathVariable("id") String id, @RequestBody ActionData actionData) {
@@ -305,6 +308,12 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
         }
     }
 
+    /**
+     * Retry job.
+     *
+     * @param processInstanceId the process instance id
+     * @return the response entity
+     */
     private ResponseEntity<String> retryJob(String processInstanceId) {
         List<Job> jobs = bpmService.getDeadLetterJobs(processInstanceId);
 

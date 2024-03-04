@@ -124,7 +124,7 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Bpmn> parse(String location, byte[] content) throws ParseException {

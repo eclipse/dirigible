@@ -14,6 +14,9 @@ import org.eclipse.dirigible.components.engine.bpm.flowable.domain.Bpmn;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The Interface BpmnRepository.
+ */
 @Repository("bpmnRepository")
 public interface BpmnRepository extends JpaRepository<Bpmn, Long> {
 
