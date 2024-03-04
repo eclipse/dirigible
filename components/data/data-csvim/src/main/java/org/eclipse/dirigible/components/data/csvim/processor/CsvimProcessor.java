@@ -395,13 +395,7 @@ public class CsvimProcessor {
      * @return the csv data batch size
      */
     private int getCsvDataBatchSize() {
-        int batchSize = DIRIGIBLE_CSV_DATA_BATCH_SIZE_DEFAULT;
-        try {
-            batchSize = Integer.parseInt(Configuration.get(DIRIGIBLE_CSV_DATA_BATCH_SIZE));
-        } catch (NumberFormatException e) {
-            // Do nothing
-        }
-        return batchSize;
+        return Configuration.getAsInt(DIRIGIBLE_CSV_DATA_BATCH_SIZE, DIRIGIBLE_CSV_DATA_BATCH_SIZE_DEFAULT);
     }
 
     /**
