@@ -298,10 +298,14 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
                         executeSchemaUpdate(connection, schema);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     }
+                    if (schema.getLifecycle()
+                              .equals(ArtefactLifecycle.MODIFIED)) {
+                        return false;
+                    }
                     break;
                 case DELETE:
-                    if (ArtefactLifecycle.CREATED.equals(schema.getLifecycle())
-                            || ArtefactLifecycle.UPDATED.equals(schema.getLifecycle())) {
+                    if (ArtefactLifecycle.CREATED.equals(schema.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(schema.getLifecycle())
+                            || ArtefactLifecycle.FAILED.equals(schema.getLifecycle())) {
                         executeSchemaDrop(connection, schema);
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
                         break;

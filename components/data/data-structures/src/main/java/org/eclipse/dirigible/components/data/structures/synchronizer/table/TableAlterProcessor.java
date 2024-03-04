@@ -118,7 +118,8 @@ public class TableAlterProcessor {
 
             modelColumnNames.add(name.toUpperCase());
 
-            if (!columnDefinitions.containsKey(nameOriginal.toUpperCase())) {
+            String nameOriginalCanonical = nameOriginal.toUpperCase();
+            if (!columnDefinitions.containsKey(nameOriginalCanonical)) {
 
                 AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection)
                                                                 .alter()
@@ -136,15 +137,18 @@ public class TableAlterProcessor {
 
                 executeAlterBuilder(connection, alterTableBuilder);
 
-            } else if (!columnDefinitions.get(nameOriginal.toUpperCase())
-                                         .equals(type.toString())) {
-                throw new SQLException(String.format(INCOMPATIBLE_CHANGE_OF_TABLE, tableName, name,
-                        "of type " + columnDefinitions.get(name) + " to be changed to" + type));
+            } else {
+                String typeFromMetadata = columnDefinitions.get(nameOriginalCanonical);
+                String typeFromDefinition = type.toString();
+                if (!DataTypeUtils.getUnifiedDatabaseType(typeFromMetadata)
+                                  .equals(DataTypeUtils.getUnifiedDatabaseType(typeFromDefinition))) {
+                    throw new SQLException(String.format(INCOMPATIBLE_CHANGE_OF_TABLE, tableName, name,
+                            "of type " + typeFromMetadata + " to be changed to " + type));
+                }
             }
         }
 
         // DROP iteration
-
         for (String columnName : columnDefinitions.keySet()) {
             if (caseSensitive) {
                 columnName = "\"" + columnName + "\"";

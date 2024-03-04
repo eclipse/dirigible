@@ -211,12 +211,19 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
                     }
                     callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                 }
+                if (expose.getLifecycle()
+                          .equals(ArtefactLifecycle.FAILED)) {
+                    callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                    return false;
+                }
                 break;
             case DELETE:
                 if (expose.getLifecycle()
                           .equals(ArtefactLifecycle.CREATED)
                         || expose.getLifecycle()
-                                 .equals(ArtefactLifecycle.UPDATED)) {
+                                 .equals(ArtefactLifecycle.UPDATED)
+                        || expose.getLifecycle()
+                                 .equals(ArtefactLifecycle.FAILED)) {
                     ExposeManager.unregisterProject(expose.getName());
                     callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
                 }

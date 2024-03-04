@@ -187,10 +187,14 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
                 if (ArtefactLifecycle.MODIFIED.equals(extensionPoint.getLifecycle())) {
                     callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                 }
+                if (ArtefactLifecycle.FAILED.equals(extensionPoint.getLifecycle())) {
+                    return false;
+                }
                 break;
             case DELETE:
                 if (ArtefactLifecycle.CREATED.equals(extensionPoint.getLifecycle())
-                        || ArtefactLifecycle.UPDATED.equals(extensionPoint.getLifecycle())) {
+                        || ArtefactLifecycle.UPDATED.equals(extensionPoint.getLifecycle())
+                        || ArtefactLifecycle.FAILED.equals(extensionPoint.getLifecycle())) {
                     try {
                         getService().delete(extensionPoint);
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");

@@ -192,10 +192,13 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
                 if (ArtefactLifecycle.MODIFIED.equals(extension.getLifecycle())) {
                     callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                 }
+                if (ArtefactLifecycle.FAILED.equals(extension.getLifecycle())) {
+                    return false;
+                }
                 break;
             case DELETE:
-                if (ArtefactLifecycle.CREATED.equals(extension.getLifecycle())
-                        || ArtefactLifecycle.UPDATED.equals(extension.getLifecycle())) {
+                if (ArtefactLifecycle.CREATED.equals(extension.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(extension.getLifecycle())
+                        || ArtefactLifecycle.FAILED.equals(extension.getLifecycle())) {
                     try {
                         getService().delete(extension);
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");

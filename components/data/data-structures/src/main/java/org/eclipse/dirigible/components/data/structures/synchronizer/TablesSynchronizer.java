@@ -359,9 +359,13 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
                         executeTableUpdate(connection, table);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     }
+                    if (ArtefactLifecycle.FAILED.equals(table.getLifecycle())) {
+                        return false;
+                    }
                     break;
                 case DELETE:
-                    if (ArtefactLifecycle.CREATED.equals(table.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(table.getLifecycle())) {
+                    if (ArtefactLifecycle.CREATED.equals(table.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(table.getLifecycle())
+                            || ArtefactLifecycle.FAILED.equals(table.getLifecycle())) {
                         if (SqlFactory.getNative(connection)
                                       .existsTable(connection, table.getName())) {
                             if (SqlFactory.deriveDialect(connection)

@@ -263,9 +263,13 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
                         generateOData(odata);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     }
+                    if (ArtefactLifecycle.MODIFIED.equals(odata.getLifecycle())) {
+                        return false;
+                    }
                     break;
                 case DELETE:
-                    if (ArtefactLifecycle.CREATED.equals(odata.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(odata.getLifecycle())) {
+                    if (ArtefactLifecycle.CREATED.equals(odata.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(odata.getLifecycle())
+                            || ArtefactLifecycle.FAILED.equals(odata.getLifecycle())) {
                         cleanupOData(odata);
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
                     }

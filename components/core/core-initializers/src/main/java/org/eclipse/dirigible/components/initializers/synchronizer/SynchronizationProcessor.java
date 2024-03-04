@@ -818,6 +818,9 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
             String message) {
         // if (logger.isTraceEnabled()) {logger.trace("Processed artefact with key: {} with status: {}",
         // artefact.getKey(), lifecycle.getValue());}
+        if (ArtefactLifecycle.FAILED.equals(lifecycle)) {
+            logger.error("Processing failed for artefact with key: {}", artefact.getKey());
+        }
         synchronizer.setStatus(artefact, lifecycle, message);
     }
 
