@@ -28,6 +28,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static org.eclipse.dirigible.components.engine.bpm.flowable.dto.ActionData.Action.SKIP;
+import static org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmService.DIRIGIBLE_BPM_INTERNAL_SKIP_STEP;
+
 /**
  * The Class DirigibleCallDelegate.
  */
@@ -89,23 +92,24 @@ public class DirigibleCallDelegate implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) {
 
-        try {
-            Map<Object, Object> context = new HashMap<>();
-            ExecutionData executionData = new ExecutionData();
-            BeanUtils.copyProperties(execution, executionData);
-            context.put("execution", GsonHelper.toJson(executionData));
-            if (type == null) {
-                type = new FixedValue("javascript");
-            }
-            if (handler == null) {
-                throw new BpmnError("Handler cannot be null at the call delegate.");
-            }
-
-            executeJSHandler(context);
-
-        } catch (Exception e) {
-            throw new BpmnError(e.getMessage());
+        String action = (String) execution.getVariable(DIRIGIBLE_BPM_INTERNAL_SKIP_STEP);
+        if (SKIP.getActionName()
+                .equals(action)) {
+            execution.removeVariable(DIRIGIBLE_BPM_INTERNAL_SKIP_STEP);
+            return;
         }
+
+        Map<Object, Object> context = new HashMap<>();
+        ExecutionData executionData = new ExecutionData();
+        BeanUtils.copyProperties(execution, executionData);
+        context.put("execution", GsonHelper.toJson(executionData));
+        if (type == null) {
+            type = new FixedValue("javascript");
+        }
+        if (handler == null) {
+            throw new BpmnError("Handler cannot be null at the call delegate.");
+        }
+        executeJSHandler(context);
     }
 
     /**

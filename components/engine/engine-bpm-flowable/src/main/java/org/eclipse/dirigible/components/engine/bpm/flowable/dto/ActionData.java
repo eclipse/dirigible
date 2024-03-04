@@ -9,7 +9,7 @@ public class ActionData {
     }
 
     public enum Action {
-        RETRY("RETRY");
+        RETRY("RETRY"), SKIP("SKIP");
 
         private final String actionName;
 
