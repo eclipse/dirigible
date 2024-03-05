@@ -15,7 +15,6 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
@@ -23,7 +22,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.MultitenantBaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
@@ -42,11 +41,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.DATASOURCE)
-<<<<<<< Upstream, based on dirigible-official/master
-public class DataSourcesSynchronizer<A extends Artefact> extends <DataSource> {
-=======
-public class DataSourcesSynchronizer<A extends Artefact> extends BaseSynchronizer<DataSource> {
->>>>>>> ef993c1 more generic approach for multitenant synchronizers support
+public class DataSourcesSynchronizer<A extends Artefact> extends MultitenantBaseSynchronizer<DataSource> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DataSourcesSynchronizer.class);
@@ -79,7 +74,6 @@ public class DataSourcesSynchronizer<A extends Artefact> extends BaseSynchronize
     public ArtefactService<DataSource> getService() {
         return dataSourceService;
     }
-
 
     /**
      * Checks if is accepted.
@@ -175,13 +169,6 @@ public class DataSourcesSynchronizer<A extends Artefact> extends BaseSynchronize
         getService().save((DataSource) artefact);
     }
 
-    /**
-     * Complete.
-     *
-     * @param wrapper the wrapper
-     * @param flow the flow
-     * @return true, if successful
-     */
     @Override
     protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
         try {

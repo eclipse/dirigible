@@ -297,19 +297,8 @@ public class TablesSynchronizer<A extends Artefact> extends MultitenantBaseSynch
         getService().save((Table) artefact);
     }
 
-    /**
-     * Complete.
-     *
-     * @param wrapper the wrapper
-     * @param flow the flow
-     * @return true, if successful
-     */
     @Override
-<<<<<<< Upstream, based on dirigible-official/master
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-=======
     protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
->>>>>>> ef993c1 more generic approach for multitenant synchronizers support
 
         try (Connection connection = datasourcesManager.getDefaultDataSource()
                                                        .getConnection()) {
@@ -361,7 +350,6 @@ public class TablesSynchronizer<A extends Artefact> extends MultitenantBaseSynch
                         executeTableUpdate(connection, table);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     }
-<<<<<<< Upstream, based on dirigible-official/master
                     if (ArtefactLifecycle.FAILED.equals(table.getLifecycle())) {
                         return false;
                     }
@@ -369,11 +357,6 @@ public class TablesSynchronizer<A extends Artefact> extends MultitenantBaseSynch
                 case DELETE:
                     if (ArtefactLifecycle.CREATED.equals(table.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(table.getLifecycle())
                             || ArtefactLifecycle.FAILED.equals(table.getLifecycle())) {
-=======
-                    break;
-                case DELETE:
-                    if (ArtefactLifecycle.CREATED.equals(table.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(table.getLifecycle())) {
->>>>>>> ef993c1 more generic approach for multitenant synchronizers support
                         if (SqlFactory.getNative(connection)
                                       .existsTable(connection, table.getName())) {
                             if (SqlFactory.deriveDialect(connection)

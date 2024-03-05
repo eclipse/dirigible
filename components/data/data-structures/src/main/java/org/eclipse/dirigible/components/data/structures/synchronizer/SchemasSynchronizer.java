@@ -254,19 +254,8 @@ public class SchemasSynchronizer<A extends Artefact> extends MultitenantBaseSync
         getService().save((Schema) artefact);
     }
 
-    /**
-     * Complete.
-     *
-     * @param wrapper the wrapper
-     * @param flow the flow
-     * @return true, if successful
-     */
     @Override
-<<<<<<< Upstream, based on dirigible-official/master
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-=======
     protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
->>>>>>> ef993c1 more generic approach for multitenant synchronizers support
 
         Schema schema = null;
         if (!(wrapper.getArtefact() instanceof Schema)) {
@@ -298,7 +287,6 @@ public class SchemasSynchronizer<A extends Artefact> extends MultitenantBaseSync
                         executeSchemaUpdate(connection, schema);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     }
-<<<<<<< Upstream, based on dirigible-official/master
                     if (schema.getLifecycle()
                               .equals(ArtefactLifecycle.MODIFIED)) {
                         return false;
@@ -307,12 +295,6 @@ public class SchemasSynchronizer<A extends Artefact> extends MultitenantBaseSync
                 case DELETE:
                     if (ArtefactLifecycle.CREATED.equals(schema.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(schema.getLifecycle())
                             || ArtefactLifecycle.FAILED.equals(schema.getLifecycle())) {
-=======
-                    break;
-                case DELETE:
-                    if (ArtefactLifecycle.CREATED.equals(schema.getLifecycle())
-                            || ArtefactLifecycle.UPDATED.equals(schema.getLifecycle())) {
->>>>>>> ef993c1 more generic approach for multitenant synchronizers support
                         executeSchemaDrop(connection, schema);
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
                         break;

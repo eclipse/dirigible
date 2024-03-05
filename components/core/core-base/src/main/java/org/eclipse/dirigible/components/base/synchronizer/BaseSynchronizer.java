@@ -17,16 +17,18 @@ public abstract class BaseSynchronizer<A extends Artefact> implements Synchroniz
 
     @Override
     public final boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-        if (!isMultitenant() || !isMultitenantArtefact(wrapper.getArtefact())) {
-            return completeImpl(wrapper, flow);
-        }
         Artefact artefact = wrapper.getArtefact();
         ArtefactLifecycle lifecycle = artefact.getLifecycle();
-        logger.debug("[{} will complete artifact with lifecycle [{}] in phase [{}]]", this, lifecycle, flow);
+
+        if (!isMultitenant() || !isMultitenantArtefact(wrapper.getArtefact())) {
+            logger.debug("[{} will complete artifact with lifecycle [{}] in phase [{}]]", this, lifecycle, flow);
+            return completeImpl(wrapper, flow);
+        }
 
         TenantContext tenantContext = BeanProvider.getTenantContext();
         List<TenantResult<Boolean>> results = tenantContext.executeForEachTenant(() -> {
-
+            logger.debug("[{} will complete artifact with lifecycle [{}] in phase [{}]] for tenant [{}]", this, lifecycle, flow,
+                    tenantContext.getCurrentTenant());
             artefact.setLifecycle(lifecycle);
             return completeImpl(wrapper, flow);
         });
