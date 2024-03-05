@@ -423,6 +423,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 					cell.value.perspectiveName = msg.data.perspectiveName;
 					cell.value.perspectiveIcon = msg.data.perspectiveIcon;
 					cell.value.perspectiveOrder = msg.data.perspectiveOrder;
+					cell.value.perspectiveRole = msg.data.perspectiveRole;
 					$scope.graph.model.setValue(cell, cell.value);
 
 					let propertyObject = new Property('propertyName');
@@ -466,6 +467,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 					cell.value.perspectiveName = msg.data.perspectiveName;
 					cell.value.perspectiveIcon = msg.data.perspectiveIcon;
 					cell.value.perspectiveOrder = msg.data.perspectiveOrder;
+					cell.value.perspectiveRole = msg.data.perspectiveRole;
 					$scope.graph.model.setValue(cell, cell.value);
 
 					let propertyObject = new Property('propertyName');
@@ -1241,6 +1243,8 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 										copy.icon = attribute.textContent;
 									} else if (attribute.localName === "order") {
 										copy.order = attribute.textContent;
+									} else if (attribute.localName === "role") {
+										copy.role = attribute.textContent;
 									}
 								}
 								graph.getModel().perspectives.push(copy);

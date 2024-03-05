@@ -9,7 +9,17 @@ const viewData = {
     factory: "frame",
     region: "bottom",
     link: "/services/web/${projectName}/gen/ui/${perspectiveName}/${masterEntity}/${name}/index.html",
-    perspectiveName: "#if($hasReferencedProjection)${referencedProjectionPerspectiveName}#else${perspectiveName}#end"
+    perspectiveName: "#if($hasReferencedProjection)${referencedProjectionPerspectiveName}#else${perspectiveName}#end",
+#if($perspectiveRole || $roleRead)
+    roles: [
+#if($perspectiveRole)
+        "${perspectiveRole}",
+#end
+#if($roleRead)
+        "${roleRead}",
+#end
+    ]
+#end
 };
 
 if (typeof exports !== 'undefined') {

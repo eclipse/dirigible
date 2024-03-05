@@ -235,7 +235,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             },
             templateUrl: '/services/web/resources-core/ui/templates/contextmenuSubmenu.html'
         };
-    }]).directive('ideHeader', ['$cookies', 'branding', 'theming', 'User', 'Menu', 'messageHub', function ($cookies, branding, theming, User, Menu, messageHub) {
+    }]).directive('ideHeader', ['$cookies', '$http', 'branding', 'theming', 'User', 'Menu', 'messageHub', function ($cookies, $http, branding, theming, User, Menu, messageHub) {
         return {
             restrict: 'E',
             replace: true,
@@ -289,12 +289,14 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     };
 
                     scope.resetTheme = function () {
-                        scope.resetViews();
-                        for (let cookie in $cookies.getAll()) {
-                            if (cookie.startsWith("DIRIGIBLE")) {
-                                $cookies.remove(cookie, { path: "/" });
+                        $http.get('/services/js/resources-core/services/clear-cache.js').then(function () {
+                            scope.resetViews();
+                            for (let cookie in $cookies.getAll()) {
+                                if (cookie.startsWith("DIRIGIBLE")) {
+                                    $cookies.remove(cookie, { path: "/" });
+                                }
                             }
-                        }
+                        });
                     };
 
                     scope.resetViews = function () {
@@ -1139,16 +1141,16 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
         }
     }])
     .directive('dgEmbeddablePerspective', [function () {
-	    return {
-	        restrict: 'A',
-	        link: function () {
-	            const urlParams = new URLSearchParams(window.location.search);
-	            const embedded = urlParams.get('embedded');
-	            if (embedded !== null && embedded !== undefined) {
-	                const styleSheet = document.createElement("style");
-	                styleSheet.innerText = '.dg-main-header, .dg-statusbar, .dg-main-container>.dg-sidebar { display: none !important; }';
-	                document.head.appendChild(styleSheet);
-	            }
-	        }
-	    }
-	}]);
+        return {
+            restrict: 'A',
+            link: function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                const embedded = urlParams.get('embedded');
+                if (embedded !== null && embedded !== undefined) {
+                    const styleSheet = document.createElement("style");
+                    styleSheet.innerText = '.dg-main-header, .dg-statusbar, .dg-main-container>.dg-sidebar { display: none !important; }';
+                    document.head.appendChild(styleSheet);
+                }
+            }
+        }
+    }]);

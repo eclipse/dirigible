@@ -26,8 +26,9 @@ exports.getSources = function (parameters) {
 			collection: "uiReportTableModels"
 		},
 		{
-			location: "/template-application-ui-angular/ui/perspective/perspective.js",
+			location: "/template-application-ui-angular/ui/perspective/perspective.js.template",
 			action: "generate",
+			engine: "velocity",
 			rename: "gen/ui/{{perspectiveName}}/perspective.js",
 			collection: "uiReportTableModels"
 		},
@@ -53,8 +54,9 @@ exports.getSources = function (parameters) {
 			collection: "uiReportTableModels"
 		},
 		{
-			location: "/template-application-ui-angular/ui/perspective/report-table/dialog-window/view.js",
+			location: "/template-application-ui-angular/ui/perspective/report-table/dialog-window/view.js.template",
 			action: "generate",
+			engine: "velocity",
 			rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-window/view.js",
 			collection: "uiReportTableModels"
 		},
@@ -79,8 +81,9 @@ exports.getSources = function (parameters) {
 			collection: "uiReportTableModels"
 		},
 		{
-			location: "/template-application-ui-angular/ui/perspective/report-table/dialog-window-filter/view.js",
+			location: "/template-application-ui-angular/ui/perspective/report-table/dialog-window-filter/view.js.template",
 			action: "generate",
+			engine: "velocity",
 			rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-window-filter/view.js",
 			collection: "uiReportTableModels"
 		},
@@ -111,8 +114,9 @@ exports.getSources = function (parameters) {
 			collection: "uiReportTableModels"
 		},
 		{
-			location: "/template-application-ui-angular/ui/perspective/report-table/tile.js",
+			location: "/template-application-ui-angular/ui/perspective/report-table/tile.js.template",
 			action: "generate",
+			engine: "velocity",
 			rename: "gen/ui/{{perspectiveName}}/{{name}}/tile.js",
 			collection: "uiReportTableModels"
 		},
@@ -123,8 +127,9 @@ exports.getSources = function (parameters) {
 			collection: "uiReportTableModels"
 		},
 		{
-			location: "/template-application-ui-angular/ui/perspective/report-table/view.js",
+			location: "/template-application-ui-angular/ui/perspective/report-table/view.js.template",
 			action: "generate",
+			engine: "velocity",
 			rename: "gen/ui/{{perspectiveName}}/{{name}}/view.js",
 			collection: "uiReportTableModels"
 		}];

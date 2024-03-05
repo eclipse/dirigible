@@ -45,7 +45,8 @@ function createModel(graph) {
 				'" navigationPath="' + _.escape(child.value.navigationPath) +
 				'" perspectiveName="' + _.escape(child.value.perspectiveName) +
 				'" perspectiveIcon="' + getPerspectiveIcon(graph, child) +
-				'" perspectiveOrder="' + getPerspectiveOrder(graph, child) + '"';
+				'" perspectiveOrder="' + getPerspectiveOrder(graph, child) +
+				'" perspectiveRole="' + getPerspectiveRole(graph, child) + '"';
 
 			if (child.value.feedUrl && child.value.feedUrl !== "") {
 				child.value.feedUrl = btoa(child.value.feedUrl);
@@ -213,7 +214,7 @@ function createModel(graph) {
 	if (graph.getModel().perspectives) {
 		model.push(' <perspectives>\n');
 		for (let i = 0; i < graph.getModel().perspectives.length; i++) {
-			model.push('  <perspective><name>' + _.escape(graph.getModel().perspectives[i].id) + '</name><label>' + _.escape(graph.getModel().perspectives[i].label) + '</label><icon>' + _.escape(graph.getModel().perspectives[i].icon) + '</icon><order>' + _.escape(graph.getModel().perspectives[i].order) + '</order></perspective>\n');
+			model.push('  <perspective><name>' + _.escape(graph.getModel().perspectives[i].id) + '</name><label>' + _.escape(graph.getModel().perspectives[i].label) + '</label><icon>' + _.escape(graph.getModel().perspectives[i].icon) + '</icon><order>' + _.escape(graph.getModel().perspectives[i].order) + '</order><role>' + _.escape(graph.getModel().perspectives[i].role) + '</role></perspective>\n');
 		}
 		model.push(' </perspectives>\n');
 	}
@@ -262,7 +263,6 @@ function getPerspectiveIcon(graph, child) {
 	for (let i = 0; i < perspectives.length; i++) {
 		if (perspectiveName === _.escape(perspectives[i].id)) {
 			perspectiveIcon = perspectives[i].icon;
-
 		}
 	}
 	return perspectiveIcon;
@@ -275,9 +275,20 @@ function getPerspectiveOrder(graph, child) {
 	for (let i = 0; i < perspectives.length; i++) {
 		if (perspectiveName === _.escape(perspectives[i].id)) {
 			perspectiveOrder = perspectives[i].order;
-
 		}
 	}
 	return perspectiveOrder;
+}
+
+function getPerspectiveRole(graph, child) {
+	let perspectiveName = _.escape(child.value.perspectiveName);
+	let perspectiveRole = _.escape(child.value.perspectiveRole);
+	let perspectives = graph.getModel().perspectives || [];
+	for (let i = 0; i < perspectives.length; i++) {
+		if (perspectiveName === _.escape(perspectives[i].id)) {
+			perspectiveRole = perspectives[i].role;
+		}
+	}
+	return perspectiveRole ? perspectiveRole : '';
 }
 
