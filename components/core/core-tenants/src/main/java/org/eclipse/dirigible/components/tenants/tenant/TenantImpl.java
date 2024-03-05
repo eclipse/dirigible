@@ -5,11 +5,10 @@ import org.eclipse.dirigible.components.base.tenant.Tenant;
 
 class TenantImpl implements Tenant {
 
-    // default tenant details must matach the one declared in
-    // src/main/resources/META-INF/dirigible/tenants/tenants.csv
     private static final String DEFAULT_TENANT_ID = "defaultTenant";
     private static final String DEFAULT_TENANT_NAME = "The default tenant";
     private static final String DEFAULT_TENANT_SUBDOMAIN = "default";
+
     private static final Tenant DEFAULT_TENANT = new TenantImpl(DEFAULT_TENANT_ID, DEFAULT_TENANT_NAME, DEFAULT_TENANT_SUBDOMAIN);
 
     private final String id;
