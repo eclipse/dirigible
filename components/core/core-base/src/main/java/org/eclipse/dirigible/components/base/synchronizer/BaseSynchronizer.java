@@ -20,15 +20,16 @@ public abstract class BaseSynchronizer<A extends Artefact> implements Synchroniz
         Artefact artefact = wrapper.getArtefact();
         ArtefactLifecycle lifecycle = artefact.getLifecycle();
 
-        if (!isMultitenant() || !isMultitenantArtefact(wrapper.getArtefact())) {
-            logger.debug("[{} will complete artifact with lifecycle [{}] in phase [{}]]", this, lifecycle, flow);
+        if (!isMultitenant() || !isMultitenantArtefact(artefact)) {
+            logger.debug("[{} will complete artefact with lifecycle [{}] in phase [{}]]...\nArtefact:[{}]", this, lifecycle, flow,
+                    artefact);
             return completeImpl(wrapper, flow);
         }
 
         TenantContext tenantContext = BeanProvider.getTenantContext();
         List<TenantResult<Boolean>> results = tenantContext.executeForEachTenant(() -> {
-            logger.debug("[{} will complete artifact with lifecycle [{}] in phase [{}]] for tenant [{}]", this, lifecycle, flow,
-                    tenantContext.getCurrentTenant());
+            logger.debug("[{} will complete artefact with lifecycle [{}] in phase [{}]] for tenant [{}]...\\nArtefact:[{}]", this,
+                    lifecycle, flow, tenantContext.getCurrentTenant(), artefact);
             artefact.setLifecycle(lifecycle);
             return completeImpl(wrapper, flow);
         });

@@ -31,6 +31,7 @@ class TenantsProvisioner {
     }
 
     public void provision() {
+        LOGGER.info("Starting tenants provisioning...");
         List<Tenant> tenants = tenantRepository.findByStatus(TenantStatus.INITIAL);
         LOGGER.info("Tenants applicable for provisioning [{}]", tenants);
 
@@ -41,6 +42,7 @@ class TenantsProvisioner {
             postProvisioningSteps.forEach(this::callPostProvisioningStep);
             LOGGER.info("Post provisioning process has completed.");
         }
+        LOGGER.info("Tenants [{}] have been provisioned successfully.", tenants);
     }
 
     private void provisionTenant(Tenant tenant) {
