@@ -37,11 +37,11 @@
                         "scale": ""
                     }
                 ]
-            }
+            },
             {
                 "name": "VIEW3",
                 "type": "VIEW",
-                "query": "SELECT * FROM TABLE1",
+                "query": "SELECT * FROM TABLE1"
             }
         ]
     },
