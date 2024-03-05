@@ -174,19 +174,8 @@ public class ViewsSynchronizer<A extends Artefact> extends MultitenantBaseSynchr
         getService().save((View) artefact);
     }
 
-    /**
-     * Complete.
-     *
-     * @param wrapper the wrapper
-     * @param flow the flow
-     * @return true, if successful
-     */
     @Override
-<<<<<<< Upstream, based on dirigible-official/master
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-=======
     protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
->>>>>>> ef993c1 more generic approach for multitenant synchronizers support
 
         try (Connection connection = datasourcesManager.getDefaultDataSource()
                                                        .getConnection()) {
@@ -227,7 +216,6 @@ public class ViewsSynchronizer<A extends Artefact> extends MultitenantBaseSynchr
                         executeViewUpdate(connection, view);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     }
-<<<<<<< Upstream, based on dirigible-official/master
                     if (ArtefactLifecycle.FAILED.equals(view.getLifecycle())) {
                         return false;
                     }
@@ -235,11 +223,6 @@ public class ViewsSynchronizer<A extends Artefact> extends MultitenantBaseSynchr
                 case DELETE:
                     if (ArtefactLifecycle.CREATED.equals(view.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(view.getLifecycle())
                             || ArtefactLifecycle.FAILED.equals(view.getLifecycle())) {
-=======
-                    break;
-                case DELETE:
-                    if (ArtefactLifecycle.CREATED.equals(view.getLifecycle())) {
->>>>>>> ef993c1 more generic approach for multitenant synchronizers support
                         if (SqlFactory.getNative(connection)
                                       .existsTable(connection, view.getName())) {
                             executeViewDrop(connection, view);

@@ -72,13 +72,20 @@ public class DataSourceInitializer {
             return getInitializedDataSource(dataSource.getName());
         }
 
-        return initDataSource(dataSource.getName(), dataSource.getDriver(), dataSource.getUrl(), dataSource.getUsername(),
-                dataSource.getPassword(), dataSource.getSchema(), dataSource.getProperties());
+        return initDataSource(dataSource);
     }
 
     @SuppressWarnings("resource")
-    private ManagedDataSource initDataSource(String name, String driver, String url, String username, String password, String schema,
-            List<DataSourceProperty> additionalProperties) {
+    private ManagedDataSource initDataSource(DataSource dataSource) {
+        String name = dataSource.getName();
+        String driver = dataSource.getDriver();
+        String url = dataSource.getUrl();
+        String username = dataSource.getUsername();
+        String password = dataSource.getPassword();
+        String schema = dataSource.getSchema();
+
+        List<DataSourceProperty> additionalProperties = dataSource.getProperties();
+
         logger.info("Initializing a datasource with name: [{}]", name);
         if ("org.h2.Driver".equals(driver)) {
             try {
@@ -97,7 +104,7 @@ public class DataSourceInitializer {
         properties.put("dataSource.password", password);
         properties.put("dataSource.logWriter", new PrintWriter(System.out));
 
-        contributors.forEach(contributor -> contributor.contribute(name, contributed));
+        contributors.forEach(contributor -> contributor.contribute(dataSource, contributed));
 
         Map<String, String> hikariProperties = getHikariProperties(name);
         hikariProperties.forEach(properties::setProperty);
