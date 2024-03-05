@@ -24,7 +24,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.MultitenantBaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
@@ -46,7 +46,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.VIEW)
-public class ViewsSynchronizer<A extends Artefact> extends BaseSynchronizer<View> {
+public class ViewsSynchronizer<A extends Artefact> extends MultitenantBaseSynchronizer<View> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(ViewsSynchronizer.class);
@@ -352,11 +352,6 @@ public class ViewsSynchronizer<A extends Artefact> extends BaseSynchronizer<View
     @Override
     public String getArtefactType() {
         return View.ARTEFACT_TYPE;
-    }
-
-    @Override
-    public boolean isMultitenant() {
-        return true;
     }
 
 }

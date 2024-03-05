@@ -12,12 +12,9 @@ package org.eclipse.dirigible.components.data.csvim.service;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.data.csvim.domain.Csvim;
 import org.eclipse.dirigible.components.data.csvim.repository.CsvimRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -31,11 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class CsvimService implements ArtefactService<Csvim> {
-
-    /**
-     * The Constant logger.
-     */
-    private static final Logger logger = LoggerFactory.getLogger(CsvimService.class);
 
     /**
      * The csvim repository.
@@ -78,9 +70,8 @@ public class CsvimService implements ArtefactService<Csvim> {
         Optional<Csvim> csvimDefinition = csvimRepository.findById(id);
         if (csvimDefinition.isPresent()) {
             return csvimDefinition.get();
-        } else {
-            throw new IllegalArgumentException("csvimDefinition with id does not exist: " + id);
         }
+        throw new IllegalArgumentException("csvimDefinition with id does not exist: " + id);
     }
 
     /**
@@ -98,9 +89,8 @@ public class CsvimService implements ArtefactService<Csvim> {
         Optional<Csvim> CsvimDefinition = csvimRepository.findOne(example);
         if (CsvimDefinition.isPresent()) {
             return CsvimDefinition.get();
-        } else {
-            throw new IllegalArgumentException("csvimDefinition with name does not exist: " + name);
         }
+        throw new IllegalArgumentException("csvimDefinition with name does not exist: " + name);
     }
 
     /**

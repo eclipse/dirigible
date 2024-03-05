@@ -90,7 +90,7 @@ class TenantContextImpl implements TenantContext {
                                                .stream()
                                                .map(TenantImpl::createFromEntity)
                                                .collect(Collectors.toList());
-        LOGGER.info("Will execute code for tenants [{}]...", tenants);
+        LOGGER.debug("Will execute code for tenants [{}]...", tenants);
         List<TenantResult<Result>> results = new ArrayList<>(tenants.size());
 
         tenants.forEach(tenant -> {

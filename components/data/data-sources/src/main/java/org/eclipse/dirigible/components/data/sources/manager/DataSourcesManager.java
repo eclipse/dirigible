@@ -10,6 +10,8 @@
  */
 package org.eclipse.dirigible.components.data.sources.manager;
 
+import org.eclipse.dirigible.components.data.sources.config.DefaultDataSourceName;
+import org.eclipse.dirigible.components.data.sources.config.SystemDataSourceName;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.service.CustomDataSourcesService;
 import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
@@ -34,6 +36,8 @@ public class DataSourcesManager implements InitializingBean {
     private final CustomDataSourcesService customDataSourcesService;
     private final DataSourceInitializer dataSourceInitializer;
     private final TenantDataSourceNameManager tenantDataSourceNameManager;
+    private final String defaultDataSourceName;
+    private final String systemDataSourceName;
 
     /**
      * Instantiates a new data sources manager.
@@ -44,11 +48,14 @@ public class DataSourcesManager implements InitializingBean {
      */
     @Autowired
     public DataSourcesManager(DataSourceService datasourceService, CustomDataSourcesService customDataSourcesService,
-            DataSourceInitializer dataSourceInitializer, TenantDataSourceNameManager tenantDataSourceNameManager) {
+            DataSourceInitializer dataSourceInitializer, TenantDataSourceNameManager tenantDataSourceNameManager,
+            @DefaultDataSourceName String defaultDataSourceName, @SystemDataSourceName String systemDataSourceName) {
         this.datasourceService = datasourceService;
         this.customDataSourcesService = customDataSourcesService;
         this.dataSourceInitializer = dataSourceInitializer;
         this.tenantDataSourceNameManager = tenantDataSourceNameManager;
+        this.defaultDataSourceName = defaultDataSourceName;
+        this.systemDataSourceName = systemDataSourceName;
         this.customDataSourcesService.initialize();
     }
 
@@ -88,7 +95,7 @@ public class DataSourcesManager implements InitializingBean {
      * @return the default data source
      */
     public javax.sql.DataSource getDefaultDataSource() {
-        return getDataSource(dataSourceInitializer.getDefaultDataSourceName());
+        return getDataSource(defaultDataSourceName);
     }
 
     /**
@@ -97,7 +104,7 @@ public class DataSourcesManager implements InitializingBean {
      * @return the system data source
      */
     public javax.sql.DataSource getSystemDataSource() {
-        return getDataSource(dataSourceInitializer.getSystemDataSourceName());
+        return getDataSource(systemDataSourceName);
     }
 
     /**

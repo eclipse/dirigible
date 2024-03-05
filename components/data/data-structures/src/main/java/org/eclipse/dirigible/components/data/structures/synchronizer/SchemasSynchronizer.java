@@ -26,7 +26,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.MultitenantBaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
@@ -58,7 +58,7 @@ import com.google.gson.JsonObject;
  */
 @Component
 @Order(SynchronizersOrder.SCHEMA)
-public class SchemasSynchronizer<A extends Artefact> extends BaseSynchronizer<Schema> {
+public class SchemasSynchronizer<A extends Artefact> extends MultitenantBaseSynchronizer<Schema> {
 
     /**
      * The Constant logger.
@@ -611,11 +611,6 @@ public class SchemasSynchronizer<A extends Artefact> extends BaseSynchronizer<Sc
                                .get("query")
                                .getAsString());
         view.updateKey();
-    }
-
-    @Override
-    public boolean isMultitenant() {
-        return true;
     }
 
 }

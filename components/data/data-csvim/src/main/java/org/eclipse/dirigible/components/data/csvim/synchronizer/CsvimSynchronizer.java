@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -30,7 +31,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.MultitenantBaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.data.csvim.domain.Csv;
@@ -39,6 +40,7 @@ import org.eclipse.dirigible.components.data.csvim.domain.Csvim;
 import org.eclipse.dirigible.components.data.csvim.processor.CsvimProcessor;
 import org.eclipse.dirigible.components.data.csvim.service.CsvService;
 import org.eclipse.dirigible.components.data.csvim.service.CsvimService;
+import org.eclipse.dirigible.components.data.sources.config.SystemDataSourceName;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
@@ -54,7 +56,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.CSVIM)
-public class CsvimSynchronizer<A extends Artefact> extends BaseSynchronizer<Csvim> {
+public class CsvimSynchronizer<A extends Artefact> extends MultitenantBaseSynchronizer<Csvim> {
 
     /**
      * The Constant logger.
@@ -76,26 +78,12 @@ public class CsvimSynchronizer<A extends Artefact> extends BaseSynchronizer<Csvi
      */
     private static final List<String> CSV_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<>());
 
-    /** The csvimsynchronizer service. */
-    private final CsvimService csvimService;
-
-    /** The csvimsynchronizer service. */
-    private final CsvService csvService;
-
-    /**
-     * The datasources manager.
-     */
-    private final DataSourcesManager datasourcesManager;
-
-    /**
-     * The synchronization callback.
-     */
     private SynchronizerCallback callback;
-
-    /**
-     * The csvim processor.
-     */
+    private final CsvimService csvimService;
+    private final CsvService csvService;
+    private final DataSourcesManager datasourcesManager;
     private final CsvimProcessor csvimProcessor;
+    private final String systemDataSourceName;
 
     /**
      * Instantiates a new csvim synchronizer.
@@ -107,11 +95,12 @@ public class CsvimSynchronizer<A extends Artefact> extends BaseSynchronizer<Csvi
      */
     @Autowired
     public CsvimSynchronizer(CsvimService csvimService, CsvService csvService, DataSourcesManager datasourcesManager,
-            CsvimProcessor csvimProcessor) {
+            CsvimProcessor csvimProcessor, @SystemDataSourceName String systemDataSourceName) {
         this.csvimService = csvimService;
         this.csvService = csvService;
         this.datasourcesManager = datasourcesManager;
         this.csvimProcessor = csvimProcessor;
+        this.systemDataSourceName = systemDataSourceName;
     }
 
     /**
@@ -229,28 +218,23 @@ public class CsvimSynchronizer<A extends Artefact> extends BaseSynchronizer<Csvi
      */
     @Override
     protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-        Csvim csvim;
         if (!(wrapper.getArtefact() instanceof Csvim)) {
-            throw new UnsupportedOperationException(String.format("Trying to process %s as Csvim", wrapper.getArtefact()
-                                                                                                          .getClass()));
+            throw new UnsupportedOperationException(String.format("Trying to process %s as Csvim", wrapper.getArtefact()));
         }
-        csvim = (Csvim) wrapper.getArtefact();
-        try (Connection connection = (csvim.getDatasource() == null ? datasourcesManager.getDefaultDataSource()
-                                                                                        .getConnection()
-                : datasourcesManager.getDataSource(csvim.getDatasource())
-                                    .getConnection())) {
+        Csvim csvim = (Csvim) wrapper.getArtefact();
+        try {
             switch (flow) {
                 case CREATE:
                     if (csvim.getLifecycle()
                              .equals(ArtefactLifecycle.NEW)) {
-                        importCsvim(csvim, connection);
+                        importCsvim(csvim);
                         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
                     }
                     break;
                 case UPDATE:
                     if (csvim.getLifecycle()
                              .equals(ArtefactLifecycle.MODIFIED)) {
-                        updateCsvim(csvim, connection);
+                        updateCsvim(csvim);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     }
                     if (csvim.getLifecycle()
@@ -348,7 +332,7 @@ public class CsvimSynchronizer<A extends Artefact> extends BaseSynchronizer<Csvi
      * @param connection the connection
      * @throws Exception the exception
      */
-    private void importCsvim(Csvim csvim, Connection connection) throws Exception {
+    private void importCsvim(Csvim csvim) throws Exception {
         List<CsvFile> files = csvim.getFiles();
 
         if (files != null) {
@@ -375,7 +359,7 @@ public class CsvimSynchronizer<A extends Artefact> extends BaseSynchronizer<Csvi
                     csv.updateKey();
 
                     csv = csvService.save(csv);
-                    csvimProcessor.process(file, new ByteArrayInputStream(content), connection);
+                    csvimProcessor.process(file, new ByteArrayInputStream(content), csvim.getDatasource());
 
                     csv.setImported(true);
 
@@ -395,7 +379,7 @@ public class CsvimSynchronizer<A extends Artefact> extends BaseSynchronizer<Csvi
      * @throws Exception the exception
      */
 
-    private void updateCsvim(Csvim csvim, Connection connection) throws Exception {
+    private void updateCsvim(Csvim csvim) throws Exception {
         List<CsvFile> files = csvim.getFiles();
         if (files != null) {
             for (CsvFile file : files) {
@@ -407,11 +391,19 @@ public class CsvimSynchronizer<A extends Artefact> extends BaseSynchronizer<Csvi
                         throw new Exception("CSV does not exist: " + fileLocation);
                     }
                     content = csvimProcessor.getCsvContent(resource);
-                    csvimProcessor.process(file, new ByteArrayInputStream(content), connection);
+                    csvimProcessor.process(file, new ByteArrayInputStream(content), csvim.getDatasource());
                 } catch (SQLException | IOException e) {
                     logger.error("An error occurred while trying to execute the data import of CSVIM [{}]", csvim, e);
                 }
             }
         }
+    }
+
+    @Override
+    protected boolean isMultitenantArtefact(Artefact artefact) {
+        if (artefact instanceof Csvim csvim) {
+            return !Objects.equals(systemDataSourceName, csvim.getDatasource());
+        }
+        throw new UnsupportedOperationException(String.format("Trying to process %s as Csvim", artefact));
     }
 }
