@@ -12,7 +12,6 @@ package org.eclipse.dirigible.components.data.csvim.utils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
 import org.eclipse.dirigible.components.api.platform.ProblemsFacade;
 import org.eclipse.dirigible.components.data.csvim.processor.CsvProcessor;
 import org.eclipse.dirigible.components.data.csvim.processor.CsvimProcessor;
@@ -59,19 +58,19 @@ public class CsvimUtils {
      * Gets the table metadata.
      *
      * @param tableName the table name
+     * @param schema the schema
      * @param connection the connection
      * @return the table metadata
      */
-    public static TableMetadata getTableMetadata(String tableName, Connection connection) {
+    public static TableMetadata getTableMetadata(String tableName, String schema, Connection connection) {
         try {
-            return DatabaseMetadataHelper.describeTable(connection, null, DatabaseMetadataHelper.getTableSchema(connection, tableName),
-                    tableName);
+            TableMetadata metadata = DatabaseMetadataHelper.describeTable(connection, null, schema, tableName);
+            return metadata != null ? metadata
+                    : DatabaseMetadataHelper.describeTable(connection, null, DatabaseMetadataHelper.getTableSchema(connection, tableName),
+                            tableName);
         } catch (SQLException sqlException) {
-            if (logger.isErrorEnabled()) {
-                logger.error(String.format("Error occurred while trying to read table metadata for table with name: %s", tableName),
-                        sqlException);
-            }
+            logger.error("Error occurred while trying to read metadata for table [{}]. Returning null.", tableName, sqlException);
+            return null;
         }
-        return null;
     }
 }

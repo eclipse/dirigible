@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.components.data.csvim.processor;
 
 import static org.eclipse.dirigible.components.api.platform.RepositoryFacade.getResource;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -23,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
+import javax.sql.DataSource;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -35,6 +34,8 @@ import org.eclipse.dirigible.components.data.csvim.domain.CsvRecord;
 import org.eclipse.dirigible.components.data.csvim.utils.CsvimUtils;
 import org.eclipse.dirigible.components.data.management.domain.ColumnMetadata;
 import org.eclipse.dirigible.components.data.management.domain.TableMetadata;
+import org.eclipse.dirigible.components.data.sources.config.DefaultDataSourceName;
+import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -58,16 +59,6 @@ public class CsvimProcessor {
     private static final Logger logger = LoggerFactory.getLogger(CsvimProcessor.class);
 
     /**
-     * The Constant DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE.
-     */
-    private static final String DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE = "DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE";
-
-    /**
-     * The Constant DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE_DEFAULT.
-     */
-    private static final int DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE_DEFAULT = 1000;
-
-    /**
      * The Constant DIRIGIBLE_CSV_DATA_BATCH_SIZE.
      */
     private static final String DIRIGIBLE_CSV_DATA_BATCH_SIZE = "DIRIGIBLE_CSV_DATA_BATCH_SIZE";
@@ -88,11 +79,6 @@ public class CsvimProcessor {
     private static final String ERROR_TYPE_PROCESSOR = "PROCESSOR";
 
     /**
-     * The Constant ERROR_MESSAGE_NO_PRIMARY_KEY.
-     */
-    private static final String ERROR_MESSAGE_NO_PRIMARY_KEY = "Error while trying to process CSV from location [%s] - no primary key.";
-
-    /**
      * The Constant ERROR_MESSAGE_DIFFERENT_COLUMNS_SIZE.
      */
     private static final String ERROR_MESSAGE_DIFFERENT_COLUMNS_SIZE =
@@ -103,12 +89,6 @@ public class CsvimProcessor {
      */
     private static final String ERROR_MESSAGE_INSERT_RECORD =
             "Error occurred while trying to insert in table [%s] a CSV record [%s] from location [%s].";
-
-    /**
-     * The Constant PROBLEM_MESSAGE_NO_PRIMARY_KEY.
-     */
-    private static final String PROBLEM_MESSAGE_NO_PRIMARY_KEY =
-            "No primary key. Check the configured CSVIM delimiter, whether matches the delimiter used in the CSV data file.";
 
     /**
      * The Constant PROBLEM_MESSAGE_DIFFERENT_COLUMNS_SIZE.
@@ -125,12 +105,9 @@ public class CsvimProcessor {
     private static final String PROBLEM_WITH_TABLE_METADATA_OR_CSVPARSER =
             "No table metadata found for table [%s] or CSVParser not created";
 
-    /**
-     * The csv processor.
-     */
     private final CsvProcessor csvProcessor;
-
-    /** The strict mode. */
+    private final DataSourcesManager datasourcesManager;
+    private final String defaultDataSourceName;
     private boolean strictMode;
 
     /**
@@ -139,8 +116,11 @@ public class CsvimProcessor {
      * @param csvProcessor the csvprocessor service
      */
     @Autowired
-    public CsvimProcessor(CsvProcessor csvProcessor) {
+    public CsvimProcessor(CsvProcessor csvProcessor, DataSourcesManager datasourcesManager,
+            @DefaultDataSourceName String defaultDataSourceName) {
         this.csvProcessor = csvProcessor;
+        this.datasourcesManager = datasourcesManager;
+        this.defaultDataSourceName = defaultDataSourceName;
         this.strictMode = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_CSV_STRICT_MODE", "false"));
     }
 
@@ -162,104 +142,115 @@ public class CsvimProcessor {
      *
      * @param csvFile the csv file
      * @param content the content
-     * @param connection the connection
+     * @param dataSourceName the dataSourceName, if a null is passed, the default DataSource will be
+     *        used
      * @throws Exception the exception
      */
-    public void process(CsvFile csvFile, InputStream content, Connection connection) throws Exception {
-        String tableName = csvFile.getTable();
-        CSVParser csvParser = getCsvParser(csvFile, content);
-        TableMetadata tableMetadata = CsvimUtils.getTableMetadata(tableName, connection);
-        String pkName = getPkName(tableMetadata, csvParser.getHeaderNames());
+    public void process(CsvFile csvFile, InputStream content, String dataSourceName) throws Exception {
+        boolean defaultDataSource = null == dataSourceName || dataSourceName.equalsIgnoreCase(defaultDataSourceName);
+        DataSource dataSource =
+                defaultDataSource ? datasourcesManager.getDefaultDataSource() : datasourcesManager.getDataSource(dataSourceName);
+        try (Connection connection = dataSource.getConnection()) {
 
-        if (tableMetadata == null) {
-            String error = String.format(PROBLEM_WITH_TABLE_METADATA_OR_CSVPARSER, tableName);
-            logger.error(error);
-            CsvimUtils.logProcessorErrors(error, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
-            return;
-        }
+            String fileSchema = csvFile.getSchema();
+            String targetSchema =
+                    defaultDataSource ? ("PUBLIC".equalsIgnoreCase(fileSchema) ? connection.getSchema() : fileSchema) : fileSchema;
 
-        List<CSVRecord> recordsToInsert = new ArrayList<>();
-        List<CSVRecord> recordsToUpdate = new ArrayList<>();
-
-        String pkNameForCSVRecord = getPkNameForCSVRecord(connection, tableName, csvParser.getHeaderNames());
-
-        List<ColumnMetadata> tableColumns = tableMetadata.getColumns();
-        boolean skipComparing = isEmptyTable(tableName, connection);
-
-        int countAll = 0;
-        int countBatch = 0;
-        int batchSize = getCsvDataBatchSize();
-        for (CSVRecord csvRecord : csvParser) {
-            countAll++;
-            countBatch++;
-            if (csvRecord.size() != tableColumns.size()) {
-                if (isStrictMode()) {
-                    CsvimUtils.logProcessorErrors(String.format(PROBLEM_MESSAGE_DIFFERENT_COLUMNS_SIZE, csvFile.getFile()),
-                            ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
-                    throw new Exception(String.format(ERROR_MESSAGE_DIFFERENT_COLUMNS_SIZE, csvFile.getFile()));
-                }
+            String tableName = csvFile.getTable();
+            CSVParser csvParser = getCsvParser(csvFile, content);
+            TableMetadata tableMetadata = CsvimUtils.getTableMetadata(tableName, targetSchema, connection);
+            if (tableMetadata == null) {
+                String error = String.format(PROBLEM_WITH_TABLE_METADATA_OR_CSVPARSER, tableName);
+                logger.error(error);
+                CsvimUtils.logProcessorErrors(error, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
+                return;
             }
-            if (skipComparing) {
-                recordsToInsert.add(csvRecord);
-            } else {
-                String pkValueForCSVRecord = getPkValueForCSVRecord(csvRecord, tableMetadata, csvParser.getHeaderNames());
 
-                if (pkValueForCSVRecord == null) {
-                    recordsToInsert.add(csvRecord);
-                } else {
-                    if (!recordExists(tableName, pkNameForCSVRecord, pkValueForCSVRecord, connection)) {
-                        recordsToInsert.add(csvRecord);
-                    } else {
-                        recordsToUpdate.add(csvRecord);
+            String pkName = getPkName(tableMetadata, csvParser.getHeaderNames());
+
+            List<CSVRecord> recordsToInsert = new ArrayList<>();
+            List<CSVRecord> recordsToUpdate = new ArrayList<>();
+
+            String pkNameForCSVRecord = getPkNameForCSVRecord(connection, tableName, targetSchema, csvParser.getHeaderNames());
+
+            List<ColumnMetadata> tableColumns = tableMetadata.getColumns();
+            boolean skipComparing = isEmptyTable(targetSchema, tableName, connection);
+
+            int countAll = 0;
+            int countBatch = 0;
+            int batchSize = getCsvDataBatchSize();
+            for (CSVRecord csvRecord : csvParser) {
+                countAll++;
+                countBatch++;
+                if (csvRecord.size() != tableColumns.size()) {
+                    if (isStrictMode()) {
+                        CsvimUtils.logProcessorErrors(String.format(PROBLEM_MESSAGE_DIFFERENT_COLUMNS_SIZE, csvFile.getFile()),
+                                ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
+                        throw new Exception(String.format(ERROR_MESSAGE_DIFFERENT_COLUMNS_SIZE, csvFile.getFile()));
                     }
                 }
-            }
-            if (countBatch >= batchSize) {
-                countBatch = 0;
-                insertCsvRecords(connection, tableMetadata, recordsToInsert, csvParser.getHeaderNames(), csvFile);
-                updateCsvRecords(connection, tableMetadata, recordsToUpdate, csvParser.getHeaderNames(), pkName, csvFile);
-                recordsToInsert.clear();
-                recordsToUpdate.clear();
-            }
-        }
+                if (skipComparing) {
+                    recordsToInsert.add(csvRecord);
+                } else {
+                    String pkValueForCSVRecord = getPkValueForCSVRecord(csvRecord, tableMetadata, csvParser.getHeaderNames());
 
-        insertCsvRecords(connection, tableMetadata, recordsToInsert, csvParser.getHeaderNames(), csvFile);
-        updateCsvRecords(connection, tableMetadata, recordsToUpdate, csvParser.getHeaderNames(), pkName, csvFile);
-
-        if (countAll > 0 && csvFile.getSequence() != null) {
-            int sequenceStart = countAll + 1;
-
-            PreparedStatement preparedStatement = null;
-            try {
-                String createSequenceSql = SqlFactory.getNative(connection)
-                                                     .create()
-                                                     .sequence(csvFile.getSequence())
-                                                     .start(sequenceStart)
-                                                     .build();
-                preparedStatement = connection.prepareStatement(createSequenceSql);
-                preparedStatement.executeUpdate();
-            } catch (SQLException e) {
-                if (preparedStatement != null) {
-                    preparedStatement.close();
+                    if (pkValueForCSVRecord == null) {
+                        recordsToInsert.add(csvRecord);
+                    } else {
+                        if (!recordExists(tableName, pkNameForCSVRecord, pkValueForCSVRecord, connection)) {
+                            recordsToInsert.add(csvRecord);
+                        } else {
+                            recordsToUpdate.add(csvRecord);
+                        }
+                    }
                 }
+                if (countBatch >= batchSize) {
+                    countBatch = 0;
+                    insertCsvRecords(connection, targetSchema, tableMetadata, recordsToInsert, csvParser.getHeaderNames(), csvFile);
+                    updateCsvRecords(connection, targetSchema, tableMetadata, recordsToUpdate, csvParser.getHeaderNames(), pkName, csvFile);
+                    recordsToInsert.clear();
+                    recordsToUpdate.clear();
+                }
+            }
+
+            insertCsvRecords(connection, targetSchema, tableMetadata, recordsToInsert, csvParser.getHeaderNames(), csvFile);
+            updateCsvRecords(connection, targetSchema, tableMetadata, recordsToUpdate, csvParser.getHeaderNames(), pkName, csvFile);
+
+            if (countAll > 0 && csvFile.getSequence() != null) {
+                int sequenceStart = countAll + 1;
+
+                PreparedStatement preparedStatement = null;
                 try {
-                    String alterSequenceSql = SqlFactory.getNative(connection)
-                                                        .alter()
-                                                        .sequence(csvFile.getSequence())
-                                                        .restartWith(sequenceStart)
-                                                        .build();
-                    preparedStatement = connection.prepareStatement(alterSequenceSql);
+                    String createSequenceSql = SqlFactory.getNative(connection)
+                                                         .create()
+                                                         .sequence(csvFile.getSequence())
+                                                         .start(sequenceStart)
+                                                         .build();
+                    preparedStatement = connection.prepareStatement(createSequenceSql);
                     preparedStatement.executeUpdate();
-                } catch (SQLException e1) {
-                    logger.error("Failed to restart database sequence [" + csvFile.getSequence() + "]", e1);
+                } catch (SQLException e) {
+                    if (preparedStatement != null) {
+                        preparedStatement.close();
+                    }
+                    try {
+                        String alterSequenceSql = SqlFactory.getNative(connection)
+                                                            .alter()
+                                                            .sequence(csvFile.getSequence())
+                                                            .restartWith(sequenceStart)
+                                                            .build();
+                        preparedStatement = connection.prepareStatement(alterSequenceSql);
+                        preparedStatement.executeUpdate();
+                    } catch (SQLException e1) {
+                        logger.error("Failed to restart database sequence [" + csvFile.getSequence() + "]", e1);
+                    } finally {
+                        if (preparedStatement != null) {
+                            preparedStatement.close();
+                        }
+                    }
                 } finally {
                     if (preparedStatement != null) {
                         preparedStatement.close();
                     }
-                }
-            } finally {
-                if (preparedStatement != null) {
-                    preparedStatement.close();
                 }
             }
         }
@@ -367,8 +358,8 @@ public class CsvimProcessor {
      * @param headerNames the header names
      * @return the pk name for CSV record
      */
-    private String getPkNameForCSVRecord(Connection connection, String tableName, List<String> headerNames) {
-        TableMetadata tableModel = CsvimUtils.getTableMetadata(tableName, connection);
+    private String getPkNameForCSVRecord(Connection connection, String tableName, String schema, List<String> headerNames) {
+        TableMetadata tableModel = CsvimUtils.getTableMetadata(tableName, schema, connection);
         if (tableModel != null) {
             List<ColumnMetadata> columnModels = tableModel.getColumns();
             if (headerNames.size() > 0) {
@@ -402,19 +393,20 @@ public class CsvimProcessor {
      * Insert csv records.
      *
      * @param connection the connection
+     * @param schema the schema
      * @param tableModel the table model
      * @param recordsToProcess the records to process
      * @param headerNames the header names
      * @param csvFile the csv file
      */
-    private void insertCsvRecords(Connection connection, TableMetadata tableModel, List<CSVRecord> recordsToProcess,
+    private void insertCsvRecords(Connection connection, String schema, TableMetadata tableModel, List<CSVRecord> recordsToProcess,
             List<String> headerNames, CsvFile csvFile) {
         try {
             List<CsvRecord> csvRecords = recordsToProcess.stream()
                                                          .map(e -> new CsvRecord(e, tableModel, headerNames,
                                                                  csvFile.getDistinguishEmptyFromNull()))
                                                          .collect(Collectors.toList());
-            csvProcessor.insert(connection, tableModel, csvRecords, headerNames, csvFile);
+            csvProcessor.insert(connection, schema, tableModel, csvRecords, headerNames, csvFile);
         } catch (Exception e) {
             String csvRecordValue = e.getMessage();
             CsvimUtils.logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableModel.getName(), csvRecordValue),
@@ -429,20 +421,21 @@ public class CsvimProcessor {
      * Update csv records.
      *
      * @param connection the connection
+     * @param schema the schema
      * @param tableModel the table model
      * @param recordsToProcess the records to process
      * @param headerNames the header names
      * @param pkName the pk name
      * @param csvFile the csv file
      */
-    private void updateCsvRecords(Connection connection, TableMetadata tableModel, List<CSVRecord> recordsToProcess,
+    private void updateCsvRecords(Connection connection, String schema, TableMetadata tableModel, List<CSVRecord> recordsToProcess,
             List<String> headerNames, String pkName, CsvFile csvFile) {
         try {
             List<CsvRecord> csvRecords = recordsToProcess.stream()
                                                          .map(e -> new CsvRecord(e, tableModel, headerNames,
                                                                  csvFile.getDistinguishEmptyFromNull()))
                                                          .collect(Collectors.toList());
-            csvProcessor.update(connection, tableModel, csvRecords, headerNames, pkName, csvFile);
+            csvProcessor.update(connection, schema, tableModel, csvRecords, headerNames, pkName, csvFile);
         } catch (SQLException e) {
             String csvRecordValue = e.getMessage();
             CsvimUtils.logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableModel.getName(), csvRecordValue),
@@ -552,16 +545,18 @@ public class CsvimProcessor {
     /**
      * Checks if is empty table.
      *
+     * @param schema the schema name
      * @param tableName the table name
      * @param connection the connection
      * @return true, if is empty table
      * @throws SQLException the SQL exception
      */
-    private boolean isEmptyTable(String tableName, Connection connection) throws SQLException {
+    private boolean isEmptyTable(String schema, String tableName, Connection connection) throws SQLException {
         boolean isEmpty = false;
         SelectBuilder selectBuilder = new SelectBuilder(SqlFactory.deriveDialect(connection));
         String sql = selectBuilder.column("COUNT(*)")
                                   .from(tableName)
+                                  .schema(schema)
                                   .build();
         try (PreparedStatement pstmt = connection.prepareCall(sql)) {
             ResultSet rs = pstmt.executeQuery();
@@ -571,4 +566,5 @@ public class CsvimProcessor {
         }
         return isEmpty;
     }
+
 }
