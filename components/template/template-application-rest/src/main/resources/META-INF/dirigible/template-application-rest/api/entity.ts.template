@@ -8,8 +8,10 @@
 import { Controller, Get, Post, Put, Delete, response } from "sdk/http"
 import { Extensions } from "sdk/extensions"
 import { ${name}Repository, ${name}EntityOptions } from "../../dao/${perspectiveName}/${name}Repository";
-#if($perspectiveRole || $roleRead || $roleWrite)
+#if($perspectiveRole || $roleRead || $roleWrite || $isEntityPropertySecurityEnabled)
 import { user } from "sdk/security"
+#end
+#if($perspectiveRole || $roleRead || $roleWrite)
 import { ForbiddenError } from "../utils/ForbiddenError";
 #end
 import { ValidationError } from "../utils/ValidationError";
