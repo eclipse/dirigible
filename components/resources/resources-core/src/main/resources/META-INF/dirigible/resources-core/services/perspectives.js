@@ -27,7 +27,18 @@ function setETag() {
 
 for (let i = 0; i < perspectiveExtensions?.length; i++) {
 	const perspective = perspectiveExtensions[i].getPerspective();
-	if (perspective.role && user.isInRole(perspective.role)) {
+	if (perspective.roles && Array.isArray(perspective.roles)) {
+		let hasRoles = true;
+		for (const next of perspective.roles) {
+			if (!user.isInRole(next)) {
+				hasRoles = false;
+				break;
+			}
+		}
+		if (hasRoles) {
+			perspectives.push(perspective);
+		}
+	} else if (perspective.role && user.isInRole(perspective.role)) {
 		perspectives.push(perspective);
 	} else if (perspective.role === undefined) {
 		perspectives.push(perspective);

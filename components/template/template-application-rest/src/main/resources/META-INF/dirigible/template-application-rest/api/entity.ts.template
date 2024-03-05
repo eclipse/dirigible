@@ -230,7 +230,7 @@ class ${name}Service {
         }
 #end
 #if($property.dataTypeTypescript == "string")
-        if (entity.${property.name}.length > ${property.dataLength}) {
+        if (entity.${property.name}?.length > ${property.dataLength}) {
             throw new ValidationError(`The '${property.name}' exceeds the maximum length of [${property.dataLength}] characters`);
         }
 #end

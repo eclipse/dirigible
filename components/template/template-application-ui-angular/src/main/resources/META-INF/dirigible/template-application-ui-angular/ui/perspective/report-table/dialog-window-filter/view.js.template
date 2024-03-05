@@ -8,8 +8,15 @@ const viewData = {
     label: "${name}",
     link: "/services/web/${projectName}/gen/ui/${perspectiveName}/${name}/dialog-window-filter/index.html",
     perspectiveName: "${perspectiveName}",
+#if($perspectiveRole || $roleRead)
+    roles: [
 #if($perspectiveRole)
-    role: "${perspectiveRole}",
+        "${perspectiveRole}",
+#end
+#if($roleRead)
+        "${roleRead}",
+#end
+    ]
 #end
 };
 

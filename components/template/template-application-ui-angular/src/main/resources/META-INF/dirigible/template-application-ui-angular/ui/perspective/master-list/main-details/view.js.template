@@ -10,8 +10,15 @@ const viewData = {
     region: "center",
     link: "/services/web/${projectName}/gen/ui/${perspectiveName}/${name}/main-details/index.html",
     perspectiveName: "${perspectiveName}",
+#if($perspectiveRole || $roleRead)
+    roles: [
 #if($perspectiveRole)
-    role: "${perspectiveRole}",
+        "${perspectiveRole}",
+#end
+#if($roleRead)
+        "${roleRead}",
+#end
+    ]
 #end
 };
 

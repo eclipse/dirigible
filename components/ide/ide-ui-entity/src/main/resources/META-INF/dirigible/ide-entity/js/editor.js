@@ -1243,6 +1243,8 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 										copy.icon = attribute.textContent;
 									} else if (attribute.localName === "order") {
 										copy.order = attribute.textContent;
+									} else if (attribute.localName === "role") {
+										copy.role = attribute.textContent;
 									}
 								}
 								graph.getModel().perspectives.push(copy);

@@ -13,6 +13,15 @@ exports.getTile = function () {
         location: "/services/web/${projectName}/gen/ui/${perspectiveName}/index.html",
         order: "${menuIndex}",
         groupOrder: "${perspectiveOrder}",
-        role: "${perspectiveRole}",
+#if($perspectiveRole || $roleRead)
+        roles: [
+#if($perspectiveRole)
+            "${perspectiveRole}",
+#end
+#if($roleRead)
+            "${roleRead}",
+#end
+        ]
+#end
     };
 };

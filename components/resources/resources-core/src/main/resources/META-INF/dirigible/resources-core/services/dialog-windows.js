@@ -27,7 +27,18 @@ function setETag() {
 
 for (let i = 0; i < dialogWindowExtensions?.length; i++) {
     const dialogWindow = dialogWindowExtensions[i].getDialogWindow();
-    if (dialogWindow.role && user.isInRole(dialogWindow.role)) {
+    if (dialogWindow.roles && Array.isArray(dialogWindow.roles)) {
+        let hasRoles = true;
+        for (const next of dialogWindow.roles) {
+            if (!user.isInRole(next)) {
+                hasRoles = false;
+                break;
+            }
+        }
+        if (hasRoles) {
+            dialogWindows.push(dialogWindow);
+        }
+    } else if (dialogWindow.role && user.isInRole(dialogWindow.role)) {
         dialogWindows.push(dialogWindow);
     } else if (dialogWindow.role === undefined) {
         dialogWindows.push(dialogWindow);

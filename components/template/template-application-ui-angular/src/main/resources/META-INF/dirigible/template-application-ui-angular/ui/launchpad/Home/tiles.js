@@ -13,7 +13,17 @@ let tileExtensions = await extensions.loadExtensionModules("${projectName}-tile"
 for (let i = 0; i < tileExtensions?.length; i++) {
     let tile = tileExtensions[i].getTile();
 
-    if (!tile || (tile.role && !user.isInRole(tile.role))) {
+
+    let hasRoles = true;
+    if (tile.roles && Array.isArray(tile.roles)) {
+        for (const next of tile.roles) {
+            if (!user.isInRole(next)) {
+                hasRoles = false;
+                break;
+            }
+        }
+    }
+    if (!tile || (tile.role && !user.isInRole(tile.role)) || !hasRoles) {
         continue;
     }
     if (!tiles[tile.group]) {

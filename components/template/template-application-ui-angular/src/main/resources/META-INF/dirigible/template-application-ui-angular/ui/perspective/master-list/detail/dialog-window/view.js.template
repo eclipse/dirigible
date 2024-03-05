@@ -8,8 +8,15 @@ const viewData = {
     label: "${name}",
     link: "/services/web/${projectName}/gen/ui/${perspectiveName}/${masterEntity}/${name}/dialog-window/index.html",
     perspectiveName: "#if($hasReferencedProjection)${referencedProjectionPerspectiveName}#else${perspectiveName}#end",
+#if($perspectiveRole || $roleRead)
+    roles: [
 #if($perspectiveRole)
-    role: "${perspectiveRole}",
+        "${perspectiveRole}",
+#end
+#if($roleRead)
+        "${roleRead}",
+#end
+    ]
 #end
 };
 

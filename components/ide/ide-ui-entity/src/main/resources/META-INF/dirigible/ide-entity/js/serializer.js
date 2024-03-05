@@ -214,7 +214,7 @@ function createModel(graph) {
 	if (graph.getModel().perspectives) {
 		model.push(' <perspectives>\n');
 		for (let i = 0; i < graph.getModel().perspectives.length; i++) {
-			model.push('  <perspective><name>' + _.escape(graph.getModel().perspectives[i].id) + '</name><label>' + _.escape(graph.getModel().perspectives[i].label) + '</label><icon>' + _.escape(graph.getModel().perspectives[i].icon) + '</icon><order>' + _.escape(graph.getModel().perspectives[i].order) + '</order></perspective>\n');
+			model.push('  <perspective><name>' + _.escape(graph.getModel().perspectives[i].id) + '</name><label>' + _.escape(graph.getModel().perspectives[i].label) + '</label><icon>' + _.escape(graph.getModel().perspectives[i].icon) + '</icon><order>' + _.escape(graph.getModel().perspectives[i].order) + '</order><role>' + _.escape(graph.getModel().perspectives[i].role) + '</role></perspective>\n');
 		}
 		model.push(' </perspectives>\n');
 	}

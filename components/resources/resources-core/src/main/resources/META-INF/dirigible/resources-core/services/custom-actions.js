@@ -27,7 +27,18 @@ function setETag() {
 
 for (let i = 0; i < customActionExtensions?.length; i++) {
     const customAction = customActionExtensions[i].getAction();
-    if (customAction.role && user.isInRole(customAction.role)) {
+    if (customAction.roles && Array.isArray(customAction.roles)) {
+        let hasRoles = true;
+        for (const next of customAction.roles) {
+            if (!user.isInRole(next)) {
+                hasRoles = false;
+                break;
+            }
+        }
+        if (hasRoles) {
+            customActions.push(customAction);
+        }
+    } else if (customAction.role && user.isInRole(customAction.role)) {
         customActions.push(customAction);
     } else if (customAction.role === undefined) {
         customActions.push(customAction);

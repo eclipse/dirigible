@@ -27,7 +27,18 @@ function setETag() {
 
 for (let i = 0; i < viewExtensions?.length; i++) {
 	const view = viewExtensions[i].getView();
-	if (view.role && user.isInRole(view.role)) {
+	if (view.roles && Array.isArray(view.roles)) {
+		let hasRoles = true;
+		for (const next of view.roles) {
+			if (!user.isInRole(next)) {
+				hasRoles = false;
+				break;
+			}
+		}
+		if (hasRoles) {
+			views.push(view);
+		}
+	} else if (view.role && user.isInRole(view.role)) {
 		views.push(view);
 	} else if (view.role === undefined) {
 		views.push(view);
