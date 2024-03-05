@@ -12,11 +12,11 @@ package org.eclipse.dirigible.commons.api.helpers;
 
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 /**
  * The GsonHelper utility class.
@@ -103,7 +103,11 @@ public class GsonHelper {
      * @return the json element
      */
     public static JsonElement parseJson(String src) {
-        return JsonParser.parseString(src);
+        try {
+            return JsonParser.parseString(src);
+        } catch (JsonSyntaxException ex) {
+            throw new JsonSyntaxException("Invalid json content [" + src + "]", ex);
+        }
     }
 
 }

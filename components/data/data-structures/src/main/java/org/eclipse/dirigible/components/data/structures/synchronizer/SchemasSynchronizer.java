@@ -586,12 +586,12 @@ public class SchemasSynchronizer<A extends Artefact> extends MultitenantBaseSync
                               .getAsString());
         view.setKind(type);
         view.setType(View.ARTEFACT_TYPE);
-        view.setQuery(structure.get("columns")
-                               .getAsJsonArray()
-                               .get(0)
-                               .getAsJsonObject()
-                               .get("query")
-                               .getAsString());
+        JsonElement columns = structure.get("columns");
+        view.setQuery(columns.getAsJsonArray()
+                             .get(0)
+                             .getAsJsonObject()
+                             .get("query")
+                             .getAsString());
         view.updateKey();
     }
 
