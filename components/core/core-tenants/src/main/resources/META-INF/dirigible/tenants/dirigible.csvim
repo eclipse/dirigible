@@ -11,16 +11,6 @@
 	    "delimEnclosing": "\"",
 	    "distinguishEmptyFromNull": true
 	  },
-      {
-	    "table": "DIRIGIBLE_TENANTS",
-	    "schema": "PUBLIC",
-	    "file": "/tenants/tenants.csv",
-	    "header": true,
-	    "useHeaderNames": true,
-	    "delimField": ",",
-	    "delimEnclosing": "\"",
-	    "distinguishEmptyFromNull": true
-	  },
 	  {
 	    "table": "DIRIGIBLE_USERS",
 	    "schema": "PUBLIC",

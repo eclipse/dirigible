@@ -86,10 +86,7 @@ class TenantContextImpl implements TenantContext {
 
     @Override
     public <Result> List<TenantResult<Result>> executeForEachTenant(CallableResultAndNoException<Result> callable) {
-        List<Tenant> tenants = tenantRepository.findByStatus(TenantStatus.PROVISIONED)
-                                               .stream()
-                                               .map(TenantImpl::createFromEntity)
-                                               .collect(Collectors.toList());
+        List<Tenant> tenants = getProvisionedTenants();
         LOGGER.debug("Will execute code for [{}] tenants [{}]...", tenants.size(), tenants);
         List<TenantResult<Result>> results = new ArrayList<>(tenants.size());
 
@@ -98,6 +95,17 @@ class TenantContextImpl implements TenantContext {
             results.add(new TenantResultImpl<>(tenant, result));
         });
         return results;
+    }
+
+    private List<Tenant> getProvisionedTenants() {
+        List<Tenant> tenants = tenantRepository.findByStatus(TenantStatus.PROVISIONED)
+                                               .stream()
+                                               .map(TenantImpl::createFromEntity)
+                                               .collect(Collectors.toList());
+        List<Tenant> allTenants = new ArrayList<>(tenants.size() + 1);
+        allTenants.add(TenantImpl.getDefaultTenant());
+        allTenants.addAll(tenants);
+        return allTenants;
     }
 
 }
