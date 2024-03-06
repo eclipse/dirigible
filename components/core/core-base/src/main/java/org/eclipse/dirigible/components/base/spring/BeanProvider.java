@@ -24,4 +24,8 @@ public class BeanProvider implements ApplicationContextAware {
         return context.getBean(TenantContext.class);
     }
 
+    public static boolean isInitialzed() {
+        return context != null;
+    }
+
 }
