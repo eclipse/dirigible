@@ -28,7 +28,7 @@ class RetriggerSynchronizersTenantPostProvisioningStep implements TenantPostProv
         this.definitionService = definitionService;
         this.synchronizationProcessor = synchronizationProcessor;
         this.multitenantSynchronizers = synchronizers.stream()
-                                                     .filter(Synchronizer::isMultitenant)
+                                                     .filter(Synchronizer::multitenantExecution)
                                                      .collect(Collectors.toList());
     }
 

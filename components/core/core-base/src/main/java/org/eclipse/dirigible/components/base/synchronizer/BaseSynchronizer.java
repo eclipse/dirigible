@@ -20,7 +20,7 @@ public abstract class BaseSynchronizer<A extends Artefact> implements Synchroniz
         Artefact artefact = wrapper.getArtefact();
         ArtefactLifecycle lifecycle = artefact.getLifecycle();
 
-        if (!isMultitenant() || !isMultitenantArtefact(artefact)) {
+        if (!multitenantExecution() || !isMultitenantArtefact(artefact)) {
             logger.debug("[{} will complete artefact with lifecycle [{}] in phase [{}]]...\nArtefact:[{}]", this, lifecycle, flow,
                     artefact);
             return completeImpl(wrapper, flow);
@@ -40,7 +40,7 @@ public abstract class BaseSynchronizer<A extends Artefact> implements Synchroniz
     }
 
     @Override
-    public boolean isMultitenant() {
+    public boolean multitenantExecution() {
         return false;
     }
 
