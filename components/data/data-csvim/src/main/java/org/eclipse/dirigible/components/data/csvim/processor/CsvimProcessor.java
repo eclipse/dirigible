@@ -155,6 +155,7 @@ public class CsvimProcessor {
             String fileSchema = csvFile.getSchema();
             String targetSchema =
                     defaultDataSource ? ("PUBLIC".equalsIgnoreCase(fileSchema) ? connection.getSchema() : fileSchema) : fileSchema;
+            connection.setSchema(targetSchema);
 
             String tableName = csvFile.getTable();
             CSVParser csvParser = getCsvParser(csvFile, content);
@@ -197,7 +198,7 @@ public class CsvimProcessor {
                     if (pkValueForCSVRecord == null) {
                         recordsToInsert.add(csvRecord);
                     } else {
-                        if (!recordExists(tableName, pkNameForCSVRecord, pkValueForCSVRecord, connection)) {
+                        if (!recordExists(targetSchema, tableName, pkNameForCSVRecord, pkValueForCSVRecord, connection)) {
                             recordsToInsert.add(csvRecord);
                         } else {
                             recordsToUpdate.add(csvRecord);
@@ -207,15 +208,19 @@ public class CsvimProcessor {
                 if (countBatch >= batchSize) {
                     countBatch = 0;
                     insertCsvRecords(connection, targetSchema, tableMetadata, recordsToInsert, csvParser.getHeaderNames(), csvFile);
-                    updateCsvRecords(connection, targetSchema, tableMetadata, recordsToUpdate, csvParser.getHeaderNames(), pkName, csvFile);
+                    if (Boolean.TRUE.equals(csvFile.getUpsert())) {
+                        updateCsvRecords(connection, targetSchema, tableMetadata, recordsToUpdate, csvParser.getHeaderNames(), pkName,
+                                csvFile);
+                    }
                     recordsToInsert.clear();
                     recordsToUpdate.clear();
                 }
             }
 
             insertCsvRecords(connection, targetSchema, tableMetadata, recordsToInsert, csvParser.getHeaderNames(), csvFile);
-            updateCsvRecords(connection, targetSchema, tableMetadata, recordsToUpdate, csvParser.getHeaderNames(), pkName, csvFile);
-
+            if (Boolean.TRUE.equals(csvFile.getUpsert())) {
+                updateCsvRecords(connection, targetSchema, tableMetadata, recordsToUpdate, csvParser.getHeaderNames(), pkName, csvFile);
+            }
             if (countAll > 0 && csvFile.getSequence() != null) {
                 int sequenceStart = countAll + 1;
 
@@ -506,6 +511,7 @@ public class CsvimProcessor {
     /**
      * Record exists.
      *
+     * @param schema the schema name
      * @param tableName the table name
      * @param pkNameForCSVRecord the pk name for CSV record
      * @param pkValueForCSVRecord the pk value for CSV record
@@ -513,13 +519,14 @@ public class CsvimProcessor {
      * @return true, if successful
      * @throws SQLException the SQL exception
      */
-    private boolean recordExists(String tableName, String pkNameForCSVRecord, String pkValueForCSVRecord, Connection connection)
-            throws SQLException {
+    private boolean recordExists(String schema, String tableName, String pkNameForCSVRecord, String pkValueForCSVRecord,
+            Connection connection) throws SQLException {
         boolean exists = false;
         SelectBuilder selectBuilder = new SelectBuilder(SqlFactory.deriveDialect(connection));
         String sql = selectBuilder.distinct()
                                   .column("1 " + pkNameForCSVRecord)
                                   .from(tableName)
+                                  .schema(schema)
                                   .where(pkNameForCSVRecord + " = ?")
                                   .build();
         try (PreparedStatement pstmt = connection.prepareCall(sql)) {

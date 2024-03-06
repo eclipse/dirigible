@@ -22,8 +22,9 @@ class TenantProvisioningJob {
 
     private static final long _15_MINS = 15 * 60 * 1000;
     private static final long JOB_EXECUTION_INTERVAL_MINUTES = _15_MINS;
-    private static final long _10_SECONDS = 10 * 1000;
-    private static final long JOB_EXECUTION_INITIAL_DELAY_SECONDS = _10_SECONDS;
+
+    private static final long _30_SECONDS = 30 * 1000;
+    private static final long JOB_EXECUTION_INITIAL_DELAY_SECONDS = _30_SECONDS;
 
     private final TenantsProvisioner tenantsProvisioner;
 

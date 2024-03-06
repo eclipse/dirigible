@@ -1,6 +1,5 @@
 package org.eclipse.dirigible.components.tenants.provisioning;
 
-import java.util.List;
 import java.util.Set;
 import org.eclipse.dirigible.components.base.tenant.TenantPostProvisioningStep;
 import org.eclipse.dirigible.components.base.tenant.TenantProvisioningStep;
@@ -32,7 +31,7 @@ class TenantsProvisioner {
 
     public void provision() {
         LOGGER.info("Starting tenants provisioning...");
-        List<Tenant> tenants = tenantRepository.findByStatus(TenantStatus.INITIAL);
+        Set<Tenant> tenants = tenantRepository.findByStatus(TenantStatus.INITIAL);
         LOGGER.info("Tenants applicable for provisioning [{}]", tenants);
 
         tenants.forEach(this::provisionTenant);
