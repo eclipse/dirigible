@@ -48,6 +48,8 @@ public class Configuration {
     /** The Constant DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER. */
     public static final String DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER = "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER";
 
+    public static final String TENANT_SUBDOMAIN_REGEX = "DIRIGIBLE_TENANT_SUBDOMAIN_REGEX";
+
     /**
      * The Enum ConfigType.
      */
@@ -64,16 +66,16 @@ public class Configuration {
     }
 
     /** The Constant RUNTIME_VARIABLES. */
-    private static final Map<String, String> RUNTIME_VARIABLES = Collections.synchronizedMap(new HashMap<String, String>());
+    private static final Map<String, String> RUNTIME_VARIABLES = Collections.synchronizedMap(new HashMap<>());
 
     /** The Constant ENVIRONMENT_VARIABLES. */
-    private static final Map<String, String> ENVIRONMENT_VARIABLES = Collections.synchronizedMap(new HashMap<String, String>());
+    private static final Map<String, String> ENVIRONMENT_VARIABLES = Collections.synchronizedMap(new HashMap<>());
 
     /** The Constant DEPLOYMENT_VARIABLES. */
-    private static final Map<String, String> DEPLOYMENT_VARIABLES = Collections.synchronizedMap(new HashMap<String, String>());
+    private static final Map<String, String> DEPLOYMENT_VARIABLES = Collections.synchronizedMap(new HashMap<>());
 
     /** The Constant MODULE_VARIABLES. */
-    private static final Map<String, String> MODULE_VARIABLES = Collections.synchronizedMap(new HashMap<String, String>());
+    private static final Map<String, String> MODULE_VARIABLES = Collections.synchronizedMap(new HashMap<>());
 
     /** The Constant CONFIG_FILE_PATH_DIRIGIBLE_PROPERTIES. */
     private static final String CONFIG_FILE_PATH_DIRIGIBLE_PROPERTIES = "/dirigible.properties";
@@ -259,7 +261,6 @@ public class Configuration {
         return (value != null) ? value : defaultValue;
     }
 
-
     /**
      * Gets the as int.
      *
@@ -280,10 +281,9 @@ public class Configuration {
     public static int getAsInt(String key, int defaultValue) {
         String stringValue = get(key, defaultValue + "");
         try {
-            int intValue = Integer.parseInt(stringValue);
-            return intValue;
+            return Integer.parseInt(stringValue);
         } catch (NumberFormatException nfe) {
-            logger.error("The configuration key: {} points to non integer value: {}", key, stringValue);
+            logger.error("The configuration key: {} points to non integer value: {}", key, stringValue, nfe);
         }
         return defaultValue;
     }
@@ -325,7 +325,7 @@ public class Configuration {
      * @return the keys
      */
     public static String[] getKeys() {
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new HashSet<>();
         keys.addAll(RUNTIME_VARIABLES.keySet());
         keys.addAll(ENVIRONMENT_VARIABLES.keySet());
         keys.addAll(DEPLOYMENT_VARIABLES.keySet());
@@ -457,7 +457,7 @@ public class Configuration {
      * @return the map of the runtime variables
      */
     public static Map<String, String> getRuntimeVariables() {
-        return new HashMap<String, String>(RUNTIME_VARIABLES);
+        return new HashMap<>(RUNTIME_VARIABLES);
     }
 
     /**
@@ -466,7 +466,7 @@ public class Configuration {
      * @return the map of the variables from the environment
      */
     public static Map<String, String> getEnvironmentVariables() {
-        return new HashMap<String, String>(ENVIRONMENT_VARIABLES);
+        return new HashMap<>(ENVIRONMENT_VARIABLES);
     }
 
     /**
@@ -475,7 +475,7 @@ public class Configuration {
      * @return the map of the variables from the dirigible.properties files
      */
     public static Map<String, String> getDeploymentVariables() {
-        return new HashMap<String, String>(DEPLOYMENT_VARIABLES);
+        return new HashMap<>(DEPLOYMENT_VARIABLES);
     }
 
     /**
@@ -484,7 +484,7 @@ public class Configuration {
      * @return the map of the variables from the module's dirigible-*.properties files
      */
     public static Map<String, String> getModuleVariables() {
-        return new HashMap<String, String>(MODULE_VARIABLES);
+        return new HashMap<>(MODULE_VARIABLES);
     }
 
     /** The Constant CONFIGURATION_PARAMETERS. */
@@ -542,7 +542,8 @@ public class Configuration {
             "DIRIGIBLE_FTP_USERNAME", "DIRIGIBLE_FTP_PASSWORD", "DIRIGIBLE_FTP_PORT", "DIRIGIBLE_SFTP_USERNAME", "DIRIGIBLE_SFTP_PASSWORD",
             "DIRIGIBLE_SFTP_PORT", "SERVER_MAXHTTPHEADERSIZE", "DIRIGIBLE_PUBLISH_DISABLED", "AWS_DEFAULT_REGION", "AWS_ACCESS_KEY_ID",
             "AWS_SECRET_ACCESS_KEY", "DIRIGIBLE_S3_PROVIDER", "DIRIGIBLE_S3_BUCKET", "DIRIGIBLE_DATABASE_SYSTEM_DRIVER",
-            "DIRIGIBLE_DATABASE_SYSTEM_URL", "DIRIGIBLE_DATABASE_SYSTEM_USERNAME", "DIRIGIBLE_DATABASE_SYSTEM_PASSWORD"};
+            "DIRIGIBLE_DATABASE_SYSTEM_URL", "DIRIGIBLE_DATABASE_SYSTEM_USERNAME", "DIRIGIBLE_DATABASE_SYSTEM_PASSWORD",
+            TENANT_SUBDOMAIN_REGEX};
 
     /**
      * Gets the os.
