@@ -5,7 +5,7 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 public abstract class MultitenantBaseSynchronizer<A extends Artefact> extends BaseSynchronizer<A> {
 
     @Override
-    public final boolean isMultitenant() {
+    public final boolean multitenantExecution() {
         return true;
     }
 

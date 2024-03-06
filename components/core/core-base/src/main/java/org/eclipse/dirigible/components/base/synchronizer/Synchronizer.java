@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
+import org.checkerframework.checker.units.qual.A;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
@@ -116,10 +117,10 @@ public interface Synchronizer<A extends Artefact> {
     String getArtefactType();
 
     /**
-     * Checks if current syncronizer is multitenant.
+     * Checks if current syncronizer must have multitenant processing.
      *
-     * @return true, if is multitenant
+     * @return true, if the execution must be multitenant
      */
-    boolean isMultitenant();
+    boolean multitenantExecution();
 
 }

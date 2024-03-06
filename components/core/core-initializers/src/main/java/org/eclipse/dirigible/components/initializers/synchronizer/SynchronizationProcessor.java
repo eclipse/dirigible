@@ -334,9 +334,8 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                                 String warnMessage = "Final retry to deplete artefacts left after cross-processing: " + crossArtefactsLeft;
                                 logger.error(warnMessage);
                                 break;
-                            } else {
-                                Thread.sleep(crossRetryInterval);
                             }
+                            Thread.sleep(crossRetryInterval);
                         }
                     } catch (Exception e) {
                         logger.error("Error occurred while cross-processing of undepleated artefacts", e);
@@ -359,7 +358,6 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                         if (!repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + artefact.getLocation())
                                        .exists()) {
                             synchronizer.cleanup(artefact);
-                            break;
                         }
                     }
                 }
