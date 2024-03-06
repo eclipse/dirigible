@@ -13,6 +13,9 @@ package org.eclipse.dirigible.components.tenants.tenant;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.tenants.repository.TenantRepository;
@@ -34,6 +37,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class TenantContextInitFilter extends OncePerRequestFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TenantContextInitFilter.class);
+
+    private static final String DEFAULT_TENANT_SUBDOMAIN_REGEX = "^([^\\.]+)\\..+$";
+    private static final String TENANT_SUBDOMAIN_REGEX =
+            Configuration.get(Configuration.TENANT_SUBDOMAIN_REGEX, DEFAULT_TENANT_SUBDOMAIN_REGEX);
+    private static final Pattern TENANT_SUBDOMAIN_PATTERN = Pattern.compile(TENANT_SUBDOMAIN_REGEX);
 
     private static final Cache<String, Optional<Tenant>> tenantCache = Caffeine.newBuilder()
                                                                                .expireAfterWrite(10, TimeUnit.MINUTES)
@@ -85,25 +93,19 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
     }
 
     private Optional<Tenant> determineCurrentTenant(HttpServletRequest request) {
-        String tenantSubdomain = getTenantSubdomain(request);
-        if (null == tenantSubdomain) {
-            return Optional.of(TenantImpl.getDefaultTenant());
+        String host = request.getServerName();
+        Matcher matcher = TENANT_SUBDOMAIN_PATTERN.matcher(host);
+        if (matcher.find()) {
+            String tenantSubdomain = matcher.group(1);
+            LOGGER.debug("Host [{}] MATCHES tenant subdomain pattern [{}]. Tenant subdomain [{}].", host,
+                    TENANT_SUBDOMAIN_PATTERN.pattern(), tenantSubdomain);
+
+            return tenantCache.get(tenantSubdomain, (k) -> tenantRepository.findBySubdomain(tenantSubdomain)
+                                                                           .map(TenantImpl::createFromEntity));
         }
-
-        return tenantCache.get(tenantSubdomain, (k) -> tenantRepository.findBySubdomain(tenantSubdomain)
-                                                                       .map(TenantImpl::createFromEntity));
-    }
-
-    private String getTenantSubdomain(HttpServletRequest request) {
-        var domain = request.getServerName();
-        var dotIndex = domain.indexOf(".");
-
-        String tenant = null;
-        if (dotIndex != -1) {
-            return domain.substring(0, dotIndex);
-        }
-
-        return tenant;
+        LOGGER.debug("Host [{}] does NOT match tenant subdomain pattern [{}]. Will be treated as default tenant host.", host,
+                TENANT_SUBDOMAIN_PATTERN.pattern());
+        return Optional.of(TenantImpl.getDefaultTenant());
     }
 
     /**
