@@ -15,8 +15,10 @@ import java.util.stream.Collectors;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.tenants.domain.User;
-import org.eclipse.dirigible.components.tenants.repository.UserRepository;
-import org.eclipse.dirigible.components.tenants.repository.UserRoleAssignmentRepository;
+import org.eclipse.dirigible.components.tenants.service.UserRoleAssignmentService;
+import org.eclipse.dirigible.components.tenants.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,15 +34,16 @@ import org.springframework.stereotype.Service;
 @ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
 public class CustomUserDetailsService implements UserDetailsService {
 
-    /** The user repository. */
-    private final UserRepository userRepository;
-    private final UserRoleAssignmentRepository userRoleAssignmentRepository;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomUserDetailsService.class);
+
+    private final UserService userService;
+    private final UserRoleAssignmentService userRoleAssignmentService;
     private final TenantContext tenantContext;
 
-    public CustomUserDetailsService(UserRepository userRepository, UserRoleAssignmentRepository userRoleAssignmentRepository,
+    public CustomUserDetailsService(UserService userService, UserRoleAssignmentService userRoleAssignmentService,
             TenantContext tenantContext) {
-        this.userRepository = userRepository;
-        this.userRoleAssignmentRepository = userRoleAssignmentRepository;
+        this.userService = userService;
+        this.userRoleAssignmentService = userRoleAssignmentService;
         this.tenantContext = tenantContext;
     }
 
@@ -55,11 +58,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Tenant tenant = tenantContext.getCurrentTenant();
 
-        User user = userRepository.findUserByUsernameAndTenantId(username, tenant.getId())
-                                  .orElseThrow(() -> new UsernameNotFoundException(
-                                          "User with username [" + username + "] in tenant [" + tenant + "] was not found."));
+        User user = userService.findUserByUsernameAndTenantId(username, tenant.getId())
+                               .orElseThrow(() -> new UsernameNotFoundException(
+                                       "User with username [" + username + "] in tenant [" + tenant + "] was not found."));
 
         Set<String> userRoles = getUserRoles(user);
+        LOGGER.debug("User [{}] has assigned roles [{}]", user, userRoles);
         Set<GrantedAuthority> auths = userRoles.stream()
                                                .map(r -> new SimpleGrantedAuthority(r))
                                                .collect(Collectors.toSet());
@@ -68,10 +72,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     private Set<String> getUserRoles(User user) {
-        return userRoleAssignmentRepository.findByUser(user)
-                                           .stream()
-                                           .map(a -> a.getRole()
-                                                      .getName())
-                                           .collect(Collectors.toSet());
+        return userRoleAssignmentService.findByUser(user)
+                                        .stream()
+                                        .map(a -> a.getRole()
+                                                   .getName())
+                                        .collect(Collectors.toSet());
     }
 }

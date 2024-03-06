@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Set;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
@@ -47,6 +48,8 @@ public class RoleSynchronizer<A extends Artefact> extends BaseSynchronizer<Role>
      * The Constant logger.
      */
     private static final Logger logger = LoggerFactory.getLogger(RoleSynchronizer.class);
+
+    private static final Set<String> PRESERVED_ROLE_LOCATION_PREFIXES = Set.of("SYSTEM_");
 
     /**
      * The Constant FILE_EXTENSION_SECURITY_ROLE.
@@ -195,7 +198,15 @@ public class RoleSynchronizer<A extends Artefact> extends BaseSynchronizer<Role>
     @Override
     public void cleanup(Role role) {
         try {
-            getService().delete(role);
+            Boolean delete = PRESERVED_ROLE_LOCATION_PREFIXES.stream()
+                                                             .filter(p -> role.getLocation()
+                                                                              .startsWith(p))
+                                                             .findFirst()
+                                                             .map(p -> Boolean.FALSE)
+                                                             .orElse(Boolean.TRUE);
+            if (delete) {
+                getService().delete(role);
+            }
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {
                 logger.error(e.getMessage(), e);

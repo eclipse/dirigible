@@ -227,13 +227,13 @@ public class DataSourcesSynchronizer<A extends Artefact> extends BaseSynchronize
     @Override
     public void cleanup(DataSource datasource) {
         try {
-            Boolean deleteDataSource = PRESERVED_DATA_SOURCE_LOCATION_PREFIXES.stream()
-                                                                              .filter(p -> datasource.getLocation()
-                                                                                                     .startsWith(p))
-                                                                              .findFirst()
-                                                                              .map(p -> Boolean.FALSE)
-                                                                              .orElse(Boolean.TRUE);
-            if (deleteDataSource) {
+            Boolean delete = PRESERVED_DATA_SOURCE_LOCATION_PREFIXES.stream()
+                                                                    .filter(p -> datasource.getLocation()
+                                                                                           .startsWith(p))
+                                                                    .findFirst()
+                                                                    .map(p -> Boolean.FALSE)
+                                                                    .orElse(Boolean.TRUE);
+            if (delete) {
                 getService().delete(datasource);
             }
         } catch (Exception e) {

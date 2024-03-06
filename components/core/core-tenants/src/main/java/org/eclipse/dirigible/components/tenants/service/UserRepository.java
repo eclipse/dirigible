@@ -8,19 +8,13 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.base.http.roles;
+package org.eclipse.dirigible.components.tenants.service;
 
-public enum Roles {
-    ADMINISTRATOR("ROLE_ADMINISTRATOR"), DEVELOPER("ROLE_DEVELOPER"), OPERATOR("ROLE_OPERATOR");
+import java.util.Optional;
+import org.eclipse.dirigible.components.tenants.domain.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-    private final String roleName;
+interface UserRepository extends JpaRepository<User, String> {
 
-    Roles(String roleName) {
-        this.roleName = roleName;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
+    Optional<User> findUserByUsernameAndTenantId(String username, String tenantId);
 }

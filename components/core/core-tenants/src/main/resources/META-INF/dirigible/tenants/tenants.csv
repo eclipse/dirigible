@@ -1,2 +1,0 @@
-TENANT_ID,TENANT_SUBDOMAIN,TENANT_NAME,TENANT_STATUS
-defaultTenant,default,The default tenant,PROVISIONED

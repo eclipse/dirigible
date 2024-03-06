@@ -10,11 +10,10 @@
  */
 package org.eclipse.dirigible.components.tenants.service;
 
+import java.util.Optional;
 import org.eclipse.dirigible.components.tenants.domain.Tenant;
 import org.eclipse.dirigible.components.tenants.domain.User;
 import org.eclipse.dirigible.components.tenants.exceptions.TenantNotFoundException;
-import org.eclipse.dirigible.components.tenants.repository.TenantRepository;
-import org.eclipse.dirigible.components.tenants.repository.UserRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,39 +25,25 @@ import org.springframework.stereotype.Service;
 @ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
 public class UserService {
 
-    /** The tenant repository. */
-    private final TenantRepository tenantRepository;
+    private final TenantService tenantService;
 
-    /** The user repository. */
     private final UserRepository userRepository;
 
-    /** The password encoder. */
     private final BCryptPasswordEncoder passwordEncoder;
 
-    /**
-     * Instantiates a new user service.
-     *
-     * @param tenantRepository the tenant repository
-     * @param userRepository the user repository
-     * @param passwordEncoder the password encoder
-     */
-    public UserService(TenantRepository tenantRepository, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
-        this.tenantRepository = tenantRepository;
+    public UserService(TenantService tenantService, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.tenantService = tenantService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    /**
-     * Creates the new user.
-     *
-     * @param username the username
-     * @param password the password
-     * @param tenantId the tenant id
-     * @param role the role
-     */
-    public void createNewUser(String username, String password, String tenantId) {
-        Tenant tenant = tenantRepository.findById(tenantId)
-                                        .orElseThrow(() -> new TenantNotFoundException("Tenant " + tenantId + " not found."));
-        userRepository.save(new User(tenant, username, passwordEncoder.encode(password)));
+    public User createNewUser(String username, String password, String tenantId) {
+        Tenant tenant = tenantService.findById(tenantId)
+                                     .orElseThrow(() -> new TenantNotFoundException("Tenant " + tenantId + " not found."));
+        return userRepository.save(new User(tenant, username, passwordEncoder.encode(password)));
+    }
+
+    public Optional<User> findUserByUsernameAndTenantId(String username, String tenantId) {
+        return userRepository.findUserByUsernameAndTenantId(username, tenantId);
     }
 }

@@ -8,13 +8,20 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.tenants.repository;
+package org.eclipse.dirigible.components.base;
 
-import java.util.Optional;
-import org.eclipse.dirigible.components.tenants.domain.User;
-import org.springframework.data.jpa.repository.JpaRepository;
+public interface ApplicationListenersOrder {
 
-public interface UserRepository extends JpaRepository<User, String> {
+    public interface ApplicationReadyEventListeners {
 
-    Optional<User> findUserByUsernameAndTenantId(String username, String tenantId);
+        int SYSTEM_ROLES_INITIALIZER = 10;
+
+        int DEFAULT_TENANT_INITIALIZER = 20;
+
+        int ADMIN_USER_INITIALIZER = 30;
+
+        int SYNCHRONIZATION_INTIALIZER = 40;
+
+    }
+
 }
