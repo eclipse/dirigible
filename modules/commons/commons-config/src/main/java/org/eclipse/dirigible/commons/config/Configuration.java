@@ -38,9 +38,14 @@ public class Configuration {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
+
+    /** The Constant MULTIVARIABLE_REGEX. */
     private static final String MULTIVARIABLE_REGEX = "\\$\\{([^}]+)\\}";
+
+    /** The Constant MULTIVARIABLE_PATTERN. */
     private static final Pattern MULTIVARIABLE_PATTERN = Pattern.compile(MULTIVARIABLE_REGEX);
 
+    /** The Constant DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER. */
     public static final String DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER = "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER";
 
     /**
@@ -254,6 +259,35 @@ public class Configuration {
         return (value != null) ? value : defaultValue;
     }
 
+
+    /**
+     * Gets the as int.
+     *
+     * @param key the key
+     * @return the as int
+     */
+    public static int getAsInt(String key) {
+        return getAsInt(key, 0);
+    }
+
+    /**
+     * Gets the as int.
+     *
+     * @param key the key
+     * @param defaultValue the default value
+     * @return the as int
+     */
+    public static int getAsInt(String key, int defaultValue) {
+        String stringValue = get(key, defaultValue + "");
+        try {
+            int intValue = Integer.parseInt(stringValue);
+            return intValue;
+        } catch (NumberFormatException nfe) {
+            logger.error("The configuration key: {} points to non integer value: {}", key, stringValue);
+        }
+        return defaultValue;
+    }
+
     /**
      * Setter for the property's key and value.
      *
@@ -361,6 +395,12 @@ public class Configuration {
         return isActiveSpringProfile("keycloak");
     }
 
+    /**
+     * Checks if is active spring profile.
+     *
+     * @param profile the profile
+     * @return true, if is active spring profile
+     */
     private static boolean isActiveSpringProfile(String profile) {
         return get("spring.profiles.active", "").contains(profile) || get("spring_profiles_active", "").contains(profile);
     }

@@ -21,10 +21,20 @@ import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfigurati
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * The Class BpmFlowableConfig.
+ */
 @Configuration
 @EnableAutoConfiguration(exclude = LiquibaseAutoConfiguration.class)
 public class BpmFlowableConfig {
 
+    /**
+     * Gets the bpm provider.
+     *
+     * @param datasource the datasource
+     * @param repository the repository
+     * @return the bpm provider
+     */
     @Bean("BPM_PROVIDER")
     public BpmProvider getBpmProvider(@Qualifier("SystemDB") DataSource datasource, IRepository repository) {
         return new BpmProviderFlowable(datasource, repository);

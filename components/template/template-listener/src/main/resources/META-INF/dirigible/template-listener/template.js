@@ -5,7 +5,7 @@
  */
 exports.getTemplate = function() {
 	return {
-		"name": "Message Listener",
+		"name": "Message Listener (Model)",
 		"description": "Listener for a message with a simple Javascript handler",
 		"sources": [
 		{
@@ -23,6 +23,7 @@ exports.getTemplate = function() {
 			"action": "generate",
 			"rename": "{{fileName}}-trigger.js"
 		}],
-		"parameters": []
+		"parameters": [],
+		"order": 51
 	};
 };

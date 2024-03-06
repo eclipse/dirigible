@@ -135,9 +135,13 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
                         addToProcessor(camel);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     }
+                    if (ArtefactLifecycle.FAILED.equals(camel.getLifecycle())) {
+                        return false;
+                    }
                     break;
                 case DELETE:
-                    if (ArtefactLifecycle.CREATED.equals(camel.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(camel.getLifecycle())) {
+                    if (ArtefactLifecycle.CREATED.equals(camel.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(camel.getLifecycle())
+                            || ArtefactLifecycle.FAILED.equals(camel.getLifecycle())) {
                         removeFromProcessor(camel);
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
                     }

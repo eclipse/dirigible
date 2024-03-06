@@ -198,10 +198,13 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, e.getMessage());
                     }
                 }
+                if (ArtefactLifecycle.FAILED.equals(listener.getLifecycle())) {
+                    return false;
+                }
                 break;
             case DELETE:
-                if (ArtefactLifecycle.CREATED.equals(listener.getLifecycle())
-                        || ArtefactLifecycle.UPDATED.equals(listener.getLifecycle())) {
+                if (ArtefactLifecycle.CREATED.equals(listener.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(listener.getLifecycle())
+                        || ArtefactLifecycle.FAILED.equals(listener.getLifecycle())) {
                     try {
                         listenersManager.stopListener(listener);
                         listener.setRunning(false);

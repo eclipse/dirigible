@@ -124,7 +124,7 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Bpmn> parse(String location, byte[] content) throws ParseException {
@@ -214,9 +214,13 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
                         updateOnProcessEngine(bpmn);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     }
+                    if (ArtefactLifecycle.FAILED.equals(bpmn.getLifecycle())) {
+                        return false;
+                    }
                     break;
                 case DELETE:
-                    if (ArtefactLifecycle.CREATED.equals(bpmn.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(bpmn.getLifecycle())) {
+                    if (ArtefactLifecycle.CREATED.equals(bpmn.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(bpmn.getLifecycle())
+                            || ArtefactLifecycle.FAILED.equals(bpmn.getLifecycle())) {
                         removeFromProcessEngine(bpmn);
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
                     }

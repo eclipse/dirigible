@@ -143,13 +143,7 @@ public class H2Database {
                 String databaseUsername = Configuration.get("DIRIGIBLE_DATABASE_H2_USERNAME");
                 String databasePassword = Configuration.get("DIRIGIBLE_DATABASE_H2_PASSWORD");
 
-                String databaseTimeout = Configuration.get("DIRIGIBLE_DATABASE_DEFAULT_WAIT_TIMEOUT", "180000");
-                int timeout = 180000;
-                try {
-                    timeout = Integer.parseInt(databaseTimeout);
-                } catch (NumberFormatException e) {
-                    timeout = 180000;
-                }
+                int timeout = Configuration.getAsInt("DIRIGIBLE_DATABASE_DEFAULT_WAIT_TIMEOUT", 180000);
 
                 if ((databaseUrl != null) && (databaseUsername != null) && (databasePassword != null)) {
                     HikariConfig config = new HikariConfig();

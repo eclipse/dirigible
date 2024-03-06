@@ -5,7 +5,7 @@
  */
 exports.getTemplate = function() {
 	return {
-		"name": "Database View",
+		"name": "Database View (Model)",
 		"description": "Database View Template",
 		"sources": [{
 			"location": "/template-database-view/database.view.template", 
@@ -15,6 +15,7 @@ exports.getTemplate = function() {
 		"parameters": [{
 			"name": "viewName",
 			"label": "View Name"
-		}]
+		}],
+		"order": 41
 	};
 };

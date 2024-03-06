@@ -226,9 +226,13 @@ public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View>
                         executeViewUpdate(connection, view);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     }
+                    if (ArtefactLifecycle.FAILED.equals(view.getLifecycle())) {
+                        return false;
+                    }
                     break;
                 case DELETE:
-                    if (ArtefactLifecycle.CREATED.equals(view.getLifecycle())) {
+                    if (ArtefactLifecycle.CREATED.equals(view.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(view.getLifecycle())
+                            || ArtefactLifecycle.FAILED.equals(view.getLifecycle())) {
                         if (SqlFactory.getNative(connection)
                                       .existsTable(connection, view.getName())) {
                             executeViewDrop(connection, view);

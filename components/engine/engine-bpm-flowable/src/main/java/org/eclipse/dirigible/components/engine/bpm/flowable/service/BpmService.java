@@ -15,10 +15,8 @@ import static java.text.MessageFormat.format;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ProcessDefinitionData;
@@ -35,10 +33,10 @@ import org.flowable.editor.language.json.converter.BpmnJsonConverter;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.job.api.Job;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -55,6 +53,9 @@ public class BpmService {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(BpmService.class);
+
+    /** The Constant DIRIGIBLE_BPM_INTERNAL_SKIP_STEP. */
+    public static final String DIRIGIBLE_BPM_INTERNAL_SKIP_STEP = "DIRIGIBLE_BPM_INTERNAL_SKIP_STEP";
 
     /** The workspace service. */
     private WorkspaceService workspaceService;
@@ -330,6 +331,45 @@ public class BpmService {
             results.add(processInstanceData);
         }
         return results;
+    }
+
+    /**
+     * Get all jobs that exhausted their retry attempts and are considered "dead".
+     *
+     * @param processInstanceId the process instance id
+     * @return list of jobs
+     */
+    public List<Job> getDeadLetterJobs(String processInstanceId) {
+        return getBpmProviderFlowable().getProcessEngine()
+                                       .getManagementService()
+                                       .createDeadLetterJobQuery()
+                                       .processInstanceId(processInstanceId)
+                                       .list();
+    }
+
+    /**
+     * Retry dead-letter job by moving it back to active state.
+     *
+     * @param job the job instance
+     * @param numberOfRetries desired number of retries
+     */
+    public void retryDeadLetterJob(Job job, int numberOfRetries) {
+        getBpmProviderFlowable().getProcessEngine()
+                                .getManagementService()
+                                .moveDeadLetterJobToExecutableJob(job.getId(), numberOfRetries);
+    }
+
+    /**
+     * Add or update variable in the process context.
+     *
+     * @param processInstanceId the process instance id
+     * @param key variable key
+     * @param value variable value
+     */
+    public void addProcessInstanceVariable(String processInstanceId, String key, String value) {
+        getBpmProviderFlowable().getProcessEngine()
+                                .getRuntimeService()
+                                .setVariable(processInstanceId, key, value);
     }
 
     /**

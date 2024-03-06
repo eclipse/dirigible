@@ -42,7 +42,7 @@ exports.process = function (model, parameters) {
             let bytes = require("io/bytes");
             e.importsCode = bytes.byteArrayToText(base64.decode(e.importsCode));
         }
-        
+
         e.referencedProjections = [];
         e.properties.forEach(p => {
             p.dataNotNull = p.dataNullable === "false";
@@ -194,7 +194,7 @@ exports.process = function (model, parameters) {
             })
 
             if (p.widgetType == "DROPDOWN") {
-                let projectNameString = "\"/services/ts/" +`${parameters.projectName}` + "/gen/api/" + `${p.relationshipEntityPerspectiveName}` + "/" + `${p.relationshipEntityName}` + "Service.ts\"";
+                let projectNameString = "\"/services/ts/" + `${parameters.projectName}` + "/gen/api/" + `${p.relationshipEntityPerspectiveName}` + "/" + `${p.relationshipEntityName}` + "Service.ts\"";
 
                 e.hasDropdowns = true;
 
@@ -209,7 +209,7 @@ exports.process = function (model, parameters) {
                     if (!foundReferenceProjection) {
                         p.widgetDropdownUrl = projectNameString;
                     }
-                }else{
+                } else {
                     p.widgetDropdownUrl = projectNameString
                 }
             }
@@ -229,6 +229,7 @@ exports.process = function (model, parameters) {
             parameters.perspectives[e.perspectiveName].label = e.perspectiveName;
             parameters.perspectives[e.perspectiveName].order = e.perspectiveOrder;
             parameters.perspectives[e.perspectiveName].icon = e.perspectiveIcon;
+            parameters.perspectives[e.perspectiveName].role = e.perspectiveRole;
             parameters.perspectives[e.perspectiveName].views.push(e.name);
         }
     });

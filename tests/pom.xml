@@ -23,7 +23,7 @@
 
 	<properties>
 		<license.header.location>../licensing-header.txt</license.header.location>
-		<selenide.version>7.0.4</selenide.version>
+		<selenide.version>7.2.0</selenide.version>
 	</properties>
 
 	<dependencyManagement>

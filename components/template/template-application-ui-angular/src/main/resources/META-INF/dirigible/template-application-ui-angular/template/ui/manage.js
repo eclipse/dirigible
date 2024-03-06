@@ -26,8 +26,9 @@ exports.getSources = function (parameters) {
             collection: "uiManageModels"
         },
         {
-            location: "/template-application-ui-angular/ui/perspective/perspective.js",
+            location: "/template-application-ui-angular/ui/perspective/perspective.js.template",
             action: "generate",
+            engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/perspective.js",
             collection: "uiManageModels"
         },
@@ -53,8 +54,9 @@ exports.getSources = function (parameters) {
             collection: "uiManageModels"
         },
         {
-            location: "/template-application-ui-angular/ui/perspective/manage/dialog-window/view.js",
+            location: "/template-application-ui-angular/ui/perspective/manage/dialog-window/view.js.template",
             action: "generate",
+            engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-window/view.js",
             collection: "uiManageModels"
         },
@@ -79,8 +81,9 @@ exports.getSources = function (parameters) {
             collection: "uiManageModels"
         },
         {
-            location: "/template-application-ui-angular/ui/perspective/manage/dialog-filter/view.js",
+            location: "/template-application-ui-angular/ui/perspective/manage/dialog-filter/view.js.template",
             action: "generate",
+            engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-filter/view.js",
             collection: "uiManageModels"
         },
@@ -111,8 +114,9 @@ exports.getSources = function (parameters) {
             collection: "uiManageModels"
         },
         {
-            location: "/template-application-ui-angular/ui/perspective/manage/tile.js",
+            location: "/template-application-ui-angular/ui/perspective/manage/tile.js.template",
             action: "generate",
+            engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/{{name}}/tile.js",
             collection: "uiManageModels"
         },
@@ -123,8 +127,9 @@ exports.getSources = function (parameters) {
             collection: "uiManageModels"
         },
         {
-            location: "/template-application-ui-angular/ui/perspective/manage/view.js",
+            location: "/template-application-ui-angular/ui/perspective/manage/view.js.template",
             action: "generate",
+            engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/{{name}}/view.js",
             collection: "uiManageModels"
         }];

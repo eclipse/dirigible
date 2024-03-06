@@ -166,8 +166,7 @@ public class JobEmailProcessor {
 
     static {
         try {
-            logsRetantionInHours =
-                    Integer.parseInt(Configuration.get(DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD, logsRetantionInHours + ""));
+            logsRetantionInHours = Configuration.getAsInt(DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD, logsRetantionInHours);
         } catch (Throwable e) {
             if (logger.isWarnEnabled()) {
                 logger.warn(DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD

@@ -19,7 +19,7 @@
 		<fd-toolbar has-title="true">
 			<fd-toolbar-title>Items ({{dataCount}})</fd-toolbar-title>
 			<fd-toolbar-spacer></fd-toolbar-spacer>
-			<fd-popover ng-show="pageActions.length > 0">
+			<fd-popover>
 				<fd-popover-control>
 					<fd-button compact="true" glyph="sap-icon--overflow" dg-type="transparent"
 						aria-label="Header Menu Button">
@@ -27,6 +27,7 @@
 				</fd-popover-control>
 				<fd-popover-body dg-align="bottom-right">
 					<fd-menu aria-label="Header Menu" no-backdrop="true" no-shadow="true">
+						<fd-menu-item title="Filter" ng-click="openFilter()"></fd-menu-item>
 						<fd-menu-item ng-repeat="action in pageActions" title="{{action.label}}"
 							ng-click="triggerPageAction(action.id)"></fd-menu-item>
 					</fd-menu>

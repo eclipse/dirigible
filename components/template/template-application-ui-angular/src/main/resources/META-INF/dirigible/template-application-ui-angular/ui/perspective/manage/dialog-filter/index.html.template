@@ -69,11 +69,6 @@
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}"
-	#if($property.isCalculatedProperty == "true")
-	                                ng-readonly="true"
-	#else
-	                                ng-readonly="action === 'select'"
-	#end
 	                                type="color"
 	                                placeholder="Enter ${property.widgetLabel}">
 	                            </fd-input>
@@ -92,11 +87,6 @@
 								state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 								dg-required="${property.isRequiredProperty}"
 								ng-model="entity.${property.name}"
-	#if($property.isCalculatedProperty == "true")
-								is-readonly="true"
-	#else
-								is-readonly="action === 'select'"
-	#end
 								placeholder="Enter ${property.widgetLabel}"
 								>
 							</fd-step-input>
@@ -114,11 +104,6 @@
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}"
-	#if($property.isCalculatedProperty == "true")
-	                                ng-readonly="true"
-	#else
-	                                ng-readonly="action === 'select'"
-	#end
 	                                type="month">
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
@@ -137,11 +122,6 @@
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}"
-	#if($property.isCalculatedProperty == "true")
-	                                ng-readonly="true"
-	#else
-	                                ng-readonly="action === 'select'"
-	#end
 	                                type="week">
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
@@ -160,11 +140,6 @@
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}"
-	#if($property.isCalculatedProperty == "true")
-	                                ng-readonly="true"
-	#else
-	                                ng-readonly="action === 'select'"
-	#end
 	                                type="time">
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
@@ -176,18 +151,13 @@
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}From" dg-required="${property.isRequiredProperty}" dg-colon="true">From ${property.widgetLabel}</fd-form-label>
                         </div>
-                        <div class="fd-col fd-col-md--2">
+                        <div class="fd-col fd-col-md--3">
 	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}From"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}From"
-	#if($property.isCalculatedProperty == "true")
-	                                ng-readonly="true"
-	#else
-	                                ng-readonly="action === 'select'"
-	#end
 	                                type="datetime-local">
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
@@ -196,18 +166,13 @@
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${property.name}To" dg-required="${property.isRequiredProperty}" dg-colon="true">To ${property.widgetLabel}</fd-form-label>
                         </div>
-                        <div class="fd-col fd-col-md--2">
+                        <div class="fd-col fd-col-md--3">
 	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${property.name}'].$valid }}">
 	                            <fd-input id="id${property.name}To"
 	                                name="${property.name}"
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}To"
-	#if($property.isCalculatedProperty == "true")
-	                                ng-readonly="true"
-	#else
-	                                ng-readonly="action === 'select'"
-	#end
 	                                type="datetime-local">
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
@@ -226,11 +191,6 @@
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}From"
-	#if($property.isCalculatedProperty == "true")
-	                                ng-readonly="true"
-	#else
-	                                ng-readonly="action === 'select'"
-	#end
 	                                type="date">
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
@@ -246,11 +206,6 @@
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}To"
-	#if($property.isCalculatedProperty == "true")
-	                                ng-readonly="true"
-	#else
-	                                ng-readonly="action === 'select'"
-	#end
 	                                type="date">
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
@@ -268,14 +223,8 @@
 								state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 								ng-required="${property.isRequiredProperty}"
 								ng-model="entity.${property.name}"
-	#if($property.isCalculatedProperty == "true")
-	                            ng-readonly="true"
-	#else
-	                            ng-readonly="action === 'select'"
-	#end
 								ng-minlength="${property.minLength} || 0"
 								ng-maxlength="${property.maxLength} || -1"
-								dg-input-rules="{ patterns: ['${property.inputRule}'] }"
 								placeholder="Enter ${property.widgetLabel}">
 							</fd-textarea>
 							<fd-form-message dg-type="error" ng-show="!forms.details['${property.name}'].$valid">Incorrect Input</fd-form-message>
@@ -293,14 +242,8 @@
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}"
-	#if($property.isCalculatedProperty == "true")
-	                                ng-readonly="true"
-	#else
-	                                ng-readonly="action === 'select'"
-	#end
 	                                ng-minlength="${property.minLength} || 0"
 	                                ng-maxlength="${property.maxLength} || -1"
-	                                dg-input-rules="{ patterns:#if($property.inputRule == "")['^[0-9]{0,14}$']#else ['${property.inputRule}']#end }"
 	                                type="tel"
 	                                placeholder="Enter ${property.widgetLabel}">
 	                            </fd-input>
@@ -320,14 +263,8 @@
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}"
-	#if($property.isCalculatedProperty == "true")
-	                                ng-readonly="true"
-	#else
-	                                ng-readonly="action === 'select'"
-	#end
 	                                ng-minlength="${property.minLength} || 0"
 	                                ng-maxlength="${property.maxLength} || -1"
-	                                dg-input-rules="{ patterns: ['${property.inputRule}'] }"
 	                                type="url"
 	                                placeholder="Enter ${property.widgetLabel}">
 	                            </fd-input>
@@ -347,14 +284,8 @@
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}"
-	#if($property.isCalculatedProperty == "true")
-	                                ng-readonly="true"
-	#else
-	                                ng-readonly="action === 'select'"
-	#end
 	                                ng-minlength="${property.minLength} || 0"
 	                                ng-maxlength="${property.maxLength} || -1"
-	                                dg-input-rules="{ patterns: ['${property.inputRule}'] }"
 	                                type="email"
 	                                placeholder="Enter ${property.widgetLabel}">
 	                            </fd-input>
@@ -374,14 +305,8 @@
 	                                state="{{ forms.details['${property.name}'].$valid ? '' : 'error' }}"
 									ng-required="${property.isRequiredProperty}"
 	                                ng-model="entity.${property.name}"
-	#if($property.isCalculatedProperty == "true")
-	                                ng-readonly="true"
-	#else
-	                                ng-readonly="action === 'select'"
-	#end
 	                                ng-minlength="${property.minLength} || 0"
 	                                ng-maxlength="${property.maxLength} || -1"
-	                                dg-input-rules="{ patterns: ['${property.inputRule}'] }"
 	                                type="text"
 	                                placeholder="Enter ${property.widgetLabel}">
 	                            </fd-input>

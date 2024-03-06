@@ -5,8 +5,8 @@
  */
 exports.getTemplate = function() {
 	return {
-		"name": "Websocket Service",
-		"description": "Websocket service with a Javascript handler",
+		"name": "WebSocket Service (Model)",
+		"description": "WebSocket service with a Javascript handler",
 		"sources": [
 		{
 			"location": "/template-websocket/websocket.template", 
@@ -28,6 +28,7 @@ exports.getTemplate = function() {
 			"action": "generate",
 			"rename": "{{fileName}}-client.js"
 		}],
-		"parameters": []
+		"parameters": [],
+		"order": 52
 	};
 };

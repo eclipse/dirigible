@@ -26,8 +26,9 @@ exports.getSources = function (parameters) {
 			collection: "uiListModels"
 		},
 		{
-			location: "/template-application-ui-angular/ui/perspective/perspective.js",
+			location: "/template-application-ui-angular/ui/perspective/perspective.js.template",
 			action: "generate",
+			engine: "velocity",
 			rename: "gen/ui/{{perspectiveName}}/perspective.js",
 			collection: "uiListModels"
 		},
@@ -53,8 +54,9 @@ exports.getSources = function (parameters) {
 			collection: "uiListModels"
 		},
 		{
-			location: "/template-application-ui-angular/ui/perspective/list/dialog-window/view.js",
+			location: "/template-application-ui-angular/ui/perspective/list/dialog-window/view.js.template",
 			action: "generate",
+			engine: "velocity",
 			rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-window/view.js",
 			collection: "uiListModels"
 		},
@@ -79,8 +81,9 @@ exports.getSources = function (parameters) {
 			collection: "uiListModels"
 		},
 		{
-			location: "/template-application-ui-angular/ui/perspective/list/dialog-filter/view.js",
+			location: "/template-application-ui-angular/ui/perspective/list/dialog-filter/view.js.template",
 			action: "generate",
+			engine: "velocity",
 			rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-filter/view.js",
 			collection: "uiListModels"
 		},
@@ -111,8 +114,9 @@ exports.getSources = function (parameters) {
 			collection: "uiListModels"
 		},
 		{
-			location: "/template-application-ui-angular/ui/perspective/list/tile.js",
+			location: "/template-application-ui-angular/ui/perspective/list/tile.js.template",
 			action: "generate",
+			engine: "velocity",
 			rename: "gen/ui/{{perspectiveName}}/{{name}}/tile.js",
 			collection: "uiListModels"
 		},
@@ -123,8 +127,9 @@ exports.getSources = function (parameters) {
 			collection: "uiListModels"
 		},
 		{
-			location: "/template-application-ui-angular/ui/perspective/list/view.js",
+			location: "/template-application-ui-angular/ui/perspective/list/view.js.template",
 			action: "generate",
+			engine: "velocity",
 			rename: "gen/ui/{{perspectiveName}}/{{name}}/view.js",
 			collection: "uiListModels"
 		}];
