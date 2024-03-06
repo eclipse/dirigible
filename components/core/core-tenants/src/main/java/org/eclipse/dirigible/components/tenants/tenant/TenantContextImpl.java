@@ -11,7 +11,9 @@
 package org.eclipse.dirigible.components.tenants.tenant;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.eclipse.dirigible.components.base.tenant.CallableNoResultAndException;
 import org.eclipse.dirigible.components.base.tenant.CallableResultAndNoException;
@@ -86,7 +88,7 @@ class TenantContextImpl implements TenantContext {
 
     @Override
     public <Result> List<TenantResult<Result>> executeForEachTenant(CallableResultAndNoException<Result> callable) {
-        List<Tenant> tenants = getProvisionedTenants();
+        Set<Tenant> tenants = getProvisionedTenants();
         LOGGER.debug("Will execute code for [{}] tenants [{}]...", tenants.size(), tenants);
         List<TenantResult<Result>> results = new ArrayList<>(tenants.size());
 
@@ -97,12 +99,12 @@ class TenantContextImpl implements TenantContext {
         return results;
     }
 
-    private List<Tenant> getProvisionedTenants() {
-        List<Tenant> tenants = tenantRepository.findByStatus(TenantStatus.PROVISIONED)
-                                               .stream()
-                                               .map(TenantImpl::createFromEntity)
-                                               .collect(Collectors.toList());
-        List<Tenant> allTenants = new ArrayList<>(tenants.size() + 1);
+    private Set<Tenant> getProvisionedTenants() {
+        Set<Tenant> tenants = tenantRepository.findByStatus(TenantStatus.PROVISIONED)
+                                              .stream()
+                                              .map(TenantImpl::createFromEntity)
+                                              .collect(Collectors.toSet());
+        Set<Tenant> allTenants = new HashSet<>(tenants);
         allTenants.add(TenantImpl.getDefaultTenant());
         allTenants.addAll(tenants);
         return allTenants;

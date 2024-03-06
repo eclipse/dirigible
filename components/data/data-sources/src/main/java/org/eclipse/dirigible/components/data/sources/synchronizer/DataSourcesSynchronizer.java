@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Set;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
@@ -22,7 +23,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.MultitenantBaseSynchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
@@ -41,10 +42,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.DATASOURCE)
-public class DataSourcesSynchronizer<A extends Artefact> extends MultitenantBaseSynchronizer<DataSource> {
+public class DataSourcesSynchronizer<A extends Artefact> extends BaseSynchronizer<DataSource> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DataSourcesSynchronizer.class);
+
+    private static final Set<String> PRESERVED_DATA_SOURCE_LOCATION_PREFIXES = Set.of("API_", "ENV_", "TENANT_");
 
     /** The Constant FILE_DATASOURCE_EXTENSION. */
     public static final String FILE_DATASOURCE_EXTENSION = ".datasource";
@@ -209,9 +212,7 @@ public class DataSourcesSynchronizer<A extends Artefact> extends MultitenantBase
             }
             return true;
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
+            logger.error(e.getMessage(), e);
             callback.addError(e.getMessage());
             callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
             return false;
@@ -226,16 +227,17 @@ public class DataSourcesSynchronizer<A extends Artefact> extends MultitenantBase
     @Override
     public void cleanup(DataSource datasource) {
         try {
-            if (!datasource.getLocation()
-                           .startsWith("API_")
-                    && !datasource.getLocation()
-                                  .startsWith("ENV_")) {
+            Boolean deleteDataSource = PRESERVED_DATA_SOURCE_LOCATION_PREFIXES.stream()
+                                                                              .filter(p -> datasource.getLocation()
+                                                                                                     .startsWith(p))
+                                                                              .findFirst()
+                                                                              .map(p -> Boolean.FALSE)
+                                                                              .orElse(Boolean.TRUE);
+            if (deleteDataSource) {
                 getService().delete(datasource);
             }
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
+            logger.error(e.getMessage(), e);
             callback.addError(e.getMessage());
             callback.registerState(this, datasource, ArtefactLifecycle.DELETED, e.getMessage());
         }
