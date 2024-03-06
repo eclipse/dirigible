@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
-import org.eclipse.dirigible.components.tenants.repository.TenantRepository;
+import org.eclipse.dirigible.components.tenants.service.TenantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -49,7 +49,7 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
                                                                                .build();
 
     /** The tenant repository. */
-    private final TenantRepository tenantRepository;
+    private final TenantService tenantService;
     private final TenantContext tenantContext;
 
     /**
@@ -57,8 +57,8 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
      *
      * @param tenantRepository the tenant repository
      */
-    public TenantContextInitFilter(TenantRepository tenantRepository, TenantContext tenantContext) {
-        this.tenantRepository = tenantRepository;
+    public TenantContextInitFilter(TenantService tenantService, TenantContext tenantContext) {
+        this.tenantService = tenantService;
         this.tenantContext = tenantContext;
     }
 
@@ -100,8 +100,8 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
             LOGGER.debug("Host [{}] MATCHES tenant subdomain pattern [{}]. Tenant subdomain [{}].", host,
                     TENANT_SUBDOMAIN_PATTERN.pattern(), tenantSubdomain);
 
-            return tenantCache.get(tenantSubdomain, (k) -> tenantRepository.findBySubdomain(tenantSubdomain)
-                                                                           .map(TenantImpl::createFromEntity));
+            return tenantCache.get(tenantSubdomain, (k) -> tenantService.findBySubdomain(tenantSubdomain)
+                                                                        .map(TenantImpl::createFromEntity));
         }
         LOGGER.debug("Host [{}] does NOT match tenant subdomain pattern [{}]. Will be treated as default tenant host.", host,
                 TENANT_SUBDOMAIN_PATTERN.pattern());

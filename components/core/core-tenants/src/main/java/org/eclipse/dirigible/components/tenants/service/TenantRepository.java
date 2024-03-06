@@ -8,7 +8,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.tenants.repository;
+package org.eclipse.dirigible.components.tenants.service;
 
 import java.util.Optional;
 import java.util.Set;
@@ -19,7 +19,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * The Interface TenantRepository.
  */
-public interface TenantRepository extends JpaRepository<Tenant, String> {
+interface TenantRepository extends JpaRepository<Tenant, String> {
 
     /**
      * Find by subdomain.

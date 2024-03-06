@@ -12,7 +12,6 @@ package org.eclipse.dirigible.components.security.service;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.security.domain.Role;
 import org.eclipse.dirigible.components.security.repository.RoleRepository;
@@ -22,7 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 /**
  * The Class SecurityRoleService.
@@ -73,9 +71,8 @@ public class RoleService implements ArtefactService<Role> {
         Optional<Role> securityRole = roleRepository.findById(id);
         if (securityRole.isPresent()) {
             return securityRole.get();
-        } else {
-            throw new IllegalArgumentException("SecurityRole with id does not exist: " + id);
         }
+        throw new IllegalArgumentException("SecurityRole with id does not exist: " + id);
     }
 
     /**
@@ -93,9 +90,17 @@ public class RoleService implements ArtefactService<Role> {
         Optional<Role> securityRole = roleRepository.findOne(example);
         if (securityRole.isPresent()) {
             return securityRole.get();
-        } else {
-            throw new IllegalArgumentException("SecurityRole with name does not exist: " + name);
         }
+        throw new IllegalArgumentException("SecurityRole with name does not exist: " + name);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean roleExistsByName(String name) {
+        Role filter = new Role();
+        filter.setName(name);
+        Example<Role> example = Example.of(filter);
+        return roleRepository.findOne(example)
+                             .isPresent();
     }
 
     /**
@@ -110,8 +115,7 @@ public class RoleService implements ArtefactService<Role> {
         Role filter = new Role();
         filter.setLocation(location);
         Example<Role> example = Example.of(filter);
-        List<Role> list = roleRepository.findAll(example);
-        return list;
+        return roleRepository.findAll(example);
     }
 
     /**

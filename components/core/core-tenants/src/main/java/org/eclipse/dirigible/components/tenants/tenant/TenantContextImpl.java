@@ -21,7 +21,7 @@ import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.base.tenant.TenantResult;
 import org.eclipse.dirigible.components.tenants.domain.TenantStatus;
-import org.eclipse.dirigible.components.tenants.repository.TenantRepository;
+import org.eclipse.dirigible.components.tenants.service.TenantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -33,10 +33,10 @@ class TenantContextImpl implements TenantContext {
 
     private static final ThreadLocal<Tenant> currentTenantHolder = new ThreadLocal<>();
 
-    private final TenantRepository tenantRepository;
+    private final TenantService tenantService;
 
-    TenantContextImpl(TenantRepository tenantRepository) {
-        this.tenantRepository = tenantRepository;
+    TenantContextImpl(TenantService tenantService) {
+        this.tenantService = tenantService;
     }
 
     @Override
@@ -100,10 +100,10 @@ class TenantContextImpl implements TenantContext {
     }
 
     private Set<Tenant> getProvisionedTenants() {
-        Set<Tenant> tenants = tenantRepository.findByStatus(TenantStatus.PROVISIONED)
-                                              .stream()
-                                              .map(TenantImpl::createFromEntity)
-                                              .collect(Collectors.toSet());
+        Set<Tenant> tenants = tenantService.findByStatus(TenantStatus.PROVISIONED)
+                                           .stream()
+                                           .map(TenantImpl::createFromEntity)
+                                           .collect(Collectors.toSet());
         Set<Tenant> allTenants = new HashSet<>(tenants);
         allTenants.add(TenantImpl.getDefaultTenant());
         allTenants.addAll(tenants);

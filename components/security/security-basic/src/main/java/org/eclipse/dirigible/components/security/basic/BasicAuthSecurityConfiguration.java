@@ -48,8 +48,10 @@ public class BasicAuthSecurityConfiguration {
 
     @Bean
     InMemoryUserDetailsManager userDetailsService() {
-        String username = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_BASIC_USERNAME", "YWRtaW4="); // admin
-        String password = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_BASIC_PASSWORD", "YWRtaW4="); // admin
+        String username = org.eclipse.dirigible.commons.config.Configuration.get(
+                org.eclipse.dirigible.commons.config.Configuration.BASIC_USERNAME, "YWRtaW4="); // admin
+        String password = org.eclipse.dirigible.commons.config.Configuration.get(
+                org.eclipse.dirigible.commons.config.Configuration.BASIC_PASSWORD, "YWRtaW4="); // admin
         UserDetails user = User.withUsername(new String(new Base64().decode(username.getBytes()), StandardCharsets.UTF_8).trim())
                                .password("{noop}" + new String(new Base64().decode(password.getBytes()), StandardCharsets.UTF_8).trim())
                                .roles(Roles.ADMINISTRATOR.name(), Roles.DEVELOPER.name(), Roles.OPERATOR.name())
