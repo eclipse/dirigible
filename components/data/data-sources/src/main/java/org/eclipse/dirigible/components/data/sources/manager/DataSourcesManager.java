@@ -18,7 +18,6 @@ import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
 import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,11 +25,9 @@ import org.springframework.stereotype.Component;
  * The Class DataSourcesManager.
  */
 @Component
-public class DataSourcesManager implements InitializingBean {
+public class DataSourcesManager {
 
     private static final Logger logger = LoggerFactory.getLogger(DataSourcesManager.class);
-
-    private static DataSourcesManager INSTANCE;
 
     private final DataSourceService datasourceService;
     private final CustomDataSourcesService customDataSourcesService;
@@ -57,25 +54,6 @@ public class DataSourcesManager implements InitializingBean {
         this.defaultDataSourceName = defaultDataSourceName;
         this.systemDataSourceName = systemDataSourceName;
         this.customDataSourcesService.initialize();
-    }
-
-    /**
-     * After properties set.
-     *
-     * @throws Exception the exception
-     */
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        INSTANCE = this;
-    }
-
-    /**
-     * Gets the.
-     *
-     * @return the data sources manager
-     */
-    public static DataSourcesManager get() {
-        return INSTANCE;
     }
 
     /**
