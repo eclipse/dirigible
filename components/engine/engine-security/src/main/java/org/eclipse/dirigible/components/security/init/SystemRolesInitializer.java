@@ -17,13 +17,11 @@ import org.eclipse.dirigible.components.security.domain.Role;
 import org.eclipse.dirigible.components.security.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@ConditionalOnProperty(name = "basic.enabled", havingValue = "true")
 @Order(ApplicationReadyEventListeners.SYSTEM_ROLES_INITIALIZER)
 @Component
 class SystemRolesInitializer implements ApplicationListener<ApplicationReadyEvent> {

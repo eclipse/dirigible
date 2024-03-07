@@ -1,10 +1,13 @@
 package org.eclipse.dirigible.components.security.keycloak;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.http.roles.Roles;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
+import org.eclipse.dirigible.components.tenants.domain.User;
 import org.eclipse.dirigible.components.tenants.service.UserService;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,26 +36,30 @@ public class CustomOidcUserService extends OidcUserService {
 
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
-        OidcUser oidcUser = super.loadUser(userRequest);
-        if (isTrialDisabled()) {
-            String username = oidcUser.getName();
-            String tenantId = tenantContext.getCurrentTenant()
-                                           .getId();
-            userService.findUserByUsernameAndTenantId(username, tenantId)
-                       .orElseThrow(() -> {
-                           String message = "User with username [" + username + "] in tenant [" + tenantId + "] was not found";
-                           return new OAuth2AuthenticationException(USER_NOT_IN_TENANT_ERR, message);
-                       });
 
-            return oidcUser;
+        OidcUser oidcUser = super.loadUser(userRequest);
+        if (isTrialEnabled()) {
+            return createTrialUser(userRequest, oidcUser);
         }
 
-        return createTrialUser(userRequest, oidcUser);
+        String username = oidcUser.getName();
+        String tenantId = tenantContext.getCurrentTenant()
+                                       .getId();
+        User user = userService.findUserByUsernameAndTenantId(username, tenantId)
+                               .orElseThrow(() -> {
+                                   String message = "User with username [" + username + "] in tenant [" + tenantId + "] was not found";
+                                   return new OAuth2AuthenticationException(USER_NOT_IN_TENANT_ERR, message);
+                               });
+        Set<String> roleNames = userService.getUserRoleNames(user);
+        Set<GrantedAuthority> roleAuthorities = toAuthorities(roleNames);
+
+        return createOidcUser(userRequest, oidcUser, roleAuthorities);
+
     }
 
-    private boolean isTrialDisabled() {
+    private boolean isTrialEnabled() {
         String configValue = Configuration.get(Configuration.TRIAL_ENABLED, "false");
-        return !Boolean.valueOf(configValue);
+        return Boolean.valueOf(configValue);
     }
 
     /**
@@ -65,21 +72,28 @@ public class CustomOidcUserService extends OidcUserService {
      * @return
      */
     private OidcUser createTrialUser(OidcUserRequest userRequest, OidcUser oidcUser) {
-        // for trial
-        // - assign all available roles to all users
-        // - skip checking whether the user is registered for the tenant
-        List<GrantedAuthority> roleAuthorities = new ArrayList<>();
-        for (Roles role : Roles.values()) {
-            GrantedAuthority authority = new SimpleGrantedAuthority(role.getRoleName());
-            roleAuthorities.add(authority);
-        }
+        Set<String> roleNames = Arrays.stream(Roles.values())
+                                      .map(Roles::getRoleName)
+                                      .collect(Collectors.toSet());
+        Set<GrantedAuthority> roleAuthorities = toAuthorities(roleNames);
 
+        return createOidcUser(userRequest, oidcUser, roleAuthorities);
+    }
+
+    private OidcUser createOidcUser(OidcUserRequest userRequest, OidcUser oidcUser, Set<GrantedAuthority> additionalAuthorities) {
         String userNameAttributeName = userRequest.getClientRegistration()
                                                   .getProviderDetails()
                                                   .getUserInfoEndpoint()
                                                   .getUserNameAttributeName();
-        return StringUtils.hasText(userNameAttributeName) ? new CustomOidcUser(oidcUser, userNameAttributeName, roleAuthorities)
-                : new CustomOidcUser(oidcUser, roleAuthorities);
+        return StringUtils.hasText(userNameAttributeName) ? new CustomOidcUser(oidcUser, userNameAttributeName, additionalAuthorities)
+                : new CustomOidcUser(oidcUser, additionalAuthorities);
+    }
+
+    private Set<GrantedAuthority> toAuthorities(Collection<String> roleNames) {
+        return roleNames.stream()
+                        .map(r -> new SimpleGrantedAuthority(r))
+                        .collect(Collectors.toSet());
+
     }
 
 }

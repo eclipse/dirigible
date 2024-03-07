@@ -22,7 +22,6 @@ import org.eclipse.dirigible.components.security.domain.Role;
 import org.eclipse.dirigible.components.security.service.RoleService;
 import org.eclipse.dirigible.components.tenants.domain.User;
 import org.eclipse.dirigible.components.tenants.domain.UserRoleAssignment;
-import org.eclipse.dirigible.components.tenants.service.UserRoleAssignmentService;
 import org.eclipse.dirigible.components.tenants.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,14 +41,11 @@ class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent>
     private final Decoder base64Decoder;
     private final UserService userService;
     private final Tenant defaultTenant;
-    private final UserRoleAssignmentService userRoleAssignmentService;
     private final RoleService roleService;
 
-    AdminUserInitializer(UserService userService, @DefaultTenant Tenant defaultTenant, UserRoleAssignmentService userRoleAssignmentService,
-            RoleService roleService) {
+    AdminUserInitializer(UserService userService, @DefaultTenant Tenant defaultTenant, RoleService roleService) {
         this.userService = userService;
         this.defaultTenant = defaultTenant;
-        this.userRoleAssignmentService = userRoleAssignmentService;
         this.roleService = roleService;
         this.base64Decoder = Base64.getDecoder();
     }
@@ -95,9 +91,7 @@ class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent>
 
         String roleName = predefinedRole.getRoleName();
         Role role = roleService.findByName(roleName);
-        assignment.setRole(role);
-
-        UserRoleAssignment savedAssignment = userRoleAssignmentService.save(assignment);
+        userService.assignUserRoles(user, role);
 
         LOGGER.info("Assigned role [{}] to user [{}] in tenant [{}]", roleName, user.getUsername(), user.getTenant()
                                                                                                         .getId());
