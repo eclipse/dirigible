@@ -15,7 +15,16 @@ import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.base.http.access.UserRequestVerifier;
+import org.eclipse.dirigible.components.security.domain.Access;
+import org.eclipse.dirigible.components.security.verifier.AccessVerifier;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import com.google.common.html.HtmlEscapers;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -25,24 +34,10 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.http.access.UserRequestVerifier;
-import org.eclipse.dirigible.components.security.domain.Access;
-import org.eclipse.dirigible.components.security.verifier.AccessVerifier;
-import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
-
-import com.google.common.html.HtmlEscapers;
-
 /**
  * The Security Filter.
  */
 @Component
-@ConditionalOnProperty(name = "tenants.enabled", havingValue = "false")
 public class SecurityFilter implements Filter {
 
     /**
@@ -81,7 +76,7 @@ public class SecurityFilter implements Filter {
     private static final Set<String> SECURED_PREFIXES = new HashSet<>();
 
     /** The security access verifier. */
-    private AccessVerifier securityAccessVerifier;
+    private final AccessVerifier securityAccessVerifier;
 
     /**
      * Instantiates a new security filter.

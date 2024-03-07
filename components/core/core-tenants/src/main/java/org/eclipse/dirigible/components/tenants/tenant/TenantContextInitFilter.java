@@ -30,9 +30,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/**
- * The Class TenantContextInitFilter.
- */
 @Component
 public class TenantContextInitFilter extends OncePerRequestFilter {
 
@@ -48,29 +45,14 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
                                                                                .maximumSize(100)
                                                                                .build();
 
-    /** The tenant repository. */
     private final TenantService tenantService;
     private final TenantContext tenantContext;
 
-    /**
-     * Instantiates a new tenant filter.
-     *
-     * @param tenantRepository the tenant repository
-     */
     public TenantContextInitFilter(TenantService tenantService, TenantContext tenantContext) {
         this.tenantService = tenantService;
         this.tenantContext = tenantContext;
     }
 
-    /**
-     * Do filter internal.
-     *
-     * @param request the request
-     * @param response the response
-     * @param chain the chain
-     * @throws ServletException the servlet exception
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
@@ -108,12 +90,6 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
         return Optional.of(TenantImpl.getDefaultTenant());
     }
 
-    /**
-     * Should not filter.
-     *
-     * @param request the request
-     * @return true, if successful
-     */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         return request.getRequestURI()

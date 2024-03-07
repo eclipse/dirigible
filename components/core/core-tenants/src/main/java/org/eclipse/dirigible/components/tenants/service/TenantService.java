@@ -14,11 +14,9 @@ import java.util.Optional;
 import java.util.Set;
 import org.eclipse.dirigible.components.tenants.domain.Tenant;
 import org.eclipse.dirigible.components.tenants.domain.TenantStatus;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 @Service
-@ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
 public class TenantService {
 
     private final TenantRepository tenantRepository;

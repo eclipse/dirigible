@@ -18,13 +18,11 @@ import org.eclipse.dirigible.components.tenants.domain.TenantStatus;
 import org.eclipse.dirigible.components.tenants.service.TenantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
 @Order(ApplicationReadyEventListeners.DEFAULT_TENANT_INITIALIZER)
 @Component
 class DefaultTenantInitializer implements ApplicationListener<ApplicationReadyEvent> {

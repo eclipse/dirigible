@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.components.security.keycloak;
 
 import org.eclipse.dirigible.components.base.http.access.HttpSecurityURIConfigurator;
+import org.eclipse.dirigible.components.tenants.tenant.TenantContextInitFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -19,6 +20,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Profile("keycloak")
@@ -28,11 +30,12 @@ import org.springframework.security.web.SecurityFilterChain;
 public class KeycloakSecurityConfiguration {
 
     @Bean
-    SecurityFilterChain configure(HttpSecurity http) throws Exception {
+    SecurityFilterChain configure(HttpSecurity http, TenantContextInitFilter tenantContextInitFilter) throws Exception {
         http//
             .authorizeHttpRequests(authz -> authz.requestMatchers("/oauth2/**", "/login/**")
                                                  .permitAll())
             .csrf(csrf -> csrf.disable())
+            .addFilterBefore(tenantContextInitFilter, OAuth2LoginAuthenticationFilter.class)
             .headers(headers -> headers.frameOptions(frameOpts -> frameOpts.sameOrigin()))
             .oauth2Client(Customizer.withDefaults())
             .oauth2Login(Customizer.withDefaults())

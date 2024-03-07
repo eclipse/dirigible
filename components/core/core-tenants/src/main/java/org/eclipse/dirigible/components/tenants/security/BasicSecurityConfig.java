@@ -10,6 +10,7 @@
  */
 package org.eclipse.dirigible.components.tenants.security;
 
+import java.util.Arrays;
 import org.eclipse.dirigible.components.base.http.access.HttpSecurityURIConfigurator;
 import org.eclipse.dirigible.components.tenants.tenant.TenantContextInitFilter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -18,17 +19,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
  * The Class WebSecurityConfig.
  */
 @Configuration
 @EnableWebSecurity
-@ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
-public class WebSecurityConfig {
+@ConditionalOnProperty(name = "basic.enabled", havingValue = "true")
+public class BasicSecurityConfig {
 
     /**
      * Filter chain.
@@ -52,14 +55,20 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    /**
-     * Password encoder.
-     *
-     * @return the b crypt password encoder
-     */
     @Bean
-    BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(
+                Arrays.asList("Access-Control-Allow-Headers", "Access-Control-Allow-Origin", "Access-Control-Request-Method",
+                        "Access-Control-Request-Headers", "Origin", "Cache-Control", "Content-Type", "Authorization"));
+        configuration.setExposedHeaders(
+                Arrays.asList("Access-Control-Allow-Headers", "Access-Control-Allow-Origin", "Access-Control-Request-Method",
+                        "Access-Control-Request-Headers", "Origin", "Cache-Control", "Content-Type", "Authorization"));
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "DELETE", "GET", "POST", "PATCH", "PUT"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
-
 }

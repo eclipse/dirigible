@@ -10,7 +10,6 @@
  */
 package org.eclipse.dirigible.components.tenants.domain;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -26,7 +25,6 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "DIRIGIBLE_TENANTS")
-@ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
 public class Tenant {
 
     /** The id. */

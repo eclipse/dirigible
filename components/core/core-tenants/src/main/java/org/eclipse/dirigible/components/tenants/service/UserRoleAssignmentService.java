@@ -13,14 +13,12 @@ package org.eclipse.dirigible.components.tenants.service;
 import java.util.List;
 import org.eclipse.dirigible.components.tenants.domain.User;
 import org.eclipse.dirigible.components.tenants.domain.UserRoleAssignment;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 /**
  * The Class UserService.
  */
 @Service
-@ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
 public class UserRoleAssignmentService {
 
     private final UserRoleAssignmentRepository repository;

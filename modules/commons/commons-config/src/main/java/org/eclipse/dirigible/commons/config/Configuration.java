@@ -51,6 +51,7 @@ public class Configuration {
     public static final String TENANT_SUBDOMAIN_REGEX = "DIRIGIBLE_TENANT_SUBDOMAIN_REGEX";
     public static final String BASIC_USERNAME = "DIRIGIBLE_BASIC_USERNAME";
     public static final String BASIC_PASSWORD = "DIRIGIBLE_BASIC_PASSWORD";
+    public static final String TRIAL_ENABLED = "DIRIGIBLE_TRIAL_ENABLED";
 
     /**
      * The Enum ConfigType.
