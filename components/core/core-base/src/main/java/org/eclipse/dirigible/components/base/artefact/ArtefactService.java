@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.components.base.artefact;
 
 import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,14 +19,14 @@ import org.springframework.data.domain.Pageable;
  *
  * @param <A> the generic type
  */
-public interface ArtefactService<A extends Artefact> {
+public interface ArtefactService<A extends Artefact, ID> {
 
     /**
      * Find all.
      *
      * @return the page
      */
-    public List<A> getAll();
+    List<A> getAll();
 
     /**
      * Find all.
@@ -35,7 +34,7 @@ public interface ArtefactService<A extends Artefact> {
      * @param pageable the pageable
      * @return the page
      */
-    public Page<A> getPages(Pageable pageable);
+    Page<A> getPages(Pageable pageable);
 
     /**
      * Find by id.
@@ -43,7 +42,7 @@ public interface ArtefactService<A extends Artefact> {
      * @param id the id
      * @return the a
      */
-    public A findById(Long id);
+    A findById(ID id);
 
     /**
      * Find by name.
@@ -51,7 +50,7 @@ public interface ArtefactService<A extends Artefact> {
      * @param name the name
      * @return the a
      */
-    public A findByName(String name);
+    A findByName(String name);
 
     /**
      * Find by location.
@@ -59,7 +58,7 @@ public interface ArtefactService<A extends Artefact> {
      * @param location the location
      * @return the a
      */
-    public List<A> findByLocation(String location);
+    List<A> findByLocation(String location);
 
     /**
      * Find by key.
@@ -67,7 +66,7 @@ public interface ArtefactService<A extends Artefact> {
      * @param key the key
      * @return the a
      */
-    public A findByKey(String key);
+    A findByKey(String key);
 
     /**
      * Save.
@@ -75,13 +74,15 @@ public interface ArtefactService<A extends Artefact> {
      * @param a the a
      * @return the a
      */
-    public A save(A a);
+    A save(A a);
 
     /**
      * Delete.
      *
      * @param a the a
      */
-    public void delete(A a);
+    void delete(A a);
+
+    void setRunningToAll(boolean running);
 
 }

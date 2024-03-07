@@ -11,14 +11,11 @@
 package org.eclipse.dirigible.components.data.structures.synchronizer;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -46,7 +43,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.VIEW)
-public class ViewsSynchronizer<A extends Artefact> extends MultitenantBaseSynchronizer<View> {
+public class ViewsSynchronizer extends MultitenantBaseSynchronizer<View, Long> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(ViewsSynchronizer.class);
@@ -81,21 +78,8 @@ public class ViewsSynchronizer<A extends Artefact> extends MultitenantBaseSynchr
      * @return the service
      */
     @Override
-    public ArtefactService<View> getService() {
+    public ArtefactService<View, Long> getService() {
         return viewService;
-    }
-
-    /**
-     * Checks if is accepted.
-     *
-     * @param file the file
-     * @param attrs the attrs
-     * @return true, if is accepted
-     */
-    @Override
-    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString()
-                   .endsWith(getFileExtension());
     }
 
     /**
@@ -168,24 +152,17 @@ public class ViewsSynchronizer<A extends Artefact> extends MultitenantBaseSynchr
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(View artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((View) artefact);
+        getService().save(artefact);
     }
 
     @Override
-    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-
+    protected boolean completeImpl(TopologyWrapper<View> wrapper, ArtefactPhase flow) {
+        View view = wrapper.getArtefact();
         try (Connection connection = datasourcesManager.getDefaultDataSource()
                                                        .getConnection()) {
-
-            View view = null;
-            if (!(wrapper.getArtefact() instanceof View)) {
-                throw new UnsupportedOperationException(String.format("Trying to process %s as View", wrapper.getArtefact()
-                                                                                                             .getClass()));
-            }
-            view = (View) wrapper.getArtefact();
 
             switch (flow) {
                 case CREATE:

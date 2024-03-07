@@ -11,14 +11,11 @@
 package org.eclipse.dirigible.components.odata.synchronizer;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -54,7 +51,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.ODATA)
-public class ODataSynchronizer<A extends Artefact> extends BaseSynchronizer<OData> {
+public class ODataSynchronizer extends BaseSynchronizer<OData, Long> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(ODataSynchronizer.class);
@@ -84,19 +81,6 @@ public class ODataSynchronizer<A extends Artefact> extends BaseSynchronizer<ODat
     /** The OData schema service. */
     @Autowired
     private ODataSchemaService odataSchemaService;
-
-    /**
-     * Checks if is accepted.
-     *
-     * @param file the file
-     * @param attrs the attrs
-     * @return true, if is accepted
-     */
-    @Override
-    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString()
-                   .endsWith(FILE_EXTENSION_ODATA);
-    }
 
     /**
      * Checks if is accepted.
@@ -166,10 +150,10 @@ public class ODataSynchronizer<A extends Artefact> extends BaseSynchronizer<ODat
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(OData artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((OData) artefact);
+        getService().save(artefact);
     }
 
     /**
@@ -224,7 +208,7 @@ public class ODataSynchronizer<A extends Artefact> extends BaseSynchronizer<ODat
      * @return the service
      */
     @Override
-    public ArtefactService<OData> getService() {
+    public ArtefactService<OData, Long> getService() {
         return odataService;
     }
 
@@ -236,16 +220,9 @@ public class ODataSynchronizer<A extends Artefact> extends BaseSynchronizer<ODat
      * @return true, if successful
      */
     @Override
-    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-
+    protected boolean completeImpl(TopologyWrapper<OData> wrapper, ArtefactPhase flow) {
+        OData odata = wrapper.getArtefact();
         try {
-            OData odata = null;
-            if (!(wrapper.getArtefact() instanceof OData)) {
-                throw new UnsupportedOperationException(String.format("Trying to process %s as OData", wrapper.getArtefact()
-                                                                                                              .getClass()));
-            }
-            odata = (OData) wrapper.getArtefact();
-
             switch (flow) {
                 case CREATE:
                     if (ArtefactLifecycle.NEW.equals(odata.getLifecycle())) {

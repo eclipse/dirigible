@@ -12,8 +12,6 @@ package org.eclipse.dirigible.components.data.structures.synchronizer;
 
 import static java.text.MessageFormat.format;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -21,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -58,7 +55,7 @@ import com.google.gson.JsonObject;
  */
 @Component
 @Order(SynchronizersOrder.SCHEMA)
-public class SchemasSynchronizer<A extends Artefact> extends MultitenantBaseSynchronizer<Schema> {
+public class SchemasSynchronizer extends MultitenantBaseSynchronizer<Schema, Long> {
 
     /**
      * The Constant logger.
@@ -118,7 +115,7 @@ public class SchemasSynchronizer<A extends Artefact> extends MultitenantBaseSync
      * @return the service
      */
     @Override
-    public ArtefactService<Schema> getService() {
+    public ArtefactService<Schema, Long> getService() {
         return schemaService;
     }
 
@@ -138,19 +135,6 @@ public class SchemasSynchronizer<A extends Artefact> extends MultitenantBaseSync
      */
     public ViewService getViewService() {
         return viewService;
-    }
-
-    /**
-     * Checks if is accepted.
-     *
-     * @param file the file
-     * @param attrs the attrs
-     * @return true, if is accepted
-     */
-    @Override
-    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString()
-                   .endsWith(getFileExtension());
     }
 
     /**
@@ -248,21 +232,15 @@ public class SchemasSynchronizer<A extends Artefact> extends MultitenantBaseSync
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(Schema artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((Schema) artefact);
+        getService().save(artefact);
     }
 
     @Override
-    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-
-        Schema schema = null;
-        if (!(wrapper.getArtefact() instanceof Schema)) {
-            throw new UnsupportedOperationException(String.format("Trying to process %s as Schema", wrapper.getArtefact()
-                                                                                                           .getClass()));
-        }
-        schema = (Schema) wrapper.getArtefact();
+    protected boolean completeImpl(TopologyWrapper<Schema> wrapper, ArtefactPhase flow) {
+        Schema schema = wrapper.getArtefact();
 
         try (Connection connection = datasourcesManager.getDataSource(schema.getDatasource())
                                                        .getConnection()) {

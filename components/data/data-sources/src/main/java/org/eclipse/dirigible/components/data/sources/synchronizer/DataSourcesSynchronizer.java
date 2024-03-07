@@ -11,13 +11,10 @@
 package org.eclipse.dirigible.components.data.sources.synchronizer;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Set;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -42,7 +39,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.DATASOURCE)
-public class DataSourcesSynchronizer<A extends Artefact> extends BaseSynchronizer<DataSource> {
+public class DataSourcesSynchronizer extends BaseSynchronizer<DataSource, Long> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DataSourcesSynchronizer.class);
@@ -74,21 +71,8 @@ public class DataSourcesSynchronizer<A extends Artefact> extends BaseSynchronize
      * @return the service
      */
     @Override
-    public ArtefactService<DataSource> getService() {
+    public ArtefactService<DataSource, Long> getService() {
         return dataSourceService;
-    }
-
-    /**
-     * Checks if is accepted.
-     *
-     * @param file the file
-     * @param attrs the attrs
-     * @return true, if is accepted
-     */
-    @Override
-    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString()
-                   .endsWith(getFileExtension());
     }
 
     /**
@@ -166,21 +150,16 @@ public class DataSourcesSynchronizer<A extends Artefact> extends BaseSynchronize
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(DataSource artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((DataSource) artefact);
+        getService().save(artefact);
     }
 
     @Override
-    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<DataSource> wrapper, ArtefactPhase flow) {
         try {
-            DataSource datasource = null;
-            if (!(wrapper.getArtefact() instanceof DataSource)) {
-                throw new UnsupportedOperationException(String.format("Trying to process %s as DataSource", wrapper.getArtefact()
-                                                                                                                   .getClass()));
-            }
-            datasource = (DataSource) wrapper.getArtefact();
+            DataSource datasource = wrapper.getArtefact();
 
             switch (flow) {
                 case CREATE:

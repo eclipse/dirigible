@@ -10,6 +10,11 @@
  */
 package org.eclipse.dirigible.components.security.service;
 
+import static org.eclipse.dirigible.components.security.repository.AccessRepositoryTest.createSecurityAccess;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.List;
 import org.eclipse.dirigible.components.security.domain.Access;
 import org.eclipse.dirigible.components.security.repository.AccessRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -23,11 +28,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static org.eclipse.dirigible.components.security.repository.AccessRepositoryTest.createSecurityAccess;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {AccessRepository.class, AccessService.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -103,13 +103,12 @@ class AccessServiceTest {
 
     @Test
     void testDelete() {
-        try {
-            Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b/c/test.txt", "GET", "test_role");
-            accessService.save(securityAccess);
-            accessService.delete(securityAccess);
+        Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b/c/test.txt", "GET", "test_role");
+        accessService.save(securityAccess);
+        accessService.delete(securityAccess);
+
+        assertThrows(IllegalArgumentException.class, () -> {
             accessService.findByName("test");
-        } catch (Exception e) {
-            assertEquals("Access with name does not exist: test", e.getMessage());
-        }
+        });
     }
 }

@@ -10,13 +10,23 @@
  */
 package org.eclipse.dirigible.components.data.csvim.repository;
 
+import org.eclipse.dirigible.components.base.artefact.ArtefactRepository;
 import org.eclipse.dirigible.components.data.csvim.domain.Csvim;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The Interface CsvimRepository.
  */
 @Repository("csvimRepository")
-public interface CsvimRepository extends JpaRepository<Csvim, Long> {
+public interface CsvimRepository extends ArtefactRepository<Csvim, Long> {
+
+    @Override
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE Csvim SET running = :running")
+    void setRunningToAll(@Param("running") boolean running);
 }

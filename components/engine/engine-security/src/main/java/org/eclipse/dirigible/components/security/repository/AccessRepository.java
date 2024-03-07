@@ -10,14 +10,23 @@
  */
 package org.eclipse.dirigible.components.security.repository;
 
+import org.eclipse.dirigible.components.base.artefact.ArtefactRepository;
 import org.eclipse.dirigible.components.security.domain.Access;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The Interface SecurityAccessRepository.
  */
 @Repository("securityAccessRepository")
-public interface AccessRepository extends JpaRepository<Access, Long> {
+public interface AccessRepository extends ArtefactRepository<Access, Long> {
 
+    @Override
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE Access SET running = :running")
+    void setRunningToAll(@Param("running") boolean running);
 }

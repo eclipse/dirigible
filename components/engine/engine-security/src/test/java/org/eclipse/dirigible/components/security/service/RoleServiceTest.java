@@ -10,6 +10,11 @@
  */
 package org.eclipse.dirigible.components.security.service;
 
+import static org.eclipse.dirigible.components.security.repository.RoleRepositoryTest.createSecurityRole;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.List;
 import org.eclipse.dirigible.components.security.domain.Role;
 import org.eclipse.dirigible.components.security.repository.RoleRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -23,11 +28,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static org.eclipse.dirigible.components.security.repository.RoleRepositoryTest.createSecurityRole;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {RoleRepository.class, RoleService.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -98,13 +98,11 @@ class RoleServiceTest {
 
     @Test
     void testDelete() {
-        try {
-            Role securityRole = new Role("/a/b/c/test.role", "test", "description");
-            roleService.save(securityRole);
-            roleService.delete(securityRole);
+        Role securityRole = new Role("/a/b/c/test.role", "test", "description");
+        roleService.save(securityRole);
+        roleService.delete(securityRole);
+        assertThrows(IllegalArgumentException.class, () -> {
             roleService.findByName("test");
-        } catch (Exception e) {
-            assertEquals("SecurityRole with name does not exist: test", e.getMessage());
-        }
+        });
     }
 }

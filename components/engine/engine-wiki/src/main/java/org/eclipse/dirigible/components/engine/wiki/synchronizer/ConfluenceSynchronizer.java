@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.CONFLUENCE)
-public class ConfluenceSynchronizer<A extends Artefact> extends BaseSynchronizer<Confluence> {
+public class ConfluenceSynchronizer extends BaseSynchronizer<Confluence, Long> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(ConfluenceSynchronizer.class);
@@ -78,7 +78,7 @@ public class ConfluenceSynchronizer<A extends Artefact> extends BaseSynchronizer
      * @return the service
      */
     @Override
-    public ArtefactService<Confluence> getService() {
+    public ArtefactService<Confluence, Long> getService() {
         return confluenceService;
     }
 
@@ -176,10 +176,10 @@ public class ConfluenceSynchronizer<A extends Artefact> extends BaseSynchronizer
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(Confluence artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((Confluence) artefact);
+        getService().save(artefact);
     }
 
     /**
@@ -190,13 +190,8 @@ public class ConfluenceSynchronizer<A extends Artefact> extends BaseSynchronizer
      * @return true, if successful
      */
     @Override
-    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-        Confluence wiki = null;
-        if (!(wrapper.getArtefact() instanceof Confluence)) {
-            throw new UnsupportedOperationException(String.format("Trying to process %s as Confluence", wrapper.getArtefact()
-                                                                                                               .getClass()));
-        }
-        wiki = (Confluence) wrapper.getArtefact();
+    protected boolean completeImpl(TopologyWrapper<Confluence> wrapper, ArtefactPhase flow) {
+        Confluence wiki = wrapper.getArtefact();
 
         switch (flow) {
             case CREATE:

@@ -11,13 +11,10 @@
 package org.eclipse.dirigible.components.jobs.synchronizer;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -45,7 +42,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.JOB)
-public class JobSynchronizer<A extends Artefact> extends BaseSynchronizer<Job> {
+public class JobSynchronizer extends BaseSynchronizer<Job, Long> {
 
     /**
      * The Constant logger.
@@ -91,19 +88,6 @@ public class JobSynchronizer<A extends Artefact> extends BaseSynchronizer<Job> {
     @Autowired
     public JobSynchronizer(JobService jobService) {
         this.jobService = jobService;
-    }
-
-    /**
-     * Checks if is accepted.
-     *
-     * @param file the file
-     * @param attrs the attrs
-     * @return true, if is accepted
-     */
-    @Override
-    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString()
-                   .endsWith(getFileExtension());
     }
 
     /**
@@ -183,10 +167,10 @@ public class JobSynchronizer<A extends Artefact> extends BaseSynchronizer<Job> {
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(Job artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((Job) artefact);
+        getService().save(artefact);
     }
 
     /**
@@ -195,7 +179,7 @@ public class JobSynchronizer<A extends Artefact> extends BaseSynchronizer<Job> {
      * @return the service
      */
     @Override
-    public ArtefactService<Job> getService() {
+    public ArtefactService<Job, Long> getService() {
         return jobService;
     }
 
@@ -207,13 +191,8 @@ public class JobSynchronizer<A extends Artefact> extends BaseSynchronizer<Job> {
      * @return true, if successful
      */
     @Override
-    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-        Job job = null;
-        if (!(wrapper.getArtefact() instanceof Job)) {
-            throw new UnsupportedOperationException(String.format("Trying to process %s as Job", wrapper.getArtefact()
-                                                                                                        .getClass()));
-        }
-        job = (Job) wrapper.getArtefact();
+    protected boolean completeImpl(TopologyWrapper<Job> wrapper, ArtefactPhase flow) {
+        Job job = wrapper.getArtefact();
 
         switch (flow) {
             case CREATE:

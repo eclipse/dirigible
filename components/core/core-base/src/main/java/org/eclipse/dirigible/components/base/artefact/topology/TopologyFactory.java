@@ -31,13 +31,13 @@ public class TopologyFactory {
      * @return the list of topology wrappers
      */
     public static final List<TopologyWrapper<? extends Artefact>> wrap(Collection<? extends Artefact> artefacts,
-            List<Synchronizer<Artefact>> synchronizers) {
-        List<TopologyWrapper<? extends Artefact>> list = new ArrayList<TopologyWrapper<? extends Artefact>>();
-        Map<String, TopologyWrapper<? extends Artefact>> wrappers = new HashMap<String, TopologyWrapper<? extends Artefact>>();
+            List<Synchronizer<?, ?>> synchronizers) {
+        List<TopologyWrapper<? extends Artefact>> list = new ArrayList<>();
+        Map<String, TopologyWrapper<Artefact>> wrappers = new HashMap<>();
         for (Artefact artefact : artefacts) {
-            for (Synchronizer<Artefact> synchronizer : synchronizers) {
+            for (Synchronizer<?, ?> synchronizer : synchronizers) {
                 if (synchronizer.isAccepted(artefact.getType())) {
-                    TopologyWrapper<? extends Artefact> wrapper = new TopologyWrapper(artefact, wrappers, synchronizer);
+                    TopologyWrapper<Artefact> wrapper = new TopologyWrapper(artefact, wrappers, synchronizer);
                     list.add(wrapper);
                     break;
                 }

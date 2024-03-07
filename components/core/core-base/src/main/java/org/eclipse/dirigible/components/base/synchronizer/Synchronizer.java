@@ -14,7 +14,6 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
-import org.checkerframework.checker.units.qual.A;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
@@ -26,14 +25,14 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
  *
  * @param <A> the generic type
  */
-public interface Synchronizer<A extends Artefact> {
+public interface Synchronizer<A extends Artefact, ID> {
 
     /**
      * Gets the service.
      *
      * @return the service
      */
-    ArtefactService<A> getService();
+    ArtefactService<A, ID> getService();
 
     /**
      * Checks if is accepted.
@@ -77,7 +76,7 @@ public interface Synchronizer<A extends Artefact> {
      * @param lifecycle the lifecycle
      * @param message the message
      */
-    void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String message);
+    void setStatus(A artefact, ArtefactLifecycle lifecycle, String message);
 
     /**
      * Complete.
@@ -86,7 +85,7 @@ public interface Synchronizer<A extends Artefact> {
      * @param flow the flow
      * @return true, if successful
      */
-    boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow);
+    boolean complete(TopologyWrapper<A> wrapper, ArtefactPhase flow);
 
     /**
      * Cleanup.
