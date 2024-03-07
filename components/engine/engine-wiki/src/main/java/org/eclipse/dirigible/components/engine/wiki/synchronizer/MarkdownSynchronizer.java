@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.MARKDOWN)
-public class MarkdownSynchronizer<A extends Artefact> extends BaseSynchronizer<Markdown> {
+public class MarkdownSynchronizer extends BaseSynchronizer<Markdown, Long> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(MarkdownSynchronizer.class);
@@ -78,7 +78,7 @@ public class MarkdownSynchronizer<A extends Artefact> extends BaseSynchronizer<M
      * @return the service
      */
     @Override
-    public ArtefactService<Markdown> getService() {
+    public ArtefactService<Markdown, Long> getService() {
         return markdownService;
     }
 
@@ -176,10 +176,10 @@ public class MarkdownSynchronizer<A extends Artefact> extends BaseSynchronizer<M
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(Markdown artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((Markdown) artefact);
+        getService().save(artefact);
     }
 
     /**
@@ -190,13 +190,8 @@ public class MarkdownSynchronizer<A extends Artefact> extends BaseSynchronizer<M
      * @return true, if successful
      */
     @Override
-    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-        Markdown wiki = null;
-        if (!(wrapper.getArtefact() instanceof Markdown)) {
-            throw new UnsupportedOperationException(String.format("Trying to process %s as Markdown", wrapper.getArtefact()
-                                                                                                             .getClass()));
-        }
-        wiki = (Markdown) wrapper.getArtefact();
+    protected boolean completeImpl(TopologyWrapper<Markdown> wrapper, ArtefactPhase flow) {
+        Markdown wiki = wrapper.getArtefact();
 
         switch (flow) {
             case CREATE:

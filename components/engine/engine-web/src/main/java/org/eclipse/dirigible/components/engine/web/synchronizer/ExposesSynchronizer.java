@@ -11,12 +11,9 @@
 package org.eclipse.dirigible.components.engine.web.synchronizer;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -42,7 +39,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.EXPOSE)
-public class ExposesSynchronizer<A extends Artefact> extends BaseSynchronizer<Expose> {
+public class ExposesSynchronizer extends BaseSynchronizer<Expose, Long> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(ExposesSynchronizer.class);
@@ -72,21 +69,8 @@ public class ExposesSynchronizer<A extends Artefact> extends BaseSynchronizer<Ex
      * @return the service
      */
     @Override
-    public ArtefactService<Expose> getService() {
+    public ArtefactService<Expose, Long> getService() {
         return exposeService;
-    }
-
-    /**
-     * Checks if is accepted.
-     *
-     * @param file the file
-     * @param attrs the attrs
-     * @return true, if is accepted
-     */
-    @Override
-    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString()
-                   .endsWith(FILE_NAME);
     }
 
     /**
@@ -159,10 +143,10 @@ public class ExposesSynchronizer<A extends Artefact> extends BaseSynchronizer<Ex
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(Expose artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((Expose) artefact);
+        getService().save(artefact);
     }
 
     /**
@@ -173,13 +157,8 @@ public class ExposesSynchronizer<A extends Artefact> extends BaseSynchronizer<Ex
      * @return true, if successful
      */
     @Override
-    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-        Expose expose = null;
-        if (!(wrapper.getArtefact() instanceof Expose)) {
-            throw new UnsupportedOperationException(String.format("Trying to process %s as Expose", wrapper.getArtefact()
-                                                                                                           .getClass()));
-        }
-        expose = (Expose) wrapper.getArtefact();
+    protected boolean completeImpl(TopologyWrapper<Expose> wrapper, ArtefactPhase flow) {
+        Expose expose = wrapper.getArtefact();
 
         switch (flow) {
             case CREATE:

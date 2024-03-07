@@ -10,15 +10,23 @@
  */
 package org.eclipse.dirigible.components.extensions.repository;
 
+import org.eclipse.dirigible.components.base.artefact.ArtefactRepository;
 import org.eclipse.dirigible.components.extensions.domain.ExtensionPoint;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The Interface ExtensionPointRepository.
  */
 @Repository("extensionPointRepository")
-public interface ExtensionPointRepository extends JpaRepository<ExtensionPoint, Long> {
+public interface ExtensionPointRepository extends ArtefactRepository<ExtensionPoint, Long> {
 
+    @Override
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE ExtensionPoint SET running = :running")
+    void setRunningToAll(@Param("running") boolean running);
 }
-

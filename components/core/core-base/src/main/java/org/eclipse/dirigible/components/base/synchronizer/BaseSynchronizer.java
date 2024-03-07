@@ -1,5 +1,7 @@
 package org.eclipse.dirigible.components.base.synchronizer;
 
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
@@ -11,13 +13,13 @@ import org.eclipse.dirigible.components.base.tenant.TenantResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class BaseSynchronizer<A extends Artefact> implements Synchronizer<A> {
+public abstract class BaseSynchronizer<A extends Artefact, ID> implements Synchronizer<A, ID> {
 
     private static final Logger logger = LoggerFactory.getLogger(BaseSynchronizer.class);
 
     @Override
-    public final boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-        Artefact artefact = wrapper.getArtefact();
+    public final boolean complete(TopologyWrapper<A> wrapper, ArtefactPhase flow) {
+        A artefact = wrapper.getArtefact();
         ArtefactLifecycle lifecycle = artefact.getLifecycle();
 
         if (!multitenantExecution() || !isMultitenantArtefact(artefact)) {
@@ -48,6 +50,11 @@ public abstract class BaseSynchronizer<A extends Artefact> implements Synchroniz
         return false;
     }
 
-    protected abstract boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow);
+    protected abstract boolean completeImpl(TopologyWrapper<A> wrapper, ArtefactPhase flow);
 
+    @Override
+    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
+        return file.toString()
+                   .endsWith(getFileExtension());
+    }
 }

@@ -10,13 +10,10 @@
  */
 package org.eclipse.dirigible.components.openapi.synchronizer;
 
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -39,7 +36,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.OPENAPI)
-public class OpenAPISynchronizer<A extends Artefact> extends BaseSynchronizer<OpenAPI> {
+public class OpenAPISynchronizer extends BaseSynchronizer<OpenAPI, Long> {
 
     /**
      * The Constant logger.
@@ -70,19 +67,6 @@ public class OpenAPISynchronizer<A extends Artefact> extends BaseSynchronizer<Op
     @Autowired
     public OpenAPISynchronizer(OpenAPIService openAPIService) {
         this.openAPIService = openAPIService;
-    }
-
-    /**
-     * Checks if is accepted.
-     *
-     * @param file the file
-     * @param attrs the attrs
-     * @return true, if is accepted
-     */
-    @Override
-    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString()
-                   .endsWith(getFileExtension());
     }
 
     /**
@@ -153,10 +137,10 @@ public class OpenAPISynchronizer<A extends Artefact> extends BaseSynchronizer<Op
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(OpenAPI artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((OpenAPI) artefact);
+        getService().save(artefact);
     }
 
     /**
@@ -165,7 +149,7 @@ public class OpenAPISynchronizer<A extends Artefact> extends BaseSynchronizer<Op
      * @return the service
      */
     @Override
-    public ArtefactService<OpenAPI> getService() {
+    public ArtefactService<OpenAPI, Long> getService() {
         return openAPIService;
     }
 
@@ -195,7 +179,7 @@ public class OpenAPISynchronizer<A extends Artefact> extends BaseSynchronizer<Op
      * @return true, if successful
      */
     @Override
-    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<OpenAPI> wrapper, ArtefactPhase flow) {
         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
         return true;
     }

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.tenant.TenantPostProvisioningStep;
 import org.eclipse.dirigible.components.base.tenant.TenantProvisioningException;
@@ -19,11 +18,11 @@ class RetriggerSynchronizersTenantPostProvisioningStep implements TenantPostProv
 
     private static final Logger logger = LoggerFactory.getLogger(RetriggerSynchronizersTenantPostProvisioningStep.class);
 
-    private final List<Synchronizer<Artefact>> multitenantSynchronizers;
+    private final List<Synchronizer<?, ?>> multitenantSynchronizers;
     private final DefinitionService definitionService;
     private final SynchronizationProcessor synchronizationProcessor;
 
-    RetriggerSynchronizersTenantPostProvisioningStep(List<Synchronizer<Artefact>> synchronizers, DefinitionService definitionService,
+    RetriggerSynchronizersTenantPostProvisioningStep(List<Synchronizer<?, ?>> synchronizers, DefinitionService definitionService,
             SynchronizationProcessor synchronizationProcessor) {
         this.definitionService = definitionService;
         this.synchronizationProcessor = synchronizationProcessor;
@@ -34,6 +33,7 @@ class RetriggerSynchronizersTenantPostProvisioningStep implements TenantPostProv
 
     @Override
     public void execute() throws TenantProvisioningException {
+        logger.info("Registered [{}] multitenant synchronizers: [{}]", multitenantSynchronizers.size(), multitenantSynchronizers);
         Set<String> multitenantArtifactTypes = multitenantSynchronizers.stream()
                                                                        .map(Synchronizer::getArtefactType)
                                                                        .collect(Collectors.toSet());

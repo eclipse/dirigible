@@ -10,14 +10,23 @@
  */
 package org.eclipse.dirigible.components.security.repository;
 
+import org.eclipse.dirigible.components.base.artefact.ArtefactRepository;
 import org.eclipse.dirigible.components.security.domain.Role;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The Interface SecurityRoleRepository.
  */
 @Repository("securityRoleRepository")
-public interface RoleRepository extends JpaRepository<Role, Long> {
+public interface RoleRepository extends ArtefactRepository<Role, Long> {
 
+    @Override
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE Role SET running = :running")
+    void setRunningToAll(@Param("running") boolean running);
 }

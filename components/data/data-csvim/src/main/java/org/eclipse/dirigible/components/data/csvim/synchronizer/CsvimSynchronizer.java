@@ -14,8 +14,6 @@ package org.eclipse.dirigible.components.data.csvim.synchronizer;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -56,7 +54,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(SynchronizersOrder.CSVIM)
-public class CsvimSynchronizer<A extends Artefact> extends MultitenantBaseSynchronizer<Csvim> {
+public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> {
 
     /**
      * The Constant logger.
@@ -109,21 +107,8 @@ public class CsvimSynchronizer<A extends Artefact> extends MultitenantBaseSynchr
      * @return the service
      */
     @Override
-    public ArtefactService<Csvim> getService() {
+    public ArtefactService<Csvim, Long> getService() {
         return csvimService;
-    }
-
-    /**
-     * Checks if is accepted.
-     *
-     * @param file the file
-     * @param attrs the attrs
-     * @return true, if is accepted
-     */
-    @Override
-    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString()
-                   .endsWith(getFileExtension());
     }
 
     /**
@@ -203,10 +188,10 @@ public class CsvimSynchronizer<A extends Artefact> extends MultitenantBaseSynchr
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(Csvim artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((Csvim) artefact);
+        getService().save(artefact);
     }
 
     /**
@@ -217,11 +202,8 @@ public class CsvimSynchronizer<A extends Artefact> extends MultitenantBaseSynchr
      * @return true, if successful
      */
     @Override
-    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-        if (!(wrapper.getArtefact() instanceof Csvim)) {
-            throw new UnsupportedOperationException(String.format("Trying to process %s as Csvim", wrapper.getArtefact()));
-        }
-        Csvim csvim = (Csvim) wrapper.getArtefact();
+    protected boolean completeImpl(TopologyWrapper<Csvim> wrapper, ArtefactPhase flow) {
+        Csvim csvim = wrapper.getArtefact();
         try {
             switch (flow) {
                 case CREATE:

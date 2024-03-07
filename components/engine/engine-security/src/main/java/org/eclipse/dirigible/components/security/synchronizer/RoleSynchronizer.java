@@ -11,13 +11,10 @@
 package org.eclipse.dirigible.components.security.synchronizer;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Set;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -42,7 +39,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Order(SynchronizersOrder.ROLE)
-public class RoleSynchronizer<A extends Artefact> extends BaseSynchronizer<Role> {
+public class RoleSynchronizer extends BaseSynchronizer<Role, Long> {
 
     /**
      * The Constant logger.
@@ -82,21 +79,8 @@ public class RoleSynchronizer<A extends Artefact> extends BaseSynchronizer<Role>
      * @return the service
      */
     @Override
-    public ArtefactService<Role> getService() {
+    public ArtefactService<Role, Long> getService() {
         return securityRoleService;
-    }
-
-    /**
-     * Checks if is accepted.
-     *
-     * @param file the file
-     * @param attrs the attrs
-     * @return true, if is accepted
-     */
-    @Override
-    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString()
-                   .endsWith(getFileExtension());
     }
 
     /**
@@ -171,10 +155,10 @@ public class RoleSynchronizer<A extends Artefact> extends BaseSynchronizer<Role>
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(Role artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((Role) artefact);
+        getService().save(artefact);
     }
 
     /**
@@ -185,7 +169,7 @@ public class RoleSynchronizer<A extends Artefact> extends BaseSynchronizer<Role>
      * @return true, if successful
      */
     @Override
-    protected boolean completeImpl(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<Role> wrapper, ArtefactPhase flow) {
         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
         return true;
     }
