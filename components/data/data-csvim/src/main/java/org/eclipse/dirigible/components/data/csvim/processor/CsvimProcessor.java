@@ -155,8 +155,9 @@ public class CsvimProcessor {
             String fileSchema = csvFile.getSchema();
             String targetSchema =
                     defaultDataSource ? ("PUBLIC".equalsIgnoreCase(fileSchema) ? connection.getSchema() : fileSchema) : fileSchema;
-            connection.setSchema(targetSchema);
-
+            if (null != targetSchema) {
+                connection.setSchema(targetSchema);
+            }
             String tableName = csvFile.getTable();
             CSVParser csvParser = getCsvParser(csvFile, content);
             TableMetadata tableMetadata = CsvimUtils.getTableMetadata(tableName, targetSchema, connection);
