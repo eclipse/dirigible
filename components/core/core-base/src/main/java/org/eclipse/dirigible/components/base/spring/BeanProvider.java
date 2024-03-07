@@ -17,11 +17,14 @@ public class BeanProvider implements ApplicationContextAware {
     }
 
     public static <T> T getBean(Class<T> clazz) {
+        if (!isInitialzed()) {
+            throw new IllegalStateException("Spring is not initialized yet.");
+        }
         return context.getBean(clazz);
     }
 
     public static TenantContext getTenantContext() {
-        return context.getBean(TenantContext.class);
+        return getBean(TenantContext.class);
     }
 
     public static boolean isInitialzed() {

@@ -21,7 +21,15 @@ import org.eclipse.dirigible.components.odata.api.TableMetadataProvider;
 public class DefaultTableMetadataProvider implements TableMetadataProvider {
 
     /** The db metadata util. */
-    private final ODataDatabaseMetadataUtil odataDatabaseMetadataUtil = new ODataDatabaseMetadataUtil();
+    private final ODataDatabaseMetadataUtil odataDatabaseMetadataUtil;
+
+    public DefaultTableMetadataProvider() {
+        this(new ODataDatabaseMetadataUtil());
+    }
+
+    DefaultTableMetadataProvider(ODataDatabaseMetadataUtil odataDatabaseMetadataUtil) {
+        this.odataDatabaseMetadataUtil = odataDatabaseMetadataUtil;
+    }
 
     /**
      * Gets the persistence table model.
