@@ -10,7 +10,6 @@
  */
 package org.eclipse.dirigible.components.tenants.domain;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,7 +26,6 @@ import jakarta.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "DIRIGIBLE_USERS", uniqueConstraints = {@UniqueConstraint(columnNames = {"USER_TENANT_ID", "USER_USERNAME"})})
-@ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
 public class User {
 
     /** The id. */

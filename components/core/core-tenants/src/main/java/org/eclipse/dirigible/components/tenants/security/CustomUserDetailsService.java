@@ -30,8 +30,8 @@ import org.springframework.stereotype.Service;
 /**
  * The Class CustomUserDetailsService.
  */
+@ConditionalOnProperty(name = "basic.enabled", havingValue = "true")
 @Service
-@ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
 public class CustomUserDetailsService implements UserDetailsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomUserDetailsService.class);

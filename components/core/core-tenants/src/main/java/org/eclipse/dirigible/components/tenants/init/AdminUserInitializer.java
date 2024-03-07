@@ -32,7 +32,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
+@ConditionalOnProperty(name = "basic.enabled", havingValue = "true")
 @Order(ApplicationReadyEventListeners.ADMIN_USER_INITIALIZER)
 @Component
 class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent> {

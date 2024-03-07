@@ -23,7 +23,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
+@ConditionalOnProperty(name = "basic.enabled", havingValue = "true")
 @Order(ApplicationReadyEventListeners.SYSTEM_ROLES_INITIALIZER)
 @Component
 class SystemRolesInitializer implements ApplicationListener<ApplicationReadyEvent> {

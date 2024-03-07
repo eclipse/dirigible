@@ -14,15 +14,10 @@ import java.util.Optional;
 import org.eclipse.dirigible.components.tenants.domain.Tenant;
 import org.eclipse.dirigible.components.tenants.domain.User;
 import org.eclipse.dirigible.components.tenants.exceptions.TenantNotFoundException;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-/**
- * The Class UserService.
- */
 @Service
-@ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
 public class UserService {
 
     private final TenantService tenantService;

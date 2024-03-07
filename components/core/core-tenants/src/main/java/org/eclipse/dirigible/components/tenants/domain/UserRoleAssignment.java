@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.components.tenants.domain;
 
 import org.eclipse.dirigible.components.security.domain.Role;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +23,6 @@ import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "DIRIGIBLE_USER_ROLE_ASSIGNMENTS", uniqueConstraints = {@UniqueConstraint(columnNames = {"USER_ID", "ROLE_ID"})})
-@ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
 public class UserRoleAssignment {
 
     @Id
