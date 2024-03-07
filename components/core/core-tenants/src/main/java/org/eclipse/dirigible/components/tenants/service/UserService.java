@@ -11,8 +11,12 @@
 package org.eclipse.dirigible.components.tenants.service;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import org.eclipse.dirigible.components.security.domain.Role;
 import org.eclipse.dirigible.components.tenants.domain.Tenant;
 import org.eclipse.dirigible.components.tenants.domain.User;
+import org.eclipse.dirigible.components.tenants.domain.UserRoleAssignment;
 import org.eclipse.dirigible.components.tenants.exceptions.TenantNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,15 +25,16 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final TenantService tenantService;
-
     private final UserRepository userRepository;
-
     private final BCryptPasswordEncoder passwordEncoder;
+    private final UserRoleAssignmentRepository assignmentRepository;
 
-    public UserService(TenantService tenantService, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserService(TenantService tenantService, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
+            UserRoleAssignmentRepository assignmentRepository) {
         this.tenantService = tenantService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.assignmentRepository = assignmentRepository;
     }
 
     public User createNewUser(String username, String password, String tenantId) {
@@ -40,5 +45,28 @@ public class UserService {
 
     public Optional<User> findUserByUsernameAndTenantId(String username, String tenantId) {
         return userRepository.findUserByUsernameAndTenantId(username, tenantId);
+    }
+
+    public Set<String> getUserRoleNames(User user) {
+        return getUserRoles(user).stream()
+                                 .map(Role::getName)
+                                 .collect(Collectors.toSet());
+    }
+
+    private Set<Role> getUserRoles(User user) {
+        return assignmentRepository.findByUser(user)
+                                   .stream()
+                                   .map(a -> a.getRole())
+                                   .collect(Collectors.toSet());
+    }
+
+    public void assignUserRoles(User user, Role... roles) {
+        for (Role role : roles) {
+            UserRoleAssignment assignment = new UserRoleAssignment();
+            assignment.setUser(user);
+            assignment.setRole(role);
+
+            assignmentRepository.save(assignment);
+        }
     }
 }

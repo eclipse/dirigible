@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.tenants.domain.User;
-import org.eclipse.dirigible.components.tenants.service.UserRoleAssignmentService;
 import org.eclipse.dirigible.components.tenants.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,13 +36,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
     private final UserService userService;
-    private final UserRoleAssignmentService userRoleAssignmentService;
     private final TenantContext tenantContext;
 
-    public CustomUserDetailsService(UserService userService, UserRoleAssignmentService userRoleAssignmentService,
-            TenantContext tenantContext) {
+    public CustomUserDetailsService(UserService userService, TenantContext tenantContext) {
         this.userService = userService;
-        this.userRoleAssignmentService = userRoleAssignmentService;
         this.tenantContext = tenantContext;
     }
 
@@ -60,9 +56,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         User user = userService.findUserByUsernameAndTenantId(username, tenant.getId())
                                .orElseThrow(() -> new UsernameNotFoundException(
-                                       "User with username [" + username + "] in tenant [" + tenant + "] was not found."));
+                                       "Username [" + username + "] was not found in tenant [" + tenant + "]."));
 
-        Set<String> userRoles = getUserRoles(user);
+        Set<String> userRoles = userService.getUserRoleNames(user);
         LOGGER.debug("User [{}] has assigned roles [{}]", user, userRoles);
         Set<GrantedAuthority> auths = userRoles.stream()
                                                .map(r -> new SimpleGrantedAuthority(r))
@@ -71,11 +67,4 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), auths);
     }
 
-    private Set<String> getUserRoles(User user) {
-        return userRoleAssignmentService.findByUser(user)
-                                        .stream()
-                                        .map(a -> a.getRole()
-                                                   .getName())
-                                        .collect(Collectors.toSet());
-    }
 }

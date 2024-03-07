@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -12,14 +13,14 @@ class CustomOidcUser extends DefaultOidcUser {
 
     private static final long serialVersionUID = 6970756030913509875L;
 
-    private final List<GrantedAuthority> additionalAuthorities;
+    private final Set<GrantedAuthority> additionalAuthorities;
 
-    CustomOidcUser(OidcUser oidcUser, List<GrantedAuthority> additionalAuthorities) {
+    CustomOidcUser(OidcUser oidcUser, Set<GrantedAuthority> additionalAuthorities) {
         super(oidcUser.getAuthorities(), oidcUser.getIdToken(), oidcUser.getUserInfo());
         this.additionalAuthorities = additionalAuthorities;
     }
 
-    CustomOidcUser(OidcUser oidcUser, String userNameAttributeName, List<GrantedAuthority> additionalAuthorities) {
+    CustomOidcUser(OidcUser oidcUser, String userNameAttributeName, Set<GrantedAuthority> additionalAuthorities) {
         super(oidcUser.getAuthorities(), oidcUser.getIdToken(), oidcUser.getUserInfo(), userNameAttributeName);
         this.additionalAuthorities = additionalAuthorities;
     }
