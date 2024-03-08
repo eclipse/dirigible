@@ -29,7 +29,7 @@ class TenantsProvisioner {
         this.tenantFactory = tenantFactory;
     }
 
-    public void provision() {
+    void provision() {
         LOGGER.info("Starting tenants provisioning...");
         Set<Tenant> tenants = tenantService.findByStatus(TenantStatus.INITIAL);
         LOGGER.info("Tenants applicable for provisioning [{}]", tenants);
@@ -56,7 +56,7 @@ class TenantsProvisioner {
 
             LOGGER.info("Tenant [{}] has been provisioned successfully.", tenant);
         } catch (RuntimeException ex) {
-            LOGGER.error("Failed to provision tenant [{}]", tenant, ex);
+            LOGGER.error("Failed to provision tenant [{}]. Continue with the next one.", tenant, ex);
         }
     }
 

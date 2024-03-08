@@ -46,7 +46,7 @@ public abstract class BaseSynchronizer<A extends Artefact, ID> implements Synchr
         return false;
     }
 
-    protected boolean isMultitenantArtefact(Artefact artefact) {
+    protected boolean isMultitenantArtefact(A artefact) {
         return false;
     }
 
