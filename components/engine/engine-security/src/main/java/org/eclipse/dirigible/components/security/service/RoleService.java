@@ -18,17 +18,28 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * The Class SecurityRoleService.
+ * The Class RoleService.
  */
 
 @Service
 @Transactional
 public class RoleService extends BaseArtefactService<Role, Long> {
 
+    /**
+     * Instantiates a new role service.
+     *
+     * @param repository the repository
+     */
     public RoleService(RoleRepository repository) {
         super(repository);
     }
 
+    /**
+     * Role exists by name.
+     *
+     * @param name the name
+     * @return true, if successful
+     */
     @Transactional(readOnly = true)
     public boolean roleExistsByName(String name) {
         Role filter = new Role();

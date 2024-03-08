@@ -34,8 +34,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class ExposesSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.EXPOSE)
@@ -90,7 +88,7 @@ public class ExposesSynchronizer extends BaseSynchronizer<Expose, Long> {
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Expose> parse(String location, byte[] content) throws ParseException {

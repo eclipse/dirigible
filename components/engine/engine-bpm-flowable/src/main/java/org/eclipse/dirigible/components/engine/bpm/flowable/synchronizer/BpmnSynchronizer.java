@@ -36,8 +36,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class BpmnSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.BPMN)

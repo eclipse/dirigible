@@ -33,8 +33,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class WebsocketsSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.WEBSOCKET)
@@ -70,7 +68,7 @@ public class WebsocketsSynchronizer extends BaseSynchronizer<Websocket, Long> {
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Websocket> parse(String location, byte[] content) throws ParseException {

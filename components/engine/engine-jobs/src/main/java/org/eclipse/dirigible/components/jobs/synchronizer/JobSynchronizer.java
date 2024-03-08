@@ -37,8 +37,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class JobSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.JOB)
@@ -107,7 +105,7 @@ public class JobSynchronizer extends BaseSynchronizer<Job, Long> {
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Job> parse(String location, byte[] content) throws ParseException {

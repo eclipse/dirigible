@@ -126,6 +126,9 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
         }
     }
 
+    /**
+     * Force process synchronizers.
+     */
     public void forceProcessSynchronizers() {
         this.synchronizationWatcher.force();
         processSynchronizers();

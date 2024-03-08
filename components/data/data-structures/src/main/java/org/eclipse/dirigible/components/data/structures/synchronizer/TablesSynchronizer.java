@@ -46,8 +46,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class TablesSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.TABLE)
@@ -107,7 +105,7 @@ public class TablesSynchronizer extends MultitenantBaseSynchronizer<Table, Long>
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Table> parse(String location, byte[] content) throws ParseException {
@@ -143,6 +141,11 @@ public class TablesSynchronizer extends MultitenantBaseSynchronizer<Table, Long>
         }
     }
 
+    /**
+     * Assign parent.
+     *
+     * @param table the table
+     */
     static void assignParent(Table table) {
         table.getColumns()
              .forEach(c -> c.setTable(table));
@@ -180,6 +183,12 @@ public class TablesSynchronizer extends MultitenantBaseSynchronizer<Table, Long>
         }
     }
 
+    /**
+     * Reassign ids.
+     *
+     * @param table the table
+     * @param maybe the maybe
+     */
     static void reassignIds(Table table, Table maybe) {
         table.getColumns()
              .forEach(c -> {
@@ -281,6 +290,13 @@ public class TablesSynchronizer extends MultitenantBaseSynchronizer<Table, Long>
         getService().save(artefact);
     }
 
+    /**
+     * Complete impl.
+     *
+     * @param wrapper the wrapper
+     * @param flow the flow
+     * @return true, if successful
+     */
     @Override
     protected boolean completeImpl(TopologyWrapper<Table> wrapper, ArtefactPhase flow) {
         Table table = wrapper.getArtefact();

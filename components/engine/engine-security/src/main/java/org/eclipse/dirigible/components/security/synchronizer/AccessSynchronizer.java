@@ -34,8 +34,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class AccessSynchronizer.
- *
- * @param <A> the generic type
  */
 
 @Component
@@ -99,6 +97,7 @@ public class AccessSynchronizer extends BaseSynchronizer<Access, Long> {
      * @param location the location
      * @param content the content
      * @return the list
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Access> parse(String location, byte[] content) throws ParseException {

@@ -32,8 +32,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class ExtensionPointsSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.EXTENSIONPOINT)
@@ -88,7 +86,7 @@ public class ExtensionPointsSynchronizer extends BaseSynchronizer<ExtensionPoint
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<ExtensionPoint> parse(String location, byte[] content) throws ParseException {

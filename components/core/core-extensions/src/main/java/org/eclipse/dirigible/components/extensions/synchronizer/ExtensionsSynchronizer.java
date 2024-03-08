@@ -33,8 +33,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class ExtensionsSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.EXTENSION)
@@ -89,7 +87,7 @@ public class ExtensionsSynchronizer extends BaseSynchronizer<Extension, Long> {
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Extension> parse(String location, byte[] content) throws ParseException {

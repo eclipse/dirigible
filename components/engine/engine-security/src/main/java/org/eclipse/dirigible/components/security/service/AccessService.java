@@ -17,12 +17,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * The Class SecurityAccessService.
+ * The Class AccessService.
  */
 @Service
 @Transactional
 public class AccessService extends BaseArtefactService<Access, Long> {
 
+    /**
+     * Instantiates a new access service.
+     *
+     * @param repository the repository
+     */
     public AccessService(AccessRepository repository) {
         super(repository);
     }

@@ -50,8 +50,6 @@ import com.google.gson.JsonObject;
 
 /**
  * The Class SchemasSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.SCHEMA)
@@ -154,7 +152,7 @@ public class SchemasSynchronizer extends MultitenantBaseSynchronizer<Schema, Lon
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Schema> parse(String location, byte[] content) throws ParseException {
@@ -238,6 +236,13 @@ public class SchemasSynchronizer extends MultitenantBaseSynchronizer<Schema, Lon
         getService().save(artefact);
     }
 
+    /**
+     * Complete impl.
+     *
+     * @param wrapper the wrapper
+     * @param flow the flow
+     * @return true, if successful
+     */
     @Override
     protected boolean completeImpl(TopologyWrapper<Schema> wrapper, ArtefactPhase flow) {
         Schema schema = wrapper.getArtefact();

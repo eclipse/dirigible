@@ -27,6 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class CamelSynchronizer.
+ */
 @Component
 @Order(250)
 public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
@@ -48,6 +51,7 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
      * Instantiates a new camel synchronizer.
      *
      * @param camelService the camel service
+     * @param camelProcessor the camel processor
      */
     @Autowired
     public CamelSynchronizer(CamelService camelService, CamelProcessor camelProcessor) {
@@ -55,11 +59,24 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
         this.camelProcessor = camelProcessor;
     }
 
+    /**
+     * Checks if is accepted.
+     *
+     * @param type the type
+     * @return true, if is accepted
+     */
     @Override
     public boolean isAccepted(String type) {
         return Camel.ARTEFACT_TYPE.equals(type);
     }
 
+    /**
+     * Parses the.
+     *
+     * @param location the location
+     * @param content the content
+     * @return the list
+     */
     @Override
     public List<Camel> parse(String location, byte[] content) {
         Camel camel = new Camel();
@@ -90,11 +107,24 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
         return List.of(camel);
     }
 
+    /**
+     * Retrieve.
+     *
+     * @param location the location
+     * @return the list
+     */
     @Override
     public List<Camel> retrieve(String location) {
         return getService().getAll();
     }
 
+    /**
+     * Sets the status.
+     *
+     * @param artefact the artefact
+     * @param lifecycle the lifecycle
+     * @param error the error
+     */
     @Override
     public void setStatus(Camel artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
@@ -102,6 +132,13 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
         getService().save(artefact);
     }
 
+    /**
+     * Complete impl.
+     *
+     * @param wrapper the wrapper
+     * @param flow the flow
+     * @return true, if successful
+     */
     @Override
     protected boolean completeImpl(TopologyWrapper<Camel> wrapper, ArtefactPhase flow) {
         try {
@@ -152,11 +189,21 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
         }
     }
 
+    /**
+     * Gets the service.
+     *
+     * @return the service
+     */
     @Override
     public ArtefactService<Camel, Long> getService() {
         return camelService;
     }
 
+    /**
+     * Cleanup.
+     *
+     * @param camel the camel
+     */
     @Override
     public void cleanup(Camel camel) {
         try {
@@ -170,16 +217,31 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
         }
     }
 
+    /**
+     * Sets the callback.
+     *
+     * @param callback the new callback
+     */
     @Override
     public void setCallback(SynchronizerCallback callback) {
         this.callback = callback;
     }
 
+    /**
+     * Gets the file extension.
+     *
+     * @return the file extension
+     */
     @Override
     public String getFileExtension() {
         return FILE_EXTENSION_CAMEL;
     }
 
+    /**
+     * Gets the artefact type.
+     *
+     * @return the artefact type
+     */
     @Override
     public String getArtefactType() {
         return Camel.ARTEFACT_TYPE;

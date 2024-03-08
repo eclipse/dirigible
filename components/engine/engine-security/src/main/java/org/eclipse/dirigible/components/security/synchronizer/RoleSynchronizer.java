@@ -33,8 +33,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class SecurityRoleSynchronizer.
- *
- * @param <A> the generic type
  */
 
 @Component
@@ -100,7 +98,7 @@ public class RoleSynchronizer extends BaseSynchronizer<Role, Long> {
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Role> parse(String location, byte[] content) throws ParseException {
