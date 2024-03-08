@@ -100,9 +100,7 @@ class BackgroundListenersIT extends IntegrationTest {
 
             MessagingFacade.sendToTopic(TOPIC_NAME, testMessage);
 
-            System.out.println("!!! Stopping the broker");
             broker.stop();
-            System.out.println("!!! Broker stopped");
 
             Awaitility.await()
                       .atMost(3, TimeUnit.SECONDS)
