@@ -48,14 +48,6 @@ class TenantImpl implements Tenant {
         return "TenantImpl [id=" + id + ", name=" + name + ", subdomain=" + subdomain + ", defaultTenant=" + defaultTenant + "]";
     }
 
-    static Tenant getDefaultTenant() {
-        return DEFAULT_TENANT;
-    }
-
-    static Tenant createFromEntity(org.eclipse.dirigible.components.tenants.domain.Tenant tenant) {
-        return new TenantImpl(tenant.getId(), tenant.getName(), tenant.getSubdomain());
-    }
-
     @Override
     public int hashCode() {
         return Objects.hash(id);
@@ -71,5 +63,13 @@ class TenantImpl implements Tenant {
             return false;
         TenantImpl other = (TenantImpl) obj;
         return Objects.equals(id, other.id);
+    }
+
+    static Tenant getDefaultTenant() {
+        return DEFAULT_TENANT;
+    }
+
+    static Tenant createFromEntity(org.eclipse.dirigible.components.tenants.domain.Tenant tenant) {
+        return new TenantImpl(tenant.getId(), tenant.getName(), tenant.getSubdomain());
     }
 }
