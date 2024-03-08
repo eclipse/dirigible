@@ -86,6 +86,9 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 							label: '${property.name}',
 #end
 							data: ${dollar}scope.data.map(e => e.${property.name}),
+#if($layoutType == "REPORT_LINE")
+							fill: true,
+#end
 							borderWidth: 1
 						},
 #end
