@@ -12,7 +12,19 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 
 		const ctx = document.getElementById('myChart');
 		const myChart = new Chart(ctx, {
+#if($layoutType == "REPORT_BAR")
 			type: 'bar',
+#elseif($layoutType == "REPORT_LINE")
+			type: 'line',
+#elseif($layoutType == "REPORT_PIE")
+			type: 'pie',
+#elseif($layoutType == "REPORT_DOUGHNUT")
+			type: 'doughnut',
+#elseif($layoutType == "REPORT_POLARAREA")
+			type: 'polarArea',
+#elseif($layoutType == "REPORT_RADAR")
+			type: 'radar',
+#end
 			data: {
 				labels: [],
 				datasets: []

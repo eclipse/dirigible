@@ -3,16 +3,14 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-const listTemplate = dirigibleRequire("template-application-ui-angular/template/ui/list");
-const manageTemplate = dirigibleRequire("template-application-ui-angular/template/ui/manage");
-const masterDetailsListTemplate = dirigibleRequire("template-application-ui-angular/template/ui/masterDetailsList");
-const masterDetailsManageTemplate = dirigibleRequire("template-application-ui-angular/template/ui/masterDetailsManage");
-const reportBarTemplate = dirigibleRequire("template-application-ui-angular/template/ui/reportBar");
-// const reportLineTemplate = require("template-application-ui-angular/template/ui/reportLine");
-// const reportPieTemplate = require("template-application-ui-angular/template/ui/reportPie");
+const listTemplate = require("template-application-ui-angular/template/ui/list");
+const manageTemplate = require("template-application-ui-angular/template/ui/manage");
+const masterDetailsListTemplate = require("template-application-ui-angular/template/ui/masterDetailsList");
+const masterDetailsManageTemplate = require("template-application-ui-angular/template/ui/masterDetailsManage");
+const reportChartTemplate = require("template-application-ui-angular/template/ui/reportChart");
 const reportTableTemplate = require("template-application-ui-angular/template/ui/reportTable");
 // const perspective = require("template-application-ui-angular/template/ui/perspective");
-const launchpad = dirigibleRequire("template-application-ui-angular/template/ui/launchpad");
+const launchpad = require("template-application-ui-angular/template/ui/launchpad");
 // const tiles = require("template-application-ui-angular/template/ui/tiles");
 // const menu = require("template-application-ui-angular/template/ui/menu");
 const customAction = require("template-application-ui-angular/template/ui/customAction");
@@ -24,9 +22,7 @@ exports.getSources = function (parameters) {
     sources = sources.concat(manageTemplate.getSources(parameters));
     sources = sources.concat(masterDetailsListTemplate.getSources(parameters));
     sources = sources.concat(masterDetailsManageTemplate.getSources(parameters));
-    sources = sources.concat(reportBarTemplate.getSources(parameters));
-    // sources = sources.concat(reportLineTemplate.getSources(parameters));
-    // sources = sources.concat(reportPieTemplate.getSources(parameters));
+    sources = sources.concat(reportChartTemplate.getSources(parameters));
     sources = sources.concat(reportTableTemplate.getSources(parameters));
     // sources = sources.concat(perspective.getSources(parameters));
     // sources = sources.concat(tiles.getSources(parameters));
