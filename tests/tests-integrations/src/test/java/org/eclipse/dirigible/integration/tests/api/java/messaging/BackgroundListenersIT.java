@@ -118,5 +118,4 @@ class BackgroundListenersIT extends IntegrationTest {
         StackTraceElement stackTraceElement = stackTraceElements[2];
         return stackTraceElement.getClassName() + ":" + stackTraceElement.getMethodName();
     }
-
 }
