@@ -29,6 +29,12 @@ public interface ApplicationListenersOrder {
 
     }
 
+    public interface ApplicationStoppedEventListeners {
+
+        int ACTIVE_MQ_CLEANUP = APP_LYFECYCLE_LOGGING_LISTENER - 10;
+
+    }
+
     int APP_LYFECYCLE_LOGGING_LISTENER = Ordered.LOWEST_PRECEDENCE;
 
 }
