@@ -33,8 +33,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class ListenerSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.LISTENER)

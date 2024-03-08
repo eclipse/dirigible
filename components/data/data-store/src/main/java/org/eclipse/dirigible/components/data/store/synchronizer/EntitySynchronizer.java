@@ -32,8 +32,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class BpmnSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.ENTITY)
@@ -102,7 +100,7 @@ public class EntitySynchronizer extends BaseSynchronizer<Entity, Long> {
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Entity> parse(String location, byte[] content) throws ParseException {

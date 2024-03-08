@@ -48,8 +48,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class CSVIM Synchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.CSVIM)
@@ -89,6 +87,7 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
      * @param csvService the csvsyncrhonizer service
      * @param datasourcesManager the datasources manager
      * @param csvimProcessor the csvim processor
+     * @param systemDataSourceName the system data source name
      */
     @Autowired
     public CsvimSynchronizer(CsvimService csvimService, CsvService csvService, DataSourcesManager datasourcesManager,
@@ -380,6 +379,12 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
         }
     }
 
+    /**
+     * Checks if is multitenant artefact.
+     *
+     * @param csvim the csvim
+     * @return true, if is multitenant artefact
+     */
     @Override
     protected boolean isMultitenantArtefact(Csvim csvim) {
         return !Objects.equals(systemDataSourceName, csvim.getDatasource());

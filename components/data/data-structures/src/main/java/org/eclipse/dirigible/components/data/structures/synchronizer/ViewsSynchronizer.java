@@ -38,8 +38,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class ViewsSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.VIEW)
@@ -99,7 +97,7 @@ public class ViewsSynchronizer extends MultitenantBaseSynchronizer<View, Long> {
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<View> parse(String location, byte[] content) throws ParseException {
@@ -158,6 +156,13 @@ public class ViewsSynchronizer extends MultitenantBaseSynchronizer<View, Long> {
         getService().save(artefact);
     }
 
+    /**
+     * Complete impl.
+     *
+     * @param wrapper the wrapper
+     * @param flow the flow
+     * @return true, if successful
+     */
     @Override
     protected boolean completeImpl(TopologyWrapper<View> wrapper, ArtefactPhase flow) {
         View view = wrapper.getArtefact();

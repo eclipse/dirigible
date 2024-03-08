@@ -17,7 +17,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -36,8 +35,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class MarkdownSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.MARKDOWN)
@@ -123,7 +120,7 @@ public class MarkdownSynchronizer extends BaseSynchronizer<Markdown, Long> {
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Markdown> parse(String location, byte[] content) throws ParseException {

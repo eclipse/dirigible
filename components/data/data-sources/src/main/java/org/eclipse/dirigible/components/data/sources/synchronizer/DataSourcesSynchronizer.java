@@ -34,8 +34,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class DataSourcesSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.DATASOURCE)
@@ -156,6 +154,13 @@ public class DataSourcesSynchronizer extends BaseSynchronizer<DataSource, Long> 
         getService().save(artefact);
     }
 
+    /**
+     * Complete impl.
+     *
+     * @param wrapper the wrapper
+     * @param flow the flow
+     * @return true, if successful
+     */
     @Override
     protected boolean completeImpl(TopologyWrapper<DataSource> wrapper, ArtefactPhase flow) {
         try {
