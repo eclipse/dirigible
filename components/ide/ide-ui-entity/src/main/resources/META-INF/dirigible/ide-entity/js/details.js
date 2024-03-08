@@ -51,7 +51,10 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
             { value: "REPORT_TABLE", label: "Report in a Table Format" },
             { value: "REPORT_BAR", label: "Report in a Bar Chart Format" },
             { value: "REPORT_LINE", label: "Report in a Line Chart Format" },
-            { value: "REPORT_PIE", label: "Report in a Pie Chart Format" }
+            { value: "REPORT_DOUGHNUT", label: "Report in a Doughnut Chart Format" },
+            { value: "REPORT_PIE", label: "Report in a Pie Chart Format" },
+            { value: "REPORT_POLARAREA", label: "Report in a Polar Area Format" },
+            { value: "REPORT_RADAR", label: "Report in a Radar Format" },
         ];
         $scope.dataTypes = [
             { value: "VARCHAR", label: "VARCHAR" },
