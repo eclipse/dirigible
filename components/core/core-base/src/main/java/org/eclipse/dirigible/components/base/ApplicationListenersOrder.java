@@ -10,11 +10,6 @@
  */
 package org.eclipse.dirigible.components.base;
 
-import org.springframework.core.Ordered;
-
-/**
- * Lower value means higher precedence - lower values will be executed before the higher values
- */
 public interface ApplicationListenersOrder {
 
     public interface ApplicationReadyEventListeners {
@@ -28,13 +23,5 @@ public interface ApplicationListenersOrder {
         int SYNCHRONIZATION_INTIALIZER = 40;
 
     }
-
-    public interface ApplicationStoppedEventListeners {
-
-        int ACTIVE_MQ_CLEANUP = APP_LYFECYCLE_LOGGING_LISTENER - 10;
-
-    }
-
-    int APP_LYFECYCLE_LOGGING_LISTENER = Ordered.LOWEST_PRECEDENCE;
 
 }

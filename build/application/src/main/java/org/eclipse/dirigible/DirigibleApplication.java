@@ -10,14 +10,19 @@
  */
 package org.eclipse.dirigible;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.event.ContextClosedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,6 +31,8 @@ import org.springframework.web.client.RestTemplate;
 @EnableScheduling
 public class DirigibleApplication {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DirigibleApplication.class);
+
     public static void main(String[] args) {
         SpringApplication.run(DirigibleApplication.class, args);
     }
@@ -33,5 +40,15 @@ public class DirigibleApplication {
     @Bean
     RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
+    }
+
+    @EventListener
+    void onStartup(@SuppressWarnings("unused") ApplicationReadyEvent event) {
+        LOGGER.info("------------------------ Eclipse Dirigible started ------------------------");
+    }
+
+    @EventListener
+    void onShutdown(@SuppressWarnings("unused") ContextClosedEvent event) {
+        LOGGER.info("------------------------ Eclipse Dirigible stopped ------------------------");
     }
 }
