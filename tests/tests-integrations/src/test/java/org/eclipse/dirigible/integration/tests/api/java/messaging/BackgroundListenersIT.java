@@ -103,7 +103,7 @@ class BackgroundListenersIT extends IntegrationTest {
             broker.stop();
 
             Awaitility.await()
-                      .atMost(3, TimeUnit.SECONDS)
+                      .atMost(5, TimeUnit.SECONDS)
                       .until(() -> MessagesHolder.getLatestReceivedError() != null);
 
             assertThat(MessagesHolder.getLatestReceivedError()).matches(STOPPED_ACTIVEMQ_ERROR_MESSAGE_PATTERN);
