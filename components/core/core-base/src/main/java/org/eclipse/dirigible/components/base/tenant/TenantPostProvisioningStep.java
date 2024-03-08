@@ -7,7 +7,8 @@ package org.eclipse.dirigible.components.base.tenant;
 public interface TenantPostProvisioningStep {
 
     /**
-     * Will be called once provisioning of all tenants is completed.
+     * Will be called once provisioning of all tenants is completed.<br>
+     * If there are no tenants in INITIAL status, post provisioning step will not be called.
      *
      * @throws TenantProvisioningException
      */

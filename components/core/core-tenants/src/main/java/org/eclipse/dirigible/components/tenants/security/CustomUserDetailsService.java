@@ -38,6 +38,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserService userService;
     private final TenantContext tenantContext;
 
+    /**
+     * Instantiates a new custom user details service.
+     *
+     * @param userService the user service
+     * @param tenantContext the tenant context
+     */
     public CustomUserDetailsService(UserService userService, TenantContext tenantContext) {
         this.userService = userService;
         this.tenantContext = tenantContext;
@@ -46,7 +52,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     /**
      * Load user by username.
      *
-     * @param username the email
+     * @param username the username
      * @return the user details
      * @throws UsernameNotFoundException the username not found exception
      */
