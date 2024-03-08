@@ -42,5 +42,4 @@ public class ExtensionService extends BaseArtefactService<Extension, Long> {
         Example<Extension> example = Example.of(filter);
         return getRepo().findAll(example);
     }
-
 }
