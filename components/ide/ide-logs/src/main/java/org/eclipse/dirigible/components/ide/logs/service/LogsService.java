@@ -169,9 +169,9 @@ public class LogsService {
         Logger logger = loggerContext.getLogger(loggerName);
         Level level = Level.toLevel(logLevel);
         if (!level.equals(logger.getLevel())) {
-        	logger.setLevel(level);
+            logger.setLevel(level);
         } else {
-        	logger.setLevel(null);
+            logger.setLevel(null);
         }
         return getSeverity(loggerName);
     }
