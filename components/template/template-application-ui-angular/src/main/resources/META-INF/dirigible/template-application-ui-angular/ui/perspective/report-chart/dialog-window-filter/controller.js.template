@@ -5,7 +5,6 @@ angular.module('page', ["ideUI", "ideView"])
 	}])
 	.controller('PageController', ['$scope', 'messageHub', 'ViewParameters', function ($scope, messageHub, ViewParameters) {
 
-		$scope.entity = {};
 		$scope.forms = {
 			details: {},
 		};
@@ -22,11 +21,6 @@ angular.module('page', ["ideUI", "ideView"])
 #end
 #end
 				$scope.entity = params.filter ?? {};
-#foreach ($property in $properties)
-#if($property.widgetType == "DROPDOWN")
-				$scope.options${property.name} = params.options${property.name};
-#end
-#end
 #foreach ($property in $filter.properties)
 #if($property.widgetType == "DROPDOWN")
 				$scope.options${property.name} = params.options${property.name};

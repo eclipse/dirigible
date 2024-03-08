@@ -43,10 +43,8 @@ exports.generateFiles = function (model, parameters, templateSources) {
     const uiListDetailsModels = model.entities.filter(e => e.layoutType === "LIST_DETAILS" && e.type === "DEPENDENT");
 
     // UI Reports
+    const uiReportChartModels = reportModels.filter(e => e.layoutType !== "REPORT_TABLE");
     const uiReportTableModels = reportModels.filter(e => e.layoutType === "REPORT_TABLE");
-    const uiReportBarsModels = reportModels.filter(e => e.layoutType === "REPORT_BAR");
-    const uiReportLinesModels = reportModels.filter(e => e.layoutType === "REPORT_LINE");
-    const uiReportPieModels = reportModels.filter(e => e.layoutType === "REPORT_PIE");
 
     for (let i = 0; i < templateSources.length; i++) {
         const template = templateSources[i];
@@ -58,7 +56,7 @@ exports.generateFiles = function (model, parameters, templateSources) {
 
         if (template.action === "copy") {
             generatedFiles.push({
-				location: location,
+                location: location,
                 content: content,
                 path: templateEngines.getMustacheEngine().generate(location, template.rename, parameters)
             });
@@ -91,23 +89,17 @@ exports.generateFiles = function (model, parameters, templateSources) {
                 case "uiListDetailsModels":
                     generatedFiles = generatedFiles.concat(generateCollection(location, content, template, uiListDetailsModels, parameters));
                     break;
+                case "uiReportChartModels":
+                    generatedFiles = generatedFiles.concat(generateCollection(location, content, template, uiReportChartModels, parameters));
+                    break;
                 case "uiReportTableModels":
                     generatedFiles = generatedFiles.concat(generateCollection(location, content, template, uiReportTableModels, parameters));
-                    break;
-                case "uiReportBarsModels":
-                    generatedFiles = generatedFiles.concat(generateCollection(location, content, template, uiReportBarsModels, parameters));
-                    break;
-                case "uiReportLinesModels":
-                    generatedFiles = generatedFiles.concat(generateCollection(location, content, template, uiReportLinesModels, parameters));
-                    break;
-                case "uiReportPieModels":
-                    generatedFiles = generatedFiles.concat(generateCollection(location, content, template, uiReportPieModels, parameters));
                     break;
                 default:
                     // No collection
                     parameters.models = model.entities;
                     generatedFiles.push({
-						location: location,
+                        location: location,
                         content: getGenerationEngine(template).generate(location, content, parameters),
                         path: templateEngines.getMustacheEngine().generate(location, template.rename, parameters)
                     });
@@ -132,7 +124,7 @@ function generateCollection(location, content, template, collection, parameters)
             }
 
             generatedFiles.push({
-				location: location,
+                location: location,
                 content: generationEngine.generate(location, content, templateParameters),
                 path: templateEngines.getMustacheEngine().generate(location, template.rename, templateParameters)
             });
@@ -152,9 +144,9 @@ function getGenerationEngine(template) {
     } else if (template.engine === "javascript") {
         generationEngine = templateEngines.getJavascriptEngine();
     } else if (template.engine === "mustache") {
-        generationEngine = templateEngines.getMustacheEngine();  
+        generationEngine = templateEngines.getMustacheEngine();
     } else {
-		console.error("Template Engine: " + template.engine + " does not exist, so will be used the default Mustache engine.");
+        console.error("Template Engine: " + template.engine + " does not exist, so will be used the default Mustache engine.");
         generationEngine = templateEngines.getMustacheEngine();
     }
 
