@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -386,7 +387,10 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
      * @return true, if is multitenant artefact
      */
     @Override
-    protected boolean isMultitenantArtefact(Csvim csvim) {
-        return !Objects.equals(systemDataSourceName, csvim.getDatasource());
+    protected boolean isMultitenantArtefact(Artefact artefact) {
+        if (artefact instanceof Csvim csvim) {
+            return !Objects.equals(systemDataSourceName, csvim.getDatasource());
+        }
+        throw new UnsupportedOperationException(String.format("Trying to process %s as Csvim", artefact));
     }
 }

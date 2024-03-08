@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 public class SynchronizationJobService {
 
     /** The logger. */
-    private static final Logger logger = LoggerFactory.getLogger(SynchronizationJobService.class);
+    private final Logger logger = LoggerFactory.getLogger(SynchronizationJobService.class);
 
     /** The count. */
     private final AtomicInteger count = new AtomicInteger();

@@ -10,7 +10,7 @@ public abstract class MultitenantBaseSynchronizer<A extends Artefact, ID> extend
     }
 
     @Override
-    protected boolean isMultitenantArtefact(A artefact) {
+    protected boolean isMultitenantArtefact(Artefact artefact) {
         return true;
     }
 
