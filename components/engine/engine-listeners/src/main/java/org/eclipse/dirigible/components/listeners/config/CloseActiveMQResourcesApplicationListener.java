@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.components.listeners.config;
 
 import org.apache.activemq.broker.BrokerService;
+import org.eclipse.dirigible.components.base.ApplicationListenersOrder.ApplicationStoppedEventListeners;
 import org.eclipse.dirigible.components.listeners.service.ListenersManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextStoppedEvent;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import jakarta.jms.Connection;
 import jakarta.jms.JMSException;
@@ -34,6 +36,7 @@ import jakarta.jms.Session;
  *
  * @see CloseActiveMQResourcesApplicationEvent
  */
+@Order(ApplicationStoppedEventListeners.ACTIVE_MQ_CLEANUP)
 @Component
 class CloseActiveMQResourcesApplicationListener implements ApplicationListener<ApplicationEvent> {
 
@@ -114,7 +117,6 @@ class CloseActiveMQResourcesApplicationListener implements ApplicationListener<A
             LOGGER.warn("Failed to stop listeners", ex);
         }
     }
-
 
     private void closeSession() {
         try {
