@@ -76,7 +76,7 @@ class BackgroundListenersIT extends IntegrationTest {
             LOGGER.info("Broker service stopped.");
 
             Awaitility.await()
-                      .atMost(10, TimeUnit.SECONDS)
+                      .atMost(5, TimeUnit.SECONDS)
                       .until(() -> MessagesHolder.getLatestReceivedError() != null);
 
             assertThat(MessagesHolder.getLatestReceivedError()).matches(STOPPED_ACTIVEMQ_ERROR_MESSAGE_PATTERN);
@@ -115,7 +115,7 @@ class BackgroundListenersIT extends IntegrationTest {
             LOGGER.info("Broker service stopped.");
 
             Awaitility.await()
-                      .atMost(10, TimeUnit.SECONDS)
+                      .atMost(5, TimeUnit.SECONDS)
                       .until(() -> MessagesHolder.getLatestReceivedError() != null);
 
             assertThat(MessagesHolder.getLatestReceivedError()).matches(STOPPED_ACTIVEMQ_ERROR_MESSAGE_PATTERN);
@@ -128,5 +128,4 @@ class BackgroundListenersIT extends IntegrationTest {
         StackTraceElement stackTraceElement = stackTraceElements[2];
         return stackTraceElement.getClassName() + ":" + stackTraceElement.getMethodName();
     }
-
 }
