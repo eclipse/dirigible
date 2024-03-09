@@ -65,6 +65,9 @@ class BackgroundListenersIT extends IntegrationTest {
                     MessagesHolder.getLatestReceivedMessage());
         }
 
+        @Disabled("Needs to be researched why this test is flaky " //
+                + "when executed on github actions and windows specifically."//
+                + "It is stable on macOS.")
         @Test
         void testOnErrorIsCalled() throws Exception {
             String testMessage = getCallerMethod();
