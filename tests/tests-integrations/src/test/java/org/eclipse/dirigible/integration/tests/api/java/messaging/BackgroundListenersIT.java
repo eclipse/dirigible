@@ -58,7 +58,7 @@ class BackgroundListenersIT extends IntegrationTest {
             MessagingFacade.sendToQueue(QUEUE_NAME, testMessage);
 
             Awaitility.await()
-                      .atMost(10, TimeUnit.SECONDS)
+                      .atMost(5, TimeUnit.SECONDS)
                       .until(() -> MessagesHolder.getLatestReceivedMessage() != null);
 
             assertEquals("Message is NOT received by the test queue listener handler", testMessage,
@@ -94,7 +94,7 @@ class BackgroundListenersIT extends IntegrationTest {
             MessagingFacade.sendToTopic(TOPIC_NAME, testMessage);
 
             Awaitility.await()
-                      .atMost(10, TimeUnit.SECONDS)
+                      .atMost(5, TimeUnit.SECONDS)
                       .until(() -> MessagesHolder.getLatestReceivedMessage() != null);
 
             assertEquals("Message is NOT received by the test topic listener handler", testMessage,
