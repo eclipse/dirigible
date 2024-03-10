@@ -11,8 +11,7 @@
 		<script type="text/javascript"
 			src="/services/js/resources-core/services/loader.js?id=application-view-js"></script>
 
-		<!-- <script src="/webjars/chart.js/4.4.2/dist/chart.js"></script> -->
-		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script type="text/javascript" src="/webjars/chart.js/4.4.2/dist/chart.umd.js"></script>
 		<link type="text/css" rel="stylesheet"
 			href="/services/js/resources-core/services/loader.js?id=application-view-css" />
 		<script type="text/javascript" src="controller.js"></script>
