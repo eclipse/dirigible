@@ -17,7 +17,6 @@ import org.apache.activemq.broker.BrokerService;
 import org.eclipse.dirigible.components.api.messaging.MessagingFacade;
 import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -65,9 +64,6 @@ class BackgroundListenersIT extends IntegrationTest {
                     MessagesHolder.getLatestReceivedMessage());
         }
 
-        @Disabled("Needs to be researched why this test is flaky " //
-                + "when executed on github actions and windows specifically."//
-                + "It is stable on macOS.")
         @Test
         void testOnErrorIsCalled() throws Exception {
             String testMessage = getCallerMethod();
@@ -104,9 +100,6 @@ class BackgroundListenersIT extends IntegrationTest {
                     MessagesHolder.getLatestReceivedMessage());
         }
 
-        @Disabled("Needs to be researched why this test is flaky " //
-                + "when executed on github actions and windows specifically."//
-                + "It is stable on macOS.")
         @Test
         void testOnErrorIsCalled() throws Exception {
             String testMessage = getCallerMethod();
