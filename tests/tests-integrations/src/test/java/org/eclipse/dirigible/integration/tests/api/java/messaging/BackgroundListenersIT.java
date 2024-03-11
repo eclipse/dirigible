@@ -44,6 +44,8 @@ class BackgroundListenersIT extends IntegrationTest {
     void setUp() {
         MessagesHolder.clearLatestReceivedMessage();
         MessagesHolder.clearLatestReceivedError();
+
+        assertThat(broker.isStarted()).isTrue();
     }
 
     @Nested
@@ -69,8 +71,6 @@ class BackgroundListenersIT extends IntegrationTest {
         void testOnErrorIsCalled() throws Exception {
             String testMessage = getCallerMethod();
             LOGGER.info("Executing [{}]", testMessage);
-
-            MessagingFacade.sendToQueue(QUEUE_NAME, testMessage);
 
             LOGGER.info("Stopping the broker service...");
             broker.stop();
@@ -107,8 +107,6 @@ class BackgroundListenersIT extends IntegrationTest {
         void testOnErrorIsCalled() throws Exception {
             String testMessage = getCallerMethod();
             LOGGER.info("Executing [{}]", testMessage);
-
-            MessagingFacade.sendToTopic(TOPIC_NAME, testMessage);
 
             LOGGER.info("Stopping the broker service...");
             broker.stop();
