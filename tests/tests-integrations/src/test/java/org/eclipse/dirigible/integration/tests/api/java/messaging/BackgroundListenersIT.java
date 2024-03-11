@@ -53,6 +53,7 @@ class BackgroundListenersIT extends IntegrationTest {
         @Test
         void testOnMessageIsCalled() {
             String testMessage = getCallerMethod();
+            LOGGER.info("Executing [{}]", testMessage);
 
             MessagingFacade.sendToQueue(QUEUE_NAME, testMessage);
 
@@ -67,6 +68,7 @@ class BackgroundListenersIT extends IntegrationTest {
         @Test
         void testOnErrorIsCalled() throws Exception {
             String testMessage = getCallerMethod();
+            LOGGER.info("Executing [{}]", testMessage);
 
             MessagingFacade.sendToQueue(QUEUE_NAME, testMessage);
 
@@ -89,6 +91,7 @@ class BackgroundListenersIT extends IntegrationTest {
         @Test
         void testOnMessageIsCalled() {
             String testMessage = getCallerMethod();
+            LOGGER.info("Executing [{}]", testMessage);
 
             MessagingFacade.sendToTopic(TOPIC_NAME, testMessage);
 
@@ -103,6 +106,7 @@ class BackgroundListenersIT extends IntegrationTest {
         @Test
         void testOnErrorIsCalled() throws Exception {
             String testMessage = getCallerMethod();
+            LOGGER.info("Executing [{}]", testMessage);
 
             MessagingFacade.sendToTopic(TOPIC_NAME, testMessage);
 
