@@ -1,42 +1,27 @@
-// Define the Cache interface
-export interface Cache {
-    contains(key: string): boolean;
-    get(key: string): any | undefined;
-    set(key: string, data: any): void;
-    delete(key: string): void;
-}
+/**
+ * API Cache
+ */
+const Cache = Java.type("org.eclipse.dirigible.components.api.cache.CacheFacade");
 
-// Implement the Cache class
-export class CacheImpl implements Cache {
-    private cache: { [key: string]: any };
+export class Caches {
 
-    constructor() {
-        this.cache = {};
+    public static contains(key: string): boolean {
+        return (Cache.contains(key));
     }
 
-    // Method to check if cache contains a key
-    contains(key: string): boolean {
-        return this.cache.hasOwnProperty(key);
+    public static get(key: string): string | undefined {
+        return Cache.get(key);
     }
 
-    // Method to get data from cache by key
-    get(key: string): any | undefined {
-        if (this.contains(key)) {
-            return this.cache[key];
-        } else {
-            return undefined;
-        }
+    public static set(key: string, data: any): void {
+        Cache.set(key, data);
     }
 
-    // Method to set data in cache with a given key
-    set(key: string, data: any): void {
-        this.cache[key] = data;
+    public static delete(key: string): void {
+        Cache.delete(key);
     }
 
-    // Method to delete data from cache by key
-    delete(key: string): void {
-        if (this.contains(key)) {
-            delete this.cache[key];
-        }
+    public static clear(): void {
+        Cache.clear();
     }
 }
