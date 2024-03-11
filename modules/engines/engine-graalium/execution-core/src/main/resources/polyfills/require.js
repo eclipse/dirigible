@@ -33,7 +33,6 @@ function _require (initialPath, path) {
         exports: {},
         require: require
     };
-    _loadedModules[path] = moduleInfo;
 
     const compiledWrapper = load({
         name: path,
@@ -47,6 +46,7 @@ function _require (initialPath, path) {
 
     compiledWrapper.apply(moduleInfo.exports, cjsModuleProps);
     moduleInfo.loaded = true;
+    _loadedModules[path] = moduleInfo;
     return moduleInfo;
 };
 
