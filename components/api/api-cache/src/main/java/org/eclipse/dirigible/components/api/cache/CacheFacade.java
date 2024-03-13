@@ -18,9 +18,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 
 public class CacheFacade {
 
-    /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(CacheFacade.class);
-    private static Cache<String, String> cache;
+    private static Cache<String, Object> cache;
 
     /**
      * Instantiates a new caffeine database metadata cache.
@@ -43,7 +41,7 @@ public class CacheFacade {
      * @param key the key
      * @return the string
      */
-    public String get(String key) {
+    public Object get(String key) {
         return cache.getIfPresent(key);
     }
 
@@ -53,7 +51,7 @@ public class CacheFacade {
      * @param key the path
      * @param content the content
      */
-    public void set(String key, String content) {
+    public void set(String key, Object content) {
         if (content != null) {
             cache.put(key, content);
         }
