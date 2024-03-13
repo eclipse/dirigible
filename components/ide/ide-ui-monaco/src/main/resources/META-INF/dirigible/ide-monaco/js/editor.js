@@ -1,94 +1,66 @@
-let messageHub = new FramesMessageHub();
+const messageHub = new FramesMessageHub();
 let csrfToken;
-let _dirty = false;
-let lastSavedVersionId;
 let _editor;
 let resourceApiUrl;
-let editorUrl;
-let gitApiUrl;
-let loadingOverview = document.getElementById('loadingOverview');
-let _toggleAutoFormattingActionRegistration = null;
 let lineDecorations = [];
 
-let sourceBeingChangedProgramatically = false;
-
-/*eslint-disable no-extend-native */
-String.prototype.replaceAll = function (search, replacement) {
-    let target = this;
-    return target.replace(new RegExp(search, 'g'), replacement);
-};
-
-let computeDiff = new Worker("js/workers/computeDiff.js");
-computeDiff.onmessage = function (event) {
-    lineDecorations = _editor.deltaDecorations(lineDecorations, event.data);;
-};
-
-function isTypeScriptFile(fileName) {
-    return fileName && fileName.endsWith(".ts");
-}
-
 function setResourceApiUrl() {
-    gitApiUrl = "/services/ide/git";
-    editorUrl = new URL(window.location.href);
+    const editorUrl = new URL(window.location.href);
     new ViewParameters();
-    let rtype;
-    if (ViewParameters.useParameters)
-        rtype = ViewParameters.parameters.resourceType;
-    else
-        rtype = editorUrl.searchParams.get('rtype');
-    if (rtype === "workspace") resourceApiUrl = "/services/ide/workspaces";
-    else if (rtype === "repository") resourceApiUrl = "/services/core/repository";
-    else if (rtype === "registry") resourceApiUrl = "/services/core/registry";
-    else resourceApiUrl = "/services/ide/workspaces";
-}
-
-function closeEditor() {
-    messageHub.post({ resourcePath: ViewParameters.parameters.file }, 'ide-core.closeEditor');
-}
-
-function saveFileContent(editor) {
-    const fileIO = new FileIO();
-    fileIO.saveText(editor.getModel().getValue()).then(() => {
-        lastSavedVersionId = editor.getModel().getAlternativeVersionId();
-        _dirty = false;
-    });
-    if (loadingOverview) loadingOverview.classList.add("dg-hidden");
-}
-
-async function loadDTS() {
-    const res = await fetch('/services/js/all-dts');
-    const allDts = await res.json();
-    for (const dts of allDts) {
-        monaco.languages.typescript.javascriptDefaults.addExtraLib(dts.content, dts.filePath);
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(dts.content, dts.filePath);
-    }
-
-    let cachedDts = window.sessionStorage.getItem('dtsContent');
-    if (cachedDts) {
-        monaco.languages.typescript.javascriptDefaults.addExtraLib(cachedDts, "");
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(cachedDts, "");
+    let resourceType;
+    if (ViewParameters.useParameters) {
+        resourceType = ViewParameters.parameters.resourceType;
     } else {
-        let xhrModules = new XMLHttpRequest();
-        xhrModules.open('GET', '/services/js/ide-monaco-extensions/api/dts.js');
-        xhrModules.setRequestHeader('X-CSRF-Token', 'Fetch');
-        xhrModules.onload = function (xhrModules) {
-            let dtsContent = xhrModules.target.responseText;
-            monaco.languages.typescript.javascriptDefaults.addExtraLib(dtsContent, "");
-            monaco.languages.typescript.typescriptDefaults.addExtraLib(dtsContent, "");
-            window.sessionStorage.setItem('dtsContent', dtsContent);
-        };
-        xhrModules.onerror = function (error) {
-            console.error('Error loading DTS', error);
-            messageHub.post({
-                message: 'Error loading DTS'
-            }, 'ide.status.error');
-        };
-        xhrModules.send();
+        resourceType = editorUrl.searchParams.get('rtype');
+    }
+    if (resourceType === "workspace") {
+        resourceApiUrl = "/services/ide/workspaces";
+    } else if (resourceType === "repository") {
+        resourceApiUrl = "/services/core/repository";
+    } else if (resourceType === "registry") {
+        resourceApiUrl = "/services/core/registry";
+    } else {
+        resourceApiUrl = "/services/ide/workspaces";
     }
 }
 
-function isDirty(model) {
-    return lastSavedVersionId !== model.getAlternativeVersionId();
+class TypeScriptUtils {
+
+    static isTypeScriptFile(fileName) {
+        return fileName && fileName.endsWith(".ts");
+    }
+
+    static async loadDTS(monaco) {
+        const res = await fetch('/services/js/all-dts');
+        const allDts = await res.json();
+        for (const dts of allDts) {
+            monaco.languages.typescript.javascriptDefaults.addExtraLib(dts.content, dts.filePath);
+            monaco.languages.typescript.typescriptDefaults.addExtraLib(dts.content, dts.filePath);
+        }
+
+        let cachedDts = window.sessionStorage.getItem('dtsContent');
+        if (cachedDts) {
+            monaco.languages.typescript.javascriptDefaults.addExtraLib(cachedDts, "");
+            monaco.languages.typescript.typescriptDefaults.addExtraLib(cachedDts, "");
+        } else {
+            let xhrModules = new XMLHttpRequest();
+            xhrModules.open('GET', '/services/js/ide-monaco-extensions/api/dts.js');
+            xhrModules.setRequestHeader('X-CSRF-Token', 'Fetch');
+            xhrModules.onload = function (xhrModules) {
+                let dtsContent = xhrModules.target.responseText;
+                monaco.languages.typescript.javascriptDefaults.addExtraLib(dtsContent, "");
+                monaco.languages.typescript.typescriptDefaults.addExtraLib(dtsContent, "");
+                window.sessionStorage.setItem('dtsContent', dtsContent);
+            };
+            xhrModules.onerror = function (error) {
+                console.error('Error loading DTS', error);
+                messageHub.post({
+                    message: 'Error loading DTS'
+                }, 'ide.status.error');
+            };
+            xhrModules.send();
+        }
+    }
 }
 
 require.config({
@@ -107,16 +79,13 @@ require(['vs/editor/editor.main', 'parser/acorn-loose'], async function (monaco,
         const fileType = await fileIO.getFileType(fileName);
         const fileObject = await fileIO.loadText(fileName);
 
-        alert(`FileType: ${fileType}`);
-        alert(`FileObject: ${JSON.stringify(fileObject, null, 2)}`);
-
         const dirigibleEditor = new DirigibleEditor(monaco, acornLoose, fileName, readOnly, fileType, fileObject);
         dirigibleEditor.configureMonaco();
         await dirigibleEditor.init();
 
     } catch (e) {
         console.error(e);
-        closeEditor();
+        DirigibleEditor.closeEditor();
     }
 });
 
@@ -230,7 +199,7 @@ class FileIO {
                     } else {
                         path = file.substring(file.indexOf(`/${workspace}/`) + `/${workspace}/`.length);
                     }
-                    gitResourceUrl = `${gitApiUrl}/${workspace}/${gitProject}/diff?path=${path}`;
+                    gitResourceUrl = `/services/ide/git/${workspace}/${gitProject}/diff?path=${path}`;
                 }
                 const xhr = new XMLHttpRequest();
                 xhr.open("GET", gitProject ? gitResourceUrl : resourceUrl);
@@ -241,7 +210,7 @@ class FileIO {
                         if (gitProject) {
                             const fileObject = JSON.parse(xhr.responseText);
 
-                            if (isTypeScriptFile(file)) {
+                            if (TypeScriptUtils.isTypeScriptFile(file)) {
                                 const xhr = new XMLHttpRequest();
                                 xhr.open("GET", resourceUrl);
                                 xhr.setRequestHeader("X-CSRF-Token", "Fetch");
@@ -267,7 +236,7 @@ class FileIO {
                                 });
                             }
                         } else {
-                            if (isTypeScriptFile(file)) {
+                            if (TypeScriptUtils.isTypeScriptFile(file)) {
                                 const typeScriptMetadata = JSON.parse(xhr.responseText);
                                 resolve({
                                     isGit: false,
@@ -284,9 +253,11 @@ class FileIO {
                             }
                         }
                     } else {
-                        if (xhr.responseText)
+                        if (xhr.responseText) {
                             reject(JSON.parse(xhr.responseText));
-                        else reject(`HTTP ${xhr.status} - Error loading '${ViewParameters.parameters.file}'`);
+                        } else {
+                            reject(`HTTP ${xhr.status} - Error loading '${ViewParameters.parameters.file}'`);
+                        }
                         messageHub.post({
                             message: `Error loading '${ViewParameters.parameters.file}'`
                         }, 'ide.status.error');
@@ -327,16 +298,18 @@ class FileIO {
                         workspace: fileName.substring(1, fileName.indexOf('/', 1)),
                     };
                     if (ViewParameters.parameters.gitName) {
-                        if (lineDecorations.length)
+                        if (lineDecorations.length) {
                             fileDescriptor.status = 'modified';
-                        else fileDescriptor.status = 'unmodified';
+                        } else {
+                            fileDescriptor.status = 'unmodified';
+                        }
                     }
                     messageHub.post({ resourcePath: fileName, isDirty: false }, 'ide-core.setEditorDirty');
                     messageHub.post(fileDescriptor, 'ide.file.saved');
                     messageHub.post({
                         message: `File '${fileName}' saved`
                     }, 'ide.status.message');
-                    if (isTypeScriptFile(fileName)) {
+                    if (TypeScriptUtils.isTypeScriptFile(fileName)) {
                         messageHub.post({ fileName }, 'ide.ts.reload');
                     }
                 }).catch(ex => {
@@ -355,6 +328,8 @@ class FileIO {
 
 class EditorActionsProvider {
 
+    static _toggleAutoFormattingActionRegistration = undefined;
+
     createSaveAction() {
         const isAutoFormattingEnabledForCurrentFile = this.isAutoFormattingEnabledForCurrentFile;
         const loadingMessage = document.getElementById('loadingMessage');
@@ -369,19 +344,18 @@ class EditorActionsProvider {
             contextMenuGroupId: 'fileIO',
             contextMenuOrder: 1.5,
             run: function (editor) {
-                debugger
                 if (loadingMessage) {
                     loadingMessage.innerText = 'Saving...';
                 }
-                if (loadingOverview) {
-                    loadingOverview.classList.remove("dg-hidden");
+                if (DirigibleEditor.loadingOverview) {
+                    DirigibleEditor.loadingOverview.classList.remove("dg-hidden");
                 }
                 if (isAutoFormattingEnabledForCurrentFile()) {
                     editor.getAction('editor.action.formatDocument').run().then(() => {
-                        saveFileContent(editor);
+                        DirigibleEditor.saveFileContent(editor);
                     });
                 } else {
-                    saveFileContent(editor);
+                    DirigibleEditor.saveFileContent(editor);
                 }
             }
         };
@@ -418,8 +392,7 @@ class EditorActionsProvider {
             contextMenuGroupId: 'fileIO',
             contextMenuOrder: 1.5,
             run: function () {
-                // TODO: Fix me!!!
-                callCloseEditor();
+                DirigibleEditor.closeEditor();
             }
         };
     }
@@ -503,8 +476,11 @@ class EditorActionsProvider {
     }
 
     updateAutoFormattingAction(editor) {
-        _toggleAutoFormattingActionRegistration.dispose();
-        _toggleAutoFormattingActionRegistration = editor.addAction(createToggleAutoFormattingAction());
+        if (EditorActionsProvider._toggleAutoFormattingActionRegistration) {
+            // @ts-ignore
+            EditorActionsProvider._toggleAutoFormattingActionRegistration.dispose();
+            EditorActionsProvider._toggleAutoFormattingActionRegistration = editor.addAction(new EditorActionsProvider().createToggleAutoFormattingAction());
+        }
     }
 
     isAutoFormattingEnabledForCurrentFile() {
@@ -518,6 +494,37 @@ class EditorActionsProvider {
 }
 
 class DirigibleEditor {
+
+    static dirty = false;
+    static lastSavedVersionId = undefined;
+    static loadingOverview = document.getElementById('loadingOverview');
+    static sourceBeingChangedProgramatically = false;
+    static computeDiff = new Worker("js/workers/computeDiff.js");
+
+    static {
+        DirigibleEditor.computeDiff.onmessage = function (event) {
+            lineDecorations = _editor.deltaDecorations(lineDecorations, event.data);
+        };
+    }
+
+    static isDirty(model) {
+        return DirigibleEditor.lastSavedVersionId !== model.getAlternativeVersionId();
+    }
+
+    static closeEditor() {
+        messageHub.post({ resourcePath: ViewParameters.parameters.file }, 'ide-core.closeEditor');
+    }
+
+    static saveFileContent(editor) {
+        const fileIO = new FileIO();
+        fileIO.saveText(editor.getModel().getValue()).then(() => {
+            DirigibleEditor.lastSavedVersionId = editor.getModel().getAlternativeVersionId();
+            DirigibleEditor.dirty = false;
+        });
+        if (DirigibleEditor.loadingOverview) {
+            DirigibleEditor.loadingOverview.classList.add("dg-hidden")
+        };
+    }
 
     constructor(monaco, acornLoose, fileName, readOnly, fileType, fileObject) {
         this.monaco = monaco;
@@ -654,14 +661,15 @@ class DirigibleEditor {
 
             messageHub.subscribe(function (msg) {
                 const file = msg.data && typeof msg.data === 'object' && msg.data.file;
-                if (file && file !== fileName)
+                if (file && file !== fileName) {
                     return;
+                }
 
                 const model = _editor.getModel();
-                if (isDirty(model)) {
+                if (DirigibleEditor.isDirty(model)) {
                     fileIO.saveText(model.getValue()).then(() => {
-                        lastSavedVersionId = model.getAlternativeVersionId();
-                        _dirty = false;
+                        DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
+                        DirigibleEditor.dirty = false;
                     });
                 }
             }, "editor.file.save");
@@ -676,18 +684,19 @@ class DirigibleEditor {
 
             messageHub.subscribe(function () {
                 let model = _editor.getModel();
-                if (isDirty(model)) {
+                if (DirigibleEditor.isDirty(model)) {
                     fileIO.saveText(model.getValue()).then(() => {
-                        lastSavedVersionId = model.getAlternativeVersionId();
-                        _dirty = false;
+                        DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
+                        DirigibleEditor.dirty = false;
                     });
                 }
             }, "editor.file.save.all");
 
             messageHub.subscribe(function (msg) {
                 let file = msg.resourcePath;
-                if (file !== fileName)
+                if (file !== fileName) {
                     return;
+                }
                 _editor.focus();
             }, "ide-core.setEditorFocusGain");
 
@@ -697,7 +706,7 @@ class DirigibleEditor {
 
             _editor.onDidChangeModel(function () {
                 if (_fileObject.isGit) {
-                    computeDiff.postMessage(
+                    DirigibleEditor.computeDiff.postMessage(
                         {
                             oldText: _fileObject.git,
                             newText: fileText
@@ -706,7 +715,7 @@ class DirigibleEditor {
                 }
             });
 
-            if (isTypeScriptFile(this.fileName)) {
+            if (TypeScriptUtils.isTypeScriptFile(this.fileName)) {
                 const loadImportedFiles = (isReload, importedFiles) => {
                     for (const importedFile of importedFiles) {
                         fileIO.loadText(importedFile)
@@ -735,14 +744,16 @@ class DirigibleEditor {
 
             const mainFileUri = new this.monaco.Uri().with({ path: this.fileName });
             let model = this.monaco.editor.createModel(fileText, fileType || 'text', mainFileUri);
-            lastSavedVersionId = model.getAlternativeVersionId();
+            DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
 
             messageHub.subscribe((changed) => {
-                if (changed.fileName === this.fileName) return;
-                sourceBeingChangedProgramatically = true;
+                if (changed.fileName === this.fileName) {
+                    return;
+                }
+                DirigibleEditor.sourceBeingChangedProgramatically = true;
                 model.setValue(model.getValue());
-                lastSavedVersionId = model.getAlternativeVersionId();
-                sourceBeingChangedProgramatically = false;
+                DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
+                DirigibleEditor.sourceBeingChangedProgramatically = false;
             }, "ide.ts.reload")
 
 
@@ -755,7 +766,7 @@ class DirigibleEditor {
             _editor.addAction(editorActionsProvider.createCloseAction());
             _editor.addAction(editorActionsProvider.createCloseOthersAction());
             _editor.addAction(editorActionsProvider.createCloseAllAction());
-            _toggleAutoFormattingActionRegistration = _editor.addAction(editorActionsProvider.createToggleAutoFormattingAction());
+            EditorActionsProvider._toggleAutoFormattingActionRegistration = _editor.addAction(editorActionsProvider.createToggleAutoFormattingAction());
             _editor.onDidChangeCursorPosition(function (e) {
                 messageHub.post(
                     {
@@ -766,12 +777,16 @@ class DirigibleEditor {
             });
             let to = 0;
             _editor.onDidChangeModelContent(function (e) {
-                if (sourceBeingChangedProgramatically) return;
+                if (DirigibleEditor.sourceBeingChangedProgramatically) {
+                    return;
+                }
 
                 if (_fileObject.isGit && e.changes) {
-                    if (to) { clearTimeout(to); }
+                    if (to) {
+                        clearTimeout(to);
+                    }
                     to = setTimeout(function () {
-                        computeDiff.postMessage(
+                        DirigibleEditor.computeDiff.postMessage(
                             {
                                 oldText: _fileObject.git,
                                 newText: _editor.getValue()
@@ -780,16 +795,16 @@ class DirigibleEditor {
                     }, 200);
                 }
 
-                let dirty = isDirty(_editor.getModel());
-                if (dirty !== _dirty) {
-                    _dirty = dirty;
+                let dirty = DirigibleEditor.isDirty(_editor.getModel());
+                if (dirty !== DirigibleEditor.dirty) {
+                    DirigibleEditor.dirty = dirty;
                     messageHub.post({ resourcePath: fileName, isDirty: dirty }, 'ide-core.setEditorDirty');
                 }
             });
 
             this.monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module: \n\n> ```\nlet res = require("http/v8/response");\nres.println("Hello World!");``` */ var require = function(moduleName: string) {return new Module();};', 'js:require.js');
             this.monaco.languages.typescript.javascriptDefaults.addExtraLib('/** $. XSJS API */ var $: any;', 'ts:$.js');
-            loadDTS();
+            TypeScriptUtils.loadDTS(this.monaco);
         }
     }
 
@@ -810,7 +825,7 @@ class DirigibleEditor {
                         automaticLayout: true,
                         readOnly: readOnly,
                     };
-                    if (isTypeScriptFile(fileName)) {
+                    if (TypeScriptUtils.isTypeScriptFile(fileName)) {
                         // @ts-ignore
                         editorConfig.language = 'typescript';
                     }
@@ -820,8 +835,8 @@ class DirigibleEditor {
                     window.onresize = function () {
                         editor.layout();
                     };
-                    if (loadingOverview) {
-                        loadingOverview.classList.add("dg-hidden")
+                    if (DirigibleEditor.loadingOverview) {
+                        DirigibleEditor.loadingOverview.classList.add("dg-hidden")
                     };
                 } catch (err) {
                     reject(err);
