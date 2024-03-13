@@ -44,10 +44,10 @@ public class JobsManager {
     private Scheduler scheduler;
 
     /** The internal jobs. */
-    public static String JOB_GROUP_INTERNAL = "dirigible-internal";
+    public static String JOB_GROUP_INTERNAL = "internal";
 
     /** The user defined jobs. */
-    public static String JOB_GROUP_DEFINED = "dirigible-defined";
+    public static String JOB_GROUP_DEFINED = "defined";
 
     /**
      * Schedule a job.

@@ -212,12 +212,19 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
                     dataStore.initialize();
                     callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                 }
+                if (entity.getLifecycle()
+                          .equals(ArtefactLifecycle.FAILED)) {
+                    callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                    return false;
+                }
                 break;
             case DELETE:
                 if (entity.getLifecycle()
                           .equals(ArtefactLifecycle.CREATED)
                         || entity.getLifecycle()
-                                 .equals(ArtefactLifecycle.UPDATED)) {
+                                 .equals(ArtefactLifecycle.UPDATED)
+                        || entity.getLifecycle()
+                                 .equals(ArtefactLifecycle.FAILED)) {
                     dataStore.removeMapping(entity.getKey());
                     dataStore.initialize();
                     callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");

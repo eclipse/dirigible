@@ -189,7 +189,6 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
                                                                                                                    .getClass()));
             }
 
-
             switch (flow) {
                 case CREATE:
                     if (datasource.getLifecycle()
@@ -202,12 +201,18 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
                                   .equals(ArtefactLifecycle.MODIFIED)) {
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     }
+                    if (datasource.getLifecycle()
+                                  .equals(ArtefactLifecycle.FAILED)) {
+                        return false;
+                    }
                     break;
                 case DELETE:
                     if (datasource.getLifecycle()
                                   .equals(ArtefactLifecycle.CREATED)
                             || datasource.getLifecycle()
-                                         .equals(ArtefactLifecycle.UPDATED)) {
+                                         .equals(ArtefactLifecycle.UPDATED)
+                            || datasource.getLifecycle()
+                                         .equals(ArtefactLifecycle.FAILED)) {
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
                     }
                     break;

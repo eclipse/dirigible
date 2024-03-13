@@ -9,6 +9,15 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
+ 
+function _uuid () {
+	function _p8(s) {
+    	let p = (Math.random().toString(16) + "000000000").substr(2, 8);
+        return s ? "-" + p.substr(0, 4) + "-" + p.substr(4, 4) : p;
+    }
+    return _p8() + _p8(true) + _p8(true) + _p8();
+}
+	    
 angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "ideGenerate", "ideTemplates"])
 	.controller('ModelerCtrl', function ($scope, messageHub, $window, workspaceApi, generateApi, templatesApi, ViewParameters) {
 		let contents;
@@ -423,23 +432,20 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 					cell.value.perspectiveName = msg.data.perspectiveName;
 					cell.value.perspectiveIcon = msg.data.perspectiveIcon;
 					cell.value.perspectiveOrder = msg.data.perspectiveOrder;
+					cell.value.perspectiveRole = msg.data.perspectiveRole;
 					$scope.graph.model.setValue(cell, cell.value);
 
-					let propertyObject = new Property('propertyName');
-					let property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
-					property.setVertex(true);
-					property.setConnectable(false);
-
 					for (let i = 0; i < msg.data.entityProperties.length; i++) {
-						let newProperty = property.clone();
-
+						let propertyObject = new Property('propertyName');
+						let property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
+						property.setId(_uuid());
+						property.setVertex(true);
+						property.setConnectable(false);
 						for (let attributeName in msg.data.entityProperties[i]) {
-							if (attributeName !== "id") {
-								newProperty.value[attributeName] = msg.data.entityProperties[i][attributeName];
-							}
+							property.value[attributeName] = msg.data.entityProperties[i][attributeName];
 						}
-						newProperty.style = 'projectionproperty';
-						cell.insert(newProperty);
+						property.style = 'projectionproperty';
+						cell.insert(property);
 					}
 					model.setCollapsed(cell, true);
 				} finally {
@@ -466,22 +472,19 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 					cell.value.perspectiveName = msg.data.perspectiveName;
 					cell.value.perspectiveIcon = msg.data.perspectiveIcon;
 					cell.value.perspectiveOrder = msg.data.perspectiveOrder;
+					cell.value.perspectiveRole = msg.data.perspectiveRole;
 					$scope.graph.model.setValue(cell, cell.value);
 
-					let propertyObject = new Property('propertyName');
-					let property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
-					property.setVertex(true);
-					property.setConnectable(false);
-
 					for (let i = 0; i < msg.data.entityProperties.length; i++) {
-						let newProperty = property.clone();
-
+						let propertyObject = new Property('propertyName');
+						let property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
+						property.setId(_uuid());
+						property.setVertex(true);
+						property.setConnectable(false);
 						for (let attributeName in msg.data.entityProperties[i]) {
-							if (attributeName !== "id") {
-								newProperty.value[attributeName] = msg.data.entityProperties[i][attributeName];
-							}
+							property.value[attributeName] = msg.data.entityProperties[i][attributeName];
 						}
-						cell.insert(newProperty);
+						cell.insert(property);
 					}
 					model.setCollapsed(cell, true);
 				} finally {
@@ -495,7 +498,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 			},
 			true
 		);
-
+		
 		function main(container, outline, toolbar, sidebar) {
 			let ICON_ENTITY = 'sap-icon--header';
 			let ICON_PROPERTY = 'sap-icon--bullet-text';
@@ -578,6 +581,11 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				// Only entities are movable
 				$scope.graph.isCellMovable = function (cell) {
 					return this.isSwimlane(cell);
+				};
+				
+				$scope.graph.model.createId = function(_cell) {
+	                let id = _uuid();
+					return this.prefix + id + this.postfix;
 				};
 
 				// Sets the graph container and configures the editor
@@ -717,7 +725,9 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				addSidebarIcon($scope.graph, sidebar, property, ICON_PROPERTY, 'Drag this to an Entity to create a new Property', $scope);
 
 				// Adds primary key field into entity
-				let firstProperty = property.clone();
+				let firstProperty = new mxCell(new Property('PropertyName'), new mxGeometry(0, 0, 0, 26));
+				firstProperty.setVertex(true);
+				firstProperty.setConnectable(false);
 				firstProperty.value.name = 'Id';
 				firstProperty.value.dataType = 'INTEGER';
 				firstProperty.value.dataLength = 0;
@@ -1241,6 +1251,8 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 										copy.icon = attribute.textContent;
 									} else if (attribute.localName === "order") {
 										copy.order = attribute.textContent;
+									} else if (attribute.localName === "role") {
+										copy.role = attribute.textContent;
 									}
 								}
 								graph.getModel().perspectives.push(copy);

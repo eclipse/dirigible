@@ -12,6 +12,7 @@
 import { extensions } from "sdk/extensions";
 import { request, response } from "sdk/http";
 import { uuid } from "sdk/utils";
+import { user } from "sdk/security";
 
 const customActions = [];
 const extensionPoint = request.getParameter('extensionPoint');
@@ -25,7 +26,23 @@ function setETag() {
 }
 
 for (let i = 0; i < customActionExtensions?.length; i++) {
-    customActions.push(customActionExtensions[i].getAction());
+    const customAction = customActionExtensions[i].getAction();
+    if (customAction.roles && Array.isArray(customAction.roles)) {
+        let hasRoles = true;
+        for (const next of customAction.roles) {
+            if (!user.isInRole(next)) {
+                hasRoles = false;
+                break;
+            }
+        }
+        if (hasRoles) {
+            customActions.push(customAction);
+        }
+    } else if (customAction.role && user.isInRole(customAction.role)) {
+        customActions.push(customAction);
+    } else if (customAction.role === undefined) {
+        customActions.push(customAction);
+    }
 }
 
 customActions.sort(function (a, b) {

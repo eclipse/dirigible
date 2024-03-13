@@ -5,7 +5,7 @@
  */
 exports.getTemplate = function() {
 	return {
-		"name": "Database Table",
+		"name": "Database Table (Model)",
 		"description": "Database Table Template",
 		"sources": [{
 			"location": "/template-database-table/database.table.template", 
@@ -16,6 +16,6 @@ exports.getTemplate = function() {
 			"name": "tableName",
 			"label": "Table Name"
 		}],
-		"order": 10
+		"order": 40
 	};
 };

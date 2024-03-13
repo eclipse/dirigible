@@ -58,7 +58,7 @@ public class DataAnonymizeService {
     private static final String DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE = "DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE";
 
     /** The Constant DEFAULT_BATCH_SIZE. */
-    private static final String DEFAULT_BATCH_SIZE = "1000";
+    private static final int DEFAULT_BATCH_SIZE = 1000;
 
     /**
      * Instantiates a new data source endpoint.
@@ -86,7 +86,7 @@ public class DataAnonymizeService {
 
             Faker faker = new Faker();
             try {
-                BATCH_SIZE = Integer.parseInt(Configuration.get(DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE, DEFAULT_BATCH_SIZE));
+                BATCH_SIZE = Configuration.getAsInt(DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE, DEFAULT_BATCH_SIZE);
             } catch (NumberFormatException e1) {
                 if (logger.isWarnEnabled()) {
                     logger.warn("Wrong configuration for " + DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE);

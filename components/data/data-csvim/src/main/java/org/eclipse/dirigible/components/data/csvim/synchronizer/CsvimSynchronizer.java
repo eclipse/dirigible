@@ -254,12 +254,18 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
                         updateCsvim(csvim, connection);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     }
+                    if (csvim.getLifecycle()
+                             .equals(ArtefactLifecycle.FAILED)) {
+                        return false;
+                    }
                     break;
                 case DELETE:
                     if (csvim.getLifecycle()
                              .equals(ArtefactLifecycle.CREATED)
                             || csvim.getLifecycle()
-                                    .equals(ArtefactLifecycle.UPDATED)) {
+                                    .equals(ArtefactLifecycle.UPDATED)
+                            || csvim.getLifecycle()
+                                    .equals(ArtefactLifecycle.FAILED)) {
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
                     }
                     break;

@@ -213,9 +213,13 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
                     wikiService.generateContent(wiki.getLocation(), new String(wiki.getContent(), StandardCharsets.UTF_8));
                     callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                 }
+                if (ArtefactLifecycle.MODIFIED.equals(wiki.getLifecycle())) {
+                    return false;
+                }
                 break;
             case DELETE:
-                if (ArtefactLifecycle.CREATED.equals(wiki.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(wiki.getLifecycle())) {
+                if (ArtefactLifecycle.CREATED.equals(wiki.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(wiki.getLifecycle())
+                        || ArtefactLifecycle.FAILED.equals(wiki.getLifecycle())) {
                     wikiService.removeGenerated(wiki.getLocation());
                     getService().delete(wiki);
                     callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");

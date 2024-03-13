@@ -252,9 +252,13 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, e.getMessage());
                     }
                 }
+                if (ArtefactLifecycle.FAILED.equals(job.getLifecycle())) {
+                    return false;
+                }
                 break;
             case DELETE:
-                if (ArtefactLifecycle.CREATED.equals(job.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(job.getLifecycle())) {
+                if (ArtefactLifecycle.CREATED.equals(job.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(job.getLifecycle())
+                        || ArtefactLifecycle.FAILED.equals(job.getLifecycle())) {
                     try {
                         schedulerManager.unscheduleJob(job.getName(), job.getGroup());
                         job.setRunning(false);

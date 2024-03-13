@@ -150,6 +150,23 @@ public class SchemaMetadata {
         return tables;
     }
 
+    /**
+     * Gets the views.
+     *
+     * @return the views
+     */
+    public List<TableMetadata> getViews() {
+        return views;
+    }
+
+    /**
+     * Sets the views.
+     *
+     * @param views the new views
+     */
+    public void setViews(List<TableMetadata> views) {
+        this.views = views;
+    }
 
     /**
      * Get the procedures metadata.
@@ -167,6 +184,24 @@ public class SchemaMetadata {
      */
     public List<FunctionMetadata> getFunctions() {
         return functions;
+    }
+
+    /**
+     * Gets the sequences.
+     *
+     * @return the sequences
+     */
+    public List<SequenceMetadata> getSequences() {
+        return sequences;
+    }
+
+    /**
+     * Sets the sequences.
+     *
+     * @param sequences the new sequences
+     */
+    public void setSequences(List<SequenceMetadata> sequences) {
+        this.sequences = sequences;
     }
 
     /**

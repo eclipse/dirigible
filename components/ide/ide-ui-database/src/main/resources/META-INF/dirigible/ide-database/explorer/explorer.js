@@ -12,6 +12,7 @@
 const database = angular.module('database', ['ideUI', 'ideView']);
 database.controller('DatabaseController', function ($scope, $http, messageHub) {
 	let databasesSvcUrl = "/services/data/";
+	let databasesInvalidateSvcUrl = "/services/data/metadata/invalidate-cache";
 	$scope.selectedDatabase;
 	$scope.jstreeWidget = angular.element('#dgDatabases');
 	$scope.spinnerColumns = {
@@ -501,9 +502,8 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 						"action": function (data) {
 							let tree = $.jstree.reference(data.reference);
 							let node = tree.get_node(data.reference);
-							let topLevelSchemaNode = node.parents.find(parentId => tree.get_node(parentId).original.kind === 'schema');
-							let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
-							let sqlCommand = topLevelSchemaName + "." + node.original.text;
+							let parentNodeName = tree.get_text(node.parent);
+							let sqlCommand = parentNodeName + "." + node.original.text;
 							messageHub.postMessage('database.data.export.artifact', sqlCommand);
 						}.bind(this)
 					};
@@ -514,9 +514,8 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 						"action": function (data) {
 							let tree = $.jstree.reference(data.reference);
 							let node = tree.get_node(data.reference);
-							let topLevelSchemaNode = node.parents.find(parentId => tree.get_node(parentId).original.kind === 'schema');
-							let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
-							let sqlCommand = topLevelSchemaName + "." + node.original.text;
+							let parentNodeName = tree.get_text(node.parent);
+							let sqlCommand = parentNodeName + "." + node.original.text;
 							messageHub.postMessage('database.data.import.artifact', sqlCommand);
 						}.bind(this)
 					};
@@ -1003,10 +1002,19 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		'ide-databases.explorer.refresh',
 		function () {
 			$scope.$apply(function () {
-				$scope.getDatabases();
+				$scope.refresh();
 			});
 		},
 		true
 	);
+	
+	$scope.refresh = function () {
+		$scope.invalidateCache();
+		$scope.getDatabases();
+	}
+	
+	$scope.invalidateCache = function () {
+		$http.get(databasesInvalidateSvcUrl);
+	}
 
 });

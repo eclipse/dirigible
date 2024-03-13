@@ -146,8 +146,7 @@ public class SystemScheduler {
     @Bean
     public Trigger trigger(JobDetail job) {
 
-        String frequency = org.eclipse.dirigible.commons.config.Configuration.get(DIRIGIBLE_SYNCHRONIZER_FREQUENCY, "10");
-        int frequencyInSec = Integer.parseInt(frequency);
+        int frequencyInSec = org.eclipse.dirigible.commons.config.Configuration.getAsInt(DIRIGIBLE_SYNCHRONIZER_FREQUENCY, 10);
         logger.info("Configuring trigger to fire every {} seconds", frequencyInSec);
 
         return newTrigger().forJob(job)

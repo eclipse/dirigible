@@ -11,6 +11,8 @@
 package org.eclipse.dirigible.components.engine.bpm.flowable.endpoint;
 
 import static java.text.MessageFormat.format;
+import static org.eclipse.dirigible.components.engine.bpm.flowable.dto.ActionData.Action.*;
+import static org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmService.DIRIGIBLE_BPM_INTERNAL_SKIP_STEP;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +21,7 @@ import java.net.URISyntaxException;
 import java.util.*;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
+import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ActionData;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ProcessDefinitionData;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ProcessInstanceData;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.VariableData;
@@ -33,6 +36,7 @@ import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.image.ProcessDiagramGenerator;
+import org.flowable.job.api.Job;
 import org.flowable.variable.api.persistence.entity.VariableInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -247,7 +251,7 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
     }
 
     /**
-     * List active process instance variables
+     * List active process instance variables.
      *
      * @param id the process instance id
      * @return process variables list
@@ -266,17 +270,80 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
         return ResponseEntity.ok(variables);
     }
 
+    /**
+     * Add or update active process instance variable.
+     *
+     * @param id the process instance id
+     * @param variableData the variable data
+     * @return the response entity
+     */
     @PostMapping(value = "/bpm-processes/instance/{id}/variables")
     public ResponseEntity<Void> addProcessInstanceVariables(@PathVariable("id") String id, @RequestBody VariableData variableData) {
-
-        BpmService bpmService = getBpmService();
-        bpmService.getBpmProviderFlowable()
-                  .getProcessEngine()
-                  .getRuntimeService()
-                  .setVariable(id, variableData.getName(), variableData.getValue());
-
+        getBpmService().addProcessInstanceVariable(id, variableData.getName(), variableData.getValue());
         return ResponseEntity.ok()
                              .build();
+    }
+
+    /**
+     * Execute action on active process instance variable.
+     *
+     * @param id the process instance id
+     * @param actionData the action to be executed, possible values: RETRY
+     * @return the response entity
+     */
+    @PostMapping(value = "/bpm-processes/instance/{id}")
+    public ResponseEntity<String> executeProcessInstanceAction(@PathVariable("id") String id, @RequestBody ActionData actionData) {
+
+        BpmService bpmService = getBpmService();
+        if (RETRY.getActionName()
+                 .equals(actionData.getAction())) {
+            return retryJob(id);
+        } else if (SKIP.getActionName()
+                       .equals(actionData.getAction())) {
+            bpmService.addProcessInstanceVariable(id, DIRIGIBLE_BPM_INTERNAL_SKIP_STEP, SKIP.getActionName());
+            return retryJob(id);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                 .body("Invalid action id provided [" + actionData.getAction() + "]");
+        }
+    }
+
+    /**
+     * Retry job.
+     *
+     * @param processInstanceId the process instance id
+     * @return the response entity
+     */
+    private ResponseEntity<String> retryJob(String processInstanceId) {
+        List<Job> jobs = bpmService.getDeadLetterJobs(processInstanceId);
+
+        if (jobs.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                 .body("No dead letter jobs found for process instance id [" + processInstanceId + "]");
+        }
+        bpmService.retryDeadLetterJob(jobs.get(0), 1);
+        return ResponseEntity.ok()
+                             .build();
+    }
+
+    /**
+     * List dead-letter jobs for an active process instance variables.
+     *
+     * @param id the process instance id
+     * @return list of dead-letter jobs
+     */
+    @GetMapping(value = "/bpm-processes/instance/{id}/jobs")
+    public ResponseEntity<List<Job>> getDeadLetterJobs(@PathVariable("id") String id) {
+
+        BpmService bpmService = getBpmService();
+        List<Job> jobs = bpmService.getBpmProviderFlowable()
+                                   .getProcessEngine()
+                                   .getManagementService()
+                                   .createDeadLetterJobQuery()
+                                   .processInstanceId(id)
+                                   .list();
+
+        return ResponseEntity.ok(jobs);
     }
 
     /**

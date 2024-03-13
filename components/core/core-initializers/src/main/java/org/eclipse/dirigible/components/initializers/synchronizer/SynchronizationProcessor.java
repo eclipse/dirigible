@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FilenameUtils;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.api.platform.ProblemsFacade;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
@@ -277,6 +278,9 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                 }
 
                 // Processing of cross-synchronizer artefacts once again due to eventual dependency issues
+                int crossRetryCount = Configuration.getAsInt("DIRIGIBLE_SYNCHRONIZER_CROSS_RETRY_COUNT", 10);
+                int crossRetryInterval = Configuration.getAsInt("DIRIGIBLE_SYNCHRONIZER_CROSS_RETRY_INTERVAL", 10000);
+                int retryCount = 0;
                 if (undepleted.size() > 0) {
                     logger.warn("Cross-processing of undepleated artefacts...");
                     try {
@@ -310,17 +314,24 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                                 }
                                 break;
                             }
+                            String crossArtefactsLeft = cross.stream()
+                                                             .map(e -> e.getArtefact()
+                                                                        .getKey())
+                                                             .collect(Collectors.joining(", "));
                             if (cross.size() > 0) {
                                 undepleted.clear();
                                 undepleted.addAll(cross);
                                 if (logger.isWarnEnabled()) {
-                                    String crossArtefactsLeft = cross.stream()
-                                                                     .map(e -> e.getArtefact()
-                                                                                .getKey())
-                                                                     .collect(Collectors.joining(", "));
                                     String warnMessage = "Retring to deplete artefacts left after cross-processing: " + crossArtefactsLeft;
                                     logger.warn(warnMessage);
                                 }
+                            }
+                            if (++retryCount == crossRetryCount) {
+                                String warnMessage = "Final retry to deplete artefacts left after cross-processing: " + crossArtefactsLeft;
+                                logger.error(warnMessage);
+                                break;
+                            } else {
+                                Thread.sleep(crossRetryInterval);
                             }
                         }
                     } catch (Exception e) {
@@ -807,6 +818,9 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
             String message) {
         // if (logger.isTraceEnabled()) {logger.trace("Processed artefact with key: {} with status: {}",
         // artefact.getKey(), lifecycle.getValue());}
+        if (ArtefactLifecycle.FAILED.equals(lifecycle)) {
+            logger.error("Processing failed for artefact with key: {}", artefact.getKey());
+        }
         synchronizer.setStatus(artefact, lifecycle, message);
     }
 

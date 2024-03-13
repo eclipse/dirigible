@@ -26,25 +26,21 @@ function openReferEntity(title, message, $scope, graph) {
 			$scope.$cell.value.projectionReferencedEntity = $scope.$parent.referencedEntity;
 
 
-			let propertyObject = new Property('propertyName');
-			let property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
-			property.setVertex(true);
-			property.setConnectable(false);
+			
 
 			$scope.$parent.availableEntities.forEach(entity => {
 				if (entity.name === $scope.$parent.referencedEntity) {
 					entity.properties.forEach(projectionProperty => {
-						let newProperty = property.clone();
-
+						let propertyObject = new Property('propertyName');
+						let property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
+						property.setId(_uuid());
+						property.setVertex(true);
+						property.setConnectable(false);
 						for (let attributeName in projectionProperty) {
-							if (attributeName !== "id") {
-								newProperty.value[attributeName] = projectionProperty[attributeName];	
-							}
+							property.value[attributeName] = projectionProperty[attributeName];	
 						}
-
-						newProperty.style = 'projectionproperty';
-
-						$scope.$cell.insert(newProperty);
+						property.style = 'projectionproperty';
+						$scope.$cell.insert(property);
 					});
 				}
 			});
@@ -80,26 +76,18 @@ function openCopiedEntity(title, message, $scope, graph) {
 			$scope.$cell.value.projectionReferencedModel = $scope.$parent.referencedModel;
 			$scope.$cell.value.projectionReferencedEntity = $scope.$parent.referencedEntity;
 
-
-			let propertyObject = new Property('propertyName');
-			let property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
-			property.setVertex(true);
-			property.setConnectable(false);
-
 			$scope.$parent.availableEntities.forEach(entity => {
 				if (entity.name === $scope.$parent.referencedEntity) {
 					entity.properties.forEach(projectionProperty => {
-						let newProperty = property.clone();
-
+						let propertyObject = new Property('propertyName');
+						let property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
+						property.setId(_uuid());
+						property.setVertex(true);
+						property.setConnectable(false);
 						for (let attributeName in projectionProperty) {
-							if (attributeName !== "id") {
-								newProperty.value[attributeName] = projectionProperty[attributeName];
-							}
+							property.value[attributeName] = projectionProperty[attributeName];
 						}
-
-						//newProperty.style = 'property';
-
-						$scope.$cell.insert(newProperty);
+						$scope.$cell.insert(property);
 					});
 				}
 			});

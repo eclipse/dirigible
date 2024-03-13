@@ -5,7 +5,7 @@
  */
 exports.getTemplate = function () {
 	return {
-		"name": "React",
+		"name": "React (UI)",
 		"description": "React Template",
 		"sources": [{
 			"location": "/template-react/index.tsx.template",
@@ -29,6 +29,6 @@ exports.getTemplate = function () {
 			"rename": "{{fileName}}.tsx"
 		}],
 		"parameters": [],
-		"order": -1
+		"order": 35
 	};
 };

@@ -44,11 +44,11 @@ public class DirigibleApplication {
 
     @EventListener
     void onStartup(@SuppressWarnings("unused") ApplicationReadyEvent event) {
-        LOGGER.info("------------------------ Dirigible started ------------------------");
+        LOGGER.info("------------------------ Eclipse Dirigible started ------------------------");
     }
 
     @EventListener
     void onShutdown(@SuppressWarnings("unused") ContextClosedEvent event) {
-        LOGGER.info("------------------------ Dirigible stopped ------------------------");
+        LOGGER.info("------------------------ Eclipse Dirigible stopped ------------------------");
     }
 }

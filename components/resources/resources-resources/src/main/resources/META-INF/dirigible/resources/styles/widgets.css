@@ -520,7 +520,7 @@ i.fd-list__icon[rotate="90"]::before {
 
 .fd-form-item>.fd-popover.fd-popover--input-message-group .fd-popover__control.is-expanded>*,
 .fd-popover__control[aria-expanded="true"]>* {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.1875rem;
 }
 
 /* Dialog padding fixes */

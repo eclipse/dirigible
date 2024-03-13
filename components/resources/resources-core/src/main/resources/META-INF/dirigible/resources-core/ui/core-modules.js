@@ -58,7 +58,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                 scope.name = branding.name;
                 scope.perspective = perspective;
             },
-            template: '<title>{{perspective.name || "Loading..."}} | {{name}}</title>'
+            template: '<title>{{::perspective.name || "Loading..."}} | {{::name}}</title>'
         };
     }]).directive('dgBrandIcon', ['branding', function (branding) {
         return {
@@ -68,7 +68,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             link: function (scope) {
                 scope.icon = branding.icons.faviconIco;
             },
-            template: `<link rel="icon" type="image/x-icon" ng-href="{{icon}}">`
+            template: `<link rel="icon" type="image/x-icon" ng-href="{{::icon}}">`
         };
     }]).directive('ideContextmenu', ['messageHub', '$window', function (messageHub, $window) {
         return {
@@ -91,6 +91,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     menu.classList.add('dg-invisible');
                     openedMenuId = '';
                     scope.hideAllSubmenus();
+                    scope.menuItems.length = 0;
                 });
 
                 element.on('contextmenu', function (event) {
@@ -100,6 +101,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     menu.classList.add('dg-invisible');
                     openedMenuId = '';
                     scope.hideAllSubmenus();
+                    scope.menuItems.length = 0;
                 });
 
                 scope.hideAllSubmenus = function () {
@@ -235,7 +237,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             },
             templateUrl: '/services/web/resources-core/ui/templates/contextmenuSubmenu.html'
         };
-    }]).directive('ideHeader', ['$cookies', 'branding', 'theming', 'User', 'Menu', 'messageHub', function ($cookies, branding, theming, User, Menu, messageHub) {
+    }]).directive('ideHeader', ['$cookies', '$http', 'branding', 'theming', 'User', 'Menu', 'messageHub', function ($cookies, $http, branding, theming, User, Menu, messageHub) {
         return {
             restrict: 'E',
             replace: true,
@@ -289,12 +291,14 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     };
 
                     scope.resetTheme = function () {
-                        scope.resetViews();
-                        for (let cookie in $cookies.getAll()) {
-                            if (cookie.startsWith("DIRIGIBLE")) {
-                                $cookies.remove(cookie, { path: "/" });
+                        $http.get('/services/js/resources-core/services/clear-cache.js').then(function () {
+                            scope.resetViews();
+                            for (let cookie in $cookies.getAll()) {
+                                if (cookie.startsWith("DIRIGIBLE")) {
+                                    $cookies.remove(cookie, { path: "/" });
+                                }
                             }
-                        }
+                        });
                     };
 
                     scope.resetViews = function () {
@@ -334,17 +338,17 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             template: `<div fd-tool-header-element ng-repeat="menuItem in menuList track by $index">
                 <fd-popover>
                     <fd-popover-control>
-                        <fd-button fd-tool-header-button compact="true" dg-label="{{ menuItem.label }}" dg-type="transparent"
-                            is-menu="true" aria-label="menu button {{ menuItem.label }}">
+                        <fd-button fd-tool-header-button compact="true" dg-label="{{ ::menuItem.label }}" dg-type="transparent"
+                            is-menu="true" aria-label="menu button {{ ::menuItem.label }}">
                         </fd-button>
                     </fd-popover-control>
-                    <fd-popover-body no-arrow="true" can-scroll="isScrollable()">
+                    <fd-popover-body no-arrow="true" can-scroll="::isScrollable()">
                         <fd-menu aria-label="header menu">
                             <fd-menu-item ng-repeat-start="item in menuItem.items track by $index" ng-if="!item.items"
-                                title="{{ item.label }}" ng-click="menuHandler(item)" has-separator="item.divider">
+                                title="{{ ::item.label }}" ng-click="::menuHandler(item)" has-separator="::item.divider">
                             </fd-menu-item>
-                            <fd-menu-sublist ng-if="item.items" has-separator="item.divider" title="{{ item.label }}" can-scroll="isScrollable(item.items)" ng-repeat-end>
-                                <header-submenu sublist="item.items" menu-handler="menuHandler"></header-submenu>
+                            <fd-menu-sublist ng-if="item.items" has-separator="::item.divider" title="{{ ::item.label }}" can-scroll="::isScrollable(item.items)" ng-repeat-end>
+                                <header-submenu sublist="::item.items" menu-handler="::menuHandler"></header-submenu>
                             </fd-menu-sublist>
                         </fd-menu>
                     </fd-popover-body>
@@ -367,8 +371,8 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     return true;
                 };
             },
-            template: `<fd-menu-item ng-repeat-start="item in sublist track by $index" ng-if="!item.items" has-separator="item.divider" title="{{ item.label }}" ng-click="menuHandler(item)"></fd-menu-item>
-<fd-menu-sublist ng-if="item.items" has-separator="item.divider" title="{{ item.label }}" can-scroll="isScrollable($index)" ng-repeat-end><header-submenu sublist="item.items" menu-handler="menuHandler"></header-submenu></fd-menu-sublist>`,
+            template: `<fd-menu-item ng-repeat-start="item in sublist track by $index" ng-if="!item.items" has-separator="::item.divider" title="{{ ::item.label }}" ng-click="::menuHandler(item)"></fd-menu-item>
+<fd-menu-sublist ng-if="item.items" has-separator="::item.divider" title="{{ ::item.label }}" can-scroll="::isScrollable($index)" ng-repeat-end><header-submenu sublist="::item.items" menu-handler="::menuHandler"></header-submenu></fd-menu-sublist>`,
         };
     }).directive('ideContainer', ['perspective', function (perspective) {
         return {
@@ -1136,5 +1140,19 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                 };
             },
             templateUrl: '/services/web/resources-core/ui/templates/ideStatusBar.html'
+        }
+    }])
+    .directive('dgEmbeddablePerspective', [function () {
+        return {
+            restrict: 'A',
+            link: function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                const embedded = urlParams.get('embedded');
+                if (embedded !== null && embedded !== undefined) {
+                    const styleSheet = document.createElement("style");
+                    styleSheet.innerText = '.dg-main-header, .dg-statusbar, .dg-main-container>.dg-sidebar { display: none !important; }';
+                    document.head.appendChild(styleSheet);
+                }
+            }
         }
     }]);
