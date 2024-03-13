@@ -1,41 +1,49 @@
+/*
+ * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
+ */
 package org.eclipse.dirigible.components.api.cache;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.github.benmanes.caffeine.cache.Cache;
 
-import java.util.concurrent.TimeUnit;
 
 public class CacheFacade {
 
     /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(Cache.class);
+    private static final Logger logger = LoggerFactory.getLogger(CacheFacade.class);
     private static Cache<String, String> cache;
 
     /**
      * Instantiates a new caffeine database metadata cache.
      */
-    public CacheFacade() {
+    static {
         initCache();
     }
 
     /**
      * Inits the cache.
      */
-    private void initCache() {
+    private static void initCache() {
         cache = Caffeine.newBuilder()
-                .build();
+                        .build();
     }
 
-        /**
-         * Getter for the value of the property by its key.
-         *
-         * @param key the key
-         * @return the string
-         */
-    public static String get(String key) {
+    /**
+     * Getter for the value of the property by its key.
+     *
+     * @param key the key
+     * @return the string
+     */
+    public String get(String key) {
         return cache.getIfPresent(key);
     }
 
