@@ -11,20 +11,16 @@
 package org.eclipse.dirigible.components.security.synchronizer;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
-
+import java.util.Set;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.security.domain.Role;
@@ -37,18 +33,18 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class SecurityRoleSynchronizer.
- *
- * @param <A> the generic type
  */
 
 @Component
 @Order(SynchronizersOrder.ROLE)
-public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> {
+public class RoleSynchronizer extends BaseSynchronizer<Role, Long> {
 
     /**
      * The Constant logger.
      */
     private static final Logger logger = LoggerFactory.getLogger(RoleSynchronizer.class);
+
+    private static final Set<String> PRESERVED_ROLE_LOCATION_PREFIXES = Set.of("SYSTEM_");
 
     /**
      * The Constant FILE_EXTENSION_SECURITY_ROLE.
@@ -58,7 +54,7 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
     /**
      * The security role service.
      */
-    private RoleService securityRoleService;
+    private final RoleService securityRoleService;
 
     /**
      * The synchronization callback.
@@ -81,22 +77,8 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
      * @return the service
      */
     @Override
-    public ArtefactService<Role> getService() {
+    public ArtefactService<Role, Long> getService() {
         return securityRoleService;
-    }
-
-
-    /**
-     * Checks if is accepted.
-     *
-     * @param file the file
-     * @param attrs the attrs
-     * @return true, if is accepted
-     */
-    @Override
-    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString()
-                   .endsWith(getFileExtension());
     }
 
     /**
@@ -116,7 +98,7 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Role> parse(String location, byte[] content) throws ParseException {
@@ -125,7 +107,7 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
         for (Role role : roles) {
             Configuration.configureObject(role);
             role.setLocation(location);
-            role.setName(roleIndex.toString());
+            role.setName(role.getName());
             role.setType(Role.ARTEFACT_TYPE);
             role.updateKey();
 
@@ -171,10 +153,10 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(Role artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((Role) artefact);
+        getService().save(artefact);
     }
 
     /**
@@ -185,7 +167,7 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<Role> wrapper, ArtefactPhase flow) {
         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
         return true;
     }
@@ -198,7 +180,15 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
     @Override
     public void cleanup(Role role) {
         try {
-            getService().delete(role);
+            Boolean delete = PRESERVED_ROLE_LOCATION_PREFIXES.stream()
+                                                             .filter(p -> role.getLocation()
+                                                                              .startsWith(p))
+                                                             .findFirst()
+                                                             .map(p -> Boolean.FALSE)
+                                                             .orElse(Boolean.TRUE);
+            if (delete) {
+                getService().delete(role);
+            }
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {
                 logger.error(e.getMessage(), e);

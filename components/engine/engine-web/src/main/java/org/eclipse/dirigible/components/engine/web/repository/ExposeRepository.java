@@ -10,14 +10,23 @@
  */
 package org.eclipse.dirigible.components.engine.web.repository;
 
+import org.eclipse.dirigible.components.base.artefact.ArtefactRepository;
 import org.eclipse.dirigible.components.engine.web.domain.Expose;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The Interface ExposeRepository.
  */
 @Repository("webRepository")
-public interface ExposeRepository extends JpaRepository<Expose, Long> {
+public interface ExposeRepository extends ArtefactRepository<Expose, Long> {
 
+    @Override
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE Expose SET running = :running")
+    void setRunningToAll(@Param("running") boolean running);
 }

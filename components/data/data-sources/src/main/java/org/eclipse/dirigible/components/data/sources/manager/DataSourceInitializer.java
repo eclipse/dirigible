@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.components.data.sources.manager;
 
 import static java.text.MessageFormat.format;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,18 +20,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
+import org.eclipse.dirigible.components.data.sources.domain.DataSourceProperty;
 import org.eclipse.dirigible.components.database.DatabaseParameters;
-import org.eclipse.dirigible.components.tenants.tenant.TenantContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
-
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -50,14 +47,18 @@ public class DataSourceInitializer {
 
     private final List<DataSourceInitializerContributor> contributors;
 
+    private final TenantDataSourceNameManager tenantDataSourceNameManager;
+
     /**
      * Instantiates a new data source initializer.
      *
      * @param applicationContext the application context
      */
-    DataSourceInitializer(ApplicationContext applicationContext, List<DataSourceInitializerContributor> contributors) {
+    DataSourceInitializer(ApplicationContext applicationContext, List<DataSourceInitializerContributor> contributors,
+            TenantDataSourceNameManager tenantDataSourceNameManager) {
         this.applicationContext = applicationContext;
         this.contributors = contributors;
+        this.tenantDataSourceNameManager = tenantDataSourceNameManager;
     }
 
     /**
@@ -67,31 +68,26 @@ public class DataSourceInitializer {
      * @return the javax.sql. data source
      */
     public javax.sql.DataSource initialize(DataSource dataSource) {
-        String name = dataSource.getName();
-        String url = dataSource.getUrl();
-
-        if (name.equals(getSystemDataSourceName())) {
-            if (isInitialized(name)) {
-                return getInitializedDataSource(name);
-            }
-        } else {
-            String currentTenant = TenantContext.getCurrentTenant();
-            if (currentTenant != null) {
-                if (isInitialized(name)) {
-                    return getInitializedDataSource(name);
-                }
-                String tenantSpecificName = getTenantSpecific(currentTenant, name);
-                url = url.replace(name, tenantSpecificName);
-                name = tenantSpecificName;
-            } else {
-                if (isInitialized(name)) {
-                    return getInitializedDataSource(name);
-                }
-            }
+        if (isInitialized(dataSource.getName())) {
+            return getInitializedDataSource(dataSource.getName());
         }
 
+        return initDataSource(dataSource);
+    }
+
+    @SuppressWarnings("resource")
+    private ManagedDataSource initDataSource(DataSource dataSource) {
+        String name = dataSource.getName();
+        String driver = dataSource.getDriver();
+        String url = dataSource.getUrl();
+        String username = dataSource.getUsername();
+        String password = dataSource.getPassword();
+        String schema = dataSource.getSchema();
+
+        List<DataSourceProperty> additionalProperties = dataSource.getProperties();
+
         logger.info("Initializing a datasource with name: [{}]", name);
-        if ("org.h2.Driver".equals(dataSource.getDriver())) {
+        if ("org.h2.Driver".equals(driver)) {
             try {
                 prepareRootFolder(name);
             } catch (IOException ex) {
@@ -101,11 +97,11 @@ public class DataSourceInitializer {
         Properties properties = new Properties();
         Properties contributed = new Properties();
 
-        properties.put("driverClassName", dataSource.getDriver());
+        properties.put("driverClassName", driver);
         properties.put("jdbcUrl", url);
         properties.put("dataSource.url", url);
-        properties.put("dataSource.user", dataSource.getUsername());
-        properties.put("dataSource.password", dataSource.getPassword());
+        properties.put("dataSource.user", username);
+        properties.put("dataSource.password", password);
         properties.put("dataSource.logWriter", new PrintWriter(System.out));
 
         contributors.forEach(contributor -> contributor.contribute(dataSource, contributed));
@@ -115,19 +111,18 @@ public class DataSourceInitializer {
 
         HikariConfig config;
 
-        if (dataSource.getName()
-                      .startsWith("SNOWFLAKE")) {
+        if (name.startsWith("SNOWFLAKE")) {
             config = new HikariConfig(contributed);
-            config.setDriverClassName(dataSource.getDriver());
+            config.setDriverClassName(driver);
             config.setJdbcUrl(contributed.get("jdbcUrl")
                                          .toString());
         } else {
             properties.putAll(contributed);
             config = new HikariConfig(properties);
-            dataSource.getProperties()
-                      .forEach(dsp -> config.addDataSourceProperty(dsp.getName(), dsp.getValue()));
+            additionalProperties.forEach(dsp -> config.addDataSourceProperty(dsp.getName(), dsp.getValue()));
         }
 
+        config.setSchema(schema);
         config.setPoolName(name);
         config.setAutoCommit(true);
         HikariDataSource hds = new HikariDataSource(config);
@@ -141,17 +136,14 @@ public class DataSourceInitializer {
     }
 
     /**
-     * Checks if is initialized.
+     * Checks if it is initialized.
      *
      * @param dataSourceName the data source name
      * @return true, if is initialized
      */
     public boolean isInitialized(String dataSourceName) {
-        String currentTenant = TenantContext.getCurrentTenant();
-        if (currentTenant != null) {
-            return DATASOURCES.containsKey(getTenantSpecific(currentTenant, dataSourceName));
-        }
-        return DATASOURCES.containsKey(dataSourceName);
+        String name = tenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
+        return DATASOURCES.containsKey(name);
 
     }
 
@@ -162,11 +154,8 @@ public class DataSourceInitializer {
      * @return the initialized data source
      */
     public javax.sql.DataSource getInitializedDataSource(String dataSourceName) {
-        String currentTenant = TenantContext.getCurrentTenant();
-        if (currentTenant != null) {
-            return DATASOURCES.get(getTenantSpecific(currentTenant, dataSourceName));
-        }
-        return DATASOURCES.get(dataSourceName);
+        String name = tenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
+        return DATASOURCES.get(name);
     }
 
     /**
@@ -175,33 +164,9 @@ public class DataSourceInitializer {
      * @param dataSourceName the data source name
      */
     public void removeInitializedDataSource(String dataSourceName) {
-        String currentTenant = TenantContext.getCurrentTenant();
-        if (currentTenant != null) {
-            DATASOURCES.remove(getTenantSpecific(currentTenant, dataSourceName));
-        }
-        DATASOURCES.remove(dataSourceName);
+        String name = tenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
+        DATASOURCES.remove(name);
     }
-
-    /**
-     * Gets the default data source name.
-     *
-     * @return the default data source name
-     */
-    public String getDefaultDataSourceName() {
-        return Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT,
-                DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
-    }
-
-    /**
-     * Gets the system data source name.
-     *
-     * @return the system data source name
-     */
-    public String getSystemDataSourceName() {
-        return Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_NAME_SYSTEM,
-                DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM);
-    }
-
 
     private String prepareRootFolder(String name) throws IOException {
         String rootFolder = (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name))
@@ -239,10 +204,6 @@ public class DataSourceInitializer {
               .forEach(key -> properties.put(key, Configuration.get(databaseKeyPrefix + key)));
 
         return properties;
-    }
-
-    private String getTenantSpecific(String currentTenant, String dataSourceName) {
-        return currentTenant + "_" + dataSourceName;
     }
 
 }

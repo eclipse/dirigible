@@ -11,19 +11,14 @@
 package org.eclipse.dirigible.components.data.store.synchronizer;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
-
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.data.store.DataStore;
@@ -37,12 +32,10 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class BpmnSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.ENTITY)
-public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Entity> {
+public class EntitySynchronizer extends BaseSynchronizer<Entity, Long> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(EntitySynchronizer.class);
@@ -51,10 +44,10 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
     public static final String FILE_EXTENSION_ENTITY = ".hbm.xml";
 
     /** The entity service. */
-    private EntityService entityService;
+    private final EntityService entityService;
 
     /** The object store. */
-    private DataStore dataStore;
+    private final DataStore dataStore;
 
     /** The synchronization callback. */
     private SynchronizerCallback callback;
@@ -77,7 +70,7 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
      * @return the service
      */
     @Override
-    public ArtefactService<Entity> getService() {
+    public ArtefactService<Entity, Long> getService() {
         return entityService;
     }
 
@@ -88,19 +81,6 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
      */
     public DataStore getDataStore() {
         return dataStore;
-    }
-
-    /**
-     * Checks if is accepted.
-     *
-     * @param file the file
-     * @param attrs the attrs
-     * @return true, if is accepted
-     */
-    @Override
-    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString()
-                   .endsWith(getFileExtension());
     }
 
     /**
@@ -120,7 +100,7 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Entity> parse(String location, byte[] content) throws ParseException {
@@ -172,10 +152,10 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(Entity artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((Entity) artefact);
+        getService().save(artefact);
     }
 
     /**
@@ -186,14 +166,8 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-        Entity entity = null;
-        if (wrapper.getArtefact() instanceof Entity) {
-            entity = (Entity) wrapper.getArtefact();
-        } else {
-            throw new UnsupportedOperationException(String.format("Trying to process %s as Entity", wrapper.getArtefact()
-                                                                                                           .getClass()));
-        }
+    protected boolean completeImpl(TopologyWrapper<Entity> wrapper, ArtefactPhase flow) {
+        Entity entity = wrapper.getArtefact();
 
         switch (flow) {
             case CREATE:

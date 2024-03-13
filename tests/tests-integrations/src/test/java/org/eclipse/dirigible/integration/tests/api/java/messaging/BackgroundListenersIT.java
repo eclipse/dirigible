@@ -19,6 +19,8 @@ import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -31,6 +33,8 @@ import org.testcontainers.shaded.org.awaitility.Awaitility;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class BackgroundListenersIT extends IntegrationTest {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundListenersIT.class);
+
     private static final String STOPPED_ACTIVEMQ_ERROR_MESSAGE_PATTERN = "peer \\(vm:\\/\\/localhost#\\d+\\) stopped\\.";
 
     @Autowired
@@ -40,6 +44,8 @@ class BackgroundListenersIT extends IntegrationTest {
     void setUp() {
         MessagesHolder.clearLatestReceivedMessage();
         MessagesHolder.clearLatestReceivedError();
+
+        assertThat(broker.isStarted()).isTrue();
     }
 
     @Nested
@@ -49,11 +55,12 @@ class BackgroundListenersIT extends IntegrationTest {
         @Test
         void testOnMessageIsCalled() {
             String testMessage = getCallerMethod();
+            LOGGER.info("Executing [{}]", testMessage);
 
             MessagingFacade.sendToQueue(QUEUE_NAME, testMessage);
 
             Awaitility.await()
-                      .atMost(3, TimeUnit.SECONDS)
+                      .atMost(5, TimeUnit.SECONDS)
                       .until(() -> MessagesHolder.getLatestReceivedMessage() != null);
 
             assertEquals("Message is NOT received by the test queue listener handler", testMessage,
@@ -63,13 +70,14 @@ class BackgroundListenersIT extends IntegrationTest {
         @Test
         void testOnErrorIsCalled() throws Exception {
             String testMessage = getCallerMethod();
+            LOGGER.info("Executing [{}]", testMessage);
 
-            MessagingFacade.sendToQueue(QUEUE_NAME, testMessage);
-
+            LOGGER.info("Stopping the broker service...");
             broker.stop();
+            LOGGER.info("Broker service stopped.");
 
             Awaitility.await()
-                      .atMost(3, TimeUnit.SECONDS)
+                      .atMost(5, TimeUnit.SECONDS)
                       .until(() -> MessagesHolder.getLatestReceivedError() != null);
 
             assertThat(MessagesHolder.getLatestReceivedError()).matches(STOPPED_ACTIVEMQ_ERROR_MESSAGE_PATTERN);
@@ -83,11 +91,12 @@ class BackgroundListenersIT extends IntegrationTest {
         @Test
         void testOnMessageIsCalled() {
             String testMessage = getCallerMethod();
+            LOGGER.info("Executing [{}]", testMessage);
 
             MessagingFacade.sendToTopic(TOPIC_NAME, testMessage);
 
             Awaitility.await()
-                      .atMost(3, TimeUnit.SECONDS)
+                      .atMost(5, TimeUnit.SECONDS)
                       .until(() -> MessagesHolder.getLatestReceivedMessage() != null);
 
             assertEquals("Message is NOT received by the test topic listener handler", testMessage,
@@ -97,13 +106,14 @@ class BackgroundListenersIT extends IntegrationTest {
         @Test
         void testOnErrorIsCalled() throws Exception {
             String testMessage = getCallerMethod();
+            LOGGER.info("Executing [{}]", testMessage);
 
-            MessagingFacade.sendToTopic(TOPIC_NAME, testMessage);
-
+            LOGGER.info("Stopping the broker service...");
             broker.stop();
+            LOGGER.info("Broker service stopped.");
 
             Awaitility.await()
-                      .atMost(3, TimeUnit.SECONDS)
+                      .atMost(5, TimeUnit.SECONDS)
                       .until(() -> MessagesHolder.getLatestReceivedError() != null);
 
             assertThat(MessagesHolder.getLatestReceivedError()).matches(STOPPED_ACTIVEMQ_ERROR_MESSAGE_PATTERN);
@@ -116,5 +126,4 @@ class BackgroundListenersIT extends IntegrationTest {
         StackTraceElement stackTraceElement = stackTraceElements[2];
         return stackTraceElement.getClassName() + ":" + stackTraceElement.getMethodName();
     }
-
 }

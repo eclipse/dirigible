@@ -20,7 +20,6 @@
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-helpers</artifactId>
     	</dependency>
-
     </dependencies>
     
 	<properties>

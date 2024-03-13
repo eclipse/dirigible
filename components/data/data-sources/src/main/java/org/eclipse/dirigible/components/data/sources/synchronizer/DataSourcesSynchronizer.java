@@ -11,19 +11,16 @@
 package org.eclipse.dirigible.components.data.sources.synchronizer;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
-
+import java.util.Set;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
@@ -37,21 +34,21 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class DataSourcesSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.DATASOURCE)
-public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer<DataSource> {
+public class DataSourcesSynchronizer extends BaseSynchronizer<DataSource, Long> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DataSourcesSynchronizer.class);
+
+    private static final Set<String> PRESERVED_DATA_SOURCE_LOCATION_PREFIXES = Set.of("API_", "ENV_", "TENANT_");
 
     /** The Constant FILE_DATASOURCE_EXTENSION. */
     public static final String FILE_DATASOURCE_EXTENSION = ".datasource";
 
     /** The datasource service. */
-    private DataSourceService dataSourceService;
+    private final DataSourceService dataSourceService;
 
     /** The synchronization callback. */
     private SynchronizerCallback callback;
@@ -72,22 +69,8 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
      * @return the service
      */
     @Override
-    public ArtefactService<DataSource> getService() {
+    public ArtefactService<DataSource, Long> getService() {
         return dataSourceService;
-    }
-
-
-    /**
-     * Checks if is accepted.
-     *
-     * @param file the file
-     * @param attrs the attrs
-     * @return true, if is accepted
-     */
-    @Override
-    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString()
-                   .endsWith(getFileExtension());
     }
 
     /**
@@ -165,29 +148,23 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(DataSource artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((DataSource) artefact);
+        getService().save(artefact);
     }
 
     /**
-     * Complete.
+     * Complete impl.
      *
      * @param wrapper the wrapper
      * @param flow the flow
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<DataSource> wrapper, ArtefactPhase flow) {
         try {
-            DataSource datasource = null;
-            if (wrapper.getArtefact() instanceof DataSource) {
-                datasource = (DataSource) wrapper.getArtefact();
-            } else {
-                throw new UnsupportedOperationException(String.format("Trying to process %s as DataSource", wrapper.getArtefact()
-                                                                                                                   .getClass()));
-            }
+            DataSource datasource = wrapper.getArtefact();
 
             switch (flow) {
                 case CREATE:
@@ -219,9 +196,7 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
             }
             return true;
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
+            logger.error(e.getMessage(), e);
             callback.addError(e.getMessage());
             callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
             return false;
@@ -236,16 +211,17 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
     @Override
     public void cleanup(DataSource datasource) {
         try {
-            if (!datasource.getLocation()
-                           .startsWith("API_")
-                    && !datasource.getLocation()
-                                  .startsWith("ENV_")) {
+            Boolean delete = PRESERVED_DATA_SOURCE_LOCATION_PREFIXES.stream()
+                                                                    .filter(p -> datasource.getLocation()
+                                                                                           .startsWith(p))
+                                                                    .findFirst()
+                                                                    .map(p -> Boolean.FALSE)
+                                                                    .orElse(Boolean.TRUE);
+            if (delete) {
                 getService().delete(datasource);
             }
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
+            logger.error(e.getMessage(), e);
             callback.addError(e.getMessage());
             callback.registerState(this, datasource, ArtefactLifecycle.DELETED, e.getMessage());
         }

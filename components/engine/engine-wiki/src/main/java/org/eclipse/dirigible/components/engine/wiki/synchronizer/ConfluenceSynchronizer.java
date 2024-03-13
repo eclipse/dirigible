@@ -16,15 +16,12 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
-
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.engine.wiki.domain.Confluence;
@@ -38,12 +35,10 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class ConfluenceSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.CONFLUENCE)
-public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<Confluence> {
+public class ConfluenceSynchronizer extends BaseSynchronizer<Confluence, Long> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(ConfluenceSynchronizer.class);
@@ -54,10 +49,10 @@ public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<
     private static final String FILE_EXTENSION_CONFLUENCE = ".confluence";
 
     /** The confluence service. */
-    private ConfluenceService confluenceService;
+    private final ConfluenceService confluenceService;
 
     /** The wiki service. */
-    private WikiService wikiService;
+    private final WikiService wikiService;
 
     /** The synchronization callback. */
     private SynchronizerCallback callback;
@@ -80,7 +75,7 @@ public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<
      * @return the service
      */
     @Override
-    public ArtefactService<Confluence> getService() {
+    public ArtefactService<Confluence, Long> getService() {
         return confluenceService;
     }
 
@@ -125,7 +120,7 @@ public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Confluence> parse(String location, byte[] content) throws ParseException {
@@ -178,10 +173,10 @@ public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(Confluence artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((Confluence) artefact);
+        getService().save(artefact);
     }
 
     /**
@@ -192,14 +187,8 @@ public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-        Confluence wiki = null;
-        if (wrapper.getArtefact() instanceof Confluence) {
-            wiki = (Confluence) wrapper.getArtefact();
-        } else {
-            throw new UnsupportedOperationException(String.format("Trying to process %s as Confluence", wrapper.getArtefact()
-                                                                                                               .getClass()));
-        }
+    protected boolean completeImpl(TopologyWrapper<Confluence> wrapper, ArtefactPhase flow) {
+        Confluence wiki = wrapper.getArtefact();
 
         switch (flow) {
             case CREATE:

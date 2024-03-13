@@ -10,12 +10,10 @@
  */
 package org.eclipse.dirigible.components.tenants.domain;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -27,22 +25,24 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "DIRIGIBLE_TENANTS")
-@ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
 public class Tenant {
 
     /** The id. */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TENANT_ID", nullable = false)
-    private long id;
+    private String id;
 
     /** The slug. */
-    @Column(name = "TENANT_SLUG", unique = true, nullable = false)
-    private String slug;
+    @Column(name = "TENANT_SUBDOMAIN", unique = true, nullable = false)
+    private String subdomain;
 
     /** The name. */
     @Column(name = "TENANT_NAME", nullable = false)
     private String name;
+
+    @Column(name = "TENANT_STATUS", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TenantStatus status;
 
     /**
      * Instantiates a new tenant.
@@ -54,7 +54,7 @@ public class Tenant {
      *
      * @return the id
      */
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -63,26 +63,26 @@ public class Tenant {
      *
      * @param id the new id
      */
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
     /**
-     * Gets the slug.
+     * Gets the subdomain.
      *
-     * @return the slug
+     * @return the subdomain
      */
-    public String getSlug() {
-        return slug;
+    public String getSubdomain() {
+        return subdomain;
     }
 
     /**
-     * Sets the slug.
+     * Sets the subdomain.
      *
-     * @param slug the new slug
+     * @param subdomain the new subdomain
      */
-    public void setSlug(String slug) {
-        this.slug = slug;
+    public void setSubdomain(String subdomain) {
+        this.subdomain = subdomain;
     }
 
     /**
@@ -102,4 +102,28 @@ public class Tenant {
     public void setName(String name) {
         this.name = name;
     }
+
+    /**
+     * Gets the status.
+     *
+     * @return the status
+     */
+    public TenantStatus getStatus() {
+        return status;
+    }
+
+    /**
+     * Sets the status.
+     *
+     * @param status the new status
+     */
+    public void setStatus(TenantStatus status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Tenant [id=" + id + ", subdomain=" + subdomain + ", name=" + name + ", status=" + status + "]";
+    }
+
 }

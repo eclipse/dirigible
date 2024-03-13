@@ -10,22 +10,25 @@
  */
 package org.eclipse.dirigible.components.initializers.synchronizer;
 
-import org.eclipse.dirigible.components.base.initializer.Initializer;
+import org.eclipse.dirigible.components.base.ApplicationListenersOrder.ApplicationReadyEventListeners;
 import org.eclipse.dirigible.components.initializers.classpath.ClasspathExpander;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * The Class SynchronizersInitializer.
  */
+@Order(ApplicationReadyEventListeners.SYNCHRONIZATION_INTIALIZER)
 @Component
 @Scope("singleton")
-public class SynchronizationInitializer {
+public class SynchronizationInitializer implements ApplicationListener<ApplicationReadyEvent> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SynchronizationInitializer.class);
 
     /** The synchronization processor. */
     private final SynchronizationProcessor synchronizationProcessor;
@@ -43,7 +46,6 @@ public class SynchronizationInitializer {
      * @param classpathExpander the classpath expander
      * @param initializationProcessor the initialization processor
      */
-    @Autowired
     public SynchronizationInitializer(SynchronizationProcessor synchronizationProcessor, ClasspathExpander classpathExpander,
             InitializationProcessor initializationProcessor) {
         this.synchronizationProcessor = synchronizationProcessor;
@@ -51,17 +53,17 @@ public class SynchronizationInitializer {
         this.initializationProcessor = initializationProcessor;
     }
 
-    /**
-     * Handle context start.
-     *
-     * @param applicationReadyEvent the ApplicationReadyEvent
-     */
-    @EventListener(ApplicationReadyEvent.class)
-    public void handleContextStart(final ApplicationReadyEvent applicationReadyEvent) {
+    @Override
+    public void onApplicationEvent(ApplicationReadyEvent event) {
+        LOGGER.info("Executing...");
+
         synchronizationProcessor.prepareSynchronizers();
         classpathExpander.expandContent();
         synchronizationProcessor.processSynchronizers();
         initializationProcessor.processInitializers();
+
+        LOGGER.info("Completed.");
+
     }
 
 }

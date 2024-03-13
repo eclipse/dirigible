@@ -16,15 +16,12 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
-
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.engine.wiki.domain.Markdown;
@@ -38,12 +35,10 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class MarkdownSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.MARKDOWN)
-public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Markdown> {
+public class MarkdownSynchronizer extends BaseSynchronizer<Markdown, Long> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(MarkdownSynchronizer.class);
@@ -54,10 +49,10 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
     private static final String FILE_EXTENSION_MARKDOWN = ".md";
 
     /** The markdown service. */
-    private MarkdownService markdownService;
+    private final MarkdownService markdownService;
 
     /** The wiki service. */
-    private WikiService wikiService;
+    private final WikiService wikiService;
 
     /** The synchronization callback. */
     private SynchronizerCallback callback;
@@ -80,7 +75,7 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
      * @return the service
      */
     @Override
-    public ArtefactService<Markdown> getService() {
+    public ArtefactService<Markdown, Long> getService() {
         return markdownService;
     }
 
@@ -125,7 +120,7 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Markdown> parse(String location, byte[] content) throws ParseException {
@@ -178,10 +173,10 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(Markdown artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((Markdown) artefact);
+        getService().save(artefact);
     }
 
     /**
@@ -192,14 +187,8 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-        Markdown wiki = null;
-        if (wrapper.getArtefact() instanceof Markdown) {
-            wiki = (Markdown) wrapper.getArtefact();
-        } else {
-            throw new UnsupportedOperationException(String.format("Trying to process %s as Markdown", wrapper.getArtefact()
-                                                                                                             .getClass()));
-        }
+    protected boolean completeImpl(TopologyWrapper<Markdown> wrapper, ArtefactPhase flow) {
+        Markdown wiki = wrapper.getArtefact();
 
         switch (flow) {
             case CREATE:
