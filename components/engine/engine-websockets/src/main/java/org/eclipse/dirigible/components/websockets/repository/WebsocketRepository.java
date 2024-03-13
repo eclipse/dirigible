@@ -10,13 +10,23 @@
  */
 package org.eclipse.dirigible.components.websockets.repository;
 
+import org.eclipse.dirigible.components.base.artefact.ArtefactRepository;
 import org.eclipse.dirigible.components.websockets.domain.Websocket;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The Interface WebsocketRepository.
  */
 @Repository("websocketRepository")
-public interface WebsocketRepository extends JpaRepository<Websocket, Long> {
+public interface WebsocketRepository extends ArtefactRepository<Websocket, Long> {
+
+    @Override
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE Websocket SET running = :running")
+    void setRunningToAll(@Param("running") boolean running);
 }

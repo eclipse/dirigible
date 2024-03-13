@@ -10,10 +10,20 @@
  */
 package org.eclipse.dirigible.components.engine.camel.repository;
 
+import org.eclipse.dirigible.components.base.artefact.ArtefactRepository;
 import org.eclipse.dirigible.components.engine.camel.domain.Camel;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository("camelRepository")
-public interface CamelRepository extends JpaRepository<Camel, Long> {
+public interface CamelRepository extends ArtefactRepository<Camel, Long> {
+
+    @Override
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE Camel SET running = :running")
+    void setRunningToAll(@Param("running") boolean running);
 }

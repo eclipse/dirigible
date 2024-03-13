@@ -10,146 +10,42 @@
  */
 package org.eclipse.dirigible.components.jobs.service;
 
+import static java.text.MessageFormat.format;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.ArtefactService;
+import org.eclipse.dirigible.components.base.artefact.BaseArtefactService;
 import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.eclipse.dirigible.components.jobs.email.JobEmailProcessor;
 import org.eclipse.dirigible.components.jobs.manager.JobsManager;
 import org.eclipse.dirigible.components.jobs.repository.JobRepository;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import static java.text.MessageFormat.format;
 
 /**
  * The Class JobService.
  */
 @Service
 @Transactional
-public class JobService implements ArtefactService<Job> {
+public class JobService extends BaseArtefactService<Job, Long> {
 
-    /** The job repository. */
-    @Autowired
-    private JobRepository jobRepository;
+    private final JobEmailProcessor jobEmailProcessor;
+    private final JobsManager jobsManager;
 
-    /** The job email service. */
-    @Autowired
-    private JobEmailProcessor jobEmailProcessor;
-
-    @Autowired
-    private JobsManager jobsManager;
-
-    /**
-     * Gets the all.
-     *
-     * @return the all
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Job> getAll() {
-        return jobRepository.findAll();
+    public JobService(JobRepository repository, JobEmailProcessor jobEmailProcessor, JobsManager jobsManager) {
+        super(repository);
+        this.jobEmailProcessor = jobEmailProcessor;
+        this.jobsManager = jobsManager;
     }
 
-    /**
-     * Find all.
-     *
-     * @param pageable the pageable
-     * @return the page
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Page<Job> getPages(Pageable pageable) {
-        return jobRepository.findAll(pageable);
-    }
-
-    /**
-     * Find by id.
-     *
-     * @param id the id
-     * @return the job
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Job findById(Long id) {
-        Optional<Job> job = jobRepository.findById(id);
-        if (job.isPresent()) {
-            return job.get();
-        } else {
-            throw new IllegalArgumentException("Job with id does not exist: " + id);
-        }
-    }
-
-    /**
-     * Find by name.
-     *
-     * @param name the name
-     * @return the job
-     */
     @Override
     @Transactional(readOnly = true)
     public Job findByName(String name) {
-        Job filter = new Job();
-        if (name != null && name.startsWith("/")) {
-            name = name.substring(1);
-        }
-        filter.setName(name);
-        filter.setEnabled(null);
-        filter.setStatus(null);
-        Example<Job> example = Example.of(filter);
-        Optional<Job> job = jobRepository.findOne(example);
-        if (job.isPresent()) {
-            return job.get();
-        } else {
-            throw new IllegalArgumentException("Job with name does not exist: " + name);
-        }
-    }
-
-    /**
-     * Find by location.
-     *
-     * @param location the location
-     * @return the list
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Job> findByLocation(String location) {
-        Job filter = new Job();
-        filter.setLocation(location);
-        Example<Job> example = Example.of(filter);
-        List<Job> list = jobRepository.findAll(example);
-        return list;
-    }
-
-    /**
-     * Find by key.
-     *
-     * @param key the key
-     * @return the job
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Job findByKey(String key) {
-        Job filter = new Job();
-        filter.setKey(key);
-        filter.setEnabled(null);
-        filter.setStatus(null);
-        Example<Job> example = Example.of(filter);
-        Optional<Job> job = jobRepository.findOne(example);
-        if (job.isPresent()) {
-            return job.get();
-        }
-        return null;
+        String jobName = (name != null && name.startsWith("/")) ? name.substring(1) : name;
+        return getRepo().findByName(jobName)
+                        .orElseThrow(() -> new IllegalArgumentException("Job with name does not exist: " + jobName));
     }
 
     /**
@@ -177,17 +73,7 @@ public class JobService implements ArtefactService<Job> {
                 jobEmailProcessor.sendEmail(job, JobEmailProcessor.emailSubjectEnable, content);
             }
         }
-        return jobRepository.saveAndFlush(job);
-    }
-
-    /**
-     * Delete.
-     *
-     * @param job the job
-     */
-    @Override
-    public void delete(Job job) {
-        jobRepository.delete(job);
+        return getRepo().saveAndFlush(job);
     }
 
     /**
@@ -201,7 +87,7 @@ public class JobService implements ArtefactService<Job> {
         Job job = findByName(name);
         job.setEnabled(true);
         jobsManager.scheduleJob(job);
-        return jobRepository.saveAndFlush(job);
+        return getRepo().saveAndFlush(job);
     }
 
     /**
@@ -215,7 +101,7 @@ public class JobService implements ArtefactService<Job> {
         Job job = findByName(name);
         job.setEnabled(false);
         jobsManager.unscheduleJob(job.getName(), job.getGroup());
-        return jobRepository.saveAndFlush(job);
+        return getRepo().saveAndFlush(job);
     }
 
     /**
@@ -228,30 +114,29 @@ public class JobService implements ArtefactService<Job> {
      */
     public boolean trigger(String name, Map<String, String> parametersMap) throws Exception {
         Job job = findByName(name);
-        if (job != null) {
-            Map<String, String> memento = new HashMap<String, String>();
-            try {
-                for (Map.Entry<String, String> entry : parametersMap.entrySet()) {
-                    memento.put(entry.getKey(), Configuration.get(entry.getKey()));
-                    Configuration.set(entry.getKey(), entry.getValue());
-                }
-
-                String handler = job.getHandler();
-                Path handlerPath = Path.of(handler);
-
-                try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner()) {
-                    runner.run(handlerPath);
-                } catch (Exception e) {
-                    throw new Exception(e);
-                }
-            } finally {
-                for (Map.Entry<String, String> entry : memento.entrySet()) {
-                    Configuration.set(entry.getKey(), entry.getValue());
-                }
-            }
-        } else {
+        if (job == null) {
             String error = format("Job with name {0} does not exist, hence cannot be triggered", name);
             throw new Exception(error);
+        }
+        Map<String, String> memento = new HashMap<String, String>();
+        try {
+            for (Map.Entry<String, String> entry : parametersMap.entrySet()) {
+                memento.put(entry.getKey(), Configuration.get(entry.getKey()));
+                Configuration.set(entry.getKey(), entry.getValue());
+            }
+
+            String handler = job.getHandler();
+            Path handlerPath = Path.of(handler);
+
+            try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner()) {
+                runner.run(handlerPath);
+            } catch (Exception e) {
+                throw new Exception(e);
+            }
+        } finally {
+            for (Map.Entry<String, String> entry : memento.entrySet()) {
+                Configuration.set(entry.getKey(), entry.getValue());
+            }
         }
 
         return true;

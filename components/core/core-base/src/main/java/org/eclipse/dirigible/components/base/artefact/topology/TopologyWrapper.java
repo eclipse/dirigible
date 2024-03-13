@@ -14,9 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.dirigible.components.base.artefact.Artefact;
-import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.slf4j.Logger;
@@ -33,13 +31,13 @@ public class TopologyWrapper<A extends Artefact> implements TopologicallySortabl
     private static final Logger logger = LoggerFactory.getLogger(TopologyWrapper.class);
 
     /** The artefact. */
-    private A artefact;
+    private final A artefact;
 
     /** The wrappers. */
-    private Map<String, TopologyWrapper<A>> wrappers;
+    private final Map<String, TopologyWrapper<A>> wrappers;
 
     /** The synchronizer. */
-    private Synchronizer<Artefact> synchronizer;
+    private final Synchronizer<A, ?> synchronizer;
 
     /**
      * Instantiates a new topology wrapper.
@@ -48,7 +46,7 @@ public class TopologyWrapper<A extends Artefact> implements TopologicallySortabl
      * @param wrappers the wrappers
      * @param synchronizer the synchronizer
      */
-    public TopologyWrapper(A artefact, Map<String, TopologyWrapper<A>> wrappers, Synchronizer<Artefact> synchronizer) {
+    public TopologyWrapper(A artefact, Map<String, TopologyWrapper<A>> wrappers, Synchronizer<A, ?> synchronizer) {
         this.artefact = artefact;
         this.wrappers = wrappers;
         this.synchronizer = synchronizer;
@@ -69,7 +67,7 @@ public class TopologyWrapper<A extends Artefact> implements TopologicallySortabl
      *
      * @return the synchronizer
      */
-    public Synchronizer<Artefact> getSynchronizer() {
+    public Synchronizer<A, ?> getSynchronizer() {
         return synchronizer;
     }
 
@@ -116,7 +114,7 @@ public class TopologyWrapper<A extends Artefact> implements TopologicallySortabl
     public boolean complete(ArtefactPhase flow) {
         if (synchronizer.isAccepted(getArtefact().getType())) {
             try {
-                return synchronizer.complete((TopologyWrapper<Artefact>) this, flow);
+                return synchronizer.complete(this, flow);
             } catch (Exception e) {
                 if (logger.isErrorEnabled()) {
                     logger.error("Complete failed in this cycle: " + e.getMessage(), e);
@@ -140,7 +138,5 @@ public class TopologyWrapper<A extends Artefact> implements TopologicallySortabl
     public String toString() {
         return "TopologyWrapper [artefact=" + artefact + ", synchronizer=" + synchronizer.getArtefactType() + "]";
     }
-
-
 
 }

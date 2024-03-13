@@ -14,17 +14,12 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-
-import org.eclipse.dirigible.components.base.artefact.ArtefactService;
+import org.eclipse.dirigible.components.base.artefact.BaseArtefactService;
 import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.eclipse.dirigible.components.jobs.domain.JobLog;
 import org.eclipse.dirigible.components.jobs.email.JobEmailProcessor;
 import org.eclipse.dirigible.components.jobs.repository.JobLogRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,156 +28,18 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class JobLogService implements ArtefactService<JobLog> {
+public class JobLogService extends BaseArtefactService<JobLog, Long> {
 
-    /** The job log repository. */
-    @Autowired
-    private JobLogRepository jobLogRepository;
+    private final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
-    /** The job service. */
-    @Autowired
-    private JobService jobService;
+    private final JobEmailProcessor jobEmailProcessor;
+    private final JobService jobService;
 
-    /** The job email processor. */
-    @Autowired
-    private JobEmailProcessor jobEmailProcessor;
-
-    /**
-     * Gets the all.
-     *
-     * @return the all
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<JobLog> getAll() {
-        return jobLogRepository.findAll();
+    public JobLogService(JobLogRepository repository, JobEmailProcessor jobEmailProcessor, JobService jobService) {
+        super(repository);
+        this.jobEmailProcessor = jobEmailProcessor;
+        this.jobService = jobService;
     }
-
-    /**
-     * Find all.
-     *
-     * @param pageable the pageable
-     * @return the page
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Page<JobLog> getPages(Pageable pageable) {
-        return jobLogRepository.findAll(pageable);
-    }
-
-    /**
-     * Find by id.
-     *
-     * @param id the id
-     * @return the job log
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public JobLog findById(Long id) {
-        Optional<JobLog> jobLog = jobLogRepository.findById(id);
-        if (jobLog.isPresent()) {
-            return jobLog.get();
-        } else {
-            throw new IllegalArgumentException("JobLog with id does not exist: " + id);
-        }
-    }
-
-    /**
-     * Find by name.
-     *
-     * @param name the name
-     * @return the job log
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public JobLog findByName(String name) {
-        JobLog filter = new JobLog();
-        filter.setName(name);
-        Example<JobLog> example = Example.of(filter);
-        Optional<JobLog> jobLog = jobLogRepository.findOne(example);
-        if (jobLog.isPresent()) {
-            return jobLog.get();
-        } else {
-            throw new IllegalArgumentException("JobLog with name does not exist: " + name);
-        }
-    }
-
-    /**
-     * Find by name.
-     *
-     * @param name the name
-     * @return the job log
-     */
-    @Transactional(readOnly = true)
-    public List<JobLog> findByJob(String name) {
-        JobLog filter = new JobLog();
-        if (name != null && name.startsWith("/")) {
-            name = name.substring(1);
-        }
-        filter.setJobName(name);
-        filter.setStatus(null);
-        Example<JobLog> example = Example.of(filter);
-        List<JobLog> jobLog = jobLogRepository.findAll(example);
-        return jobLog;
-    }
-
-    /**
-     * Find by location.
-     *
-     * @param location the location
-     * @return the list
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<JobLog> findByLocation(String location) {
-        JobLog filter = new JobLog();
-        filter.setLocation(location);
-        Example<JobLog> example = Example.of(filter);
-        List<JobLog> list = jobLogRepository.findAll(example);
-        return list;
-    }
-
-    /**
-     * Find by key.
-     *
-     * @param key the key
-     * @return the job log
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public JobLog findByKey(String key) {
-        JobLog filter = new JobLog();
-        filter.setKey(key);
-        Example<JobLog> example = Example.of(filter);
-        Optional<JobLog> jobLog = jobLogRepository.findOne(example);
-        if (jobLog.isPresent()) {
-            return jobLog.get();
-        }
-        return null;
-    }
-
-    /**
-     * Save.
-     *
-     * @param jobLog the job log
-     * @return the job log
-     */
-    @Override
-    public JobLog save(JobLog jobLog) {
-        return jobLogRepository.saveAndFlush(jobLog);
-    }
-
-    /**
-     * Delete.
-     *
-     * @param jobLog the job log
-     */
-    @Override
-    public void delete(JobLog jobLog) {
-        jobLogRepository.delete(jobLog);
-    }
-
-    private String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
     /**
      * Job triggered.
@@ -357,8 +214,26 @@ public class JobLogService implements ArtefactService<JobLog> {
         }
         filter.setJobName(jobName);
         Example<JobLog> example = Example.of(filter);
-        List<JobLog> jobLogs = jobLogRepository.findAll(example);
-        jobLogRepository.deleteAll(jobLogs);
+        List<JobLog> jobLogs = getRepo().findAll(example);
+        getRepo().deleteAll(jobLogs);
 
+    }
+
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the job log
+     */
+    @Transactional(readOnly = true)
+    public List<JobLog> findByJob(String name) {
+        JobLog filter = new JobLog();
+        if (name != null && name.startsWith("/")) {
+            name = name.substring(1);
+        }
+        filter.setJobName(name);
+        filter.setStatus(null);
+        Example<JobLog> example = Example.of(filter);
+        return getRepo().findAll(example);
     }
 }

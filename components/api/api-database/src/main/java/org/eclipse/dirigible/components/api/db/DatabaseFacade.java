@@ -195,17 +195,12 @@ public class DatabaseFacade implements InitializingBean {
      * @return the data source
      */
     private static DataSource getDataSource(String datasourceName) {
-        DataSource dataSource = null;
-        if (datasourceName == null) {
-            dataSource = DatabaseFacade.get()
-                                       .getDataSourcesManager()
-                                       .getDefaultDataSource();
-        } else {
-            dataSource = DatabaseFacade.get()
-                                       .getDataSourcesManager()
-                                       .getDataSource(datasourceName);
-        }
-        return dataSource;
+        return datasourceName == null ? DatabaseFacade.get()
+                                                      .getDataSourcesManager()
+                                                      .getDefaultDataSource()
+                : DatabaseFacade.get()
+                                .getDataSourcesManager()
+                                .getDataSource(datasourceName);
     }
 
     // ============ Query ===========

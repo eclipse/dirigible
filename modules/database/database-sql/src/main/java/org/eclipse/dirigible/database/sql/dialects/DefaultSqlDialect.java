@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.DatabaseArtifactTypes;
 import org.eclipse.dirigible.database.sql.DatabaseType;
@@ -58,27 +57,20 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
         implements ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST> {
 
     /** The Constant FUNCTIONS. */
-    public static final Set<String> FUNCTIONS = Collections.synchronizedSet(new HashSet<String>(Arrays.asList(new String[] {"ascii",
-            "char_length", "character_length", "concat", "concat_ws", "field", "find_in_set", "format", "insert", "instr", "lcase", "left",
-            "length", "locate", "lower", "lpad", "ltrim", "mid", "position", "repeat", "replace", "reverse", "right", "rpad", "rtrim",
-            "space", "strcmp", "substr", "substring", "substring_index", "trim", "ucase", "upper",
-
-            "abs", "acos", "asin", "atan", "atan2", "avg", "ceil", "ceiling", "cos", "cot", "count", "degrees", "div", "exp", "floor",
-            "greatest", "least", "ln", "log", "log10", "log2", "max", "min", "mod", "pi", "pow", "power", "radians", "rand", "round",
-            "sign", "sin", "sqrt", "sum", "tan", "truncate",
-
+    public static final Set<String> FUNCTIONS = Collections.synchronizedSet(new HashSet<String>(Arrays.asList("ascii", "char_length",
+            "character_length", "concat", "concat_ws", "field", "find_in_set", "format", "insert", "instr", "lcase", "left", "length",
+            "locate", "lower", "lpad", "ltrim", "mid", "position", "repeat", "replace", "reverse", "right", "rpad", "rtrim", "space",
+            "strcmp", "substr", "substring", "substring_index", "trim", "ucase", "upper", "abs", "acos", "asin", "atan", "atan2", "avg",
+            "ceil", "ceiling", "cos", "cot", "count", "degrees", "div", "exp", "floor", "greatest", "least", "ln", "log", "log10", "log2",
+            "max", "min", "mod", "pi", "pow", "power", "radians", "rand", "round", "sign", "sin", "sqrt", "sum", "tan", "truncate",
             "adddate", "addtime", "curdate", "current_date", "current_time", "current_timestamp", "curtime", "date", "datediff", "date_add",
             "date_format", "date_sub", "day", "dayname", "dayofmonth", "dayofweek", "dayofyear", "extract", "from_days", "hour", "last_day",
             "localtime", "localtimestamp", "makedate", "maketime", "microsecond", "minute", "month", "monthname", "now", "period_add",
             "period_diff", "quarter", "second", "sec_to_time", "str_to_date", "subdate", "subtime", "sysdate", "time", "time_format",
-            "time_to_sec", "timediff", "timestamp", "to_days", "week", "weekday", "weekofyear", "year", "yearweek",
-
-            "bin", "binary", "case", "cast", "coalesce", "connection_id", "conv", "convert", "current_user", "database", "if", "ifnull",
-            "isnull", "last_insert_id", "nullif", "session_user", "system_user", "user", "version",
-
-            "and", "or", "between", "binary", "case", "div", "in", "is", "not", "null", "like", "rlike", "xor"
-
-    })));
+            "time_to_sec", "timediff", "timestamp", "to_days", "week", "weekday", "weekofyear", "year", "yearweek", "bin", "binary", "case",
+            "cast", "coalesce", "connection_id", "conv", "convert", "current_user", "database", "if", "ifnull", "isnull", "last_insert_id",
+            "nullif", "session_user", "system_user", "user", "version", "and", "or", "between", "binary", "case", "div", "in", "is", "not",
+            "null", "like", "rlike", "xor")));
 
     /**
      * Select.
@@ -329,7 +321,7 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
      */
     @Override
     public boolean exists(Connection connection, String table, int type) throws SQLException {
-        return exists(connection, null, table, type);
+        return exists(connection, connection.getSchema(), table, type);
     }
 
     /**
@@ -345,13 +337,13 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
     @Override
     public boolean exists(Connection connection, String schema, String table, int type) throws SQLException {
         boolean exists = false;
-        table = normalizeTableName(table);
+        String normalizeTableName = normalizeTableName(table);
         DatabaseMetaData metadata = connection.getMetaData();
         ResultSet resultSet =
-                metadata.getTables(null, schema, normalizeTableName(table), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
+                metadata.getTables(null, schema, normalizeTableName, ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
         exists = resultSet != null && resultSet.next();
         if (!exists) {
-            resultSet = metadata.getTables(null, null, normalizeTableName(table.toUpperCase()),
+            resultSet = metadata.getTables(null, schema, normalizeTableName.toUpperCase(),
                     ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
             exists = resultSet != null && resultSet.next();
         }
@@ -405,7 +397,8 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
         String[] tokens = table.split("\\.");
         if (tokens.length == 1) {
             return "\"" + table + "\"";
-        } else if (tokens.length == 2) {
+        }
+        if (tokens.length == 2) {
             return "\"" + tokens[0] + "\".\"" + tokens[1] + "\"";
         }
         return table;
@@ -602,6 +595,7 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
      *
      * @return the escape symbol
      */
+    @Override
     public String getEscapeSymbol() {
         return "\"";
     }
@@ -642,8 +636,7 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
     public ResultSet all(Connection connection, String table) throws SQLException {
         String sql = allQuery(table);
         PreparedStatement statement = connection.prepareStatement(sql);
-        ResultSet resultSet = statement.executeQuery();
-        return resultSet;
+        return statement.executeQuery();
     }
 
     /**
@@ -655,10 +648,9 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
     @Override
     public String countQuery(String table) {
         table = normalizeTableName(table);
-        String sql = new SelectBuilder(this).column("COUNT(*)")
-                                            .from(quoteTableName(table))
-                                            .build();
-        return sql;
+        return new SelectBuilder(this).column("COUNT(*)")
+                                      .from(quoteTableName(table))
+                                      .build();
     }
 
     /**
@@ -669,10 +661,9 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
      */
     @Override
     public String allQuery(String table) {
-        String sql = new SelectBuilder(this).column("*")
-                                            .from(quoteTableName(table))
-                                            .build();
-        return sql;
+        return new SelectBuilder(this).column("*")
+                                      .from(quoteTableName(table))
+                                      .build();
     }
 
     /**
@@ -711,7 +702,5 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
     public void importData(Connection connection, String table, InputStream input) throws Exception {
         throw new SQLFeatureNotSupportedException();
     }
-
-
 
 }

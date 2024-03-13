@@ -63,13 +63,15 @@ public class HttpSecurityURIConfigurator {
         authz.requestMatchers(PUBLIC_PATTERNS)
              .permitAll()
 
-             // Authenticated
-             .requestMatchers(AUTHENTICATED_PATTERNS)
-             .authenticated()
+             // NOTE!: the order is important - role checks should be before just authenticated paths
 
              // "DEVELOPER" role required
              .requestMatchers(DEVELOPER_PATTERNS)
              .hasRole(Roles.DEVELOPER.name())
+
+             // Authenticated
+             .requestMatchers(AUTHENTICATED_PATTERNS)
+             .authenticated()
 
              // Deny all other requests
              .anyRequest()

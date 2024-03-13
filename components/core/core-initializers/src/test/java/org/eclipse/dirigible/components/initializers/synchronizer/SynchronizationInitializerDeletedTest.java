@@ -13,9 +13,7 @@ package org.eclipse.dirigible.components.initializers.synchronizer;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-
 import javax.sql.DataSource;
-
 import org.eclipse.dirigible.components.initializers.SynchronousSpringEventsConfig;
 import org.eclipse.dirigible.components.repository.RepositoryConfig;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -94,7 +92,7 @@ public class SynchronizationInitializerDeletedTest {
         try (Connection connection = datasource.getConnection()) {
 
             // initialization
-            initializer.handleContextStart(null);
+            initializer.onApplicationEvent(null);
 
             // check if the definition has been created
             CheckDefinitionUtils.isDefinitionForDeletionExists(connection);

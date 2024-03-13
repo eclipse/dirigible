@@ -10,14 +10,23 @@
  */
 package org.eclipse.dirigible.components.openapi.repository;
 
+import org.eclipse.dirigible.components.base.artefact.ArtefactRepository;
 import org.eclipse.dirigible.components.openapi.domain.OpenAPI;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The Interface OpenAPIRepository.
  */
 @Repository("openAPIRepository")
-public interface OpenAPIRepository extends JpaRepository<OpenAPI, Long> {
+public interface OpenAPIRepository extends ArtefactRepository<OpenAPI, Long> {
 
+    @Override
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE OpenAPI SET running = :running")
+    void setRunningToAll(@Param("running") boolean running);
 }

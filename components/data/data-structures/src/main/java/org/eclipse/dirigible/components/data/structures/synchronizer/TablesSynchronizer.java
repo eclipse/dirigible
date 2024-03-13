@@ -11,21 +11,17 @@
 package org.eclipse.dirigible.components.data.structures.synchronizer;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
-
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.MultitenantBaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
@@ -50,12 +46,10 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class TablesSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.TABLE)
-public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Table> {
+public class TablesSynchronizer extends MultitenantBaseSynchronizer<Table, Long> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(TablesSynchronizer.class);
@@ -64,10 +58,10 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
     private static final String FILE_EXTENSION_TABLE = ".table";
 
     /** The table service. */
-    private TableService tableService;
+    private final TableService tableService;
 
     /** The datasources manager. */
-    private DataSourcesManager datasourcesManager;
+    private final DataSourcesManager datasourcesManager;
 
     /** The synchronization callback. */
     private SynchronizerCallback callback;
@@ -90,21 +84,8 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
      * @return the service
      */
     @Override
-    public ArtefactService<Table> getService() {
+    public ArtefactService<Table, Long> getService() {
         return tableService;
-    }
-
-    /**
-     * Checks if is accepted.
-     *
-     * @param file the file
-     * @param attrs the attrs
-     * @return true, if is accepted
-     */
-    @Override
-    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString()
-                   .endsWith(getFileExtension());
     }
 
     /**
@@ -124,7 +105,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Table> parse(String location, byte[] content) throws ParseException {
@@ -160,6 +141,11 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
         }
     }
 
+    /**
+     * Assign parent.
+     *
+     * @param table the table
+     */
     static void assignParent(Table table) {
         table.getColumns()
              .forEach(c -> c.setTable(table));
@@ -197,6 +183,12 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
         }
     }
 
+    /**
+     * Reassign ids.
+     *
+     * @param table the table
+     * @param maybe the maybe
+     */
     static void reassignIds(Table table, Table maybe) {
         table.getColumns()
              .forEach(c -> {
@@ -292,33 +284,25 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(Table artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((Table) artefact);
+        getService().save(artefact);
     }
 
     /**
-     * Complete.
+     * Complete impl.
      *
      * @param wrapper the wrapper
      * @param flow the flow
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<Table> wrapper, ArtefactPhase flow) {
+        Table table = wrapper.getArtefact();
 
         try (Connection connection = datasourcesManager.getDefaultDataSource()
                                                        .getConnection()) {
-
-            Table table = null;
-            if (wrapper.getArtefact() instanceof Table) {
-                table = (Table) wrapper.getArtefact();
-            } else {
-                throw new UnsupportedOperationException(String.format("Trying to process %s as Table", wrapper.getArtefact()
-                                                                                                              .getClass()));
-            }
-
             switch (flow) {
                 case CREATE:
                     if (ArtefactLifecycle.NEW.equals(table.getLifecycle())) {

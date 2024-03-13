@@ -10,6 +10,11 @@
  */
 package org.eclipse.dirigible.components.openapi.service;
 
+import static org.eclipse.dirigible.components.openapi.repository.OpenAPIRepositoryTest.createOpenAPI;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.List;
 import org.eclipse.dirigible.components.openapi.domain.OpenAPI;
 import org.eclipse.dirigible.components.openapi.repository.OpenAPIRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -23,12 +28,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-import static org.eclipse.dirigible.components.openapi.repository.OpenAPIRepositoryTest.createOpenAPI;
 
 @SpringBootTest(classes = {OpenAPIRepository.class, OpenAPIService.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -99,13 +98,12 @@ class OpenAPIServiceTest {
 
     @Test
     void testDelete() {
-        try {
-            OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
-            openAPIService.save(openAPI);
-            openAPIService.delete(openAPI);
+        OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
+        openAPIService.save(openAPI);
+        openAPIService.delete(openAPI);
+
+        assertThrows(IllegalArgumentException.class, () -> {
             openAPIService.findByName("test");
-        } catch (Exception e) {
-            assertEquals("OpenAPI with name does not exist: test", e.getMessage());
-        }
+        });
     }
 }

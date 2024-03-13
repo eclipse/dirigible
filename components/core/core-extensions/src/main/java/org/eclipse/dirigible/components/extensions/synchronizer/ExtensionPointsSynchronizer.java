@@ -11,19 +11,15 @@
 package org.eclipse.dirigible.components.extensions.synchronizer;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
-
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.extensions.domain.ExtensionPoint;
@@ -36,12 +32,10 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class ExtensionPointsSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.EXTENSIONPOINT)
-public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchronizer<ExtensionPoint> {
+public class ExtensionPointsSynchronizer extends BaseSynchronizer<ExtensionPoint, Long> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(ExtensionPointsSynchronizer.class);
@@ -50,7 +44,7 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
     private static final String FILE_EXTENSION_EXTENSIONPOINT = ".extensionpoint";
 
     /** The extension point service. */
-    private ExtensionPointService extensionPointService;
+    private final ExtensionPointService extensionPointService;
 
     /** The synchronization callback. */
     private SynchronizerCallback callback;
@@ -71,21 +65,8 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
      * @return the service
      */
     @Override
-    public ArtefactService<ExtensionPoint> getService() {
+    public ArtefactService<ExtensionPoint, Long> getService() {
         return extensionPointService;
-    }
-
-    /**
-     * Checks if is accepted.
-     *
-     * @param file the file
-     * @param attrs the attrs
-     * @return true, if is accepted
-     */
-    @Override
-    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString()
-                   .endsWith(getFileExtension());
     }
 
     /**
@@ -105,7 +86,7 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<ExtensionPoint> parse(String location, byte[] content) throws ParseException {
@@ -154,10 +135,10 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(ExtensionPoint artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((ExtensionPoint) artefact);
+        getService().save(artefact);
     }
 
     /**
@@ -168,14 +149,8 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-        ExtensionPoint extensionPoint = null;
-        if (wrapper.getArtefact() instanceof ExtensionPoint) {
-            extensionPoint = (ExtensionPoint) wrapper.getArtefact();
-        } else {
-            throw new UnsupportedOperationException(String.format("Trying to process %s as Extension Point", wrapper.getArtefact()
-                                                                                                                    .getClass()));
-        }
+    protected boolean completeImpl(TopologyWrapper<ExtensionPoint> wrapper, ArtefactPhase flow) {
+        ExtensionPoint extensionPoint = wrapper.getArtefact();
 
         switch (flow) {
             case CREATE:

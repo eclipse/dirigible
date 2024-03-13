@@ -12,7 +12,6 @@ package org.eclipse.dirigible.components.initializers.synchronizer;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -45,6 +44,7 @@ public class SynchronizationJob implements Job {
      * @param context the context
      * @throws JobExecutionException the job execution exception
      */
+    @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
 
         logger.debug("Job {} fired @ {}", context.getJobDetail()
@@ -57,18 +57,14 @@ public class SynchronizationJob implements Job {
             runtime.gc();
             long usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory();
 
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Used memory at the start: %-+,15d", usedMemoryBefore));
-            }
+            logger.debug(String.format("Used memory at the start: %-+,15d", usedMemoryBefore));
 
             jobService.executeSynchronizationJob();
 
             runtime.gc();
             long usedMemoryAfter = runtime.totalMemory() - runtime.freeMemory();
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Used memory at the end:   %-+,15d / delta: %-+,15d", usedMemoryAfter,
-                        (usedMemoryAfter - usedMemoryBefore)));
-            }
+            logger.debug(String.format("Used memory at the end:   %-+,15d / delta: %-+,15d", usedMemoryAfter,
+                    (usedMemoryAfter - usedMemoryBefore)));
 
         });
 

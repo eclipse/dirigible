@@ -10,11 +10,20 @@
  */
 package org.eclipse.dirigible.components.data.store.repository;
 
+import org.eclipse.dirigible.components.base.artefact.ArtefactRepository;
 import org.eclipse.dirigible.components.data.store.domain.Entity;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository("entityRepository")
-public interface EntityRepository extends JpaRepository<Entity, Long> {
+public interface EntityRepository extends ArtefactRepository<Entity, Long> {
 
+    @Override
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE Entity SET running = :running")
+    void setRunningToAll(@Param("running") boolean running);
 }

@@ -10,12 +10,13 @@
  */
 package org.eclipse.dirigible.components.engine.camel.synchronizer;
 
-import org.eclipse.dirigible.components.base.artefact.Artefact;
+import java.nio.file.Paths;
+import java.util.List;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.engine.camel.domain.Camel;
 import org.eclipse.dirigible.components.engine.camel.processor.CamelProcessor;
@@ -26,14 +27,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.List;
-
+/**
+ * The Class CamelSynchronizer.
+ */
 @Component
 @Order(250)
-public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel> {
+public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(CamelSynchronizer.class);
@@ -52,6 +51,7 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
      * Instantiates a new camel synchronizer.
      *
      * @param camelService the camel service
+     * @param camelProcessor the camel processor
      */
     @Autowired
     public CamelSynchronizer(CamelService camelService, CamelProcessor camelProcessor) {
@@ -59,17 +59,24 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
         this.camelProcessor = camelProcessor;
     }
 
-    @Override
-    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString()
-                   .endsWith(getFileExtension());
-    }
-
+    /**
+     * Checks if is accepted.
+     *
+     * @param type the type
+     * @return true, if is accepted
+     */
     @Override
     public boolean isAccepted(String type) {
         return Camel.ARTEFACT_TYPE.equals(type);
     }
 
+    /**
+     * Parses the.
+     *
+     * @param location the location
+     * @param content the content
+     * @return the list
+     */
     @Override
     public List<Camel> parse(String location, byte[] content) {
         Camel camel = new Camel();
@@ -100,28 +107,42 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
         return List.of(camel);
     }
 
+    /**
+     * Retrieve.
+     *
+     * @param location the location
+     * @return the list
+     */
     @Override
     public List<Camel> retrieve(String location) {
         return getService().getAll();
     }
 
+    /**
+     * Sets the status.
+     *
+     * @param artefact the artefact
+     * @param lifecycle the lifecycle
+     * @param error the error
+     */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(Camel artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((Camel) artefact);
+        getService().save(artefact);
     }
 
+    /**
+     * Complete impl.
+     *
+     * @param wrapper the wrapper
+     * @param flow the flow
+     * @return true, if successful
+     */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<Camel> wrapper, ArtefactPhase flow) {
         try {
-            Camel camel = null;
-            if (wrapper.getArtefact() instanceof Camel) {
-                camel = (Camel) wrapper.getArtefact();
-            } else {
-                throw new UnsupportedOperationException(String.format("Trying to process %s as Camel", wrapper.getArtefact()
-                                                                                                              .getClass()));
-            }
+            Camel camel = wrapper.getArtefact();
 
             switch (flow) {
                 case CREATE:
@@ -168,11 +189,21 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
         }
     }
 
+    /**
+     * Gets the service.
+     *
+     * @return the service
+     */
     @Override
-    public ArtefactService<Camel> getService() {
+    public ArtefactService<Camel, Long> getService() {
         return camelService;
     }
 
+    /**
+     * Cleanup.
+     *
+     * @param camel the camel
+     */
     @Override
     public void cleanup(Camel camel) {
         try {
@@ -186,16 +217,31 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
         }
     }
 
+    /**
+     * Sets the callback.
+     *
+     * @param callback the new callback
+     */
     @Override
     public void setCallback(SynchronizerCallback callback) {
         this.callback = callback;
     }
 
+    /**
+     * Gets the file extension.
+     *
+     * @return the file extension
+     */
     @Override
     public String getFileExtension() {
         return FILE_EXTENSION_CAMEL;
     }
 
+    /**
+     * Gets the artefact type.
+     *
+     * @return the artefact type
+     */
     @Override
     public String getArtefactType() {
         return Camel.ARTEFACT_TYPE;

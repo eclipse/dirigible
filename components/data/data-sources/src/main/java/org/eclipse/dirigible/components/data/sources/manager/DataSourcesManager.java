@@ -10,14 +10,14 @@
  */
 package org.eclipse.dirigible.components.data.sources.manager;
 
-import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.data.sources.config.DefaultDataSourceName;
+import org.eclipse.dirigible.components.data.sources.config.SystemDataSourceName;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.service.CustomDataSourcesService;
 import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
 import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,17 +25,16 @@ import org.springframework.stereotype.Component;
  * The Class DataSourcesManager.
  */
 @Component
-public class DataSourcesManager implements InitializingBean {
+public class DataSourcesManager {
 
     private static final Logger logger = LoggerFactory.getLogger(DataSourcesManager.class);
 
-    private static DataSourcesManager INSTANCE;
-
     private final DataSourceService datasourceService;
-
     private final CustomDataSourcesService customDataSourcesService;
-
     private final DataSourceInitializer dataSourceInitializer;
+    private final TenantDataSourceNameManager tenantDataSourceNameManager;
+    private final String defaultDataSourceName;
+    private final String systemDataSourceName;
 
     /**
      * Instantiates a new data sources manager.
@@ -46,30 +45,15 @@ public class DataSourcesManager implements InitializingBean {
      */
     @Autowired
     public DataSourcesManager(DataSourceService datasourceService, CustomDataSourcesService customDataSourcesService,
-            DataSourceInitializer dataSourceInitializer) {
+            DataSourceInitializer dataSourceInitializer, TenantDataSourceNameManager tenantDataSourceNameManager,
+            @DefaultDataSourceName String defaultDataSourceName, @SystemDataSourceName String systemDataSourceName) {
         this.datasourceService = datasourceService;
         this.customDataSourcesService = customDataSourcesService;
         this.dataSourceInitializer = dataSourceInitializer;
+        this.tenantDataSourceNameManager = tenantDataSourceNameManager;
+        this.defaultDataSourceName = defaultDataSourceName;
+        this.systemDataSourceName = systemDataSourceName;
         this.customDataSourcesService.initialize();
-    }
-
-    /**
-     * After properties set.
-     *
-     * @throws Exception the exception
-     */
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        INSTANCE = this;
-    }
-
-    /**
-     * Gets the.
-     *
-     * @return the data sources manager
-     */
-    public static DataSourcesManager get() {
-        return INSTANCE;
     }
 
     /**
@@ -89,7 +73,7 @@ public class DataSourcesManager implements InitializingBean {
      * @return the default data source
      */
     public javax.sql.DataSource getDefaultDataSource() {
-        return getDataSource(dataSourceInitializer.getDefaultDataSourceName());
+        return getDataSource(defaultDataSourceName);
     }
 
     /**
@@ -98,10 +82,8 @@ public class DataSourcesManager implements InitializingBean {
      * @return the system data source
      */
     public javax.sql.DataSource getSystemDataSource() {
-        return getDataSource(dataSourceInitializer.getSystemDataSourceName());
+        return getDataSource(systemDataSourceName);
     }
-
-
 
     /**
      * Gets the data source definition.
@@ -110,14 +92,16 @@ public class DataSourcesManager implements InitializingBean {
      * @return the data source definition
      */
     public DataSource getDataSourceDefinition(String name) {
+        String dataSourceName = tenantDataSourceNameManager.getTenantDataSourceName(name);
         try {
-            return datasourceService.findByName(name);
+            return datasourceService.findByName(dataSourceName);
         } catch (Exception e) {
-            if (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name)) {
+            if (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(dataSourceName)) {
                 if (logger.isErrorEnabled()) {
-                    logger.error("DataSource cannot be initialized, hence fail over database is started as a backup - " + name);
+                    logger.error("DataSource cannot be initialized, hence fail over database is started as a backup - " + dataSourceName);
                 }
-                return new DataSource(name, name, name, "org.h2.Driver", "jdbc:h2:~/DefaultDBFailOver", "sa", "");
+                return new DataSource(dataSourceName, dataSourceName, dataSourceName, "org.h2.Driver", "jdbc:h2:~/DefaultDBFailOver", "sa",
+                        "");
             }
             throw e;
         }
