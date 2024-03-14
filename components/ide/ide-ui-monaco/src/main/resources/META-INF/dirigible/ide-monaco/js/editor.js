@@ -24,45 +24,7 @@ function setResourceApiUrl() {
     }
 }
 
-class TypeScriptUtils {
-
-    static isTypeScriptFile(fileName) {
-        return fileName && fileName.endsWith(".ts");
-    }
-
-    static async loadDTS(monaco) {
-        const res = await fetch('/services/js/all-dts');
-        const allDts = await res.json();
-        for (const dts of allDts) {
-            monaco.languages.typescript.javascriptDefaults.addExtraLib(dts.content, dts.filePath);
-            monaco.languages.typescript.typescriptDefaults.addExtraLib(dts.content, dts.filePath);
-        }
-
-        let cachedDts = window.sessionStorage.getItem('dtsContent');
-        if (cachedDts) {
-            monaco.languages.typescript.javascriptDefaults.addExtraLib(cachedDts, "");
-            monaco.languages.typescript.typescriptDefaults.addExtraLib(cachedDts, "");
-        } else {
-            let xhrModules = new XMLHttpRequest();
-            xhrModules.open('GET', '/services/js/ide-monaco-extensions/api/dts.js');
-            xhrModules.setRequestHeader('X-CSRF-Token', 'Fetch');
-            xhrModules.onload = function (xhrModules) {
-                let dtsContent = xhrModules.target.responseText;
-                monaco.languages.typescript.javascriptDefaults.addExtraLib(dtsContent, "");
-                monaco.languages.typescript.typescriptDefaults.addExtraLib(dtsContent, "");
-                window.sessionStorage.setItem('dtsContent', dtsContent);
-            };
-            xhrModules.onerror = function (error) {
-                console.error('Error loading DTS', error);
-                messageHub.post({
-                    message: 'Error loading DTS'
-                }, 'ide.status.error');
-            };
-            xhrModules.send();
-        }
-    }
-}
-
+// @ts-ignore
 require.config({
     paths: {
         'vs': '/webjars/monaco-editor/min/vs',
@@ -82,6 +44,7 @@ require(['vs/editor/editor.main', 'parser/acorn-loose'], async function (monaco,
         const dirigibleEditor = new DirigibleEditor(monaco, acornLoose, fileName, readOnly, fileType, fileObject);
         dirigibleEditor.configureMonaco();
         await dirigibleEditor.init();
+        dirigibleEditor.subscribeEvents();
 
     } catch (e) {
         console.error(e);
@@ -299,8 +262,10 @@ class FileIO {
                     };
                     if (ViewParameters.parameters.gitName) {
                         if (lineDecorations.length) {
+                            // @ts-ignore
                             fileDescriptor.status = 'modified';
                         } else {
+                            // @ts-ignore
                             fileDescriptor.status = 'unmodified';
                         }
                     }
@@ -372,7 +337,7 @@ class EditorActionsProvider {
             keybindingContext: null,
             contextMenuGroupId: 'fileIO',
             contextMenuOrder: 1.5,
-            run: function (editor) {
+            run: function () {
                 messageHub.post({
                     viewId: "search"
                 }, 'ide-core.openView');
@@ -408,8 +373,8 @@ class EditorActionsProvider {
             keybindingContext: null,
             contextMenuGroupId: 'fileIO',
             contextMenuOrder: 1.5,
-            run: function (editor) {
-                let fileIO = new FileIO();
+            run: function () {
+                const fileIO = new FileIO();
                 messageHub.post({ resourcePath: fileIO.resolveFileName() }, 'ide-core.closeOtherEditors');
             }
         };
@@ -426,7 +391,7 @@ class EditorActionsProvider {
             keybindingContext: null,
             contextMenuGroupId: 'fileIO',
             contextMenuOrder: 1.5,
-            run: function (editor) {
+            run: function () {
                 messageHub.post('', 'ide-core.closeAllEditors');
             }
         };
@@ -449,7 +414,10 @@ class EditorActionsProvider {
                 let fileName = fileIO.resolveFileName();
 
                 const filesWithDisabledFormattingListJson = window.localStorage.getItem('DIRIGIBLE.filesWithDisabledFormattingList');
-                const filesWithDisabledFormattingList = JSON.parse(filesWithDisabledFormattingListJson);
+                let filesWithDisabledFormattingList = undefined;
+                if (filesWithDisabledFormattingListJson) {
+                    filesWithDisabledFormattingList = JSON.parse(filesWithDisabledFormattingListJson);
+                }
 
                 let jsonString = null;
 
@@ -487,7 +455,10 @@ class EditorActionsProvider {
         let fileIO = new FileIO();
         let fileName = fileIO.resolveFileName();
         let filesWithDisabledFormattingListJson = window.localStorage.getItem('DIRIGIBLE.filesWithDisabledFormattingList');
-        let filesWithDisabledFormattingList = JSON.parse(filesWithDisabledFormattingListJson);
+        let filesWithDisabledFormattingList = undefined;
+        if (filesWithDisabledFormattingListJson) {
+            filesWithDisabledFormattingList = JSON.parse(filesWithDisabledFormattingListJson);
+        }
 
         return !filesWithDisabledFormattingList || !filesWithDisabledFormattingList.includes(fileName);
     }
@@ -500,12 +471,6 @@ class DirigibleEditor {
     static loadingOverview = document.getElementById('loadingOverview');
     static sourceBeingChangedProgramatically = false;
     static computeDiff = new Worker("js/workers/computeDiff.js");
-
-    static {
-        DirigibleEditor.computeDiff.onmessage = function (event) {
-            lineDecorations = _editor.deltaDecorations(lineDecorations, event.data);
-        };
-    }
 
     static isDirty(model) {
         return DirigibleEditor.lastSavedVersionId !== model.getAlternativeVersionId();
@@ -647,64 +612,70 @@ class DirigibleEditor {
         }, 'ide.themeChange');
     }
 
+    subscribeEvents() {
+        const fileIO = new FileIO();
+        const editor = this.editor;
+
+        messageHub.subscribe(function (msg) {
+            const file = msg.data && typeof msg.data === 'object' && msg.data.file;
+            if (file && file !== fileName) {
+                return;
+            }
+
+            const model = editor.getModel();
+            if (DirigibleEditor.isDirty(model)) {
+                fileIO.saveText(model.getValue()).then(() => {
+                    DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
+                    DirigibleEditor.dirty = false;
+                });
+            }
+        }, "editor.file.save");
+
+        messageHub.subscribe(function () {
+            const model = editor.getModel();
+            if (DirigibleEditor.isDirty(model)) {
+                fileIO.saveText(model.getValue()).then(() => {
+                    DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
+                    DirigibleEditor.dirty = false;
+                });
+            }
+        }, "editor.file.save.all");
+
+        messageHub.subscribe(function (event) {
+            const file = event.resourcePath;
+            if (file === fileName) {
+                new ViewParameters();
+            }
+        }, "core.editors.reloadParams");
+
+        messageHub.subscribe(function (msg) {
+            const file = msg.resourcePath;
+            if (file !== fileName) {
+                return;
+            }
+            editor.focus();
+        }, "ide-core.setEditorFocusGain");
+    }
+
     async init() {
         const fileIO = new FileIO();
+
         const _fileObject = this.fileObject;
         const fileName = this.fileName;
-        _editor = await this.createEditorInstance();
         const fileMetadata = this.fileObject;
+
+        this.editor = await this.createEditorInstance();
 
         if (fileName) {
             let fileType = this.fileType;
 
             const fileText = fileMetadata.modified;
 
-            messageHub.subscribe(function (msg) {
-                const file = msg.data && typeof msg.data === 'object' && msg.data.file;
-                if (file && file !== fileName) {
-                    return;
-                }
-
-                const model = _editor.getModel();
-                if (DirigibleEditor.isDirty(model)) {
-                    fileIO.saveText(model.getValue()).then(() => {
-                        DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
-                        DirigibleEditor.dirty = false;
-                    });
-                }
-            }, "editor.file.save");
-
-            messageHub.subscribe(function (event) {
-                let file = event.resourcePath;
-                if (file === fileName) {
-                    new ViewParameters();
-                    fileName = fileIO.resolveFileName();
-                }
-            }, "core.editors.reloadParams");
-
-            messageHub.subscribe(function () {
-                let model = _editor.getModel();
-                if (DirigibleEditor.isDirty(model)) {
-                    fileIO.saveText(model.getValue()).then(() => {
-                        DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
-                        DirigibleEditor.dirty = false;
-                    });
-                }
-            }, "editor.file.save.all");
-
-            messageHub.subscribe(function (msg) {
-                let file = msg.resourcePath;
-                if (file !== fileName) {
-                    return;
-                }
-                _editor.focus();
-            }, "ide-core.setEditorFocusGain");
-
-            _editor.onDidFocusEditorText(function () {
+            this.editor.onDidFocusEditorText(function () {
                 messageHub.post({ resourcePath: fileName }, 'ide-core.setFocusedEditor');
             });
 
-            _editor.onDidChangeModel(function () {
+            this.editor.onDidChangeModel(function () {
                 if (_fileObject.isGit) {
                     DirigibleEditor.computeDiff.postMessage(
                         {
@@ -757,26 +728,11 @@ class DirigibleEditor {
             }, "ide.ts.reload")
 
 
-            const editorActionsProvider = new EditorActionsProvider();
-            _editor.setModel(model);
-            if (!this.readOnly) {
-                _editor.addAction(editorActionsProvider.createSaveAction());
-            }
-            _editor.addAction(editorActionsProvider.createSearchAction());
-            _editor.addAction(editorActionsProvider.createCloseAction());
-            _editor.addAction(editorActionsProvider.createCloseOthersAction());
-            _editor.addAction(editorActionsProvider.createCloseAllAction());
-            EditorActionsProvider._toggleAutoFormattingActionRegistration = _editor.addAction(editorActionsProvider.createToggleAutoFormattingAction());
-            _editor.onDidChangeCursorPosition(function (e) {
-                messageHub.post(
-                    {
-                        text: `Line ${e.position.lineNumber}, Column ${e.position.column}`
-                    },
-                    'ide.status.caret',
-                );
-            });
+            this.editor.setModel(model);
+
             let to = 0;
-            _editor.onDidChangeModelContent(function (e) {
+            _editor = this.editor;
+            this.editor.onDidChangeModelContent(function (e) {
                 if (DirigibleEditor.sourceBeingChangedProgramatically) {
                     return;
                 }
@@ -808,10 +764,10 @@ class DirigibleEditor {
         }
     }
 
-    createEditorInstance() {
+    async createEditorInstance() {
         const fileName = this.fileName;
         const readOnly = this.readOnly;
-        return new Promise((resolve, reject) => {
+        const editor = await new Promise((resolve, reject) => {
             setTimeout(function () {
                 try {
                     let containerEl = document.getElementById('embeddedEditor');
@@ -843,6 +799,70 @@ class DirigibleEditor {
                 }
             });
         });
+
+        editor.onDidChangeCursorPosition(function (e) {
+            messageHub.post(
+                {
+                    text: `Line ${e.position.lineNumber}, Column ${e.position.column}`
+                },
+                'ide.status.caret',
+            );
+        });
+
+        const editorActionsProvider = new EditorActionsProvider();
+        if (!this.readOnly) {
+            editor.addAction(editorActionsProvider.createSaveAction());
+        }
+        editor.addAction(editorActionsProvider.createSearchAction());
+        editor.addAction(editorActionsProvider.createCloseAction());
+        editor.addAction(editorActionsProvider.createCloseOthersAction());
+        editor.addAction(editorActionsProvider.createCloseAllAction());
+        EditorActionsProvider._toggleAutoFormattingActionRegistration = editor.addAction(editorActionsProvider.createToggleAutoFormattingAction());
+
+        DirigibleEditor.computeDiff.onmessage = function (event) {
+            lineDecorations = editor.deltaDecorations(lineDecorations, event.data);
+        };
+        return editor;
+    }
+}
+
+class TypeScriptUtils {
+
+    static isTypeScriptFile(fileName) {
+        return fileName && fileName.endsWith(".ts");
+    }
+
+    static async loadDTS(monaco) {
+        const res = await fetch('/services/js/all-dts');
+        const allDts = await res.json();
+        for (const dts of allDts) {
+            monaco.languages.typescript.javascriptDefaults.addExtraLib(dts.content, dts.filePath);
+            monaco.languages.typescript.typescriptDefaults.addExtraLib(dts.content, dts.filePath);
+        }
+
+        let cachedDts = window.sessionStorage.getItem('dtsContent');
+        if (cachedDts) {
+            monaco.languages.typescript.javascriptDefaults.addExtraLib(cachedDts, "");
+            monaco.languages.typescript.typescriptDefaults.addExtraLib(cachedDts, "");
+        } else {
+            let xhrModules = new XMLHttpRequest();
+            xhrModules.open('GET', '/services/js/ide-monaco-extensions/api/dts.js');
+            xhrModules.setRequestHeader('X-CSRF-Token', 'Fetch');
+            xhrModules.onload = function (xhrModules) {
+                // @ts-ignore
+                let dtsContent = xhrModules.target.responseText;
+                monaco.languages.typescript.javascriptDefaults.addExtraLib(dtsContent, "");
+                monaco.languages.typescript.typescriptDefaults.addExtraLib(dtsContent, "");
+                window.sessionStorage.setItem('dtsContent', dtsContent);
+            };
+            xhrModules.onerror = function (error) {
+                console.error('Error loading DTS', error);
+                messageHub.post({
+                    message: 'Error loading DTS'
+                }, 'ide.status.error');
+            };
+            xhrModules.send();
+        }
     }
 }
 
