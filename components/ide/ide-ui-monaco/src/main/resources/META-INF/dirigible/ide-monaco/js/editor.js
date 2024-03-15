@@ -1,6 +1,5 @@
 const messageHub = new FramesMessageHub();
 let csrfToken;
-let _editor;
 let resourceApiUrl;
 let lineDecorations = [];
 
@@ -42,8 +41,8 @@ require(['vs/editor/editor.main', 'parser/acorn-loose'], async function (monaco,
         const fileObject = await fileIO.loadText(fileName);
 
         const dirigibleEditor = new DirigibleEditor(monaco, acornLoose, fileName, readOnly, fileType, fileObject);
-        dirigibleEditor.configureMonaco();
         await dirigibleEditor.init();
+        dirigibleEditor.configureMonaco();
         dirigibleEditor.subscribeEvents();
 
     } catch (e) {
@@ -294,9 +293,27 @@ class FileIO {
 class EditorActionsProvider {
 
     static _toggleAutoFormattingActionRegistration = undefined;
+    static _toggleAutoRevealActionRegistration = undefined;
+    static _autoRevealActionEnabled = true;
+
+    static isAutoFormattingEnabledForCurrentFile() {
+        const fileIO = new FileIO();
+        const fileName = fileIO.resolveFileName();
+        const filesWithDisabledFormattingListJson = window.localStorage.getItem('DIRIGIBLE.filesWithDisabledFormattingList');
+        let filesWithDisabledFormattingList = undefined;
+        if (filesWithDisabledFormattingListJson) {
+            filesWithDisabledFormattingList = JSON.parse(filesWithDisabledFormattingListJson);
+        }
+
+        return !filesWithDisabledFormattingList || !filesWithDisabledFormattingList.includes(fileName);
+    }
+
+    static isAutoRevealEnabled() {
+        const autoRevealEnabled = window.localStorage.getItem('DIRIGIBLE.autoRevealActionEnabled');
+        return autoRevealEnabled === null || autoRevealEnabled === 'true';
+    }
 
     createSaveAction() {
-        const isAutoFormattingEnabledForCurrentFile = this.isAutoFormattingEnabledForCurrentFile;
         const loadingMessage = document.getElementById('loadingMessage');
         return {
             id: 'dirigible-files-save',
@@ -315,7 +332,7 @@ class EditorActionsProvider {
                 if (DirigibleEditor.loadingOverview) {
                     DirigibleEditor.loadingOverview.classList.remove("dg-hidden");
                 }
-                if (isAutoFormattingEnabledForCurrentFile()) {
+                if (EditorActionsProvider.isAutoFormattingEnabledForCurrentFile()) {
                     editor.getAction('editor.action.formatDocument').run().then(() => {
                         DirigibleEditor.saveFileContent(editor);
                     });
@@ -398,10 +415,9 @@ class EditorActionsProvider {
     }
 
     createToggleAutoFormattingAction() {
-        const updateAutoFormattingAction = this.updateAutoFormattingAction;
         return {
             id: 'dirigible-toggle-auto-formatting',
-            label: this.isAutoFormattingEnabledForCurrentFile() ? "Disable Auto-Formatting" : "Enable Auto-Formatting",
+            label: EditorActionsProvider.isAutoFormattingEnabledForCurrentFile() ? "Disable Auto-Formatting" : "Enable Auto-Formatting",
             keybindings: [
                 monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyD
             ],
@@ -438,29 +454,36 @@ class EditorActionsProvider {
                 }
 
                 window.localStorage.setItem('DIRIGIBLE.filesWithDisabledFormattingList', jsonString);
-                updateAutoFormattingAction(editor);
+
+                if (EditorActionsProvider._toggleAutoFormattingActionRegistration) {
+                    // @ts-ignore
+                    EditorActionsProvider._toggleAutoFormattingActionRegistration.dispose();
+                    EditorActionsProvider._toggleAutoFormattingActionRegistration = editor.addAction(new EditorActionsProvider().createToggleAutoFormattingAction());
+                }
             }
         };
     }
 
-    updateAutoFormattingAction(editor) {
-        if (EditorActionsProvider._toggleAutoFormattingActionRegistration) {
-            // @ts-ignore
-            EditorActionsProvider._toggleAutoFormattingActionRegistration.dispose();
-            EditorActionsProvider._toggleAutoFormattingActionRegistration = editor.addAction(new EditorActionsProvider().createToggleAutoFormattingAction());
-        }
-    }
+    createToggleAutoRevealAction() {
+        return {
+            id: 'dirigible-toggle-auto-reveal',
+            label: EditorActionsProvider._autoRevealActionEnabled ? "Disable Auto-Reveal Active File" : "Enable Auto-Reveal Active File",
+            keybindings: [],
+            precondition: null,
+            keybindingContext: null,
+            contextMenuGroupId: 'fileIO',
+            contextMenuOrder: 1.5,
+            run: function (editor) {
+                EditorActionsProvider._autoRevealActionEnabled = !EditorActionsProvider._autoRevealActionEnabled;
+                window.localStorage.setItem('DIRIGIBLE.autoRevealActionEnabled', `${EditorActionsProvider._autoRevealActionEnabled}`);
 
-    isAutoFormattingEnabledForCurrentFile() {
-        let fileIO = new FileIO();
-        let fileName = fileIO.resolveFileName();
-        let filesWithDisabledFormattingListJson = window.localStorage.getItem('DIRIGIBLE.filesWithDisabledFormattingList');
-        let filesWithDisabledFormattingList = undefined;
-        if (filesWithDisabledFormattingListJson) {
-            filesWithDisabledFormattingList = JSON.parse(filesWithDisabledFormattingListJson);
-        }
-
-        return !filesWithDisabledFormattingList || !filesWithDisabledFormattingList.includes(fileName);
+                if (EditorActionsProvider._toggleAutoRevealActionRegistration) {
+                    // @ts-ignore
+                    EditorActionsProvider._toggleAutoRevealActionRegistration.dispose();
+                    EditorActionsProvider._toggleAutoRevealActionRegistration = editor.addAction(new EditorActionsProvider().createToggleAutoRevealAction());
+                }
+            }
+        };
     }
 }
 
@@ -498,6 +521,178 @@ class DirigibleEditor {
         this.readOnly = readOnly;
         this.fileType = fileType;
         this.fileObject = fileObject;
+    }
+
+    async init() {
+        const fileIO = new FileIO();
+
+        this.editor = await this.createEditorInstance();
+
+        if (this.fileName) {
+            let fileType = this.fileType;
+
+            const fileText = this.fileObject.modified;
+
+            if (TypeScriptUtils.isTypeScriptFile(this.fileName)) {
+                const loadImportedFiles = (isReload, importedFiles) => {
+                    for (const importedFile of importedFiles) {
+                        fileIO.loadText(importedFile)
+                            .then((importedFile) => {
+                                const uri = new this.monaco.Uri().with({ path: `/${importedFile.workspace}/${importedFile.project}/${importedFile.filePath}` });
+                                if (isReload) {
+                                    const model = this.monaco.editor.getModel(uri);
+                                    model.setValue(importedFile.sourceCode);
+                                } else {
+                                    this.monaco.editor.createModel(importedFile.sourceCode, fileType, uri);
+                                }
+                                if (importedFile.importedFilesNames?.length > 0) {
+                                    loadImportedFiles(isReload, importedFile.importedFilesNames);
+                                }
+                            })
+                            .catch((status) => {
+                                console.error(status);
+                            })
+                    }
+                };
+                loadImportedFiles(false, this.fileObject.importedFilesNames);
+                // messageHub.subscribe(() => {
+                //     loadImportedFiles(true, fileMetadata.importedFilesNames);
+                // }, "ide.ts.reload")
+            }
+
+            const mainFileUri = new this.monaco.Uri().with({ path: this.fileName });
+            const model = this.monaco.editor.createModel(fileText, fileType || 'text', mainFileUri);
+            DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
+
+            messageHub.subscribe((changed) => {
+                if (changed.fileName === this.fileName) {
+                    return;
+                }
+                DirigibleEditor.sourceBeingChangedProgramatically = true;
+                model.setValue(model.getValue());
+                DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
+                DirigibleEditor.sourceBeingChangedProgramatically = false;
+            }, "ide.ts.reload")
+
+
+            this.editor.setModel(model);
+
+            this.monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module: \n\n> ```\nlet res = require("http/v8/response");\nres.println("Hello World!");``` */ var require = function(moduleName: string) {return new Module();};', 'js:require.js');
+            this.monaco.languages.typescript.javascriptDefaults.addExtraLib('/** $. XSJS API */ var $: any;', 'ts:$.js');
+            await TypeScriptUtils.loadDTS(this.monaco);
+        }
+    }
+
+    async createEditorInstance() {
+        const fileName = this.fileName;
+        const readOnly = this.readOnly;
+        const fileObject = this.fileObject;
+        let to = 0;
+
+        const editor = await new Promise((resolve, reject) => {
+            setTimeout(function () {
+                try {
+                    let containerEl = document.getElementById('embeddedEditor');
+                    if (containerEl && containerEl.childElementCount > 0) {
+                        for (let i = 0; i < containerEl.childElementCount; i++)
+                            // @ts-ignore
+                            containerEl.removeChild(containerEl.children.item(i));
+                    }
+                    const editorConfig = {
+                        value: '',
+                        automaticLayout: true,
+                        readOnly: readOnly,
+                    };
+                    if (TypeScriptUtils.isTypeScriptFile(fileName)) {
+                        // @ts-ignore
+                        editorConfig.language = 'typescript';
+                    }
+
+                    const editor = this.monaco.editor.create(containerEl, editorConfig);
+                    resolve(editor);
+                    window.onresize = function () {
+                        editor.layout();
+                    };
+                    if (DirigibleEditor.loadingOverview) {
+                        DirigibleEditor.loadingOverview.classList.add("dg-hidden")
+                    };
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        });
+
+        editor.onDidChangeModel(function () {
+            if (fileObject.isGit) {
+                DirigibleEditor.computeDiff.postMessage({
+                    oldText: fileObject.git,
+                    newText: fileObject.modified
+                });
+            }
+        });
+
+        editor.onDidChangeModelContent(function (e) {
+            debugger
+            if (DirigibleEditor.sourceBeingChangedProgramatically) {
+                return;
+            }
+
+            if (fileObject.isGit && e.changes) {
+                if (to) {
+                    clearTimeout(to);
+                }
+                to = setTimeout(function () {
+                    DirigibleEditor.computeDiff.postMessage({
+                        oldText: fileObject.git,
+                        newText: editor.getValue()
+                    });
+                }, 200);
+            }
+
+            const dirty = DirigibleEditor.isDirty(editor.getModel());
+            if (dirty !== DirigibleEditor.dirty) {
+                DirigibleEditor.dirty = dirty;
+                messageHub.post({ resourcePath: fileName, isDirty: dirty }, 'ide-core.setEditorDirty');
+            }
+        });
+
+        editor.onDidFocusEditorText(function () {
+            messageHub.post({ resourcePath: fileName }, 'ide-core.setFocusedEditor');
+            if (EditorActionsProvider.isAutoRevealEnabled()) {
+                setTimeout(() => {
+                    messageHub.post({
+                        data: {
+                            filePath: fileName
+                        }
+                    }, 'projects.tree.select');
+                }, 100);
+            }
+        });
+
+        editor.onDidChangeCursorPosition(function (e) {
+            messageHub.post(
+                {
+                    text: `Line ${e.position.lineNumber}, Column ${e.position.column}`
+                },
+                'ide.status.caret',
+            );
+        });
+
+        const editorActionsProvider = new EditorActionsProvider();
+        if (!this.readOnly) {
+            editor.addAction(editorActionsProvider.createSaveAction());
+        }
+        editor.addAction(editorActionsProvider.createSearchAction());
+        editor.addAction(editorActionsProvider.createCloseAction());
+        editor.addAction(editorActionsProvider.createCloseOthersAction());
+        editor.addAction(editorActionsProvider.createCloseAllAction());
+        EditorActionsProvider._toggleAutoFormattingActionRegistration = editor.addAction(editorActionsProvider.createToggleAutoFormattingAction());
+        EditorActionsProvider._toggleAutoRevealActionRegistration = editor.addAction(editorActionsProvider.createToggleAutoRevealAction());
+
+        DirigibleEditor.computeDiff.onmessage = function (event) {
+            lineDecorations = editor.deltaDecorations(lineDecorations, event.data);
+        };
+        return editor;
     }
 
     configureMonaco() {
@@ -655,174 +850,6 @@ class DirigibleEditor {
             }
             editor.focus();
         }, "ide-core.setEditorFocusGain");
-    }
-
-    async init() {
-        const fileIO = new FileIO();
-
-        const _fileObject = this.fileObject;
-        const fileName = this.fileName;
-        const fileMetadata = this.fileObject;
-
-        this.editor = await this.createEditorInstance();
-
-        if (fileName) {
-            let fileType = this.fileType;
-
-            const fileText = fileMetadata.modified;
-
-            this.editor.onDidFocusEditorText(function () {
-                messageHub.post({ resourcePath: fileName }, 'ide-core.setFocusedEditor');
-            });
-
-            this.editor.onDidChangeModel(function () {
-                if (_fileObject.isGit) {
-                    DirigibleEditor.computeDiff.postMessage(
-                        {
-                            oldText: _fileObject.git,
-                            newText: fileText
-                        }
-                    );
-                }
-            });
-
-            if (TypeScriptUtils.isTypeScriptFile(this.fileName)) {
-                const loadImportedFiles = (isReload, importedFiles) => {
-                    for (const importedFile of importedFiles) {
-                        fileIO.loadText(importedFile)
-                            .then((importedFile) => {
-                                const uri = new this.monaco.Uri().with({ path: `/${importedFile.workspace}/${importedFile.project}/${importedFile.filePath}` });
-                                if (isReload) {
-                                    const model = this.monaco.editor.getModel(uri);
-                                    model.setValue(importedFile.sourceCode);
-                                } else {
-                                    this.monaco.editor.createModel(importedFile.sourceCode, fileType, uri);
-                                }
-                                if (importedFile.importedFilesNames?.length > 0) {
-                                    loadImportedFiles(isReload, importedFile.importedFilesNames);
-                                }
-                            })
-                            .catch((status) => {
-                                console.error(status);
-                            })
-                    }
-                };
-                loadImportedFiles(false, fileMetadata.importedFilesNames);
-                messageHub.subscribe(() => {
-                    loadImportedFiles(true, fileMetadata.importedFilesNames);
-                }, "ide.ts.reload")
-            }
-
-            const mainFileUri = new this.monaco.Uri().with({ path: this.fileName });
-            let model = this.monaco.editor.createModel(fileText, fileType || 'text', mainFileUri);
-            DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
-
-            messageHub.subscribe((changed) => {
-                if (changed.fileName === this.fileName) {
-                    return;
-                }
-                DirigibleEditor.sourceBeingChangedProgramatically = true;
-                model.setValue(model.getValue());
-                DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
-                DirigibleEditor.sourceBeingChangedProgramatically = false;
-            }, "ide.ts.reload")
-
-
-            this.editor.setModel(model);
-
-            let to = 0;
-            _editor = this.editor;
-            this.editor.onDidChangeModelContent(function (e) {
-                if (DirigibleEditor.sourceBeingChangedProgramatically) {
-                    return;
-                }
-
-                if (_fileObject.isGit && e.changes) {
-                    if (to) {
-                        clearTimeout(to);
-                    }
-                    to = setTimeout(function () {
-                        DirigibleEditor.computeDiff.postMessage(
-                            {
-                                oldText: _fileObject.git,
-                                newText: _editor.getValue()
-                            }
-                        );
-                    }, 200);
-                }
-
-                let dirty = DirigibleEditor.isDirty(_editor.getModel());
-                if (dirty !== DirigibleEditor.dirty) {
-                    DirigibleEditor.dirty = dirty;
-                    messageHub.post({ resourcePath: fileName, isDirty: dirty }, 'ide-core.setEditorDirty');
-                }
-            });
-
-            this.monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module: \n\n> ```\nlet res = require("http/v8/response");\nres.println("Hello World!");``` */ var require = function(moduleName: string) {return new Module();};', 'js:require.js');
-            this.monaco.languages.typescript.javascriptDefaults.addExtraLib('/** $. XSJS API */ var $: any;', 'ts:$.js');
-            TypeScriptUtils.loadDTS(this.monaco);
-        }
-    }
-
-    async createEditorInstance() {
-        const fileName = this.fileName;
-        const readOnly = this.readOnly;
-        const editor = await new Promise((resolve, reject) => {
-            setTimeout(function () {
-                try {
-                    let containerEl = document.getElementById('embeddedEditor');
-                    if (containerEl && containerEl.childElementCount > 0) {
-                        for (let i = 0; i < containerEl.childElementCount; i++)
-                            // @ts-ignore
-                            containerEl.removeChild(containerEl.children.item(i));
-                    }
-                    const editorConfig = {
-                        value: '',
-                        automaticLayout: true,
-                        readOnly: readOnly,
-                    };
-                    if (TypeScriptUtils.isTypeScriptFile(fileName)) {
-                        // @ts-ignore
-                        editorConfig.language = 'typescript';
-                    }
-
-                    const editor = this.monaco.editor.create(containerEl, editorConfig);
-                    resolve(editor);
-                    window.onresize = function () {
-                        editor.layout();
-                    };
-                    if (DirigibleEditor.loadingOverview) {
-                        DirigibleEditor.loadingOverview.classList.add("dg-hidden")
-                    };
-                } catch (err) {
-                    reject(err);
-                }
-            });
-        });
-
-        editor.onDidChangeCursorPosition(function (e) {
-            messageHub.post(
-                {
-                    text: `Line ${e.position.lineNumber}, Column ${e.position.column}`
-                },
-                'ide.status.caret',
-            );
-        });
-
-        const editorActionsProvider = new EditorActionsProvider();
-        if (!this.readOnly) {
-            editor.addAction(editorActionsProvider.createSaveAction());
-        }
-        editor.addAction(editorActionsProvider.createSearchAction());
-        editor.addAction(editorActionsProvider.createCloseAction());
-        editor.addAction(editorActionsProvider.createCloseOthersAction());
-        editor.addAction(editorActionsProvider.createCloseAllAction());
-        EditorActionsProvider._toggleAutoFormattingActionRegistration = editor.addAction(editorActionsProvider.createToggleAutoFormattingAction());
-
-        DirigibleEditor.computeDiff.onmessage = function (event) {
-            lineDecorations = editor.deltaDecorations(lineDecorations, event.data);
-        };
-        return editor;
     }
 }
 
