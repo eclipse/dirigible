@@ -141,7 +141,7 @@
 
 		<flowable.version>6.8.0</flowable.version>
 
-		<camel.version>4.4.0</camel.version>
+		<camel.version>4.4.1</camel.version>
 
 		<velocity.version>2.3</velocity.version>
 		<wikitext.version>3.0.48.202308291007</wikitext.version>
