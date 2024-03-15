@@ -3,6 +3,10 @@ let csrfToken;
 let resourceApiUrl;
 let lineDecorations = [];
 
+const workspaceAPI = "/services/ide/workspaces";
+const repositoryAPI = "/services/core/repository";
+const registryAPI = "/services/core/registry";
+
 function setResourceApiUrl() {
     const editorUrl = new URL(window.location.href);
     new ViewParameters();
@@ -30,6 +34,29 @@ require.config({
         'parser': 'js/parser'
     }
 });
+
+class Utils {
+
+    static logMessage(message) {
+        messageHub.post({
+            message: message
+        }, 'ide.status.message');
+    }
+
+    static logErrorMessage(errorMessage) {
+        console.error(errorMessage);
+        messageHub.post({
+            message: errorMessage
+        }, 'ide.status.error');
+    }
+
+    static setEditorDirty(fileName, isDirty) {
+        messageHub.post({
+            resourcePath: fileName,
+            isDirty: isDirty
+        }, 'ide-core.setEditorDirty');
+    }
+}
 
 // @ts-ignore
 require(['vs/editor/editor.main', 'parser/acorn-loose'], async function (monaco, acornLoose) {
@@ -94,10 +121,7 @@ class FileIO {
     }
 
     resolveGitProjectName() {
-        if (ViewParameters.useParameters) {
-            return ViewParameters.parameters.gitName;
-        }
-        return FileIO.editorUrl.searchParams.get('gitName');
+        return ViewParameters.useParameters ? ViewParameters.parameters.gitName : FileIO.editorUrl.searchParams.get('gitName')
     }
 
     resolveFileName() {
@@ -109,35 +133,25 @@ class FileIO {
         return FileIO.editorUrl.searchParams.get('file');
     };
 
-    getFileType(fileName) {
-        return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.open("GET", "/services/js/ide-monaco/api/fileTypes.js");
-            xhr.onload = () => {
-                if (xhr.status === 200) {
-                    let fileTypes = JSON.parse(xhr.responseText);
-
-                    let fileType = "text";
-                    if (fileName) {
-                        for (let fileExtension in fileTypes) {
-                            if (fileName.endsWith(fileExtension)) {
-                                fileType = fileTypes[fileExtension];
-                            }
-                        }
+    async getFileType(fileName) {
+        const response = await fetch('/services/js/ide-monaco/api/fileTypes.js');
+        csrfToken = response.headers.get("x-csrf-token");
+        if (response.ok) {
+            const fileTypes = await response.json();
+            let fileType = "text";
+            if (fileName) {
+                for (let fileExtension in fileTypes) {
+                    if (fileName.endsWith(fileExtension)) {
+                        fileType = fileTypes[fileExtension];
                     }
-                    if (fileName && fileName.indexOf(".") === -1 && fileName.toLowerCase().indexOf("dockerfile") > 0) {
-                        fileType = "dockerfile";
-                    }
-
-                    resolve(fileType);
-                } else {
-                    reject(`HTTP ${xhr.status} - ${xhr.statusText}`)
                 }
-                csrfToken = xhr.getResponseHeader("x-csrf-token");
-            };
-            xhr.onerror = () => reject(`HTTP ${xhr.status} - ${xhr.statusText}`);
-            xhr.send();
-        });
+            }
+            if (fileName && fileName.indexOf(".") === -1 && fileName.toLowerCase().indexOf("dockerfile") > 0) {
+                fileType = "dockerfile";
+            }
+            return fileType;
+        }
+        Utils.logErrorMessage(`Unable to determine the fileType of [${fileName}], HTTP: ${response.status}, ${response.statusText}]`);
     };
 
     loadText(file) {
@@ -234,59 +248,50 @@ class FileIO {
         });
     };
 
-    saveText(text, fileName) {
-        return new Promise((resolve, reject) => {
+    async saveText(text, fileName) {
+        try {
             fileName = fileName || this.resolveFileName();
-            if (fileName) {
-                fetch(resourceApiUrl + fileName, {
-                    method: 'PUT',
-                    body: text,
-                    headers: {
-                        'X-Requested-With': 'Fetch',
-                        'X-CSRF-Token': csrfToken,
-                        'Dirigible-Editor': 'Monaco',
-                        'Content-Type': 'text/plain'
-                    }
-                }).then(response => {
-                    if (!response.ok) {
-                        throw new Error(response.statusText);
-                    }
-
-                    resolve(fileName);
-                    let fileDescriptor = {
-                        name: fileName.substring(fileName.lastIndexOf('/') + 1),
-                        path: fileName.substring(fileName.indexOf('/', 1)),
-                        contentType: ViewParameters.parameters.contentType,
-                        workspace: fileName.substring(1, fileName.indexOf('/', 1)),
-                    };
-                    if (ViewParameters.parameters.gitName) {
-                        if (lineDecorations.length) {
-                            // @ts-ignore
-                            fileDescriptor.status = 'modified';
-                        } else {
-                            // @ts-ignore
-                            fileDescriptor.status = 'unmodified';
-                        }
-                    }
-                    messageHub.post({ resourcePath: fileName, isDirty: false }, 'ide-core.setEditorDirty');
-                    messageHub.post(fileDescriptor, 'ide.file.saved');
-                    messageHub.post({
-                        message: `File '${fileName}' saved`
-                    }, 'ide.status.message');
-                    if (TypeScriptUtils.isTypeScriptFile(fileName)) {
-                        messageHub.post({ fileName }, 'ide.ts.reload');
-                    }
-                }).catch(ex => {
-                    reject(ex.message);
-                    messageHub.post({
-                        message: `Error saving '${fileName}'`
-                    }, 'ide.status.error');
-                    // messageHub.post({ data: { file: fileName, error: ex.message } }, 'editor.file.save.failed');
-                });
-            } else {
-                reject('file query parameter is not present in the URL');
+            if (!fileName) {
+                throw new Error(`Unable to save file [${fileName}], file query parameter is not present in the URL`);
             }
-        });
+
+            const response = await fetch(resourceApiUrl + fileName, {
+                method: 'PUT',
+                body: text,
+                headers: {
+                    'X-Requested-With': 'Fetch',
+                    'X-CSRF-Token': csrfToken,
+                    'Dirigible-Editor': 'Monaco',
+                    'Content-Type': 'text/plain'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Unable to save [${fileName}, HTTP: ${response.status}, ${response.statusText}]`);
+            }
+
+            Utils.setEditorDirty(fileName, false);
+
+            messageHub.post({
+                name: fileName.substring(fileName.lastIndexOf('/') + 1),
+                path: fileName.substring(fileName.indexOf('/', 1)),
+                contentType: ViewParameters.parameters.contentType,
+                workspace: fileName.substring(1, fileName.indexOf('/', 1)),
+                status: ViewParameters.parameters.gitName && lineDecorations.length ? 'modified' : 'unmodified'
+            }, 'ide.file.saved');
+
+            Utils.logMessage(`File '${fileName}' saved`);
+
+            if (TypeScriptUtils.isTypeScriptFile(fileName)) {
+                messageHub.post({
+                    fileName
+                }, 'ide.ts.reload');
+            }
+        } catch (e) {
+            // @ts-ignore
+            Utils.logErrorMessage(e.message);
+            throw e;
+        }
     };
 }
 
@@ -325,7 +330,7 @@ class EditorActionsProvider {
             keybindingContext: null,
             contextMenuGroupId: 'fileIO',
             contextMenuOrder: 1.5,
-            run: function (editor) {
+            run: async function (editor) {
                 if (loadingMessage) {
                     loadingMessage.innerText = 'Saving...';
                 }
@@ -333,11 +338,11 @@ class EditorActionsProvider {
                     DirigibleEditor.loadingOverview.classList.remove("dg-hidden");
                 }
                 if (EditorActionsProvider.isAutoFormattingEnabledForCurrentFile()) {
-                    editor.getAction('editor.action.formatDocument').run().then(() => {
-                        DirigibleEditor.saveFileContent(editor);
+                    await editor.getAction('editor.action.formatDocument').run().then(async () => {
+                        await DirigibleEditor.saveFileContent(editor);
                     });
                 } else {
-                    DirigibleEditor.saveFileContent(editor);
+                    await DirigibleEditor.saveFileContent(editor);
                 }
             }
         };
@@ -503,9 +508,9 @@ class DirigibleEditor {
         messageHub.post({ resourcePath: ViewParameters.parameters.file }, 'ide-core.closeEditor');
     }
 
-    static saveFileContent(editor) {
+    static async saveFileContent(editor) {
         const fileIO = new FileIO();
-        fileIO.saveText(editor.getModel().getValue()).then(() => {
+        await fileIO.saveText(editor.getModel().getValue()).then(() => {
             DirigibleEditor.lastSavedVersionId = editor.getModel().getAlternativeVersionId();
             DirigibleEditor.dirty = false;
         });
@@ -529,9 +534,7 @@ class DirigibleEditor {
         this.editor = await this.createEditorInstance();
 
         if (this.fileName) {
-            let fileType = this.fileType;
-
-            const fileText = this.fileObject.modified;
+            const fileType = this.fileType;
 
             if (TypeScriptUtils.isTypeScriptFile(this.fileName)) {
                 const loadImportedFiles = (isReload, importedFiles) => {
@@ -561,7 +564,7 @@ class DirigibleEditor {
             }
 
             const mainFileUri = new this.monaco.Uri().with({ path: this.fileName });
-            const model = this.monaco.editor.createModel(fileText, fileType || 'text', mainFileUri);
+            const model = this.monaco.editor.createModel(this.fileObject.modified, this.fileType || 'text', mainFileUri);
             DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
 
             messageHub.subscribe((changed) => {
@@ -577,8 +580,6 @@ class DirigibleEditor {
 
             this.editor.setModel(model);
 
-            this.monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module: \n\n> ```\nlet res = require("http/v8/response");\nres.println("Hello World!");``` */ var require = function(moduleName: string) {return new Module();};', 'js:require.js');
-            this.monaco.languages.typescript.javascriptDefaults.addExtraLib('/** $. XSJS API */ var $: any;', 'ts:$.js');
             await TypeScriptUtils.loadDTS(this.monaco);
         }
     }
@@ -632,7 +633,6 @@ class DirigibleEditor {
         });
 
         editor.onDidChangeModelContent(function (e) {
-            debugger
             if (DirigibleEditor.sourceBeingChangedProgramatically) {
                 return;
             }
@@ -652,7 +652,7 @@ class DirigibleEditor {
             const dirty = DirigibleEditor.isDirty(editor.getModel());
             if (dirty !== DirigibleEditor.dirty) {
                 DirigibleEditor.dirty = dirty;
-                messageHub.post({ resourcePath: fileName, isDirty: dirty }, 'ide-core.setEditorDirty');
+                Utils.setEditorDirty(fileName, dirty);
             }
         });
 
@@ -764,6 +764,10 @@ class DirigibleEditor {
             jsx: (this.fileName?.endsWith(".tsx") === true) ? "react" : undefined
         });
 
+        this.monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module: \n\n> ```\nlet res = require("http/v8/response");\nres.println("Hello World!");``` */ var require = function(moduleName: string) {return new Module();};', 'js:require.js');
+
+        this.monaco.languages.typescript.javascriptDefaults.addExtraLib('/** $. XSJS API */ var $: any;', 'ts:$.js');
+
         this.monaco.languages.html.registerHTMLLanguageService('xml', {}, { documentFormattingEdits: true });
 
         this.monaco.languages.html.htmlDefaults.setOptions({
@@ -811,28 +815,27 @@ class DirigibleEditor {
         const fileIO = new FileIO();
         const editor = this.editor;
 
-        messageHub.subscribe(function (msg) {
+        messageHub.subscribe(async function (msg) {
             const file = msg.data && typeof msg.data === 'object' && msg.data.file;
-            if (file && file !== fileName) {
+            if (file && file !== fileIO.resolveFileName()) {
                 return;
             }
 
             const model = editor.getModel();
             if (DirigibleEditor.isDirty(model)) {
-                fileIO.saveText(model.getValue()).then(() => {
+                await fileIO.saveText(model.getValue()).then(() => {
                     DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
                     DirigibleEditor.dirty = false;
                 });
             }
         }, "editor.file.save");
 
-        messageHub.subscribe(function () {
+        messageHub.subscribe(async function () {
             const model = editor.getModel();
             if (DirigibleEditor.isDirty(model)) {
-                fileIO.saveText(model.getValue()).then(() => {
-                    DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
-                    DirigibleEditor.dirty = false;
-                });
+                await fileIO.saveText(model.getValue());
+                DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
+                DirigibleEditor.dirty = false;
             }
         }, "editor.file.save.all");
 
