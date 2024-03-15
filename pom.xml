@@ -137,7 +137,7 @@
 		<sshd-core.version>2.12.1</sshd-core.version>
 		<ftpserver.version>1.2.0</ftpserver.version>
 
-		<activemq.version>6.0.1</activemq.version>
+		<activemq.version>6.1.0</activemq.version>
 
 		<flowable.version>6.8.0</flowable.version>
 
