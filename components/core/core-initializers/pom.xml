@@ -60,8 +60,11 @@
 			<artifactId>dirigible-components-ide-git</artifactId>
 			<scope>test</scope>
     	</dependency>
-    	
-    </dependencies>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-data-sources</artifactId>
+		</dependency>
+	</dependencies>
     
 	<properties>
 		<license.header.location>../../../licensing-header.txt</license.header.location>

@@ -73,5 +73,6 @@
 	<logger name="org.eclipse.dirigible.components.initializers.synchronizer" level="INFO"/>
 	<logger name="org.eclipse.dirigible.components.base.synchronizer" level="INFO"/>
 	<logger name="org.eclipse.dirigible.components.tenants" level="INFO"/>
-	
+	<logger name="org.springframework.context.support" level="WARN"/>
+
 </configuration>

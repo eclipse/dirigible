@@ -10,25 +10,15 @@
  */
 package org.eclipse.dirigible.components.initializers.scheduler;
 
-import static org.quartz.JobBuilder.newJob;
-import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
-import static org.quartz.TriggerBuilder.newTrigger;
-
-import java.io.IOException;
-import java.util.Properties;
-
 import jakarta.annotation.PostConstruct;
-
+import org.eclipse.dirigible.components.data.sources.config.SystemDataSourceName;
 import org.eclipse.dirigible.components.initializers.synchronizer.SynchronizationJob;
-import org.quartz.JobDetail;
-import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-import org.quartz.TriggerKey;
+import org.quartz.*;
+import org.quartz.utils.DBConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +26,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
+
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.util.Properties;
+
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
+import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
  * The Class SystemScheduler.
@@ -85,7 +83,13 @@ public class SystemScheduler {
      * @throws SchedulerException the scheduler exception
      */
     @Bean
-    public Scheduler scheduler(Trigger trigger, JobDetail job, SchedulerFactoryBean factory) throws SchedulerException {
+    public Scheduler scheduler(Trigger trigger, JobDetail job, SchedulerFactoryBean factory,
+            @Qualifier("SystemDB") DataSource systemDataSource, @SystemDataSourceName String systemDataSourceName)
+            throws SchedulerException {
+        factory.setDataSource(systemDataSource);
+        DBConnectionManager.getInstance()
+                           .addConnectionProvider(systemDataSourceName, new CustomConnectionProvider(systemDataSource));
+
         logger.debug("Getting a handle to the Scheduler");
         Scheduler scheduler = factory.getScheduler();
         scheduler.scheduleJob(job, trigger);
