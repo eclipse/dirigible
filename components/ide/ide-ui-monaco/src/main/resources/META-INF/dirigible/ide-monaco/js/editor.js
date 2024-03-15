@@ -154,98 +154,99 @@ class FileIO {
         Utils.logErrorMessage(`Unable to determine the fileType of [${fileName}], HTTP: ${response.status}, ${response.statusText}]`);
     };
 
-    loadText(file) {
-        return new Promise((resolve, reject) => {
-            if (file) {
-                const gitProject = this.resolveGitProjectName();
-                let resourceUrl = resourceApiUrl + file;
-                let gitResourceUrl;
-                if (gitProject) {
-                    const gitFolder = "/.git/";
-                    const isGitFolderLocation = file.indexOf(gitFolder) > 0;
-                    if (isGitFolderLocation) {
-                        file = file.substring(file.indexOf(gitFolder) + gitFolder.length);
-                    }
-                    const workspace = file.replace('\\', '/').split('/')[1];
-
-                    let path;
-                    if (isGitFolderLocation) {
-                        path = file.substring(file.indexOf(gitProject) + gitProject.length + 1);
-                        resourceUrl = `${resourceApiUrl}/${workspace}/${path}`;
-                    } else {
-                        path = file.substring(file.indexOf(`/${workspace}/`) + `/${workspace}/`.length);
-                    }
-                    gitResourceUrl = `/services/ide/git/${workspace}/${gitProject}/diff?path=${path}`;
-                }
-                const xhr = new XMLHttpRequest();
-                xhr.open("GET", gitProject ? gitResourceUrl : resourceUrl);
-                xhr.setRequestHeader("X-CSRF-Token", "Fetch");
-                xhr.setRequestHeader('Dirigible-Editor', 'Monaco');
-                xhr.onload = () => {
-                    if (xhr.status === 200) {
-                        if (gitProject) {
-                            const fileObject = JSON.parse(xhr.responseText);
-
-                            if (TypeScriptUtils.isTypeScriptFile(file)) {
-                                const xhr = new XMLHttpRequest();
-                                xhr.open("GET", resourceUrl);
-                                xhr.setRequestHeader("X-CSRF-Token", "Fetch");
-                                xhr.setRequestHeader('Dirigible-Editor', 'Monaco');
-                                xhr.onload = () => {
-                                    if (xhr.status === 200) {
-                                        const typeScriptMetadata = JSON.parse(xhr.responseText);
-                                        resolve({
-                                            isGit: true,
-                                            git: fileObject.original || "", // File is not in git
-                                            modified: fileObject.modified,
-                                            ...typeScriptMetadata
-                                        });
-                                    }
-                                };
-                                xhr.onerror = () => reject(`HTTP ${xhr.status} - ${xhr.statusText}`);
-                                xhr.send();
-                            } else {
-                                resolve({
-                                    isGit: true,
-                                    git: fileObject.original || "", // File is not in git
-                                    modified: fileObject.modified,
-                                });
-                            }
-                        } else {
-                            if (TypeScriptUtils.isTypeScriptFile(file)) {
-                                const typeScriptMetadata = JSON.parse(xhr.responseText);
-                                resolve({
-                                    isGit: false,
-                                    git: "",
-                                    modified: typeScriptMetadata.sourceCode,
-                                    ...typeScriptMetadata
-                                });
-                            } else {
-                                resolve({
-                                    isGit: false,
-                                    git: "",
-                                    modified: xhr.responseText,
-                                });
-                            }
-                        }
-                    } else {
-                        if (xhr.responseText) {
-                            reject(JSON.parse(xhr.responseText));
-                        } else {
-                            reject(`HTTP ${xhr.status} - Error loading '${ViewParameters.parameters.file}'`);
-                        }
-                        messageHub.post({
-                            message: `Error loading '${ViewParameters.parameters.file}'`
-                        }, 'ide.status.error');
-                    }
-                    csrfToken = xhr.getResponseHeader("x-csrf-token");
-                };
-                xhr.onerror = () => reject(`HTTP ${xhr.status} - ${xhr.statusText}`);
-                xhr.send();
-            } else {
-                reject(`HTTP ${400} - 'file' parameter cannot be '${file}'`);
+    async loadText(fileName) {
+        try {
+            fileName = fileName || this.resolveFileName();
+            if (!fileName) {
+                throw new Error(`Unable to load file [${fileName}], file query parameter is not present in the URL`);
             }
-        });
+
+            const gitProject = this.resolveGitProjectName();
+            let resourceUrl = resourceApiUrl + fileName;
+            let gitResourceUrl;
+            if (gitProject) {
+                const gitFolder = "/.git/";
+                const isGitFolderLocation = fileName.indexOf(gitFolder) > 0;
+                if (isGitFolderLocation) {
+                    fileName = fileName.substring(fileName.indexOf(gitFolder) + gitFolder.length);
+                }
+                const workspace = fileName.replace('\\', '/').split('/')[1];
+
+                let path;
+                if (isGitFolderLocation) {
+                    path = fileName.substring(fileName.indexOf(gitProject) + gitProject.length + 1);
+                    resourceUrl = `${resourceApiUrl}/${workspace}/${path}`;
+                } else {
+                    path = fileName.substring(fileName.indexOf(`/${workspace}/`) + `/${workspace}/`.length);
+                }
+                gitResourceUrl = `/services/ide/git/${workspace}/${gitProject}/diff?path=${path}`;
+            }
+
+            const response = await fetch(gitProject ? gitResourceUrl : resourceUrl, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'Fetch',
+                    'Dirigible-Editor': 'Monaco',
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Unable to load [${fileName}, HTTP: ${response.status}, ${response.statusText}]`);
+            }
+
+            csrfToken = response.headers.get("x-csrf-token");
+            if (gitProject) {
+                const fileObject = await response.json();
+
+                if (TypeScriptUtils.isTypeScriptFile(fileName)) {
+                    const responseTypeScript = await fetch(resourceUrl, {
+                        method: 'GET',
+                        headers: {
+                            'X-Requested-With': 'Fetch',
+                            'Dirigible-Editor': 'Monaco',
+                        }
+                    });
+
+                    if (!responseTypeScript.ok) {
+                        throw new Error(`Unable to load [${fileName}, HTTP: ${response.status}, ${response.statusText}]`);
+                    }
+
+                    const typeScriptMetadata = await responseTypeScript.json();
+                    return {
+                        isGit: true,
+                        git: fileObject.original || "", // File is not in git
+                        modified: fileObject.modified,
+                        ...typeScriptMetadata
+                    };
+                } else {
+                    return {
+                        isGit: true,
+                        git: fileObject.original || "", // File is not in git
+                        modified: fileObject.modified,
+                    };
+                }
+            } else {
+                if (TypeScriptUtils.isTypeScriptFile(fileName)) {
+                    const typeScriptMetadata = await response.json();
+                    return {
+                        isGit: false,
+                        git: "",
+                        modified: typeScriptMetadata.sourceCode,
+                        ...typeScriptMetadata
+                    };
+                } else {
+                    return {
+                        isGit: false,
+                        git: "",
+                        modified: await response.text(),
+                    };
+                }
+            }
+        } catch (e) {
+            // @ts-ignore
+            Utils.logErrorMessage(e.message);
+            throw e;
+        }
     };
 
     async saveText(text, fileName) {
