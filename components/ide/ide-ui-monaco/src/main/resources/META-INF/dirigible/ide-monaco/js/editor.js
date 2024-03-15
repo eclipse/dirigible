@@ -35,6 +35,26 @@ require.config({
     }
 });
 
+// @ts-ignore
+require(['vs/editor/editor.main', 'parser/acorn-loose'], async function (monaco, acornLoose) {
+    try {
+        const fileIO = new FileIO();
+        const fileName = fileIO.resolveFileName();
+        const readOnly = fileIO.isReadOnly();
+        const fileType = await fileIO.getFileType(fileName);
+        const fileObject = await fileIO.loadText(fileName);
+
+        const dirigibleEditor = new DirigibleEditor(monaco, acornLoose, fileName, readOnly, fileType, fileObject);
+        await dirigibleEditor.init();
+        dirigibleEditor.configureMonaco();
+        dirigibleEditor.subscribeEvents();
+
+    } catch (e) {
+        console.error(e);
+        DirigibleEditor.closeEditor();
+    }
+});
+
 class Utils {
 
     static logMessage(message) {
@@ -57,26 +77,6 @@ class Utils {
         }, 'ide-core.setEditorDirty');
     }
 }
-
-// @ts-ignore
-require(['vs/editor/editor.main', 'parser/acorn-loose'], async function (monaco, acornLoose) {
-    try {
-        const fileIO = new FileIO();
-        const fileName = fileIO.resolveFileName();
-        const readOnly = fileIO.isReadOnly();
-        const fileType = await fileIO.getFileType(fileName);
-        const fileObject = await fileIO.loadText(fileName);
-
-        const dirigibleEditor = new DirigibleEditor(monaco, acornLoose, fileName, readOnly, fileType, fileObject);
-        await dirigibleEditor.init();
-        dirigibleEditor.configureMonaco();
-        dirigibleEditor.subscribeEvents();
-
-    } catch (e) {
-        console.error(e);
-        DirigibleEditor.closeEditor();
-    }
-});
 
 class ViewParameters {
 
@@ -195,53 +195,44 @@ class FileIO {
             }
 
             csrfToken = response.headers.get("x-csrf-token");
+
+            const fileMetadata = {
+                isGit: false,
+                git: '',
+                modified: '',
+                workspace: '',
+                project: '',
+                filePath: '',
+                sourceCode: '',
+                importedFilesNames: [],
+            };
+            debugger
             if (gitProject) {
                 const fileObject = await response.json();
-
-                if (TypeScriptUtils.isTypeScriptFile(fileName)) {
-                    const responseTypeScript = await fetch(resourceUrl, {
-                        method: 'GET',
-                        headers: {
-                            'X-Requested-With': 'Fetch',
-                            'Dirigible-Editor': 'Monaco',
-                        }
-                    });
-
-                    if (!responseTypeScript.ok) {
-                        throw new Error(`Unable to load [${fileName}, HTTP: ${response.status}, ${response.statusText}]`);
-                    }
-
-                    const typeScriptMetadata = await responseTypeScript.json();
-                    return {
-                        isGit: true,
-                        git: fileObject.original || "", // File is not in git
-                        modified: fileObject.modified,
-                        ...typeScriptMetadata
-                    };
-                } else {
-                    return {
-                        isGit: true,
-                        git: fileObject.original || "", // File is not in git
-                        modified: fileObject.modified,
-                    };
-                }
+                fileMetadata.isGit = true;
+                fileMetadata.git = fileObject.original || ""; // File is not in git
+                fileMetadata.modified = fileObject.modified;
+                fileMetadata.sourceCode = fileObject.modified;
             } else {
-                if (TypeScriptUtils.isTypeScriptFile(fileName)) {
-                    const typeScriptMetadata = await response.json();
-                    return {
-                        isGit: false,
-                        git: "",
-                        modified: typeScriptMetadata.sourceCode,
-                        ...typeScriptMetadata
-                    };
-                } else {
-                    return {
-                        isGit: false,
-                        git: "",
-                        modified: await response.text(),
-                    };
+                const fileContent = await response.text();
+                fileMetadata.modified = fileContent;
+                fileMetadata.sourceCode = fileContent;
+            }
+            if (TypeScriptUtils.isTypeScriptFile(fileName)) {
+
+                // Find all ES6 import statements and their modules
+                const importRegex = /import\s+(?:\{(?:\s*\w+\s*,?)*\}|(?:\*\s+as\s+\w+)|\w+)\s+from\s+['"]([^'"]+)['"]/g;
+
+                let match;
+                while ((match = importRegex.exec(fileMetadata.sourceCode)) !== null) {
+                    const modulePath = match[1];
+                    if (!modulePath.startsWith('sdk/')) {
+                        // @ts-ignore
+                        fileMetadata.importedFilesNames.push(modulePath);
+                    }
                 }
             }
+            return fileMetadata;
         } catch (e) {
             // @ts-ignore
             Utils.logErrorMessage(e.message);
