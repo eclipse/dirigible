@@ -106,7 +106,7 @@
 		<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
 		<maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
 		<maven-source-plugin.version>3.3.0</maven-source-plugin.version>
-		<maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
+		<maven-gpg-plugin.version>3.2.0</maven-gpg-plugin.version>
 		<jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
 		<spotbugs-maven-plugin.version>4.8.3.1</spotbugs-maven-plugin.version>
 		<formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
@@ -115,7 +115,7 @@
 		<license-maven-plugin.version>4.3</license-maven-plugin.version>
 
 		<spring.boot.version>3.2.0</spring.boot.version>
-		<springdoc.version>2.3.0</springdoc.version>
+		<springdoc.version>2.4.0</springdoc.version>
 
 		<graalvm.version>23.1.1</graalvm.version>
 
@@ -131,7 +131,7 @@
 		<c3p0.version>0.10.0-pre7</c3p0.version>
 		<guava.version>33.0.0-jre</guava.version>
 		<icu4j.version>74.2</icu4j.version>
-		<classgraph.version>4.8.165</classgraph.version>
+		<classgraph.version>4.8.168</classgraph.version>
 
 		<mina-core.version>2.2.3</mina-core.version>
 		<sshd-core.version>2.12.1</sshd-core.version>
@@ -167,14 +167,14 @@
 		<jquery.version>3.6.0</jquery.version>
 		<jqplot.version>1.0.8r1250</jqplot.version>
 		<webjars.bootstrap.version>5.3.2</webjars.bootstrap.version>
-		<webjars.locator.version>0.50</webjars.locator.version>
+		<webjars.locator.version>0.52</webjars.locator.version>
 		<webjars.locator.core.version>0.56</webjars.locator.core.version>
 		<es5-shim.version>4.6.7</es5-shim.version>
 		<angular-file-upload.version>2.6.1</angular-file-upload.version>
 		<angularjs.version>1.8.2</angularjs.version>
 		<fontawesome.version>4.7.0</fontawesome.version>
 
-		<testcontainers.version>1.19.6</testcontainers.version>
+		<testcontainers.version>1.19.7</testcontainers.version>
 		<logcaptor.version>2.9.2</logcaptor.version>
 
 		<profile.content.phase>none</profile.content.phase>
