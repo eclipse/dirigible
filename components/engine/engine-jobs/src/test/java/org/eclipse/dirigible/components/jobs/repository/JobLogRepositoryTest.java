@@ -93,9 +93,8 @@ public class JobLogRepositoryTest {
     public static void createJobLog(JobLogRepository jobLogRepository, String location, String name, String description,
             Set<String> dependencies, String jobName, String handler, Timestamp triggeredAt, long triggeredId, Timestamp finishedAt,
             JobStatus status, String message) {
-        JobLog jobLog =
-                new JobLog(location, name, description, dependencies, jobName, handler, triggeredAt, triggeredId, finishedAt, status,
-                        message);
+        JobLog jobLog = new JobLog(location, name, description, dependencies, jobName, handler, triggeredAt, triggeredId, finishedAt,
+                status, message);
         jobLogRepository.save(jobLog);
     }
 

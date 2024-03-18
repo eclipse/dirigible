@@ -253,7 +253,8 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                     HealthCheckStatus.getInstance()
                                      .getJobs()
                                      .setStatus(synchronizer.getClass()
-                                                            .getSimpleName(), JobStatus.Running);
+                                                            .getSimpleName(),
+                                             JobStatus.Running);
                     List<TopologyWrapper<? extends Artefact>> unmodifiable = wrappers.stream()
                                                                                      .filter(w -> w.getSynchronizer()
                                                                                                    .equals(synchronizer))
@@ -281,12 +282,14 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                         HealthCheckStatus.getInstance()
                                          .getJobs()
                                          .setStatus(synchronizer.getClass()
-                                                                .getSimpleName(), JobStatus.Failed);
+                                                                .getSimpleName(),
+                                                 JobStatus.Failed);
                     }
                     HealthCheckStatus.getInstance()
                                      .getJobs()
                                      .setStatus(synchronizer.getClass()
-                                                            .getSimpleName(), JobStatus.Succeeded);
+                                                            .getSimpleName(),
+                                             JobStatus.Succeeded);
                 }
 
                 // Processing of cross-synchronizer artefacts once again due to eventual dependency issues
@@ -645,7 +648,8 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
             return;
         }
         Definition definition = new Definition(location, FilenameUtils.getBaseName(file.getFileName()
-                                                                                       .toString()), type, content);
+                                                                                       .toString()),
+                type, content);
         // check whether this artefact has been processed in the past already
         Definition maybe = definitionService.findByKey(definition.getKey());
         Map<String, Definition> map = checkSynchronizerMap(synchronizer);
@@ -747,9 +751,10 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                 logger.error(errorMessage);
                 errors.add(errorMessage);
                 if (wrapper.getArtefact()
-                           .getError() != null && !wrapper.getArtefact()
-                                                          .getError()
-                                                          .equals("")) {
+                           .getError() != null
+                        && !wrapper.getArtefact()
+                                   .getError()
+                                   .equals("")) {
                     errorMessage += " | " + wrapper.getArtefact()
                                                    .getError();
                 }
@@ -775,9 +780,10 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
     public void registerFatals(List<TopologyWrapper<? extends Artefact>> remained, ArtefactLifecycle lifecycle) {
         if (remained.size() > 0) {
             for (TopologyWrapper<? extends Artefact> wrapper : remained) {
-                String errorMessage = String.format("Fatal undepleted Artefact of type: [%s] with key: [%s] in phase: [%s]",
-                        wrapper.getArtefact()
-                               .getType(), wrapper.getId(), lifecycle);
+                String errorMessage = String.format(
+                        "Fatal undepleted Artefact of type: [%s] with key: [%s] in phase: [%s]", wrapper.getArtefact()
+                                                                                                        .getType(),
+                        wrapper.getId(), lifecycle);
                 logger.error(errorMessage);
                 errors.add(errorMessage);
                 Synchronizer synchronizer = wrapper.getSynchronizer();
