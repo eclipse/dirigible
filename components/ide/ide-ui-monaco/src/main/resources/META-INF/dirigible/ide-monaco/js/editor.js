@@ -3,9 +3,10 @@ let csrfToken;
 let resourceApiUrl;
 let lineDecorations = [];
 
-const workspaceAPI = "/services/ide/workspaces";
-const repositoryAPI = "/services/core/repository";
-const registryAPI = "/services/core/registry";
+const WORKSPACE_API = "/services/ide/workspaces";
+const REPOSITORY_API = "/services/core/repository";
+const REGISTRY_API = "/services/core/repository/registry/public";
+
 
 function setResourceApiUrl() {
     const editorUrl = new URL(window.location.href);
@@ -39,10 +40,10 @@ require.config({
 require(['vs/editor/editor.main', 'parser/acorn-loose'], async function (monaco, acornLoose) {
     try {
         const fileIO = new FileIO();
-        const fileName = fileIO.resolveFileName();
+        const fileName = fileIO.resolvePath();
         const readOnly = fileIO.isReadOnly();
         const fileType = await fileIO.getFileType(fileName);
-        const fileObject = await fileIO.loadText(fileName);
+        const fileObject = await fileIO.loadText(fileName, true);
 
         const dirigibleEditor = new DirigibleEditor(monaco, acornLoose, fileName, readOnly, fileType, fileObject);
         await dirigibleEditor.init();
@@ -113,6 +114,13 @@ class FileIO {
         new ViewParameters();
     }
 
+    /**
+     * "workspace", "repository" or "registry"
+     */
+    getResourceType() {
+        return ViewParameters.useParameters ? ViewParameters.parameters.resourceType : FileIO.editorUrl.searchParams.get('rtype');
+    }
+
     isReadOnly() {
         if (ViewParameters.useParameters) {
             return ViewParameters.parameters.readOnly || false;
@@ -124,14 +132,54 @@ class FileIO {
         return ViewParameters.useParameters ? ViewParameters.parameters.gitName : FileIO.editorUrl.searchParams.get('gitName')
     }
 
-    resolveFileName() {
+    resolvePath() {
         if (ViewParameters.useParameters) {
             this.readOnly = ViewParameters.parameters.readOnly || false;
             return ViewParameters.parameters.file;
         }
         this.readOnly = FileIO.editorUrl.searchParams.get('readOnly') || false;
         return FileIO.editorUrl.searchParams.get('file');
-    };
+    }
+
+    resolveWorkspace() {
+        const fileName = this.resolvePath();
+        if (fileName) {
+            return fileName.replaceAll('\\', '/').split('/')[1]
+        }
+        return '';
+    }
+
+    resolveProjectName(filePath) {
+        let path = this.resolvePath();
+        if (path && filePath.startsWith('../')) {
+            const fileNameTokens = path.split('/');
+            const relativeTokens = filePath.split('../');
+            for (let i = 0; i < relativeTokens.length; i++) {
+                fileNameTokens.pop();
+            }
+            path = fileNameTokens.join('/') + '/' + relativeTokens.filter(e => e != '').join('/');
+        }
+        if (path) {
+            return path.replaceAll('\\', '/').split('/')[2]
+        }
+        return '';
+    }
+
+    resolveFilePath(filePath) {
+        let path = this.resolvePath();
+        if (path && filePath.startsWith('../')) {
+            const fileNameTokens = path.split('/');
+            const relativeTokens = filePath.split('../');
+            for (let i = 0; i < relativeTokens.length; i++) {
+                fileNameTokens.pop();
+            }
+            path = fileNameTokens.join('/') + '/' + relativeTokens.filter(e => e != '').join('/');
+        }
+        if (path) {
+            return path.replaceAll('\\', '/').split('/').slice(2).join('/');
+        }
+        return '';
+    }
 
     async getFileType(fileName) {
         const response = await fetch('/services/js/ide-monaco/api/fileTypes.js');
@@ -154,63 +202,111 @@ class FileIO {
         Utils.logErrorMessage(`Unable to determine the fileType of [${fileName}], HTTP: ${response.status}, ${response.statusText}]`);
     };
 
-    async loadText(fileName) {
+    buildRegistryUrl(filePath) {
+        return `${REGISTRY_API}${filePath.startsWith('/') ? '' : '/'}${filePath}`;
+    }
+
+    buildRepositoryUrl(path) {
+        return `${REPOSITORY_API}${path.startsWith('/') ? '' : '/'}${path}`;
+    }
+
+    buildWorkspaceUrl(workspace, filePath) {
+        return `${WORKSPACE_API}/${workspace}/${filePath}`;
+    }
+
+    buildFileRequestMetadata(path, workspace, filePath, loadGitMetadata) {
+        let url;
+        let isGitProject = false;
+
+        switch (this.getResourceType()) {
+            case "registry":
+                url = this.buildRegistryUrl(filePath);
+                break;
+            case "repository":
+                url = this.buildRepositoryUrl(path);
+                break;
+            default:
+                url = this.buildWorkspaceUrl(workspace, filePath);
+        }
+
+        const gitProject = this.resolveGitProjectName();
+        if (loadGitMetadata && gitProject) {
+            const gitFolder = "/.git/";
+            const isGitFolderLocation = path.indexOf(gitFolder) > 0;
+            if (isGitFolderLocation) {
+                path = path.substring(path.indexOf(gitFolder) + gitFolder.length);
+            }
+
+            let diffPath;
+            if (isGitFolderLocation) {
+                diffPath = path.substring(path.indexOf(gitProject) + gitProject.length + 1);
+            } else {
+                diffPath = path.substring(path.indexOf(`/${workspace}/`) + `/${workspace}/`.length);
+            }
+            url = `/services/ide/git/${workspace}/${gitProject}/diff?path=${diffPath}`;
+            isGitProject = true;
+        }
+        return {
+            url: url,
+            isGitProject: isGitProject,
+        };
+    }
+
+    async loadText(path, loadGitMetadata = false) {
         try {
-            fileName = fileName || this.resolveFileName();
-            if (!fileName) {
-                throw new Error(`Unable to load file [${fileName}], file query parameter is not present in the URL`);
+            path = path ?? this.resolvePath();
+            if (!path) {
+                throw new Error(`Unable to load file [${path}], file query parameter is not present in the URL`);
             }
+            const workspace = this.resolveWorkspace();
+            const projectName = this.resolveProjectName(path);
+            const filePath = this.resolveFilePath(path);
 
-            const gitProject = this.resolveGitProjectName();
-            let resourceUrl = resourceApiUrl + fileName;
-            let gitResourceUrl;
-            if (gitProject) {
-                const gitFolder = "/.git/";
-                const isGitFolderLocation = fileName.indexOf(gitFolder) > 0;
-                if (isGitFolderLocation) {
-                    fileName = fileName.substring(fileName.indexOf(gitFolder) + gitFolder.length);
-                }
-                const workspace = fileName.replace('\\', '/').split('/')[1];
+            const requestMetadata = this.buildFileRequestMetadata(path, workspace, filePath, loadGitMetadata);
+            let response;
 
-                let path;
-                if (isGitFolderLocation) {
-                    path = fileName.substring(fileName.indexOf(gitProject) + gitProject.length + 1);
-                    resourceUrl = `${resourceApiUrl}/${workspace}/${path}`;
-                } else {
-                    path = fileName.substring(fileName.indexOf(`/${workspace}/`) + `/${workspace}/`.length);
+            try {
+                response = await fetch(requestMetadata.url, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'Fetch',
+                        'Dirigible-Editor': 'Monaco',
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`Unable to load [${path}, HTTP: ${response.status}, ${response.statusText}]`);
                 }
-                gitResourceUrl = `/services/ide/git/${workspace}/${gitProject}/diff?path=${path}`;
+            } catch (e) {
+                // Fallback to file in Registry
+                response = await fetch(this.buildRegistryUrl(filePath), {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'Fetch',
+                        'Dirigible-Editor': 'Monaco',
+                    }
+                });
+                requestMetadata.isGitProject = false;
             }
-
-            const response = await fetch(gitProject ? gitResourceUrl : resourceUrl, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'Fetch',
-                    'Dirigible-Editor': 'Monaco',
-                }
-            });
-
             if (!response.ok) {
-                throw new Error(`Unable to load [${fileName}, HTTP: ${response.status}, ${response.statusText}]`);
+                throw new Error(`Unable to load [${path}, HTTP: ${response.status}, ${response.statusText}]`);
             }
 
             csrfToken = response.headers.get("x-csrf-token");
 
             const fileMetadata = {
-                isGit: false,
+                workspace: workspace,
+                project: projectName,
+                filePath: filePath,
+                isGit: requestMetadata.isGitProject,
                 git: '',
                 modified: '',
-                workspace: '',
-                project: '',
-                filePath: '',
                 sourceCode: '',
                 importedFilesNames: [],
             };
-            debugger
-            if (gitProject) {
+
+            if (requestMetadata.isGitProject) {
                 const fileObject = await response.json();
-                fileMetadata.isGit = true;
-                fileMetadata.git = fileObject.original || ""; // File is not in git
+                fileMetadata.git = fileObject.original ?? ""; // File is not in git
                 fileMetadata.modified = fileObject.modified;
                 fileMetadata.sourceCode = fileObject.modified;
             } else {
@@ -218,7 +314,7 @@ class FileIO {
                 fileMetadata.modified = fileContent;
                 fileMetadata.sourceCode = fileContent;
             }
-            if (TypeScriptUtils.isTypeScriptFile(fileName)) {
+            if (TypeScriptUtils.isTypeScriptFile(path)) {
 
                 // Find all ES6 import statements and their modules
                 const importRegex = /import\s+(?:\{(?:\s*\w+\s*,?)*\}|(?:\*\s+as\s+\w+)|\w+)\s+from\s+['"]([^'"]+)['"]/g;
@@ -228,7 +324,7 @@ class FileIO {
                     const modulePath = match[1];
                     if (!modulePath.startsWith('sdk/')) {
                         // @ts-ignore
-                        fileMetadata.importedFilesNames.push(modulePath);
+                        fileMetadata.importedFilesNames.push(`${modulePath}.ts`);
                     }
                 }
             }
@@ -242,7 +338,7 @@ class FileIO {
 
     async saveText(text, fileName) {
         try {
-            fileName = fileName || this.resolveFileName();
+            fileName = fileName || this.resolvePath();
             if (!fileName) {
                 throw new Error(`Unable to save file [${fileName}], file query parameter is not present in the URL`);
             }
@@ -295,7 +391,7 @@ class EditorActionsProvider {
 
     static isAutoFormattingEnabledForCurrentFile() {
         const fileIO = new FileIO();
-        const fileName = fileIO.resolveFileName();
+        const fileName = fileIO.resolvePath();
         const filesWithDisabledFormattingListJson = window.localStorage.getItem('DIRIGIBLE.filesWithDisabledFormattingList');
         let filesWithDisabledFormattingList = undefined;
         if (filesWithDisabledFormattingListJson) {
@@ -389,7 +485,7 @@ class EditorActionsProvider {
             contextMenuOrder: 1.5,
             run: function () {
                 const fileIO = new FileIO();
-                messageHub.post({ resourcePath: fileIO.resolveFileName() }, 'ide-core.closeOtherEditors');
+                messageHub.post({ resourcePath: fileIO.resolvePath() }, 'ide-core.closeOtherEditors');
             }
         };
     }
@@ -424,7 +520,7 @@ class EditorActionsProvider {
             contextMenuOrder: 1.5,
             run: function (editor) {
                 let fileIO = new FileIO();
-                let fileName = fileIO.resolveFileName();
+                let fileName = fileIO.resolvePath();
 
                 const filesWithDisabledFormattingListJson = window.localStorage.getItem('DIRIGIBLE.filesWithDisabledFormattingList');
                 let filesWithDisabledFormattingList = undefined;
@@ -529,27 +625,26 @@ class DirigibleEditor {
             const fileType = this.fileType;
 
             if (TypeScriptUtils.isTypeScriptFile(this.fileName)) {
-                const loadImportedFiles = (isReload, importedFiles) => {
+                const loadImportedFiles = async (isReload, importedFiles) => {
                     for (const importedFile of importedFiles) {
-                        fileIO.loadText(importedFile)
-                            .then((importedFile) => {
-                                const uri = new this.monaco.Uri().with({ path: `/${importedFile.workspace}/${importedFile.project}/${importedFile.filePath}` });
-                                if (isReload) {
-                                    const model = this.monaco.editor.getModel(uri);
-                                    model.setValue(importedFile.sourceCode);
-                                } else {
-                                    this.monaco.editor.createModel(importedFile.sourceCode, fileType, uri);
-                                }
-                                if (importedFile.importedFilesNames?.length > 0) {
-                                    loadImportedFiles(isReload, importedFile.importedFilesNames);
-                                }
-                            })
-                            .catch((status) => {
-                                console.error(status);
-                            })
+                        try {
+                            const importedFileMetadata = await fileIO.loadText(importedFile);
+                            const uri = new this.monaco.Uri().with({ path: `/${importedFileMetadata.workspace}/${importedFileMetadata.filePath}` });
+                            if (isReload) {
+                                const model = this.monaco.editor.getModel(uri);
+                                model.setValue(importedFileMetadata.sourceCode);
+                            } else {
+                                this.monaco.editor.createModel(importedFileMetadata.sourceCode, fileType, uri);
+                            }
+                            if (importedFileMetadata.importedFilesNames?.length > 0) {
+                                await loadImportedFiles(isReload, importedFileMetadata.importedFilesNames);
+                            }
+                        } catch (e) {
+                            Utils.logErrorMessage(e);
+                        }
                     }
                 };
-                loadImportedFiles(false, this.fileObject.importedFilesNames);
+                await loadImportedFiles(false, this.fileObject.importedFilesNames);
                 // messageHub.subscribe(() => {
                 //     loadImportedFiles(true, fileMetadata.importedFilesNames);
                 // }, "ide.ts.reload")
@@ -809,7 +904,7 @@ class DirigibleEditor {
 
         messageHub.subscribe(async function (msg) {
             const file = msg.data && typeof msg.data === 'object' && msg.data.file;
-            if (file && file !== fileIO.resolveFileName()) {
+            if (file && file !== fileIO.resolvePath()) {
                 return;
             }
 
