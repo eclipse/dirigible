@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.components.initializers.scheduler;
+package org.eclipse.dirigible.components.jobs.config;
 
 import org.quartz.utils.ConnectionProvider;
 

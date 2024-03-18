@@ -1,7 +1,8 @@
 package org.eclipse.dirigible.components.tenants.tenant;
 
-import java.util.Objects;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
+
+import java.util.Objects;
 
 class TenantImpl implements Tenant {
 
@@ -21,6 +22,14 @@ class TenantImpl implements Tenant {
         this.name = name;
         this.subdomain = subdomain;
         this.defaultTenant = Objects.equals(id, DEFAULT_TENANT_ID);
+    }
+
+    static Tenant getDefaultTenant() {
+        return DEFAULT_TENANT;
+    }
+
+    static Tenant createFromEntity(org.eclipse.dirigible.components.tenants.domain.Tenant tenant) {
+        return new TenantImpl(tenant.getId(), tenant.getName(), tenant.getSubdomain());
     }
 
     @Override
@@ -63,13 +72,5 @@ class TenantImpl implements Tenant {
             return false;
         TenantImpl other = (TenantImpl) obj;
         return Objects.equals(id, other.id);
-    }
-
-    static Tenant getDefaultTenant() {
-        return DEFAULT_TENANT;
-    }
-
-    static Tenant createFromEntity(org.eclipse.dirigible.components.tenants.domain.Tenant tenant) {
-        return new TenantImpl(tenant.getId(), tenant.getName(), tenant.getSubdomain());
     }
 }

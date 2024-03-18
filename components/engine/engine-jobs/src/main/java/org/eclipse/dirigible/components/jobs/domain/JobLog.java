@@ -10,19 +10,12 @@
  */
 package org.eclipse.dirigible.components.jobs.domain;
 
-import java.sql.Timestamp;
-import java.util.Set;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
+import com.google.gson.annotations.Expose;
+import jakarta.persistence.*;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 
-import com.google.gson.annotations.Expose;
+import java.sql.Timestamp;
+import java.util.Set;
 
 /**
  * The JobLogDefinition serialization object.
@@ -30,30 +23,6 @@ import com.google.gson.annotations.Expose;
 @Entity
 @Table(name = "DIRIGIBLE_JOB_LOGS")
 public class JobLog extends Artefact {
-
-    /** The Constant JOB_LOG_STATUS_TRIGGRED. */
-    public static final short JOB_LOG_STATUS_TRIGGRED = 0;
-
-    /** The Constant JOB_LOG_STATUS_FINISHED. */
-    public static final short JOB_LOG_STATUS_FINISHED = 1;
-
-    /** The Constant JOB_LOG_STATUS_FAILED. */
-    public static final short JOB_LOG_STATUS_FAILED = -1;
-
-    /** The Constant JOB_LOG_STATUS_LOGGED. */
-    public static final short JOB_LOG_STATUS_LOGGED = 2;
-
-    /** The Constant JOB_LOG_STATUS_ERROR. */
-    public static final short JOB_LOG_STATUS_ERROR = 3;
-
-    /** The Constant JOB_LOG_STATUS_WARN. */
-    public static final short JOB_LOG_STATUS_WARN = 4;
-
-    /** The Constant JOB_LOG_STATUS_INFO. */
-    public static final short JOB_LOG_STATUS_INFO = 5;
-
-    /** The Constant JOB_LOG_STATUS_UNKNOWN. */
-    public static final short JOB_LOG_STATUS_UNKNOWN = 99;
 
     /** The Constant ARTEFACT_TYPE. */
     public static final String ARTEFACT_TYPE = "job-log";
@@ -89,15 +58,18 @@ public class JobLog extends Artefact {
     @Expose
     private Timestamp finishedAt;
 
-    /** The status. */
-    @Column(name = "JOBLOG_STATUS", columnDefinition = "SMALLINT", nullable = false)
-    @Expose
-    private Short status;
+    @Column(name = "JOBLOG_STATUS", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private JobStatus status;
 
     /** The message. */
     @Column(name = "JOBLOG_MESSAGE", columnDefinition = "VARCHAR", nullable = true, length = 2000)
     @Expose
     private String message;
+
+    @Column(name = "JOBLOG_TENANT_ID", columnDefinition = "VARCHAR", nullable = false)
+    @Expose
+    private String tenantId;
 
     /**
      * Instantiates a new job log.
@@ -123,7 +95,7 @@ public class JobLog extends Artefact {
      * @param message the message
      */
     public JobLog(String location, String name, String description, Set<String> dependencies, String jobName, String handler,
-            Timestamp triggeredAt, Long triggeredId, Timestamp finishedAt, Short status, String message) {
+            Timestamp triggeredAt, Long triggeredId, Timestamp finishedAt, JobStatus status, String message) {
         super(location, name, ARTEFACT_TYPE, description, dependencies);
         this.jobName = jobName;
         this.handler = handler;
@@ -247,7 +219,7 @@ public class JobLog extends Artefact {
      *
      * @return the status
      */
-    public Short getStatus() {
+    public JobStatus getStatus() {
         return status;
     }
 
@@ -256,7 +228,7 @@ public class JobLog extends Artefact {
      *
      * @param status the new status
      */
-    public void setStatus(Short status) {
+    public void setStatus(JobStatus status) {
         this.status = status;
     }
 
@@ -278,6 +250,12 @@ public class JobLog extends Artefact {
         this.message = message;
     }
 
+    @Override
+    public void updateKey() {
+        super.updateKey();
+        this.key = this.key + KEY_SEPARATOR + tenantId;
+    }
+
     /**
      * To string.
      *
@@ -285,9 +263,16 @@ public class JobLog extends Artefact {
      */
     @Override
     public String toString() {
-        return "JobLog{" + "id=" + id + ", jobName=" + jobName + ", handler=" + handler + ", triggeredAt=" + triggeredAt + ", triggeredId="
-                + triggeredId + ", finishedAt=" + finishedAt + ", status=" + status + ", message=" + message + ", location=" + location
-                + ", name=" + name + ", type=" + type + ", description=" + description + ", key=" + key + ", dependencies=" + dependencies
-                + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + '}';
+        return "JobLog{" + "id=" + id + ", jobName='" + jobName + '\'' + ", handler='" + handler + '\'' + ", triggeredAt=" + triggeredAt
+                + ", triggeredId=" + triggeredId + ", finishedAt=" + finishedAt + ", status=" + status + ", message='" + message + '\''
+                + ", tenantId='" + tenantId + '\'' + '}';
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 }

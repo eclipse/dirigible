@@ -10,9 +10,6 @@
  */
 package org.eclipse.dirigible.components.jobs.synchronizer;
 
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
@@ -20,7 +17,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.MultitenantBaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.jobs.domain.Job;
@@ -35,23 +32,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.util.List;
+
 /**
  * The Class JobSynchronizer.
  */
 @Component
 @Order(SynchronizersOrder.JOB)
-public class JobSynchronizer extends BaseSynchronizer<Job, Long> {
-
-    /**
-     * The Constant logger.
-     */
-    private static final Logger logger = LoggerFactory.getLogger(JobSynchronizer.class);
+public class JobSynchronizer extends MultitenantBaseSynchronizer<Job, Long> {
 
     /**
      * The Constant FILE_JOB_EXTENSION.
      */
     public static final String FILE_EXTENSION_JOB = ".job";
-
+    /**
+     * The Constant logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(JobSynchronizer.class);
     /**
      * The job service.
      */

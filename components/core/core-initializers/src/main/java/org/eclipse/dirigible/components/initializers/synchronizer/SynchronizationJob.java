@@ -10,47 +10,76 @@
  */
 package org.eclipse.dirigible.components.initializers.synchronizer;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import org.quartz.Job;
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.jobs.SystemJob;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+import org.quartz.SimpleScheduleBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 
 /**
  * The Class SynchronizationJob.
  */
 @Component
-@Scope("singleton")
-public class SynchronizationJob implements Job {
+class SynchronizationJob extends SystemJob {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(SynchronizationJob.class);
 
     /** The executor. */
-    private static ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
 
-    /** The job service. */
     @Autowired
     private SynchronizationJobService jobService;
+
+
+    @Override
+    protected String getTriggerKey() {
+        return "SynchronizationJobTrigger";
+    }
+
+    @Override
+    protected String getTriggerDescription() {
+        return "Synchronization trigger";
+    }
+
+    @Override
+    protected SimpleScheduleBuilder getSchedule() {
+        int frequencyInSec = org.eclipse.dirigible.commons.config.Configuration.getAsInt(Configuration.SYNCHRONIZER_FREQUENCY, 10);
+        logger.info("Configuring trigger to fire every {} seconds", frequencyInSec);
+
+        return simpleSchedule().withIntervalInSeconds(frequencyInSec)
+                               .repeatForever();
+    }
+
+    @Override
+    protected String getJobKey() {
+        return "SynchronizationJobDetail";
+    }
+
+    @Override
+    protected String getJobDescription() {
+        return "Invoke Synchronization Job service...";
+    }
 
     /**
      * Execute.
      *
      * @param context the context
-     * @throws JobExecutionException the job execution exception
      */
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException {
+    public void execute(JobExecutionContext context) {
 
-        logger.debug("Job {} fired @ {}", context.getJobDetail()
-                                                 .getKey()
-                                                 .getName(),
-                context.getFireTime());
+        logger.info("Job {} fired @ {}", context.getJobDetail()
+                                                .getKey()
+                                                .getName(), context.getFireTime());
 
         executor.submit(() -> {
             Runtime runtime = Runtime.getRuntime();

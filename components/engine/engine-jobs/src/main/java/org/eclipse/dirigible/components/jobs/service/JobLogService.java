@@ -10,18 +10,23 @@
  */
 package org.eclipse.dirigible.components.jobs.service;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 import org.eclipse.dirigible.components.base.artefact.BaseArtefactService;
+import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
+import org.eclipse.dirigible.components.base.tenant.Tenant;
+import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.eclipse.dirigible.components.jobs.domain.JobLog;
+import org.eclipse.dirigible.components.jobs.domain.JobStatus;
 import org.eclipse.dirigible.components.jobs.email.JobEmailProcessor;
 import org.eclipse.dirigible.components.jobs.repository.JobLogRepository;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * The Class JobLogService.
@@ -34,11 +39,16 @@ public class JobLogService extends BaseArtefactService<JobLog, Long> {
 
     private final JobEmailProcessor jobEmailProcessor;
     private final JobService jobService;
+    private final TenantContext tenantContext;
+    private final Tenant defaultTenant;
 
-    public JobLogService(JobLogRepository repository, JobEmailProcessor jobEmailProcessor, JobService jobService) {
+    public JobLogService(JobLogRepository repository, JobEmailProcessor jobEmailProcessor, JobService jobService,
+            TenantContext tenantContext, @DefaultTenant Tenant defaultTenant) {
         super(repository);
         this.jobEmailProcessor = jobEmailProcessor;
         this.jobService = jobService;
+        this.tenantContext = tenantContext;
+        this.defaultTenant = defaultTenant;
     }
 
     /**
@@ -49,11 +59,11 @@ public class JobLogService extends BaseArtefactService<JobLog, Long> {
      * @return the job log definition
      */
     public JobLog jobTriggered(String name, String handler) {
-        JobLog jobLog = new JobLog();
+        JobLog jobLog = createJobLog();
         jobLog.setName(name);
         jobLog.setJobName(name);
         jobLog.setHandler(handler);
-        jobLog.setStatus(JobLog.JOB_LOG_STATUS_TRIGGRED);
+        jobLog.setStatus(JobStatus.TRIGGRED);
         jobLog.setTriggeredAt(new Timestamp(new Date().getTime()));
         jobLog.setLocation(new SimpleDateFormat(DATE_FORMAT).format(new Date()));
         jobLog.updateKey();
@@ -61,26 +71,12 @@ public class JobLogService extends BaseArtefactService<JobLog, Long> {
         return jobLog;
     }
 
-    /**
-     * Job logged.
-     *
-     * @param name the name
-     * @param handler the handler
-     * @param message the message
-     * @param severity the severity
-     * @return the job log definition
-     */
-    private JobLog jobLogged(String name, String handler, String message, short severity) {
+    private JobLog createJobLog() {
         JobLog jobLog = new JobLog();
-        jobLog.setName(name);
-        jobLog.setJobName(name);
-        jobLog.setHandler(handler);
-        jobLog.setMessage(message);
-        jobLog.setStatus(severity);
-        jobLog.setTriggeredAt(new Timestamp(new Date().getTime()));
-        jobLog.setLocation(new SimpleDateFormat(DATE_FORMAT).format(new Date()));
-        jobLog.updateKey();
-        save(jobLog);
+        String tenantId = tenantContext.isNotInitialized() ? defaultTenant.getId()
+                : tenantContext.getCurrentTenant()
+                               .getId();
+        jobLog.setTenantId(tenantId);
         return jobLog;
     }
 
@@ -93,7 +89,30 @@ public class JobLogService extends BaseArtefactService<JobLog, Long> {
      * @return the job log definition
      */
     public JobLog jobLogged(String name, String handler, String message) {
-        return jobLogged(name, handler, message, JobLog.JOB_LOG_STATUS_LOGGED);
+        return jobLogged(name, handler, message, JobStatus.LOGGED);
+    }
+
+    /**
+     * Job logged.
+     *
+     * @param name the name
+     * @param handler the handler
+     * @param message the message
+     * @param status the status
+     * @return the job log definition
+     */
+    private JobLog jobLogged(String name, String handler, String message, JobStatus status) {
+        JobLog jobLog = createJobLog();
+        jobLog.setName(name);
+        jobLog.setJobName(name);
+        jobLog.setHandler(handler);
+        jobLog.setMessage(message);
+        jobLog.setStatus(status);
+        jobLog.setTriggeredAt(new Timestamp(new Date().getTime()));
+        jobLog.setLocation(new SimpleDateFormat(DATE_FORMAT).format(new Date()));
+        jobLog.updateKey();
+        save(jobLog);
+        return jobLog;
     }
 
     /**
@@ -105,7 +124,7 @@ public class JobLogService extends BaseArtefactService<JobLog, Long> {
      * @return the job log definition
      */
     public JobLog jobLoggedError(String name, String handler, String message) {
-        return jobLogged(name, handler, message, JobLog.JOB_LOG_STATUS_ERROR);
+        return jobLogged(name, handler, message, JobStatus.ERROR);
     }
 
     /**
@@ -117,7 +136,7 @@ public class JobLogService extends BaseArtefactService<JobLog, Long> {
      * @return the job log definition
      */
     public JobLog jobLoggedWarning(String name, String handler, String message) {
-        return jobLogged(name, handler, message, JobLog.JOB_LOG_STATUS_WARN);
+        return jobLogged(name, handler, message, JobStatus.WARN);
     }
 
     /**
@@ -129,7 +148,7 @@ public class JobLogService extends BaseArtefactService<JobLog, Long> {
      * @return the job log definition
      */
     public JobLog jobLoggedInfo(String name, String handler, String message) {
-        return jobLogged(name, handler, message, JobLog.JOB_LOG_STATUS_INFO);
+        return jobLogged(name, handler, message, JobStatus.INFO);
     }
 
     /**
@@ -142,11 +161,11 @@ public class JobLogService extends BaseArtefactService<JobLog, Long> {
      * @return the job log definition
      */
     public JobLog jobFinished(String name, String handler, long triggeredId, Date triggeredAt) {
-        JobLog jobLog = new JobLog();
+        JobLog jobLog = createJobLog();
         jobLog.setName(name);
         jobLog.setJobName(name);
         jobLog.setHandler(handler);
-        jobLog.setStatus(JobLog.JOB_LOG_STATUS_FINISHED);
+        jobLog.setStatus(JobStatus.FINISHED);
         jobLog.setTriggeredId(triggeredId);
         jobLog.setTriggeredAt(new Timestamp(triggeredAt.getTime()));
         jobLog.setFinishedAt(new Timestamp(new Date().getTime()));
@@ -154,8 +173,8 @@ public class JobLogService extends BaseArtefactService<JobLog, Long> {
         jobLog.updateKey();
         save(jobLog);
         Job job = jobService.findByName(name);
-        boolean statusChanged = job.getStatus() != JobLog.JOB_LOG_STATUS_FINISHED;
-        job.setStatus(JobLog.JOB_LOG_STATUS_FINISHED);
+        boolean statusChanged = job.getStatus() != JobStatus.FINISHED;
+        job.setStatus(JobStatus.FINISHED);
         job.setMessage("");
         job.setExecutedAt(jobLog.getFinishedAt());
         if (statusChanged) {
@@ -177,11 +196,11 @@ public class JobLogService extends BaseArtefactService<JobLog, Long> {
      * @return the job log definition
      */
     public JobLog jobFailed(String name, String handler, long triggeredId, Date triggeredAt, String message) {
-        JobLog jobLog = new JobLog();
+        JobLog jobLog = createJobLog();
         jobLog.setName(name);
         jobLog.setJobName(name);
         jobLog.setHandler(handler);
-        jobLog.setStatus(JobLog.JOB_LOG_STATUS_FAILED);
+        jobLog.setStatus(JobStatus.FAILED);
         jobLog.setTriggeredId(triggeredId);
         jobLog.setTriggeredAt(new Timestamp(triggeredAt.getTime()));
         jobLog.setFinishedAt(new Timestamp(new Date().getTime()));
@@ -190,8 +209,8 @@ public class JobLogService extends BaseArtefactService<JobLog, Long> {
         jobLog.updateKey();
         save(jobLog);
         Job job = jobService.findByName(name);
-        boolean statusChanged = job.getStatus() != JobLog.JOB_LOG_STATUS_FAILED;
-        job.setStatus(JobLog.JOB_LOG_STATUS_FAILED);
+        boolean statusChanged = job.getStatus() != JobStatus.FAILED;
+        job.setStatus(JobStatus.FAILED);
         job.setMessage(message);
         job.setExecutedAt(jobLog.getFinishedAt());
         if (statusChanged) {
@@ -208,6 +227,7 @@ public class JobLogService extends BaseArtefactService<JobLog, Long> {
      * @param jobName the job name
      */
     public void deleteAllByJobName(String jobName) {
+        // createJobLog() if we want only logs for the current tenant otherwise new JobLog()
         JobLog filter = new JobLog();
         if (jobName != null && jobName.startsWith("/")) {
             jobName = jobName.substring(1);
@@ -227,6 +247,7 @@ public class JobLogService extends BaseArtefactService<JobLog, Long> {
      */
     @Transactional(readOnly = true)
     public List<JobLog> findByJob(String name) {
+        // createJobLog() if we want only logs for the current tenant otherwise new JobLog()
         JobLog filter = new JobLog();
         if (name != null && name.startsWith("/")) {
             name = name.substring(1);

@@ -10,25 +10,16 @@
  */
 package org.eclipse.dirigible.components.jobs.manager;
 
-import static org.quartz.CronScheduleBuilder.cronSchedule;
-import static org.quartz.JobBuilder.newJob;
-import static org.quartz.TriggerBuilder.newTrigger;
-
-import java.util.Set;
-
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.jobs.handler.JobHandler;
-import org.quartz.Job;
-import org.quartz.JobDetail;
-import org.quartz.JobKey;
-import org.quartz.ObjectAlreadyExistsException;
-import org.quartz.Scheduler;
-import org.quartz.Trigger;
-import org.quartz.TriggerKey;
-import org.quartz.impl.matchers.GroupMatcher;
+import org.eclipse.dirigible.components.jobs.tenant.JobNameCreator;
+import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import static org.quartz.CronScheduleBuilder.cronSchedule;
 
 /**
  * The Scheduler Manager.
@@ -39,15 +30,66 @@ public class JobsManager {
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(JobsManager.class);
 
-    /** The scheduler. */
-    @Autowired
-    private Scheduler scheduler;
-
-    /** The internal jobs. */
-    public static String JOB_GROUP_INTERNAL = "internal";
-
     /** The user defined jobs. */
     public static String JOB_GROUP_DEFINED = "defined";
+    private final Scheduler scheduler;
+    private final TenantContext tenantContext;
+    private final JobNameCreator jobNameCreator;
+
+    JobsManager(Scheduler scheduler, TenantContext tenantContext, JobNameCreator jobNameCreator) {
+        this.scheduler = scheduler;
+        this.tenantContext = tenantContext;
+        this.jobNameCreator = jobNameCreator;
+    }
+
+    private static JobDetail createInternalJob(org.eclipse.dirigible.components.jobs.domain.Job jobDefinition, JobKey jobKey)
+            throws ClassNotFoundException {
+        Class<Job> jobClass = (Class<Job>) Class.forName(jobDefinition.getClazz());
+        return JobBuilder.newJob(jobClass)
+                         .withIdentity(jobKey)
+                         .withDescription(jobDefinition.getDescription())
+                         .build();
+    }
+
+    private static Trigger createTrigger(org.eclipse.dirigible.components.jobs.domain.Job jobDefinition, TriggerKey triggerKey) {
+        TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger()
+                                                               .withIdentity(triggerKey);
+        if (StringUtils.isEmpty(jobDefinition.getExpression())) {
+            triggerBuilder.startNow();
+        } else {
+            triggerBuilder.withSchedule(cronSchedule(jobDefinition.getExpression()));
+        }
+        return triggerBuilder.build();
+    }
+
+    private static boolean isInternalJob(org.eclipse.dirigible.components.jobs.domain.Job jobDefinition) {
+        return isInternalJob(jobDefinition.getGroup());
+    }
+
+    private static boolean isInternalJob(String group) {
+        return !JOB_GROUP_DEFINED.equals(group);
+    }
+
+    private JobDetail createUserJob(org.eclipse.dirigible.components.jobs.domain.Job jobDefinition, JobKey jobKey) {
+        JobDetail job = JobBuilder.newJob(JobHandler.class)
+                                  .withIdentity(jobKey)
+                                  .withDescription(jobDefinition.getDescription())
+                                  .usingJobData(JobHandler.JOB_PARAMETER_HANDLER, jobDefinition.getHandler())
+                                  .usingJobData(JobHandler.JOB_PARAMETER_ENGINE, jobDefinition.getEngine())
+                                  .build();
+        job.getJobDataMap()
+           .put(JobHandler.TENANT_PARAMETER, tenantContext.getCurrentTenant());
+
+        return job;
+    }
+
+    private TriggerKey createTriggerKey(org.eclipse.dirigible.components.jobs.domain.Job jobDefinition) {
+        return createTriggerKey(jobDefinition.getName(), jobDefinition.getGroup());
+    }
+
+    private String createJobName(String jobName, String group) {
+        return isInternalJob(group) ? jobName : jobNameCreator.toTenantName(jobName);
+    }
 
     /**
      * Schedule a job.
@@ -56,58 +98,37 @@ public class JobsManager {
      * @throws Exception the exception
      */
     public void scheduleJob(org.eclipse.dirigible.components.jobs.domain.Job jobDefinition) throws Exception {
+        JobKey jobKey = createJobKey(jobDefinition);
         if (!jobDefinition.isEnabled()) {
+            if (scheduler.checkExists(jobKey)) {
+                logger.debug("Deleting job with key [{}]...", jobKey);
+                scheduler.deleteJob(jobKey);
+            }
+            logger.debug("Job [{}] is NOT enabled and will not be scheduled.", jobDefinition);
             return;
         }
         try {
-            JobKey jobKey = new JobKey(jobDefinition.getName(), jobDefinition.getGroup());
-            TriggerKey triggerKey = new TriggerKey(jobDefinition.getName(), jobDefinition.getGroup());
-            if (!scheduler.checkExists(jobKey) && (!scheduler.checkExists(triggerKey))) {
-                JobDetail job;
-                if (!JOB_GROUP_DEFINED.equals(jobDefinition.getGroup())) {
-                    // internal jobs
-                    Class<Job> jobClass = (Class<Job>) Class.forName(jobDefinition.getClazz());
-                    job = newJob(jobClass).withIdentity(jobKey)
-                                          .withDescription(jobDefinition.getDescription())
-                                          .build();
-                } else {
-                    // user defined jobs
-                    job = newJob(JobHandler.class).withIdentity(jobKey)
-                                                  .withDescription(jobDefinition.getDescription())
-                                                  .build();
-                    job.getJobDataMap()
-                       .put(JobHandler.JOB_PARAMETER_HANDLER, jobDefinition.getHandler());
-                    job.getJobDataMap()
-                       .put(JobHandler.JOB_PARAMETER_ENGINE, jobDefinition.getEngine());
-                }
-
-                Trigger trigger = null;
-                if (!jobDefinition.getExpression()
-                                  .equals("")) {
-                    trigger = newTrigger().withIdentity(triggerKey)
-                                          .withSchedule(cronSchedule(jobDefinition.getExpression()))
-                                          .build();
-                } else {
-                    trigger = newTrigger().withIdentity(triggerKey)
-                                          .startNow()
-                                          .build();
-                }
-                scheduler.scheduleJob(job, trigger);
-
-                if (logger.isInfoEnabled()) {
-                    logger.info("Scheduled Job: [{}] of group: [{}] at: [{}]", jobDefinition.getName(), jobDefinition.getGroup(),
-                            jobDefinition.getExpression());
-                }
+            TriggerKey triggerKey = createTriggerKey(jobDefinition);
+            if (scheduler.checkExists(jobKey) && scheduler.checkExists(triggerKey)) {
+                logger.debug("Job [{}] already exists and will not be scheduled.", jobDefinition);
+                return;
             }
+            JobDetail job = isInternalJob(jobDefinition) ? createInternalJob(jobDefinition, jobKey) : createUserJob(jobDefinition, jobKey);
+            Trigger trigger = createTrigger(jobDefinition, triggerKey);
+            scheduler.scheduleJob(job, trigger);
+
+            logger.info("Scheduled Job: [{}] of group: [{}] at: [{}]", jobKey.getName(), jobKey.getGroup(), jobDefinition.getExpression());
         } catch (ObjectAlreadyExistsException e) {
-            if (logger.isWarnEnabled()) {
-                logger.warn(e.getMessage());
-            }
+            logger.warn(e.getMessage());
         } catch (ClassNotFoundException e) {
-            throw new Exception("Invalid class name for the job", e);
+            throw new Exception("Invalid class name [" + jobDefinition.getClazz() + "] for the job", e);
         } catch (org.quartz.SchedulerException e) {
-            throw new Exception(e);
+            throw new Exception("Failed to schedule a job for " + jobDefinition, e);
         }
+    }
+
+    private JobKey createJobKey(org.eclipse.dirigible.components.jobs.domain.Job jobDefinition) {
+        return createJobKey(jobDefinition.getName(), jobDefinition.getGroup());
     }
 
     /**
@@ -118,60 +139,34 @@ public class JobsManager {
      * @throws Exception the exception
      */
     public void unscheduleJob(String name, String group) throws Exception {
-        if (!JOB_GROUP_DEFINED.equals(group)) {
+        if (isInternalJob(group)) {
+            logger.debug("Internal job with name [{}] will NOT be unscheduled", name);
             return;
         }
         try {
-            JobKey jobKey = new JobKey(name, group);
-            TriggerKey triggerKey = new TriggerKey(name, group);
+            JobKey jobKey = createJobKey(name, group);
+            TriggerKey triggerKey = createTriggerKey(name, group);
             if (scheduler.checkExists(triggerKey)) {
                 scheduler.unscheduleJob(triggerKey);
                 scheduler.deleteJob(jobKey);
-                if (logger.isInfoEnabled()) {
-                    logger.info("Unscheduled Job: [{}] of group: [{}]", name, group);
-                }
+                logger.info("Unscheduled Job: [{}] of group: [{}]", name, group);
             }
-        } catch (ObjectAlreadyExistsException e) {
-            if (logger.isWarnEnabled()) {
-                logger.warn(e.getMessage());
-            }
-        } catch (org.quartz.SchedulerException e) {
-            throw new Exception(e);
+        } catch (ObjectAlreadyExistsException ex) {
+            logger.warn(ex.getMessage());
+        } catch (org.quartz.SchedulerException ex) {
+            String msg = "Failed to unschedule job with name [" + name + "] from group [" + group + "] ";
+            throw new Exception(msg, ex);
         }
     }
 
-    /**
-     * List all the jobs.
-     *
-     * @return the sets the
-     * @throws Exception the exception
-     */
-    public Set<TriggerKey> listJobs() throws Exception {
-        try {
-            Set<TriggerKey> triggerKeys = scheduler.getTriggerKeys(GroupMatcher.anyTriggerGroup());
-            return triggerKeys;
-        } catch (org.quartz.SchedulerException e) {
-            throw new Exception(e);
-        }
+    private TriggerKey createTriggerKey(String name, String group) {
+        String jobName = createJobName(name, group);
+        return new TriggerKey(jobName, group);
     }
 
-    /**
-     * Checks whether the job with a given name is already scheduled.
-     *
-     * @param name the name of the job
-     * @return true if registered
-     * @throws Exception the exception
-     */
-    public boolean existsJob(String name) throws Exception {
-        Set<TriggerKey> triggerKeys = listJobs();
-        for (TriggerKey triggerKey : triggerKeys) {
-            if (triggerKey.getName()
-                          .equals(name)
-                    && JOB_GROUP_DEFINED.equals(triggerKey.getGroup())) {
-                return true;
-            }
-        }
-        return false;
+    private JobKey createJobKey(String name, String group) {
+        String jobName = createJobName(name, group);
+        return new JobKey(jobName, group);
     }
 
 }

@@ -8,7 +8,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.initializers.scheduler;
+package org.eclipse.dirigible.components.jobs.config;
 
 import org.quartz.spi.TriggerFiredBundle;
 import org.springframework.beans.BeansException;
@@ -20,7 +20,7 @@ import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 /**
  * A factory for creating AutoWiringSpringBeanJob objects.
  */
-public class AutoWiringSpringBeanJobFactory extends SpringBeanJobFactory implements ApplicationContextAware {
+class AutoWiringSpringBeanJobFactory extends SpringBeanJobFactory implements ApplicationContextAware {
 
     /** The bean factory. */
     private transient AutowireCapableBeanFactory beanFactory;

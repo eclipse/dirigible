@@ -10,27 +10,17 @@
  */
 package org.eclipse.dirigible.components.jobs.domain;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
+import com.google.gson.annotations.Expose;
+import jakarta.persistence.*;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.data.annotation.Transient;
 
-import com.google.gson.annotations.Expose;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The Class Job.
@@ -105,10 +95,10 @@ public class Job extends Artefact {
     @Transient
     private List<JobParameter> parameters = new ArrayList<>();
 
-    /** The status. */
-    @Column(name = "JOB_STATUS", columnDefinition = "SMALLINT", nullable = true)
-    @Expose
-    private Short status = 99;
+
+    @Column(name = "JOB_STATUS", nullable = true)
+    @Enumerated(EnumType.STRING)
+    private JobStatus status = JobStatus.UNKNOWN;
 
     /**
      * The message.
@@ -143,7 +133,7 @@ public class Job extends Artefact {
      * @param executedAt the executed at
      */
     public Job(String location, String name, String description, Set<String> dependencies, String group, String clazz, String expression,
-            String handler, String engine, Boolean singleton, Boolean enabled, Short status, String message, Timestamp executedAt) {
+            String handler, String engine, Boolean singleton, Boolean enabled, JobStatus status, String message, Timestamp executedAt) {
         super(location, name, ARTEFACT_TYPE, description, dependencies);
         this.group = group;
         this.clazz = clazz;
@@ -341,7 +331,7 @@ public class Job extends Artefact {
      *
      * @return the status
      */
-    public Short getStatus() {
+    public JobStatus getStatus() {
         return status;
     }
 
@@ -350,7 +340,7 @@ public class Job extends Artefact {
      *
      * @param status the new status
      */
-    public void setStatus(Short status) {
+    public void setStatus(JobStatus status) {
         this.status = status;
     }
 
@@ -361,6 +351,15 @@ public class Job extends Artefact {
      */
     public List<JobParameter> getParameters() {
         return parameters;
+    }
+
+    /**
+     * Sets the parameters list.
+     *
+     * @param parameters the new parameters list
+     */
+    public void setParameters(List<JobParameter> parameters) {
+        this.parameters = parameters;
     }
 
     /**
@@ -376,15 +375,6 @@ public class Job extends Artefact {
             }
         }
         return null;
-    }
-
-    /**
-     * Sets the parameters list.
-     *
-     * @param parameters the new parameters list
-     */
-    public void setParameters(List<JobParameter> parameters) {
-        this.parameters = parameters;
     }
 
     /**
