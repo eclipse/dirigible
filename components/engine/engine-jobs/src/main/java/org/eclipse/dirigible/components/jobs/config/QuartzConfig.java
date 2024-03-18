@@ -10,22 +10,18 @@
  */
 package org.eclipse.dirigible.components.jobs.config;
 
-import jakarta.annotation.PostConstruct;
 import org.eclipse.dirigible.components.data.sources.config.SystemDataSourceName;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.utils.DBConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -40,18 +36,6 @@ class QuartzConfig {
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(QuartzConfig.class);
 
-    /** The application context. */
-    @Autowired
-    private ApplicationContext applicationContext;
-
-    /**
-     * Inits the.
-     */
-    @PostConstruct
-    public void init() {
-        logger.info("System Scheduler...");
-    }
-
     /**
      * Scheduler.
      *
@@ -60,7 +44,7 @@ class QuartzConfig {
      * @throws SchedulerException the scheduler exception
      */
     @Bean
-    public Scheduler scheduler(SchedulerFactoryBean factory, @Qualifier("SystemDB") DataSource systemDataSource,
+    Scheduler scheduler(SchedulerFactoryBean factory, @Qualifier("SystemDB") DataSource systemDataSource,
             @SystemDataSourceName String systemDataSourceName) throws SchedulerException {
         factory.setDataSource(systemDataSource);
         DBConnectionManager.getInstance()
@@ -80,25 +64,11 @@ class QuartzConfig {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @Bean
-    public SchedulerFactoryBean schedulerFactoryBean() throws IOException {
+    SchedulerFactoryBean schedulerFactoryBean(AutoWiringSpringBeanJobFactory jobFactory) throws IOException {
         SchedulerFactoryBean factory = new SchedulerFactoryBean();
-        factory.setJobFactory(springBeanJobFactory());
+        factory.setJobFactory(jobFactory);
         factory.setQuartzProperties(quartzProperties());
         return factory;
-    }
-
-    /**
-     * Spring bean job factory.
-     *
-     * @return the spring bean job factory
-     */
-    @Bean
-    public SpringBeanJobFactory springBeanJobFactory() {
-        AutoWiringSpringBeanJobFactory jobFactory = new AutoWiringSpringBeanJobFactory();
-        logger.debug("Configuring Job factory");
-
-        jobFactory.setApplicationContext(applicationContext);
-        return jobFactory;
     }
 
     /**
