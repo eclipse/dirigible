@@ -41,12 +41,22 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Transactional
 public class JobLogRepositoryTest {
 
+    private static final String TENANT_ID = "5a2cbfde-bae3-42d5-b0fa-0568466160cd";
+
     /** The entity manager. */
     @Autowired
     EntityManager entityManager;
     /** The job log repository. */
     @Autowired
     private JobLogRepository jobLogRepository;
+
+
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 
     /**
      * Setup.
@@ -94,7 +104,7 @@ public class JobLogRepositoryTest {
             Set<String> dependencies, String jobName, String handler, Timestamp triggeredAt, long triggeredId, Timestamp finishedAt,
             JobStatus status, String message) {
         JobLog jobLog = new JobLog(location, name, description, dependencies, jobName, handler, triggeredAt, triggeredId, finishedAt,
-                status, message);
+                status, message, TENANT_ID);
         jobLogRepository.save(jobLog);
     }
 
@@ -120,6 +130,7 @@ public class JobLogRepositoryTest {
         assertEquals(JobStatus.LOGGED, jobLog.getStatus());
         assertEquals("job logged", jobLog.getMessage());
         assertEquals("SYSTEM", jobLog.getCreatedBy());
+        assertEquals(TENANT_ID, jobLog.getTenantId());
         assertNotNull(jobLog.getCreatedAt());
     }
 
@@ -134,13 +145,5 @@ public class JobLogRepositoryTest {
         JobLog extension = entityManager.getReference(JobLog.class, id);
         assertNotNull(extension);
         assertNotNull(extension.getLocation());
-    }
-
-
-    /**
-     * The Class TestConfiguration.
-     */
-    @SpringBootApplication
-    static class TestConfiguration {
     }
 }

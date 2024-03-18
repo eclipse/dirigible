@@ -79,23 +79,8 @@ public class JobLog extends Artefact {
         this.type = ARTEFACT_TYPE;
     }
 
-    /**
-     * Instantiates a new job log.
-     *
-     * @param location the location
-     * @param name the name
-     * @param description the description
-     * @param dependencies the dependencies
-     * @param jobName the job id
-     * @param handler the handler
-     * @param triggeredAt the triggered at
-     * @param triggeredId the triggered id
-     * @param finishedAt the finished at
-     * @param status the status
-     * @param message the message
-     */
     public JobLog(String location, String name, String description, Set<String> dependencies, String jobName, String handler,
-            Timestamp triggeredAt, Long triggeredId, Timestamp finishedAt, JobStatus status, String message) {
+            Timestamp triggeredAt, Long triggeredId, Timestamp finishedAt, JobStatus status, String message, String tenantId) {
         super(location, name, ARTEFACT_TYPE, description, dependencies);
         this.jobName = jobName;
         this.handler = handler;
@@ -104,6 +89,7 @@ public class JobLog extends Artefact {
         this.finishedAt = finishedAt;
         this.status = status;
         this.message = message;
+        this.tenantId = tenantId;
     }
 
     /**
