@@ -48,6 +48,7 @@ public class JobHandler implements Job {
 
     @Autowired
     private TenantContext tenantContext;
+
     @Autowired
     private JobNameCreator jobNameCreator;
 

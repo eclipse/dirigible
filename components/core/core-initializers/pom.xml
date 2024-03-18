@@ -64,10 +64,6 @@
 			<artifactId>dirigible-components-ide-git</artifactId>
 			<scope>test</scope>
     	</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-data-sources</artifactId>
-		</dependency>
 	</dependencies>
     
 	<properties>
