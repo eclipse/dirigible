@@ -10,10 +10,6 @@
  */
 package org.eclipse.dirigible.components.data.store.synchronizer;
 
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
-import java.text.ParseException;
-import java.util.List;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -30,6 +26,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
+import java.text.ParseException;
+import java.util.List;
+
 /**
  * The Class BpmnSynchronizer.
  */
@@ -37,12 +38,10 @@ import org.springframework.stereotype.Component;
 @Order(SynchronizersOrder.ENTITY)
 public class EntitySynchronizer extends BaseSynchronizer<Entity, Long> {
 
-    /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(EntitySynchronizer.class);
-
     /** The Constant FILE_EXTENSION_BPMN. */
     public static final String FILE_EXTENSION_ENTITY = ".hbm.xml";
-
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(EntitySynchronizer.class);
     /** The entity service. */
     private final EntityService entityService;
 
@@ -62,16 +61,6 @@ public class EntitySynchronizer extends BaseSynchronizer<Entity, Long> {
     public EntitySynchronizer(EntityService entityService, DataStore dataStore) {
         this.entityService = entityService;
         this.dataStore = dataStore;
-    }
-
-    /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<Entity, Long> getService() {
-        return entityService;
     }
 
     /**
@@ -131,6 +120,16 @@ public class EntitySynchronizer extends BaseSynchronizer<Entity, Long> {
             throw new ParseException(e.getMessage(), 0);
         }
         return List.of(entity);
+    }
+
+    /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<Entity, Long> getService() {
+        return entityService;
     }
 
     /**
@@ -227,7 +226,7 @@ public class EntitySynchronizer extends BaseSynchronizer<Entity, Long> {
      * @param entity the entity
      */
     @Override
-    public void cleanup(Entity entity) {
+    public void cleanupImpl(Entity entity) {
         try {
             dataStore.removeMapping(entity.getKey());
             dataStore.initialize();

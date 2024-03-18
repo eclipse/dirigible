@@ -10,11 +10,6 @@
  */
 package org.eclipse.dirigible.components.data.structures.synchronizer;
 
-import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.List;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
@@ -35,6 +30,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.List;
 
 /**
  * The Class ViewsSynchronizer.
@@ -68,16 +69,6 @@ public class ViewsSynchronizer extends MultitenantBaseSynchronizer<View, Long> {
     public ViewsSynchronizer(ViewService viewService, DataSourcesManager datasourcesManager) {
         this.viewService = viewService;
         this.datasourcesManager = datasourcesManager;
-    }
-
-    /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<View, Long> getService() {
-        return viewService;
     }
 
     /**
@@ -129,6 +120,16 @@ public class ViewsSynchronizer extends MultitenantBaseSynchronizer<View, Long> {
             throw new ParseException(e.getMessage(), 0);
         }
         return List.of(view);
+    }
+
+    /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<View, Long> getService() {
+        return viewService;
     }
 
     /**
@@ -229,32 +230,14 @@ public class ViewsSynchronizer extends MultitenantBaseSynchronizer<View, Long> {
     }
 
     /**
-     * Cleanup.
+     * Execute view create.
      *
-     * @param view the view
+     * @param connection the connection
+     * @param viewModel the view model
+     * @throws SQLException the SQL exception
      */
-    @Override
-    public void cleanup(View view) {
-        try (Connection connection = datasourcesManager.getDefaultDataSource()
-                                                       .getConnection()) {
-            getService().delete(view);
-        } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
-            callback.addError(e.getMessage());
-            callback.registerState(this, view, ArtefactLifecycle.DELETED, e.getMessage());
-        }
-    }
-
-    /**
-     * Sets the callback.
-     *
-     * @param callback the new callback
-     */
-    @Override
-    public void setCallback(SynchronizerCallback callback) {
-        this.callback = callback;
+    public void executeViewCreate(Connection connection, View viewModel) throws SQLException {
+        ViewCreateProcessor.execute(connection, viewModel);
     }
 
     /**
@@ -278,17 +261,6 @@ public class ViewsSynchronizer extends MultitenantBaseSynchronizer<View, Long> {
     }
 
     /**
-     * Execute view create.
-     *
-     * @param connection the connection
-     * @param viewModel the view model
-     * @throws SQLException the SQL exception
-     */
-    public void executeViewCreate(Connection connection, View viewModel) throws SQLException {
-        ViewCreateProcessor.execute(connection, viewModel);
-    }
-
-    /**
      * Execute view drop.
      *
      * @param connection the connection
@@ -297,6 +269,35 @@ public class ViewsSynchronizer extends MultitenantBaseSynchronizer<View, Long> {
      */
     public void executeViewDrop(Connection connection, View viewModel) throws SQLException {
         ViewDropProcessor.execute(connection, viewModel);
+    }
+
+    /**
+     * Cleanup.
+     *
+     * @param view the view
+     */
+    @Override
+    public void cleanupImpl(View view) {
+        try (Connection connection = datasourcesManager.getDefaultDataSource()
+                                                       .getConnection()) {
+            getService().delete(view);
+        } catch (Exception e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
+            callback.addError(e.getMessage());
+            callback.registerState(this, view, ArtefactLifecycle.DELETED, e.getMessage());
+        }
+    }
+
+    /**
+     * Sets the callback.
+     *
+     * @param callback the new callback
+     */
+    @Override
+    public void setCallback(SynchronizerCallback callback) {
+        this.callback = callback;
     }
 
     /**

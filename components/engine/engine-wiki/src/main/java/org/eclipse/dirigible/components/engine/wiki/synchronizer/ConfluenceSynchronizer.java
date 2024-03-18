@@ -10,12 +10,6 @@
  */
 package org.eclipse.dirigible.components.engine.wiki.synchronizer;
 
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.text.ParseException;
-import java.util.List;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
@@ -32,6 +26,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
+import java.util.List;
 
 /**
  * The Class ConfluenceSynchronizer.
@@ -67,16 +68,6 @@ public class ConfluenceSynchronizer extends BaseSynchronizer<Confluence, Long> {
     public ConfluenceSynchronizer(ConfluenceService confluenceService, WikiService wikiService) {
         this.confluenceService = confluenceService;
         this.wikiService = wikiService;
-    }
-
-    /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<Confluence, Long> getService() {
-        return confluenceService;
     }
 
     /**
@@ -155,6 +146,16 @@ public class ConfluenceSynchronizer extends BaseSynchronizer<Confluence, Long> {
     }
 
     /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<Confluence, Long> getService() {
+        return confluenceService;
+    }
+
+    /**
      * Retrieve.
      *
      * @param location the location
@@ -227,7 +228,7 @@ public class ConfluenceSynchronizer extends BaseSynchronizer<Confluence, Long> {
      * @param wiki the wiki
      */
     @Override
-    public void cleanup(Confluence wiki) {
+    public void cleanupImpl(Confluence wiki) {
         try {
             wikiService.removeGenerated(wiki.getLocation());
             getService().delete(wiki);

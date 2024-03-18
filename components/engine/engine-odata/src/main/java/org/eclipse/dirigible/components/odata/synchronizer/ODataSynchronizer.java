@@ -10,10 +10,6 @@
  */
 package org.eclipse.dirigible.components.odata.synchronizer;
 
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
@@ -24,16 +20,8 @@ import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
-import org.eclipse.dirigible.components.odata.domain.OData;
-import org.eclipse.dirigible.components.odata.domain.ODataContainer;
-import org.eclipse.dirigible.components.odata.domain.ODataHandler;
-import org.eclipse.dirigible.components.odata.domain.ODataMapping;
-import org.eclipse.dirigible.components.odata.domain.ODataSchema;
-import org.eclipse.dirigible.components.odata.service.ODataContainerService;
-import org.eclipse.dirigible.components.odata.service.ODataHandlerService;
-import org.eclipse.dirigible.components.odata.service.ODataMappingService;
-import org.eclipse.dirigible.components.odata.service.ODataSchemaService;
-import org.eclipse.dirigible.components.odata.service.ODataService;
+import org.eclipse.dirigible.components.odata.domain.*;
+import org.eclipse.dirigible.components.odata.service.*;
 import org.eclipse.dirigible.components.odata.transformers.DefaultTableMetadataProvider;
 import org.eclipse.dirigible.components.odata.transformers.OData2ODataHTransformer;
 import org.eclipse.dirigible.components.odata.transformers.OData2ODataMTransformer;
@@ -43,6 +31,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.List;
 
 /**
  * The Class ListenerSynchronizer.
@@ -56,29 +49,40 @@ public class ODataSynchronizer extends BaseSynchronizer<OData, Long> {
 
     /** The Constant FILE_EXTENSION_LISTENER. */
     private static final String FILE_EXTENSION_ODATA = ".odata";
-
+    /** The odata to odata mappings transformer. */
+    private final OData2ODataMTransformer odata2ODataMTransformer = new OData2ODataMTransformer();
+    /** The odata to odata schema transformer. */
+    private final OData2ODataXTransformer odata2ODataXTransformer = new OData2ODataXTransformer(new DefaultTableMetadataProvider());
+    /** The odata to odata handler transformer. */
+    private final OData2ODataHTransformer odata2ODataHTransformer = new OData2ODataHTransformer();
     /** The callback. */
     private SynchronizerCallback callback;
-
     /** The OData service. */
     @Autowired
     private ODataService odataService;
-
     /** The OData container service. */
     @Autowired
     private ODataContainerService odataContainerService;
-
     /** The OData handler service. */
     @Autowired
     private ODataHandlerService odataHandlerService;
-
     /** The OData mapping service. */
     @Autowired
     private ODataMappingService odataMappingService;
-
     /** The OData schema service. */
     @Autowired
     private ODataSchemaService odataSchemaService;
+
+    /**
+     * Parses the O data.
+     *
+     * @param location the location
+     * @param content the content
+     * @return the o data
+     */
+    public static OData parseOData(String location, byte[] content) {
+        return parseOData(location, new String(content, StandardCharsets.UTF_8));
+    }
 
     /**
      * Checks if is accepted.
@@ -124,48 +128,6 @@ public class ODataSynchronizer extends BaseSynchronizer<OData, Long> {
     }
 
     /**
-     * Retrieve.
-     *
-     * @param location the location
-     * @return the list
-     */
-    @Override
-    public List<OData> retrieve(String location) {
-        List<OData> list = getService().getAll();
-        for (OData odata : list) {
-            OData parsed = parseOData(location, odata.getContent());
-            odata.setEntities(parsed.getEntities());
-            odata.setAssociations(parsed.getAssociations());
-        }
-        return list;
-    }
-
-    /**
-     * Sets the status.
-     *
-     * @param artefact the artefact
-     * @param lifecycle the lifecycle
-     * @param error the error
-     */
-    @Override
-    public void setStatus(OData artefact, ArtefactLifecycle lifecycle, String error) {
-        artefact.setLifecycle(lifecycle);
-        artefact.setError(error);
-        getService().save(artefact);
-    }
-
-    /**
-     * Parses the O data.
-     *
-     * @param location the location
-     * @param content the content
-     * @return the o data
-     */
-    public static OData parseOData(String location, byte[] content) {
-        return parseOData(location, new String(content, StandardCharsets.UTF_8));
-    }
-
-    /**
      * Parses the O data.
      *
      * @param location the location
@@ -208,6 +170,37 @@ public class ODataSynchronizer extends BaseSynchronizer<OData, Long> {
     @Override
     public ArtefactService<OData, Long> getService() {
         return odataService;
+    }
+
+    /**
+     * Retrieve.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    public List<OData> retrieve(String location) {
+        List<OData> list = getService().getAll();
+        for (OData odata : list) {
+            OData parsed = parseOData(location, odata.getContent());
+            odata.setEntities(parsed.getEntities());
+            odata.setAssociations(parsed.getAssociations());
+        }
+        return list;
+    }
+
+    /**
+     * Sets the status.
+     *
+     * @param artefact the artefact
+     * @param lifecycle the lifecycle
+     * @param error the error
+     */
+    @Override
+    public void setStatus(OData artefact, ArtefactLifecycle lifecycle, String error) {
+        artefact.setLifecycle(lifecycle);
+        artefact.setError(error);
+        getService().save(artefact);
     }
 
     /**
@@ -302,12 +295,45 @@ public class ODataSynchronizer extends BaseSynchronizer<OData, Long> {
     }
 
     /**
+     * Generate OData Schema.
+     *
+     * @param model the model
+     * @return the string[]
+     * @throws SQLException the SQL exception
+     */
+    private String[] generateODataSchema(OData model) throws SQLException {
+        return odata2ODataXTransformer.transform(model);
+    }
+
+    /**
+     * Generate OData Mappings.
+     *
+     * @param model the model
+     * @return the string[]
+     * @throws SQLException the SQL exception
+     */
+    private String[] generateODataMappings(OData model) throws SQLException {
+        return odata2ODataMTransformer.transform(model);
+    }
+
+    /**
+     * Generate OData Handlers.
+     *
+     * @param model the model
+     * @return the list
+     * @throws SQLException the SQL exception
+     */
+    private List<ODataHandler> generateODataHandlers(OData model) throws SQLException {
+        return odata2ODataHTransformer.transform(model);
+    }
+
+    /**
      * Cleanup.
      *
      * @param odata the OData
      */
     @Override
-    public void cleanup(OData odata) {
+    public void cleanupImpl(OData odata) {
         try {
             odataSchemaService.removeSchema(odata.getLocation());
             odataContainerService.removeContainer(odata.getLocation());
@@ -351,48 +377,6 @@ public class ODataSynchronizer extends BaseSynchronizer<OData, Long> {
     @Override
     public String getArtefactType() {
         return OData.ARTEFACT_TYPE;
-    }
-
-    /** The odata to odata mappings transformer. */
-    private final OData2ODataMTransformer odata2ODataMTransformer = new OData2ODataMTransformer();
-
-    /** The odata to odata schema transformer. */
-    private final OData2ODataXTransformer odata2ODataXTransformer = new OData2ODataXTransformer(new DefaultTableMetadataProvider());
-
-    /** The odata to odata handler transformer. */
-    private final OData2ODataHTransformer odata2ODataHTransformer = new OData2ODataHTransformer();
-
-    /**
-     * Generate OData Schema.
-     *
-     * @param model the model
-     * @return the string[]
-     * @throws SQLException the SQL exception
-     */
-    private String[] generateODataSchema(OData model) throws SQLException {
-        return odata2ODataXTransformer.transform(model);
-    }
-
-    /**
-     * Generate OData Mappings.
-     *
-     * @param model the model
-     * @return the string[]
-     * @throws SQLException the SQL exception
-     */
-    private String[] generateODataMappings(OData model) throws SQLException {
-        return odata2ODataMTransformer.transform(model);
-    }
-
-    /**
-     * Generate OData Handlers.
-     *
-     * @param model the model
-     * @return the list
-     * @throws SQLException the SQL exception
-     */
-    private List<ODataHandler> generateODataHandlers(OData model) throws SQLException {
-        return odata2ODataHTransformer.transform(model);
     }
 
 }

@@ -10,9 +10,6 @@
  */
 package org.eclipse.dirigible.components.listeners.synchronizer;
 
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.util.List;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
@@ -30,6 +27,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.util.List;
 
 /**
  * The Class ListenerSynchronizer.
@@ -95,6 +96,16 @@ public class ListenerSynchronizer extends BaseSynchronizer<Listener, Long> {
     }
 
     /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<Listener, Long> getService() {
+        return listenerService;
+    }
+
+    /**
      * Retrieve.
      *
      * @param location the location
@@ -117,16 +128,6 @@ public class ListenerSynchronizer extends BaseSynchronizer<Listener, Long> {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
         getService().save(artefact);
-    }
-
-    /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<Listener, Long> getService() {
-        return listenerService;
     }
 
     /**
@@ -237,7 +238,7 @@ public class ListenerSynchronizer extends BaseSynchronizer<Listener, Long> {
      * @param listener the listener
      */
     @Override
-    public void cleanup(Listener listener) {
+    public void cleanupImpl(Listener listener) {
         try {
             listenersManager.stopListener(listener);
             getService().delete(listener);
