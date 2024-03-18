@@ -222,9 +222,11 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
                     break;
                 case DELETE:
                     if (csvim.getLifecycle()
-                             .equals(ArtefactLifecycle.CREATED) || csvim.getLifecycle()
-                                                                        .equals(ArtefactLifecycle.UPDATED) || csvim.getLifecycle()
-                                                                                                                   .equals(ArtefactLifecycle.FAILED)) {
+                             .equals(ArtefactLifecycle.CREATED)
+                            || csvim.getLifecycle()
+                                    .equals(ArtefactLifecycle.UPDATED)
+                            || csvim.getLifecycle()
+                                    .equals(ArtefactLifecycle.FAILED)) {
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
                     }
                     break;
