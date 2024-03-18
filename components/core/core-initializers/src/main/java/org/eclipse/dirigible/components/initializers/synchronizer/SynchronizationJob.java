@@ -77,7 +77,8 @@ class SynchronizationJob extends SystemJob {
     public void execute(JobExecutionContext context) {
         logger.debug("Job {} fired @ {}", context.getJobDetail()
                                                  .getKey()
-                                                 .getName(), context.getFireTime());
+                                                 .getName(),
+                context.getFireTime());
 
         executor.submit(() -> {
             Runtime runtime = Runtime.getRuntime();

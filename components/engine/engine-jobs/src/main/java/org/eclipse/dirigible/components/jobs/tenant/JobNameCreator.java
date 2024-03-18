@@ -19,6 +19,9 @@ public class JobNameCreator {
     }
 
     public String toTenantName(String name) {
+        if (tenantContext.isNotInitialized()) {
+            return name;
+        }
         Tenant currentTenant = tenantContext.getCurrentTenant();
         return currentTenant.isDefault() ? name : currentTenant.getId() + "###" + name;
     }
