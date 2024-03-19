@@ -37,6 +37,7 @@ class AsynchronousMessageListenerTest {
     /** The Constant HANDLER. */
     private static final String HANDLER = "test-handler";
 
+    /** The Constant TENANT_ID. */
     private static final String TENANT_ID = "1e7252b1-3bca-4285-bd4e-60e19886d063";
 
     /** The background message listener. */
@@ -62,6 +63,7 @@ class AsynchronousMessageListenerTest {
     @Mock
     private Module module;
 
+    /** The tenant property manager. */
     @Mock
     private TenantPropertyManager tenantPropertyManager;
 

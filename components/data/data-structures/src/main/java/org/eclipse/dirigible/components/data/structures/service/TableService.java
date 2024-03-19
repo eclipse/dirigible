@@ -23,6 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TableService extends BaseArtefactService<Table, Long> {
 
+    /**
+     * Instantiates a new table service.
+     *
+     * @param repository the repository
+     */
     public TableService(TableRepository repository) {
         super(repository);
     }

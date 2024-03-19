@@ -24,6 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ODataContainerService extends BaseArtefactService<ODataContainer, Long> {
 
+    /**
+     * Instantiates a new o data container service.
+     *
+     * @param odataContainerRepository the odata container repository
+     */
     public ODataContainerService(ODataContainerRepository odataContainerRepository) {
         super(odataContainerRepository);
     }

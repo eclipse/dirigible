@@ -23,8 +23,14 @@ import org.springframework.stereotype.Component;
 @Component
 class AutoWiringSpringBeanJobFactory extends SpringBeanJobFactory implements ApplicationContextAware {
 
+    /** The application context. */
     private final ApplicationContext applicationContext;
 
+    /**
+     * Instantiates a new auto wiring spring bean job factory.
+     *
+     * @param applicationContext the application context
+     */
     AutoWiringSpringBeanJobFactory(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }

@@ -12,13 +12,26 @@ package org.eclipse.dirigible.components.jobs;
 
 import java.util.Optional;
 
+/**
+ * The Class SystemJob.
+ */
 public abstract class SystemJob extends DirigibleJob {
 
+    /**
+     * Gets the trigger group.
+     *
+     * @return the trigger group
+     */
     @Override
     protected final Optional<String> getTriggerGroup() {
         return Optional.of("system");
     }
 
+    /**
+     * Gets the job group.
+     *
+     * @return the job group
+     */
     @Override
     protected final Optional<String> getJobGroup() {
         return Optional.of("system");

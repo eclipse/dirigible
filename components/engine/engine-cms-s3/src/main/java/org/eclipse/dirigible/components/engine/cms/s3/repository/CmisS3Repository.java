@@ -26,6 +26,9 @@ public class CmisS3Repository implements CmisRepository {
 
     /**
      * Instantiates a new cmis s3 repository.
+     *
+     * @param root the root
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public CmisS3Repository(String root) throws IOException {
         super();

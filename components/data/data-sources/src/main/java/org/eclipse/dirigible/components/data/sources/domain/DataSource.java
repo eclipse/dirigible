@@ -64,6 +64,7 @@ public class DataSource extends Artefact {
     @Encrypted
     private String password;
 
+    /** The schema. */
     @Column(name = "DS_SCHEMA", columnDefinition = "VARCHAR", nullable = true, length = 64)
     @Expose
     private String schema;

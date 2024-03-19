@@ -32,6 +32,7 @@ import java.util.Date;
  */
 public class JobHandler implements Job {
 
+    /** The Constant TENANT_PARAMETER. */
     public static final String TENANT_PARAMETER = "tenant-id";
 
     /** The Constant LOGGER. */
@@ -46,9 +47,11 @@ public class JobHandler implements Job {
     @Autowired
     private JobLogService jobLogService;
 
+    /** The tenant context. */
     @Autowired
     private TenantContext tenantContext;
 
+    /** The job name creator. */
     @Autowired
     private JobNameCreator jobNameCreator;
 
@@ -82,6 +85,12 @@ public class JobHandler implements Job {
         }
     }
 
+    /**
+     * Execute job.
+     *
+     * @param context the context
+     * @throws JobExecutionException the job execution exception
+     */
     private void executeJob(JobExecutionContext context) throws JobExecutionException {
         String tenantJobName = context.getJobDetail()
                                       .getKey()

@@ -23,15 +23,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class RetriggerSynchronizersTenantPostProvisioningStep.
+ */
 @Component
 class RetriggerSynchronizersTenantPostProvisioningStep implements TenantPostProvisioningStep {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(RetriggerSynchronizersTenantPostProvisioningStep.class);
 
+    /** The multitenant synchronizers. */
     private final List<Synchronizer<?, ?>> multitenantSynchronizers;
+    
+    /** The definition service. */
     private final DefinitionService definitionService;
+    
+    /** The synchronization processor. */
     private final SynchronizationProcessor synchronizationProcessor;
 
+    /**
+     * Instantiates a new retrigger synchronizers tenant post provisioning step.
+     *
+     * @param synchronizers the synchronizers
+     * @param definitionService the definition service
+     * @param synchronizationProcessor the synchronization processor
+     */
     RetriggerSynchronizersTenantPostProvisioningStep(List<Synchronizer<?, ?>> synchronizers, DefinitionService definitionService,
             SynchronizationProcessor synchronizationProcessor) {
         this.definitionService = definitionService;
@@ -41,6 +57,11 @@ class RetriggerSynchronizersTenantPostProvisioningStep implements TenantPostProv
                                                      .collect(Collectors.toList());
     }
 
+    /**
+     * Execute.
+     *
+     * @throws TenantProvisioningException the tenant provisioning exception
+     */
     @Override
     public void execute() throws TenantProvisioningException {
         logger.info("Registered [{}] multitenant synchronizers: [{}]", multitenantSynchronizers.size(), multitenantSynchronizers);

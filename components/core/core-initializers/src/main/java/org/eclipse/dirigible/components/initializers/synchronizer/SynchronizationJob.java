@@ -36,19 +36,35 @@ class SynchronizationJob extends SystemJob {
     /** The executor. */
     private static final ExecutorService executor = Executors.newFixedThreadPool(1);
 
+    /** The job service. */
     @Autowired
     private SynchronizationJobService jobService;
 
+    /**
+     * Gets the trigger key.
+     *
+     * @return the trigger key
+     */
     @Override
     protected String getTriggerKey() {
         return "SynchronizationJobTrigger";
     }
 
+    /**
+     * Gets the trigger description.
+     *
+     * @return the trigger description
+     */
     @Override
     protected String getTriggerDescription() {
         return "Synchronization trigger";
     }
 
+    /**
+     * Gets the schedule.
+     *
+     * @return the schedule
+     */
     @Override
     protected SimpleScheduleBuilder getSchedule() {
         int frequencyInSec = org.eclipse.dirigible.commons.config.Configuration.getAsInt(Configuration.SYNCHRONIZER_FREQUENCY, 10);
@@ -58,11 +74,21 @@ class SynchronizationJob extends SystemJob {
                                .repeatForever();
     }
 
+    /**
+     * Gets the job key.
+     *
+     * @return the job key
+     */
     @Override
     protected String getJobKey() {
         return "SynchronizationJobDetail";
     }
 
+    /**
+     * Gets the job description.
+     *
+     * @return the job description
+     */
     @Override
     protected String getJobDescription() {
         return "Invoke Synchronization Job service...";

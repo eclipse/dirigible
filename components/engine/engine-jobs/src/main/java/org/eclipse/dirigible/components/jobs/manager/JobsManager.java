@@ -26,15 +26,29 @@ import static org.quartz.CronScheduleBuilder.cronSchedule;
  */
 @Component
 public class JobsManager {
+    
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(JobsManager.class);
 
     /** The user defined jobs. */
     private static final String JOB_GROUP_DEFINED = "defined";
 
+    /** The scheduler. */
     private final Scheduler scheduler;
+    
+    /** The tenant context. */
     private final TenantContext tenantContext;
+    
+    /** The job name creator. */
     private final JobNameCreator jobNameCreator;
 
+    /**
+     * Instantiates a new jobs manager.
+     *
+     * @param scheduler the scheduler
+     * @param tenantContext the tenant context
+     * @param jobNameCreator the job name creator
+     */
     JobsManager(Scheduler scheduler, TenantContext tenantContext, JobNameCreator jobNameCreator) {
         this.scheduler = scheduler;
         this.tenantContext = tenantContext;
@@ -105,36 +119,89 @@ public class JobsManager {
         }
     }
 
+    /**
+     * Creates the trigger key.
+     *
+     * @param jobDefinition the job definition
+     * @return the trigger key
+     */
     private TriggerKey createTriggerKey(org.eclipse.dirigible.components.jobs.domain.Job jobDefinition) {
         return createTriggerKey(jobDefinition.getName(), jobDefinition.getGroup());
     }
 
+    /**
+     * Creates the trigger key.
+     *
+     * @param name the name
+     * @param group the group
+     * @return the trigger key
+     */
     private TriggerKey createTriggerKey(String name, String group) {
         String jobName = createJobName(name, group);
         return new TriggerKey(jobName, group);
     }
 
+    /**
+     * Creates the job name.
+     *
+     * @param jobName the job name
+     * @param group the group
+     * @return the string
+     */
     private String createJobName(String jobName, String group) {
         return isInternalJob(group) ? jobName : jobNameCreator.toTenantName(jobName);
     }
 
+    /**
+     * Checks if is internal job.
+     *
+     * @param jobDefinition the job definition
+     * @return true, if is internal job
+     */
     private boolean isInternalJob(org.eclipse.dirigible.components.jobs.domain.Job jobDefinition) {
         return isInternalJob(jobDefinition.getGroup());
     }
 
+    /**
+     * Checks if is internal job.
+     *
+     * @param group the group
+     * @return true, if is internal job
+     */
     private boolean isInternalJob(String group) {
         return !JOB_GROUP_DEFINED.equals(group);
     }
 
+    /**
+     * Creates the job key.
+     *
+     * @param jobDefinition the job definition
+     * @return the job key
+     */
     private JobKey createJobKey(org.eclipse.dirigible.components.jobs.domain.Job jobDefinition) {
         return createJobKey(jobDefinition.getName(), jobDefinition.getGroup());
     }
 
+    /**
+     * Creates the job key.
+     *
+     * @param name the name
+     * @param group the group
+     * @return the job key
+     */
     private JobKey createJobKey(String name, String group) {
         String jobName = createJobName(name, group);
         return new JobKey(jobName, group);
     }
 
+    /**
+     * Creates the internal job.
+     *
+     * @param jobDefinition the job definition
+     * @param jobKey the job key
+     * @return the job detail
+     * @throws ClassNotFoundException the class not found exception
+     */
     private JobDetail createInternalJob(org.eclipse.dirigible.components.jobs.domain.Job jobDefinition, JobKey jobKey)
             throws ClassNotFoundException {
         Class<Job> jobClass = (Class<Job>) Class.forName(jobDefinition.getClazz());
@@ -144,6 +211,13 @@ public class JobsManager {
                          .build();
     }
 
+    /**
+     * Creates the user job.
+     *
+     * @param jobDefinition the job definition
+     * @param jobKey the job key
+     * @return the job detail
+     */
     private JobDetail createUserJob(org.eclipse.dirigible.components.jobs.domain.Job jobDefinition, JobKey jobKey) {
         JobDetail job = JobBuilder.newJob(JobHandler.class)
                                   .withIdentity(jobKey)
@@ -157,6 +231,13 @@ public class JobsManager {
         return job;
     }
 
+    /**
+     * Creates the trigger.
+     *
+     * @param jobDefinition the job definition
+     * @param triggerKey the trigger key
+     * @return the trigger
+     */
     private Trigger createTrigger(org.eclipse.dirigible.components.jobs.domain.Job jobDefinition, TriggerKey triggerKey) {
         TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger()
                                                                .withIdentity(triggerKey);

@@ -28,26 +28,42 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 
+/**
+ * The Class WebsocketsSynchronizerTest.
+ */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 public class WebsocketsSynchronizerTest {
+    
+    /** The websockets synchronizer. */
     @Autowired
     private WebsocketsSynchronizer websocketsSynchronizer;
 
 
+    /**
+     * Checks if is accepted path.
+     */
     @Test
     public void isAcceptedPath() {
         assertTrue(websocketsSynchronizer.isAccepted(Path.of("/a/b/c/e1.websocket"), null));
     }
 
+    /**
+     * Checks if is accepted artefact.
+     */
     @Test
     public void isAcceptedArtefact() {
         assertTrue(websocketsSynchronizer.isAccepted(
                 new Websocket("/a/b/c/w1.websocket", "name1", "description", "endpoint1", "handler1", "engine1").getType()));
     }
 
+    /**
+     * Load.
+     *
+     * @throws ParseException the parse exception
+     */
     @Test
     public void load() throws ParseException {
         String content =
@@ -58,6 +74,9 @@ public class WebsocketsSynchronizerTest {
                                                  .getLocation());
     }
 
+    /**
+     * The Class TestConfiguration.
+     */
     @SpringBootApplication
     static class TestConfiguration {
     }

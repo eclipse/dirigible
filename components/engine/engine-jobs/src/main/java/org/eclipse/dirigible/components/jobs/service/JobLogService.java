@@ -35,13 +35,30 @@ import java.util.List;
 @Transactional
 public class JobLogService extends BaseArtefactService<JobLog, Long> {
 
+    /** The date format. */
     private final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
+    /** The job email processor. */
     private final JobEmailProcessor jobEmailProcessor;
+    
+    /** The job service. */
     private final JobService jobService;
+    
+    /** The tenant context. */
     private final TenantContext tenantContext;
+    
+    /** The default tenant. */
     private final Tenant defaultTenant;
 
+    /**
+     * Instantiates a new job log service.
+     *
+     * @param repository the repository
+     * @param jobEmailProcessor the job email processor
+     * @param jobService the job service
+     * @param tenantContext the tenant context
+     * @param defaultTenant the default tenant
+     */
     public JobLogService(JobLogRepository repository, JobEmailProcessor jobEmailProcessor, JobService jobService,
             TenantContext tenantContext, @DefaultTenant Tenant defaultTenant) {
         super(repository);
@@ -71,6 +88,11 @@ public class JobLogService extends BaseArtefactService<JobLog, Long> {
         return jobLog;
     }
 
+    /**
+     * Creates the job log.
+     *
+     * @return the job log
+     */
     private JobLog createJobLog() {
         JobLog jobLog = new JobLog();
         String tenantId = tenantContext.isNotInitialized() ? defaultTenant.getId()

@@ -33,6 +33,7 @@ class MessageConsumerTest {
     /** The Constant QUEUE. */
     private static final String QUEUE = "test-queue";
 
+    /** The Constant TENANT_QUEUE. */
     private static final String TENANT_QUEUE = "1e7252b1-3bca-4285-bd4e-60e19886d063###test-queue";
 
     /** The Constant TIMEOUT. */
@@ -44,6 +45,7 @@ class MessageConsumerTest {
     /** The Constant TOPIC. */
     private static final String TOPIC = "test-topic";
 
+    /** The Constant TENANT_TOPIC. */
     private static final String TENANT_TOPIC = "1e7252b1-3bca-4285-bd4e-60e19886d063###test-topic";
 
     /** The consumer. */
@@ -74,6 +76,7 @@ class MessageConsumerTest {
     @Mock
     private BytesMessage byteMessage;
 
+    /** The destination name manager. */
     @Mock
     private DestinationNameManager destinationNameManager;
 

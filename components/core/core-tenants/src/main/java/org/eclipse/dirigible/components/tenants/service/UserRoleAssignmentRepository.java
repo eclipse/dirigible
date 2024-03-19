@@ -15,7 +15,16 @@ import org.eclipse.dirigible.components.tenants.domain.User;
 import org.eclipse.dirigible.components.tenants.domain.UserRoleAssignment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/**
+ * The Interface UserRoleAssignmentRepository.
+ */
 interface UserRoleAssignmentRepository extends JpaRepository<UserRoleAssignment, Long> {
 
+    /**
+     * Find by user.
+     *
+     * @param user the user
+     * @return the list
+     */
     List<UserRoleAssignment> findByUser(User user);
 }

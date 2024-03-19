@@ -31,6 +31,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The Class WebsocketRepositoryTest.
+ */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
@@ -38,12 +41,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class WebsocketRepositoryTest {
 
+    /** The websocket repository. */
     @Autowired
     private WebsocketRepository websocketRepository;
 
+    /** The entity manager. */
     @Autowired
     EntityManager entityManager;
 
+    /**
+     * Setup.
+     */
     @BeforeEach
     public void setup() {
 
@@ -54,11 +62,19 @@ public class WebsocketRepositoryTest {
         websocketRepository.save(new Websocket("/a/b/c/w3.websocket", "name3", "description", "endpoint3", "handler3", "engine3"));
     }
 
+    /**
+     * Cleanup.
+     */
     @AfterEach
     public void cleanup() {
         websocketRepository.deleteAll();
     }
 
+    /**
+     * Gets the one.
+     *
+     * @return the one
+     */
     @Test
     public void getOne() {
         List<Websocket> all = websocketRepository.findAll();
@@ -79,6 +95,11 @@ public class WebsocketRepositoryTest {
         assertNotNull(websocket.getCreatedAt());
     }
 
+    /**
+     * Gets the reference using entity manager.
+     *
+     * @return the reference using entity manager
+     */
     @Test
     public void getReferenceUsingEntityManager() {
         Long id = websocketRepository.findAll()
@@ -89,6 +110,9 @@ public class WebsocketRepositoryTest {
         assertEquals("/a/b/c/w1.websocket", websocket.getLocation());
     }
 
+    /**
+     * The Class TestConfiguration.
+     */
     @SpringBootApplication
     static class TestConfiguration {
     }

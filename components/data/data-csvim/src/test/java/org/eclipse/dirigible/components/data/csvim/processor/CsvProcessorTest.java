@@ -36,10 +36,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CsvProcessorTest {
 
+    /** The default data source name. */
     @Autowired
     @DefaultDataSourceName
     private String defaultDataSourceName;
 
+    /** The data source manager. */
     @Autowired
     private DataSourcesManager dataSourceManager;
 

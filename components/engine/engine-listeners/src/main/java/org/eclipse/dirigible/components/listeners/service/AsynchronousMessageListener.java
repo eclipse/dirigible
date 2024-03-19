@@ -25,6 +25,8 @@ import org.slf4j.LoggerFactory;
  * processing a asynchronousMessage event implements this interface, and the object created with
  * that class is registered with a component using the component's addAsynchronousMessageListener
  * method. When the asynchronousMessage event occurs, that object's appropriate method is invoked.
+ *
+ * @see AsynchronousMessageEvent
  */
 class AsynchronousMessageListener implements MessageListener {
 
@@ -33,13 +35,19 @@ class AsynchronousMessageListener implements MessageListener {
 
     /** The listener. */
     private final ListenerDescriptor listenerDescriptor;
+    
+    /** The tenant property manager. */
     private final TenantPropertyManager tenantPropertyManager;
+    
+    /** The tenant context. */
     private final TenantContext tenantContext;
 
     /**
      * Instantiates a new asynchronous message listener.
      *
      * @param listenerDescriptor the listener
+     * @param tenantPropertyManager the tenant property manager
+     * @param tenantContext the tenant context
      */
     AsynchronousMessageListener(ListenerDescriptor listenerDescriptor, TenantPropertyManager tenantPropertyManager,
             TenantContext tenantContext) {

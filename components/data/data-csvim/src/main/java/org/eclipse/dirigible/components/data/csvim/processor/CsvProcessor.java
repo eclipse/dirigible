@@ -66,7 +66,7 @@ public class CsvProcessor {
      * Insert.
      *
      * @param connection the connection
-     * @param schema
+     * @param schema the schema
      * @param tableMetadata the table metadata
      * @param csvRecords the csv records
      * @param headerNames the header names
@@ -121,7 +121,7 @@ public class CsvProcessor {
      * Update.
      *
      * @param connection the connection
-     * @param schema
+     * @param schema the schema
      * @param tableMetadata the table metadata
      * @param csvRecords the csv records
      * @param headerNames the header names

@@ -30,8 +30,16 @@ public class MessageConsumer {
 
     /** The session. */
     private final Session session;
+    
+    /** The destination name manager. */
     private final DestinationNameManager destinationNameManager;
 
+    /**
+     * Instantiates a new message consumer.
+     *
+     * @param session the session
+     * @param destinationNameManager the destination name manager
+     */
     @Autowired
     MessageConsumer(@Qualifier("ActiveMQSession") Session session, DestinationNameManager destinationNameManager) {
         this.session = session;

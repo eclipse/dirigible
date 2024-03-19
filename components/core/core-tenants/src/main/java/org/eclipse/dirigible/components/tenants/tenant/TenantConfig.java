@@ -15,9 +15,17 @@ import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * The Class TenantConfig.
+ */
 @Configuration
 class TenantConfig {
 
+    /**
+     * Gets the default tenant.
+     *
+     * @return the default tenant
+     */
     @Bean
     @DefaultTenant
     Tenant getDefaultTenant() {

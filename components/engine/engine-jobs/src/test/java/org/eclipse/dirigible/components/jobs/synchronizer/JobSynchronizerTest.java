@@ -106,6 +106,7 @@ public class JobSynchronizerTest {
      * @param parameters the job parameters
      * @param location the job location
      * @param dependencies the dependencies
+     * @return the job
      */
     public static Job createJob(JobRepository jobRepository, String name, String group, String clazz, String handler, String engine,
             String description, String expression, boolean singleton, List<JobParameter> parameters, String location,
@@ -136,7 +137,7 @@ public class JobSynchronizerTest {
     /**
      * Load the artefact.
      *
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Test
     public void load() throws ParseException {

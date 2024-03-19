@@ -18,9 +18,17 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.springframework.context.annotation.Bean;
 
+/**
+ * The Class RepositoryConfig.
+ */
 @org.springframework.context.annotation.Configuration
 public class RepositoryConfig {
 
+    /**
+     * Repository.
+     *
+     * @return the i repository
+     */
     @Bean
     public IRepository repository() {
         String repoFolderPath = Configuration.get(Configuration.DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER, "target");

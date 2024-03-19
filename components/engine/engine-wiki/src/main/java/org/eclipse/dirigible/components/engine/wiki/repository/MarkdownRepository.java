@@ -24,6 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository("markdownRepository")
 public interface MarkdownRepository extends ArtefactRepository<Markdown, Long> {
 
+    /**
+     * Sets the running to all.
+     *
+     * @param running the new running to all
+     */
     @Override
     @Modifying
     @Transactional

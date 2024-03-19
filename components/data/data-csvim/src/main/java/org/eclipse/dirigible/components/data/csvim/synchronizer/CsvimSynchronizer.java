@@ -71,11 +71,23 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
      * The Constant CSV_SYNCHRONIZED.
      */
     private static final List<String> CSV_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<>());
+    
+    /** The csvim service. */
     private final CsvimService csvimService;
+    
+    /** The csv service. */
     private final CsvService csvService;
+    
+    /** The datasources manager. */
     private final DataSourcesManager datasourcesManager;
+    
+    /** The csvim processor. */
     private final CsvimProcessor csvimProcessor;
+    
+    /** The system data source name. */
     private final String systemDataSourceName;
+    
+    /** The callback. */
     private SynchronizerCallback callback;
 
     /**
@@ -243,6 +255,12 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
         }
     }
 
+    /**
+     * Import csvim.
+     *
+     * @param csvim the csvim
+     * @throws Exception the exception
+     */
     private void importCsvim(Csvim csvim) throws Exception {
         List<CsvFile> files = csvim.getFiles();
 
@@ -282,6 +300,12 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
         }
     }
 
+    /**
+     * Update csvim.
+     *
+     * @param csvim the csvim
+     * @throws Exception the exception
+     */
     private void updateCsvim(Csvim csvim) throws Exception {
         List<CsvFile> files = csvim.getFiles();
         if (files != null) {

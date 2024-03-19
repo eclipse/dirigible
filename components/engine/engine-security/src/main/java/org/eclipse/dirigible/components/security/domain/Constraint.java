@@ -107,6 +107,11 @@ public class Constraint {
         return roles;
     }
 
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     @Override
     public String toString() {
         return "Constraint [scope=" + scope + ", path=" + path + ", method=" + method + ", roles=" + roles + "]";

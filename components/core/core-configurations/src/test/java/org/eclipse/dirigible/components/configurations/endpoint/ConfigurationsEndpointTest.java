@@ -20,19 +20,29 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 
+/**
+ * The Class ConfigurationsEndpointTest.
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 public class ConfigurationsEndpointTest {
 
+    /** The configurations service. */
     @Autowired
     private ConfigurationsService configurationsService;
 
+    /**
+     * Find all.
+     */
     @Test
     public void findAll() {
         assertNotNull(configurationsService.findAll());
     }
 
+    /**
+     * The Class TestConfiguration.
+     */
     @SpringBootApplication
     static class TestConfiguration {
     }

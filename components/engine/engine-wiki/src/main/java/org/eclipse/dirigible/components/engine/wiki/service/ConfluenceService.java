@@ -24,6 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ConfluenceService extends BaseArtefactService<Confluence, Long> {
 
+    /**
+     * Instantiates a new confluence service.
+     *
+     * @param repository the repository
+     */
     public ConfluenceService(ConfluenceRepository repository) {
         super(repository);
     }

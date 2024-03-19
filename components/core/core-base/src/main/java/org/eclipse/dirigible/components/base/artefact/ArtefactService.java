@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
  * The Interface ArtefactService.
  *
  * @param <A> the generic type
+ * @param <ID> the generic type
  */
 public interface ArtefactService<A extends Artefact, ID> {
 
@@ -83,6 +84,11 @@ public interface ArtefactService<A extends Artefact, ID> {
      */
     void delete(A a);
 
+    /**
+     * Sets the running to all.
+     *
+     * @param running the new running to all
+     */
     void setRunningToAll(boolean running);
 
 }

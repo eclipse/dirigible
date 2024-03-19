@@ -10,6 +10,9 @@
  */
 package org.eclipse.dirigible.components.data.management.domain;
 
+/**
+ * The Class SequenceMetadata.
+ */
 public class SequenceMetadata {
     /** The name. */
     private String name;
@@ -17,22 +20,47 @@ public class SequenceMetadata {
     /** The kind. */
     private String kind = "sequence";
 
+    /**
+     * Instantiates a new sequence metadata.
+     *
+     * @param name the name
+     */
     public SequenceMetadata(String name) {
         this.name = name;
     }
 
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name.
+     *
+     * @param name the new name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Gets the kind.
+     *
+     * @return the kind
+     */
     public String getKind() {
         return kind;
     }
 
+    /**
+     * Sets the kind.
+     *
+     * @param kind the new kind
+     */
     public void setKind(String kind) {
         this.kind = kind;
     }

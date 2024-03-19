@@ -12,10 +12,20 @@ package org.eclipse.dirigible.components.data.sources.provisioning;
 
 import java.security.SecureRandom;
 
+/**
+ * The Class PasswordGenerator.
+ */
 class PasswordGenerator {
 
+    /** The Constant CHARACTERS. */
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
 
+    /**
+     * Generate secure password.
+     *
+     * @param length the length
+     * @return the string
+     */
     static String generateSecurePassword(int length) {
         StringBuilder password = new StringBuilder();
         SecureRandom random = new SecureRandom();

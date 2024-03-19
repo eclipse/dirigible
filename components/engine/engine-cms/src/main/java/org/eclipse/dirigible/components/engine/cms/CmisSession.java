@@ -12,6 +12,9 @@ package org.eclipse.dirigible.components.engine.cms;
 
 import java.io.IOException;
 
+/**
+ * The Interface CmisSession.
+ */
 public interface CmisSession {
     /**
      * Returns a CMIS Object by name.

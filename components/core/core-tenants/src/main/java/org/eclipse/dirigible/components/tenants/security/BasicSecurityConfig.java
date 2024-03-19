@@ -37,6 +37,7 @@ public class BasicSecurityConfig {
      * Filter chain.
      *
      * @param http the http
+     * @param tenantContextInitFilter the tenant context init filter
      * @return the security filter chain
      * @throws Exception the exception
      */
@@ -55,6 +56,11 @@ public class BasicSecurityConfig {
         return http.build();
     }
 
+    /**
+     * Cors configuration source.
+     *
+     * @return the cors configuration source
+     */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

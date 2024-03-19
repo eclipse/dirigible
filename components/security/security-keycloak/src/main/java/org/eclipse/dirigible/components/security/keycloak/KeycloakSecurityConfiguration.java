@@ -23,12 +23,23 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * The Class KeycloakSecurityConfiguration.
+ */
 @Profile("keycloak")
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class KeycloakSecurityConfiguration {
 
+    /**
+     * Configure.
+     *
+     * @param http the http
+     * @param tenantContextInitFilter the tenant context init filter
+     * @return the security filter chain
+     * @throws Exception the exception
+     */
     @Bean
     SecurityFilterChain configure(HttpSecurity http, TenantContextInitFilter tenantContextInitFilter) throws Exception {
         http//

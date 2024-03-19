@@ -23,6 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ListenerService extends BaseArtefactService<Listener, Long> {
 
+    /**
+     * Instantiates a new listener service.
+     *
+     * @param repository the repository
+     */
     public ListenerService(ListenerRepository repository) {
         super(repository);
     }

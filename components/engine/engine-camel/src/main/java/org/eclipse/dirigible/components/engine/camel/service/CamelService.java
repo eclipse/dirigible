@@ -16,10 +16,18 @@ import org.eclipse.dirigible.components.engine.camel.repository.CamelRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The Class CamelService.
+ */
 @Service
 @Transactional
 public class CamelService extends BaseArtefactService<Camel, Long> {
 
+    /**
+     * Instantiates a new camel service.
+     *
+     * @param repository the repository
+     */
     public CamelService(CamelRepository repository) {
         super(repository);
     }

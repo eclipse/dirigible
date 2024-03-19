@@ -24,6 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository("csvimRepository")
 public interface CsvimRepository extends ArtefactRepository<Csvim, Long> {
 
+    /**
+     * Sets the running to all.
+     *
+     * @param running the new running to all
+     */
     @Override
     @Modifying
     @Transactional

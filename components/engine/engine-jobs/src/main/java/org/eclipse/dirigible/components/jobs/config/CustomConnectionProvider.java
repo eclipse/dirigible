@@ -16,24 +16,48 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * The Class CustomConnectionProvider.
+ */
 class CustomConnectionProvider implements ConnectionProvider {
+    
+    /** The data source. */
     private final DataSource dataSource;
 
+    /**
+     * Instantiates a new custom connection provider.
+     *
+     * @param dataSource the data source
+     */
     public CustomConnectionProvider(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
+    /**
+     * Gets the connection.
+     *
+     * @return the connection
+     * @throws SQLException the SQL exception
+     */
     @Override
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
 
+    /**
+     * Shutdown.
+     */
     @Override
     public void shutdown() {
         // nothing to shutdown
     }
 
 
+    /**
+     * Initialize.
+     *
+     * @throws SQLException the SQL exception
+     */
     @Override
     public void initialize() throws SQLException {
         // nothing to init

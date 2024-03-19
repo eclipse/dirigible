@@ -15,11 +15,23 @@ import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import ch.qos.logback.classic.pattern.ClassicConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 
+/**
+ * The Class TenantConverter.
+ */
 public class TenantConverter extends ClassicConverter {
 
+    /** The Constant BACKGROUND_TENANT_VALUE. */
     private static final String BACKGROUND_TENANT_VALUE = "background";
+    
+    /** The tenant context. */
     private TenantContext tenantContext;
 
+    /**
+     * Convert.
+     *
+     * @param event the event
+     * @return the string
+     */
     @Override
     public String convert(ILoggingEvent event) {
         TenantContext ctx = getTenantContext();
@@ -31,6 +43,11 @@ public class TenantConverter extends ClassicConverter {
                 : BACKGROUND_TENANT_VALUE;
     }
 
+    /**
+     * Gets the tenant context.
+     *
+     * @return the tenant context
+     */
     private TenantContext getTenantContext() {
         if (null != tenantContext) {
             return tenantContext;

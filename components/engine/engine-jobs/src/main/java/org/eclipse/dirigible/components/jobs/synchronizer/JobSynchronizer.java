@@ -55,8 +55,14 @@ public class JobSynchronizer extends MultitenantBaseSynchronizer<Job, Long> {
      * The job service.
      */
     private final JobService jobService;
+    
+    /** The jobs manager. */
     private final JobsManager jobsManager;
+    
+    /** The job email service. */
     private final JobEmailService jobEmailService;
+    
+    /** The job log service. */
     private final JobLogService jobLogService;
 
     /**
@@ -64,6 +70,14 @@ public class JobSynchronizer extends MultitenantBaseSynchronizer<Job, Long> {
      */
     private SynchronizerCallback callback;
 
+    /**
+     * Instantiates a new job synchronizer.
+     *
+     * @param jobService the job service
+     * @param jobsManager the jobs manager
+     * @param jobEmailService the job email service
+     * @param jobLogService the job log service
+     */
     @Autowired
     JobSynchronizer(JobService jobService, JobsManager jobsManager, JobEmailService jobEmailService, JobLogService jobLogService) {
         this.jobService = jobService;

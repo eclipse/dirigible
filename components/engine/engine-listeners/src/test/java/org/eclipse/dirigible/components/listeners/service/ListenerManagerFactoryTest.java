@@ -28,6 +28,7 @@ class ListenerManagerFactoryTest {
     @InjectMocks
     private ListenerManagerFactory factory;
 
+    /** The asynchronous message listener factory. */
     @Mock
     private AsynchronousMessageListenerFactory asynchronousMessageListenerFactory;
 

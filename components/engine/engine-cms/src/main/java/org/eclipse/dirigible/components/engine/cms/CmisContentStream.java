@@ -12,6 +12,9 @@ package org.eclipse.dirigible.components.engine.cms;
 
 import java.io.InputStream;
 
+/**
+ * The Interface CmisContentStream.
+ */
 public interface CmisContentStream {
     /**
      * Returns the InputStream of this ContentStream object.

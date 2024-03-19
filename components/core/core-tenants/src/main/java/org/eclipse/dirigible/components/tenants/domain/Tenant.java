@@ -40,6 +40,7 @@ public class Tenant {
     @Column(name = "TENANT_NAME", nullable = false)
     private String name;
 
+    /** The status. */
     @Column(name = "TENANT_STATUS", nullable = false)
     @Enumerated(EnumType.STRING)
     private TenantStatus status;
@@ -121,6 +122,11 @@ public class Tenant {
         this.status = status;
     }
 
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     @Override
     public String toString() {
         return "Tenant [id=" + id + ", subdomain=" + subdomain + ", name=" + name + ", status=" + status + "]";

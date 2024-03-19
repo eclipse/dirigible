@@ -35,9 +35,16 @@ public class SftpServerConfiguration {
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(SftpServerConfiguration.class);
 
+    /** The Constant REPOSITORY_ROOT. */
     private static final String REPOSITORY_ROOT = "./target/dirigible/cms/dirigible/repository/root";
 
 
+    /**
+     * Ssh server.
+     *
+     * @return the ssh server
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Bean
     SshServer sshServer() throws IOException {
         String portValue = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_SFTP_PORT", "8022");

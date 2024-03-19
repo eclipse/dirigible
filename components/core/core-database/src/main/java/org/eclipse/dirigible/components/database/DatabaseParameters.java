@@ -10,6 +10,9 @@
  */
 package org.eclipse.dirigible.components.database;
 
+/**
+ * The Interface DatabaseParameters.
+ */
 public interface DatabaseParameters {
 
     /** Whether or not to use case sensitive syntax for table or view names and column names. */

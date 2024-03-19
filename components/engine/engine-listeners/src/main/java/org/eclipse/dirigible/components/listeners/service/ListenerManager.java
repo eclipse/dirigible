@@ -27,8 +27,13 @@ import java.lang.IllegalStateException;
  */
 public class ListenerManager {
 
+    /** The Constant INITIAL_REDELIVERY_DELAY. */
     private static final int INITIAL_REDELIVERY_DELAY = 1000;
+    
+    /** The Constant REDELIVERY_DELAY. */
     private static final int REDELIVERY_DELAY = 5000;
+    
+    /** The Constant MAXIMUM_REDELIVERIES. */
     private static final int MAXIMUM_REDELIVERIES = 3;
 
     /** The Constant LOGGER. */
@@ -39,6 +44,8 @@ public class ListenerManager {
 
     /** The connection artifacts factory. */
     private final ActiveMQConnectionArtifactsFactory connectionArtifactsFactory;
+    
+    /** The asynchronous message listener factory. */
     private final AsynchronousMessageListenerFactory asynchronousMessageListenerFactory;
 
     /** The connection artifacts. */
@@ -49,6 +56,7 @@ public class ListenerManager {
      *
      * @param listenerDescriptor the listener
      * @param connectionArtifactsFactory the connection artifacts factory
+     * @param asynchronousMessageListenerFactory the asynchronous message listener factory
      */
     public ListenerManager(ListenerDescriptor listenerDescriptor, ActiveMQConnectionArtifactsFactory connectionArtifactsFactory,
             AsynchronousMessageListenerFactory asynchronousMessageListenerFactory) {
@@ -109,6 +117,12 @@ public class ListenerManager {
         };
     }
 
+    /**
+     * Configure redelivery policy.
+     *
+     * @param connection the connection
+     * @param destination the destination
+     */
     private void configureRedeliveryPolicy(Connection connection, Destination destination) {
         if (connection instanceof ActiveMQConnection amqConnection && destination instanceof ActiveMQDestination amqDestination) {
             RedeliveryPolicy redeliveryPolicy = createRedeliveryPolicy();
@@ -117,6 +131,11 @@ public class ListenerManager {
         }
     }
 
+    /**
+     * Creates the redelivery policy.
+     *
+     * @return the redelivery policy
+     */
     private RedeliveryPolicy createRedeliveryPolicy() {
         RedeliveryPolicy redeliveryPolicy = new RedeliveryPolicy();
 

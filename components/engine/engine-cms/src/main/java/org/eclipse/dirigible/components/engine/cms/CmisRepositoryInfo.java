@@ -10,6 +10,9 @@
  */
 package org.eclipse.dirigible.components.engine.cms;
 
+/**
+ * The Interface CmisRepositoryInfo.
+ */
 public interface CmisRepositoryInfo {
     /**
      * Returns the ID of the CMIS repository.

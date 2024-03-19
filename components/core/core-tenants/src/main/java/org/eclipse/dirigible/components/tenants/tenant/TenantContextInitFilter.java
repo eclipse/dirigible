@@ -31,29 +31,57 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * The Class TenantContextInitFilter.
+ */
 @Component
 public class TenantContextInitFilter extends OncePerRequestFilter {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(TenantContextInitFilter.class);
 
+    /** The Constant DEFAULT_TENANT_SUBDOMAIN_REGEX. */
     private static final String DEFAULT_TENANT_SUBDOMAIN_REGEX = "^([^\\.]+)\\..+$";
+    
+    /** The Constant TENANT_SUBDOMAIN_REGEX. */
     private static final String TENANT_SUBDOMAIN_REGEX =
             Configuration.get(Configuration.TENANT_SUBDOMAIN_REGEX, DEFAULT_TENANT_SUBDOMAIN_REGEX);
+    
+    /** The Constant TENANT_SUBDOMAIN_PATTERN. */
     private static final Pattern TENANT_SUBDOMAIN_PATTERN = Pattern.compile(TENANT_SUBDOMAIN_REGEX);
 
+    /** The Constant tenantCache. */
     private static final Cache<String, Optional<Tenant>> tenantCache = Caffeine.newBuilder()
                                                                                .expireAfterWrite(10, TimeUnit.MINUTES)
                                                                                .maximumSize(100)
                                                                                .build();
 
+    /** The tenant service. */
     private final TenantService tenantService;
+    
+    /** The tenant context. */
     private final TenantContext tenantContext;
 
+    /**
+     * Instantiates a new tenant context init filter.
+     *
+     * @param tenantService the tenant service
+     * @param tenantContext the tenant context
+     */
     public TenantContextInitFilter(TenantService tenantService, TenantContext tenantContext) {
         this.tenantService = tenantService;
         this.tenantContext = tenantContext;
     }
 
+    /**
+     * Do filter internal.
+     *
+     * @param request the request
+     * @param response the response
+     * @param chain the chain
+     * @throws ServletException the servlet exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
@@ -78,6 +106,12 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
         }
     }
 
+    /**
+     * Determine current tenant.
+     *
+     * @param request the request
+     * @return the optional
+     */
     private Optional<Tenant> determineCurrentTenant(HttpServletRequest request) {
         String host = request.getServerName();
         Matcher matcher = TENANT_SUBDOMAIN_PATTERN.matcher(host);
@@ -94,6 +128,12 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
         return Optional.of(TenantImpl.getDefaultTenant());
     }
 
+    /**
+     * Should not filter.
+     *
+     * @param request the request
+     * @return true, if successful
+     */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         return request.getRequestURI()

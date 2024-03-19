@@ -22,7 +22,9 @@ public class CmisRepositoryFactory {
     /**
      * Creates a new CmisRepository object.
      *
+     * @param root the root
      * @return the cmis repository
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static CmisRepository createCmisRepository(String root) throws IOException {
         return new CmisS3Repository(root);

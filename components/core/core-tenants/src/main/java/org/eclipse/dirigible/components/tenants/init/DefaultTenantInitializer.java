@@ -23,20 +23,38 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class DefaultTenantInitializer.
+ */
 @Order(ApplicationReadyEventListeners.DEFAULT_TENANT_INITIALIZER)
 @Component
 class DefaultTenantInitializer implements ApplicationListener<ApplicationReadyEvent> {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultTenantInitializer.class);
 
+    /** The default tenant. */
     private final Tenant defaultTenant;
+    
+    /** The tenant service. */
     private final TenantService tenantService;
 
+    /**
+     * Instantiates a new default tenant initializer.
+     *
+     * @param defaultTenant the default tenant
+     * @param tenantService the tenant service
+     */
     DefaultTenantInitializer(@DefaultTenant Tenant defaultTenant, TenantService tenantService) {
         this.defaultTenant = defaultTenant;
         this.tenantService = tenantService;
     }
 
+    /**
+     * On application event.
+     *
+     * @param event the event
+     */
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         LOGGER.info("Executing...");
@@ -45,6 +63,9 @@ class DefaultTenantInitializer implements ApplicationListener<ApplicationReadyEv
 
     }
 
+    /**
+     * Creates the default tenant.
+     */
     private void createDefaultTenant() {
         Optional<org.eclipse.dirigible.components.tenants.domain.Tenant> existingTenant = tenantService.findById(defaultTenant.getId());
         if (existingTenant.isPresent()) {

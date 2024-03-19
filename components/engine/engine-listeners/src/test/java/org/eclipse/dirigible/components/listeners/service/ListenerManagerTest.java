@@ -51,6 +51,7 @@ class ListenerManagerTest {
     @Mock
     private ActiveMQConnectionArtifactsFactory connectionArtifactsFactory;
 
+    /** The asynchronous message listener factory. */
     @Mock
     private AsynchronousMessageListenerFactory asynchronousMessageListenerFactory;
 
@@ -82,9 +83,13 @@ class ListenerManagerTest {
     @Captor
     private ArgumentCaptor<AsynchronousMessageListener> messageListenerCaptor;
 
+    /** The asynchronous message listener. */
     @Mock
     private AsynchronousMessageListener asynchronousMessageListener;
 
+    /**
+     * Sets the up.
+     */
     @BeforeEach
     void setUp() {
         lenient().when(asynchronousMessageListenerFactory.create(listenerDescriptor))

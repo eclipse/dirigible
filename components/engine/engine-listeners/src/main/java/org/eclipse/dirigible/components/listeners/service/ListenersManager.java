@@ -40,6 +40,7 @@ public class ListenersManager {
     /** The message listener manager factory. */
     private final ListenerManagerFactory messageListenerManagerFactory;
 
+    /** The listener creator. */
     private final ListenerCreator listenerCreator;
 
     /**
@@ -47,6 +48,7 @@ public class ListenersManager {
      *
      * @param repository the repository
      * @param messageListenerManagerFactory the message listener manager factory
+     * @param listenerCreator the listener creator
      */
     @Autowired
     public ListenersManager(IRepository repository, ListenerManagerFactory messageListenerManagerFactory, ListenerCreator listenerCreator) {

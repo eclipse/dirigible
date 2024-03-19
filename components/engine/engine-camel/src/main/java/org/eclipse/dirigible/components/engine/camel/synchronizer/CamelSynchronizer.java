@@ -41,6 +41,8 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
     private static final Logger logger = LoggerFactory.getLogger(CamelSynchronizer.class);
     /** The camel service. */
     private final CamelService camelService;
+    
+    /** The camel processor. */
     private final CamelProcessor camelProcessor;
     /** The synchronization callback. */
     private SynchronizerCallback callback;
@@ -197,10 +199,20 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
         }
     }
 
+    /**
+     * Adds the to processor.
+     *
+     * @param camel the camel
+     */
     private void addToProcessor(Camel camel) {
         camelProcessor.onCreateOrUpdate(camel);
     }
 
+    /**
+     * Removes the from processor.
+     *
+     * @param camel the camel
+     */
     private void removeFromProcessor(Camel camel) {
         getService().delete(camel);
         camelProcessor.onRemove(camel);

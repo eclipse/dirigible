@@ -558,6 +558,13 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
         registerBrokenState(definition, e, e.getMessage());
     }
 
+    /**
+     * Register broken state.
+     *
+     * @param definition the definition
+     * @param ex the ex
+     * @param errorMessage the error message
+     */
     private void registerBrokenState(Definition definition, Exception ex, String errorMessage) {
         if (null != ex) {
             logger.error(errorMessage, ex);
@@ -586,6 +593,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
     /**
      * Adds the artefacts.
      *
+     * @param <T> the generic type
      * @param parsed the parsed
      */
     private <T extends Artefact> void addArtefacts(List<T> parsed) {

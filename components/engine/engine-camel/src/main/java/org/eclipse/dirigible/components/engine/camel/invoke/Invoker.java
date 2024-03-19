@@ -23,15 +23,30 @@ import org.springframework.stereotype.Component;
 import java.nio.file.Path;
 import java.util.Map;
 
+/**
+ * The Class Invoker.
+ */
 @Component
 public class Invoker {
+    
+    /** The processor. */
     private final CamelProcessor processor;
 
+    /**
+     * Instantiates a new invoker.
+     *
+     * @param processor the processor
+     */
     @Autowired
     public Invoker(CamelProcessor processor) {
         this.processor = processor;
     }
 
+    /**
+     * Invoke.
+     *
+     * @param camelMessage the camel message
+     */
     public void invoke(Message camelMessage) {
         DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner();
         String resourcePath = (String) camelMessage.getExchange()
@@ -61,16 +76,33 @@ public class Invoker {
         }
     }
 
+    /**
+     * Wrap camel message.
+     *
+     * @param camelMessage the camel message
+     * @return the integration message
+     */
     private IntegrationMessage wrapCamelMessage(Message camelMessage) {
         return new IntegrationMessage(camelMessage);
     }
 
+    /**
+     * Unwrap camel message.
+     *
+     * @param value the value
+     * @return the message
+     */
     private Message unwrapCamelMessage(Value value) {
         validateIntegrationMessage(value);
         IntegrationMessage message = value.asHostObject();
         return message.getCamelMessage();
     }
 
+    /**
+     * Validate integration message.
+     *
+     * @param value the value
+     */
     private void validateIntegrationMessage(Value value) {
         if (!value.isHostObject() || !(value.asHostObject() instanceof IntegrationMessage)) {
             throw new IllegalArgumentException(
@@ -78,6 +110,14 @@ public class Invoker {
         }
     }
 
+    /**
+     * Invoke route.
+     *
+     * @param routeId the route id
+     * @param payload the payload
+     * @param headers the headers
+     * @return the object
+     */
     @CalledFromJS
     public Object invokeRoute(String routeId, Object payload, Map<String, Object> headers) {
         return processor.invokeRoute(routeId, payload, headers);

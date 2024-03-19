@@ -24,6 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class MarkdownService extends BaseArtefactService<Markdown, Long> {
 
+    /**
+     * Instantiates a new markdown service.
+     *
+     * @param repository the repository
+     */
     public MarkdownService(MarkdownRepository repository) {
         super(repository);
     }

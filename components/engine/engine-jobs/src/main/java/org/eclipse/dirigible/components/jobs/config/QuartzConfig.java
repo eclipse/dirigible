@@ -40,6 +40,8 @@ class QuartzConfig {
      * Scheduler.
      *
      * @param factory the factory
+     * @param systemDataSource the system data source
+     * @param systemDataSourceName the system data source name
      * @return the scheduler
      * @throws SchedulerException the scheduler exception
      */
@@ -60,6 +62,7 @@ class QuartzConfig {
     /**
      * Scheduler factory bean.
      *
+     * @param jobFactory the job factory
      * @return the scheduler factory bean
      * @throws IOException Signals that an I/O exception has occurred.
      */

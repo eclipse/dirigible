@@ -12,8 +12,16 @@ package org.eclipse.dirigible.components.jobs.handler;
 
 import org.quartz.JobExecutionException;
 
+/**
+ * The Class MissingTenantException.
+ */
 public class MissingTenantException extends JobExecutionException {
 
+    /**
+     * Instantiates a new missing tenant exception.
+     *
+     * @param message the message
+     */
     public MissingTenantException(String message) {
         super(message);
     }

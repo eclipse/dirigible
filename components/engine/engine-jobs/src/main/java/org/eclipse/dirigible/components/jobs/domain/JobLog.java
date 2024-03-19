@@ -58,6 +58,7 @@ public class JobLog extends Artefact {
     @Expose
     private Timestamp finishedAt;
 
+    /** The status. */
     @Column(name = "JOBLOG_STATUS", nullable = false)
     @Enumerated(EnumType.STRING)
     private JobStatus status;
@@ -67,6 +68,7 @@ public class JobLog extends Artefact {
     @Expose
     private String message;
 
+    /** The tenant id. */
     @Column(name = "JOBLOG_TENANT_ID", columnDefinition = "VARCHAR", nullable = false)
     @Expose
     private String tenantId;
@@ -79,6 +81,22 @@ public class JobLog extends Artefact {
         this.type = ARTEFACT_TYPE;
     }
 
+    /**
+     * Instantiates a new job log.
+     *
+     * @param location the location
+     * @param name the name
+     * @param description the description
+     * @param dependencies the dependencies
+     * @param jobName the job name
+     * @param handler the handler
+     * @param triggeredAt the triggered at
+     * @param triggeredId the triggered id
+     * @param finishedAt the finished at
+     * @param status the status
+     * @param message the message
+     * @param tenantId the tenant id
+     */
     public JobLog(String location, String name, String description, Set<String> dependencies, String jobName, String handler,
             Timestamp triggeredAt, Long triggeredId, Timestamp finishedAt, JobStatus status, String message, String tenantId) {
         super(location, name, ARTEFACT_TYPE, description, dependencies);
@@ -236,6 +254,9 @@ public class JobLog extends Artefact {
         this.message = message;
     }
 
+    /**
+     * Update key.
+     */
     @Override
     public void updateKey() {
         super.updateKey();
@@ -254,10 +275,20 @@ public class JobLog extends Artefact {
                 + ", tenantId='" + tenantId + '\'' + '}';
     }
 
+    /**
+     * Gets the tenant id.
+     *
+     * @return the tenant id
+     */
     public String getTenantId() {
         return tenantId;
     }
 
+    /**
+     * Sets the tenant id.
+     *
+     * @param tenantId the new tenant id
+     */
     public void setTenantId(String tenantId) {
         this.tenantId = tenantId;
     }

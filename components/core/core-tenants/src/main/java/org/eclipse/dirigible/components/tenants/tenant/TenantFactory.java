@@ -13,9 +13,18 @@ package org.eclipse.dirigible.components.tenants.tenant;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.springframework.stereotype.Component;
 
+/**
+ * A factory for creating Tenant objects.
+ */
 @Component
 public class TenantFactory {
 
+    /**
+     * Creates a new Tenant object.
+     *
+     * @param tenant the tenant
+     * @return the tenant
+     */
     public Tenant createFromEntity(org.eclipse.dirigible.components.tenants.domain.Tenant tenant) {
         return TenantImpl.createFromEntity(tenant);
     }

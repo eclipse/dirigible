@@ -31,15 +31,31 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class JobService extends BaseArtefactService<Job, Long> {
 
+    /** The job email processor. */
     private final JobEmailProcessor jobEmailProcessor;
+    
+    /** The jobs manager. */
     private final JobsManager jobsManager;
 
+    /**
+     * Instantiates a new job service.
+     *
+     * @param repository the repository
+     * @param jobEmailProcessor the job email processor
+     * @param jobsManager the jobs manager
+     */
     public JobService(JobRepository repository, JobEmailProcessor jobEmailProcessor, JobsManager jobsManager) {
         super(repository);
         this.jobEmailProcessor = jobEmailProcessor;
         this.jobsManager = jobsManager;
     }
 
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the job
+     */
     @Override
     @Transactional(readOnly = true)
     public Job findByName(String name) {
@@ -81,7 +97,7 @@ public class JobService extends BaseArtefactService<Job, Long> {
      *
      * @param name the name
      * @return the job
-     * @throws Exception
+     * @throws Exception the exception
      */
     public Job enable(String name) throws Exception {
         Job job = findByName(name);
@@ -95,7 +111,7 @@ public class JobService extends BaseArtefactService<Job, Long> {
      *
      * @param name the name
      * @return the job
-     * @throws Exception
+     * @throws Exception the exception
      */
     public Job disable(String name) throws Exception {
         Job job = findByName(name);

@@ -10,7 +10,12 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
+/**
+ * The Enum ListenerType.
+ */
 enum ListenerType {
 
-    QUEUE, TOPIC
+    /** The queue. */
+    QUEUE, /** The topic. */
+ TOPIC
 }

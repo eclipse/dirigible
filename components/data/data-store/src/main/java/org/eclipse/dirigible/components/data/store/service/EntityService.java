@@ -16,10 +16,18 @@ import org.eclipse.dirigible.components.data.store.repository.EntityRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The Class EntityService.
+ */
 @Service
 @Transactional
 public class EntityService extends BaseArtefactService<Entity, Long> {
 
+    /**
+     * Instantiates a new entity service.
+     *
+     * @param repository the repository
+     */
     public EntityService(EntityRepository repository) {
         super(repository);
     }

@@ -28,9 +28,20 @@ public class MessageProducer {
 
     /** The session. */
     private final Session session;
+    
+    /** The destination name manager. */
     private final DestinationNameManager destinationNameManager;
+    
+    /** The tenant property manager. */
     private final TenantPropertyManager tenantPropertyManager;
 
+    /**
+     * Instantiates a new message producer.
+     *
+     * @param session the session
+     * @param destinationNameManager the destination name manager
+     * @param tenantPropertyManager the tenant property manager
+     */
     @Autowired
     MessageProducer(@Qualifier("ActiveMQSession") Session session, DestinationNameManager destinationNameManager,
             TenantPropertyManager tenantPropertyManager) {

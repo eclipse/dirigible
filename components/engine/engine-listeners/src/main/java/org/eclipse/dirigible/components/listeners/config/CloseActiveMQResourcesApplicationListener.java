@@ -118,6 +118,9 @@ class CloseActiveMQResourcesApplicationListener implements ApplicationListener<A
         }
     }
 
+    /**
+     * Close session.
+     */
     private void closeSession() {
         try {
             session.close();
@@ -126,6 +129,9 @@ class CloseActiveMQResourcesApplicationListener implements ApplicationListener<A
         }
     }
 
+    /**
+     * Close connection.
+     */
     private void closeConnection() {
         try {
             connection.close();

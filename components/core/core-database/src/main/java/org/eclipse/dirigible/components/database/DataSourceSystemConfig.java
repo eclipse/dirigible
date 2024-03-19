@@ -32,15 +32,24 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.zaxxer.hikari.HikariDataSource;
 
+/**
+ * The Class DataSourceSystemConfig.
+ */
 @org.springframework.context.annotation.Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager",
         basePackages = {"org.eclipse.dirigible.components"})
 public class DataSourceSystemConfig {
 
+    /** The dirigible scan packages. */
     @Value("${dirigible.scan.packages:org.eclipse.dirigible.components}")
     private String dirigibleScanPackages;
 
+    /**
+     * Gets the data source.
+     *
+     * @return the data source
+     */
     @Bean(name = "SystemDB")
     public HikariDataSource getDataSource() {
         DataSourceProperties dataSourceProperties = new DataSourceProperties();
@@ -54,6 +63,12 @@ public class DataSourceSystemConfig {
                                    .build();
     }
 
+    /**
+     * Entity manager factory.
+     *
+     * @param dataSource the data source
+     * @return the local container entity manager factory bean
+     */
     @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier("SystemDB") DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
@@ -72,6 +87,12 @@ public class DataSourceSystemConfig {
         return em;
     }
 
+    /**
+     * Transaction manager.
+     *
+     * @param entityManagerFactory the entity manager factory
+     * @return the platform transaction manager
+     */
     @Bean(name = "transactionManager")
     public PlatformTransactionManager transactionManager(@Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);

@@ -32,22 +32,43 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+/**
+ * The Class CustomOidcUserService.
+ */
 @Profile("keycloak")
 @Service
 public class CustomOidcUserService extends OidcUserService {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomOidcUserService.class);
 
+    /** The Constant USER_NOT_IN_TENANT_ERR. */
     private static final OAuth2Error USER_NOT_IN_TENANT_ERR = new OAuth2Error("user_not_registered_in_tenant");
 
+    /** The user service. */
     private final UserService userService;
+    
+    /** The tenant context. */
     private final TenantContext tenantContext;
 
+    /**
+     * Instantiates a new custom oidc user service.
+     *
+     * @param userService the user service
+     * @param tenantContext the tenant context
+     */
     public CustomOidcUserService(UserService userService, TenantContext tenantContext) {
         this.userService = userService;
         this.tenantContext = tenantContext;
     }
 
+    /**
+     * Load user.
+     *
+     * @param userRequest the user request
+     * @return the oidc user
+     * @throws OAuth2AuthenticationException the o auth 2 authentication exception
+     */
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
         OidcUser oidcUser = super.loadUser(userRequest);
@@ -60,6 +81,12 @@ public class CustomOidcUserService extends OidcUserService {
 
     }
 
+    /**
+     * Gets the tenant user.
+     *
+     * @param oidcUser the oidc user
+     * @return the tenant user
+     */
     private User getTenantUser(OidcUser oidcUser) {
         if (isTrialEnabled()) {
             LOGGER.debug("Trial enabled - user [{}] will not be checked for the current tenant.", oidcUser.getName());
@@ -76,6 +103,12 @@ public class CustomOidcUserService extends OidcUserService {
                           });
     }
 
+    /**
+     * Gets the role names.
+     *
+     * @param user the user
+     * @return the role names
+     */
     private Set<String> getRoleNames(User user) {
         if (isTrialEnabled()) {
             LOGGER.debug("Trial enabled - returning all available system roles for the current user.");
@@ -86,11 +119,22 @@ public class CustomOidcUserService extends OidcUserService {
         return userService.getUserRoleNames(user);
     }
 
+    /**
+     * Checks if is trial enabled.
+     *
+     * @return true, if is trial enabled
+     */
     private boolean isTrialEnabled() {
         String configValue = Configuration.get(Configuration.TRIAL_ENABLED, "false");
         return Boolean.valueOf(configValue);
     }
 
+    /**
+     * To authorities.
+     *
+     * @param roleNames the role names
+     * @return the sets the
+     */
     private Set<GrantedAuthority> toAuthorities(Collection<String> roleNames) {
         return roleNames.stream()
                         .map(r -> new SimpleGrantedAuthority(r))
@@ -98,6 +142,14 @@ public class CustomOidcUserService extends OidcUserService {
 
     }
 
+    /**
+     * Creates the oidc user.
+     *
+     * @param userRequest the user request
+     * @param oidcUser the oidc user
+     * @param additionalAuthorities the additional authorities
+     * @return the oidc user
+     */
     private OidcUser createOidcUser(OidcUserRequest userRequest, OidcUser oidcUser, Set<GrantedAuthority> additionalAuthorities) {
         String userNameAttributeName = userRequest.getClientRegistration()
                                                   .getProviderDetails()

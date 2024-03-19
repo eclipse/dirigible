@@ -41,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Transactional
 public class JobLogRepositoryTest {
 
+    /** The Constant TENANT_ID. */
     private static final String TENANT_ID = "5a2cbfde-bae3-42d5-b0fa-0568466160cd";
 
     /** The entity manager. */
@@ -110,6 +111,8 @@ public class JobLogRepositoryTest {
 
     /**
      * Gets the one.
+     *
+     * @return the one
      */
     @Test
     public void getOne() {
@@ -136,6 +139,8 @@ public class JobLogRepositoryTest {
 
     /**
      * Gets the reference using entity manager.
+     *
+     * @return the reference using entity manager
      */
     @Test
     public void getReferenceUsingEntityManager() {

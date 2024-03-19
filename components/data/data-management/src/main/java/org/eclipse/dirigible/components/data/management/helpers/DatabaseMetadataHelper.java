@@ -276,6 +276,14 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         return result;
     }
 
+    /**
+     * List sequences.
+     *
+     * @param connection the connection
+     * @param name the name
+     * @return the list
+     * @throws SQLException the SQL exception
+     */
     public static List<SequenceMetadata> listSequences(Connection connection, String name) throws SQLException {
 
         DatabaseMetaData dmd = connection.getMetaData();
@@ -543,6 +551,7 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
      * @param tableName the table name
      * @param columnsIteratorCallback the columns iterator callback
      * @param indicesIteratorCallback the indices iterator callback
+     * @param foreignKeysIteratorCallback the foreign keys iterator callback
      * @throws SQLException the SQL exception
      */
     public static void iterateTableDefinition(Connection connection, String catalogName, String schemaName, String tableName,

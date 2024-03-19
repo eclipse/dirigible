@@ -24,6 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository("webRepository")
 public interface ExposeRepository extends ArtefactRepository<Expose, Long> {
 
+    /**
+     * Sets the running to all.
+     *
+     * @param running the new running to all
+     */
     @Override
     @Modifying
     @Transactional

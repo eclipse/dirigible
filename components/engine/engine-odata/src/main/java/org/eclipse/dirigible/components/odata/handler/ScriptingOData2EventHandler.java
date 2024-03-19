@@ -578,7 +578,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
      * @param handlers the handlers
      * @param context the context
      * @return the string
-     * @throws Exception
+     * @throws Exception the exception
      */
     private String executeHandler(List<ODataHandler> handlers, Map<Object, Object> context) throws Exception {
         if (handlers.size() > 0) {

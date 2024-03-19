@@ -14,8 +14,16 @@ import org.quartz.*;
 
 import java.util.Optional;
 
+/**
+ * The Class DirigibleJob.
+ */
 public abstract class DirigibleJob implements Job {
 
+    /**
+     * Creates the trigger.
+     *
+     * @return the trigger
+     */
     public Trigger createTrigger() {
         JobDetail job = createJob();
 
@@ -30,6 +38,11 @@ public abstract class DirigibleJob implements Job {
                              .build();
     }
 
+    /**
+     * Creates the job.
+     *
+     * @return the job detail
+     */
     public JobDetail createJob() {
         Optional<String> jobGroup = getJobGroup();
         JobKey key = jobGroup.isPresent() ? JobKey.jobKey(getJobKey(), jobGroup.get()) : JobKey.jobKey(getJobKey());
@@ -42,17 +55,52 @@ public abstract class DirigibleJob implements Job {
                          .build();
     }
 
+    /**
+     * Gets the trigger group.
+     *
+     * @return the trigger group
+     */
     protected abstract Optional<String> getTriggerGroup();
 
+    /**
+     * Gets the trigger key.
+     *
+     * @return the trigger key
+     */
     protected abstract String getTriggerKey();
 
+    /**
+     * Gets the trigger description.
+     *
+     * @return the trigger description
+     */
     protected abstract String getTriggerDescription();
 
+    /**
+     * Gets the schedule.
+     *
+     * @return the schedule
+     */
     protected abstract SimpleScheduleBuilder getSchedule();
 
+    /**
+     * Gets the job group.
+     *
+     * @return the job group
+     */
     protected abstract Optional<String> getJobGroup();
 
+    /**
+     * Gets the job key.
+     *
+     * @return the job key
+     */
     protected abstract String getJobKey();
 
+    /**
+     * Gets the job description.
+     *
+     * @return the job description
+     */
     protected abstract String getJobDescription();
 }

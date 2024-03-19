@@ -138,6 +138,12 @@ public class OpenAPIEndpoint extends BaseEndpoint {
         return new ResponseEntity<>(openAPIJson, HttpStatus.OK);
     }
 
+    /**
+     * Initialize open api.
+     *
+     * @param info the info
+     * @return the open API
+     */
     private OpenAPI initializeOpenApi(Info info) {
         OpenAPI openApi = new OpenAPI();
         openApi.info(info);
@@ -169,7 +175,7 @@ public class OpenAPIEndpoint extends BaseEndpoint {
     /**
      * Populate swagger from contribution.
      *
-     * @param swagger the swagger
+     * @param openApi the open api
      * @param resource the resource
      */
     private void populateOpenApiFromContribution(OpenAPI openApi, IResource resource) {

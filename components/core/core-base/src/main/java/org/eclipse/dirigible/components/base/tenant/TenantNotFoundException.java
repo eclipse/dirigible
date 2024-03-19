@@ -10,8 +10,16 @@
  */
 package org.eclipse.dirigible.components.base.tenant;
 
+/**
+ * The Class TenantNotFoundException.
+ */
 public class TenantNotFoundException extends RuntimeException {
 
+    /**
+     * Instantiates a new tenant not found exception.
+     *
+     * @param tenantId the tenant id
+     */
     public TenantNotFoundException(String tenantId) {
         super("Tenant with id [" + tenantId + "] was not found.");
     }

@@ -25,9 +25,18 @@ import org.springframework.stereotype.Service;
 public class ODataMetadataService {
 
 
+    /** The odata schema service. */
     private final ODataSchemaService odataSchemaService;
+    
+    /** The odata container service. */
     private final ODataContainerService odataContainerService;
 
+    /**
+     * Instantiates a new o data metadata service.
+     *
+     * @param odataSchemaService the odata schema service
+     * @param odataContainerService the odata container service
+     */
     ODataMetadataService(ODataSchemaService odataSchemaService, ODataContainerService odataContainerService) {
         this.odataSchemaService = odataSchemaService;
         this.odataContainerService = odataContainerService;

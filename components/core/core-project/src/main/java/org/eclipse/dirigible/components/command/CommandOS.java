@@ -12,10 +12,21 @@ package org.eclipse.dirigible.components.command;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * The Enum CommandOS.
+ */
 public enum CommandOS {
+    
+    /** The unix. */
     @SerializedName("unix")
-    UNIX, @SerializedName("linux")
-    LINUX, @SerializedName("mac")
-    MAC, @SerializedName("windows")
+    UNIX, 
+ /** The linux. */
+ @SerializedName("linux")
+    LINUX, 
+ /** The mac. */
+ @SerializedName("mac")
+    MAC, 
+ /** The windows. */
+ @SerializedName("windows")
     WINDOWS
 }

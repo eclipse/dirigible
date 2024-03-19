@@ -22,8 +22,16 @@ public class ListenerManagerFactory {
 
     /** The connection artifacts factory. */
     private final ActiveMQConnectionArtifactsFactory connectionArtifactsFactory;
+    
+    /** The asynchronous message listener factory. */
     private final AsynchronousMessageListenerFactory asynchronousMessageListenerFactory;
 
+    /**
+     * Instantiates a new listener manager factory.
+     *
+     * @param connectionArtifactsFactory the connection artifacts factory
+     * @param asynchronousMessageListenerFactory the asynchronous message listener factory
+     */
     @Autowired
     public ListenerManagerFactory(ActiveMQConnectionArtifactsFactory connectionArtifactsFactory,
             AsynchronousMessageListenerFactory asynchronousMessageListenerFactory) {

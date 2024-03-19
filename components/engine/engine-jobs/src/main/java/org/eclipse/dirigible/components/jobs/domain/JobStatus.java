@@ -10,8 +10,26 @@
  */
 package org.eclipse.dirigible.components.jobs.domain;
 
+/**
+ * The Enum JobStatus.
+ */
 public enum JobStatus {
     // values are used in DB and in the UI as well
+    /** The triggred. */
     // change them with caution
-    TRIGGRED, FINISHED, FAILED, LOGGED, UNKNOWN, INFO, WARN, ERROR
+    TRIGGRED, 
+ /** The finished. */
+ FINISHED, 
+ /** The failed. */
+ FAILED, 
+ /** The logged. */
+ LOGGED, 
+ /** The unknown. */
+ UNKNOWN, 
+ /** The info. */
+ INFO, 
+ /** The warn. */
+ WARN, 
+ /** The error. */
+ ERROR
 }

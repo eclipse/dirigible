@@ -46,13 +46,25 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DirigibleODataServiceFactory.class);
 
+    /** The data sources manager. */
     private static DataSourcesManager dataSourcesManager;
+    
+    /** The odata metadata service. */
     private static ODataMetadataService odataMetadataService;
 
+    /**
+     * Instantiates a new dirigible O data service factory.
+     */
     public DirigibleODataServiceFactory() {
         // called by ODataServlet
     }
 
+    /**
+     * Instantiates a new dirigible O data service factory.
+     *
+     * @param dataSourcesManager the data sources manager
+     * @param odataMetadataService the odata metadata service
+     */
     @Autowired
     public DirigibleODataServiceFactory(DataSourcesManager dataSourcesManager, ODataMetadataService odataMetadataService) {
         DirigibleODataServiceFactory.dataSourcesManager = dataSourcesManager;

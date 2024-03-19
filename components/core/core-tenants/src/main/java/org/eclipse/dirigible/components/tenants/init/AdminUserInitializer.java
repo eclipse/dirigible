@@ -31,18 +31,36 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class AdminUserInitializer.
+ */
 @ConditionalOnProperty(name = "basic.enabled", havingValue = "true")
 @Order(ApplicationReadyEventListeners.ADMIN_USER_INITIALIZER)
 @Component
 class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent> {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminUserInitializer.class);
 
+    /** The base 64 decoder. */
     private final Decoder base64Decoder;
+    
+    /** The user service. */
     private final UserService userService;
+    
+    /** The default tenant. */
     private final Tenant defaultTenant;
+    
+    /** The role service. */
     private final RoleService roleService;
 
+    /**
+     * Instantiates a new admin user initializer.
+     *
+     * @param userService the user service
+     * @param defaultTenant the default tenant
+     * @param roleService the role service
+     */
     AdminUserInitializer(UserService userService, @DefaultTenant Tenant defaultTenant, RoleService roleService) {
         this.userService = userService;
         this.defaultTenant = defaultTenant;
@@ -50,6 +68,11 @@ class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent>
         this.base64Decoder = Base64.getDecoder();
     }
 
+    /**
+     * On application event.
+     *
+     * @param event the event
+     */
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         LOGGER.info("Executing...");
@@ -58,6 +81,9 @@ class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent>
 
     }
 
+    /**
+     * Inits the admin user.
+     */
     private void initAdminUser() {
         String base64Username = org.eclipse.dirigible.commons.config.Configuration.get(
                 org.eclipse.dirigible.commons.config.Configuration.BASIC_USERNAME, "YWRtaW4="); // admin
@@ -80,11 +106,23 @@ class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent>
         }
     }
 
+    /**
+     * Decode.
+     *
+     * @param base64String the base 64 string
+     * @return the string
+     */
     private String decode(String base64String) {
         byte[] decodedValue = base64Decoder.decode(base64String);
         return new String(decodedValue, StandardCharsets.UTF_8);
     }
 
+    /**
+     * Assign role.
+     *
+     * @param user the user
+     * @param predefinedRole the predefined role
+     */
     private void assignRole(User user, Roles predefinedRole) {
         UserRoleAssignment assignment = new UserRoleAssignment();
         assignment.setUser(user);

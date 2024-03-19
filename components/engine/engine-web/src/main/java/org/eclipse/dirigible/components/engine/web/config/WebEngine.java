@@ -13,14 +13,27 @@ package org.eclipse.dirigible.components.engine.web.config;
 import org.eclipse.dirigible.components.base.artefact.Engine;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class WebEngine.
+ */
 @Component
 public class WebEngine implements Engine {
 
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
     @Override
     public String getName() {
         return "Web";
     }
 
+    /**
+     * Gets the provider.
+     *
+     * @return the provider
+     */
     @Override
     public String getProvider() {
         return "Eclipse Dirigible";

@@ -12,6 +12,9 @@ package org.eclipse.dirigible.components.base.tenant;
 
 import java.util.List;
 
+/**
+ * The Interface TenantContext.
+ */
 public interface TenantContext {
 
     /**
@@ -38,9 +41,9 @@ public interface TenantContext {
     /**
      * This method will execute callable.call() method on behalf of the specified tenant.
      *
+     * @param <Result> result type
      * @param tenant the tenant
      * @param callable the callable
-     * @param <Result> result type
      * @return the result
      * @throws Exception the exception which is thrown by the passed callable
      */
@@ -49,9 +52,9 @@ public interface TenantContext {
     /**
      * This method will execute callable.call() method on behalf of the specified tenant.
      *
+     * @param <Result> result type
      * @param tenant the tenant
      * @param callable the callable
-     * @param <Result> result type
      * @return the result
      */
     <Result> Result execute(Tenant tenant, CallableResultAndNoException<Result> callable);
@@ -59,9 +62,9 @@ public interface TenantContext {
     /**
      * This method will execute callable.call() method on behalf of the specified tenant id.
      *
+     * @param <Result> result type
      * @param tenantId the tenant id
      * @param callable the callable
-     * @param <Result> result type
      * @return the result
      * @throws TenantNotFoundException in case the provided tenant id doesn't exist
      */

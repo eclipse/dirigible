@@ -25,15 +25,30 @@ import org.eclipse.dirigible.components.engine.camel.domain.Camel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class CamelProcessor.
+ */
 @Component
 public class CamelProcessor {
+    
+    /** The context. */
     private final SpringBootCamelContext context;
+    
+    /** The camel request handler mapping. */
     private final CamelRequestHandlerMapping camelRequestHandlerMapping;
 
+    /** The loader. */
     private final RoutesLoader loader;
 
+    /** The camels. */
     private final Map<Long, Resource> camels = new HashMap<>();
 
+    /**
+     * Instantiates a new camel processor.
+     *
+     * @param context the context
+     * @param camelRequestHandlerMapping the camel request handler mapping
+     */
     @Autowired
     public CamelProcessor(SpringBootCamelContext context, CamelRequestHandlerMapping camelRequestHandlerMapping) {
         this.context = context;
@@ -41,6 +56,11 @@ public class CamelProcessor {
         loader = new DefaultRoutesLoader(context);
     }
 
+    /**
+     * On create or update.
+     *
+     * @param camel the camel
+     */
     public void onCreateOrUpdate(Camel camel) {
         Resource resource = ResourceHelper.fromBytes("any.yaml", camel.getContent());
         camels.put(camel.getId(), resource);
@@ -48,12 +68,20 @@ public class CamelProcessor {
         addAllRoutes();
     }
 
+    /**
+     * On remove.
+     *
+     * @param camel the camel
+     */
     public void onRemove(Camel camel) {
         camels.remove(camel.getId());
         removeAllRoutes();
         addAllRoutes();
     }
 
+    /**
+     * Adds the all routes.
+     */
     private void addAllRoutes() {
         camels.values()
               .forEach(routesResource -> {
@@ -65,6 +93,9 @@ public class CamelProcessor {
               });
     }
 
+    /**
+     * Removes the all routes.
+     */
     private void removeAllRoutes() {
         try {
             context.stopAllRoutes();
@@ -76,6 +107,14 @@ public class CamelProcessor {
         }
     }
 
+    /**
+     * Invoke route.
+     *
+     * @param routeId the route id
+     * @param payload the payload
+     * @param headers the headers
+     * @return the object
+     */
     public Object invokeRoute(String routeId, Object payload, Map<String, Object> headers) {
         try (FluentProducerTemplate producer = context.createFluentProducerTemplate()) {
             return producer.withHeaders(headers)

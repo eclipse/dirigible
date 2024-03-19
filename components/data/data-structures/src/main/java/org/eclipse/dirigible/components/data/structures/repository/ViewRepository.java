@@ -24,6 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository("viewRepository")
 public interface ViewRepository extends ArtefactRepository<View, Long> {
 
+    /**
+     * Sets the running to all.
+     *
+     * @param running the new running to all
+     */
     @Override
     @Modifying
     @Transactional

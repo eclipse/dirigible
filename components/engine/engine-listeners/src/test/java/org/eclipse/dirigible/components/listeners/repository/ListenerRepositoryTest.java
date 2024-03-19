@@ -55,9 +55,11 @@ public class ListenerRepositoryTest {
     @Autowired
     private EntityManager entityManager;
 
+    /** The tenant context. */
     @MockBean
     private TenantContext tenantContext;
 
+    /** The tenant. */
     @MockBean
     @DefaultTenant
     private Tenant tenant;

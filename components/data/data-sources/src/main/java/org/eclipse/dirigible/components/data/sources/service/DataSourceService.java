@@ -24,13 +24,26 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DataSourceService extends BaseArtefactService<DataSource, Long> {
 
+    /** The data source listeners. */
     private final List<DataSourceLifecycleListener> dataSourceListeners;
 
+    /**
+     * Instantiates a new data source service.
+     *
+     * @param datasourceRepository the datasource repository
+     * @param dataSourceListeners the data source listeners
+     */
     DataSourceService(DataSourceRepository datasourceRepository, List<DataSourceLifecycleListener> dataSourceListeners) {
         super(datasourceRepository);
         this.dataSourceListeners = dataSourceListeners;
     }
 
+    /**
+     * Save.
+     *
+     * @param datasource the datasource
+     * @return the data source
+     */
     @Override
     public DataSource save(DataSource datasource) {
         DataSource savedDataSource = super.save(datasource);
@@ -38,6 +51,11 @@ public class DataSourceService extends BaseArtefactService<DataSource, Long> {
         return savedDataSource;
     }
 
+    /**
+     * Delete.
+     *
+     * @param datasource the datasource
+     */
     @Override
     public void delete(DataSource datasource) {
         super.delete(datasource);

@@ -23,6 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ExposeService extends BaseArtefactService<Expose, Long> {
 
+    /**
+     * Instantiates a new expose service.
+     *
+     * @param repository the repository
+     */
     public ExposeService(ExposeRepository repository) {
         super(repository);
     }

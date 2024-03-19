@@ -25,20 +25,38 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
+/**
+ * The Class JobsInitializer.
+ */
 @Order(ApplicationReadyEventListeners.JOBS_INITIALIZER)
 @Component
 class JobsInitializer implements ApplicationListener<ApplicationReadyEvent> {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(JobsInitializer.class);
 
+    /** The jobs. */
     private final Set<DirigibleJob> jobs;
+    
+    /** The scheduler. */
     private final Scheduler scheduler;
 
+    /**
+     * Instantiates a new jobs initializer.
+     *
+     * @param jobs the jobs
+     * @param scheduler the scheduler
+     */
     JobsInitializer(Set<DirigibleJob> jobs, Scheduler scheduler) {
         this.jobs = jobs;
         this.scheduler = scheduler;
     }
 
+    /**
+     * On application event.
+     *
+     * @param event the event
+     */
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         LOGGER.info("Initializing [{}] jobs: {}}", jobs.size(), jobs);

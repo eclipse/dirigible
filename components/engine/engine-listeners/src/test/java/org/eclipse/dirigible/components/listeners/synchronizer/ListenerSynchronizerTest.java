@@ -52,9 +52,11 @@ public class ListenerSynchronizerTest {
     @Autowired
     private ListenerRepository listenerRepository;
 
+    /** The tenant context. */
     @MockBean
     private TenantContext tenantContext;
 
+    /** The tenant. */
     @MockBean
     @DefaultTenant
     private Tenant tenant;

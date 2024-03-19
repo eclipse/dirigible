@@ -18,9 +18,17 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The Interface EntityRepository.
+ */
 @Repository("entityRepository")
 public interface EntityRepository extends ArtefactRepository<Entity, Long> {
 
+    /**
+     * Sets the running to all.
+     *
+     * @param running the new running to all
+     */
     @Override
     @Modifying
     @Transactional

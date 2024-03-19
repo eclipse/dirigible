@@ -115,8 +115,8 @@ public class DataExportEndpoint {
      * @param datasource the datasource
      * @param schema the schema name
      * @return the response
-     * @throws URISyntaxException the URI syntax exception
      * @throws SQLException the SQL exception
+     * @throws URISyntaxException the URI syntax exception
      */
 
     @PutMapping(value = "/model/{datasource}/{schema}")

@@ -12,34 +12,76 @@ package org.eclipse.dirigible.components.listeners.service;
 
 import java.util.Objects;
 
+/**
+ * The Class ListenerDescriptor.
+ */
 class ListenerDescriptor {
+    
+    /** The type. */
     private final ListenerType type;
+    
+    /** The destination. */
     private final String destination;
+    
+    /** The handler path. */
     private final String handlerPath;
 
+    /**
+     * Instantiates a new listener descriptor.
+     *
+     * @param type the type
+     * @param destination the destination
+     * @param handlerPath the handler path
+     */
     ListenerDescriptor(ListenerType type, String destination, String handlerPath) {
         this.type = type;
         this.destination = destination;
         this.handlerPath = handlerPath;
     }
 
+    /**
+     * Gets the type.
+     *
+     * @return the type
+     */
     ListenerType getType() {
         return type;
     }
 
+    /**
+     * Gets the destination.
+     *
+     * @return the destination
+     */
     String getDestination() {
         return destination;
     }
 
+    /**
+     * Gets the handler path.
+     *
+     * @return the handler path
+     */
     String getHandlerPath() {
         return handlerPath;
     }
 
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     @Override
     public String toString() {
         return "Listener{" + "type=" + type + ", destination='" + destination + '\'' + ", handlerPath='" + handlerPath + '\'' + '}';
     }
 
+    /**
+     * Equals.
+     *
+     * @param o the o
+     * @return true, if successful
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -51,6 +93,11 @@ class ListenerDescriptor {
                 && Objects.equals(handlerPath, listenerDescriptor.handlerPath);
     }
 
+    /**
+     * Hash code.
+     *
+     * @return the int
+     */
     @Override
     public int hashCode() {
         return Objects.hash(type, destination, handlerPath);

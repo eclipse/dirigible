@@ -16,17 +16,33 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class DestinationNameManager.
+ */
 @Component
 class DestinationNameManager {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(DestinationNameManager.class);
 
+    /** The tenant context. */
     private final TenantContext tenantContext;
 
+    /**
+     * Instantiates a new destination name manager.
+     *
+     * @param tenantContext the tenant context
+     */
     DestinationNameManager(TenantContext tenantContext) {
         this.tenantContext = tenantContext;
     }
 
+    /**
+     * To tenant name.
+     *
+     * @param destinationName the destination name
+     * @return the string
+     */
     String toTenantName(String destinationName) {
         if (tenantContext.isNotInitialized()) {
             LOGGER.debug("Tenant context is NOT initialized. Will return destination name as it is. Destination name [{}]",

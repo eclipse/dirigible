@@ -54,6 +54,7 @@ class ListenersManagerTest {
     @Mock
     private IResource resource;
 
+    /** The listener creator. */
     @Mock
     private ListenerCreator listenerCreator;
 
@@ -65,9 +66,11 @@ class ListenersManagerTest {
     @Mock
     private ListenerManager listenerManager2;
 
+    /** The listener descriptor. */
     @Mock
     private ListenerDescriptor listenerDescriptor;
 
+    /** The listener descriptor 2. */
     @Mock
     private ListenerDescriptor listenerDescriptor2;
 

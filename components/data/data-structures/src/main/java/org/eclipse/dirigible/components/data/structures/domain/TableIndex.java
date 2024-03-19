@@ -86,6 +86,7 @@ public class TableIndex {
      * @param name the name
      * @param type the type
      * @param unique the unique
+     * @param order the order
      * @param columns the columns
      * @param table the table
      */

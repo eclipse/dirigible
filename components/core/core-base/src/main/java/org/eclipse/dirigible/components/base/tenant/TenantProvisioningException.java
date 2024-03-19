@@ -10,8 +10,17 @@
  */
 package org.eclipse.dirigible.components.base.tenant;
 
+/**
+ * The Class TenantProvisioningException.
+ */
 public class TenantProvisioningException extends RuntimeException {
 
+    /**
+     * Instantiates a new tenant provisioning exception.
+     *
+     * @param message the message
+     * @param cause the cause
+     */
     public TenantProvisioningException(String message, Throwable cause) {
         super(message, cause);
     }
