@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.components.listeners.service;
 
 import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
-import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,15 +22,13 @@ public class ListenerManagerFactory {
 
     /** The connection artifacts factory. */
     private final ActiveMQConnectionArtifactsFactory connectionArtifactsFactory;
+    private final AsynchronousMessageListenerFactory asynchronousMessageListenerFactory;
 
-    /**
-     * Instantiates a new listener manager factory.
-     *
-     * @param connectionArtifactsFactory the connection artifacts factory
-     */
     @Autowired
-    public ListenerManagerFactory(ActiveMQConnectionArtifactsFactory connectionArtifactsFactory) {
+    public ListenerManagerFactory(ActiveMQConnectionArtifactsFactory connectionArtifactsFactory,
+            AsynchronousMessageListenerFactory asynchronousMessageListenerFactory) {
         this.connectionArtifactsFactory = connectionArtifactsFactory;
+        this.asynchronousMessageListenerFactory = asynchronousMessageListenerFactory;
     }
 
     /**
@@ -41,6 +38,6 @@ public class ListenerManagerFactory {
      * @return the listener manager
      */
     public ListenerManager create(Listener listener) {
-        return new ListenerManager(listener, connectionArtifactsFactory);
+        return new ListenerManager(listener, connectionArtifactsFactory, asynchronousMessageListenerFactory);
     }
 }

@@ -10,12 +10,9 @@
  */
 package org.eclipse.dirigible.components.listeners.synchronizer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import java.nio.file.Path;
-import java.text.ParseException;
-import java.util.List;
+import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
+import org.eclipse.dirigible.components.base.tenant.Tenant;
+import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
 import org.eclipse.dirigible.components.listeners.repository.ListenerRepository;
@@ -26,9 +23,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+
+import java.nio.file.Path;
+import java.text.ParseException;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * The Class BackgroundListenerSynchronizerTest.
@@ -47,6 +51,22 @@ public class ListenerSynchronizerTest {
     /** The listener repository. */
     @Autowired
     private ListenerRepository listenerRepository;
+
+    @MockBean
+    private TenantContext tenantContext;
+
+    @MockBean
+    @DefaultTenant
+    private Tenant tenant;
+
+
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+        // it is needed
+    }
 
     /**
      * Cleanup.
@@ -86,13 +106,5 @@ public class ListenerSynchronizerTest {
         assertNotNull(list);
         assertEquals("/test/test.listener", list.get(0)
                                                 .getLocation());
-    }
-
-    /**
-     * The Class TestConfiguration.
-     */
-    @SpringBootApplication
-    static class TestConfiguration {
-        // it is needed
     }
 }

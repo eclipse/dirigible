@@ -37,6 +37,8 @@ public interface TenantContext {
 
     <Result> Result execute(Tenant tenant, CallableResultAndNoException<Result> callable);
 
+    <Result> Result execute(String tenantId, CallableResultAndNoException<Result> callable);
+
     /**
      * This method will execute callable.call() method on behalf of the specified tenant.
      *

@@ -10,20 +10,17 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
+import jakarta.jms.MessageConsumer;
+import jakarta.jms.*;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.RedeliveryPolicy;
 import org.apache.activemq.broker.region.policy.RedeliveryPolicyMap;
 import org.apache.activemq.command.ActiveMQDestination;
 import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
-import org.eclipse.dirigible.components.listeners.domain.Listener;
-import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import jakarta.jms.Connection;
-import jakarta.jms.Destination;
-import jakarta.jms.JMSException;
-import jakarta.jms.MessageConsumer;
-import jakarta.jms.Session;
+
+import java.lang.IllegalStateException;
 
 /**
  * The Class BackgroundListenerManager.
@@ -42,6 +39,7 @@ public class ListenerManager {
 
     /** The connection artifacts factory. */
     private final ActiveMQConnectionArtifactsFactory connectionArtifactsFactory;
+    private final AsynchronousMessageListenerFactory asynchronousMessageListenerFactory;
 
     /** The connection artifacts. */
     private ConnectionArtifacts connectionArtifacts;
@@ -52,9 +50,11 @@ public class ListenerManager {
      * @param listener the listener
      * @param connectionArtifactsFactory the connection artifacts factory
      */
-    public ListenerManager(Listener listener, ActiveMQConnectionArtifactsFactory connectionArtifactsFactory) {
+    public ListenerManager(Listener listener, ActiveMQConnectionArtifactsFactory connectionArtifactsFactory,
+            AsynchronousMessageListenerFactory asynchronousMessageListenerFactory) {
         this.listener = listener;
         this.connectionArtifactsFactory = connectionArtifactsFactory;
+        this.asynchronousMessageListenerFactory = asynchronousMessageListenerFactory;
     }
 
     /**
@@ -69,7 +69,7 @@ public class ListenerManager {
 
         LOGGER.info("Starting a message listener for {} ...", listener);
         try {
-            String handlerPath = listener.getHandler();
+            String handlerPath = listener.getHandlerPath();
             ListenerExceptionHandler exceptionListener = new ListenerExceptionHandler(handlerPath);
 
             Connection connection = connectionArtifactsFactory.createConnection(exceptionListener);
@@ -80,7 +80,7 @@ public class ListenerManager {
 
             MessageConsumer consumer = session.createConsumer(destination);
 
-            AsynchronousMessageListener messageListener = new AsynchronousMessageListener(listener);
+            AsynchronousMessageListener messageListener = asynchronousMessageListenerFactory.create(listener);
             consumer.setMessageListener(messageListener);
 
             connectionArtifacts = new ConnectionArtifacts(connection, session, consumer);
@@ -97,12 +97,15 @@ public class ListenerManager {
      * @throws JMSException the JMS exception
      */
     private Destination createDestination(Session session) throws JMSException {
-        String destination = listener.getName();
-        ListenerKind kind = getKind();
-        return switch (kind) {
+        String destination = listener.getDestination();
+        ListenerType type = listener.getType();
+        if (null == type) {
+            throw new IllegalArgumentException("Type cannot be null for: " + listener);
+        }
+        return switch (type) {
             case QUEUE -> session.createQueue(destination);
             case TOPIC -> session.createTopic(destination);
-            default -> throw new IllegalArgumentException("Invalid kind: " + kind);
+            default -> throw new IllegalArgumentException("Invalid type: " + type);
         };
     }
 
@@ -123,14 +126,6 @@ public class ListenerManager {
         redeliveryPolicy.setMaximumRedeliveries(MAXIMUM_REDELIVERIES);
 
         return redeliveryPolicy;
-    }
-
-    private ListenerKind getKind() {
-        ListenerKind kind = listener.getKind();
-        if (null == kind) {
-            throw new IllegalArgumentException("Invalid listener: " + listener + ", kind IS null");
-        }
-        return kind;
     }
 
     /**

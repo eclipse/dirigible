@@ -10,30 +10,21 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
+import jakarta.jms.MessageConsumer;
+import jakarta.jms.*;
+import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.lang.IllegalStateException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import jakarta.jms.Connection;
-import jakarta.jms.ExceptionListener;
-import jakarta.jms.JMSException;
-import jakarta.jms.MessageConsumer;
-import jakarta.jms.Queue;
-import jakarta.jms.Session;
-import jakarta.jms.Topic;
-import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
-import org.eclipse.dirigible.components.listeners.domain.Listener;
-import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InOrder;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.Mockito.*;
 
 /**
  * The Class BackgroundListenerManagerTest.
@@ -59,6 +50,9 @@ class ListenerManagerTest {
     /** The connection artifacts factory. */
     @Mock
     private ActiveMQConnectionArtifactsFactory connectionArtifactsFactory;
+
+    @Mock
+    private AsynchronousMessageListenerFactory asynchronousMessageListenerFactory;
 
     /** The connection. */
     @Mock
@@ -88,6 +82,15 @@ class ListenerManagerTest {
     @Captor
     private ArgumentCaptor<AsynchronousMessageListener> messageListenerCaptor;
 
+    @Mock
+    private AsynchronousMessageListener asynchronousMessageListener;
+
+    @BeforeEach
+    void setUp() {
+        lenient().when(asynchronousMessageListenerFactory.create(listener))
+                 .thenReturn(asynchronousMessageListener);
+    }
+
     /**
      * Test start listener on start error.
      *
@@ -98,17 +101,17 @@ class ListenerManagerTest {
         when(connectionArtifactsFactory.createConnection(any(ExceptionListener.class))).thenReturn(connection);
         when(connectionArtifactsFactory.createSession(connection)).thenThrow(JMSException.class);
 
-        assertThrows(IllegalStateException.class, ()-> manager.startListener());
+        assertThrows(IllegalStateException.class, () -> manager.startListener());
     }
 
     /**
      * Test start listener for unsupported listener kind.
      */
     @Test
-    void testStartListenerForUnsupportedListenerKind() {
-        when(listener.getKind()).thenReturn(null);
+    void testStartListenerForUnsupportedListenerType() {
+        when(listener.getType()).thenReturn(null);
 
-        assertThrows(IllegalArgumentException.class, ()-> manager.startListener());
+        assertThrows(IllegalArgumentException.class, () -> manager.startListener());
     }
 
     /**
@@ -119,8 +122,8 @@ class ListenerManagerTest {
     @Test
     void testStartListenerForQueue() throws JMSException {
         mockConnectionAndSession();
-        when(listener.getKind()).thenReturn(ListenerKind.QUEUE);
-        when(listener.getName()).thenReturn(QUEUE);
+        when(listener.getType()).thenReturn(ListenerType.QUEUE);
+        when(listener.getDestination()).thenReturn(QUEUE);
 
         when(session.createQueue(QUEUE)).thenReturn(queue);
         when(session.createConsumer(queue)).thenReturn(consumer);
@@ -136,26 +139,6 @@ class ListenerManagerTest {
         verify(session).createConsumer(queue);
         verify(connectionArtifactsFactory).createConnection(any(ExceptionListener.class));
         verify(connectionArtifactsFactory).createSession(connection);
-    }
-
-    /**
-     * Test start listener for topic.
-     *
-     * @throws JMSException the JMS exception
-     */
-    @Test
-    void testStartListenerForTopic() throws JMSException {
-        mockConnectionAndSession();
-        when(listener.getKind()).thenReturn(ListenerKind.TOPIC);
-        when(listener.getName()).thenReturn(TOPIC);
-
-        when(session.createTopic(TOPIC)).thenReturn(topic);
-        when(session.createConsumer(topic)).thenReturn(consumer);
-
-        manager.startListener();
-
-        verifyConfiguredExceptionListener();
-        verifyConfiguredMessageListener();
     }
 
     /**
@@ -211,6 +194,26 @@ class ListenerManagerTest {
 
         inOrder.verify(connection)
                .close();
+    }
+
+    /**
+     * Test start listener for topic.
+     *
+     * @throws JMSException the JMS exception
+     */
+    @Test
+    void testStartListenerForTopic() throws JMSException {
+        mockConnectionAndSession();
+        when(listener.getType()).thenReturn(ListenerType.TOPIC);
+        when(listener.getDestination()).thenReturn(TOPIC);
+
+        when(session.createTopic(TOPIC)).thenReturn(topic);
+        when(session.createConsumer(topic)).thenReturn(consumer);
+
+        manager.startListener();
+
+        verifyConfiguredExceptionListener();
+        verifyConfiguredMessageListener();
     }
 
 }
