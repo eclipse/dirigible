@@ -1,8 +1,5 @@
 package org.eclipse.dirigible.components.listeners.service;
 
-import org.eclipse.dirigible.components.base.spring.BeanProvider;
-import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
-
 import java.util.Objects;
 
 class Listener {
@@ -47,24 +44,5 @@ class Listener {
     @Override
     public int hashCode() {
         return Objects.hash(type, destination, handlerPath);
-    }
-
-    static Listener fromEntity(org.eclipse.dirigible.components.listeners.domain.Listener entity) {
-        ListenerType type = fromEntityType(entity.getKind());
-
-        DestinationNameManager destinationNameManager = BeanProvider.getBean(DestinationNameManager.class);
-        String destination = destinationNameManager.toTenantName(entity.getName());
-        return new Listener(type, destination, entity.getHandler());
-    }
-
-    private static ListenerType fromEntityType(ListenerKind kind) {
-        if (null == kind) {
-            throw new IllegalArgumentException("Listener kind cannot be null");
-        }
-        return switch (kind) {
-            case QUEUE -> ListenerType.QUEUE;
-            case TOPIC -> ListenerType.TOPIC;
-            default -> throw new IllegalArgumentException("Unsupported listener kind: " + kind);
-        };
     }
 }
