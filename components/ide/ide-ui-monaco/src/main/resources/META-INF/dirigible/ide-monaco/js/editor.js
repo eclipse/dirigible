@@ -1,32 +1,11 @@
 const messageHub = new FramesMessageHub();
-let csrfToken;
-let resourceApiUrl;
-let lineDecorations = [];
 
 const WORKSPACE_API = "/services/ide/workspaces";
 const REPOSITORY_API = "/services/core/repository";
 const REGISTRY_API = "/services/core/repository/registry/public";
 
-
-function setResourceApiUrl() {
-    const editorUrl = new URL(window.location.href);
-    new ViewParameters();
-    let resourceType;
-    if (ViewParameters.useParameters) {
-        resourceType = ViewParameters.parameters.resourceType;
-    } else {
-        resourceType = editorUrl.searchParams.get('rtype');
-    }
-    if (resourceType === "workspace") {
-        resourceApiUrl = "/services/ide/workspaces";
-    } else if (resourceType === "repository") {
-        resourceApiUrl = "/services/core/repository";
-    } else if (resourceType === "registry") {
-        resourceApiUrl = "/services/core/registry";
-    } else {
-        resourceApiUrl = "/services/ide/workspaces";
-    }
-}
+let csrfToken;
+let lineDecorations = [];
 
 // @ts-ignore
 require.config({
@@ -343,7 +322,7 @@ class FileIO {
                 throw new Error(`Unable to save file [${fileName}], file query parameter is not present in the URL`);
             }
 
-            const response = await fetch(resourceApiUrl + fileName, {
+            const response = await fetch(`${WORKSPACE_API}${fileName}`, {
                 method: 'PUT',
                 body: text,
                 headers: {
@@ -982,5 +961,3 @@ class TypeScriptUtils {
         }
     }
 }
-
-setResourceApiUrl();
