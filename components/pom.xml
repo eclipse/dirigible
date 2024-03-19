@@ -155,7 +155,8 @@
         <!-- API -->
         <module>api/api-modules-javascript</module>
         <module>api/api-modules-python</module>
-        <module>api/api-core</module>
+		<module>api/api-cache</module>
+		<module>api/api-core</module>
         <module>api/api-test</module>
         <module>api/api-qunit</module>
         <module>api/api-utils</module>
