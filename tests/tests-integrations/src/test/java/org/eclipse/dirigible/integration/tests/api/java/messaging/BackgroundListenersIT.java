@@ -29,7 +29,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 /**
- * the test methods use the listener and handler which are defined in META-INF/dirigible/integration-tests-project
+ * the test methods use the listener and handler which are defined in
+ * META-INF/dirigible/integration-tests-project
  */
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class BackgroundListenersIT extends IntegrationTest {

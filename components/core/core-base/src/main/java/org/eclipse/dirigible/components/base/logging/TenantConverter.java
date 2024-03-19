@@ -31,7 +31,8 @@ public class TenantConverter extends ClassicConverter {
             return BACKGROUND_TENANT_VALUE;
         }
         return ctx.isInitialized() ? ctx.getCurrentTenant()
-                                        .getId() : BACKGROUND_TENANT_VALUE;
+                                        .getId()
+                : BACKGROUND_TENANT_VALUE;
     }
 
     private TenantContext getTenantContext() {
