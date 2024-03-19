@@ -997,8 +997,8 @@ class TypeScriptUtils {
                     const model = monaco.editor.getModel(uri);
                     model.setValue(importedFileMetadata.sourceCode);
                 } else {
-                    // TODO: Maybe determine the file type instead of hard-coding it to "typescript" (e.g. could be usefull if JSONs are imported?)
-                    monaco.editor.createModel(importedFileMetadata.sourceCode, "typescript", uri);
+                    const fileType = uri.path.endsWith(".json") ? "json" : "typescript";
+                    monaco.editor.createModel(importedFileMetadata.sourceCode, fileType, uri);
                 }
                 if (importedFileMetadata.importedFilesNames?.length > 0) {
                     TypeScriptUtils.loadImportedFiles(monaco, importedFileMetadata.importedFilesNames, isReload);
