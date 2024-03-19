@@ -27,8 +27,6 @@ import java.util.List;
 /**
  * The Class BaseSynchronizer.
  *
- * @param A the generic type
- * @param ID the generic type
  */
 public abstract class BaseSynchronizer<A extends Artefact, ID> implements Synchronizer<A, ID> {
 
