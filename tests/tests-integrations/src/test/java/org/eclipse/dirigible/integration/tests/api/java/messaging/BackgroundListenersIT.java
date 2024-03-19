@@ -14,9 +14,8 @@ import org.apache.activemq.broker.BrokerService;
 import org.eclipse.dirigible.components.api.messaging.MessagingFacade;
 import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.RepeatedTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +29,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 /**
- * the test methods use the listener and handler which are defined in
- * META-INF/dirigible/integration-tests-project
+ * the test methods use the listener and handler which are defined in META-INF/dirigible/integration-tests-project
  */
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class BackgroundListenersIT extends IntegrationTest {
+
+    private static final int REPEAT_COUNT = 10;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundListenersIT.class);
 
@@ -43,27 +43,12 @@ class BackgroundListenersIT extends IntegrationTest {
     @Autowired
     private BrokerService broker;
 
-    @BeforeEach
-    void setUp() {
-        MessagesHolder.clearLatestReceivedMessage();
-        MessagesHolder.clearLatestReceivedError();
-
-        assertThat(broker.isStarted()).isTrue();
-    }
-
-    private String getCallerMethod() {
-        StackTraceElement[] stackTraceElements = Thread.currentThread()
-                                                       .getStackTrace();
-        StackTraceElement stackTraceElement = stackTraceElements[2];
-        return stackTraceElement.getClassName() + ":" + stackTraceElement.getMethodName();
-    }
-
 
     @Nested
     class QueueListenerTest {
         private static final String QUEUE_NAME = "integration-tests-queue";
 
-        @Test
+        @RepeatedTest(REPEAT_COUNT)
         void testOnMessageIsCalled() {
             String testMessage = getCallerMethod();
             LOGGER.info("Executing [{}]", testMessage);
@@ -78,8 +63,7 @@ class BackgroundListenersIT extends IntegrationTest {
                     MessagesHolder.getLatestReceivedMessage());
         }
 
-        @Disabled("not stable on GitHub actions [Windows]")
-        @Test
+        @RepeatedTest(REPEAT_COUNT)
         void testOnErrorIsCalled() throws Exception {
             String testMessage = getCallerMethod();
             LOGGER.info("Executing [{}]", testMessage);
@@ -101,7 +85,7 @@ class BackgroundListenersIT extends IntegrationTest {
     class TopicListenerTest {
         private static final String TOPIC_NAME = "integration-tests-topic";
 
-        @Test
+        @RepeatedTest(REPEAT_COUNT)
         void testOnMessageIsCalled() {
             String testMessage = getCallerMethod();
             LOGGER.info("Executing [{}]", testMessage);
@@ -116,8 +100,7 @@ class BackgroundListenersIT extends IntegrationTest {
                     MessagesHolder.getLatestReceivedMessage());
         }
 
-        @Disabled("not stable on GitHub actions [Windows]")
-        @Test
+        @RepeatedTest(REPEAT_COUNT)
         void testOnErrorIsCalled() throws Exception {
             String testMessage = getCallerMethod();
             LOGGER.info("Executing [{}]", testMessage);
@@ -132,5 +115,20 @@ class BackgroundListenersIT extends IntegrationTest {
 
             assertThat(MessagesHolder.getLatestReceivedError()).matches(STOPPED_ACTIVEMQ_ERROR_MESSAGE_PATTERN);
         }
+    }
+
+    @BeforeEach
+    void setUp() {
+        MessagesHolder.clearLatestReceivedMessage();
+        MessagesHolder.clearLatestReceivedError();
+
+        assertThat(broker.isStarted()).isTrue();
+    }
+
+    private String getCallerMethod() {
+        StackTraceElement[] stackTraceElements = Thread.currentThread()
+                                                       .getStackTrace();
+        StackTraceElement stackTraceElement = stackTraceElements[2];
+        return stackTraceElement.getClassName() + ":" + stackTraceElement.getMethodName();
     }
 }
