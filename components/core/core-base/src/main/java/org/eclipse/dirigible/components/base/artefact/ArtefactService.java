@@ -17,8 +17,8 @@ import org.springframework.data.domain.Pageable;
 /**
  * The Interface ArtefactService.
  *
- * @param <A> the generic type
- * @param <ID> the generic type
+ * @param A the generic type
+ * @param ID the generic type
  */
 public interface ArtefactService<A extends Artefact, ID> {
 

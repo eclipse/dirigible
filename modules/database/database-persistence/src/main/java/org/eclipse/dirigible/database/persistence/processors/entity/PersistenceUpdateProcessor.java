@@ -51,13 +51,6 @@ public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor 
      * @param tableModel the table model
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript
-     * (java.sql. Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
-     */
     @Override
     protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
         UpdateBuilder updateBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
@@ -132,13 +125,6 @@ public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor 
      *
      * @param columnModel the column model
      * @return true, if successful
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#
-     * shouldSetColumnValue(org.
-     * eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel)
      */
     @Override
     protected boolean shouldSetColumnValue(PersistenceTableColumnModel columnModel) {

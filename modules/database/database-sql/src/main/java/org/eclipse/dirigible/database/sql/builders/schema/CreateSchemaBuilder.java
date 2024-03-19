@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CreateSchemaBuilder extends AbstractCreateSqlBuilder {
 
+    /** The Constant AUTHORIZATION_KEYWORD. */
     private static final String AUTHORIZATION_KEYWORD = "AUTHORIZATION";
 
     /** The Constant logger. */
@@ -28,6 +29,7 @@ public class CreateSchemaBuilder extends AbstractCreateSqlBuilder {
     /** The name. */
     private final String name;
 
+    /** The authorization. */
     private String authorization;
 
     /**
@@ -45,11 +47,6 @@ public class CreateSchemaBuilder extends AbstractCreateSqlBuilder {
      * Generate.
      *
      * @return the string
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
      */
     @Override
     public String generate() {
@@ -95,11 +92,22 @@ public class CreateSchemaBuilder extends AbstractCreateSqlBuilder {
         return name;
     }
 
+    /**
+     * Authorization.
+     *
+     * @param roleSpecification the role specification
+     * @return the creates the schema builder
+     */
     public CreateSchemaBuilder authorization(String roleSpecification) {
         this.authorization = roleSpecification;
         return this;
     }
 
+    /**
+     * Generate authorization.
+     *
+     * @param sql the sql
+     */
     private void generateAuthorization(StringBuilder sql) {
         if (null == authorization) {
             return;

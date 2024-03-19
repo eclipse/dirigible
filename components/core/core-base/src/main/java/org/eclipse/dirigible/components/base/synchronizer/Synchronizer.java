@@ -24,8 +24,8 @@ import java.util.List;
 /**
  * The Interface Synchronizer.
  *
- * @param <A> the generic type
- * @param <ID> the generic type
+ * @param A the generic type
+ * @param ID the generic type
  */
 public interface Synchronizer<A extends Artefact, ID> {
 

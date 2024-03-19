@@ -61,11 +61,6 @@ public class H2SqlDialect extends
      * @param sequence the sequence
      * @return the h 2 next value sequence builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
-     */
     @Override
     public H2NextValueSequenceBuilder nextval(String sequence) {
         return new H2NextValueSequenceBuilder(this, sequence);
@@ -77,11 +72,6 @@ public class H2SqlDialect extends
      * @param args the args
      * @return the h 2 last value identity builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
-     */
     @Override
     public H2LastValueIdentityBuilder lastval(String... args) {
         return new H2LastValueIdentityBuilder(this);
@@ -91,11 +81,6 @@ public class H2SqlDialect extends
      * Checks if is synonym supported.
      *
      * @return true, if is synonym supported
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#isSynonymSupported()
      */
     @Override
     public boolean isSynonymSupported() {
@@ -107,11 +92,6 @@ public class H2SqlDialect extends
      *
      * @return the functions names
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#getFunctionsNames()
-     */
     @Override
     public Set<String> getFunctionsNames() {
         return FUNCTIONS;
@@ -121,11 +101,6 @@ public class H2SqlDialect extends
      * Creates the.
      *
      * @return the h 2 create branching builder
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#create()
      */
     @Override
     public H2CreateBranchingBuilder create() {

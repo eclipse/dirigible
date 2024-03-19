@@ -120,11 +120,6 @@ public class MySQLSqlDialect extends
      *
      * @return the my SQL create branching builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#create()
-     */
     @Override
     public MySQLCreateBranchingBuilder create() {
         return new MySQLCreateBranchingBuilder(this);
@@ -134,11 +129,6 @@ public class MySQLSqlDialect extends
      * Drop.
      *
      * @return the my SQL drop branching builder
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#drop()
      */
     @Override
     public MySQLDropBranchingBuilder drop() {
@@ -151,11 +141,6 @@ public class MySQLSqlDialect extends
      * @param sequence the sequence
      * @return the my SQL next value sequence builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
-     */
     @Override
     public MySQLNextValueSequenceBuilder nextval(String sequence) {
         return new MySQLNextValueSequenceBuilder(this, sequence);
@@ -167,11 +152,6 @@ public class MySQLSqlDialect extends
      * @param args the args
      * @return the my SQL last value identity builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
-     */
     @Override
     public MySQLLastValueIdentityBuilder lastval(String... args) {
         return new MySQLLastValueIdentityBuilder(this);
@@ -182,11 +162,6 @@ public class MySQLSqlDialect extends
      *
      * @return the identity argument
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#getPrimaryKeyArgument()
-     */
     @Override
     public String getIdentityArgument() {
         return MYSQL_KEYWORD_IDENTITY;
@@ -196,11 +171,6 @@ public class MySQLSqlDialect extends
      * Checks if is sequence supported.
      *
      * @return true, if is sequence supported
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#isSequenceSupported()
      */
     @Override
     public boolean isSequenceSupported() {
@@ -214,11 +184,6 @@ public class MySQLSqlDialect extends
      * @param table the table
      * @return true, if successful
      * @throws SQLException the SQL exception
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String)
      */
     @Override
     public boolean existsTable(Connection connection, String table) throws SQLException {
@@ -236,11 +201,6 @@ public class MySQLSqlDialect extends
      * Gets the functions names.
      *
      * @return the functions names
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#getFunctionsNames()
      */
     @Override
     public Set<String> getFunctionsNames() {

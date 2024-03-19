@@ -49,11 +49,6 @@ public class MongoDBSqlDialect extends
      *
      * @return true, if is synonym supported
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#isSynonymSupported()
-     */
     @Override
     public boolean isSynonymSupported() {
         return false;
@@ -63,11 +58,6 @@ public class MongoDBSqlDialect extends
      * Gets the functions names.
      *
      * @return the functions names
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#getFunctionsNames()
      */
     @Override
     public Set<String> getFunctionsNames() {

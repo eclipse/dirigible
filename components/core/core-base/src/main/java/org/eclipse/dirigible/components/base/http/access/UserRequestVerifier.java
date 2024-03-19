@@ -69,7 +69,6 @@ public class UserRequestVerifier {
      *
      * @param role the role
      * @return true, if is user in role
-     * @see HttpServletRequest#isUserInRole(String)
      */
     public static final boolean isUserInRole(String role) {
         HttpServletRequest request = getRequest();

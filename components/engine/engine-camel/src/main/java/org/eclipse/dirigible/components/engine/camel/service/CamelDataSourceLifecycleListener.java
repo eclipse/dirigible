@@ -21,11 +21,10 @@ import org.springframework.stereotype.Component;
  * The class that is interested in processing a camelDataSourceLifecycle
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addCamelDataSourceLifecycleListener<code> method. When
+ * component's addCamelDataSourceLifecycleListener method. When
  * the camelDataSourceLifecycle event occurs, that object's appropriate
  * method is invoked.
  *
- * @see CamelDataSourceLifecycleEvent
  */
 @Component
 class CamelDataSourceLifecycleListener implements DataSourceLifecycleListener {

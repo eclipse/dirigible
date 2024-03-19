@@ -34,12 +34,6 @@ public class MySQLDropBranchingBuilder extends DropBranchingBuilder {
      * @param sequence the sequence
      * @return the drop sequence builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(java.lang.String)
-     */
     @Override
     public DropSequenceBuilder sequence(String sequence) {
         return new MySQLDropSequenceBuilder(this.getDialect(), sequence);

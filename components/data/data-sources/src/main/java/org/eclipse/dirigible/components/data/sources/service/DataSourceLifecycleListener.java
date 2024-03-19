@@ -18,7 +18,6 @@ import org.eclipse.dirigible.components.data.sources.domain.DataSource;
  * that class is registered with a component using the component's addDataSourceLifecycleListener
  * method. When the dataSourceLifecycle event occurs, that object's appropriate method is invoked.
  *
- * @see DataSourceLifecycleEvent
  */
 public interface DataSourceLifecycleListener {
 

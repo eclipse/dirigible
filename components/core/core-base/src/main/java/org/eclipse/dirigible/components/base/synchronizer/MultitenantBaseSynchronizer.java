@@ -15,8 +15,8 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 /**
  * The Class MultitenantBaseSynchronizer.
  *
- * @param <A> the generic type
- * @param <ID> the generic type
+ * @param A the generic type
+ * @param ID the generic type
  */
 public abstract class MultitenantBaseSynchronizer<A extends Artefact, ID> extends BaseSynchronizer<A, ID> {
 

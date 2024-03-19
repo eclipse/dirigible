@@ -19,11 +19,10 @@ import org.springframework.stereotype.Component;
  * The class that is interested in processing a initializerDataSourceLifecycle
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addInitializerDataSourceLifecycleListener<code> method. When
+ * component's addInitializerDataSourceLifecycleListener method. When
  * the initializerDataSourceLifecycle event occurs, that object's appropriate
  * method is invoked.
  *
- * @see InitializerDataSourceLifecycleEvent
  */
 @Component
 class InitializerDataSourceLifecycleListener implements DataSourceLifecycleListener {

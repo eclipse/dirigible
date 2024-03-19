@@ -17,8 +17,8 @@ import org.springframework.data.domain.Pageable;
 /**
  * The Class BaseArtefactService.
  *
- * @param <A> the generic type
- * @param <ID> the generic type
+ * @param A the generic type
+ * @param ID the generic type
  */
 public abstract class BaseArtefactService<A extends Artefact, ID> implements ArtefactService<A, ID> {
 

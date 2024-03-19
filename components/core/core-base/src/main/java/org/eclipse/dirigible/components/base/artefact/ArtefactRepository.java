@@ -18,8 +18,8 @@ import org.springframework.data.repository.NoRepositoryBean;
 /**
  * The Interface ArtefactRepository.
  *
- * @param <A> the generic type
- * @param <ID> the generic type
+ * @param A the generic type
+ * @param ID the generic type
  */
 @NoRepositoryBean
 public interface ArtefactRepository<A extends Artefact, ID> extends JpaRepository<A, ID> {

@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
  * that class is registered with a component using the component's addAsynchronousMessageListener
  * method. When the asynchronousMessage event occurs, that object's appropriate method is invoked.
  *
- * @see AsynchronousMessageEvent
  */
 class AsynchronousMessageListener implements MessageListener {
 

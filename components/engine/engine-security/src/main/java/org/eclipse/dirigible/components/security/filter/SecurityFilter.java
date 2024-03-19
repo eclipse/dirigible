@@ -93,11 +93,6 @@ public class SecurityFilter implements Filter {
      *
      * @param filterConfig the filter config
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see jakarta.servlet.Filter#init(jakarta.servlet.FilterConfig)
-     */
     @Override
     public void init(FilterConfig filterConfig) {
         SECURED_PREFIXES.add("/js");
@@ -115,12 +110,6 @@ public class SecurityFilter implements Filter {
      * @param chain the chain
      * @throws ServletException the servlet exception
      * @throws IOException Signals that an I/O exception has occurred.
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see jakarta.servlet.Filter#doFilter(jakarta.servlet.ServletRequest,
-     * jakarta.servlet.ServletResponse, jakarta.servlet.FilterChain)
      */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
@@ -209,11 +198,6 @@ public class SecurityFilter implements Filter {
 
     /**
      * Destroy.
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see jakarta.servlet.Filter#destroy()
      */
     @Override
     public void destroy() {

@@ -13,12 +13,26 @@ package org.eclipse.dirigible.database.sql.dialects.hana;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.synonym.CreateSynonymBuilder;
 
+/**
+ * The Class HanaCreatePublicSynonymBuilder.
+ */
 public class HanaCreatePublicSynonymBuilder extends CreateSynonymBuilder {
 
+    /**
+     * Instantiates a new hana create public synonym builder.
+     *
+     * @param dialect the dialect
+     * @param synonym the synonym
+     */
     public HanaCreatePublicSynonymBuilder(ISqlDialect dialect, String synonym) {
         super(dialect, synonym);
     }
 
+    /**
+     * Generate synonym.
+     *
+     * @param sql the sql
+     */
     @Override
     protected void generateSynonym(StringBuilder sql) {
         String synonymName = (isCaseSensitive()) ? encapsulate(this.getSynonym(), true) : this.getSynonym();

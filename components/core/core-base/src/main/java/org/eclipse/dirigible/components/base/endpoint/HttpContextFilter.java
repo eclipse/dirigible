@@ -40,7 +40,6 @@ public class HttpContextFilter implements Filter {
     /*
      * (non-Javadoc)
      *
-     * @see jakarta.servlet.Filter#init(jakarta.servlet.FilterConfig)
      */
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -55,12 +54,6 @@ public class HttpContextFilter implements Filter {
      * @param chain the chain
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws ServletException the servlet exception
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see jakarta.servlet.Filter#doFilter(jakarta.servlet.ServletRequest,
-     * jakarta.servlet.ServletResponse, jakarta.servlet.FilterChain)
      */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -81,11 +74,6 @@ public class HttpContextFilter implements Filter {
 
     /**
      * Destroy.
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see jakarta.servlet.Filter#destroy()
      */
     @Override
     public void destroy() {

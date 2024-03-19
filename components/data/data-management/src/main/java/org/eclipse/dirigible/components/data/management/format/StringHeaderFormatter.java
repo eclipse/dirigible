@@ -23,11 +23,6 @@ public class StringHeaderFormatter implements HeaderFormatter {
      * @param columnDescriptors the column descriptors
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.databases.processor.format.HeaderFormatter#write(java.util.List)
-     */
     @Override
     public String write(List<ColumnDescriptor> columnDescriptors) {
         StringBuilder headerSb = new StringBuilder();
