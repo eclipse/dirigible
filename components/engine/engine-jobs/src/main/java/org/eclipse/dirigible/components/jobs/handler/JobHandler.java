@@ -69,9 +69,14 @@ public class JobHandler implements Job {
         }
 
         try {
-            tenantContext.execute(tenant, () -> executeJob(context));
-        } catch (JobExecutionException e) {
-            throw e;
+            tenantContext.execute(tenant, () -> {
+                try {
+                    executeJob(context);
+                } catch (JobExecutionException e) {
+                    LOGGER.error(e.getMessage(), e);
+                }
+                return null;
+            });
         } catch (Exception e) {
             throw new JobExecutionException("Failed to execute job with details " + context.getJobDetail(), e);
         }
