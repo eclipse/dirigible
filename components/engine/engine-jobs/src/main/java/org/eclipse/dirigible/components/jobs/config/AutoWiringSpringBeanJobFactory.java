@@ -8,33 +8,25 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.initializers.scheduler;
+package org.eclipse.dirigible.components.jobs.config;
 
 import org.quartz.spi.TriggerFiredBundle;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * A factory for creating AutoWiringSpringBeanJob objects.
  */
-public class AutoWiringSpringBeanJobFactory extends SpringBeanJobFactory implements ApplicationContextAware {
+@Component
+class AutoWiringSpringBeanJobFactory extends SpringBeanJobFactory implements ApplicationContextAware {
 
-    /** The bean factory. */
-    private transient AutowireCapableBeanFactory beanFactory;
+    private final ApplicationContext applicationContext;
 
-    /**
-     * Sets the application context.
-     *
-     * @param applicationContext the new application context
-     * @throws BeansException the beans exception
-     */
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-
-        beanFactory = applicationContext.getAutowireCapableBeanFactory();
+    AutoWiringSpringBeanJobFactory(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
     }
 
     /**
@@ -47,6 +39,7 @@ public class AutoWiringSpringBeanJobFactory extends SpringBeanJobFactory impleme
     @Override
     protected Object createJobInstance(final TriggerFiredBundle bundle) throws Exception {
         final Object job = super.createJobInstance(bundle);
+        AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
         beanFactory.autowireBean(job);
         return job;
     }

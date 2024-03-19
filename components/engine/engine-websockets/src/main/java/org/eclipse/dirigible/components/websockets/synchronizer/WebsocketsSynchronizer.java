@@ -10,9 +10,6 @@
  */
 package org.eclipse.dirigible.components.websockets.synchronizer;
 
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
@@ -30,6 +27,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.util.List;
 
 /**
  * The Class WebsocketsSynchronizer.
@@ -96,6 +97,16 @@ public class WebsocketsSynchronizer extends BaseSynchronizer<Websocket, Long> {
     }
 
     /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<Websocket, Long> getService() {
+        return websocketService;
+    }
+
+    /**
      * Retrieve.
      *
      * @param location the location
@@ -139,7 +150,7 @@ public class WebsocketsSynchronizer extends BaseSynchronizer<Websocket, Long> {
      * @param websocket the websocket
      */
     @Override
-    public void cleanup(Websocket websocket) {
+    public void cleanupImpl(Websocket websocket) {
         try {
             getService().delete(websocket);
         } catch (Exception e) {
@@ -149,16 +160,6 @@ public class WebsocketsSynchronizer extends BaseSynchronizer<Websocket, Long> {
             callback.addError(e.getMessage());
             callback.registerState(this, websocket, ArtefactLifecycle.DELETED, e.getMessage());
         }
-    }
-
-    /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<Websocket, Long> getService() {
-        return websocketService;
     }
 
     /**

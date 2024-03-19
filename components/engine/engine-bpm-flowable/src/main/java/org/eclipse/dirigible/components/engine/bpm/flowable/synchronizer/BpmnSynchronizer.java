@@ -10,10 +10,6 @@
  */
 package org.eclipse.dirigible.components.engine.bpm.flowable.synchronizer;
 
-import static java.text.MessageFormat.format;
-import java.nio.file.Paths;
-import java.text.ParseException;
-import java.util.List;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -34,6 +30,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.Paths;
+import java.text.ParseException;
+import java.util.List;
+
+import static java.text.MessageFormat.format;
+
 /**
  * The Class BpmnSynchronizer.
  */
@@ -41,12 +43,10 @@ import org.springframework.stereotype.Component;
 @Order(SynchronizersOrder.BPMN)
 public class BpmnSynchronizer extends BaseSynchronizer<Bpmn, Long> {
 
-    /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(BpmnSynchronizer.class);
-
     /** The Constant FILE_EXTENSION_BPMN. */
     public static final String FILE_EXTENSION_BPMN = ".bpmn";
-
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(BpmnSynchronizer.class);
     /** The bpmn service. */
     private final BpmnService bpmnService;
 
@@ -66,16 +66,6 @@ public class BpmnSynchronizer extends BaseSynchronizer<Bpmn, Long> {
     public BpmnSynchronizer(BpmnService bpmnService, BpmProviderFlowable bpmProviderFlowable) {
         this.bpmnService = bpmnService;
         this.bpmProviderFlowable = bpmProviderFlowable;
-    }
-
-    /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<Bpmn, Long> getService() {
-        return bpmnService;
     }
 
     /**
@@ -135,6 +125,16 @@ public class BpmnSynchronizer extends BaseSynchronizer<Bpmn, Long> {
             throw new ParseException(e.getMessage(), 0);
         }
         return List.of(bpmn);
+    }
+
+    /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<Bpmn, Long> getService() {
+        return bpmnService;
     }
 
     /**
@@ -208,55 +208,6 @@ public class BpmnSynchronizer extends BaseSynchronizer<Bpmn, Long> {
             callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
             return false;
         }
-    }
-
-    /**
-     * Cleanup.
-     *
-     * @param bpmn the bpmn
-     */
-    @Override
-    public void cleanup(Bpmn bpmn) {
-        try {
-            removeFromProcessEngine(bpmn);
-            getService().delete(bpmn);
-        } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
-            callback.addError(e.getMessage());
-            callback.registerState(this, bpmn, ArtefactLifecycle.DELETED, e.getMessage());
-        }
-    }
-
-    /**
-     * Sets the callback.
-     *
-     * @param callback the new callback
-     */
-    @Override
-    public void setCallback(SynchronizerCallback callback) {
-        this.callback = callback;
-    }
-
-    /**
-     * Gets the file bpmn.
-     *
-     * @return the file bpmn
-     */
-    @Override
-    public String getFileExtension() {
-        return FILE_EXTENSION_BPMN;
-    }
-
-    /**
-     * Gets the artefact type.
-     *
-     * @return the artefact type
-     */
-    @Override
-    public String getArtefactType() {
-        return Bpmn.ARTEFACT_TYPE;
     }
 
     /**
@@ -388,6 +339,55 @@ public class BpmnSynchronizer extends BaseSynchronizer<Bpmn, Long> {
             }
         }
 
+    }
+
+    /**
+     * Cleanup.
+     *
+     * @param bpmn the bpmn
+     */
+    @Override
+    public void cleanupImpl(Bpmn bpmn) {
+        try {
+            removeFromProcessEngine(bpmn);
+            getService().delete(bpmn);
+        } catch (Exception e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
+            callback.addError(e.getMessage());
+            callback.registerState(this, bpmn, ArtefactLifecycle.DELETED, e.getMessage());
+        }
+    }
+
+    /**
+     * Sets the callback.
+     *
+     * @param callback the new callback
+     */
+    @Override
+    public void setCallback(SynchronizerCallback callback) {
+        this.callback = callback;
+    }
+
+    /**
+     * Gets the file bpmn.
+     *
+     * @return the file bpmn
+     */
+    @Override
+    public String getFileExtension() {
+        return FILE_EXTENSION_BPMN;
+    }
+
+    /**
+     * Gets the artefact type.
+     *
+     * @return the artefact type
+     */
+    @Override
+    public String getArtefactType() {
+        return Bpmn.ARTEFACT_TYPE;
     }
 
 }

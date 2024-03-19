@@ -10,8 +10,6 @@
  */
 package org.eclipse.dirigible.components.engine.camel.synchronizer;
 
-import java.nio.file.Paths;
-import java.util.List;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -27,6 +25,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.Paths;
+import java.util.List;
+
 /**
  * The Class CamelSynchronizer.
  */
@@ -34,18 +35,15 @@ import org.springframework.stereotype.Component;
 @Order(250)
 public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
 
-    /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(CamelSynchronizer.class);
-
     /** The Constant FILE_EXTENSION_CAMEL. */
     public static final String FILE_EXTENSION_CAMEL = ".camel";
-
-    /** The synchronization callback. */
-    private SynchronizerCallback callback;
-
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(CamelSynchronizer.class);
     /** The camel service. */
     private final CamelService camelService;
     private final CamelProcessor camelProcessor;
+    /** The synchronization callback. */
+    private SynchronizerCallback callback;
 
     /**
      * Instantiates a new camel synchronizer.
@@ -105,6 +103,16 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
             }
         }
         return List.of(camel);
+    }
+
+    /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<Camel, Long> getService() {
+        return camelService;
     }
 
     /**
@@ -189,14 +197,13 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
         }
     }
 
-    /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<Camel, Long> getService() {
-        return camelService;
+    private void addToProcessor(Camel camel) {
+        camelProcessor.onCreateOrUpdate(camel);
+    }
+
+    private void removeFromProcessor(Camel camel) {
+        getService().delete(camel);
+        camelProcessor.onRemove(camel);
     }
 
     /**
@@ -205,7 +212,7 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
      * @param camel the camel
      */
     @Override
-    public void cleanup(Camel camel) {
+    public void cleanupImpl(Camel camel) {
         try {
             removeFromProcessor(camel);
         } catch (Exception e) {
@@ -245,14 +252,5 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
     @Override
     public String getArtefactType() {
         return Camel.ARTEFACT_TYPE;
-    }
-
-    private void addToProcessor(Camel camel) {
-        camelProcessor.onCreateOrUpdate(camel);
-    }
-
-    private void removeFromProcessor(Camel camel) {
-        getService().delete(camel);
-        camelProcessor.onRemove(camel);
     }
 }

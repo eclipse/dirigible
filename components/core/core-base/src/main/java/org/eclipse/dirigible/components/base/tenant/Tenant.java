@@ -10,10 +10,12 @@
  */
 package org.eclipse.dirigible.components.base.tenant;
 
+import java.io.Serializable;
+
 /**
  * The Interface Tenant.
  */
-public interface Tenant {
+public interface Tenant extends Serializable {
 
     /**
      * Gets the id.

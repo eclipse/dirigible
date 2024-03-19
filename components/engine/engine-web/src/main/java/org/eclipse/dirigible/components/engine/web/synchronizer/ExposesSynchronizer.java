@@ -10,9 +10,6 @@
  */
 package org.eclipse.dirigible.components.engine.web.synchronizer;
 
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.util.List;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
@@ -32,6 +29,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.util.List;
+
 /**
  * The Class ExposesSynchronizer.
  */
@@ -39,12 +40,10 @@ import org.springframework.stereotype.Component;
 @Order(SynchronizersOrder.EXPOSE)
 public class ExposesSynchronizer extends BaseSynchronizer<Expose, Long> {
 
-    /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(ExposesSynchronizer.class);
-
     /** The Constant FILE_NAME. */
     public static final String FILE_NAME = "project.json";
-
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(ExposesSynchronizer.class);
     /** The expose service. */
     private final ExposeService exposeService;
 
@@ -59,16 +58,6 @@ public class ExposesSynchronizer extends BaseSynchronizer<Expose, Long> {
     @Autowired
     public ExposesSynchronizer(ExposeService exposeService) {
         this.exposeService = exposeService;
-    }
-
-    /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<Expose, Long> getService() {
-        return exposeService;
     }
 
     /**
@@ -120,6 +109,16 @@ public class ExposesSynchronizer extends BaseSynchronizer<Expose, Long> {
             throw new ParseException(e.getMessage(), 0);
         }
         return List.of(expose);
+    }
+
+    /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<Expose, Long> getService() {
+        return exposeService;
     }
 
     /**
@@ -215,7 +214,7 @@ public class ExposesSynchronizer extends BaseSynchronizer<Expose, Long> {
      * @param expose the expose
      */
     @Override
-    public void cleanup(Expose expose) {
+    public void cleanupImpl(Expose expose) {
         try {
             ExposeManager.unregisterProject(expose.getName());
             getService().delete(expose);

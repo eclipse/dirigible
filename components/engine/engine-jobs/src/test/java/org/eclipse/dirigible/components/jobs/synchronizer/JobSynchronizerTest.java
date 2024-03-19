@@ -10,18 +10,7 @@
  */
 package org.eclipse.dirigible.components.jobs.synchronizer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.nio.file.Path;
-import java.text.ParseException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import jakarta.persistence.EntityManager;
-
 import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.eclipse.dirigible.components.jobs.domain.JobParameter;
 import org.eclipse.dirigible.components.jobs.repository.JobRepository;
@@ -35,6 +24,14 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.nio.file.Path;
+import java.text.ParseException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * The Class JobSynchronizerTest.
@@ -56,7 +53,15 @@ public class JobSynchronizerTest {
 
     /** The entity manager. */
     @Autowired
-    EntityManager entityManager;
+    private EntityManager entityManager;
+
+
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 
     /**
      * Setup.
@@ -84,6 +89,30 @@ public class JobSynchronizerTest {
     public void cleanup() throws Exception {
         // delete test Tables
         jobRepository.deleteAll();
+    }
+
+    /**
+     * Creates the job.
+     *
+     * @param jobRepository the job repository
+     * @param name the job name
+     * @param group the job group
+     * @param clazz the job clazz
+     * @param handler the job handler
+     * @param engine the job engine
+     * @param description the job description
+     * @param expression the job expression
+     * @param singleton the singleton
+     * @param parameters the job parameters
+     * @param location the job location
+     * @param dependencies the dependencies
+     */
+    public static Job createJob(JobRepository jobRepository, String name, String group, String clazz, String handler, String engine,
+            String description, String expression, boolean singleton, List<JobParameter> parameters, String location,
+            Set<String> dependencies) {
+        Job job = new Job(name, group, clazz, handler, engine, description, expression, singleton, parameters, location, dependencies);
+        jobRepository.save(job);
+        return job;
     }
 
     /**
@@ -117,36 +146,5 @@ public class JobSynchronizerTest {
         assertNotNull(list);
         assertEquals("/test/control.job", list.get(0)
                                               .getLocation());
-    }
-
-    /**
-     * Creates the job.
-     *
-     * @param jobRepository the job repository
-     * @param name the job name
-     * @param group the job group
-     * @param clazz the job clazz
-     * @param handler the job handler
-     * @param engine the job engine
-     * @param description the job description
-     * @param expression the job expression
-     * @param singleton the singleton
-     * @param parameters the job parameters
-     * @param location the job location
-     * @param dependencies the dependencies
-     */
-    public static Job createJob(JobRepository jobRepository, String name, String group, String clazz, String handler, String engine,
-            String description, String expression, boolean singleton, List<JobParameter> parameters, String location,
-            Set<String> dependencies) {
-        Job job = new Job(name, group, clazz, handler, engine, description, expression, singleton, parameters, location, dependencies);
-        jobRepository.save(job);
-        return job;
-    }
-
-    /**
-     * The Class TestConfiguration.
-     */
-    @SpringBootApplication
-    static class TestConfiguration {
     }
 }

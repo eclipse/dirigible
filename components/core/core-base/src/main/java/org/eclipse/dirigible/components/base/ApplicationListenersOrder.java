@@ -17,7 +17,10 @@ import org.springframework.core.Ordered;
  */
 public interface ApplicationListenersOrder {
 
-    public interface ApplicationReadyEventListeners {
+    int APP_LYFECYCLE_LOGGING_LISTENER = Ordered.LOWEST_PRECEDENCE;
+
+
+    interface ApplicationReadyEventListeners {
 
         int SYSTEM_ROLES_INITIALIZER = 10;
 
@@ -27,14 +30,16 @@ public interface ApplicationListenersOrder {
 
         int SYNCHRONIZATION_INTIALIZER = 40;
 
+        int JOBS_INITIALIZER = 50;
+
+
     }
 
-    public interface ApplicationStoppedEventListeners {
+
+    interface ApplicationStoppedEventListeners {
 
         int ACTIVE_MQ_CLEANUP = APP_LYFECYCLE_LOGGING_LISTENER - 10;
 
     }
-
-    int APP_LYFECYCLE_LOGGING_LISTENER = Ordered.LOWEST_PRECEDENCE;
 
 }

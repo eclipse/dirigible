@@ -10,35 +10,47 @@
  */
 package org.eclipse.dirigible.components.jobs.handler;
 
-import java.nio.file.Path;
-import java.util.Date;
+import org.eclipse.dirigible.components.base.tenant.Tenant;
+import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.jobs.domain.JobLog;
 import org.eclipse.dirigible.components.jobs.service.JobLogService;
+import org.eclipse.dirigible.components.jobs.tenant.JobNameCreator;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.quartz.Job;
+import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.nio.file.Path;
+import java.util.Date;
+
 /**
  * The built-in scripting service job handler.
  */
 public class JobHandler implements Job {
 
-    /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(JobHandler.class);
+    public static final String TENANT_PARAMETER = "tenant-id";
+
+    /** The Constant LOGGER. */
+    private static final Logger LOGGER = LoggerFactory.getLogger(JobHandler.class);
 
     /** The handler parameter. */
     public static String JOB_PARAMETER_HANDLER = "dirigible-job-handler";
-
     /** The engine type. */
     public static String JOB_PARAMETER_ENGINE = "dirigible-engine-type";
 
     /** The job log service. */
     @Autowired
     private JobLogService jobLogService;
+
+    @Autowired
+    private TenantContext tenantContext;
+
+    @Autowired
+    private JobNameCreator jobNameCreator;
 
     /**
      * Execute.
@@ -48,12 +60,33 @@ public class JobHandler implements Job {
      */
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        String name = context.getJobDetail()
-                             .getKey()
-                             .getName();
-        String handler = (String) context.getJobDetail()
-                                         .getJobDataMap()
-                                         .get(JOB_PARAMETER_HANDLER);
+        JobDataMap params = context.getJobDetail()
+                                   .getJobDataMap();
+        Tenant tenant = (Tenant) params.get(TENANT_PARAMETER);
+        if (null == tenant) {
+            throw new MissingTenantException(
+                    "Missing tenant parameter with key [" + TENANT_PARAMETER + "] for job with details: " + context.getJobDetail());
+        }
+
+        try {
+            tenantContext.execute(tenant, () -> executeJob(context));
+        } catch (JobExecutionException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new JobExecutionException("Failed to execute job with details " + context.getJobDetail(), e);
+        }
+    }
+
+    private void executeJob(JobExecutionContext context) throws JobExecutionException {
+        String tenantJobName = context.getJobDetail()
+                                      .getKey()
+                                      .getName();
+        String name = jobNameCreator.fromTenantName(tenantJobName);
+
+        JobDataMap params = context.getJobDetail()
+                                   .getJobDataMap();
+        String handler = params.getString(JOB_PARAMETER_HANDLER);
+
         JobLog triggered = registerTriggered(name, handler);
         if (triggered != null) {
             context.put("handler", handler);
@@ -61,14 +94,13 @@ public class JobHandler implements Job {
 
             try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner()) {
                 runner.run(handlerPath);
+                registeredFinished(name, handler, triggered);
             } catch (RuntimeException ex) {
                 registeredFailed(name, handler, triggered, ex);
                 String msg = "Failed to execute JS. Job name [" + name + "], handler [" + handler + "]";
-                logger.error(msg, ex);
+                LOGGER.error(msg, ex);
                 throw new JobExecutionException(msg, ex);
             }
-
-            registeredFinished(name, handler, triggered);
         }
     }
 
@@ -84,11 +116,27 @@ public class JobHandler implements Job {
         try {
             triggered = jobLogService.jobTriggered(name, module);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
+            LOGGER.error(e.getMessage(), e);
         }
         return triggered;
+    }
+
+    /**
+     * Registered finished.
+     *
+     * @param name the name
+     * @param module the module
+     * @param triggered the triggered
+     */
+    private void registeredFinished(String name, String module, JobLog triggered) {
+        try {
+            jobLogService.jobFinished(name, module, triggered.getId(), new Date(triggered.getTriggeredAt()
+                                                                                         .getTime()));
+        } catch (Exception e) {
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(e.getMessage(), e);
+            }
+        }
     }
 
     /**
@@ -105,27 +153,7 @@ public class JobHandler implements Job {
                                                                                        .getTime()),
                     e.getMessage());
         } catch (Exception se) {
-            if (logger.isErrorEnabled()) {
-                logger.error(se.getMessage(), se);
-            }
-        }
-    }
-
-    /**
-     * Registered finished.
-     *
-     * @param name the name
-     * @param module the module
-     * @param triggered the triggered
-     */
-    private void registeredFinished(String name, String module, JobLog triggered) {
-        try {
-            jobLogService.jobFinished(name, module, triggered.getId(), new Date(triggered.getTriggeredAt()
-                                                                                         .getTime()));
-        } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
+            LOGGER.error(se.getMessage(), se);
         }
     }
 

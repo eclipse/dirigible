@@ -10,9 +10,6 @@
  */
 package org.eclipse.dirigible.components.base.synchronizer;
 
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.List;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
@@ -22,6 +19,10 @@ import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.base.tenant.TenantResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
 
 public abstract class BaseSynchronizer<A extends Artefact, ID> implements Synchronizer<A, ID> {
 
@@ -47,7 +48,7 @@ public abstract class BaseSynchronizer<A extends Artefact, ID> implements Synchr
         });
 
         return results.stream()
-                      .map(TenantResult<Boolean>::getResult)
+                      .map(TenantResult::getResult)
                       .allMatch(r -> Boolean.TRUE.equals(r));
     }
 
@@ -61,6 +62,26 @@ public abstract class BaseSynchronizer<A extends Artefact, ID> implements Synchr
     }
 
     protected abstract boolean completeImpl(TopologyWrapper<A> wrapper, ArtefactPhase flow);
+
+    public final void cleanup(A artefact) {
+        if (!multitenantExecution() || !isMultitenantArtefact(artefact)) {
+            logger.debug("[{} will cleanup artefact [{}]", this, artefact);
+            cleanupImpl(artefact);
+            return;
+        }
+
+        ArtefactLifecycle lifecycle = artefact.getLifecycle();
+
+        TenantContext tenantContext = BeanProvider.getTenantContext();
+        tenantContext.executeForEachTenant(() -> {
+            logger.debug("[{} will cleanup artefact [{}] for tenant [{}]", this, artefact, tenantContext.getCurrentTenant());
+            artefact.setLifecycle(lifecycle);
+            cleanupImpl(artefact);
+            return null;
+        });
+    }
+
+    protected abstract void cleanupImpl(A artefact);
 
     @Override
     public boolean isAccepted(Path file, BasicFileAttributes attrs) {

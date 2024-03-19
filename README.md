@@ -37,7 +37,6 @@ The project started as an internal SAP initiative to address the extension and a
 		- [Standalone](#standalone)
 		- [Docker](#docker)
                 - [Native image](#native-image)
-  	- [Code formatting](#code-formatting)	 
 - [Additional Information](#additional-information)
 	- [License](#license)
 	- [Contributors](#contributors)

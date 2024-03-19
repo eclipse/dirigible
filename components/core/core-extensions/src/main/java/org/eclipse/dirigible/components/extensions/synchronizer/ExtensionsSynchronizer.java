@@ -10,9 +10,6 @@
  */
 package org.eclipse.dirigible.components.extensions.synchronizer;
 
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
@@ -31,6 +28,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.util.List;
+
 /**
  * The Class ExtensionsSynchronizer.
  */
@@ -38,12 +39,10 @@ import org.springframework.stereotype.Component;
 @Order(SynchronizersOrder.EXTENSION)
 public class ExtensionsSynchronizer extends BaseSynchronizer<Extension, Long> {
 
-    /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(ExtensionsSynchronizer.class);
-
     /** The Constant FILE_EXTENSION_EXTENSION. */
     public static final String FILE_EXTENSION_EXTENSION = ".extension";
-
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(ExtensionsSynchronizer.class);
     /** The extension service. */
     private final ExtensionService extensionService;
 
@@ -58,16 +57,6 @@ public class ExtensionsSynchronizer extends BaseSynchronizer<Extension, Long> {
     @Autowired
     public ExtensionsSynchronizer(ExtensionService extensionService) {
         this.extensionService = extensionService;
-    }
-
-    /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<Extension, Long> getService() {
-        return extensionService;
     }
 
     /**
@@ -116,6 +105,16 @@ public class ExtensionsSynchronizer extends BaseSynchronizer<Extension, Long> {
             throw new ParseException(e.getMessage(), 0);
         }
         return List.of(extension);
+    }
+
+    /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<Extension, Long> getService() {
+        return extensionService;
     }
 
     /**
@@ -195,7 +194,7 @@ public class ExtensionsSynchronizer extends BaseSynchronizer<Extension, Long> {
      * @param extension the extension
      */
     @Override
-    public void cleanup(Extension extension) {
+    public void cleanupImpl(Extension extension) {
         try {
             getService().delete(extension);
         } catch (Exception e) {

@@ -11,16 +11,6 @@
 
 package org.eclipse.dirigible.components.data.csvim.synchronizer;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
@@ -46,6 +36,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
 /**
  * The Class CSVIM Synchronizer.
  */
@@ -54,15 +55,13 @@ import org.springframework.stereotype.Component;
 public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> {
 
     /**
-     * The Constant logger.
-     */
-    private static final Logger logger = LoggerFactory.getLogger(CsvimSynchronizer.class);
-
-    /**
      * The Constant FILE_EXTENSION_CSVIM.
      */
     public static final String FILE_EXTENSION_CSVIM = ".csvim";
-
+    /**
+     * The Constant logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(CsvimSynchronizer.class);
     /**
      * The Constant CSVIM_SYNCHRONIZED.
      */
@@ -72,13 +71,12 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
      * The Constant CSV_SYNCHRONIZED.
      */
     private static final List<String> CSV_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<>());
-
-    private SynchronizerCallback callback;
     private final CsvimService csvimService;
     private final CsvService csvService;
     private final DataSourcesManager datasourcesManager;
     private final CsvimProcessor csvimProcessor;
     private final String systemDataSourceName;
+    private SynchronizerCallback callback;
 
     /**
      * Instantiates a new csvim synchronizer.
@@ -97,16 +95,6 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
         this.datasourcesManager = datasourcesManager;
         this.csvimProcessor = csvimProcessor;
         this.systemDataSourceName = systemDataSourceName;
-    }
-
-    /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<Csvim, Long> getService() {
-        return csvimService;
     }
 
     /**
@@ -165,6 +153,16 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
             logger.error("Failed to save CSVIM [{}], content: [{}]", csvim, new String(content), e);
             throw new ParseException(e.getMessage(), 0);
         }
+    }
+
+    /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<Csvim, Long> getService() {
+        return csvimService;
     }
 
     /**
@@ -245,13 +243,72 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
         }
     }
 
+    private void importCsvim(Csvim csvim) throws Exception {
+        List<CsvFile> files = csvim.getFiles();
+
+        if (files != null) {
+            for (CsvFile file : files) {
+                try {
+                    Csv csv;
+                    String fileLocation = file.getLocation();
+                    List<Csv> list = csvService.findByLocation(fileLocation);
+                    if (list.size() > 0) {
+                        csv = list.get(0);
+                    } else {
+                        csv = new Csv();
+                    }
+                    byte[] content;
+                    IResource resource = CsvimProcessor.getCsvResource(file);
+                    if (!resource.exists()) {
+                        throw new Exception("CSV does not exist: " + fileLocation);
+                    }
+                    content = csvimProcessor.getCsvContent(resource);
+                    csv.setContent(content);
+                    csv.setLocation(file.getLocation());
+                    csv.setType(Csv.ARTEFACT_TYPE);
+                    csv.setName(file.getName());
+                    csv.updateKey();
+
+                    csv = csvService.save(csv);
+                    csvimProcessor.process(file, new ByteArrayInputStream(content), csvim.getDatasource());
+
+                    csv.setImported(true);
+
+                    csvService.save(csv);
+                } catch (SQLException | IOException e) {
+                    logger.error("An error occurred while trying to execute the data import of file [{}]", file, e);
+                }
+            }
+        }
+    }
+
+    private void updateCsvim(Csvim csvim) throws Exception {
+        List<CsvFile> files = csvim.getFiles();
+        if (files != null) {
+            for (CsvFile file : files) {
+                try {
+                    String fileLocation = file.getLocation();
+                    byte[] content;
+                    IResource resource = CsvimProcessor.getCsvResource(file);
+                    if (!resource.exists()) {
+                        throw new Exception("CSV does not exist: " + fileLocation);
+                    }
+                    content = csvimProcessor.getCsvContent(resource);
+                    csvimProcessor.process(file, new ByteArrayInputStream(content), csvim.getDatasource());
+                } catch (SQLException | IOException e) {
+                    logger.error("An error occurred while trying to execute the data import of CSVIM [{}]", csvim, e);
+                }
+            }
+        }
+    }
+
     /**
      * Cleanup.
      *
      * @param csvim the csvim
      */
     @Override
-    public void cleanup(Csvim csvim) {
+    public void cleanupImpl(Csvim csvim) {
         try (Connection connection = datasourcesManager.getDefaultDataSource()
                                                        .getConnection()) {
             List<Csvim> csvims = csvimService.getAll();
@@ -303,80 +360,6 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
     @Override
     public String getArtefactType() {
         return Csvim.ARTEFACT_TYPE;
-    }
-
-    /**
-     * Execute csvim.
-     *
-     * @param csvim the csvim
-     * @param connection the connection
-     * @throws Exception the exception
-     */
-    private void importCsvim(Csvim csvim) throws Exception {
-        List<CsvFile> files = csvim.getFiles();
-
-        if (files != null) {
-            for (CsvFile file : files) {
-                try {
-                    Csv csv;
-                    String fileLocation = file.getLocation();
-                    List<Csv> list = csvService.findByLocation(fileLocation);
-                    if (list.size() > 0) {
-                        csv = list.get(0);
-                    } else {
-                        csv = new Csv();
-                    }
-                    byte[] content;
-                    IResource resource = CsvimProcessor.getCsvResource(file);
-                    if (!resource.exists()) {
-                        throw new Exception("CSV does not exist: " + fileLocation);
-                    }
-                    content = csvimProcessor.getCsvContent(resource);
-                    csv.setContent(content);
-                    csv.setLocation(file.getLocation());
-                    csv.setType(Csv.ARTEFACT_TYPE);
-                    csv.setName(file.getName());
-                    csv.updateKey();
-
-                    csv = csvService.save(csv);
-                    csvimProcessor.process(file, new ByteArrayInputStream(content), csvim.getDatasource());
-
-                    csv.setImported(true);
-
-                    csvService.save(csv);
-                } catch (SQLException | IOException e) {
-                    logger.error("An error occurred while trying to execute the data import of file [{}]", file, e);
-                }
-            }
-        }
-    }
-
-    /**
-     * Update csvim.
-     *
-     * @param csvim the csvim
-     * @param connection the connection
-     * @throws Exception the exception
-     */
-
-    private void updateCsvim(Csvim csvim) throws Exception {
-        List<CsvFile> files = csvim.getFiles();
-        if (files != null) {
-            for (CsvFile file : files) {
-                try {
-                    String fileLocation = file.getLocation();
-                    byte[] content;
-                    IResource resource = CsvimProcessor.getCsvResource(file);
-                    if (!resource.exists()) {
-                        throw new Exception("CSV does not exist: " + fileLocation);
-                    }
-                    content = csvimProcessor.getCsvContent(resource);
-                    csvimProcessor.process(file, new ByteArrayInputStream(content), csvim.getDatasource());
-                } catch (SQLException | IOException e) {
-                    logger.error("An error occurred while trying to execute the data import of CSVIM [{}]", csvim, e);
-                }
-            }
-        }
     }
 
     /**
