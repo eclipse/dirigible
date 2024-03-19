@@ -61,6 +61,8 @@ class AsynchronousMessageListener implements MessageListener {
         }
         try {
             String tenantId = tenantPropertyManager.getCurrentTenantId(message);
+            LOGGER.debug("Processing message WITH context for tenant [{}].", tenantId);
+
             tenantContext.execute(tenantId, () -> {
                 executeOnMessageHandler(textMsg);
                 return null;
