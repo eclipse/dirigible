@@ -10,11 +10,12 @@
  */
 package org.eclipse.dirigible.components.tenants.tenant;
 
-import java.io.IOException;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
@@ -23,12 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class TenantContextInitFilter extends OncePerRequestFilter {
@@ -65,7 +66,10 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
         }
 
         try {
-            tenantContext.execute(currentTenant.get(), () -> chain.doFilter(request, response));
+            tenantContext.executeWithPossibleException(currentTenant.get(), () -> {
+                chain.doFilter(request, response);
+                return null;
+            });
 
         } catch (ServletException | IOException | RuntimeException ex) {
             throw ex;

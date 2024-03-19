@@ -95,15 +95,15 @@ public class TestTenantContext implements TenantContext {
     }
 
     @Override
-    public void execute(Tenant tenant, CallableNoResultAndException callable) throws Exception {
-        callable.call();
+    public <Result> Result executeWithPossibleException(Tenant tenant, CallableResultAndException<Result> callable) throws Exception {
+        return callable.call();
     }
 
     @Override
     public <Result> List<TenantResult<Result>> executeForEachTenant(CallableResultAndNoException<Result> callable) {
         Result result = callable.call();
         Tenant tenant = new TestTenant(TENANT_ID, TENANT_NAME, TENANT_SUBDOMAIN, DEFUALT_TENANT);
-        TenantResult<Result> tr = new TestTenantResult<Result>(tenant, result);
+        TenantResult<Result> tr = new TestTenantResult<>(tenant, result);
         return List.of(tr);
     }
 }

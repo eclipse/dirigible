@@ -47,12 +47,17 @@ class TenantContextImpl implements TenantContext {
     }
 
     @Override
-    public <Result> Result execute(String tenantId, CallableResultAndNoException<Result> callable) {
+    public <Result> Result execute(String tenantId, CallableResultAndNoException<Result> callable) throws TenantNotFoundException {
         org.eclipse.dirigible.components.tenants.domain.Tenant tenantEntity = tenantService.findById(tenantId)
                                                                                            .orElseThrow(() -> new TenantNotFoundException(
                                                                                                    tenantId));
-        Tenant currentTenant = safelyGetCurrentTenant();
         Tenant tenant = TenantImpl.createFromEntity(tenantEntity);
+        return execute(tenant, callable);
+    }
+
+    @Override
+    public <Result> Result execute(Tenant tenant, CallableResultAndNoException<Result> callable) {
+        Tenant currentTenant = safelyGetCurrentTenant();
         setCurrentTenant(tenant);
         try {
             return callable.call();
@@ -63,17 +68,6 @@ class TenantContextImpl implements TenantContext {
 
     private Tenant safelyGetCurrentTenant() {
         return isInitialized() ? getCurrentTenant() : null;
-    }
-
-    @Override
-    public void execute(Tenant tenant, CallableNoResultAndException callable) throws Exception {
-        Tenant currentTenant = safelyGetCurrentTenant();
-        setCurrentTenant(tenant);
-        try {
-            callable.call();
-        } finally {
-            setCurrentTenant(currentTenant);
-        }
     }
 
     @Override
@@ -101,18 +95,8 @@ class TenantContextImpl implements TenantContext {
     }
 
     @Override
-    public Tenant getCurrentTenant() {
-        Tenant tenant = currentTenantHolder.get();
-        if (null == tenant) {
-            throw new IllegalStateException("Attempting to get current tenant but it is not initialized yet.");
-        }
-        LOGGER.debug("Getting current tenant [{}]", tenant);
-        return tenant;
-    }
-
-    @Override
-    public <Result> Result execute(Tenant tenant, CallableResultAndNoException<Result> callable) {
-        Tenant currentTenant = isInitialized() ? getCurrentTenant() : null;
+    public <Result> Result executeWithPossibleException(Tenant tenant, CallableResultAndException<Result> callable) throws Exception {
+        Tenant currentTenant = safelyGetCurrentTenant();
         setCurrentTenant(tenant);
         try {
             return callable.call();
@@ -121,7 +105,15 @@ class TenantContextImpl implements TenantContext {
         }
     }
 
-
+    @Override
+    public Tenant getCurrentTenant() {
+        Tenant tenant = currentTenantHolder.get();
+        if (null == tenant) {
+            throw new IllegalStateException("Attempting to get current tenant but it is not initialized yet.");
+        }
+        LOGGER.debug("Getting current tenant [{}]", tenant);
+        return tenant;
+    }
 
     private void setCurrentTenant(Tenant tenant) {
         LOGGER.debug("Setting current tenant to [{}]", tenant);

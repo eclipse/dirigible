@@ -11,7 +11,7 @@
 package org.eclipse.dirigible.components.base.tenant;
 
 @FunctionalInterface
-public interface CallableNoResultAndException {
+public interface CallableResultAndException<Result> {
 
-    void call() throws Exception;
+    Result call() throws Exception;
 }
