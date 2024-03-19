@@ -106,7 +106,7 @@
 		<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
 		<maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
 		<maven-source-plugin.version>3.3.0</maven-source-plugin.version>
-		<maven-gpg-plugin.version>3.2.0</maven-gpg-plugin.version>
+		<maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
 		<jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
 		<spotbugs-maven-plugin.version>4.8.3.1</spotbugs-maven-plugin.version>
 		<formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
@@ -151,7 +151,7 @@
 		<ngdbc.version>2.19.16</ngdbc.version>
 		<snowflake.version>3.13.34</snowflake.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.679</qldb.sdk.version>
+		<qldb.sdk.version>1.12.681</qldb.sdk.version>
 		<jetcd.core.version>0.7.7</jetcd.core.version>
 
 		<jquery-ui.version>1.13.0</jquery-ui.version>

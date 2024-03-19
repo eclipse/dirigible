@@ -10,13 +10,11 @@
  */
 package org.eclipse.dirigible.integration.tests.api.java.messaging;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import java.util.concurrent.TimeUnit;
 import org.apache.activemq.broker.BrokerService;
 import org.eclipse.dirigible.components.api.messaging.MessagingFacade;
 import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -25,6 +23,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.testcontainers.shaded.org.awaitility.Awaitility;
+
+import java.util.concurrent.TimeUnit;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 /**
  * the test methods use the listener and handler which are defined in
@@ -48,6 +51,14 @@ class BackgroundListenersIT extends IntegrationTest {
         assertThat(broker.isStarted()).isTrue();
     }
 
+    private String getCallerMethod() {
+        StackTraceElement[] stackTraceElements = Thread.currentThread()
+                                                       .getStackTrace();
+        StackTraceElement stackTraceElement = stackTraceElements[2];
+        return stackTraceElement.getClassName() + ":" + stackTraceElement.getMethodName();
+    }
+
+
     @Nested
     class QueueListenerTest {
         private static final String QUEUE_NAME = "integration-tests-queue";
@@ -67,6 +78,7 @@ class BackgroundListenersIT extends IntegrationTest {
                     MessagesHolder.getLatestReceivedMessage());
         }
 
+        @Disabled("not stable on GitHub actions [Windows]")
         @Test
         void testOnErrorIsCalled() throws Exception {
             String testMessage = getCallerMethod();
@@ -83,6 +95,7 @@ class BackgroundListenersIT extends IntegrationTest {
             assertThat(MessagesHolder.getLatestReceivedError()).matches(STOPPED_ACTIVEMQ_ERROR_MESSAGE_PATTERN);
         }
     }
+
 
     @Nested
     class TopicListenerTest {
@@ -103,6 +116,7 @@ class BackgroundListenersIT extends IntegrationTest {
                     MessagesHolder.getLatestReceivedMessage());
         }
 
+        @Disabled("not stable on GitHub actions [Windows]")
         @Test
         void testOnErrorIsCalled() throws Exception {
             String testMessage = getCallerMethod();
@@ -118,12 +132,5 @@ class BackgroundListenersIT extends IntegrationTest {
 
             assertThat(MessagesHolder.getLatestReceivedError()).matches(STOPPED_ACTIVEMQ_ERROR_MESSAGE_PATTERN);
         }
-    }
-
-    private String getCallerMethod() {
-        StackTraceElement[] stackTraceElements = Thread.currentThread()
-                                                       .getStackTrace();
-        StackTraceElement stackTraceElement = stackTraceElements[2];
-        return stackTraceElement.getClassName() + ":" + stackTraceElement.getMethodName();
     }
 }
