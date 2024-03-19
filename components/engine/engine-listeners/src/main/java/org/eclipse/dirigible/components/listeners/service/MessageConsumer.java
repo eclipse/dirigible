@@ -10,16 +10,14 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
+import jakarta.jms.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import jakarta.jms.Destination;
-import jakarta.jms.JMSException;
-import jakarta.jms.Message;
-import jakarta.jms.Session;
-import jakarta.jms.TextMessage;
+
+import java.lang.IllegalStateException;
 
 /**
  * The Class MessageConsumer.
@@ -32,15 +30,12 @@ public class MessageConsumer {
 
     /** The session. */
     private final Session session;
+    private final DestinationNameManager destinationNameManager;
 
-    /**
-     * Instantiates a new message consumer.
-     *
-     * @param session the session
-     */
     @Autowired
-    public MessageConsumer(@Qualifier("ActiveMQSession") Session session) {
+    MessageConsumer(@Qualifier("ActiveMQSession") Session session, DestinationNameManager destinationNameManager) {
         this.session = session;
+        this.destinationNameManager = destinationNameManager;
     }
 
     /**
@@ -53,20 +48,8 @@ public class MessageConsumer {
      * @throws TimeoutException the timeout exception
      */
     public String receiveMessageFromQueue(String queue, long timeout) throws JMSException, TimeoutException {
-        return receiveMessage(timeout, session.createQueue(queue));
-    }
-
-    /**
-     * Receive message from topic.
-     *
-     * @param topic the topic
-     * @param timeout the timeout
-     * @return the string
-     * @throws JMSException the JMS exception
-     * @throws TimeoutException the timeout exception
-     */
-    public String receiveMessageFromTopic(String topic, long timeout) throws JMSException, TimeoutException {
-        return receiveMessage(timeout, session.createTopic(topic));
+        String destination = destinationNameManager.toTenantName(queue);
+        return receiveMessage(timeout, session.createQueue(destination));
     }
 
     /**
@@ -91,6 +74,20 @@ public class MessageConsumer {
             }
             throw new IllegalStateException("Received an unsupported message " + message);
         }
+    }
+
+    /**
+     * Receive message from topic.
+     *
+     * @param topic the topic
+     * @param timeout the timeout
+     * @return the string
+     * @throws JMSException the JMS exception
+     * @throws TimeoutException the timeout exception
+     */
+    public String receiveMessageFromTopic(String topic, long timeout) throws JMSException, TimeoutException {
+        String destination = destinationNameManager.toTenantName(topic);
+        return receiveMessage(timeout, session.createTopic(destination));
     }
 
 }

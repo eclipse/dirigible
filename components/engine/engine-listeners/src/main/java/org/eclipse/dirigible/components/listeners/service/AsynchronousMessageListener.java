@@ -14,7 +14,7 @@ import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.MessageListener;
 import jakarta.jms.TextMessage;
-import org.eclipse.dirigible.components.listeners.domain.Listener;
+import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
 import org.slf4j.Logger;
@@ -25,23 +25,27 @@ import org.slf4j.LoggerFactory;
  * processing a asynchronousMessage event implements this interface, and the object created with
  * that class is registered with a component using the component's addAsynchronousMessageListener
  * method. When the asynchronousMessage event occurs, that object's appropriate method is invoked.
- *
  */
-public class AsynchronousMessageListener implements MessageListener {
+class AsynchronousMessageListener implements MessageListener {
 
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(AsynchronousMessageListener.class);
 
     /** The listener. */
-    private final Listener listener;
+    private final ListenerDescriptor listenerDescriptor;
+    private final TenantPropertyManager tenantPropertyManager;
+    private final TenantContext tenantContext;
 
     /**
      * Instantiates a new asynchronous message listener.
      *
-     * @param listener the listener
+     * @param listenerDescriptor the listener
      */
-    public AsynchronousMessageListener(Listener listener) {
-        this.listener = listener;
+    AsynchronousMessageListener(ListenerDescriptor listenerDescriptor, TenantPropertyManager tenantPropertyManager,
+            TenantContext tenantContext) {
+        this.listenerDescriptor = listenerDescriptor;
+        this.tenantPropertyManager = tenantPropertyManager;
+        this.tenantContext = tenantContext;
     }
 
     /**
@@ -51,13 +55,26 @@ public class AsynchronousMessageListener implements MessageListener {
      */
     @Override
     public void onMessage(Message message) {
-        LOGGER.trace("Start processing a received message in [{}] by [{}] ...", listener.getName(), listener.getHandler());
+        LOGGER.trace("Start processing a received message in [{}] by [{}] ...", listenerDescriptor.getDestination(),
+                listenerDescriptor.getHandlerPath());
         if (!(message instanceof TextMessage textMsg)) {
-            String msg = String.format("Invalid message [%s] has been received in destination [%s]", message, listener.getName());
+            String msg = String.format("Invalid message [%s] has been received in destination [%s]", message,
+                    listenerDescriptor.getDestination());
             throw new IllegalStateException(msg);
         }
-        executeOnMessageHandler(textMsg);
-        LOGGER.trace("Done processing the received message in [{}] by [{}]", listener.getName(), listener.getHandler());
+        try {
+            String tenantId = tenantPropertyManager.getCurrentTenantId(message);
+            LOGGER.debug("Processing message WITH context for tenant [{}].", tenantId);
+
+            tenantContext.execute(tenantId, () -> {
+                executeOnMessageHandler(textMsg);
+                return null;
+            });
+            LOGGER.trace("Done processing the received message in [{}] by [{}]", listenerDescriptor.getDestination(),
+                    listenerDescriptor.getHandlerPath());
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to handle message: " + message, e);
+        }
     }
 
     /**
@@ -68,7 +85,7 @@ public class AsynchronousMessageListener implements MessageListener {
     private void executeOnMessageHandler(TextMessage textMsg) {
         String extractedMsg = extractMessage(textMsg);
         try (DirigibleJavascriptCodeRunner runner = createJSCodeRunner()) {
-            String handlerPath = listener.getHandler();
+            String handlerPath = listenerDescriptor.getHandlerPath();
             Module module = runner.run(handlerPath);
             runner.runMethod(module, "onMessage", extractedMsg);
         }

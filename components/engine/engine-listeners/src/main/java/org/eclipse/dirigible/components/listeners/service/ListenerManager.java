@@ -10,20 +10,17 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
+import jakarta.jms.MessageConsumer;
+import jakarta.jms.*;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.RedeliveryPolicy;
 import org.apache.activemq.broker.region.policy.RedeliveryPolicyMap;
 import org.apache.activemq.command.ActiveMQDestination;
 import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
-import org.eclipse.dirigible.components.listeners.domain.Listener;
-import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import jakarta.jms.Connection;
-import jakarta.jms.Destination;
-import jakarta.jms.JMSException;
-import jakarta.jms.MessageConsumer;
-import jakarta.jms.Session;
+
+import java.lang.IllegalStateException;
 
 /**
  * The Class BackgroundListenerManager.
@@ -38,10 +35,11 @@ public class ListenerManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(ListenerManager.class);
 
     /** The listener. */
-    private final Listener listener;
+    private final ListenerDescriptor listenerDescriptor;
 
     /** The connection artifacts factory. */
     private final ActiveMQConnectionArtifactsFactory connectionArtifactsFactory;
+    private final AsynchronousMessageListenerFactory asynchronousMessageListenerFactory;
 
     /** The connection artifacts. */
     private ConnectionArtifacts connectionArtifacts;
@@ -49,12 +47,14 @@ public class ListenerManager {
     /**
      * Instantiates a new background listener manager.
      *
-     * @param listener the listener
+     * @param listenerDescriptor the listener
      * @param connectionArtifactsFactory the connection artifacts factory
      */
-    public ListenerManager(Listener listener, ActiveMQConnectionArtifactsFactory connectionArtifactsFactory) {
-        this.listener = listener;
+    public ListenerManager(ListenerDescriptor listenerDescriptor, ActiveMQConnectionArtifactsFactory connectionArtifactsFactory,
+            AsynchronousMessageListenerFactory asynchronousMessageListenerFactory) {
+        this.listenerDescriptor = listenerDescriptor;
         this.connectionArtifactsFactory = connectionArtifactsFactory;
+        this.asynchronousMessageListenerFactory = asynchronousMessageListenerFactory;
     }
 
     /**
@@ -63,13 +63,13 @@ public class ListenerManager {
     @SuppressWarnings("resource")
     public synchronized void startListener() {
         if (null != connectionArtifacts) {
-            LOGGER.debug("Listener [{}] IS already configured", listener);
+            LOGGER.debug("Listener [{}] IS already configured", listenerDescriptor);
             return;
         }
 
-        LOGGER.info("Starting a message listener for {} ...", listener);
+        LOGGER.info("Starting a message listener for {} ...", listenerDescriptor);
         try {
-            String handlerPath = listener.getHandler();
+            String handlerPath = listenerDescriptor.getHandlerPath();
             ListenerExceptionHandler exceptionListener = new ListenerExceptionHandler(handlerPath);
 
             Connection connection = connectionArtifactsFactory.createConnection(exceptionListener);
@@ -80,12 +80,12 @@ public class ListenerManager {
 
             MessageConsumer consumer = session.createConsumer(destination);
 
-            AsynchronousMessageListener messageListener = new AsynchronousMessageListener(listener);
+            AsynchronousMessageListener messageListener = asynchronousMessageListenerFactory.create(listenerDescriptor);
             consumer.setMessageListener(messageListener);
 
             connectionArtifacts = new ConnectionArtifacts(connection, session, consumer);
         } catch (JMSException ex) {
-            throw new IllegalStateException("Failed to start listener for " + listener, ex);
+            throw new IllegalStateException("Failed to start listener for " + listenerDescriptor, ex);
         }
     }
 
@@ -97,12 +97,15 @@ public class ListenerManager {
      * @throws JMSException the JMS exception
      */
     private Destination createDestination(Session session) throws JMSException {
-        String destination = listener.getName();
-        ListenerKind kind = getKind();
-        return switch (kind) {
+        String destination = listenerDescriptor.getDestination();
+        ListenerType type = listenerDescriptor.getType();
+        if (null == type) {
+            throw new IllegalArgumentException("Type cannot be null for: " + listenerDescriptor);
+        }
+        return switch (type) {
             case QUEUE -> session.createQueue(destination);
             case TOPIC -> session.createTopic(destination);
-            default -> throw new IllegalArgumentException("Invalid kind: " + kind);
+            default -> throw new IllegalArgumentException("Invalid type: " + type);
         };
     }
 
@@ -125,25 +128,17 @@ public class ListenerManager {
         return redeliveryPolicy;
     }
 
-    private ListenerKind getKind() {
-        ListenerKind kind = listener.getKind();
-        if (null == kind) {
-            throw new IllegalArgumentException("Invalid listener: " + listener + ", kind IS null");
-        }
-        return kind;
-    }
-
     /**
      * Stop listener.
      */
     public synchronized void stopListener() {
         if (null == connectionArtifacts) {
-            LOGGER.debug("Listener [{}] is NOT started", listener);
+            LOGGER.debug("Listener [{}] is NOT started", listenerDescriptor);
             return;
         }
-        LOGGER.info("Stopping message listener for {} ...", listener);
+        LOGGER.info("Stopping message listener for {} ...", listenerDescriptor);
         connectionArtifacts.closeAll();
         connectionArtifacts = null;
-        LOGGER.info("Stopped message listener for {}", listener);
+        LOGGER.info("Stopped message listener for {}", listenerDescriptor);
     }
 }

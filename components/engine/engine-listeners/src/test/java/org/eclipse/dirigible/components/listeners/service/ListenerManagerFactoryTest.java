@@ -10,24 +10,26 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
-import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * The Class BackgroundListenerManagerFactoryTest.
  */
 @ExtendWith(MockitoExtension.class)
 class ListenerManagerFactoryTest {
-
     /** The factory. */
     @InjectMocks
     private ListenerManagerFactory factory;
+
+    @Mock
+    private AsynchronousMessageListenerFactory asynchronousMessageListenerFactory;
 
     /** The connection artifacts factory. */
     @Mock
@@ -35,14 +37,14 @@ class ListenerManagerFactoryTest {
 
     /** The listener. */
     @Mock
-    private Listener listener;
+    private ListenerDescriptor listenerDescriptor;
 
     /**
      * Test create.
      */
     @Test
     void testCreate() {
-        ListenerManager manager = factory.create(listener);
+        ListenerManager manager = factory.create(listenerDescriptor);
 
         assertThat(manager).isNotNull();
     }

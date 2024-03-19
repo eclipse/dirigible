@@ -10,8 +10,9 @@
  */
 package org.eclipse.dirigible.components.base.tenant;
 
-@FunctionalInterface
-public interface CallableNoResultAndException {
+public class TenantNotFoundException extends RuntimeException {
 
-    void call() throws Exception;
+    public TenantNotFoundException(String tenantId) {
+        super("Tenant with id [" + tenantId + "] was not found.");
+    }
 }

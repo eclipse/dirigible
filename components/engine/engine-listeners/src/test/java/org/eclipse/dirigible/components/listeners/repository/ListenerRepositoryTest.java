@@ -10,11 +10,10 @@
  */
 package org.eclipse.dirigible.components.listeners.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import java.util.List;
-import java.util.Optional;
 import jakarta.persistence.EntityManager;
+import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
+import org.eclipse.dirigible.components.base.tenant.Tenant;
+import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
 import org.junit.jupiter.api.AfterEach;
@@ -25,10 +24,17 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * The Class ListenerRepositoryTest.
@@ -47,7 +53,22 @@ public class ListenerRepositoryTest {
 
     /** The entity manager. */
     @Autowired
-    EntityManager entityManager;
+    private EntityManager entityManager;
+
+    @MockBean
+    private TenantContext tenantContext;
+
+    @MockBean
+    @DefaultTenant
+    private Tenant tenant;
+
+
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 
     /**
      * Setup.
@@ -105,12 +126,5 @@ public class ListenerRepositoryTest {
         Listener listener = entityManager.getReference(Listener.class, id);
         assertNotNull(listener);
         assertEquals("/a/b/c/l1.listener", listener.getLocation());
-    }
-
-    /**
-     * The Class TestConfiguration.
-     */
-    @SpringBootApplication
-    static class TestConfiguration {
     }
 }
