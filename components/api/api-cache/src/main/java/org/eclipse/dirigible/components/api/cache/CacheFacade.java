@@ -13,7 +13,6 @@ package org.eclipse.dirigible.components.api.cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.Cache;
 
-
 public class CacheFacade {
 
     private static Cache<String, Object> cache;
