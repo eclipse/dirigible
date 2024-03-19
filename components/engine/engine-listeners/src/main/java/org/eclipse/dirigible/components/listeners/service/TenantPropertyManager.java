@@ -27,13 +27,13 @@ class TenantPropertyManager {
 
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(TenantPropertyManager.class);
-    
+
     /** The Constant TENANT_ID_PARAM_NAME. */
     private static final String TENANT_ID_PARAM_NAME = "tenant_id";
 
     /** The tenant context. */
     private final TenantContext tenantContext;
-    
+
     /** The defualt tenant. */
     private final Tenant defualtTenant;
 

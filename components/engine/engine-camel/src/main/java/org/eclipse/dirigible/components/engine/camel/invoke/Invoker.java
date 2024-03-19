@@ -28,7 +28,7 @@ import java.util.Map;
  */
 @Component
 public class Invoker {
-    
+
     /** The processor. */
     private final CamelProcessor processor;
 

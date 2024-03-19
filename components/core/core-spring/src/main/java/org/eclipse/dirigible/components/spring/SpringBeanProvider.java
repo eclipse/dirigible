@@ -23,7 +23,7 @@ public class SpringBeanProvider implements InitializingBean {
 
     /** The instance. */
     private static SpringBeanProvider INSTANCE;
-    
+
     /** The application context. */
     private final ApplicationContext applicationContext;
 

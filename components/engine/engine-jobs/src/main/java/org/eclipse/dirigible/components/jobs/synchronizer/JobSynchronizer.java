@@ -55,13 +55,13 @@ public class JobSynchronizer extends MultitenantBaseSynchronizer<Job, Long> {
      * The job service.
      */
     private final JobService jobService;
-    
+
     /** The jobs manager. */
     private final JobsManager jobsManager;
-    
+
     /** The job email service. */
     private final JobEmailService jobEmailService;
-    
+
     /** The job log service. */
     private final JobLogService jobLogService;
 

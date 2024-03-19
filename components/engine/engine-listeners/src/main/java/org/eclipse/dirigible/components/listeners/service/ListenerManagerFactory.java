@@ -22,7 +22,7 @@ public class ListenerManagerFactory {
 
     /** The connection artifacts factory. */
     private final ActiveMQConnectionArtifactsFactory connectionArtifactsFactory;
-    
+
     /** The asynchronous message listener factory. */
     private final AsynchronousMessageListenerFactory asynchronousMessageListenerFactory;
 

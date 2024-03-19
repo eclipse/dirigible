@@ -34,10 +34,10 @@ class AsynchronousMessageListener implements MessageListener {
 
     /** The listener. */
     private final ListenerDescriptor listenerDescriptor;
-    
+
     /** The tenant property manager. */
     private final TenantPropertyManager tenantPropertyManager;
-    
+
     /** The tenant context. */
     private final TenantContext tenantContext;
 

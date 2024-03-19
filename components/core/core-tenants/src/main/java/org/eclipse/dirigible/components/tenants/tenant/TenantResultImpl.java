@@ -22,7 +22,7 @@ class TenantResultImpl<Result> implements TenantResult<Result> {
 
     /** The tenant. */
     private final Tenant tenant;
-    
+
     /** The result. */
     private final Result result;
 

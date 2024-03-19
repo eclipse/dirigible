@@ -29,13 +29,13 @@ public class UserService {
 
     /** The tenant service. */
     private final TenantService tenantService;
-    
+
     /** The user repository. */
     private final UserRepository userRepository;
-    
+
     /** The password encoder. */
     private final BCryptPasswordEncoder passwordEncoder;
-    
+
     /** The assignment repository. */
     private final UserRoleAssignmentRepository assignmentRepository;
 

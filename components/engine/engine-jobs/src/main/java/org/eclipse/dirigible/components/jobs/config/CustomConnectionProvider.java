@@ -20,7 +20,7 @@ import java.sql.SQLException;
  * The Class CustomConnectionProvider.
  */
 class CustomConnectionProvider implements ConnectionProvider {
-    
+
     /** The data source. */
     private final DataSource dataSource;
 

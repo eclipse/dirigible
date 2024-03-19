@@ -42,11 +42,11 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
 
     /** The Constant DEFAULT_TENANT_SUBDOMAIN_REGEX. */
     private static final String DEFAULT_TENANT_SUBDOMAIN_REGEX = "^([^\\.]+)\\..+$";
-    
+
     /** The Constant TENANT_SUBDOMAIN_REGEX. */
     private static final String TENANT_SUBDOMAIN_REGEX =
             Configuration.get(Configuration.TENANT_SUBDOMAIN_REGEX, DEFAULT_TENANT_SUBDOMAIN_REGEX);
-    
+
     /** The Constant TENANT_SUBDOMAIN_PATTERN. */
     private static final Pattern TENANT_SUBDOMAIN_PATTERN = Pattern.compile(TENANT_SUBDOMAIN_REGEX);
 
@@ -58,7 +58,7 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
 
     /** The tenant service. */
     private final TenantService tenantService;
-    
+
     /** The tenant context. */
     private final TenantContext tenantContext;
 

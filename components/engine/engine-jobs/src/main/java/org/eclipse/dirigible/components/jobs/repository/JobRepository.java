@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository("jobsRepository")
 public interface JobRepository extends ArtefactRepository<Job, Long> {
-    
+
     /**
      * Sets the running to all.
      *

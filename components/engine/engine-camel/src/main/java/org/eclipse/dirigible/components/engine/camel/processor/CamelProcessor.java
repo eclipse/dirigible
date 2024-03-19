@@ -30,10 +30,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CamelProcessor {
-    
+
     /** The context. */
     private final SpringBootCamelContext context;
-    
+
     /** The camel request handler mapping. */
     private final CamelRequestHandlerMapping camelRequestHandlerMapping;
 

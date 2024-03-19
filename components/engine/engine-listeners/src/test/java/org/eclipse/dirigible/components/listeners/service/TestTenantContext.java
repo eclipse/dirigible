@@ -21,13 +21,13 @@ public class TestTenantContext implements TenantContext {
 
     /** The Constant TENANT_ID. */
     private static final String TENANT_ID = "1e7252b1-3bca-4285-bd4e-60e19886d063";
-    
+
     /** The Constant TENANT_NAME. */
     private static final String TENANT_NAME = "test-tenant";
-    
+
     /** The Constant TENANT_SUBDOMAIN. */
     private static final String TENANT_SUBDOMAIN = "test";
-    
+
     /** The Constant DEFUALT_TENANT. */
     private static final boolean DEFUALT_TENANT = false;
 
@@ -82,16 +82,16 @@ public class TestTenantContext implements TenantContext {
      * The Class TestTenant.
      */
     private static class TestTenant implements Tenant {
-        
+
         /** The id. */
         private final String id;
-        
+
         /** The name. */
         private final String name;
-        
+
         /** The subdomain. */
         private final String subdomain;
-        
+
         /** The default tenant. */
         private final boolean defaultTenant;
 

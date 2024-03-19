@@ -35,7 +35,7 @@ class DefaultTenantInitializer implements ApplicationListener<ApplicationReadyEv
 
     /** The default tenant. */
     private final Tenant defaultTenant;
-    
+
     /** The tenant service. */
     private final TenantService tenantService;
 

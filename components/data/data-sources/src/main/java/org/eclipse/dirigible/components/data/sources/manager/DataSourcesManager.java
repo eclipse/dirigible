@@ -32,19 +32,19 @@ public class DataSourcesManager {
 
     /** The datasource service. */
     private final DataSourceService datasourceService;
-    
+
     /** The custom data sources service. */
     private final CustomDataSourcesService customDataSourcesService;
-    
+
     /** The data source initializer. */
     private final DataSourceInitializer dataSourceInitializer;
-    
+
     /** The tenant data source name manager. */
     private final TenantDataSourceNameManager tenantDataSourceNameManager;
-    
+
     /** The default data source name. */
     private final String defaultDataSourceName;
-    
+
     /** The system data source name. */
     private final String systemDataSourceName;
 

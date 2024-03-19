@@ -25,7 +25,7 @@ public class CreateUserBuilder extends AbstractCreateSqlBuilder {
 
     /** The user id. */
     private final String userId;
-    
+
     /** The password. */
     private final String password;
 

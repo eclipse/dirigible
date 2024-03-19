@@ -26,7 +26,7 @@ import static org.quartz.CronScheduleBuilder.cronSchedule;
  */
 @Component
 public class JobsManager {
-    
+
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(JobsManager.class);
 
@@ -35,10 +35,10 @@ public class JobsManager {
 
     /** The scheduler. */
     private final Scheduler scheduler;
-    
+
     /** The tenant context. */
     private final TenantContext tenantContext;
-    
+
     /** The job name creator. */
     private final JobNameCreator jobNameCreator;
 

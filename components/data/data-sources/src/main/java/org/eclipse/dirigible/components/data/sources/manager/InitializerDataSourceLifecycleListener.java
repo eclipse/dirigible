@@ -15,13 +15,11 @@ import org.eclipse.dirigible.components.data.sources.service.DataSourceLifecycle
 import org.springframework.stereotype.Component;
 
 /**
- * The listener interface for receiving initializerDataSourceLifecycle events.
- * The class that is interested in processing a initializerDataSourceLifecycle
- * event implements this interface, and the object created
- * with that class is registered with a component using the
- * component's addInitializerDataSourceLifecycleListener method. When
- * the initializerDataSourceLifecycle event occurs, that object's appropriate
- * method is invoked.
+ * The listener interface for receiving initializerDataSourceLifecycle events. The class that is
+ * interested in processing a initializerDataSourceLifecycle event implements this interface, and
+ * the object created with that class is registered with a component using the component's
+ * addInitializerDataSourceLifecycleListener method. When the initializerDataSourceLifecycle event
+ * occurs, that object's appropriate method is invoked.
  *
  */
 @Component

@@ -43,7 +43,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @Transactional
 public class WebsocketEndpointTest {
-    
+
     /** The websocket service. */
     @Autowired
     private WebsocketService websocketService;

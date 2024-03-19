@@ -33,7 +33,7 @@ public class JobService extends BaseArtefactService<Job, Long> {
 
     /** The job email processor. */
     private final JobEmailProcessor jobEmailProcessor;
-    
+
     /** The jobs manager. */
     private final JobsManager jobsManager;
 

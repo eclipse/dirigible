@@ -16,6 +16,7 @@ package org.eclipse.dirigible.components.listeners.service;
 enum ListenerType {
 
     /** The queue. */
-    QUEUE, /** The topic. */
- TOPIC
+    QUEUE,
+    /** The topic. */
+    TOPIC
 }

@@ -14,13 +14,13 @@ package org.eclipse.dirigible.components.base.http.roles;
  * The Enum Roles.
  */
 public enum Roles {
-    
+
     /** The administrator. */
-    ADMINISTRATOR("ROLE_ADMINISTRATOR"), 
- /** The developer. */
- DEVELOPER("ROLE_DEVELOPER"), 
- /** The operator. */
- OPERATOR("ROLE_OPERATOR");
+    ADMINISTRATOR("ROLE_ADMINISTRATOR"),
+    /** The developer. */
+    DEVELOPER("ROLE_DEVELOPER"),
+    /** The operator. */
+    OPERATOR("ROLE_OPERATOR");
 
     /** The role name. */
     private final String roleName;

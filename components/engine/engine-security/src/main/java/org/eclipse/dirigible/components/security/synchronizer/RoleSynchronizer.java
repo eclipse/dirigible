@@ -48,7 +48,7 @@ public class RoleSynchronizer extends BaseSynchronizer<Role, Long> {
      * The Constant logger.
      */
     private static final Logger logger = LoggerFactory.getLogger(RoleSynchronizer.class);
-    
+
     /** The Constant PRESERVED_ROLE_LOCATION_PREFIXES. */
     private static final Set<String> PRESERVED_ROLE_LOCATION_PREFIXES = Set.of("SYSTEM_");
     /**

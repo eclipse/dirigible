@@ -36,7 +36,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 public class WebsocketsSynchronizerTest {
-    
+
     /** The websockets synchronizer. */
     @Autowired
     private WebsocketsSynchronizer websocketsSynchronizer;

@@ -28,10 +28,10 @@ public class MessageProducer {
 
     /** The session. */
     private final Session session;
-    
+
     /** The destination name manager. */
     private final DestinationNameManager destinationNameManager;
-    
+
     /** The tenant property manager. */
     private final TenantPropertyManager tenantPropertyManager;
 

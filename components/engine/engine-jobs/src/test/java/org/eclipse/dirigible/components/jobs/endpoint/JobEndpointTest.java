@@ -113,7 +113,7 @@ public class JobEndpointTest {
     }
 
     /**
-     *  Cleanup.
+     * Cleanup.
      */
     @AfterEach
     public void cleanup() {
@@ -121,7 +121,7 @@ public class JobEndpointTest {
     }
 
     /**
-     *  Finds all extension points and checks the location of the first one.
+     * Finds all extension points and checks the location of the first one.
      *
      * @throws Exception the exception
      */
@@ -134,7 +134,7 @@ public class JobEndpointTest {
     }
 
     /**
-     *  Gets all extension points.
+     * Gets all extension points.
      *
      * @return the all extension points
      * @throws Exception the exception
@@ -147,7 +147,7 @@ public class JobEndpointTest {
     }
 
     /**
-     *  Enables the job by name.
+     * Enables the job by name.
      *
      * @throws Exception the exception
      */
@@ -161,7 +161,7 @@ public class JobEndpointTest {
     }
 
     /**
-     *  Disables the job by name.
+     * Disables the job by name.
      *
      * @throws Exception the exception
      */

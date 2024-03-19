@@ -366,10 +366,10 @@ public class JavascriptEndpoint extends BaseEndpoint {
     }
 
     /**
-     * The  Dts.
+     * The Dts.
      */
     record Dts(String content, String moduleName, String filePath) {
-        
+
         /**
          * From dts path.
          *

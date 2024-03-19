@@ -45,7 +45,7 @@ public class Schema extends Artefact {
     @Column(name = "SCHEMA_ID", nullable = false)
     private Long id;
 
-    /**  The dataSource. */
+    /** The dataSource. */
     @Column(name = "datasource", nullable = false)
     @Expose
     private String datasource;

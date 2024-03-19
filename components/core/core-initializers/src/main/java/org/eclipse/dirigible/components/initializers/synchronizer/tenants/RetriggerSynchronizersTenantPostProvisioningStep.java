@@ -34,10 +34,10 @@ class RetriggerSynchronizersTenantPostProvisioningStep implements TenantPostProv
 
     /** The multitenant synchronizers. */
     private final List<Synchronizer<?, ?>> multitenantSynchronizers;
-    
+
     /** The definition service. */
     private final DefinitionService definitionService;
-    
+
     /** The synchronization processor. */
     private final SynchronizationProcessor synchronizationProcessor;
 

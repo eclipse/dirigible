@@ -30,7 +30,7 @@ public class MessageConsumer {
 
     /** The session. */
     private final Session session;
-    
+
     /** The destination name manager. */
     private final DestinationNameManager destinationNameManager;
 

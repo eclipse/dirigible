@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class RoleRepositoryTest {
-    
+
     /** The security role repository. */
     @Autowired
     private RoleRepository securityRoleRepository;

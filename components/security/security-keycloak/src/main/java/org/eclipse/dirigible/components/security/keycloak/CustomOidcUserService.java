@@ -47,7 +47,7 @@ public class CustomOidcUserService extends OidcUserService {
 
     /** The user service. */
     private final UserService userService;
-    
+
     /** The tenant context. */
     private final TenantContext tenantContext;
 

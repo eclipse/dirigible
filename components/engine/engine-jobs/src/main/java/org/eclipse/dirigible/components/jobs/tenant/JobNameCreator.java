@@ -25,10 +25,10 @@ public class JobNameCreator {
 
     /** The Constant TENANT_JOB_NAME_REGEX. */
     private static final String TENANT_JOB_NAME_REGEX = ".+###(.+)";
-    
+
     /** The Constant TENANT_JOB_NAME_PATTERN. */
     private static final Pattern TENANT_JOB_NAME_PATTERN = Pattern.compile(TENANT_JOB_NAME_REGEX);
-    
+
     /** The tenant context. */
     private final TenantContext tenantContext;
 

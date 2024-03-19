@@ -41,7 +41,7 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
     private static final Logger logger = LoggerFactory.getLogger(CamelSynchronizer.class);
     /** The camel service. */
     private final CamelService camelService;
-    
+
     /** The camel processor. */
     private final CamelProcessor camelProcessor;
     /** The synchronization callback. */

@@ -18,7 +18,7 @@ import java.util.Objects;
  * The Class CmisS3Utils.
  */
 public class CmisS3Utils {
-    
+
     /** The root. */
     public static String ROOT = "/";
 

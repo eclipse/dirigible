@@ -107,13 +107,13 @@ public class CsvimProcessor {
 
     /** The csv processor. */
     private final CsvProcessor csvProcessor;
-    
+
     /** The datasources manager. */
     private final DataSourcesManager datasourcesManager;
-    
+
     /** The default data source name. */
     private final String defaultDataSourceName;
-    
+
     /** The strict mode. */
     private boolean strictMode;
 

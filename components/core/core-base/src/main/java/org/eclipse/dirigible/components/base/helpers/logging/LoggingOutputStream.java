@@ -22,10 +22,10 @@ public class LoggingOutputStream extends OutputStream {
 
     /** The baos. */
     private final ByteArrayOutputStream baos = new ByteArrayOutputStream(1000);
-    
+
     /** The logger. */
     private final Logger logger;
-    
+
     /** The level. */
     private final LogLevel level;
 
@@ -33,17 +33,17 @@ public class LoggingOutputStream extends OutputStream {
      * The Enum LogLevel.
      */
     public enum LogLevel {
-        
+
         /** The trace. */
-        TRACE, 
- /** The debug. */
- DEBUG, 
- /** The info. */
- INFO, 
- /** The warn. */
- WARN, 
- /** The error. */
- ERROR,
+        TRACE,
+        /** The debug. */
+        DEBUG,
+        /** The info. */
+        INFO,
+        /** The warn. */
+        WARN,
+        /** The error. */
+        ERROR,
     }
 
     /**

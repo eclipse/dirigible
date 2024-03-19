@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CamelEngine implements Engine {
-    
+
     /**
      * Gets the name.
      *

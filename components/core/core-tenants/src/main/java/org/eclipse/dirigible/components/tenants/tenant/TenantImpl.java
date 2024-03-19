@@ -21,10 +21,10 @@ class TenantImpl implements Tenant {
 
     /** The Constant DEFAULT_TENANT_ID. */
     private static final String DEFAULT_TENANT_ID = "defaultTenant";
-    
+
     /** The Constant DEFAULT_TENANT_NAME. */
     private static final String DEFAULT_TENANT_NAME = "The default tenant";
-    
+
     /** The Constant DEFAULT_TENANT_SUBDOMAIN. */
     private static final String DEFAULT_TENANT_SUBDOMAIN = "default";
 
@@ -33,13 +33,13 @@ class TenantImpl implements Tenant {
 
     /** The id. */
     private final String id;
-    
+
     /** The name. */
     private final String name;
-    
+
     /** The subdomain. */
     private final String subdomain;
-    
+
     /** The default tenant. */
     private final boolean defaultTenant;
 

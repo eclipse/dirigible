@@ -32,13 +32,13 @@ class TenantsProvisioner {
 
     /** The tenant service. */
     private final TenantService tenantService;
-    
+
     /** The provisioning steps. */
     private final Set<TenantProvisioningStep> provisioningSteps;
-    
+
     /** The post provisioning steps. */
     private final Set<TenantPostProvisioningStep> postProvisioningSteps;
-    
+
     /** The tenant factory. */
     private final TenantFactory tenantFactory;
 

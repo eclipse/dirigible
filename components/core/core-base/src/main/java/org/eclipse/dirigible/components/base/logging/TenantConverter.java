@@ -22,7 +22,7 @@ public class TenantConverter extends ClassicConverter {
 
     /** The Constant BACKGROUND_TENANT_VALUE. */
     private static final String BACKGROUND_TENANT_VALUE = "background";
-    
+
     /** The tenant context. */
     private TenantContext tenantContext;
 

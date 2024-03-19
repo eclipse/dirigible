@@ -27,7 +27,7 @@ public class ODataMetadataService {
 
     /** The odata schema service. */
     private final ODataSchemaService odataSchemaService;
-    
+
     /** The odata container service. */
     private final ODataContainerService odataContainerService;
 

@@ -16,13 +16,13 @@ import java.util.Objects;
  * The Class ListenerDescriptor.
  */
 class ListenerDescriptor {
-    
+
     /** The type. */
     private final ListenerType type;
-    
+
     /** The destination. */
     private final String destination;
-    
+
     /** The handler path. */
     private final String handlerPath;
 

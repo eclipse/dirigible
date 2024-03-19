@@ -63,7 +63,7 @@ public class ListenerEndpointTest {
     /** The mock mvc. */
     @Autowired
     private MockMvc mockMvc;
-    
+
     /** The tenant context. */
     @MockBean
     private TenantContext tenantContext;

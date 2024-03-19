@@ -37,7 +37,7 @@ class JobsInitializer implements ApplicationListener<ApplicationReadyEvent> {
 
     /** The jobs. */
     private final Set<DirigibleJob> jobs;
-    
+
     /** The scheduler. */
     private final Scheduler scheduler;
 

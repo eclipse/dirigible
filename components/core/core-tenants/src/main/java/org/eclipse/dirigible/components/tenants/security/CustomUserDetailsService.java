@@ -38,7 +38,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     /** The user service. */
     private final UserService userService;
-    
+
     /** The tenant context. */
     private final TenantContext tenantContext;
 

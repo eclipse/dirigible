@@ -29,10 +29,10 @@ public class ListenerManager {
 
     /** The Constant INITIAL_REDELIVERY_DELAY. */
     private static final int INITIAL_REDELIVERY_DELAY = 1000;
-    
+
     /** The Constant REDELIVERY_DELAY. */
     private static final int REDELIVERY_DELAY = 5000;
-    
+
     /** The Constant MAXIMUM_REDELIVERIES. */
     private static final int MAXIMUM_REDELIVERIES = 3;
 
@@ -44,7 +44,7 @@ public class ListenerManager {
 
     /** The connection artifacts factory. */
     private final ActiveMQConnectionArtifactsFactory connectionArtifactsFactory;
-    
+
     /** The asynchronous message listener factory. */
     private final AsynchronousMessageListenerFactory asynchronousMessageListenerFactory;
 

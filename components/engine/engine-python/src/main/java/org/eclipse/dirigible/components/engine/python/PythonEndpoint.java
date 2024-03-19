@@ -47,16 +47,16 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping({BaseEndpoint.PREFIX_ENDPOINT_SECURED + "py", BaseEndpoint.PREFIX_ENDPOINT_PUBLIC + "py"})
 public class PythonEndpoint extends BaseEndpoint {
-    
+
     /** The Constant PYTHON. */
     private static final String PYTHON = ".py/";
-    
+
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(PythonEndpoint.class.getCanonicalName());
-    
+
     /** The Constant HTTP_PATH_MATCHER. */
     private static final String HTTP_PATH_MATCHER = "/{projectName}/{*projectFilePath}";
-    
+
     /** The repository. */
     private final IRepository repository;
 

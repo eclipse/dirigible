@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class OpenAPIRepositoryTest {
-    
+
     /** The open API repository. */
     @Autowired
     private OpenAPIRepository openAPIRepository;

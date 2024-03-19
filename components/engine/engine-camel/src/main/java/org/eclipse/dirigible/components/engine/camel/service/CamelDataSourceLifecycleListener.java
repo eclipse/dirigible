@@ -17,13 +17,11 @@ import org.eclipse.dirigible.components.data.sources.service.DataSourceLifecycle
 import org.springframework.stereotype.Component;
 
 /**
- * The listener interface for receiving camelDataSourceLifecycle events.
- * The class that is interested in processing a camelDataSourceLifecycle
- * event implements this interface, and the object created
- * with that class is registered with a component using the
- * component's addCamelDataSourceLifecycleListener method. When
- * the camelDataSourceLifecycle event occurs, that object's appropriate
- * method is invoked.
+ * The listener interface for receiving camelDataSourceLifecycle events. The class that is
+ * interested in processing a camelDataSourceLifecycle event implements this interface, and the
+ * object created with that class is registered with a component using the component's
+ * addCamelDataSourceLifecycleListener method. When the camelDataSourceLifecycle event occurs, that
+ * object's appropriate method is invoked.
  *
  */
 @Component
@@ -31,7 +29,7 @@ class CamelDataSourceLifecycleListener implements DataSourceLifecycleListener {
 
     /** The camel context. */
     private final SpringBootCamelContext camelContext;
-    
+
     /** The data source initializer. */
     private final DataSourceInitializer dataSourceInitializer;
 

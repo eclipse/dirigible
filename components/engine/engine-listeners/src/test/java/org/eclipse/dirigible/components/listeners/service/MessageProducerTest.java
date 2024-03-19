@@ -29,7 +29,7 @@ class MessageProducerTest {
 
     /** The Constant QUEUE. */
     private static final String QUEUE = "test-queue";
-    
+
     /** The Constant TENANT_QUEUE. */
     private static final String TENANT_QUEUE = "1e7252b1-3bca-4285-bd4e-60e19886d063###test-queue";
 
@@ -38,7 +38,7 @@ class MessageProducerTest {
 
     /** The Constant TOPIC. */
     private static final String TOPIC = "test-topic";
-    
+
     /** The Constant TENANT_TOPIC. */
     private static final String TENANT_TOPIC = "1e7252b1-3bca-4285-bd4e-60e19886d063###test-topic";
 
@@ -60,11 +60,11 @@ class MessageProducerTest {
     /** The txt message. */
     @Mock
     private TextMessage txtMessage;
-    
+
     /** The destination name manager. */
     @Mock
     private DestinationNameManager destinationNameManager;
-    
+
     /** The tenant property manager. */
     @Mock
     private TenantPropertyManager tenantPropertyManager;

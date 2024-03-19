@@ -48,7 +48,7 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
 
     /** The data sources manager. */
     private static DataSourcesManager dataSourcesManager;
-    
+
     /** The odata metadata service. */
     private static ODataMetadataService odataMetadataService;
 

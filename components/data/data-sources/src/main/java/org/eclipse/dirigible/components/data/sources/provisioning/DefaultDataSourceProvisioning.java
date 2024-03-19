@@ -41,10 +41,10 @@ class DefaultDataSourceProvisioning implements TenantProvisioningStep {
 
     /** The data sources manager. */
     private final DataSourcesManager dataSourcesManager;
-    
+
     /** The data source service. */
     private final DataSourceService dataSourceService;
-    
+
     /** The tenant data source name manager. */
     private final TenantDataSourceNameManager tenantDataSourceNameManager;
 

@@ -26,13 +26,13 @@ class TenantProvisioningJob {
 
     /** The Constant _15_MINS. */
     private static final long _15_MINS = 15 * 60 * 1000;
-    
+
     /** The Constant JOB_EXECUTION_INTERVAL_MINUTES. */
     private static final long JOB_EXECUTION_INTERVAL_MINUTES = _15_MINS;
 
     /** The Constant _30_SECONDS. */
     private static final long _30_SECONDS = 30 * 1000;
-    
+
     /** The Constant JOB_EXECUTION_INITIAL_DELAY_SECONDS. */
     private static final long JOB_EXECUTION_INITIAL_DELAY_SECONDS = _30_SECONDS;
 

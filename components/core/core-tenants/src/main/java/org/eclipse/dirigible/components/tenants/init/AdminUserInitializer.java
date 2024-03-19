@@ -44,13 +44,13 @@ class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent>
 
     /** The base 64 decoder. */
     private final Decoder base64Decoder;
-    
+
     /** The user service. */
     private final UserService userService;
-    
+
     /** The default tenant. */
     private final Tenant defaultTenant;
-    
+
     /** The role service. */
     private final RoleService roleService;
 

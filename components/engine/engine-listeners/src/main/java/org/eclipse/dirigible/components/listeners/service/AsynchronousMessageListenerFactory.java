@@ -21,7 +21,7 @@ class AsynchronousMessageListenerFactory {
 
     /** The tenant property manager. */
     private final TenantPropertyManager tenantPropertyManager;
-    
+
     /** The tenant context. */
     private final TenantContext tenantContext;
 

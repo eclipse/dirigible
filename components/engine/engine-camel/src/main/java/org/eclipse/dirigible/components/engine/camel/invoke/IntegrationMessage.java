@@ -18,7 +18,7 @@ import java.util.Map;
  * The Class IntegrationMessage.
  */
 public class IntegrationMessage {
-    
+
     /** The message. */
     private final Message message;
 

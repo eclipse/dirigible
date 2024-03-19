@@ -40,13 +40,13 @@ public class JobLogService extends BaseArtefactService<JobLog, Long> {
 
     /** The job email processor. */
     private final JobEmailProcessor jobEmailProcessor;
-    
+
     /** The job service. */
     private final JobService jobService;
-    
+
     /** The tenant context. */
     private final TenantContext tenantContext;
-    
+
     /** The default tenant. */
     private final Tenant defaultTenant;
 
