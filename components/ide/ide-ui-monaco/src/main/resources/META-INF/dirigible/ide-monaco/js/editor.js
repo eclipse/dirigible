@@ -388,7 +388,7 @@ class EditorActionsProvider {
             keybindingContext: null,
             contextMenuGroupId: 'fileIO',
             contextMenuOrder: 1.5,
-            run: async function (editor) {
+            run: function (editor) {
                 if (loadingMessage) {
                     loadingMessage.innerText = 'Saving...';
                 }
@@ -396,11 +396,11 @@ class EditorActionsProvider {
                     DirigibleEditor.loadingOverview.classList.remove("dg-hidden");
                 }
                 if (EditorActionsProvider.isAutoFormattingEnabledForCurrentFile()) {
-                    await editor.getAction('editor.action.formatDocument').run().then(async () => {
-                        await DirigibleEditor.saveFileContent(editor);
+                    editor.getAction('editor.action.formatDocument').run().then(() => {
+                        DirigibleEditor.saveFileContent(editor);
                     });
                 } else {
-                    await DirigibleEditor.saveFileContent(editor);
+                    DirigibleEditor.saveFileContent(editor);
                 }
             }
         };
@@ -566,9 +566,9 @@ class DirigibleEditor {
         messageHub.post({ resourcePath: ViewParameters.parameters.file }, 'ide-core.closeEditor');
     }
 
-    static async saveFileContent(editor) {
+    static saveFileContent(editor) {
         const fileIO = new FileIO();
-        await fileIO.saveText(editor.getModel().getValue()).then(() => {
+        fileIO.saveText(editor.getModel().getValue()).then(() => {
             DirigibleEditor.lastSavedVersionId = editor.getModel().getAlternativeVersionId();
             DirigibleEditor.dirty = false;
         });
@@ -587,40 +587,23 @@ class DirigibleEditor {
     }
 
     async init() {
-        const fileIO = new FileIO();
+        if (!this.fileName) {
+            return
+        }
 
         this.editor = await this.createEditorInstance();
 
-        if (this.fileName) {
-            const fileType = this.fileType;
-
-            if (TypeScriptUtils.isTypeScriptFile(this.fileName)) {
-                await TypeScriptUtils.loadImportedFiles(this.monaco, this.fileObject.importedFilesNames);
-
-                // messageHub.subscribe(() => {
-                //     loadImportedFiles(monaco, fileMetadata.importedFilesNames, true);
-                // }, "ide.ts.reload")
-            }
-
-            const mainFileUri = new this.monaco.Uri().with({ path: this.fileName });
-            const model = this.monaco.editor.createModel(this.fileObject.modified, this.fileType || 'text', mainFileUri);
-            DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
-
-            messageHub.subscribe((changed) => {
-                if (changed.fileName === this.fileName) {
-                    return;
-                }
-                DirigibleEditor.sourceBeingChangedProgramatically = true;
-                model.setValue(model.getValue());
-                DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
-                DirigibleEditor.sourceBeingChangedProgramatically = false;
-            }, "ide.ts.reload")
-
-
-            this.editor.setModel(model);
-
-            await TypeScriptUtils.loadDTS(this.monaco);
+        if (TypeScriptUtils.isTypeScriptFile(this.fileName)) {
+            TypeScriptUtils.loadImportedFiles(this.monaco, this.fileObject.importedFilesNames);
         }
+
+        const mainFileUri = new this.monaco.Uri().with({ path: this.fileName });
+        const model = this.monaco.editor.createModel(this.fileObject.modified, this.fileType || 'text', mainFileUri);
+        DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
+
+        this.editor.setModel(model);
+
+        await TypeScriptUtils.loadDTS(this.monaco);
     }
 
     async createEditorInstance() {
@@ -708,7 +691,7 @@ class DirigibleEditor {
                         }
                     }
                     if (newImportedModules.length > 0) {
-                        await TypeScriptUtils.loadImportedFiles(monaco, newImportedModules);
+                        TypeScriptUtils.loadImportedFiles(monaco, newImportedModules);
                         fileObject.importedFilesNames.push(...newImportedModules);
                     }
                 }, 1000);
@@ -887,7 +870,7 @@ class DirigibleEditor {
         }
 
         this.monaco.languages.registerImplementationProvider('typescript', {
-            provideImplementation: function (model, position, token) {
+            provideImplementation: function (model, position) {
                 const filePath = getTypeScriptFileImport(model, position, fileObject);
                 if (filePath) {
                     const workspace = new FileIO().resolveWorkspace();
@@ -907,7 +890,7 @@ class DirigibleEditor {
         });
 
         this.monaco.languages.registerDefinitionProvider('typescript', {
-            provideDefinition: function (model, position, token) {
+            provideDefinition: function (model, position) {
                 const filePath = getTypeScriptFileImport(model, position, fileObject);
                 if (filePath) {
                     return [{
@@ -922,6 +905,8 @@ class DirigibleEditor {
     subscribeEvents() {
         const fileIO = new FileIO();
         const editor = this.editor;
+        const monaco = this.monaco;
+        const fileObject = this.fileObject;
 
         messageHub.subscribe(async function (msg) {
             const file = msg.data && typeof msg.data === 'object' && msg.data.file;
@@ -931,7 +916,7 @@ class DirigibleEditor {
 
             const model = editor.getModel();
             if (DirigibleEditor.isDirty(model)) {
-                await fileIO.saveText(model.getValue()).then(() => {
+                fileIO.saveText(model.getValue()).then(() => {
                     DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
                     DirigibleEditor.dirty = false;
                 });
@@ -941,7 +926,7 @@ class DirigibleEditor {
         messageHub.subscribe(async function () {
             const model = editor.getModel();
             if (DirigibleEditor.isDirty(model)) {
-                await fileIO.saveText(model.getValue());
+                fileIO.saveText(model.getValue());
                 DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
                 DirigibleEditor.dirty = false;
             }
@@ -961,6 +946,19 @@ class DirigibleEditor {
             }
             editor.focus();
         }, "ide-core.setEditorFocusGain");
+
+        messageHub.subscribe((event) => {
+            if (event.fileName === this.fileName) {
+                return;
+            }
+            DirigibleEditor.sourceBeingChangedProgramatically = true;
+            const model = editor.getModel();
+            model.setValue(model.getValue());
+            DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
+            DirigibleEditor.sourceBeingChangedProgramatically = false;
+
+            TypeScriptUtils.loadImportedFiles(monaco, fileObject.importedFilesNames, true);
+        }, "ide.ts.reload");
     }
 }
 
@@ -978,9 +976,12 @@ class TypeScriptUtils {
 
         let match;
         while ((match = importRegex.exec(content)) !== null) {
-            const modulePath = match[1];
+            let modulePath = match[1];
             if (!modulePath.startsWith('sdk/')) {
-                importedModules.push(`${modulePath}.ts`);
+                if (!modulePath.endsWith(".json")) {
+                    modulePath += ".ts";
+                }
+                importedModules.push(modulePath);
             }
         }
         return importedModules;
@@ -1000,7 +1001,7 @@ class TypeScriptUtils {
                     monaco.editor.createModel(importedFileMetadata.sourceCode, "typescript", uri);
                 }
                 if (importedFileMetadata.importedFilesNames?.length > 0) {
-                    await TypeScriptUtils.loadImportedFiles(monaco, importedFileMetadata.importedFilesNames, isReload);
+                    TypeScriptUtils.loadImportedFiles(monaco, importedFileMetadata.importedFilesNames, isReload);
                 }
             } catch (e) {
                 Utils.logErrorMessage(e);
