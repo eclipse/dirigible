@@ -18,23 +18,13 @@
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-modules-javascript</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-api-http</artifactId>
-		</dependency>
-
-		<!-- Helpers -->
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-commons-helpers</artifactId>
-		</dependency>
 		
 		<!-- Test -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-test</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>com.github.ben-manes.caffeine</groupId>
 			<artifactId>caffeine</artifactId>

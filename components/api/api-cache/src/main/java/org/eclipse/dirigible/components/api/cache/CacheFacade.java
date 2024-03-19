@@ -11,8 +11,6 @@
 package org.eclipse.dirigible.components.api.cache;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.github.benmanes.caffeine.cache.Cache;
 
 

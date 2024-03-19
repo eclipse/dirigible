@@ -1,2 +1,2 @@
-export * from "./caches"
-export { Caches as caches } from "./caches"
+export * from "./cache"
+export { Cache as caches } from "./cache"
