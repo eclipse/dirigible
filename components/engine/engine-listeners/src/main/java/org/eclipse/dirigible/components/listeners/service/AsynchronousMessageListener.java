@@ -41,7 +41,8 @@ class AsynchronousMessageListener implements MessageListener {
      *
      * @param listenerDescriptor the listener
      */
-    AsynchronousMessageListener(ListenerDescriptor listenerDescriptor, TenantPropertyManager tenantPropertyManager, TenantContext tenantContext) {
+    AsynchronousMessageListener(ListenerDescriptor listenerDescriptor, TenantPropertyManager tenantPropertyManager,
+            TenantContext tenantContext) {
         this.listenerDescriptor = listenerDescriptor;
         this.tenantPropertyManager = tenantPropertyManager;
         this.tenantContext = tenantContext;
@@ -54,9 +55,11 @@ class AsynchronousMessageListener implements MessageListener {
      */
     @Override
     public void onMessage(Message message) {
-        LOGGER.trace("Start processing a received message in [{}] by [{}] ...", listenerDescriptor.getDestination(), listenerDescriptor.getHandlerPath());
+        LOGGER.trace("Start processing a received message in [{}] by [{}] ...", listenerDescriptor.getDestination(),
+                listenerDescriptor.getHandlerPath());
         if (!(message instanceof TextMessage textMsg)) {
-            String msg = String.format("Invalid message [%s] has been received in destination [%s]", message, listenerDescriptor.getDestination());
+            String msg = String.format("Invalid message [%s] has been received in destination [%s]", message,
+                    listenerDescriptor.getDestination());
             throw new IllegalStateException(msg);
         }
         try {
@@ -67,7 +70,8 @@ class AsynchronousMessageListener implements MessageListener {
                 executeOnMessageHandler(textMsg);
                 return null;
             });
-            LOGGER.trace("Done processing the received message in [{}] by [{}]", listenerDescriptor.getDestination(), listenerDescriptor.getHandlerPath());
+            LOGGER.trace("Done processing the received message in [{}] by [{}]", listenerDescriptor.getDestination(),
+                    listenerDescriptor.getHandlerPath());
         } catch (Exception e) {
             throw new IllegalStateException("Failed to handle message: " + message, e);
         }
