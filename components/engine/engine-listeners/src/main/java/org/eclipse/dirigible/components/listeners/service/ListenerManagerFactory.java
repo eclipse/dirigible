@@ -34,10 +34,10 @@ public class ListenerManagerFactory {
     /**
      * Creates the.
      *
-     * @param listener the listener
+     * @param listenerDescriptor the listener
      * @return the listener manager
      */
-    public ListenerManager create(Listener listener) {
-        return new ListenerManager(listener, connectionArtifactsFactory, asynchronousMessageListenerFactory);
+    public ListenerManager create(ListenerDescriptor listenerDescriptor) {
+        return new ListenerManager(listenerDescriptor, connectionArtifactsFactory, asynchronousMessageListenerFactory);
     }
 }

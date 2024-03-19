@@ -37,14 +37,14 @@ class ListenerManagerFactoryTest {
 
     /** The listener. */
     @Mock
-    private Listener listener;
+    private ListenerDescriptor listenerDescriptor;
 
     /**
      * Test create.
      */
     @Test
     void testCreate() {
-        ListenerManager manager = factory.create(listener);
+        ListenerManager manager = factory.create(listenerDescriptor);
 
         assertThat(manager).isNotNull();
     }

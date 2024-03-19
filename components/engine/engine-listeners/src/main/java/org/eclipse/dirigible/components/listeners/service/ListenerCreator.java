@@ -12,11 +12,11 @@ class ListenerCreator {
         this.destinationNameManager = destinationNameManager;
     }
 
-    Listener fromEntity(org.eclipse.dirigible.components.listeners.domain.Listener entity) {
+    ListenerDescriptor fromEntity(org.eclipse.dirigible.components.listeners.domain.Listener entity) {
         ListenerType type = fromEntityType(entity.getKind());
 
         String destination = destinationNameManager.toTenantName(entity.getName());
-        return new Listener(type, destination, entity.getHandler());
+        return new ListenerDescriptor(type, destination, entity.getHandler());
     }
 
     private ListenerType fromEntityType(ListenerKind kind) {

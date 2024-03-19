@@ -29,7 +29,7 @@ import java.util.Map;
 public class ListenersManager {
 
     /** The listeners. */
-    static final Map<Listener, ListenerManager> LISTENERS = Collections.synchronizedMap(new HashMap<>());
+    static final Map<ListenerDescriptor, ListenerManager> LISTENERS = Collections.synchronizedMap(new HashMap<>());
 
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(ListenersManager.class);
@@ -61,32 +61,32 @@ public class ListenersManager {
      * @param listenerEntity the listener
      */
     public void startListener(org.eclipse.dirigible.components.listeners.domain.Listener listenerEntity) {
-        Listener listener = listenerCreator.fromEntity(listenerEntity);
-        if (LISTENERS.containsKey(listener)) {
-            LOGGER.warn("Message consumer for listener [{}] already running!", listener);
+        ListenerDescriptor listenerDescriptor = listenerCreator.fromEntity(listenerEntity);
+        if (LISTENERS.containsKey(listenerDescriptor)) {
+            LOGGER.warn("Message consumer for listener [{}] already running!", listenerDescriptor);
             return;
 
         }
-        if (isMissingHandler(listener)) {
-            LOGGER.error("Listener {} cannot be started, because the handler does not exist!", listener);
+        if (isMissingHandler(listenerDescriptor)) {
+            LOGGER.error("Listener {} cannot be started, because the handler does not exist!", listenerDescriptor);
             return;
         }
-        ListenerManager listenerManager = messageListenerManagerFactory.create(listener);
+        ListenerManager listenerManager = messageListenerManagerFactory.create(listenerDescriptor);
         listenerManager.startListener();
 
-        LISTENERS.put(listener, listenerManager);
-        LOGGER.info("Listener [{}] started.", listener);
+        LISTENERS.put(listenerDescriptor, listenerManager);
+        LOGGER.info("Listener [{}] started.", listenerDescriptor);
     }
 
     /**
      * Checks if is missing handler.
      *
-     * @param listener the listener
+     * @param listenerDescriptor the listener
      * @return true, if is missing handler
      */
-    private boolean isMissingHandler(Listener listener) {
+    private boolean isMissingHandler(ListenerDescriptor listenerDescriptor) {
         IResource resource = repository.getResource(
-                IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + listener.getHandlerPath());
+                IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + listenerDescriptor.getHandlerPath());
         return !resource.exists();
     }
 
@@ -110,13 +110,13 @@ public class ListenersManager {
      * @param listenerEntity the listener
      */
     public void stopListener(org.eclipse.dirigible.components.listeners.domain.Listener listenerEntity) {
-        Listener listener = listenerCreator.fromEntity(listenerEntity);
-        ListenerManager listenerManager = LISTENERS.get(listener);
+        ListenerDescriptor listenerDescriptor = listenerCreator.fromEntity(listenerEntity);
+        ListenerManager listenerManager = LISTENERS.get(listenerDescriptor);
         if (listenerManager != null) {
             listenerManager.stopListener();
-            LISTENERS.remove(listener);
+            LISTENERS.remove(listenerDescriptor);
         } else {
-            LOGGER.warn("There is NO configured listener for [{}]", listener);
+            LOGGER.warn("There is NO configured listener for [{}]", listenerDescriptor);
         }
     }
 

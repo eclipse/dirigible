@@ -2,12 +2,12 @@ package org.eclipse.dirigible.components.listeners.service;
 
 import java.util.Objects;
 
-class Listener {
+class ListenerDescriptor {
     private final ListenerType type;
     private final String destination;
     private final String handlerPath;
 
-    Listener(ListenerType type, String destination, String handlerPath) {
+    ListenerDescriptor(ListenerType type, String destination, String handlerPath) {
         this.type = type;
         this.destination = destination;
         this.handlerPath = handlerPath;
@@ -36,9 +36,9 @@ class Listener {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        Listener listener = (Listener) o;
-        return type == listener.type && Objects.equals(destination, listener.destination)
-                && Objects.equals(handlerPath, listener.handlerPath);
+        ListenerDescriptor listenerDescriptor = (ListenerDescriptor) o;
+        return type == listenerDescriptor.type && Objects.equals(destination, listenerDescriptor.destination)
+                && Objects.equals(handlerPath, listenerDescriptor.handlerPath);
     }
 
     @Override

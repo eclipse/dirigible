@@ -66,10 +66,10 @@ class ListenersManagerTest {
     private ListenerManager listenerManager2;
 
     @Mock
-    private Listener listener;
+    private ListenerDescriptor listenerDescriptor;
 
     @Mock
-    private Listener listener2;
+    private ListenerDescriptor listenerDescriptor2;
 
     /**
      * Sets the up.
@@ -78,7 +78,7 @@ class ListenersManagerTest {
     void setUp() {
         ListenersManager.LISTENERS.clear();
         lenient().when(listenerCreator.fromEntity(listenerEntity))
-                 .thenReturn(listener);
+                 .thenReturn(listenerDescriptor);
     }
 
     /**
@@ -98,11 +98,11 @@ class ListenersManagerTest {
      */
     @Test
     void testStartListenerOnExistingListener() {
-        when(listener.getHandlerPath()).thenReturn(HANDLER);
+        when(listenerDescriptor.getHandlerPath()).thenReturn(HANDLER);
         when(repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + HANDLER)).thenReturn(
                 resource);
         when(resource.exists()).thenReturn(true);
-        when(messageListenerManagerFactory.create(listener)).thenReturn(listenerManager);
+        when(messageListenerManagerFactory.create(listenerDescriptor)).thenReturn(listenerManager);
 
         listenersManager.startListener(listenerEntity);
 
@@ -114,7 +114,7 @@ class ListenersManagerTest {
      */
     @Test
     void testStartListenerOnMissingListener() {
-        when(listener.getHandlerPath()).thenReturn(HANDLER);
+        when(listenerDescriptor.getHandlerPath()).thenReturn(HANDLER);
         when(repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + HANDLER)).thenReturn(
                 resource);
         when(resource.exists()).thenReturn(false);
@@ -129,7 +129,7 @@ class ListenersManagerTest {
      */
     @Test
     void testStopListener() {
-        ListenersManager.LISTENERS.put(listener, listenerManager);
+        ListenersManager.LISTENERS.put(listenerDescriptor, listenerManager);
 
         listenersManager.stopListener(listenerEntity);
         listenersManager.stopListener(listenerEntity);
@@ -143,8 +143,8 @@ class ListenersManagerTest {
      */
     @Test
     void testStopListeners() {
-        ListenersManager.LISTENERS.put(listener, listenerManager);
-        ListenersManager.LISTENERS.put(listener2, listenerManager2);
+        ListenersManager.LISTENERS.put(listenerDescriptor, listenerManager);
+        ListenersManager.LISTENERS.put(listenerDescriptor2, listenerManager2);
 
         listenersManager.stopListeners();
         listenersManager.stopListeners();

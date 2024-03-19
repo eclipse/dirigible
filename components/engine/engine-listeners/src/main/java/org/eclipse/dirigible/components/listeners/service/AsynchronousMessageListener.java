@@ -32,17 +32,17 @@ class AsynchronousMessageListener implements MessageListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(AsynchronousMessageListener.class);
 
     /** The listener. */
-    private final Listener listener;
+    private final ListenerDescriptor listenerDescriptor;
     private final TenantPropertyManager tenantPropertyManager;
     private final TenantContext tenantContext;
 
     /**
      * Instantiates a new asynchronous message listener.
      *
-     * @param listener the listener
+     * @param listenerDescriptor the listener
      */
-    AsynchronousMessageListener(Listener listener, TenantPropertyManager tenantPropertyManager, TenantContext tenantContext) {
-        this.listener = listener;
+    AsynchronousMessageListener(ListenerDescriptor listenerDescriptor, TenantPropertyManager tenantPropertyManager, TenantContext tenantContext) {
+        this.listenerDescriptor = listenerDescriptor;
         this.tenantPropertyManager = tenantPropertyManager;
         this.tenantContext = tenantContext;
     }
@@ -54,9 +54,9 @@ class AsynchronousMessageListener implements MessageListener {
      */
     @Override
     public void onMessage(Message message) {
-        LOGGER.trace("Start processing a received message in [{}] by [{}] ...", listener.getDestination(), listener.getHandlerPath());
+        LOGGER.trace("Start processing a received message in [{}] by [{}] ...", listenerDescriptor.getDestination(), listenerDescriptor.getHandlerPath());
         if (!(message instanceof TextMessage textMsg)) {
-            String msg = String.format("Invalid message [%s] has been received in destination [%s]", message, listener.getDestination());
+            String msg = String.format("Invalid message [%s] has been received in destination [%s]", message, listenerDescriptor.getDestination());
             throw new IllegalStateException(msg);
         }
         try {
@@ -67,7 +67,7 @@ class AsynchronousMessageListener implements MessageListener {
                 executeOnMessageHandler(textMsg);
                 return null;
             });
-            LOGGER.trace("Done processing the received message in [{}] by [{}]", listener.getDestination(), listener.getHandlerPath());
+            LOGGER.trace("Done processing the received message in [{}] by [{}]", listenerDescriptor.getDestination(), listenerDescriptor.getHandlerPath());
         } catch (Exception e) {
             throw new IllegalStateException("Failed to handle message: " + message, e);
         }
@@ -81,7 +81,7 @@ class AsynchronousMessageListener implements MessageListener {
     private void executeOnMessageHandler(TextMessage textMsg) {
         String extractedMsg = extractMessage(textMsg);
         try (DirigibleJavascriptCodeRunner runner = createJSCodeRunner()) {
-            String handlerPath = listener.getHandlerPath();
+            String handlerPath = listenerDescriptor.getHandlerPath();
             Module module = runner.run(handlerPath);
             runner.runMethod(module, "onMessage", extractedMsg);
         }

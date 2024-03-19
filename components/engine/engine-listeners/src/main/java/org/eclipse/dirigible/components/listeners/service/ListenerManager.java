@@ -35,7 +35,7 @@ public class ListenerManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(ListenerManager.class);
 
     /** The listener. */
-    private final Listener listener;
+    private final ListenerDescriptor listenerDescriptor;
 
     /** The connection artifacts factory. */
     private final ActiveMQConnectionArtifactsFactory connectionArtifactsFactory;
@@ -47,12 +47,12 @@ public class ListenerManager {
     /**
      * Instantiates a new background listener manager.
      *
-     * @param listener the listener
+     * @param listenerDescriptor the listener
      * @param connectionArtifactsFactory the connection artifacts factory
      */
-    public ListenerManager(Listener listener, ActiveMQConnectionArtifactsFactory connectionArtifactsFactory,
+    public ListenerManager(ListenerDescriptor listenerDescriptor, ActiveMQConnectionArtifactsFactory connectionArtifactsFactory,
             AsynchronousMessageListenerFactory asynchronousMessageListenerFactory) {
-        this.listener = listener;
+        this.listenerDescriptor = listenerDescriptor;
         this.connectionArtifactsFactory = connectionArtifactsFactory;
         this.asynchronousMessageListenerFactory = asynchronousMessageListenerFactory;
     }
@@ -63,13 +63,13 @@ public class ListenerManager {
     @SuppressWarnings("resource")
     public synchronized void startListener() {
         if (null != connectionArtifacts) {
-            LOGGER.debug("Listener [{}] IS already configured", listener);
+            LOGGER.debug("Listener [{}] IS already configured", listenerDescriptor);
             return;
         }
 
-        LOGGER.info("Starting a message listener for {} ...", listener);
+        LOGGER.info("Starting a message listener for {} ...", listenerDescriptor);
         try {
-            String handlerPath = listener.getHandlerPath();
+            String handlerPath = listenerDescriptor.getHandlerPath();
             ListenerExceptionHandler exceptionListener = new ListenerExceptionHandler(handlerPath);
 
             Connection connection = connectionArtifactsFactory.createConnection(exceptionListener);
@@ -80,12 +80,12 @@ public class ListenerManager {
 
             MessageConsumer consumer = session.createConsumer(destination);
 
-            AsynchronousMessageListener messageListener = asynchronousMessageListenerFactory.create(listener);
+            AsynchronousMessageListener messageListener = asynchronousMessageListenerFactory.create(listenerDescriptor);
             consumer.setMessageListener(messageListener);
 
             connectionArtifacts = new ConnectionArtifacts(connection, session, consumer);
         } catch (JMSException ex) {
-            throw new IllegalStateException("Failed to start listener for " + listener, ex);
+            throw new IllegalStateException("Failed to start listener for " + listenerDescriptor, ex);
         }
     }
 
@@ -97,10 +97,10 @@ public class ListenerManager {
      * @throws JMSException the JMS exception
      */
     private Destination createDestination(Session session) throws JMSException {
-        String destination = listener.getDestination();
-        ListenerType type = listener.getType();
+        String destination = listenerDescriptor.getDestination();
+        ListenerType type = listenerDescriptor.getType();
         if (null == type) {
-            throw new IllegalArgumentException("Type cannot be null for: " + listener);
+            throw new IllegalArgumentException("Type cannot be null for: " + listenerDescriptor);
         }
         return switch (type) {
             case QUEUE -> session.createQueue(destination);
@@ -133,12 +133,12 @@ public class ListenerManager {
      */
     public synchronized void stopListener() {
         if (null == connectionArtifacts) {
-            LOGGER.debug("Listener [{}] is NOT started", listener);
+            LOGGER.debug("Listener [{}] is NOT started", listenerDescriptor);
             return;
         }
-        LOGGER.info("Stopping message listener for {} ...", listener);
+        LOGGER.info("Stopping message listener for {} ...", listenerDescriptor);
         connectionArtifacts.closeAll();
         connectionArtifacts = null;
-        LOGGER.info("Stopped message listener for {}", listener);
+        LOGGER.info("Stopped message listener for {}", listenerDescriptor);
     }
 }

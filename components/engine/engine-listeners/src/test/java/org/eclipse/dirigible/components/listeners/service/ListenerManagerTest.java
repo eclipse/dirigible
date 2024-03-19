@@ -45,7 +45,7 @@ class ListenerManagerTest {
 
     /** The listener. */
     @Mock
-    private Listener listener;
+    private ListenerDescriptor listenerDescriptor;
 
     /** The connection artifacts factory. */
     @Mock
@@ -87,7 +87,7 @@ class ListenerManagerTest {
 
     @BeforeEach
     void setUp() {
-        lenient().when(asynchronousMessageListenerFactory.create(listener))
+        lenient().when(asynchronousMessageListenerFactory.create(listenerDescriptor))
                  .thenReturn(asynchronousMessageListener);
     }
 
@@ -109,7 +109,7 @@ class ListenerManagerTest {
      */
     @Test
     void testStartListenerForUnsupportedListenerType() {
-        when(listener.getType()).thenReturn(null);
+        when(listenerDescriptor.getType()).thenReturn(null);
 
         assertThrows(IllegalArgumentException.class, () -> manager.startListener());
     }
@@ -122,8 +122,8 @@ class ListenerManagerTest {
     @Test
     void testStartListenerForQueue() throws JMSException {
         mockConnectionAndSession();
-        when(listener.getType()).thenReturn(ListenerType.QUEUE);
-        when(listener.getDestination()).thenReturn(QUEUE);
+        when(listenerDescriptor.getType()).thenReturn(ListenerType.QUEUE);
+        when(listenerDescriptor.getDestination()).thenReturn(QUEUE);
 
         when(session.createQueue(QUEUE)).thenReturn(queue);
         when(session.createConsumer(queue)).thenReturn(consumer);
@@ -204,8 +204,8 @@ class ListenerManagerTest {
     @Test
     void testStartListenerForTopic() throws JMSException {
         mockConnectionAndSession();
-        when(listener.getType()).thenReturn(ListenerType.TOPIC);
-        when(listener.getDestination()).thenReturn(TOPIC);
+        when(listenerDescriptor.getType()).thenReturn(ListenerType.TOPIC);
+        when(listenerDescriptor.getDestination()).thenReturn(TOPIC);
 
         when(session.createTopic(TOPIC)).thenReturn(topic);
         when(session.createConsumer(topic)).thenReturn(consumer);

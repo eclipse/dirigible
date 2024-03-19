@@ -24,7 +24,7 @@ class AsynchronousMessageListenerFactory {
         this.tenantContext = tenantContext;
     }
 
-    AsynchronousMessageListener create(Listener listener) {
-        return new AsynchronousMessageListener(listener, tenantPropertyManager, tenantContext);
+    AsynchronousMessageListener create(ListenerDescriptor listenerDescriptor) {
+        return new AsynchronousMessageListener(listenerDescriptor, tenantPropertyManager, tenantContext);
     }
 }

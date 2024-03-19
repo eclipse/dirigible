@@ -52,7 +52,7 @@ class AsynchronousMessageListenerTest {
 
     /** The listener. */
     @Mock
-    private Listener listener;
+    private ListenerDescriptor listenerDescriptor;
 
     /** The bytes message. */
     @Mock
@@ -70,7 +70,7 @@ class AsynchronousMessageListenerTest {
      */
     @BeforeEach
     void setUp() {
-        asyncMessageListener = spy(new AsynchronousMessageListener(listener, tenantPropertyManager, new TestTenantContext()));
+        asyncMessageListener = spy(new AsynchronousMessageListener(listenerDescriptor, tenantPropertyManager, new TestTenantContext()));
     }
 
     /**
@@ -83,7 +83,7 @@ class AsynchronousMessageListenerTest {
         when(tenantPropertyManager.getCurrentTenantId(textMessage)).thenReturn(TENANT_ID);
         doReturn(jsCodeRunner).when(asyncMessageListener)
                               .createJSCodeRunner();
-        when(listener.getHandlerPath()).thenReturn(HANDLER);
+        when(listenerDescriptor.getHandlerPath()).thenReturn(HANDLER);
         when(textMessage.getText()).thenReturn(MESSAGE);
         when(jsCodeRunner.run(HANDLER)).thenReturn(module);
 
