@@ -20,7 +20,7 @@ import org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder;
 public class MySQLDropBranchingBuilder extends DropBranchingBuilder {
 
     /**
-     * Instantiates a new mySQL create branching builder.
+     * Instantiates a new MySQL create branching builder.
      *
      * @param dialect the dialect
      */

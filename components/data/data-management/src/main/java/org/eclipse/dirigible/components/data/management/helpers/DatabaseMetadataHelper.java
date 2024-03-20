@@ -293,7 +293,9 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         String query = null;
 
         if (dmd.getDatabaseProductName()
-               .equals("MariaDB")) {
+               .equals("MariaDB")
+                || dmd.getDatabaseProductName()
+                      .equals("MySQL")) {
             query = String.format(
                     "SELECT column_name FROM information_schema.columns WHERE table_schema = \'%s\' AND extra = 'auto_increment'", name);
         } else if (dmd.getDatabaseProductName()
@@ -310,7 +312,9 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
                 while (resultSet.next()) {
                     String sequenceName;
                     if (dmd.getDatabaseProductName()
-                           .equals("MariaDB")) {
+                           .equals("MariaDB")
+                            || dmd.getDatabaseProductName()
+                                  .equals("MySQL")) {
                         sequenceName = resultSet.getString("column_name");
                     } else if (dmd.getDatabaseProductName()
                                   .equals("Snowflake")) {

@@ -14,7 +14,7 @@ import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilder;
 
 /**
- * The mySQL Create Sequence Builder.
+ * The MySQL Create Sequence Builder.
  */
 public class MySQLCreateSequenceBuilder extends CreateSequenceBuilder {
 
