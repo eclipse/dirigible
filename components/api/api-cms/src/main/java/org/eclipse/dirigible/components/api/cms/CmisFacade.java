@@ -10,10 +10,10 @@
  */
 package org.eclipse.dirigible.components.api.cms;
 
+import jakarta.servlet.ServletException;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.api.http.HttpRequestFacade;
 import org.eclipse.dirigible.components.engine.cms.CmsProvider;
-import org.eclipse.dirigible.components.engine.cms.CmsProviderFactory;
 import org.eclipse.dirigible.components.security.domain.Access;
 import org.eclipse.dirigible.components.security.verifier.AccessVerifier;
 import org.slf4j.Logger;
@@ -25,6 +25,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -55,23 +56,38 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
     private static CmisFacade INSTANCE;
     /** The security access verifier. */
     private final AccessVerifier securityAccessVerifier;
+    /** The cms provider. */
+    private final List<CmsProvider> cmsProvider;
 
     /**
      * Instantiates a new cmis facade.
      *
+     * @param cmsProvider the cms provider
      * @param securityAccessVerifier the security access verifier
      */
     @Autowired
-    public CmisFacade(AccessVerifier securityAccessVerifier) {
+    public CmisFacade(List<CmsProvider> cmsProvider, AccessVerifier securityAccessVerifier) {
+        this.cmsProvider = cmsProvider;
         this.securityAccessVerifier = securityAccessVerifier;
     }
 
     /**
      * After properties set.
+     *
+     * @throws Exception the exception
      */
     @Override
-    public void afterPropertiesSet() {
+    public void afterPropertiesSet() throws Exception {
         INSTANCE = this;
+    }
+
+    /**
+     * Gets the cms provider.
+     *
+     * @return the cms provider
+     */
+    protected List<CmsProvider> getCmsProvider() {
+        return cmsProvider;
     }
 
     /**
@@ -91,9 +107,8 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
      */
     public static final Object getSession() {
         String type = Configuration.get("DIRIGIBLE_CMS_PROVIDER", "cms-provider-internal");
-        CmsProviderFactory cmsProviderFactory = applicationContext.getBean(type, CmsProviderFactory.class);
-        CmsProvider cmsProvider = cmsProviderFactory.create();
-        return cmsProvider.getSession();
+        Object session = ((CmsProvider) applicationContext.getBean(type)).getSession();
+        return session;
     }
 
     /**
@@ -153,7 +168,9 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
             if (!readDefinitions.isEmpty()) {
                 isReadable = false;
                 if (user == null) {
-                    logger.error("No logged in user accessing path: " + path);
+                    if (logger.isErrorEnabled()) {
+                        logger.error("No logged in user accessing path: " + path);
+                    }
                     return false;
                 }
             }
@@ -171,7 +188,9 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
                 if (!writeDefinitions.isEmpty()) {
                     isReadOnly = true;
                     if (user == null) {
-                        logger.error("No logged in user accessing path: " + path);
+                        if (logger.isErrorEnabled()) {
+                            logger.error("No logged in user accessing path: " + path);
+                        }
                         return false;
                     }
                 }
@@ -186,8 +205,10 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
                 return isReadable;
             }
 
-        } catch (Exception ex) {
-            logger.error(ex.getMessage(), ex);
+        } catch (Exception e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage());
+            }
         }
         return true;
     }
@@ -198,9 +219,10 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
      * @param path the path
      * @param method the method
      * @return the access definitions
+     * @throws ServletException the servlet exception
      */
-    public static Set<Access> getAccessDefinitions(String path, String method) {
-        Set<Access> accessDefinitions = new HashSet<>();
+    public static Set<Access> getAccessDefinitions(String path, String method) throws ServletException {
+        Set<Access> accessDefinitions = new HashSet<Access>();
         int indexOf = 0;
         do {
             String accessPath = path;
