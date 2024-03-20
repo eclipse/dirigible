@@ -133,6 +133,23 @@ class FileIO {
         return '';
     }
 
+    resolveRelativePath(basePath, relativePath) {
+        if (relativePath.startsWith('../')) {
+            const fileNameTokens = basePath.split('/');
+            const relativeTokens = relativePath.split('../');
+            for (let i = 0; i < relativeTokens.length; i++) {
+                fileNameTokens.pop();
+            }
+            basePath = fileNameTokens.join('/') + '/' + relativeTokens.filter(e => e != '').join('/');
+        } else if (relativePath.startsWith('./')) {
+            const fileNameTokens = basePath.split('/');
+            fileNameTokens.pop();
+            const relativeTokens = relativePath.split('./');
+            basePath = fileNameTokens.join('/') + '/' + relativeTokens.filter(e => e != '').join('/');
+        }
+        return basePath.replaceAll('\\', '/').split('/').join('/');
+    }
+
     resolveFilePath(filePath) {
         let path = this.resolvePath();
         if (path && filePath.startsWith('../')) {
@@ -1007,7 +1024,8 @@ class TypeScriptUtils {
                     monaco.editor.createModel(importedFileMetadata.sourceCode, fileType, uri);
                 }
                 if (importedFileMetadata.importedFilesNames?.length > 0) {
-                    TypeScriptUtils.loadImportedFiles(monaco, importedFileMetadata.importedFilesNames, isReload);
+                    const relativeImportedPaths = importedFileMetadata.importedFilesNames.map(e => fileIO.resolveRelativePath(importedFile, e));
+                    TypeScriptUtils.loadImportedFiles(monaco, relativeImportedPaths, isReload);
                 }
             } catch (e) {
                 Utils.logErrorMessage(e);
