@@ -38,15 +38,18 @@ public class MessagingFacade {
      * @param message the message
      * @throws MessagingAPIException if fail to send the message
      */
-    public static final void sendToQueue(String queue, String message) throws MessagingAPIException {
-        if (null == messageProducer) {
-            throw new IllegalStateException("Class is not initialized yet. Cannot call this static method before the bean is initialized");
-        }
-
+    public static void sendToQueue(String queue, String message) throws MessagingAPIException {
+        validateClassIsInitialized();
         try {
             messageProducer.sendMessageToQueue(queue, message);
         } catch (RuntimeException | JMSException ex) {
             throw new MessagingAPIException("Failed to send message to queue [" + queue + "]", ex);
+        }
+    }
+
+    private static void validateClassIsInitialized() {
+        if (null == messageProducer) {
+            throw new IllegalStateException("Class is not initialized yet. Cannot call this static method before the bean is initialized");
         }
     }
 
@@ -57,17 +60,13 @@ public class MessagingFacade {
      * @param message the message
      * @throws MessagingAPIException if fail to send the message
      */
-    public static final void sendToTopic(String topic, String message) {
-        if (null == messageProducer) {
-            throw new IllegalStateException("Class is not initialized yet. Cannot call this static method before the bean is initialized");
-        }
-
+    public static void sendToTopic(String topic, String message) {
+        validateClassIsInitialized();
         try {
             messageProducer.sendMessageToTopic(topic, message);
         } catch (RuntimeException | JMSException ex) {
             throw new MessagingAPIException("Failed to send message to topic [" + topic + "]", ex);
         }
-
     }
 
     /**
@@ -79,11 +78,8 @@ public class MessagingFacade {
      * @throws MessagingAPIException if fail to receive a message from the queue
      * @throws TimeoutException if timeout to get a message from the queue
      */
-    public static final String receiveFromQueue(String queue, long timeout) throws MessagingAPIException {
-        if (null == messageConsumer) {
-            throw new IllegalStateException("Class is not initialized yet. Cannot call this static method before the bean is initialized");
-        }
-
+    public static String receiveFromQueue(String queue, long timeout) throws MessagingAPIException {
+        validateClassIsInitialized();
         try {
             return messageConsumer.receiveMessageFromQueue(queue, timeout);
         } catch (org.eclipse.dirigible.components.listeners.service.TimeoutException ex) {
@@ -102,11 +98,8 @@ public class MessagingFacade {
      * @throws MessagingAPIException if fail to receive a message from the topic
      * @throws TimeoutException if timeout to get a message from the topic
      */
-    public static final String receiveFromTopic(String topic, long timeout) {
-        if (null == messageConsumer) {
-            throw new IllegalStateException("Class is not initialized yet. Cannot call this static method before the bean is initialized");
-        }
-
+    public static String receiveFromTopic(String topic, long timeout) {
+        validateClassIsInitialized();
         try {
             return messageConsumer.receiveMessageFromTopic(topic, timeout);
         } catch (org.eclipse.dirigible.components.listeners.service.TimeoutException ex) {

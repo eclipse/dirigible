@@ -25,6 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class WebsocketService extends BaseArtefactService<Websocket, Long> {
 
+    /**
+     * Instantiates a new websocket service.
+     *
+     * @param repository the repository
+     */
     public WebsocketService(WebsocketRepository repository) {
         super(repository);
     }

@@ -300,6 +300,12 @@ public class DataExportService {
         }
     }
 
+    /**
+     * Adds the table metadata in model.
+     *
+     * @param table the table
+     * @param entitiesArray the entities array
+     */
     private void addTableMetadataInModel(Table table, JsonArray entitiesArray) {
         JsonObject tableObject = new JsonObject();
         JsonArray tableColumns = new JsonArray();
@@ -315,6 +321,12 @@ public class DataExportService {
         entitiesArray.add(tableObject);
     }
 
+    /**
+     * Populate table properties.
+     *
+     * @param tableObject the table object
+     * @param table the table
+     */
     private void populateTableProperties(JsonObject tableObject, Table table) {
         tableObject.addProperty("caption", "Manage entity " + table.getName());
         tableObject.addProperty("dataCount", "SELECT COUNT(*) AS COUNT FROM \"${tablePrefix}" + table.getName() + "\"");
@@ -342,6 +354,12 @@ public class DataExportService {
         tableObject.addProperty("type", "PRIMARY");
     }
 
+    /**
+     * Populate column data.
+     *
+     * @param column the column
+     * @return the json object
+     */
     private JsonObject populateColumnData(TableColumn column) {
         JsonObject columnObject = new JsonObject();
         columnObject.addProperty("calculatedPropertyExpressionCreate", "");

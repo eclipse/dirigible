@@ -10,8 +10,6 @@
  */
 package org.eclipse.dirigible.components.openapi.synchronizer;
 
-import java.text.ParseException;
-import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
@@ -28,6 +26,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.text.ParseException;
+import java.util.List;
 
 /**
  * The Class OpenAPISynchronizer.
@@ -117,6 +118,16 @@ public class OpenAPISynchronizer extends BaseSynchronizer<OpenAPI, Long> {
     }
 
     /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<OpenAPI, Long> getService() {
+        return openAPIService;
+    }
+
+    /**
      * Retrieve.
      *
      * @param location the location
@@ -142,22 +153,12 @@ public class OpenAPISynchronizer extends BaseSynchronizer<OpenAPI, Long> {
     }
 
     /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<OpenAPI, Long> getService() {
-        return openAPIService;
-    }
-
-    /**
      * Cleanup.
      *
      * @param openAPI the openAPI
      */
     @Override
-    public void cleanup(OpenAPI openAPI) {
+    public void cleanupImpl(OpenAPI openAPI) {
         try {
             getService().delete(openAPI);
         } catch (Exception e) {

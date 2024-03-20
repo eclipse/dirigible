@@ -10,10 +10,6 @@
  */
 package org.eclipse.dirigible.components.data.sources.synchronizer;
 
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.util.List;
-import java.util.Set;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
@@ -32,6 +28,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.util.List;
+import java.util.Set;
+
 /**
  * The Class DataSourcesSynchronizer.
  */
@@ -39,14 +40,13 @@ import org.springframework.stereotype.Component;
 @Order(SynchronizersOrder.DATASOURCE)
 public class DataSourcesSynchronizer extends BaseSynchronizer<DataSource, Long> {
 
+    /** The Constant FILE_DATASOURCE_EXTENSION. */
+    public static final String FILE_DATASOURCE_EXTENSION = ".datasource";
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DataSourcesSynchronizer.class);
 
+    /** The Constant PRESERVED_DATA_SOURCE_LOCATION_PREFIXES. */
     private static final Set<String> PRESERVED_DATA_SOURCE_LOCATION_PREFIXES = Set.of("API_", "ENV_", "TENANT_");
-
-    /** The Constant FILE_DATASOURCE_EXTENSION. */
-    public static final String FILE_DATASOURCE_EXTENSION = ".datasource";
-
     /** The datasource service. */
     private final DataSourceService dataSourceService;
 
@@ -61,16 +61,6 @@ public class DataSourcesSynchronizer extends BaseSynchronizer<DataSource, Long> 
     @Autowired
     public DataSourcesSynchronizer(DataSourceService dataSourceService) {
         this.dataSourceService = dataSourceService;
-    }
-
-    /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<DataSource, Long> getService() {
-        return dataSourceService;
     }
 
     /**
@@ -127,6 +117,16 @@ public class DataSourcesSynchronizer extends BaseSynchronizer<DataSource, Long> 
             }
             throw new ParseException(e.getMessage(), 0);
         }
+    }
+
+    /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<DataSource, Long> getService() {
+        return dataSourceService;
     }
 
     /**
@@ -209,7 +209,7 @@ public class DataSourcesSynchronizer extends BaseSynchronizer<DataSource, Long> 
      * @param datasource the datasource
      */
     @Override
-    public void cleanup(DataSource datasource) {
+    public void cleanupImpl(DataSource datasource) {
         try {
             Boolean delete = PRESERVED_DATA_SOURCE_LOCATION_PREFIXES.stream()
                                                                     .filter(p -> datasource.getLocation()

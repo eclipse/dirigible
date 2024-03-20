@@ -27,13 +27,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataSourcesManager {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DataSourcesManager.class);
 
+    /** The datasource service. */
     private final DataSourceService datasourceService;
+
+    /** The custom data sources service. */
     private final CustomDataSourcesService customDataSourcesService;
+
+    /** The data source initializer. */
     private final DataSourceInitializer dataSourceInitializer;
+
+    /** The tenant data source name manager. */
     private final TenantDataSourceNameManager tenantDataSourceNameManager;
+
+    /** The default data source name. */
     private final String defaultDataSourceName;
+
+    /** The system data source name. */
     private final String systemDataSourceName;
 
     /**
@@ -42,6 +54,9 @@ public class DataSourcesManager {
      * @param datasourceService the datasource service
      * @param customDataSourcesService the custom data sources service
      * @param dataSourceInitializer the data source initializer
+     * @param tenantDataSourceNameManager the tenant data source name manager
+     * @param defaultDataSourceName the default data source name
+     * @param systemDataSourceName the system data source name
      */
     @Autowired
     public DataSourcesManager(DataSourceService datasourceService, CustomDataSourcesService customDataSourcesService,

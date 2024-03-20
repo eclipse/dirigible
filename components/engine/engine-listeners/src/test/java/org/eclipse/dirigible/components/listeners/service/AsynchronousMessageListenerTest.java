@@ -10,30 +10,26 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
-import static org.junit.Assert.assertThrows;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import jakarta.jms.BytesMessage;
 import jakarta.jms.JMSException;
 import jakarta.jms.TextMessage;
-import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
-import org.graalvm.polyglot.Value;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.*;
+
 /**
  * The Class BackgroundMessageListenerTest.
  */
 @SuppressWarnings("resource")
 @ExtendWith(MockitoExtension.class)
-class MessageListenerTest {
+class AsynchronousMessageListenerTest {
 
     /** The Constant MESSAGE. */
     private static final String MESSAGE = "This is a test message";
@@ -41,8 +37,11 @@ class MessageListenerTest {
     /** The Constant HANDLER. */
     private static final String HANDLER = "test-handler";
 
+    /** The Constant TENANT_ID. */
+    private static final String TENANT_ID = "1e7252b1-3bca-4285-bd4e-60e19886d063";
+
     /** The background message listener. */
-    private AsynchronousMessageListener backgroundMessageListener;
+    private AsynchronousMessageListener asyncMessageListener;
 
     /** The js code runner. */
     @Mock
@@ -54,7 +53,7 @@ class MessageListenerTest {
 
     /** The listener. */
     @Mock
-    private Listener listener;
+    private ListenerDescriptor listenerDescriptor;
 
     /** The bytes message. */
     @Mock
@@ -64,16 +63,16 @@ class MessageListenerTest {
     @Mock
     private Module module;
 
-    /** The value. */
+    /** The tenant property manager. */
     @Mock
-    private Value value;
+    private TenantPropertyManager tenantPropertyManager;
 
     /**
      * Sets the up.
      */
     @BeforeEach
     void setUp() {
-        backgroundMessageListener = spy(new AsynchronousMessageListener(listener));
+        asyncMessageListener = spy(new AsynchronousMessageListener(listenerDescriptor, tenantPropertyManager, new TestTenantContext()));
     }
 
     /**
@@ -83,16 +82,16 @@ class MessageListenerTest {
      */
     @Test
     void testOnMessage() throws JMSException {
-        doReturn(jsCodeRunner).when(backgroundMessageListener)
+        when(tenantPropertyManager.getCurrentTenantId(textMessage)).thenReturn(TENANT_ID);
+        doReturn(jsCodeRunner).when(asyncMessageListener)
                               .createJSCodeRunner();
-        when(listener.getHandler()).thenReturn(HANDLER);
+        when(listenerDescriptor.getHandlerPath()).thenReturn(HANDLER);
         when(textMessage.getText()).thenReturn(MESSAGE);
         when(jsCodeRunner.run(HANDLER)).thenReturn(module);
 
-        backgroundMessageListener.onMessage(textMessage);
+        asyncMessageListener.onMessage(textMessage);
 
         verify(jsCodeRunner).runMethod(module, "onMessage", MESSAGE);
-
     }
 
     /**
@@ -104,7 +103,7 @@ class MessageListenerTest {
     void testOnMessageFailedToExtractMessage() throws JMSException {
         when(textMessage.getText()).thenThrow(JMSException.class);
 
-        assertThrows(IllegalStateException.class, () -> backgroundMessageListener.onMessage(textMessage));
+        assertThrows(IllegalStateException.class, () -> asyncMessageListener.onMessage(textMessage));
     }
 
     /**
@@ -112,7 +111,7 @@ class MessageListenerTest {
      */
     @Test
     void testOnMessageWithUnsupportedMessage() {
-        assertThrows(IllegalStateException.class, () -> backgroundMessageListener.onMessage(bytesMessage));
+        assertThrows(IllegalStateException.class, () -> asyncMessageListener.onMessage(bytesMessage));
     }
 
 }

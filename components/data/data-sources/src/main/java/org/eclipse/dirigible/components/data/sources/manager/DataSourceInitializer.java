@@ -39,20 +39,27 @@ import com.zaxxer.hikari.HikariDataSource;
 @Component
 public class DataSourceInitializer {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DataSourceInitializer.class);
 
+    /** The Constant DATASOURCES. */
     private static final Map<String, javax.sql.DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<>());
 
+    /** The application context. */
     private final ApplicationContext applicationContext;
 
+    /** The contributors. */
     private final List<DataSourceInitializerContributor> contributors;
 
+    /** The tenant data source name manager. */
     private final TenantDataSourceNameManager tenantDataSourceNameManager;
 
     /**
      * Instantiates a new data source initializer.
      *
      * @param applicationContext the application context
+     * @param contributors the contributors
+     * @param tenantDataSourceNameManager the tenant data source name manager
      */
     DataSourceInitializer(ApplicationContext applicationContext, List<DataSourceInitializerContributor> contributors,
             TenantDataSourceNameManager tenantDataSourceNameManager) {
@@ -75,6 +82,12 @@ public class DataSourceInitializer {
         return initDataSource(dataSource);
     }
 
+    /**
+     * Inits the data source.
+     *
+     * @param dataSource the data source
+     * @return the managed data source
+     */
     @SuppressWarnings("resource")
     private ManagedDataSource initDataSource(DataSource dataSource) {
         String name = dataSource.getName();
@@ -168,6 +181,13 @@ public class DataSourceInitializer {
         DATASOURCES.remove(name);
     }
 
+    /**
+     * Prepare root folder.
+     *
+     * @param name the name
+     * @return the string
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private String prepareRootFolder(String name) throws IOException {
         String rootFolder = (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name))
                 ? DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
@@ -184,6 +204,12 @@ public class DataSourceInitializer {
         return h2Root;
     }
 
+    /**
+     * Register data source bean.
+     *
+     * @param name the name
+     * @param dataSource the data source
+     */
     private void registerDataSourceBean(String name, ManagedDataSource dataSource) {
         if (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM.equals(name)) {
             return; // bean already set by org.eclipse.dirigible.components.database.DataSourceSystemConfig
@@ -193,6 +219,12 @@ public class DataSourceInitializer {
         beanFactory.registerSingleton(name, dataSource);
     }
 
+    /**
+     * Gets the hikari properties.
+     *
+     * @param databaseName the database name
+     * @return the hikari properties
+     */
     private Map<String, String> getHikariProperties(String databaseName) {
         Map<String, String> properties = new HashMap<>();
         String hikariDelimiter = "_HIKARI_";

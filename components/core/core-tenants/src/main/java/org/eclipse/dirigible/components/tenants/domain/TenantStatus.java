@@ -10,7 +10,13 @@
  */
 package org.eclipse.dirigible.components.tenants.domain;
 
+/**
+ * The Enum TenantStatus.
+ */
 public enum TenantStatus {
 
-    INITIAL, PROVISIONED
+    /** The initial. */
+    INITIAL,
+    /** The provisioned. */
+    PROVISIONED
 }

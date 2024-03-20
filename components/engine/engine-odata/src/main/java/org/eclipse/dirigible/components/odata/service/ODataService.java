@@ -24,6 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ODataService extends BaseArtefactService<OData, Long> implements InitializingBean {
 
+    /**
+     * Instantiates a new o data service.
+     *
+     * @param odataRepository the odata repository
+     */
     public ODataService(ODataRepository odataRepository) {
         super(odataRepository);
     }

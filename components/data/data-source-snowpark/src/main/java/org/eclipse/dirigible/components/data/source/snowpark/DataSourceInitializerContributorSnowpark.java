@@ -21,11 +21,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * The Class DataSourceInitializerContributorSnowpark.
+ */
 @Configuration
 public class DataSourceInitializerContributorSnowpark implements DataSourceInitializerContributor {
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DataSourceInitializerContributorSnowpark.class);
 
+    /**
+     * Contribute.
+     *
+     * @param dataSource the data source
+     * @param properties the properties
+     */
     @Override
     public void contribute(DataSource dataSource, Properties properties) {
         if (!dataSource.getName()

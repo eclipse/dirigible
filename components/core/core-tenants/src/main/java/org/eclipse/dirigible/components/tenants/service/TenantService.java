@@ -16,27 +16,60 @@ import org.eclipse.dirigible.components.tenants.domain.Tenant;
 import org.eclipse.dirigible.components.tenants.domain.TenantStatus;
 import org.springframework.stereotype.Service;
 
+/**
+ * The Class TenantService.
+ */
 @Service
 public class TenantService {
 
+    /** The tenant repository. */
     private final TenantRepository tenantRepository;
 
+    /**
+     * Instantiates a new tenant service.
+     *
+     * @param tenantRepository the tenant repository
+     */
     public TenantService(TenantRepository tenantRepository) {
         this.tenantRepository = tenantRepository;
     }
 
+    /**
+     * Find by subdomain.
+     *
+     * @param subdomain the subdomain
+     * @return the optional
+     */
     public Optional<Tenant> findBySubdomain(String subdomain) {
         return tenantRepository.findBySubdomain(subdomain);
     }
 
+    /**
+     * Find by status.
+     *
+     * @param status the status
+     * @return the sets the
+     */
     public Set<Tenant> findByStatus(TenantStatus status) {
         return tenantRepository.findByStatus(status);
     }
 
+    /**
+     * Save.
+     *
+     * @param tenant the tenant
+     * @return the tenant
+     */
     public Tenant save(Tenant tenant) {
         return tenantRepository.save(tenant);
     }
 
+    /**
+     * Find by id.
+     *
+     * @param id the id
+     * @return the optional
+     */
     public Optional<Tenant> findById(String id) {
         return tenantRepository.findById(id);
     }

@@ -10,10 +10,6 @@
  */
 package org.eclipse.dirigible.components.security.synchronizer;
 
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
@@ -31,6 +27,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class AccessSynchronizer.
@@ -68,16 +69,6 @@ public class AccessSynchronizer extends BaseSynchronizer<Access, Long> {
     @Autowired
     public AccessSynchronizer(AccessService securityAccessService) {
         this.securityAccessService = securityAccessService;
-    }
-
-    /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<Access, Long> getService() {
-        return securityAccessService;
     }
 
     /**
@@ -135,6 +126,16 @@ public class AccessSynchronizer extends BaseSynchronizer<Access, Long> {
     }
 
     /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<Access, Long> getService() {
+        return securityAccessService;
+    }
+
+    /**
      * Retrieve.
      *
      * @param location the location
@@ -178,7 +179,7 @@ public class AccessSynchronizer extends BaseSynchronizer<Access, Long> {
      * @param access the security access
      */
     @Override
-    public void cleanup(Access access) {
+    public void cleanupImpl(Access access) {
         try {
             getService().delete(access);
         } catch (Exception e) {

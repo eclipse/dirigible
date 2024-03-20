@@ -39,6 +39,7 @@ public class CmisS3Object implements CmisObject {
      */
     private String id;
 
+    /** The name. */
     private String name;
 
     /**

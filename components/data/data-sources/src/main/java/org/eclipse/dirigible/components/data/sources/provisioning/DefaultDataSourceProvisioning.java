@@ -30,15 +30,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class DefaultDataSourceProvisioning.
+ */
 @Component
 class DefaultDataSourceProvisioning implements TenantProvisioningStep {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultDataSourceProvisioning.class);
 
+    /** The data sources manager. */
     private final DataSourcesManager dataSourcesManager;
+
+    /** The data source service. */
     private final DataSourceService dataSourceService;
+
+    /** The tenant data source name manager. */
     private final TenantDataSourceNameManager tenantDataSourceNameManager;
 
+    /**
+     * Instantiates a new default data source provisioning.
+     *
+     * @param dataSourcesManager the data sources manager
+     * @param dataSourceService the data source service
+     * @param tenantDataSourceNameManager the tenant data source name manager
+     */
     DefaultDataSourceProvisioning(DataSourcesManager dataSourcesManager, DataSourceService dataSourceService,
             TenantDataSourceNameManager tenantDataSourceNameManager) {
         this.dataSourcesManager = dataSourcesManager;
@@ -46,6 +62,12 @@ class DefaultDataSourceProvisioning implements TenantProvisioningStep {
         this.tenantDataSourceNameManager = tenantDataSourceNameManager;
     }
 
+    /**
+     * Execute.
+     *
+     * @param tenant the tenant
+     * @throws TenantProvisioningException the tenant provisioning exception
+     */
     @Override
     public void execute(Tenant tenant) throws TenantProvisioningException {
         LOGGER.info("Registering Default DataSource for tenant [{}]...", tenant);
@@ -70,11 +92,23 @@ class DefaultDataSourceProvisioning implements TenantProvisioningStep {
 
     }
 
+    /**
+     * Generate user id.
+     *
+     * @return the string
+     */
     private String generateUserId() {
         return UUID.randomUUID()
                    .toString();
     }
 
+    /**
+     * Creates the user.
+     *
+     * @param tenant the tenant
+     * @param userId the user id
+     * @param password the password
+     */
     private void createUser(Tenant tenant, String userId, String password) {
         javax.sql.DataSource dataSource = dataSourcesManager.getDefaultDataSource();
         try (Connection connection = dataSource.getConnection()) {
@@ -92,6 +126,14 @@ class DefaultDataSourceProvisioning implements TenantProvisioningStep {
         }
     }
 
+    /**
+     * Creates the schema.
+     *
+     * @param tenant the tenant
+     * @param userId the user id
+     * @return the string
+     * @throws TenantProvisioningException the tenant provisioning exception
+     */
     private String createSchema(Tenant tenant, String userId) throws TenantProvisioningException {
         javax.sql.DataSource dataSource = dataSourcesManager.getDefaultDataSource();
         try (Connection connection = dataSource.getConnection()) {
@@ -112,11 +154,26 @@ class DefaultDataSourceProvisioning implements TenantProvisioningStep {
         }
     }
 
+    /**
+     * Gets the schema name.
+     *
+     * @param tenant the tenant
+     * @return the schema name
+     */
     private String getSchemaName(Tenant tenant) {
         return tenant.getId()
                      .toUpperCase();
     }
 
+    /**
+     * Register data source.
+     *
+     * @param tenant the tenant
+     * @param userId the user id
+     * @param password the password
+     * @param schema the schema
+     * @return the data source
+     */
     private DataSource registerDataSource(Tenant tenant, String userId, String password, String schema) {
 
         String defaultDataSourceName = Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT,

@@ -21,9 +21,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+/**
+ * The Class CamelDirigibleConfiguration.
+ */
 @Configuration
 class CamelDirigibleConfiguration {
 
+    /**
+     * Creates the camel request handler mapping.
+     *
+     * @param camelContext the camel context
+     * @param httpEngine the http engine
+     * @param camelRequestHandlerMapping the camel request handler mapping
+     * @return the camel request handler mapping
+     */
     @Bean
     @Primary
     public CamelRequestHandlerMapping createCamelRequestHandlerMapping(CamelContext camelContext, PlatformHttpEngine httpEngine,
@@ -33,6 +44,12 @@ class CamelDirigibleConfiguration {
         return new CamelDirigibleRequestHandlerMapping(httpComponent, httpEngine);
     }
 
+    /**
+     * Creates the spring boot camel context.
+     *
+     * @param applicationContext the application context
+     * @return the spring boot camel context
+     */
     @Bean
     SpringBootCamelContext createSpringBootCamelContext(ApplicationContext applicationContext) {
         return new SpringBootCamelContext(applicationContext, true);

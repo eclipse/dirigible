@@ -10,6 +10,9 @@
  */
 package org.eclipse.dirigible.components.engine.bpm;
 
+/**
+ * The Interface BpmProvider.
+ */
 public interface BpmProvider {
 
 }

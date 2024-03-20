@@ -22,18 +22,33 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class SystemRolesInitializer.
+ */
 @Order(ApplicationReadyEventListeners.SYSTEM_ROLES_INITIALIZER)
 @Component
 class SystemRolesInitializer implements ApplicationListener<ApplicationReadyEvent> {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemRolesInitializer.class);
 
+    /** The role service. */
     private final RoleService roleService;
 
+    /**
+     * Instantiates a new system roles initializer.
+     *
+     * @param roleService the role service
+     */
     SystemRolesInitializer(RoleService roleService) {
         this.roleService = roleService;
     }
 
+    /**
+     * On application event.
+     *
+     * @param event the event
+     */
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         LOGGER.info("Executing...");
@@ -45,6 +60,11 @@ class SystemRolesInitializer implements ApplicationListener<ApplicationReadyEven
         LOGGER.info("Completed...");
     }
 
+    /**
+     * Creates the role.
+     *
+     * @param predefinedRole the predefined role
+     */
     private void createRole(Roles predefinedRole) {
         String roleName = predefinedRole.getRoleName();
         if (roleService.roleExistsByName(roleName)) {

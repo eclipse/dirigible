@@ -23,6 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ViewService extends BaseArtefactService<View, Long> {
 
+    /**
+     * Instantiates a new view service.
+     *
+     * @param repository the repository
+     */
     public ViewService(ViewRepository repository) {
         super(repository);
     }

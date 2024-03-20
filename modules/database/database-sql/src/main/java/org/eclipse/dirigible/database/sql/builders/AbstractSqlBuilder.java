@@ -142,10 +142,23 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
         return encapsulateMany(line, '"');
     }
 
+    /**
+     * Encapsulate where.
+     *
+     * @param where the where
+     * @return the string
+     */
     protected String encapsulateWhere(String where) {
         return encapsulateMany(where, '"');
     }
 
+    /**
+     * Encapsulate many.
+     *
+     * @param line the line
+     * @param escapeChar the escape char
+     * @return the string
+     */
     protected String encapsulateMany(String line, char escapeChar) {
         String lineWithoughContentBetweenSingleQuotes = String.join("", line.split(contentBetweenSingleQuotes.toString()));
         String regex = "([^a-zA-Z0-9_#$::']+)'*\\1*";

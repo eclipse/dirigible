@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component;
 @Scope("singleton")
 public class SynchronizationInitializer implements ApplicationListener<ApplicationReadyEvent> {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(SynchronizationInitializer.class);
 
     /** The synchronization processor. */
@@ -53,6 +54,11 @@ public class SynchronizationInitializer implements ApplicationListener<Applicati
         this.initializationProcessor = initializationProcessor;
     }
 
+    /**
+     * On application event.
+     *
+     * @param event the event
+     */
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         LOGGER.info("Executing...");

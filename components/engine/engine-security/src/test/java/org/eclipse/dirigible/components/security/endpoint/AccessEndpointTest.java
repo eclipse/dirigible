@@ -36,6 +36,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * The Class AccessEndpointTest.
+ */
 @WithMockUser
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {AccessRepository.class})
@@ -45,18 +48,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 class AccessEndpointTest {
 
+    /** The access repository. */
     @Autowired
     private AccessRepository accessRepository;
 
+    /** The mock mvc. */
     @Autowired
     private MockMvc mockMvc;
 
+    /** The wac. */
     @Autowired
     protected WebApplicationContext wac;
 
+    /** The spring security filter chain. */
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
 
+    /**
+     * Setup.
+     */
     @BeforeEach
     public void setup() {
 
@@ -69,12 +79,20 @@ class AccessEndpointTest {
                 createSecurityAccess("/a/b/c/test2.access", "test2", "description", "HTTP", "/a" + "/b/c/test2.txt", "GET", "test_role_2"));
     }
 
+    /**
+     * Cleanup.
+     */
     @AfterEach
     public void cleanup() {
         // Delete test security accesses
         accessRepository.deleteAll();
     }
 
+    /**
+     * Test get security accesses.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testGetSecurityAccesses() throws Exception {
         mockMvc.perform(get("/services/security/access").accept(MediaType.APPLICATION_JSON))
@@ -82,6 +100,9 @@ class AccessEndpointTest {
                .andExpect(status().isOk());
     }
 
+    /**
+     * The Class TestConfiguration.
+     */
     @SpringBootApplication
     static class TestConfiguration {
     }

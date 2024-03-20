@@ -10,58 +10,92 @@
  */
 package org.eclipse.dirigible.components.tenants.tenant;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import org.eclipse.dirigible.components.base.tenant.CallableNoResultAndException;
-import org.eclipse.dirigible.components.base.tenant.CallableResultAndNoException;
-import org.eclipse.dirigible.components.base.tenant.Tenant;
-import org.eclipse.dirigible.components.base.tenant.TenantContext;
-import org.eclipse.dirigible.components.base.tenant.TenantResult;
+import org.eclipse.dirigible.components.base.tenant.*;
 import org.eclipse.dirigible.components.tenants.domain.TenantStatus;
 import org.eclipse.dirigible.components.tenants.service.TenantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+/**
+ * The Class TenantContextImpl.
+ */
 @Component
 class TenantContextImpl implements TenantContext {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(TenantContextImpl.class);
 
+    /** The Constant currentTenantHolder. */
     private static final ThreadLocal<Tenant> currentTenantHolder = new ThreadLocal<>();
 
+    /** The tenant service. */
     private final TenantService tenantService;
 
+    /**
+     * Instantiates a new tenant context impl.
+     *
+     * @param tenantService the tenant service
+     */
     TenantContextImpl(TenantService tenantService) {
         this.tenantService = tenantService;
     }
 
+    /**
+     * Checks if is not initialized.
+     *
+     * @return true, if is not initialized
+     */
     @Override
     public boolean isNotInitialized() {
         return !isInitialized();
     }
 
+    /**
+     * Checks if is initialized.
+     *
+     * @return true, if is initialized
+     */
     @Override
     public boolean isInitialized() {
         return null != currentTenantHolder.get();
     }
 
+    /**
+     * Execute.
+     *
+     * @param <Result> the generic type
+     * @param tenantId the tenant id
+     * @param callable the callable
+     * @return the result
+     * @throws TenantNotFoundException the tenant not found exception
+     */
     @Override
-    public Tenant getCurrentTenant() {
-        Tenant tenant = currentTenantHolder.get();
-        if (null == tenant) {
-            throw new IllegalStateException("Attempting to get current tenant but it is not initialized yet.");
-        }
-        LOGGER.debug("Getting current tenant [{}]", tenant);
-        return tenant;
+    public <Result> Result execute(String tenantId, CallableResultAndNoException<Result> callable) throws TenantNotFoundException {
+        org.eclipse.dirigible.components.tenants.domain.Tenant tenantEntity = tenantService.findById(tenantId)
+                                                                                           .orElseThrow(() -> new TenantNotFoundException(
+                                                                                                   tenantId));
+        Tenant tenant = TenantImpl.createFromEntity(tenantEntity);
+        return execute(tenant, callable);
     }
 
+    /**
+     * Execute.
+     *
+     * @param <Result> the generic type
+     * @param tenant the tenant
+     * @param callable the callable
+     * @return the result
+     */
     @Override
     public <Result> Result execute(Tenant tenant, CallableResultAndNoException<Result> callable) {
-        Tenant currentTenant = isInitialized() ? getCurrentTenant() : null;
+        Tenant currentTenant = safelyGetCurrentTenant();
         setCurrentTenant(tenant);
         try {
             return callable.call();
@@ -70,22 +104,22 @@ class TenantContextImpl implements TenantContext {
         }
     }
 
-    @Override
-    public void execute(Tenant tenant, CallableNoResultAndException callable) throws Exception {
-        Tenant currentTenant = isInitialized() ? getCurrentTenant() : null;
-        setCurrentTenant(tenant);
-        try {
-            callable.call();
-        } finally {
-            setCurrentTenant(currentTenant);
-        }
+    /**
+     * Safely get current tenant.
+     *
+     * @return the tenant
+     */
+    private Tenant safelyGetCurrentTenant() {
+        return isInitialized() ? getCurrentTenant() : null;
     }
 
-    private void setCurrentTenant(Tenant tenant) {
-        LOGGER.debug("Setting current tenant to [{}]", tenant);
-        currentTenantHolder.set(tenant);
-    }
-
+    /**
+     * Execute for each tenant.
+     *
+     * @param <Result> the generic type
+     * @param callable the callable
+     * @return the list
+     */
     @Override
     public <Result> List<TenantResult<Result>> executeForEachTenant(CallableResultAndNoException<Result> callable) {
         Set<Tenant> tenants = getProvisionedTenants();
@@ -99,6 +133,11 @@ class TenantContextImpl implements TenantContext {
         return results;
     }
 
+    /**
+     * Gets the provisioned tenants.
+     *
+     * @return the provisioned tenants
+     */
     private Set<Tenant> getProvisionedTenants() {
         Set<Tenant> tenants = tenantService.findByStatus(TenantStatus.PROVISIONED)
                                            .stream()
@@ -108,6 +147,51 @@ class TenantContextImpl implements TenantContext {
         allTenants.add(TenantImpl.getDefaultTenant());
         allTenants.addAll(tenants);
         return allTenants;
+    }
+
+    /**
+     * Execute with possible exception.
+     *
+     * @param <Result> the generic type
+     * @param tenant the tenant
+     * @param callable the callable
+     * @return the result
+     * @throws Exception the exception
+     */
+    @Override
+    public <Result> Result executeWithPossibleException(Tenant tenant, CallableResultAndException<Result> callable) throws Exception {
+        Tenant currentTenant = safelyGetCurrentTenant();
+        setCurrentTenant(tenant);
+        try {
+            return callable.call();
+        } finally {
+            setCurrentTenant(currentTenant);
+        }
+    }
+
+    /**
+     * Gets the current tenant.
+     *
+     * @return the current tenant
+     */
+    @Override
+    public Tenant getCurrentTenant() {
+        Tenant tenant = currentTenantHolder.get();
+        if (null == tenant) {
+            throw new IllegalStateException("Attempting to get current tenant but it is not initialized yet.");
+        }
+        LOGGER.debug("Getting current tenant [{}]", tenant);
+        return tenant;
+    }
+
+    /**
+     * Sets the current tenant.
+     *
+     * @param tenant the new current tenant
+     */
+    private void setCurrentTenant(Tenant tenant) {
+        LOGGER.debug("Setting current tenant to [{}]", tenant);
+        currentTenantHolder.set(tenant);
     }
 
 }

@@ -13,28 +13,46 @@ package org.eclipse.dirigible.components.base;
 import org.springframework.core.Ordered;
 
 /**
- * Lower value means higher precedence - lower values will be executed before the higher values
+ * Lower value means higher precedence - lower values will be executed before the higher values.
  */
 public interface ApplicationListenersOrder {
 
-    public interface ApplicationReadyEventListeners {
+    /** The app lyfecycle logging listener. */
+    int APP_LYFECYCLE_LOGGING_LISTENER = Ordered.LOWEST_PRECEDENCE;
 
+
+    /**
+     * The Interface ApplicationReadyEventListeners.
+     */
+    interface ApplicationReadyEventListeners {
+
+        /** The system roles initializer. */
         int SYSTEM_ROLES_INITIALIZER = 10;
 
+        /** The default tenant initializer. */
         int DEFAULT_TENANT_INITIALIZER = 20;
 
+        /** The admin user initializer. */
         int ADMIN_USER_INITIALIZER = 30;
 
+        /** The synchronization intializer. */
         int SYNCHRONIZATION_INTIALIZER = 40;
+
+        /** The jobs initializer. */
+        int JOBS_INITIALIZER = 50;
+
 
     }
 
-    public interface ApplicationStoppedEventListeners {
 
+    /**
+     * The Interface ApplicationStoppedEventListeners.
+     */
+    interface ApplicationStoppedEventListeners {
+
+        /** The active mq cleanup. */
         int ACTIVE_MQ_CLEANUP = APP_LYFECYCLE_LOGGING_LISTENER - 10;
 
     }
-
-    int APP_LYFECYCLE_LOGGING_LISTENER = Ordered.LOWEST_PRECEDENCE;
 
 }

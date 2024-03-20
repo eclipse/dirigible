@@ -23,6 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class BpmnService extends BaseArtefactService<Bpmn, Long> {
 
+    /**
+     * Instantiates a new bpmn service.
+     *
+     * @param repository the repository
+     */
     public BpmnService(BpmnRepository repository) {
         super(repository);
     }

@@ -130,6 +130,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      *
      * @param name the name
      * @param isUnique whether the index is unique
+     * @param order the order
      * @param type the type
      * @param columns the list of the columns names
      * @return the table builder

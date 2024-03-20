@@ -25,6 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ExtensionService extends BaseArtefactService<Extension, Long> {
 
+    /**
+     * Instantiates a new extension service.
+     *
+     * @param repository the repository
+     */
     public ExtensionService(ExtensionRepository repository) {
         super(repository);
     }

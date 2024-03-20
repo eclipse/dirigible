@@ -33,13 +33,6 @@ public class MySQLCreateSequenceBuilder extends CreateSequenceBuilder {
      *
      * @param sql the sql
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilder#generateStart(java.
-     * lang.StringBuilder)
-     */
     @Override
     protected void generateStart(StringBuilder sql) {
         throw new IllegalStateException("MySQL does not support Sequences");

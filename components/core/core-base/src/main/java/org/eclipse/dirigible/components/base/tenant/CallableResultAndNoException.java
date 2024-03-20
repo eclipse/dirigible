@@ -10,8 +10,18 @@
  */
 package org.eclipse.dirigible.components.base.tenant;
 
+/**
+ * The Interface CallableResultAndNoException.
+ *
+ * @param <Result> the generic type
+ */
 @FunctionalInterface
 public interface CallableResultAndNoException<Result> {
 
+    /**
+     * Call.
+     *
+     * @return the result
+     */
     Result call();
 }

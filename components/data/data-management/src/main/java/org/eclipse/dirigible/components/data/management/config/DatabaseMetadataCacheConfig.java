@@ -13,9 +13,17 @@ package org.eclipse.dirigible.components.data.management.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * The Class DatabaseMetadataCacheConfig.
+ */
 @Configuration
 public class DatabaseMetadataCacheConfig {
 
+    /**
+     * Gets the database metadata cache.
+     *
+     * @return the database metadata cache
+     */
     @Bean
     public DatabaseMetadataCache getDatabaseMetadataCache() {
         return new DatabaseMetadataCache();

@@ -122,6 +122,12 @@ public class DefinitionService {
         definitionRepository.delete(definition);
     }
 
+    /**
+     * Update checksums.
+     *
+     * @param checksum the checksum
+     * @param types the types
+     */
     public void updateChecksums(String checksum, Set<String> types) {
         definitionRepository.updateChecksums(checksum, types);
     }

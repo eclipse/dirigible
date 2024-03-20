@@ -12,13 +12,28 @@ package org.eclipse.dirigible.components.base.synchronizer;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 
+/**
+ * The Class MultitenantBaseSynchronizer.
+ *
+ */
 public abstract class MultitenantBaseSynchronizer<A extends Artefact, ID> extends BaseSynchronizer<A, ID> {
 
+    /**
+     * Multitenant execution.
+     *
+     * @return true, if successful
+     */
     @Override
     public final boolean multitenantExecution() {
         return true;
     }
 
+    /**
+     * Checks if is multitenant artefact.
+     *
+     * @param artefact the artefact
+     * @return true, if is multitenant artefact
+     */
     @Override
     protected boolean isMultitenantArtefact(A artefact) {
         return true;

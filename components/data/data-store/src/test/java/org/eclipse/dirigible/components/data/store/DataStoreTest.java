@@ -43,6 +43,7 @@ public class DataStoreTest {
     @Autowired
     private DataStore dataStore;
 
+    /** The data source. */
     @Autowired
     private DataSource dataSource;
 

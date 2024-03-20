@@ -42,13 +42,13 @@ public class CmsProviderS3 implements CmsProvider {
      */
     private CmisRepository cmisRepository;
 
-    /**
-     * The S3Facade
-     */
+    /** The S3Facade. */
     private String S3_ROOT = "/";
 
     /**
      * Instantiates a new cms provider s3.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public CmsProviderS3() throws IOException {
         this.cmisRepository = CmisRepositoryFactory.createCmisRepository(S3_ROOT);

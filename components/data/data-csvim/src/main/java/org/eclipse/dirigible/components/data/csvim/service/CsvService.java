@@ -23,6 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CsvService extends BaseArtefactService<Csv, Long> {
 
+    /**
+     * Instantiates a new csv service.
+     *
+     * @param repository the repository
+     */
     public CsvService(CsvRepository repository) {
         super(repository);
     }

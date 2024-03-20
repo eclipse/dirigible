@@ -157,6 +157,7 @@ public class TableConstraints {
     /**
      * Get the foreignKey by name.
      *
+     * @param name the name
      * @return the foreignKey
      */
     public TableConstraintForeignKey getForeignKey(String name) {
@@ -193,6 +194,7 @@ public class TableConstraints {
     /**
      * Get the uniqueIndex by name.
      *
+     * @param name the name
      * @return the uniqueIndex
      */
     public TableConstraintUnique getUniqueIndex(String name) {
@@ -229,6 +231,7 @@ public class TableConstraints {
     /**
      * Get the checks by name.
      *
+     * @param name the name
      * @return the checks
      */
     public TableConstraintCheck getCheck(String name) {

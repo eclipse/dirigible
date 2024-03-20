@@ -306,8 +306,7 @@ public class GitService {
     }
 
     /**
-     * Return the list of the Git branches - local ones
-     *
+     * Return the list of the Git branches - local ones.
      *
      * @param workspace the workspace
      * @param project the project
@@ -325,7 +324,7 @@ public class GitService {
     }
 
     /**
-     * Return the list of the Git branches - remote ones
+     * Return the list of the Git branches - remote ones.
      *
      * @param workspace the workspace
      * @param project the project

@@ -23,10 +23,18 @@ public class DefaultTableMetadataProvider implements TableMetadataProvider {
     /** The db metadata util. */
     private final ODataDatabaseMetadataUtil odataDatabaseMetadataUtil;
 
+    /**
+     * Instantiates a new default table metadata provider.
+     */
     public DefaultTableMetadataProvider() {
         this(new ODataDatabaseMetadataUtil());
     }
 
+    /**
+     * Instantiates a new default table metadata provider.
+     *
+     * @param odataDatabaseMetadataUtil the odata database metadata util
+     */
     DefaultTableMetadataProvider(ODataDatabaseMetadataUtil odataDatabaseMetadataUtil) {
         this.odataDatabaseMetadataUtil = odataDatabaseMetadataUtil;
     }

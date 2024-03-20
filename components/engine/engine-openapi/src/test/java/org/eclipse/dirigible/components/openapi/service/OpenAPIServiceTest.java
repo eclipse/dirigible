@@ -29,6 +29,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The Class OpenAPIServiceTest.
+ */
 @SpringBootTest(classes = {OpenAPIRepository.class, OpenAPIService.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
@@ -36,12 +39,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class OpenAPIServiceTest {
 
+    /** The open API repository. */
     @Autowired
     private OpenAPIRepository openAPIRepository;
 
+    /** The open API service. */
     @Autowired
     private OpenAPIService openAPIService;
 
+    /**
+     * Setup.
+     */
     @BeforeEach
     public void setup() {
 
@@ -55,24 +63,36 @@ class OpenAPIServiceTest {
         openAPIRepository.save(createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
     }
 
+    /**
+     * Cleanup.
+     */
     @AfterEach
     public void cleanup() {
         // Delete test OpenAPIs
         openAPIRepository.deleteAll();
     }
 
+    /**
+     * Test get all.
+     */
     @Test
     void testGetAll() {
         List<OpenAPI> openAPIList = openAPIService.getAll();
         assertEquals(5, openAPIList.size());
     }
 
+    /**
+     * Test find all.
+     */
     @Test
     void testFindAll() {
         Page<OpenAPI> openApiPage = openAPIService.getPages(Pageable.ofSize(1));
         assertEquals(5, openApiPage.getTotalElements());
     }
 
+    /**
+     * Test find by id.
+     */
     @Test
     void testFindById() {
         OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
@@ -81,6 +101,9 @@ class OpenAPIServiceTest {
         assertEquals("test", openAPIServiceById.getName());
     }
 
+    /**
+     * Test find by name.
+     */
     @Test
     void testFindByName() {
         OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
@@ -89,6 +112,9 @@ class OpenAPIServiceTest {
         assertEquals(openAPI.getId(), openAPIServiceByName.getId());
     }
 
+    /**
+     * Test save.
+     */
     @Test
     void testSave() {
         OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
@@ -96,6 +122,9 @@ class OpenAPIServiceTest {
         assertNotNull(openAPIService.findByName("test"));
     }
 
+    /**
+     * Test delete.
+     */
     @Test
     void testDelete() {
         OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");

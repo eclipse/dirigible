@@ -24,6 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ODataSchemaService extends BaseArtefactService<ODataSchema, Long> {
 
+    /**
+     * Instantiates a new o data schema service.
+     *
+     * @param repository the repository
+     */
     ODataSchemaService(ODataSchemaRepository repository) {
         super(repository);
     }

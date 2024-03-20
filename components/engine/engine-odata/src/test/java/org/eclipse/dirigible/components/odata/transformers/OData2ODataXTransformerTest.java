@@ -34,6 +34,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 
+/**
+ * The Class OData2ODataXTransformerTest.
+ */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
@@ -44,8 +47,12 @@ public class OData2ODataXTransformerTest {
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private ODataDatabaseMetadataUtil odataDatabaseMetadataUtil;
 
+    /** The default table metadata provider. */
     private DefaultTableMetadataProvider defaultTableMetadataProvider;
 
+    /**
+     * Sets the up.
+     */
     @BeforeEach
     void setUp() {
         this.defaultTableMetadataProvider = new DefaultTableMetadataProvider(odataDatabaseMetadataUtil);

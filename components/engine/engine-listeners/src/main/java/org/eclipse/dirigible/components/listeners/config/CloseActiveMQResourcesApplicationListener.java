@@ -31,10 +31,8 @@ import jakarta.jms.Session;
  * The listener interface for receiving closeActiveMQResourcesApplication events. The class that is
  * interested in processing a closeActiveMQResourcesApplication event implements this interface, and
  * the object created with that class is registered with a component using the component's
- * <code>addCloseActiveMQResourcesApplicationListener<code> method. When the
  * closeActiveMQResourcesApplication event occurs, that object's appropriate method is invoked.
  *
- * @see CloseActiveMQResourcesApplicationEvent
  */
 @Order(ApplicationStoppedEventListeners.ACTIVE_MQ_CLEANUP)
 @Component
@@ -118,6 +116,9 @@ class CloseActiveMQResourcesApplicationListener implements ApplicationListener<A
         }
     }
 
+    /**
+     * Close session.
+     */
     private void closeSession() {
         try {
             session.close();
@@ -126,6 +127,9 @@ class CloseActiveMQResourcesApplicationListener implements ApplicationListener<A
         }
     }
 
+    /**
+     * Close connection.
+     */
     private void closeConnection() {
         try {
             connection.close();

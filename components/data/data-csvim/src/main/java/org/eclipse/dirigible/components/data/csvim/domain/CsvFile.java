@@ -106,6 +106,7 @@ public class CsvFile extends Artefact {
     @Expose
     private Boolean distinguishEmptyFromNull;
 
+    /** The upsert. */
     @Column(name = "CSV_FILE_UPSERT", columnDefinition = "boolean", nullable = false)
     @Expose
     private Boolean upsert = true; // default true
@@ -390,10 +391,20 @@ public class CsvFile extends Artefact {
         this.csvim = csvim;
     }
 
+    /**
+     * Gets the upsert.
+     *
+     * @return the upsert
+     */
     public Boolean getUpsert() {
         return upsert;
     }
 
+    /**
+     * Sets the upsert.
+     *
+     * @param upsert the new upsert
+     */
     public void setUpsert(Boolean upsert) {
         this.upsert = upsert;
     }

@@ -19,22 +19,45 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
+/**
+ * The Class CustomOidcUser.
+ */
 class CustomOidcUser extends DefaultOidcUser {
 
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 6970756030913509875L;
 
+    /** The additional authorities. */
     private final Set<GrantedAuthority> additionalAuthorities;
 
+    /**
+     * Instantiates a new custom oidc user.
+     *
+     * @param oidcUser the oidc user
+     * @param additionalAuthorities the additional authorities
+     */
     CustomOidcUser(OidcUser oidcUser, Set<GrantedAuthority> additionalAuthorities) {
         super(oidcUser.getAuthorities(), oidcUser.getIdToken(), oidcUser.getUserInfo());
         this.additionalAuthorities = additionalAuthorities;
     }
 
+    /**
+     * Instantiates a new custom oidc user.
+     *
+     * @param oidcUser the oidc user
+     * @param userNameAttributeName the user name attribute name
+     * @param additionalAuthorities the additional authorities
+     */
     CustomOidcUser(OidcUser oidcUser, String userNameAttributeName, Set<GrantedAuthority> additionalAuthorities) {
         super(oidcUser.getAuthorities(), oidcUser.getIdToken(), oidcUser.getUserInfo(), userNameAttributeName);
         this.additionalAuthorities = additionalAuthorities;
     }
 
+    /**
+     * Gets the authorities.
+     *
+     * @return the authorities
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<? extends GrantedAuthority> authorities = super.getAuthorities();

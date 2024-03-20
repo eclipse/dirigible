@@ -33,11 +33,6 @@ public class SnowflakeCreateBranchingBuilder extends CreateBranchingBuilder {
      * @param table the table
      * @return the Snowflake create table builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java.lang.String)
-     */
     @Override
     public SnowflakeCreateTableBuilder table(String table) {
         return new SnowflakeCreateTableBuilder(this.getDialect(), table);

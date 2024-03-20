@@ -14,7 +14,17 @@ import java.util.Optional;
 import org.eclipse.dirigible.components.tenants.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/**
+ * The Interface UserRepository.
+ */
 interface UserRepository extends JpaRepository<User, String> {
 
+    /**
+     * Find user by username and tenant id.
+     *
+     * @param username the username
+     * @param tenantId the tenant id
+     * @return the optional
+     */
     Optional<User> findUserByUsernameAndTenantId(String username, String tenantId);
 }

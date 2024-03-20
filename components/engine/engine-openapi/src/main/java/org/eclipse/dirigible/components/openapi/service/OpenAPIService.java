@@ -26,8 +26,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class OpenAPIService extends BaseArtefactService<OpenAPI, Long> {
 
+    /** The i repo. */
     private final IRepository iRepo;
 
+    /**
+     * Instantiates a new open API service.
+     *
+     * @param openAPIRepository the open API repository
+     * @param iRepo the i repo
+     */
     public OpenAPIService(OpenAPIRepository openAPIRepository, IRepository iRepo) {
         super(openAPIRepository);
         this.iRepo = iRepo;

@@ -33,9 +33,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
+    /** The user service. */
     private final UserService userService;
+
+    /** The tenant context. */
     private final TenantContext tenantContext;
 
     /**

@@ -20,7 +20,7 @@ public interface TenantPostProvisioningStep {
      * Will be called once provisioning of all tenants is completed.<br>
      * If there are no tenants in INITIAL status, post provisioning step will not be called.
      *
-     * @throws TenantProvisioningException
+     * @throws TenantProvisioningException the tenant provisioning exception
      */
     void execute() throws TenantProvisioningException;
 

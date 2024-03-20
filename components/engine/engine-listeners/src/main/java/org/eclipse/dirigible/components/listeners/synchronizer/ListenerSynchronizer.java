@@ -10,16 +10,13 @@
  */
 package org.eclipse.dirigible.components.listeners.synchronizer;
 
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.util.List;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.MultitenantBaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
@@ -31,12 +28,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.util.List;
+
 /**
  * The Class ListenerSynchronizer.
  */
 @Component
 @Order(SynchronizersOrder.LISTENER)
-public class ListenerSynchronizer extends BaseSynchronizer<Listener, Long> {
+public class ListenerSynchronizer extends MultitenantBaseSynchronizer<Listener, Long> {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(ListenerSynchronizer.class);
@@ -95,6 +96,16 @@ public class ListenerSynchronizer extends BaseSynchronizer<Listener, Long> {
     }
 
     /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<Listener, Long> getService() {
+        return listenerService;
+    }
+
+    /**
      * Retrieve.
      *
      * @param location the location
@@ -120,16 +131,6 @@ public class ListenerSynchronizer extends BaseSynchronizer<Listener, Long> {
     }
 
     /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<Listener, Long> getService() {
-        return listenerService;
-    }
-
-    /**
      * Complete.
      *
      * @param wrapper the wrapper
@@ -149,9 +150,7 @@ public class ListenerSynchronizer extends BaseSynchronizer<Listener, Long> {
                         getService().save(listener);
                         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
                     } catch (Exception e) {
-                        if (logger.isErrorEnabled()) {
-                            logger.error(e.getMessage(), e);
-                        }
+                        logger.error(e.getMessage(), e);
                         callback.addError(e.getMessage());
                         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, e.getMessage());
                     }
@@ -168,9 +167,7 @@ public class ListenerSynchronizer extends BaseSynchronizer<Listener, Long> {
                         getService().save(listener);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     } catch (Exception e) {
-                        if (logger.isErrorEnabled()) {
-                            logger.error(e.getMessage(), e);
-                        }
+                        logger.error(e.getMessage(), e);
                         callback.addError(e.getMessage());
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, e.getMessage());
                     }
@@ -188,9 +185,7 @@ public class ListenerSynchronizer extends BaseSynchronizer<Listener, Long> {
                         getService().delete(listener);
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
                     } catch (Exception e) {
-                        if (logger.isErrorEnabled()) {
-                            logger.error(e.getMessage(), e);
-                        }
+                        logger.error(e.getMessage(), e);
                         callback.addError(e.getMessage());
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, e.getMessage());
                     }
@@ -203,9 +198,7 @@ public class ListenerSynchronizer extends BaseSynchronizer<Listener, Long> {
                         listener.setRunning(true);
                         getService().save(listener);
                     } catch (Exception e) {
-                        if (logger.isErrorEnabled()) {
-                            logger.error(e.getMessage(), e);
-                        }
+                        logger.error(e.getMessage(), e);
                         callback.addError(e.getMessage());
                         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
                     }
@@ -218,9 +211,7 @@ public class ListenerSynchronizer extends BaseSynchronizer<Listener, Long> {
                         listener.setRunning(false);
                         getService().save(listener);
                     } catch (Exception e) {
-                        if (logger.isErrorEnabled()) {
-                            logger.error(e.getMessage(), e);
-                        }
+                        logger.error(e.getMessage(), e);
                         callback.addError(e.getMessage());
                         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
                     }
@@ -237,14 +228,12 @@ public class ListenerSynchronizer extends BaseSynchronizer<Listener, Long> {
      * @param listener the listener
      */
     @Override
-    public void cleanup(Listener listener) {
+    public void cleanupImpl(Listener listener) {
         try {
             listenersManager.stopListener(listener);
             getService().delete(listener);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
+            logger.error(e.getMessage(), e);
             callback.addError(e.getMessage());
             callback.registerState(this, listener, ArtefactLifecycle.DELETED, e.getMessage());
         }

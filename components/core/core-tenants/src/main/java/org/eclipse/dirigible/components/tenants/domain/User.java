@@ -137,6 +137,11 @@ public class User {
         this.password = password;
     }
 
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     @Override
     public String toString() {
         return "User [id=" + id + ", tenant=" + tenant + ", username=" + username + "]";

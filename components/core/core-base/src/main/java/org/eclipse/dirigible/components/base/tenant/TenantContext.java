@@ -12,6 +12,9 @@ package org.eclipse.dirigible.components.base.tenant;
 
 import java.util.List;
 
+/**
+ * The Interface TenantContext.
+ */
 public interface TenantContext {
 
     /**
@@ -35,30 +38,43 @@ public interface TenantContext {
      */
     Tenant getCurrentTenant();
 
-    <Result> Result execute(Tenant tenant, CallableResultAndNoException<Result> callable);
+    /**
+     * This method will execute callable.call() method on behalf of the specified tenant.
+     *
+     * @param <Result> result type
+     * @param tenant the tenant
+     * @param callable the callable
+     * @return the result
+     * @throws Exception the exception which is thrown by the passed callable
+     */
+    <Result> Result executeWithPossibleException(Tenant tenant, CallableResultAndException<Result> callable) throws Exception;
 
     /**
      * This method will execute callable.call() method on behalf of the specified tenant.
      *
+     * @param <Result> result type
      * @param tenant the tenant
      * @param callable the callable
-     * @throws Exception the exception which is thrown by the passed callable
+     * @return the result
      */
-    void execute(Tenant tenant, CallableNoResultAndException callable) throws Exception;
+    <Result> Result execute(Tenant tenant, CallableResultAndNoException<Result> callable);
+
+    /**
+     * This method will execute callable.call() method on behalf of the specified tenant id.
+     *
+     * @param <Result> result type
+     * @param tenantId the tenant id
+     * @param callable the callable
+     * @return the result
+     * @throws TenantNotFoundException in case the provided tenant id doesn't exist
+     */
+    <Result> Result execute(String tenantId, CallableResultAndNoException<Result> callable) throws TenantNotFoundException;
 
     /**
      * This method will execute callable.call() for each provisioned tenant.
      *
-     * @param tenant the tenant
+     * @param <Result> result type
      * @param callable the callable
-     * @throws Exception the exception which is thrown by the passed callable
-     */
-
-    /**
-     * This method will execute callable.call() for each provisioned tenant.
-     *
-     * @param <Result>
-     * @param callable
      * @return the results of the tenant executions
      */
     <Result> List<TenantResult<Result>> executeForEachTenant(CallableResultAndNoException<Result> callable);

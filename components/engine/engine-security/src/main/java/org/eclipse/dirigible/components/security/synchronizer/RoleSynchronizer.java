@@ -10,10 +10,6 @@
  */
 package org.eclipse.dirigible.components.security.synchronizer;
 
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.util.List;
-import java.util.Set;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
@@ -31,6 +27,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.util.List;
+import java.util.Set;
+
 /**
  * The Class SecurityRoleSynchronizer.
  */
@@ -40,17 +41,16 @@ import org.springframework.stereotype.Component;
 public class RoleSynchronizer extends BaseSynchronizer<Role, Long> {
 
     /**
+     * The Constant FILE_EXTENSION_SECURITY_ROLE.
+     */
+    public static final String FILE_EXTENSION_SECURITY_ROLE = ".role";
+    /**
      * The Constant logger.
      */
     private static final Logger logger = LoggerFactory.getLogger(RoleSynchronizer.class);
 
+    /** The Constant PRESERVED_ROLE_LOCATION_PREFIXES. */
     private static final Set<String> PRESERVED_ROLE_LOCATION_PREFIXES = Set.of("SYSTEM_");
-
-    /**
-     * The Constant FILE_EXTENSION_SECURITY_ROLE.
-     */
-    public static final String FILE_EXTENSION_SECURITY_ROLE = ".role";
-
     /**
      * The security role service.
      */
@@ -69,16 +69,6 @@ public class RoleSynchronizer extends BaseSynchronizer<Role, Long> {
     @Autowired
     public RoleSynchronizer(RoleService securityRoleService) {
         this.securityRoleService = securityRoleService;
-    }
-
-    /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<Role, Long> getService() {
-        return securityRoleService;
     }
 
     /**
@@ -135,6 +125,16 @@ public class RoleSynchronizer extends BaseSynchronizer<Role, Long> {
     }
 
     /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<Role, Long> getService() {
+        return securityRoleService;
+    }
+
+    /**
      * Retrieve.
      *
      * @param location the location
@@ -178,7 +178,7 @@ public class RoleSynchronizer extends BaseSynchronizer<Role, Long> {
      * @param role the security role
      */
     @Override
-    public void cleanup(Role role) {
+    public void cleanupImpl(Role role) {
         try {
             Boolean delete = PRESERVED_ROLE_LOCATION_PREFIXES.stream()
                                                              .filter(p -> role.getLocation()

@@ -25,6 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ODataMappingService extends BaseArtefactService<ODataMapping, Long> implements InitializingBean {
 
+    /**
+     * Instantiates a new o data mapping service.
+     *
+     * @param repository the repository
+     */
     public ODataMappingService(ODataMappingRepository repository) {
         super(repository);
     }

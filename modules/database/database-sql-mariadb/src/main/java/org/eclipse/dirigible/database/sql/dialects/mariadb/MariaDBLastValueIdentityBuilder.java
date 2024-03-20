@@ -36,11 +36,6 @@ public class MariaDBLastValueIdentityBuilder extends LastValueIdentityBuilder {
      *
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
-     */
     @Override
     public String generate() {
         return format(PATTERN_SELECT_LAST_VALUE_IDENTITY);

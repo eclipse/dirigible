@@ -14,9 +14,17 @@ import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * The Class DataSourceConfig.
+ */
 @Configuration
 class DataSourceConfig {
 
+    /**
+     * Gets the default data source name.
+     *
+     * @return the default data source name
+     */
     @Bean
     @DefaultDataSourceName
     String getDefaultDataSourceName() {
@@ -24,6 +32,11 @@ class DataSourceConfig {
                 DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
     }
 
+    /**
+     * Gets the system data source name.
+     *
+     * @return the system data source name
+     */
     @Bean
     @SystemDataSourceName
     String getSystemDataSourceName() {

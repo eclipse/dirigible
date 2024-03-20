@@ -37,11 +37,6 @@ public class SybaseLastValueIdentityBuilder extends LastValueIdentityBuilder {
      *
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
-     */
     @Override
     public String generate() {
         String sql = format(PATTERN_SELECT_LAST_VALUE_IDENTITY);

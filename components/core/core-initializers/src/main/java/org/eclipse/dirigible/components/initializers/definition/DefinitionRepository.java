@@ -23,6 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository("definitionRepository")
 public interface DefinitionRepository extends JpaRepository<Definition, Long> {
 
+    /**
+     * Update checksums.
+     *
+     * @param checksum the checksum
+     * @param types the types
+     */
     @Modifying
     @Transactional
     @Query("update Definition d set d.checksum = :checksum where d.type in :types")

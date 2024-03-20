@@ -29,6 +29,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The Class RoleServiceTest.
+ */
 @SpringBootTest(classes = {RoleRepository.class, RoleService.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
@@ -36,12 +39,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class RoleServiceTest {
 
+    /** The role repository. */
     @Autowired
     private RoleRepository roleRepository;
 
+    /** The role service. */
     @Autowired
     private RoleService roleService;
 
+    /**
+     * Setup.
+     */
     @BeforeEach
     public void setup() {
 
@@ -55,24 +63,36 @@ class RoleServiceTest {
         roleRepository.save(createSecurityRole("/a/b/c/test5.role", "test5", "description"));
     }
 
+    /**
+     * Cleanup.
+     */
     @AfterEach
     public void cleanup() {
         // Delete test security roles
         roleRepository.deleteAll();
     }
 
+    /**
+     * Test get all.
+     */
     @Test
     void testGetAll() {
         List<Role> securityRoleList = roleService.getAll();
         assertEquals(5, securityRoleList.size());
     }
 
+    /**
+     * Test find all.
+     */
     @Test
     void testFindAll() {
         Page<Role> securityRolePage = roleService.getPages(Pageable.ofSize(1));
         assertEquals(5, securityRolePage.getTotalElements());
     }
 
+    /**
+     * Test find by id.
+     */
     @Test
     void testFindById() {
         Role securityRole = new Role("/a/b/c/test.role", "test", "description");
@@ -81,6 +101,9 @@ class RoleServiceTest {
         assertEquals("test", securityRoleServiceById.getName());
     }
 
+    /**
+     * Test find by name.
+     */
     @Test
     void testFindByName() {
         Role securityRole = new Role("/a/b/c/test.role", "test", "description");
@@ -89,6 +112,9 @@ class RoleServiceTest {
         assertEquals(securityRole.getId(), securityRoleServiceByName.getId());
     }
 
+    /**
+     * Test save.
+     */
     @Test
     void testSave() {
         Role securityRole = new Role("/a/b/c/test.role", "test", "description");
@@ -96,6 +122,9 @@ class RoleServiceTest {
         assertNotNull(roleService.findByName("test"));
     }
 
+    /**
+     * Test delete.
+     */
     @Test
     void testDelete() {
         Role securityRole = new Role("/a/b/c/test.role", "test", "description");

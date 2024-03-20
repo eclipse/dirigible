@@ -132,6 +132,13 @@ public class DataStore {
         sessionFactory = configuration.buildSessionFactory(serviceRegistry);
     }
 
+    /**
+     * Adds the input stream to config.
+     *
+     * @param configuration the configuration
+     * @param key the key
+     * @param value the value
+     */
     private void addInputStreamToConfig(Configuration configuration, String key, String value) {
         try (InputStream inputStream = IOUtils.toInputStream(value, StandardCharsets.UTF_8)) {
             configuration.addInputStream(inputStream);

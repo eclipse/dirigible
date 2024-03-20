@@ -105,15 +105,24 @@ public class CsvimProcessor {
     private static final String PROBLEM_WITH_TABLE_METADATA_OR_CSVPARSER =
             "No table metadata found for table [%s] or CSVParser not created";
 
+    /** The csv processor. */
     private final CsvProcessor csvProcessor;
+
+    /** The datasources manager. */
     private final DataSourcesManager datasourcesManager;
+
+    /** The default data source name. */
     private final String defaultDataSourceName;
+
+    /** The strict mode. */
     private boolean strictMode;
 
     /**
      * Instantiates a new csvim processor.
      *
      * @param csvProcessor the csvprocessor service
+     * @param datasourcesManager the datasources manager
+     * @param defaultDataSourceName the default data source name
      */
     @Autowired
     public CsvimProcessor(CsvProcessor csvProcessor, DataSourcesManager datasourcesManager,
@@ -133,6 +142,11 @@ public class CsvimProcessor {
         return strictMode;
     }
 
+    /**
+     * Sets the strict mode.
+     *
+     * @param strictMode the new strict mode
+     */
     void setStrictMode(boolean strictMode) {
         this.strictMode = strictMode;
     }
@@ -361,6 +375,7 @@ public class CsvimProcessor {
      *
      * @param connection the connection
      * @param tableName the table name
+     * @param schema the schema
      * @param headerNames the header names
      * @return the pk name for CSV record
      */

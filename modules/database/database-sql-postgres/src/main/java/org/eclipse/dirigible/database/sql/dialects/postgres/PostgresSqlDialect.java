@@ -84,11 +84,6 @@ public class PostgresSqlDialect extends
      *
      * @return the postgres create branching builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#create()
-     */
     @Override
     public PostgresCreateBranchingBuilder create() {
         return new PostgresCreateBranchingBuilder(this);
@@ -100,11 +95,6 @@ public class PostgresSqlDialect extends
      * @param sequence the sequence
      * @return the postgres next value sequence builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
-     */
     @Override
     public PostgresNextValueSequenceBuilder nextval(String sequence) {
         return new PostgresNextValueSequenceBuilder(this, sequence);
@@ -114,11 +104,6 @@ public class PostgresSqlDialect extends
      * Function current date.
      *
      * @return the string
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentDate()
      */
     @Override
     public String functionCurrentDate() {
@@ -130,11 +115,6 @@ public class PostgresSqlDialect extends
      *
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentTime()
-     */
     @Override
     public String functionCurrentTime() {
         return FUNCTION_CURRENT_TIME;
@@ -144,11 +124,6 @@ public class PostgresSqlDialect extends
      * Function current timestamp.
      *
      * @return the string
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentTimestamp()
      */
     @Override
     public String functionCurrentTimestamp() {
@@ -178,11 +153,6 @@ public class PostgresSqlDialect extends
      * @return true, if successful
      * @throws SQLException the SQL exception
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String)
-     */
     @Override
     public boolean existsTable(Connection connection, String table) throws SQLException {
         boolean exists = false;
@@ -206,11 +176,6 @@ public class PostgresSqlDialect extends
      * Gets the functions names.
      *
      * @return the functions names
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#getFunctionsNames()
      */
     @Override
     public Set<String> getFunctionsNames() {

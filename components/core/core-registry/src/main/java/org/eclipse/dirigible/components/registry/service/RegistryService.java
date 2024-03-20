@@ -31,6 +31,11 @@ public class RegistryService {
     /** The repository. */
     private IRepository repository;
 
+    /**
+     * Instantiates a new registry service.
+     *
+     * @param repository the repository
+     */
     @Autowired
     public RegistryService(IRepository repository) {
         this.repository = repository;

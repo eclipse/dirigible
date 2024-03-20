@@ -17,8 +17,18 @@ package org.eclipse.dirigible.components.base.tenant;
  */
 public interface TenantResult<Result> {
 
+    /**
+     * Gets the tenant.
+     *
+     * @return the tenant
+     */
     Tenant getTenant();
 
+    /**
+     * Gets the result.
+     *
+     * @return the result
+     */
     Result getResult();
 
 }

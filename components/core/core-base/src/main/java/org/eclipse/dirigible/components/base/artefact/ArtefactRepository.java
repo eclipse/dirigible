@@ -15,15 +15,42 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
+/**
+ * The Interface ArtefactRepository.
+ *
+ */
 @NoRepositoryBean
 public interface ArtefactRepository<A extends Artefact, ID> extends JpaRepository<A, ID> {
 
+    /**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
     List<A> findByLocation(String location);
 
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the optional
+     */
     Optional<A> findByName(String name);
 
+    /**
+     * Find by key.
+     *
+     * @param key the key
+     * @return the optional
+     */
     Optional<A> findByKey(String key);
 
+    /**
+     * Sets the running to all.
+     *
+     * @param running the new running to all
+     */
     void setRunningToAll(boolean running);
 
 }

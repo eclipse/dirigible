@@ -536,11 +536,6 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
      *
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-     */
     @Override
     public String generate() {
         StringBuilder sql = new StringBuilder();

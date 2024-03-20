@@ -97,6 +97,12 @@ public class ActionsService {
 
     }
 
+    /**
+     * Gets the commands for OS.
+     *
+     * @param projectAction the project action
+     * @return the commands for OS
+     */
     public List<CommandDescriptor> getCommandsForOS(ProjectAction projectAction) {
         List<CommandDescriptor> commands = projectAction.getCommands();
         return commands.stream()

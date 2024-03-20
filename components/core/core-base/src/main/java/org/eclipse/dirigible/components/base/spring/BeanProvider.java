@@ -16,16 +16,33 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class BeanProvider.
+ */
 @Component
 public class BeanProvider implements ApplicationContextAware {
 
+    /** The context. */
     private static ApplicationContext context;
 
+    /**
+     * Sets the application context.
+     *
+     * @param argApplicationContext the new application context
+     * @throws BeansException the beans exception
+     */
     @Override
     public void setApplicationContext(ApplicationContext argApplicationContext) throws BeansException {
         context = argApplicationContext;
     }
 
+    /**
+     * Gets the bean.
+     *
+     * @param <T> the generic type
+     * @param clazz the clazz
+     * @return the bean
+     */
     public static <T> T getBean(Class<T> clazz) {
         if (!isInitialzed()) {
             throw new IllegalStateException("Spring is not initialized yet.");
@@ -33,10 +50,20 @@ public class BeanProvider implements ApplicationContextAware {
         return context.getBean(clazz);
     }
 
+    /**
+     * Gets the tenant context.
+     *
+     * @return the tenant context
+     */
     public static TenantContext getTenantContext() {
         return getBean(TenantContext.class);
     }
 
+    /**
+     * Checks if is initialzed.
+     *
+     * @return true, if is initialzed
+     */
     public static boolean isInitialzed() {
         return context != null;
     }

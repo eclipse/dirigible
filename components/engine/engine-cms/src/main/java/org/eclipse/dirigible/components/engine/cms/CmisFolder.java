@@ -10,6 +10,9 @@
  */
 package org.eclipse.dirigible.components.engine.cms;
 
+/**
+ * The Interface CmisFolder.
+ */
 public interface CmisFolder {
     /**
      * Returns true if this CmisInternalFolder is a root folder and false otherwise.

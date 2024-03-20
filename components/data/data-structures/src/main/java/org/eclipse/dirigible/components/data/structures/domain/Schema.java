@@ -45,7 +45,7 @@ public class Schema extends Artefact {
     @Column(name = "SCHEMA_ID", nullable = false)
     private Long id;
 
-    /** The dataSource */
+    /** The dataSource. */
     @Column(name = "datasource", nullable = false)
     @Expose
     private String datasource;
@@ -167,10 +167,20 @@ public class Schema extends Artefact {
         return null;
     }
 
+    /**
+     * Gets the datasource.
+     *
+     * @return the datasource
+     */
     public String getDatasource() {
         return datasource;
     }
 
+    /**
+     * Sets the data source.
+     *
+     * @param dataSource the new data source
+     */
     public void setDataSource(String dataSource) {
         this.datasource = dataSource;
     }

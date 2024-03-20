@@ -23,6 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SchemaService extends BaseArtefactService<Schema, Long> {
 
+    /**
+     * Instantiates a new schema service.
+     *
+     * @param repository the repository
+     */
     public SchemaService(SchemaRepository repository) {
         super(repository);
     }

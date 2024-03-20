@@ -25,6 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class JobEmailService extends BaseArtefactService<JobEmail, Long> {
 
+    /**
+     * Instantiates a new job email service.
+     *
+     * @param repository the repository
+     */
     public JobEmailService(JobEmailRepository repository) {
         super(repository);
     }
@@ -54,6 +59,12 @@ public class JobEmailService extends BaseArtefactService<JobEmail, Long> {
         }
     }
 
+    /**
+     * Find all by job name.
+     *
+     * @param jobName the job name
+     * @return the list
+     */
     @Transactional(readOnly = true)
     public List<JobEmail> findAllByJobName(String jobName) {
         JobEmail filter = new JobEmail();
