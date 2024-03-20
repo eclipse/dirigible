@@ -61,6 +61,7 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
 
     /** The tenant context. */
     private final TenantContext tenantContext;
+    private final boolean singleTenantMode;
 
     /**
      * Instantiates a new tenant context init filter.
@@ -71,6 +72,7 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
     public TenantContextInitFilter(TenantService tenantService, TenantContext tenantContext) {
         this.tenantService = tenantService;
         this.tenantContext = tenantContext;
+        this.singleTenantMode = Configuration.getAsBoolean(Configuration.SINGLE_TENANT_MODE_ENABLED, false);
     }
 
     /**
@@ -113,6 +115,10 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
      * @return the optional
      */
     private Optional<Tenant> determineCurrentTenant(HttpServletRequest request) {
+        if (singleTenantMode) {
+            LOGGER.debug("The app is in single tenant mode. Will return the default tenant.");
+            return Optional.of(TenantImpl.getDefaultTenant());
+        }
         String host = request.getServerName();
         Matcher matcher = TENANT_SUBDOMAIN_PATTERN.matcher(host);
         if (matcher.find()) {
@@ -137,13 +143,10 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         return request.getRequestURI()
-                      .startsWith("/webjars/")
-                || request.getRequestURI()
-                          .startsWith("/css/")
-                || request.getRequestURI()
-                          .startsWith("/js/")
-                || request.getRequestURI()
-                          .endsWith(".ico");
+                      .startsWith("/webjars/") || request.getRequestURI()
+                                                         .startsWith("/css/") || request.getRequestURI()
+                                                                                        .startsWith("/js/") || request.getRequestURI()
+                                                                                                                      .endsWith(".ico");
     }
 
 }

@@ -10,11 +10,9 @@
  */
 package org.eclipse.dirigible.commons.config;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * The Class ConfigurationTest.
@@ -65,6 +63,7 @@ public class ConfigurationTest {
     // 2. System properties (-D...)
     // 3. Environment properties
     // 4. Deployment properties
+
     /**
      * Config precedence test.
      */
@@ -162,11 +161,11 @@ public class ConfigurationTest {
         Configuration.set("projectName", "my-test-project");
 
         class TestObject {
-            String s1 = "s1";
-            String s2 = "${S2_VALUE}";
-            String s3 = "${S3_VALUE}.{s3}";
-            String s4 = "jdbc:mariadb://${PORTUNUS_OPENCART_DB_HOST}:${PORTUNUS_OPENCART_DB_PORT}/${PORTUNUS_OPENCART_DB_NAME}";
-            String s5 = "${projectName} ${projectVersion} - Application View";
+            final String s1 = "s1";
+            final String s2 = "${S2_VALUE}";
+            final String s3 = "${S3_VALUE}.{s3}";
+            final String s4 = "jdbc:mariadb://${PORTUNUS_OPENCART_DB_HOST}:${PORTUNUS_OPENCART_DB_PORT}/${PORTUNUS_OPENCART_DB_NAME}";
+            final String s5 = "${projectName} ${projectVersion} - Application View";
         }
         TestObject o = new TestObject();
         Configuration.configureObject(o);
@@ -176,5 +175,22 @@ public class ConfigurationTest {
         assertEquals("s3", o.s3);
         assertEquals("jdbc:mariadb://localhost:3306/bitnami_opencart", o.s4);
         assertEquals("my-test-project ${projectVersion} - Application View", o.s5);
+    }
+
+    @Test
+    public void testGetAsBoolean() {
+        testGetAsBoolean("invalid_value", false, false);
+        testGetAsBoolean("false", false, false);
+        testGetAsBoolean("true", false, true);
+        testGetAsBoolean("TRUE", false, true);
+        testGetAsBoolean(" TRUE ", false, true);
+        testGetAsBoolean("false", true, false);
+        testGetAsBoolean("FALSE", true, false);
+    }
+
+    private void testGetAsBoolean(String initialValue, boolean defaultValue, boolean expected) {
+        String key = "TEST_KEY";
+        Configuration.set(key, initialValue);
+        assertEquals(expected, Configuration.getAsBoolean(key, defaultValue));
     }
 }
