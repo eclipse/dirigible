@@ -149,7 +149,7 @@
 
 		<mongodb.version>3.12.14</mongodb.version>
 		<ngdbc.version>2.20.11</ngdbc.version>
-		<snowflake.version>3.13.34</snowflake.version>
+		<snowflake.version>3.15.0</snowflake.version>
 		<mysql.version>8.3.0</mysql.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
 		<qldb.sdk.version>1.12.683</qldb.sdk.version>
