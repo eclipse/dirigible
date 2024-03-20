@@ -19,24 +19,24 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
-import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ActionData;
-import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ProcessDefinitionData;
-import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ProcessInstanceData;
-import org.eclipse.dirigible.components.engine.bpm.flowable.dto.VariableData;
+import org.eclipse.dirigible.components.engine.bpm.flowable.dto.*;
 import org.eclipse.dirigible.components.engine.bpm.flowable.provider.BpmProviderFlowable;
 import org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmService;
+import org.eclipse.dirigible.components.engine.bpm.flowable.service.task.TaskQueryExecutor;
 import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
 import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
 import org.flowable.bpmn.model.BpmnModel;
-import org.flowable.engine.ProcessEngine;
-import org.flowable.engine.ProcessEngineConfiguration;
-import org.flowable.engine.RepositoryService;
-import org.flowable.engine.RuntimeService;
+import org.flowable.engine.*;
 import org.flowable.engine.repository.ProcessDefinition;
+import org.flowable.identitylink.api.IdentityLink;
+import org.flowable.identitylink.api.IdentityLinkInfo;
 import org.flowable.image.ProcessDiagramGenerator;
 import org.flowable.job.api.Job;
+import org.flowable.task.api.Task;
 import org.flowable.variable.api.persistence.entity.VariableInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +82,9 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
      */
     @Autowired
     private WorkspaceService workspaceService;
+
+    @Autowired
+    private TaskQueryExecutor taskQueryExecutor;
 
 
     /**
@@ -268,6 +271,49 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
                                                      .list();
 
         return ResponseEntity.ok(variables);
+    }
+
+    @GetMapping(value = "/bpm-processes/instance/{id}/tasks")
+    public ResponseEntity<List<TaskDTO>> getProcessInstanceTasks(@PathVariable("id") String id,
+            @RequestParam(value = "type", required = false) String type) {
+        TaskQueryExecutor.Type principalType;
+        try {
+            principalType = TaskQueryExecutor.Type.fromString(type);
+        } catch (IllegalArgumentException e) {
+            principalType = TaskQueryExecutor.Type.ASSIGNEE;
+        }
+        List<TaskDTO> taskDTOS = taskQueryExecutor.findTasks(id, principalType)
+                                                  .stream()
+                                                  .map(this::mapToDTO)
+                                                  .collect(Collectors.toList());
+        return ResponseEntity.ok(taskDTOS);
+    }
+
+    private TaskService getTaskService() {
+        return bpmService.getBpmProviderFlowable()
+                         .getProcessEngine()
+                         .getTaskService();
+    }
+
+    private TaskDTO mapToDTO(Task task) {
+        List<IdentityLink> identityLinks = getTaskService().getIdentityLinksForTask(task.getId());
+
+        TaskDTO dto = new TaskDTO();
+        dto.setId(task.getId());
+        dto.setName(task.getName());
+        dto.setAssignee(task.getAssignee());
+        dto.setFormKey(task.getFormKey());
+        dto.setCreateTime(task.getCreateTime());
+        dto.setProcessInstanceId(task.getProcessInstanceId());
+        dto.setCandidateUsers(identityLinks.stream()
+                                           .map(IdentityLinkInfo::getUserId)
+                                           .filter(Objects::nonNull)
+                                           .collect(Collectors.joining(",")));
+        dto.setCandidateGroups(identityLinks.stream()
+                                            .map(IdentityLinkInfo::getGroupId)
+                                            .filter(Objects::nonNull)
+                                            .collect(Collectors.joining(",")));
+        return dto;
     }
 
     /**
