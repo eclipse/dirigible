@@ -148,7 +148,7 @@
 		<flexmark.version>0.64.8</flexmark.version>
 
 		<mongodb.version>3.12.14</mongodb.version>
-		<ngdbc.version>2.19.16</ngdbc.version>
+		<ngdbc.version>2.20.11</ngdbc.version>
 		<snowflake.version>3.13.34</snowflake.version>
 		<mysql.version>8.3.0</mysql.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
