@@ -19,7 +19,7 @@ import org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder;
 public class MySQLCreateViewBuilder extends CreateViewBuilder {
 
     /** The values. */
-    private String values = null;
+    private final String values = null;
 
 
     /**
