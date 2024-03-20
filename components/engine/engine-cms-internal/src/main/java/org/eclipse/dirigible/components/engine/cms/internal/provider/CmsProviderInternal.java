@@ -10,8 +10,6 @@
  */
 package org.eclipse.dirigible.components.engine.cms.internal.provider;
 
-import java.io.File;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.engine.cms.CmsProvider;
 import org.eclipse.dirigible.components.engine.cms.internal.repository.CmisInternalSession;
@@ -20,35 +18,30 @@ import org.eclipse.dirigible.components.engine.cms.internal.repository.CmisRepos
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 
+import java.io.File;
+
 /**
  * The Class CmsProviderInternal.
  */
 public class CmsProviderInternal implements CmsProvider {
 
-    /** The Constant CMS. */
-    private static final String CMS = "cms"; //$NON-NLS-1$
-
     /** The Constant NAME. */
     public static final String NAME = "repository"; //$NON-NLS-1$
-
     /** The Constant TYPE. */
     public static final String TYPE = "internal"; //$NON-NLS-1$
-
+    /** The Constant CMS. */
+    private static final String CMS = "cms"; //$NON-NLS-1$
     /** The cmis repository. */
-    private CmisRepository cmisRepository;
+    private final CmisRepository cmisRepository;
 
     /**
      * Instantiates a new cms provider internal.
      */
-    public CmsProviderInternal() {
-
-        String rootFolder = Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER, "target/dirigible");
-        boolean absolute = Boolean.parseBoolean(Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE, "false"));
-
+    public CmsProviderInternal(String rootFolder, boolean absolutePath) {
         String repositoryFolder = rootFolder + File.separator + CMS;
 
         boolean versioningEnabled = Boolean.parseBoolean(Configuration.get(DIRIGIBLE_CMS_INTERNAL_VERSIONING_ENABLED, "false"));
-        IRepository repository = new LocalRepository(repositoryFolder, absolute, versioningEnabled);
+        IRepository repository = new LocalRepository(repositoryFolder, absolutePath, versioningEnabled);
         this.cmisRepository = CmisRepositoryFactory.createCmisRepository(repository);
     }
 

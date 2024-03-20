@@ -10,11 +10,6 @@
  */
 package org.eclipse.dirigible.components.api.s3;
 
-import java.io.IOException;
-import java.net.URI;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,25 +21,17 @@ import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.BucketAlreadyOwnedByYouException;
-import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
-import software.amazon.awssdk.services.s3.model.Delete;
-import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
-import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
-import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
-import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
-import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
-import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.S3Exception;
-import software.amazon.awssdk.services.s3.model.S3Object;
+import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.s3.paginators.ListObjectsV2Iterable;
 import software.amazon.awssdk.transfer.s3.S3TransferManager;
 import software.amazon.awssdk.transfer.s3.model.DirectoryUpload;
 import software.amazon.awssdk.transfer.s3.model.UploadDirectoryRequest;
+
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The Class S3Facade.
@@ -55,25 +42,18 @@ public class S3Facade implements InitializingBean {
      * The Constant logger.
      */
     private static final Logger logger = LoggerFactory.getLogger(S3Facade.class);
-
-    /** The instance. */
-    private static S3Facade INSTANCE;
-
     /** The Constant AWS_ACCESS_KEY_ID. */
     private static final String AWS_ACCESS_KEY_ID = Configuration.get("AWS_ACCESS_KEY_ID");
-
     /** The Constant AWS_DEFAULT_REGION. */
     private static final Region AWS_DEFAULT_REGION = Region.of(Configuration.get("AWS_DEFAULT_REGION", "eu-central-1"));
-
     /** The Constant AWS_SECRET_ACCESS_KEY. */
     private static final String AWS_SECRET_ACCESS_KEY = Configuration.get("AWS_SECRET_ACCESS_KEY");
-
     /** The Constant DIRIGIBLE_S3_PROVIDER. */
     private static final String DIRIGIBLE_S3_PROVIDER = Configuration.get("DIRIGIBLE_S3_PROVIDER", "aws");
-
     /** The Constant LOCALSTACK_URI. */
     private static final String DEFAULT_LOCALSTACK_URI = "https://s3.localhost.localstack.cloud:4566";
-
+    /** The instance. */
+    private static S3Facade INSTANCE;
     /** The s 3. */
     private S3Client s3;
 
@@ -85,7 +65,93 @@ public class S3Facade implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         INSTANCE = this;
+    }
 
+    /**
+     * Upload directory.
+     *
+     * @param sourceDirectory the source directory
+     */
+    public static void uploadDirectory(String sourceDirectory) {
+        String bucket = getBucketName();
+        S3TransferManager transferManager = S3TransferManager.create();
+
+        DirectoryUpload directoryUpload = transferManager.uploadDirectory(UploadDirectoryRequest.builder()
+                                                                                                .source(Paths.get(sourceDirectory))
+                                                                                                .bucket(bucket)
+                                                                                                .build());
+
+        directoryUpload.completionFuture()
+                       .join();
+    }
+
+    private static String getBucketName() {
+        return Configuration.get("DIRIGIBLE_S3_BUCKET", "cmis-bucket");
+    }
+
+    /**
+     * Delete.
+     *
+     * @param name the name
+     */
+    public static void delete(String name) {
+        String bucket = getBucketName();
+        if (name.endsWith("/")) {
+            deleteFolder(name);
+        } else {
+            DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
+                                                                   .bucket(bucket)
+                                                                   .key(name)
+                                                                   .build();
+
+            S3Facade.get()
+                    .getS3Client()
+                    .deleteObject(objectRequest);
+        }
+    }
+
+    /**
+     * Delete folder.
+     *
+     * @param prefix the prefix
+     */
+    public static void deleteFolder(String prefix) {
+        String bucket = getBucketName();
+        S3Client s3Client = S3Client.builder()
+                                    .region(AWS_DEFAULT_REGION)
+                                    .build();
+        ListObjectsV2Request request = ListObjectsV2Request.builder()
+                                                           .bucket(bucket)
+                                                           .prefix(prefix)
+                                                           .build();
+        ListObjectsV2Iterable list = s3Client.listObjectsV2Paginator(request);
+
+        List<ObjectIdentifier> objectIdentifiers = list.stream()
+                                                       .flatMap(r -> r.contents()
+                                                                      .stream())
+                                                       .map(o -> ObjectIdentifier.builder()
+                                                                                 .key(o.key())
+                                                                                 .build())
+                                                       .collect(Collectors.toList());
+
+        if (objectIdentifiers.isEmpty())
+            return;
+        DeleteObjectsRequest deleteObjectsRequest = DeleteObjectsRequest.builder()
+                                                                        .bucket(bucket)
+                                                                        .delete(Delete.builder()
+                                                                                      .objects(objectIdentifiers)
+                                                                                      .build())
+                                                                        .build();
+        s3Client.deleteObjects(deleteObjectsRequest);
+    }
+
+    /**
+     * Gets the s3 client.
+     *
+     * @return the s3 client
+     */
+    private S3Client getS3Client() {
+        return INSTANCE.s3;
     }
 
     /**
@@ -101,86 +167,41 @@ public class S3Facade implements InitializingBean {
     }
 
     /**
-     * Gets the s3 client.
-     *
-     * @return the s3 client
+     * Initializes the client.
      */
-    private S3Client getS3Client() {
-        return INSTANCE.s3;
-    }
-
-    /**
-     * Sets the s3 client.
-     *
-     * @param s3 the new s3 client
-     */
-    public void setS3Client(S3Client s3) {
-        INSTANCE.s3 = s3;
-    }
-
-    /**
-     * Put.
-     *
-     * @param name the name
-     * @param input the input
-     * @param contentType the content type
-     */
-    public static void put(String name, byte[] input, String contentType) {
-        String BUCKET = Configuration.get("DIRIGIBLE_S3_BUCKET", "cmis-bucket");
-        PutObjectRequest objectRequest;
-        if (name.endsWith("/")) {
-            objectRequest = PutObjectRequest.builder()
-                                            .bucket(BUCKET)
-                                            .key(name)
-                                            .build();
+    private void initClient() {
+        String bucket = getBucketName();
+        if (AWS_ACCESS_KEY_ID == null || AWS_SECRET_ACCESS_KEY == null) {
+            logger.warn("AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY not set");
         } else {
-            objectRequest = PutObjectRequest.builder()
-                                            .bucket(BUCKET)
-                                            .key(name)
-                                            .contentType(contentType)
-                                            .build();
+            AwsBasicCredentials credentials = AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
+            if (DIRIGIBLE_S3_PROVIDER.equals("aws")) {
+                s3 = S3Client.builder()
+                             .region(AWS_DEFAULT_REGION)
+                             .credentialsProvider(StaticCredentialsProvider.create(credentials))
+                             .build();
+            } else if (DIRIGIBLE_S3_PROVIDER.equals("localstack")) {
+                s3 = S3Client.builder()
+                             .region(AWS_DEFAULT_REGION)
+                             .endpointOverride(URI.create(DEFAULT_LOCALSTACK_URI))
+                             .credentialsProvider(StaticCredentialsProvider.create(credentials))
+                             .build();
+            } else {
+                return;
+            }
+            createBucket(bucket);
         }
-        S3Facade.get()
-                .getS3Client()
-                .putObject(objectRequest, RequestBody.fromBytes(input));
     }
 
-    /**
-     * Upload directory.
-     *
-     * @param sourceDirectory the source directory
-     */
-    public static void uploadDirectory(String sourceDirectory) {
-        String BUCKET = Configuration.get("DIRIGIBLE_S3_BUCKET", "cmis-bucket");
-        S3TransferManager transferManager = S3TransferManager.create();
+    private void createBucket(String bucket) {
+        CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
+                                                                     .bucket(bucket)
+                                                                     .build();
 
-        DirectoryUpload directoryUpload = transferManager.uploadDirectory(UploadDirectoryRequest.builder()
-                                                                                                .source(Paths.get(sourceDirectory))
-                                                                                                .bucket(BUCKET)
-                                                                                                .build());
-
-        directoryUpload.completionFuture()
-                       .join();
-    }
-
-    /**
-     * Delete.
-     *
-     * @param name the name
-     */
-    public static void delete(String name) {
-        String BUCKET = Configuration.get("DIRIGIBLE_S3_BUCKET", "cmis-bucket");
-        if (name.endsWith("/")) {
-            deleteFolder(name);
-        } else {
-            DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
-                                                                   .bucket(BUCKET)
-                                                                   .key(name)
-                                                                   .build();
-
-            S3Facade.get()
-                    .getS3Client()
-                    .deleteObject(objectRequest);
+        try {
+            s3.createBucket(createBucketRequest);
+        } catch (BucketAlreadyOwnedByYouException ignored) {
+            logger.info("Bucket: [" + bucket + "] already created", ignored);
         }
     }
 
@@ -192,11 +213,11 @@ public class S3Facade implements InitializingBean {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public static byte[] get(String name) throws IOException {
-        String BUCKET = Configuration.get("DIRIGIBLE_S3_BUCKET", "cmis-bucket");
+        String bucket = getBucketName();
         ResponseInputStream<GetObjectResponse> response = S3Facade.get()
                                                                   .getS3Client()
                                                                   .getObject(GetObjectRequest.builder()
-                                                                                             .bucket(BUCKET)
+                                                                                             .bucket(bucket)
                                                                                              .key(name)
                                                                                              .build());
 
@@ -217,16 +238,44 @@ public class S3Facade implements InitializingBean {
     }
 
     /**
+     * Put.
+     *
+     * @param name the name
+     * @param input the input
+     * @param contentType the content type
+     */
+    public static void put(String name, byte[] input, String contentType) {
+        String bucket = getBucketName();
+        PutObjectRequest objectRequest;
+        if (name.endsWith("/")) {
+            objectRequest = PutObjectRequest.builder()
+                                            .bucket(bucket)
+                                            .key(name)
+                                            .build();
+        } else {
+            objectRequest = PutObjectRequest.builder()
+                                            .bucket(bucket)
+                                            .key(name)
+                                            .contentType(contentType)
+                                            .build();
+        }
+        S3Facade.get()
+                .getS3Client()
+                .putObject(objectRequest, RequestBody.fromBytes(input));
+    }
+
+    /**
      * List objects.
      *
      * @param path the path
      * @return the list
      */
     public static List<S3Object> listObjects(String path) {
-        String BUCKET = Configuration.get("DIRIGIBLE_S3_BUCKET", "cmis-bucket");
+        String bucket = getBucketName();
+        String prefix = "/".equals(path) ? null : path;
         ListObjectsV2Request listObjectsV2Request = ListObjectsV2Request.builder()
-                                                                        .bucket(BUCKET)
-                                                                        .prefix("/".equals(path) ? null : path)
+                                                                        .bucket(bucket)
+                                                                        .prefix(prefix)
                                                                         .build();
 
         ListObjectsV2Response listObjectsV2Response = S3Facade.get()
@@ -241,55 +290,20 @@ public class S3Facade implements InitializingBean {
     }
 
     /**
-     * Delete folder.
-     *
-     * @param prefix the prefix
-     */
-    public static void deleteFolder(String prefix) {
-        String BUCKET = Configuration.get("DIRIGIBLE_S3_BUCKET", "cmis-bucket");
-        S3Client s3Client = S3Client.builder()
-                                    .region(AWS_DEFAULT_REGION)
-                                    .build();
-        ListObjectsV2Request request = ListObjectsV2Request.builder()
-                                                           .bucket(BUCKET)
-                                                           .prefix(prefix)
-                                                           .build();
-        ListObjectsV2Iterable list = s3Client.listObjectsV2Paginator(request);
-
-        List<ObjectIdentifier> objectIdentifiers = list.stream()
-                                                       .flatMap(r -> r.contents()
-                                                                      .stream())
-                                                       .map(o -> ObjectIdentifier.builder()
-                                                                                 .key(o.key())
-                                                                                 .build())
-                                                       .collect(Collectors.toList());
-
-        if (objectIdentifiers.isEmpty())
-            return;
-        DeleteObjectsRequest deleteObjectsRequest = DeleteObjectsRequest.builder()
-                                                                        .bucket(BUCKET)
-                                                                        .delete(Delete.builder()
-                                                                                      .objects(objectIdentifiers)
-                                                                                      .build())
-                                                                        .build();
-        s3Client.deleteObjects(deleteObjectsRequest);
-    }
-
-    /**
      * Exists.
      *
      * @param keyName the key name
      * @return true, if successful
      */
     public static boolean exists(String keyName) {
-        String BUCKET = Configuration.get("DIRIGIBLE_S3_BUCKET", "cmis-bucket");
+        String bucket = getBucketName();
         if (keyName.startsWith("/")) {
             keyName = keyName.substring(1);
         }
         try {
             HeadObjectRequest objectRequest = HeadObjectRequest.builder()
                                                                .key(keyName)
-                                                               .bucket(BUCKET)
+                                                               .bucket(bucket)
                                                                .build();
 
             HeadObjectResponse objectHead = S3Facade.get()
@@ -297,7 +311,11 @@ public class S3Facade implements InitializingBean {
                                                     .headObject(objectRequest);
             objectHead.contentType();
             return true;
-        } catch (S3Exception e) {
+        } catch (BucketAlreadyExistsException | NoSuchKeyException ex) {
+            logger.debug("[{}] already exists", keyName, ex);
+            return false;
+        } catch (S3Exception ex) {
+            logger.warn("Returning false for [{}]", keyName, ex);
             return false;
         }
     }
@@ -309,14 +327,14 @@ public class S3Facade implements InitializingBean {
      * @return the object content type
      */
     public static String getObjectContentType(String keyName) {
-        String BUCKET = Configuration.get("DIRIGIBLE_S3_BUCKET", "cmis-bucket");
+        String bucket = getBucketName();
         if (keyName.startsWith("/")) {
             keyName = keyName.substring(1);
         }
         try {
             HeadObjectRequest objectRequest = HeadObjectRequest.builder()
                                                                .key(keyName)
-                                                               .bucket(BUCKET)
+                                                               .bucket(bucket)
                                                                .build();
 
             HeadObjectResponse objectHead = S3Facade.get()
@@ -346,41 +364,11 @@ public class S3Facade implements InitializingBean {
     }
 
     /**
-     * Initializes the client.
+     * Sets the s3 client.
+     *
+     * @param s3 the new s3 client
      */
-    private void initClient() {
-        String BUCKET = Configuration.get("DIRIGIBLE_S3_BUCKET", "cmis-bucket");
-        if (AWS_ACCESS_KEY_ID == null || AWS_SECRET_ACCESS_KEY == null) {
-            logger.warn("AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY not set");
-        } else {
-            AwsBasicCredentials credentials = AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
-            if (DIRIGIBLE_S3_PROVIDER.equals("aws")) {
-                s3 = S3Client.builder()
-                             .region(AWS_DEFAULT_REGION)
-                             .credentialsProvider(StaticCredentialsProvider.create(credentials))
-                             .build();
-            } else if (DIRIGIBLE_S3_PROVIDER.equals("localstack")) {
-                s3 = S3Client.builder()
-                             .region(AWS_DEFAULT_REGION)
-                             .endpointOverride(URI.create(DEFAULT_LOCALSTACK_URI))
-                             .credentialsProvider(StaticCredentialsProvider.create(credentials))
-                             .build();
-            } else {
-                return;
-            }
-            createBucket(BUCKET);
-        }
-    }
-
-    private void createBucket(String bucket) {
-        CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
-                                                                     .bucket(bucket)
-                                                                     .build();
-
-        try {
-            s3.createBucket(createBucketRequest);
-        } catch (BucketAlreadyOwnedByYouException ignored) {
-            logger.info("Bucket: " + bucket + "already created");
-        }
+    public void setS3Client(S3Client s3) {
+        INSTANCE.s3 = s3;
     }
 }
