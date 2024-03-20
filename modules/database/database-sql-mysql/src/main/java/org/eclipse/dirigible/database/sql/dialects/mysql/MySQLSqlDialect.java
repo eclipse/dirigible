@@ -31,7 +31,7 @@ public class MySQLSqlDialect extends
         DefaultSqlDialect<MySQLSelectBuilder, InsertBuilder, MySQLUpdateBuilder, MySQLDeleteBuilder, MySQLCreateBranchingBuilder, AlterBranchingBuilder, MySQLDropBranchingBuilder, MySQLNextValueSequenceBuilder, MySQLLastValueIdentityBuilder> {
 
     /** The Constant MYSQL_KEYWORD_IDENTITY. */
-    private static final String MARIA_DB_KEYWORD_IDENTITY = "AUTO_INCREMENT";
+    private static final String MYSQL_KEYWORD_IDENTITY = "AUTO_INCREMENT";
 
     /** The Constant FUNCTIONS. */
     public static final Set<String> FUNCTIONS = Collections.synchronizedSet(new HashSet<>(Arrays.asList("DATABASE", "USER", "SYSTEM_USER",
@@ -99,7 +99,7 @@ public class MySQLSqlDialect extends
      */
     @Override
     public String getIdentityArgument() {
-        return MARIA_DB_KEYWORD_IDENTITY;
+        return MYSQL_KEYWORD_IDENTITY;
     }
 
     /**
