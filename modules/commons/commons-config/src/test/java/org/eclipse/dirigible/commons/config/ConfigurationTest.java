@@ -161,11 +161,11 @@ public class ConfigurationTest {
         Configuration.set("projectName", "my-test-project");
 
         class TestObject {
-            final String s1 = "s1";
-            final String s2 = "${S2_VALUE}";
-            final String s3 = "${S3_VALUE}.{s3}";
-            final String s4 = "jdbc:mariadb://${PORTUNUS_OPENCART_DB_HOST}:${PORTUNUS_OPENCART_DB_PORT}/${PORTUNUS_OPENCART_DB_NAME}";
-            final String s5 = "${projectName} ${projectVersion} - Application View";
+            String s1 = "s1";
+            String s2 = "${S2_VALUE}";
+            String s3 = "${S3_VALUE}.{s3}";
+            String s4 = "jdbc:mariadb://${PORTUNUS_OPENCART_DB_HOST}:${PORTUNUS_OPENCART_DB_PORT}/${PORTUNUS_OPENCART_DB_NAME}";
+            String s5 = "${projectName} ${projectVersion} - Application View";
         }
         TestObject o = new TestObject();
         Configuration.configureObject(o);
