@@ -161,7 +161,8 @@ public class JobHandler implements Job {
     private void registeredFailed(String name, String module, JobLog triggered, Exception e) {
         try {
             jobLogService.jobFailed(name, module, triggered.getId(), new Date(triggered.getTriggeredAt()
-                                                                                       .getTime()), e.getMessage());
+                                                                                       .getTime()),
+                    e.getMessage());
         } catch (Exception se) {
             LOGGER.error(se.getMessage(), se);
         }
