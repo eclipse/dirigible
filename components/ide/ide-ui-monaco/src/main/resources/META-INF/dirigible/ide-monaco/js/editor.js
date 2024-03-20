@@ -87,28 +87,17 @@ class ViewParameters {
 
 class FileIO {
 
-    static editorUrl = new URL(window.location.href);
+    static EDITOR_URL = new URL(window.location.href);
 
     constructor() {
         new ViewParameters();
-    }
-
-    /**
-     * "workspace", "repository" or "registry"
-     */
-    getResourceType() {
-        return ViewParameters.useParameters ? ViewParameters.parameters.resourceType : FileIO.editorUrl.searchParams.get('rtype');
     }
 
     isReadOnly() {
         if (ViewParameters.useParameters) {
             return ViewParameters.parameters.readOnly || false;
         }
-        return FileIO.editorUrl.searchParams.get('readOnly') || false;
-    }
-
-    resolveGitProjectName() {
-        return ViewParameters.useParameters ? ViewParameters.parameters.gitName : FileIO.editorUrl.searchParams.get('gitName')
+        return FileIO.EDITOR_URL.searchParams.get('readOnly') || false;
     }
 
     resolvePath() {
@@ -116,8 +105,8 @@ class FileIO {
             this.readOnly = ViewParameters.parameters.readOnly || false;
             return ViewParameters.parameters.file;
         }
-        this.readOnly = FileIO.editorUrl.searchParams.get('readOnly') || false;
-        return FileIO.editorUrl.searchParams.get('file');
+        this.readOnly = FileIO.EDITOR_URL.searchParams.get('readOnly') || false;
+        return FileIO.EDITOR_URL.searchParams.get('file');
     }
 
     resolveWorkspace() {
@@ -153,6 +142,12 @@ class FileIO {
                 fileNameTokens.pop();
             }
             path = fileNameTokens.join('/') + '/' + relativeTokens.filter(e => e != '').join('/');
+        } else if (path && filePath.startsWith('./')) {
+            const fileNameTokens = path.split('/');
+            fileNameTokens.pop();
+            const relativeTokens = filePath.split('./');
+            path = fileNameTokens.join('/') + '/' + relativeTokens.filter(e => e != '').join('/');
+
         }
         if (path) {
             return path.replaceAll('\\', '/').split('/').slice(2).join('/');
@@ -181,56 +176,6 @@ class FileIO {
         Utils.logErrorMessage(`Unable to determine the fileType of [${fileName}], HTTP: ${response.status}, ${response.statusText}]`);
     };
 
-    buildRegistryUrl(filePath) {
-        return `${REGISTRY_API}${filePath.startsWith('/') ? '' : '/'}${filePath}`;
-    }
-
-    buildRepositoryUrl(path) {
-        return `${REPOSITORY_API}${path.startsWith('/') ? '' : '/'}${path}`;
-    }
-
-    buildWorkspaceUrl(workspace, filePath) {
-        return `${WORKSPACE_API}/${workspace}/${filePath}`;
-    }
-
-    buildFileRequestMetadata(path, workspace, filePath, loadGitMetadata) {
-        let url;
-        let isGitProject = false;
-
-        switch (this.getResourceType()) {
-            case "registry":
-                url = this.buildRegistryUrl(filePath);
-                break;
-            case "repository":
-                url = this.buildRepositoryUrl(path);
-                break;
-            default:
-                url = this.buildWorkspaceUrl(workspace, filePath);
-        }
-
-        const gitProject = this.resolveGitProjectName();
-        if (loadGitMetadata && gitProject) {
-            const gitFolder = "/.git/";
-            const isGitFolderLocation = path.indexOf(gitFolder) > 0;
-            if (isGitFolderLocation) {
-                path = path.substring(path.indexOf(gitFolder) + gitFolder.length);
-            }
-
-            let diffPath;
-            if (isGitFolderLocation) {
-                diffPath = path.substring(path.indexOf(gitProject) + gitProject.length + 1);
-            } else {
-                diffPath = path.substring(path.indexOf(`/${workspace}/`) + `/${workspace}/`.length);
-            }
-            url = `/services/ide/git/${workspace}/${gitProject}/diff?path=${diffPath}`;
-            isGitProject = true;
-        }
-        return {
-            url: url,
-            isGitProject: isGitProject,
-        };
-    }
-
     async loadText(path, loadGitMetadata = false) {
         try {
             path = path ?? this.resolvePath();
@@ -241,7 +186,7 @@ class FileIO {
             const projectName = this.resolveProjectName(path);
             const filePath = this.resolveFilePath(path);
 
-            const requestMetadata = this.buildFileRequestMetadata(path, workspace, filePath, loadGitMetadata);
+            const requestMetadata = this.#buildFileRequestMetadata(path, workspace, filePath, loadGitMetadata);
             let response;
 
             try {
@@ -257,7 +202,7 @@ class FileIO {
                 }
             } catch (e) {
                 // Fallback to file in Registry
-                response = await fetch(this.buildRegistryUrl(filePath), {
+                response = await fetch(this.#buildRegistryUrl(filePath), {
                     method: 'GET',
                     headers: {
                         'X-Requested-With': 'Fetch',
@@ -351,32 +296,82 @@ class FileIO {
             throw e;
         }
     };
+
+    /**
+     * "workspace", "repository" or "registry"
+     */
+    #getResourceType() {
+        return ViewParameters.useParameters ? ViewParameters.parameters.resourceType : FileIO.EDITOR_URL.searchParams.get('rtype');
+    }
+
+    #resolveGitProjectName() {
+        return ViewParameters.useParameters ? ViewParameters.parameters.gitName : FileIO.EDITOR_URL.searchParams.get('gitName')
+    }
+
+    #buildRegistryUrl(filePath) {
+        return `${REGISTRY_API}${filePath.startsWith('/') ? '' : '/'}${filePath}`;
+    }
+
+    #buildRepositoryUrl(path) {
+        return `${REPOSITORY_API}${path.startsWith('/') ? '' : '/'}${path}`;
+    }
+
+    #buildWorkspaceUrl(workspace, filePath) {
+        return `${WORKSPACE_API}/${workspace}/${filePath}`;
+    }
+
+    #buildFileRequestMetadata(path, workspace, filePath, loadGitMetadata) {
+        let url;
+        let isGitProject = false;
+
+        switch (this.#getResourceType()) {
+            case "registry":
+                url = this.#buildRegistryUrl(filePath);
+                break;
+            case "repository":
+                url = this.#buildRepositoryUrl(path);
+                break;
+            default:
+                url = this.#buildWorkspaceUrl(workspace, filePath);
+        }
+
+        const gitProject = this.#resolveGitProjectName();
+        if (loadGitMetadata && gitProject) {
+            const gitFolder = "/.git/";
+            const isGitFolderLocation = path.indexOf(gitFolder) > 0;
+            if (isGitFolderLocation) {
+                path = path.substring(path.indexOf(gitFolder) + gitFolder.length);
+            }
+
+            let diffPath;
+            if (isGitFolderLocation) {
+                diffPath = path.substring(path.indexOf(gitProject) + gitProject.length + 1);
+            } else {
+                diffPath = path.substring(path.indexOf(`/${workspace}/`) + `/${workspace}/`.length);
+            }
+            url = `/services/ide/git/${workspace}/${gitProject}/diff?path=${diffPath}`;
+            isGitProject = true;
+        }
+        return {
+            url: url,
+            isGitProject: isGitProject,
+        };
+    }
 }
 
 class EditorActionsProvider {
 
+    static #autoRevealActionEnabled = true;
+
     static _toggleAutoFormattingActionRegistration = undefined;
     static _toggleAutoRevealActionRegistration = undefined;
-    static _autoRevealActionEnabled = true;
-
-    static isAutoFormattingEnabledForCurrentFile() {
-        const fileIO = new FileIO();
-        const fileName = fileIO.resolvePath();
-        const filesWithDisabledFormattingListJson = window.localStorage.getItem('DIRIGIBLE.filesWithDisabledFormattingList');
-        let filesWithDisabledFormattingList = undefined;
-        if (filesWithDisabledFormattingListJson) {
-            filesWithDisabledFormattingList = JSON.parse(filesWithDisabledFormattingListJson);
-        }
-
-        return !filesWithDisabledFormattingList || !filesWithDisabledFormattingList.includes(fileName);
-    }
 
     static isAutoRevealEnabled() {
         const autoRevealEnabled = window.localStorage.getItem('DIRIGIBLE.autoRevealActionEnabled');
         return autoRevealEnabled === null || autoRevealEnabled === 'true';
     }
 
-    createSaveAction() {
+    static createSaveAction() {
         const loadingMessage = document.getElementById('loadingMessage');
         return {
             id: 'dirigible-files-save',
@@ -395,7 +390,7 @@ class EditorActionsProvider {
                 if (DirigibleEditor.loadingOverview) {
                     DirigibleEditor.loadingOverview.classList.remove("dg-hidden");
                 }
-                if (EditorActionsProvider.isAutoFormattingEnabledForCurrentFile()) {
+                if (EditorActionsProvider.#isAutoFormattingEnabledForCurrentFile()) {
                     editor.getAction('editor.action.formatDocument').run().then(() => {
                         DirigibleEditor.saveFileContent(editor);
                     });
@@ -406,7 +401,7 @@ class EditorActionsProvider {
         };
     }
 
-    createSearchAction() {
+    static createSearchAction() {
         return {
             id: 'dirigible-search',
             label: 'Search',
@@ -425,7 +420,7 @@ class EditorActionsProvider {
         };
     }
 
-    createCloseAction() {
+    static createCloseAction() {
         return {
             id: 'dirigible-close',
             label: 'Close',
@@ -442,7 +437,7 @@ class EditorActionsProvider {
         };
     }
 
-    createCloseOthersAction() {
+    static createCloseOthersAction() {
         return {
             id: 'dirigible-close-others',
             label: 'Close Others',
@@ -460,7 +455,7 @@ class EditorActionsProvider {
         };
     }
 
-    createCloseAllAction() {
+    static createCloseAllAction() {
         return {
             id: 'dirigible-close-all',
             label: 'Close All',
@@ -477,10 +472,10 @@ class EditorActionsProvider {
         };
     }
 
-    createToggleAutoFormattingAction() {
+    static createToggleAutoFormattingAction() {
         return {
             id: 'dirigible-toggle-auto-formatting',
-            label: EditorActionsProvider.isAutoFormattingEnabledForCurrentFile() ? "Disable Auto-Formatting" : "Enable Auto-Formatting",
+            label: EditorActionsProvider.#isAutoFormattingEnabledForCurrentFile() ? "Disable Auto-Formatting" : "Enable Auto-Formatting",
             keybindings: [
                 monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyD
             ],
@@ -521,32 +516,44 @@ class EditorActionsProvider {
                 if (EditorActionsProvider._toggleAutoFormattingActionRegistration) {
                     // @ts-ignore
                     EditorActionsProvider._toggleAutoFormattingActionRegistration.dispose();
-                    EditorActionsProvider._toggleAutoFormattingActionRegistration = editor.addAction(new EditorActionsProvider().createToggleAutoFormattingAction());
+                    EditorActionsProvider._toggleAutoFormattingActionRegistration = editor.addAction(EditorActionsProvider.createToggleAutoFormattingAction());
                 }
             }
         };
     }
 
-    createToggleAutoRevealAction() {
+    static createToggleAutoRevealAction() {
         return {
             id: 'dirigible-toggle-auto-reveal',
-            label: EditorActionsProvider._autoRevealActionEnabled ? "Disable Auto-Reveal Active File" : "Enable Auto-Reveal Active File",
+            label: EditorActionsProvider.#autoRevealActionEnabled ? "Disable Auto-Reveal Active File" : "Enable Auto-Reveal Active File",
             keybindings: [],
             precondition: null,
             keybindingContext: null,
             contextMenuGroupId: 'fileIO',
             contextMenuOrder: 1.5,
             run: function (editor) {
-                EditorActionsProvider._autoRevealActionEnabled = !EditorActionsProvider._autoRevealActionEnabled;
-                window.localStorage.setItem('DIRIGIBLE.autoRevealActionEnabled', `${EditorActionsProvider._autoRevealActionEnabled}`);
+                EditorActionsProvider.#autoRevealActionEnabled = !EditorActionsProvider.#autoRevealActionEnabled;
+                window.localStorage.setItem('DIRIGIBLE.autoRevealActionEnabled', `${EditorActionsProvider.#autoRevealActionEnabled}`);
 
                 if (EditorActionsProvider._toggleAutoRevealActionRegistration) {
                     // @ts-ignore
                     EditorActionsProvider._toggleAutoRevealActionRegistration.dispose();
-                    EditorActionsProvider._toggleAutoRevealActionRegistration = editor.addAction(new EditorActionsProvider().createToggleAutoRevealAction());
+                    EditorActionsProvider._toggleAutoRevealActionRegistration = editor.addAction(EditorActionsProvider.createToggleAutoRevealAction());
                 }
             }
         };
+    }
+
+    static #isAutoFormattingEnabledForCurrentFile() {
+        const fileIO = new FileIO();
+        const fileName = fileIO.resolvePath();
+        const filesWithDisabledFormattingListJson = window.localStorage.getItem('DIRIGIBLE.filesWithDisabledFormattingList');
+        let filesWithDisabledFormattingList = undefined;
+        if (filesWithDisabledFormattingListJson) {
+            filesWithDisabledFormattingList = JSON.parse(filesWithDisabledFormattingListJson);
+        }
+
+        return !filesWithDisabledFormattingList || !filesWithDisabledFormattingList.includes(fileName);
     }
 }
 
@@ -557,10 +564,6 @@ class DirigibleEditor {
     static loadingOverview = document.getElementById('loadingOverview');
     static sourceBeingChangedProgramatically = false;
     static computeDiff = new Worker("js/workers/computeDiff.js");
-
-    static isDirty(model) {
-        return DirigibleEditor.lastSavedVersionId !== model.getAlternativeVersionId();
-    }
 
     static closeEditor() {
         messageHub.post({ resourcePath: ViewParameters.parameters.file }, 'ide-core.closeEditor');
@@ -577,6 +580,10 @@ class DirigibleEditor {
         };
     }
 
+    static #isDirty(model) {
+        return DirigibleEditor.lastSavedVersionId !== model.getAlternativeVersionId();
+    }
+
     constructor(monaco, acornLoose, fileName, readOnly, fileType, fileObject) {
         this.monaco = monaco;
         this.acornLoose = acornLoose;
@@ -591,7 +598,7 @@ class DirigibleEditor {
             return
         }
 
-        this.editor = await this.createEditorInstance();
+        this.editor = await this.#createEditorInstance();
 
         if (TypeScriptUtils.isTypeScriptFile(this.fileName)) {
             TypeScriptUtils.loadImportedFiles(this.monaco, this.fileObject.importedFilesNames);
@@ -606,7 +613,7 @@ class DirigibleEditor {
         await TypeScriptUtils.loadDTS(this.monaco);
     }
 
-    async createEditorInstance() {
+    async #createEditorInstance() {
         const fileName = this.fileName;
         const readOnly = this.readOnly;
         const fileObject = this.fileObject;
@@ -697,7 +704,7 @@ class DirigibleEditor {
                 }, 1000);
             }
 
-            const dirty = DirigibleEditor.isDirty(editor.getModel());
+            const dirty = DirigibleEditor.#isDirty(editor.getModel());
             if (dirty !== DirigibleEditor.dirty) {
                 DirigibleEditor.dirty = dirty;
                 Utils.setEditorDirty(fileName, dirty);
@@ -726,16 +733,15 @@ class DirigibleEditor {
             );
         });
 
-        const editorActionsProvider = new EditorActionsProvider();
         if (!this.readOnly) {
-            editor.addAction(editorActionsProvider.createSaveAction());
+            editor.addAction(EditorActionsProvider.createSaveAction());
         }
-        editor.addAction(editorActionsProvider.createSearchAction());
-        editor.addAction(editorActionsProvider.createCloseAction());
-        editor.addAction(editorActionsProvider.createCloseOthersAction());
-        editor.addAction(editorActionsProvider.createCloseAllAction());
-        EditorActionsProvider._toggleAutoFormattingActionRegistration = editor.addAction(editorActionsProvider.createToggleAutoFormattingAction());
-        EditorActionsProvider._toggleAutoRevealActionRegistration = editor.addAction(editorActionsProvider.createToggleAutoRevealAction());
+        editor.addAction(EditorActionsProvider.createSearchAction());
+        editor.addAction(EditorActionsProvider.createCloseAction());
+        editor.addAction(EditorActionsProvider.createCloseOthersAction());
+        editor.addAction(EditorActionsProvider.createCloseAllAction());
+        EditorActionsProvider._toggleAutoFormattingActionRegistration = editor.addAction(EditorActionsProvider.createToggleAutoFormattingAction());
+        EditorActionsProvider._toggleAutoRevealActionRegistration = editor.addAction(EditorActionsProvider.createToggleAutoRevealAction());
 
         DirigibleEditor.computeDiff.onmessage = function (event) {
             lineDecorations = editor.deltaDecorations(lineDecorations, event.data);
@@ -915,7 +921,7 @@ class DirigibleEditor {
             }
 
             const model = editor.getModel();
-            if (DirigibleEditor.isDirty(model)) {
+            if (DirigibleEditor.#isDirty(model)) {
                 fileIO.saveText(model.getValue()).then(() => {
                     DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
                     DirigibleEditor.dirty = false;
@@ -925,7 +931,7 @@ class DirigibleEditor {
 
         messageHub.subscribe(async function () {
             const model = editor.getModel();
-            if (DirigibleEditor.isDirty(model)) {
+            if (DirigibleEditor.#isDirty(model)) {
                 fileIO.saveText(model.getValue());
                 DirigibleEditor.lastSavedVersionId = model.getAlternativeVersionId();
                 DirigibleEditor.dirty = false;
@@ -964,18 +970,18 @@ class DirigibleEditor {
 
 class TypeScriptUtils {
 
+    // Find all ES6 import statements and their modules
+    static #IMPORT_REGEX = /import\s+(?:\{(?:\s*\w?\s*,?)*\}|(?:\*\s+as\s+\w+)|\w+)\s+from\s+['"]([^'"]+)['"]/g;
+
     static isTypeScriptFile(fileName) {
         return fileName && fileName.endsWith(".ts");
     }
 
     static getImportedModuleFiles(content) {
-        // Find all ES6 import statements and their modules
-        const importRegex = /import\s+(?:\{(?:\s*\w?\s*,?)*\}|(?:\*\s+as\s+\w+)|\w+)\s+from\s+['"]([^'"]+)['"]/g;
-
         const importedModules = [];
 
         let match;
-        while ((match = importRegex.exec(content)) !== null) {
+        while ((match = TypeScriptUtils.#IMPORT_REGEX.exec(content)) !== null) {
             let modulePath = match[1];
             if (!modulePath.startsWith('sdk/')) {
                 if (!modulePath.endsWith(".json")) {
@@ -1017,17 +1023,17 @@ class TypeScriptUtils {
             monaco.languages.typescript.typescriptDefaults.addExtraLib(dts.content, dts.filePath);
         }
 
-        let cachedDts = window.sessionStorage.getItem('dtsContent');
+        const cachedDts = window.sessionStorage.getItem('dtsContent');
         if (cachedDts) {
             monaco.languages.typescript.javascriptDefaults.addExtraLib(cachedDts, "");
             monaco.languages.typescript.typescriptDefaults.addExtraLib(cachedDts, "");
         } else {
-            let xhrModules = new XMLHttpRequest();
+            const xhrModules = new XMLHttpRequest();
             xhrModules.open('GET', '/services/js/ide-monaco-extensions/api/dts.js');
             xhrModules.setRequestHeader('X-CSRF-Token', 'Fetch');
             xhrModules.onload = function (xhrModules) {
                 // @ts-ignore
-                let dtsContent = xhrModules.target.responseText;
+                const dtsContent = xhrModules.target.responseText;
                 monaco.languages.typescript.javascriptDefaults.addExtraLib(dtsContent, "");
                 monaco.languages.typescript.typescriptDefaults.addExtraLib(dtsContent, "");
                 window.sessionStorage.setItem('dtsContent', dtsContent);
