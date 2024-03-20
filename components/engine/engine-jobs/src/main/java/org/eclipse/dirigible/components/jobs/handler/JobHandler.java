@@ -72,16 +72,15 @@ public class JobHandler implements Job {
         }
 
         try {
-            tenantContext.execute(tenant, () -> {
-                try {
-                    executeJob(context);
-                } catch (JobExecutionException e) {
-                    LOGGER.error(e.getMessage(), e);
-                }
+            tenantContext.executeWithPossibleException(tenant, () -> {
+                executeJob(context);
                 return null;
             });
-        } catch (Exception e) {
-            throw new JobExecutionException("Failed to execute job with details " + context.getJobDetail(), e);
+
+        } catch (JobExecutionException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new JobExecutionException("Failed to execute job with details " + context.getJobDetail(), ex);
         }
     }
 
@@ -147,9 +146,7 @@ public class JobHandler implements Job {
             jobLogService.jobFinished(name, module, triggered.getId(), new Date(triggered.getTriggeredAt()
                                                                                          .getTime()));
         } catch (Exception e) {
-            if (LOGGER.isErrorEnabled()) {
-                LOGGER.error(e.getMessage(), e);
-            }
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -164,8 +161,7 @@ public class JobHandler implements Job {
     private void registeredFailed(String name, String module, JobLog triggered, Exception e) {
         try {
             jobLogService.jobFailed(name, module, triggered.getId(), new Date(triggered.getTriggeredAt()
-                                                                                       .getTime()),
-                    e.getMessage());
+                                                                                       .getTime()), e.getMessage());
         } catch (Exception se) {
             LOGGER.error(se.getMessage(), se);
         }
