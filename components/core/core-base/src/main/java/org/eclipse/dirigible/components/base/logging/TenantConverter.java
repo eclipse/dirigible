@@ -10,17 +10,20 @@
  */
 package org.eclipse.dirigible.components.base.logging;
 
-import org.eclipse.dirigible.components.base.spring.BeanProvider;
-import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import ch.qos.logback.classic.pattern.ClassicConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import org.eclipse.dirigible.components.base.spring.BeanProvider;
+import org.eclipse.dirigible.components.base.tenant.TenantContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class TenantConverter.
  */
 public class TenantConverter extends ClassicConverter {
 
-    /** The Constant BACKGROUND_TENANT_VALUE. */
+    private static final Logger LOGGER = LoggerFactory.getLogger(TenantConverter.class);
+
     private static final String BACKGROUND_TENANT_VALUE = "background";
 
     /** The tenant context. */
@@ -53,7 +56,11 @@ public class TenantConverter extends ClassicConverter {
             return tenantContext;
         }
 
-        tenantContext = BeanProvider.isInitialzed() ? BeanProvider.getTenantContext() : null;
+        try {
+            tenantContext = BeanProvider.isInitialzed() ? BeanProvider.getTenantContext() : null;
+        } catch (RuntimeException ex) {
+            LOGGER.warn("Failed to get tenant context", ex);
+        }
         return tenantContext;
     }
 
