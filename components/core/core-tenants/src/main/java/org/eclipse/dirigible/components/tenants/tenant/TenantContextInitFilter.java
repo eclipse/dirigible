@@ -143,10 +143,13 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         return request.getRequestURI()
-                      .startsWith("/webjars/") || request.getRequestURI()
-                                                         .startsWith("/css/") || request.getRequestURI()
-                                                                                        .startsWith("/js/") || request.getRequestURI()
-                                                                                                                      .endsWith(".ico");
+                      .startsWith("/webjars/")
+                || request.getRequestURI()
+                          .startsWith("/css/")
+                || request.getRequestURI()
+                          .startsWith("/js/")
+                || request.getRequestURI()
+                          .endsWith(".ico");
     }
 
 }
