@@ -62,7 +62,8 @@ public class TableAlterProcessor {
 
         Map<String, String> columnDefinitions = new HashMap<>();
         DatabaseMetaData dmd = connection.getMetaData();
-        ResultSet rsColumns = dmd.getColumns(null, null, DatabaseNameNormalizer.normalizeTableName(tableName), null);
+        String schema = connection.getSchema();
+        ResultSet rsColumns = dmd.getColumns(null, schema, DatabaseNameNormalizer.normalizeTableName(tableName), null);
         while (rsColumns.next()) {
             int columnType = rsColumns.getInt(5);
             String columnName = rsColumns.getString(4)

@@ -34,11 +34,6 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
      * @param table the table
      * @return the hana create table builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java.lang.String)
-     */
     @Override
     public HanaCreateTableBuilder table(String table) {
         return new HanaCreateTableBuilder(this.getDialect(), table, ISqlDialect.KEYWORD_COLUMN);
@@ -67,12 +62,6 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
      *
      * @param table the table
      * @return the hana create temporary table builder
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#temporaryTable(java.lang.
-     * String)
      */
     public HanaCreateTemporaryTableBuilder temporaryTable(String table) {
         return new HanaCreateTemporaryTableBuilder(this.getDialect(), table);
@@ -109,6 +98,12 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
         return new HanaCreateTableTypeBuilder(this.getDialect(), tableType);
     }
 
+    /**
+     * Public synonym.
+     *
+     * @param synonym the synonym
+     * @return the creates the synonym builder
+     */
     @Override
     public CreateSynonymBuilder publicSynonym(String synonym) {
         return new HanaCreatePublicSynonymBuilder(getDialect(), synonym);

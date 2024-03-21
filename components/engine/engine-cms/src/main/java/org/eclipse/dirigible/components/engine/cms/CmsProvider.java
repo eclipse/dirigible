@@ -10,6 +10,9 @@
  */
 package org.eclipse.dirigible.components.engine.cms;
 
+/**
+ * The Interface CmsProvider.
+ */
 public interface CmsProvider {
 
     /** The Constant DIRIGIBLE_CMS_PROVIDER. */

@@ -22,14 +22,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+/**
+ * The Class VersionServiceTest.
+ */
 @SpringBootTest(classes = {VersionService.class})
 @ExtendWith(SpringExtension.class)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 class VersionServiceTest {
 
+    /** The version service. */
     @Autowired
     VersionService versionService;
 
+    /**
+     * Test get version.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Test
     void testGetVersion() throws IOException {
         Version version = versionService.getVersion();

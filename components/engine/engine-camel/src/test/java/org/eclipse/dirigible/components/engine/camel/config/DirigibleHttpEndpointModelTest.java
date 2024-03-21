@@ -22,8 +22,17 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
+/**
+ * The Class DirigibleHttpEndpointModelTest.
+ */
 class DirigibleHttpEndpointModelTest {
 
+    /**
+     * Test create from input model.
+     *
+     * @param inputUri the input uri
+     * @param expectedTransformedUri the expected transformed uri
+     */
     @ParameterizedTest
     @MethodSource("provideParameters")
     public void testCreateFromInputModel(String inputUri, String expectedTransformedUri) {
@@ -37,6 +46,11 @@ class DirigibleHttpEndpointModelTest {
         assertEquals(consumer, outputModel.getConsumer(), "Unexpected Consumer");
     }
 
+    /**
+     * Provide parameters.
+     *
+     * @return the stream
+     */
     private static Stream<Arguments> provideParameters() {
         return Stream.of(Arguments.of("/test-uri", "/services/integrations/test-uri"),
                 Arguments.of("test-uri", "/services/integrations/test-uri"), Arguments.of("", "/services/integrations"),

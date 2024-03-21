@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PublisherService {
 
+    /** The Constant DIRIGIBLE_PUBLISH_DISABLED. */
     public static final String DIRIGIBLE_PUBLISH_DISABLED = "DIRIGIBLE_PUBLISH_DISABLED";
 
     /** The Constant logger. */

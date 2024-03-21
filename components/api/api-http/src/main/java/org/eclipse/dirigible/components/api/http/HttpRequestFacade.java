@@ -65,7 +65,6 @@ public class HttpRequestFacade {
      * made.
      *
      * @return the HTTP method of the request
-     * @see HttpServletRequest#getMethod()
      */
     public static final String getMethod() {
         HttpServletRequest request = getRequest();
@@ -79,7 +78,6 @@ public class HttpRequestFacade {
      * Returns the login of the user making the request or null if the user hasn't been authenticated.
      *
      * @return the login of the user making the request
-     * @see HttpServletRequest#getRemoteUser()
      */
     public static final String getRemoteUser() {
         HttpServletRequest request = getRequest();
@@ -94,7 +92,6 @@ public class HttpRequestFacade {
      * request.
      *
      * @return the path info
-     * @see HttpServletRequest#getPathInfo()
      */
     public static final String getPathInfo() {
         HttpServletRequest request = getRequest();
@@ -109,7 +106,6 @@ public class HttpRequestFacade {
      * translates it to a real path.
      *
      * @return the path translated
-     * @see HttpServletRequest#getPathTranslated()
      */
     public static final String getPathTranslated() {
         HttpServletRequest request = getRequest();
@@ -125,7 +121,6 @@ public class HttpRequestFacade {
      *
      * @param name the header name
      * @return the header value
-     * @see HttpServletRequest#getHeader(String)
      */
     public static final String getHeader(String name) {
         HttpServletRequest request = getRequest();
@@ -140,7 +135,6 @@ public class HttpRequestFacade {
      *
      * @param role the role
      * @return true, if is user in role
-     * @see HttpServletRequest#isUserInRole(String)
      */
     public static final boolean isUserInRole(String role) {
         return UserRequestVerifier.isUserInRole(role);
@@ -151,7 +145,6 @@ public class HttpRequestFacade {
      *
      * @param name the name
      * @return the attribute
-     * @see HttpServletRequest#getAttribute(String)
      */
     public static final String getAttribute(String name) {
         HttpServletRequest request = getRequest();
@@ -167,7 +160,6 @@ public class HttpRequestFacade {
      * Returns the auth type.
      *
      * @return the auth type
-     * @see HttpServletRequest#getAuthType()
      */
     public static final String getAuthType() {
         HttpServletRequest request = getRequest();

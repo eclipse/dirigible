@@ -20,11 +20,17 @@ import org.slf4j.LoggerFactory;
  */
 public class CreateSchemaBuilder extends AbstractCreateSqlBuilder {
 
+    /** The Constant AUTHORIZATION_KEYWORD. */
+    private static final String AUTHORIZATION_KEYWORD = "AUTHORIZATION";
+
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(CreateSchemaBuilder.class);
 
     /** The name. */
-    private String name;
+    private final String name;
+
+    /** The authorization. */
+    private String authorization;
 
     /**
      * Instantiates a new creates the schema builder.
@@ -42,11 +48,6 @@ public class CreateSchemaBuilder extends AbstractCreateSqlBuilder {
      *
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-     */
     @Override
     public String generate() {
 
@@ -57,6 +58,8 @@ public class CreateSchemaBuilder extends AbstractCreateSqlBuilder {
 
         // SCHEMA
         generateSchema(sql);
+
+        generateAuthorization(sql);
 
         String generated = sql.toString();
 
@@ -87,5 +90,34 @@ public class CreateSchemaBuilder extends AbstractCreateSqlBuilder {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Authorization.
+     *
+     * @param roleSpecification the role specification
+     * @return the creates the schema builder
+     */
+    public CreateSchemaBuilder authorization(String roleSpecification) {
+        this.authorization = roleSpecification;
+        return this;
+    }
+
+    /**
+     * Generate authorization.
+     *
+     * @param sql the sql
+     */
+    private void generateAuthorization(StringBuilder sql) {
+        if (null == authorization) {
+            return;
+        }
+        sql.append(SPACE)
+           .append(AUTHORIZATION_KEYWORD)
+           .append(SPACE)
+           .append(getEscapeSymbol())
+           .append(authorization)
+           .append(getEscapeSymbol());
+
     }
 }

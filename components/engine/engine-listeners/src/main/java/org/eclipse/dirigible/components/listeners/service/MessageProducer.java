@@ -10,16 +10,12 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
+import jakarta.jms.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import jakarta.jms.DeliveryMode;
-import jakarta.jms.Destination;
-import jakarta.jms.JMSException;
-import jakarta.jms.Session;
-import jakarta.jms.TextMessage;
 
 /**
  * The Class MessageProducer.
@@ -33,14 +29,25 @@ public class MessageProducer {
     /** The session. */
     private final Session session;
 
+    /** The destination name manager. */
+    private final DestinationNameManager destinationNameManager;
+
+    /** The tenant property manager. */
+    private final TenantPropertyManager tenantPropertyManager;
+
     /**
      * Instantiates a new message producer.
      *
      * @param session the session
+     * @param destinationNameManager the destination name manager
+     * @param tenantPropertyManager the tenant property manager
      */
     @Autowired
-    public MessageProducer(@Qualifier("ActiveMQSession") Session session) {
+    MessageProducer(@Qualifier("ActiveMQSession") Session session, DestinationNameManager destinationNameManager,
+            TenantPropertyManager tenantPropertyManager) {
         this.session = session;
+        this.destinationNameManager = destinationNameManager;
+        this.tenantPropertyManager = tenantPropertyManager;
     }
 
     /**
@@ -51,19 +58,8 @@ public class MessageProducer {
      * @throws JMSException the JMS exception
      */
     public void sendMessageToTopic(String topic, String message) throws JMSException {
-        Destination destination = session.createTopic(topic);
-        sendMessage(message, destination);
-    }
-
-    /**
-     * Send message to queue.
-     *
-     * @param queue the queue
-     * @param message the message
-     * @throws JMSException the JMS exception
-     */
-    public void sendMessageToQueue(String queue, String message) throws JMSException {
-        Destination destination = session.createQueue(queue);
+        String destinationName = destinationNameManager.toTenantName(topic);
+        Destination destination = session.createTopic(destinationName);
         sendMessage(message, destination);
     }
 
@@ -79,10 +75,24 @@ public class MessageProducer {
             producer.setDeliveryMode(DeliveryMode.PERSISTENT);
 
             TextMessage textMessage = session.createTextMessage(message);
+            tenantPropertyManager.setCurrentTenant(textMessage);
 
             producer.send(textMessage);
             LOGGER.trace("Message sent in [{}]", destination);
         }
+    }
+
+    /**
+     * Send message to queue.
+     *
+     * @param queue the queue
+     * @param message the message
+     * @throws JMSException the JMS exception
+     */
+    public void sendMessageToQueue(String queue, String message) throws JMSException {
+        String destinationName = destinationNameManager.toTenantName(queue);
+        Destination destination = session.createQueue(destinationName);
+        sendMessage(message, destination);
     }
 
 }

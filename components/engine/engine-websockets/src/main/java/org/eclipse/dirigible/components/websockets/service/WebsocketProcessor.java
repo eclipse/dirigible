@@ -66,6 +66,7 @@ public class WebsocketProcessor {
      * @param endpoint the endpoint
      * @param wrapper the wrapper
      * @param context the context
+     * @return the object
      * @throws Exception the exception
      */
     public Object processEvent(String endpoint, String wrapper, Map<Object, Object> context) throws Exception {

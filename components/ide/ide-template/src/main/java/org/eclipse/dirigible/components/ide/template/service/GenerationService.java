@@ -163,6 +163,12 @@ public class GenerationService {
         return generatedFiles;
     }
 
+    /**
+     * Gets the template metadata.
+     *
+     * @param parameters the parameters
+     * @return the template metadata
+     */
     private static GenerationTemplateMetadata getTemplateMetadata(GenerationTemplateParameters parameters) {
         String templateModule = parameters.getTemplate();
         try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner()) {

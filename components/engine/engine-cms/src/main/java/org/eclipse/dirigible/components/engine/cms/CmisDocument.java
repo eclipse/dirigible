@@ -10,6 +10,9 @@
  */
 package org.eclipse.dirigible.components.engine.cms;
 
+/**
+ * The Interface CmisDocument.
+ */
 public interface CmisDocument {
     /**
      * Returns the Path of this CmisDocument.

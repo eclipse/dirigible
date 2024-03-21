@@ -10,11 +10,15 @@
  */
 package org.eclipse.dirigible.database.sql;
 
+/**
+ * The Enum DatabaseType.
+ */
 public enum DatabaseType {
 
     /** The rdbms. */
     RDBMS("RDBMS"),
 
+    /** The nosql. */
     NOSQL("NOSQL");
 
     /** The name. */

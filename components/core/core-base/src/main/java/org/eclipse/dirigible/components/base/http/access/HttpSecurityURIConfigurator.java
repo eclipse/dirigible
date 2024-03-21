@@ -18,6 +18,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
  */
 public class HttpSecurityURIConfigurator {
 
+    /** The Constant PUBLIC_PATTERNS. */
     private static final String[] PUBLIC_PATTERNS = {//
             "/", //
             "/home", //
@@ -40,6 +41,7 @@ public class HttpSecurityURIConfigurator {
             "/services/integrations/**", //
             "/actuator/**"};
 
+    /** The Constant AUTHENTICATED_PATTERNS. */
     private static final String[] AUTHENTICATED_PATTERNS = {//
             "/services/**", //
             "/websockets/**", //
@@ -48,6 +50,7 @@ public class HttpSecurityURIConfigurator {
             "/odata/**", //
             "/swagger-ui/**"};
 
+    /** The Constant DEVELOPER_PATTERNS. */
     private static final String[] DEVELOPER_PATTERNS = {//
             "/services/ide/**", //
             "/websockets/ide/**"};
@@ -63,13 +66,15 @@ public class HttpSecurityURIConfigurator {
         authz.requestMatchers(PUBLIC_PATTERNS)
              .permitAll()
 
-             // Authenticated
-             .requestMatchers(AUTHENTICATED_PATTERNS)
-             .authenticated()
+             // NOTE!: the order is important - role checks should be before just authenticated paths
 
              // "DEVELOPER" role required
              .requestMatchers(DEVELOPER_PATTERNS)
              .hasRole(Roles.DEVELOPER.name())
+
+             // Authenticated
+             .requestMatchers(AUTHENTICATED_PATTERNS)
+             .authenticated()
 
              // Deny all other requests
              .anyRequest()

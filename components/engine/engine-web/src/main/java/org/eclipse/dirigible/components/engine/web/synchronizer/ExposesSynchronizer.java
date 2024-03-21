@@ -10,49 +10,42 @@
  */
 package org.eclipse.dirigible.components.engine.web.synchronizer;
 
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.text.ParseException;
-import java.util.List;
-
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.project.ProjectMetadata;
-import org.eclipse.dirigible.components.project.ProjectMetadataUtils;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.engine.web.domain.Expose;
 import org.eclipse.dirigible.components.engine.web.exposure.ExposeManager;
 import org.eclipse.dirigible.components.engine.web.service.ExposeService;
+import org.eclipse.dirigible.components.project.ProjectMetadata;
+import org.eclipse.dirigible.components.project.ProjectMetadataUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.util.List;
+
 /**
  * The Class ExposesSynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.EXPOSE)
-public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Expose> {
-
-    /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(ExposesSynchronizer.class);
+public class ExposesSynchronizer extends BaseSynchronizer<Expose, Long> {
 
     /** The Constant FILE_NAME. */
     public static final String FILE_NAME = "project.json";
-
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(ExposesSynchronizer.class);
     /** The expose service. */
-    private ExposeService exposeService;
+    private final ExposeService exposeService;
 
     /** The synchronization callback. */
     private SynchronizerCallback callback;
@@ -65,30 +58,6 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
     @Autowired
     public ExposesSynchronizer(ExposeService exposeService) {
         this.exposeService = exposeService;
-    }
-
-    /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<Expose> getService() {
-        return exposeService;
-    }
-
-
-    /**
-     * Checks if is accepted.
-     *
-     * @param file the file
-     * @param attrs the attrs
-     * @return true, if is accepted
-     */
-    @Override
-    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString()
-                   .endsWith(FILE_NAME);
     }
 
     /**
@@ -108,7 +77,7 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Expose> parse(String location, byte[] content) throws ParseException {
@@ -143,6 +112,16 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
     }
 
     /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<Expose, Long> getService() {
+        return exposeService;
+    }
+
+    /**
      * Retrieve.
      *
      * @param location the location
@@ -161,10 +140,10 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(Expose artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((Expose) artefact);
+        getService().save(artefact);
     }
 
     /**
@@ -175,14 +154,8 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-        Expose expose = null;
-        if (wrapper.getArtefact() instanceof Expose) {
-            expose = (Expose) wrapper.getArtefact();
-        } else {
-            throw new UnsupportedOperationException(String.format("Trying to process %s as Expose", wrapper.getArtefact()
-                                                                                                           .getClass()));
-        }
+    protected boolean completeImpl(TopologyWrapper<Expose> wrapper, ArtefactPhase flow) {
+        Expose expose = wrapper.getArtefact();
 
         switch (flow) {
             case CREATE:
@@ -241,7 +214,7 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
      * @param expose the expose
      */
     @Override
-    public void cleanup(Expose expose) {
+    public void cleanupImpl(Expose expose) {
         try {
             ExposeManager.unregisterProject(expose.getName());
             getService().delete(expose);

@@ -39,6 +39,7 @@ public class ExtensionPoint extends Artefact {
     @Column(name = "EXTENSIONPOINT_ID", nullable = false)
     private Long id;
 
+    /** The extensions. */
     @Transient
     private transient Set<Extension> extensions = new HashSet<Extension>();
 

@@ -46,6 +46,7 @@ public class FtpServerConfiguration {
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(FtpServerConfiguration.class);
 
+    /** The Constant REPOSITORY_ROOT. */
     private static final String REPOSITORY_ROOT = "./target/dirigible/cms/dirigible/repository/root";
 
     /**
@@ -64,7 +65,6 @@ public class FtpServerConfiguration {
     /**
      * Nio listener.
      *
-     * @param port the port
      * @return the listener
      */
     @Bean

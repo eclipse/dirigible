@@ -20,7 +20,6 @@ import java.sql.Types;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.commons.api.helpers.DateTimeUtils;
@@ -67,17 +66,22 @@ public class CsvProcessor {
      * Insert.
      *
      * @param connection the connection
+     * @param schema the schema
      * @param tableMetadata the table metadata
      * @param csvRecords the csv records
      * @param headerNames the header names
      * @param csvFile the csv file
      * @throws SQLException the SQL exception
      */
-    public void insert(Connection connection, TableMetadata tableMetadata, List<CsvRecord> csvRecords, List<String> headerNames,
-            CsvFile csvFile) throws SQLException {
+    public void insert(Connection connection, String schema, TableMetadata tableMetadata, List<CsvRecord> csvRecords,
+            List<String> headerNames, CsvFile csvFile) throws SQLException {
         if (tableMetadata == null) {
             return;
         }
+        if (null != schema) {
+            connection.setSchema(schema);
+        }
+        logger.info("Will insert data into table [{}] in schema [{}]", tableMetadata.getName(), schema);
         List<ColumnMetadata> availableTableColumns = tableMetadata.getColumns();
         InsertBuilder insertBuilder = new InsertBuilder(SqlFactory.deriveDialect(connection));
         insertBuilder.into(tableMetadata.getName());
@@ -109,9 +113,7 @@ public class CsvProcessor {
                                                                                                                        Collectors.toList()),
                     tableMetadata.getName());
             CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
-            if (logger.isErrorEnabled()) {
-                logger.error(errorMessage, t);
-            }
+            logger.error(errorMessage, t);
         }
     }
 
@@ -119,6 +121,7 @@ public class CsvProcessor {
      * Update.
      *
      * @param connection the connection
+     * @param schema the schema
      * @param tableMetadata the table metadata
      * @param csvRecords the csv records
      * @param headerNames the header names
@@ -126,11 +129,15 @@ public class CsvProcessor {
      * @param csvFile the csv file
      * @throws SQLException the SQL exception
      */
-    public void update(Connection connection, TableMetadata tableMetadata, List<CsvRecord> csvRecords, List<String> headerNames,
-            String pkName, CsvFile csvFile) throws SQLException {
+    public void update(Connection connection, String schema, TableMetadata tableMetadata, List<CsvRecord> csvRecords,
+            List<String> headerNames, String pkName, CsvFile csvFile) throws SQLException {
         if (tableMetadata == null) {
             return;
         }
+        if (null != schema) {
+            connection.setSchema(schema);
+        }
+        logger.info("Will update data into table [{}] in schema [{}]", tableMetadata.getName(), schema);
         List<ColumnMetadata> availableTableColumns = tableMetadata.getColumns();
         UpdateBuilder updateBuilder = new UpdateBuilder(SqlFactory.deriveDialect(connection));
         updateBuilder.table(tableMetadata.getName());

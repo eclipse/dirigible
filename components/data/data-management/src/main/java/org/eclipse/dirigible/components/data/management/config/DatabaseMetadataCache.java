@@ -22,6 +22,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
  */
 public class DatabaseMetadataCache {
 
+    /** The Constant DIRIGIBLE_DATABASE_METADATA_CACHE_TIME_LIMIT_IN_MINUTES. */
     private static final String DIRIGIBLE_DATABASE_METADATA_CACHE_TIME_LIMIT_IN_MINUTES =
             "DIRIGIBLE_DATABASE_METADATA_CACHE_TIME_LIMIT_IN_MINUTES";
 

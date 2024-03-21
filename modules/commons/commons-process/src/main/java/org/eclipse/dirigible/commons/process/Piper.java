@@ -47,11 +47,6 @@ public class Piper implements java.lang.Runnable {
     /**
      * Run.
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Runnable#run()
-     */
     @Override
     public void run() {
         try {

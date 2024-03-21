@@ -18,10 +18,20 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * The Class OAuth2SecurityConfiguration.
+ */
 @Profile("oauth")
 @Configuration
 public class OAuth2SecurityConfiguration {
 
+    /**
+     * Filter chain.
+     *
+     * @param http the http
+     * @return the security filter chain
+     * @throws Exception the exception
+     */
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 

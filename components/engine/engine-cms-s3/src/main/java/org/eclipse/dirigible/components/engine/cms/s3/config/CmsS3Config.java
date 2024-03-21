@@ -27,6 +27,7 @@ public class CmsS3Config {
      * Gets the cms provider.
      *
      * @return the cms provider
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     @Bean("cms-provider-s3")
     public CmsProvider getCmsProvider() throws IOException {

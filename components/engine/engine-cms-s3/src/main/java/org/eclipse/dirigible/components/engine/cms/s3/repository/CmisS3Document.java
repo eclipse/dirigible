@@ -27,8 +27,10 @@ public class CmisS3Document extends CmisS3Object implements CmisDocument {
      */
     private CmisS3Session session;
 
+    /** The id. */
     private String id;
 
+    /** The name. */
     private String name;
 
     /**
@@ -36,6 +38,7 @@ public class CmisS3Document extends CmisS3Object implements CmisDocument {
      *
      * @param session the session
      * @param id the idx
+     * @param name the name
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public CmisS3Document(CmisS3Session session, String id, String name) throws IOException {
@@ -77,10 +80,22 @@ public class CmisS3Document extends CmisS3Object implements CmisDocument {
         return this.id;
     }
 
+    /**
+     * Gets the content type.
+     *
+     * @param resource the resource
+     * @return the content type
+     */
     private String getContentType(String resource) {
         return S3Facade.getObjectContentType(resource);
     }
 
+    /**
+     * Gets the resource name.
+     *
+     * @param resource the resource
+     * @return the resource name
+     */
     private String getResourceName(String resource) {
         return this.name;
     }

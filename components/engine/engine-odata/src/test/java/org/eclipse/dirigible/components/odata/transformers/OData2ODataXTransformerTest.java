@@ -13,10 +13,8 @@ package org.eclipse.dirigible.components.odata.transformers;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-
 import java.io.IOException;
 import java.sql.SQLException;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
@@ -26,16 +24,22 @@ import org.eclipse.dirigible.components.odata.domain.OData;
 import org.eclipse.dirigible.components.odata.factory.ODataDefinitionFactoryTest;
 import org.eclipse.dirigible.components.odata.synchronizer.ODataSynchronizer;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * The Class OData2ODataXTransformerTest.
  */
+@SpringBootTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @ExtendWith(MockitoExtension.class)
 public class OData2ODataXTransformerTest {
 
@@ -44,8 +48,15 @@ public class OData2ODataXTransformerTest {
     private ODataDatabaseMetadataUtil odataDatabaseMetadataUtil;
 
     /** The default table metadata provider. */
-    @InjectMocks
     private DefaultTableMetadataProvider defaultTableMetadataProvider;
+
+    /**
+     * Sets the up.
+     */
+    @BeforeEach
+    void setUp() {
+        this.defaultTableMetadataProvider = new DefaultTableMetadataProvider(odataDatabaseMetadataUtil);
+    }
 
     /**
      * Test transform with incorrect multiplicity.

@@ -413,8 +413,10 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetaData = connection.getMetaData();
             ResultSet schemas;
-            if (!databaseMetaData.getDatabaseProductName()
-                                 .equals("MariaDB")) {
+            if (!(databaseMetaData.getDatabaseProductName()
+                                  .equals("MariaDB")
+                    || databaseMetaData.getDatabaseProductName()
+                                       .equals("MySQL"))) {
                 schemas = databaseMetaData.getSchemas(null, schemaName);
             } else {
                 schemas = databaseMetaData.getCatalogs();

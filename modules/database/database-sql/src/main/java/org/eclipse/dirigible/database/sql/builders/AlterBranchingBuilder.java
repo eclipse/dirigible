@@ -54,11 +54,6 @@ public class AlterBranchingBuilder extends AbstractSqlBuilder {
      *
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-     */
     @Override
     public String generate() {
         throw new SqlException("Invalid method invocation of generate() for Create Branching Builder");

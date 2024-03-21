@@ -168,11 +168,6 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
      *
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-     */
     @Override
     public String generate() {
 

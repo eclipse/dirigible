@@ -32,8 +32,10 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
      */
     private CmisS3Session session;
 
+    /** The id. */
     private String id;
 
+    /** The name. */
     private String name;
 
     /**
@@ -65,6 +67,7 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
      *
      * @param session the session
      * @param id the id
+     * @param name the name
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public CmisS3Folder(CmisS3Session session, String id, String name) throws IOException {
@@ -98,6 +101,11 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
         return this.id;
     }
 
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
     public String getName() {
         return this.name;
     }

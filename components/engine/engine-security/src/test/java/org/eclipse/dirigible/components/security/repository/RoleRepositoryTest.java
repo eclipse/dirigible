@@ -29,18 +29,27 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The Class RoleRepositoryTest.
+ */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class RoleRepositoryTest {
+
+    /** The security role repository. */
     @Autowired
     private RoleRepository securityRoleRepository;
 
+    /** The entity manager. */
     @Autowired
     EntityManager entityManager;
 
+    /**
+     * Setup.
+     */
     @BeforeEach
     public void setup() {
         // Create test security roles
@@ -51,6 +60,9 @@ public class RoleRepositoryTest {
         securityRoleRepository.save(createSecurityRole("/a/b/c/test5.role", "test5", "description"));
     }
 
+    /**
+     * Cleanup.
+     */
     @AfterEach
     public void cleanup() {
         // Delete test security roles
@@ -59,6 +71,11 @@ public class RoleRepositoryTest {
                               .forEach(securityRole -> securityRoleRepository.delete(securityRole));
     }
 
+    /**
+     * Gets the one.
+     *
+     * @return the one
+     */
     @Test
     public void getOne() {
         Long id = securityRoleRepository.findAll()
@@ -73,6 +90,11 @@ public class RoleRepositoryTest {
         assertNotNull(securityRole.getCreatedAt());
     }
 
+    /**
+     * Gets the reference using entity manager.
+     *
+     * @return the reference using entity manager
+     */
     @Test
     public void getReferenceUsingEntityManager() {
         Long id = securityRoleRepository.findAll()
@@ -83,11 +105,22 @@ public class RoleRepositoryTest {
         assertNotNull(securityRole.getLocation());
     }
 
+    /**
+     * Creates the security role.
+     *
+     * @param location the location
+     * @param name the name
+     * @param description the description
+     * @return the role
+     */
     public static Role createSecurityRole(String location, String name, String description) {
         Role securityRole = new Role(location, name, description);
         return securityRole;
     }
 
+    /**
+     * The Class TestConfiguration.
+     */
     @SpringBootApplication
     static class TestConfiguration {
     }

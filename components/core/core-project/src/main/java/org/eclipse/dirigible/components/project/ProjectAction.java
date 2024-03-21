@@ -30,6 +30,14 @@ public class ProjectAction {
     /** The publish. */
     private final boolean registry;
 
+    /**
+     * Instantiates a new project action.
+     *
+     * @param name the name
+     * @param commands the commands
+     * @param publish the publish
+     * @param afterPublish the after publish
+     */
     public ProjectAction(String name, List<CommandDescriptor> commands, boolean publish, boolean afterPublish) {
         this.name = name;
         this.commands = commands;
@@ -73,6 +81,11 @@ public class ProjectAction {
         return registry;
     }
 
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     @Override
     public String toString() {
         return "ProjectAction{" + "name='" + name + '\'' + ", commands=" + commands + ", publish=" + publish + ", registry=" + registry

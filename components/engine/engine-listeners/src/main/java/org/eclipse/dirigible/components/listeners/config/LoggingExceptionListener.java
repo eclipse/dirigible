@@ -19,11 +19,9 @@ import org.springframework.stereotype.Component;
 /**
  * The listener interface for receiving loggingException events. The class that is interested in
  * processing a loggingException event implements this interface, and the object created with that
- * class is registered with a component using the component's
- * <code>addLoggingExceptionListener<code> method. When the loggingException event occurs, that
- * object's appropriate method is invoked.
+ * class is registered with a component using the component's object's appropriate method is
+ * invoked.
  *
- * @see LoggingExceptionEvent
  */
 @Component
 class LoggingExceptionListener implements ExceptionListener {

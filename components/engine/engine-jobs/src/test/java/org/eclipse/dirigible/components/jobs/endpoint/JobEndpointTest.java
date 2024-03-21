@@ -59,6 +59,7 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 public class JobEndpointTest {
 
+    /** The entity manager. */
     @Autowired
     private EntityManager entityManager;
 
@@ -70,15 +71,18 @@ public class JobEndpointTest {
     @Autowired
     private JobRepository jobRepository;
 
+    /** The test job. */
     private Job testJob;
 
     /** The mockMvc. */
     @Autowired
     private MockMvc mockMvc;
 
+    /** The wac. */
     @Autowired
     protected WebApplicationContext wac;
 
+    /** The spring security filter chain. */
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
 
@@ -108,13 +112,19 @@ public class JobEndpointTest {
 
     }
 
-    /** Cleanup */
+    /**
+     * Cleanup.
+     */
     @AfterEach
     public void cleanup() {
         jobRepository.deleteAll();
     }
 
-    /** Finds all extension points and checks the location of the first one */
+    /**
+     * Finds all extension points and checks the location of the first one.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void findAllExtensionPoints() throws Exception {
         mockMvc.perform(get("/services/jobs"))
@@ -123,7 +133,12 @@ public class JobEndpointTest {
         // .andExpect(jsonPath("$.content[0].location").value("/a/b/c/j1.job"));
     }
 
-    /** Gets all extension points */
+    /**
+     * Gets all extension points.
+     *
+     * @return the all extension points
+     * @throws Exception the exception
+     */
     @Test
     public void getAllExtensionPoints() throws Exception {
         mockMvc.perform(get("/services/jobs/pages"))
@@ -131,7 +146,11 @@ public class JobEndpointTest {
                .andExpect(status().is2xxSuccessful());
     }
 
-    /** Enables the job by name */
+    /**
+     * Enables the job by name.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void enableJob() throws Exception {
         // TODO
@@ -141,7 +160,11 @@ public class JobEndpointTest {
 
     }
 
-    /** Disables the job by name */
+    /**
+     * Disables the job by name.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void disableJob() throws Exception {
         // TODO

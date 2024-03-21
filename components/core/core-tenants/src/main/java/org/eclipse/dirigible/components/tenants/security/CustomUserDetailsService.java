@@ -10,12 +10,14 @@
  */
 package org.eclipse.dirigible.components.tenants.security;
 
-import static org.eclipse.dirigible.components.base.http.roles.Roles.ADMINISTRATOR;
-
-import java.util.ArrayList;
-
-import org.eclipse.dirigible.components.tenants.repository.UserRepository;
-import org.eclipse.dirigible.components.tenants.tenant.TenantContext;
+import java.util.Set;
+import java.util.stream.Collectors;
+import org.eclipse.dirigible.components.base.tenant.Tenant;
+import org.eclipse.dirigible.components.base.tenant.TenantContext;
+import org.eclipse.dirigible.components.tenants.domain.User;
+import org.eclipse.dirigible.components.tenants.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,70 +29,52 @@ import org.springframework.stereotype.Service;
 /**
  * The Class CustomUserDetailsService.
  */
+@ConditionalOnProperty(name = "basic.enabled", havingValue = "true")
 @Service
-@ConditionalOnProperty(name = "tenants.enabled", havingValue = "true")
 public class CustomUserDetailsService implements UserDetailsService {
 
-    /** The user repository. */
-    private final UserRepository userRepository;
+    /** The Constant LOGGER. */
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomUserDetailsService.class);
+
+    /** The user service. */
+    private final UserService userService;
+
+    /** The tenant context. */
+    private final TenantContext tenantContext;
 
     /**
      * Instantiates a new custom user details service.
      *
-     * @param userRepository the user repository
+     * @param userService the user service
+     * @param tenantContext the tenant context
      */
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CustomUserDetailsService(UserService userService, TenantContext tenantContext) {
+        this.userService = userService;
+        this.tenantContext = tenantContext;
     }
 
     /**
      * Load user by username.
      *
-     * @param email the email
+     * @param username the username
      * @return the user details
      * @throws UsernameNotFoundException the username not found exception
      */
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        var tenant = TenantContext.getCurrentTenant();
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Tenant tenant = tenantContext.getCurrentTenant();
 
-        if (tenant != null) {
-            return loadUser(email, tenant);
-        } else {
-            return loadGeneralAdmin(email);
-        }
+        User user = userService.findUserByUsernameAndTenantId(username, tenant.getId())
+                               .orElseThrow(() -> new UsernameNotFoundException(
+                                       "Username [" + username + "] was not found in tenant [" + tenant + "]."));
+
+        Set<String> userRoles = userService.getUserRoleNames(user);
+        LOGGER.debug("User [{}] has assigned roles [{}]", user, userRoles);
+        Set<GrantedAuthority> auths = userRoles.stream()
+                                               .map(r -> new SimpleGrantedAuthority(r))
+                                               .collect(Collectors.toSet());
+
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), auths);
     }
 
-    /**
-     * Load user.
-     *
-     * @param email the email
-     * @param tenant the tenant
-     * @return the user details
-     */
-    private UserDetails loadUser(String email, String tenant) {
-        var user = userRepository.findUser(email, tenant)
-                                 .orElseThrow(() -> new UsernameNotFoundException("'" + email + "' / '" + tenant + "' was not found."));
-
-        var auths = new ArrayList<GrantedAuthority>();
-        auths.add(new SimpleGrantedAuthority(user.getRole()
-                                                 .getRoleName()));
-        return new CustomUserDetails(user.getEmail(), user.getPassword(), user.getId(), user.getTenant()
-                                                                                            .getId(),
-                auths);
-    }
-
-    /**
-     * Load general admin.
-     *
-     * @param email the email
-     * @return the user details
-     */
-    private UserDetails loadGeneralAdmin(String email) {
-        var admin = userRepository.findGeneralAdmin(email)
-                                  .orElseThrow(() -> new UsernameNotFoundException("'" + email + "' was not found as a general admin."));
-        var auths = new ArrayList<GrantedAuthority>();
-        auths.add(new SimpleGrantedAuthority(ADMINISTRATOR.getRoleName()));
-        return new CustomUserDetails(admin.getEmail(), admin.getPassword(), admin.getId(), null, auths);
-    }
 }

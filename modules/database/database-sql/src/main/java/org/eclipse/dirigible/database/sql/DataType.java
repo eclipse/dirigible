@@ -182,6 +182,12 @@ public enum DataType {
         throw new IllegalArgumentException("DataType not found: " + name);
     }
 
+    /**
+     * Checks if is of type.
+     *
+     * @param dataType the data type
+     * @return true, if is of type
+     */
     public boolean isOfType(String dataType) {
         return name.equalsIgnoreCase(null != dataType ? dataType.trim() : dataType);
     }

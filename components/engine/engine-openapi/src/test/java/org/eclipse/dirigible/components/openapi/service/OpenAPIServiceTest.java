@@ -10,6 +10,11 @@
  */
 package org.eclipse.dirigible.components.openapi.service;
 
+import static org.eclipse.dirigible.components.openapi.repository.OpenAPIRepositoryTest.createOpenAPI;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.List;
 import org.eclipse.dirigible.components.openapi.domain.OpenAPI;
 import org.eclipse.dirigible.components.openapi.repository.OpenAPIRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -24,12 +29,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-import static org.eclipse.dirigible.components.openapi.repository.OpenAPIRepositoryTest.createOpenAPI;
-
+/**
+ * The Class OpenAPIServiceTest.
+ */
 @SpringBootTest(classes = {OpenAPIRepository.class, OpenAPIService.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
@@ -37,12 +39,17 @@ import static org.eclipse.dirigible.components.openapi.repository.OpenAPIReposit
 @Transactional
 class OpenAPIServiceTest {
 
+    /** The open API repository. */
     @Autowired
     private OpenAPIRepository openAPIRepository;
 
+    /** The open API service. */
     @Autowired
     private OpenAPIService openAPIService;
 
+    /**
+     * Setup.
+     */
     @BeforeEach
     public void setup() {
 
@@ -56,24 +63,36 @@ class OpenAPIServiceTest {
         openAPIRepository.save(createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
     }
 
+    /**
+     * Cleanup.
+     */
     @AfterEach
     public void cleanup() {
         // Delete test OpenAPIs
         openAPIRepository.deleteAll();
     }
 
+    /**
+     * Test get all.
+     */
     @Test
     void testGetAll() {
         List<OpenAPI> openAPIList = openAPIService.getAll();
         assertEquals(5, openAPIList.size());
     }
 
+    /**
+     * Test find all.
+     */
     @Test
     void testFindAll() {
         Page<OpenAPI> openApiPage = openAPIService.getPages(Pageable.ofSize(1));
         assertEquals(5, openApiPage.getTotalElements());
     }
 
+    /**
+     * Test find by id.
+     */
     @Test
     void testFindById() {
         OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
@@ -82,6 +101,9 @@ class OpenAPIServiceTest {
         assertEquals("test", openAPIServiceById.getName());
     }
 
+    /**
+     * Test find by name.
+     */
     @Test
     void testFindByName() {
         OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
@@ -90,6 +112,9 @@ class OpenAPIServiceTest {
         assertEquals(openAPI.getId(), openAPIServiceByName.getId());
     }
 
+    /**
+     * Test save.
+     */
     @Test
     void testSave() {
         OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
@@ -97,15 +122,17 @@ class OpenAPIServiceTest {
         assertNotNull(openAPIService.findByName("test"));
     }
 
+    /**
+     * Test delete.
+     */
     @Test
     void testDelete() {
-        try {
-            OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
-            openAPIService.save(openAPI);
-            openAPIService.delete(openAPI);
+        OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
+        openAPIService.save(openAPI);
+        openAPIService.delete(openAPI);
+
+        assertThrows(IllegalArgumentException.class, () -> {
             openAPIService.findByName("test");
-        } catch (Exception e) {
-            assertEquals("OpenAPI with name does not exist: test", e.getMessage());
-        }
+        });
     }
 }

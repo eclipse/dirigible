@@ -11,13 +11,10 @@
 package org.eclipse.dirigible.components.data.csvim.domain;
 
 import java.util.Set;
-
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
 import com.google.gson.annotations.Expose;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -108,6 +105,11 @@ public class CsvFile extends Artefact {
     @Column(name = "CSV_FILE_DISTINGUISH_EMPTY_FROM_NULL", columnDefinition = "BOOLEAN")
     @Expose
     private Boolean distinguishEmptyFromNull;
+
+    /** The upsert. */
+    @Column(name = "CSV_FILE_UPSERT", columnDefinition = "boolean", nullable = false)
+    @Expose
+    private Boolean upsert = true; // default true
 
     /**
      * The csvim.
@@ -335,7 +337,6 @@ public class CsvFile extends Artefact {
         this.delimEnclosing = delimEnclosing;
     }
 
-
     /**
      * Gets the sequence.
      *
@@ -388,5 +389,23 @@ public class CsvFile extends Artefact {
      */
     public void setCsvim(Csvim csvim) {
         this.csvim = csvim;
+    }
+
+    /**
+     * Gets the upsert.
+     *
+     * @return the upsert
+     */
+    public Boolean getUpsert() {
+        return upsert;
+    }
+
+    /**
+     * Sets the upsert.
+     *
+     * @param upsert the new upsert
+     */
+    public void setUpsert(Boolean upsert) {
+        this.upsert = upsert;
     }
 }

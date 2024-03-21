@@ -108,11 +108,6 @@ public class InsertBuilder extends AbstractSqlBuilder {
      *
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-     */
     @Override
     public String generate() {
 

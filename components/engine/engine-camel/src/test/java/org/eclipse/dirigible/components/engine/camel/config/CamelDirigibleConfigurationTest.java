@@ -34,21 +34,31 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+/**
+ * The Class CamelDirigibleConfigurationTest.
+ */
 @ExtendWith(MockitoExtension.class)
 class CamelDirigibleConfigurationTest {
 
+    /** The camel context. */
     @Mock
     private CamelContext camelContext;
 
+    /** The camel request handler mapping. */
     @Mock
     private CamelRequestHandlerMapping camelRequestHandlerMapping;
 
+    /** The http engine. */
     @Mock
     private PlatformHttpEngine httpEngine;
 
+    /** The http component. */
     @Mock
     private PlatformHttpComponent httpComponent;
 
+    /**
+     * Test create camel request handler mapping.
+     */
     @Test
     void testCreateCamelRequestHandlerMapping() {
         when(camelContext.getComponent("platform-http", PlatformHttpComponent.class)).thenReturn(httpComponent);
@@ -60,6 +70,9 @@ class CamelDirigibleConfigurationTest {
         assertNotNull(res, "CamelRequestHandlerMapping should not be null");
     }
 
+    /**
+     * Test camel configuration has bean factory method we depend on.
+     */
     @Test
     void testCamelConfigurationHasBeanFactoryMethodWeDependOn() {
         try {
@@ -72,6 +85,9 @@ class CamelDirigibleConfigurationTest {
         }
     }
 
+    /**
+     * Test spring boot platform http auto configuration full name.
+     */
     @Test
     void testSpringBootPlatformHttpAutoConfigurationFullName() {
         assertEquals("org.apache.camel.component.platform.http.springboot.SpringBootPlatformHttpAutoConfiguration",
@@ -79,6 +95,9 @@ class CamelDirigibleConfigurationTest {
                 "Unexpected SpringBootPlatformHttpAutoConfiguration full class name");
     }
 
+    /**
+     * Test camel dirigible configuration correct spring annotations.
+     */
     @Test
     void testCamelDirigibleConfigurationCorrectSpringAnnotations() {
         var classAnnotations = CamelDirigibleConfiguration.class.getAnnotations();
@@ -88,6 +107,9 @@ class CamelDirigibleConfigurationTest {
         assertTrue(configuration.isPresent(), "No @Configuration found on CamelDirigibleConfiguration");
     }
 
+    /**
+     * Test camel dirigible configuration correct spring bean annotations.
+     */
     @Test
     void testCamelDirigibleConfigurationCorrectSpringBeanAnnotations() {
         Method beanFactoryMethod = getBeanFactoryMethodOrFail();
@@ -102,6 +124,9 @@ class CamelDirigibleConfigurationTest {
         assertTrue(primary.isPresent(), "No @Primary found on CamelDirigibleConfiguration");
     }
 
+    /**
+     * Test camel dirigible configuration bean factory method return type.
+     */
     @Test
     void testCamelDirigibleConfigurationBeanFactoryMethodReturnType() {
         Method beanFactoryMethod = getBeanFactoryMethodOrFail();
@@ -109,6 +134,13 @@ class CamelDirigibleConfigurationTest {
                 "Unexpected CamelDirigibleConfiguration::createCamelRequestHandlerMapping return type");
     }
 
+    /**
+     * First annotation with class.
+     *
+     * @param annotations the annotations
+     * @param annotationClass the annotation class
+     * @return the optional
+     */
     private static Optional<Annotation> firstAnnotationWithClass(Annotation[] annotations, Class<?> annotationClass) {
         return Arrays.stream(annotations)
                      .filter(a -> a.annotationType()
@@ -116,6 +148,11 @@ class CamelDirigibleConfigurationTest {
                      .findFirst();
     }
 
+    /**
+     * Gets the bean factory method or fail.
+     *
+     * @return the bean factory method or fail
+     */
     private static Method getBeanFactoryMethodOrFail() {
         try {
             return CamelDirigibleConfiguration.class.getMethod("createCamelRequestHandlerMapping", CamelContext.class,

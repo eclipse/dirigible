@@ -12,15 +12,13 @@ package org.eclipse.dirigible.components.data.csvim.processor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-
 import java.io.ByteArrayInputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import javax.sql.DataSource;
-
 import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
+import org.eclipse.dirigible.components.data.sources.config.DefaultDataSourceName;
+import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -38,9 +36,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CsvProcessorTest {
 
-    /** The datasource. */
+    /** The default data source name. */
     @Autowired
-    private DataSource datasource;
+    @DefaultDataSourceName
+    private String defaultDataSourceName;
+
+    /** The data source manager. */
+    @Autowired
+    private DataSourcesManager dataSourceManager;
 
     /** The csvim processor. */
     @Autowired
@@ -53,14 +56,15 @@ public class CsvProcessorTest {
      */
     @Test
     public void importStrict() throws SQLException {
-        try (Connection connection = datasource.getConnection()) {
+        try (Connection connection = dataSourceManager.getDefaultDataSource()
+                                                      .getConnection()) {
             connection.createStatement()
                       .execute("CREATE TABLE CSV_A (A1 INT PRIMARY KEY, A2 VARCHAR(20), A3 VARCHAR(20))");
             try {
                 csvimProcessor.setStrictMode(true);
                 byte[] content = "A1,A2,A3\n1,a2_1,a3_1\n2,a2_2,a3_2".getBytes();
                 CsvFile csvFile = new CsvFile(null, "CSV_A", null, "import", true, true, ",", "\"", null, false, null);
-                csvimProcessor.process(csvFile, new ByteArrayInputStream(content), connection);
+                csvimProcessor.process(csvFile, new ByteArrayInputStream(content), defaultDataSourceName);
                 ResultSet rs = connection.createStatement()
                                          .executeQuery("SELECT COUNT(*) FROM CSV_A");
                 if (rs.next()) {
@@ -86,7 +90,8 @@ public class CsvProcessorTest {
      */
     @Test
     public void importStrictNegative() throws SQLException {
-        try (Connection connection = datasource.getConnection()) {
+        try (Connection connection = dataSourceManager.getDefaultDataSource()
+                                                      .getConnection()) {
             connection.createStatement()
                       .execute("CREATE TABLE CSV_A (A1 INT PRIMARY KEY, A2 VARCHAR(20), A3 VARCHAR(20))");
             try {
@@ -94,7 +99,7 @@ public class CsvProcessorTest {
                 byte[] content = "A1,A2\n1,a2_1\n2,a2_2".getBytes();
                 CsvFile csvFile = new CsvFile(null, "CSV_A", null, "import", true, true, ",", "\"", null, false, null);
                 try {
-                    csvimProcessor.process(csvFile, new ByteArrayInputStream(content), connection);
+                    csvimProcessor.process(csvFile, new ByteArrayInputStream(content), defaultDataSourceName);
                 } catch (Exception e) {
                     //
                 }
@@ -121,7 +126,8 @@ public class CsvProcessorTest {
      */
     @Test
     public void importNonStrictMode() throws SQLException {
-        try (Connection connection = datasource.getConnection()) {
+        try (Connection connection = dataSourceManager.getDefaultDataSource()
+                                                      .getConnection()) {
             connection.createStatement()
                       .execute("CREATE TABLE CSV_A (A1 INT PRIMARY KEY, A2 VARCHAR(20), A3 VARCHAR(20))");
             try {
@@ -129,7 +135,7 @@ public class CsvProcessorTest {
                 byte[] content = "A1,A2\n1,a2_1\n2,a2_2".getBytes();
                 CsvFile csvFile = new CsvFile(null, "CSV_A", null, "import", true, true, ",", "\"", null, false, null);
                 try {
-                    csvimProcessor.process(csvFile, new ByteArrayInputStream(content), connection);
+                    csvimProcessor.process(csvFile, new ByteArrayInputStream(content), defaultDataSourceName);
                 } catch (Exception e) {
                     //
                 }
@@ -158,7 +164,8 @@ public class CsvProcessorTest {
      */
     @Test
     public void importNonStrictModeScrumbled() throws SQLException {
-        try (Connection connection = datasource.getConnection()) {
+        try (Connection connection = dataSourceManager.getDefaultDataSource()
+                                                      .getConnection()) {
             connection.createStatement()
                       .execute("CREATE TABLE CSV_A (A1 INT PRIMARY KEY, A2 VARCHAR(20), A3 VARCHAR(20))");
             try {
@@ -166,7 +173,7 @@ public class CsvProcessorTest {
                 byte[] content = "A1,A3,A2,A4\n1,a3_1,a2_1,a4_1\n2,a3_2,a2_3,a4_1".getBytes();
                 CsvFile csvFile = new CsvFile(null, "CSV_A", null, "import", true, true, ",", "\"", null, false, null);
                 try {
-                    csvimProcessor.process(csvFile, new ByteArrayInputStream(content), connection);
+                    csvimProcessor.process(csvFile, new ByteArrayInputStream(content), defaultDataSourceName);
                 } catch (Exception e) {
                     //
                 }

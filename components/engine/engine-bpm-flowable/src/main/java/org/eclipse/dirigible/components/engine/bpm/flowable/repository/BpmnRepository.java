@@ -10,14 +10,28 @@
  */
 package org.eclipse.dirigible.components.engine.bpm.flowable.repository;
 
+import org.eclipse.dirigible.components.base.artefact.ArtefactRepository;
 import org.eclipse.dirigible.components.engine.bpm.flowable.domain.Bpmn;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The Interface BpmnRepository.
  */
 @Repository("bpmnRepository")
-public interface BpmnRepository extends JpaRepository<Bpmn, Long> {
+public interface BpmnRepository extends ArtefactRepository<Bpmn, Long> {
 
+    /**
+     * Sets the running to all.
+     *
+     * @param running the new running to all
+     */
+    @Override
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE Bpmn SET running = :running")
+    void setRunningToAll(@Param("running") boolean running);
 }

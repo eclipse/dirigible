@@ -29,6 +29,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JavascriptGenerationEngine implements TemplateEngine {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(JavascriptGenerationEngine.class);
 
     /** The Constant ENGINE_NAME. */

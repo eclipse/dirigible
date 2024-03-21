@@ -12,7 +12,7 @@ package org.eclipse.dirigible.components.initializers.definition;
 
 import java.util.List;
 import java.util.Optional;
-
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -63,9 +63,8 @@ public class DefinitionService {
         Optional<Definition> definition = definitionRepository.findById(id);
         if (definition.isPresent()) {
             return definition.get();
-        } else {
-            throw new IllegalArgumentException("Definition with id does not exist: " + id);
         }
+        throw new IllegalArgumentException("Definition with id does not exist: " + id);
     }
 
     /**
@@ -121,6 +120,16 @@ public class DefinitionService {
      */
     public void delete(Definition definition) {
         definitionRepository.delete(definition);
+    }
+
+    /**
+     * Update checksums.
+     *
+     * @param checksum the checksum
+     * @param types the types
+     */
+    public void updateChecksums(String checksum, Set<String> types) {
+        definitionRepository.updateChecksums(checksum, types);
     }
 
 }
