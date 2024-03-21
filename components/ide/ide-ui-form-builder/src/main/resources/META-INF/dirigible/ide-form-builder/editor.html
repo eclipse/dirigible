@@ -18,6 +18,7 @@
         <title dg-view-title></title>
         <script type="text/javascript" src="services/editor.js"></script>
         <theme></theme>
+        <script type="text/javascript" src="js/Sortable.js"></script>
         <link type="text/css" rel="stylesheet" data-name="vs/editor/editor.main"
             href="/services/js/resources-core/services/loader.js?id=code-editor-css" />
         <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
@@ -50,20 +51,22 @@
             </fd-icon-tab-bar-tablist>
             <fd-icon-tab-bar-panel class="dg-hbox" tab-id="designer" ng-show="selectedTab === 'designer'">
                 <fd-scrollbar class="dg-list-border-right">
-                    <fd-panel expanded="true" ng-repeat="(key, group) in builderComponents">
+                    <fd-panel expanded="true" ng-repeat="componentGroup in builderComponents track by $index">
                         <fd-panel-header>
                             <fd-panel-expand></fd-panel-expand>
-                            <h4 fd-panel-title>{{key}}</h4>
+                            <h4 fd-panel-title>{{::componentGroup.label}}</h4>
                         </fd-panel-header>
-                        <fd-panel-content aria-label="{{key}} Group Content"
+                        <fd-panel-content aria-label="{{componentGroup.label}} Group Content"
                             class="fd-padding--none dg-no-border-bottom">
-                            <fd-list>
-                                <fd-list-item ng-repeat="control in group" ng-on-dragstart="drag($event, control)"
-                                    draggable="true" title="{{control.description}}">
-                                    <fd-list-icon glyph="{{control.icon}}"
-                                        ng-attr-rotate="{{control.iconRotate ? '90' : undefined}}">
+                            <fd-list id="{{::componentGroup.id}}" data-type="componentPanel">
+                                <fd-list-item ng-repeat="control in componentGroup.items track by $index"
+                                    data-pindex="{{::$parent.$index}}" data-cindex="{{::$index}}"
+                                    title="{{::control.description}}"
+                                    ng-init="$last && initControlGroup(componentGroup.id)">
+                                    <fd-list-icon glyph="{{::control.icon}}"
+                                        ng-attr-rotate="{{::control.iconRotate ? '90' : undefined}}">
                                     </fd-list-icon>
-                                    <fd-list-title>{{control.label}}</fd-list-title>
+                                    <fd-list-title>{{::control.label}}</fd-list-title>
                                 </fd-list-item>
                             </fd-list>
                         </fd-panel-content>
@@ -72,15 +75,18 @@
                 <div style="flex:1">
                     <fd-toolbar has-title="false">
                         <fd-toolbar-spacer></fd-toolbar-spacer>
-                        <fd-button compact="true" dg-type="transparent" glyph="sap-icon--save" dg-label="Save"
-                            aria-label="save" ng-click="save()" state="{{ isFormValid() ? '' : 'disabled'}}">
+                        <fd-button dg-type="transparent" dg-toggled="state.preview" glyph="sap-icon--show"
+                            title="Toggle preview" dg-label="Preview" aria-label="Toggle preview"
+                            ng-click="togglePreview()">
                         </fd-button>
-                        <!-- <fd-toolbar-separator></fd-toolbar-separator> -->
+                        <fd-button dg-type="transparent" glyph="sap-icon--save" dg-label="Save" aria-label="save"
+                            ng-click="save()" state="{{ isFormValid() ? '' : 'disabled'}}">
+                        </fd-button>
                     </fd-toolbar>
                     <fd-scrollbar class="fd-padding">
-                        <div id="formContainer" class="dg-checkered-bg dg-vbox fb-main-dnd-area dg-restrict-width"
-                            ng-attr-disabled="{{state.canSave === false || undefined}}" ng-on-drop="drop($event)"
-                            ng-on-dragover="allowDrop($event)" data-type="container-vbox">
+                        <div id="formContainer" class="dg-checkered-bg dg-vbox fb-main-container dg-restrict-width"
+                            ng-attr-disabled="{{state.canSave === false || undefined}}" data-preview="{{state.preview}}"
+                            data-type="container-main" dg-contextmenu="contextMenuContent">
                         </div>
                     </fd-scrollbar>
                 </div>
@@ -150,7 +156,7 @@
 
                                         <fd-form-item ng-if="item.type === 'checkbox'">
                                             <fd-checkbox id="{{ 'p' + key }}" ng-model="item.value"
-                                                state="{'error' : item.error }">
+                                                state="{'error' : item.error }" ng-change="fileChanged()">
                                             </fd-checkbox>
                                             <fd-checkbox-label for="{{ 'p' + key }}">{{ item.label }}
                                             </fd-checkbox-label>
@@ -163,7 +169,7 @@
                                             </fd-form-label>
                                             <fd-select dg-placeholder="{{ item.placeholder }}"
                                                 label-id="{{ 'p' + key }}" ng-required="item.required"
-                                                ng-model="item.value" dropdown-fixed="true">
+                                                ng-model="item.value" ng-change="fileChanged()" dropdown-fixed="true">
                                                 <fd-option text="{{ menuItem.label }}" value="menuItem.value"
                                                     ng-repeat="menuItem in item.items">
                                                 </fd-option>
@@ -229,7 +235,7 @@
                             </fd-fieldset>
                             <fd-button ng-show="selectedContainerId" glyph="sap-icon--delete"
                                 dg-label="Delete container" title="Delete container" dg-type="negative"
-                                aria-label="Delete container" ng-click="deleteControl(selectedContainerId)">
+                                aria-label="Delete container" ng-click="deleteControl(selectedContainerId, true)">
                             </fd-button>
                         </fd-panel-content>
                     </fd-panel>

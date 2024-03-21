@@ -876,7 +876,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * compact: Boolean - Input size.
          * dgId: String - The input id.
          * dgDisabled: Boolean - If the input is disabled.
-         * dgReqired: Boolen - If the input is required.
+         * dgRequired: Boolen - If the input is required.
          * dgMin: Number - Minimum input value.
          * dgMin: Number - Maximum input value.
          * dgStep: Number - Input step.

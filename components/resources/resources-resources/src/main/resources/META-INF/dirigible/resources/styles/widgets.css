@@ -262,6 +262,18 @@ i.fd-list__icon[rotate="90"]::before {
   flex-wrap: nowrap;
 }
 
+.dg-box--stretch-items {
+  justify-content: stretch;
+}
+
+.dg-box--stretch-items>* {
+  width: 100%;
+}
+
+.dg-box--gap {
+  gap: .5rem;
+}
+
 .dg-no-border {
   border: none;
 }
@@ -445,6 +457,12 @@ i.fd-list__icon[rotate="90"]::before {
   white-space: pre;
   font-size: var(--sapFontSmallSize, .9em);
   font-style: italic;
+}
+
+/* fd-input additions */
+
+.fd-input[type="color"] {
+  padding: 0;
 }
 
 /* Tool header fixes */
