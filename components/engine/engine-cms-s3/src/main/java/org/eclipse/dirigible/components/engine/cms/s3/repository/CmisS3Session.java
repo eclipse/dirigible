@@ -24,7 +24,7 @@ public class CmisS3Session implements CmisSession {
     /**
      * The cmis repository.
      */
-    private CmisRepository cmisRepository;
+    private final CmisRepository cmisRepository;
 
     /**
      * Instantiates a new cmis session.
@@ -32,7 +32,6 @@ public class CmisS3Session implements CmisSession {
      * @param cmisRepository the cmis repository
      */
     public CmisS3Session(CmisRepository cmisRepository) {
-        super();
         this.cmisRepository = cmisRepository;
     }
 
@@ -75,6 +74,23 @@ public class CmisS3Session implements CmisSession {
     }
 
     /**
+     * Returns a CMIS Object by path.
+     *
+     * @param path the path
+     * @return CMIS Object
+     * @throws IOException IO Exception
+     */
+    @Override
+    public CmisS3Object getObjectByPath(String path) throws IOException {
+        // Just for debugging
+        // if(!path.equals("__internal/roles-access.json")) {
+        // return getObject(path);
+        // }
+        // return new CmisS3Object(this, "/", "/");
+        return getObject(path);
+    }
+
+    /**
      * Returns a CMIS Object by name.
      *
      * @param id the Id
@@ -100,22 +116,5 @@ public class CmisS3Session implements CmisSession {
             return new CmisS3Folder(this, path, CmisS3Utils.findCurrentFolder(path + "/"));
         }
         return new CmisS3Document(this, id, id);
-    }
-
-    /**
-     * Returns a CMIS Object by path.
-     *
-     * @param path the path
-     * @return CMIS Object
-     * @throws IOException IO Exception
-     */
-    @Override
-    public CmisS3Object getObjectByPath(String path) throws IOException {
-        // Just for debugging
-        // if(!path.equals("__internal/roles-access.json")) {
-        // return getObject(path);
-        // }
-        // return new CmisS3Object(this, "/", "/");
-        return getObject(path);
     }
 }

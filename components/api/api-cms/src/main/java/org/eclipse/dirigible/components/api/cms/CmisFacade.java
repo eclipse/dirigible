@@ -14,6 +14,7 @@ import jakarta.servlet.ServletException;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.api.http.HttpRequestFacade;
 import org.eclipse.dirigible.components.engine.cms.CmsProvider;
+import org.eclipse.dirigible.components.engine.cms.CmsProviderFactory;
 import org.eclipse.dirigible.components.security.domain.Access;
 import org.eclipse.dirigible.components.security.verifier.AccessVerifier;
 import org.slf4j.Logger;
@@ -25,7 +26,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -56,18 +56,14 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
     private static CmisFacade INSTANCE;
     /** The security access verifier. */
     private final AccessVerifier securityAccessVerifier;
-    /** The cms provider. */
-    private final List<CmsProvider> cmsProvider;
 
     /**
      * Instantiates a new cmis facade.
      *
-     * @param cmsProvider the cms provider
      * @param securityAccessVerifier the security access verifier
      */
     @Autowired
-    public CmisFacade(List<CmsProvider> cmsProvider, AccessVerifier securityAccessVerifier) {
-        this.cmsProvider = cmsProvider;
+    public CmisFacade(AccessVerifier securityAccessVerifier) {
         this.securityAccessVerifier = securityAccessVerifier;
     }
 
@@ -79,15 +75,6 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         INSTANCE = this;
-    }
-
-    /**
-     * Gets the cms provider.
-     *
-     * @return the cms provider
-     */
-    protected List<CmsProvider> getCmsProvider() {
-        return cmsProvider;
     }
 
     /**
@@ -107,8 +94,9 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
      */
     public static final Object getSession() {
         String type = Configuration.get("DIRIGIBLE_CMS_PROVIDER", "cms-provider-internal");
-        Object session = ((CmsProvider) applicationContext.getBean(type)).getSession();
-        return session;
+        CmsProviderFactory cmsProviderFactory = applicationContext.getBean(type, CmsProviderFactory.class);
+        CmsProvider cmsProvider = cmsProviderFactory.create();
+        return cmsProvider.getSession();
     }
 
     /**

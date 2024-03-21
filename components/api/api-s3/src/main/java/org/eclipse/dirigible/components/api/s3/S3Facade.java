@@ -201,7 +201,7 @@ public class S3Facade implements InitializingBean {
         try {
             s3.createBucket(createBucketRequest);
         } catch (BucketAlreadyOwnedByYouException ignored) {
-            logger.info("Bucket: [" + bucket + "] already created", ignored);
+            logger.debug("Bucket: [" + bucket + "] already created", ignored);
         }
     }
 
@@ -311,7 +311,7 @@ public class S3Facade implements InitializingBean {
                                                     .headObject(objectRequest);
             objectHead.contentType();
             return true;
-        } catch (BucketAlreadyExistsException | NoSuchKeyException ex) {
+        } catch (BucketAlreadyExistsException | NoSuchKeyException | BucketAlreadyOwnedByYouException ex) {
             logger.debug("[{}] already exists", keyName, ex);
             return false;
         } catch (S3Exception ex) {

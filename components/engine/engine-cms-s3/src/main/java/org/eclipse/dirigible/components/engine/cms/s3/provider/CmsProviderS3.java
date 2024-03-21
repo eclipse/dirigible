@@ -23,35 +23,24 @@ import java.io.IOException;
 public class CmsProviderS3 implements CmsProvider {
 
     /**
-     * The Constant CMS.
-     */
-    private static final String CMS = "cms"; //$NON-NLS-1$
-
-    /**
      * The Constant NAME.
      */
     public static final String NAME = "repository"; //$NON-NLS-1$
-
     /**
      * The Constant TYPE.
      */
     public static final String TYPE = "s3"; //$NON-NLS-1$
-
+    /**
+     * The Constant CMS.
+     */
+    private static final String CMS = "cms"; //$NON-NLS-1$
     /**
      * The cmis repository.
      */
-    private CmisRepository cmisRepository;
+    private final CmisRepository cmisRepository;
 
-    /** The S3Facade. */
-    private String S3_ROOT = "/";
-
-    /**
-     * Instantiates a new cms provider s3.
-     *
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public CmsProviderS3() throws IOException {
-        this.cmisRepository = CmisRepositoryFactory.createCmisRepository(S3_ROOT);
+    public CmsProviderS3(String tenantFolder) throws IOException {
+        this.cmisRepository = CmisRepositoryFactory.createCmisRepository(tenantFolder + "/");
     }
 
     /**

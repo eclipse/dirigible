@@ -10,10 +10,6 @@
  */
 package org.eclipse.dirigible.components.engine.cms.s3.repository;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.*;
-
 import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.api.s3.S3Facade;
@@ -21,6 +17,10 @@ import org.eclipse.dirigible.components.engine.cms.CmisConstants;
 import org.eclipse.dirigible.components.engine.cms.CmisFolder;
 import org.eclipse.dirigible.repository.api.IRepository;
 import software.amazon.awssdk.services.s3.model.S3Object;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * The Class CmisS3Folder.
@@ -30,23 +30,18 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
     /**
      * The session.
      */
-    private CmisS3Session session;
+    private final CmisS3Session session;
 
     /** The id. */
-    private String id;
+    private final String id;
 
     /** The name. */
-    private String name;
+    private final String name;
 
     /**
      * Is root folder.
      */
-    private boolean rootFolder = false;
-
-    /**
-     * The root folder.
-     */
-    private static String ROOT = "/";
+    private final boolean rootFolder;
 
     /**
      * Instantiates a new folder.
@@ -57,8 +52,10 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
     public CmisS3Folder(CmisS3Session session) throws IOException {
         super(session, IRepository.SEPARATOR, IRepository.SEPARATOR);
         this.session = session;
-        this.id = ROOT;
-        this.name = ROOT;
+        String repoRootFolder = session.getCmisRepository()
+                                       .getRootFolder();
+        this.id = repoRootFolder;
+        this.name = repoRootFolder;
         this.rootFolder = true;
     }
 
@@ -73,9 +70,9 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
     public CmisS3Folder(CmisS3Session session, String id, String name) throws IOException {
         super(session, id, name);
         id = sanitize(id);
-        if (IRepository.SEPARATOR.equals(id)) {
-            this.rootFolder = true;
-        }
+        this.rootFolder = Objects.equals(session.getCmisRepository()
+                                                .getRootFolder(),
+                id);
         this.session = session;
         this.id = id;
         this.name = name;
@@ -120,15 +117,16 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
     public CmisS3Folder createFolder(Map<String, String> properties) throws IOException {
         String folderName;
         String name = properties.get(CmisConstants.NAME);
-        if (!Objects.equals(this.id, ROOT)) {
+        if (Objects.equals(this.id, session.getCmisRepository()
+                                           .getRootFolder())) {
+            folderName = name + IRepository.SEPARATOR;
+            S3Facade.put(folderName, new byte[0], "");
+            return new CmisS3Folder(this.session, folderName, folderName);
+        } else {
             String fromRootPath = this.id + name + IRepository.SEPARATOR;
             folderName = fromRootPath.startsWith(IRepository.SEPARATOR) ? fromRootPath.substring(1) : fromRootPath;
             S3Facade.put(folderName, new byte[0], "");
             return new CmisS3Folder(this.session, fromRootPath, folderName);
-        } else {
-            folderName = name + IRepository.SEPARATOR;
-            S3Facade.put(folderName, new byte[0], "");
-            return new CmisS3Folder(this.session, folderName, folderName);
         }
     }
 
@@ -144,18 +142,23 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
     public CmisS3Document createDocument(Map<String, String> properties, CmisS3ContentStream contentStream, VersioningState versioningState)
             throws IOException {
         String name = properties.get(CmisConstants.NAME);
+        String folderName = createFolderName(name);
+
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         IOUtils.copy(contentStream.getStream(), out);
-        String folderName;
-        if (!Objects.equals(this.id, ROOT)) {
-            String fromRootPath = this.id + name;
-            folderName = fromRootPath.startsWith(IRepository.SEPARATOR) ? fromRootPath.substring(1) : fromRootPath;
-            S3Facade.put(folderName, out.toByteArray(), contentStream.getMimeType());
-        } else {
-            folderName = this.id + name;
-            S3Facade.put(folderName, out.toByteArray(), contentStream.getMimeType());
-        }
+
+        S3Facade.put(folderName, out.toByteArray(), contentStream.getMimeType());
         return new CmisS3Document(this.session, IRepository.SEPARATOR + folderName, name);
+    }
+
+    private String createFolderName(String name) {
+        if (Objects.equals(this.id, session.getCmisRepository()
+                                           .getRootFolder())) {
+            return this.id + name;
+        } else {
+            String fromRootPath = this.id + name;
+            return fromRootPath.startsWith(IRepository.SEPARATOR) ? fromRootPath.substring(1) : fromRootPath;
+        }
     }
 
     /**
@@ -165,32 +168,29 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public List<CmisS3Object> getChildren() throws IOException {
-        List<CmisS3Object> children = new ArrayList<CmisS3Object>();
+        String path = this.id.startsWith(IRepository.SEPARATOR) && this.id.length() > 1 ? this.id.substring(1) : this.id;
 
-        String path;
-        if (this.id.startsWith(IRepository.SEPARATOR) && this.id.length() > 1) {
-            path = this.id.substring(1);
-        } else {
-            path = this.id;
-        }
+        List<String> objectKeys = S3Facade.listObjects(path)
+                                          .stream()
+                                          .map(S3Object::key)
+                                          .toList();
+        Set<S3ObjectUtil.S3ObjectDescriptor> descriptors = S3ObjectUtil.getDirectChildren(this.id, objectKeys);
+        return createDirectChildren(descriptors);
+    }
 
-        List<S3Object> s3CurrentFolderObjects = S3Facade.listObjects(path);
-        for (S3Object s3Object : s3CurrentFolderObjects) {
-            int segmentsPath = CmisS3Utils.pathSegmentsLength(path);
-            int segmentsObject = CmisS3Utils.pathSegmentsLength(s3Object.key());
-            if (segmentsObject == segmentsPath + 1) {
-                if (s3Object.key()
-                            .endsWith(IRepository.SEPARATOR)) {
-                    if (!s3Object.key()
-                                 .equals(path)) {
-                        children.add(new CmisS3Folder(this.session, this.id, CmisS3Utils.findCurrentFolder((s3Object.key()))));
-                    }
-                } else {
-                    children.add(new CmisS3Document(this.session, this.id, CmisS3Utils.findCurrentFile(s3Object.key())));
-                }
+    private List<CmisS3Object> createDirectChildren(Set<S3ObjectUtil.S3ObjectDescriptor> descriptors) throws IOException {
+        List<CmisS3Object> directChildren = new ArrayList<>(descriptors.size());
+        for (S3ObjectUtil.S3ObjectDescriptor descriptor : descriptors) {
+            if (descriptor.isFolder()) {
+                CmisS3Folder folder = new CmisS3Folder(this.session, this.id, descriptor.getName());
+                directChildren.add(folder);
+            }
+            if (descriptor.isFile()) {
+                CmisS3Document document = new CmisS3Document(this.session, this.id, descriptor.getName());
+                directChildren.add(document);
             }
         }
-        return children;
+        return directChildren;
     }
 
     /**
@@ -215,4 +215,5 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
         }
         return new CmisS3Folder(this.session);
     }
+
 }

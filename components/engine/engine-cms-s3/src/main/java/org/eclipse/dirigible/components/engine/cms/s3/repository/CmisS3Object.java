@@ -10,14 +10,11 @@
  */
 package org.eclipse.dirigible.components.engine.cms.s3.repository;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.eclipse.dirigible.components.api.s3.S3Facade;
 import org.eclipse.dirigible.components.engine.cms.CmisObject;
 import org.eclipse.dirigible.components.engine.cms.ObjectType;
-import org.eclipse.dirigible.repository.api.IEntity;
-import software.amazon.awssdk.services.s3.model.S3Object;
+
+import java.io.IOException;
 
 /**
  * The Class CmisS3Object.
@@ -27,20 +24,17 @@ public class CmisS3Object implements CmisObject {
     /**
      * The session.
      */
-    private CmisS3Session session;
-
+    private final CmisS3Session session;
+    /**
+     * The id/path of the object.
+     */
+    private final String id;
+    /** The name. */
+    private final String name;
     /**
      * The type collection.
      */
     private boolean typeCollection = false;
-
-    /**
-     * The id/path of the object.
-     */
-    private String id;
-
-    /** The name. */
-    private String name;
 
     /**
      * Instantiates a new cmis object.
@@ -56,20 +50,7 @@ public class CmisS3Object implements CmisObject {
         id = sanitize(id);
         this.id = id;
         this.name = name;
-        if (id.endsWith("/")) {
-            this.typeCollection = true;
-        } else {
-            this.typeCollection = false;
-        }
-    }
-
-    /**
-     * Checks if is collection.
-     *
-     * @return true, if is collection
-     */
-    protected boolean isCollection() {
-        return typeCollection;
+        this.typeCollection = id.endsWith("/");
     }
 
     /**
@@ -80,7 +61,8 @@ public class CmisS3Object implements CmisObject {
      */
     @Override
     public String sanitize(String path) {
-        return path.replace("\\", "");
+        return path.replace("\\", "")
+                   .replaceAll("\\/\\/", "/");
     }
 
     /**
@@ -114,6 +96,26 @@ public class CmisS3Object implements CmisObject {
     }
 
     /**
+     * Checks if is collection.
+     *
+     * @return true, if is collection
+     */
+    protected boolean isCollection() {
+        return typeCollection;
+    }
+
+    /**
+     * Delete this CmisS3Object.
+     *
+     * @param allVersions whether to delete all versions
+     * @throws IOException IO Exception
+     */
+    @Override
+    public void delete(boolean allVersions) throws IOException {
+        delete();
+    }
+
+    /**
      * Delete this CmisS3Object.
      *
      * @throws IOException IO Exception
@@ -126,17 +128,6 @@ public class CmisS3Object implements CmisObject {
         } else {
             S3Facade.delete(cmisPath);
         }
-    }
-
-    /**
-     * Delete this CmisS3Object.
-     *
-     * @param allVersions whether to delete all versions
-     * @throws IOException IO Exception
-     */
-    @Override
-    public void delete(boolean allVersions) throws IOException {
-        delete();
     }
 
     /**

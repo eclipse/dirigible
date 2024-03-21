@@ -10,8 +10,6 @@
  */
 package org.eclipse.dirigible.components.engine.cms.s3.repository;
 
-import org.eclipse.dirigible.components.api.s3.S3Facade;
-
 import java.io.IOException;
 
 /**
@@ -19,20 +17,16 @@ import java.io.IOException;
  */
 public class CmisS3Repository implements CmisRepository {
 
-    /**
-     * The S3Facade representation of repository.
-     */
-    private String S3_ROOT = "/";
+    private final String rootFolder;
 
     /**
      * Instantiates a new cmis s3 repository.
      *
-     * @param root the root
+     * @param rootFolder the rootFolder
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public CmisS3Repository(String root) throws IOException {
-        super();
-        this.S3_ROOT = root;
+    public CmisS3Repository(String rootFolder) throws IOException {
+        this.rootFolder = rootFolder;
     }
 
     /**
@@ -43,6 +37,11 @@ public class CmisS3Repository implements CmisRepository {
     @Override
     public CmisS3Session getSession() {
         return new CmisS3Session(this);
+    }
+
+    @Override
+    public String getRootFolder() {
+        return rootFolder;
     }
 
 }
