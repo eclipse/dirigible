@@ -48,6 +48,11 @@
                 </fd-icon-tab-bar-tab>
                 <fd-icon-tab-bar-tab label="Scripts" tab-id="scripts" ng-click="switchTab('scripts')">
                 </fd-icon-tab-bar-tab>
+                <dg-icon-tab-bar-buttons dg-align="right">
+                    <fd-button dg-type="transparent" glyph="sap-icon--save" dg-label="Save" aria-label="save"
+                        ng-click="save()" state="{{ isFormValid() && isFileChanged ? '' : 'disabled'}}">
+                    </fd-button>
+                </dg-icon-tab-bar-buttons>
             </fd-icon-tab-bar-tablist>
             <fd-icon-tab-bar-panel class="dg-hbox" tab-id="designer" ng-show="selectedTab === 'designer'">
                 <fd-scrollbar class="dg-list-border-right">
@@ -79,14 +84,12 @@
                             title="Toggle preview" dg-label="Preview" aria-label="Toggle preview"
                             ng-click="togglePreview()">
                         </fd-button>
-                        <fd-button dg-type="transparent" glyph="sap-icon--save" dg-label="Save" aria-label="save"
-                            ng-click="save()" state="{{ isFormValid() && isFileChanged ? '' : 'disabled'}}">
-                        </fd-button>
                     </fd-toolbar>
                     <fd-scrollbar class="fd-padding">
                         <div id="formContainer" class="dg-checkered-bg dg-vbox fb-main-container dg-restrict-width"
                             ng-attr-disabled="{{state.canSave === false || undefined}}" data-preview="{{state.preview}}"
-                            data-type="container-main" dg-contextmenu="contextMenuContent">
+                            data-type="container-main" dg-contextmenu="contextMenuContent" dg-shortcut="'delete'"
+                            dg-shortcut-action="deleteSelected()">
                         </div>
                     </fd-scrollbar>
                 </div>

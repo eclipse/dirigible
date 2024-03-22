@@ -715,14 +715,14 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
                     props: {
                         id: {
                             type: 'text',
-                            label: 'Radio group name',
+                            label: 'Name',
                             placeholder: 'The name of the radio button(s)',
                             value: '',
                             required: true
                         },
                         name: {
                             type: 'text',
-                            label: 'Radio group name',
+                            label: 'Group title',
                             value: 'Radio group',
                             placeholder: '',
                         },
@@ -980,6 +980,7 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
 
     $scope.showProps = function (event) {
         if ($scope.state.canSave) {
+            $scope.selectedContainerId = undefined;
             if ($scope.selectedCtrlId) {
                 removeSelection();
             }
@@ -1049,11 +1050,11 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
             function (msg) {
                 if (msg.data.buttonId === "b1") {
                     $scope.$apply(function () {
-                        $scope.fileChanged();
                         options.push({
                             label: msg.data.formData[0].value,
                             value: msg.data.formData[1].value
                         });
+                        $scope.fileChanged();
                     });
                 }
                 messageHub.hideFormDialog('formEditorAddListItem');
@@ -1109,10 +1110,10 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
             function (msg) {
                 if (msg.data.buttonId === "b1") {
                     $scope.$apply(function () {
-                        $scope.fileChanged();
                         listItem.label = msg.data.formData[0].value;
                         listItem.value = msg.data.formData[1].value;
                     });
+                    $scope.fileChanged();
                 }
                 messageHub.hideFormDialog('formEditorEditListItem');
                 messageHub.unsubscribe(handler);
@@ -1164,11 +1165,11 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
             function (msg) {
                 if (msg.data.buttonId === "b1") {
                     $scope.$apply(function () {
-                        $scope.fileChanged();
                         $scope.formData.feeds.push({
                             name: msg.data.formData[0].value,
                             url: msg.data.formData[1].value
                         });
+                        $scope.fileChanged();
                     });
                 }
                 messageHub.hideFormDialog('formEditorAddFeed');
@@ -1221,9 +1222,9 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
             function (msg) {
                 if (msg.data.buttonId === "b1") {
                     $scope.$apply(function () {
-                        $scope.fileChanged();
                         feed.name = msg.data.formData[0].value;
                         feed.url = msg.data.formData[1].value;
+                        $scope.fileChanged();
                     });
                 }
                 messageHub.hideFormDialog('formEditorEditFeed');
@@ -1280,11 +1281,11 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
             function (msg) {
                 if (msg.data.buttonId === "b1") {
                     $scope.$apply(function () {
-                        $scope.fileChanged();
                         $scope.formData.scripts.push({
                             name: msg.data.formData[0].value,
                             url: msg.data.formData[1].value
                         });
+                        $scope.fileChanged();
                     });
                 }
                 messageHub.hideFormDialog('formEditorAddScript');
@@ -1333,19 +1334,18 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
         );
 
         const handler = messageHub.onDidReceiveMessage(
-            'formEditor.dialogs.editFeed',
+            'dialogs.editScript',
             function (msg) {
                 if (msg.data.buttonId === "b1") {
                     $scope.$apply(function () {
+                        script.name = msg.data.formData[0].value;
+                        script.url = msg.data.formData[1].value;
                         $scope.fileChanged();
-                        feed.name = msg.data.formData[0].value;
-                        feed.url = msg.data.formData[1].value;
                     });
                 }
-                messageHub.hideFormDialog('formEditorEditFeed');
+                messageHub.hideFormDialog('formEditorEditScript');
                 messageHub.unsubscribe(handler);
-            },
-            true
+            }
         );
     };
 
@@ -1549,6 +1549,14 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
             }
         }
     };
+
+    $scope.deleteSelected = function () {
+        if ($scope.selectedCtrlId) {
+            $scope.deleteControl($scope.selectedCtrlId);
+        } else if ($scope.selectedContainerId) {
+            $scope.deleteControl($scope.selectedContainerId, true);
+        }
+    }
 
     messageHub.onDidReceiveMessage(
         'contextmenu',
