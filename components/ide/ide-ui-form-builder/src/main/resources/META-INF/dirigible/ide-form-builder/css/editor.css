@@ -24,6 +24,10 @@ div.fb-main-container[data-preview=true] div[data-type="container"] {
     outline: none;
 }
 
+div.fb-main-container[data-preview=true] div[data-type="container"]>div.fb-control-wrapper {
+    padding: 0;
+}
+
 div.fb-main-container[data-preview=true] div.dg-hbox {
     gap: .5rem;
 }
@@ -83,7 +87,6 @@ div.dg-vbox[data-type="container"]:empty {
     border: .5rem solid var(--sapBackgroundColor, #f7f7f7);
 }
 
-div.dg-hbox[data-type="container"]>div.fb-control-wrapper,
-div.dg-vbox[data-type="container"]>div.fb-control-wrapper {
+div[data-type="container"]>div.fb-control-wrapper {
     padding: .25rem;
 }

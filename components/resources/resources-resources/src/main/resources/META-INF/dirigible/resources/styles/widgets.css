@@ -465,6 +465,10 @@ i.fd-list__icon[rotate="90"]::before {
   padding: 0;
 }
 
+.dg-form-item--horizontal>.fd-popover {
+  flex: 1;
+}
+
 /* Tool header fixes */
 .fd-button--tool-header {
   width: auto;

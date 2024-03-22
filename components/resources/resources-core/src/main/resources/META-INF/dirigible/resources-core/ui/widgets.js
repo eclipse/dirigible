@@ -638,6 +638,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             link: function (scope) {
                 scope.getClasses = () => classNames({
                     'fd-form-item--horizontal': scope.horizontal,
+                    'dg-form-item--horizontal': scope.horizontal, // see widgets.css
                     'fd-list__form-item': scope.inList,
                 });
             },
