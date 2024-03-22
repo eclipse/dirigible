@@ -85,8 +85,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         let ignoreInputs = false;
         let separateCtrl = false;
         let isMac = navigator.userAgent.indexOf('Mac') >= 0;
-        let charKeyCodes = { "0": 58, "1": 49, "2": 50, "3": 51, "4": 52, "5": 53, "6": 54, "7": 55, "8": 56, "9": 57, "delete": 8, "tab": 9, "enter": 13, "return": 13, "esc": 27, "space": 32, "left": 37, "up": 38, "right": 39, "down": 40, ";": 186, "=": 187, ",": 188, "-": 189, ".": 190, "/": 191, "`": 192, "[": 219, "\\": 220, "]": 221, "'": 222, "a": 65, "b": 66, "c": 67, "d": 68, "e": 69, "f": 70, "g": 71, "h": 72, "i": 73, "j": 74, "k": 75, "l": 76, "m": 77, "n": 78, "o": 79, "p": 80, "q": 81, "r": 82, "s": 83, "t": 84, "u": 85, "v": 86, "w": 87, "x": 88, "y": 89, "z": 90 };
-        let keyCodeChars = { 8: "delete", 9: "tab", 13: "return", 27: "esc", 32: "space", 37: "left", 38: "up", 39: "right", 40: "down", 49: "1", 50: "2", 51: "3", 52: "4", 53: "5", 54: "6", 55: "7", 56: "8", 57: "9", 58: "0", 65: "a", 66: "b", 67: "c", 68: "d", 69: "e", 70: "f", 71: "g", 72: "h", 73: "i", 74: "j", 75: "k", 76: "l", 77: "m", 78: "n", 79: "o", 80: "p", 81: "q", 82: "r", 83: "s", 84: "t", 85: "u", 86: "v", 87: "w", 88: "x", 89: "y", 90: "z", 186: ";", 187: "=", 188: ",", 189: "-", 190: ".", 191: "/", 192: "`", 219: "[", 220: "\\", 221: "]", 222: "'" };
+        let charKeyCodes = { "0": 58, "1": 49, "2": 50, "3": 51, "4": 52, "5": 53, "6": 54, "7": 55, "8": 56, "9": 57, "delete": 46, "tab": 9, "enter": 13, "return": 13, "esc": 27, "space": 32, "left": 37, "up": 38, "right": 39, "down": 40, ";": 186, "=": 187, ",": 188, "-": 189, ".": 190, "/": 191, "`": 192, "[": 219, "\\": 220, "]": 221, "'": 222, "a": 65, "b": 66, "c": 67, "d": 68, "e": 69, "f": 70, "g": 71, "h": 72, "i": 73, "j": 74, "k": 75, "l": 76, "m": 77, "n": 78, "o": 79, "p": 80, "q": 81, "r": 82, "s": 83, "t": 84, "u": 85, "v": 86, "w": 87, "x": 88, "y": 89, "z": 90 };
+        let keyCodeChars = { 46: "delete", 9: "tab", 13: "return", 27: "esc", 32: "space", 37: "left", 38: "up", 39: "right", 40: "down", 49: "1", 50: "2", 51: "3", 52: "4", 53: "5", 54: "6", 55: "7", 56: "8", 57: "9", 58: "0", 65: "a", 66: "b", 67: "c", 68: "d", 69: "e", 70: "f", 71: "g", 72: "h", 73: "i", 74: "j", 75: "k", 76: "l", 77: "m", 78: "n", 79: "o", 80: "p", 81: "q", 82: "r", 83: "s", 84: "t", 85: "u", 86: "v", 87: "w", 88: "x", 89: "y", 90: "z", 186: ";", 187: "=", 188: ",", 189: "-", 190: ".", 191: "/", 192: "`", 219: "[", 220: "\\", 221: "]", 222: "'" };
         let modifierKeys = { 'shift': 'shift', 'ctrl': 'ctrl', 'meta': 'meta', 'alt': 'alt' };
 
         function parseKeySet(keySet) {
@@ -638,6 +638,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             link: function (scope) {
                 scope.getClasses = () => classNames({
                     'fd-form-item--horizontal': scope.horizontal,
+                    'dg-form-item--horizontal': scope.horizontal, // see widgets.css
                     'fd-list__form-item': scope.inList,
                 });
             },
@@ -876,7 +877,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * compact: Boolean - Input size.
          * dgId: String - The input id.
          * dgDisabled: Boolean - If the input is disabled.
-         * dgReqired: Boolen - If the input is required.
+         * dgRequired: Boolen - If the input is required.
          * dgMin: Number - Minimum input value.
          * dgMin: Number - Maximum input value.
          * dgStep: Number - Input step.
@@ -3602,7 +3603,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         }
     }]).directive('fdTitle', [function () {
         /**
-         * headerSize: Boolean - If specified overrides the size of the heading element. Must be a number between 1 and 6 inclusive
+         * headerSize: Number - If specified overrides the size of the heading element. Must be a number between 1 and 6 inclusive
          * dgWrap: Boolean - Whether or not the title should wrap
          */
         return {
@@ -3613,17 +3614,21 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             },
             link: function (scope, element) {
                 element.addClass('fd-title');
+                if (scope.dgWrap) element.addClass(`fd-title--wrap`);
 
-                if (scope.headerSize) {
-                    if (scope.headerSize >= 1 && scope.headerSize <= 6)
-                        element.addClass(`fd-title--h${scope.headerSize}`);
-                    else
-                        console.error(`fd-title error: 'header-size' must be a number between 1 and 6 inclusive`);
+                function setHeaderSize(newSize, oldSize) {
+                    if (scope.headerSize) {
+                        if (scope.headerSize >= 1 && scope.headerSize <= 6) {
+                            if (oldSize) element.removeClass(`fd-title--h${oldSize}`);
+                            element.addClass(`fd-title--h${scope.headerSize}`);
+                        } else
+                            console.error(`fd-title error: 'header-size' must be a number between 1 and 6 inclusive`);
+                    }
                 }
-
-                if (scope.dgWrap) {
-                    element.addClass(`fd-title--wrap`);
-                }
+                let headerSizeWatcher = scope.$watch('headerSize', setHeaderSize);
+                scope.$on('$destroy', function () {
+                    headerSizeWatcher();
+                });
             }
         }
     }]).directive('fdComboboxInput', ['uuid', 'classNames', '$window', '$timeout', function (uuid, classNames, $window, $timeout) {

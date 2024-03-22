@@ -105,6 +105,11 @@
 			<artifactId>chart.js</artifactId>
 			<version>${chart.js.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.webjars.npm</groupId>
+			<artifactId>sortablejs</artifactId>
+			<version>${sortablejs.version}</version>
+		</dependency>
     </dependencies>
     
     <build>

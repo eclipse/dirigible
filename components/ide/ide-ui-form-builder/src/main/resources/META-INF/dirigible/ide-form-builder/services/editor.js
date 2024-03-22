@@ -9,11 +9,16 @@
  * SPDX-FileCopyrightText: 2024 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function () {
-	return {
-		"name": "form",
-		"label": "Form Definition",
-		"extension": "form",
-		"data": '{"feeds":[],"scripts":[],"code":"","form":[]}'
-	};
+const editorData = {
+	id: "formBuilder",
+	factory: "frame",
+	region: "center",
+	label: "Form Builder",
+	link: "../ide-form-builder/editor.html",
+	contentTypes: ["application/json+form"]
 };
+if (typeof exports !== 'undefined') {
+	exports.getEditor = function () {
+		return editorData;
+	}
+}
