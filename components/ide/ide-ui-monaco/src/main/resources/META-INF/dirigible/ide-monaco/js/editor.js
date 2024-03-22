@@ -1020,6 +1020,9 @@ class TypeScriptUtils {
     }
 
     static loadImportedFiles = async (monaco, importedFiles, isReload = false) => {
+        if (isReload) {
+            TypeScriptUtils.#IMPORTED_FILES.clear();
+        }
         const fileIO = new FileIO();
         for (const importedFile of importedFiles) {
             try {
