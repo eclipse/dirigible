@@ -17,19 +17,6 @@ import java.io.InputStream;
  */
 public class CmisS3ObjectFactory {
 
-    /** The session. */
-    private CmisS3Session session;
-
-    /**
-     * Instantiates a new object factory.
-     *
-     * @param session the session
-     */
-    public CmisS3ObjectFactory(CmisS3Session session) {
-        super();
-        this.session = session;
-    }
-
     /**
      * Creates a new S3Object object.
      *
@@ -40,7 +27,7 @@ public class CmisS3ObjectFactory {
      * @return the content stream
      */
     public CmisS3ContentStream createContentStream(String filename, long length, String mimetype, InputStream inputStream) {
-        return new CmisS3ContentStream(this.session, filename, length, mimetype, inputStream);
+        return new CmisS3ContentStream(filename, length, mimetype, inputStream);
     }
 
 }

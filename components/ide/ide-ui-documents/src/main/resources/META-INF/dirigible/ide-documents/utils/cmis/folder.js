@@ -102,16 +102,14 @@ export const createFolder = (parentFolder, name) => {
 
 export const getFolderOrRoot = (folderPath) => {
 	if (folderPath === null) {
-		let rootFolder = cmisSession.getRootFolder();
-		return rootFolder;
+		return cmisSession.getRootFolder();
 	}
-	let folder = null;
 	try {
-		folder = getFolder(folderPath);
+		return getFolder(folderPath);
 	} catch (e) {
-		folder = cmisSession.getRootFolder();
+		console.error("Failed to get folder: " + e);
+		return cmisSession.getRootFolder();
 	}
-	return folder;
 };
 
 export const getFolder = (path) => {

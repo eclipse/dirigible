@@ -6,9 +6,8 @@ import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.engine.cms.CmsProvider;
 import org.eclipse.dirigible.components.engine.cms.CmsProviderFactory;
 import org.eclipse.dirigible.components.engine.cms.CmsProviderInitializationException;
+import org.eclipse.dirigible.components.engine.cms.s3.repository.CmisS3Session;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 
 @Component("cms-provider-s3")
 class CmsProviderS3Factory implements CmsProviderFactory {
@@ -23,12 +22,8 @@ class CmsProviderS3Factory implements CmsProviderFactory {
 
     @Override
     public CmsProvider create() throws CmsProviderInitializationException {
-        String tenantFolder = getTenantFolder();
-        try {
-            return new CmsProviderS3(tenantFolder);
-        } catch (IOException ex) {
-            throw new CmsProviderInitializationException("Failed to create S3 CMS provider.", ex);
-        }
+        CmisS3Session session = new CmisS3Session();
+        return new CmsProviderS3(session);
     }
 
     private String getTenantFolder() {

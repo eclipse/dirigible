@@ -22,29 +22,13 @@ import java.io.IOException;
 public class CmisS3Document extends CmisS3Object implements CmisDocument {
 
     /**
-     * The session.
-     */
-    private final CmisS3Session session;
-
-    /** The id. */
-    private final String id;
-
-    /** The name. */
-    private final String name;
-
-    /**
      * Instantiates a new document.
      *
-     * @param session the session
      * @param id the idx
      * @param name the name
      */
-    public CmisS3Document(CmisS3Session session, String id, String name) {
-        super(session, id, name);
-        id = sanitize(id);
-        this.session = session;
-        this.id = id;
-        this.name = name;
+    public CmisS3Document(String id, String name) {
+        super(id, name);
     }
 
     /**
@@ -64,9 +48,9 @@ public class CmisS3Document extends CmisS3Object implements CmisDocument {
      * @throws IOException IO Exception
      */
     public CmisS3ContentStream getContentStream() throws IOException {
-        byte[] content = S3Facade.get(this.id);
-        String contentType = getContentType(this.id);
-        return new CmisS3ContentStream(session, this.name, content.length, contentType, new ByteArrayInputStream(content));
+        byte[] content = S3Facade.get(getId());
+        String contentType = getContentType(getId());
+        return new CmisS3ContentStream(getName(), content.length, contentType, new ByteArrayInputStream(content));
     }
 
     /**
@@ -85,7 +69,7 @@ public class CmisS3Document extends CmisS3Object implements CmisDocument {
      * @return the path
      */
     public String getPath() {
-        return this.id;
+        return getId();
     }
 
     /**
@@ -95,6 +79,6 @@ public class CmisS3Document extends CmisS3Object implements CmisDocument {
      * @return the resource name
      */
     private String getResourceName(String resource) {
-        return this.name;
+        return getName();
     }
 }

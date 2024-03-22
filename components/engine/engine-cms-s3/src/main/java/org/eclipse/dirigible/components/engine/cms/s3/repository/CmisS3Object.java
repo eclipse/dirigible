@@ -22,10 +22,6 @@ import java.io.IOException;
 public class CmisS3Object implements CmisObject {
 
     /**
-     * The session.
-     */
-    private final CmisS3Session session;
-    /**
      * The id/path of the object.
      */
     private final String id;
@@ -39,13 +35,11 @@ public class CmisS3Object implements CmisObject {
     /**
      * Instantiates a new cmis object.
      *
-     * @param session the session
      * @param id the path
      * @param name the name
      */
-    public CmisS3Object(CmisS3Session session, String id, String name) {
+    public CmisS3Object(String id, String name) {
         super();
-        this.session = session;
         id = sanitize(id);
         this.id = id;
         this.name = name;
@@ -116,11 +110,9 @@ public class CmisS3Object implements CmisObject {
 
     /**
      * Delete this CmisS3Object.
-     *
-     * @throws IOException IO Exception
      */
     @Override
-    public void delete() throws IOException {
+    public void delete() {
         String cmisPath = this.id.substring(1);
         if (this.typeCollection) {
             S3Facade.deleteFolder(cmisPath);
@@ -133,10 +125,9 @@ public class CmisS3Object implements CmisObject {
      * Rename this CmisS3Object.
      *
      * @param newName the new name
-     * @throws IOException IO Exception
      */
     @Override
-    public void rename(String newName) throws IOException {
+    public void rename(String newName) {
         // TODO see how to rename from S3Facade
         // S3Facade.update();
     }

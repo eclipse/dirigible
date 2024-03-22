@@ -11,6 +11,9 @@
 package org.eclipse.dirigible.components.api.s3;
 
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
+import org.eclipse.dirigible.components.base.tenant.Tenant;
+import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -52,18 +55,26 @@ public class S3Facade implements InitializingBean {
     private static final String DIRIGIBLE_S3_PROVIDER = Configuration.get("DIRIGIBLE_S3_PROVIDER", "aws");
     /** The Constant LOCALSTACK_URI. */
     private static final String DEFAULT_LOCALSTACK_URI = "https://s3.localhost.localstack.cloud:4566";
+    private static final String PATH_SEPARATOR = "/";
+    private static final String ROOT_PATH = "/";
+    private static final String FOLDER_SUFFIX = "/";
     /** The instance. */
     private static S3Facade INSTANCE;
+    private static TenantContext tenantContext;
+    private static Tenant defaultTenant;
     /** The s 3. */
     private S3Client s3;
 
+    S3Facade(TenantContext tenantContext, @DefaultTenant Tenant defaultTenant) {
+        S3Facade.tenantContext = tenantContext;
+        S3Facade.defaultTenant = defaultTenant;
+    }
+
     /**
      * After properties set.
-     *
-     * @throws Exception the exception
      */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         INSTANCE = this;
     }
 
@@ -95,13 +106,14 @@ public class S3Facade implements InitializingBean {
      * @param name the name
      */
     public static void delete(String name) {
+        String tenantName = toTenantPath(name);
         String bucket = getBucketName();
-        if (name.endsWith("/")) {
-            deleteFolder(name);
+        if (isFolderPath(tenantName)) {
+            deleteFolder(tenantName);
         } else {
             DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
                                                                    .bucket(bucket)
-                                                                   .key(name)
+                                                                   .key(tenantName)
                                                                    .build();
 
             S3Facade.get()
@@ -110,39 +122,62 @@ public class S3Facade implements InitializingBean {
         }
     }
 
+    public static String toTenantPath(String path) {
+        String tenantId = tenantContext.isInitialized() ? tenantContext.getCurrentTenant()
+                                                                       .getId() : defaultTenant.getId();
+        String prefix = tenantId + PATH_SEPARATOR;
+        if (ROOT_PATH.equals(path)) {
+            return prefix;
+        }
+
+        if (path.startsWith(prefix)) {
+            return path;
+        }
+
+        String tenantPath = prefix + (path.startsWith(PATH_SEPARATOR) ? path.substring(1) : path);
+        logger.debug("Path [{}] is resolved to [{}]", path, tenantPath);
+        return tenantPath;
+    }
+
+    private static boolean isFolderPath(String path) {
+        return path.endsWith(FOLDER_SUFFIX);
+    }
+
     /**
      * Delete folder.
      *
      * @param prefix the prefix
      */
     public static void deleteFolder(String prefix) {
+        String tenantPrefix = toTenantPath(prefix);
         String bucket = getBucketName();
-        S3Client s3Client = S3Client.builder()
-                                    .region(AWS_DEFAULT_REGION)
-                                    .build();
-        ListObjectsV2Request request = ListObjectsV2Request.builder()
-                                                           .bucket(bucket)
-                                                           .prefix(prefix)
-                                                           .build();
-        ListObjectsV2Iterable list = s3Client.listObjectsV2Paginator(request);
+        try (S3Client s3Client = S3Client.builder()
+                                         .region(AWS_DEFAULT_REGION)
+                                         .build()) {
+            ListObjectsV2Request request = ListObjectsV2Request.builder()
+                                                               .bucket(bucket)
+                                                               .prefix(tenantPrefix)
+                                                               .build();
+            ListObjectsV2Iterable list = s3Client.listObjectsV2Paginator(request);
 
-        List<ObjectIdentifier> objectIdentifiers = list.stream()
-                                                       .flatMap(r -> r.contents()
-                                                                      .stream())
-                                                       .map(o -> ObjectIdentifier.builder()
-                                                                                 .key(o.key())
-                                                                                 .build())
-                                                       .collect(Collectors.toList());
+            List<ObjectIdentifier> objectIdentifiers = list.stream()
+                                                           .flatMap(r -> r.contents()
+                                                                          .stream())
+                                                           .map(o -> ObjectIdentifier.builder()
+                                                                                     .key(o.key())
+                                                                                     .build())
+                                                           .collect(Collectors.toList());
 
-        if (objectIdentifiers.isEmpty())
-            return;
-        DeleteObjectsRequest deleteObjectsRequest = DeleteObjectsRequest.builder()
-                                                                        .bucket(bucket)
-                                                                        .delete(Delete.builder()
-                                                                                      .objects(objectIdentifiers)
-                                                                                      .build())
-                                                                        .build();
-        s3Client.deleteObjects(deleteObjectsRequest);
+            if (objectIdentifiers.isEmpty())
+                return;
+            DeleteObjectsRequest deleteObjectsRequest = DeleteObjectsRequest.builder()
+                                                                            .bucket(bucket)
+                                                                            .delete(Delete.builder()
+                                                                                          .objects(objectIdentifiers)
+                                                                                          .build())
+                                                                            .build();
+            s3Client.deleteObjects(deleteObjectsRequest);
+        }
     }
 
     /**
@@ -155,7 +190,7 @@ public class S3Facade implements InitializingBean {
     }
 
     /**
-     * Gets the.
+     * Gets the S3Facade.
      *
      * @return the s3 facade
      */
@@ -200,8 +235,8 @@ public class S3Facade implements InitializingBean {
 
         try {
             s3.createBucket(createBucketRequest);
-        } catch (BucketAlreadyOwnedByYouException ignored) {
-            logger.debug("Bucket: [" + bucket + "] already created", ignored);
+        } catch (BucketAlreadyOwnedByYouException ex) {
+            logger.debug("Bucket: [" + bucket + "] already created", ex);
         }
     }
 
@@ -214,11 +249,13 @@ public class S3Facade implements InitializingBean {
      */
     public static byte[] get(String name) throws IOException {
         String bucket = getBucketName();
+
+        String tenantName = toTenantPath(name);
         ResponseInputStream<GetObjectResponse> response = S3Facade.get()
                                                                   .getS3Client()
                                                                   .getObject(GetObjectRequest.builder()
                                                                                              .bucket(bucket)
-                                                                                             .key(name)
+                                                                                             .key(tenantName)
                                                                                              .build());
 
         return response.readAllBytes();
@@ -229,9 +266,8 @@ public class S3Facade implements InitializingBean {
      *
      * @param name the name
      * @param inputStream the input stream
-     * @throws IOException Signals that an I/O exception has occurred.
      */
-    public static void update(String name, byte[] inputStream) throws IOException {
+    public static void update(String name, byte[] inputStream) {
         // will upload the updated object to S3, overwriting the existing object
         // TODO fix update
         put(name, inputStream, "");
@@ -245,17 +281,18 @@ public class S3Facade implements InitializingBean {
      * @param contentType the content type
      */
     public static void put(String name, byte[] input, String contentType) {
+        String tenantName = toTenantPath(name);
         String bucket = getBucketName();
         PutObjectRequest objectRequest;
-        if (name.endsWith("/")) {
+        if (isFolderPath(tenantName)) {
             objectRequest = PutObjectRequest.builder()
                                             .bucket(bucket)
-                                            .key(name)
+                                            .key(tenantName)
                                             .build();
         } else {
             objectRequest = PutObjectRequest.builder()
                                             .bucket(bucket)
-                                            .key(name)
+                                            .key(tenantName)
                                             .contentType(contentType)
                                             .build();
         }
@@ -271,11 +308,12 @@ public class S3Facade implements InitializingBean {
      * @return the list
      */
     public static List<S3Object> listObjects(String path) {
+        String tenantPath = toTenantPath(path);
+
         String bucket = getBucketName();
-        String prefix = "/".equals(path) ? null : path;
         ListObjectsV2Request listObjectsV2Request = ListObjectsV2Request.builder()
                                                                         .bucket(bucket)
-                                                                        .prefix(prefix)
+                                                                        .prefix(tenantPath)
                                                                         .build();
 
         ListObjectsV2Response listObjectsV2Response = S3Facade.get()
@@ -284,8 +322,7 @@ public class S3Facade implements InitializingBean {
 
         List<S3Object> contents = listObjectsV2Response.contents();
 
-        logger.info("Number of objects in the bucket: " + contents.stream()
-                                                                  .count());
+        logger.info("Number of objects in the bucket: [{}]", contents.size());
         return contents;
     }
 
@@ -296,13 +333,11 @@ public class S3Facade implements InitializingBean {
      * @return true, if successful
      */
     public static boolean exists(String keyName) {
+        String tenantKeyName = toTenantPath(keyName);
         String bucket = getBucketName();
-        if (keyName.startsWith("/")) {
-            keyName = keyName.substring(1);
-        }
         try {
             HeadObjectRequest objectRequest = HeadObjectRequest.builder()
-                                                               .key(keyName)
+                                                               .key(tenantKeyName)
                                                                .bucket(bucket)
                                                                .build();
 
@@ -312,13 +347,13 @@ public class S3Facade implements InitializingBean {
             objectHead.contentType();
             return true;
         } catch (BucketAlreadyExistsException | BucketAlreadyOwnedByYouException ex) {
-            logger.debug("[{}] already exists", keyName, ex);
+            logger.debug("[{}] already exists", tenantKeyName, ex);
             return true;
         } catch (NoSuchKeyException ex) {
-            logger.debug("[{}] is missing", keyName, ex);
+            logger.debug("[{}] is missing", tenantKeyName, ex);
             return false;
         } catch (S3Exception ex) {
-            logger.warn("Returning false for [{}]", keyName, ex);
+            logger.warn("Returning false for [{}]", tenantKeyName, ex);
             return false;
         }
     }
@@ -331,12 +366,10 @@ public class S3Facade implements InitializingBean {
      */
     public static String getObjectContentType(String keyName) {
         String bucket = getBucketName();
-        if (keyName.startsWith("/")) {
-            keyName = keyName.substring(1);
-        }
+        String tenantKeyName = toTenantPath(keyName);
         try {
             HeadObjectRequest objectRequest = HeadObjectRequest.builder()
-                                                               .key(keyName)
+                                                               .key(tenantKeyName)
                                                                .bucket(bucket)
                                                                .build();
 

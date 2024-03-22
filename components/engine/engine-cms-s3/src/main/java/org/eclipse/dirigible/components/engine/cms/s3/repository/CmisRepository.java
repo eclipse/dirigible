@@ -22,5 +22,4 @@ public interface CmisRepository {
      */
     CmisS3Session getSession();
 
-    String getRootFolder();
 }
