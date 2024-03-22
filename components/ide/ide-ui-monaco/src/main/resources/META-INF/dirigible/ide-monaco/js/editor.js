@@ -146,6 +146,8 @@ class FileIO {
             fileNameTokens.pop();
             const relativeTokens = relativePath.split('./');
             basePath = fileNameTokens.join('/') + '/' + relativeTokens.filter(e => e != '').join('/');
+        } else if (TypeScriptUtils.isGlobalImport(relativePath)) {
+            return relativePath;
         }
         return basePath.replaceAll('\\', '/').split('/').join('/');
     }
@@ -164,7 +166,7 @@ class FileIO {
             fileNameTokens.pop();
             const relativeTokens = filePath.split('./');
             path = fileNameTokens.join('/') + '/' + relativeTokens.filter(e => e != '').join('/');
-        } else if (TypeScriptUtils.isAbsolutePathImport(filePath)) {
+        } else if (TypeScriptUtils.isGlobalImport(filePath)) {
             return filePath;
         }
         if (path) {
@@ -991,6 +993,8 @@ class TypeScriptUtils {
     // Find all ES6 import statements and their modules
     static #IMPORT_REGEX = /import\s+(?:\{(?:\s*\w?\s*,?)*\}|(?:\*\s+as\s+\w+)|\w+)\s+from\s+['"]([^'"]+)['"]/g;
 
+    static #IMPORTED_FILES = new Set();
+
     static isTypeScriptFile(fileName) {
         return fileName && fileName.endsWith(".ts");
     }
@@ -1011,7 +1015,7 @@ class TypeScriptUtils {
         return importedModules;
     }
 
-    static isAbsolutePathImport(path) {
+    static isGlobalImport(path) {
         return !path.startsWith("/") && !path.startsWith("./") && !path.startsWith("../") && !path.startsWith("sdk/")
     }
 
@@ -1019,9 +1023,13 @@ class TypeScriptUtils {
         const fileIO = new FileIO();
         for (const importedFile of importedFiles) {
             try {
+                const importedFilePath = fileIO.resolveFilePath(importedFile);
+                if (TypeScriptUtils.#IMPORTED_FILES.has(importedFilePath)) {
+                    continue;
+                }
                 const importedFileMetadata = await fileIO.loadText(importedFile);
                 let uriPath = `/${importedFileMetadata.workspace}/${importedFileMetadata.filePath}`;
-                if (TypeScriptUtils.isAbsolutePathImport(importedFile)) {
+                if (TypeScriptUtils.isGlobalImport(importedFile)) {
                     monaco.languages.typescript.typescriptDefaults.addExtraLib(
                         importedFileMetadata.sourceCode,
                         `file:///node_modules/@types/${importedFile.substring(0, importedFile.indexOf('.ts'))}.d.ts`
@@ -1040,6 +1048,7 @@ class TypeScriptUtils {
                     const relativeImportedPaths = importedFileMetadata.importedFilesNames.map(e => fileIO.resolveRelativePath(importedFile, e));
                     TypeScriptUtils.loadImportedFiles(monaco, relativeImportedPaths, isReload);
                 }
+                TypeScriptUtils.#IMPORTED_FILES.add(importedFilePath);
             } catch (e) {
                 Utils.logErrorMessage(e);
             }
