@@ -61,6 +61,9 @@ class S3ObjectUtil {
         Set<S3ObjectDescriptor> descriptors = new HashSet<>();
 
         for (String objectKey : objectKeys) {
+            if (Objects.equals(rootPath, objectKey)) {
+                continue;
+            }
             String relativePath = objectKey.startsWith(rootPath) ? objectKey.replaceFirst(Pattern.quote(rootPath), "") : objectKey;
 
             if (isObjectInSubdir(relativePath)) {
@@ -70,7 +73,7 @@ class S3ObjectUtil {
                 descriptors.add(descriptor);
             } else {
                 String fileName = extractFirstSegment(relativePath);
-                S3ObjectDescriptor descriptor = new S3ObjectDescriptor(false, fileName);
+                S3ObjectDescriptor descriptor = new S3ObjectDescriptor(isFolder(relativePath), fileName);
                 descriptors.add(descriptor);
             }
         }

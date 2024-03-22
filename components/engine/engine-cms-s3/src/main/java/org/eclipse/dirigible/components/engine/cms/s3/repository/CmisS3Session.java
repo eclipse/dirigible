@@ -99,22 +99,21 @@ public class CmisS3Session implements CmisSession {
      */
     @Override
     public CmisS3Object getObject(String id) throws IOException {
-        String path = id;
-        if (path.equals("/")) {
-            return new CmisS3Folder(this, id, path);
+        if (IRepository.SEPARATOR.equals(id)) {
+            return new CmisS3Folder(this, id, id);
         }
-        if (!path.startsWith("/")) {
-            path = IRepository.SEPARATOR + id;
+        String path = id.startsWith(IRepository.SEPARATOR) ? id.substring(1) : id;
+        if (isFolder(path)) {
+            return new CmisS3Folder(this, path, CmisS3Utils.findCurrentFolder(path));
         }
         if (S3Facade.exists(path)) {
-            if (path.endsWith("/")) {
-                return new CmisS3Folder(this, path, CmisS3Utils.findCurrentFolder(path));
-            } else {
-                return new CmisS3Document(this, path, CmisS3Utils.findCurrentFile(path));
-            }
-        } else if (S3Facade.exists(path + "/")) {
-            return new CmisS3Folder(this, path, CmisS3Utils.findCurrentFolder(path + "/"));
+            return new CmisS3Document(this, path, CmisS3Utils.findCurrentFile(path));
+        } else {
+            throw new IOException("Missing object with id [" + id + "] and path: " + path);
         }
-        return new CmisS3Document(this, id, id);
+    }
+
+    private static boolean isFolder(String path) {
+        return path.endsWith(IRepository.SEPARATOR);
     }
 }

@@ -311,8 +311,11 @@ public class S3Facade implements InitializingBean {
                                                     .headObject(objectRequest);
             objectHead.contentType();
             return true;
-        } catch (BucketAlreadyExistsException | NoSuchKeyException | BucketAlreadyOwnedByYouException ex) {
+        } catch (BucketAlreadyExistsException | BucketAlreadyOwnedByYouException ex) {
             logger.debug("[{}] already exists", keyName, ex);
+            return true;
+        } catch (NoSuchKeyException ex) {
+            logger.debug("[{}] is missing", keyName, ex);
             return false;
         } catch (S3Exception ex) {
             logger.warn("Returning false for [{}]", keyName, ex);

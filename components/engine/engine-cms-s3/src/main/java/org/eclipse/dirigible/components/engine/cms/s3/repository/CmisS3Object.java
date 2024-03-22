@@ -42,9 +42,8 @@ public class CmisS3Object implements CmisObject {
      * @param session the session
      * @param id the path
      * @param name the name
-     * @throws IOException Signals that an I/O exception has occurred.
      */
-    public CmisS3Object(CmisS3Session session, String id, String name) throws IOException {
+    public CmisS3Object(CmisS3Session session, String id, String name) {
         super();
         this.session = session;
         id = sanitize(id);

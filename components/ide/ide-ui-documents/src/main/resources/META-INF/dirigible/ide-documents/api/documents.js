@@ -181,4 +181,5 @@ function printError(response, httpCode, errCode, error) {
 	response.setContentType("application/json");
 	response.setStatus(httpCode);
 	response.println(JSON.stringify(body));
+	throw error;
 }

@@ -10,12 +10,11 @@
  */
 package org.eclipse.dirigible.components.engine.cms.s3.repository;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
-import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.components.api.s3.S3Facade;
 import org.eclipse.dirigible.components.engine.cms.CmisDocument;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 /**
  * The Class CmisDocument.
@@ -25,13 +24,13 @@ public class CmisS3Document extends CmisS3Object implements CmisDocument {
     /**
      * The session.
      */
-    private CmisS3Session session;
+    private final CmisS3Session session;
 
     /** The id. */
-    private String id;
+    private final String id;
 
     /** The name. */
-    private String name;
+    private final String name;
 
     /**
      * Instantiates a new document.
@@ -39,9 +38,8 @@ public class CmisS3Document extends CmisS3Object implements CmisDocument {
      * @param session the session
      * @param id the idx
      * @param name the name
-     * @throws IOException Signals that an I/O exception has occurred.
      */
-    public CmisS3Document(CmisS3Session session, String id, String name) throws IOException {
+    public CmisS3Document(CmisS3Session session, String id, String name) {
         super(session, id, name);
         id = sanitize(id);
         this.session = session;
@@ -66,18 +64,9 @@ public class CmisS3Document extends CmisS3Object implements CmisDocument {
      * @throws IOException IO Exception
      */
     public CmisS3ContentStream getContentStream() throws IOException {
-        byte[] content = S3Facade.get(this.id.substring(1));
-        String contentType = getContentType(this.id.substring(1));
+        byte[] content = S3Facade.get(this.id);
+        String contentType = getContentType(this.id);
         return new CmisS3ContentStream(session, this.name, content.length, contentType, new ByteArrayInputStream(content));
-    }
-
-    /**
-     * Returns the Path of this CmisDocument.
-     *
-     * @return the path
-     */
-    public String getPath() {
-        return this.id;
     }
 
     /**
@@ -88,6 +77,15 @@ public class CmisS3Document extends CmisS3Object implements CmisDocument {
      */
     private String getContentType(String resource) {
         return S3Facade.getObjectContentType(resource);
+    }
+
+    /**
+     * Returns the Path of this CmisDocument.
+     *
+     * @return the path
+     */
+    public String getPath() {
+        return this.id;
     }
 
     /**

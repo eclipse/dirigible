@@ -20,7 +20,10 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * The Class CmisS3Folder.
@@ -67,7 +70,7 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
      * @param name the name
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public CmisS3Folder(CmisS3Session session, String id, String name) throws IOException {
+    public CmisS3Folder(CmisS3Session session, String id, String name) {
         super(session, id, name);
         id = sanitize(id);
         this.rootFolder = Objects.equals(session.getCmisRepository()
@@ -175,22 +178,16 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
                                           .map(S3Object::key)
                                           .toList();
         Set<S3ObjectUtil.S3ObjectDescriptor> descriptors = S3ObjectUtil.getDirectChildren(this.id, objectKeys);
-        return createDirectChildren(descriptors);
+
+        return descriptors.stream()
+                          .map(this::toS3Object)
+                          .toList();
     }
 
-    private List<CmisS3Object> createDirectChildren(Set<S3ObjectUtil.S3ObjectDescriptor> descriptors) throws IOException {
-        List<CmisS3Object> directChildren = new ArrayList<>(descriptors.size());
-        for (S3ObjectUtil.S3ObjectDescriptor descriptor : descriptors) {
-            if (descriptor.isFolder()) {
-                CmisS3Folder folder = new CmisS3Folder(this.session, this.id, descriptor.getName());
-                directChildren.add(folder);
-            }
-            if (descriptor.isFile()) {
-                CmisS3Document document = new CmisS3Document(this.session, this.id, descriptor.getName());
-                directChildren.add(document);
-            }
-        }
-        return directChildren;
+    private CmisS3Object toS3Object(S3ObjectUtil.S3ObjectDescriptor descriptor) {
+        String name = descriptor.getName();
+        String id = this.id + name;
+        return descriptor.isFolder() ? new CmisS3Folder(this.session, id, name) : new CmisS3Document(this.session, id, name);
     }
 
     /**
