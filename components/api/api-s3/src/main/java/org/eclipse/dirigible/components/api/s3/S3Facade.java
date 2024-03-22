@@ -16,7 +16,6 @@ import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -40,7 +39,7 @@ import java.util.stream.Collectors;
  * The Class S3Facade.
  */
 @Component
-public class S3Facade implements InitializingBean {
+public class S3Facade {
     /**
      * The Constant logger.
      */
@@ -68,13 +67,6 @@ public class S3Facade implements InitializingBean {
     S3Facade(TenantContext tenantContext, @DefaultTenant Tenant defaultTenant) {
         S3Facade.tenantContext = tenantContext;
         S3Facade.defaultTenant = defaultTenant;
-    }
-
-    /**
-     * After properties set.
-     */
-    @Override
-    public void afterPropertiesSet() {
         INSTANCE = this;
     }
 
@@ -124,7 +116,8 @@ public class S3Facade implements InitializingBean {
 
     public static String toTenantPath(String path) {
         String tenantId = tenantContext.isInitialized() ? tenantContext.getCurrentTenant()
-                                                                       .getId() : defaultTenant.getId();
+                                                                       .getId()
+                : defaultTenant.getId();
         String prefix = tenantId + PATH_SEPARATOR;
         if (ROOT_PATH.equals(path)) {
             return prefix;
