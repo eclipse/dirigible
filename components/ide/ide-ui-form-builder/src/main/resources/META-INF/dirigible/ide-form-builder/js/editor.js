@@ -1562,9 +1562,12 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
         'contextmenu',
         function (msg) {
             if (msg.data.itemId === 'clearForm') {
-                $scope.formModel.length = 0;
                 const control = $document[0].querySelector('#formContainer');
                 control.textContent = '';
+                $scope.$apply(function () {
+                    $scope.formModel.length = 0;
+                    $scope.fileChanged();
+                });
             } else if (msg.data.itemId === 'deleteControl') {
                 if (msg.data.data.isContainer) $scope.deleteControl(msg.data.data.controlId, true);
                 else $scope.deleteControl(msg.data.data.controlId);
