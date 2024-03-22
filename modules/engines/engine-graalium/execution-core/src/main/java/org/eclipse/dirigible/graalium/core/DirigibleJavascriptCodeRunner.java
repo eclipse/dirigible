@@ -26,6 +26,7 @@ import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
 import org.eclipse.dirigible.graalium.core.javascript.modules.ModuleType;
 import org.eclipse.dirigible.graalium.core.javascript.modules.java.JavaModuleResolver;
 import org.eclipse.dirigible.graalium.core.modules.DirigibleEsmModuleResolver;
+import org.eclipse.dirigible.graalium.core.modules.DirigibleGlobalModuleResolver;
 import org.eclipse.dirigible.graalium.core.modules.DirigibleModuleResolver;
 import org.eclipse.dirigible.graalium.core.modules.DirigibleSourceProvider;
 import org.eclipse.dirigible.graalium.core.polyfills.RequirePolyfill;
@@ -134,6 +135,7 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
                                 .addModuleResolver(new JavaModuleResolver(javaModulesESMProxiesCachePath))
                                 .addModuleResolver(new DirigibleModuleResolver(coreModulesESMProxiesCachePath, sourceProvider))
                                 .addModuleResolver(new DirigibleEsmModuleResolver(sourceProvider))
+                                .addModuleResolver(new DirigibleGlobalModuleResolver(sourceProvider))
                                 .waitForDebugger(shouldEnableDebug && DirigibleJavascriptCodeRunner.shouldEnableDebug())
                                 .addOnBeforeContextCreatedListener(onBeforeContextCreatedListener)
                                 .addOnAfterContextCreatedListener(onAfterContextCreatedListener)

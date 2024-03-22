@@ -164,7 +164,8 @@ class FileIO {
             fileNameTokens.pop();
             const relativeTokens = filePath.split('./');
             path = fileNameTokens.join('/') + '/' + relativeTokens.filter(e => e != '').join('/');
-
+        } else if (TypeScriptUtils.isAbsolutePathImport(filePath)) {
+            return filePath;
         }
         if (path) {
             return path.replaceAll('\\', '/').split('/').slice(2).join('/');
@@ -1010,12 +1011,24 @@ class TypeScriptUtils {
         return importedModules;
     }
 
+    static isAbsolutePathImport(path) {
+        return !path.startsWith("/") && !path.startsWith("./") && !path.startsWith("../") && !path.startsWith("sdk/")
+    }
+
     static loadImportedFiles = async (monaco, importedFiles, isReload = false) => {
         const fileIO = new FileIO();
         for (const importedFile of importedFiles) {
             try {
                 const importedFileMetadata = await fileIO.loadText(importedFile);
-                const uri = new monaco.Uri().with({ path: `/${importedFileMetadata.workspace}/${importedFileMetadata.filePath}` });
+                let uriPath = `/${importedFileMetadata.workspace}/${importedFileMetadata.filePath}`;
+                if (TypeScriptUtils.isAbsolutePathImport(importedFile)) {
+                    monaco.languages.typescript.typescriptDefaults.addExtraLib(
+                        importedFileMetadata.sourceCode,
+                        `file:///node_modules/@types/${importedFile.substring(0, importedFile.indexOf('.ts'))}.d.ts`
+                    );
+                }
+
+                const uri = new monaco.Uri().with({ path: uriPath });
                 if (isReload) {
                     const model = monaco.editor.getModel(uri);
                     model.setValue(importedFileMetadata.sourceCode);
