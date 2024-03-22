@@ -12,137 +12,69 @@
 const tasksView = angular.module('tasks', ['ideUI', 'ideView']);
 
 tasksView.config(["messageHubProvider", function (messageHubProvider) {
-    messageHubProvider.eventIdPrefix = 'tasks-view';
+    messageHubProvider.eventIdPrefix = 'bpm';
 }]);
 
-tasksView.controller('TasksController', ['$http', '$timeout', 'messageHub', function ($http, $timeout, messageHub) {
-    this.selectAll = false;
-    this.searchText = "";
-    this.filterBy = "";
-    this.displaySearch = false;
-    this.tasksList = [];
-    this.pageSize = 10;
-    this.currentPage = 1;
+tasksView.controller('TasksController', ['$scope','$http', '$timeout', 'messageHub', function ($scope, $http, $timeout, messageHub) {
+    $scope.tasksList = [];
+    $scope.tasksListAssignee = [];
+    $scope.currentProcessInstanceId;
+    $scope.selectedVariable = null;
 
-    this.currentFetchDataTask = null;
+    $scope.currentFetchDataTask = null;
 
-    const fetchData = (args) => {
-        if (this.currentFetchDataTask) {
-            clearInterval(this.currentFetchDataTask);
-        }
+    $scope.reload = function () {
+        console.log("Reloading user tasks for current process instance id: " + $scope.currentProcessInstanceId)
+        $scope.fetchData($scope.currentProcessInstanceId);
+    };
 
-        this.currentFetchDataTask = setInterval(() => {
-                const pageNumber = (args && args.pageNumber) || this.currentPage;
-                const pageSize = (args && args.pageSize) || this.pageSize;
-                const limit = pageNumber * pageSize;
-                const startIndex = (pageNumber - 1) * pageSize;
-                if (startIndex >= this.totalRows) {
-                    return;
-                }
+    $scope.fetchData = function(processInstanceId) {
+        $http.get('/services/ide/bpm/bpm-processes/instance/' + processInstanceId + '/tasks?type=groups', { params: { 'limit': 100 } })
+             .then((response) => {
+                $scope.tasksList = response.data;
+              });
 
-                $http.get('/services/js/ide-bpm-workspace/api/tasks.mjs/tasks', { params: { 'condition': this.filterBy, 'limit': limit } })
-                    .then((response) => {
-                        if (this.tasksList.length < response.data.length ) {
-                            //messageHub.showAlertInfo("User tasks", "A new user task has been added");
-                        }
-
-                        this.tasksList = response.data;
-                        this.selectionChanged();
-                    });
-        }, 5000);
-
+        $http.get('/services/ide/bpm/bpm-processes/instance/' + processInstanceId + '/tasks?type=assignee', { params: { 'limit': 100 } })
+             .then((response) => {
+                $scope.tasksListAssignee = response.data;
+              });
     }
 
-    fetchData();
+    messageHub.onDidReceiveMessage('instance.selected', function (msg) {
+        const processInstanceId = msg.data.instance;
+        $scope.fetchData(processInstanceId);
+        $scope.$apply(function () {
+            $scope.currentProcessInstanceId = processInstanceId;
+        });
+    });
 
-    this.toggleSearch = function () {
-        this.displaySearch = !this.displaySearch;
-    }
-
-    this.selectAllChanged = function () {
-        for (let task of this.tasksList) {
-            task.selected = this.selectAll;
+    $scope.selectionChanged = function (variable) {
+        if (variable) {
+            $scope.selectedVariable = variable;
         }
     }
 
-    this.selectionChanged = function () {
-        this.selectAll = this.tasksList.every(x => x.selected);
+    $scope.claimTask = function() {
+        const apiUrl = '/services/ide/bpm/bpm-processes/tasks/' + $scope.selectedVariable.id;
+        const requestBody = { };
+
+        $http({
+            method: 'POST',
+            url: apiUrl,
+            data: requestBody,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response) => {
+            console.log('Successfully claimed task with id ' + $scope.selectedVariable.id);
+        })
+        .catch((error) => {
+            console.error('Error making POST request:', error);
+        });
     }
 
-    this.clearSearch = function () {
-        this.searchText = "";
-        this.filterBy = "";
-        fetchData();
-    }
-
-    this.getSelectedCount = function () {
-        return this.tasksList.reduce((c, task) => {
-            if (task.selected) c++;
-            return c;
-        }, 0);
-    }
-
-    this.hasSelected = function () {
-        return this.tasksList.some(x => x.selected);
-    }
-
-    this.applyFilter = function () {
-        this.filterBy = this.searchText;
-        fetchData();
-    }
-
-    this.getNoDataMessage = function () {
-        return this.filterBy ? 'No tasks found.' : 'No tasks have been detected.';
-    }
-
-    this.inputSearchKeyUp = function (e) {
-        if (this.lastSearchKeyUp) {
-            $timeout.cancel(this.lastSearchKeyUp);
-            this.lastSearchKeyUp = null;
-        }
-
-        switch (e.key) {
-            case 'Escape':
-                this.searchText = this.filterBy || '';
-                break;
-            case 'Enter':
-                this.applyFilter();
-                break;
-            default:
-                if (this.filterBy !== this.searchText) {
-                    this.lastSearchKeyUp = $timeout(() => {
-                        this.lastSearchKeyUp = null;
-                        this.applyFilter();
-                    }, 250);
-                }
-                break;
-        }
-    }
-
-    this.onPageChange = function (pageNumber) {
-        fetchData({ pageNumber });
-    }
-
-    this.onItemsPerPageChange = function (itemsPerPage) {
-        fetchData({ pageSize: itemsPerPage });
-    }
-
-    this.refresh = function () {
-        fetchData();
-    }
-
-    this.deleteSelected = function () {
-        const selectedIds = this.tasksList.reduce((ret, task) => {
-            if (task.selected)
-                ret.push(task.id);
-            return ret;
-        }, []);
-    }
-
-    this.showInfo = function (task) {
-        messageHub.showDialogWindow(
-            "task-details",
-            { taskDetails: task }
-        );
+    $scope.getNoDataMessage = function () {
+        return 'No tasks found.';
     }
 }]);
