@@ -920,17 +920,14 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
             $(event.item).replaceWith(element);
             if (isContainer) createSublist(element, control.$scope.id);
         } else {
-            if (event.from.id !== event.to.id) {
-                const control = $scope.popFromModel($scope.formModel, event.item.getAttribute('data-id'));
-                if (control) {
-                    $scope.moveInModel($scope.formModel, control, event.to.id, event.newIndex);
-                } else {
-                    messageHub.showAlertError('Move error', 'There was an error while attempting to move the control in the data model. Control was not found.');
-                }
+            const control = $scope.popFromModel($scope.formModel, event.item.getAttribute('data-id'));
+            if (control) {
+                $scope.moveInModel($scope.formModel, control, event.to.id, event.newIndex);
+            } else {
+                messageHub.showAlertError('Move error', 'There was an error while attempting to move the control in the data model. Control was not found.');
             }
         }
-        $scope.$digest();
-        $scope.fileChanged();
+        $scope.$apply(() => $scope.fileChanged())
     }
 
     function createSublist(element, groupId) {
@@ -941,6 +938,7 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
             },
             animation: 200,
             onAdd: addFormItem,
+            onUpdate: addFormItem,
         });
     }
 
@@ -1598,6 +1596,7 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
                 },
                 animation: 200,
                 onAdd: addFormItem,
+                onUpdate: addFormItem,
             });
         });
     }

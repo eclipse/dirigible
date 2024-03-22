@@ -80,7 +80,7 @@
                             ng-click="togglePreview()">
                         </fd-button>
                         <fd-button dg-type="transparent" glyph="sap-icon--save" dg-label="Save" aria-label="save"
-                            ng-click="save()" state="{{ isFormValid() ? '' : 'disabled'}}">
+                            ng-click="save()" state="{{ isFormValid() && isFileChanged ? '' : 'disabled'}}">
                         </fd-button>
                     </fd-toolbar>
                     <fd-scrollbar class="fd-padding">
