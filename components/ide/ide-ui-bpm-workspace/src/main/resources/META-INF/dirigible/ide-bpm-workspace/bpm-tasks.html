@@ -32,7 +32,7 @@
     <fd-button dg-type="emphasized" state="{{ selectedVariable !== null ? '' : 'disabled' }}" compact="true" dg-label="Claim" title="Claim"
                aria-label="Claim" ng-click="claimTask()"></fd-button>
 </fd-toolbar>
-<label><b>Candidate tasks to claim:</b></label>
+<label style="margin: 5px 10px 5px"><b>Candidate tasks</b></label>
 <fd-scrollbar class="dg-full-height">
     <table fd-table outer-borders="none" display-mode="compact" class="dg-list-border-bottom">
         <thead fd-table-header sticky="true">
@@ -65,7 +65,7 @@
         </tbody>
     </table>
 </fd-scrollbar>
-<label><b>Assigned tasks:</b></label>
+<label style="margin: 5px 10px 5px"><b>Assigned tasks</b></label>
 <fd-scrollbar class="dg-full-height">
     <table fd-table outer-borders="none" display-mode="compact" class="dg-list-border-bottom">
         <thead fd-table-header sticky="true">
