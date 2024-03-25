@@ -16,6 +16,8 @@
 
 const RabbitMQFacade = Java.type("org.eclipse.dirigible.components.api.rabbitmq.RabbitMQFacade");
 
-export function send(queue, message) {
-    return RabbitMQFacade.send(queue, message);
+export class Producer{
+    public static send(queue: string, message: string): void {
+        return RabbitMQFacade.send(queue, message);
+    }
 }
