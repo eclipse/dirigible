@@ -113,11 +113,10 @@ public class CmisS3Object implements CmisObject {
      */
     @Override
     public void delete() {
-        String cmisPath = this.id.substring(1);
         if (this.typeCollection) {
-            S3Facade.deleteFolder(cmisPath);
+            S3Facade.deleteFolder(this.id);
         } else {
-            S3Facade.delete(cmisPath);
+            S3Facade.delete(this.id);
         }
     }
 

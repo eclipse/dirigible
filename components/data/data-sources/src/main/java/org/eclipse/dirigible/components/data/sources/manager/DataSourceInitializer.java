@@ -10,16 +10,8 @@
  */
 package org.eclipse.dirigible.components.data.sources.manager;
 
-import static java.text.MessageFormat.format;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.domain.DataSourceProperty;
@@ -30,8 +22,13 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.*;
+
+import static java.text.MessageFormat.format;
 
 /**
  * The Class DataSourceInitializer.
@@ -80,6 +77,29 @@ public class DataSourceInitializer {
         }
 
         return initDataSource(dataSource);
+    }
+
+    /**
+     * Checks if it is initialized.
+     *
+     * @param dataSourceName the data source name
+     * @return true, if is initialized
+     */
+    public boolean isInitialized(String dataSourceName) {
+        String name = tenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
+        return DATASOURCES.containsKey(name);
+
+    }
+
+    /**
+     * Gets the initialized data source.
+     *
+     * @param dataSourceName the data source name
+     * @return the initialized data source
+     */
+    public javax.sql.DataSource getInitializedDataSource(String dataSourceName) {
+        String name = tenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
+        return DATASOURCES.get(name);
     }
 
     /**
@@ -149,39 +169,6 @@ public class DataSourceInitializer {
     }
 
     /**
-     * Checks if it is initialized.
-     *
-     * @param dataSourceName the data source name
-     * @return true, if is initialized
-     */
-    public boolean isInitialized(String dataSourceName) {
-        String name = tenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
-        return DATASOURCES.containsKey(name);
-
-    }
-
-    /**
-     * Gets the initialized data source.
-     *
-     * @param dataSourceName the data source name
-     * @return the initialized data source
-     */
-    public javax.sql.DataSource getInitializedDataSource(String dataSourceName) {
-        String name = tenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
-        return DATASOURCES.get(name);
-    }
-
-    /**
-     * Removes the initialized data source.
-     *
-     * @param dataSourceName the data source name
-     */
-    public void removeInitializedDataSource(String dataSourceName) {
-        String name = tenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
-        DATASOURCES.remove(name);
-    }
-
-    /**
      * Prepare root folder.
      *
      * @param name the name
@@ -205,21 +192,6 @@ public class DataSourceInitializer {
     }
 
     /**
-     * Register data source bean.
-     *
-     * @param name the name
-     * @param dataSource the data source
-     */
-    private void registerDataSourceBean(String name, ManagedDataSource dataSource) {
-        if (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM.equals(name)) {
-            return; // bean already set by org.eclipse.dirigible.components.database.DataSourceSystemConfig
-        }
-        GenericApplicationContext genericAppContext = (GenericApplicationContext) applicationContext;
-        ConfigurableListableBeanFactory beanFactory = genericAppContext.getBeanFactory();
-        beanFactory.registerSingleton(name, dataSource);
-    }
-
-    /**
      * Gets the hikari properties.
      *
      * @param databaseName the database name
@@ -236,6 +208,36 @@ public class DataSourceInitializer {
               .forEach(key -> properties.put(key, Configuration.get(databaseKeyPrefix + key)));
 
         return properties;
+    }
+
+    /**
+     * Register data source bean.
+     *
+     * @param name the name
+     * @param dataSource the data source
+     */
+    private void registerDataSourceBean(String name, ManagedDataSource dataSource) {
+        if (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM.equals(name)) {
+            return; // bean already set by org.eclipse.dirigible.components.database.DataSourceSystemConfig
+        }
+        GenericApplicationContext genericAppContext = (GenericApplicationContext) applicationContext;
+        ConfigurableListableBeanFactory beanFactory = genericAppContext.getBeanFactory();
+
+        if (beanFactory.containsBean(name)) {
+            logger.debug("Bean with name [{}] is already registered. Skipping its registration.", name);
+            return;
+        }
+        beanFactory.registerSingleton(name, dataSource);
+    }
+
+    /**
+     * Removes the initialized data source.
+     *
+     * @param dataSourceName the data source name
+     */
+    public void removeInitializedDataSource(String dataSourceName) {
+        String name = tenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
+        DATASOURCES.remove(name);
     }
 
 }
