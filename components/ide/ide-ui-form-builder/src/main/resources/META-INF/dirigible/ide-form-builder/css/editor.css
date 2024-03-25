@@ -18,6 +18,9 @@ div.fb-main-container[data-preview=true] {
 }
 
 div.fb-main-container[data-preview=true] div[data-type="container"] {
+    -webkit-box-pack: stretch;
+    -webkit-justify-content: stretch;
+    -ms-flex-pack: stretch;
     justify-content: stretch;
     padding: 0;
     border: none;
@@ -56,6 +59,7 @@ div.fb-control-wrapper.is-selected:before {
     left: 0;
     content: '';
     z-index: 1;
+    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     background: var(--sapList_SelectionBackgroundColor, #e5f0fa);
     border: var(--sapList_BorderWidth, 0.0625rem) solid var(--sapList_SelectionBorderColor, #0854a0);

@@ -40,7 +40,7 @@
                                 has-separator="$last ? true : false"
                                 icon-before="{{ theme.id === currentTheme.id ? 'sap-icon--accept' : 'none' }}"
                                 ng-click="setTheme(theme.id, theme.name)"></fd-menu-item>
-                            <fd-menu-item title="Reset" icon-before="sap-icon--reset" ng-click="resetTheme()">
+                            <fd-menu-item title="Reset" icon-before="sap-icon--reset" ng-click="resetAll()">
                             </fd-menu-item>
                         </fd-menu>
                     </fd-popover-body>
@@ -61,3 +61,4 @@
         </fd-tool-header-group>
     </fd-tool-header>
 </div>
+
