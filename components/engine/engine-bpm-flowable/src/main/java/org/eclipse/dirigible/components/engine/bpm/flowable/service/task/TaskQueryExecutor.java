@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The  TaskQueryExecutor.
+ * The TaskQueryExecutor.
  */
 @Component
 public record TaskQueryExecutor(BpmService bpmService) {
@@ -64,11 +64,11 @@ public record TaskQueryExecutor(BpmService bpmService) {
      * The Enum Type.
      */
     public enum Type {
-        
+
         /** The assignee. */
-        ASSIGNEE("assignee"), 
- /** The candidate groups. */
- CANDIDATE_GROUPS("groups");
+        ASSIGNEE("assignee"),
+        /** The candidate groups. */
+        CANDIDATE_GROUPS("groups");
 
         /** The type. */
         private final String type;

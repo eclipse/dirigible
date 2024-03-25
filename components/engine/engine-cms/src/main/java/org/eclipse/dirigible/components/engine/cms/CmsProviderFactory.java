@@ -14,7 +14,7 @@ package org.eclipse.dirigible.components.engine.cms;
  * A factory for creating CmsProvider objects.
  */
 public interface CmsProviderFactory {
-    
+
     /**
      * Creates the.
      *

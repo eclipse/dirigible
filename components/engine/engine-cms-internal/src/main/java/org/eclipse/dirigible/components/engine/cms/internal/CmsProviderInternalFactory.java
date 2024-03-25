@@ -34,7 +34,7 @@ class CmsProviderInternalFactory implements CmsProviderFactory {
 
     /** The tenant context. */
     private final TenantContext tenantContext;
-    
+
     /** The default tenant. */
     private final Tenant defaultTenant;
 

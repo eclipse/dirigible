@@ -14,11 +14,11 @@ package org.eclipse.dirigible.components.engine.cms;
  * The Class CmsProviderInitializationException.
  */
 public class CmsProviderInitializationException extends RuntimeException {
-    
+
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = -903595641536388250L;
 
-	/**
+    /**
      * Instantiates a new cms provider initialization exception.
      *
      * @param message the message

@@ -22,19 +22,19 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class TenantPathResolved {
-    
+
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(TenantPathResolved.class);
-    
+
     /** The Constant PATH_SEPARATOR. */
     private static final String PATH_SEPARATOR = "/";
-    
+
     /** The Constant ROOT_PATH. */
     private static final String ROOT_PATH = "/";
-    
+
     /** The tenant context. */
     private final TenantContext tenantContext;
-    
+
     /** The default tenant. */
     private final Tenant defaultTenant;
 

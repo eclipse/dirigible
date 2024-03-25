@@ -19,25 +19,25 @@ public class TaskDTO {
 
     /** The id. */
     private String id;
-    
+
     /** The name. */
     private String name;
-    
+
     /** The form key. */
     private String formKey;
-    
+
     /** The assignee. */
     private String assignee;
-    
+
     /** The candidate users. */
     private String candidateUsers;
-    
+
     /** The candidate groups. */
     private String candidateGroups;
-    
+
     /** The create time. */
     private Date createTime;
-    
+
     /** The process instance id. */
     private String processInstanceId;
 

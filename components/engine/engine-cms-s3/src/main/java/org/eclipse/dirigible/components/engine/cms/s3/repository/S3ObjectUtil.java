@@ -22,18 +22,18 @@ import java.util.regex.Pattern;
  * The Class S3ObjectUtil.
  */
 class S3ObjectUtil {
-    
+
     /**
      * The Class S3ObjectDescriptor.
      */
     static class S3ObjectDescriptor {
-        
+
         /** The name. */
         private final String name;
-        
+
         /** The folder. */
         private final boolean folder;
-        
+
         /** The file. */
         private final boolean file;
 
