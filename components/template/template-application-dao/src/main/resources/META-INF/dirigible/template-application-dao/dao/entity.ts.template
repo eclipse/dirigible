@@ -208,8 +208,14 @@ export class ${name}Repository {
 #end
 #foreach ($property in $properties)
 #if($property.dataDefaultValue)
-        if (!entity.${property.name}) {
-            entity.${property.name} = "${property.dataDefaultValue}";
+        if (entity.${property.name} === undefined || entity.${property.name} === null) {
+#if($property.dataTypeTypescript == "string")
+            (entity as ${name}Entity).${property.name} = "${property.dataDefaultValue}";
+#elseif($property.dataTypeTypescript == "Date")
+            (entity as ${name}Entity).${property.name} = new Date("${property.dataDefaultValue}");
+#else
+            (entity as ${name}Entity).${property.name} = ${property.dataDefaultValue};
+#end
         }
 #end
 #end
