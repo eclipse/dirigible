@@ -54,7 +54,9 @@ class QuartzConfig {
 
         Scheduler scheduler = factory.getScheduler();
         logger.debug("Starting Scheduler threads");
-        scheduler.start();
+
+        // give some time for spring auto configurations to pass before starting
+        scheduler.startDelayed(10);
 
         return scheduler;
     }

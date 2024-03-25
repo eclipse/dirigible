@@ -24,20 +24,6 @@ public interface CmisContentStream {
     InputStream getStream();
 
     /**
-     * Gets the cmis session.
-     *
-     * @return the cmis session
-     */
-    CmisSession getCmisSession();
-
-    /**
-     * Sets the cmis session.
-     *
-     * @param cmisSession the new cmis session
-     */
-    void setCmisSession(CmisSession cmisSession);
-
-    /**
      * Gets the filename.
      *
      * @return the filename

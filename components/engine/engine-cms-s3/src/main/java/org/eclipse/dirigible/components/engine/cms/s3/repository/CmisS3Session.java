@@ -21,29 +21,7 @@ import java.io.IOException;
  */
 public class CmisS3Session implements CmisSession {
 
-    /**
-     * The cmis repository.
-     */
-    private CmisRepository cmisRepository;
-
-    /**
-     * Instantiates a new cmis session.
-     *
-     * @param cmisRepository the cmis repository
-     */
-    public CmisS3Session(CmisRepository cmisRepository) {
-        super();
-        this.cmisRepository = cmisRepository;
-    }
-
-    /**
-     * Gets the cmis repository.
-     *
-     * @return the cmis repository
-     */
-    public CmisRepository getCmisRepository() {
-        return cmisRepository;
-    }
+    private static final String ROOT = "/";
 
     /**
      * Returns the information about the CMIS repository.
@@ -60,46 +38,17 @@ public class CmisS3Session implements CmisSession {
      * @return Object Factory
      */
     public CmisS3ObjectFactory getObjectFactory() {
-        return new CmisS3ObjectFactory(this);
+        return new CmisS3ObjectFactory();
     }
 
     /**
      * Returns the root folder of this repository.
      *
      * @return CmisS3Folder
-     * @throws IOException IO Exception
      */
 
-    public CmisS3Folder getRootFolder() throws IOException {
-        return new CmisS3Folder(this);
-    }
-
-    /**
-     * Returns a CMIS Object by name.
-     *
-     * @param id the Id
-     * @return CMIS Object
-     * @throws IOException IO Exception
-     */
-    @Override
-    public CmisS3Object getObject(String id) throws IOException {
-        String path = id;
-        if (path.equals("/")) {
-            return new CmisS3Folder(this, id, path);
-        }
-        if (!path.startsWith("/")) {
-            path = IRepository.SEPARATOR + id;
-        }
-        if (S3Facade.exists(path)) {
-            if (path.endsWith("/")) {
-                return new CmisS3Folder(this, path, CmisS3Utils.findCurrentFolder(path));
-            } else {
-                return new CmisS3Document(this, path, CmisS3Utils.findCurrentFile(path));
-            }
-        } else if (S3Facade.exists(path + "/")) {
-            return new CmisS3Folder(this, path, CmisS3Utils.findCurrentFolder(path + "/"));
-        }
-        return new CmisS3Document(this, id, id);
+    public CmisS3Folder getRootFolder() {
+        return new CmisS3Folder(ROOT, ROOT, true);
     }
 
     /**
@@ -111,11 +60,29 @@ public class CmisS3Session implements CmisSession {
      */
     @Override
     public CmisS3Object getObjectByPath(String path) throws IOException {
-        // Just for debugging
-        // if(!path.equals("__internal/roles-access.json")) {
-        // return getObject(path);
-        // }
-        // return new CmisS3Object(this, "/", "/");
         return getObject(path);
+    }
+
+    /**
+     * Returns a CMIS Object by name.
+     *
+     * @param id the Id
+     * @return CMIS Object
+     * @throws IOException IO Exception
+     */
+    @Override
+    public CmisS3Object getObject(String id) throws IOException {
+        if (isFolder(id)) {
+            return new CmisS3Folder(id, CmisS3Utils.findCurrentFolder(id), ROOT.equals(id));
+        }
+        if (S3Facade.exists(id)) {
+            return new CmisS3Document(id, CmisS3Utils.findCurrentFile(id));
+        } else {
+            throw new IOException("Missing object with id [" + id + "]");
+        }
+    }
+
+    private boolean isFolder(String path) {
+        return path.endsWith(IRepository.SEPARATOR);
     }
 }

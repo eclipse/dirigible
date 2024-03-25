@@ -72,18 +72,4 @@ public class CmisS3Utils {
         }
     }
 
-    /**
-     * Path segments length.
-     *
-     * @param folderPath the folder path
-     * @return the int
-     */
-    public static int pathSegmentsLength(String folderPath) {
-        if (Objects.equals(folderPath, ROOT)) {
-            return 0;
-        }
-
-        String[] parts = folderPath.split(IRepository.SEPARATOR);
-        return parts.length;
-    }
 }

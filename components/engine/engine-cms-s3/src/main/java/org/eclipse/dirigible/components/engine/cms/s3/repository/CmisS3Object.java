@@ -10,14 +10,11 @@
  */
 package org.eclipse.dirigible.components.engine.cms.s3.repository;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.eclipse.dirigible.components.api.s3.S3Facade;
 import org.eclipse.dirigible.components.engine.cms.CmisObject;
 import org.eclipse.dirigible.components.engine.cms.ObjectType;
-import org.eclipse.dirigible.repository.api.IEntity;
-import software.amazon.awssdk.services.s3.model.S3Object;
+
+import java.io.IOException;
 
 /**
  * The Class CmisS3Object.
@@ -25,51 +22,28 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 public class CmisS3Object implements CmisObject {
 
     /**
-     * The session.
+     * The id/path of the object.
      */
-    private CmisS3Session session;
-
+    private final String id;
+    /** The name. */
+    private final String name;
     /**
      * The type collection.
      */
     private boolean typeCollection = false;
 
     /**
-     * The id/path of the object.
-     */
-    private String id;
-
-    /** The name. */
-    private String name;
-
-    /**
      * Instantiates a new cmis object.
      *
-     * @param session the session
      * @param id the path
      * @param name the name
-     * @throws IOException Signals that an I/O exception has occurred.
      */
-    public CmisS3Object(CmisS3Session session, String id, String name) throws IOException {
+    public CmisS3Object(String id, String name) {
         super();
-        this.session = session;
         id = sanitize(id);
         this.id = id;
         this.name = name;
-        if (id.endsWith("/")) {
-            this.typeCollection = true;
-        } else {
-            this.typeCollection = false;
-        }
-    }
-
-    /**
-     * Checks if is collection.
-     *
-     * @return true, if is collection
-     */
-    protected boolean isCollection() {
-        return typeCollection;
+        this.typeCollection = id.endsWith("/");
     }
 
     /**
@@ -80,7 +54,8 @@ public class CmisS3Object implements CmisObject {
      */
     @Override
     public String sanitize(String path) {
-        return path.replace("\\", "");
+        return path.replace("\\", "")
+                   .replaceAll("\\/\\/", "/");
     }
 
     /**
@@ -114,18 +89,12 @@ public class CmisS3Object implements CmisObject {
     }
 
     /**
-     * Delete this CmisS3Object.
+     * Checks if is collection.
      *
-     * @throws IOException IO Exception
+     * @return true, if is collection
      */
-    @Override
-    public void delete() throws IOException {
-        String cmisPath = this.id.substring(1);
-        if (this.typeCollection) {
-            S3Facade.deleteFolder(cmisPath);
-        } else {
-            S3Facade.delete(cmisPath);
-        }
+    protected boolean isCollection() {
+        return typeCollection;
     }
 
     /**
@@ -140,13 +109,24 @@ public class CmisS3Object implements CmisObject {
     }
 
     /**
+     * Delete this CmisS3Object.
+     */
+    @Override
+    public void delete() {
+        if (this.typeCollection) {
+            S3Facade.deleteFolder(this.id);
+        } else {
+            S3Facade.delete(this.id);
+        }
+    }
+
+    /**
      * Rename this CmisS3Object.
      *
      * @param newName the new name
-     * @throws IOException IO Exception
      */
     @Override
-    public void rename(String newName) throws IOException {
+    public void rename(String newName) {
         // TODO see how to rename from S3Facade
         // S3Facade.update();
     }
