@@ -15,12 +15,30 @@
  */
 import * as bytes from "sdk/io/bytes";
 import { InputStream } from "sdk/io/streams";
-import { numeric } from "sdk/utils/alphanumeric";
+
+// @ts-ignore
 const DatabaseFacade = Java.type("org.eclipse.dirigible.components.api.db.DatabaseFacade");
+
+// @ts-ignore
 const DatabaseResultSetHelper = Java.type("org.eclipse.dirigible.components.data.management.helpers.DatabaseResultSetHelper");
+
+// @ts-ignore
 const JSqlDate = Java.type("java.sql.Date");
+
+// @ts-ignore
 const JSqlTimestamp = Java.type("java.sql.Timestamp");
+
+// @ts-ignore
 const JSqlTime = Java.type("java.sql.Time");
+
+// @ts-ignore
+const StringWriter = Java.type("java.io.StringWriter");
+
+// @ts-ignore
+const WriterOutputStream = Java.type("org.apache.commons.io.output.WriterOutputStream");
+
+// @ts-ignore
+const StandardCharsets = Java.type("java.nio.charset.StandardCharsets");
 
 const SQLTypes = Object.freeze({
 	"BOOLEAN": 16,
@@ -46,144 +64,733 @@ const SQLTypes = Object.freeze({
 	"BIT": -7
 });
 
+/**
+ * @deprecated
+ */
 export function getDatabaseTypes(): void {
 	throw new Error("Deprecated");
 };
 
-export function getDataSources(): Object {
+export function getDataSources(): string[] {
 	const datasources = DatabaseFacade.getDataSources();
 	if (datasources) {
 		return JSON.parse(datasources);
 	}
-	return datasources;
+	return [];
 };
 
-export function createDataSource(name: string, driver: string, url: string, username: string, password: string, properties: string): void {
+/**
+ * @deprecated
+ */
+export function createDataSource(_name: string, _driver: string, _url: string, _username: string, _password: string, _properties: string): void {
 	throw new Error("Deprecated");
 };
 
-export function getMetadata(datasourceName: string): Object {
-	let metadata;
-	if (datasourceName) {
-		metadata = DatabaseFacade.getMetadata(datasourceName);
-	} else {
-		metadata = DatabaseFacade.getMetadata();
-	}
+interface TableMetadata {
+	/** The name. */
+	readonly name: string;
 
-	if (metadata) {
-		return JSON.parse(metadata);
-	}
-	return metadata;
+	/** The type. */
+	readonly type: string;
+
+	/** The remarks. */
+	readonly remarks: string;
+
+	/** The columns. */
+	readonly columns: ColumnMetadata[];
+
+	/** The indices. */
+	readonly indices: IndexMetadata[];
+
+	/** The indices. */
+	readonly foreignKeys: ForeignKeyMetadata[];
+
+	/** The kind. */
+	readonly kind: string;
+}
+
+interface ColumnMetadata {
+	/** The name. */
+	readonly name: string;
+
+	/** The type. */
+	readonly type: string;
+
+	/** The size. */
+	readonly size: number;
+
+	/** The nullable. */
+	readonly nullable: boolean;
+
+	/** The key. */
+	readonly key: boolean;
+
+	/** The kind. */
+	readonly kind: string;
+
+	/** The scale. */
+	readonly scale: number;
+}
+
+interface IndexMetadata {
+
+	/** The name. */
+	readonly name: string;
+
+	/** The type. */
+	readonly type: string;
+
+	/** The column. */
+	readonly column: string;
+
+	/** The non unique. */
+	readonly nonUnique: boolean;
+
+	/** The qualifier. */
+	readonly qualifier: string;
+
+	/** The ordinal position. */
+	readonly ordinalPosition: string;
+
+	/** The sort order. */
+	readonly sortOrder: string;
+
+	/** The cardinality. */
+	readonly cardinality: number;
+
+	/** The pages. */
+	readonly pages: number;
+
+	/** The filter condition. */
+	readonly filterCondition: string;
+
+	/** The kind. */
+	readonly kind: string;
+}
+
+interface ForeignKeyMetadata {
+
+	/** The name. */
+	readonly name: string;
+
+	/** The kind. */
+	readonly kind: string;
+}
+
+interface SchemaMetadata {
+	/**
+		 * The name.
+		 */
+	readonly name: string;
+
+	/**
+	 * The kind.
+	 */
+	readonly kind: string;
+
+	/**
+	 * The tables.
+	 */
+	readonly tables: TableMetadata[];
+
+	/**
+	 * The views.
+	 */
+	readonly views: TableMetadata[];
+
+	/**
+	 * The procedures.
+	 */
+	readonly procedures: ProcedureMetadata[];
+
+	/**
+	 * The functions.
+	 */
+	readonly functions: FunctionMetadata[];
+
+	/**
+	 * The functions.
+	 */
+	readonly sequences: SequenceMetadata[];
+}
+
+interface ProcedureMetadata {
+	/** The name. */
+	readonly name: string;
+
+	/** The type. */
+	readonly type: string;
+
+	/** The remarks. */
+	readonly remarks: string;
+
+	/** The columns. */
+	readonly columns: ParameterColumnMetadata[];
+
+	/** The kind. */
+	readonly kind: string;
+}
+
+interface FunctionMetadata {
+	/** The name. */
+	readonly name: string;
+
+	/** The type. */
+	readonly type: string;
+
+	/** The remarks. */
+	readonly remarks: string;
+
+	/** The columns. */
+	readonly columns: ParameterColumnMetadata[];
+
+	/** The kind. */
+	readonly kind: string;
+}
+
+interface ParameterColumnMetadata {
+	/** The name. */
+	readonly name: string;
+
+	/** The kind. */
+	readonly kind: number;
+
+	/** The type. */
+	readonly type: string;
+
+	/** The precision. */
+	readonly precision: number;
+
+	/** The length. */
+	readonly length: number;
+
+	/** The scale. */
+	readonly scale: number;
+
+	/** The radix. */
+	readonly radix: number;
+
+	/** The nullable. */
+	readonly nullable: boolean;
+
+	/** The remarks. */
+	readonly remarks: string;
+}
+
+interface SequenceMetadata {
+
+	/** The name. */
+	readonly name: string;
+
+	/** The kind. */
+	readonly kind: string;
+}
+
+export interface DatabaseMetadata {
+
+	/** The all procedures are callable. */
+	readonly allProceduresAreCallable: boolean;
+
+	/** The all tables are selectable. */
+	readonly allTablesAreSelectable: boolean;
+
+	/** The URL. */
+	readonly url: string;
+
+	/** The user name. */
+	readonly userName: string;
+
+	/** The is read only. */
+	readonly isReadOnly: boolean;
+
+	/** The nulls are sorted high. */
+	readonly nullsAreSortedHigh: boolean;
+
+	/** The nulls are sorted low. */
+	readonly nullsAreSortedLow: boolean;
+
+	/** The nulls are sorted at start. */
+	readonly nullsAreSortedAtStart: boolean;
+
+	/** The nulls are sorted at end. */
+	readonly nullsAreSortedAtEnd: boolean;
+
+	/** The database product name. */
+	readonly databaseProductName: string;
+
+	/** The database product version. */
+	readonly databaseProductVersion: string;
+
+	/** The driver name. */
+	readonly driverName: string;
+
+	/** The driver version. */
+	readonly driverVersion: string;
+
+	/** The driver major version. */
+	readonly driverMajorVersion: number;
+
+	/** The driver minor version. */
+	readonly driverMinorVersion: number;
+
+	/** The uses local files. */
+	readonly usesLocalFiles: boolean;
+
+	/** The uses local file per table. */
+	readonly usesLocalFilePerTable: boolean;
+
+	/** The supports mixed case identifiers. */
+	readonly supportsMixedCaseIdentifiers: boolean;
+
+	/** The stores upper case identifiers. */
+	readonly storesUpperCaseIdentifiers: boolean;
+
+	/** The stores lower case identifiers. */
+	readonly storesLowerCaseIdentifiers: boolean;
+
+	/** The stores mixed case identifiers. */
+	readonly storesMixedCaseIdentifiers: boolean;
+
+	/** The supports mixed case quoted identifiers. */
+	readonly supportsMixedCaseQuotedIdentifiers: boolean;
+
+	/** The stores upper case quoted identifiers. */
+	readonly storesUpperCaseQuotedIdentifiers: boolean;
+
+	/** The stores lower case quoted identifiers. */
+	readonly storesLowerCaseQuotedIdentifiers: boolean;
+
+	/** The stores mixed case quoted identifiers. */
+	readonly storesMixedCaseQuotedIdentifiers: boolean;
+
+	/** The identifier quote string. */
+	readonly identifierQuoteString: string;
+
+	/** The sql keywords. */
+	readonly sqlKeywords: string;
+
+	/** The numeric functions. */
+	readonly numericFunctions: string;
+
+	/** The string functions. */
+	readonly stringFunctions: string;
+
+	/** The system functions. */
+	readonly systemFunctions: string;
+
+	/** The time date functions. */
+	readonly timeDateFunctions: string;
+
+	/** The search string escape. */
+	readonly searchStringEscape: string;
+
+	/** The extra name characters. */
+	readonly extraNameCharacters: string;
+
+	/** The supports alter table with add column. */
+	readonly supportsAlterTableWithAddColumn: boolean;
+
+	/** The supports alter table with drop column. */
+	readonly supportsAlterTableWithDropColumn: boolean;
+
+	/** The supports column aliasing. */
+	readonly supportsColumnAliasing: boolean;
+
+	/** The null plus non null is null. */
+	readonly nullPlusNonNullIsNull: boolean;
+
+	/** The supports convert. */
+	readonly supportsConvert: boolean;
+
+	/** The supports table correlation names. */
+	readonly supportsTableCorrelationNames: boolean;
+
+	/** The supports different table correlation names. */
+	readonly supportsDifferentTableCorrelationNames: boolean;
+
+	/** The supports expressions in order by. */
+	readonly supportsExpressionsInOrderBy: boolean;
+
+	/** The supports order by unrelated. */
+	readonly supportsOrderByUnrelated: boolean;
+
+	/** The supports group by. */
+	readonly supportsGroupBy: boolean;
+
+	/** The supports group by unrelated. */
+	readonly supportsGroupByUnrelated: boolean;
+
+	/** The supports group by beyond select. */
+	readonly supportsGroupByBeyondSelect: boolean;
+
+	/** The supports like escape clause. */
+	readonly supportsLikeEscapeClause: boolean;
+
+	/** The supports multiple result sets. */
+	readonly supportsMultipleResultSets: boolean;
+
+	/** The supports multiple transactions. */
+	readonly supportsMultipleTransactions: boolean;
+
+	/** The supports non nullable columns. */
+	readonly supportsNonNullableColumns: boolean;
+
+	/** The supports minimum SQL grammar. */
+	readonly supportsMinimumSQLGrammar: boolean;
+
+	/** The supports core SQL grammar. */
+	readonly supportsCoreSQLGrammar: boolean;
+
+	/** The supports extended SQL grammar. */
+	readonly supportsExtendedSQLGrammar: boolean;
+
+	/** The supports ANSI 92 entry level SQL. */
+	readonly supportsANSI92EntryLevelSQL: boolean;
+
+	/** The supports ANSI 92 intermediate SQL. */
+	readonly supportsANSI92IntermediateSQL: boolean;
+
+	/** The supports ANSI 92 full SQL. */
+	readonly supportsANSI92FullSQL: boolean;
+
+	/** The supports integrity enhancement facility. */
+	readonly supportsIntegrityEnhancementFacility: boolean;
+
+	/** The supports outer joins. */
+	readonly supportsOuterJoins: boolean;
+
+	/** The supports full outer joins. */
+	readonly supportsFullOuterJoins: boolean;
+
+	/** The supports limited outer joins. */
+	readonly supportsLimitedOuterJoins: boolean;
+
+	/** The schema term. */
+	readonly schemaTerm: string;
+
+	/** The procedure term. */
+	readonly procedureTerm: string;
+
+	/** The catalog term. */
+	readonly catalogTerm: string;
+
+	/** The is catalog at start. */
+	readonly isCatalogAtStart: boolean;
+
+	/** The catalog separator. */
+	readonly catalogSeparator: string;
+
+	/** The supports schemas in data manipulation. */
+	readonly supportsSchemasInDataManipulation: boolean;
+
+	/** The supports schemas in procedure calls. */
+	readonly supportsSchemasInProcedureCalls: boolean;
+
+	/** The supports schemas in table definitions. */
+	readonly supportsSchemasInTableDefinitions: boolean;
+
+	/** The supports schemas in index definitions. */
+	readonly supportsSchemasInIndexDefinitions: boolean;
+
+	/** The supports schemas in privilege definitions. */
+	readonly supportsSchemasInPrivilegeDefinitions: boolean;
+
+	/** The supports catalogs in data manipulation. */
+	readonly supportsCatalogsInDataManipulation: boolean;
+
+	/** The supports catalogs in procedure calls. */
+	readonly supportsCatalogsInProcedureCalls: boolean;
+
+	/** The supports catalogs in table definitions. */
+	readonly supportsCatalogsInTableDefinitions: boolean;
+
+	/** The supports catalogs in index definitions. */
+	readonly supportsCatalogsInIndexDefinitions: boolean;
+
+	/** The supports catalogs in privilege definitions. */
+	readonly supportsCatalogsInPrivilegeDefinitions: boolean;
+
+	/** The supports positioned delete. */
+	readonly supportsPositionedDelete: boolean;
+
+	/** The supports positioned update. */
+	readonly supportsPositionedUpdate: boolean;
+
+	/** The supports select for update. */
+	readonly supportsSelectForUpdate: boolean;
+
+	/** The supports stored procedures. */
+	readonly supportsStoredProcedures: boolean;
+
+	/** The supports subqueries in comparisons. */
+	readonly supportsSubqueriesInComparisons: boolean;
+
+	/** The supports subqueries in exists. */
+	readonly supportsSubqueriesInExists: boolean;
+
+	/** The supports subqueries in ins. */
+	readonly supportsSubqueriesInIns: boolean;
+
+	/** The supports subqueries in quantifieds. */
+	readonly supportsSubqueriesInQuantifieds: boolean;
+
+	/** The supports correlated subqueries. */
+	readonly supportsCorrelatedSubqueries: boolean;
+
+	/** The supports union. */
+	readonly supportsUnion: boolean;
+
+	/** The supports union all. */
+	readonly supportsUnionAll: boolean;
+
+	/** The supports open cursors across commit. */
+	readonly supportsOpenCursorsAcrossCommit: boolean;
+
+	/** The supports open cursors across rollback. */
+	readonly supportsOpenCursorsAcrossRollback: boolean;
+
+	/** The supports open statements across commit. */
+	readonly supportsOpenStatementsAcrossCommit: boolean;
+
+	/** The supports open statements across rollback. */
+	readonly supportsOpenStatementsAcrossRollback: boolean;
+
+	/** The max binary literal length. */
+	readonly maxBinaryLiteralLength: number;
+
+	/** The max char literal length. */
+	readonly maxCharLiteralLength: number;
+
+	/** The max column name length. */
+	readonly maxColumnNameLength: number;
+
+	/** The max columns in group by. */
+	readonly maxColumnsInGroupBy: number;
+
+	/** The max columns in index. */
+	readonly maxColumnsInIndex: number;
+
+	/** The max columns in order by. */
+	readonly maxColumnsInOrderBy: number;
+
+	/** The max columns in select. */
+	readonly maxColumnsInSelect: number;
+
+	/** The max columns in table. */
+	readonly maxColumnsInTable: number;
+
+	/** The max connections. */
+	readonly maxConnections: number;
+
+	/** The max cursor name length. */
+	readonly maxCursorNameLength: number;
+
+	/** The max index length. */
+	readonly maxIndexLength: number;
+
+	/** The max schema name length. */
+	readonly maxSchemaNameLength: number;
+
+	/** The max procedure name length. */
+	readonly maxProcedureNameLength: number;
+
+	/** The max catalog name length. */
+	readonly maxCatalogNameLength: number;
+
+	/** The max row size. */
+	readonly maxRowSize: number;
+
+	/** The max row size include blobs. */
+	readonly maxRowSizeIncludeBlobs: boolean;
+
+	/** The max statement length. */
+	readonly maxStatementLength: number;
+
+	/** The max statements. */
+	readonly maxStatements: number;
+
+	/** The max table name length. */
+	readonly maxTableNameLength: number;
+
+	/** The max tables in select. */
+	readonly maxTablesInSelect: number;
+
+	/** The max user name length. */
+	readonly maxUserNameLength: number;
+
+	/** The default transaction isolation. */
+	readonly defaultTransactionIsolation: number;
+
+	/** The supports transactions. */
+	readonly supportsTransactions: boolean;
+
+	/** The supports data definition and data manipulation transactions. */
+	readonly supportsDataDefinitionAndDataManipulationTransactions: boolean;
+
+	/** The supports data manipulation transactions only. */
+	readonly supportsDataManipulationTransactionsOnly: boolean;
+
+	/** The data definition causes transaction commit. */
+	readonly dataDefinitionCausesTransactionCommit: boolean;
+
+	/** The data definition ignored in transactions. */
+	readonly dataDefinitionIgnoredInTransactions: boolean;
+
+	/** The supports batch updates. */
+	readonly supportsBatchUpdates: boolean;
+
+	/** The supports savepoints. */
+	readonly supportsSavepoints: boolean;
+
+	/** The supports named parameters. */
+	readonly supportsNamedParameters: boolean;
+
+	/** The supports multiple open results. */
+	readonly supportsMultipleOpenResults: boolean;
+
+	/** The supports get generated keys. */
+	readonly supportsGetGeneratedKeys: boolean;
+
+	/** The result set holdability. */
+	readonly resultSetHoldability: number;
+
+	/** The database major version. */
+	readonly databaseMajorVersion: number;
+
+	/** The database minor version. */
+	readonly databaseMinorVersion: number;
+
+	/** The JDBC major version. */
+	readonly jdbcMajorVersion: number;
+
+	/** The JDBC minor version. */
+	readonly jdbcMinorVersion: number;
+
+	/** The SQL state type. */
+	readonly sqlStateType: number;
+
+	/** The locators update copy. */
+	readonly locatorsUpdateCopy: boolean;
+
+	/** The supports statement pooling. */
+	readonly supportsStatementPooling: boolean;
+
+	/** The supports stored functions using call syntax. */
+	readonly supportsStoredFunctionsUsingCallSyntax: boolean;
+
+	/** The auto commit failure closes all result sets. */
+	readonly autoCommitFailureClosesAllResultSets: boolean;
+
+	/** The generated key always returned. */
+	readonly generatedKeyAlwaysReturned: boolean;
+
+	/** The max logical lob size. */
+	readonly maxLogicalLobSize: number;
+
+	/** The supports ref cursors. */
+	readonly supportsRefCursors: boolean;
+
+	/** The schemas. */
+	readonly schemas: SchemaMetadata[];
+
+	/** The kind. */
+	readonly kind: string;
+}
+
+export function getMetadata(datasourceName?: string): DatabaseMetadata | undefined {
+	const metadata = DatabaseFacade.getMetadata(datasourceName);
+	return metadata ? JSON.parse(metadata) : undefined;
 };
 
 export function getProductName(datasourceName?: string): string {
-	let productName;
-	if (datasourceName) {
-		productName = DatabaseFacade.getProductName(datasourceName);
-	} else {
-		productName = DatabaseFacade.getProductName();
-	}
-	return productName;
+	return DatabaseFacade.getProductName(datasourceName);
 };
- 
 
 export function getConnection(datasourceName?: string): Connection {
-	const connection = new Connection(datasourceName);
-
-	return connection;
+	return new Connection(datasourceName);
 };
 
 /**
  * Connection object
  */
 export class Connection {
-	public native;
+	private native;
 
-	constructor(datasourceName? : string) {
-		if(datasourceName) {
-			this.native = DatabaseFacade.getConnection(datasourceName);
-		} else {
-			this.native = DatabaseFacade.getConnection();
-		}
+	constructor(datasourceName?: string) {
+		this.native = DatabaseFacade.getConnection(datasourceName);
 	}
 
 	public prepareStatement(sql: string): PreparedStatement {
-		const preparedStatement = new PreparedStatement();
-		const native = this.native.prepareStatement(sql);
-		preparedStatement.native = native;
-		return preparedStatement;
-	};
+		return new PreparedStatement(this.native.prepareStatement(sql));
+	}
 
 	public prepareCall(sql: string): CallableStatement {
-		const callableStatement = new CallableStatement();
-		const native = this.native.prepareCall(sql);
-		callableStatement.native = native;
-		return callableStatement;
-	};
+		return new CallableStatement(this.native.prepareCall(sql));
+	}
 
 	public close(): void {
 		if (!this.isClosed()) {
 			this.native.close();
 		}
-	};
+	}
 
-	public commit (): void {
+	public commit(): void {
 		this.native.commit();
-	};
+	}
 
-	public getAutoCommit (): boolean {
+	public getAutoCommit(): boolean {
 		return this.native.getAutoCommit();
-	};
+	}
 
-	public getCatalog (): string {
+	public getCatalog(): string {
 		return this.native.getCatalog();
-	};
+	}
 
-	public getSchema (): string {
+	public getSchema(): string {
 		return this.native.getSchema();
-	};
+	}
 
-	public getTransactionIsolation (): number {
+	public getTransactionIsolation(): number {
 		return this.native.getTransactionIsolation();
-	};
+	}
 
-	public isClosed (): boolean {
+	public isClosed(): boolean {
 		return this.native.isClosed();
-	};
+	}
 
-	public isReadOnly (): boolean {
+	public isReadOnly(): boolean {
 		return this.native.isReadOnly();
-	};
+	}
 
-	public isValid (): boolean {
+	public isValid(): boolean {
 		return this.native.isValid();
-	};
+	}
 
-	public rollback (): void {
+	public rollback(): void {
 		this.native.rollback();
-	};
+	}
 
-	public setAutoCommit (autoCommit: boolean): void {
+	public setAutoCommit(autoCommit: boolean): void {
 		this.native.setAutoCommit(autoCommit);
-	};
+	}
 
-	public setCatalog (catalog: string): void {
+	public setCatalog(catalog: string): void {
 		this.native.setCatalog(catalog);
-	};
+	}
 
-	public setReadOnly (readOnly: boolean): void {
+	public setReadOnly(readOnly: boolean): void {
 		this.native.setReadOnly(readOnly);
-	};
+	}
 
-	public setSchema (schema: string): void {
+	public setSchema(schema: string): void {
 		this.native.setSchema(schema);
-	};
+	}
 
-	public setTransactionIsolation (transactionIsolation: number): void {
+	public setTransactionIsolation(transactionIsolation: number): void {
 		this.native.setTransactionIsolation(transactionIsolation);
-	};
+	}
 
-	public getMetaData (): any /*: DatabaseMetaData*/ {
+	public getMetaData(): any /*: DatabaseMetaData*/ {
 		return this.native.getMetaData();
 	}
 }
@@ -192,41 +799,35 @@ export class Connection {
  * Statement object
  */
 class PreparedStatement {
-	public native;
-	public internalStatement;
+	private native: any;
 
-	constructor(internalStatement?: string) {
-		this.internalStatement = internalStatement;
+	constructor(native: any) {
+		this.native = native;
 	}
 
 	public close(): void {
 		this.native.close();
-	};
+	}
 
 	public getResultSet(): ResultSet {
-		const resultset = new ResultSet();
-		const native = this.native.getResultSet();
-		resultset.native = native;
-		return resultset;
-	};
+		return new ResultSet(this.native.getResultSet());
+	}
 
 	public execute(): boolean {
 		return this.native.execute();
-	};
+	}
 
 	public executeQuery(): ResultSet {
-		const resultset = new ResultSet();
-		resultset.native = this.native.executeQuery();
-		return resultset;
-	};
+		return new ResultSet(this.native.executeQuery());
+	}
 
 	public executeUpdate(): number {
 		return this.native.executeUpdate();
-	};
+	}
 
 	public setNull(index: number, sqlType: number): void {
 		this.native.setNull(index, sqlType);
-	};
+	}
 
 	public setBinaryStream(parameterIndex: number, inputStream: InputStream, length?: number): void {
 		if (length) {
@@ -234,7 +835,7 @@ class PreparedStatement {
 		} else {
 			this.native.setBinaryStream(parameterIndex, inputStream);
 		}
-	};
+	}
 
 	public setBoolean(index: number, value?: boolean): void {
 		if (value !== null && value !== undefined) {
@@ -242,24 +843,24 @@ class PreparedStatement {
 		} else {
 			this.setNull(index, SQLTypes.BOOLEAN);
 		}
-	};
+	}
 
-	public setByte(index: number, value?: any /*: byte*/): void {
+	public setByte(index: number, value?: any /*: Byte*/): void {
 		if (value !== null && value !== undefined) {
 			this.native.setByte(index, value);
 		} else {
 			this.setNull(index, SQLTypes.TINYINT);
 		}
-	};
+	}
 
-	public setBlob(index: number, value?: Blob): void {
+	public setBlob(index: number, value?: any /**: Blob*/): void {
 		if (value !== null && value !== undefined) {
 			let blob = createBlobValue(this.native, value);
 			this.native.setBlob(index, blob);
 		} else {
 			this.setNull(index, SQLTypes.BLOB);
 		}
-	};
+	}
 
 	public setClob(index: number, value?: any /*: Clob*/): void {
 		if (value !== null && value !== undefined) {
@@ -268,7 +869,7 @@ class PreparedStatement {
 		} else {
 			this.setNull(index, SQLTypes.CLOB);
 		}
-	};
+	}
 
 	public setNClob(index: number, value?: any /*: NClob*/): void {
 		if (value !== null && value !== undefined) {
@@ -277,7 +878,7 @@ class PreparedStatement {
 		} else {
 			this.setNull(index, SQLTypes.NCLOB);
 		}
-	};
+	}
 
 	public setBytesNative(index: number, value?: any[] /*byte[]*/): void {
 		if (value !== null && value !== undefined) {
@@ -285,7 +886,7 @@ class PreparedStatement {
 		} else {
 			this.setNull(index, SQLTypes.VARBINARY);
 		}
-	};
+	}
 
 	public setBytes(index: number, value?: any[] /*byte[]*/): void {
 		if (value !== null && value !== undefined) {
@@ -294,17 +895,16 @@ class PreparedStatement {
 		} else {
 			this.setNull(index, SQLTypes.VARBINARY);
 		}
-	};
+	}
 
 	public setDate(index: number, value?: string | Date): void {
 		if (value !== null && value !== undefined) {
-			let date = getDateValue(value);
-			let dateInstance = new JSqlDate(date.getTime());
-			this.native.setDate(index, dateInstance);
+			const date = getDateValue(value);
+			this.native.setDate(index, new JSqlDate(date.getTime()));
 		} else {
 			this.setNull(index, SQLTypes.DATE);
 		}
-	};
+	}
 
 	public setDouble(index: number, value?: number): void {
 		if (value !== null && value !== undefined) {
@@ -312,267 +912,261 @@ class PreparedStatement {
 		} else {
 			this.setNull(index, SQLTypes.DOUBLE);
 		}
-	};
+	}
 
-	public setFloat(index: number, value: number) {
+	public setFloat(index: number, value: number): void {
 		if (value !== null && value !== undefined) {
 			this.native.setFloat(index, value);
 		} else {
 			this.setNull(index, SQLTypes.FLOAT);
 		}
-	};
+	}
 
-	public setInt(index: number, value?: number) {
+	public setInt(index: number, value?: number): void {
 		if (value !== null && value !== undefined) {
 			this.native.setInt(index, value);
 		} else {
 			this.setNull(index, SQLTypes.INTEGER);
 		}
-	};
+	}
 
-	public setLong(index: string | number, value?: number) {
-		index = parseInt("" + index, 10); //Rhino things..
+	public setLong(index: number, value?: number): void {
 		if (value !== null && value !== undefined) {
 			this.native.setLong(index, value);
 		} else {
 			this.setNull(index, SQLTypes.BIGINT);
 		}
-	};
+	}
 
-	public setShort(index: number, value?: number) {
+	public setShort(index: number, value?: number): void {
 		if (value !== null && value !== undefined) {
 			this.native.setShort(index, value);
 		} else {
 			this.setNull(index, SQLTypes.SMALLINT);
 		}
-	};
+	}
 
-	public setString(index: number, value?: string) {
+	public setString(index: number, value?: string): void {
 		if (value !== null && value !== undefined) {
 			this.native.setString(index, value);
 		} else {
 			this.setNull(index, SQLTypes.VARCHAR);
 		}
-	};
+	}
 
-	public setTime(index: number, value?: string | Date) {
+	public setTime(index: number, value?: string | Date): void {
 		if (value !== null && value !== undefined) {
-			let date = getDateValue(value);
-			let timeInstance = new JSqlTime(date.getTime());
-			this.native.setTime(index, timeInstance);
+			const date = getDateValue(value);
+			this.native.setTime(index, new JSqlTime(date.getTime()));
 		} else {
 			this.setNull(index, SQLTypes.TIME);
 		}
-	};
+	}
 
-	public setTimestamp(index: number, value?: string | Date) {
+	public setTimestamp(index: number, value?: string | Date): void {
 		if (value !== null && value !== undefined) {
-			let date = getDateValue(value);
-			let timestampInstance = new JSqlTimestamp(date.getTime());
-			this.native.setTimestamp(index, timestampInstance);
+			const date = getDateValue(value);
+			this.native.setTimestamp(index, new JSqlTimestamp(date.getTime()));
 		} else {
 			this.setNull(index, SQLTypes.TIMESTAMP);
 		}
-	};
+	}
 
-	public setBigDecimal(index: number, value?: number /*: BigDecimal*/) {
+	public setBigDecimal(index: number, value?: number /*: BigDecimal*/): void {
 		if (value !== null && value !== undefined) {
 			this.native.setBigDecimal(index, value);
 		} else {
 			this.setNull(index, SQLTypes.DECIMAL);
 		}
-	};
+	}
 
-	public setNString(index: number, value?: string) {
+	public setNString(index: number, value?: string): void {
 		if (value !== null && value !== undefined) {
 			this.native.setNString(index, value);
 		} else {
 			this.setNull(index, SQLTypes.NVARCHAR);
 		}
-	};
+	}
 
-	public addBatch() {
+	public addBatch(): void {
 		this.native.addBatch();
-	};
+	}
 
-	public executeBatch() {
+	public executeBatch(): number[] {
 		return this.native.executeBatch();
-	};
+	}
 
-	public getMetaData() {
+	public getMetaData(): any {
 		return this.native.getMetaData();
-	};
+	}
 
-	public getMoreResults() {
+	public getMoreResults(): boolean {
 		return this.native.getMoreResults();
-	};
+	}
 
-	public getParameterMetaData() {
+	public getParameterMetaData(): any {
 		return this.native.getParameterMetaData();
-	};
+	}
 
-	public getSQLWarning() {
+	public getSQLWarning(): any {
 		return this.native.getWarnings();
-	};
+	}
 
-	public isClosed() {
+	public isClosed(): boolean {
 		return this.native.isClosed();
-	};
+	}
 }
 
 class CallableStatement {
-	public native;
+	private native: any;
 
-	// constructor() {
+	constructor(native: any) {
+		this.native = native;
+	}
 
-	// }
-
-	public getResultSet() {
-		const resultset = new ResultSet();
-		resultset.native = this.native.getResultSet();
-		return resultset;
-	};
+	public getResultSet(): ResultSet {
+		return new ResultSet(this.native.getResultSet());
+	}
 
 	public executeQuery(): ResultSet {
-		const resultset = new ResultSet();
-		resultset.native = this.native.executeQuery();
-		return resultset;
-	};
+		return new ResultSet(this.native.executeQuery());
+	}
 
 	public executeUpdate(): number {
 		return this.native.executeUpdate();
-	};
+	}
 
-	public registerOutParameter(parameterIndex: number, sqlType: keyof typeof SQLTypes | number) {
+	public registerOutParameter(parameterIndex: number, sqlType: keyof typeof SQLTypes | number): void {
 		this.native.registerOutParameter(parameterIndex, sqlType);
-	};
+	}
 
-	public registerOutParameterByScale(parameterIndex: number, sqlType: keyof typeof SQLTypes | number, scale: number) {
+	public registerOutParameterByScale(parameterIndex: number, sqlType: keyof typeof SQLTypes | number, scale: number): void {
 		this.native.registerOutParameter(parameterIndex, sqlType, scale);
-	};
+	}
 
-	public registerOutParameterByTypeName(parameterIndex: number, sqlType: keyof typeof SQLTypes | number, typeName: string) {
+	public registerOutParameterByTypeName(parameterIndex: number, sqlType: keyof typeof SQLTypes | number, typeName: string): void {
 		this.native.registerOutParameter(parameterIndex, sqlType, typeName);
-	};
+	}
 
-	public wasNull() {
+	public wasNull(): boolean {
 		return this.native.wasNull();
-	};
+	}
 
 	public getString(parameterIndex: number): string {
 		return this.native.getString(parameterIndex);
-	};
+	}
 
 	public getBoolean(parameterIndex: number): boolean {
 		return this.native.getBoolean(parameterIndex);
-	};
+	}
 
 	public getByte(parameterIndex: number): any /*: byte*/ {
 		return this.native.getByte(parameterIndex);
-	};
+	}
 
 	public getShort(parameterIndex: number): number {
 		return this.native.getShort(parameterIndex);
-	};
+	}
 
 	public getInt(parameterIndex: number): number {
 		return this.native.getInt(parameterIndex);
-	};
+	}
 
 	public getLong(parameterIndex: number): number {
 		return this.native.getLong(parameterIndex);
-	};
+	}
 
 	public getFloat(parameterIndex: number): number {
 		return this.native.getFloat(parameterIndex);
-	};
+	}
 
 	public getDouble(parameterIndex: number): number {
 		return this.native.getDouble(parameterIndex);
-	};
+	}
 
 	public getDate(parameterIndex: number): Date {
 		return this.native.getDate(parameterIndex);
-	};
+	}
 
 	public getTime(parameterIndex: number): Date {
 		return this.native.getTime(parameterIndex);
-	};
+	}
 
 	public getTimestamp(parameterIndex: number): Date {
 		return this.native.getTimestamp(parameterIndex);
-	};
+	}
 
 	public getObject(parameterIndex: number): any {
 		return this.native.getObject(parameterIndex);
-	};
+	}
 
 	public getBigDecimal(parameterIndex: number): number /*: sql.BigDecimal*/ {
 		return this.native.getBigDecimal(parameterIndex);
-	};
+	}
 
 	public getRef(parameterIndex: number): any /*: sql.Ref*/ {
 		return this.native.getRef(parameterIndex);
-	};
+	}
 
 	public getBytes(parameterIndex: number): any[] /*: byte[]*/ {
-		let data = this.native.getBytes(parameterIndex);
+		const data = this.native.getBytes(parameterIndex);
 		return bytes.toJavaScriptBytes(data);
-	};
+	}
 
 	public getBytesNative(parameterIndex: number): any[] /*: byte[]*/ {
 		return this.native.getBytes(parameterIndex);
-	};
+	}
 
 	public getBlob(parameterIndex: number): any /*: sql.Blob*/ {
-		let data = readBlobValue(this.native.getBlob(parameterIndex));
+		const data = readBlobValue(this.native.getBlob(parameterIndex));
 		return bytes.toJavaScriptBytes(data);
-	};
+	}
 
 	public getBlobNative(parameterIndex: number): any /*: sql.Blob*/ {
 		return readBlobValue(this.native.getBlob(parameterIndex));
-	};
+	}
 
 	public getClob(parameterIndex: number): any /*: sql.Clob*/ {
 		return readClobValue(this.native.getClob(parameterIndex));
-	};
+	}
 
 	public getNClob(parameterIndex: string | number): any /*: sql.NClob*/ {
 		return readNClobValue(this.native.getNClob(parameterIndex));
-	};
+	}
 
 	public getNString(parameterIndex: string | number): string {
 		return this.native.getNString(parameterIndex);
-	};
+	}
 
-	public getArray(parameterIndex: string | number): any /*: sql.Array*/ {
+	public getArray(parameterIndex: string | number): any[] /*: sql.Array*/ {
 		return this.native.getArray(parameterIndex);
-	};
+	}
 
-	public getURL(parameterIndex: string | number): URL {
+	public getURL(parameterIndex: string | number): any {
 		return this.native.getURL(parameterIndex);
-	};
+	}
 
 	public getRowId(parameterIndex: string | number): any /*: sql.RowId*/ {
 		return this.native.getRowId(parameterIndex);
-	};
+	}
 
 	public getSQLXML(parameterIndex: string | number): any /*: sql.SQLXML*/ {
 		return this.native.getSQLXML(parameterIndex);
-	};
+	}
 
-	public setURL(parameterIndex: string, value: URL): void {
+	public setURL(parameterIndex: string, value: any): void {
 		this.native.setURL(parameterIndex, value);
-	};
+	}
 
 	public setNull(parameterIndex: string, sqlTypeStr: keyof typeof SQLTypes | number, typeName?: string): void {
+		// @ts-ignore
 		const sqlType: number = Number.isInteger(sqlTypeStr) ? sqlTypeStr : SQLTypes[sqlTypeStr];
 		if (typeName !== undefined && typeName !== null) {
 			this.native.setNull(parameterIndex, sqlType, typeName);
 		} else {
 			this.native.setNull(parameterIndex, sqlType);
 		}
-	};
+	}
 
 	public setBoolean(parameterIndex: string, value?: boolean): void {
 		if (value !== null && value !== undefined) {
@@ -580,7 +1174,7 @@ class CallableStatement {
 		} else {
 			this.setNull(parameterIndex, SQLTypes.BOOLEAN);
 		}
-	};
+	}
 
 	public setByte(parameterIndex: string, value?: any /*: byte*/): void {
 		if (value !== null && value !== undefined) {
@@ -588,7 +1182,7 @@ class CallableStatement {
 		} else {
 			this.setNull(parameterIndex, SQLTypes.BIT);
 		}
-	};
+	}
 
 	public setShort(parameterIndex: string, value?: number): void {
 		if (value !== null && value !== undefined) {
@@ -596,7 +1190,7 @@ class CallableStatement {
 		} else {
 			this.setNull(parameterIndex, SQLTypes.SMALLINT);
 		}
-	};
+	}
 
 	public setInt(parameterIndex: string, value?: number): void {
 		if (value !== null && value !== undefined) {
@@ -604,7 +1198,7 @@ class CallableStatement {
 		} else {
 			this.setNull(parameterIndex, SQLTypes.INTEGER);
 		}
-	};
+	}
 
 	public setLong(parameterIndex: string, value?: number): void {
 		if (value !== null && value !== undefined) {
@@ -612,7 +1206,7 @@ class CallableStatement {
 		} else {
 			this.setNull(parameterIndex, SQLTypes.BIGINT);
 		}
-	};
+	}
 
 	public setFloat(parameterIndex: string, value?: number): void {
 		if (value !== null && value !== undefined) {
@@ -620,7 +1214,7 @@ class CallableStatement {
 		} else {
 			this.setNull(parameterIndex, SQLTypes.FLOAT);
 		}
-	};
+	}
 
 	public setDouble(parameterIndex: string, value?: number): void {
 		if (value !== null && value !== undefined) {
@@ -628,7 +1222,7 @@ class CallableStatement {
 		} else {
 			this.setNull(parameterIndex, SQLTypes.DOUBLE);
 		}
-	};
+	}
 
 	public setBigDecimal(parameterIndex: string, value?: number /*: BigDecimal*/): void {
 		if (value !== null && value !== undefined) {
@@ -636,7 +1230,7 @@ class CallableStatement {
 		} else {
 			this.setNull(parameterIndex, SQLTypes.DECIMAL);
 		}
-	};
+	}
 
 	public setString(parameterIndex: string, value?: string): void {
 		if (value !== null && value !== undefined) {
@@ -644,7 +1238,7 @@ class CallableStatement {
 		} else {
 			this.setNull(parameterIndex, SQLTypes.VARCHAR);
 		}
-	};
+	}
 
 	public setBytes(parameterIndex: string, value?: any[] /*byte[]*/): void {
 		if (value !== null && value !== undefined) {
@@ -652,37 +1246,34 @@ class CallableStatement {
 		} else {
 			this.setNull(parameterIndex, SQLTypes.ARRAY);
 		}
-	};
+	}
 
 	public setDate(parameterIndex: string, value?: string | Date): void {
 		if (value !== null && value !== undefined) {
-			let date = getDateValue(value);
-			let dateInstance = new JSqlDate(date.getTime());
-			this.native.setDate(parameterIndex, dateInstance);
+			const date = getDateValue(value);
+			this.native.setDate(parameterIndex, new JSqlDate(date.getTime()));
 		} else {
 			this.setNull(parameterIndex, SQLTypes.DATE);
 		}
-	};
+	}
 
 	public setTime(parameterIndex: string, value?: string | Date): void {
 		if (value !== null && value !== undefined) {
-			let date = getDateValue(value);
-			let timeInstance = new JSqlTime(date.getTime());
-			this.native.setTime(parameterIndex, timeInstance);
+			const date = getDateValue(value);
+			this.native.setTime(parameterIndex, new JSqlTime(date.getTime()));
 		} else {
 			this.setNull(parameterIndex, SQLTypes.TIME);
 		}
-	};
+	}
 
 	public setTimestamp(parameterIndex: string, value?: string | Date): void {
 		if (value !== null && value !== undefined) {
 			let date = getDateValue(value);
-			let timestampInstance = new JSqlTimestamp(date.getTime());
-			this.native.setTimestamp(parameterIndex, timestampInstance);
+			this.native.setTimestamp(parameterIndex, new JSqlTimestamp(date.getTime()));
 		} else {
 			this.setNull(parameterIndex, SQLTypes.TIMESTAMP);
 		}
-	};
+	}
 
 	public setAsciiStream(parameterIndex: string, inputStream: InputStream, length: number): void {
 		if (length) {
@@ -690,7 +1281,7 @@ class CallableStatement {
 		} else {
 			this.native.setAsciiStream(parameterIndex, inputStream);
 		}
-	};
+	}
 
 	public setBinaryStream(parameterIndex: string, inputStream: InputStream, length: number): void {
 		if (length) {
@@ -698,9 +1289,9 @@ class CallableStatement {
 		} else {
 			this.native.setBinaryStream(parameterIndex, inputStream);
 		}
-	};
+	}
 
-	public setObject(parameterIndex: string, value: Object, targetSqlType: number, scale: number): void {
+	public setObject(parameterIndex: string, value: any, targetSqlType: number, scale: number): void {
 		if (scale !== undefined && scale !== null && targetSqlType !== undefined && targetSqlType !== null) {
 			this.native.setObject(parameterIndex, value, targetSqlType, scale);
 		} else if (targetSqlType !== undefined && targetSqlType !== null) {
@@ -708,11 +1299,11 @@ class CallableStatement {
 		} else {
 			this.native.setObject(parameterIndex, value);
 		}
-	};
+	}
 
 	public setRowId(parameterIndex: string, value: number /*: RowId*/): void {
 		this.native.setRowId(parameterIndex, value);
-	};
+	}
 
 	public setNString(parameterIndex: string, value: string): void {
 		if (value !== null && value !== undefined) {
@@ -720,7 +1311,7 @@ class CallableStatement {
 		} else {
 			this.setNull(parameterIndex, SQLTypes.NVARCHAR);
 		}
-	};
+	}
 
 	public setSQLXML(parameterIndex: string, value: any /*: SQLXML*/): void {
 		if (value !== null && value !== undefined) {
@@ -728,175 +1319,177 @@ class CallableStatement {
 		} else {
 			throw Error("Nullable SQLXML type not supported.");
 		}
-	};
+	}
 
-	public setBlob(parameterIndex: string, value: any /*Blob */): void{
+	public setBlob(parameterIndex: string, value: any /*Blob */): void {
 		if (value !== null && value !== undefined) {
-			let blob = createBlobValue(this.native, value);
+			const blob = createBlobValue(this.native, value);
 			this.native.setBlob(parameterIndex, blob);
 		} else {
 			this.setNull(parameterIndex, SQLTypes.BLOB);
 		}
-	};
+	}
 
 	public setClob(parameterIndex: string, value: any /*: Clob*/): void {
 		if (value !== null && value !== undefined) {
-			let clob = createClobValue(this.native, value);
+			const clob = createClobValue(this.native, value);
 			this.native.setClob(parameterIndex, clob);
 		} else {
 			this.setNull(parameterIndex, SQLTypes.CLOB);
 		}
-	};
+	}
 
 	public setNClob(parameterIndex: string, value: any /*: NClob*/): void {
 		if (value !== null && value !== undefined) {
-			let nclob = createNClobValue(this.native, value);
+			const nclob = createNClobValue(this.native, value);
 			this.native.setNClob(parameterIndex, nclob);
 		} else {
 			this.setNull(parameterIndex, SQLTypes.NCLOB);
 		}
-	};
+	}
 
 	public execute(): boolean {
 		return this.native.execute();
-	};
+	}
 
-	public getMoreResults(): boolean /* unsure about here */ {
+	public getMoreResults(): boolean {
 		return this.native.getMoreResults();
-	};
+	}
 
 	public getParameterMetaData(): any /*: ParameterMetaData*/ {
 		return this.native.getParameterMetaData();
-	};
+	}
 
 	public isClosed(): boolean {
 		return this.native.isClosed();
-	};
-
+	}
 
 	public close(): void {
 		this.native.close();
-	};
+	}
 }
 
 /**
  * ResultSet object
  */
 class ResultSet {
-	public native;
-	public internalResultset;
+	private native: any;
 
-	constructor(internalResultset?) {
-		this.internalResultset = internalResultset;
+	constructor(native: any) {
+		this.native = native;
 	}
 
-	public toJson(limited: boolean): void {
-		if (limited === undefined || limited === false) {
-			limited = false;
-		}
-		DatabaseResultSetHelper.toJson(this.native, limited, false);
-	};
+	public toJson(limited = false, stringify = false): any[] {
+		const sw = new StringWriter();
+		const output = WriterOutputStream
+			.builder()
+			.setWriter(sw)
+			.setCharset(StandardCharsets.UTF_8)
+			.get();
+		DatabaseResultSetHelper.toJson(this.native, limited, stringify, output);
+		return JSON.parse(sw.toString());
+	}
 
 	public close(): void {
 		this.native.close();
-	};
+	}
 
 	public getBigDecimal(identifier: number): any /*: BigDecimal*/ {
 		return this.native.getBigDecimal(identifier);
-	};
+	}
 
 	public getBoolean(identifier: number): boolean {
 		return this.native.getBoolean(identifier);
-	};
+	}
 
 	public getByte(identifier: number): any /*: byte*/ {
 		return this.native.getByte(identifier);
-	};
+	}
 
 	public getBytes(identifier: number): any[] /*: byte[]*/ {
-		let data = this.native.getBytes(identifier);
+		const data = this.native.getBytes(identifier);
 		return bytes.toJavaScriptBytes(data);
-	};
+	}
 
 	public getBytesNative(identifier: number): any[] /*: byte[]*/ {
 		return this.native.getBytes(identifier);
-	};
+	}
 
 	public getBlob(identifier: number): any /*: sql.Blob*/ {
-		let data = readBlobValue(this.native.getBlob(identifier));
+		const data = readBlobValue(this.native.getBlob(identifier));
 		return bytes.toJavaScriptBytes(data);
-	};
+	}
 
 	public getBlobNative(identifier: number): any /*: sql.Blob*/ {
 		return readBlobValue(this.native.getBlob(identifier));
-	};
+	}
 
 	public getClob(identifier: number): any /*: sql.Clob*/ {
 		return readClobValue(this.native.getClob(identifier));
-	};
+	}
 
 	public getNClob(columnIndex: number): any /*: sql.NClob*/ {
 		return readNClobValue(this.native.getNClob(columnIndex));
 	}
 
-	public getDate(identifier: number): Date | null {
+	public getDate(identifier: number): Date | undefined {
 		const dateInstance = this.native.getDate(identifier);
-		return dateInstance !== null && dateInstance !== undefined ? new Date(dateInstance.getTime()) : null;
-	};
+		return dateInstance !== null && dateInstance !== undefined ? new Date(dateInstance.getTime()) : undefined;
+	}
 
 	public getDouble(identifier: number): number {
 		return this.native.getDouble(identifier);
-	};
+	}
 
 	public getFloat(identifier: number): number {
 		return this.native.getFloat(identifier);
-	};
+	}
 
 	public getInt(identifier: number): number {
 		return this.native.getInt(identifier);
-	};
+	}
 
 	public getLong(identifier: number): number {
 		return this.native.getLong(identifier);
-	};
+	}
 
 	public getShort(identifier: number): number {
 		return this.native.getShort(identifier);
-	};
+	}
 
 	public getString(identifier: number): string {
 		return this.native.getString(identifier);
-	};
+	}
 
-	public getTime(identifier: number): Date | null {
+	public getTime(identifier: number): Date | undefined {
 		const dateInstance = this.native.getTime(identifier);
-		return dateInstance !== null && dateInstance !== undefined ? new Date(dateInstance.getTime()) : null;
-	};
+		return dateInstance !== null && dateInstance !== undefined ? new Date(dateInstance.getTime()) : undefined;
+	}
 
-	public getTimestamp(identifier: number): Date | null {
+	public getTimestamp(identifier: number): Date | undefined {
 		const dateInstance = this.native.getTimestamp(identifier);
-		return dateInstance !== null && dateInstance !== undefined ? new Date(dateInstance.getTime()) : null;
-	};
+		return dateInstance !== null && dateInstance !== undefined ? new Date(dateInstance.getTime()) : undefined;
+	}
 
 	public isAfterLast(): boolean {
 		return this.native.isAfterLast();
-	};
+	}
 
 	public isBeforeFirst(): boolean {
 		return this.native.isBeforeFirst();
-	};
+	}
 
 	public isClosed(): boolean {
 		return this.native.isClosed();
-	};
+	}
 
 	public isFirst(): boolean {
 		return this.native.isFirst();
-	};
+	}
 
 	public isLast(): boolean {
 		return this.native.isLast();
-	};
+	}
 
 	public next(): boolean {
 		return this.native.next();
@@ -913,7 +1506,7 @@ class ResultSet {
 
 function isHanaDatabase(connection: Connection): boolean {
 	let isHanaDatabase = false;
-	let metadata = connection.getMetaData();
+	const metadata = connection.getMetaData();
 	if (metadata !== null && metadata !== undefined) {
 		isHanaDatabase = metadata.getDatabaseProductName() === "HDB";
 	}
@@ -924,19 +1517,19 @@ function readBlobValue(value: any /*: Blob*/) {
 	return value.getBytes(1, value.length());
 }
 
-function createBlobValue(native, value: any /*byte[] */): any /*: Blob*/ {
+function createBlobValue(native: any, value: any /*byte[] */): any /*: Blob*/ {
 	try {
-		let connection = native.getConnection();
+		const connection = native.getConnection();
 		if (connection === null || connection === undefined) {
 			throw new Error("Can't create new 'Blob' value as the connection is null");
 		}
-		let blob = null;
+		let blob;
 		if (isHanaDatabase(connection)) {
-			let ps = null;
+			let ps;
 			try {
 				ps = connection.prepareStatement("SELECT TO_BLOB (?) FROM DUMMY;");
 				ps.setBytes(1, value);
-				let rs = ps.executeQuery();
+				const rs = ps.executeQuery();
 				if (rs.next()) {
 					blob = rs.getBlob(1);
 				}
@@ -950,7 +1543,7 @@ function createBlobValue(native, value: any /*byte[] */): any /*: Blob*/ {
 			blob.setBytes(1, value);
 		}
 		return blob;
-	} catch (e) {
+	} catch (e: any) {
 		throw new Error(`Error occured during creation of 'Clob' value: ${e.message}`);
 	}
 }
@@ -959,19 +1552,19 @@ function readClobValue(value: any /*: Clob*/): string {
 	return value.getSubString(1, value.length());
 }
 
-function createClobValue(native, value: string): any /*: Clob*/ {
+function createClobValue(native: any, value: string): any /*: Clob*/ {
 	try {
-		let connection = native.getConnection();
+		const connection = native.getConnection();
 		if (connection === null || connection === undefined) {
 			throw new Error("Can't create new 'Clob' value as the connection is null");
 		}
-		let clob = null;
+		let clob;
 		if (isHanaDatabase(connection)) {
-			let ps = null;
+			let ps;
 			try {
 				ps = connection.prepareStatement("SELECT TO_CLOB (?) FROM DUMMY;");
 				ps.setString(1, value);
-				let rs = ps.executeQuery();
+				const rs = ps.executeQuery();
 				if (rs.next()) {
 					clob = rs.getClob(1);
 				}
@@ -985,7 +1578,7 @@ function createClobValue(native, value: string): any /*: Clob*/ {
 			clob.setString(1, value);
 		}
 		return clob;
-	} catch (e) {
+	} catch (e: any) {
 		throw new Error(`Error occured during creation of 'Clob' value: ${e.message}`);
 	}
 }
@@ -994,19 +1587,19 @@ function readNClobValue(value: any /*: NClob*/): string {
 	return value.getSubString(1, value.length());
 }
 
-function createNClobValue(native, value: string): any /*: NClob*/ {
+function createNClobValue(native: any, value: string): any /*: NClob*/ {
 	try {
-		let connection = native.getConnection();
+		const connection = native.getConnection();
 		if (connection === null || connection === undefined) {
 			throw new Error("Can't create new 'NClob' value as the connection is null");
 		}
-		let nclob = null;
+		let nclob;
 		if (isHanaDatabase(connection)) {
-			let ps = null;
+			let ps;
 			try {
 				ps = connection.prepareStatement("SELECT TO_NCLOB (?) FROM DUMMY;");
 				ps.setString(1, value);
-				let rs = ps.executeQuery();
+				const rs = ps.executeQuery();
 				if (rs.next()) {
 					nclob = rs.getNClob(1);
 				}
@@ -1020,7 +1613,7 @@ function createNClobValue(native, value: string): any /*: NClob*/ {
 			nclob.setString(1, value);
 		}
 		return nclob;
-	} catch (e) {
+	} catch (e: any) {
 		throw new Error(`Error occured during creation of 'NClob' value: ${e.message}`);
 	}
 }
