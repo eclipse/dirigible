@@ -12,30 +12,32 @@
 
 const UserFacade = Java.type("org.eclipse.dirigible.components.api.security.UserFacade");
 
-export function getName() {
-    return UserFacade.getName();
-};
+export class Security {
+    public static getName(): string {
+        return UserFacade.getName();
+    };
 
-export function isInRole(role) {
-    return UserFacade.isInRole(role);
-};
+    public static isInRole(role: string): boolean {
+        return UserFacade.isInRole(role);
+    };
 
-export function getTimeout() {
-    return UserFacade.getTimeout();
-};
+    public static getTimeout(): number {
+        return UserFacade.getTimeout();
+    };
 
-export function getAuthType() {
-    return UserFacade.getAuthType();
-};
+    public static getAuthType(): string {
+        return UserFacade.getAuthType();
+    };
 
-export function getSecurityToken() {
-    return UserFacade.getSecurityToken();
-};
+    public static getSecurityToken(): string {
+        return UserFacade.getSecurityToken();
+    };
 
-export function getInvocationCount() {
-    return UserFacade.getInvocationCount();
-};
+    public static getInvocationCount(): string {
+        return UserFacade.getInvocationCount();
+    };
 
-export function getLanguage() {
-    return UserFacade.getLanguage();
-};
+    public static getLanguage(): string {
+        return UserFacade.getLanguage();
+    };
+}
