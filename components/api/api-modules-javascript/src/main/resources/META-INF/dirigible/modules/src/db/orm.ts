@@ -63,24 +63,24 @@ ORM.prototype.ASSOCIATION_TYPES_VALUES = Object.keys(ORM.prototype.ASSOCIATION_T
 export interface ORMProperty {
 	name: string;
 	table: string;
-	properties: Array<{
+	properties?: Array<{
 		name: string;
 		column: string;
-		id: boolean;
-		required: boolean;
-		unique: boolean;
-		dbValue: Function;
-		value: Function;
-		allowedOps: Array<'insert' | 'update'>;
+		id?: boolean;
+		required?: boolean;
+		unique?: boolean;
+		dbValue?: Function;
+		value?: Function;
+		allowedOps?: Array<'insert' | 'update'>;
 	}>;
-	associations: Array<{
+	associations?: Array<{
 		name: string;
 		joinKey: string;
 		key: string;
 		type: keyof typeof ORM.prototype.ASSOCIATION_TYPES;
-		targetDao: Function | typeof DAO;
-		joinDao: Function | typeof DAO;
-		defaults: Object;
+		targetDao?: Function | typeof DAO;
+		joinDao?: Function | typeof DAO;
+		defaults?: any;
 	}>;
 }
 
