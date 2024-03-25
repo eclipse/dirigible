@@ -64,28 +64,6 @@ const SQLTypes = Object.freeze({
 	"BIT": -7
 });
 
-/**
- * @deprecated
- */
-export function getDatabaseTypes(): void {
-	throw new Error("Deprecated");
-};
-
-export function getDataSources(): string[] {
-	const datasources = DatabaseFacade.getDataSources();
-	if (datasources) {
-		return JSON.parse(datasources);
-	}
-	return [];
-};
-
-/**
- * @deprecated
- */
-export function createDataSource(_name: string, _driver: string, _url: string, _username: string, _password: string, _properties: string): void {
-	throw new Error("Deprecated");
-};
-
 interface TableMetadata {
 	/** The name. */
 	readonly name: string;
@@ -286,7 +264,7 @@ interface SequenceMetadata {
 	readonly kind: string;
 }
 
-export interface DatabaseMetadata {
+interface DatabaseMetadata {
 
 	/** The all procedures are callable. */
 	readonly allProceduresAreCallable: boolean;
@@ -697,23 +675,48 @@ export interface DatabaseMetadata {
 	readonly kind: string;
 }
 
-export function getMetadata(datasourceName?: string): DatabaseMetadata | undefined {
-	const metadata = DatabaseFacade.getMetadata(datasourceName);
-	return metadata ? JSON.parse(metadata) : undefined;
-};
+export class Database {
 
-export function getProductName(datasourceName?: string): string {
-	return DatabaseFacade.getProductName(datasourceName);
-};
+	/**
+	 * @deprecated
+	 */
+	public static getDatabaseTypes(): void {
+		throw new Error("Deprecated");
+	}
 
-export function getConnection(datasourceName?: string): Connection {
-	return new Connection(datasourceName);
-};
+	public static getDataSources(): string[] {
+		const datasources = DatabaseFacade.getDataSources();
+		if (datasources) {
+			return JSON.parse(datasources);
+		}
+		return [];
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public static createDataSource(_name: string, _driver: string, _url: string, _username: string, _password: string, _properties: string): void {
+		throw new Error("Deprecated");
+	}
+
+	public static getMetadata(datasourceName?: string): DatabaseMetadata | undefined {
+		const metadata = DatabaseFacade.getMetadata(datasourceName);
+		return metadata ? JSON.parse(metadata) : undefined;
+	}
+
+	public static getProductName(datasourceName?: string): string {
+		return DatabaseFacade.getProductName(datasourceName);
+	}
+
+	public static getConnection(datasourceName?: string): Connection {
+		return new Connection(datasourceName);
+	}
+}
 
 /**
  * Connection object
  */
-export class Connection {
+class Connection {
 	private native;
 
 	constructor(datasourceName?: string) {
@@ -1623,4 +1626,10 @@ function getDateValue(value: string | Date): Date {
 		return new Date(value);
 	}
 	return value;
+}
+
+// @ts-ignore
+if (typeof module !== 'undefined') {
+	// @ts-ignore
+	module.exports = Database;
 }
