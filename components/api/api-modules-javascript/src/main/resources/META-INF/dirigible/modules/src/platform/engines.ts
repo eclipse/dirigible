@@ -16,7 +16,7 @@ const HashMap = Java.type("java.util.HashMap");
 /**
  * Get engine by type
  */
-export function getEngine(type) {
+export function getEngine(type: string): Engine {
 	return new Engine(type);
 }
 
@@ -24,9 +24,9 @@ export function getEngine(type) {
  * Engine
  */
 class Engine {
-	constructor(private type) { }
+	constructor(private type: any) { }
 
-	execute(projectName, projectFilePath, projectFilePathParam, parameters, debug) {
+	execute(projectName: string, projectFilePath: string, projectFilePathParam: string, parameters: any, debug: boolean): any {
 		const mapInstance = new HashMap();
 		for (const property in parameters) {
 			if (context.hasOwnProperty(property)) {
@@ -38,7 +38,7 @@ class Engine {
 
 }
 
-export function getTypes() {
+export function getTypes(): JSON {
 	const json = EnginesFacade.getEngineTypes();
 	return JSON.parse(json);
 }

@@ -14,12 +14,14 @@
  */
 const SystemUtils = Java.type("org.apache.commons.lang3.SystemUtils")
 
-export function isWindows() {
-	return SystemUtils.IS_OS_WINDOWS;
-};
+export class Os{
+	public static isWindows(): boolean {
+		return SystemUtils.IS_OS_WINDOWS;
+	};
 
-export function isUnix() {
-	return SystemUtils.IS_OS_UNIX;
-};
+	public static isUnix(): boolean {
+		return SystemUtils.IS_OS_UNIX;
+	};
 
-export const name = SystemUtils.OS_NAME;
+	public name = SystemUtils.OS_NAME;
+}
