@@ -84,9 +84,7 @@ export interface ORMProperty {
 	}>;
 }
 
-
-
-ORM.prototype.getPrimaryKey = function (): ORMProperty['properties'][0] {
+ORM.prototype.getPrimaryKey = function (): ORMProperty['properties'] {
 	if (!this.idProperty) {
 		if (!this.properties || !this.properties.length)
 			throw new Error('Invalid orm configuration - no properties are defined');
@@ -116,7 +114,7 @@ ORM.prototype.isAutoIncrementPrimaryKey = function (): boolean {
 	return this.autoIncrementPrimaryKeyProperty;
 };
 
-ORM.prototype.getProperty = function (name: string): ORMProperty['properties'][0] | undefined {
+ORM.prototype.getProperty = function (name: string): ORMProperty['properties'] | undefined {
 	if (name === undefined)
 		throw new Error('Illegal argument: name[' + name + ']');
 	if (!this.properties || !this.properties.length)
@@ -127,7 +125,7 @@ ORM.prototype.getProperty = function (name: string): ORMProperty['properties'][0
 	return property.length > 0 ? property[0] : undefined;
 };
 
-ORM.prototype.getMandatoryProperties = function (): ORMProperty['properties'] {
+ORM.prototype.getMandatoryProperties = function (): ORMProperty['properties'][] {
 	if (!this.mandatoryProperties) {
 		if (!this.properties || !this.properties.length)
 			throw new Error('Invalid orm configuration - no properties are defined');
@@ -139,7 +137,7 @@ ORM.prototype.getMandatoryProperties = function (): ORMProperty['properties'] {
 	return this.mandatoryProperties;
 };
 
-ORM.prototype.getOptionalProperties = function (): ORMProperty['properties'] {
+ORM.prototype.getOptionalProperties = function (): ORMProperty['properties'][] {
 	if (!this.optionalProperties) {
 		if (!this.properties || !this.properties.length)
 			throw new Error('Invalid orm configuration - no properties are defined');
@@ -151,7 +149,7 @@ ORM.prototype.getOptionalProperties = function (): ORMProperty['properties'] {
 	return this.optionalProperties;
 };
 
-ORM.prototype.getUniqueProperties = function (): ORMProperty['properties'] {
+ORM.prototype.getUniqueProperties = function (): ORMProperty['properties'][] {
 	if (!this.uniqueProperties) {
 		if (!this.properties || !this.properties.length)
 			throw new Error('Invalid orm configuration - no properties are defined');
@@ -184,15 +182,14 @@ ORM.prototype.getAssociationNames = function (): string[] {
 	return names;
 };
 
-
-ORM.prototype.getAssociation = function (associationName: string): ORMProperty['associations'][0] | undefined {
+ORM.prototype.getAssociation = function (associationName: string): ORMProperty['associations'] | undefined {
 	if (this.associations) {
 		return this.associations
 			.filter(function (assoc) {
 				return assoc.name === associationName;
 			})[0];
 	}
-	return;
+	return undefined;
 };
 
 ORM.prototype.validate = function (): void {
@@ -245,7 +242,7 @@ ORM.prototype.validate = function (): void {
 	}
 };
 
-ORM.prototype.toColumn = function (ormProperty): ORMProperty['properties'][0] | undefined {
+ORM.prototype.toColumn = function (ormProperty): ORMProperty['properties'] | undefined {
 	let column;
 	if (ormProperty) {
 		column = {
@@ -264,9 +261,9 @@ ORM.prototype.toColumn = function (ormProperty): ORMProperty['properties'][0] | 
 interface ORMToTable { 
 	name: string; 
 	type: string; 
-	columns: ORMProperty['properties'][0] | null; 
+	columns?: ORMProperty['properties']; 
 	constraints: { primarKeys: { columns: string; }[]; 
-	uniqueIndices: { columns: string; }[]; } | null; 
+	uniqueIndices?: { columns: string; }[]; }; 
 }
 
 
