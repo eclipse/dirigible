@@ -12,7 +12,7 @@ package org.eclipse.dirigible.components.base.http.access;
 
 import java.util.ServiceLoader;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.context.ContextException;
@@ -69,7 +69,6 @@ public class UserRequestVerifier {
      *
      * @param role the role
      * @return true, if is user in role
-     * @see HttpServletRequest#isUserInRole(String)
      */
     public static final boolean isUserInRole(String role) {
         HttpServletRequest request = getRequest();

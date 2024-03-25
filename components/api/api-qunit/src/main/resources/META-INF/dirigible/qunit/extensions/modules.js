@@ -12,7 +12,7 @@
 exports.getContent = function () {
     return [
         {
-            "name": "@dirigible/qunit",
+            "name": "sdk/qunit",
             "description": "Dirigible QUnit module",
             "isPackageDescription": true,
             "dtsPath": "qunit/extensions/qunit.d.ts"

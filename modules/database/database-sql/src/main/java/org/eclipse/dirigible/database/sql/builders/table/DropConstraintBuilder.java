@@ -65,11 +65,6 @@ public class DropConstraintBuilder extends AbstractDropSqlBuilder {
      *
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-     */
     @Override
     public String generate() {
 

@@ -10,14 +10,6 @@
  */
 package org.eclipse.dirigible.components.api.mail;
 
-import com.google.gson.Gson;
-import com.sun.mail.smtp.SMTPSSLTransport;
-import com.sun.mail.smtp.SMTPTransport;
-
-import javax.activation.DataHandler;
-import javax.mail.*;
-import javax.mail.internet.*;
-import javax.mail.util.ByteArrayDataSource;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -25,6 +17,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import org.eclipse.angus.mail.smtp.SMTPSSLTransport;
+import org.eclipse.angus.mail.smtp.SMTPTransport;
+import com.google.gson.Gson;
+import jakarta.activation.DataHandler;
+import jakarta.mail.Authenticator;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.internet.ContentType;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
+import jakarta.mail.util.ByteArrayDataSource;
 
 /**
  * The Class MailClient.
@@ -76,16 +83,11 @@ public class MailClient {
         String transportProperty = properties.getProperty("mail.transport.protocol")
                                              .toLowerCase();
 
-        switch (transportProperty) {
-            case SMTP_TRANSPORT:
-                transport = (SMTPTransport) session.getTransport();
-                break;
-            case SMTPS_TRANSPORT:
-                transport = (SMTPSSLTransport) session.getTransport();
-                break;
-            default:
-                throw new IllegalStateException("Unexpected transport property: " + transportProperty);
-        }
+        transport = switch (transportProperty) {
+            case SMTP_TRANSPORT -> (SMTPTransport) session.getTransport();
+            case SMTPS_TRANSPORT -> (SMTPSSLTransport) session.getTransport();
+            default -> throw new IllegalStateException("Unexpected transport property: " + transportProperty);
+        };
 
         try {
             String proxyType = this.properties.getProperty("ProxyType");
@@ -128,6 +130,7 @@ public class MailClient {
         String user = properties.getProperty(MAIL_USER);
         String password = properties.getProperty(MAIL_PASSWORD);
         Authenticator authenticator = new Authenticator() {
+            @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(user, password);
             }

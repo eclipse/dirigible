@@ -1663,7 +1663,7 @@ projectsView.controller('ProjectsViewController', [
                                         id: $scope.modelTemplates[i].parameters[j].name,
                                         type: ($scope.modelTemplates[i].parameters[j].type === 'checkbox' ? 'checkbox' : 'input'),
                                         label: $scope.modelTemplates[i].parameters[j].label,
-                                        required: $scope.modelTemplates[i].parameters[j].required || true,
+                                        required: $scope.modelTemplates[i].parameters[j].required ?? true,
                                         placeholder: $scope.modelTemplates[i].parameters[j].placeholder,
                                         value: $scope.modelTemplates[i].parameters[j].value || ($scope.modelTemplates[i].parameters[j].type === 'checkbox' ? false : ''),
                                     };

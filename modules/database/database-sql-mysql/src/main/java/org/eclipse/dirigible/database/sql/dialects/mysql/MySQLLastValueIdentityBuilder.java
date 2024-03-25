@@ -10,13 +10,13 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.mysql;
 
-import static java.text.MessageFormat.format;
-
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.sequence.LastValueIdentityBuilder;
 
+import static java.text.MessageFormat.format;
+
 /**
- * The H2 Next Value Sequence Builder.
+ * The MySQL Next Value Sequence Builder.
  */
 public class MySQLLastValueIdentityBuilder extends LastValueIdentityBuilder {
 
@@ -37,14 +37,8 @@ public class MySQLLastValueIdentityBuilder extends LastValueIdentityBuilder {
      *
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
-     */
     @Override
     public String generate() {
-        String sql = format(PATTERN_SELECT_LAST_VALUE_IDENTITY);
-        return sql;
+        return format(PATTERN_SELECT_LAST_VALUE_IDENTITY);
     }
 }

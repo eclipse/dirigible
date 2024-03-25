@@ -91,7 +91,7 @@ public class IndexingService {
     static {
         Configuration.loadModuleConfig("/dirigible-indexing.properties");
         ROOT_FOLDER = Configuration.get(DIRIGIBLE_INDEXING_ROOT_FOLDER);
-        MAX_RESULTS = Integer.parseInt(Configuration.get(DIRIGIBLE_INDEXING_MAX_RESULTS, "100"));
+        MAX_RESULTS = Configuration.getAsInt(DIRIGIBLE_INDEXING_MAX_RESULTS, 100);
     }
 
     /**

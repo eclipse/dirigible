@@ -77,11 +77,6 @@ public class SybaseSqlDialect extends
      *
      * @return the sybase create branching builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#create()
-     */
     @Override
     public SybaseCreateBranchingBuilder create() {
         return new SybaseCreateBranchingBuilder(this);
@@ -91,11 +86,6 @@ public class SybaseSqlDialect extends
      * Drop.
      *
      * @return the sybase drop branching builder
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#drop()
      */
     @Override
     public SybaseDropBranchingBuilder drop() {
@@ -107,11 +97,6 @@ public class SybaseSqlDialect extends
      *
      * @param sequence the sequence
      * @return the sybase next value sequence builder
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
      */
     @Override
     public SybaseNextValueSequenceBuilder nextval(String sequence) {
@@ -147,11 +132,6 @@ public class SybaseSqlDialect extends
      * @param args the args
      * @return the sybase last value identity builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
-     */
     @Override
     public SybaseLastValueIdentityBuilder lastval(String... args) {
         return new SybaseLastValueIdentityBuilder(this);
@@ -161,11 +141,6 @@ public class SybaseSqlDialect extends
      * Select.
      *
      * @return the sybase select builder
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#select()
      */
     @Override
     public SybaseSelectBuilder select() {
@@ -177,11 +152,6 @@ public class SybaseSqlDialect extends
      *
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentDate()
-     */
     @Override
     public String functionCurrentDate() {
         return FUNCTION_CURRENT_DATE;
@@ -191,11 +161,6 @@ public class SybaseSqlDialect extends
      * Function current time.
      *
      * @return the string
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentTime()
      */
     @Override
     public String functionCurrentTime() {
@@ -207,11 +172,6 @@ public class SybaseSqlDialect extends
      *
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentTimestamp()
-     */
     @Override
     public String functionCurrentTimestamp() {
         return FUNCTION_CURRENT_TIMESTAMP;
@@ -221,11 +181,6 @@ public class SybaseSqlDialect extends
      * Gets the functions names.
      *
      * @return the functions names
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#getFunctionsNames()
      */
     @Override
     public Set<String> getFunctionsNames() {

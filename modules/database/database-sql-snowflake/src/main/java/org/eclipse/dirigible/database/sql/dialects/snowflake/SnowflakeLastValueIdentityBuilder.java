@@ -33,11 +33,6 @@ public class SnowflakeLastValueIdentityBuilder extends LastValueIdentityBuilder 
      *
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
-     */
     @Override
     public String generate() {
         return null;

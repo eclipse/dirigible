@@ -10,7 +10,7 @@
  */
 package org.eclipse.dirigible.components.listeners.domain;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 
 /**
  * The Class ListenerKindConverter.

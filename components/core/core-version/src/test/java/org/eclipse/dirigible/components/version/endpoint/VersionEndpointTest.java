@@ -31,6 +31,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * The Class VersionEndpointTest.
+ */
 @WithMockUser
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -39,15 +42,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class VersionEndpointTest {
 
+    /** The mock mvc. */
     @Autowired
     private MockMvc mockMvc;
 
+    /** The wac. */
     @Autowired
     protected WebApplicationContext wac;
 
+    /** The spring security filter chain. */
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
 
+    /**
+     * Test get version.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testGetVersion() throws Exception {
         // TODO: Update expected value when engines added.
@@ -59,6 +70,9 @@ public class VersionEndpointTest {
                        + "\"repositoryProvider\":\"local\",\"databaseProvider\":\"local\",\"engines\":[]}")));
     }
 
+    /**
+     * The Class TestConfiguration.
+     */
     @SpringBootApplication
     static class TestConfiguration {
     }

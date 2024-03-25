@@ -5,13 +5,14 @@
  */
 exports.getTemplate = function() {
 	return {
-		"name": "Database Access",
+		"name": "Database Access (API)",
 		"description": "Database Access Template",
 		"sources": [{
 			"location": "/template-database-access/service.mjs.template", 
 			"action": "generate",
 			"rename": "{{fileName}}.mjs"
 		}],
-		"parameters": []
+		"parameters": [],
+		"order": 21
 	};
 };

@@ -115,11 +115,6 @@ public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends Ab
      *
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-     */
     @Override
     public String generate() {
         throw new IllegalStateException("Direct use of generate on the constraint level is not needed.");

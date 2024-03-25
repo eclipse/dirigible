@@ -57,14 +57,13 @@ public class ManagedDataSource implements DataSource {
      * @return the connection
      * @throws SQLException the SQL exception
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.sql.DataSource#getConnection()
-     */
     @Override
     public Connection getConnection() throws SQLException {
-        return getConnection(null, null);
+        Connection connection = originalDataSource.getConnection();
+
+        enhanceConnection(connection);
+
+        return connection;
     }
 
     /**
@@ -75,14 +74,22 @@ public class ManagedDataSource implements DataSource {
      * @return the connection
      * @throws SQLException the SQL exception
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.sql.DataSource#getConnection(java.lang.String, java.lang.String)
-     */
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        Connection connection = originalDataSource.getConnection();
+        Connection connection = originalDataSource.getConnection(username, password);
+
+        enhanceConnection(connection);
+
+        return connection;
+    }
+
+    /**
+     * Enhance connection.
+     *
+     * @param connection the connection
+     * @throws SQLException the SQL exception
+     */
+    private void enhanceConnection(Connection connection) throws SQLException {
 
         if (this.databaseName == null) {
             this.databaseName = connection.getMetaData()
@@ -108,8 +115,6 @@ public class ManagedDataSource implements DataSource {
             }
             connection.setClientInfo("XS_APPLICATIONUSER", userName);
         }
-
-        return connection;
     }
 
     /**
@@ -117,11 +122,6 @@ public class ManagedDataSource implements DataSource {
      *
      * @return the log writer
      * @throws SQLException the SQL exception
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.sql.CommonDataSource#getLogWriter()
      */
     @Override
     public PrintWriter getLogWriter() throws SQLException {
@@ -133,11 +133,6 @@ public class ManagedDataSource implements DataSource {
      *
      * @return the login timeout
      * @throws SQLException the SQL exception
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.sql.CommonDataSource#getLoginTimeout()
      */
     @Override
     public int getLoginTimeout() throws SQLException {
@@ -151,11 +146,6 @@ public class ManagedDataSource implements DataSource {
      * @return true, if is wrapper for
      * @throws SQLException the SQL exception
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.sql.Wrapper#isWrapperFor(java.lang.Class)
-     */
     @Override
     public boolean isWrapperFor(Class<?> arg0) throws SQLException {
         return originalDataSource.isWrapperFor(arg0);
@@ -167,11 +157,6 @@ public class ManagedDataSource implements DataSource {
      * @param arg0 the new log writer
      * @throws SQLException the SQL exception
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.sql.CommonDataSource#setLogWriter(java.io.PrintWriter)
-     */
     @Override
     public void setLogWriter(PrintWriter arg0) throws SQLException {
         originalDataSource.setLogWriter(arg0);
@@ -182,11 +167,6 @@ public class ManagedDataSource implements DataSource {
      *
      * @param arg0 the new login timeout
      * @throws SQLException the SQL exception
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.sql.CommonDataSource#setLoginTimeout(int)
      */
     @Override
     public void setLoginTimeout(int arg0) throws SQLException {
@@ -201,11 +181,6 @@ public class ManagedDataSource implements DataSource {
      * @return the t
      * @throws SQLException the SQL exception
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.sql.Wrapper#unwrap(java.lang.Class)
-     */
     @Override
     public <T> T unwrap(Class<T> arg0) throws SQLException {
         return originalDataSource.unwrap(arg0);
@@ -216,11 +191,6 @@ public class ManagedDataSource implements DataSource {
      *
      * @return the parent logger
      * @throws SQLFeatureNotSupportedException the SQL feature not supported exception
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.sql.CommonDataSource#getParentLogger()
      */
     @Override
     public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException {

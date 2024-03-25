@@ -10,20 +10,18 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThrows;
-import static org.mockito.Mockito.when;
-import javax.jms.BytesMessage;
-import javax.jms.JMSException;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-import javax.jms.Topic;
+import jakarta.jms.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.lang.IllegalStateException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.when;
 
 /**
  * The Class MessageConsumerTest.
@@ -35,6 +33,9 @@ class MessageConsumerTest {
     /** The Constant QUEUE. */
     private static final String QUEUE = "test-queue";
 
+    /** The Constant TENANT_QUEUE. */
+    private static final String TENANT_QUEUE = "1e7252b1-3bca-4285-bd4e-60e19886d063###test-queue";
+
     /** The Constant TIMEOUT. */
     private static final long TIMEOUT = 100L;
 
@@ -43,6 +44,9 @@ class MessageConsumerTest {
 
     /** The Constant TOPIC. */
     private static final String TOPIC = "test-topic";
+
+    /** The Constant TENANT_TOPIC. */
+    private static final String TENANT_TOPIC = "1e7252b1-3bca-4285-bd4e-60e19886d063###test-topic";
 
     /** The consumer. */
     @InjectMocks
@@ -54,7 +58,7 @@ class MessageConsumerTest {
 
     /** The jsm consumer. */
     @Mock
-    private javax.jms.MessageConsumer jsmConsumer;
+    private jakarta.jms.MessageConsumer jsmConsumer;
 
     /** The queue. */
     @Mock
@@ -72,6 +76,10 @@ class MessageConsumerTest {
     @Mock
     private BytesMessage byteMessage;
 
+    /** The destination name manager. */
+    @Mock
+    private DestinationNameManager destinationNameManager;
+
     /**
      * Test receive message from queue.
      *
@@ -80,7 +88,8 @@ class MessageConsumerTest {
      */
     @Test
     void testReceiveMessageFromQueue() throws TimeoutException, JMSException {
-        when(session.createQueue(QUEUE)).thenReturn(queue);
+        when(destinationNameManager.toTenantName(QUEUE)).thenReturn(TENANT_QUEUE);
+        when(session.createQueue(TENANT_QUEUE)).thenReturn(queue);
         when(session.createConsumer(queue)).thenReturn(jsmConsumer);
         when(jsmConsumer.receive(TIMEOUT)).thenReturn(txtMessage);
         when(txtMessage.getText()).thenReturn(MESSAGE);
@@ -98,11 +107,12 @@ class MessageConsumerTest {
      */
     @Test
     void testReceiveMessageFromQueueOnTimeout() throws TimeoutException, JMSException {
-        when(session.createQueue(QUEUE)).thenReturn(queue);
+        when(destinationNameManager.toTenantName(QUEUE)).thenReturn(TENANT_QUEUE);
+        when(session.createQueue(TENANT_QUEUE)).thenReturn(queue);
         when(session.createConsumer(queue)).thenReturn(jsmConsumer);
         when(jsmConsumer.receive(TIMEOUT)).thenReturn(null);
 
-        assertThrows(TimeoutException.class, ()->  consumer.receiveMessageFromQueue(QUEUE, TIMEOUT));
+        assertThrows(TimeoutException.class, () -> consumer.receiveMessageFromQueue(QUEUE, TIMEOUT));
     }
 
     /**
@@ -113,11 +123,12 @@ class MessageConsumerTest {
      */
     @Test
     void testReceiveMessageFromQueueOnUnsupportedMessageIsReceived() throws TimeoutException, JMSException {
-        when(session.createQueue(QUEUE)).thenReturn(queue);
+        when(destinationNameManager.toTenantName(QUEUE)).thenReturn(TENANT_QUEUE);
+        when(session.createQueue(TENANT_QUEUE)).thenReturn(queue);
         when(session.createConsumer(queue)).thenReturn(jsmConsumer);
         when(jsmConsumer.receive(TIMEOUT)).thenReturn(byteMessage);
 
-        assertThrows(IllegalStateException.class, ()->  consumer.receiveMessageFromQueue(QUEUE, TIMEOUT));
+        assertThrows(IllegalStateException.class, () -> consumer.receiveMessageFromQueue(QUEUE, TIMEOUT));
     }
 
     /**
@@ -127,7 +138,8 @@ class MessageConsumerTest {
      */
     @Test
     void testReceiveMessageFromTopic() throws JMSException {
-        when(session.createTopic(TOPIC)).thenReturn(topic);
+        when(destinationNameManager.toTenantName(TOPIC)).thenReturn(TENANT_TOPIC);
+        when(session.createTopic(TENANT_TOPIC)).thenReturn(topic);
         when(session.createConsumer(topic)).thenReturn(jsmConsumer);
         when(jsmConsumer.receive(TIMEOUT)).thenReturn(txtMessage);
         when(txtMessage.getText()).thenReturn(MESSAGE);
@@ -144,11 +156,12 @@ class MessageConsumerTest {
      */
     @Test
     void testReceiveMessageFromTopicOnTimeout() throws JMSException {
-        when(session.createTopic(TOPIC)).thenReturn(topic);
+        when(destinationNameManager.toTenantName(TOPIC)).thenReturn(TENANT_TOPIC);
+        when(session.createTopic(TENANT_TOPIC)).thenReturn(topic);
         when(session.createConsumer(topic)).thenReturn(jsmConsumer);
         when(jsmConsumer.receive(TIMEOUT)).thenReturn(null);
 
-        assertThrows(TimeoutException.class, ()->  consumer.receiveMessageFromTopic(TOPIC, TIMEOUT));
+        assertThrows(TimeoutException.class, () -> consumer.receiveMessageFromTopic(TOPIC, TIMEOUT));
     }
 
 }

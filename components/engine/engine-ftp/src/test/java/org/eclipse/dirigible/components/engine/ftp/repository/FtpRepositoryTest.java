@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.apache.ftpserver.ftplet.Authority;
 import org.eclipse.dirigible.components.engine.ftp.domain.FtpUser;
@@ -136,6 +136,7 @@ public class FtpRepositoryTest {
      * @param auths the auths
      * @param maxIdleTime the max idle time
      * @param homeDirectory the home directory
+     * @param admin the admin
      * @return the ftp user
      */
     public static FtpUser createFtpUser(String username, String password, boolean enabled, List<? extends Authority> auths, int maxIdleTime,

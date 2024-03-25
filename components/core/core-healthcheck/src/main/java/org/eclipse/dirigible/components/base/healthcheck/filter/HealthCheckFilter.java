@@ -12,14 +12,14 @@ package org.eclipse.dirigible.components.base.healthcheck.filter;
 
 import java.io.IOException;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.components.base.healthcheck.status.HealthCheckStatus;
 import org.springframework.stereotype.Component;
@@ -73,26 +73,62 @@ public class HealthCheckFilter implements Filter {
         chain.doFilter(request, response);
     }
 
+    /**
+     * Checks if is resources request.
+     *
+     * @param path the path
+     * @return true, if is resources request
+     */
     private boolean isResourcesRequest(String path) {
         return path.startsWith("/web/resources") || path.startsWith("/js/resources");
     }
 
+    /**
+     * Checks if is healt check request.
+     *
+     * @param path the path
+     * @return true, if is healt check request
+     */
     private boolean isHealtCheckRequest(String path) {
         return path.startsWith("/core/healthcheck") || path.startsWith("/index-busy.html");
     }
 
+    /**
+     * Checks if is ops request.
+     *
+     * @param path the path
+     * @return true, if is ops request
+     */
     private boolean isOpsRequest(String path) {
         return path.startsWith("/ops");
     }
 
+    /**
+     * Checks if is web jars request.
+     *
+     * @param path the path
+     * @return true, if is web jars request
+     */
     private boolean isWebJarsRequest(String path) {
         return path.startsWith("/webjars");
     }
 
+    /**
+     * Checks if is theme request.
+     *
+     * @param path the path
+     * @return true, if is theme request
+     */
     private boolean isThemeRequest(String path) {
         return path.startsWith("/web/theme/") || path.startsWith("/js/theme/");
     }
 
+    /**
+     * Gets the request path.
+     *
+     * @param httpRequest the http request
+     * @return the request path
+     */
     private String getRequestPath(HttpServletRequest httpRequest) {
         String path = httpRequest.getPathInfo();
         if (path == null) {

@@ -19,15 +19,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
-import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.eclipse.dirigible.components.database.DatabaseNameNormalizer;
+import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.DataTypeUtils;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
+import org.eclipse.dirigible.database.sql.SqlException;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.table.AlterTableBuilder;
 import org.slf4j.Logger;
@@ -58,23 +58,26 @@ public class TableAlterProcessor {
         if (caseSensitive) {
             tableName = "\"" + tableName + "\"";
         }
-        if (logger.isInfoEnabled()) {
-            logger.info("Processing Alter Table: " + tableName);
-        }
+        logger.info("Processing Alter Table: " + tableName);
 
-        Map<String, String> columnDefinitions = new HashMap<String, String>();
+        Map<String, String> columnDefinitions = new HashMap<>();
         DatabaseMetaData dmd = connection.getMetaData();
-        ResultSet rsColumns = dmd.getColumns(null, null, DatabaseNameNormalizer.normalizeTableName(tableName), null);
+        String schema = connection.getSchema();
+        ResultSet rsColumns = dmd.getColumns(null, schema, DatabaseNameNormalizer.normalizeTableName(tableName), null);
         while (rsColumns.next()) {
-            // String typeName =
-            // nativeDialect.getDataTypeName(DataTypeUtils.getDatabaseType(rsColumns.getInt(5)));
-            String typeName = DataTypeUtils.getDatabaseTypeName(rsColumns.getInt(5));
-            columnDefinitions.put(rsColumns.getString(4)
-                                           .toUpperCase(),
-                    typeName);
+            int columnType = rsColumns.getInt(5);
+            String columnName = rsColumns.getString(4)
+                                         .toUpperCase();
+            try {
+                String typeName = DataTypeUtils.getDatabaseTypeName(columnType);
+                columnDefinitions.put(columnName, typeName);
+            } catch (SqlException ex) {
+                String errorMessage = "Missing type for column [" + columnName + "] and type [" + columnType + "]";
+                throw new SqlException(errorMessage, ex);
+            }
         }
 
-        List<String> modelColumnNames = new ArrayList<String>();
+        List<String> modelColumnNames = new ArrayList<>();
 
         // ADD iteration
         for (TableColumn columnModel : tableModel.getColumns()) {
@@ -116,7 +119,8 @@ public class TableAlterProcessor {
 
             modelColumnNames.add(name.toUpperCase());
 
-            if (!columnDefinitions.containsKey(nameOriginal.toUpperCase())) {
+            String nameOriginalCanonical = nameOriginal.toUpperCase();
+            if (!columnDefinitions.containsKey(nameOriginalCanonical)) {
 
                 AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection)
                                                                 .alter()
@@ -134,15 +138,18 @@ public class TableAlterProcessor {
 
                 executeAlterBuilder(connection, alterTableBuilder);
 
-            } else if (!columnDefinitions.get(nameOriginal.toUpperCase())
-                                         .equals(type.toString())) {
-                throw new SQLException(String.format(INCOMPATIBLE_CHANGE_OF_TABLE, tableName, name,
-                        "of type " + columnDefinitions.get(name) + " to be changed to" + type));
+            } else {
+                String typeFromMetadata = columnDefinitions.get(nameOriginalCanonical);
+                String typeFromDefinition = type.toString();
+                if (!DataTypeUtils.getUnifiedDatabaseType(typeFromMetadata)
+                                  .equals(DataTypeUtils.getUnifiedDatabaseType(typeFromDefinition))) {
+                    throw new SQLException(String.format(INCOMPATIBLE_CHANGE_OF_TABLE, tableName, name,
+                            "of type " + typeFromMetadata + " to be changed to " + type));
+                }
             }
         }
 
         // DROP iteration
-
         for (String columnName : columnDefinitions.keySet()) {
             if (caseSensitive) {
                 columnName = "\"" + columnName + "\"";

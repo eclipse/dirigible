@@ -10,14 +10,28 @@
  */
 package org.eclipse.dirigible.components.jobs.repository;
 
+import org.eclipse.dirigible.components.base.artefact.ArtefactRepository;
 import org.eclipse.dirigible.components.jobs.domain.JobEmail;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The Interface JobEmailRepository.
  */
 @Repository("jobEmailDefinitionRepository")
-public interface JobEmailRepository extends JpaRepository<JobEmail, Long> {
+public interface JobEmailRepository extends ArtefactRepository<JobEmail, Long> {
 
+    /**
+     * Sets the running to all.
+     *
+     * @param running the new running to all
+     */
+    @Override
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE JobEmail SET running = :running")
+    void setRunningToAll(@Param("running") boolean running);
 }

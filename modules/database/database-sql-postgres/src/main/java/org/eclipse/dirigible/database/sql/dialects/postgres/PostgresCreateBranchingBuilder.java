@@ -33,11 +33,6 @@ public class PostgresCreateBranchingBuilder extends CreateBranchingBuilder {
      * @param view the view
      * @return the postgres create view builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#view(java.lang.String)
-     */
     @Override
     public PostgresCreateViewBuilder view(String view) {
         return new PostgresCreateViewBuilder(this.getDialect(), view);

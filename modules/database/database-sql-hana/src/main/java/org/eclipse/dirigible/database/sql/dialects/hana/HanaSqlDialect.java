@@ -198,11 +198,6 @@ public class HanaSqlDialect extends
      * @param sequence the sequence
      * @return the hana next value sequence builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
-     */
     @Override
     public HanaNextValueSequenceBuilder nextval(String sequence) {
         return new HanaNextValueSequenceBuilder(this, sequence);
@@ -212,11 +207,6 @@ public class HanaSqlDialect extends
      * Creates the.
      *
      * @return the hana create branching builder
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#create()
      */
     @Override
     public HanaCreateBranchingBuilder create() {
@@ -259,11 +249,6 @@ public class HanaSqlDialect extends
      * @param args the args
      * @return the hana last value identity builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
-     */
     @Override
     public HanaLastValueIdentityBuilder lastval(String... args) {
         return new HanaLastValueIdentityBuilder(this, args);
@@ -276,11 +261,6 @@ public class HanaSqlDialect extends
      * @param table the table
      * @return true, if successful
      * @throws SQLException the SQL exception
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String)
      */
     @Override
     public boolean existsTable(Connection connection, String table) throws SQLException {
@@ -296,12 +276,6 @@ public class HanaSqlDialect extends
      * @return true, if successful
      * @throws SQLException the SQL exception
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String,
-     * java.lang.int)
-     */
     @Override
     public boolean exists(Connection connection, String artefact, int type) throws SQLException {
         return exists(connection, null, artefact, type);
@@ -316,12 +290,6 @@ public class HanaSqlDialect extends
      * @param type the type
      * @return true, if successful
      * @throws SQLException the SQL exception
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String,
-     * java.lang.int)
      */
     @Override
     public boolean exists(Connection connection, String schema, String artefact, int type) throws SQLException {
@@ -362,11 +330,6 @@ public class HanaSqlDialect extends
      *
      * @return true, if is schema filter supported
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#isSchemaFilterSupported()
-     */
     @Override
     public boolean isSchemaFilterSupported() {
         return true;
@@ -377,11 +340,6 @@ public class HanaSqlDialect extends
      *
      * @return the schema filter script
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#getSchemaFilterScript()
-     */
     @Override
     public String getSchemaFilterScript() {
         return "SELECT * FROM \"SYS\".\"SCHEMAS\"";
@@ -391,11 +349,6 @@ public class HanaSqlDialect extends
      * Gets the functions names.
      *
      * @return the functions names
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#getFunctionsNames()
      */
     @Override
     public Set<String> getFunctionsNames() {

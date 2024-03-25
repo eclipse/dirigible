@@ -16,9 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.mail.MessagingException;
-
 import org.apache.commons.validator.routines.EmailValidator;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -33,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import jakarta.mail.MessagingException;
 
 /**
  * The Class JobEmailProcessor.
@@ -168,8 +166,7 @@ public class JobEmailProcessor {
 
     static {
         try {
-            logsRetantionInHours =
-                    Integer.parseInt(Configuration.get(DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD, logsRetantionInHours + ""));
+            logsRetantionInHours = Configuration.getAsInt(DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD, logsRetantionInHours);
         } catch (Throwable e) {
             if (logger.isWarnEnabled()) {
                 logger.warn(DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD

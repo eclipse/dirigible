@@ -33,7 +33,6 @@ function _require (initialPath, path) {
         exports: {},
         require: require
     };
-    _loadedModules[path] = moduleInfo;
 
     const compiledWrapper = load({
         name: path,
@@ -47,6 +46,7 @@ function _require (initialPath, path) {
 
     compiledWrapper.apply(moduleInfo.exports, cjsModuleProps);
     moduleInfo.loaded = true;
+    _loadedModules[path] = moduleInfo;
     return moduleInfo;
 };
 
@@ -83,12 +83,13 @@ function fixPath(path, mod) {
         "template",
         "utils",
         "junit",
-        "integrations"
+        "integrations",
+        "security"
     ];
 
     let fixedPath = path;
-    if (fixedPath.startsWith("@dirigible")) {
-        fixedPath = fixedPath.substring("@dirigible".length)
+    if (fixedPath.startsWith("sdk")) {
+        fixedPath = fixedPath.substring("sdk".length)
     }
 
     for (const mod of mods) {

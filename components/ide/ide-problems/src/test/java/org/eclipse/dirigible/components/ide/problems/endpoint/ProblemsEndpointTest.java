@@ -14,11 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import javax.persistence.EntityManager;
-
 import org.eclipse.dirigible.components.ide.problems.domain.Problem;
-import org.eclipse.dirigible.components.ide.problems.repository.ProblemRepository;
 import org.eclipse.dirigible.components.ide.problems.service.ProblemService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,12 +29,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 
+/**
+ * The Class ProblemsEndpointTest.
+ */
 @WithMockUser
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -46,28 +43,23 @@ import org.springframework.web.context.WebApplicationContext;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
-public class ProblemsEndpointTest {
+class ProblemsEndpointTest {
 
-    @Autowired
-    private EntityManager entityManager;
-
+    /** The problem service. */
     @Autowired
     private ProblemService problemService;
 
-    @Autowired
-    private ProblemRepository problemRepository;
-
+    /** The mock mvc. */
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    protected WebApplicationContext wac;
-
-    @Autowired
-    private FilterChainProxy springSecurityFilterChain;
-
+    /**
+     * Setup.
+     *
+     * @throws Exception the exception
+     */
     @BeforeEach
-    public void setup() throws Exception {
+    void setup() throws Exception {
 
         cleanup();
 
@@ -78,39 +70,76 @@ public class ProblemsEndpointTest {
 
     }
 
+    /**
+     * Cleanup.
+     *
+     * @throws Exception the exception
+     */
     @AfterEach
-    public void cleanup() throws Exception {
+    void cleanup() throws Exception {
 
     }
 
+    /**
+     * Find all problems.
+     */
     @Test
-    public void findAllProblems() {
+    void findAllProblems() {
         Integer size = 10;
         Integer page = 0;
         Pageable pageable = PageRequest.of(page, size);
         assertNotNull(problemService.getPages(pageable));
     }
 
+    /**
+     * Gets the problems.
+     *
+     * @return the problems
+     * @throws Exception the exception
+     */
     @Test
-    public void getProblems() throws Exception {
-        mockMvc.perform(get("/services/ide/problems/"))
+    void getProblems() throws Exception {
+        mockMvc.perform(get("/services/ide/problems"))
                .andDo(print())
                .andExpect(status().is2xxSuccessful());
     }
 
+    /**
+     * Gets the problems by condition.
+     *
+     * @return the problems by condition
+     * @throws Exception the exception
+     */
     @Test
-    public void getProblemsByCondition() throws Exception {
+    void getProblemsByCondition() throws Exception {
         mockMvc.perform(get("/services/ide/problems/search?condition=co&limit=5"))
                .andDo(print())
                .andExpect(status().is2xxSuccessful());
     }
 
+    /**
+     * Creates the problem.
+     *
+     * @param location the location
+     * @param type the type
+     * @param line the line
+     * @param column the column
+     * @param cause the cause
+     * @param expected the expected
+     * @param category the category
+     * @param module the module
+     * @param source the source
+     * @param program the program
+     * @return the problem
+     */
     public static Problem createProblem(String location, String type, String line, String column, String cause, String expected,
             String category, String module, String source, String program) {
-        Problem problem = new Problem(location, type, line, column, cause, expected, category, module, source, program);
-        return problem;
+        return new Problem(location, type, line, column, cause, expected, category, module, source, program);
     }
 
+    /**
+     * The Class TestConfiguration.
+     */
     @SpringBootApplication
     static class TestConfiguration {
     }

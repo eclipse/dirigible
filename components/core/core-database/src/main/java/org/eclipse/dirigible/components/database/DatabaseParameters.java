@@ -10,6 +10,9 @@
  */
 package org.eclipse.dirigible.components.database;
 
+/**
+ * The Interface DatabaseParameters.
+ */
 public interface DatabaseParameters {
 
     /** Whether or not to use case sensitive syntax for table or view names and column names. */
@@ -133,6 +136,8 @@ public interface DatabaseParameters {
     /** The Constant DECIMAL_DIGITS. */
     public static final String DECIMAL_DIGITS = "DECIMAL_DIGITS"; //$NON-NLS-1$
 
+    /** The Constant FK_NAME. */
+    public static final String FK_NAME = "FK_NAME"; //$NON-NLS-1$
 
 
     /** The Constant JDBC_TABLE_NAME_PROPERTY. */

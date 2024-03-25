@@ -5,7 +5,7 @@
  */
 exports.getTemplate = function() {
 	return {
-		"name": "HTML5 (AngularJS)",
+		"name": "AngularJS (UI)",
 		"description": "HTML5 Template with AngularJS",
 		"sources": [{
 			"location": "/template-html/index.html.template", 

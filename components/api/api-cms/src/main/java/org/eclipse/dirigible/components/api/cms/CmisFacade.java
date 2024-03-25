@@ -10,14 +10,11 @@
  */
 package org.eclipse.dirigible.components.api.cms;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-
+import jakarta.servlet.ServletException;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.api.http.HttpRequestFacade;
 import org.eclipse.dirigible.components.engine.cms.CmsProvider;
+import org.eclipse.dirigible.components.engine.cms.CmsProviderFactory;
 import org.eclipse.dirigible.components.security.domain.Access;
 import org.eclipse.dirigible.components.security.verifier.AccessVerifier;
 import org.slf4j.Logger;
@@ -28,57 +25,45 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * The Class CmisFacade.
  */
 @Component
 public class CmisFacade implements ApplicationContextAware, InitializingBean {
 
-    /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(CmisFacade.class);
-
     /** The Constant VERSIONING_STATE_NONE. */
     public static final String VERSIONING_STATE_NONE = "none";
-
     /** The Constant VERSIONING_STATE_MAJOR. */
     public static final String VERSIONING_STATE_MAJOR = "major";
-
     /** The Constant VERSIONING_STATE_MINOR. */
     public static final String VERSIONING_STATE_MINOR = "minor";
-
     /** The Constant VERSIONING_STATE_CHECKEDOUT. */
     public static final String VERSIONING_STATE_CHECKEDOUT = "checkedout";
-
     /** The Constant CMIS_METHOD_READ. */
     public static final String CMIS_METHOD_READ = "READ";
-
     /** The Constant CMIS_METHOD_WRITE. */
     public static final String CMIS_METHOD_WRITE = "WRITE";
-
     /** The Constant DIRIGIBLE_CMS_ROLES_ENABLED. */
     public static final String DIRIGIBLE_CMS_ROLES_ENABLED = "DIRIGIBLE_CMS_ROLES_ENABLED";
-
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(CmisFacade.class);
     /** The application context. */
     private static ApplicationContext applicationContext;
-
-    /** The security access verifier. */
-    private AccessVerifier securityAccessVerifier;
-
-    /** The cms provider. */
-    private CmsProvider cmsProvider;
-
     /** The instance. */
     private static CmisFacade INSTANCE;
+    /** The security access verifier. */
+    private final AccessVerifier securityAccessVerifier;
 
     /**
      * Instantiates a new cmis facade.
      *
-     * @param cmsProvider the cms provider
      * @param securityAccessVerifier the security access verifier
      */
     @Autowired
-    public CmisFacade(CmsProvider cmsProvider, AccessVerifier securityAccessVerifier) {
-        this.cmsProvider = cmsProvider;
+    public CmisFacade(AccessVerifier securityAccessVerifier) {
         this.securityAccessVerifier = securityAccessVerifier;
     }
 
@@ -90,33 +75,6 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         INSTANCE = this;
-    }
-
-    /**
-     * Gets the instance.
-     *
-     * @return the cmis facade
-     */
-    public static CmisFacade get() {
-        return INSTANCE;
-    }
-
-    /**
-     * Gets the cms provider.
-     *
-     * @return the cms provider
-     */
-    protected CmsProvider getCmsProvider() {
-        return cmsProvider;
-    }
-
-    /**
-     * Gets the security access verifier.
-     *
-     * @return the security access verifier
-     */
-    public AccessVerifier getSecurityAccessVerifier() {
-        return securityAccessVerifier;
     }
 
     /**
@@ -135,8 +93,10 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
      * @return the CMIS session object
      */
     public static final Object getSession() {
-        Object session = ((CmsProvider) applicationContext.getBean("CMS_PROVIDER")).getSession();
-        return session;
+        String type = Configuration.get("DIRIGIBLE_CMS_PROVIDER", "cms-provider-internal");
+        CmsProviderFactory cmsProviderFactory = applicationContext.getBean(type, CmsProviderFactory.class);
+        CmsProvider cmsProvider = cmsProviderFactory.create();
+        return cmsProvider.getSession();
     }
 
     /**
@@ -263,5 +223,23 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
                                                .getMatchingSecurityAccesses("CMIS", accessPath, method));
         } while (indexOf > 0);
         return accessDefinitions;
+    }
+
+    /**
+     * Gets the security access verifier.
+     *
+     * @return the security access verifier
+     */
+    public AccessVerifier getSecurityAccessVerifier() {
+        return securityAccessVerifier;
+    }
+
+    /**
+     * Gets the instance.
+     *
+     * @return the cmis facade
+     */
+    public static CmisFacade get() {
+        return INSTANCE;
     }
 }

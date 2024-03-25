@@ -33,7 +33,7 @@ public abstract class AbstractResultSetWriter<T> implements ResultSetWriter<T> {
      * Default Constructor.
      */
     public AbstractResultSetWriter() {
-        this.limit = Integer.parseInt(Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DEFAULT_QUERY_LIMIT, "1000"));
+        this.limit = Configuration.getAsInt(DatabaseParameters.DIRIGIBLE_DATABASE_DEFAULT_QUERY_LIMIT, 1000);
     }
 
     /**

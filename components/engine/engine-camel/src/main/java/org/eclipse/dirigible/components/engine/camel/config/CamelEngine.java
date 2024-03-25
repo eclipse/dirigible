@@ -13,13 +13,27 @@ package org.eclipse.dirigible.components.engine.camel.config;
 import org.eclipse.dirigible.components.base.artefact.Engine;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class CamelEngine.
+ */
 @Component
 public class CamelEngine implements Engine {
+
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
     @Override
     public String getName() {
         return "Integrations (Camel)";
     }
 
+    /**
+     * Gets the provider.
+     *
+     * @return the provider
+     */
     @Override
     public String getProvider() {
         return "Eclipse Dirigible";

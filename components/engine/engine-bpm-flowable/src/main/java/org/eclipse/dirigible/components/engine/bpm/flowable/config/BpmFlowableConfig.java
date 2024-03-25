@@ -15,17 +15,28 @@ import javax.sql.DataSource;
 import org.eclipse.dirigible.components.engine.bpm.BpmProvider;
 import org.eclipse.dirigible.components.engine.bpm.flowable.provider.BpmProviderFlowable;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * The Class BpmFlowableConfig.
+ */
 @Configuration
 @EnableAutoConfiguration(exclude = LiquibaseAutoConfiguration.class)
 public class BpmFlowableConfig {
 
+    /**
+     * Gets the bpm provider.
+     *
+     * @param datasource the datasource
+     * @param repository the repository
+     * @return the bpm provider
+     */
     @Bean("BPM_PROVIDER")
-    public BpmProvider getBpmProvider(DataSource datasource, IRepository repository) {
+    public BpmProvider getBpmProvider(@Qualifier("SystemDB") DataSource datasource, IRepository repository) {
         return new BpmProviderFlowable(datasource, repository);
     }
 

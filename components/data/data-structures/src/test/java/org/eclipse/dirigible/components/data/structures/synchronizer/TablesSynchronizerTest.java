@@ -19,7 +19,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.data.structures.repository.TableColumnRepository;
@@ -113,7 +113,7 @@ public class TablesSynchronizerTest {
     /**
      * Load the artefact.
      *
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Test
     public void load() throws ParseException {

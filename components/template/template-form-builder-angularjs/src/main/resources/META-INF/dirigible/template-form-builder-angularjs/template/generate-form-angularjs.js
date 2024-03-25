@@ -24,7 +24,7 @@ exports.generateView = function(workspaceName, projectName, filePath) {
     var template = repositoryContent.getText("template-form-builder-angularjs/template/angularjs.html.template");
     var segments = filePath.split();
     form.controller = segments[segments.length-1].replace(".form", ".js");
-    var result = templateEngines.generate(template, form);
+    var result = templateEngines.generate("template-form-builder-angularjs/template/angularjs.html.template", template, form);
 
     return result;
 }
@@ -44,7 +44,7 @@ exports.generateController = function(workspaceName, projectName, filePath) {
 
     var template = repositoryContent.getText("template-form-builder-angularjs/template/angularjs.js.template");
 
-    var result = templateEngines.generate(template, form);
+    var result = templateEngines.generate("template-form-builder-angularjs/template/angularjs.js.template", template, form);
 
     return result;
 }

@@ -13,11 +13,16 @@ package org.eclipse.dirigible.components.engine.camel.domain;
 import com.google.gson.annotations.Expose;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
+/**
+ * The Class Camel.
+ */
 @Entity
 @Table(name = "DIRIGIBLE_CAMEL")
 public class Camel extends Artefact {
+
+    /** The Constant ARTEFACT_TYPE. */
     public static final String ARTEFACT_TYPE = "camel";
 
     /** The id. */

@@ -19,7 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.persistence.GenerationType;
+import jakarta.persistence.GenerationType;
 
 import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
@@ -59,13 +59,6 @@ public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor 
      * @param connection the connection
      * @param tableModel the table model
      * @return the string
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript
-     * (java.sql. Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
      */
     @Override
     protected String generateScript(Connection connection, PersistenceTableModel tableModel) {

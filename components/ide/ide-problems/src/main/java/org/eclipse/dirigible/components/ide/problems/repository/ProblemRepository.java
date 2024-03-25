@@ -42,6 +42,7 @@ public interface ProblemRepository extends JpaRepository<Problem, Long> {
     /**
      * Update problems by location, type amd category.
      *
+     * @param cause the cause
      * @param location the location
      * @param type the type
      * @param category the category

@@ -12,11 +12,13 @@ package org.eclipse.dirigible.components.api.security;
 
 import static java.text.MessageFormat.format;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.websocket.Session;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.websocket.Session;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.api.http.HttpRequestFacade;
@@ -25,6 +27,9 @@ import org.eclipse.dirigible.components.base.context.ContextException;
 import org.eclipse.dirigible.components.base.context.ThreadContextFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -274,6 +279,15 @@ public class UserFacade {
             }
         }
         return null;
+    }
+
+    public static Collection<String> getUserRoles() {
+        Authentication authentication = SecurityContextHolder.getContext()
+                                                             .getAuthentication();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        return authorities.stream()
+                          .map(GrantedAuthority::getAuthority)
+                          .collect(Collectors.toList());
     }
 
     /**

@@ -19,7 +19,7 @@ import java.nio.file.Path;
 import java.text.ParseException;
 import java.util.List;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.eclipse.dirigible.components.openapi.domain.OpenAPI;
 import org.eclipse.dirigible.components.openapi.repository.OpenAPIRepository;
@@ -35,6 +35,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The Class OpenAPISynchronizerTest.
+ */
 @SpringBootTest(classes = {OpenAPIRepository.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
@@ -108,7 +111,8 @@ class OpenAPISynchronizerTest {
     /**
      * Load the artefact.
      *
-     * @throws ParseException
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws ParseException the parse exception
      */
     @Test
     public void testLoad() throws IOException, ParseException {

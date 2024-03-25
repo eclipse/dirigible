@@ -22,17 +22,21 @@ import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 import org.springframework.beans.BeanUtils;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import static org.eclipse.dirigible.components.engine.bpm.flowable.dto.ActionData.Action.SKIP;
+import static org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmService.DIRIGIBLE_BPM_INTERNAL_SKIP_STEP;
 
 /**
  * The Class DirigibleCallDelegate.
  */
 public class DirigibleCallDelegate implements JavaDelegate {
 
+    /** The js expression regex. */
     private static Pattern JS_EXPRESSION_REGEX = Pattern.compile("(.*\\.m?js)(?:\\/(\\w*))?(?:\\/(\\w*))?");
 
     /**
@@ -89,23 +93,24 @@ public class DirigibleCallDelegate implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) {
 
-        try {
-            Map<Object, Object> context = new HashMap<>();
-            ExecutionData executionData = new ExecutionData();
-            BeanUtils.copyProperties(execution, executionData);
-            context.put("execution", GsonHelper.toJson(executionData));
-            if (type == null) {
-                type = new FixedValue("javascript");
-            }
-            if (handler == null) {
-                throw new BpmnError("Handler cannot be null at the call delegate.");
-            }
-
-            executeJSHandler(context);
-
-        } catch (Exception e) {
-            throw new BpmnError(e.getMessage());
+        String action = (String) execution.getVariable(DIRIGIBLE_BPM_INTERNAL_SKIP_STEP);
+        if (SKIP.getActionName()
+                .equals(action)) {
+            execution.removeVariable(DIRIGIBLE_BPM_INTERNAL_SKIP_STEP);
+            return;
         }
+
+        Map<Object, Object> context = new HashMap<>();
+        ExecutionData executionData = new ExecutionData();
+        BeanUtils.copyProperties(execution, executionData);
+        context.put("execution", GsonHelper.toJson(executionData));
+        if (type == null) {
+            type = new FixedValue("javascript");
+        }
+        if (handler == null) {
+            throw new BpmnError("Handler cannot be null at the call delegate.");
+        }
+        executeJSHandler(context);
     }
 
     /**
@@ -134,13 +139,33 @@ public class DirigibleCallDelegate implements JavaDelegate {
         }
     }
 
+    /**
+     * The Class JSTask.
+     */
     static class JSTask {
+
+        /** The source file path. */
         private final Path sourceFilePath;
+
+        /** The class name. */
         private final @Nullable String className;
+
+        /** The method name. */
         private final @Nullable String methodName;
+
+        /** The has exported class and method. */
         private final boolean hasExportedClassAndMethod;
+
+        /** The has exported method. */
         private final boolean hasExportedMethod;
 
+        /**
+         * Instantiates a new JS task.
+         *
+         * @param sourceFilePath the source file path
+         * @param className the class name
+         * @param methodName the method name
+         */
         JSTask(Path sourceFilePath, @Nullable String className, @Nullable String methodName) {
             this.sourceFilePath = sourceFilePath;
             this.className = className;
@@ -149,6 +174,12 @@ public class DirigibleCallDelegate implements JavaDelegate {
             this.hasExportedClassAndMethod = className != null && methodName != null;
         }
 
+        /**
+         * From repository path.
+         *
+         * @param repositoryPath the repository path
+         * @return the JS task
+         */
         static JSTask fromRepositoryPath(RepositoryPath repositoryPath) {
             var matcher = JS_EXPRESSION_REGEX.matcher(repositoryPath.getPath());
             if (!matcher.matches()) {
@@ -170,22 +201,47 @@ public class DirigibleCallDelegate implements JavaDelegate {
             return new JSTask(sourceFilePath, maybeClassName, maybeMethodName);
         }
 
+        /**
+         * Gets the source file path.
+         *
+         * @return the source file path
+         */
         public Path getSourceFilePath() {
             return sourceFilePath;
         }
 
+        /**
+         * Gets the class name.
+         *
+         * @return the class name
+         */
         public String getClassName() {
             return className;
         }
 
+        /**
+         * Gets the method name.
+         *
+         * @return the method name
+         */
         public String getMethodName() {
             return methodName;
         }
 
+        /**
+         * Checks for exported class and method.
+         *
+         * @return true, if successful
+         */
         public boolean hasExportedClassAndMethod() {
             return hasExportedClassAndMethod;
         }
 
+        /**
+         * Checks for exported method.
+         *
+         * @return true, if successful
+         */
         public boolean hasExportedMethod() {
             return hasExportedMethod;
         }

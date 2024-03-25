@@ -11,33 +11,33 @@
 package org.eclipse.dirigible.components.engine.bpm.flowable.endpoint;
 
 import static java.text.MessageFormat.format;
+import static org.eclipse.dirigible.components.engine.bpm.flowable.dto.ActionData.Action.*;
+import static org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmService.DIRIGIBLE_BPM_INTERNAL_SKIP_STEP;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
-import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ProcessDefinitionData;
-import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ProcessInstanceData;
+import org.eclipse.dirigible.components.engine.bpm.flowable.dto.*;
 import org.eclipse.dirigible.components.engine.bpm.flowable.provider.BpmProviderFlowable;
 import org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmService;
+import org.eclipse.dirigible.components.engine.bpm.flowable.service.task.TaskQueryExecutor;
 import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
 import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
 import org.flowable.bpmn.model.BpmnModel;
-import org.flowable.engine.ProcessEngine;
-import org.flowable.engine.ProcessEngineConfiguration;
-import org.flowable.engine.RepositoryService;
-import org.flowable.engine.RuntimeService;
+import org.flowable.engine.*;
 import org.flowable.engine.repository.ProcessDefinition;
-import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.identitylink.api.IdentityLink;
+import org.flowable.identitylink.api.IdentityLinkInfo;
 import org.flowable.image.ProcessDiagramGenerator;
+import org.flowable.job.api.Job;
+import org.flowable.task.api.Task;
+import org.flowable.variable.api.persistence.entity.VariableInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,13 +45,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -66,20 +60,31 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "bpm")
 public class BpmFlowableEndpoint extends BaseEndpoint {
 
-    /** The Constant logger. */
+    /**
+     * The Constant logger.
+     */
     private static final Logger logger = LoggerFactory.getLogger(BpmFlowableEndpoint.class);
 
-    /** The bpm provider flowable. */
+    /**
+     * The bpm provider flowable.
+     */
     @Autowired
     private BpmProviderFlowable bpmProviderFlowable;
 
-    /** The bpm service. */
+    /**
+     * The bpm service.
+     */
     @Autowired
     private BpmService bpmService;
 
-    /** The workspace service. */
+    /**
+     * The workspace service.
+     */
     @Autowired
     private WorkspaceService workspaceService;
+
+    @Autowired
+    private TaskQueryExecutor taskQueryExecutor;
 
 
     /**
@@ -246,6 +251,145 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
     @GetMapping(value = "/bpm-processes/instance/{id}")
     public ResponseEntity<ProcessInstanceData> getProcessesInstances(@PathVariable("id") String id) {
         return ResponseEntity.ok(getBpmService().getProcessInstanceById(id));
+    }
+
+    /**
+     * List active process instance variables.
+     *
+     * @param id the process instance id
+     * @return process variables list
+     */
+    @GetMapping(value = "/bpm-processes/instance/{id}/variables")
+    public ResponseEntity<List<VariableInstance>> getProcessInstanceVariables(@PathVariable("id") String id) {
+
+        BpmService bpmService = getBpmService();
+        List<VariableInstance> variables = bpmService.getBpmProviderFlowable()
+                                                     .getProcessEngine()
+                                                     .getRuntimeService()
+                                                     .createVariableInstanceQuery()
+                                                     .processInstanceId(id)
+                                                     .list();
+
+        return ResponseEntity.ok(variables);
+    }
+
+    @GetMapping(value = "/bpm-processes/instance/{id}/tasks")
+    public ResponseEntity<List<TaskDTO>> getProcessInstanceTasks(@PathVariable("id") String id,
+            @RequestParam(value = "type", required = false) String type) {
+        TaskQueryExecutor.Type principalType;
+        try {
+            principalType = TaskQueryExecutor.Type.fromString(type);
+        } catch (IllegalArgumentException e) {
+            principalType = TaskQueryExecutor.Type.ASSIGNEE;
+        }
+        List<TaskDTO> taskDTOS = taskQueryExecutor.findTasks(id, principalType)
+                                                  .stream()
+                                                  .map(this::mapToDTO)
+                                                  .collect(Collectors.toList());
+        return ResponseEntity.ok(taskDTOS);
+    }
+
+    private TaskService getTaskService() {
+        return bpmService.getBpmProviderFlowable()
+                         .getProcessEngine()
+                         .getTaskService();
+    }
+
+    private TaskDTO mapToDTO(Task task) {
+        List<IdentityLink> identityLinks = getTaskService().getIdentityLinksForTask(task.getId());
+
+        TaskDTO dto = new TaskDTO();
+        dto.setId(task.getId());
+        dto.setName(task.getName());
+        dto.setAssignee(task.getAssignee());
+        dto.setFormKey(task.getFormKey());
+        dto.setCreateTime(task.getCreateTime());
+        dto.setProcessInstanceId(task.getProcessInstanceId());
+        dto.setCandidateUsers(identityLinks.stream()
+                                           .map(IdentityLinkInfo::getUserId)
+                                           .filter(Objects::nonNull)
+                                           .collect(Collectors.joining(",")));
+        dto.setCandidateGroups(identityLinks.stream()
+                                            .map(IdentityLinkInfo::getGroupId)
+                                            .filter(Objects::nonNull)
+                                            .collect(Collectors.joining(",")));
+        return dto;
+    }
+
+    /**
+     * Add or update active process instance variable.
+     *
+     * @param id the process instance id
+     * @param variableData the variable data
+     * @return the response entity
+     */
+    @PostMapping(value = "/bpm-processes/instance/{id}/variables")
+    public ResponseEntity<Void> addProcessInstanceVariables(@PathVariable("id") String id, @RequestBody VariableData variableData) {
+        getBpmService().addProcessInstanceVariable(id, variableData.getName(), variableData.getValue());
+        return ResponseEntity.ok()
+                             .build();
+    }
+
+    /**
+     * Execute action on active process instance variable.
+     *
+     * @param id the process instance id
+     * @param actionData the action to be executed, possible values: RETRY
+     * @return the response entity
+     */
+    @PostMapping(value = "/bpm-processes/instance/{id}")
+    public ResponseEntity<String> executeProcessInstanceAction(@PathVariable("id") String id, @RequestBody ActionData actionData) {
+
+        BpmService bpmService = getBpmService();
+        if (RETRY.getActionName()
+                 .equals(actionData.getAction())) {
+            return retryJob(id);
+        } else if (SKIP.getActionName()
+                       .equals(actionData.getAction())) {
+            bpmService.addProcessInstanceVariable(id, DIRIGIBLE_BPM_INTERNAL_SKIP_STEP, SKIP.getActionName());
+            return retryJob(id);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                 .body("Invalid action id provided [" + actionData.getAction() + "]");
+        }
+    }
+
+    /**
+     * Retry job.
+     *
+     * @param processInstanceId the process instance id
+     * @return the response entity
+     */
+    private ResponseEntity<String> retryJob(String processInstanceId) {
+        List<Job> jobs = bpmService.getDeadLetterJobs(processInstanceId);
+
+        if (jobs.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                 .body("No dead letter jobs found for process instance id [" + processInstanceId + "]");
+        }
+        bpmService.retryDeadLetterJob(jobs.get(0), 1);
+        return ResponseEntity.ok()
+                             .build();
+    }
+
+    /**
+     * List dead-letter jobs for an active process instance variables.
+     *
+     * @param id the process instance id
+     * @return list of dead-letter jobs
+     */
+    @GetMapping(value = "/bpm-processes/instance/{id}/jobs")
+    public ResponseEntity<List<Job>> getDeadLetterJobs(@PathVariable("id") String id) {
+
+        BpmService bpmService = getBpmService();
+        List<Job> jobs = bpmService.getBpmProviderFlowable()
+                                   .getProcessEngine()
+                                   .getManagementService()
+                                   .createDeadLetterJobQuery()
+                                   .processInstanceId(id)
+                                   .list();
+
+        return ResponseEntity.ok(jobs);
     }
 
     /**

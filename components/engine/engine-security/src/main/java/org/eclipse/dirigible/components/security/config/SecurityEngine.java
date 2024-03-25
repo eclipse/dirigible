@@ -13,14 +13,27 @@ package org.eclipse.dirigible.components.security.config;
 import org.eclipse.dirigible.components.base.artefact.Engine;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class SecurityEngine.
+ */
 @Component
 public class SecurityEngine implements Engine {
 
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
     @Override
     public String getName() {
         return "Security";
     }
 
+    /**
+     * Gets the provider.
+     *
+     * @return the provider
+     */
     @Override
     public String getProvider() {
         return "Eclipse Dirigible";

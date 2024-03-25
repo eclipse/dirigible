@@ -34,13 +34,6 @@ public class SybaseSelectBuilder extends SelectBuilder {
      * @param limit the limit
      * @param offset the offset
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.eclipse.dirigible.database.sql.builders.AbstractQuerySqlBuilder#generateLimitAndOffset(java.
-     * lang. StringBuilder, int, int)
-     */
     @Override
     protected void generateLimitAndOffset(StringBuilder sql, int limit, int offset) {
         if (limit > -1) {

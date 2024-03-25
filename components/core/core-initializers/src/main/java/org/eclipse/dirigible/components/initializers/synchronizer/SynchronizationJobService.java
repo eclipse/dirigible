@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.components.initializers.synchronizer;
 
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +25,10 @@ import org.springframework.stereotype.Service;
 public class SynchronizationJobService {
 
     /** The logger. */
-    private Logger logger = LoggerFactory.getLogger(SynchronizationJobService.class);
+    private static final Logger logger = LoggerFactory.getLogger(SynchronizationJobService.class);
 
     /** The count. */
-    private AtomicInteger count = new AtomicInteger();
+    private final AtomicInteger count = new AtomicInteger();
 
     /** The synchronization processor. */
     private final SynchronizationProcessor synchronizationProcessor;
@@ -49,16 +48,12 @@ public class SynchronizationJobService {
      */
     public void executeSynchronizationJob() {
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Synchronization started...");
-        }
+        logger.debug("Starting synchronization...");
         try {
             synchronizationProcessor.processSynchronizers();
         } finally {
             count.incrementAndGet();
-            if (logger.isDebugEnabled()) {
-                logger.debug("Synchronization finished.");
-            }
+            logger.debug("Synchronization finished.");
         }
     }
 

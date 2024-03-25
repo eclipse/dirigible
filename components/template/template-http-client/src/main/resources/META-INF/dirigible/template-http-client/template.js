@@ -5,7 +5,7 @@
  */
 exports.getTemplate = function() {
 	return {
-		"name": "HTTP Client",
+		"name": "HTTP Client (API)",
 		"description": "HTTP Client Template",
 		"sources": [{
 			"location": "/template-http-client/service.mjs.template", 

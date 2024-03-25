@@ -14,23 +14,45 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.component.platform.http.PlatformHttpComponent;
 import org.apache.camel.component.platform.http.spi.PlatformHttpEngine;
 import org.apache.camel.component.platform.http.springboot.CamelRequestHandlerMapping;
+import org.apache.camel.spring.boot.SpringBootCamelContext;
 import org.eclipse.dirigible.components.engine.camel.processor.CamelDirigibleRequestHandlerMapping;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+/**
+ * The Class CamelDirigibleConfiguration.
+ */
 @Configuration
-public class CamelDirigibleConfiguration {
+class CamelDirigibleConfiguration {
 
+    /**
+     * Creates the camel request handler mapping.
+     *
+     * @param camelContext the camel context
+     * @param httpEngine the http engine
+     * @param camelRequestHandlerMapping the camel request handler mapping
+     * @return the camel request handler mapping
+     */
     @Bean
     @Primary
     public CamelRequestHandlerMapping createCamelRequestHandlerMapping(CamelContext camelContext, PlatformHttpEngine httpEngine,
             CamelRequestHandlerMapping camelRequestHandlerMapping) {
         var httpComponent = camelContext.getComponent("platform-http", PlatformHttpComponent.class);
-        httpComponent.removePlatformHttpListener(camelRequestHandlerMapping); // necessary as the Camel configurations are still going to
-        // run and this class adds itself as a primary listener in its
-        // constructor
+        httpComponent.removePlatformHttpListener(camelRequestHandlerMapping);
         return new CamelDirigibleRequestHandlerMapping(httpComponent, httpEngine);
+    }
+
+    /**
+     * Creates the spring boot camel context.
+     *
+     * @param applicationContext the application context
+     * @return the spring boot camel context
+     */
+    @Bean
+    SpringBootCamelContext createSpringBootCamelContext(ApplicationContext applicationContext) {
+        return new SpringBootCamelContext(applicationContext, true);
     }
 
 }

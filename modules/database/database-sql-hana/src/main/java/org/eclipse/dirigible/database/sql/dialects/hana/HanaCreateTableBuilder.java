@@ -51,13 +51,6 @@ public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBu
      *
      * @param sql the sql
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder#generateTable(java.lang.
-     * StringBuilder)
-     */
     @Override
     protected void generateTable(StringBuilder sql) {
         String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();

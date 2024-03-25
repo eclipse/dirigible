@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.extensions.domain.ExtensionPoint;
@@ -43,6 +43,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+/**
+ * The Class ExtensionPointEndpointTest.
+ */
 @WithMockUser
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -52,26 +55,38 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 public class ExtensionPointEndpointTest {
 
+    /** The entity manager. */
     @Autowired
     private EntityManager entityManager;
 
+    /** The extension point service. */
     @Autowired
     private ExtensionPointService extensionPointService;
 
+    /** The extension point repository. */
     @Autowired
     private ExtensionPointRepository extensionPointRepository;
 
+    /** The test extension point. */
     private ExtensionPoint testExtensionPoint;
 
+    /** The mock mvc. */
     @Autowired
     private MockMvc mockMvc;
 
+    /** The wac. */
     @Autowired
     protected WebApplicationContext wac;
 
+    /** The spring security filter chain. */
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
 
+    /**
+     * Setup.
+     *
+     * @throws Exception the exception
+     */
     @BeforeEach
     public void setup() throws Exception {
 
@@ -95,11 +110,19 @@ public class ExtensionPointEndpointTest {
 
     }
 
+    /**
+     * Cleanup.
+     *
+     * @throws Exception the exception
+     */
     @AfterEach
     public void cleanup() throws Exception {
         extensionPointRepository.deleteAll();
     }
 
+    /**
+     * Find all extension points.
+     */
     @Test
     public void findAllExtensionPoints() {
         Integer size = 10;
@@ -108,6 +131,12 @@ public class ExtensionPointEndpointTest {
         assertNotNull(extensionPointService.getPages(pageable));
     }
 
+    /**
+     * Gets the extension point by id.
+     *
+     * @return the extension point by id
+     * @throws Exception the exception
+     */
     @Test
     public void getExtensionPointById() throws Exception {
         Long id = testExtensionPoint.getId();
@@ -117,6 +146,12 @@ public class ExtensionPointEndpointTest {
                .andExpect(status().is2xxSuccessful());
     }
 
+    /**
+     * Gets the extension point by name.
+     *
+     * @return the extension point by name
+     * @throws Exception the exception
+     */
     @Test
     public void getExtensionPointByName() throws Exception {
         String name = testExtensionPoint.getName();
@@ -126,6 +161,12 @@ public class ExtensionPointEndpointTest {
                .andExpect(status().is2xxSuccessful());
     }
 
+    /**
+     * Gets the pages extension points.
+     *
+     * @return the pages extension points
+     * @throws Exception the exception
+     */
     @Test
     public void getPagesExtensionPoints() throws Exception {
         String name = testExtensionPoint.getName();
@@ -135,6 +176,12 @@ public class ExtensionPointEndpointTest {
                .andExpect(status().is2xxSuccessful());
     }
 
+    /**
+     * Gets the all extension points.
+     *
+     * @return the all extension points
+     * @throws Exception the exception
+     */
     @Test
     public void getAllExtensionPoints() throws Exception {
         String name = testExtensionPoint.getName();
@@ -144,6 +191,9 @@ public class ExtensionPointEndpointTest {
                .andExpect(status().is2xxSuccessful());
     }
 
+    /**
+     * The Class TestConfiguration.
+     */
     @SpringBootApplication
     static class TestConfiguration {
     }

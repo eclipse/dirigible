@@ -50,8 +50,14 @@ public class VersionService {
     /** The Constant DIRIGIBLE_INSTANCE_NAME. */
     private static final String DIRIGIBLE_INSTANCE_NAME = "DIRIGIBLE_INSTANCE_NAME";
 
+    /** The engines. */
     private List<Engine> engines;
 
+    /**
+     * Instantiates a new version service.
+     *
+     * @param engines the engines
+     */
     public VersionService(List<Engine> engines) {
         this.engines = engines;
     }

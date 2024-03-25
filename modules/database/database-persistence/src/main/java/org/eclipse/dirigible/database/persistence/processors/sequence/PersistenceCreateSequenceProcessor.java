@@ -48,13 +48,6 @@ public class PersistenceCreateSequenceProcessor extends AbstractPersistenceProce
      * @param tableModel the table model
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript
-     * (java.sql. Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
-     */
     @Override
     protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
         CreateSequenceBuilder createSequenceBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))

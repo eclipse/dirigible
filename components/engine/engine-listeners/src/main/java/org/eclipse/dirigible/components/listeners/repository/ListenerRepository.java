@@ -10,13 +10,28 @@
  */
 package org.eclipse.dirigible.components.listeners.repository;
 
+import org.eclipse.dirigible.components.base.artefact.ArtefactRepository;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The Interface ListenerRepository.
  */
 @Repository("listenerRepository")
-public interface ListenerRepository extends JpaRepository<Listener, Long> {
+public interface ListenerRepository extends ArtefactRepository<Listener, Long> {
+
+    /**
+     * Sets the running to all.
+     *
+     * @param running the new running to all
+     */
+    @Override
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE Listener SET running = :running")
+    void setRunningToAll(@Param("running") boolean running);
 }

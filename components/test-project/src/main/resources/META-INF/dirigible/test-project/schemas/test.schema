@@ -3,7 +3,7 @@
         "structures": [
             {
                 "name": "TABLE1",
-                "type": "table",
+                "type": "TABLE",
                 "columns": [
                     {
                         "name": "TABLE1_ID",
@@ -25,7 +25,7 @@
             },
             {
                 "name": "TABLE2",
-                "type": "table",
+                "type": "TABLE",
                 "columns": [
                     {
                         "name": "TABLE2_ID",
@@ -39,17 +39,8 @@
                 ]
             },
             {
-                "name": "TABLE1_TABLE2",
-                "type": "foreignKey",
-                "table": "TABLE1",
-                "constraintName": "TABLE1_TABLE2",
-                "columns": "TABLE2_ID",
-                "referencedTable": "TABLE2",
-                "referencedColumns": "TABLE2_ID"
-            },
-            {
                 "name": "VIEW3",
-                "type": "view",
+                "type": "VIEW",
                 "columns": [
                     {
                         "query": "SELECT * FROM TABLE1"
@@ -57,5 +48,6 @@
                 ]
             }
         ]
-    }
+    },
+    "datasource": "DefaultDB"
 }

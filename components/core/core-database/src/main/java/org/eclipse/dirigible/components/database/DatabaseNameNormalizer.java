@@ -10,6 +10,9 @@
  */
 package org.eclipse.dirigible.components.database;
 
+/**
+ * The Class DatabaseNameNormalizer.
+ */
 public class DatabaseNameNormalizer {
 
     /**

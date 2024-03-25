@@ -14,7 +14,7 @@ import org.apache.cxf.helpers.IOUtils;
 import org.eclipse.dirigible.engine.odata2.sql.entities.User;
 import org.eclipse.dirigible.engine.odata2.sql.entities.Group;
 import org.junit.Test;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
 
 import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.GET;

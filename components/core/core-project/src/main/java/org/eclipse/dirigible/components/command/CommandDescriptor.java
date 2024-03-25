@@ -52,6 +52,11 @@ public class CommandDescriptor {
         return command;
     }
 
+    /**
+     * Checks if is compatible with current OS.
+     *
+     * @return true, if is compatible with current OS
+     */
     public boolean isCompatibleWithCurrentOS() {
         if (os == null) {
             return true; // treat as command with no explicit OS set, so use this command as universal
@@ -71,6 +76,11 @@ public class CommandDescriptor {
         }
     }
 
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     @Override
     public String toString() {
         return "CommandLine{" + "os=" + os + ", command='" + command + '\'' + '}';

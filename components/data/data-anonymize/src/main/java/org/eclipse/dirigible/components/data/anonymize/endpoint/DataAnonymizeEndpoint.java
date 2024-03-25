@@ -14,7 +14,7 @@ import static java.text.MessageFormat.format;
 
 import java.sql.SQLException;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.data.anonymize.domain.DataAnonymizeParameters;

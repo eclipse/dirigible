@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2024 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2024 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('ideWorkspace', [])
     .provider('workspaceApi', function WorkspaceApiProvider() {
-        this.workspacesServiceUrl = '/services/ide/workspaces/';
+        this.workspacesServiceUrl = '/services/ide/workspaces';
         this.workspaceManagerServiceUrl = '/services/ide/workspace';
         this.workspaceSearchServiceUrl = '/services/ide/workspace-search';
         this.$get = ['$http', function workspaceApiFactory($http) {
@@ -65,6 +65,17 @@ angular.module('ideWorkspace', [])
             let loadContent = async function (workspace, filePath) {
                 let url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(filePath.split('/')).build();
                 return $http.get(url)
+                    .then(function successCallback(response) {
+                        return { status: response.status, data: response.data };
+                    }, function errorCallback(response) {
+                        console.error('Workspace service:', response);
+                        return { status: response.status };
+                    });
+            }.bind(this);
+
+            let saveContent = async function (workspace, filePath, content) {
+                let url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(filePath.split('/')).build();
+                return $http.put(url, content, { headers: { 'Content-Type': 'text/plain;charset=UTF-8' } })
                     .then(function successCallback(response) {
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
@@ -232,7 +243,7 @@ angular.module('ideWorkspace', [])
                         return { status: response.status };
                     });
             }.bind(this);
-            
+
             return {
                 setWorkspace: setWorkspace,
                 getCurrentWorkspace: getCurrentWorkspace,
@@ -240,6 +251,7 @@ angular.module('ideWorkspace', [])
                 load: load,
                 resourceExists: resourceExists,
                 loadContent: loadContent,
+                saveContent: saveContent,
                 getMetadata: getMetadata,
                 getMetadataByPath: getMetadataByPath,
                 rename: rename,

@@ -13,13 +13,9 @@ package org.eclipse.dirigible.components.data.sources.synchronizer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.nio.file.Path;
 import java.text.ParseException;
 import java.util.List;
-
-import javax.persistence.EntityManager;
-
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.repository.DataSourceRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -32,6 +28,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.Transactional;
+import jakarta.persistence.EntityManager;
 
 /**
  * The Class DataSourcesSynchronizerTest.
@@ -49,7 +46,7 @@ public class DataSourcesSynchronizerTest {
 
     /** The datasource synchronizer. */
     @Autowired
-    private DataSourcesSynchronizer<DataSource> datasourcesSynchronizer;
+    private DataSourcesSynchronizer datasourcesSynchronizer;
 
     /** The entity manager. */
     @Autowired
@@ -83,8 +80,6 @@ public class DataSourcesSynchronizerTest {
         datasourceRepository.deleteAll();
     }
 
-
-
     /**
      * Checks if is accepted.
      */
@@ -116,8 +111,6 @@ public class DataSourcesSynchronizerTest {
                                                   .getLocation());
     }
 
-
-
     /**
      * Creates the datasource.
      *
@@ -127,8 +120,7 @@ public class DataSourcesSynchronizerTest {
      * @return the extension point
      */
     public static DataSource createDataSource(String location, String name, String description) {
-        DataSource dataSource = new DataSource(location, name, description, "", "", "", "");
-        return dataSource;
+        return new DataSource(location, name, description, "", "", "", "");
     }
 
     /**

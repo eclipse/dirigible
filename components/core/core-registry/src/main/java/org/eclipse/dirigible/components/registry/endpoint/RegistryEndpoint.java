@@ -29,20 +29,37 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 
+/**
+ * The Class RegistryEndpoint.
+ */
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "registry")
 public class RegistryEndpoint extends BaseEndpoint {
 
+    /** The registry service. */
     private final RegistryService registryService;
 
+    /** The registry accessor. */
     private final RegistryAccessor registryAccessor;
 
+    /**
+     * Instantiates a new registry endpoint.
+     *
+     * @param registryService the registry service
+     * @param registryAccessor the registry accessor
+     */
     @Autowired
     public RegistryEndpoint(RegistryService registryService, RegistryAccessor registryAccessor) {
         this.registryService = registryService;
         this.registryAccessor = registryAccessor;
     }
 
+    /**
+     * Gets the.
+     *
+     * @param path the path
+     * @return the response entity
+     */
     @GetMapping("/{*path}")
     public ResponseEntity<?> get(@PathVariable("path") String path) {
 

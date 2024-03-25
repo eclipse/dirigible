@@ -13,6 +13,7 @@ package org.eclipse.dirigible.components.data.sources.service;
 import java.util.StringTokenizer;
 
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class CustomDataSourcesService {
                 if (logger.isInfoEnabled()) {
                     logger.info("Initializing a custom datasource with name: " + name);
                 }
-                initializeDataSource(name);
+                saveDataSource(name);
             }
         } else {
             if (logger.isTraceEnabled()) {
@@ -61,12 +62,12 @@ public class CustomDataSourcesService {
     }
 
     /**
-     * Initialize data source.
+     * Save data source model.
      *
      * @param name the name
      * @return the data source
      */
-    private void initializeDataSource(String name) {
+    private void saveDataSource(String name) {
         String databaseDriver = Configuration.get(name + "_DRIVER");
         String databaseUrl = Configuration.get(name + "_URL");
         String databaseUsername = Configuration.get(name + "_USERNAME");
@@ -77,6 +78,7 @@ public class CustomDataSourcesService {
                     new org.eclipse.dirigible.components.data.sources.domain.DataSource("ENV_" + name, name, null, databaseDriver,
                             databaseUrl, databaseUsername, databasePassword);
             ds.updateKey();
+            ds.setLifecycle(ArtefactLifecycle.NEW);
             dataSourceService.save(ds);
         } else {
             throw new IllegalArgumentException("Invalid configuration for the custom datasource: " + name);

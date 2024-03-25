@@ -13,19 +13,16 @@ package org.eclipse.dirigible.components.base.artefact;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Lob;
-import javax.persistence.MappedSuperclass;
-
 import org.eclipse.dirigible.components.base.converters.SetOfStringsToCsvConverter;
 import org.springframework.lang.Nullable;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.Expose;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Lob;
+import jakarta.persistence.MappedSuperclass;
 
 /**
  * The Class Artefact.
@@ -93,8 +90,6 @@ public abstract class Artefact extends Auditable<String> implements Serializable
     @JsonIgnore
     private Boolean running;
 
-
-
     /**
      * Instantiates a new artefact.
      *
@@ -105,7 +100,6 @@ public abstract class Artefact extends Auditable<String> implements Serializable
      * @param dependencies the dependencies
      */
     public Artefact(String location, String name, String type, String description, Set<String> dependencies) {
-        super();
         this.location = location;
         this.name = name;
         this.type = type;
@@ -329,12 +323,11 @@ public abstract class Artefact extends Auditable<String> implements Serializable
      *
      */
     public void updateKey() {
-        if (this.type != null && this.location != null && this.name != null) {
-            this.key = this.type + KEY_SEPARATOR + this.location + KEY_SEPARATOR + this.name;
-        } else {
+        if ((this.type == null) || (this.location == null) || (this.name == null)) {
             throw new IllegalArgumentException(
                     String.format("Attempt to generate an artefact key by type=[%s], location=[%s], name=[%s]", type, location, name));
         }
+        this.key = this.type + KEY_SEPARATOR + this.location + KEY_SEPARATOR + this.name;
     }
 
     /**
@@ -347,8 +340,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
      */
     public String constructKey(String typeA, String locationA, String nameA) {
         if (typeA != null && locationA != null && nameA != null) {
-            String keyA = typeA + KEY_SEPARATOR + locationA + KEY_SEPARATOR + nameA;
-            return keyA;
+            return typeA + KEY_SEPARATOR + locationA + KEY_SEPARATOR + nameA;
         }
         return null;
     }

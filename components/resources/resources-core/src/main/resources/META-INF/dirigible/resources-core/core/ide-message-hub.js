@@ -611,6 +611,11 @@ angular.module('ideMessageHub', [])
                     throw Error('Callback argument must be a function');
                 return messageHub.subscribe(callbackFunc, 'ide.repository.modified');
             };
+            const onThemeChanged = function (callbackFunc) {
+                if (typeof callbackFunc !== 'function')
+                    throw Error('Callback argument must be a function');
+                return messageHub.subscribe(callbackFunc, 'ide.themeChange');
+            };
             return {
                 showStatusBusy: showStatusBusy,
                 hideStatusBusy: hideStatusBusy,
@@ -680,6 +685,7 @@ angular.module('ideMessageHub', [])
                 onWorkspacesModified: onWorkspacesModified,
                 announceRepositoryModified: announceRepositoryModified,
                 onRepositoryModified: onRepositoryModified,
+                onThemeChanged: onThemeChanged,
             };
         }];
     });

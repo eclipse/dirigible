@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.eclipse.dirigible.components.extensions.domain.Extension;
 import org.junit.jupiter.api.AfterEach;
@@ -29,6 +29,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The Class ExtensionRepositoryTest.
+ */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
@@ -36,12 +39,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ExtensionRepositoryTest {
 
+    /** The extension repository. */
     @Autowired
     private ExtensionRepository extensionRepository;
 
+    /** The entity manager. */
     @Autowired
     EntityManager entityManager;
 
+    /**
+     * Setup.
+     *
+     * @throws Exception the exception
+     */
     @BeforeEach
     public void setup() throws Exception {
 
@@ -55,12 +65,22 @@ public class ExtensionRepositoryTest {
         extensionRepository.save(createExtension("/a/b/c/e5.extension", "e5", "description", "epoint2", "e5"));
     }
 
+    /**
+     * Cleanup.
+     *
+     * @throws Exception the exception
+     */
     @AfterEach
     public void cleanup() throws Exception {
         extensionRepository.deleteAll();
     }
 
 
+    /**
+     * Gets the one.
+     *
+     * @return the one
+     */
     @Test
     public void getOne() {
         Long id = extensionRepository.findAll()
@@ -76,6 +96,11 @@ public class ExtensionRepositoryTest {
         // assertEquals("extension:/a/b/c/e1.extension:e1",extension.getKey());
     }
 
+    /**
+     * Gets the reference using entity manager.
+     *
+     * @return the reference using entity manager
+     */
     @Test
     public void getReferenceUsingEntityManager() {
         Long id = extensionRepository.findAll()
@@ -86,11 +111,24 @@ public class ExtensionRepositoryTest {
         assertNotNull(extension.getLocation());
     }
 
+    /**
+     * Creates the extension.
+     *
+     * @param location the location
+     * @param name the name
+     * @param description the description
+     * @param extensionPoint the extension point
+     * @param module the module
+     * @return the extension
+     */
     public static Extension createExtension(String location, String name, String description, String extensionPoint, String module) {
         Extension extension = new Extension(location, name, description, extensionPoint, module);
         return extension;
     }
 
+    /**
+     * The Class TestConfiguration.
+     */
     @SpringBootApplication
     static class TestConfiguration {
     }

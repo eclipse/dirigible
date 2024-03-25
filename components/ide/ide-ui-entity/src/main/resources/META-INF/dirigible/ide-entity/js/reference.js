@@ -29,7 +29,7 @@ angular.module('edmReference', ['ideUI', 'ideView'])
         $scope.loadModels = function () {
             $http({
                 method: 'POST',
-                url: '/services/ide/workspace-find/',
+                url: '/services/ide/workspace-find',
                 headers: {
                     'X-CSRF-Token': 'Fetch',
                     'Dirigible-Editor': 'EntityDataModeler',
@@ -99,7 +99,8 @@ angular.module('edmReference', ['ideUI', 'ideView'])
                     entity: $scope.dropdowns.entity,
                     perspectiveName: referencedEntity.perspectiveName,
                     perspectiveIcon: referencedEntity.perspectiveIcon,
-                perspectiveOrder: referencedEntity.perspectiveOrder,
+                    perspectiveOrder: referencedEntity.perspectiveOrder,
+                    perspectiveRole: referencedEntity.perspectiveRole,
                     entityProperties: referencedEntity.properties,
                 }, true);
             else messageHub.postMessage('edm.editor.copiedEntity', {
@@ -109,6 +110,7 @@ angular.module('edmReference', ['ideUI', 'ideView'])
                 perspectiveName: referencedEntity.perspectiveName,
                 perspectiveIcon: referencedEntity.perspectiveIcon,
                 perspectiveOrder: referencedEntity.perspectiveOrder,
+                perspectiveRole: referencedEntity.perspectiveRole,
                 entityProperties: referencedEntity.properties,
             }, true);
         };

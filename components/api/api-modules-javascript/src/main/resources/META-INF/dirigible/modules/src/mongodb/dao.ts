@@ -11,12 +11,15 @@
  */
 "use strict";
 
-import * as globals from "@dirigible/core/globals";
+import { globals } from "sdk/core"
 import * as mongodb from "./client"
-import * as dirigibleOrm from "@dirigible/db/orm";
-import * as logging from "@dirigible/log/logging";
+import * as dirigibleOrm from "sdk/db/orm";
+import { Logging } from "sdk/log";
+import { Configurations } from "sdk/core";
 
-const mongoClient = mongodb.getClient();
+const dbUri = Configurations.get("DIRIGIBLE_MONGODB_CLIENT_URI", "mongodb://localhost:27017");
+
+const mongoClient = mongodb.getClient(dbUri, null, null);
 const db = mongoClient.getDB();
 
 export class DAO {
@@ -36,7 +39,7 @@ export class DAO {
             if (this.orm.table)
                 loggerName = 'mongodb.dao.' + (this.orm.table.toLowerCase());
         }
-        this.$log = logging.getLogger(loggerName);
+        this.$log = Logging.getLogger(loggerName);
     }
 
     notify(event, ...a) {

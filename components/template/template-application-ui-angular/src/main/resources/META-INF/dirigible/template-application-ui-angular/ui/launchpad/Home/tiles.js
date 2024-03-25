@@ -3,18 +3,29 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-const response = dirigibleRequire("http/response");
-const extensions = dirigibleRequire("extensions/extensions");
+import { response } from "sdk/http";
+import { extensions } from "sdk/extensions";
+import { user } from "sdk/security";
 
 let tiles = {};
 
-let tileExtensions = extensions.getExtensions("${projectName}-tile");
-for (let i = 0; tileExtensions !== null && i < tileExtensions.length; i++) {
-    let tileExtension = dirigibleRequire(tileExtensions[i]);
-    if (typeof tileExtension.getTile !== "function") {
+let tileExtensions = await extensions.loadExtensionModules("${projectName}-tile");
+for (let i = 0; i < tileExtensions?.length; i++) {
+    let tile = tileExtensions[i].getTile();
+
+
+    let hasRoles = true;
+    if (tile.roles && Array.isArray(tile.roles)) {
+        for (const next of tile.roles) {
+            if (!user.isInRole(next)) {
+                hasRoles = false;
+                break;
+            }
+        }
+    }
+    if (!tile || (tile.role && !user.isInRole(tile.role)) || !hasRoles) {
         continue;
     }
-    let tile = tileExtension.getTile();
     if (!tiles[tile.group]) {
         tiles[tile.group] = [];
     }

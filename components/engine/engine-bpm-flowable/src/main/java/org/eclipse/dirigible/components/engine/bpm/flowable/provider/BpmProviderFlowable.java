@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**
@@ -94,7 +95,7 @@ public class BpmProviderFlowable implements BpmProvider {
      * @param repository the repository
      */
     @Autowired
-    public BpmProviderFlowable(DataSource datasource, IRepository repository) {
+    public BpmProviderFlowable(@Qualifier("SystemDB") DataSource datasource, IRepository repository) {
         this.datasource = datasource;
         this.repository = repository;
     }
@@ -160,6 +161,7 @@ public class BpmProviderFlowable implements BpmProvider {
                 cfg.setDatabaseSchemaUpdate(updateSchema ? ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE
                         : ProcessEngineConfiguration.DB_SCHEMA_UPDATE_FALSE);
 
+                cfg.setAsyncExecutorActivate(true);
                 processEngine = cfg.buildProcessEngine();
                 if (logger.isInfoEnabled()) {
                     logger.info("Done initializng the Flowable Process Engine.");

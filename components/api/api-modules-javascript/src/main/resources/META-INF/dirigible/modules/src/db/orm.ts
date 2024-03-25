@@ -39,9 +39,8 @@
  *
  *
  */
-
 import { DAO } from "./dao";
-import * as configurations from "@dirigible/core/configurations";
+import { configurations } from "sdk/core";
 const isCaseSensitive = configurations.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE");
 
 export function ORM(orm: ORMProperty): void {

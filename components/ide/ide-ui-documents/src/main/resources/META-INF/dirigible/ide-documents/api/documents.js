@@ -9,18 +9,16 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let rs = require("http/rs");
-let user = require("security/user");
-let registry = require("platform/registry");
-let streams = require("io/streams");
-let upload = require('http/upload');
+import { rs } from "sdk/http";
+import { streams } from "sdk/io";
+import { upload } from 'sdk/http';
 
-let documentsProcessor = require("ide-documents/api/processors/documentsProcessor");
-let imageProcessor = require("ide-documents/api/processors/imageProcessor");
+import * as documentsProcessor from "./processors/documentsProcessor";
+import * as imageProcessor from "./processors/imageProcessor";
 
-let zipUtils = require("ide-documents/utils/cmis/zip");
+import * as zipUtils from "../utils/cmis/zip";
 
-let { replaceAll, unescapePath, getNameFromPath } = require("ide-documents/utils/string");
+import { unescapePath, getNameFromPath } from "../utils/string";
 
 rs.service()
 	.resource("")
@@ -32,7 +30,8 @@ rs.service()
 		response.println(JSON.stringify(result));
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
+        throw error;
 	})
 	.post(function (ctx, request, response) {
 		if (!upload.isMultipartContent()) {
@@ -46,7 +45,7 @@ rs.service()
 		response.println(JSON.stringify(result));
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
 	})
 	.put(function (ctx, request, response) {
 		let { path, name } = request.getJSON();
@@ -60,18 +59,18 @@ rs.service()
 		response.print(JSON.stringify(name));
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
 	})
 	.delete(function (ctx, request, response) {
 		let forceDelete = ctx.queryParameters.force === "true" ? true : false;
 		let objects = request.getJSON();
 
-		documentsProcessor.delete(objects, forceDelete);
+		documentsProcessor.remove(objects, forceDelete);
 
 		response.setStatus(response.NO_CONTENT);
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
 	})
 	.resource("folder")
 	.post(function (ctx, request, response) {
@@ -86,7 +85,7 @@ rs.service()
 		response.print(JSON.stringify(result));
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
 	})
 	.resource("zip")
 	.get(function (ctx, request, response) {
@@ -102,7 +101,7 @@ rs.service()
 		zipUtils.makeZip(path, outputStream);
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
 	})
 	.post(function (ctx, request, response) {
 		if (!upload.isMultipartContent()) {
@@ -118,7 +117,7 @@ rs.service()
 		response.println(JSON.stringify(result));
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
 	})
 	.resource("image")
 	.post(function (ctx, request, response) {
@@ -135,7 +134,7 @@ rs.service()
 		response.println(JSON.stringify(result));
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
 	})
 	.resource("preview")
 	.get(function (ctx, request, response) {
@@ -150,7 +149,7 @@ rs.service()
 		response.write(document.content.getStream().readBytes());
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
 	})
 	.resource("download")
 	.get(function (ctx, request, response) {
@@ -166,11 +165,12 @@ rs.service()
 		streams.copy(document.content.getStream(), response.getOutputStream());
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
 	})
 	.execute();
 
-function printError(response, httpCode, errCode, errMessage) {
+function printError(response, httpCode, errCode, error) {
+    const errMessage = error.message;
 	let body = {
 		err: {
 			code: errCode,
@@ -181,4 +181,5 @@ function printError(response, httpCode, errCode, errMessage) {
 	response.setContentType("application/json");
 	response.setStatus(httpCode);
 	response.println(JSON.stringify(body));
+	throw error;
 }

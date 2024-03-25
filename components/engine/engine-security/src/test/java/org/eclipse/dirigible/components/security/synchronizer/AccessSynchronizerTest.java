@@ -24,7 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.ParseException;
@@ -33,6 +33,9 @@ import java.util.List;
 import static org.eclipse.dirigible.components.security.repository.AccessRepositoryTest.createSecurityAccess;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The Class AccessSynchronizerTest.
+ */
 @SpringBootTest(classes = {AccessRepository.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
@@ -111,7 +114,8 @@ class AccessSynchronizerTest {
     /**
      * Load the artefact.
      *
-     * @throws ParseException
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws ParseException the parse exception
      */
     @Test
     public void testLoad() throws IOException, ParseException {
