@@ -30,7 +30,7 @@ exports.getSources = function (parameters) {
 			engine: "velocity"
 		},
 		{
-			location: "/template-application-ui-angular/ui/launchpad/Home/view.extension",
+			location: "/template-application-ui-angular/ui/launchpad/Home/view.extension.template",
 			action: "generate",
 			rename: "gen/ui/launchpad/Home/view.extension",
 			engine: "velocity"
@@ -43,13 +43,13 @@ exports.getSources = function (parameters) {
 		},
 		// Location: "gen/ui/launchpad"
 		{
-			location: "/template-application-ui-angular/ui/launchpad/dialog-window.extensionpoint",
+			location: "/template-application-ui-angular/ui/launchpad/dialog-window.extensionpoint.template",
 			action: "generate",
 			rename: "gen/ui/launchpad/dialog-window.extensionpoint",
 			engine: "velocity"
 		},
 		{
-			location: "/template-application-ui-angular/ui/launchpad/menu-help.extension",
+			location: "/template-application-ui-angular/ui/launchpad/menu-help.extension.template",
 			action: "generate",
 			rename: "gen/ui/launchpad/menu-help.extension",
 			engine: "velocity"
@@ -60,7 +60,7 @@ exports.getSources = function (parameters) {
 			rename: "gen/ui/launchpad/menu-help.js"
 		},
 		{
-			location: "/template-application-ui-angular/ui/launchpad/menu.extensionpoint",
+			location: "/template-application-ui-angular/ui/launchpad/menu.extensionpoint.template",
 			action: "generate",
 			rename: "gen/ui/launchpad/menu.extensionpoint",
 			engine: "velocity"
@@ -72,7 +72,7 @@ exports.getSources = function (parameters) {
 			engine: "velocity"
 		},
 		{
-			location: "/template-application-ui-angular/ui/launchpad/perspective.extensionpoint",
+			location: "/template-application-ui-angular/ui/launchpad/perspective.extensionpoint.template",
 			action: "generate",
 			rename: "gen/ui/launchpad/perspective.extensionpoint",
 			engine: "velocity"
@@ -84,13 +84,13 @@ exports.getSources = function (parameters) {
 			engine: "velocity"
 		},
 		{
-			location: "/template-application-ui-angular/ui/launchpad/tile.extensionpoint",
+			location: "/template-application-ui-angular/ui/launchpad/tile.extensionpoint.template",
 			action: "generate",
 			rename: "gen/ui/launchpad/tile.extensionpoint",
 			engine: "velocity"
 		},
 		{
-			location: "/template-application-ui-angular/ui/launchpad/view.extensionpoint",
+			location: "/template-application-ui-angular/ui/launchpad/view.extensionpoint.template",
 			action: "generate",
 			rename: "gen/ui/launchpad/view.extensionpoint",
 			engine: "velocity"

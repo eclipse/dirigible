@@ -159,7 +159,7 @@ function getDetails(parameters) {
 			collection: "uiManageDetailsModels"
 		},
 		{
-			location: "/template-application-ui-angular/ui/perspective/master-manage/detail/view.extension",
+			location: "/template-application-ui-angular/ui/perspective/master-manage/detail/view.extension.template",
 			action: "generate",
 			engine: "velocity",
 			rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/view.extension",
@@ -187,7 +187,7 @@ function getDetails(parameters) {
 			collection: "uiManageDetailsModels"
 		},
 		{
-			location: "/template-application-ui-angular/ui/perspective/master-manage/detail/dialog-window/view.extension",
+			location: "/template-application-ui-angular/ui/perspective/master-manage/detail/dialog-window/view.extension.template",
 			action: "generate",
 			engine: "velocity",
 			rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-window/view.extension",
