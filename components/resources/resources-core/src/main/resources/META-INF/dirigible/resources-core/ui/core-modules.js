@@ -290,21 +290,42 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                         theming.setTheme(themeId);
                     };
 
-                    scope.resetTheme = function () {
-                        $http.get('/services/js/resources-core/services/clear-cache.js').then(function () {
-                            scope.resetViews();
-                            for (let cookie in $cookies.getAll()) {
-                                if (cookie.startsWith("DIRIGIBLE")) {
-                                    $cookies.remove(cookie, { path: "/" });
-                                }
+                    scope.resetAll = function () {
+                        messageHub.showDialogAsync(
+                            `Reset ${scope.branding.brand}`,
+                            ['This will clear all settings, open tabs and cache.', `${scope.branding.brand} will then reload.`, 'Do you wish to continue?'],
+                            [{
+                                id: 'btnConfirm',
+                                type: 'emphasized',
+                                label: 'Yes',
+                            }, {
+                                id: 'btnCancel',
+                                type: 'transparent',
+                                label: 'No',
+                            }],
+                        ).then(function (msg) {
+                            if (msg.data === "btnConfirm") {
+                                messageHub.showBusyDialog(
+                                    'ideResetDialogBusy',
+                                    'Resetting',
+                                    'ide.dialog.reset.all.done'
+                                );
+                                localStorage.clear();
+                                theming.reset();
+                                $http.get('/services/js/resources-core/services/clear-cache.js').then(function () {
+                                    for (let cookie in $cookies.getAll()) {
+                                        if (cookie.startsWith('DIRIGIBLE')) {
+                                            $cookies.remove(cookie, { path: '/' });
+                                        }
+                                    }
+                                    location.reload();
+                                }, function (error) {
+                                    console.log(error);
+                                    messageHub.hideBusyDialog('ideResetDialogBusy');
+                                    messageHub.showAlertError('Failed to reset', 'There was an error during the reset process. Please refresh manually.');
+                                });
                             }
                         });
-                    };
-
-                    scope.resetViews = function () {
-                        localStorage.clear();
-                        theming.reset();
-                        location.reload();
                     };
 
                     scope.logout = function () {
@@ -1156,3 +1177,4 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             }
         }
     }]);
+
