@@ -10,7 +10,6 @@
  */
 package org.eclipse.dirigible.components.engine.cms.internal.repository;
 
-
 import org.eclipse.dirigible.components.engine.cms.CmisConstants;
 import org.eclipse.dirigible.components.engine.cms.CmisObject;
 import org.eclipse.dirigible.components.engine.cms.CmisSession;
@@ -23,7 +22,7 @@ import java.io.IOException;
 public class CmisInternalSession implements CmisSession {
 
     /** The cmis repository. */
-    private CmisRepository cmisRepository;
+    private final CmisRepository cmisRepository;
 
     /**
      * Instantiates a new cmis session.
@@ -73,6 +72,18 @@ public class CmisInternalSession implements CmisSession {
     }
 
     /**
+     * Returns a CMIS Object by path.
+     *
+     * @param path the path
+     * @return CMIS Object
+     * @throws IOException IO Exception
+     */
+    @Override
+    public CmisObject getObjectByPath(String path) throws IOException {
+        return getObject(path);
+    }
+
+    /**
      * Returns a CMIS Object by name.
      *
      * @param id the Id
@@ -82,8 +93,8 @@ public class CmisInternalSession implements CmisSession {
     @Override
     public CmisObject getObject(String id) throws IOException {
         CmisInternalObject cmisObject = new CmisInternalObject(this, id);
-        if (!cmisObject.getInternalEntity()
-                       .exists()) {
+        if (null == cmisObject.getInternalEntity() || !cmisObject.getInternalEntity()
+                                                                 .exists()) {
             throw new IOException(String.format("Object with id: %s does not exist", id));
         }
         if (CmisConstants.OBJECT_TYPE_FOLDER.equals(cmisObject.getType()
@@ -94,18 +105,6 @@ public class CmisInternalSession implements CmisSession {
             return new CmisInternalDocument(this, id);
         }
         return cmisObject;
-    }
-
-    /**
-     * Returns a CMIS Object by path.
-     *
-     * @param path the path
-     * @return CMIS Object
-     * @throws IOException IO Exception
-     */
-    @Override
-    public CmisObject getObjectByPath(String path) throws IOException {
-        return getObject(path);
     }
 
 }
