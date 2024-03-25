@@ -33,7 +33,7 @@ public class CmsSuiteIT extends IntegrationTest {
     private JavascriptService javascriptService;
 
     @Test
-    void executeCMISTest() throws Exception {
+    void executeCMISTest() {
         javascriptService.handleRequest("cms-tests", "cmis-create-document.js", null, null, false);
         javascriptService.handleRequest("cms-tests", "cmis-create-folder.js", null, null, false);
         javascriptService.handleRequest("cms-tests", "cmis-get-children.js", null, null, false);

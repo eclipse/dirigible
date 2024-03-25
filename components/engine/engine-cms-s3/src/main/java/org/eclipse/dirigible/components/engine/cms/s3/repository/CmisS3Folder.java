@@ -13,6 +13,8 @@ package org.eclipse.dirigible.components.engine.cms.s3.repository;
 import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.api.s3.S3Facade;
+import org.eclipse.dirigible.components.api.s3.TenantPathResolved;
+import org.eclipse.dirigible.components.base.spring.BeanProvider;
 import org.eclipse.dirigible.components.engine.cms.CmisConstants;
 import org.eclipse.dirigible.components.engine.cms.CmisFolder;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -107,7 +109,8 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
      */
     public List<CmisS3Object> getChildren() {
         String path = this.getId();
-        String tenantPath = S3Facade.toTenantPath(path);
+        TenantPathResolved tenantPathResolved = BeanProvider.getBean(TenantPathResolved.class);
+        String tenantPath = tenantPathResolved.toTenantPath(path);
         List<String> objectKeys = S3Facade.listObjects(tenantPath)
                                           .stream()
                                           .map(S3Object::key)

@@ -11,9 +11,6 @@
 package org.eclipse.dirigible.components.api.s3;
 
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
-import org.eclipse.dirigible.components.base.tenant.Tenant;
-import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -54,19 +51,15 @@ public class S3Facade {
     private static final String DIRIGIBLE_S3_PROVIDER = Configuration.get("DIRIGIBLE_S3_PROVIDER", "aws");
     /** The Constant LOCALSTACK_URI. */
     private static final String DEFAULT_LOCALSTACK_URI = "https://s3.localhost.localstack.cloud:4566";
-    private static final String PATH_SEPARATOR = "/";
-    private static final String ROOT_PATH = "/";
     private static final String FOLDER_SUFFIX = "/";
     /** The instance. */
     private static S3Facade INSTANCE;
-    private static TenantContext tenantContext;
-    private static Tenant defaultTenant;
+    private final TenantPathResolved tenantPathResolved;
     /** The s 3. */
     private S3Client s3;
 
-    S3Facade(TenantContext tenantContext, @DefaultTenant Tenant defaultTenant) {
-        S3Facade.tenantContext = tenantContext;
-        S3Facade.defaultTenant = defaultTenant;
+    S3Facade(TenantPathResolved tenantPathResolved) {
+        this.tenantPathResolved = tenantPathResolved;
         INSTANCE = this;
     }
 
@@ -98,7 +91,7 @@ public class S3Facade {
      * @param name the name
      */
     public static void delete(String name) {
-        String tenantName = toTenantPath(name);
+        String tenantName = INSTANCE.tenantPathResolved.toTenantPath(name);
         String bucket = getBucketName();
         if (isFolderPath(tenantName)) {
             deleteFolder(tenantName);
@@ -114,24 +107,6 @@ public class S3Facade {
         }
     }
 
-    public static String toTenantPath(String path) {
-        String tenantId = tenantContext.isInitialized() ? tenantContext.getCurrentTenant()
-                                                                       .getId()
-                : defaultTenant.getId();
-        String prefix = tenantId + PATH_SEPARATOR;
-        if (ROOT_PATH.equals(path)) {
-            return prefix;
-        }
-
-        if (path.startsWith(prefix)) {
-            return path;
-        }
-
-        String tenantPath = prefix + (path.startsWith(PATH_SEPARATOR) ? path.substring(1) : path);
-        logger.debug("Path [{}] is resolved to [{}]", path, tenantPath);
-        return tenantPath;
-    }
-
     private static boolean isFolderPath(String path) {
         return path.endsWith(FOLDER_SUFFIX);
     }
@@ -142,7 +117,7 @@ public class S3Facade {
      * @param prefix the prefix
      */
     public static void deleteFolder(String prefix) {
-        String tenantPrefix = toTenantPath(prefix);
+        String tenantPrefix = INSTANCE.tenantPathResolved.toTenantPath(prefix);
         String bucket = getBucketName();
         try (S3Client s3Client = S3Client.builder()
                                          .region(AWS_DEFAULT_REGION)
@@ -243,7 +218,7 @@ public class S3Facade {
     public static byte[] get(String name) throws IOException {
         String bucket = getBucketName();
 
-        String tenantName = toTenantPath(name);
+        String tenantName = INSTANCE.tenantPathResolved.toTenantPath(name);
         ResponseInputStream<GetObjectResponse> response = S3Facade.get()
                                                                   .getS3Client()
                                                                   .getObject(GetObjectRequest.builder()
@@ -274,7 +249,7 @@ public class S3Facade {
      * @param contentType the content type
      */
     public static void put(String name, byte[] input, String contentType) {
-        String tenantName = toTenantPath(name);
+        String tenantName = INSTANCE.tenantPathResolved.toTenantPath(name);
         String bucket = getBucketName();
         PutObjectRequest objectRequest;
         if (isFolderPath(tenantName)) {
@@ -301,7 +276,7 @@ public class S3Facade {
      * @return the list
      */
     public static List<S3Object> listObjects(String path) {
-        String tenantPath = toTenantPath(path);
+        String tenantPath = INSTANCE.tenantPathResolved.toTenantPath(path);
 
         String bucket = getBucketName();
         ListObjectsV2Request listObjectsV2Request = ListObjectsV2Request.builder()
@@ -326,7 +301,7 @@ public class S3Facade {
      * @return true, if successful
      */
     public static boolean exists(String keyName) {
-        String tenantKeyName = toTenantPath(keyName);
+        String tenantKeyName = INSTANCE.tenantPathResolved.toTenantPath(keyName);
         String bucket = getBucketName();
         try {
             HeadObjectRequest objectRequest = HeadObjectRequest.builder()
@@ -359,7 +334,7 @@ public class S3Facade {
      */
     public static String getObjectContentType(String keyName) {
         String bucket = getBucketName();
-        String tenantKeyName = toTenantPath(keyName);
+        String tenantKeyName = INSTANCE.tenantPathResolved.toTenantPath(keyName);
         try {
             HeadObjectRequest objectRequest = HeadObjectRequest.builder()
                                                                .key(tenantKeyName)
