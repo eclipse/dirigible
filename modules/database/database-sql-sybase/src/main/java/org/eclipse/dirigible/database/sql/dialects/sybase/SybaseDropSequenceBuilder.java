@@ -33,11 +33,6 @@ public class SybaseDropSequenceBuilder extends DropSequenceBuilder {
      *
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder#generate()
-     */
     @Override
     public String generate() {
         throw new IllegalStateException("Sybase does not support Sequences");

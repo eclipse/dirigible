@@ -9,9 +9,10 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { request, response } from "@dirigible/http";
-import { extensions } from "@dirigible/extensions";
-import { uuid } from "@dirigible/utils";
+import { request, response } from "sdk/http";
+import { extensions } from "sdk/extensions";
+import { uuid } from "sdk/utils";
+import { user } from "sdk/security";
 
 const menuExtensionId = request.getParameter("id");
 let mainmenu = [];
@@ -25,7 +26,12 @@ function setETag() {
 }
 
 for (let i = 0; i < menuExtensions?.length; i++) {
-	mainmenu.push(menuExtensions[i].getMenu());
+	const menu = menuExtensions[i].getMenu();
+	if (menu.role && user.isInRole(menu.role)) {
+		mainmenu.push(menu);
+	} else if (menu.role === undefined) {
+		mainmenu.push(menu);
+	}
 }
 
 mainmenu.sort(function (p, n) {

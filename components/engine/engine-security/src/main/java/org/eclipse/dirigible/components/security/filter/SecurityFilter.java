@@ -15,16 +15,6 @@ import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.http.access.UserRequestVerifier;
 import org.eclipse.dirigible.components.security.domain.Access;
@@ -34,8 +24,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.google.common.html.HtmlEscapers;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * The Security Filter.
@@ -79,7 +76,7 @@ public class SecurityFilter implements Filter {
     private static final Set<String> SECURED_PREFIXES = new HashSet<>();
 
     /** The security access verifier. */
-    private AccessVerifier securityAccessVerifier;
+    private final AccessVerifier securityAccessVerifier;
 
     /**
      * Instantiates a new security filter.
@@ -95,11 +92,6 @@ public class SecurityFilter implements Filter {
      * Inits the security filter.
      *
      * @param filterConfig the filter config
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see jakarta.servlet.Filter#init(jakarta.servlet.FilterConfig)
      */
     @Override
     public void init(FilterConfig filterConfig) {
@@ -118,12 +110,6 @@ public class SecurityFilter implements Filter {
      * @param chain the chain
      * @throws ServletException the servlet exception
      * @throws IOException Signals that an I/O exception has occurred.
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see jakarta.servlet.Filter#doFilter(jakarta.servlet.ServletRequest,
-     * jakarta.servlet.ServletResponse, jakarta.servlet.FilterChain)
      */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
@@ -212,11 +198,6 @@ public class SecurityFilter implements Filter {
 
     /**
      * Destroy.
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see jakarta.servlet.Filter#destroy()
      */
     @Override
     public void destroy() {

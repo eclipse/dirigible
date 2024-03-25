@@ -167,7 +167,12 @@ public class LogsService {
     public String setSeverity(String loggerName, String logLevel) {
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
         Logger logger = loggerContext.getLogger(loggerName);
-        logger.setLevel(Level.toLevel(logLevel));
+        Level level = Level.toLevel(logLevel);
+        if (!level.equals(logger.getLevel())) {
+            logger.setLevel(level);
+        } else {
+            logger.setLevel(null);
+        }
         return getSeverity(loggerName);
     }
 

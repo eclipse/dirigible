@@ -10,6 +10,7 @@
  */
 package org.eclipse.dirigible.components.base.http.access;
 
+import org.eclipse.dirigible.components.base.http.roles.Roles;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 /**
@@ -17,6 +18,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
  */
 public class HttpSecurityURIConfigurator {
 
+    /** The Constant PUBLIC_PATTERNS. */
     private static final String[] PUBLIC_PATTERNS = {//
             "/", //
             "/home", //
@@ -39,14 +41,16 @@ public class HttpSecurityURIConfigurator {
             "/services/integrations/**", //
             "/actuator/**"};
 
+    /** The Constant AUTHENTICATED_PATTERNS. */
     private static final String[] AUTHENTICATED_PATTERNS = {//
             "/services/**", //
             "/websockets/**", //
-            "/v3/api-docs/swagger-config", //
-            "/v3/api-docs/**", //
+            "/api-docs/swagger-config", //
+            "/api-docs/**", //
             "/odata/**", //
             "/swagger-ui/**"};
 
+    /** The Constant DEVELOPER_PATTERNS. */
     private static final String[] DEVELOPER_PATTERNS = {//
             "/services/ide/**", //
             "/websockets/ide/**"};
@@ -62,13 +66,15 @@ public class HttpSecurityURIConfigurator {
         authz.requestMatchers(PUBLIC_PATTERNS)
              .permitAll()
 
+             // NOTE!: the order is important - role checks should be before just authenticated paths
+
+             // "DEVELOPER" role required
+             .requestMatchers(DEVELOPER_PATTERNS)
+             .hasRole(Roles.DEVELOPER.name())
+
              // Authenticated
              .requestMatchers(AUTHENTICATED_PATTERNS)
              .authenticated()
-
-             // "Developer" role required
-             .requestMatchers(DEVELOPER_PATTERNS)
-             .hasRole("Developer")
 
              // Deny all other requests
              .anyRequest()

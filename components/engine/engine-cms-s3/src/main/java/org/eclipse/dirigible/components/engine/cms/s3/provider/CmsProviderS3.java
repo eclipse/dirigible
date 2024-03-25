@@ -11,11 +11,7 @@
 package org.eclipse.dirigible.components.engine.cms.s3.provider;
 
 import org.eclipse.dirigible.components.engine.cms.CmsProvider;
-import org.eclipse.dirigible.components.engine.cms.s3.repository.CmisRepository;
-import org.eclipse.dirigible.components.engine.cms.s3.repository.CmisRepositoryFactory;
 import org.eclipse.dirigible.components.engine.cms.s3.repository.CmisS3Session;
-
-import java.io.IOException;
 
 /**
  * The Class CmsProviderS3.
@@ -23,35 +19,14 @@ import java.io.IOException;
 public class CmsProviderS3 implements CmsProvider {
 
     /**
-     * The Constant CMS.
-     */
-    private static final String CMS = "cms"; //$NON-NLS-1$
-
-    /**
-     * The Constant NAME.
-     */
-    public static final String NAME = "repository"; //$NON-NLS-1$
-
-    /**
      * The Constant TYPE.
      */
     public static final String TYPE = "s3"; //$NON-NLS-1$
+    private final CmisS3Session session;
 
-    /**
-     * The cmis repository.
-     */
-    private CmisRepository cmisRepository;
+    CmsProviderS3(CmisS3Session session) {
 
-    /**
-     * The S3Facade
-     */
-    private String S3_ROOT = "/";
-
-    /**
-     * Instantiates a new cms provider s3.
-     */
-    public CmsProviderS3() throws IOException {
-        this.cmisRepository = CmisRepositoryFactory.createCmisRepository(S3_ROOT);
+        this.session = session;
     }
 
     /**
@@ -61,8 +36,7 @@ public class CmsProviderS3 implements CmsProvider {
      */
     @Override
     public Object getSession() {
-        CmisS3Session cmisSession = this.cmisRepository.getSession();
-        return cmisSession;
+        return session;
     }
 
     /**

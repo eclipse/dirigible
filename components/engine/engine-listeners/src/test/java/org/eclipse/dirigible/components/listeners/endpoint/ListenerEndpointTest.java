@@ -10,9 +10,9 @@
  */
 package org.eclipse.dirigible.components.listeners.endpoint;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
+import org.eclipse.dirigible.components.base.tenant.Tenant;
+import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.eclipse.dirigible.components.listeners.domain.ListenerKind;
 import org.eclipse.dirigible.components.listeners.repository.ListenerRepository;
@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
@@ -33,6 +34,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * The Class ListenerEndpointTest.
@@ -46,21 +51,36 @@ import org.springframework.web.context.WebApplicationContext;
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class ListenerEndpointTest {
 
+    /** The wac. */
+    @Autowired
+    protected WebApplicationContext wac;
     /** The listener service. */
     @Autowired
     private ListenerService listenerService;
-
     /** The listener repository. */
     @Autowired
     private ListenerRepository listenerRepository;
-
     /** The mock mvc. */
     @Autowired
     private MockMvc mockMvc;
 
-    /** The wac. */
-    @Autowired
-    protected WebApplicationContext wac;
+    /** The tenant context. */
+    @MockBean
+    private TenantContext tenantContext;
+
+    /** The tenant. */
+    @MockBean
+    @DefaultTenant
+    private Tenant tenant;
+
+
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+        // it is needed
+    }
 
     /**
      * Setup.
@@ -92,13 +112,5 @@ public class ListenerEndpointTest {
         mockMvc.perform(get("/services/listeners"))
                .andDo(print())
                .andExpect(status().is2xxSuccessful());
-    }
-
-    /**
-     * The Class TestConfiguration.
-     */
-    @SpringBootApplication
-    static class TestConfiguration {
-        // it is needed
     }
 }

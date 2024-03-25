@@ -38,11 +38,6 @@ public class H2NextValueSequenceBuilder extends NextValueSequenceBuilder {
      *
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
-     */
     @Override
     public String generate() {
         String sequenceName = this.getSequence();

@@ -33,8 +33,9 @@ function getMaster(parameters) {
             collection: "uiListMasterModels"
         },
         {
-            location: "/template-application-ui-angular/ui/perspective/perspective.js",
+            location: "/template-application-ui-angular/ui/perspective/perspective.js.template",
             action: "generate",
+            engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/perspective.js",
             collection: "uiListMasterModels"
         },
@@ -65,8 +66,9 @@ function getMaster(parameters) {
             collection: "uiListMasterModels"
         },
         {
-            location: "/template-application-ui-angular/ui/perspective/master-list/tile.js",
+            location: "/template-application-ui-angular/ui/perspective/master-list/tile.js.template",
             action: "generate",
+            engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/{{name}}/tile.js",
             collection: "uiListMasterModels"
         },
@@ -77,8 +79,9 @@ function getMaster(parameters) {
             collection: "uiListMasterModels"
         },
         {
-            location: "/template-application-ui-angular/ui/perspective/master-list/view.js",
+            location: "/template-application-ui-angular/ui/perspective/master-list/view.js.template",
             action: "generate",
+            engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/{{name}}/view.js",
             collection: "uiListMasterModels"
         },
@@ -103,11 +106,39 @@ function getMaster(parameters) {
             collection: "uiListMasterModels"
         },
         {
-            location: "/template-application-ui-angular/ui/perspective/master-list/main-details/view.js",
+            location: "/template-application-ui-angular/ui/perspective/master-list/main-details/view.js.template",
             action: "generate",
+            engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/{{name}}/main-details/view.js",
             collection: "uiListMasterModels"
         },
+        {
+            location: "/template-application-ui-angular/ui/perspective/master-list/dialog-filter/controller.js.template",
+            action: "generate",
+            engine: "velocity",
+            rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-filter/controller.js",
+            collection: "uiListMasterModels"
+        },
+        {
+            location: "/template-application-ui-angular/ui/perspective/master-list/dialog-filter/index.html.template",
+            action: "generate",
+            engine: "velocity",
+            rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-filter/index.html",
+            collection: "uiListMasterModels"
+        },
+        {
+            location: "/template-application-ui-angular/ui/perspective/master-list/dialog-filter/view.extension",
+            action: "generate",
+            rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-filter/view.extension",
+            collection: "uiListMasterModels"
+        },
+        {
+            location: "/template-application-ui-angular/ui/perspective/master-list/dialog-filter/view.js.template",
+            action: "generate",
+            engine: "velocity",
+            rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-filter/view.js",
+            collection: "uiListMasterModels"
+        }
     ];
 }
 
@@ -128,14 +159,14 @@ function getDetails(parameters) {
             collection: "uiListDetailsModels"
         },
         {
-            location: "/template-application-ui-angular/ui/perspective/master-list/detail/view.extension",
+            location: "/template-application-ui-angular/ui/perspective/master-list/detail/view.extension.template",
             action: "generate",
             engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/view.extension",
             collection: "uiListDetailsModels"
         },
         {
-            location: "/template-application-ui-angular/ui/perspective/master-list/detail/view.js",
+            location: "/template-application-ui-angular/ui/perspective/master-list/detail/view.js.template",
             action: "generate",
             engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/view.js",
@@ -156,17 +187,44 @@ function getDetails(parameters) {
             collection: "uiListDetailsModels"
         },
         {
-            location: "/template-application-ui-angular/ui/perspective/master-list/detail/dialog-window/view.extension",
+            location: "/template-application-ui-angular/ui/perspective/master-list/detail/dialog-window/view.extension.template",
             action: "generate",
             engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-window/view.extension",
             collection: "uiListDetailsModels"
         },
         {
-            location: "/template-application-ui-angular/ui/perspective/master-list/detail/dialog-window/view.js",
+            location: "/template-application-ui-angular/ui/perspective/master-list/detail/dialog-window/view.js.template",
             action: "generate",
             engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-window/view.js",
+            collection: "uiListDetailsModels"
+        },
+        {
+            location: "/template-application-ui-angular/ui/perspective/master-list/detail/dialog-filter/controller.js.template",
+            action: "generate",
+            engine: "velocity",
+            rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-filter/controller.js",
+            collection: "uiListDetailsModels"
+        },
+        {
+            location: "/template-application-ui-angular/ui/perspective/master-list/detail/dialog-filter/index.html.template",
+            action: "generate",
+            engine: "velocity",
+            rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-filter/index.html",
+            collection: "uiListDetailsModels"
+        },
+        {
+            location: "/template-application-ui-angular/ui/perspective/master-list/detail/dialog-filter/view.extension",
+            action: "generate",
+            rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-filter/view.extension",
+            collection: "uiListDetailsModels"
+        },
+        {
+            location: "/template-application-ui-angular/ui/perspective/master-list/detail/dialog-filter/view.js.template",
+            action: "generate",
+            engine: "velocity",
+            rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-filter/view.js",
             collection: "uiListDetailsModels"
         }
     ];

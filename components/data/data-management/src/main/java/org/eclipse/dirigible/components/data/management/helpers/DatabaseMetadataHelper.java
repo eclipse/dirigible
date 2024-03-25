@@ -276,7 +276,15 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         return result;
     }
 
-    public static List<SequenceMetadata> listSequences(Connection connection) throws SQLException {
+    /**
+     * List sequences.
+     *
+     * @param connection the connection
+     * @param name the name
+     * @return the list
+     * @throws SQLException the SQL exception
+     */
+    public static List<SequenceMetadata> listSequences(Connection connection, String name) throws SQLException {
 
         DatabaseMetaData dmd = connection.getMetaData();
 
@@ -284,8 +292,17 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
 
         String query = null;
 
-        if (!dmd.getDatabaseProductName()
-                .equals("MongoDB")) {
+        if (dmd.getDatabaseProductName()
+               .equals("MariaDB")
+                || dmd.getDatabaseProductName()
+                      .equals("MySQL")) {
+            query = String.format(
+                    "SELECT column_name FROM information_schema.columns WHERE table_schema = \'%s\' AND extra = 'auto_increment'", name);
+        } else if (dmd.getDatabaseProductName()
+                      .equals("Snowflake")) {
+            query = "SHOW SEQUENCES";
+        } else if (!dmd.getDatabaseProductName()
+                       .equals("MongoDB")) {
             query = "SELECT * FROM information_schema.sequences";
         }
 
@@ -293,7 +310,18 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    String sequenceName = resultSet.getString("sequence_name");
+                    String sequenceName;
+                    if (dmd.getDatabaseProductName()
+                           .equals("MariaDB")
+                            || dmd.getDatabaseProductName()
+                                  .equals("MySQL")) {
+                        sequenceName = resultSet.getString("column_name");
+                    } else if (dmd.getDatabaseProductName()
+                                  .equals("Snowflake")) {
+                        sequenceName = resultSet.getString("name");
+                    } else {
+                        sequenceName = resultSet.getString("sequence_name");
+                    }
                     result.add(new SequenceMetadata(sequenceName));
                 }
             }
@@ -527,6 +555,7 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
      * @param tableName the table name
      * @param columnsIteratorCallback the columns iterator callback
      * @param indicesIteratorCallback the indices iterator callback
+     * @param foreignKeysIteratorCallback the foreign keys iterator callback
      * @throws SQLException the SQL exception
      */
     public static void iterateTableDefinition(Connection connection, String catalogName, String schemaName, String tableName,

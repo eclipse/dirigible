@@ -10,6 +10,11 @@
  */
 package org.eclipse.dirigible.components.security.service;
 
+import static org.eclipse.dirigible.components.security.repository.AccessRepositoryTest.createSecurityAccess;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.List;
 import org.eclipse.dirigible.components.security.domain.Access;
 import org.eclipse.dirigible.components.security.repository.AccessRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -24,11 +29,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-import static org.eclipse.dirigible.components.security.repository.AccessRepositoryTest.createSecurityAccess;
-import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * The Class AccessServiceTest.
+ */
 @SpringBootTest(classes = {AccessRepository.class, AccessService.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
@@ -36,12 +39,17 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class AccessServiceTest {
 
+    /** The access repository. */
     @Autowired
     private AccessRepository accessRepository;
 
+    /** The access service. */
     @Autowired
     private AccessService accessService;
 
+    /**
+     * Setup.
+     */
     @BeforeEach
     public void setup() {
 
@@ -60,24 +68,36 @@ class AccessServiceTest {
                 createSecurityAccess("/a/b/c/test5.access", "test5", "description", "HTTP", "/a" + "/b/c/test5.txt", "GET", "test_role_5"));
     }
 
+    /**
+     * Cleanup.
+     */
     @AfterEach
     public void cleanup() {
         // Delete test security accesses
         accessRepository.deleteAll();
     }
 
+    /**
+     * Test get all.
+     */
     @Test
     void testGetAll() {
         List<Access> securityAccessList = accessService.getAll();
         assertEquals(5, securityAccessList.size());
     }
 
+    /**
+     * Test find all.
+     */
     @Test
     void testFindAll() {
         Page<Access> securityAccessPage = accessService.getPages(Pageable.ofSize(1));
         assertEquals(5, securityAccessPage.getTotalElements());
     }
 
+    /**
+     * Test find by id.
+     */
     @Test
     void testFindById() {
         Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b" + "/c/test.txt", "GET", "test_role");
@@ -86,6 +106,9 @@ class AccessServiceTest {
         assertEquals("test", securityAccessServiceById.getName());
     }
 
+    /**
+     * Test find by name.
+     */
     @Test
     void testFindByName() {
         Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b" + "/c/test.txt", "GET", "test_role");
@@ -94,6 +117,9 @@ class AccessServiceTest {
         assertEquals(securityAccess.getId(), securityAccessServiceByName.getId());
     }
 
+    /**
+     * Test save.
+     */
     @Test
     void testSave() {
         Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b" + "/c/test.txt", "GET", "test_role");
@@ -101,15 +127,17 @@ class AccessServiceTest {
         assertNotNull(accessService.findByName("test"));
     }
 
+    /**
+     * Test delete.
+     */
     @Test
     void testDelete() {
-        try {
-            Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b/c/test.txt", "GET", "test_role");
-            accessService.save(securityAccess);
-            accessService.delete(securityAccess);
+        Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b/c/test.txt", "GET", "test_role");
+        accessService.save(securityAccess);
+        accessService.delete(securityAccess);
+
+        assertThrows(IllegalArgumentException.class, () -> {
             accessService.findByName("test");
-        } catch (Exception e) {
-            assertEquals("Access with name does not exist: test", e.getMessage());
-        }
+        });
     }
 }

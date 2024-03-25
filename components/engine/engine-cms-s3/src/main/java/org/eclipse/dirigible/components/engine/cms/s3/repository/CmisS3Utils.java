@@ -14,9 +14,20 @@ import org.eclipse.dirigible.repository.api.IRepository;
 
 import java.util.Objects;
 
+/**
+ * The Class CmisS3Utils.
+ */
 public class CmisS3Utils {
+
+    /** The root. */
     public static String ROOT = "/";
 
+    /**
+     * Find current file.
+     *
+     * @param folderPath the folder path
+     * @return the string
+     */
     public static String findCurrentFile(String folderPath) {
         if (Objects.equals(folderPath, ROOT)) {
             return ROOT;
@@ -26,6 +37,12 @@ public class CmisS3Utils {
         return parts[parts.length - 1];
     }
 
+    /**
+     * Find current folder.
+     *
+     * @param folderPath the folder path
+     * @return the string
+     */
     public static String findCurrentFolder(String folderPath) {
         if (Objects.equals(folderPath, ROOT)) {
             return ROOT;
@@ -35,6 +52,12 @@ public class CmisS3Utils {
         return parts[parts.length - 1] + IRepository.SEPARATOR;
     }
 
+    /**
+     * Find parent folder.
+     *
+     * @param folderPath the folder path
+     * @return the string
+     */
     public static String findParentFolder(String folderPath) {
         if (Objects.equals(folderPath, ROOT)) {
             return null;
@@ -49,12 +72,4 @@ public class CmisS3Utils {
         }
     }
 
-    public static int pathSegmentsLength(String folderPath) {
-        if (Objects.equals(folderPath, ROOT)) {
-            return 0;
-        }
-
-        String[] parts = folderPath.split(IRepository.SEPARATOR);
-        return parts.length;
-    }
 }

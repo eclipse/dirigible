@@ -10,19 +10,13 @@
  */
 package org.eclipse.dirigible.components.openapi.synchronizer;
 
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.text.ParseException;
-import java.util.List;
-
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.openapi.domain.OpenAPI;
@@ -33,14 +27,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.text.ParseException;
+import java.util.List;
+
 /**
  * The Class OpenAPISynchronizer.
- *
- * @param <A> the generic type
  */
 @Component
 @Order(SynchronizersOrder.OPENAPI)
-public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<OpenAPI> {
+public class OpenAPISynchronizer extends BaseSynchronizer<OpenAPI, Long> {
 
     /**
      * The Constant logger.
@@ -56,7 +51,7 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
      * The openAPI service.
      */
 
-    private OpenAPIService openAPIService;
+    private final OpenAPIService openAPIService;
 
     /**
      * The synchronization callback.
@@ -76,19 +71,6 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
     /**
      * Checks if is accepted.
      *
-     * @param file the file
-     * @param attrs the attrs
-     * @return true, if is accepted
-     */
-    @Override
-    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString()
-                   .endsWith(getFileExtension());
-    }
-
-    /**
-     * Checks if is accepted.
-     *
      * @param type the type
      * @return true, if is accepted
      */
@@ -103,7 +85,7 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
      * @param location the location
      * @param content the content
      * @return the list
-     * @throws ParseException
+     * @throws ParseException the parse exception
      */
     @Override
     public List<OpenAPI> parse(String location, byte[] content) throws ParseException {
@@ -136,6 +118,16 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
     }
 
     /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<OpenAPI, Long> getService() {
+        return openAPIService;
+    }
+
+    /**
      * Retrieve.
      *
      * @param location the location
@@ -154,20 +146,10 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(OpenAPI artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((OpenAPI) artefact);
-    }
-
-    /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<OpenAPI> getService() {
-        return openAPIService;
+        getService().save(artefact);
     }
 
     /**
@@ -176,7 +158,7 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
      * @param openAPI the openAPI
      */
     @Override
-    public void cleanup(OpenAPI openAPI) {
+    public void cleanupImpl(OpenAPI openAPI) {
         try {
             getService().delete(openAPI);
         } catch (Exception e) {
@@ -196,7 +178,7 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<OpenAPI> wrapper, ArtefactPhase flow) {
         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
         return true;
     }

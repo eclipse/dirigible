@@ -1390,9 +1390,18 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     return scope.editorTabs;
                 };
 
-                scope.onTabClick = function (pane, tabId) {
+                scope.onTabClick = function (pane, tabId, file) {
                     pane.selectedTab = tabId;
                     messageHub.setTabFocus(tabId);
+
+                    const autoRevealEnabled = window.localStorage.getItem('DIRIGIBLE.autoRevealActionEnabled');
+                    if (file && (autoRevealEnabled === null || autoRevealEnabled === 'true')) {
+                        setTimeout(() => {
+                            messageHub.postMessage('projects.tree.select', {
+                                filePath: file
+                            }, true);
+                        }, 100);
+                    }
                 };
             },
             templateUrl: '/services/web/resources-core/ui/templates/splittedTabs.html'

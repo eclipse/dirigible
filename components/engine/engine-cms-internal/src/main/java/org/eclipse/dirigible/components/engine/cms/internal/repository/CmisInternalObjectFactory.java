@@ -18,7 +18,7 @@ import java.io.InputStream;
 public class CmisInternalObjectFactory {
 
     /** The session. */
-    private CmisInternalSession session;
+    private final CmisInternalSession session;
 
     /**
      * Instantiates a new object factory.
@@ -40,7 +40,7 @@ public class CmisInternalObjectFactory {
      * @return the content stream
      */
     public CmisInternalContentStream createContentStream(String filename, long length, String mimetype, InputStream inputStream) {
-        return new CmisInternalContentStream(this.session, filename, length, mimetype, inputStream);
+        return new CmisInternalContentStream(filename, length, mimetype, inputStream);
     }
 
 }

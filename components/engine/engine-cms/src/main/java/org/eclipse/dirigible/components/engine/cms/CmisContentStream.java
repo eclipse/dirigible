@@ -12,6 +12,9 @@ package org.eclipse.dirigible.components.engine.cms;
 
 import java.io.InputStream;
 
+/**
+ * The Interface CmisContentStream.
+ */
 public interface CmisContentStream {
     /**
      * Returns the InputStream of this ContentStream object.
@@ -19,20 +22,6 @@ public interface CmisContentStream {
      * @return Input Stream
      */
     InputStream getStream();
-
-    /**
-     * Gets the cmis session.
-     *
-     * @return the cmis session
-     */
-    CmisSession getCmisSession();
-
-    /**
-     * Sets the cmis session.
-     *
-     * @param cmisSession the new cmis session
-     */
-    void setCmisSession(CmisSession cmisSession);
 
     /**
      * Gets the filename.

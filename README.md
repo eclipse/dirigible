@@ -37,7 +37,6 @@ The project started as an internal SAP initiative to address the extension and a
 		- [Standalone](#standalone)
 		- [Docker](#docker)
                 - [Native image](#native-image)
-  	- [Code formatting](#code-formatting)	 
 - [Additional Information](#additional-information)
 	- [License](#license)
 	- [Contributors](#contributors)
@@ -104,11 +103,11 @@ git config --system core.longpaths true
 
  - If you don't need to compile and run tests:
 
-        mvn clean install -D maven.test.skip=true -D skipTests
+        mvn clean install -D skipTests
 
  - If you want to do a fast build, with no tests, javadocs and license updates:
 
-        mvn -T 1C clean install -D maven.test.skip=true -D skipTests -D maven.javadoc.skip=true -D license.skip=true
+        mvn -T 1C clean install -D skipTests -D maven.javadoc.skip=true -D license.skip=true
 
 > The build should pass successfully.
 
@@ -307,4 +306,3 @@ Unicons by IconScout: [https://github.com/Iconscout/unicons](https://github.com/
 - Mailing List: [https://dev.eclipse.org/mailman/listinfo/dirigible-dev](https://dev.eclipse.org/mailman/listinfo/dirigible-dev)
 - Issues: [https://github.com/eclipse/dirigible/issues](https://github.com/eclipse/dirigible/issues)
 - Eclipse Foundation Help Desk: https://gitlab.eclipse.org/eclipsefdn/helpdesk
-

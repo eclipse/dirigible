@@ -4,7 +4,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 		messageHubProvider.eventIdPrefix = '${projectName}.${perspectiveName}.${name}';
 	}])
 	.config(["entityApiProvider", function (entityApiProvider) {
-		entityApiProvider.baseUrl = "/services/js/${projectName}/gen/api/${perspectiveName}/${name}.js";
+		entityApiProvider.baseUrl = "/services/ts/${projectName}/gen/api/${perspectiveName}/${name}Service.ts";
 	}])
 	.controller('PageController', ['$scope', '$http', 'messageHub', 'entityApi', function ($scope, $http, messageHub, entityApi) {
 

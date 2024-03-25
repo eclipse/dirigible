@@ -10,22 +10,8 @@
  */
 package org.eclipse.dirigible.components.initializers.synchronizer;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 import org.apache.commons.io.FilenameUtils;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.api.platform.ProblemsFacade;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
@@ -44,12 +30,22 @@ import org.eclipse.dirigible.components.initializers.definition.DefinitionServic
 import org.eclipse.dirigible.components.initializers.definition.DefinitionState;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 /**
  * The Class SynchronizationProcessor.
@@ -62,7 +58,8 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
     private static final Logger logger = LoggerFactory.getLogger(SynchronizationProcessor.class);
 
     /** The definitions. */
-    private final Map<Synchronizer<Artefact>, Map<String, Definition>> definitions = Collections.synchronizedMap(new HashMap<>());
+    private final Map<Synchronizer<? extends Artefact, ?>, Map<String, Definition>> definitions =
+            Collections.synchronizedMap(new HashMap<>());
 
     /** The artefacts. */
     private final Map<String, Artefact> artefacts = Collections.synchronizedMap(new HashMap<>());
@@ -71,7 +68,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
     private final IRepository repository;
 
     /** The synchronizers. */
-    private final List<Synchronizer<Artefact>> synchronizers;
+    private final List<Synchronizer<?, ?>> synchronizers;
 
     /** The errors. */
     private final List<String> errors = Collections.synchronizedList(new ArrayList<>());
@@ -100,10 +97,11 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
      * @param synchronizationWatcher the synchronization watcher
      */
     @Autowired
-    public SynchronizationProcessor(IRepository repository, List<Synchronizer<Artefact>> synchronizers, DefinitionService definitionService,
+    public SynchronizationProcessor(IRepository repository, List<Synchronizer<?, ?>> synchronizers, DefinitionService definitionService,
             SynchronizationWatcher synchronizationWatcher) {
         this.repository = repository;
         this.synchronizers = Collections.synchronizedList(synchronizers);
+        logger.info("Registered [{}] synchronizers: [{}]", synchronizers.size(), synchronizers);
         this.definitionService = definitionService;
         this.synchronizationWatcher = synchronizationWatcher;
         this.synchronizers.forEach(s -> s.setCallback(this));
@@ -114,12 +112,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
      */
     public synchronized void prepareSynchronizers() {
         this.synchronizers.forEach(s -> s.getService()
-                                         .getAll()
-                                         .forEach(a -> {
-                                             a.setRunning(false);
-                                             s.getService()
-                                              .save(a);
-                                         }));
+                                         .setRunningToAll(false));
         try {
             this.synchronizationWatcher.initialize(getRegistryFolder());
             prepared.set(true);
@@ -129,9 +122,33 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
     }
 
     /**
+     * Gets the registry folder.
+     *
+     * @return the registry folder
+     */
+    public String getRegistryFolder() {
+        String internalRegistryPath = repository.getInternalResourcePath(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
+        File registry = Path.of(internalRegistryPath)
+                            .toFile();
+        if (!registry.exists()) {
+            registry.mkdirs();
+        }
+        return internalRegistryPath;
+    }
+
+    /**
+     * Force process synchronizers.
+     */
+    public void forceProcessSynchronizers() {
+        this.synchronizationWatcher.force();
+        processSynchronizers();
+    }
+
+    /**
      * Process synchronizers.
      */
-    public synchronized void processSynchronizers() {
+    public void processSynchronizers() {
+        logger.debug("Processing synchronizers...");
 
         if (!this.synchronizationWatcher.isModified() && initialized.get()) {
             logger.debug("Skipped synchronization as no changes in the Registry.");
@@ -150,8 +167,6 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 
         processing.set(true);
 
-        logger.debug("Processing synchronizers started...");
-
         try {
 
             prepare();
@@ -167,7 +182,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
             logger.debug("Collecting files done. {} known types of definitions collected - {}.", synchronizers.size(),
                     synchronizers.stream()
                                  .map(Synchronizer::getArtefactType)
-                                 .collect(Collectors.toUnmodifiableList()));
+                                 .toList());
             logger.trace("Loading definitions...");
 
             // mark the deleted definitions, which previousely processed
@@ -197,7 +212,8 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                 TopologicalSorter<TopologyWrapper<? extends Artefact>> sorter = new TopologicalSorter<>();
                 TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter = new TopologicalDepleter<>();
 
-                List<TopologyWrapper<? extends Artefact>> wrappers = TopologyFactory.wrap(artefacts.values(), synchronizers);
+                Collection<? extends Artefact> values = artefacts.values();
+                List<TopologyWrapper<? extends Artefact>> wrappers = TopologyFactory.wrap(values, synchronizers);
 
                 logger.trace("Topological sorting...");
 
@@ -212,11 +228,11 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                 List<TopologyWrapper<? extends Artefact>> undepleted = new ArrayList<>();
 
                 // preparing and depleting
-                for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
+                for (Synchronizer<? extends Artefact, ?> synchronizer : synchronizers) {
                     List<TopologyWrapper<? extends Artefact>> unmodifiable = wrappers.stream()
                                                                                      .filter(w -> w.getSynchronizer()
                                                                                                    .equals(synchronizer))
-                                                                                     .collect(Collectors.toUnmodifiableList());
+                                                                                     .toList();
                     try {
                         List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(unmodifiable, ArtefactPhase.PREPARE);
                         undepleted.addAll(results);
@@ -233,7 +249,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 
                 logger.trace("Processing of artefacts...");
                 // processing and depleting
-                for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
+                for (Synchronizer<? extends Artefact, ?> synchronizer : synchronizers) {
                     HealthCheckStatus.getInstance()
                                      .getJobs()
                                      .setStatus(synchronizer.getClass()
@@ -242,7 +258,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                     List<TopologyWrapper<? extends Artefact>> unmodifiable = wrappers.stream()
                                                                                      .filter(w -> w.getSynchronizer()
                                                                                                    .equals(synchronizer))
-                                                                                     .collect(Collectors.toUnmodifiableList());
+                                                                                     .toList();
                     try {
 
                         // phase create
@@ -277,10 +293,13 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                 }
 
                 // Processing of cross-synchronizer artefacts once again due to eventual dependency issues
-                if (undepleted.size() > 0) {
+                int crossRetryCount = Configuration.getAsInt("DIRIGIBLE_SYNCHRONIZER_CROSS_RETRY_COUNT", 10);
+                int crossRetryInterval = Configuration.getAsInt("DIRIGIBLE_SYNCHRONIZER_CROSS_RETRY_INTERVAL", 10000);
+                int retryCount = 0;
+                if (!undepleted.isEmpty()) {
                     logger.warn("Cross-processing of undepleated artefacts...");
                     try {
-                        while (undepleted.size() > 0) {
+                        while (!undepleted.isEmpty()) {
                             List<TopologyWrapper<? extends Artefact>> cross = new ArrayList<>();
                             List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(undepleted, ArtefactPhase.PREPARE);
                             cross.addAll(results);
@@ -298,7 +317,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                             cross.addAll(results);
                             registerErrors(results, ArtefactLifecycle.STARTED);
 
-                            if (cross.size() > 0 && cross.size() == undepleted.size()) {
+                            if (!cross.isEmpty() && cross.size() == undepleted.size()) {
                                 // No artefacts were depleted, exiting an infinite loop
                                 if (logger.isErrorEnabled()) {
                                     String crossArtefactsLeft = cross.stream()
@@ -310,18 +329,24 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                                 }
                                 break;
                             }
-                            if (cross.size() > 0) {
+                            String crossArtefactsLeft = cross.stream()
+                                                             .map(e -> e.getArtefact()
+                                                                        .getKey())
+                                                             .collect(Collectors.joining(", "));
+                            if (!cross.isEmpty()) {
                                 undepleted.clear();
                                 undepleted.addAll(cross);
                                 if (logger.isWarnEnabled()) {
-                                    String crossArtefactsLeft = cross.stream()
-                                                                     .map(e -> e.getArtefact()
-                                                                                .getKey())
-                                                                     .collect(Collectors.joining(", "));
                                     String warnMessage = "Retring to deplete artefacts left after cross-processing: " + crossArtefactsLeft;
                                     logger.warn(warnMessage);
                                 }
                             }
+                            if (++retryCount == crossRetryCount) {
+                                String warnMessage = "Final retry to deplete artefacts left after cross-processing: " + crossArtefactsLeft;
+                                logger.error(warnMessage);
+                                break;
+                            }
+                            Thread.sleep(crossRetryInterval);
                         }
                     } catch (Exception e) {
                         logger.error("Error occurred while cross-processing of undepleated artefacts", e);
@@ -336,7 +361,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
             logger.trace("Cleaning up removed artefacts...");
 
             // cleanup
-            for (Synchronizer<Artefact> synchronizer : synchronizers) {
+            for (Synchronizer synchronizer : synchronizers) {
                 List<? extends Artefact> registered = synchronizer.getService()
                                                                   .getAll();
                 for (Artefact artefact : registered) {
@@ -344,7 +369,6 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                         if (!repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + artefact.getLocation())
                                        .exists()) {
                             synchronizer.cleanup(artefact);
-                            break;
                         }
                     }
                 }
@@ -352,9 +376,12 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
             logger.trace("Cleaning up removed artefacts done.");
 
             // report results
-            getErrors().forEach(e -> {
-                logger.error("Error occured during synchronization: ", e);
+            getErrors().forEach(errMsg -> {
+                logger.error("Error occured during synchronization: [{}]", errMsg);
             });
+
+            logger.debug("Processing synchronizers completed!");
+
         } finally {
             if (logger.isDebugEnabled()) {
                 int countCreated = 0;
@@ -409,7 +436,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
      */
     private void markDeleted() {
         Map<String, Definition> found = new HashMap<>();
-        for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
+        for (Synchronizer<? extends Artefact, ?> synchronizer : synchronizers) {
             Map<String, Definition> map = checkSynchronizerMap(synchronizer);
             Collection<Definition> immutableDefinitions = Collections.synchronizedCollection(map.values());
             for (Definition definition : immutableDefinitions) {
@@ -430,7 +457,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
      * Load definitions.
      */
     private void parseDefinitions() {
-        for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
+        for (Synchronizer synchronizer : synchronizers) {
             Map<String, Definition> map = checkSynchronizerMap(synchronizer);
             Collection<Definition> immutableDefinitions = Collections.synchronizedCollection(map.values());
             for (Definition definition : immutableDefinitions) {
@@ -441,14 +468,14 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                         continue;
                     }
 
-                    List parsed;
+                    List<? extends Artefact> parsed;
                     switch (definition.getState()) {
                         case NEW: // brand new definition
                             try {
                                 parsed = synchronizer.parse(definition.getLocation(), definition.getContent());
                                 parsed.forEach(a -> {
-                                    ((Artefact) a).setPhase(ArtefactPhase.CREATE);
-                                    synchronizer.setStatus(((Artefact) a), ArtefactLifecycle.NEW, "");
+                                    a.setPhase(ArtefactPhase.CREATE);
+                                    synchronizer.setStatus((a), ArtefactLifecycle.NEW, "");
                                 });
                                 addArtefacts(parsed);
                                 registerParsedState(definition);
@@ -460,8 +487,8 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                             try {
                                 parsed = synchronizer.parse(definition.getLocation(), definition.getContent());
                                 parsed.forEach(a -> {
-                                    ((Artefact) a).setPhase(ArtefactPhase.UPDATE);
-                                    synchronizer.setStatus(((Artefact) a), ArtefactLifecycle.MODIFIED, "");
+                                    a.setPhase(ArtefactPhase.UPDATE);
+                                    synchronizer.setStatus((a), ArtefactLifecycle.MODIFIED, "");
                                 });
                                 addArtefacts(parsed);
                                 registerParsedState(definition);
@@ -480,8 +507,8 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                             try {
                                 parsed = synchronizer.parse(definition.getLocation(), definition.getContent());
                                 parsed.forEach(a -> {
-                                    ((Artefact) a).setPhase(ArtefactPhase.CREATE);
-                                    synchronizer.setStatus(((Artefact) a), ArtefactLifecycle.NEW, "");
+                                    a.setPhase(ArtefactPhase.CREATE);
+                                    synchronizer.setStatus((a), ArtefactLifecycle.NEW, "");
                                 });
                                 addArtefacts(parsed);
                                 registerParsedState(definition);
@@ -531,6 +558,13 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
         registerBrokenState(definition, e, e.getMessage());
     }
 
+    /**
+     * Register broken state.
+     *
+     * @param definition the definition
+     * @param ex the ex
+     * @param errorMessage the error message
+     */
     private void registerBrokenState(Definition definition, Exception ex, String errorMessage) {
         if (null != ex) {
             logger.error(errorMessage, ex);
@@ -559,27 +593,13 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
     /**
      * Adds the artefacts.
      *
+     * @param <T> the generic type
      * @param parsed the parsed
      */
-    private void addArtefacts(List<Artefact> parsed) {
-        for (Artefact artefact : parsed) {
+    private <T extends Artefact> void addArtefacts(List<T> parsed) {
+        for (T artefact : parsed) {
             artefacts.put(artefact.getKey(), artefact);
         }
-    }
-
-    /**
-     * Gets the registry folder.
-     *
-     * @return the registry folder
-     */
-    public String getRegistryFolder() {
-        String internalRegistryPath = ((LocalRepository) repository).getInternalResourcePath(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
-        File registry = Path.of(internalRegistryPath)
-                            .toFile();
-        if (!registry.exists()) {
-            registry.mkdirs();
-        }
-        return internalRegistryPath;
     }
 
     /**
@@ -602,7 +622,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
      * @param location the location
      */
     private void checkFile(Path file, BasicFileAttributes attrs, String location) {
-        for (Synchronizer<Artefact> synchronizer : synchronizers) {
+        for (Synchronizer<? extends Artefact, ?> synchronizer : synchronizers) {
             if (synchronizer.isAccepted(file, attrs)) {
                 // synchronizer knows this artifact, hence check whether to process it or not
                 try {
@@ -624,7 +644,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws FileNotFoundException the file not found exception
      */
-    private void checkAndCollect(Path file, String location, Synchronizer<Artefact> synchronizer)
+    private void checkAndCollect(Path file, String location, Synchronizer<? extends Artefact, ?> synchronizer)
             throws IOException, FileNotFoundException {
 
         String type = synchronizer.getArtefactType();
@@ -746,8 +766,8 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                     errorMessage += " | " + wrapper.getArtefact()
                                                    .getError();
                 }
-                wrapper.getSynchronizer()
-                       .setStatus(wrapper.getArtefact(), ArtefactLifecycle.FAILED, errorMessage);
+                Synchronizer synchronizer = wrapper.getSynchronizer();
+                synchronizer.setStatus(wrapper.getArtefact(), ArtefactLifecycle.FAILED, errorMessage);
                 Problem problem = ProblemsFacade.getArtefactSynchronizationProblem(wrapper.getArtefact());
                 if (problem != null) {
                     ProblemsFacade.updateArtefactSynchronizationProblem(wrapper.getArtefact(), errorMessage);
@@ -774,8 +794,8 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                         wrapper.getId(), lifecycle);
                 logger.error(errorMessage);
                 errors.add(errorMessage);
-                wrapper.getSynchronizer()
-                       .setStatus(wrapper.getArtefact(), lifecycle, errorMessage);
+                Synchronizer synchronizer = wrapper.getSynchronizer();
+                synchronizer.setStatus(wrapper.getArtefact(), lifecycle, errorMessage);
             }
         }
     }
@@ -789,7 +809,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
      * @param message the message
      */
     @Override
-    public void registerState(Synchronizer<? extends Artefact> synchronizer, TopologyWrapper<? extends Artefact> wrapper,
+    public void registerState(Synchronizer<? extends Artefact, ?> synchronizer, TopologyWrapper<? extends Artefact> wrapper,
             ArtefactLifecycle lifecycle, String message) {
         registerState(synchronizer, wrapper.getArtefact(), lifecycle, message);
     }
@@ -803,11 +823,12 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
      * @param message the message
      */
     @Override
-    public void registerState(Synchronizer<? extends Artefact> synchronizer, Artefact artefact, ArtefactLifecycle lifecycle,
+    public void registerState(Synchronizer<? extends Artefact, ?> synchronizer, Artefact artefact, ArtefactLifecycle lifecycle,
             String message) {
-        // if (logger.isTraceEnabled()) {logger.trace("Processed artefact with key: {} with status: {}",
-        // artefact.getKey(), lifecycle.getValue());}
-        synchronizer.setStatus(artefact, lifecycle, message);
+        if (ArtefactLifecycle.FAILED.equals(lifecycle)) {
+            logger.error("Processing failed for artefact with key: {}", artefact.getKey());
+        }
+        Synchronizer s = synchronizer;
+        s.setStatus(artefact, lifecycle, message);
     }
-
 }

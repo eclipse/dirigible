@@ -20,17 +20,14 @@ import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
-import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
-import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
-import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
 import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
 
 /**
  * The MariaDB SQL Dialect.
  */
 public class MariaDBSqlDialect extends
-        DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, MariaDBCreateBranchingBuilder, AlterBranchingBuilder, MariaDBDropBranchingBuilder, MariaDBNextValueSequenceBuilder, MariaDBLastValueIdentityBuilder> {
+        DefaultSqlDialect<MariaDBSelectBuilder, InsertBuilder, MariaDBUpdateBuilder, MariaDBDeleteBuilder, MariaDBCreateBranchingBuilder, AlterBranchingBuilder, MariaDBDropBranchingBuilder, MariaDBNextValueSequenceBuilder, MariaDBLastValueIdentityBuilder> {
 
     /** The Constant MARIADB_KEYWORD_IDENTITY. */
     private static final String MARIA_DB_KEYWORD_IDENTITY = "AUTO_INCREMENT";
@@ -57,11 +54,6 @@ public class MariaDBSqlDialect extends
      *
      * @return the my SQL create branching builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#create()
-     */
     @Override
     public MariaDBCreateBranchingBuilder create() {
         return new MariaDBCreateBranchingBuilder(this);
@@ -71,11 +63,6 @@ public class MariaDBSqlDialect extends
      * Drop.
      *
      * @return the my SQL drop branching builder
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#drop()
      */
     @Override
     public MariaDBDropBranchingBuilder drop() {
@@ -88,11 +75,6 @@ public class MariaDBSqlDialect extends
      * @param sequence the sequence
      * @return the my SQL next value sequence builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
-     */
     @Override
     public MariaDBNextValueSequenceBuilder nextval(String sequence) {
         return new MariaDBNextValueSequenceBuilder(this, sequence);
@@ -104,11 +86,6 @@ public class MariaDBSqlDialect extends
      * @param args the args
      * @return the my SQL last value identity builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
-     */
     @Override
     public MariaDBLastValueIdentityBuilder lastval(String... args) {
         return new MariaDBLastValueIdentityBuilder(this);
@@ -119,11 +96,6 @@ public class MariaDBSqlDialect extends
      *
      * @return the identity argument
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#getPrimaryKeyArgument()
-     */
     @Override
     public String getIdentityArgument() {
         return MARIA_DB_KEYWORD_IDENTITY;
@@ -133,11 +105,6 @@ public class MariaDBSqlDialect extends
      * Checks if is sequence supported.
      *
      * @return true, if is sequence supported
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#isSequenceSupported()
      */
     @Override
     public boolean isSequenceSupported() {
@@ -151,11 +118,6 @@ public class MariaDBSqlDialect extends
      * @param table the table
      * @return true, if successful
      * @throws SQLException the SQL exception
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String)
      */
     @Override
     public boolean existsTable(Connection connection, String table) throws SQLException {
@@ -173,11 +135,6 @@ public class MariaDBSqlDialect extends
      * Gets the functions names.
      *
      * @return the functions names
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#getFunctionsNames()
      */
     @Override
     public Set<String> getFunctionsNames() {
@@ -197,6 +154,26 @@ public class MariaDBSqlDialect extends
     @Override
     public boolean isCatalogForSchema() {
         return true;
+    }
+
+    @Override
+    public MariaDBSelectBuilder select() {
+        return new MariaDBSelectBuilder(this);
+    }
+
+    @Override
+    public MariaDBUpdateBuilder update() {
+        return new MariaDBUpdateBuilder(this);
+    }
+
+    @Override
+    public MariaDBDeleteBuilder delete() {
+        return new MariaDBDeleteBuilder(this);
+    }
+
+    @Override
+    public MariaDBInsertBuilder insert() {
+        return new MariaDBInsertBuilder(this);
     }
 
 }

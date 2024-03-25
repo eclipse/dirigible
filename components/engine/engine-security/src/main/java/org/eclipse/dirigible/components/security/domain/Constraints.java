@@ -55,6 +55,11 @@ public class Constraints {
         return securityAccesses;
     }
 
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     @Override
     public String toString() {
         return "Constraints [constraints=" + constraints + "]";

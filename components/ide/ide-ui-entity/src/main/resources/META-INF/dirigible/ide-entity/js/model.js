@@ -28,6 +28,7 @@ Entity.prototype.layoutType = 'MANAGE';
 Entity.prototype.perspectiveName = 'entities';
 Entity.prototype.perspectiveIcon = '/services/web/resources/unicons/copy.svg';
 Entity.prototype.perspectiveOrder = 100;
+Entity.prototype.perspectiveRole = '';
 Entity.prototype.navigationPath = '/Home';
 Entity.prototype.feedUrl = null;
 Entity.prototype.feedUsername = null;
@@ -38,6 +39,8 @@ Entity.prototype.roleRead = null;
 Entity.prototype.roleWrite = null;
 Entity.prototype.projectionReferencedModel = null;
 Entity.prototype.projectionReferencedEntity = null;
+Entity.prototype.referenceProjections = [];
+Entity.prototype.importsCode = null;
 
 Entity.prototype.clone = function () {
 	return mxUtils.clone(this);
@@ -48,8 +51,10 @@ function Property(name) {
 	this.name = name;
 }
 
+Property.prototype.isRequiredProperty = false;
 Property.prototype.isCalculatedProperty = false;
-Property.prototype.calculatedPropertyExpression = null;
+Property.prototype.calculatedPropertyExpressionCreate = null;
+Property.prototype.calculatedPropertyExpressionUpdate = null;
 Property.prototype.dataName = null;
 Property.prototype.dataType = 'VARCHAR';
 Property.prototype.dataLength = '20';
@@ -67,7 +72,7 @@ Property.prototype.relationshipEntityName = null;
 Property.prototype.relationshipEntityPerspectiveName = null;
 Property.prototype.widgetType = 'TEXTBOX';
 Property.prototype.widgetLength = '20';
-Property.prototype.widgetPattern = null; // the input validation patern
+Property.prototype.widgetPattern = null; // the input validation pattern
 Property.prototype.widgetService = null; // the service used to fill in the widget if any
 Property.prototype.widgetIsMajor = 'true'; // whether this property will be shown in e.g. a list of entities table
 Property.prototype.widgetSection = null; // the name of the grouping section

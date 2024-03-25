@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { cmis } from "@dirigible/cms";
-import { user } from "@dirigible/security";
+import { cmis } from "sdk/cms";
+import { user } from "sdk/security";
 import * as objectUtils from "./object";
 
 let cmisSession = cmis.getSession();
@@ -102,16 +102,14 @@ export const createFolder = (parentFolder, name) => {
 
 export const getFolderOrRoot = (folderPath) => {
 	if (folderPath === null) {
-		let rootFolder = cmisSession.getRootFolder();
-		return rootFolder;
+		return cmisSession.getRootFolder();
 	}
-	let folder = null;
 	try {
-		folder = getFolder(folderPath);
+		return getFolder(folderPath);
 	} catch (e) {
-		folder = cmisSession.getRootFolder();
+		console.error("Failed to get folder: " + e);
+		return cmisSession.getRootFolder();
 	}
-	return folder;
 };
 
 export const getFolder = (path) => {

@@ -32,6 +32,9 @@ import static org.eclipse.dirigible.components.security.repository.AccessReposit
 import static org.eclipse.dirigible.components.security.repository.RoleRepositoryTest.createSecurityRole;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The Class AccessVerifierTest.
+ */
 @SpringBootTest(classes = {AccessRepository.class, RoleRepository.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
@@ -39,15 +42,21 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class AccessVerifierTest {
 
+    /** The security access verifier. */
     @Autowired
     private AccessVerifier securityAccessVerifier;
 
+    /** The security access repository. */
     @Autowired
     private AccessRepository securityAccessRepository;
 
+    /** The security role repository. */
     @Autowired
     private RoleRepository securityRoleRepository;
 
+    /**
+     * Setup.
+     */
     @BeforeEach
     public void setup() {
 
@@ -62,6 +71,9 @@ class AccessVerifierTest {
                 createSecurityAccess("/a/b/c/test.access", "test2", "description", "HTTP", "/a" + "/b/c/test.txt", "GET", "test2"));
     }
 
+    /**
+     * Cleanup.
+     */
     @AfterEach
     public void cleanup() {
         // Delete test security roles and accesses
@@ -69,6 +81,9 @@ class AccessVerifierTest {
         securityAccessRepository.deleteAll();
     }
 
+    /**
+     * Test get matching security accesses.
+     */
     @Test
     void testGetMatchingSecurityAccesses() {
         List<Access> matchingSecurityAccesses = securityAccessVerifier.getMatchingSecurityAccesses("HTTP", "/a/b/c", "GET");
@@ -79,6 +94,9 @@ class AccessVerifierTest {
         assertEquals(2, matchingSecurityAccesses.size());
     }
 
+    /**
+     * The Class TestConfiguration.
+     */
     @SpringBootApplication
     static class TestConfiguration {
     }

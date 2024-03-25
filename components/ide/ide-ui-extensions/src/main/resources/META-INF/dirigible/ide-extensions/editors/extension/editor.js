@@ -1,19 +1,19 @@
 /*
- * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2024 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2024 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('page', ["ideUI", "ideView"])
 	.controller('PageController', function ($scope, $http, messageHub, $window, ViewParameters) {
 		let contents;
 		let csrfToken;
-		$scope.errorMessage = 'Аn unknown error was encountered. Please see console for more information.';
+		$scope.errorMessage = 'An unknown error was encountered. Please see console for more information.';
 		$scope.forms = {
 			editor: {},
 		};
@@ -161,6 +161,10 @@ angular.module('page', ["ideUI", "ideView"])
 						}
 					});
 					$scope.load();
+				}, function (error) {
+					$scope.state.error = true;
+					$scope.errorMessage = error.data.message;
+					console.error(error);
 				});
 		}
 	});

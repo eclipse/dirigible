@@ -73,7 +73,8 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 	$scope.goForward = () => $scope.history.goForward(path => loadFolder(path));
 
 	$scope.getFullPath = function (itemName) {
-		return ($scope.folder.path + '/' + itemName).replace(/\/\//g, '/');
+	    const path = $scope.folder.path? ($scope.folder.path + '/' + itemName) : itemName;
+		return path.replace(/\/\//g, '/');
 	};
 
 	$scope.isDocument = (item) => item && item.type === 'cmis:document';
@@ -555,7 +556,10 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 		let crumbs = [];
 		for (let i = 0; i < folders.length; i++) {
 			let crumbPath = folders.slice(0, i + 1).join('/');
-			let crumb = { name: folders[i], path: crumbPath };
+			let crumb = {
+			    name: folders[i],
+			    path: crumbPath + "/"
+			};
 			crumbs.push(crumb);
 		}
 		crumbs.splice(0, 0, { name: 'Home', path: '/' });

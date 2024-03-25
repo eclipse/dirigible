@@ -5,7 +5,7 @@
  */
 exports.getTemplate = function () {
 	return {
-		name: "Extension (View)",
+		name: "View (UI)",
 		description: "Generates a basic view",
 		sources: [{
 			location: "/template-extension-view/views/view/index.html.template",
@@ -28,6 +28,7 @@ exports.getTemplate = function () {
 		parameters: [{
 			name: "viewName",
 			label: "Name"
-		}]
+		}],
+		"order": 33
 	};
 };

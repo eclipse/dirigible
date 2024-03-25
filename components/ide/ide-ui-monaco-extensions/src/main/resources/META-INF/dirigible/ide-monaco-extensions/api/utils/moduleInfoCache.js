@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { repository } from "@dirigible/platform";
-import { configurations as config } from "@dirigible/core";
+import { repository } from "sdk/platform";
+import { configurations as config } from "sdk/core";
 import * as modulesParser from "./modulesParser";
 import * as suggestionsParser from "./suggestionsParser";
 

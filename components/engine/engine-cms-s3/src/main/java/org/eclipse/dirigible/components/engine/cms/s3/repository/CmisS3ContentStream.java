@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.components.engine.cms.s3.repository;
 
 import org.eclipse.dirigible.components.engine.cms.CmisContentStream;
-import org.eclipse.dirigible.components.engine.cms.CmisSession;
 
 import java.io.InputStream;
 
@@ -20,33 +19,28 @@ import java.io.InputStream;
  */
 public class CmisS3ContentStream implements CmisContentStream {
 
-    /** The cmis session. */
-    private CmisS3Session cmisSession;
-
     /** The filename. */
-    private String filename;
+    private final String filename;
 
     /** The length. */
-    private long length;
+    private final long length;
 
     /** The mimetype. */
-    private String mimetype;
+    private final String mimetype;
 
     /** The input stream. */
-    private InputStream inputStream;
+    private final InputStream inputStream;
 
     /**
      * Instantiates a new content stream.
      *
-     * @param cmisSession the cmis session
      * @param filename the filename
      * @param length the length
      * @param mimetype the mimetype
      * @param inputStream the input stream
      */
-    public CmisS3ContentStream(CmisS3Session cmisSession, String filename, long length, String mimetype, InputStream inputStream) {
+    public CmisS3ContentStream(String filename, long length, String mimetype, InputStream inputStream) {
         super();
-        this.cmisSession = cmisSession;
         this.filename = filename;
         this.length = length;
         this.mimetype = mimetype;
@@ -61,27 +55,6 @@ public class CmisS3ContentStream implements CmisContentStream {
     @Override
     public InputStream getStream() {
         return this.inputStream;
-    }
-
-    /**
-     * Gets the cmis session.
-     *
-     * @return the cmis session
-     */
-    @Override
-    public CmisS3Session getCmisSession() {
-        return cmisSession;
-    }
-
-
-    /**
-     * Sets the cmis session.
-     *
-     * @param cmisSession the new cmis session
-     */
-    @Override
-    public void setCmisSession(CmisSession cmisSession) {
-        this.cmisSession = (CmisS3Session) cmisSession;
     }
 
     /**

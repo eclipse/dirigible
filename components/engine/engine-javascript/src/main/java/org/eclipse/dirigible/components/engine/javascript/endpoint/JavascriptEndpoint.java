@@ -66,6 +66,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
     /** The repository. */
     private final IRepository repository;
 
+    /** The source provider. */
     private final JavascriptSourceProvider sourceProvider = new DirigibleSourceProvider();
 
     /**
@@ -80,6 +81,12 @@ public class JavascriptEndpoint extends BaseEndpoint {
         this.repository = repository;
     }
 
+    /**
+     * Gets the dts.
+     *
+     * @return the dts
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @GetMapping("/all-dts")
     public List<Dts> getDTS() throws IOException {
         Path dtsRoot = sourceProvider.getAbsoluteProjectPath("modules")
@@ -358,16 +365,33 @@ public class JavascriptEndpoint extends BaseEndpoint {
         return path;
     }
 
+    /**
+     * The Dts.
+     */
     record Dts(String content, String moduleName, String filePath) {
+
+        /**
+         * From dts path.
+         *
+         * @param dtsDirRoot the dts dir root
+         * @param dtsPath the dts path
+         * @return the dts
+         */
         static Dts fromDtsPath(Path dtsDirRoot, Path dtsPath) {
             String content = readAllText(dtsPath);
             Path relativePath = dtsDirRoot.relativize(dtsPath);
-            String filePath = "file:///node_modules/@dirigible/" + relativePath;
-            String moduleName = ("@dirigible/" + relativePath).replace("index.d.ts", "")
-                                                              .replace(".d.ts", "");
+            String filePath = "file:///node_modules/sdk/" + relativePath;
+            String moduleName = ("sdk/" + relativePath).replace("index.d.ts", "")
+                                                       .replace(".d.ts", "");
             return new Dts(content, moduleName, filePath);
         }
 
+        /**
+         * Read all text.
+         *
+         * @param path the path
+         * @return the string
+         */
         private static String readAllText(Path path) {
             try {
                 byte[] bytes = Files.readAllBytes(path);

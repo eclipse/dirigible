@@ -29,6 +29,9 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The Class AccessRepositoryTest.
+ */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
@@ -36,12 +39,17 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 public class AccessRepositoryTest {
 
+    /** The security access repository. */
     @Autowired
     private AccessRepository securityAccessRepository;
 
+    /** The entity manager. */
     @Autowired
     EntityManager entityManager;
 
+    /**
+     * Setup.
+     */
     @BeforeEach
     public void setup() {
         // Create test security accesses
@@ -57,6 +65,9 @@ public class AccessRepositoryTest {
                 createSecurityAccess("/a/b/c/test5.access", "test5", "description", "HTTP", "/a/b/c/test5.txt", "GET", "test_role_5"));
     }
 
+    /**
+     * Cleanup.
+     */
     @AfterEach
     public void cleanup() {
         // Delete test security accesses
@@ -65,6 +76,11 @@ public class AccessRepositoryTest {
                                 .forEach(securityAccess -> securityAccessRepository.delete(securityAccess));
     }
 
+    /**
+     * Gets the one.
+     *
+     * @return the one
+     */
     @Test
     public void getOne() {
         Long id = securityAccessRepository.findAll()
@@ -79,6 +95,11 @@ public class AccessRepositoryTest {
         assertNotNull(securityAccess.getCreatedAt());
     }
 
+    /**
+     * Gets the reference using entity manager.
+     *
+     * @return the reference using entity manager
+     */
     @Test
     public void getReferenceUsingEntityManager() {
         Long id = securityAccessRepository.findAll()
@@ -89,12 +110,27 @@ public class AccessRepositoryTest {
         assertNotNull(securityAccess.getLocation());
     }
 
+    /**
+     * Creates the security access.
+     *
+     * @param location the location
+     * @param name the name
+     * @param description the description
+     * @param scope the scope
+     * @param path the path
+     * @param method the method
+     * @param role the role
+     * @return the access
+     */
     public static Access createSecurityAccess(String location, String name, String description, String scope, String path, String method,
             String role) {
         Access securityAccess = new Access(location, name, description, scope, path, method, role);
         return securityAccess;
     }
 
+    /**
+     * The Class TestConfiguration.
+     */
     @SpringBootApplication
     static class TestConfiguration {
     }

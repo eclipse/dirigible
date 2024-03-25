@@ -33,11 +33,6 @@ public class H2CreateBranchingBuilder extends CreateBranchingBuilder {
      * @param table the table
      * @return the h2 create table builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java.lang.String)
-     */
     @Override
     public H2CreateTableBuilder table(String table) {
         return new H2CreateTableBuilder(this.getDialect(), table);

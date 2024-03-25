@@ -10,14 +10,10 @@
  */
 package org.eclipse.dirigible.components.odata.service;
 
-import java.util.List;
-import java.util.Optional;
-import org.eclipse.dirigible.components.base.artefact.ArtefactService;
+import org.eclipse.dirigible.components.base.artefact.BaseArtefactService;
 import org.eclipse.dirigible.components.odata.domain.ODataContainer;
 import org.eclipse.dirigible.components.odata.repository.ODataContainerRepository;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,121 +22,15 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class ODataContainerService implements ArtefactService<ODataContainer> {
+public class ODataContainerService extends BaseArtefactService<ODataContainer, Long> {
 
-    private final ODataContainerRepository odataContainerRepository;
-
+    /**
+     * Instantiates a new o data container service.
+     *
+     * @param odataContainerRepository the odata container repository
+     */
     public ODataContainerService(ODataContainerRepository odataContainerRepository) {
-        this.odataContainerRepository = odataContainerRepository;
-    }
-
-    /**
-     * Gets the all.
-     *
-     * @return the all
-     */
-    @Override
-    public List<ODataContainer> getAll() {
-        return odataContainerRepository.findAll();
-    }
-
-    /**
-     * Find all.
-     *
-     * @param pageable the pageable
-     * @return the page
-     */
-    @Override
-    public Page<ODataContainer> getPages(Pageable pageable) {
-        return odataContainerRepository.findAll(pageable);
-    }
-
-    /**
-     * Find by id.
-     *
-     * @param id the id
-     * @return the ODataContainer
-     */
-    @Override
-    public ODataContainer findById(Long id) {
-        Optional<ODataContainer> odataContainer = odataContainerRepository.findById(id);
-        if (odataContainer.isPresent()) {
-            return odataContainer.get();
-        }
-        throw new IllegalArgumentException("OData Container with id does not exist: " + id);
-    }
-
-    /**
-     * Find by name.
-     *
-     * @param name the name
-     * @return the ODataContainer
-     */
-    @Override
-    public ODataContainer findByName(String name) {
-        ODataContainer filter = new ODataContainer();
-        filter.setName(name);
-        Example<ODataContainer> example = Example.of(filter);
-        Optional<ODataContainer> odataContainer = odataContainerRepository.findOne(example);
-        if (odataContainer.isPresent()) {
-            return odataContainer.get();
-        }
-        throw new IllegalArgumentException("OData Container with name does not exist: " + name);
-    }
-
-    /**
-     * Find by location.
-     *
-     * @param location the location
-     * @return the list
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<ODataContainer> findByLocation(String location) {
-        ODataContainer filter = new ODataContainer();
-        filter.setLocation(location);
-        Example<ODataContainer> example = Example.of(filter);
-        return odataContainerRepository.findAll(example);
-    }
-
-    /**
-     * Find by key.
-     *
-     * @param key the key
-     * @return the ODataContainer
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public ODataContainer findByKey(String key) {
-        ODataContainer filter = new ODataContainer();
-        filter.setKey(key);
-        Example<ODataContainer> example = Example.of(filter);
-        Optional<ODataContainer> odataContainer = odataContainerRepository.findOne(example);
-        if (odataContainer.isPresent()) {
-            return odataContainer.get();
-        }
-        return null;
-    }
-
-    /**
-     * Save.
-     *
-     * @param odataContainer the ODataContainer
-     * @return the ODataContainer
-     */
-    @Override
-    public ODataContainer save(ODataContainer odataContainer) {
-        return odataContainerRepository.saveAndFlush(odataContainer);
-    }
-
-    /**
-     * Delete.
-     *
-     * @param odataContainer the ODataContainer
-     */
-    @Override
-    public void delete(ODataContainer odataContainer) {
-        odataContainerRepository.delete(odataContainer);
+        super(odataContainerRepository);
     }
 
     /**
@@ -152,7 +42,7 @@ public class ODataContainerService implements ArtefactService<ODataContainer> {
         ODataContainer filter = new ODataContainer();
         filter.setLocation(location);
         Example<ODataContainer> example = Example.of(filter);
-        odataContainerRepository.deleteAll(odataContainerRepository.findAll(example));
+        getRepo().deleteAll(getRepo().findAll(example));
     }
 
 }

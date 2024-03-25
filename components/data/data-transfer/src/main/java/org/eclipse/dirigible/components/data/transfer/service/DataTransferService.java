@@ -51,20 +51,31 @@ public class DataTransferService {
     private static final String DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE = "DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE";
 
     /** The Constant DEFAULT_BATCH_SIZE. */
-    private static final String DEFAULT_BATCH_SIZE = "1000";
+    private static final int DEFAULT_BATCH_SIZE = 1000;
 
     /** The batch size. */
     private static int BATCH_SIZE = 1000;
 
 
+    /** The data sources manager. */
     private final DataSourcesManager dataSourcesManager;
 
+    /**
+     * Instantiates a new data transfer service.
+     *
+     * @param dataSourcesManager the data sources manager
+     */
     @Autowired
     public DataTransferService(DataSourcesManager dataSourcesManager) {
         this.dataSourcesManager = dataSourcesManager;
 
     }
 
+    /**
+     * Gets the data sources manager.
+     *
+     * @return the data sources manager
+     */
     public DataSourcesManager getDataSourcesManager() {
         return dataSourcesManager;
     }
@@ -74,7 +85,7 @@ public class DataTransferService {
      *
      * @param definition the definition
      * @param handler the handler
-     * @throws Exception
+     * @throws Exception the exception
      */
     public final void transfer(DataTransfer definition, DataTransferCallbackHandler handler) throws Exception {
         DataSource source = getDataSourcesManager().getDataSource(definition.getSource());
@@ -89,7 +100,7 @@ public class DataTransferService {
      * @param target the target
      * @param configuration the configuration
      * @param handler the handler
-     * @throws Exception
+     * @throws Exception the exception
      */
     public final void transfer(DataSource source, DataSource target, DataTransferConfiguration configuration,
             DataTransferCallbackHandler handler) throws Exception {
@@ -98,13 +109,7 @@ public class DataTransferService {
             handler = new DummyDataTransferCallbackHandler();
         }
 
-        try {
-            BATCH_SIZE = Integer.parseInt(Configuration.get(DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE, DEFAULT_BATCH_SIZE));
-        } catch (NumberFormatException e1) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("Wrong configuration for " + DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE);
-            }
-        }
+        BATCH_SIZE = Configuration.getAsInt(DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE, DEFAULT_BATCH_SIZE);
 
         handler.transferStarted(configuration);
 

@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { streams, image as imageIO } from "@dirigible/io";
+import { streams, image as imageIO } from "sdk/io";
 import * as documentUtils from "./document";
 
 export const uploadImageWithResize = (folder, name, image, width, height) => {

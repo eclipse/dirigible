@@ -51,12 +51,18 @@ public class JavascriptHandler {
      * Instantiates a new javascript handler.
      *
      * @param repository the repository
+     * @param sourceProvider the source provider
      */
     public JavascriptHandler(IRepository repository, JavascriptSourceProvider sourceProvider) {
         this.repository = repository;
         this.sourceProvider = sourceProvider;
     }
 
+    /**
+     * Gets the repository.
+     *
+     * @return the repository
+     */
     public IRepository getRepository() {
         return repository;
     }

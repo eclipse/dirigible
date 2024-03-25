@@ -5,7 +5,7 @@
  */
 exports.getTemplate = function() {
 	return {
-		"name": "HTML5 Widgets (AngularJS)",
+		"name": "AngularJS Widgets (UI)",
 		"description": "HTML5 Widgets for AngularJS",
 		"sources": [{
 			"location": "/template-html-widgets/index.html.template", 
@@ -23,6 +23,6 @@ exports.getTemplate = function() {
 			"action": "copy"
 		}],
 		"parameters": [],
-		"order": 30
+		"order": 31
 	};
 };

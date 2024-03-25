@@ -279,6 +279,9 @@ public class HanaCreateTableBuilderTest {
                 Matchers.containsInAnyOrder(expected.toArray()));
     }
 
+    /**
+     * Test create global temporary table.
+     */
     @Test
     public void testCreateGlobalTemporaryTable() {
         String sql = SqlFactory.getNative(new HanaSqlDialect())
@@ -295,6 +298,9 @@ public class HanaCreateTableBuilderTest {
                 sql);
     }
 
+    /**
+     * Test create global temporary column table.
+     */
     @Test
     public void testCreateGlobalTemporaryColumnTable() {
         String sql = SqlFactory.getNative(new HanaSqlDialect())

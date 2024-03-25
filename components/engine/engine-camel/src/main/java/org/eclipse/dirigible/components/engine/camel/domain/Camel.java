@@ -15,9 +15,14 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 
 import jakarta.persistence.*;
 
+/**
+ * The Class Camel.
+ */
 @Entity
 @Table(name = "DIRIGIBLE_CAMEL")
 public class Camel extends Artefact {
+
+    /** The Constant ARTEFACT_TYPE. */
     public static final String ARTEFACT_TYPE = "camel";
 
     /** The id. */

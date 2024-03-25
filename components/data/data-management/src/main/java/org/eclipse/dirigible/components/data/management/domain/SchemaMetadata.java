@@ -84,7 +84,6 @@ public class SchemaMetadata {
         List<TableMetadata> allTablesTypeViews = new ArrayList<>();
 
         allTables.forEach(tableMetadata -> {
-            logger.info("Table name: {}  Table type: {}", tableMetadata.getName(), tableMetadata.getType());
             if (!tableMetadata.getType()
                               .equals("VIEW")) {
                 allTablesTypeTable.add(tableMetadata);
@@ -115,7 +114,7 @@ public class SchemaMetadata {
         }
 
         try {
-            this.sequences = DatabaseMetadataHelper.listSequences(connection);
+            this.sequences = DatabaseMetadataHelper.listSequences(connection, name);
         } catch (Exception e) {
             this.sequences = new ArrayList<SequenceMetadata>();
             if (logger.isErrorEnabled()) {
@@ -151,6 +150,23 @@ public class SchemaMetadata {
         return tables;
     }
 
+    /**
+     * Gets the views.
+     *
+     * @return the views
+     */
+    public List<TableMetadata> getViews() {
+        return views;
+    }
+
+    /**
+     * Sets the views.
+     *
+     * @param views the new views
+     */
+    public void setViews(List<TableMetadata> views) {
+        this.views = views;
+    }
 
     /**
      * Get the procedures metadata.
@@ -168,6 +184,24 @@ public class SchemaMetadata {
      */
     public List<FunctionMetadata> getFunctions() {
         return functions;
+    }
+
+    /**
+     * Gets the sequences.
+     *
+     * @return the sequences
+     */
+    public List<SequenceMetadata> getSequences() {
+        return sequences;
+    }
+
+    /**
+     * Sets the sequences.
+     *
+     * @param sequences the new sequences
+     */
+    public void setSequences(List<SequenceMetadata> sequences) {
+        this.sequences = sequences;
     }
 
     /**

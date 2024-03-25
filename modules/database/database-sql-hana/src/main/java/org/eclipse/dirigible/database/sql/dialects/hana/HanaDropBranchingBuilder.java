@@ -36,11 +36,6 @@ public class HanaDropBranchingBuilder extends DropBranchingBuilder {
      * @param sequence the sequence
      * @return the drop sequence builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder#sequence(java.lang.String)
-     */
     @Override
     public DropSequenceBuilder sequence(String sequence) {
         return new HanaDropSequenceBuilder(this.getDialect(), sequence);
@@ -57,6 +52,12 @@ public class HanaDropBranchingBuilder extends DropBranchingBuilder {
         return new HanaDropTableTypeBuilder(this.getDialect(), tableType);
     }
 
+    /**
+     * Public synonym.
+     *
+     * @param synonym the synonym
+     * @return the drop synonym builder
+     */
     @Override
     public DropSynonymBuilder publicSynonym(String synonym) {
         return new HanaDropPublicSynonymBuilder(getDialect(), synonym);

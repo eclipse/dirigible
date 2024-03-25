@@ -46,6 +46,7 @@ public class ExtensionPointEndpoint extends BaseEndpoint {
      * Instantiates a new extension point endpoint.
      *
      * @param extensionPointService the extension point service
+     * @param extensionService the extension service
      */
     @Autowired
     public ExtensionPointEndpoint(ExtensionPointService extensionPointService, ExtensionService extensionService) {

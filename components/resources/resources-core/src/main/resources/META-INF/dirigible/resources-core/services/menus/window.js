@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { extensions } from "@dirigible/extensions";
+import { extensions } from "sdk/extensions";
 
 let perspectiveExtensions = await extensions.loadExtensionModules('ide-perspective');
 let perspectiveExtensionDefinitions = [];

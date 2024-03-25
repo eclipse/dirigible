@@ -37,17 +37,17 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 			pt.y -= pstate.y;
 
 			let columnCount = graph.model.getChildCount(parent) + 1;
-			createNode('property' + columnCount, prototype.style === 'copied', parent.style === 'projection', parent.style === 'extension');
+			createNode('Property' + columnCount, prototype.style);
 		} else {
-			let entitiesCount = 0;
-			let childCount = graph.model.getChildCount(parent);
+			//let entitiesCount = 0;
+			//let childCount = graph.model.getChildCount(parent);
 
-			for (let i = 0; i < childCount; i++) {
-				if (!graph.model.isEdge(graph.model.getChildAt(parent, i))) {
-					entitiesCount++;
-				}
-			}
-			createNode('Entity' + (entitiesCount + 1), prototype.style);
+			//for (let i = 0; i < childCount; i++) {
+			//	if (!graph.model.isEdge(graph.model.getChildAt(parent, i))) {
+			//		entitiesCount++;
+			//	}
+			//}
+			createNode('Entity' + Math.floor((Math.random() * 100000) + 1), prototype.style);
 
 
 			if (prototype.style === 'dependent') {
@@ -96,7 +96,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 						v1.style = 'copied';
 						v1.value.entityType = "COPIED";
 					}
-					
+
 					if (isEntity && style === 'projection') {
 						v1.style = 'projection';
 						v1.value.entityType = "PROJECTION";
@@ -121,7 +121,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 						if (style !== 'projection') {
 							if (v1.children && v1.children.length > 0) {
 								if (!v1.children[0].value.isSQL) {
-									v1.children[0].value.name = name.toLowerCase() + 'Id';
+									v1.children[0].value.name = 'Id';
 								}
 							}
 						} else {

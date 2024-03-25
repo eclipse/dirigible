@@ -34,7 +34,7 @@ public class TimeLimited {
     private static final String DIRIGIBLE_JOB_DEFAULT_TIMEOUT = "DIRIGIBLE_JOB_DEFAULT_TIMEOUT";
 
     /** The Constant DEFAULT_TIMEOUT. */
-    private static final String DEFAULT_TIMEOUT = "3";
+    private static final int DEFAULT_TIMEOUT = 3;
 
     /**
      * Run with timeout.
@@ -91,15 +91,7 @@ public class TimeLimited {
      * @return the timeout
      */
     public static final int getTimeout() {
-        String defaultTimeout = Configuration.get(DIRIGIBLE_JOB_DEFAULT_TIMEOUT, DEFAULT_TIMEOUT);
-        try {
-            return Integer.parseInt(defaultTimeout);
-        } catch (NumberFormatException e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
-            return Integer.parseInt(DEFAULT_TIMEOUT);
-        }
+        return Configuration.getAsInt(DIRIGIBLE_JOB_DEFAULT_TIMEOUT, DEFAULT_TIMEOUT);
     }
 
     /**

@@ -38,6 +38,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+/**
+ * The Class OpenAPIEndpointTest.
+ */
 @WithMockUser
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {OpenAPIRepository.class, RepositoryConfig.class})
@@ -47,21 +50,29 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 class OpenAPIEndpointTest {
 
+    /** The open API repository. */
     @Autowired
     private OpenAPIRepository openAPIRepository;
 
+    /** The mock mvc. */
     @Autowired
     private MockMvc mockMvc;
 
+    /** The wac. */
     @Autowired
     protected WebApplicationContext wac;
 
+    /** The spring security filter chain. */
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
 
+    /** The repository. */
     @Autowired
     private IRepository repository;
 
+    /**
+     * Setup.
+     */
     @BeforeEach
     public void setup() {
 
@@ -76,11 +87,19 @@ class OpenAPIEndpointTest {
 
     }
 
+    /**
+     * Cleanup.
+     */
     @AfterEach
     public void cleanup() {
         openAPIRepository.deleteAll();
     }
 
+    /**
+     * Test get version.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testGetVersion() throws Exception {
         String openAPILocation = "/META-INF/dirigible/test/test.openapi";
@@ -95,6 +114,9 @@ class OpenAPIEndpointTest {
                        "{\"openapi\":\"3.0.1\",\"info\":{\"title\":\"Eclipse Dirigible - Applications REST Services API\",\"description\":\"Eclipse Dirigible API of the REST services provided by the applications\",\"contact\":{\"name\":\"Eclipse Dirigible\",\"url\":\"https://www.dirigible.io\",\"email\":\"dirigible-dev@eclipse.org\"},\"license\":{\"name\":\"Eclipse Public License - v 2.0\",\"url\":\"https://www.eclipse.org/legal/epl-v20.html\"},\"version\":\"0.0.1\"},\"servers\":[{\"url\":\"/services/js\"}],\"security\":[],\"tags\":[],\"paths\":{\"/test/openapi/api.mjs/hello-world\":{\"get\":{\"description\":\"Returns Hello World message\",\"responses\":{\"200\":{\"description\":\"Hello World response\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/HelloWorldModel\"}}}}}}}},\"components\":{\"schemas\":{\"HelloWorldModel\":{\"type\":\"object\",\"properties\":{\"status\":{\"type\":\"string\"}}}},\"responses\":{},\"parameters\":{},\"examples\":{},\"requestBodies\":{},\"headers\":{},\"securitySchemes\":{},\"links\":{},\"callbacks\":{}}}")));
     }
 
+    /**
+     * The Class TestConfiguration.
+     */
     @SpringBootApplication
     static class TestConfiguration {
     }

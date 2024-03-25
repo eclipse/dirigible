@@ -68,6 +68,12 @@ public class DataTransferWebsocketHandler extends TextWebSocketHandler {
         return dataTransferService;
     }
 
+    /**
+     * After connection established.
+     *
+     * @param session the session
+     * @throws Exception the exception
+     */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         if (logger.isDebugEnabled()) {
@@ -75,6 +81,13 @@ public class DataTransferWebsocketHandler extends TextWebSocketHandler {
         }
     }
 
+    /**
+     * Handle text message.
+     *
+     * @param session the session
+     * @param message the message
+     * @throws Exception the exception
+     */
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         if (logger.isDebugEnabled()) {
@@ -147,6 +160,13 @@ public class DataTransferWebsocketHandler extends TextWebSocketHandler {
         }
     }
 
+    /**
+     * Handle transport error.
+     *
+     * @param session the session
+     * @param exception the exception
+     * @throws Exception the exception
+     */
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
         if (logger.isErrorEnabled()) {
@@ -157,6 +177,13 @@ public class DataTransferWebsocketHandler extends TextWebSocketHandler {
         }
     }
 
+    /**
+     * After connection closed.
+     *
+     * @param session the session
+     * @param status the status
+     * @throws Exception the exception
+     */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         if (logger.isDebugEnabled()) {

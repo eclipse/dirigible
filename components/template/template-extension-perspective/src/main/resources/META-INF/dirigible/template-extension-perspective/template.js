@@ -5,7 +5,7 @@
  */
 exports.getTemplate = function () {
 	return {
-		name: "Extension (Perspective)",
+		name: "Perspective (UI)",
 		description: "Generates a basic perspective",
 		sources: [{
 			location: "/template-extension-perspective/extensions/menu/help.extension.template",
@@ -48,6 +48,7 @@ exports.getTemplate = function () {
 			action: "generate",
 			rename: "/images/perspective.svg"
 		}],
-		parameters: []
+		parameters: [],
+		"order": 32
 	};
 };

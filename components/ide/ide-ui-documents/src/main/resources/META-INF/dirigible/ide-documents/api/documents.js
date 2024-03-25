@@ -9,9 +9,9 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { rs } from "@dirigible/http";
-import { streams } from "@dirigible/io";
-import { upload } from '@dirigible/http';
+import { rs } from "sdk/http";
+import { streams } from "sdk/io";
+import { upload } from 'sdk/http';
 
 import * as documentsProcessor from "./processors/documentsProcessor";
 import * as imageProcessor from "./processors/imageProcessor";
@@ -30,7 +30,8 @@ rs.service()
 		response.println(JSON.stringify(result));
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
+        throw error;
 	})
 	.post(function (ctx, request, response) {
 		if (!upload.isMultipartContent()) {
@@ -44,7 +45,7 @@ rs.service()
 		response.println(JSON.stringify(result));
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
 	})
 	.put(function (ctx, request, response) {
 		let { path, name } = request.getJSON();
@@ -58,7 +59,7 @@ rs.service()
 		response.print(JSON.stringify(name));
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
 	})
 	.delete(function (ctx, request, response) {
 		let forceDelete = ctx.queryParameters.force === "true" ? true : false;
@@ -69,7 +70,7 @@ rs.service()
 		response.setStatus(response.NO_CONTENT);
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
 	})
 	.resource("folder")
 	.post(function (ctx, request, response) {
@@ -84,7 +85,7 @@ rs.service()
 		response.print(JSON.stringify(result));
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
 	})
 	.resource("zip")
 	.get(function (ctx, request, response) {
@@ -100,7 +101,7 @@ rs.service()
 		zipUtils.makeZip(path, outputStream);
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
 	})
 	.post(function (ctx, request, response) {
 		if (!upload.isMultipartContent()) {
@@ -116,7 +117,7 @@ rs.service()
 		response.println(JSON.stringify(result));
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
 	})
 	.resource("image")
 	.post(function (ctx, request, response) {
@@ -133,7 +134,7 @@ rs.service()
 		response.println(JSON.stringify(result));
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
 	})
 	.resource("preview")
 	.get(function (ctx, request, response) {
@@ -148,7 +149,7 @@ rs.service()
 		response.write(document.content.getStream().readBytes());
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
 	})
 	.resource("download")
 	.get(function (ctx, request, response) {
@@ -164,11 +165,12 @@ rs.service()
 		streams.copy(document.content.getStream(), response.getOutputStream());
 	})
 	.catch(function (ctx, error, request, response) {
-		printError(response, response.BAD_REQUEST, 4, error.message);
+		printError(response, response.BAD_REQUEST, 4, error);
 	})
 	.execute();
 
-function printError(response, httpCode, errCode, errMessage) {
+function printError(response, httpCode, errCode, error) {
+    const errMessage = error.message;
 	let body = {
 		err: {
 			code: errCode,
@@ -179,4 +181,5 @@ function printError(response, httpCode, errCode, errMessage) {
 	response.setContentType("application/json");
 	response.setStatus(httpCode);
 	response.println(JSON.stringify(body));
+	throw error;
 }

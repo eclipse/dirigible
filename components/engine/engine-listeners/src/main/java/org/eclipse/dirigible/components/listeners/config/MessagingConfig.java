@@ -62,19 +62,21 @@ class MessagingConfig {
     BrokerService createBrokerService(@Qualifier("SystemDB") DataSource dataSource) {
         try {
             BrokerService broker = new BrokerService();
-            if (Boolean.parseBoolean(
-                    org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE", "true"))) {
-                PersistenceAdapter persistenceAdapter = new JDBCPersistenceAdapter(dataSource, new OpenWireFormat());
-                broker.setPersistenceAdapter(persistenceAdapter);
-            }
-            broker.setPersistent(true);
-            broker.setUseJmx(false);
-            PListStore pListStore = new PListStoreImpl();
-            pListStore.setDirectory(new File(LOCATION_TEMP_STORE));
-            broker.setTempDataStore(pListStore);
-            broker.addConnector(CONNECTOR_URL);
+            if (!broker.isStarted()) {
+                if (Boolean.parseBoolean(
+                        org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE", "true"))) {
+                    PersistenceAdapter persistenceAdapter = new JDBCPersistenceAdapter(dataSource, new OpenWireFormat());
+                    broker.setPersistenceAdapter(persistenceAdapter);
+                }
+                broker.setPersistent(true);
+                broker.setUseJmx(false);
+                PListStore pListStore = new PListStoreImpl();
+                pListStore.setDirectory(new File(LOCATION_TEMP_STORE));
+                broker.setTempDataStore(pListStore);
+                broker.addConnector(CONNECTOR_URL);
 
-            broker.start();
+                broker.start();
+            }
 
             return broker;
         } catch (Exception ex) {

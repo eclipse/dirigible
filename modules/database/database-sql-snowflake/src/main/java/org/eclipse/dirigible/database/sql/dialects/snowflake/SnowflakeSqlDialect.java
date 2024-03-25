@@ -143,11 +143,6 @@ public class SnowflakeSqlDialect extends
      * @param sequence the sequence
      * @return the h 2 next value sequence builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
-     */
     @Override
     public SnowflakeNextValueSequenceBuilder nextval(String sequence) {
         return new SnowflakeNextValueSequenceBuilder(this, sequence);
@@ -159,11 +154,6 @@ public class SnowflakeSqlDialect extends
      * @param args the args
      * @return the h 2 last value identity builder
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
-     */
     @Override
     public SnowflakeLastValueIdentityBuilder lastval(String... args) {
         return new SnowflakeLastValueIdentityBuilder(this);
@@ -173,11 +163,6 @@ public class SnowflakeSqlDialect extends
      * Checks if is synonym supported.
      *
      * @return true, if is synonym supported
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#isSynonymSupported()
      */
     @Override
     public boolean isSynonymSupported() {
@@ -189,11 +174,6 @@ public class SnowflakeSqlDialect extends
      *
      * @return the functions names
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.ISqlDialect#getFunctionsNames()
-     */
     @Override
     public Set<String> getFunctionsNames() {
         return FUNCTIONS;
@@ -203,11 +183,6 @@ public class SnowflakeSqlDialect extends
      * Creates the.
      *
      * @return the h 2 create branching builder
-     */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#create()
      */
     @Override
     public SnowflakeCreateBranchingBuilder create() {

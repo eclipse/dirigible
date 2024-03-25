@@ -46,6 +46,7 @@ public class WorkspaceActionsEndpoint {
     @Autowired
     private WorkspaceService workspaceService;
 
+    /** The actions service. */
     @Autowired
     private ActionsService actionsService;
 

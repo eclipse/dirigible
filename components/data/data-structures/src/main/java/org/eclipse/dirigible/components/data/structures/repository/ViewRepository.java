@@ -10,15 +10,28 @@
  */
 package org.eclipse.dirigible.components.data.structures.repository;
 
+import org.eclipse.dirigible.components.base.artefact.ArtefactRepository;
 import org.eclipse.dirigible.components.data.structures.domain.View;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The Interface ViewRepository.
  */
 @Repository("viewRepository")
-public interface ViewRepository extends JpaRepository<View, Long> {
+public interface ViewRepository extends ArtefactRepository<View, Long> {
 
+    /**
+     * Sets the running to all.
+     *
+     * @param running the new running to all
+     */
+    @Override
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE View SET running = :running")
+    void setRunningToAll(@Param("running") boolean running);
 }
-

@@ -10,12 +10,12 @@
  */
 package org.eclipse.dirigible.components.engine.cms.internal.repository;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
 import org.eclipse.dirigible.components.engine.cms.CmisDocument;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 /**
  * The Class CmisDocument.
@@ -23,13 +23,13 @@ import org.eclipse.dirigible.repository.api.IResource;
 public class CmisInternalDocument extends CmisInternalObject implements CmisDocument {
 
     /** The session. */
-    private CmisInternalSession session;
+    private final CmisInternalSession session;
 
     /** The internal resource. */
-    private IResource internalResource;
+    private final IResource internalResource;
 
     /** The repository. */
-    private IRepository repository;
+    private final IRepository repository;
 
     /**
      * Instantiates a new document.
@@ -85,12 +85,11 @@ public class CmisInternalDocument extends CmisInternalObject implements CmisDocu
      * Returns the CmisInternalContentStream representing the contents of this CmisDocument.
      *
      * @return Content Stream
-     * @throws IOException IO Exception
      */
-    public CmisInternalContentStream getContentStream() throws IOException {
+    public CmisInternalContentStream getContentStream() {
         byte[] content = this.internalResource.getContent();
-        return new CmisInternalContentStream(session, this.internalResource.getName(), content.length,
-                this.internalResource.getContentType(), new ByteArrayInputStream(content));
+        return new CmisInternalContentStream(this.internalResource.getName(), content.length, this.internalResource.getContentType(),
+                new ByteArrayInputStream(content));
     }
 
     /**

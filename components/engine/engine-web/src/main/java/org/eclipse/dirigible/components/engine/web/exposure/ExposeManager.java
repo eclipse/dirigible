@@ -27,7 +27,7 @@ public class ExposeManager {
     private static final Map<String, String[]> EXPOSABLE_PROJECTS = Collections.synchronizedMap(new HashMap<String, String[]>());
 
     /**
-     * Whether the project name is known
+     * Whether the project name is known.
      *
      * @param name the project name
      * @return true if it is known

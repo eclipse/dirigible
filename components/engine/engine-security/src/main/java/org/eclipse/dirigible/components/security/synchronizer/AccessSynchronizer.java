@@ -10,22 +10,13 @@
  */
 package org.eclipse.dirigible.components.security.synchronizer;
 
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
+import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.security.domain.Access;
@@ -37,15 +28,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The Class AccessSynchronizer.
- *
- * @param <A> the generic type
  */
 
 @Component
 @Order(SynchronizersOrder.ACCESS)
-public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Access> {
+public class AccessSynchronizer extends BaseSynchronizer<Access, Long> {
 
     /**
      * The Constant logger.
@@ -60,7 +54,7 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
     /**
      * The security access service.
      */
-    private AccessService securityAccessService;
+    private final AccessService securityAccessService;
 
     /**
      * The synchronization callback.
@@ -75,30 +69,6 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
     @Autowired
     public AccessSynchronizer(AccessService securityAccessService) {
         this.securityAccessService = securityAccessService;
-    }
-
-    /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<Access> getService() {
-        return securityAccessService;
-    }
-
-
-    /**
-     * Checks if is accepted.
-     *
-     * @param file the file
-     * @param attrs the attrs
-     * @return true, if is accepted
-     */
-    @Override
-    public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString()
-                   .endsWith(getFileExtension());
     }
 
     /**
@@ -118,6 +88,7 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
      * @param location the location
      * @param content the content
      * @return the list
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Access> parse(String location, byte[] content) throws ParseException {
@@ -155,6 +126,16 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
     }
 
     /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<Access, Long> getService() {
+        return securityAccessService;
+    }
+
+    /**
      * Retrieve.
      *
      * @param location the location
@@ -173,10 +154,10 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
      * @param error the error
      */
     @Override
-    public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+    public void setStatus(Access artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
         artefact.setError(error);
-        getService().save((Access) artefact);
+        getService().save(artefact);
     }
 
     /**
@@ -187,7 +168,7 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+    protected boolean completeImpl(TopologyWrapper<Access> wrapper, ArtefactPhase flow) {
         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
         return true;
     }
@@ -198,7 +179,7 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
      * @param access the security access
      */
     @Override
-    public void cleanup(Access access) {
+    public void cleanupImpl(Access access) {
         try {
             getService().delete(access);
         } catch (Exception e) {
@@ -239,4 +220,5 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
     public String getArtefactType() {
         return Access.ARTEFACT_TYPE;
     }
+
 }

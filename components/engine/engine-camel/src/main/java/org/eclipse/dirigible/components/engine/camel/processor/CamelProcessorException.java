@@ -10,16 +10,35 @@
  */
 package org.eclipse.dirigible.components.engine.camel.processor;
 
+/**
+ * The Class CamelProcessorException.
+ */
 public class CamelProcessorException extends RuntimeException {
 
+    /**
+     * Instantiates a new camel processor exception.
+     *
+     * @param message the message
+     */
     public CamelProcessorException(String message) {
         super(message);
     }
 
+    /**
+     * Instantiates a new camel processor exception.
+     *
+     * @param cause the cause
+     */
     public CamelProcessorException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * Instantiates a new camel processor exception.
+     *
+     * @param message the message
+     * @param cause the cause
+     */
     public CamelProcessorException(String message, Throwable cause) {
         super(message, cause);
     }

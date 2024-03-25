@@ -322,6 +322,7 @@ public class Table extends Artefact {
      * @param name the name
      * @param type the type
      * @param unique the unique
+     * @param order the order
      * @param columns the columns
      * @return the table index
      */

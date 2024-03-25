@@ -25,23 +25,44 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    /** The processor. */
     private final WebsocketProcessor processor;
 
+    /**
+     * Instantiates a new websocket config.
+     *
+     * @param processor the processor
+     */
     @Autowired
     public WebsocketConfig(WebsocketProcessor processor) {
         this.processor = processor;
     }
 
+    /**
+     * Gets the processor.
+     *
+     * @return the processor
+     */
     public WebsocketProcessor getProcessor() {
         return processor;
     }
 
+    /**
+     * Configure message broker.
+     *
+     * @param config the config
+     */
     @Override
     public void configureMessageBroker(final MessageBrokerRegistry config) {
         config.enableSimpleBroker("/queue/", "/topic/");
         config.setApplicationDestinationPrefixes("/ws");
     }
 
+    /**
+     * Register stomp endpoints.
+     *
+     * @param registry the registry
+     */
     @Override
     public void registerStompEndpoints(final StompEndpointRegistry registry) {
         registry.addEndpoint("/stomp");

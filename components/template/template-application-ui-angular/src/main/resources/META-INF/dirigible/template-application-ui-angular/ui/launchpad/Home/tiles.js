@@ -3,8 +3,9 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-import { response } from "@dirigible/http";
-import { extensions } from "@dirigible/extensions";
+import { response } from "sdk/http";
+import { extensions } from "sdk/extensions";
+import { user } from "sdk/security";
 
 let tiles = {};
 
@@ -12,7 +13,17 @@ let tileExtensions = await extensions.loadExtensionModules("${projectName}-tile"
 for (let i = 0; i < tileExtensions?.length; i++) {
     let tile = tileExtensions[i].getTile();
 
-    if (!tile) {
+
+    let hasRoles = true;
+    if (tile.roles && Array.isArray(tile.roles)) {
+        for (const next of tile.roles) {
+            if (!user.isInRole(next)) {
+                hasRoles = false;
+                break;
+            }
+        }
+    }
+    if (!tile || (tile.role && !user.isInRole(tile.role)) || !hasRoles) {
         continue;
     }
     if (!tiles[tile.group]) {

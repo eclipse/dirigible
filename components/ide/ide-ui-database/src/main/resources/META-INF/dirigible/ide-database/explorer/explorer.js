@@ -12,6 +12,7 @@
 const database = angular.module('database', ['ideUI', 'ideView']);
 database.controller('DatabaseController', function ($scope, $http, messageHub) {
 	let databasesSvcUrl = "/services/data/";
+	let databasesInvalidateSvcUrl = "/services/data/metadata/invalidate-cache";
 	$scope.selectedDatabase;
 	$scope.jstreeWidget = angular.element('#dgDatabases');
 	$scope.spinnerColumns = {
@@ -451,7 +452,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							messageHub.postMessage('database.metadata.project.export.schema', sqlCommand);
 						}.bind(this)
 					};
-					ctxmenu.exportMetadataInProject = {
+					ctxmenu.exportTopologicalOrder = {
 						"separator_before": false,
 						"label": "Export Topological Order",
 						"action": function (data) {
@@ -459,6 +460,16 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							let node = tree.get_node(data.reference);
 							let sqlCommand = node.original.text;
 							messageHub.postMessage('database.metadata.project.export.topology', sqlCommand);
+						}.bind(this)
+					};
+					ctxmenu.exportAsModel = {
+						"separator_before": false,
+						"label": "Export Schema as Model",
+						"action": function (data) {
+							let tree = $.jstree.reference(data.reference);
+							let node = tree.get_node(data.reference);
+							let sqlCommand = node.original.text;
+							messageHub.postMessage('database.metadata.project.export.model', sqlCommand);
 						}.bind(this)
 					};
 					ctxmenu.dropScript = {
@@ -491,9 +502,8 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 						"action": function (data) {
 							let tree = $.jstree.reference(data.reference);
 							let node = tree.get_node(data.reference);
-							let topLevelSchemaNode = node.parents.find(parentId => tree.get_node(parentId).original.kind === 'schema');
-							let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
-							let sqlCommand = topLevelSchemaName + "." + node.original.text;
+							let parentNodeName = tree.get_text(node.parent);
+							let sqlCommand = parentNodeName + "." + node.original.text;
 							messageHub.postMessage('database.data.export.artifact', sqlCommand);
 						}.bind(this)
 					};
@@ -504,9 +514,8 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 						"action": function (data) {
 							let tree = $.jstree.reference(data.reference);
 							let node = tree.get_node(data.reference);
-							let topLevelSchemaNode = node.parents.find(parentId => tree.get_node(parentId).original.kind === 'schema');
-							let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
-							let sqlCommand = topLevelSchemaName + "." + node.original.text;
+							let parentNodeName = tree.get_text(node.parent);
+							let sqlCommand = parentNodeName + "." + node.original.text;
 							messageHub.postMessage('database.data.import.artifact', sqlCommand);
 						}.bind(this)
 					};
@@ -893,7 +902,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			children = types.map((type, index) => {
 				return {
 					text: type,
-					icon: "sap-icon--folder-full",
+					icon: "sap-icon--folder",
 					children: f[type.toLowerCase()].map(item => build(item))
 				};
 			});
@@ -993,10 +1002,19 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		'ide-databases.explorer.refresh',
 		function () {
 			$scope.$apply(function () {
-				$scope.getDatabases();
+				$scope.refresh();
 			});
 		},
 		true
 	);
+	
+	$scope.refresh = function () {
+		$scope.invalidateCache();
+		$scope.getDatabases();
+	}
+	
+	$scope.invalidateCache = function () {
+		$http.get(databasesInvalidateSvcUrl);
+	}
 
 });

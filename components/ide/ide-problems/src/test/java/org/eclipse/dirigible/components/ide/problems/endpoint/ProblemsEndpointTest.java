@@ -33,6 +33,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The Class ProblemsEndpointTest.
+ */
 @WithMockUser
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -42,12 +45,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class ProblemsEndpointTest {
 
+    /** The problem service. */
     @Autowired
     private ProblemService problemService;
 
+    /** The mock mvc. */
     @Autowired
     private MockMvc mockMvc;
 
+    /**
+     * Setup.
+     *
+     * @throws Exception the exception
+     */
     @BeforeEach
     void setup() throws Exception {
 
@@ -60,11 +70,19 @@ class ProblemsEndpointTest {
 
     }
 
+    /**
+     * Cleanup.
+     *
+     * @throws Exception the exception
+     */
     @AfterEach
     void cleanup() throws Exception {
 
     }
 
+    /**
+     * Find all problems.
+     */
     @Test
     void findAllProblems() {
         Integer size = 10;
@@ -73,6 +91,12 @@ class ProblemsEndpointTest {
         assertNotNull(problemService.getPages(pageable));
     }
 
+    /**
+     * Gets the problems.
+     *
+     * @return the problems
+     * @throws Exception the exception
+     */
     @Test
     void getProblems() throws Exception {
         mockMvc.perform(get("/services/ide/problems"))
@@ -80,6 +104,12 @@ class ProblemsEndpointTest {
                .andExpect(status().is2xxSuccessful());
     }
 
+    /**
+     * Gets the problems by condition.
+     *
+     * @return the problems by condition
+     * @throws Exception the exception
+     */
     @Test
     void getProblemsByCondition() throws Exception {
         mockMvc.perform(get("/services/ide/problems/search?condition=co&limit=5"))
@@ -87,11 +117,29 @@ class ProblemsEndpointTest {
                .andExpect(status().is2xxSuccessful());
     }
 
+    /**
+     * Creates the problem.
+     *
+     * @param location the location
+     * @param type the type
+     * @param line the line
+     * @param column the column
+     * @param cause the cause
+     * @param expected the expected
+     * @param category the category
+     * @param module the module
+     * @param source the source
+     * @param program the program
+     * @return the problem
+     */
     public static Problem createProblem(String location, String type, String line, String column, String cause, String expected,
             String category, String module, String source, String program) {
         return new Problem(location, type, line, column, cause, expected, category, module, source, program);
     }
 
+    /**
+     * The Class TestConfiguration.
+     */
     @SpringBootApplication
     static class TestConfiguration {
     }

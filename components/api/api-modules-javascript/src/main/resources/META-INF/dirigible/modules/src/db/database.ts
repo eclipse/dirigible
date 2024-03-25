@@ -13,9 +13,9 @@
  * API Database
  * 
  */
-import * as bytes from "@dirigible/io/bytes";
-import { InputStream } from "@dirigible/io/streams";
-import { numeric } from "@dirigible/utils/alphanumeric";
+import * as bytes from "sdk/io/bytes";
+import { InputStream } from "sdk/io/streams";
+import { numeric } from "sdk/utils/alphanumeric";
 const DatabaseFacade = Java.type("org.eclipse.dirigible.components.api.db.DatabaseFacade");
 const DatabaseResultSetHelper = Java.type("org.eclipse.dirigible.components.data.management.helpers.DatabaseResultSetHelper");
 const JSqlDate = Java.type("java.sql.Date");

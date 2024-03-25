@@ -5,7 +5,7 @@
  */
 exports.getTemplate = function() {
 	return {
-		"name": "Scheduled Job",
+		"name": "Scheduled Job (Model)",
 		"description": "Scheduled Job definition with a simple Javascript handler",
 		"sources": [
 		{
@@ -18,6 +18,7 @@ exports.getTemplate = function() {
 			"action": "generate",
 			"rename": "{{fileName}}-handler.js"
 		}],
-		"parameters": []
+		"parameters": [],
+		"order": 50
 	};
 };

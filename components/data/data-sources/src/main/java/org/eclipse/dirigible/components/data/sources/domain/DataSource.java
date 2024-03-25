@@ -12,10 +12,11 @@ package org.eclipse.dirigible.components.data.sources.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
+import org.eclipse.dirigible.components.base.artefact.Artefact;
+import org.eclipse.dirigible.components.base.encryption.Encrypted;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import com.google.gson.annotations.Expose;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,13 +26,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
-import org.eclipse.dirigible.components.base.artefact.Artefact;
-import org.eclipse.dirigible.components.base.encryption.Encrypted;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
-import com.google.gson.annotations.Expose;
 
 /**
  * The Class DataSource.
@@ -70,6 +64,11 @@ public class DataSource extends Artefact {
     @Encrypted
     private String password;
 
+    /** The schema. */
+    @Column(name = "DS_SCHEMA", columnDefinition = "VARCHAR", nullable = true, length = 64)
+    @Expose
+    private String schema;
+
     /** The properties. */
     @OneToMany(mappedBy = "datasource", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -98,9 +97,7 @@ public class DataSource extends Artefact {
     /**
      * Instantiates a new extension.
      */
-    public DataSource() {
-        super();
-    }
+    public DataSource() {}
 
     /**
      * Gets the id.
@@ -227,19 +224,6 @@ public class DataSource extends Artefact {
     }
 
     /**
-     * To string.
-     *
-     * @return the string
-     */
-    @Override
-    public String toString() {
-        return "DataSource [id=" + id + ", driver=" + driver + ", url=" + url + ", username=" + username + ", password=" + password
-                + ", properties=" + (properties != null ? Objects.toString(properties) : "null") + ", location=" + location + ", name="
-                + name + ", type=" + type + ", description=" + description + ", key=" + key + ", dependencies=" + dependencies
-                + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
-    }
-
-    /**
      * Adds the property.
      *
      * @param name the name
@@ -250,6 +234,35 @@ public class DataSource extends Artefact {
         DataSourceProperty property = new DataSourceProperty(name, value, this);
         properties.add(property);
         return property;
+    }
+
+    /**
+     * Gets the schema.
+     *
+     * @return the schema
+     */
+    public String getSchema() {
+        return schema;
+    }
+
+    /**
+     * Sets the schema.
+     *
+     * @param schema the new schema
+     */
+    public void setSchema(String schema) {
+        this.schema = schema;
+    }
+
+    /**
+     * To string.
+     *
+     * @return the string
+     */
+    @Override
+    public String toString() {
+        return "DataSource [id=" + id + ", driver=" + driver + ", url=" + url + ", username=" + username + ", schema=" + schema
+                + ", properties=" + properties + "]";
     }
 
 }

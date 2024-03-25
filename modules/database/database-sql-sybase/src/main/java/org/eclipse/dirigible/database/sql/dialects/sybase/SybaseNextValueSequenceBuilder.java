@@ -33,11 +33,6 @@ public class SybaseNextValueSequenceBuilder extends NextValueSequenceBuilder {
      *
      * @return the string
      */
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
-     */
     @Override
     public String generate() {
         throw new IllegalStateException("Sybase ASE does not support Sequences");

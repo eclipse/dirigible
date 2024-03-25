@@ -9,9 +9,10 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { extensions } from "@dirigible/extensions";
-import { request, response } from "@dirigible/http";
-import { uuid } from "@dirigible/utils";
+import { extensions } from "sdk/extensions";
+import { request, response } from "sdk/http";
+import { uuid } from "sdk/utils";
+import { user } from "sdk/security";
 
 let views = [];
 let extensionPoint = request.getParameter('extensionPoint') || 'ide-view';
@@ -25,7 +26,23 @@ function setETag() {
 }
 
 for (let i = 0; i < viewExtensions?.length; i++) {
-	views.push(viewExtensions[i].getView());
+	const view = viewExtensions[i].getView();
+	if (view.roles && Array.isArray(view.roles)) {
+		let hasRoles = true;
+		for (const next of view.roles) {
+			if (!user.isInRole(next)) {
+				hasRoles = false;
+				break;
+			}
+		}
+		if (hasRoles) {
+			views.push(view);
+		}
+	} else if (view.role && user.isInRole(view.role)) {
+		views.push(view);
+	} else if (view.role === undefined) {
+		views.push(view);
+	}
 	let duplication = false;
 	for (let i = 0; i < views.length; i++) {
 		for (let j = 0; j < views.length; j++) {

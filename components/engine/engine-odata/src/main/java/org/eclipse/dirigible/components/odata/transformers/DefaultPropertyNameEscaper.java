@@ -21,7 +21,6 @@ class DefaultPropertyNameEscaper implements ODataPropertyNameEscaper {
      *
      * @param propertyName entity property name
      * @return replaced string
-     * @see org.apache.olingo.odata2.core.edm.provider.EdmNamedImplProv
      */
     @Override
     public String escape(String propertyName) {

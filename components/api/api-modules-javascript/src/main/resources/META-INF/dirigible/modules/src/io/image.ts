@@ -12,7 +12,7 @@
 /**
  * API Image
  */
-import * as streams from "@dirigible/io/streams";
+import * as streams from "sdk/io/streams";
 
 const ImageFacade = Java.type("org.eclipse.dirigible.components.api.io.ImageFacade");
 

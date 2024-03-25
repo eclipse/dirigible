@@ -10,12 +10,6 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -25,6 +19,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.mockito.Mockito.*;
 
 /**
  * The Class BackgroundListenersManagerTest.
@@ -50,13 +46,17 @@ class ListenersManagerTest {
     @Mock
     private ListenerManagerFactory messageListenerManagerFactory;
 
-    /** The listener. */
+    /** The listenerEntity. */
     @Mock
-    private Listener listener;
+    private org.eclipse.dirigible.components.listeners.domain.Listener listenerEntity;
 
     /** The resource. */
     @Mock
     private IResource resource;
+
+    /** The listener creator. */
+    @Mock
+    private ListenerCreator listenerCreator;
 
     /** The listener manager. */
     @Mock
@@ -66,24 +66,32 @@ class ListenersManagerTest {
     @Mock
     private ListenerManager listenerManager2;
 
+    /** The listener descriptor. */
+    @Mock
+    private ListenerDescriptor listenerDescriptor;
+
+    /** The listener descriptor 2. */
+    @Mock
+    private ListenerDescriptor listenerDescriptor2;
+
     /**
      * Sets the up.
      */
     @BeforeEach
     void setUp() {
         ListenersManager.LISTENERS.clear();
-        lenient().when(listener.getLocation())
-                 .thenReturn(LISTNER_LOCATION);
+        lenient().when(listenerCreator.fromEntity(listenerEntity))
+                 .thenReturn(listenerDescriptor);
     }
 
     /**
      * Test start listener on try to start the listner again.
      */
     @Test
-    void testStartListenerOnTryToStartTheListnerAgain() {
+    void testStartListenerOnTryToStartTheListenerAgain() {
         testStartListenerOnExistingListener();
 
-        listenersManager.startListener(listener);
+        listenersManager.startListener(listenerEntity);
 
         verifyNoMoreInteractions(listenerManager);
     }
@@ -93,13 +101,13 @@ class ListenersManagerTest {
      */
     @Test
     void testStartListenerOnExistingListener() {
-        when(listener.getHandler()).thenReturn(HANDLER);
-        when(repository.getResource(
-                    IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + HANDLER)).thenReturn(resource);
+        when(listenerDescriptor.getHandlerPath()).thenReturn(HANDLER);
+        when(repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + HANDLER)).thenReturn(
+                resource);
         when(resource.exists()).thenReturn(true);
-        when(messageListenerManagerFactory.create(listener)).thenReturn(listenerManager);
+        when(messageListenerManagerFactory.create(listenerDescriptor)).thenReturn(listenerManager);
 
-        listenersManager.startListener(listener);
+        listenersManager.startListener(listenerEntity);
 
         verify(listenerManager).startListener();
     }
@@ -109,12 +117,12 @@ class ListenersManagerTest {
      */
     @Test
     void testStartListenerOnMissingListener() {
-        when(listener.getHandler()).thenReturn(HANDLER);
-        when(repository.getResource(
-                IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + HANDLER)).thenReturn(resource);
+        when(listenerDescriptor.getHandlerPath()).thenReturn(HANDLER);
+        when(repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + HANDLER)).thenReturn(
+                resource);
         when(resource.exists()).thenReturn(false);
 
-        listenersManager.startListener(listener);
+        listenersManager.startListener(listenerEntity);
 
         verifyNoInteractions(messageListenerManagerFactory);
     }
@@ -124,10 +132,10 @@ class ListenersManagerTest {
      */
     @Test
     void testStopListener() {
-        ListenersManager.LISTENERS.put(LISTNER_LOCATION, listenerManager);
+        ListenersManager.LISTENERS.put(listenerDescriptor, listenerManager);
 
-        listenersManager.stopListener(listener);
-        listenersManager.stopListener(listener);
+        listenersManager.stopListener(listenerEntity);
+        listenersManager.stopListener(listenerEntity);
 
         // stop is called only once
         verify(listenerManager).stopListener();
@@ -138,8 +146,8 @@ class ListenersManagerTest {
      */
     @Test
     void testStopListeners() {
-        ListenersManager.LISTENERS.put(LISTNER_LOCATION, listenerManager);
-        ListenersManager.LISTENERS.put("my-listener2", listenerManager2);
+        ListenersManager.LISTENERS.put(listenerDescriptor, listenerManager);
+        ListenersManager.LISTENERS.put(listenerDescriptor2, listenerManager2);
 
         listenersManager.stopListeners();
         listenersManager.stopListeners();

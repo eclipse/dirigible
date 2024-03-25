@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.components.data.sources.manager;
 
 import java.util.Properties;
-
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 
 /**
@@ -25,6 +24,6 @@ public interface DataSourceInitializerContributor {
      * @param datasource the datasource
      * @param properties the properties
      */
-    public void contribute(DataSource datasource, Properties properties);
+    void contribute(DataSource datasource, Properties properties);
 
 }

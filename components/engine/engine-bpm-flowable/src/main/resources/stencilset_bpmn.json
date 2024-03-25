@@ -109,7 +109,7 @@
       "id" : "asynchronousdefinition",
       "type" : "Boolean",
       "title" : "Asynchronous",
-      "value" : "false",
+      "value" : "true",
       "description" : "Define the activity as asynchronous.",
       "popular" : true
     } ]
@@ -129,7 +129,7 @@
       "id" : "exclusivedefinition",
       "type" : "Boolean",
       "title" : "Exclusive",
-      "value" : "false",
+      "value" : "true",
       "description" : "Define the activity as exclusive.",
       "popular" : true
     } ]

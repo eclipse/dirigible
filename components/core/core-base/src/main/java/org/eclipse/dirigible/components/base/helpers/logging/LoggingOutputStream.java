@@ -15,21 +15,53 @@ import java.io.OutputStream;
 
 import org.slf4j.Logger;
 
+/**
+ * The Class LoggingOutputStream.
+ */
 public class LoggingOutputStream extends OutputStream {
 
+    /** The baos. */
     private final ByteArrayOutputStream baos = new ByteArrayOutputStream(1000);
+
+    /** The logger. */
     private final Logger logger;
+
+    /** The level. */
     private final LogLevel level;
 
+    /**
+     * The Enum LogLevel.
+     */
     public enum LogLevel {
-        TRACE, DEBUG, INFO, WARN, ERROR,
+
+        /** The trace. */
+        TRACE,
+        /** The debug. */
+        DEBUG,
+        /** The info. */
+        INFO,
+        /** The warn. */
+        WARN,
+        /** The error. */
+        ERROR,
     }
 
+    /**
+     * Instantiates a new logging output stream.
+     *
+     * @param logger the logger
+     * @param level the level
+     */
     public LoggingOutputStream(Logger logger, LogLevel level) {
         this.logger = logger;
         this.level = level;
     }
 
+    /**
+     * Write.
+     *
+     * @param b the b
+     */
     @Override
     public void write(int b) {
         if (b == '\n') {

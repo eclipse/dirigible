@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { cmis } from "@dirigible/cms";
+import { cmis } from "sdk/cms";
 let cmisSession = cmis.getSession();
 
 export const getObject = (path) => {

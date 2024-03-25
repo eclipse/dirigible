@@ -1,55 +1,39 @@
 #set($dollar = '$')
-#set($hasDropdowns = false)
-#foreach ($property in $filter.properties)
-#if($property.widgetType == "DROPDOWN")
-#set($hasDropdowns = true)
-#end
-#end
-angular.module('page', ["ideUI", "ideView", "entityApi"])
+angular.module('page', ["ideUI", "ideView"])
 	.config(["messageHubProvider", function (messageHubProvider) {
 		messageHubProvider.eventIdPrefix = '${projectName}.${perspectiveName}.${name}';
 	}])
-	.config(["entityApiProvider", function (entityApiProvider) {
-		entityApiProvider.baseUrl = "/services/js/${projectName}/gen/api/${perspectiveName}/${name}.js";
-	}])
-	.controller('PageController', ['$scope', 'messageHub', 'ViewParameters',#if($hasDropdowns) '${dollar}http',#end 'entityApi', function ($scope, messageHub, ViewParameters,#if($hasDropdowns) ${dollar}http,#end entityApi) {
+	.controller('PageController', ['$scope', 'messageHub', 'ViewParameters', function ($scope, messageHub, ViewParameters) {
 
 		$scope.entity = {};
-		$scope.formErrors = {};
+		$scope.forms = {
+			details: {},
+		};
 
-		$scope.dataParameters = ViewParameters.get();
-		if ($scope.dataParameters?.filter) {
-			const filter = $scope.dataParameters.filter;
+		if (window != null && window.frameElement != null && window.frameElement.hasAttribute("data-parameters")) {
+			let dataParameters = window.frameElement.getAttribute("data-parameters");
+			if (dataParameters) {
+				let params = JSON.parse(dataParameters);
 #foreach ($property in $filter.properties)
 #if($property.isDateType)
-			if (filter.${property.name}) {
-				filter.${property.name} = new Date(filter.${property.name});
-			}
-#end
-#end
-#foreach ($property in $filter.properties)
-#if($property.widgetType == "DROPDOWN")
-			${dollar}scope.${property.name}Value = filter.${property.name};
-#end
-#end
-			$scope.entity = filter;
-#foreach ($property in $filter.properties)
-#if($property.widgetType == "DROPDOWN")
-			${dollar}scope.entity.${property.name} = undefined;
-#end
-#end
-		}
-
-		$scope.isValid = function (isValid, property) {
-			${dollar}scope.formErrors[property] = !isValid ? true : undefined;
-			for (let next in ${dollar}scope.formErrors) {
-				if (${dollar}scope.formErrors[next] === true) {
-					${dollar}scope.isFormValid = false;
-					return;
+				if (params?.filter?.${property.name}) {
+					params.filter.${property.name} = new Date(params.filter.${property.name});
 				}
+#end
+#end
+				$scope.entity = params.filter ?? {};
+#foreach ($property in $properties)
+#if($property.widgetType == "DROPDOWN")
+				$scope.options${property.name} = params.options${property.name};
+#end
+#end
+#foreach ($property in $filter.properties)
+#if($property.widgetType == "DROPDOWN")
+				$scope.options${property.name} = params.options${property.name};
+#end
+#end
 			}
-			${dollar}scope.isFormValid = true;
-		};
+		}
 
 		$scope.filter = function () {
 			const filter = {
@@ -72,41 +56,5 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 		$scope.cancel = function () {
 			messageHub.closeDialogWindow("${name}-details-filter");
 		};
-#if($hasDropdowns)
-
-		//----------------Dropdowns-----------------//
-#foreach ($property in $filter.properties)
-#if($property.widgetType == "DROPDOWN")
-		$scope.options${property.name} = [];
-#end
-#end
-#foreach ($property in $filter.properties)
-#if($property.widgetType == "DROPDOWN")
-
-		${dollar}http.get("/services/js/${projectName}/gen/api/${property.relationshipEntityPerspectiveName}/${property.relationshipEntityName}.js").then(function (response) {
-			${dollar}scope.options${property.name} = response.data.map(e => {
-				return {
-					value: e.${property.widgetDropDownKey},
-					text: e.${property.widgetDropDownValue}
-				}
-			});
-			${dollar}scope.entity.${property.name} = ${dollar}scope.${property.name}Value;
-		});
-#end
-#end
-#foreach ($property in $filter.properties)
-#if($property.widgetType == "DROPDOWN")
-		${dollar}scope.options${property.name}Value = function (optionKey) {
-			for (let i = 0; i < ${dollar}scope.options${property.name}.length; i++) {
-				if (${dollar}scope.options${property.name}[i].value === optionKey) {
-					return ${dollar}scope.options${property.name}[i].text;
-				}
-			}
-			return null;
-		};
-#end
-#end
-		//----------------Dropdowns-----------------//
-#end
 
 	}]);

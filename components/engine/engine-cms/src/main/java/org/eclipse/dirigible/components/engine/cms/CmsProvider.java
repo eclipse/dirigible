@@ -10,62 +10,26 @@
  */
 package org.eclipse.dirigible.components.engine.cms;
 
+/**
+ * The Interface CmsProvider.
+ */
 public interface CmsProvider {
 
-    /** The Constant DIRIGIBLE_CMS_PROVIDER. */
-    public static final String DIRIGIBLE_CMS_PROVIDER = "DIRIGIBLE_CMS_PROVIDER"; //$NON-NLS-1$
-
-    /** The Constant DIRIGIBLE_CMS_PROVIDER_INTERNAL. */
-    public static final String DIRIGIBLE_CMS_PROVIDER_INTERNAL = "internal"; //$NON-NLS-1$
-
-    /** The Constant DIRIGIBLE_CMS_PROVIDER_S3. */
-    public static final String DIRIGIBLE_CMS_PROVIDER_S3 = "s3"; //$NON-NLS-1$
-
-    /** The Constant DIRIGIBLE_CMS_PROVIDER_DATABASE. */
-    public static final String DIRIGIBLE_CMS_PROVIDER_DATABASE = "database"; //$NON-NLS-1$
-
-    /** The Constant DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER. */
-    public static final String DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER = "DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER"; //$NON-NLS-1$
-
-    /** The Constant DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE. */
-    public static final String DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE = "DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE"; //$NON-NLS-1$
-
     /** The Constant DIRIGIBLE_CMS_INTERNAL_VERSIONING_ENABLED. */
-    public static final String DIRIGIBLE_CMS_INTERNAL_VERSIONING_ENABLED = "DIRIGIBLE_CMS_INTERNAL_VERSIONING_ENABLED"; //$NON-NLS-1$
-
-    /** The Constant DIRIGIBLE_CMS_MANAGED_CONFIGURATION_JNDI_NAME. */
-    public static final String DIRIGIBLE_CMS_MANAGED_CONFIGURATION_JNDI_NAME = "DIRIGIBLE_CMS_MANAGED_CONFIGURATION_JNDI_NAME"; //$NON-NLS-1$
-
-    /** The Constant DIRIGIBLE_CMS_MANAGED_CONFIGURATION_AUTH_METHOD. */
-    public static final String DIRIGIBLE_CMS_MANAGED_CONFIGURATION_AUTH_METHOD = "DIRIGIBLE_CMS_MANAGED_CONFIGURATION_AUTH_METHOD"; //$NON-NLS-1$
-
-    /** The Constant DIRIGIBLE_CMS_MANAGED_CONFIGURATION_NAME. */
-    public static final String DIRIGIBLE_CMS_MANAGED_CONFIGURATION_NAME = "DIRIGIBLE_CMS_MANAGED_CONFIGURATION_NAME"; //$NON-NLS-1$
-
-    /** The Constant DIRIGIBLE_CMS_MANAGED_CONFIGURATION_KEY. */
-    public static final String DIRIGIBLE_CMS_MANAGED_CONFIGURATION_KEY = "DIRIGIBLE_CMS_MANAGED_CONFIGURATION_KEY"; //$NON-NLS-1$
-
-    /** The Constant DIRIGIBLE_CMS_MANAGED_CONFIGURATION_DESTINATION. */
-    public static final String DIRIGIBLE_CMS_MANAGED_CONFIGURATION_DESTINATION = "DIRIGIBLE_CMS_MANAGED_CONFIGURATION_DESTINATION"; //$NON-NLS-1$
-
-    /** The Constant DIRIGIBLE_CMS_DATABASE_DATASOURCE_TYPE. */
-    public static final String DIRIGIBLE_CMS_DATABASE_DATASOURCE_TYPE = "DIRIGIBLE_CMS_DATABASE_DATASOURCE_TYPE";
-
-    /** The Constant DIRIGIBLE_CMS_DATABASE_DATASOURCE_NAME. */
-    public static final String DIRIGIBLE_CMS_DATABASE_DATASOURCE_NAME = "DIRIGIBLE_CMS_DATABASE_DATASOURCE_NAME";
+    String DIRIGIBLE_CMS_INTERNAL_VERSIONING_ENABLED = "DIRIGIBLE_CMS_INTERNAL_VERSIONING_ENABLED"; //$NON-NLS-1$
 
     /**
      * Getter for the underlying repository session object.
      *
      * @return the session object
      */
-    public Object getSession();
+    Object getSession();
 
     /**
      * Getter for the underlying repository type object.
      *
      * @return the type of the object
      */
-    public String getType();
+    String getType();
 
 }
