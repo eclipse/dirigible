@@ -9,13 +9,40 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-"use strict";
-
 import { Logging } from "sdk/log";
 import * as sql from "./sql";
+import { ORM } from "./orm"
+import { DAO } from "./dao";
 
-export function ORMStatements(orm, dialect) {
-	this.$log = Logging.getLogger('db.dao.ormstatements');
+
+//TODO - this interface is implemented in ""./orm.ts". It can be imported from there
+interface ORMProperty {
+	name: string;
+	table: string;
+	properties: Array<{
+		name: string;
+		column: string;
+		id: boolean;
+		required: boolean;
+		unique: boolean;
+		dbValue: Function;
+		value: Function;
+		allowedOps: Array<'insert' | 'update'>;
+	}>;
+	associations: Array<{
+		name: string;
+		joinKey: string;
+		key: string;
+		type: keyof typeof ORM.prototype.ASSOCIATION_TYPES;
+		targetDao: Function | typeof DAO;
+		joinDao: Function | typeof DAO;
+		defaults: Object;
+	}>;
+}
+
+
+export function ORMStatements(orm: ORMProperty, dialect): void {
+  this.$log = Logging.getLogger('db.dao.ormstatements');
 	this.orm = orm;
 	this.orm.tableName = this.orm.table;
 	this.orm.properties.forEach(function (property) {
@@ -24,6 +51,7 @@ export function ORMStatements(orm, dialect) {
 	this.dialect = dialect || sql.getDialect();
 };
 ORMStatements.prototype.constructor = ORMStatements;
+
 
 ORMStatements.prototype.createTable = function () {
 	const builder = this.dialect.create().table(this.orm.table);
