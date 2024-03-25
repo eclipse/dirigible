@@ -19,7 +19,7 @@ tasksView.controller('TasksController', ['$scope','$http', '$timeout', 'messageH
     $scope.tasksList = [];
     $scope.tasksListAssignee = [];
     $scope.currentProcessInstanceId;
-    $scope.selectedVariable = null;
+    $scope.selectedTask = null;
 
     $scope.currentFetchDataTask = null;
 
@@ -50,12 +50,12 @@ tasksView.controller('TasksController', ['$scope','$http', '$timeout', 'messageH
 
     $scope.selectionChanged = function (variable) {
         if (variable) {
-            $scope.selectedVariable = variable;
+            $scope.selectedTask = variable;
         }
     }
 
     $scope.claimTask = function() {
-        const apiUrl = '/services/ide/bpm/bpm-processes/tasks/' + $scope.selectedVariable.id;
+        const apiUrl = '/services/ide/bpm/bpm-processes/tasks/' + $scope.selectedTask.id;
         const requestBody = { };
 
         $http({
@@ -67,7 +67,7 @@ tasksView.controller('TasksController', ['$scope','$http', '$timeout', 'messageH
             }
         })
         .then((response) => {
-            console.log('Successfully claimed task with id ' + $scope.selectedVariable.id);
+            console.log('Successfully claimed task with id ' + $scope.selectedTask.id);
         })
         .catch((error) => {
             console.error('Error making POST request:', error);
