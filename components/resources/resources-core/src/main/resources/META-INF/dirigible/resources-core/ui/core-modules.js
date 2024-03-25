@@ -308,7 +308,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     scope.resetViews = function () {
                         localStorage.clear();
                         theming.reset();
-                        location.reload();
+                        location.reload(true);
                     };
 
                     scope.logout = function () {
