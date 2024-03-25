@@ -31,6 +31,7 @@ div.fb-main-container[data-preview=true] div[data-type="container"]>div.fb-contr
     padding: 0;
 }
 
+div.fb-main-container[data-preview=true] div.dg-vbox,
 div.fb-main-container[data-preview=true] div.dg-hbox {
     gap: .5rem;
 }

@@ -77,7 +77,7 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
                     label: 'Button',
                     icon: 'sap-icon--border',
                     description: 'Button',
-                    template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-form-group class="dg-float-right"><fd-button type="{{props.isSubmit.value ? 'submit' : 'button'}}" dg-label="{{props.label.value}}" dg-type="{{props.type.value}}" ng-click="submit()"></fd-button></fd-form-group></div>`,
+                    template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-button class="{{props.sizeToText.value ? 'dg-float-right' : 'dg-full-width'}}" type="{{props.isSubmit.value ? 'submit' : 'button'}}" dg-label="{{props.label.value}}" dg-type="{{props.type.value}}" ng-click="submit()"></fd-button></div>`,
                     props: {
                         label: {
                             type: 'text',
@@ -121,6 +121,11 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
                                 }
                             ]
                         },
+                        sizeToText: {
+                            type: 'checkbox',
+                            label: 'Size to text',
+                            value: false,
+                        },
                         isSubmit: {
                             type: 'checkbox',
                             label: 'Submits form',
@@ -145,10 +150,7 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
                         </fd-form-label>
                         <fd-form-input-message-group dg-inactive="{{props.errorState.invalid}}">
                             <fd-input id="{{props.id.value}}" type="text" placeholder="{{props.placeholder.value}}"
-                                state="{'error' : props.errorState.invalid }" name="{{props.id.value}}" ng-required="props.required.value"
-                                ng-model="scopeVars.model" ng-trim="false" ng-minlength="props.minLength.value || 0"
-                                ng-maxlength="props.maxLength.value || -1" dg-input-rules="props.validationRegex.value ? { patterns: [props.validationRegex.value] } : {}"
-                                ng-change="props.errorState.invalid = !formModel[props.id.value].$valid">
+                                state="{'error' : props.errorState.invalid }" name="{{props.id.value}}" ng-required="props.required.value">
                             </fd-input>
                             <fd-form-message dg-type="error">{{props.errorState.value || 'Incorrect input'}}</fd-form-message>
                         </fd-form-input-message-group>
@@ -258,10 +260,7 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
                         </fd-form-label>
                         <fd-form-input-message-group dg-inactive="{{props.errorState.invalid}}">
                             <fd-textarea id="{{props.id.value}}" type="text" placeholder="{{props.placeholder.value}}"
-                                state="{'error' : props.errorState.invalid }" name="{{props.id.value}}" ng-required="props.required.value"
-                                ng-model="scopeVars.model" ng-trim="false" ng-minlength="props.minLength.value || 0"
-                                ng-maxlength="props.maxLength.value || -1" dg-input-rules="props.validationRegex.value ? { patterns: [props.validationRegex.value] } : {}"
-                                ng-change="props.errorState.invalid = !formModel[props.id.value].$valid">
+                                state="{'error' : props.errorState.invalid }" name="{{props.id.value}}" ng-required="props.required.value">
                             </fd-textarea>
                             <fd-form-message dg-type="error">{{props.errorState.value || 'Incorrect input'}}</fd-form-message>
                         </fd-form-input-message-group>
@@ -471,7 +470,7 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
                     description: 'Stepped number input',
                     template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-form-item horizontal="props.horizontal.value">
 						<fd-form-label dg-colon="true" dg-required="props.required.value" for="{{props.id.value}}">{{ props.label.value }}</fd-form-label>
-						<fd-step-input dg-id="{{props.id.value}}" name="{{props.id.value}}" ng-model="scopeVars.model" placeholder="{{props.placeholder.value}}" dg-required="props.required.value" dg-min="props.minNum.value || 0" dg-max="props.maxNum.value || -1" dg-step="props.step.value || 1">
+						<fd-step-input dg-id="{{props.id.value}}" name="{{props.id.value}}" ng-model="props.minNum.value" placeholder="{{props.placeholder.value}}" dg-required="props.required.value">
 						</fd-step-input>
 					</fd-form-item></div>`,
                     props: {
@@ -663,10 +662,8 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
                     icon: "sap-icon--complete",
                     description: 'description',
                     template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-form-item>
-                        <fd-checkbox id="{{ props.id.value }}" ng-model="scopeVars.model">
-                        </fd-checkbox>
-                        <fd-checkbox-label for="{{ props.id.value }}">{{ props.label.value }}
-                        </fd-checkbox-label>
+                        <fd-checkbox id="{{ props.id.value }}"></fd-checkbox>
+                        <fd-checkbox-label for="{{ props.id.value }}">{{ props.label.value }}</fd-checkbox-label>
                     </fd-form-item></div>`,
                     props: {
                         id: {
