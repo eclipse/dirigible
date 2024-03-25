@@ -20,7 +20,7 @@ public class TenantPathResolved {
         this.defaultTenant = defaultTenant;
     }
 
-    public String toTenantPath(String path) {
+    public String resolve(String path) {
         String tenantId = tenantContext.isInitialized() ? tenantContext.getCurrentTenant()
                                                                        .getId()
                 : defaultTenant.getId();

@@ -91,7 +91,7 @@ public class S3Facade {
      * @param name the name
      */
     public static void delete(String name) {
-        String tenantName = INSTANCE.tenantPathResolved.toTenantPath(name);
+        String tenantName = INSTANCE.tenantPathResolved.resolve(name);
         String bucket = getBucketName();
         if (isFolderPath(tenantName)) {
             deleteFolder(tenantName);
@@ -117,7 +117,7 @@ public class S3Facade {
      * @param prefix the prefix
      */
     public static void deleteFolder(String prefix) {
-        String tenantPrefix = INSTANCE.tenantPathResolved.toTenantPath(prefix);
+        String tenantPrefix = INSTANCE.tenantPathResolved.resolve(prefix);
         String bucket = getBucketName();
         try (S3Client s3Client = S3Client.builder()
                                          .region(AWS_DEFAULT_REGION)
@@ -218,7 +218,7 @@ public class S3Facade {
     public static byte[] get(String name) throws IOException {
         String bucket = getBucketName();
 
-        String tenantName = INSTANCE.tenantPathResolved.toTenantPath(name);
+        String tenantName = INSTANCE.tenantPathResolved.resolve(name);
         ResponseInputStream<GetObjectResponse> response = S3Facade.get()
                                                                   .getS3Client()
                                                                   .getObject(GetObjectRequest.builder()
@@ -249,7 +249,7 @@ public class S3Facade {
      * @param contentType the content type
      */
     public static void put(String name, byte[] input, String contentType) {
-        String tenantName = INSTANCE.tenantPathResolved.toTenantPath(name);
+        String tenantName = INSTANCE.tenantPathResolved.resolve(name);
         String bucket = getBucketName();
         PutObjectRequest objectRequest;
         if (isFolderPath(tenantName)) {
@@ -276,7 +276,7 @@ public class S3Facade {
      * @return the list
      */
     public static List<S3Object> listObjects(String path) {
-        String tenantPath = INSTANCE.tenantPathResolved.toTenantPath(path);
+        String tenantPath = INSTANCE.tenantPathResolved.resolve(path);
 
         String bucket = getBucketName();
         ListObjectsV2Request listObjectsV2Request = ListObjectsV2Request.builder()
@@ -301,7 +301,7 @@ public class S3Facade {
      * @return true, if successful
      */
     public static boolean exists(String keyName) {
-        String tenantKeyName = INSTANCE.tenantPathResolved.toTenantPath(keyName);
+        String tenantKeyName = INSTANCE.tenantPathResolved.resolve(keyName);
         String bucket = getBucketName();
         try {
             HeadObjectRequest objectRequest = HeadObjectRequest.builder()
@@ -334,7 +334,7 @@ public class S3Facade {
      */
     public static String getObjectContentType(String keyName) {
         String bucket = getBucketName();
-        String tenantKeyName = INSTANCE.tenantPathResolved.toTenantPath(keyName);
+        String tenantKeyName = INSTANCE.tenantPathResolved.resolve(keyName);
         try {
             HeadObjectRequest objectRequest = HeadObjectRequest.builder()
                                                                .key(tenantKeyName)

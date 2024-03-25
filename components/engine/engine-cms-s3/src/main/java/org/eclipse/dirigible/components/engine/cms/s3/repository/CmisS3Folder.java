@@ -110,7 +110,7 @@ public class CmisS3Folder extends CmisS3Object implements CmisFolder {
     public List<CmisS3Object> getChildren() {
         String path = this.getId();
         TenantPathResolved tenantPathResolved = BeanProvider.getBean(TenantPathResolved.class);
-        String tenantPath = tenantPathResolved.toTenantPath(path);
+        String tenantPath = tenantPathResolved.resolve(path);
         List<String> objectKeys = S3Facade.listObjects(tenantPath)
                                           .stream()
                                           .map(S3Object::key)
