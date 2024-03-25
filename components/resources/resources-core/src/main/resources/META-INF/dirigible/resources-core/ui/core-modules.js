@@ -301,7 +301,6 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                                     $cookies.remove(cookie, { path: "/" });
                                 }
                             }
-                            messageHub.hideBusyDialog("resetThemeBusyDialog")
                             scope.resetViews();
                         });
                     };
