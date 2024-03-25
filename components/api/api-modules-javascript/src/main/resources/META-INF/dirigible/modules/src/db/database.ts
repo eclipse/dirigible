@@ -716,7 +716,7 @@ export class Database {
 /**
  * Connection object
  */
-class Connection {
+export class Connection {
 	private native;
 
 	constructor(datasourceName?: string) {
@@ -801,7 +801,7 @@ class Connection {
 /**
  * Statement object
  */
-class PreparedStatement {
+export class PreparedStatement {
 	private native: any;
 
 	constructor(native: any) {
@@ -1020,7 +1020,7 @@ class PreparedStatement {
 	}
 }
 
-class CallableStatement {
+export class CallableStatement {
 	private native: any;
 
 	constructor(native: any) {
@@ -1157,11 +1157,11 @@ class CallableStatement {
 		return this.native.getSQLXML(parameterIndex);
 	}
 
-	public setURL(parameterIndex: string, value: any): void {
+	public setURL(parameterIndex: number, value: any): void {
 		this.native.setURL(parameterIndex, value);
 	}
 
-	public setNull(parameterIndex: string, sqlTypeStr: keyof typeof SQLTypes | number, typeName?: string): void {
+	public setNull(parameterIndex: number, sqlTypeStr: keyof typeof SQLTypes | number, typeName?: string): void {
 		// @ts-ignore
 		const sqlType: number = Number.isInteger(sqlTypeStr) ? sqlTypeStr : SQLTypes[sqlTypeStr];
 		if (typeName !== undefined && typeName !== null) {
@@ -1171,7 +1171,7 @@ class CallableStatement {
 		}
 	}
 
-	public setBoolean(parameterIndex: string, value?: boolean): void {
+	public setBoolean(parameterIndex: number, value?: boolean): void {
 		if (value !== null && value !== undefined) {
 			this.native.setBoolean(parameterIndex, value);
 		} else {
@@ -1179,7 +1179,7 @@ class CallableStatement {
 		}
 	}
 
-	public setByte(parameterIndex: string, value?: any /*: byte*/): void {
+	public setByte(parameterIndex: number, value?: any /*: byte*/): void {
 		if (value !== null && value !== undefined) {
 			this.native.setByte(parameterIndex, value);
 		} else {
@@ -1187,7 +1187,7 @@ class CallableStatement {
 		}
 	}
 
-	public setShort(parameterIndex: string, value?: number): void {
+	public setShort(parameterIndex: number, value?: number): void {
 		if (value !== null && value !== undefined) {
 			this.native.setShort(parameterIndex, value);
 		} else {
@@ -1195,7 +1195,7 @@ class CallableStatement {
 		}
 	}
 
-	public setInt(parameterIndex: string, value?: number): void {
+	public setInt(parameterIndex: number, value?: number): void {
 		if (value !== null && value !== undefined) {
 			this.native.setInt(parameterIndex, value);
 		} else {
@@ -1203,7 +1203,7 @@ class CallableStatement {
 		}
 	}
 
-	public setLong(parameterIndex: string, value?: number): void {
+	public setLong(parameterIndex: number, value?: number): void {
 		if (value !== null && value !== undefined) {
 			this.native.setLong(parameterIndex, value);
 		} else {
@@ -1211,7 +1211,7 @@ class CallableStatement {
 		}
 	}
 
-	public setFloat(parameterIndex: string, value?: number): void {
+	public setFloat(parameterIndex: number, value?: number): void {
 		if (value !== null && value !== undefined) {
 			this.native.setFloat(parameterIndex, value);
 		} else {
@@ -1219,7 +1219,7 @@ class CallableStatement {
 		}
 	}
 
-	public setDouble(parameterIndex: string, value?: number): void {
+	public setDouble(parameterIndex: number, value?: number): void {
 		if (value !== null && value !== undefined) {
 			this.native.setDouble(parameterIndex, value);
 		} else {
@@ -1227,7 +1227,7 @@ class CallableStatement {
 		}
 	}
 
-	public setBigDecimal(parameterIndex: string, value?: number /*: BigDecimal*/): void {
+	public setBigDecimal(parameterIndex: number, value?: number /*: BigDecimal*/): void {
 		if (value !== null && value !== undefined) {
 			this.native.setBigDecimal(parameterIndex, value);
 		} else {
@@ -1235,7 +1235,7 @@ class CallableStatement {
 		}
 	}
 
-	public setString(parameterIndex: string, value?: string): void {
+	public setString(parameterIndex: number, value?: string): void {
 		if (value !== null && value !== undefined) {
 			this.native.setString(parameterIndex, value);
 		} else {
@@ -1243,7 +1243,7 @@ class CallableStatement {
 		}
 	}
 
-	public setBytes(parameterIndex: string, value?: any[] /*byte[]*/): void {
+	public setBytes(parameterIndex: number, value?: any[] /*byte[]*/): void {
 		if (value !== null && value !== undefined) {
 			this.native.setBytes(parameterIndex, value);
 		} else {
@@ -1251,7 +1251,7 @@ class CallableStatement {
 		}
 	}
 
-	public setDate(parameterIndex: string, value?: string | Date): void {
+	public setDate(parameterIndex: number, value?: string | Date): void {
 		if (value !== null && value !== undefined) {
 			const date = getDateValue(value);
 			this.native.setDate(parameterIndex, new JSqlDate(date.getTime()));
@@ -1260,7 +1260,7 @@ class CallableStatement {
 		}
 	}
 
-	public setTime(parameterIndex: string, value?: string | Date): void {
+	public setTime(parameterIndex: number, value?: string | Date): void {
 		if (value !== null && value !== undefined) {
 			const date = getDateValue(value);
 			this.native.setTime(parameterIndex, new JSqlTime(date.getTime()));
@@ -1269,7 +1269,7 @@ class CallableStatement {
 		}
 	}
 
-	public setTimestamp(parameterIndex: string, value?: string | Date): void {
+	public setTimestamp(parameterIndex: number, value?: string | Date): void {
 		if (value !== null && value !== undefined) {
 			let date = getDateValue(value);
 			this.native.setTimestamp(parameterIndex, new JSqlTimestamp(date.getTime()));
@@ -1278,7 +1278,7 @@ class CallableStatement {
 		}
 	}
 
-	public setAsciiStream(parameterIndex: string, inputStream: InputStream, length: number): void {
+	public setAsciiStream(parameterIndex: number, inputStream: InputStream, length: number): void {
 		if (length) {
 			this.native.setAsciiStream(parameterIndex, inputStream, length);
 		} else {
@@ -1286,7 +1286,7 @@ class CallableStatement {
 		}
 	}
 
-	public setBinaryStream(parameterIndex: string, inputStream: InputStream, length: number): void {
+	public setBinaryStream(parameterIndex: number, inputStream: InputStream, length: number): void {
 		if (length) {
 			this.native.setBinaryStream(parameterIndex, inputStream, length);
 		} else {
@@ -1294,7 +1294,7 @@ class CallableStatement {
 		}
 	}
 
-	public setObject(parameterIndex: string, value: any, targetSqlType: number, scale: number): void {
+	public setObject(parameterIndex: number, value: any, targetSqlType: number, scale: number): void {
 		if (scale !== undefined && scale !== null && targetSqlType !== undefined && targetSqlType !== null) {
 			this.native.setObject(parameterIndex, value, targetSqlType, scale);
 		} else if (targetSqlType !== undefined && targetSqlType !== null) {
@@ -1304,11 +1304,11 @@ class CallableStatement {
 		}
 	}
 
-	public setRowId(parameterIndex: string, value: number /*: RowId*/): void {
+	public setRowId(parameterIndex: number, value: number /*: RowId*/): void {
 		this.native.setRowId(parameterIndex, value);
 	}
 
-	public setNString(parameterIndex: string, value: string): void {
+	public setNString(parameterIndex: number, value: string): void {
 		if (value !== null && value !== undefined) {
 			this.native.setNString(parameterIndex, value);
 		} else {
@@ -1316,7 +1316,7 @@ class CallableStatement {
 		}
 	}
 
-	public setSQLXML(parameterIndex: string, value: any /*: SQLXML*/): void {
+	public setSQLXML(parameterIndex: number, value: any /*: SQLXML*/): void {
 		if (value !== null && value !== undefined) {
 			this.native.setSQLXML(parameterIndex, value);
 		} else {
@@ -1324,7 +1324,7 @@ class CallableStatement {
 		}
 	}
 
-	public setBlob(parameterIndex: string, value: any /*Blob */): void {
+	public setBlob(parameterIndex: number, value: any /*Blob */): void {
 		if (value !== null && value !== undefined) {
 			const blob = createBlobValue(this.native, value);
 			this.native.setBlob(parameterIndex, blob);
@@ -1333,7 +1333,7 @@ class CallableStatement {
 		}
 	}
 
-	public setClob(parameterIndex: string, value: any /*: Clob*/): void {
+	public setClob(parameterIndex: number, value: any /*: Clob*/): void {
 		if (value !== null && value !== undefined) {
 			const clob = createClobValue(this.native, value);
 			this.native.setClob(parameterIndex, clob);
@@ -1342,7 +1342,7 @@ class CallableStatement {
 		}
 	}
 
-	public setNClob(parameterIndex: string, value: any /*: NClob*/): void {
+	public setNClob(parameterIndex: number, value: any /*: NClob*/): void {
 		if (value !== null && value !== undefined) {
 			const nclob = createNClobValue(this.native, value);
 			this.native.setNClob(parameterIndex, nclob);
@@ -1375,7 +1375,7 @@ class CallableStatement {
 /**
  * ResultSet object
  */
-class ResultSet {
+export class ResultSet {
 	private native: any;
 
 	constructor(native: any) {

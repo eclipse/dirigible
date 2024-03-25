@@ -14,7 +14,7 @@
 import * as dirigibleOrm from "./orm";
 import * as dirigibleOrmStatements from "./ormstatements";
 import { Sequence } from "./sequence";
-import * as database from "./database";
+import { Database } from "./database";
 import { Query } from "sdk/db";
 import { Update } from "./update";
 import { Insert } from "./insert";
@@ -35,7 +35,7 @@ export function DAO(orm, logCtxName, dataSourceName) {
 		return Sequence.nextval(this.sequenceName, this.orm.table, dataSourceName);
 	};
 
-	const conn = database.getConnection(dataSourceName);
+	const conn = Database.getConnection(dataSourceName);
 	try {
 		this.ormstatements = dirigibleOrmStatements.create(this.orm, conn);
 	} finally {
@@ -932,7 +932,7 @@ export function create(oDefinition, logCtxName, dataSourceName) {
 
 	let productName = globals.get(dataSourceName);
 	if (!productName) {
-		productName = database.getProductName(dataSourceName);
+		productName = Database.getProductName(dataSourceName);
 		globals.set(dataSourceName, productName);
 	}
 

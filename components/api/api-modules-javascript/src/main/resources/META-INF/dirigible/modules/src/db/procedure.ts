@@ -14,7 +14,7 @@
  *
  */
 import { Update } from "./update";
-import * as database from "./database";
+import { CallableStatement, Connection, Database, ResultSet } from "./database";
 
 export interface ProcedureParameter {
 	readonly type: string;
@@ -28,16 +28,16 @@ export class Procedure {
     }
 
     public static execute(sql: string, parameters: (string | number | ProcedureParameter)[] = [], datasourceName?: string): any[] {
-        const result = [];
+        const result: any[] = [];
 
-        let connection = null;
-        let callableStatement = null;
-        let resultSet = null;
+        let connection: Connection;
+        let callableStatement: CallableStatement;
+        let resultSet: ResultSet;
 
         try {
             let hasMoreResults = false;
 
-            connection = database.getConnection(datasourceName);
+            connection = Database.getConnection(datasourceName);
             callableStatement = connection.prepareCall(sql);
             let mappedParameters = parameters.map((parameter) => {
                 let mappedParameter: ProcedureParameter = {
@@ -79,7 +79,7 @@ export class Procedure {
             resultSet = callableStatement.executeQuery();
 
             do {
-                result.push(JSON.parse(resultSet.toJson()));
+                result.push(resultSet.toJson());
                 hasMoreResults = callableStatement.getMoreResults();
                 if (hasMoreResults) {
                     resultSet.close();
