@@ -28,7 +28,7 @@ const {hasOwnProperty: hasOwnProp} = Object.prototype;
  * item if evaluates to `true`
  * @returns {undefined}
  */
-const moveToAnotherArray = function (source, target, conditionCb) {
+const moveToAnotherArray = function (source: Array<any>, target: Array<any>, conditionCb: Function): void {
     const il = source.length;
     for (let i = 0; i < il; i++) {
         const item = source[i];
@@ -44,10 +44,10 @@ const vm = {
          * @param {Object} context Object whose items will be added to evaluation
          * @returns {*} Result of evaluated code
          */
-        runInNewContext (expr, context) {
+        runInNewContext (expr: string, context: any): any {
             const keys = Object.keys(context);
             const funcs = [];
-            moveToAnotherArray(keys, funcs, (key) => {
+            moveToAnotherArray(keys, funcs, (key: string | number) => {
                 return typeof context[key] === 'function';
             });
             const code = funcs.reduce((s, func) => {
@@ -74,7 +74,7 @@ const vm = {
  * @param {*} item Array item to add (to end)
  * @returns {Array} Copy of the original array
  */
-function push (arr, item) {
+function push (arr: Array<any>, item: any): Array<any> {
     arr = arr.slice();
     arr.push(item);
     return arr;
@@ -85,7 +85,7 @@ function push (arr, item) {
  * @param {Array} arr Array to copy and into which to unshift
  * @returns {Array} Copy of the original array
  */
-function unshift (item, arr) {
+function unshift (item: any, arr: Array<any>): Array<any> {
     arr = arr.slice();
     arr.unshift(item);
     return arr;
@@ -96,7 +96,7 @@ function unshift (item, arr) {
  * @extends Error
  * @param {*} value The evaluated scalar value
  */
-var NewError = function (value) {
+var NewError = function (value: any) {
     const error = Error.call(this, 'JSONPath should not be called with "new" (it prevents return of (unwrapped) scalar values)');
     this.message = error.message;
     this.stack = error.stack;
@@ -120,7 +120,7 @@ NewError.prototype.constructor = NewError;
  * @returns {JSONPath}
  * @class
  */
-export function JSONPath (opts, expr, obj, callback, otherTypeCallback): void {
+export function JSONPath (opts: any, expr: string, obj: any, callback: Function, otherTypeCallback: Function): void {
     // eslint-disable-next-line no-restricted-syntax
     if (!(this instanceof JSONPath)) {
         try {
@@ -171,7 +171,7 @@ JSONPath.prototype = Object.create(Object.prototype);
 JSONPath.prototype.constructor = JSONPath;
 
 // PUBLIC METHODS
-JSONPath.prototype.evaluate = function (expr, json, callback, otherTypeCallback) {
+JSONPath.prototype.evaluate = function (expr: any, json: any, callback: Function, otherTypeCallback: Function) {
     const that = this;
     let currParent = this.parent,
         currParentProperty = this.parentProperty;
@@ -217,13 +217,13 @@ JSONPath.prototype.evaluate = function (expr, json, callback, otherTypeCallback)
     this._hasParentSelector = null;
     const result = this
         ._trace(exprList, json, ['$'], currParent, currParentProperty, callback)
-        .filter(function (ea) { return ea && !ea.isParentSelector; });
+        .filter(function (ea: { isParentSelector: any; }) { return ea && !ea.isParentSelector; });
 
     if (!result.length) { return wrap ? [] : undefined; }
     if (result.length === 1 && !wrap && !Array.isArray(result[0].value)) {
         return this._getPreferredOutput(result[0]);
     }
-    return result.reduce(function (rslt, ea) {
+    return result.reduce(function (rslt: any[], ea: any) {
         const valOrPath = that._getPreferredOutput(ea);
         if (flatten && Array.isArray(valOrPath)) {
             rslt = rslt.concat(valOrPath);
@@ -236,7 +236,7 @@ JSONPath.prototype.evaluate = function (expr, json, callback, otherTypeCallback)
 
 // PRIVATE METHODS
 
-JSONPath.prototype._getPreferredOutput = function (ea) {
+JSONPath.prototype._getPreferredOutput = function (ea: any) {
     const resultType = this.currResultType;
     switch (resultType) {
     default:
@@ -254,7 +254,7 @@ JSONPath.prototype._getPreferredOutput = function (ea) {
     }
 };
 
-JSONPath.prototype._handleCallback = function (fullRetObj, callback, type) {
+JSONPath.prototype._handleCallback = function (fullRetObj: any, callback: Function, type: string) {
     if (callback) {
         const preferredOutput = this._getPreferredOutput(fullRetObj);
         fullRetObj.path = typeof fullRetObj.path === 'string'
@@ -266,10 +266,10 @@ JSONPath.prototype._handleCallback = function (fullRetObj, callback, type) {
 };
 
 JSONPath.prototype._trace = function (
-    expr, val, path, parent, parentPropName, callback, literalPriority
-) {
+    expr: any, val: number, path: any, parent: any, parentPropName: string, callback: Function, literalPriority: string
+): any {
     // No expr to follow? return path and value as the result of this trace branch
-    let retObj;
+    let retObj: any;
     const that = this;
     if (!expr.length) {
         retObj = {path: path, value: val, parent: parent, parentProperty: parentPropName};
@@ -282,7 +282,7 @@ JSONPath.prototype._trace = function (
     // We need to gather the return value of recursive trace calls in order to
     // do the parent sel computation.
     const ret = [];
-    function addRet (elems) {
+    function addRet (elems: any[]) {
         if (Array.isArray(elems)) {
             // This was causing excessive stack size in Node (with or without Babel) against our performance test: `ret.push(...elems);`
             elems.forEach((t) => {
@@ -445,7 +445,7 @@ JSONPath.prototype._trace = function (
     return ret;
 };
 
-JSONPath.prototype._walk = function (loc, expr, val, path, parent, parentPropName, callback, f) {
+JSONPath.prototype._walk = function (loc: any, expr: any, val: number, path: any, parent: any, parentPropName: string, callback: Function, f: any): void {
     if (Array.isArray(val)) {
         const n = val.length;
         for (let i = 0; i < n; i++) {
@@ -460,7 +460,7 @@ JSONPath.prototype._walk = function (loc, expr, val, path, parent, parentPropNam
     }
 };
 
-JSONPath.prototype._slice = function (loc, expr, val, path, parent, parentPropName, callback) {
+JSONPath.prototype._slice = function (loc: any, expr: any, val: number, path: any, parent: any, parentPropName: string, callback: Function): any {
     if (!Array.isArray(val)) { return undefined; }
     const len = val.length, parts = loc.split(':'),
         step = (parts[2] && parseInt(parts[2])) || 1;
@@ -483,7 +483,7 @@ JSONPath.prototype._slice = function (loc, expr, val, path, parent, parentPropNa
     return ret;
 };
 
-JSONPath.prototype._eval = function (code, _v, _vname, path, parent, parentPropName) {
+JSONPath.prototype._eval = function (code: string, _v: any, _vname: any, path: any, parent: any, parentPropName: string): any {
     if (!this._obj || !_v) { return false; }
     if (code.indexOf('@parentProperty')>-1) {
         this.currSandbox._$_parentProperty = parentPropName;
@@ -555,7 +555,7 @@ JSONPath.toPointer = function (pointer) {
  * @param {string} expr Expression to convert
  * @returns {string[]}
  */
-JSONPath.toPathArray = function (expr) {
+JSONPath.toPathArray = function (expr: string): string[] {
     const {cache} = JSONPath;
     if (cache[expr]) { return cache[expr].concat(); }
     const subx = [];
@@ -567,11 +567,11 @@ JSONPath.toPathArray = function (expr) {
         )
         // Parenthetical evaluations (filtering and otherwise), directly
         //   within brackets or single quotes
-        .replace(/[['](\??\(.*?\))[\]']/g, function ($0, $1) {
+        .replace(/[['](\??\(.*?\))[\]']/g, function ($0: any, $1: any) {
             return '[#' + (subx.push($1) - 1) + ']';
         })
         // Escape periods and tildes within properties
-        .replace(/\['([^'\]]*)'\]/g, function ($0, prop) {
+        .replace(/\['([^'\]]*)'\]/g, function ($0: any, prop: string) {
             return "['" + prop
                 .replace(/\./g, '%@%')
                 .replace(/~/g, '%%@@%%') +
@@ -586,7 +586,7 @@ JSONPath.toPathArray = function (expr) {
         // Reinsert tildes within properties
         .replace(/%%@@%%/g, '~')
         // Parent
-        .replace(/(?:;)?(\^+)(?:;)?/g, function ($0, ups) {
+        .replace(/(?:;)?(\^+)(?:;)?/g, function ($0: any, ups: string) {
             return ';' + ups.split('').join(';') + ';';
         })
         // Descendents
@@ -594,7 +594,7 @@ JSONPath.toPathArray = function (expr) {
         // Remove trailing
         .replace(/;$|'?\]|'$/g, '');
 
-    const exprList = normalized.split(';').map(function (exp) {
+    const exprList = normalized.split(';').map(function (exp: string) {
         const match = exp.match(/#(\d+)/);
         return !match || !match[1] ? exp : subx[match[1]];
     });
