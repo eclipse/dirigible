@@ -291,20 +291,25 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     };
 
                     scope.resetTheme = function () {
+                        messageHub.showBusyDialog(
+                            'resetThemeBusyDialog',
+                            'Reseting Theme...',
+                        );
                         $http.get('/services/js/resources-core/services/clear-cache.js').then(function () {
-                            scope.resetViews();
                             for (let cookie in $cookies.getAll()) {
                                 if (cookie.startsWith("DIRIGIBLE")) {
                                     $cookies.remove(cookie, { path: "/" });
                                 }
                             }
+                            messageHub.hideBusyDialog("resetThemeBusyDialog")
+                            scope.resetViews();
                         });
                     };
 
                     scope.resetViews = function () {
                         localStorage.clear();
                         theming.reset();
-                        location.reload();
+                        location.reload(true);
                     };
 
                     scope.logout = function () {
