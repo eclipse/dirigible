@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
 
+// TODO to be deleted once the MultitenancyIT is implemented
 class UITest {
 
     @Test
