@@ -29,7 +29,11 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
     private EdmView edmView;
 
     @Test
-    void test() throws InterruptedException {
+    void test() {
+        prepareTestProject();
+    }
+
+    private void prepareTestProject() {
         testProject.copyToRepository();
 
         dirigible.openHomePage();
