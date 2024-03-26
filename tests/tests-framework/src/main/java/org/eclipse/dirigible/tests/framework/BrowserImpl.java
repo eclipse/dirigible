@@ -10,24 +10,23 @@
  */
 package org.eclipse.dirigible.tests.framework;
 
-import java.util.concurrent.TimeUnit;
+import com.codeborne.selenide.*;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.Selectors;
-import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.WebDriverRunner;
+
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.regex.Pattern;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Lazy
 @Component
-class BrowserImpl implements Browser {
+public class BrowserImpl implements Browser {
 
     private static final String BROWSER = "chrome";
     private static final long SELENIDE_TIMEOUT_MILLIS = TimeUnit.SECONDS.toMillis(5);
@@ -40,8 +39,11 @@ class BrowserImpl implements Browser {
         Configuration.browserCapabilities = new ChromeOptions().addArguments("--remote-allow-origins=*");
     }
 
-    @LocalServerPort
-    private int localServerPort;
+    private final int localServerPort;
+
+    public BrowserImpl(@LocalServerPort int localServerPort) {
+        this.localServerPort = localServerPort;
+    }
 
     @Override
     public void openPath(String path) {
@@ -50,19 +52,19 @@ class BrowserImpl implements Browser {
         maximizeBrowser();
     }
 
-    private void maximizeBrowser() {
-        WebDriverRunner.getWebDriver()
-                       .manage()
-                       .window()
-                       .maximize();
-    }
-
     private String createAppUrl(String path) {
         if (StringUtils.isBlank(path)) {
             return createAppUrlByAbsolutePath("");
         }
         String absolutePath = path.startsWith(PATH_SEPARATOR) ? path : PATH_SEPARATOR + path;
         return createAppUrlByAbsolutePath(absolutePath);
+    }
+
+    private void maximizeBrowser() {
+        WebDriverRunner.getWebDriver()
+                       .manage()
+                       .window()
+                       .maximize();
     }
 
     private String createAppUrlByAbsolutePath(String absolutePath) {
@@ -82,6 +84,11 @@ class BrowserImpl implements Browser {
         return Selenide.$(selector);
     }
 
+    private By constructCssSelectorByTypeAndAttribute(HtmlElementType elementType, HtmlAttribute attribute, String attributePattern) {
+        String cssSelector = elementType.getType() + "[" + attribute.getAttribute() + "*='" + attributePattern + "']";
+        return Selectors.byCssSelector(cssSelector);
+    }
+
     @Override
     public void clickElementByAttributePatternAndText(HtmlElementType elementType, HtmlAttribute attribute, String pattern, String text) {
         SelenideElement element = getElementByAttributePatternAndText(elementType, attribute, pattern, text);
@@ -97,15 +104,90 @@ class BrowserImpl implements Browser {
         return options.findBy(Condition.text(text));
     }
 
-    private By constructCssSelectorByTypeAndAttribute(HtmlElementType elementType, HtmlAttribute attribute, String attributePattern) {
-        String cssSelector = elementType.getType() + "[" + attribute.getAttribute() + "*=" + attributePattern + "]";
-        return Selectors.byCssSelector(cssSelector);
-    }
-
     private void clickElement(SelenideElement element) {
         element.shouldBe(Condition.visible, Condition.enabled)
                .scrollIntoView(false)
                .click();
+    }
+
+    @Override
+    public void clickElementByAttributeValue(HtmlElementType htmlElementType, HtmlAttribute htmlAttribute, String attributeValue) {
+        SelenideElement element = getElementByAttributePattern(htmlElementType, htmlAttribute, attributeValue);
+
+        clickElement(element);
+    }
+
+    @Override
+    public void doubleClickOnElementContainingText(HtmlElementType elementType, String text) {
+        String textPattern = Pattern.quote(text);
+
+        boolean executed =
+                handleElementInAllFrames(() -> getElementByAttributeAndTextPattern(elementType, textPattern), e -> e.doubleClick());
+
+        assertThat(executed).withFailMessage("Element of type [" + elementType + "] with text pattern [" + textPattern + "] was not found.")
+                            .isTrue();
+    }
+
+    @Override
+    public void clickElementByAttributePattern(HtmlElementType elementType, HtmlAttribute attribute, String pattern) {
+        boolean executed = handleElementInAllFrames(() -> getElementByAttributePattern(elementType, attribute, pattern), e -> e.click());
+        assertThat(executed)
+                            .withFailMessage("Element of type [" + elementType + "] with attribute [" + attribute + "] with pattern ["
+                                    + pattern + "] was not found.")
+                            .isTrue();
+    }
+
+    private boolean handleElementInAllFrames(CallableResultAndNoException<SelenideElement> elementResolver,
+            Consumer<SelenideElement> elementHandler) {
+        Selenide.switchTo()
+                .defaultContent();
+        SelenideElement element = elementResolver.call();
+        if (element.exists()) {
+            elementHandler.accept(element);
+            return true;
+        }
+        try {
+            ElementsCollection iframes = getElements(HtmlElementType.IFRAME);
+
+            for (SelenideElement iframe : iframes) {
+                Selenide.switchTo()
+                        .frame(iframe);
+                SelenideElement el = elementResolver.call();
+                if (el.exists()) {
+                    elementHandler.accept(el);
+                    return true;
+                }
+
+                // without this, the frame cannot be switched in the next iteration
+                Selenide.switchTo()
+                        .defaultContent();
+            }
+            return false;
+        } finally {
+            Selenide.switchTo()
+                    .defaultContent();
+        }
+    }
+
+    private ElementsCollection getElements(HtmlElementType elementType) {
+        By selector = constructCssSelectorByType(elementType);
+        return Selenide.$$(selector);
+    }
+
+    private By constructCssSelectorByType(HtmlElementType elementType) {
+        String cssSelector = elementType.getType();
+        return Selectors.byCssSelector(cssSelector);
+    }
+
+    @Override
+    public void assertElementExistsByTypeAndTextPattern(HtmlElementType htmlElementType, String textPattern) {
+        SelenideElement element = getElementByAttributeAndTextPattern(htmlElementType, textPattern);
+        element.should(Condition.exist);
+    }
+
+    private SelenideElement getElementByAttributeAndTextPattern(HtmlElementType htmlElementType, String textPattern) {
+        ElementsCollection elements = getElements(htmlElementType);
+        return elements.findBy(Condition.matchText(textPattern));
     }
 
     @Override
@@ -119,11 +201,6 @@ class BrowserImpl implements Browser {
         ElementsCollection options = Selenide.$$(selector);
 
         return options.findBy(Condition.text(text));
-    }
-
-    private By constructCssSelectorByType(HtmlElementType elementType) {
-        String cssSelector = elementType.getType();
-        return Selectors.byCssSelector(cssSelector);
     }
 
     @Override
