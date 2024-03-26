@@ -10,6 +10,7 @@
  */
 package org.eclipse.dirigible.integration.tests.ui.tests.multitenancy;
 
+import org.awaitility.Awaitility;
 import org.eclipse.dirigible.integration.tests.ui.Dirigible;
 import org.eclipse.dirigible.integration.tests.ui.DirigibleWorkbench;
 import org.eclipse.dirigible.integration.tests.ui.EdmView;
@@ -17,8 +18,15 @@ import org.eclipse.dirigible.integration.tests.ui.tests.UserInterfaceIntegration
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.concurrent.TimeUnit;
+
 class MultitenancyIT extends UserInterfaceIntegrationTest {
 
+    private static final DirigibleTestTenant TEST_TENANT_1 = new DirigibleTestTenant("test-tenant-1", "test-tenant-1");
+    private static final DirigibleTestTenant TEST_TENANT_2 = new DirigibleTestTenant("test-tenant-2", "test-tenant-2");
+
+    @Autowired
+    private TenantCreator tenantCreator;
     @Autowired
     private TestProject testProject;
 
@@ -31,6 +39,7 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
     @Test
     void test() {
         prepareTestProject();
+        createTestTenants();
     }
 
     private void prepareTestProject() {
@@ -45,5 +54,19 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
         edmView.regenerate();
 
         workbench.publishAll();
+    }
+
+    private void createTestTenants() {
+        tenantCreator.createTenant(TEST_TENANT_1);
+        tenantCreator.createTenant(TEST_TENANT_2);
+
+        waitForTenantProvisioning(TEST_TENANT_1, 30);
+        waitForTenantProvisioning(TEST_TENANT_2, 10);
+    }
+
+    private void waitForTenantProvisioning(DirigibleTestTenant tenant, int waitSeconds) {
+        Awaitility.await()
+                  .atMost(waitSeconds, TimeUnit.SECONDS)
+                  .until(() -> tenantCreator.isTenantProvisioned(tenant));
     }
 }
