@@ -14,7 +14,7 @@ import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.eclipse.dirigible.tests.framework.Browser;
 import org.springframework.beans.factory.annotation.Autowired;
 
-abstract class UserInterfaceIntegrationTest extends IntegrationTest {
+public abstract class UserInterfaceIntegrationTest extends IntegrationTest {
 
     @Autowired
     protected Browser browser;

@@ -22,6 +22,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons.io}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-application</artifactId>
 			<scope>test</scope>

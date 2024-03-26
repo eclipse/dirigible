@@ -10,22 +10,13 @@
  */
 package org.eclipse.dirigible.tests.framework;
 
-public enum HtmlElementType {
-    BUTTON("button"), //
-    INPUT("input"), //
-    ANCHOR("a"), //
-    HEADER5("h5"), //
-    TITLE("title"), //
-    IFRAME("iframe"), //
-    SPAN("span");
+@FunctionalInterface
+interface CallableResultAndNoException<Result> {
 
-    private final String type;
-
-    HtmlElementType(String type) {
-        this.type = type;
-    }
-
-    public String getType() {
-        return type;
-    }
+    /**
+     * Call.
+     *
+     * @return the result
+     */
+    Result call();
 }
