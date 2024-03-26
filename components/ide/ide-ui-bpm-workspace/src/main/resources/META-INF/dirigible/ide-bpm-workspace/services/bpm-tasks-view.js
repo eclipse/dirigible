@@ -13,7 +13,7 @@ const viewData = {
     id: "bpm-user-tasks",
     factory: "frame",
     region: "bottom",
-    label: "Process User Tasks",
+    label: "User Tasks",
     link: "../ide-bpm-workspace/bpm-tasks.html"
 };
 
