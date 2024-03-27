@@ -12,6 +12,8 @@ package org.eclipse.dirigible.tests.framework.restassured;
 
 import io.restassured.RestAssured;
 import io.restassured.authentication.AuthenticationScheme;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
 import org.eclipse.dirigible.tests.framework.DirigibleTestTenant;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Lazy;
@@ -20,6 +22,10 @@ import org.springframework.stereotype.Component;
 @Lazy
 @Component
 public class RestAssuredExecutor {
+
+    static {
+        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+    }
 
     private final int port;
 
@@ -37,6 +43,7 @@ public class RestAssuredExecutor {
         String configuredBaseURI = RestAssured.baseURI;
         int configuredPort = RestAssured.port;
         AuthenticationScheme configuredAuthentication = RestAssured.authentication;
+
         try {
             RestAssured.baseURI = "http://" + tenant.getSubdomain() + ".localhost";
             RestAssured.port = port;
