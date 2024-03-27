@@ -38,8 +38,15 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
 
     @Test
     void test() {
-        prepareTestProject();
         createTestTenants();
+        prepareTestProject();
+
+        waitForTenantsProvisioning();
+    }
+
+    private void createTestTenants() {
+        tenantCreator.createTenant(TEST_TENANT_1);
+        tenantCreator.createTenant(TEST_TENANT_2);
     }
 
     private void prepareTestProject() {
@@ -56,10 +63,7 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
         workbench.publishAll();
     }
 
-    private void createTestTenants() {
-        tenantCreator.createTenant(TEST_TENANT_1);
-        tenantCreator.createTenant(TEST_TENANT_2);
-
+    private void waitForTenantsProvisioning() {
         waitForTenantProvisioning(TEST_TENANT_1, 30);
         waitForTenantProvisioning(TEST_TENANT_2, 10);
     }
