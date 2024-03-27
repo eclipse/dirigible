@@ -301,11 +301,25 @@ public class WorkspaceEndpoint {
         String sourceFilePath = sourcePath.constructPathFrom(1);
         String targetFilePath = targetPath.constructPathFrom(1);
         if (workspaceService.existsFile(workspace, sourceProject, sourceFilePath)) {
-            workspaceService.moveFile(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
+            if (sourceFilePath.toLowerCase()
+                              .equals(targetFilePath.toLowerCase())) {
+                String casesensitivefix = sourceFilePath + "_temp";
+                workspaceService.moveFile(workspace, sourceProject, sourceFilePath, targetProject, casesensitivefix);
+                workspaceService.moveFile(workspace, sourceProject, casesensitivefix, targetProject, targetFilePath);
+            } else {
+                workspaceService.moveFile(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
+            }
         } else if (workspaceService.existsFolder(workspace, sourceProject, sourceFilePath)) {
-            workspaceService.moveFolder(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
-        } else {
+            if (sourceFilePath.toLowerCase()
+                              .equals(targetFilePath.toLowerCase())) {
+                String casesensitivefix = sourceFilePath + "_temp";
+                workspaceService.moveFolder(workspace, sourceProject, sourceFilePath, targetProject, casesensitivefix);
+                workspaceService.moveFolder(workspace, sourceProject, casesensitivefix, targetProject, targetFilePath);
+            } else {
+                workspaceService.moveFolder(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
+            }
 
+        } else {
             String error = "Path does not exists.";
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
         }
