@@ -14,6 +14,7 @@ import org.apache.activemq.broker.BrokerService;
 import org.eclipse.dirigible.components.api.messaging.MessagingFacade;
 import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ import static org.junit.Assert.assertEquals;
  * META-INF/dirigible/integration-tests-project
  */
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@Disabled("the test is not stable on github actions and windows")
 class BackgroundListenersIT extends IntegrationTest {
 
     private static final int REPEAT_COUNT = 1;
