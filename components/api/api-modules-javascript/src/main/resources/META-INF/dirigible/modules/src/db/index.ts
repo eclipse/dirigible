@@ -1,5 +1,6 @@
 export * as dao from "./dao";
-export * as database from "./database";
+export * from "./database";
+export { Database as database } from "./database";
 export * as orm from "./orm";
 export * as ormstatements from "./ormstatements";
 export * from "./procedure";
