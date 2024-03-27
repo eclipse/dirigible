@@ -8,12 +8,16 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.tests.framework;
+package org.eclipse.dirigible.tests.framework.impl;
 
 import com.codeborne.selenide.*;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.dirigible.tests.framework.Browser;
+import org.eclipse.dirigible.tests.framework.HtmlAttribute;
+import org.eclipse.dirigible.tests.framework.HtmlElementType;
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -26,11 +30,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Lazy
 @Component
-public class BrowserImpl implements Browser {
+class BrowserImpl implements Browser {
 
     private static final String BROWSER = "chrome";
     private static final long SELENIDE_TIMEOUT_MILLIS = TimeUnit.SECONDS.toMillis(10);
-
     private static final String PATH_SEPARATOR = "/";
 
     static {
@@ -39,10 +42,24 @@ public class BrowserImpl implements Browser {
         Configuration.browserCapabilities = new ChromeOptions().addArguments("--remote-allow-origins=*");
     }
 
-    private final int localServerPort;
+    private final String protocol;
+    private final int port;
+    private final String host;
 
-    public BrowserImpl(@LocalServerPort int localServerPort) {
-        this.localServerPort = localServerPort;
+    @Autowired
+    BrowserImpl(@LocalServerPort int port) {
+        this(Protocol.HTTP, "localhost", port);
+    }
+
+    BrowserImpl(Protocol protocol, String host, int port) {
+        this.protocol = protocol.name();
+        this.host = host;
+        this.port = port;
+    }
+
+    enum Protocol {
+        HTTP, HTTPS
+
     }
 
     @Override
@@ -68,7 +85,7 @@ public class BrowserImpl implements Browser {
     }
 
     private String createAppUrlByAbsolutePath(String absolutePath) {
-        return "http://localhost:" + localServerPort + absolutePath;
+        return protocol + "://" + host + ":" + port + absolutePath;
     }
 
     @Override
@@ -192,8 +209,9 @@ public class BrowserImpl implements Browser {
 
     @Override
     public void assertElementExistsByTypeAndText(HtmlElementType elementType, String text) {
-        SelenideElement element = getElementByAttributeAndText(elementType, text);
-        element.should(Condition.exist);
+        boolean executed = handleElementInAllFrames(() -> getElementByAttributeAndText(elementType, text), e -> e.should(Condition.exist));
+        assertThat(executed).withFailMessage("Element of type [" + elementType + "] with text [" + text + "] was not found.")
+                            .isTrue();
     }
 
     private SelenideElement getElementByAttributeAndText(HtmlElementType elementType, String text) {

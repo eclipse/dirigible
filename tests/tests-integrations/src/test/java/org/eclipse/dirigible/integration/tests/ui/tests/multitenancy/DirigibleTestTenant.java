@@ -10,6 +10,8 @@
  */
 package org.eclipse.dirigible.integration.tests.ui.tests.multitenancy;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.util.UUID;
 
 class DirigibleTestTenant {
@@ -19,15 +21,23 @@ class DirigibleTestTenant {
     private final String username;
     private final String password;
 
-    DirigibleTestTenant(String name, String subdomain) {
+    DirigibleTestTenant(String name) {
+        this(name, UUID.randomUUID()
+                       .toString(),
+                RandomStringUtils.randomAlphabetic(10)
+                                 .toLowerCase(),
+                UUID.randomUUID()
+                    .toString(),
+                UUID.randomUUID()
+                    .toString());
+    }
+
+    DirigibleTestTenant(String name, String id, String subdomain, String username, String password) {
         this.name = name;
-        this.id = UUID.randomUUID()
-                      .toString();
+        this.id = id;
         this.subdomain = subdomain;
-        this.username = UUID.randomUUID()
-                            .toString();
-        this.password = UUID.randomUUID()
-                            .toString();
+        this.username = username;
+        this.password = password;
     }
 
     String getUsername() {

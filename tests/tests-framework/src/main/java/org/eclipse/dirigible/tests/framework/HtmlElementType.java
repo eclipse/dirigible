@@ -17,7 +17,8 @@ public enum HtmlElementType {
     HEADER5("h5"), //
     TITLE("title"), //
     IFRAME("iframe"), //
-    SPAN("span");
+    SPAN("span"), //
+    HEADER3("h3");
 
     private final String type;
 

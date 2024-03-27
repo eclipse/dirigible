@@ -11,23 +11,34 @@
 package org.eclipse.dirigible.integration.tests.ui.tests.multitenancy;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.dirigible.integration.tests.ui.Dirigible;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.tests.framework.Browser;
+import org.eclipse.dirigible.tests.framework.BrowserFactory;
+import org.eclipse.dirigible.tests.framework.HtmlElementType;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.springframework.util.FileSystemUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+@Lazy
 @Component
 class TestProject {
 
+    public static final String UI_HOME_PATH = "/services/web/dirigible-test-project/gen/index.html";
     private static final String PROJECT_RESOURCES_PATH = "dirigible-test-project";
     private static final String ADMIN_USERNAME = "admin";
+    private static final String UI_PROJECT_TITLE = "Dirigible Test Project";
 
     private final IRepository dirigibleRepo;
+    private final BrowserFactory browserFactory;
 
-    TestProject(IRepository dirigibleRepo) {
+    TestProject(IRepository dirigibleRepo, BrowserFactory browserFactory) {
         this.dirigibleRepo = dirigibleRepo;
+        this.browserFactory = browserFactory;
     }
 
     void copyToRepository() {
@@ -42,17 +53,14 @@ class TestProject {
         String destinationDir = userWorkspace + File.separator + PROJECT_RESOURCES_PATH;
 
         String projectResourcesPath = projectResource.getPath();
+        File sourceDirectory = new File(projectResource.getPath());
+        File destinationDirectory = new File(destinationDir);
+        if (destinationDirectory.exists()) {
+            FileSystemUtils.deleteRecursively(destinationDirectory);
+            destinationDirectory.delete();
+        }
         try {
-            File sourceDirectory = new File(projectResource.getPath());
-            File destinationDirectory = new File(destinationDir);
             FileUtils.copyDirectory(sourceDirectory, destinationDirectory);
-            // List<Path> paths = Files.walk(Paths.get(projectResource.toURI()))
-            // .toList();
-            // for (Path path : paths) {
-            // Path destination = Paths.get(destinationDirectory, path.toString()
-            // .substring(projectResourcesPath.length()));
-            // Files.copy(path, destination);
-            // }
         } catch (IOException ex) {
             throw new IllegalStateException("Failed to copy test project to Dirigible repository", ex);
         }
@@ -64,5 +72,15 @@ class TestProject {
 
     public String getEdmFileName() {
         return "edm.edm";
+    }
+
+    public void assertHomePageAccessibleByTenant(DirigibleTestTenant tenant) {
+        Browser browser = browserFactory.createByTenantSubdomain(tenant.getSubdomain());
+        browser.openPath(UI_HOME_PATH);
+
+        Dirigible dirigible = new Dirigible(browser, tenant.getUsername(), tenant.getPassword());
+        dirigible.login();
+
+        browser.assertElementExistsByTypeAndText(HtmlElementType.HEADER3, UI_PROJECT_TITLE);
     }
 }

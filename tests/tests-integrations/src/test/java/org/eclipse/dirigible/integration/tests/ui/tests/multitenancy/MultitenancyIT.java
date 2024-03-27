@@ -22,8 +22,8 @@ import java.util.concurrent.TimeUnit;
 
 class MultitenancyIT extends UserInterfaceIntegrationTest {
 
-    private static final DirigibleTestTenant TEST_TENANT_1 = new DirigibleTestTenant("test-tenant-1", "test-tenant-1");
-    private static final DirigibleTestTenant TEST_TENANT_2 = new DirigibleTestTenant("test-tenant-2", "test-tenant-2");
+    private static final DirigibleTestTenant TEST_TENANT_1 = new DirigibleTestTenant("test-tenant-1");
+    private static final DirigibleTestTenant TEST_TENANT_2 = new DirigibleTestTenant("test-tenant-2");
 
     @Autowired
     private TenantCreator tenantCreator;
@@ -42,6 +42,8 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
         prepareTestProject();
 
         waitForTenantsProvisioning();
+
+        assertTestProjectAccessibleByTenants();
     }
 
     private void createTestTenants() {
@@ -66,6 +68,12 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
     private void waitForTenantsProvisioning() {
         waitForTenantProvisioning(TEST_TENANT_1, 30);
         waitForTenantProvisioning(TEST_TENANT_2, 10);
+    }
+
+    private void assertTestProjectAccessibleByTenants() {
+        testProject.assertHomePageAccessibleByTenant(TEST_TENANT_1);
+        testProject.assertHomePageAccessibleByTenant(TEST_TENANT_2);
+
     }
 
     private void waitForTenantProvisioning(DirigibleTestTenant tenant, int waitSeconds) {
