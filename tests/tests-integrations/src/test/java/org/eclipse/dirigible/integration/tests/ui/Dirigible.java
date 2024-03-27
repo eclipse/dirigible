@@ -10,6 +10,7 @@
  */
 package org.eclipse.dirigible.integration.tests.ui;
 
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.tests.framework.Browser;
 import org.eclipse.dirigible.tests.framework.HtmlAttribute;
 import org.eclipse.dirigible.tests.framework.HtmlElementType;
@@ -18,6 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+
+import java.util.Base64;
 
 @Lazy
 @Component
@@ -44,7 +47,11 @@ public class Dirigible {
 
     @Autowired
     public Dirigible(Browser browser) {
-        this(browser, DEFAULT_USERNAME, DEFAULT_PASSWORD);
+        this(browser, //
+                new String(Base64.getDecoder()
+                                 .decode(Configuration.get(Configuration.BASIC_USERNAME, "YWRtaW4="))), // admin
+                new String(Base64.getDecoder()
+                                 .decode(Configuration.get(Configuration.BASIC_PASSWORD, "YWRtaW4="))));// admin
     }
 
     public Dirigible(Browser browser, String username, String password) {
