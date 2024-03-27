@@ -131,8 +131,9 @@ public class BrowserImpl implements Browser {
     @Override
     public void clickElementByAttributePattern(HtmlElementType elementType, HtmlAttribute attribute, String pattern) {
         boolean executed = handleElementInAllFrames(() -> getElementByAttributePattern(elementType, attribute, pattern), e -> e.click());
-        assertThat(executed).withFailMessage(
-                                    "Element of type [" + elementType + "] with attribute [" + attribute + "] with pattern [" + pattern + "] was not found.")
+        assertThat(executed)
+                            .withFailMessage("Element of type [" + elementType + "] with attribute [" + attribute + "] with pattern ["
+                                    + pattern + "] was not found.")
                             .isTrue();
     }
 
