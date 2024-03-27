@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
+import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +80,10 @@ public class CustomDataSourcesService {
                             databaseUrl, databaseUsername, databasePassword);
             ds.updateKey();
             ds.setLifecycle(ArtefactLifecycle.NEW);
+            DataSource maybe = dataSourceService.findByKey(ds.getKey());
+            if (maybe != null) {
+                dataSourceService.delete(maybe);
+            }
             dataSourceService.save(ds);
         } else {
             throw new IllegalArgumentException("Invalid configuration for the custom datasource: " + name);
