@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Base64;
+import java.util.concurrent.TimeUnit;
 
 @Lazy
 @Component
@@ -85,7 +86,16 @@ class TestProject {
         Dirigible dirigible = new Dirigible(browser, tenant.getUsername(), tenant.getPassword());
         dirigible.login();
 
+        waitToLoadThePage();
         browser.assertElementExistsByTypeAndText(HtmlElementType.HEADER3, UI_PROJECT_TITLE);
+    }
+
+    private void waitToLoadThePage() {
+        try {
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            throw new IllegalStateException("Failed to fall asleep", e);
+        }
     }
 
     public String getReadersODataEntityPath() {
