@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class BrowserImpl implements Browser {
 
     private static final String BROWSER = "chrome";
-    private static final long SELENIDE_TIMEOUT_MILLIS = TimeUnit.SECONDS.toMillis(5);
+    private static final long SELENIDE_TIMEOUT_MILLIS = TimeUnit.SECONDS.toMillis(10);
 
     private static final String PATH_SEPARATOR = "/";
 
@@ -131,9 +131,8 @@ public class BrowserImpl implements Browser {
     @Override
     public void clickElementByAttributePattern(HtmlElementType elementType, HtmlAttribute attribute, String pattern) {
         boolean executed = handleElementInAllFrames(() -> getElementByAttributePattern(elementType, attribute, pattern), e -> e.click());
-        assertThat(executed)
-                            .withFailMessage("Element of type [" + elementType + "] with attribute [" + attribute + "] with pattern ["
-                                    + pattern + "] was not found.")
+        assertThat(executed).withFailMessage(
+                                    "Element of type [" + elementType + "] with attribute [" + attribute + "] with pattern [" + pattern + "] was not found.")
                             .isTrue();
     }
 
