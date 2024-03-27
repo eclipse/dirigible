@@ -29,4 +29,6 @@ public interface Browser {
     void clickElementByAttributePattern(HtmlElementType htmlElementType, HtmlAttribute htmlAttribute, String pattern);
 
     void assertElementExistsByTypeAndTextPattern(HtmlElementType htmlElementType, String textPattern);
+
+    void reload();
 }

@@ -66,6 +66,7 @@ public class Dirigible {
         if (LOGIN_PAGE_TITLE.equals(pageTitle)) {
             login();
         }
+        browser.reload();
     }
 
     public void login() {

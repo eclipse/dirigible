@@ -13,6 +13,7 @@ package org.eclipse.dirigible.tests.framework.impl;
 import com.codeborne.selenide.*;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.tests.framework.Browser;
+import org.eclipse.dirigible.tests.framework.CallableResultAndNoException;
 import org.eclipse.dirigible.tests.framework.HtmlAttribute;
 import org.eclipse.dirigible.tests.framework.HtmlElementType;
 import org.openqa.selenium.By;
@@ -200,6 +201,11 @@ class BrowserImpl implements Browser {
     public void assertElementExistsByTypeAndTextPattern(HtmlElementType htmlElementType, String textPattern) {
         SelenideElement element = getElementByAttributeAndTextPattern(htmlElementType, textPattern);
         element.should(Condition.exist);
+    }
+
+    @Override
+    public void reload() {
+        Selenide.refresh();
     }
 
     private SelenideElement getElementByAttributeAndTextPattern(HtmlElementType htmlElementType, String textPattern) {

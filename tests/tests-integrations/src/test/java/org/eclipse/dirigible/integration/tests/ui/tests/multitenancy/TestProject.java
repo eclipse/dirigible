@@ -15,6 +15,7 @@ import org.eclipse.dirigible.integration.tests.ui.Dirigible;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.tests.framework.Browser;
 import org.eclipse.dirigible.tests.framework.BrowserFactory;
+import org.eclipse.dirigible.tests.framework.DirigibleTestTenant;
 import org.eclipse.dirigible.tests.framework.HtmlElementType;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;

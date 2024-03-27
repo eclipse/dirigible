@@ -8,14 +8,13 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.integration.tests.ui.tests.multitenancy;
+package org.eclipse.dirigible.tests.framework;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.eclipse.dirigible.components.base.tenant.Tenant;
 
 import java.util.UUID;
 
-class DirigibleTestTenant {
+public class DirigibleTestTenant {
     private final String name;
     private final boolean defaultTenant;
     private final String id;
@@ -23,7 +22,7 @@ class DirigibleTestTenant {
     private final String username;
     private final String password;
 
-    DirigibleTestTenant(String name) {
+    public DirigibleTestTenant(String name) {
         this(false, //
                 name, //
                 UUID.randomUUID()
@@ -36,7 +35,7 @@ class DirigibleTestTenant {
                     .toString());
     }
 
-    DirigibleTestTenant(boolean defaultTenant, String name, String id, String subdomain, String username, String password) {
+    public DirigibleTestTenant(boolean defaultTenant, String name, String id, String subdomain, String username, String password) {
         this.defaultTenant = defaultTenant;
         this.name = name;
         this.id = id;
@@ -45,44 +44,33 @@ class DirigibleTestTenant {
         this.password = password;
     }
 
-    public DirigibleTestTenant(Tenant tenant) {
-        this(tenant.isDefault(), //
-                tenant.getName(), //
-                tenant.getId(), //
-                tenant.getSubdomain(), //
-                UUID.randomUUID()
-                    .toString(), //
-                UUID.randomUUID()
-                    .toString());
-    }
-
     public boolean isDefaultTenant() {
         return defaultTenant;
     }
 
-    String getUsername() {
+    public String getUsername() {
         return username;
     }
 
-    String getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    String getId() {
+    public String getId() {
         return id;
     }
 
-    String getSubdomain() {
+    public String getSubdomain() {
         return subdomain;
     }
 
     @Override
     public String toString() {
-        return "DirigibleTestTenant{" + "name='" + name + '\'' + ", id='" + id + '\'' + ", subdomain='" + subdomain + '\'' + ", username='"
-                + username + '\'' + ", password='" + password + '\'' + '}';
+        return "DirigibleTestTenant{" + "name='" + name + '\'' + ", defaultTenant=" + defaultTenant + ", id='" + id + '\'' + ", subdomain='"
+                + subdomain + '\'' + ", username='" + username + '\'' + ", password='" + password + '\'' + '}';
     }
 }
