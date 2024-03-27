@@ -23,6 +23,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
@@ -141,17 +142,20 @@ class BrowserImpl implements Browser {
 
         boolean executed =
                 handleElementInAllFrames(() -> getElementByAttributeAndTextPattern(elementType, textPattern), e -> e.doubleClick());
-
-        assertThat(executed).withFailMessage("Element of type [" + elementType + "] with text pattern [" + textPattern + "] was not found.")
+        String screenshot = generateScreenshot(executed);
+        assertThat(executed)
+                            .withFailMessage("Element of type [" + elementType + "] with text pattern [" + textPattern
+                                    + "] was not found. Screenshot path: " + screenshot)
                             .isTrue();
     }
 
     @Override
     public void clickElementByAttributePattern(HtmlElementType elementType, HtmlAttribute attribute, String pattern) {
         boolean executed = handleElementInAllFrames(() -> getElementByAttributePattern(elementType, attribute, pattern), e -> e.click());
+        String screenshot = generateScreenshot(executed);
         assertThat(executed)
                             .withFailMessage("Element of type [" + elementType + "] with attribute [" + attribute + "] with pattern ["
-                                    + pattern + "] was not found.")
+                                    + pattern + "] was not found. Screenshot path: " + screenshot)
                             .isTrue();
     }
 
@@ -187,6 +191,14 @@ class BrowserImpl implements Browser {
         }
     }
 
+    private String generateScreenshot(boolean executed) {
+        if (executed) {
+            return "";
+        }
+        return Selenide.screenshot(UUID.randomUUID()
+                                       .toString());
+    }
+
     private ElementsCollection getElements(HtmlElementType elementType) {
         By selector = constructCssSelectorByType(elementType);
         return Selenide.$$(selector);
@@ -203,20 +215,23 @@ class BrowserImpl implements Browser {
         element.should(Condition.exist);
     }
 
-    @Override
-    public void reload() {
-        Selenide.refresh();
-    }
-
     private SelenideElement getElementByAttributeAndTextPattern(HtmlElementType htmlElementType, String textPattern) {
         ElementsCollection elements = getElements(htmlElementType);
         return elements.findBy(Condition.matchText(textPattern));
     }
 
     @Override
+    public void reload() {
+        Selenide.refresh();
+    }
+
+    @Override
     public void assertElementExistsByTypeAndText(HtmlElementType elementType, String text) {
         boolean executed = handleElementInAllFrames(() -> getElementByAttributeAndText(elementType, text), e -> e.should(Condition.exist));
-        assertThat(executed).withFailMessage("Element of type [" + elementType + "] with text [" + text + "] was not found.")
+        String screenshot = generateScreenshot(executed);
+        assertThat(executed)
+                            .withFailMessage("Element of type [" + elementType + "] with text [" + text
+                                    + "] was not found. Screenshot path: " + screenshot)
                             .isTrue();
     }
 
