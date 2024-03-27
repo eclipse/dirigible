@@ -50,4 +50,8 @@ public class DirigibleWorkbench {
         browser.clickElementByAttributePattern(HtmlElementType.BUTTON, HtmlAttribute.TITLE, "Publish all");
         browser.assertElementExistsByTypeAndTextPattern(HtmlElementType.SPAN, "Published all projects in");
     }
+
+    public void refresh() {
+        browser.clickElementByAttributePattern(HtmlElementType.BUTTON, HtmlAttribute.TITLE, "Refresh");
+    }
 }
