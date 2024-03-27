@@ -56,7 +56,7 @@ jobs:
       - if: runner.os == 'Linux'
         run: chrome --version
       - if: runner.os == 'macOS'
-        run: chromium --version
+        run: '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version'
       - if: runner.os == 'Windows'
         run: (Get-Item (Get-Command chrome).Source).VersionInfo.ProductVersion
       - uses: actions/checkout@v3
