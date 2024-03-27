@@ -86,6 +86,7 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
 
         waitForTenantsProvisioning();
         verifyTestProjectAccessibleByTenants();
+        verifyView();
         verifyOData();
     }
 
@@ -105,6 +106,7 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
 
         edmView.regenerate();
 
+        workbench.refresh();
         workbench.publishAll();
     }
 
@@ -116,6 +118,16 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
     private void verifyTestProjectAccessibleByTenants() {
         testTenants.stream()
                    .forEach(t -> testProject.assertHomePageAccessibleByTenant(t));
+    }
+
+    /**
+     * Verifies indirectly:<br>
+     * - dirigible-test-project/views/readers.view is created and it is working<br>
+     * - dirigible-test-project/csvim/data.csvim is imported <br>
+     * - DefaultDB datasource is resolved correctly
+     */
+    private void verifyView() {
+        testTenants.forEach(t -> restAssuredExecutor.execute(t, () -> verifyView(t)));
     }
 
     /**
@@ -139,10 +151,23 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
                   .until(() -> tenantCreator.isTenantProvisioned(tenant));
     }
 
+    private void verifyView(DirigibleTestTenant tenant) {
+        restAssuredExecutor.execute(tenant, //
+                () -> given().when()
+                             .get(testProject.getReadersViewServicePath())
+                             .then()
+                             .statusCode(200)
+                             .body("$", hasSize(2))
+                             .body("[0].READER_FIRST_NAME", equalTo("Ivan"))
+                             .body("[0].READER_LAST_NAME", equalTo("Ivanov"))
+                             .body("[1].READER_FIRST_NAME", equalTo("Maria"))
+                             .body("[1].READER_LAST_NAME", equalTo("Petrova")));
+    }
+
     private void verifyCSVIMIsImported() {
         given().header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                .when()
-               .get("/odata/v2/Readers")
+               .get(testProject.getReadersODataEntityPath())
                .then()
                .statusCode(200)
                .body("d.results", hasSize(2))
@@ -168,13 +193,13 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
         given().contentType(ContentType.JSON)
                .body(jsonPayload)
                .when()
-               .post("/odata/v2/Readers")
+               .post(testProject.getReadersODataEntityPath())
                .then()
                .statusCode(201);
 
         given().header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                .when()
-               .get("/odata/v2/Readers")
+               .get(testProject.getReadersODataEntityPath())
                .then()
                .statusCode(200)
                .body("d.results", hasSize(3))

@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.integration.tests.ui.tests.multitenancy;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.integration.tests.ui.Dirigible;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.tests.framework.Browser;
@@ -24,6 +25,7 @@ import org.springframework.util.FileSystemUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Base64;
 
 @Lazy
 @Component
@@ -31,7 +33,8 @@ class TestProject {
 
     public static final String UI_HOME_PATH = "/services/web/dirigible-test-project/gen/index.html";
     private static final String PROJECT_RESOURCES_PATH = "dirigible-test-project";
-    private static final String ADMIN_USERNAME = "admin";
+    private static final String ADMIN_USERNAME = new String(Base64.getDecoder()
+                                                                  .decode(Configuration.get(Configuration.BASIC_USERNAME, "YWRtaW4=")));
     private static final String UI_PROJECT_TITLE = "Dirigible Test Project";
 
     private final IRepository dirigibleRepo;
@@ -83,5 +86,13 @@ class TestProject {
         dirigible.login();
 
         browser.assertElementExistsByTypeAndText(HtmlElementType.HEADER3, UI_PROJECT_TITLE);
+    }
+
+    public String getReadersODataEntityPath() {
+        return "/odata/v2/Readers";
+    }
+
+    public String getReadersViewServicePath() {
+        return "/services/ts/dirigible-test-project/views/ReaderViewService.ts";
     }
 }
