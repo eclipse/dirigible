@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -50,6 +51,7 @@ public class DataSourceSystemConfig {
      *
      * @return the data source
      */
+    @Primary
     @Bean(name = "SystemDB")
     public HikariDataSource getDataSource() {
         DataSourceProperties dataSourceProperties = new DataSourceProperties();
@@ -69,6 +71,7 @@ public class DataSourceSystemConfig {
      * @param dataSource the data source
      * @return the local container entity manager factory bean
      */
+    @Primary
     @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier("SystemDB") DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
@@ -93,6 +96,7 @@ public class DataSourceSystemConfig {
      * @param entityManagerFactory the entity manager factory
      * @return the platform transaction manager
      */
+    @Primary
     @Bean(name = "transactionManager")
     public PlatformTransactionManager transactionManager(@Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
