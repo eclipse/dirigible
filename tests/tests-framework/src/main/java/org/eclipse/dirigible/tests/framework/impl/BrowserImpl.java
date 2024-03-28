@@ -13,11 +13,11 @@ package org.eclipse.dirigible.tests.framework.impl;
 import com.codeborne.selenide.*;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.tests.framework.Browser;
-import org.eclipse.dirigible.tests.framework.CallableResultAndNoException;
-import org.eclipse.dirigible.tests.framework.HtmlAttribute;
-import org.eclipse.dirigible.tests.framework.HtmlElementType;
+import org.eclipse.dirigible.tests.framework.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Lazy;
@@ -33,6 +33,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Lazy
 @Component
 class BrowserImpl implements Browser {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BrowserImpl.class);
 
     private static final String BROWSER = "chrome";
     private static final long SELENIDE_TIMEOUT_MILLIS = TimeUnit.SECONDS.toMillis(10);
@@ -164,7 +166,8 @@ class BrowserImpl implements Browser {
         Selenide.switchTo()
                 .defaultContent();
         SelenideElement element = elementResolver.call();
-        if (element.exists()) {
+        LOGGER.info("Checking element [{}] in default frame...", element);
+        if (elementExists(element, 2)) {
             elementHandler.accept(element);
             return true;
         }
@@ -174,8 +177,10 @@ class BrowserImpl implements Browser {
             for (SelenideElement iframe : iframes) {
                 Selenide.switchTo()
                         .frame(iframe);
+                // TODO do I need to call it again?
                 SelenideElement el = elementResolver.call();
-                if (el.exists()) {
+                LOGGER.info("Checking element [{}] in iframe [{}]...", element, iframe);
+                if (elementExists(el, 600L)) {
                     elementHandler.accept(el);
                     return true;
                 }
@@ -199,9 +204,27 @@ class BrowserImpl implements Browser {
                                        .toString());
     }
 
+    private boolean elementExists(SelenideElement element, int checkSeconds) {
+        return elementExists(element, 1000L * checkSeconds);
+    }
+
     private ElementsCollection getElements(HtmlElementType elementType) {
         By selector = constructCssSelectorByType(elementType);
         return Selenide.$$(selector);
+    }
+
+    private boolean elementExists(SelenideElement element, long millis) {
+        LOGGER.info("Checking element [{}] existence in the current frame for [{}] millis", element, millis);
+        long until = System.currentTimeMillis() + (millis);
+        do {
+            if (element.exists()) {
+                LOGGER.info("Element [{}] EXISTS in the current frame.", element);
+                return true;
+            }
+            LOGGER.info("Element [{}] does NOT exist in the current frame.", element);
+            SleepUtil.sleep(200);
+        } while (System.currentTimeMillis() < until);
+        return false;
     }
 
     private By constructCssSelectorByType(HtmlElementType elementType) {

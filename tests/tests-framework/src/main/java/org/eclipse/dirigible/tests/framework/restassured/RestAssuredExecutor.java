@@ -40,16 +40,20 @@ public class RestAssuredExecutor {
      * @param callable rest assured validation
      */
     public void execute(DirigibleTestTenant tenant, CallableNoResultAndNoException callable) {
+        this.execute(callable, tenant.getSubdomain() + ".localhost", tenant.getUsername(), tenant.getPassword());
+    }
+
+    public void execute(CallableNoResultAndNoException callable, String host, String user, String password) {
         String configuredBaseURI = RestAssured.baseURI;
         int configuredPort = RestAssured.port;
         AuthenticationScheme configuredAuthentication = RestAssured.authentication;
 
         try {
-            RestAssured.baseURI = "http://" + tenant.getSubdomain() + ".localhost";
+            RestAssured.baseURI = "http://" + host;
             RestAssured.port = port;
 
             RestAssured.authentication = RestAssured.preemptive()
-                                                    .basic(tenant.getUsername(), tenant.getPassword());
+                                                    .basic(user, password);
 
             callable.call();
         } finally {
@@ -58,4 +62,9 @@ public class RestAssuredExecutor {
             RestAssured.authentication = configuredAuthentication;
         }
     }
+
+    public void execute(CallableNoResultAndNoException callable, String user, String password) {
+        this.execute(callable, "localhost", user, password);
+    }
+
 }
