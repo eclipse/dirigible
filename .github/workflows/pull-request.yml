@@ -57,11 +57,6 @@ jobs:
         run: chrome --version
       - if: runner.os == 'macOS'
         run: '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version'
-      - name: "Configure DNS"
-        if: runner.os == 'macOS'
-        run: |
-          echo "127.0.0.1   *.localhost" | sudo tee -a /etc/hosts
-          cat /etc/hosts
       - if: runner.os == 'Windows'
         run: (Get-Item (Get-Command chrome).Source).VersionInfo.ProductVersion
       - uses: actions/checkout@v3
