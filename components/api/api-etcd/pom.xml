@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>io.etcd</groupId>
 			<artifactId>jetcd-test</artifactId>
-			<version>0.7.6</version>
+			<version>0.7.7</version>
 		</dependency>
 		<!-- / Etcd dependencies -->
 	</dependencies>
