@@ -152,7 +152,7 @@
 		<snowflake.version>3.13.34</snowflake.version>
 		<mysql.version>8.3.0</mysql.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.688</qldb.sdk.version>
+		<qldb.sdk.version>1.12.689</qldb.sdk.version>
 		<jetcd.core.version>0.7.7</jetcd.core.version>
 
 		<jquery-ui.version>1.13.0</jquery-ui.version>
