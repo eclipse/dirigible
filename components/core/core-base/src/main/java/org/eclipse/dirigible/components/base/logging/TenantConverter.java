@@ -59,7 +59,7 @@ public class TenantConverter extends ClassicConverter {
         try {
             tenantContext = BeanProvider.isInitialzed() ? BeanProvider.getTenantContext() : null;
         } catch (RuntimeException ex) {
-            LOGGER.warn("Failed to get tenant context", ex);
+            LOGGER.debug("Failed to get tenant context", ex);
         }
         return tenantContext;
     }
