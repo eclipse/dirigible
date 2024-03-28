@@ -20,7 +20,6 @@ import org.eclipse.dirigible.tests.framework.DirigibleTestTenant;
 import org.eclipse.dirigible.tests.framework.HtmlElementType;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import org.springframework.util.FileSystemUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,10 +59,7 @@ class TestProject {
         String projectResourcesPath = projectResource.getPath();
         File sourceDirectory = new File(projectResource.getPath());
         File destinationDirectory = new File(destinationDir);
-        if (destinationDirectory.exists()) {
-            FileSystemUtils.deleteRecursively(destinationDirectory);
-            destinationDirectory.delete();
-        }
+
         try {
             FileUtils.copyDirectory(sourceDirectory, destinationDirectory);
         } catch (IOException ex) {
