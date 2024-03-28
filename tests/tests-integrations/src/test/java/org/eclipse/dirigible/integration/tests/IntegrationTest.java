@@ -94,38 +94,48 @@ public abstract class IntegrationTest {
         }
     }
 
-    private String relativeToAbsolutePath(String relativePath) {
-        return System.getProperty("user.dir") + File.separator + Path.of(relativePath)
-                                                                     .normalize();
-    }
-
     @AfterEach
-    final void unpublishAllResources() {
+    final void unpublishAllResources() throws IOException {
         LOGGER.info("Deleting all Dirigible project resources from the repository...");
+
+        List<String> userProjects = getUserProjects();
         deleteUsersFolder();
-        deleteDirigibleProjectFromRegistry();
+        deleteDirigibleProjectsFromRegistry(userProjects);
         LOGGER.info("Dirigible project resources have been deleted.");
     }
 
+    private List<String> getUserProjects() throws IOException {
+        String usersRepoFolder = getUsersRepoFolder();
+        List<Path> userProjectFiles = FileUtil.findFiles(usersRepoFolder, "project.json");
+        return userProjectFiles.stream()
+                               .map(p -> p.toFile()
+                                          .getParentFile()
+                                          .getName())
+                               .toList();
+    }
+
     private void deleteUsersFolder() {
-        String repoBasePath = dirigibleRepo.getRepositoryPath();
-        String usersFolder = repoBasePath + File.separator + "users";
+        String usersFolder = getUsersRepoFolder();
         FileUtil.deleteFolder(usersFolder);
     }
 
-    private void deleteDirigibleProjectFromRegistry() {
-        String repoBasePath = dirigibleRepo.getRepositoryPath() + IRepositoryStructure.PATH_REGISTRY_PUBLIC;
+    private void deleteDirigibleProjectsFromRegistry(List<String> userProjects) {
+        String repoBasePath = dirigibleRepo.getRepositoryPath() + IRepositoryStructure.PATH_REGISTRY_PUBLIC + File.separator;
         try {
-
             List<Path> files = FileUtil.findFiles(Paths.get(repoBasePath), "project.json");
-            files.forEach(f -> {
-                Path parentPath = f.getParent();
-                FileUtil.deleteFolder(parentPath);
+            userProjects.forEach(projectName -> {
+                String projectPath = repoBasePath + projectName;
+                FileUtil.deleteFolder(projectPath);
             });
 
         } catch (IOException ex) {
-            throw new IllegalStateException("Failed to delete all folders in registry which are Dirigible projects", ex);
+            throw new IllegalStateException("Failed to delete all user projects [" + userProjects + "] from registry", ex);
         }
+    }
+
+    private String getUsersRepoFolder() {
+        String repoBasePath = dirigibleRepo.getRepositoryPath();
+        return repoBasePath + File.separator + "users";
     }
 
 }
