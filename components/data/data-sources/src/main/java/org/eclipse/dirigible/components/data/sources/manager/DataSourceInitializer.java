@@ -13,6 +13,8 @@ package org.eclipse.dirigible.components.data.sources.manager;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.data.sources.config.DefaultDataSourceName;
+import org.eclipse.dirigible.components.data.sources.config.SystemDataSourceName;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.domain.DataSourceProperty;
 import org.eclipse.dirigible.components.database.DatabaseParameters;
@@ -50,19 +52,17 @@ public class DataSourceInitializer {
 
     /** The tenant data source name manager. */
     private final TenantDataSourceNameManager tenantDataSourceNameManager;
+    private final String systemDataSourceName;
+    private final String defaultDataSourceName;
 
-    /**
-     * Instantiates a new data source initializer.
-     *
-     * @param applicationContext the application context
-     * @param contributors the contributors
-     * @param tenantDataSourceNameManager the tenant data source name manager
-     */
     DataSourceInitializer(ApplicationContext applicationContext, List<DataSourceInitializerContributor> contributors,
-            TenantDataSourceNameManager tenantDataSourceNameManager) {
+            TenantDataSourceNameManager tenantDataSourceNameManager, @SystemDataSourceName String systemDataSourceName,
+            @DefaultDataSourceName String defaultDataSourceName) {
         this.applicationContext = applicationContext;
         this.contributors = contributors;
         this.tenantDataSourceNameManager = tenantDataSourceNameManager;
+        this.systemDataSourceName = systemDataSourceName;
+        this.defaultDataSourceName = defaultDataSourceName;
     }
 
     /**
@@ -176,8 +176,7 @@ public class DataSourceInitializer {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     private String prepareRootFolder(String name) throws IOException {
-        String rootFolder = (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name))
-                ? DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
+        String rootFolder = (Objects.equals(defaultDataSourceName, name)) ? DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
                 : DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
         String h2Root = Configuration.get(rootFolder, name);
         File rootFile = new File(h2Root);
@@ -217,7 +216,7 @@ public class DataSourceInitializer {
      * @param dataSource the data source
      */
     private void registerDataSourceBean(String name, ManagedDataSource dataSource) {
-        if (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM.equals(name)) {
+        if (Objects.equals(systemDataSourceName, name)) {
             return; // bean already set by org.eclipse.dirigible.components.database.DataSourceSystemConfig
         }
         GenericApplicationContext genericAppContext = (GenericApplicationContext) applicationContext;

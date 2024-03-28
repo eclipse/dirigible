@@ -13,6 +13,7 @@ package org.eclipse.dirigible.components.jobs.config;
 import org.eclipse.dirigible.components.data.sources.config.SystemDataSourceName;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.quartz.impl.jdbcjobstore.JobStoreTX;
 import org.quartz.utils.DBConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,10 +70,11 @@ class QuartzConfig {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @Bean
-    SchedulerFactoryBean schedulerFactoryBean(AutoWiringSpringBeanJobFactory jobFactory) throws IOException {
+    SchedulerFactoryBean schedulerFactoryBean(AutoWiringSpringBeanJobFactory jobFactory, @SystemDataSourceName String systemDataSourceName)
+            throws IOException {
         SchedulerFactoryBean factory = new SchedulerFactoryBean();
         factory.setJobFactory(jobFactory);
-        factory.setQuartzProperties(quartzProperties());
+        factory.setQuartzProperties(quartzProperties(systemDataSourceName));
         return factory;
     }
 
@@ -82,11 +84,16 @@ class QuartzConfig {
      * @return the properties
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    private Properties quartzProperties() throws IOException {
+    private Properties quartzProperties(String systemDataSourceName) throws IOException {
         PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
         propertiesFactoryBean.setLocation(new ClassPathResource("/quartz.properties"));
         propertiesFactoryBean.afterPropertiesSet();
-        return propertiesFactoryBean.getObject();
-    }
 
+        Properties properties = propertiesFactoryBean.getObject();
+        String jobStoreClass = properties.getProperty("org.quartz.jobStore.class");
+        if (null != jobStoreClass && jobStoreClass.equals(JobStoreTX.class.getCanonicalName())) {
+            properties.setProperty("org.quartz.jobStore.dataSource", systemDataSourceName);
+        }
+        return properties;
+    }
 }

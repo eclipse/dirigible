@@ -10,19 +10,14 @@
  */
 package org.eclipse.dirigible.components.database;
 
-import java.util.Properties;
-
+import com.zaxxer.hikari.HikariDataSource;
 import jakarta.persistence.EntityManagerFactory;
-
-import javax.sql.DataSource;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -31,7 +26,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.zaxxer.hikari.HikariDataSource;
+import javax.sql.DataSource;
+import java.util.Properties;
 
 /**
  * The Class DataSourceSystemConfig.
@@ -54,8 +50,13 @@ public class DataSourceSystemConfig {
     @Primary
     @Bean(name = "SystemDB")
     public HikariDataSource getDataSource() {
+        // !!! keep it in sync with
+        // components/data/data-sources/src/main/resources/META-INF/dirigible/datasources/SystemDB.datasource
         DataSourceProperties dataSourceProperties = new DataSourceProperties();
-        dataSourceProperties.setName("SystemDB");
+
+        String systemDataSourceName = Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_NAME_SYSTEM,
+                DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM);
+        dataSourceProperties.setName(systemDataSourceName);
         dataSourceProperties.setDriverClassName(Configuration.get("DIRIGIBLE_DATABASE_SYSTEM_DRIVER", "org.h2.Driver"));
         dataSourceProperties.setUrl(Configuration.get("DIRIGIBLE_DATABASE_SYSTEM_URL", "jdbc:h2:file:./target/dirigible/h2/SystemDB"));
         dataSourceProperties.setUsername(Configuration.get("DIRIGIBLE_DATABASE_SYSTEM_USERNAME", "sa"));
