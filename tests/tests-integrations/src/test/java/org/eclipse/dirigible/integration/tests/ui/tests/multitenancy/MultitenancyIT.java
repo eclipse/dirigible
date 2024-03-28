@@ -84,6 +84,7 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
         prepareTestProject();
 
         waitForTenantsProvisioning();
+
         verifyTestProjectAccessibleByTenants();
         verifyView();
         verifyOData();
@@ -106,7 +107,6 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
 
         edmView.regenerate();
 
-        workbench.refresh();
         workbench.publishAll();
     }
 
