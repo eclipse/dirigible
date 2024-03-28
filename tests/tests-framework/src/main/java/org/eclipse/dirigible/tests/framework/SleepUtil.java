@@ -17,11 +17,15 @@ public class SleepUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SleepUtil.class);
 
-    public static void sleep(long millis) {
-        sleep(millis, "Failed to fall asleep for [" + millis + "] millis");
+    public static void sleepSeconds(int seconds) {
+        sleepMillis(seconds * 1000L);
     }
 
-    public static void sleep(long millis, String errorMessage) {
+    public static void sleepMillis(long millis) {
+        sleepMillis(millis, "Failed to fall asleep for [" + millis + "] millis");
+    }
+
+    public static void sleepMillis(long millis, String errorMessage) {
         LOGGER.info("Falling asleep for [{}] millis...", millis);
         try {
             Thread.sleep(millis);

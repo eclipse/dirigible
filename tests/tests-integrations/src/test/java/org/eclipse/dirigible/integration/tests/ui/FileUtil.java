@@ -27,8 +27,8 @@ import java.util.stream.Stream;
 public class FileUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileUtil.class);
 
-    public static List<Path> findFiles(String path, String fileExtension) throws IOException {
-        return findFiles(Path.of(path), fileExtension);
+    public static List<Path> findFiles(File folder, String fileExtension) throws IOException {
+        return findFiles(folder.toPath(), fileExtension);
     }
 
     public static List<Path> findFiles(Path path, String fileExtension) throws IOException {
@@ -44,6 +44,10 @@ public class FileUtil {
                                      .endsWith(fileExtension))
                        .collect(Collectors.toList());
         }
+    }
+
+    public static List<Path> findFiles(String path, String fileExtension) throws IOException {
+        return findFiles(Path.of(path), fileExtension);
     }
 
     public static void deleteFolder(String folderPath) {

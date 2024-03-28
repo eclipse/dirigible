@@ -14,10 +14,7 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.integration.tests.ui.Dirigible;
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.tests.framework.Browser;
-import org.eclipse.dirigible.tests.framework.BrowserFactory;
-import org.eclipse.dirigible.tests.framework.DirigibleTestTenant;
-import org.eclipse.dirigible.tests.framework.HtmlElementType;
+import org.eclipse.dirigible.tests.framework.*;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Base64;
-import java.util.concurrent.TimeUnit;
 
 @Lazy
 @Component
@@ -87,11 +83,7 @@ class TestProject {
     }
 
     private void waitToLoadThePage() {
-        try {
-            TimeUnit.SECONDS.sleep(3);
-        } catch (InterruptedException e) {
-            throw new IllegalStateException("Failed to fall asleep", e);
-        }
+        SleepUtil.sleepSeconds(2);
     }
 
     public String getReadersODataEntityPath() {

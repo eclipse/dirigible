@@ -13,10 +13,9 @@ package org.eclipse.dirigible.integration.tests.ui;
 import org.eclipse.dirigible.tests.framework.Browser;
 import org.eclipse.dirigible.tests.framework.HtmlAttribute;
 import org.eclipse.dirigible.tests.framework.HtmlElementType;
+import org.eclipse.dirigible.tests.framework.SleepUtil;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.TimeUnit;
 
 @Lazy
 @Component
@@ -30,15 +29,7 @@ public class DirigibleWorkbench {
 
     public void expandProject(String projectName) {
         browser.doubleClickOnElementContainingText(HtmlElementType.ANCHOR, projectName);
-        sleepSeconds(1);
-    }
-
-    private void sleepSeconds(int seconds) {
-        try {
-            TimeUnit.SECONDS.sleep(seconds);
-        } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
-        }
+        SleepUtil.sleepSeconds(1);
     }
 
     public void openFile(String fileName) {

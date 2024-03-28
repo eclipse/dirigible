@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 @Lazy
 @Component
@@ -141,27 +141,15 @@ class BrowserImpl implements Browser {
     @Override
     public void doubleClickOnElementContainingText(HtmlElementType elementType, String text) {
         String textPattern = Pattern.quote(text);
-
-        boolean executed =
-                handleElementInAllFrames(() -> getElementByAttributeAndTextPattern(elementType, textPattern), e -> e.doubleClick());
-        String screenshot = generateScreenshot(executed);
-        assertThat(executed)
-                            .withFailMessage("Element of type [" + elementType + "] with text pattern [" + textPattern
-                                    + "] was not found. Screenshot path: " + screenshot)
-                            .isTrue();
+        handleElementInAllFrames(() -> getElementByAttributeAndTextPattern(elementType, textPattern), e -> e.doubleClick());
     }
 
     @Override
     public void clickElementByAttributePattern(HtmlElementType elementType, HtmlAttribute attribute, String pattern) {
-        boolean executed = handleElementInAllFrames(() -> getElementByAttributePattern(elementType, attribute, pattern), e -> e.click());
-        String screenshot = generateScreenshot(executed);
-        assertThat(executed)
-                            .withFailMessage("Element of type [" + elementType + "] with attribute [" + attribute + "] with pattern ["
-                                    + pattern + "] was not found. Screenshot path: " + screenshot)
-                            .isTrue();
+        handleElementInAllFrames(() -> getElementByAttributePattern(elementType, attribute, pattern), e -> e.click());
     }
 
-    private boolean handleElementInAllFrames(CallableResultAndNoException<SelenideElement> elementResolver,
+    private void handleElementInAllFrames(CallableResultAndNoException<SelenideElement> elementResolver,
             Consumer<SelenideElement> elementHandler) {
         Selenide.switchTo()
                 .defaultContent();
@@ -169,40 +157,33 @@ class BrowserImpl implements Browser {
         LOGGER.info("Checking element [{}] in default frame...", element);
         if (elementExists(element, 2)) {
             elementHandler.accept(element);
-            return true;
+            return;
         }
-        try {
-            ElementsCollection iframes = getElements(HtmlElementType.IFRAME);
-            LOGGER.info("Found [{}] iframes", iframes.size());
+        ElementsCollection iframes = getElements(HtmlElementType.IFRAME);
+        LOGGER.info("Found [{}] iframes", iframes.size());
 
+        try {
             for (SelenideElement iframe : iframes) {
                 Selenide.switchTo()
                         .frame(iframe);
-                // TODO do I need to call it again?
                 SelenideElement el = elementResolver.call();
-                LOGGER.info("Checking element [{}] in iframe [{}]...", element, iframe);
+                LOGGER.info("Checking element [{}] in iframe [{}]...", el, iframe);
                 if (elementExists(el, 600L)) {
                     elementHandler.accept(el);
-                    return true;
+                    return;
                 }
 
                 // without this, the frame cannot be switched in the next iteration
                 Selenide.switchTo()
                         .defaultContent();
             }
-            return false;
+
+            String screenshot = generateScreenshot();
+            fail("Element [" + element + "] cannot be found in any iframe. Screenshot path: " + screenshot);
         } finally {
             Selenide.switchTo()
                     .defaultContent();
         }
-    }
-
-    private String generateScreenshot(boolean executed) {
-        if (executed) {
-            return "";
-        }
-        return Selenide.screenshot(UUID.randomUUID()
-                                       .toString());
     }
 
     private boolean elementExists(SelenideElement element, int checkSeconds) {
@@ -223,9 +204,14 @@ class BrowserImpl implements Browser {
                 return true;
             }
             LOGGER.info("Element [{}] does NOT exist in the current frame.", element);
-            SleepUtil.sleep(200);
+            SleepUtil.sleepMillis(200);
         } while (System.currentTimeMillis() < until);
         return false;
+    }
+
+    private String generateScreenshot() {
+        return Selenide.screenshot(UUID.randomUUID()
+                                       .toString());
     }
 
     private By constructCssSelectorByType(HtmlElementType elementType) {
@@ -251,12 +237,7 @@ class BrowserImpl implements Browser {
 
     @Override
     public void assertElementExistsByTypeAndText(HtmlElementType elementType, String text) {
-        boolean executed = handleElementInAllFrames(() -> getElementByAttributeAndText(elementType, text), e -> e.should(Condition.exist));
-        String screenshot = generateScreenshot(executed);
-        assertThat(executed)
-                            .withFailMessage("Element of type [" + elementType + "] with text [" + text
-                                    + "] was not found. Screenshot path: " + screenshot)
-                            .isTrue();
+        handleElementInAllFrames(() -> getElementByAttributeAndText(elementType, text), e -> e.should(Condition.exist));
     }
 
     private SelenideElement getElementByAttributeAndText(HtmlElementType elementType, String text) {
