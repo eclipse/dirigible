@@ -180,11 +180,11 @@ angular.module('flowableModeler').controller('FlowableAssignmentPopupCtrl',
             } else {
                 $scope.popup.oldGroupFilter = $scope.popup.groupFilter;
             }
-
-            GroupService.getFilteredGroups($scope.popup.groupFilter).then(function(result) {
-                $scope.popup.groupResults = result.data;
-                $scope.resetGroupSelection();
-            });
+// This code block is commented out because we will support only fixed values for the process assignment. IDM is disabled. FR#3602
+//            GroupService.getFilteredGroups($scope.popup.groupFilter).then(function(result) {
+//                $scope.popup.groupResults = result.data;
+//                $scope.resetGroupSelection();
+//            });
         }
     };
 

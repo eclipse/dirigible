@@ -8,7 +8,8 @@
             <div class="modal-body">
                 <div class="detail-group clearfix">
 
-                    <div class="form-group clearfix">
+<!-- This code block is commented out because we will support only fixed values for the process assignment. IDM is disabled. FR#3602 -->
+<!--                    <div class="form-group clearfix">
                         <div class="col-xs-12">
                             <label class="col-xs-4">{{'PROPERTY.ASSIGNMENT.TYPE' | translate}}</label>
 
@@ -29,7 +30,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
 
                     <div class="form-group clearfix" ng-show="popup.assignmentObject.type != 'idm'">
                         <div class="col-xs-12">
@@ -66,21 +67,21 @@
                                ng-click="addCandidateGroupValue($index)"></i>
                         </div>
                     </div>
-
-                    <div class="form-group clearfix" ng-show="popup.assignmentObject.type == 'idm'">
-                        <div class="col-xs-12">
-                            <div class="col-xs-4">
-                                <label>{{'PROPERTY.ASSIGNMENT.IDM.TYPE' | translate}}</label>
-                            </div>
-                            <div class="col-xs-8">
-                                <div class="btn-group span">
-                                    <button class="selection" ng-options="option as (option.title | translate) for option in assignmentOptions"
-                                            bs-select ng-model="assignmentOption" activiti-fix-dropdown-bug>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- This code block is commented out because we will support only fixed values for the process assignment. IDM is disabled. FR#3602 -->
+                    <!--                    <div class="form-group clearfix" ng-show="popup.assignmentObject.type == 'idm'">-->
+                    <!--                        <div class="col-xs-12">-->
+                    <!--                            <div class="col-xs-4">-->
+                    <!--                                <label>{{'PROPERTY.ASSIGNMENT.IDM.TYPE' | translate}}</label>-->
+                    <!--                            </div>-->
+                    <!--                            <div class="col-xs-8">-->
+                    <!--                                <div class="btn-group span">-->
+                    <!--                                    <button class="selection" ng-options="option as (option.title | translate) for option in assignmentOptions"-->
+                    <!--                                            bs-select ng-model="assignmentOption" activiti-fix-dropdown-bug>-->
+                    <!--                                    </button>-->
+                    <!--                                </div>-->
+                    <!--                            </div>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
 
                     <div class="form-group clearfix" ng-show="popup.assignmentObject.type == 'idm' && assignmentOption.id == 'users'">
                         <div class="col-xs-12">
