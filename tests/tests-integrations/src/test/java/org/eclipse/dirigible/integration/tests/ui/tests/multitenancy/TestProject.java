@@ -93,4 +93,8 @@ class TestProject {
     public String getReadersViewServicePath() {
         return "/services/ts/dirigible-test-project/views/ReaderViewService.ts";
     }
+
+    public String getBooksServicePath() {
+        return "/services/ts/dirigible-test-project/gen/api/Books/BookService.ts";
+    }
 }
