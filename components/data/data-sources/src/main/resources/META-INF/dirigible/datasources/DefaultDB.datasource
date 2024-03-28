@@ -1,6 +1,6 @@
 {
   "location":"/datasources/DefaultDB.datasource",
-  "name":"DefaultDB",
+  "name":"${DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT}.{DefaultDB}",
   "driver":"${DIRIGIBLE_DATASOURCE_DEFAULT_DRIVER}.{org.h2.Driver}",
   "url":"${DIRIGIBLE_DATASOURCE_DEFAULT_URL}.{jdbc:h2:file:./target/dirigible/h2/DefaultDB}",
   "username":"${DIRIGIBLE_DATASOURCE_DEFAULT_USERNAME}.{sa}",

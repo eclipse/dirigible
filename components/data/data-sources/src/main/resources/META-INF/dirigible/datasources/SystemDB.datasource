@@ -1,6 +1,6 @@
 {
   "location":"/datasources/SystemDB.datasource",
-  "name":"SystemDB",
+  "name":"${DIRIGIBLE_DATABASE_DATASOURCE_NAME_SYSTEM}.{SystemDB}",
   "driver":"${DIRIGIBLE_DATABASE_SYSTEM_DRIVER}.{org.h2.Driver}",
   "url":"${DIRIGIBLE_DATABASE_SYSTEM_URL}.{jdbc:h2:file:./target/dirigible/h2/SystemDB}",
   "username":"${DIRIGIBLE_DATABASE_SYSTEM_USERNAME}.{sa}",
