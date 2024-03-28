@@ -10,17 +10,11 @@
  */
 package org.eclipse.dirigible.components.data.sources.manager;
 
-import org.eclipse.dirigible.components.data.sources.config.DefaultDataSourceName;
-import org.eclipse.dirigible.components.data.sources.config.SystemDataSourceName;
-import org.eclipse.dirigible.components.data.sources.domain.DataSource;
-import org.eclipse.dirigible.components.data.sources.service.CustomDataSourcesService;
-import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Objects;
 
 /**
  * The Class DataSourcesManager.
