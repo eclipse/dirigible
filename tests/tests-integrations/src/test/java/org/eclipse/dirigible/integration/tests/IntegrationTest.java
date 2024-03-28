@@ -37,6 +37,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @AutoConfigureMockMvc
@@ -105,22 +106,27 @@ public abstract class IntegrationTest {
     }
 
     private List<String> getUserProjects() throws IOException {
-        String usersRepoFolder = getUsersRepoFolder();
-        List<Path> userProjectFiles = FileUtil.findFiles(usersRepoFolder, "project.json");
-        return userProjectFiles.stream()
-                               .map(p -> p.toFile()
-                                          .getParentFile()
-                                          .getName())
-                               .toList();
+        File usersRepoFolder = getUsersRepoFolder();
+        if (usersRepoFolder.exists()) {
+            List<Path> userProjectFiles = FileUtil.findFiles(usersRepoFolder, "project.json");
+            return userProjectFiles.stream()
+                                   .map(p -> p.toFile()
+                                              .getParentFile()
+                                              .getName())
+                                   .toList();
+        }
+        LOGGER.info("Missing users repo folder [{}]", usersRepoFolder);
+        return Collections.emptyList();
     }
 
     private void deleteUsersFolder() {
-        String usersFolder = getUsersRepoFolder();
+        File usersFolder = getUsersRepoFolder();
         FileUtil.deleteFolder(usersFolder);
     }
 
     private void deleteDirigibleProjectsFromRegistry(List<String> userProjects) {
         String repoBasePath = dirigibleRepo.getRepositoryPath() + IRepositoryStructure.PATH_REGISTRY_PUBLIC + File.separator;
+        LOGGER.info("Will delete user projects [{}] from the registry [{}]", userProjects, repoBasePath);
         try {
             List<Path> files = FileUtil.findFiles(Paths.get(repoBasePath), "project.json");
             userProjects.forEach(projectName -> {
@@ -133,9 +139,9 @@ public abstract class IntegrationTest {
         }
     }
 
-    private String getUsersRepoFolder() {
+    private File getUsersRepoFolder() {
         String repoBasePath = dirigibleRepo.getRepositoryPath();
-        return repoBasePath + File.separator + "users";
+        return new File(repoBasePath + File.separator + "users");
     }
 
 }
