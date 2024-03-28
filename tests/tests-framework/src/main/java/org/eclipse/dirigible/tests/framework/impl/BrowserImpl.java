@@ -145,9 +145,9 @@ class BrowserImpl implements Browser {
         boolean executed =
                 handleElementInAllFrames(() -> getElementByAttributeAndTextPattern(elementType, textPattern), e -> e.doubleClick());
         String screenshot = generateScreenshot(executed);
-        assertThat(executed).withFailMessage(
-                                    "Element of type [" + elementType + "] with text pattern [" + textPattern + "] was not found. Screenshot path: "
-                                            + screenshot)
+        assertThat(executed)
+                            .withFailMessage("Element of type [" + elementType + "] with text pattern [" + textPattern
+                                    + "] was not found. Screenshot path: " + screenshot)
                             .isTrue();
     }
 
@@ -155,9 +155,9 @@ class BrowserImpl implements Browser {
     public void clickElementByAttributePattern(HtmlElementType elementType, HtmlAttribute attribute, String pattern) {
         boolean executed = handleElementInAllFrames(() -> getElementByAttributePattern(elementType, attribute, pattern), e -> e.click());
         String screenshot = generateScreenshot(executed);
-        assertThat(executed).withFailMessage(
-                                    "Element of type [" + elementType + "] with attribute [" + attribute + "] with pattern [" + pattern
-                                            + "] was not found. Screenshot path: " + screenshot)
+        assertThat(executed)
+                            .withFailMessage("Element of type [" + elementType + "] with attribute [" + attribute + "] with pattern ["
+                                    + pattern + "] was not found. Screenshot path: " + screenshot)
                             .isTrue();
     }
 
@@ -174,7 +174,7 @@ class BrowserImpl implements Browser {
         try {
             ElementsCollection iframes = getElements(HtmlElementType.IFRAME);
             LOGGER.info("Found [{}] iframes", iframes.size());
-            
+
             for (SelenideElement iframe : iframes) {
                 Selenide.switchTo()
                         .frame(iframe);
@@ -253,8 +253,9 @@ class BrowserImpl implements Browser {
     public void assertElementExistsByTypeAndText(HtmlElementType elementType, String text) {
         boolean executed = handleElementInAllFrames(() -> getElementByAttributeAndText(elementType, text), e -> e.should(Condition.exist));
         String screenshot = generateScreenshot(executed);
-        assertThat(executed).withFailMessage(
-                                    "Element of type [" + elementType + "] with text [" + text + "] was not found. Screenshot path: " + screenshot)
+        assertThat(executed)
+                            .withFailMessage("Element of type [" + elementType + "] with text [" + text
+                                    + "] was not found. Screenshot path: " + screenshot)
                             .isTrue();
     }
 
