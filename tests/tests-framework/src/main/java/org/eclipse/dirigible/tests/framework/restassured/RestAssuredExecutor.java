@@ -19,6 +19,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import static io.restassured.specification.ProxySpecification.host;
+
 @Lazy
 @Component
 public class RestAssuredExecutor {
@@ -31,6 +33,8 @@ public class RestAssuredExecutor {
 
     public RestAssuredExecutor(@LocalServerPort int port) {
         this.port = port;
+
+        RestAssured.proxy = host("127.0.0.1").withPort(port);
     }
 
     /**
