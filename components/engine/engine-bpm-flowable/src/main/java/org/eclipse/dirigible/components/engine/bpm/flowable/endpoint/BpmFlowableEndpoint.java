@@ -13,6 +13,7 @@ package org.eclipse.dirigible.components.engine.bpm.flowable.endpoint;
 import static java.text.MessageFormat.format;
 import static org.eclipse.dirigible.components.engine.bpm.flowable.dto.ActionData.Action.*;
 import static org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmService.DIRIGIBLE_BPM_INTERNAL_SKIP_STEP;
+import static org.eclipse.dirigible.components.engine.bpm.flowable.service.task.TaskQueryExecutor.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +23,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.components.api.security.UserFacade;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.*;
 import org.eclipse.dirigible.components.engine.bpm.flowable.provider.BpmProviderFlowable;
@@ -276,17 +278,26 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
     @GetMapping(value = "/bpm-processes/instance/{id}/tasks")
     public ResponseEntity<List<TaskDTO>> getProcessInstanceTasks(@PathVariable("id") String id,
             @RequestParam(value = "type", required = false) String type) {
-        TaskQueryExecutor.Type principalType;
+        Type principalType;
         try {
-            principalType = TaskQueryExecutor.Type.fromString(type);
+            principalType = Type.fromString(type);
         } catch (IllegalArgumentException e) {
-            principalType = TaskQueryExecutor.Type.ASSIGNEE;
+            principalType = Type.ASSIGNEE;
         }
         List<TaskDTO> taskDTOS = taskQueryExecutor.findTasks(id, principalType)
                                                   .stream()
                                                   .map(this::mapToDTO)
                                                   .collect(Collectors.toList());
         return ResponseEntity.ok(taskDTOS);
+    }
+
+    @PostMapping(value = "/bpm-processes/tasks/{id}")
+    public ResponseEntity<Void> claimTask(@PathVariable("id") String id) {
+        TaskService taskService = getTaskService();
+        taskService.claim(id, UserFacade.getName());
+
+        return ResponseEntity.ok()
+                             .build();
     }
 
     private TaskService getTaskService() {
