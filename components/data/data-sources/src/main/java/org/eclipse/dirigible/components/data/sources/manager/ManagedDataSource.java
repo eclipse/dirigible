@@ -10,18 +10,17 @@
  */
 package org.eclipse.dirigible.components.data.sources.manager;
 
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-
-import javax.sql.DataSource;
-
 import org.eclipse.dirigible.components.api.security.UserFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import javax.sql.DataSource;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 
 /**
  * The WrappedDataSource of the standard JDBC {@link DataSource} object with added some additional
@@ -34,12 +33,10 @@ public class ManagedDataSource implements DataSource {
 
     /** The Constant DATABASE_NAME_HDB. */
     private static final String DATABASE_NAME_HDB = "HDB";
-
-    /** The database name. */
-    private String databaseName;
-
     /** The original data source. */
     private final DataSource originalDataSource;
+    /** The database name. */
+    private String databaseName;
 
     /**
      * Wrapper of the default datasource provided by the underlying platform It has some fault tolerance
@@ -60,23 +57,6 @@ public class ManagedDataSource implements DataSource {
     @Override
     public Connection getConnection() throws SQLException {
         Connection connection = originalDataSource.getConnection();
-
-        enhanceConnection(connection);
-
-        return connection;
-    }
-
-    /**
-     * Gets the connection.
-     *
-     * @param username the username
-     * @param password the password
-     * @return the connection
-     * @throws SQLException the SQL exception
-     */
-    @Override
-    public Connection getConnection(String username, String password) throws SQLException {
-        Connection connection = originalDataSource.getConnection(username, password);
 
         enhanceConnection(connection);
 
@@ -118,6 +98,23 @@ public class ManagedDataSource implements DataSource {
     }
 
     /**
+     * Gets the connection.
+     *
+     * @param username the username
+     * @param password the password
+     * @return the connection
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public Connection getConnection(String username, String password) throws SQLException {
+        Connection connection = originalDataSource.getConnection(username, password);
+
+        enhanceConnection(connection);
+
+        return connection;
+    }
+
+    /**
      * Gets the log writer.
      *
      * @return the log writer
@@ -126,29 +123,6 @@ public class ManagedDataSource implements DataSource {
     @Override
     public PrintWriter getLogWriter() throws SQLException {
         return originalDataSource.getLogWriter();
-    }
-
-    /**
-     * Gets the login timeout.
-     *
-     * @return the login timeout
-     * @throws SQLException the SQL exception
-     */
-    @Override
-    public int getLoginTimeout() throws SQLException {
-        return originalDataSource.getLoginTimeout();
-    }
-
-    /**
-     * Checks if is wrapper for.
-     *
-     * @param arg0 the arg 0
-     * @return true, if is wrapper for
-     * @throws SQLException the SQL exception
-     */
-    @Override
-    public boolean isWrapperFor(Class<?> arg0) throws SQLException {
-        return originalDataSource.isWrapperFor(arg0);
     }
 
     /**
@@ -163,6 +137,17 @@ public class ManagedDataSource implements DataSource {
     }
 
     /**
+     * Gets the login timeout.
+     *
+     * @return the login timeout
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public int getLoginTimeout() throws SQLException {
+        return originalDataSource.getLoginTimeout();
+    }
+
+    /**
      * Sets the login timeout.
      *
      * @param arg0 the new login timeout
@@ -171,6 +156,18 @@ public class ManagedDataSource implements DataSource {
     @Override
     public void setLoginTimeout(int arg0) throws SQLException {
         originalDataSource.setLoginTimeout(arg0);
+    }
+
+    /**
+     * Checks if is wrapper for.
+     *
+     * @param arg0 the arg 0
+     * @return true, if is wrapper for
+     * @throws SQLException the SQL exception
+     */
+    @Override
+    public boolean isWrapperFor(Class<?> arg0) throws SQLException {
+        return originalDataSource.isWrapperFor(arg0);
     }
 
     /**
@@ -197,4 +194,8 @@ public class ManagedDataSource implements DataSource {
         throw new SQLFeatureNotSupportedException();
     }
 
+    @Override
+    public String toString() {
+        return "ManagedDataSource{" + "databaseName='" + databaseName + '\'' + '}';
+    }
 }

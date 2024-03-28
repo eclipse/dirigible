@@ -36,18 +36,20 @@ public class BeanProvider implements ApplicationContextAware {
         context = argApplicationContext;
     }
 
-    /**
-     * Gets the bean.
-     *
-     * @param <T> the generic type
-     * @param clazz the clazz
-     * @return the bean
-     */
-    public static <T> T getBean(Class<T> clazz) {
+    public static <T> T getBean(String beanName, Class<T> clazz) {
         if (!isInitialzed()) {
             throw new IllegalStateException("Spring is not initialized yet.");
         }
-        return context.getBean(clazz);
+        return context.getBean(beanName, clazz);
+    }
+
+    /**
+     * Checks if is initialzed.
+     *
+     * @return true, if is initialzed
+     */
+    public static boolean isInitialzed() {
+        return context != null;
     }
 
     /**
@@ -60,12 +62,17 @@ public class BeanProvider implements ApplicationContextAware {
     }
 
     /**
-     * Checks if is initialzed.
+     * Gets the bean.
      *
-     * @return true, if is initialzed
+     * @param <T> the generic type
+     * @param clazz the clazz
+     * @return the bean
      */
-    public static boolean isInitialzed() {
-        return context != null;
+    public static <T> T getBean(Class<T> clazz) {
+        if (!isInitialzed()) {
+            throw new IllegalStateException("Spring is not initialized yet.");
+        }
+        return context.getBean(clazz);
     }
 
 }

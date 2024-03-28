@@ -22,6 +22,7 @@ class HomepageRedirectIT extends UserInterfaceIntegrationTest {
 
     @Test
     void testOpenHomepage() {
+        dirigible.openHomePage();
         assertHomeRedirect("/");
         assertHomeRedirect("");
         assertHomeRedirect("/home");
@@ -29,8 +30,6 @@ class HomepageRedirectIT extends UserInterfaceIntegrationTest {
 
     private void assertHomeRedirect(String path) {
         browser.openPath(path);
-        dirigible.login();
-
         browser.assertElementExistsByTypeAndText(HtmlElementType.ANCHOR, "Welcome");
 
     }

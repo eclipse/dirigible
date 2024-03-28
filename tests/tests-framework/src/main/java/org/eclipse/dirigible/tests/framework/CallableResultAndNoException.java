@@ -8,15 +8,15 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.integration.tests.ui.tests;
+package org.eclipse.dirigible.tests.framework;
 
-import org.eclipse.dirigible.integration.tests.IntegrationTest;
-import org.eclipse.dirigible.tests.framework.Browser;
-import org.springframework.beans.factory.annotation.Autowired;
+@FunctionalInterface
+public interface CallableResultAndNoException<Result> {
 
-public abstract class UserInterfaceIntegrationTest extends IntegrationTest {
-
-    @Autowired
-    protected Browser browser;
-
+    /**
+     * Call.
+     *
+     * @return the result
+     */
+    Result call();
 }
