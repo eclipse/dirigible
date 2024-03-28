@@ -13,6 +13,7 @@ package org.eclipse.dirigible.components.jobs.config;
 import org.eclipse.dirigible.components.data.sources.config.SystemDataSourceName;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.quartz.impl.jdbcjobstore.JobStoreTX;
 import org.quartz.utils.DBConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,8 +90,10 @@ class QuartzConfig {
         propertiesFactoryBean.afterPropertiesSet();
 
         Properties properties = propertiesFactoryBean.getObject();
-        properties.setProperty("org.quartz.jobStore.dataSource", systemDataSourceName);
+        String jobStoreClass = properties.getProperty("org.quartz.jobStore.class");
+        if (null != jobStoreClass && jobStoreClass.equals(JobStoreTX.class.getCanonicalName())) {
+            properties.setProperty("org.quartz.jobStore.dataSource", systemDataSourceName);
+        }
         return properties;
     }
-
 }
