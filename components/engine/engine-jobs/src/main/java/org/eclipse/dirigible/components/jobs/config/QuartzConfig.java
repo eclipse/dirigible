@@ -69,10 +69,11 @@ class QuartzConfig {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @Bean
-    SchedulerFactoryBean schedulerFactoryBean(AutoWiringSpringBeanJobFactory jobFactory) throws IOException {
+    SchedulerFactoryBean schedulerFactoryBean(AutoWiringSpringBeanJobFactory jobFactory, @SystemDataSourceName String systemDataSourceName)
+            throws IOException {
         SchedulerFactoryBean factory = new SchedulerFactoryBean();
         factory.setJobFactory(jobFactory);
-        factory.setQuartzProperties(quartzProperties());
+        factory.setQuartzProperties(quartzProperties(systemDataSourceName));
         return factory;
     }
 
@@ -82,11 +83,14 @@ class QuartzConfig {
      * @return the properties
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    private Properties quartzProperties() throws IOException {
+    private Properties quartzProperties(String systemDataSourceName) throws IOException {
         PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
         propertiesFactoryBean.setLocation(new ClassPathResource("/quartz.properties"));
         propertiesFactoryBean.afterPropertiesSet();
-        return propertiesFactoryBean.getObject();
+
+        Properties properties = propertiesFactoryBean.getObject();
+        properties.setProperty("org.quartz.jobStore.dataSource", systemDataSourceName);
+        return properties;
     }
 
 }
