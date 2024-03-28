@@ -13,7 +13,9 @@ package org.eclipse.dirigible.tests.framework.impl;
 import com.codeborne.selenide.*;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.tests.framework.Browser;
-import org.eclipse.dirigible.tests.framework.*;
+import org.eclipse.dirigible.tests.framework.HtmlAttribute;
+import org.eclipse.dirigible.tests.framework.HtmlElementType;
+import org.eclipse.dirigible.tests.framework.SleepUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
@@ -141,19 +143,19 @@ class BrowserImpl implements Browser {
     @Override
     public void doubleClickOnElementContainingText(HtmlElementType elementType, String text) {
         String textPattern = Pattern.quote(text);
-        handleElementInAllFrames(() -> getElementByAttributeAndTextPattern(elementType, textPattern), e -> e.doubleClick());
+        SelenideElement element = getElementByAttributeAndTextPattern(elementType, textPattern);
+        handleElementInAllFrames(element, e -> e.doubleClick());
     }
 
     @Override
     public void clickElementByAttributePattern(HtmlElementType elementType, HtmlAttribute attribute, String pattern) {
-        handleElementInAllFrames(() -> getElementByAttributePattern(elementType, attribute, pattern), e -> e.click());
+        SelenideElement element = getElementByAttributePattern(elementType, attribute, pattern);
+        handleElementInAllFrames(element, e -> e.click());
     }
 
-    private void handleElementInAllFrames(CallableResultAndNoException<SelenideElement> elementResolver,
-            Consumer<SelenideElement> elementHandler) {
+    private void handleElementInAllFrames(SelenideElement element, Consumer<SelenideElement> elementHandler) {
         Selenide.switchTo()
                 .defaultContent();
-        SelenideElement element = elementResolver.call();
         LOGGER.info("Checking element [{}] in default frame...", element);
         if (elementExists(element, 2)) {
             elementHandler.accept(element);
@@ -166,10 +168,10 @@ class BrowserImpl implements Browser {
             for (SelenideElement iframe : iframes) {
                 Selenide.switchTo()
                         .frame(iframe);
-                SelenideElement el = elementResolver.call();
-                LOGGER.info("Checking element [{}] in iframe [{}]...", el, iframe);
-                if (elementExists(el, 600L)) {
-                    elementHandler.accept(el);
+
+                LOGGER.info("Checking element [{}] in iframe [{}]...", element, iframe);
+                if (elementExists(element, 600L)) {
+                    elementHandler.accept(element);
                     return;
                 }
 
@@ -237,7 +239,8 @@ class BrowserImpl implements Browser {
 
     @Override
     public void assertElementExistsByTypeAndText(HtmlElementType elementType, String text) {
-        handleElementInAllFrames(() -> getElementByAttributeAndText(elementType, text), e -> e.should(Condition.exist));
+        SelenideElement element = getElementByAttributeAndText(elementType, text);
+        handleElementInAllFrames(element, e -> e.should(Condition.exist));
     }
 
     private SelenideElement getElementByAttributeAndText(HtmlElementType elementType, String text) {
