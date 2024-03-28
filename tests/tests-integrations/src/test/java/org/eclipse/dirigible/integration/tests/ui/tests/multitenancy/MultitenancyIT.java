@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.integration.tests.ui.tests.multitenancy;
 
 import io.restassured.http.ContentType;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.awaitility.Awaitility;
 import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
@@ -88,6 +87,7 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
         verifyTestProjectAccessibleByTenants();
         verifyView();
         verifyOData();
+        verifyEdmGeneratedResources();
     }
 
     private void createTestTenants() {
@@ -124,7 +124,7 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
      * Verifies indirectly:<br>
      * - dirigible-test-project/views/readers.view is created and it is working<br>
      * - dirigible-test-project/csvim/data.csvim is imported <br>
-     * - DefaultDB datasource is resolved correctly
+     * - default DB datasource is resolved correctly
      */
     private void verifyView() {
         testTenants.forEach(t -> restAssuredExecutor.execute(t, () -> verifyView(t)));
@@ -136,13 +136,27 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
      * - dirigible-test-project/csvim/data.csvim is imported <br>
      * - dirigible-test-project/odata/readers.odata is configured <br>
      * - OData is working<br>
-     * - DefaultDB datasource is resolved correctly
+     * - default DB datasource is resolved correctly
      */
     private void verifyOData() {
         testTenants.forEach(t -> restAssuredExecutor.execute(t, () -> {
             verifyCSVIMIsImported();
-            verifyAddingNewReader();
+            verifyAddingNewReader(t);
         }));
+    }
+
+    /**
+     * Verifies indirectly:<br>
+     * - edm generated schema is created<br>
+     * - generated REST is created and it works<br>
+     * - topic listener works<br>
+     * - job has been executed<br>
+     * - default DB datasource is resolved correctly
+     */
+    private void verifyEdmGeneratedResources() {
+        testTenants.forEach(t -> {
+            restAssuredExecutor.execute(t, () -> verifyBookREST(t));
+        });
     }
 
     private void waitForTenantProvisioning(DirigibleTestTenant tenant, int waitSeconds) {
@@ -179,9 +193,9 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
                .body("d.results[1].ReaderLastName", equalTo("Petrova"));
     }
 
-    private void verifyAddingNewReader() {
-        String firstName = "FirstName_" + RandomStringUtils.randomAlphabetic(5);
-        String lastName = "LastName_" + RandomStringUtils.randomAlphabetic(5);
+    private void verifyAddingNewReader(DirigibleTestTenant tenant) {
+        String firstName = "FirstName[" + tenant.getName() + "]";
+        String lastName = "LastName[" + tenant.getName() + "]";
         String jsonPayload = String.format("""
                 {
                     "ReaderId": 3,
@@ -208,4 +222,30 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
                .body("d.results[2].ReaderLastName", equalTo(lastName));
     }
 
+    private void verifyBookREST(DirigibleTestTenant tenant) {
+        String title = "Title[" + tenant.getName() + "]";
+        String author = "Author[" + tenant.getName() + "]";
+        String jsonPayload = String.format("""
+                {
+                    "Title": "%s",
+                    "Author": "%s"
+                }
+                """, title, author);
+
+        given().contentType(ContentType.JSON)
+               .body(jsonPayload)
+               .when()
+               .post(testProject.getBooksServicePath())
+               .then()
+               .statusCode(201);
+
+        given().when()
+               .get(testProject.getBooksServicePath())
+               .then()
+               .statusCode(200)
+               .body("$", hasSize(1))
+               .body("[0].Id", equalTo(1))
+               .body("[0].Title", equalTo(title))
+               .body("[0].Author", equalTo(author));
+    }
 }
