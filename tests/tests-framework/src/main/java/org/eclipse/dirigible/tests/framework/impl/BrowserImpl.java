@@ -97,60 +97,16 @@ class BrowserImpl implements Browser {
     @Override
     public void enterTextInElementByAttributePattern(HtmlElementType elementType, HtmlAttribute attribute, String pattern, String text) {
         SelenideElement element = getElementByAttributePattern(elementType, attribute, pattern);
-        element.click();
-        element.setValue(text);
+        handleElementInAllFrames(element, e -> {
+            e.click();
+            e.setValue(text);
+        });
     }
 
     private SelenideElement getElementByAttributePattern(HtmlElementType elementType, HtmlAttribute attribute,
             String attributeValuePattern) {
         By selector = constructCssSelectorByTypeAndAttribute(elementType, attribute, attributeValuePattern);
         return Selenide.$(selector);
-    }
-
-    private By constructCssSelectorByTypeAndAttribute(HtmlElementType elementType, HtmlAttribute attribute, String attributePattern) {
-        String cssSelector = elementType.getType() + "[" + attribute.getAttribute() + "*='" + attributePattern + "']";
-        return Selectors.byCssSelector(cssSelector);
-    }
-
-    @Override
-    public void clickElementByAttributePatternAndText(HtmlElementType elementType, HtmlAttribute attribute, String pattern, String text) {
-        SelenideElement element = getElementByAttributePatternAndText(elementType, attribute, pattern, text);
-
-        clickElement(element);
-    }
-
-    private SelenideElement getElementByAttributePatternAndText(HtmlElementType elementType, HtmlAttribute attribute, String pattern,
-            String text) {
-        By selector = constructCssSelectorByTypeAndAttribute(elementType, attribute, pattern);
-        ElementsCollection options = Selenide.$$(selector);
-
-        return options.findBy(Condition.text(text));
-    }
-
-    private void clickElement(SelenideElement element) {
-        element.shouldBe(Condition.visible, Condition.enabled)
-               .scrollIntoView(false)
-               .click();
-    }
-
-    @Override
-    public void clickElementByAttributeValue(HtmlElementType htmlElementType, HtmlAttribute htmlAttribute, String attributeValue) {
-        SelenideElement element = getElementByAttributePattern(htmlElementType, htmlAttribute, attributeValue);
-
-        clickElement(element);
-    }
-
-    @Override
-    public void doubleClickOnElementContainingText(HtmlElementType elementType, String text) {
-        String textPattern = Pattern.quote(text);
-        SelenideElement element = getElementByAttributeAndTextPattern(elementType, textPattern);
-        handleElementInAllFrames(element, e -> e.doubleClick());
-    }
-
-    @Override
-    public void clickElementByAttributePattern(HtmlElementType elementType, HtmlAttribute attribute, String pattern) {
-        SelenideElement element = getElementByAttributePattern(elementType, attribute, pattern);
-        handleElementInAllFrames(element, e -> e.click());
     }
 
     private void handleElementInAllFrames(SelenideElement element, Consumer<SelenideElement> elementHandler) {
@@ -188,6 +144,11 @@ class BrowserImpl implements Browser {
         }
     }
 
+    private By constructCssSelectorByTypeAndAttribute(HtmlElementType elementType, HtmlAttribute attribute, String attributePattern) {
+        String cssSelector = elementType.getType() + "[" + attribute.getAttribute() + "*='" + attributePattern + "']";
+        return Selectors.byCssSelector(cssSelector);
+    }
+
     private boolean elementExists(SelenideElement element, int checkSeconds) {
         return elementExists(element, 1000L * checkSeconds);
     }
@@ -220,6 +181,45 @@ class BrowserImpl implements Browser {
     private By constructCssSelectorByType(HtmlElementType elementType) {
         String cssSelector = elementType.getType();
         return Selectors.byCssSelector(cssSelector);
+    }
+
+    @Override
+    public void clickElementByAttributePatternAndText(HtmlElementType elementType, HtmlAttribute attribute, String pattern, String text) {
+        SelenideElement element = getElementByAttributePatternAndText(elementType, attribute, pattern, text);
+        handleElementInAllFrames(element, e -> clickElement(e));
+    }
+
+    private SelenideElement getElementByAttributePatternAndText(HtmlElementType elementType, HtmlAttribute attribute, String pattern,
+            String text) {
+        By selector = constructCssSelectorByTypeAndAttribute(elementType, attribute, pattern);
+        ElementsCollection options = Selenide.$$(selector);
+
+        return options.findBy(Condition.text(text));
+    }
+
+    private void clickElement(SelenideElement element) {
+        element.shouldBe(Condition.visible, Condition.enabled)
+               .scrollIntoView(false)
+               .click();
+    }
+
+    @Override
+    public void clickElementByAttributeValue(HtmlElementType htmlElementType, HtmlAttribute htmlAttribute, String attributeValue) {
+        SelenideElement element = getElementByAttributePattern(htmlElementType, htmlAttribute, attributeValue);
+        handleElementInAllFrames(element, e -> clickElement(e));
+    }
+
+    @Override
+    public void doubleClickOnElementContainingText(HtmlElementType elementType, String text) {
+        String textPattern = Pattern.quote(text);
+        SelenideElement element = getElementByAttributeAndTextPattern(elementType, textPattern);
+        handleElementInAllFrames(element, e -> e.doubleClick());
+    }
+
+    @Override
+    public void clickElementByAttributePattern(HtmlElementType elementType, HtmlAttribute attribute, String pattern) {
+        SelenideElement element = getElementByAttributePattern(elementType, attribute, pattern);
+        handleElementInAllFrames(element, e -> e.click());
     }
 
     @Override

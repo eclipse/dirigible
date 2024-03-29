@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.integration.tests.api.rest;
 
 import io.restassured.http.ContentType;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.eclipse.dirigible.tests.restassured.RestAssuredExecutor;
 import org.junit.jupiter.api.Test;
@@ -25,12 +26,14 @@ class ODataAPIIT extends IntegrationTest {
 
     @Test
     void testODataMetadata() throws Exception {
+        String user = DirigibleConfig.BASIC_ADMIN_USERNAME.getFromBase64Value();
+        String pass = DirigibleConfig.BASIC_ADMIN_PASS.getFromBase64Value();
         restAssuredExecutor.execute( //
                 () -> given().when()
                              .get("/odata/v2/$metadata")
                              .then()
                              .statusCode(200)
                              .contentType(ContentType.XML),
-                "admin", "admin");
+                user, pass);
     }
 }
