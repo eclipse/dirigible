@@ -72,7 +72,7 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
     public TenantContextInitFilter(TenantService tenantService, TenantContext tenantContext) {
         this.tenantService = tenantService;
         this.tenantContext = tenantContext;
-        this.singleTenantMode = Configuration.getAsBoolean(Configuration.SINGLE_TENANT_MODE_ENABLED, false);
+        this.singleTenantMode = Configuration.getAsBoolean(Configuration.SINGLE_TENANT_MODE_ENABLED, true);
     }
 
     /**
