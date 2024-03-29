@@ -125,7 +125,7 @@ class BrowserImpl implements Browser {
                 Selenide.switchTo()
                         .defaultContent();
                 LOGGER.info("Checking element [{}] in default frame...", element);
-                if (elementExists(element, 2)) {
+                if (elementExists(element, 600L)) {
                     elementHandler.accept(element);
                     return;
                 }
@@ -157,10 +157,6 @@ class BrowserImpl implements Browser {
         }
     }
 
-    private boolean elementExists(SelenideElement element, int checkSeconds) {
-        return elementExists(element, 1000L * checkSeconds);
-    }
-
     private boolean elementExists(SelenideElement element, long millis) {
         LOGGER.info("Checking element [{}] existence in the current frame for [{}] millis", element, millis);
         long until = System.currentTimeMillis() + (millis);
@@ -189,6 +185,10 @@ class BrowserImpl implements Browser {
     public String createScreenshot() {
         return Selenide.screenshot(UUID.randomUUID()
                                        .toString());
+    }
+
+    private boolean elementExists(SelenideElement element, int checkSeconds) {
+        return elementExists(element, 1000L * checkSeconds);
     }
 
     @Override
