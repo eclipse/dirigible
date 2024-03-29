@@ -794,7 +794,6 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
      * Register fatal errors.
      *
      * @param remained the remained
-     * @param lifecycle the lifecycle
      */
     @Override
     public void registerFatals(List<TopologyWrapper<? extends Artefact>> remained) {
