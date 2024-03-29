@@ -10,6 +10,7 @@
  */
 package org.eclipse.dirigible.integration.tests.ui.tests.multitenancy;
 
+import ch.qos.logback.classic.Level;
 import io.restassured.http.ContentType;
 import org.awaitility.Awaitility;
 import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
@@ -19,6 +20,8 @@ import org.eclipse.dirigible.integration.tests.ui.DirigibleWorkbench;
 import org.eclipse.dirigible.integration.tests.ui.EdmView;
 import org.eclipse.dirigible.integration.tests.ui.tests.UserInterfaceIntegrationTest;
 import org.eclipse.dirigible.tests.framework.DirigibleTestTenant;
+import org.eclipse.dirigible.tests.framework.awaitility.AwaitilityExecutor;
+import org.eclipse.dirigible.tests.framework.logging.LogsAsserter;
 import org.eclipse.dirigible.tests.framework.restassured.RestAssuredExecutor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +34,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static io.restassured.RestAssured.given;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -59,12 +63,18 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
     @Autowired
     private RestAssuredExecutor restAssuredExecutor;
 
+    private LogsAsserter testJobLogsAsserter;
+    private LogsAsserter eventListenerLogsAsserter;
+
     @BeforeEach
     void initTestTenants() {
         defaultTenant = fromTenantEntity(defTenant);
         testTenant1 = new DirigibleTestTenant("test-tenant-1");
         testTenant2 = new DirigibleTestTenant("test-tenant-2");
         testTenants = List.of(defaultTenant, testTenant1, testTenant2);
+
+        testJobLogsAsserter = new LogsAsserter("app.test-job-handler.ts", Level.DEBUG);
+        eventListenerLogsAsserter = new LogsAsserter("app.background-handler.ts", Level.DEBUG);
     }
 
     private DirigibleTestTenant fromTenantEntity(Tenant tenant) {
@@ -156,13 +166,25 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
     private void verifyEdmGeneratedResources() {
         testTenants.forEach(t -> {
             restAssuredExecutor.execute(t, () -> verifyBookREST(t));
+
+            assertJobExecuted(t);
         });
     }
 
+    private void assertJobExecuted(DirigibleTestTenant tenant) {
+        String expectedMessage = "Found [1] books. Books: [[{\"Id\":1,\"Title\":\"Title[" + tenant.getName() + "]\",\"Author\":\"Author["
+                + tenant.getName() + "]\"}]]";
+
+        String failMessage = "Couldn't find message [" + expectedMessage + "]. Logs: " + testJobLogsAsserter.getLoggedMessages();
+        AwaitilityExecutor.execute(failMessage, () -> Awaitility.await()
+                                                                .atMost(7, TimeUnit.SECONDS)
+                                                                .until(() -> testJobLogsAsserter.containsMessage(expectedMessage,
+                                                                        Level.INFO)));
+    }
+
     private void waitForTenantProvisioning(DirigibleTestTenant tenant, int waitSeconds) {
-        Awaitility.await()
-                  .atMost(waitSeconds, TimeUnit.SECONDS)
-                  .until(() -> tenantCreator.isTenantProvisioned(tenant));
+        await().atMost(waitSeconds, TimeUnit.SECONDS)
+               .until(() -> tenantCreator.isTenantProvisioned(tenant));
     }
 
     private void verifyView(DirigibleTestTenant tenant) {
