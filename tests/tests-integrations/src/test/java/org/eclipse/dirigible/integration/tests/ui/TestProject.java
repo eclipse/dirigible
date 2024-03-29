@@ -14,7 +14,7 @@ import ch.qos.logback.classic.Level;
 import io.restassured.http.ContentType;
 import org.apache.commons.io.FileUtils;
 import org.awaitility.Awaitility;
-import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.tests.DirigibleTestTenant;
 import org.eclipse.dirigible.tests.awaitility.AwaitilityExecutor;
@@ -34,7 +34,6 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 
 import static io.restassured.RestAssured.given;
@@ -45,19 +44,15 @@ import static org.hamcrest.Matchers.hasSize;
 @Component
 public class TestProject {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestProject.class);
-
     public static final String UI_HOME_PATH = "/services/web/dirigible-test-project/gen/index.html";
-    private static final String PROJECT_RESOURCES_PATH = "dirigible-test-project";
-    private static final String ADMIN_USERNAME = new String(Base64.getDecoder()
-                                                                  .decode(Configuration.get(Configuration.BASIC_USERNAME, "YWRtaW4=")));
-    private static final String UI_PROJECT_TITLE = "Dirigible Test Project";
     public static final String BOOKS_SERVICE_PATH = "/services/ts/dirigible-test-project/gen/api/Books/BookService.ts";
     public static final String EDM_FILE_NAME = "edm.edm";
     public static final String READERS_ODATA_ENTITY_PATH = "/odata/v2/Readers";
     public static final String READERS_VIEW_SERVICE_PATH = "/services/ts/dirigible-test-project/views/ReaderViewService.ts";
     public static final String PROJECT_ROOT_FOLDER = "dirigible-test-project";
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestProject.class);
+    private static final String PROJECT_RESOURCES_PATH = "dirigible-test-project";
+    private static final String UI_PROJECT_TITLE = "Dirigible Test Project";
     private final IRepository dirigibleRepo;
     private final BrowserFactory browserFactory;
     private final Dirigible dirigible;
@@ -81,9 +76,24 @@ public class TestProject {
         this.eventListenerLogsAsserter = new LogsAsserter("app.book-entity-events-handler.ts", Level.DEBUG);
     }
 
+    public void publish() {
+        copyToRepository();
+
+        dirigible.openHomePage();
+
+        DirigibleWorkbench workbench = dirigible.openWorkbench();
+        workbench.expandProject(PROJECT_ROOT_FOLDER);
+        workbench.openFile(EDM_FILE_NAME);
+
+        edmView.regenerate();
+
+        workbench.publishAll();
+    }
+
     public void copyToRepository() {
         String repoBasePath = dirigibleRepo.getRepositoryPath();
-        String userWorkspace = repoBasePath + File.separator + "users" + File.separator + ADMIN_USERNAME + File.separator + "workspace";
+        String userWorkspace = repoBasePath + File.separator + "users" + File.separator
+                + DirigibleConfig.BASIC_ADMIN_USERNAME.getFromBase64Value() + File.separator + "workspace";
 
         URL projectResource = TestProject.class.getClassLoader()
                                                .getResource(PROJECT_RESOURCES_PATH);
@@ -102,6 +112,17 @@ public class TestProject {
         }
     }
 
+    public void verify(DirigibleTestTenant tenant) {
+        LOGGER.info("Verifying test project for tenant [{}]...", tenant);
+
+        verifyHomePageAccessibleByTenant(tenant);
+        verifyView(tenant);
+        verifyOData(tenant);
+        verifyEdmGeneratedResources(tenant);
+
+        LOGGER.info("Test test project for tenant [{}] has been verified successfully!", tenant);
+    }
+
     public void verifyHomePageAccessibleByTenant(DirigibleTestTenant tenant) {
         Browser browser = browserFactory.createByHost(tenant.getHost());
         browser.openPath(UI_HOME_PATH);
@@ -114,33 +135,23 @@ public class TestProject {
         browser.assertElementExistsByTypeAndText(HtmlElementType.HEADER3, UI_PROJECT_TITLE);
     }
 
-    private void waitToLoadThePage() {
-        SleepUtil.sleepSeconds(1);
-    }
-
-    public void publish() {
-        copyToRepository();
-
-        dirigible.openHomePage();
-
-        DirigibleWorkbench workbench = dirigible.openWorkbench();
-        workbench.expandProject(PROJECT_ROOT_FOLDER);
-        workbench.openFile(EDM_FILE_NAME);
-
-        edmView.regenerate();
-
-        workbench.publishAll();
-    }
-
-    public void verify(DirigibleTestTenant tenant) {
-        LOGGER.info("Verifying test project for tenant [{}]...", tenant);
-
-        verifyHomePageAccessibleByTenant(tenant);
-        verifyView(tenant);
-        verifyOData(tenant);
-        verifyEdmGeneratedResources(tenant);
-
-        LOGGER.info("Test test project for tenant [{}] has been verified successfully!", tenant);
+    /**
+     * Verifies indirectly:<br>
+     * - dirigible-test-project/views/readers.view is created and it is working<br>
+     * - dirigible-test-project/csvim/data.csvim is imported <br>
+     * - default DB datasource is resolved correctly
+     */
+    private void verifyView(DirigibleTestTenant tenant) {
+        restAssuredExecutor.execute(tenant, //
+                () -> given().when()
+                             .get(READERS_VIEW_SERVICE_PATH)
+                             .then()
+                             .statusCode(200)
+                             .body("$", hasSize(2))
+                             .body("[0].READER_FIRST_NAME", equalTo("Ivan"))
+                             .body("[0].READER_LAST_NAME", equalTo("Ivanov"))
+                             .body("[1].READER_FIRST_NAME", equalTo("Maria"))
+                             .body("[1].READER_LAST_NAME", equalTo("Petrova")));
     }
 
     /**
@@ -172,43 +183,8 @@ public class TestProject {
         verifyListenerExecuted(tenant);
     }
 
-    private void verifyJobExecuted(DirigibleTestTenant tenant) {
-        String expectedMessage = "Job: found [1] books. Books: [[{\"Id\":1,\"Title\":\"Title[" + tenant.getName()
-                + "]\",\"Author\":\"Author[" + tenant.getName() + "]\"}]]";
-        verifyMessageLogged(expectedMessage, testJobLogsAsserter);
-    }
-
-    private void verifyListenerExecuted(DirigibleTestTenant tenant) {
-        String expectedMessage = "Listener: found [1] books. Books: [[{\"Id\":1,\"Title\":\"Title[" + tenant.getName()
-                + "]\",\"Author\":\"Author[" + tenant.getName() + "]\"}]]";
-        verifyMessageLogged(expectedMessage, eventListenerLogsAsserter);
-    }
-
-    private void verifyMessageLogged(String expectedMessage, LogsAsserter logsAsserter) {
-        String failMessage =
-                "Couldn't find message [" + expectedMessage + "] in the logs. Logged messages: " + logsAsserter.getLoggedMessages();
-        AwaitilityExecutor.execute(failMessage, () -> Awaitility.await()
-                                                                .atMost(10, TimeUnit.SECONDS)
-                                                                .until(() -> logsAsserter.containsMessage(expectedMessage, Level.INFO)));
-    }
-
-    /**
-     * Verifies indirectly:<br>
-     * - dirigible-test-project/views/readers.view is created and it is working<br>
-     * - dirigible-test-project/csvim/data.csvim is imported <br>
-     * - default DB datasource is resolved correctly
-     */
-    private void verifyView(DirigibleTestTenant tenant) {
-        restAssuredExecutor.execute(tenant, //
-                () -> given().when()
-                             .get(READERS_VIEW_SERVICE_PATH)
-                             .then()
-                             .statusCode(200)
-                             .body("$", hasSize(2))
-                             .body("[0].READER_FIRST_NAME", equalTo("Ivan"))
-                             .body("[0].READER_LAST_NAME", equalTo("Ivanov"))
-                             .body("[1].READER_FIRST_NAME", equalTo("Maria"))
-                             .body("[1].READER_LAST_NAME", equalTo("Petrova")));
+    private void waitToLoadThePage() {
+        SleepUtil.sleepSeconds(1);
     }
 
     private void verifyCSVIMIsImported() {
@@ -280,5 +256,25 @@ public class TestProject {
                .body("[0].Id", equalTo(1))
                .body("[0].Title", equalTo(title))
                .body("[0].Author", equalTo(author));
+    }
+
+    private void verifyJobExecuted(DirigibleTestTenant tenant) {
+        String expectedMessage = "Job: found [1] books. Books: [[{\"Id\":1,\"Title\":\"Title[" + tenant.getName()
+                + "]\",\"Author\":\"Author[" + tenant.getName() + "]\"}]]";
+        verifyMessageLogged(expectedMessage, testJobLogsAsserter);
+    }
+
+    private void verifyListenerExecuted(DirigibleTestTenant tenant) {
+        String expectedMessage = "Listener: found [1] books. Books: [[{\"Id\":1,\"Title\":\"Title[" + tenant.getName()
+                + "]\",\"Author\":\"Author[" + tenant.getName() + "]\"}]]";
+        verifyMessageLogged(expectedMessage, eventListenerLogsAsserter);
+    }
+
+    private void verifyMessageLogged(String expectedMessage, LogsAsserter logsAsserter) {
+        String failMessage =
+                "Couldn't find message [" + expectedMessage + "] in the logs. Logged messages: " + logsAsserter.getLoggedMessages();
+        AwaitilityExecutor.execute(failMessage, () -> Awaitility.await()
+                                                                .atMost(10, TimeUnit.SECONDS)
+                                                                .until(() -> logsAsserter.containsMessage(expectedMessage, Level.INFO)));
     }
 }

@@ -13,6 +13,7 @@ package org.eclipse.dirigible.components.database;
 import com.zaxxer.hikari.HikariDataSource;
 import jakarta.persistence.EntityManagerFactory;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -54,8 +55,7 @@ public class DataSourceSystemConfig {
         // components/data/data-sources/src/main/resources/META-INF/dirigible/datasources/SystemDB.datasource
         DataSourceProperties dataSourceProperties = new DataSourceProperties();
 
-        String systemDataSourceName = Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_NAME_SYSTEM,
-                DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM);
+        String systemDataSourceName = DirigibleConfig.SYSTEM_DATA_SOURCE_NAME.getStringValue();
         dataSourceProperties.setName(systemDataSourceName);
         dataSourceProperties.setDriverClassName(Configuration.get("DIRIGIBLE_DATABASE_SYSTEM_DRIVER", "org.h2.Driver"));
         dataSourceProperties.setUrl(Configuration.get("DIRIGIBLE_DATABASE_SYSTEM_URL", "jdbc:h2:file:./target/dirigible/h2/SystemDB"));

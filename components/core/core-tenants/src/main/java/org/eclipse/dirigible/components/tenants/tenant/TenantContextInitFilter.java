@@ -10,26 +10,23 @@
  */
 package org.eclipse.dirigible.components.tenants.tenant;
 
+import java.io.IOException;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
+import org.eclipse.dirigible.components.base.tenant.TenantContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.tenant.Tenant;
-import org.eclipse.dirigible.components.base.tenant.TenantContext;
-import org.eclipse.dirigible.components.tenants.service.TenantService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import java.io.IOException;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * The Class TenantContextInitFilter.
@@ -40,15 +37,8 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(TenantContextInitFilter.class);
 
-    /** The Constant DEFAULT_TENANT_SUBDOMAIN_REGEX. */
-    private static final String DEFAULT_TENANT_SUBDOMAIN_REGEX = "^([^\\.]+)\\..+$";
-
-    /** The Constant TENANT_SUBDOMAIN_REGEX. */
-    private static final String TENANT_SUBDOMAIN_REGEX =
-            Configuration.get(Configuration.TENANT_SUBDOMAIN_REGEX, DEFAULT_TENANT_SUBDOMAIN_REGEX);
-
     /** The Constant TENANT_SUBDOMAIN_PATTERN. */
-    private static final Pattern TENANT_SUBDOMAIN_PATTERN = Pattern.compile(TENANT_SUBDOMAIN_REGEX);
+    private static final Pattern TENANT_SUBDOMAIN_PATTERN = Pattern.compile(DirigibleConfig.TENANT_SUBDOMAIN_REGEX.getStringValue());
 
     /** The Constant tenantCache. */
     private static final Cache<String, Optional<Tenant>> tenantCache = Caffeine.newBuilder()
@@ -61,7 +51,6 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
 
     /** The tenant context. */
     private final TenantContext tenantContext;
-    private final boolean singleTenantMode;
 
     /**
      * Instantiates a new tenant context init filter.
@@ -72,7 +61,6 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
     public TenantContextInitFilter(TenantService tenantService, TenantContext tenantContext) {
         this.tenantService = tenantService;
         this.tenantContext = tenantContext;
-        this.singleTenantMode = Configuration.getAsBoolean(Configuration.SINGLE_TENANT_MODE_ENABLED, true);
     }
 
     /**
@@ -115,7 +103,7 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
      * @return the optional
      */
     private Optional<Tenant> determineCurrentTenant(HttpServletRequest request) {
-        if (singleTenantMode) {
+        if (DirigibleConfig.SINGLE_TENANT_MODE_ENABLED.getBooleanValue()) {
             LOGGER.debug("The app is in single tenant mode. Will return the default tenant.");
             return Optional.of(TenantImpl.getDefaultTenant());
         }

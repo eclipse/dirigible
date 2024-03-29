@@ -10,7 +10,7 @@
  */
 package org.eclipse.dirigible.components.initializers.synchronizer;
 
-import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.jobs.SystemJob;
 import org.quartz.JobExecutionContext;
 import org.quartz.SimpleScheduleBuilder;
@@ -67,8 +67,8 @@ class SynchronizationJob extends SystemJob {
      */
     @Override
     protected SimpleScheduleBuilder getSchedule() {
-        int frequencyInSec = org.eclipse.dirigible.commons.config.Configuration.getAsInt(Configuration.SYNCHRONIZER_FREQUENCY, 10);
-        logger.info("Configuring trigger to fire every {} seconds", frequencyInSec);
+        int frequencyInSec = DirigibleConfig.SYNCHRONIZER_FREQUENCY.getIntValue();
+        logger.info("Configuring trigger to fire every [{}] seconds", frequencyInSec);
 
         return simpleSchedule().withIntervalInSeconds(frequencyInSec)
                                .repeatForever();

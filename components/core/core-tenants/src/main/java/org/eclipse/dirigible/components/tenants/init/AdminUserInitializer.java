@@ -10,10 +10,7 @@
  */
 package org.eclipse.dirigible.components.tenants.init;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Base64.Decoder;
-import java.util.Optional;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.base.ApplicationListenersOrder.ApplicationReadyEventListeners;
 import org.eclipse.dirigible.components.base.http.roles.Roles;
 import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
@@ -30,6 +27,11 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Optional;
 
 /**
  * The Class AdminUserInitializer.
@@ -85,13 +87,8 @@ class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent>
      * Inits the admin user.
      */
     private void initAdminUser() {
-        String base64Username = org.eclipse.dirigible.commons.config.Configuration.get(
-                org.eclipse.dirigible.commons.config.Configuration.BASIC_USERNAME, "YWRtaW4="); // admin
-        String base64Password = org.eclipse.dirigible.commons.config.Configuration.get(
-                org.eclipse.dirigible.commons.config.Configuration.BASIC_PASSWORD, "YWRtaW4="); // admin
-
-        String username = decode(base64Username);
-        String password = decode(base64Password);
+        String username = DirigibleConfig.BASIC_ADMIN_USERNAME.getFromBase64Value();
+        String password = DirigibleConfig.BASIC_ADMIN_PASS.getFromBase64Value();
 
         Optional<User> existingUser = userService.findUserByUsernameAndTenantId(username, defaultTenant.getId());
         if (existingUser.isPresent()) {

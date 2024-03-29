@@ -10,11 +10,7 @@
  */
 package org.eclipse.dirigible.components.security.keycloak;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
-import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.base.http.roles.Roles;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.tenants.domain.User;
@@ -31,6 +27,11 @@ import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * The Class CustomOidcUserService.
@@ -125,8 +126,7 @@ public class CustomOidcUserService extends OidcUserService {
      * @return true, if is trial enabled
      */
     private boolean isTrialEnabled() {
-        String configValue = Configuration.get(Configuration.TRIAL_ENABLED, "false");
-        return Boolean.valueOf(configValue);
+        return DirigibleConfig.TRIAL_ENABLED.getBooleanValue();
     }
 
     /**
