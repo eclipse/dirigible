@@ -83,15 +83,15 @@ class BrowserImpl implements Browser {
         return createAppUrlByAbsolutePath(absolutePath);
     }
 
+    private String createAppUrlByAbsolutePath(String absolutePath) {
+        return protocol + "://" + host + ":" + port + absolutePath;
+    }
+
     private void maximizeBrowser() {
         WebDriverRunner.getWebDriver()
                        .manage()
                        .window()
                        .maximize();
-    }
-
-    private String createAppUrlByAbsolutePath(String absolutePath) {
-        return protocol + "://" + host + ":" + port + absolutePath;
     }
 
     @Override
@@ -109,11 +109,16 @@ class BrowserImpl implements Browser {
         return Selenide.$(selector);
     }
 
+    private By constructCssSelectorByTypeAndAttribute(HtmlElementType elementType, HtmlAttribute attribute, String attributePattern) {
+        String cssSelector = elementType.getType() + "[" + attribute.getAttribute() + "*='" + attributePattern + "']";
+        return Selectors.byCssSelector(cssSelector);
+    }
+
     private void handleElementInAllFrames(SelenideElement element, Consumer<SelenideElement> elementHandler) {
         Selenide.switchTo()
                 .defaultContent();
         LOGGER.info("Checking element [{}] in default frame...", element);
-        if (elementExists(element, 2)) {
+        if (elementExists(element, 3)) {
             elementHandler.accept(element);
             return;
         }
@@ -144,18 +149,8 @@ class BrowserImpl implements Browser {
         }
     }
 
-    private By constructCssSelectorByTypeAndAttribute(HtmlElementType elementType, HtmlAttribute attribute, String attributePattern) {
-        String cssSelector = elementType.getType() + "[" + attribute.getAttribute() + "*='" + attributePattern + "']";
-        return Selectors.byCssSelector(cssSelector);
-    }
-
     private boolean elementExists(SelenideElement element, int checkSeconds) {
         return elementExists(element, 1000L * checkSeconds);
-    }
-
-    private ElementsCollection getElements(HtmlElementType elementType) {
-        By selector = constructCssSelectorByType(elementType);
-        return Selenide.$$(selector);
     }
 
     private boolean elementExists(SelenideElement element, long millis) {
@@ -172,15 +167,20 @@ class BrowserImpl implements Browser {
         return false;
     }
 
-    @Override
-    public String createScreenshot() {
-        return Selenide.screenshot(UUID.randomUUID()
-                                       .toString());
+    private ElementsCollection getElements(HtmlElementType elementType) {
+        By selector = constructCssSelectorByType(elementType);
+        return Selenide.$$(selector);
     }
 
     private By constructCssSelectorByType(HtmlElementType elementType) {
         String cssSelector = elementType.getType();
         return Selectors.byCssSelector(cssSelector);
+    }
+
+    @Override
+    public String createScreenshot() {
+        return Selenide.screenshot(UUID.randomUUID()
+                                       .toString());
     }
 
     @Override

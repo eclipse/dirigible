@@ -28,16 +28,10 @@ public class Dirigible {
     private static final Logger LOGGER = LoggerFactory.getLogger(Dirigible.class);
 
     private static final String LOGIN_PAGE_TITLE = "Please sign in";
-
     private static final String ROOT_PATH = "/";
-
-    private static final String DEFAULT_USERNAME = "admin";
-    private static final String DEFAULT_PASSWORD = "admin";
-
     private static final String USERNAME_FIELD_ID = "username";
     private static final String PASSWORD_FIELD_ID = "password";
     private static final String SUBMIT_TYPE = "submit";
-
     private static final String SIGN_IN_BUTTON_TEXT = "Sign in";
 
     private final Browser browser;
@@ -63,15 +57,6 @@ public class Dirigible {
         browser.reload();
     }
 
-    private boolean isLoginPageOpened() {
-        String pageTitle = browser.getPageTitle();
-        return LOGIN_PAGE_TITLE.equals(pageTitle);
-    }
-
-    public void login() {
-        login(true);
-    }
-
     public void login(boolean forceLogin) {
         if (!forceLogin && !isLoginPageOpened()) {
             LOGGER.info("Already logged in");
@@ -81,6 +66,15 @@ public class Dirigible {
         browser.enterTextInElementByAttributePattern(HtmlElementType.INPUT, HtmlAttribute.ID, USERNAME_FIELD_ID, username);
         browser.enterTextInElementByAttributePattern(HtmlElementType.INPUT, HtmlAttribute.ID, PASSWORD_FIELD_ID, password);
         browser.clickElementByAttributePatternAndText(HtmlElementType.BUTTON, HtmlAttribute.TYPE, SUBMIT_TYPE, SIGN_IN_BUTTON_TEXT);
+    }
+
+    private boolean isLoginPageOpened() {
+        String pageTitle = browser.getPageTitle();
+        return LOGIN_PAGE_TITLE.equals(pageTitle);
+    }
+
+    public void login() {
+        login(true);
     }
 
     public DirigibleWorkbench openWorkbench() {

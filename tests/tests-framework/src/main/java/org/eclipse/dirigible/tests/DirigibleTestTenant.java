@@ -16,6 +16,7 @@ import java.util.UUID;
 
 public class DirigibleTestTenant {
     private static final String LOCALHOST = "localhost";
+
     private final String name;
     private final boolean defaultTenant;
     private final String id;
@@ -45,10 +46,6 @@ public class DirigibleTestTenant {
         this.password = password;
     }
 
-    public boolean isDefaultTenant() {
-        return defaultTenant;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -71,6 +68,10 @@ public class DirigibleTestTenant {
 
     public String getHost() {
         return isDefaultTenant() ? LOCALHOST : (subdomain + "." + LOCALHOST);
+    }
+
+    public boolean isDefaultTenant() {
+        return defaultTenant;
     }
 
     @Override

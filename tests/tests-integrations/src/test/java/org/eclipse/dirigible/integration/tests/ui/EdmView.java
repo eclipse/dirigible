@@ -31,3 +31,4 @@ public class EdmView {
         browser.assertElementExistsByTypeAndTextPattern(HtmlElementType.SPAN, "Generated from model");
     }
 }
+

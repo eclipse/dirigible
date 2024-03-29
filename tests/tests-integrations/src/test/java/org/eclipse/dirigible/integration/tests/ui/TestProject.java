@@ -138,6 +138,10 @@ public class TestProject {
         browser.assertElementExistsByTypeAndText(HtmlElementType.HEADER3, UI_PROJECT_TITLE);
     }
 
+    private void waitToLoadThePage() {
+        SleepUtil.sleepSeconds(1);
+    }
+
     /**
      * Verifies indirectly:<br>
      * - dirigible-test-project/views/readers.view is created and it is working<br>
@@ -169,57 +173,6 @@ public class TestProject {
         restAssuredExecutor.execute(tenant, () -> verifyBookREST(tenant));
         verifyJobExecuted(tenant);
         verifyListenerExecuted(tenant);
-    }
-
-    /**
-     * Verifies indirectly:<br>
-     * - dirigible-test-project/tables/reader.table is created<br>
-     * - dirigible-test-project/csvim/data.csvim is imported <br>
-     * - dirigible-test-project/odata/readers.odata is configured <br>
-     * - OData is working<br>
-     * - default DB datasource is resolved correctly
-     */
-    private void verifyOData(DirigibleTestTenant tenant) {
-        restAssuredExecutor.execute(tenant, () -> {
-            verifyCSVIMIsImported();
-            verifyAddingNewReader(tenant);
-        });
-    }
-
-    private void verifyDocumentsAPI(DirigibleTestTenant tenant) {
-        restAssuredExecutor.execute(tenant, () -> {
-            given().when()
-                   .get(DOCUMENTS_SERVIE_PATH)
-                   .then()
-                   .statusCode(200)
-                   .body("$", hasSize(0));
-
-            String documentName = "DOC_NAME_" + tenant.getId() + ".txt";
-            String documentContent = "DOC_CONTENT_" + tenant.getId();
-            String jsonPayload = String.format("""
-                    {
-                        "documentName": "%s",
-                        "content": "%s"
-                    }
-                    """, documentName, documentContent);
-
-            given().contentType(ContentType.JSON)
-                   .body(jsonPayload)
-                   .when()
-                   .post(DOCUMENTS_SERVIE_PATH)
-                   .then()
-                   .statusCode(200);
-
-            given().when()
-                   .get(DOCUMENTS_SERVIE_PATH + "/" + documentName)
-                   .then()
-                   .statusCode(200)
-                   .body(equalTo(JsonHelper.toJson(documentContent)));
-        });
-    }
-
-    private void waitToLoadThePage() {
-        SleepUtil.sleepSeconds(1);
     }
 
     private void verifyBookREST(DirigibleTestTenant tenant) {
@@ -255,10 +208,33 @@ public class TestProject {
         verifyMessageLogged(expectedMessage, testJobLogsAsserter);
     }
 
+    private void verifyMessageLogged(String expectedMessage, LogsAsserter logsAsserter) {
+        String failMessage =
+                "Couldn't find message [" + expectedMessage + "] in the logs. Logged messages: " + logsAsserter.getLoggedMessages();
+        AwaitilityExecutor.execute(failMessage, () -> Awaitility.await()
+                                                                .atMost(10, TimeUnit.SECONDS)
+                                                                .until(() -> logsAsserter.containsMessage(expectedMessage, Level.INFO)));
+    }
+
     private void verifyListenerExecuted(DirigibleTestTenant tenant) {
         String expectedMessage = "Listener: found [1] books. Books: [[{\"Id\":1,\"Title\":\"Title[" + tenant.getName()
                 + "]\",\"Author\":\"Author[" + tenant.getName() + "]\"}]]";
         verifyMessageLogged(expectedMessage, eventListenerLogsAsserter);
+    }
+
+    /**
+     * Verifies indirectly:<br>
+     * - dirigible-test-project/tables/reader.table is created<br>
+     * - dirigible-test-project/csvim/data.csvim is imported <br>
+     * - dirigible-test-project/odata/readers.odata is configured <br>
+     * - OData is working<br>
+     * - default DB datasource is resolved correctly
+     */
+    private void verifyOData(DirigibleTestTenant tenant) {
+        restAssuredExecutor.execute(tenant, () -> {
+            verifyCSVIMIsImported();
+            verifyAddingNewReader(tenant);
+        });
     }
 
     private void verifyCSVIMIsImported() {
@@ -305,11 +281,35 @@ public class TestProject {
                .body("d.results[2].ReaderLastName", equalTo(lastName));
     }
 
-    private void verifyMessageLogged(String expectedMessage, LogsAsserter logsAsserter) {
-        String failMessage =
-                "Couldn't find message [" + expectedMessage + "] in the logs. Logged messages: " + logsAsserter.getLoggedMessages();
-        AwaitilityExecutor.execute(failMessage, () -> Awaitility.await()
-                                                                .atMost(10, TimeUnit.SECONDS)
-                                                                .until(() -> logsAsserter.containsMessage(expectedMessage, Level.INFO)));
+    private void verifyDocumentsAPI(DirigibleTestTenant tenant) {
+        restAssuredExecutor.execute(tenant, () -> {
+            given().when()
+                   .get(DOCUMENTS_SERVIE_PATH)
+                   .then()
+                   .statusCode(200)
+                   .body("$", hasSize(0));
+
+            String documentName = "DOC_NAME_" + tenant.getId() + ".txt";
+            String documentContent = "DOC_CONTENT_" + tenant.getId();
+            String jsonPayload = String.format("""
+                    {
+                        "documentName": "%s",
+                        "content": "%s"
+                    }
+                    """, documentName, documentContent);
+
+            given().contentType(ContentType.JSON)
+                   .body(jsonPayload)
+                   .when()
+                   .post(DOCUMENTS_SERVIE_PATH)
+                   .then()
+                   .statusCode(200);
+
+            given().when()
+                   .get(DOCUMENTS_SERVIE_PATH + "/" + documentName)
+                   .then()
+                   .statusCode(200)
+                   .body(equalTo(JsonHelper.toJson(documentContent)));
+        });
     }
 }

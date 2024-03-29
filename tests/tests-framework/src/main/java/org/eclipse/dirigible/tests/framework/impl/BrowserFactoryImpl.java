@@ -26,6 +26,7 @@ class BrowserFactoryImpl implements BrowserFactory {
         this.localServerPort = localServerPort;
     }
 
+    @Override
     public Browser createByHost(String host) {
         return create(BrowserImpl.Protocol.HTTP, host, localServerPort);
     }

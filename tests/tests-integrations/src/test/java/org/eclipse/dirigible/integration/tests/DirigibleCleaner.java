@@ -60,20 +60,6 @@ class DirigibleCleaner {
         LOGGER.info("Dirigible databases have been deleted...");
     }
 
-    private void deleteCMSFolder() {
-        File cmdFolder = getCMSFolder();
-        FileUtil.deleteFolder(cmdFolder);
-    }
-
-    private void unpublishResources() throws IOException {
-        LOGGER.info("Deleting all Dirigible project resources from the repository...");
-
-        List<String> userProjects = getUserProjects();
-        deleteUsersFolder();
-        deleteDirigibleProjectsFromRegistry(userProjects);
-        LOGGER.info("Dirigible project resources have been deleted.");
-    }
-
     /**
      * Execute this before H2 folder deletion because it is in memory DB. Otherwise, will remain data in
      * memory.
@@ -86,44 +72,6 @@ class DirigibleCleaner {
         deleteAllDataInSchema(systemDataSource);
 
         deleteSchemas(defaultDataSource);
-    }
-
-    private void deleteH2Folder() {
-        File h2Folder = getH2Folder();
-        FileUtil.deleteFolder(h2Folder);
-    }
-
-    private File getCMSFolder() {
-        String path = getDirigibleSubfolder("cms");
-        return new File(path);
-    }
-
-    private List<String> getUserProjects() throws IOException {
-        File usersRepoFolder = getUsersRepoFolder();
-        if (usersRepoFolder.exists()) {
-            List<Path> userProjectFiles = FileUtil.findFiles(usersRepoFolder, "project.json");
-            return userProjectFiles.stream()
-                                   .map(p -> p.toFile()
-                                              .getParentFile()
-                                              .getName())
-                                   .toList();
-        }
-        LOGGER.info("Missing users repo folder [{}]", usersRepoFolder);
-        return Collections.emptyList();
-    }
-
-    private void deleteUsersFolder() {
-        File usersFolder = getUsersRepoFolder();
-        FileUtil.deleteFolder(usersFolder);
-    }
-
-    private void deleteDirigibleProjectsFromRegistry(List<String> userProjects) {
-        String repoBasePath = dirigibleRepo.getRepositoryPath() + IRepositoryStructure.PATH_REGISTRY_PUBLIC + File.separator;
-        LOGGER.info("Will delete user projects [{}] from the registry [{}]", userProjects, repoBasePath);
-        userProjects.forEach(projectName -> {
-            String projectPath = repoBasePath + projectName;
-            FileUtil.deleteFolder(projectPath);
-        });
     }
 
     private void deleteAllDataInSchema(DataSource dataSource) {
@@ -140,29 +88,6 @@ class DirigibleCleaner {
         });
     }
 
-    private void deleteSchemas(DataSource dataSource) {
-        Set<String> schemas = getSchemas(dataSource);
-        schemas.remove("PUBLIC");
-        schemas.remove("INFORMATION_SCHEMA");
-
-        LOGGER.info("Will drop schemas [{}] from data source [{}]", schemas, dataSource);
-        schemas.forEach(schema -> deleteSchema(schema, dataSource));
-    }
-
-    private File getH2Folder() {
-        String path = getDirigibleSubfolder("h2");
-        return new File(path);
-    }
-
-    private String getDirigibleSubfolder(String folder) {
-        return System.getProperty("user.dir") + File.separator + "target" + File.separator + "dirigible" + File.separator + folder;
-    }
-
-    private File getUsersRepoFolder() {
-        String repoBasePath = dirigibleRepo.getRepositoryPath();
-        return new File(repoBasePath + File.separator + "users");
-    }
-
     private List<String> getAllTables(DataSource dataSource) {
         List<String> tables = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
@@ -176,6 +101,15 @@ class DirigibleCleaner {
         } catch (SQLException ex) {
             throw new IllegalStateException("Failed to get all tables in data source:" + dataSource, ex);
         }
+    }
+
+    private void deleteSchemas(DataSource dataSource) {
+        Set<String> schemas = getSchemas(dataSource);
+        schemas.remove("PUBLIC");
+        schemas.remove("INFORMATION_SCHEMA");
+
+        LOGGER.info("Will drop schemas [{}] from data source [{}]", schemas, dataSource);
+        schemas.forEach(schema -> deleteSchema(schema, dataSource));
     }
 
     private Set<String> getSchemas(DataSource dataSource) {
@@ -200,5 +134,61 @@ class DirigibleCleaner {
         } catch (SQLException ex) {
             throw new IllegalStateException("Failed to drop schema [" + schema + "] from dataSource: " + dataSource, ex);
         }
+    }
+
+    private void deleteH2Folder() {
+        String h2Folder = getDirigibleSubfolder("h2");
+        FileUtil.deleteFolder(h2Folder);
+    }
+
+    private String getDirigibleSubfolder(String folder) {
+        return System.getProperty("user.dir") + File.separator + "target" + File.separator + "dirigible" + File.separator + folder;
+    }
+
+    private void deleteCMSFolder() {
+        String cmdFolder = getDirigibleSubfolder("cms");
+        FileUtil.deleteFolder(cmdFolder);
+    }
+
+    private void unpublishResources() throws IOException {
+        LOGGER.info("Deleting all Dirigible project resources from the repository...");
+
+        List<String> userProjects = getUserProjects();
+        deleteUsersFolder();
+        deleteDirigibleProjectsFromRegistry(userProjects);
+        LOGGER.info("Dirigible project resources have been deleted.");
+    }
+
+    private List<String> getUserProjects() throws IOException {
+        File usersRepoFolder = getUsersRepoFolder();
+        if (usersRepoFolder.exists()) {
+            List<Path> userProjectFiles = FileUtil.findFiles(usersRepoFolder, "project.json");
+            return userProjectFiles.stream()
+                                   .map(p -> p.toFile()
+                                              .getParentFile()
+                                              .getName())
+                                   .toList();
+        }
+        LOGGER.info("Missing users repo folder [{}]", usersRepoFolder);
+        return Collections.emptyList();
+    }
+
+    private File getUsersRepoFolder() {
+        String repoBasePath = dirigibleRepo.getRepositoryPath();
+        return new File(repoBasePath + File.separator + "users");
+    }
+
+    private void deleteUsersFolder() {
+        File usersFolder = getUsersRepoFolder();
+        FileUtil.deleteFolder(usersFolder);
+    }
+
+    private void deleteDirigibleProjectsFromRegistry(List<String> userProjects) {
+        String repoBasePath = dirigibleRepo.getRepositoryPath() + IRepositoryStructure.PATH_REGISTRY_PUBLIC + File.separator;
+        LOGGER.info("Will delete user projects [{}] from the registry [{}]", userProjects, repoBasePath);
+        userProjects.forEach(projectName -> {
+            String projectPath = repoBasePath + projectName;
+            FileUtil.deleteFolder(projectPath);
+        });
     }
 }

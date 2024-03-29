@@ -46,10 +46,6 @@ public class FileUtil {
         }
     }
 
-    public static List<Path> findFiles(String path, String fileExtension) throws IOException {
-        return findFiles(Path.of(path), fileExtension);
-    }
-
     public static void deleteFolder(String folderPath) {
         File folder = new File(folderPath);
         deleteFolder(folder);
@@ -64,7 +60,4 @@ public class FileUtil {
         }
     }
 
-    public static void deleteFolder(Path path) {
-        deleteFolder(path.toFile());
-    }
 }

@@ -10,7 +10,7 @@
  */
 package org.eclipse.dirigible.components.engine.cms.internal;
 
-import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
@@ -56,7 +56,7 @@ class CmsProviderInternalFactory implements CmsProviderFactory {
      */
     @Override
     public CmsProvider create() {
-        String rootFolder = Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER, "target/dirigible/cms") + getTenantFolder();
+        String rootFolder = DirigibleConfig.CMS_INTERNAL_ROOT_FOLDER.getStringValue() + getTenantFolder();
         Path path = Paths.get(rootFolder);
         boolean absolutePath = path.isAbsolute();
 

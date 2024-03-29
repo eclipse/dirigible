@@ -10,6 +10,8 @@
  */
 package org.eclipse.dirigible.integration.tests.ui.tests;
 
+import org.awaitility.Awaitility;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.integration.tests.TenantCreator;
@@ -20,10 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-
-import static org.awaitility.Awaitility.await;
 
 class MultitenancyIT extends UserInterfaceIntegrationTest {
 
@@ -41,22 +40,20 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
 
     @BeforeEach
     void initTestTenants() {
-        DirigibleTestTenant defaultTenant = fromTenantEntity(defTenant);
+        DirigibleTestTenant defaultTenant = createDefaultTenant();
         DirigibleTestTenant testTenant1 = new DirigibleTestTenant("test-tenant-1");
         DirigibleTestTenant testTenant2 = new DirigibleTestTenant("test-tenant-2");
 
         this.testTenants = List.of(defaultTenant, testTenant1, testTenant2);
     }
 
-    private DirigibleTestTenant fromTenantEntity(Tenant tenant) {
-        return new DirigibleTestTenant(tenant.isDefault(), //
-                tenant.getName(), //
-                tenant.getId(), //
-                tenant.getSubdomain(), //
-                UUID.randomUUID()
-                    .toString(), //
-                UUID.randomUUID()
-                    .toString());
+    private DirigibleTestTenant createDefaultTenant() {
+        return new DirigibleTestTenant(true, //
+                defTenant.getName(), //
+                defTenant.getId(), //
+                defTenant.getSubdomain(), //
+                DirigibleConfig.BASIC_ADMIN_USERNAME.getFromBase64Value(), //
+                DirigibleConfig.BASIC_ADMIN_PASS.getFromBase64Value());
     }
 
     @Test
@@ -66,7 +63,7 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
         testProject.publish();
         waitForTenantsProvisioning();
 
-        testTenants.forEach(testProject::verify);
+        verifyTenants();
     }
 
     private void createTestTenants() {
@@ -76,12 +73,17 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
 
     private void waitForTenantsProvisioning() {
         testTenants.stream()
-                   .forEach(t -> waitForTenantProvisioning(t, 30));
+                   .forEach(this::waitForTenantProvisioning);
     }
 
-    private void waitForTenantProvisioning(DirigibleTestTenant tenant, int waitSeconds) {
-        await().atMost(waitSeconds, TimeUnit.SECONDS)
-               .until(() -> tenantCreator.isTenantProvisioned(tenant));
+    private void waitForTenantProvisioning(DirigibleTestTenant tenant) {
+        Awaitility.await()
+                  .atMost(30, TimeUnit.SECONDS)
+                  .until(() -> tenantCreator.isTenantProvisioned(tenant));
+    }
+
+    private void verifyTenants() {
+        testTenants.forEach(testProject::verify);
     }
 
 }
