@@ -24,6 +24,8 @@ import org.eclipse.dirigible.tests.framework.HtmlElementType;
 import org.eclipse.dirigible.tests.logging.LogsAsserter;
 import org.eclipse.dirigible.tests.restassured.RestAssuredExecutor;
 import org.eclipse.dirigible.tests.util.SleepUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -42,6 +44,8 @@ import static org.hamcrest.Matchers.hasSize;
 @Lazy
 @Component
 public class TestProject {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestProject.class);
 
     public static final String UI_HOME_PATH = "/services/web/dirigible-test-project/gen/index.html";
     private static final String PROJECT_RESOURCES_PATH = "dirigible-test-project";
@@ -129,10 +133,14 @@ public class TestProject {
     }
 
     public void verify(DirigibleTestTenant tenant) {
+        LOGGER.info("Verifying test project for tenant [{}]...", tenant);
+
         verifyHomePageAccessibleByTenant(tenant);
         verifyView(tenant);
         verifyOData(tenant);
         verifyEdmGeneratedResources(tenant);
+
+        LOGGER.info("Test test project for tenant [{}] has been verified successfully!", tenant);
     }
 
     /**
