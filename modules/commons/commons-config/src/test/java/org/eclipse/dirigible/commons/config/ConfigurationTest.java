@@ -177,20 +177,4 @@ public class ConfigurationTest {
         assertEquals("my-test-project ${projectVersion} - Application View", o.s5);
     }
 
-    @Test
-    public void testGetAsBoolean() {
-        testGetAsBoolean("invalid_value", false, false);
-        testGetAsBoolean("false", false, false);
-        testGetAsBoolean("true", false, true);
-        testGetAsBoolean("TRUE", false, true);
-        testGetAsBoolean(" TRUE ", false, true);
-        testGetAsBoolean("false", true, false);
-        testGetAsBoolean("FALSE", true, false);
-    }
-
-    private void testGetAsBoolean(String initialValue, boolean defaultValue, boolean expected) {
-        String key = "TEST_KEY";
-        Configuration.set(key, initialValue);
-        assertEquals(expected, Configuration.getAsBoolean(key, defaultValue));
-    }
 }

@@ -11,7 +11,9 @@
 package org.eclipse.dirigible.integration.tests;
 
 import org.eclipse.dirigible.DirigibleApplication;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -21,8 +23,16 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @AutoConfigureMockMvc
 @RunWith(SpringRunner.class)
-@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = DirigibleApplication.class)
 public abstract class IntegrationTest {
-    // base class for integration tests
+
+    @Autowired
+    private DirigibleCleaner dirigibleCleaner;
+
+    @AfterEach
+    final void cleanUp() {
+        dirigibleCleaner.clean();
+    }
+
 }
