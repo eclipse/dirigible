@@ -104,17 +104,6 @@ class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent>
     }
 
     /**
-     * Decode.
-     *
-     * @param base64String the base 64 string
-     * @return the string
-     */
-    private String decode(String base64String) {
-        byte[] decodedValue = base64Decoder.decode(base64String);
-        return new String(decodedValue, StandardCharsets.UTF_8);
-    }
-
-    /**
      * Assign role.
      *
      * @param user the user
@@ -130,6 +119,17 @@ class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent>
 
         LOGGER.info("Assigned role [{}] to user [{}] in tenant [{}]", roleName, user.getUsername(), user.getTenant()
                                                                                                         .getId());
+    }
+
+    /**
+     * Decode.
+     *
+     * @param base64String the base 64 string
+     * @return the string
+     */
+    private String decode(String base64String) {
+        byte[] decodedValue = base64Decoder.decode(base64String);
+        return new String(decodedValue, StandardCharsets.UTF_8);
     }
 
 }

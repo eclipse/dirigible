@@ -105,6 +105,15 @@ public class CustomOidcUserService extends OidcUserService {
     }
 
     /**
+     * Checks if is trial enabled.
+     *
+     * @return true, if is trial enabled
+     */
+    private boolean isTrialEnabled() {
+        return DirigibleConfig.TRIAL_ENABLED.getBooleanValue();
+    }
+
+    /**
      * Gets the role names.
      *
      * @param user the user
@@ -118,15 +127,6 @@ public class CustomOidcUserService extends OidcUserService {
                          .collect(Collectors.toSet());
         }
         return userService.getUserRoleNames(user);
-    }
-
-    /**
-     * Checks if is trial enabled.
-     *
-     * @return true, if is trial enabled
-     */
-    private boolean isTrialEnabled() {
-        return DirigibleConfig.TRIAL_ENABLED.getBooleanValue();
     }
 
     /**
