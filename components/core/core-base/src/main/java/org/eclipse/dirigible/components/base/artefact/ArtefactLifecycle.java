@@ -30,7 +30,9 @@ public enum ArtefactLifecycle {
     /** The started. */
     STARTED("STARTED"),
     /** The failed. */
-    FAILED("FAILED");
+    FAILED("FAILED"),
+    /** The failed. */
+    FATAL("FATAL");
 
     /** The status. */
     private String status;

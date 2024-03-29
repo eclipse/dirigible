@@ -387,6 +387,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                 int countCreated = 0;
                 int countUpdated = 0;
                 int countFailed = 0;
+                int countFatal = 0;
                 for (Artefact artefact : artefacts.values()) {
                     if (ArtefactLifecycle.CREATED.equals(artefact.getLifecycle()))
                         countCreated++;
@@ -394,9 +395,12 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                         countUpdated++;
                     if (ArtefactLifecycle.FAILED.equals(artefact.getLifecycle()))
                         countFailed++;
+                    if (ArtefactLifecycle.FATAL.equals(artefact.getLifecycle()))
+                        countFatal++;
                 }
-                logger.debug("Processing synchronizers done. {} artefacts processed in total. {} ({}/{}) successful and {} failed.",
-                        artefacts.size(), countCreated + countUpdated, countCreated, countUpdated, countFailed);
+                logger.debug(
+                        "Processing synchronizers done. {} artefacts processed in total. {} ({}/{}) successful, {} failed and {} fatal.",
+                        artefacts.size(), countCreated + countUpdated, countCreated, countUpdated, countFailed, countFatal);
             }
             // clear maps
             definitions.clear();
@@ -498,6 +502,14 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
                             break;
                         case PARSED: // not new nor modified
                             parsed = synchronizer.retrieve(definition.getLocation());
+
+                            Iterator<? extends Artefact> iterator = parsed.iterator();
+                            while (iterator.hasNext()) {
+                                Artefact a = iterator.next();
+                                if (ArtefactLifecycle.FATAL.equals(a.getLifecycle())) {
+                                    iterator.remove();
+                                }
+                            }
                             addArtefacts(parsed);
                             break;
                         case BROKEN: // has been broken
@@ -785,17 +797,17 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
      * @param lifecycle the lifecycle
      */
     @Override
-    public void registerFatals(List<TopologyWrapper<? extends Artefact>> remained, ArtefactLifecycle lifecycle) {
+    public void registerFatals(List<TopologyWrapper<? extends Artefact>> remained) {
         if (remained.size() > 0) {
             for (TopologyWrapper<? extends Artefact> wrapper : remained) {
                 String errorMessage = String.format(
                         "Fatal undepleted Artefact of type: [%s] with key: [%s] in phase: [%s]", wrapper.getArtefact()
                                                                                                         .getType(),
-                        wrapper.getId(), lifecycle);
+                        wrapper.getId(), ArtefactLifecycle.FATAL);
                 logger.error(errorMessage);
                 errors.add(errorMessage);
                 Synchronizer synchronizer = wrapper.getSynchronizer();
-                synchronizer.setStatus(wrapper.getArtefact(), lifecycle, errorMessage);
+                synchronizer.setStatus(wrapper.getArtefact(), ArtefactLifecycle.FATAL, errorMessage);
             }
         }
     }
@@ -826,7 +838,10 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
     public void registerState(Synchronizer<? extends Artefact, ?> synchronizer, Artefact artefact, ArtefactLifecycle lifecycle,
             String message) {
         if (ArtefactLifecycle.FAILED.equals(lifecycle)) {
-            logger.error("Processing failed for artefact with key: {}", artefact.getKey());
+            logger.error("Processing has been failed for artefact with key: {}", artefact.getKey());
+        }
+        if (ArtefactLifecycle.FATAL.equals(lifecycle)) {
+            logger.error("Processing has been fatal for artefact with key: {}", artefact.getKey());
         }
         Synchronizer s = synchronizer;
         s.setStatus(artefact, lifecycle, message);

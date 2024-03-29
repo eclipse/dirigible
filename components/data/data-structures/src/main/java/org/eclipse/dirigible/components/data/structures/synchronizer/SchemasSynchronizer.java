@@ -43,6 +43,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import static java.text.MessageFormat.format;
 
 /**
@@ -435,8 +437,27 @@ public class SchemasSynchronizer extends MultitenantBaseSynchronizer<Schema, Lon
     protected boolean completeImpl(TopologyWrapper<Schema> wrapper, ArtefactPhase flow) {
         Schema schema = wrapper.getArtefact();
 
-        try (Connection connection = datasourcesManager.getDataSource(schema.getDatasource())
-                                                       .getConnection()) {
+        DataSource dataSource = null;
+        try {
+            dataSource = datasourcesManager.getDataSource(schema.getDatasource());
+        } catch (Exception e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
+
+            if (dataSource == null) {
+                if (ArtefactLifecycle.FAILED.equals(schema.getLifecycle())) {
+                    callback.addError(e.getMessage());
+                    callback.registerState(this, wrapper, ArtefactLifecycle.FATAL, e.getMessage());
+                    return true;
+                }
+            }
+            callback.addError(e.getMessage());
+            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
+            return false;
+        }
+
+        try (Connection connection = dataSource.getConnection()) {
             switch (flow) {
                 case CREATE:
                     if (schema.getLifecycle()
