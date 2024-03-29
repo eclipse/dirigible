@@ -115,7 +115,7 @@ class BrowserImpl implements Browser {
     }
 
     private void handleElementInAllFrames(SelenideElement element, Consumer<SelenideElement> elementHandler) {
-        handleElementInAllFrames(15 * 1000, element, elementHandler);
+        handleElementInAllFrames(30 * 1000, element, elementHandler);
     }
 
     private void handleElementInAllFrames(long totalWaitMillis, SelenideElement element, Consumer<SelenideElement> elementHandler) {
