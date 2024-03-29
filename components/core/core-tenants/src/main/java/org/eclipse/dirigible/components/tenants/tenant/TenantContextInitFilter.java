@@ -54,7 +54,7 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
 
     /** The tenant context. */
     private final TenantContext tenantContext;
-    private final boolean singleTenantMode;
+    private final boolean multitenantModeEnabled;
 
     /**
      * Instantiates a new tenant context init filter.
@@ -65,7 +65,7 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
     public TenantContextInitFilter(TenantService tenantService, TenantContext tenantContext) {
         this.tenantService = tenantService;
         this.tenantContext = tenantContext;
-        this.singleTenantMode = DirigibleConfig.SINGLE_TENANT_MODE_ENABLED.getBooleanValue();
+        this.multitenantModeEnabled = DirigibleConfig.MULTI_TENANT_MODE_ENABLED.getBooleanValue();
     }
 
     /**
@@ -108,7 +108,7 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
      * @return the optional
      */
     private Optional<Tenant> determineCurrentTenant(HttpServletRequest request) {
-        if (singleTenantMode) {
+        if (!multitenantModeEnabled) {
             LOGGER.debug("The app is in single tenant mode. Will return the default tenant.");
             return Optional.of(TenantImpl.getDefaultTenant());
         }
