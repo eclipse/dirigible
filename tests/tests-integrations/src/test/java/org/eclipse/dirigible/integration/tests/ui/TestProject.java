@@ -15,6 +15,7 @@ import io.restassured.http.ContentType;
 import org.apache.commons.io.FileUtils;
 import org.awaitility.Awaitility;
 import org.eclipse.dirigible.commons.config.DirigibleConfig;
+import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.tests.DirigibleTestTenant;
 import org.eclipse.dirigible.tests.awaitility.AwaitilityExecutor;
@@ -50,6 +51,7 @@ public class TestProject {
     public static final String READERS_ODATA_ENTITY_PATH = "/odata/v2/Readers";
     public static final String READERS_VIEW_SERVICE_PATH = "/services/ts/dirigible-test-project/views/ReaderViewService.ts";
     public static final String PROJECT_ROOT_FOLDER = "dirigible-test-project";
+    public static final String DOCUMENTS_SERVIE_PATH = "/services/ts/dirigible-test-project/cmis/DocumentService.ts/documents";
     private static final Logger LOGGER = LoggerFactory.getLogger(TestProject.class);
     private static final String PROJECT_RESOURCES_PATH = "dirigible-test-project";
     private static final String UI_PROJECT_TITLE = "Dirigible Test Project";
@@ -64,7 +66,7 @@ public class TestProject {
 
     private final LogsAsserter eventListenerLogsAsserter;
 
-    TestProject(IRepository dirigibleRepo, BrowserFactory browserFactory, Dirigible dirigible, EdmView edmView,
+    public TestProject(IRepository dirigibleRepo, BrowserFactory browserFactory, Dirigible dirigible, EdmView edmView,
             RestAssuredExecutor restAssuredExecutor) {
         this.dirigibleRepo = dirigibleRepo;
         this.browserFactory = browserFactory;
@@ -117,8 +119,9 @@ public class TestProject {
 
         verifyHomePageAccessibleByTenant(tenant);
         verifyView(tenant);
-        verifyOData(tenant);
         verifyEdmGeneratedResources(tenant);
+        verifyOData(tenant);
+        verifyDocumentsAPI(tenant);
 
         LOGGER.info("Test test project for tenant [{}] has been verified successfully!", tenant);
     }
@@ -156,6 +159,20 @@ public class TestProject {
 
     /**
      * Verifies indirectly:<br>
+     * - edm generated schema is created<br>
+     * - generated REST is created and it works<br>
+     * - topic listener works<br>
+     * - job has been executed<br>
+     * - default DB datasource is resolved correctly
+     */
+    private void verifyEdmGeneratedResources(DirigibleTestTenant tenant) {
+        restAssuredExecutor.execute(tenant, () -> verifyBookREST(tenant));
+        verifyJobExecuted(tenant);
+        verifyListenerExecuted(tenant);
+    }
+
+    /**
+     * Verifies indirectly:<br>
      * - dirigible-test-project/tables/reader.table is created<br>
      * - dirigible-test-project/csvim/data.csvim is imported <br>
      * - dirigible-test-project/odata/readers.odata is configured <br>
@@ -169,22 +186,79 @@ public class TestProject {
         });
     }
 
-    /**
-     * Verifies indirectly:<br>
-     * - edm generated schema is created<br>
-     * - generated REST is created and it works<br>
-     * - topic listener works<br>
-     * - job has been executed<br>
-     * - default DB datasource is resolved correctly
-     */
-    private void verifyEdmGeneratedResources(DirigibleTestTenant tenant) {
-        restAssuredExecutor.execute(tenant, () -> verifyBookREST(tenant));
-        verifyJobExecuted(tenant);
-        verifyListenerExecuted(tenant);
+    private void verifyDocumentsAPI(DirigibleTestTenant tenant) {
+        restAssuredExecutor.execute(tenant, () -> {
+            given().when()
+                   .get(DOCUMENTS_SERVIE_PATH)
+                   .then()
+                   .statusCode(200)
+                   .body("$", hasSize(0));
+
+            String documentName = "DOC_NAME_" + tenant.getId() + ".txt";
+            String documentContent = "DOC_CONTENT_" + tenant.getId();
+            String jsonPayload = String.format("""
+                    {
+                        "documentName": "%s",
+                        "content": "%s"
+                    }
+                    """, documentName, documentContent);
+
+            given().contentType(ContentType.JSON)
+                   .body(jsonPayload)
+                   .when()
+                   .post(DOCUMENTS_SERVIE_PATH)
+                   .then()
+                   .statusCode(200);
+
+            given().when()
+                   .get(DOCUMENTS_SERVIE_PATH + "/" + documentName)
+                   .then()
+                   .statusCode(200)
+                   .body(equalTo(JsonHelper.toJson(documentContent)));
+        });
     }
 
     private void waitToLoadThePage() {
         SleepUtil.sleepSeconds(1);
+    }
+
+    private void verifyBookREST(DirigibleTestTenant tenant) {
+        String title = "Title[" + tenant.getName() + "]";
+        String author = "Author[" + tenant.getName() + "]";
+        String jsonPayload = String.format("""
+                {
+                    "Title": "%s",
+                    "Author": "%s"
+                }
+                """, title, author);
+
+        given().contentType(ContentType.JSON)
+               .body(jsonPayload)
+               .when()
+               .post(BOOKS_SERVICE_PATH)
+               .then()
+               .statusCode(201);
+
+        given().when()
+               .get(BOOKS_SERVICE_PATH)
+               .then()
+               .statusCode(200)
+               .body("$", hasSize(1))
+               .body("[0].Id", equalTo(1))
+               .body("[0].Title", equalTo(title))
+               .body("[0].Author", equalTo(author));
+    }
+
+    private void verifyJobExecuted(DirigibleTestTenant tenant) {
+        String expectedMessage = "Job: found [1] books. Books: [[{\"Id\":1,\"Title\":\"Title[" + tenant.getName()
+                + "]\",\"Author\":\"Author[" + tenant.getName() + "]\"}]]";
+        verifyMessageLogged(expectedMessage, testJobLogsAsserter);
+    }
+
+    private void verifyListenerExecuted(DirigibleTestTenant tenant) {
+        String expectedMessage = "Listener: found [1] books. Books: [[{\"Id\":1,\"Title\":\"Title[" + tenant.getName()
+                + "]\",\"Author\":\"Author[" + tenant.getName() + "]\"}]]";
+        verifyMessageLogged(expectedMessage, eventListenerLogsAsserter);
     }
 
     private void verifyCSVIMIsImported() {
@@ -229,45 +303,6 @@ public class TestProject {
                .body("d.results[2].ReaderId", equalTo(3))
                .body("d.results[2].ReaderFirstName", equalTo(firstName))
                .body("d.results[2].ReaderLastName", equalTo(lastName));
-    }
-
-    private void verifyBookREST(DirigibleTestTenant tenant) {
-        String title = "Title[" + tenant.getName() + "]";
-        String author = "Author[" + tenant.getName() + "]";
-        String jsonPayload = String.format("""
-                {
-                    "Title": "%s",
-                    "Author": "%s"
-                }
-                """, title, author);
-
-        given().contentType(ContentType.JSON)
-               .body(jsonPayload)
-               .when()
-               .post(BOOKS_SERVICE_PATH)
-               .then()
-               .statusCode(201);
-
-        given().when()
-               .get(BOOKS_SERVICE_PATH)
-               .then()
-               .statusCode(200)
-               .body("$", hasSize(1))
-               .body("[0].Id", equalTo(1))
-               .body("[0].Title", equalTo(title))
-               .body("[0].Author", equalTo(author));
-    }
-
-    private void verifyJobExecuted(DirigibleTestTenant tenant) {
-        String expectedMessage = "Job: found [1] books. Books: [[{\"Id\":1,\"Title\":\"Title[" + tenant.getName()
-                + "]\",\"Author\":\"Author[" + tenant.getName() + "]\"}]]";
-        verifyMessageLogged(expectedMessage, testJobLogsAsserter);
-    }
-
-    private void verifyListenerExecuted(DirigibleTestTenant tenant) {
-        String expectedMessage = "Listener: found [1] books. Books: [[{\"Id\":1,\"Title\":\"Title[" + tenant.getName()
-                + "]\",\"Author\":\"Author[" + tenant.getName() + "]\"}]]";
-        verifyMessageLogged(expectedMessage, eventListenerLogsAsserter);
     }
 
     private void verifyMessageLogged(String expectedMessage, LogsAsserter logsAsserter) {

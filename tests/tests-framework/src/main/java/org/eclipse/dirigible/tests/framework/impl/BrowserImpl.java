@@ -225,7 +225,7 @@ class BrowserImpl implements Browser {
     @Override
     public void assertElementExistsByTypeAndTextPattern(HtmlElementType htmlElementType, String textPattern) {
         SelenideElement element = getElementByAttributeAndTextPattern(htmlElementType, textPattern);
-        element.should(Condition.exist);
+        handleElementInAllFrames(element, e -> e.should(Condition.exist));
     }
 
     private SelenideElement getElementByAttributeAndTextPattern(HtmlElementType htmlElementType, String textPattern) {
