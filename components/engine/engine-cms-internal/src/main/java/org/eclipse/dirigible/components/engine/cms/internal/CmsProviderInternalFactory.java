@@ -56,7 +56,7 @@ class CmsProviderInternalFactory implements CmsProviderFactory {
      */
     @Override
     public CmsProvider create() {
-        String rootFolder = Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER, "target/dirigible") + getTenantFolder();
+        String rootFolder = Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER, "target/dirigible/cms") + getTenantFolder();
         Path path = Paths.get(rootFolder);
         boolean absolutePath = path.isAbsolute();
 

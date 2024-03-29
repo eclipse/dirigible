@@ -44,6 +44,7 @@ class DirigibleCleaner {
     void clean() {
         try {
             deleteDatabases();
+            deleteCMSFolder();
             unpublishResources();
         } catch (Throwable ex) {
             throw new IllegalStateException("Failed to cleanup resources", ex);
@@ -57,6 +58,20 @@ class DirigibleCleaner {
         deleteH2Folder();
 
         LOGGER.info("Dirigible databases have been deleted...");
+    }
+
+    private void deleteCMSFolder() {
+        File cmdFolder = getCMSFolder();
+        FileUtil.deleteFolder(cmdFolder);
+    }
+
+    private void unpublishResources() throws IOException {
+        LOGGER.info("Deleting all Dirigible project resources from the repository...");
+
+        List<String> userProjects = getUserProjects();
+        deleteUsersFolder();
+        deleteDirigibleProjectsFromRegistry(userProjects);
+        LOGGER.info("Dirigible project resources have been deleted.");
     }
 
     /**
@@ -73,75 +88,14 @@ class DirigibleCleaner {
         deleteSchemas(defaultDataSource);
     }
 
-    private void deleteSchemas(DataSource dataSource) {
-        Set<String> schemas = getSchemas(dataSource);
-        schemas.remove("PUBLIC");
-        schemas.remove("INFORMATION_SCHEMA");
-
-        LOGGER.info("Will drop schemas [{}] from data source [{}]", schemas, dataSource);
-        schemas.forEach(schema -> deleteSchema(schema, dataSource));
+    private void deleteH2Folder() {
+        File h2Folder = getH2Folder();
+        FileUtil.deleteFolder(h2Folder);
     }
 
-    private void deleteSchema(String schema, DataSource dataSource) {
-        LOGGER.info("Will drop schema [{}] from data source [{}]", schema, dataSource);
-        try (Connection connection = dataSource.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("DROP SCHEMA `" + schema + "` CASCADE")) {
-            preparedStatement.executeUpdate();
-        } catch (SQLException ex) {
-            throw new IllegalStateException("Failed to drop schema [" + schema + "] from dataSource: " + dataSource, ex);
-        }
-    }
-
-    private Set<String> getSchemas(DataSource dataSource) {
-        Set<String> schemas = new HashSet<>();
-        try (Connection connection = dataSource.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("SHOW SCHEMAS");
-                ResultSet resultSet = preparedStatement.executeQuery()) {
-            while (resultSet.next()) {
-                schemas.add(resultSet.getString(1));
-            }
-            return schemas;
-        } catch (SQLException ex) {
-            throw new IllegalStateException("Failed to get all schemas from data source: " + dataSource, ex);
-        }
-    }
-
-    private void deleteAllDataInSchema(DataSource dataSource) {
-        List<String> tables = getAllTables(dataSource);
-
-        tables.forEach(t -> {
-            try (Connection connection = dataSource.getConnection();
-                    PreparedStatement prepareStatement = connection.prepareStatement("DELETE FROM " + t)) {
-                int rowsAffected = prepareStatement.executeUpdate();
-                LOGGER.info("Deleted [{}] from table [{}]", rowsAffected, t);
-            } catch (SQLException ex) {
-                LOGGER.warn("Failed to delete data from table [{}] in data source [{}]", t, dataSource, ex);
-            }
-        });
-    }
-
-    private List<String> getAllTables(DataSource dataSource) {
-        List<String> tables = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection();
-                PreparedStatement prepareStatement =
-                        connection.prepareStatement("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='PUBLIC'")) {
-            ResultSet resultSet = prepareStatement.executeQuery();
-            while (resultSet.next()) {
-                tables.add(resultSet.getString(1));
-            }
-            return tables;
-        } catch (SQLException ex) {
-            throw new IllegalStateException("Failed to get all tables in data source:" + dataSource, ex);
-        }
-    }
-
-    private void unpublishResources() throws IOException {
-        LOGGER.info("Deleting all Dirigible project resources from the repository...");
-
-        List<String> userProjects = getUserProjects();
-        deleteUsersFolder();
-        deleteDirigibleProjectsFromRegistry(userProjects);
-        LOGGER.info("Dirigible project resources have been deleted.");
+    private File getCMSFolder() {
+        String path = getDirigibleSubfolder("cms");
+        return new File(path);
     }
 
     private List<String> getUserProjects() throws IOException {
@@ -163,11 +117,6 @@ class DirigibleCleaner {
         FileUtil.deleteFolder(usersFolder);
     }
 
-    private void deleteH2Folder() {
-        File h2Folder = getH2Folder();
-        FileUtil.deleteFolder(h2Folder);
-    }
-
     private void deleteDirigibleProjectsFromRegistry(List<String> userProjects) {
         String repoBasePath = dirigibleRepo.getRepositoryPath() + IRepositoryStructure.PATH_REGISTRY_PUBLIC + File.separator;
         LOGGER.info("Will delete user projects [{}] from the registry [{}]", userProjects, repoBasePath);
@@ -177,14 +126,79 @@ class DirigibleCleaner {
         });
     }
 
+    private void deleteAllDataInSchema(DataSource dataSource) {
+        List<String> tables = getAllTables(dataSource);
+
+        tables.forEach(t -> {
+            try (Connection connection = dataSource.getConnection();
+                    PreparedStatement prepareStatement = connection.prepareStatement("DELETE FROM " + t)) {
+                int rowsAffected = prepareStatement.executeUpdate();
+                LOGGER.info("Deleted [{}] from table [{}]", rowsAffected, t);
+            } catch (SQLException ex) {
+                LOGGER.warn("Failed to delete data from table [{}] in data source [{}]", t, dataSource, ex);
+            }
+        });
+    }
+
+    private void deleteSchemas(DataSource dataSource) {
+        Set<String> schemas = getSchemas(dataSource);
+        schemas.remove("PUBLIC");
+        schemas.remove("INFORMATION_SCHEMA");
+
+        LOGGER.info("Will drop schemas [{}] from data source [{}]", schemas, dataSource);
+        schemas.forEach(schema -> deleteSchema(schema, dataSource));
+    }
+
+    private File getH2Folder() {
+        String path = getDirigibleSubfolder("h2");
+        return new File(path);
+    }
+
+    private String getDirigibleSubfolder(String folder) {
+        return System.getProperty("user.dir") + File.separator + "target" + File.separator + "dirigible" + File.separator + folder;
+    }
+
     private File getUsersRepoFolder() {
         String repoBasePath = dirigibleRepo.getRepositoryPath();
         return new File(repoBasePath + File.separator + "users");
     }
 
-    private File getH2Folder() {
-        String path = System.getProperty("user.dir") + File.separator + "target" + File.separator + "dirigible" + File.separator + "h2";
-        return new File(path);
+    private List<String> getAllTables(DataSource dataSource) {
+        List<String> tables = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement prepareStatement =
+                        connection.prepareStatement("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='PUBLIC'")) {
+            ResultSet resultSet = prepareStatement.executeQuery();
+            while (resultSet.next()) {
+                tables.add(resultSet.getString(1));
+            }
+            return tables;
+        } catch (SQLException ex) {
+            throw new IllegalStateException("Failed to get all tables in data source:" + dataSource, ex);
+        }
     }
 
+    private Set<String> getSchemas(DataSource dataSource) {
+        Set<String> schemas = new HashSet<>();
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement("SHOW SCHEMAS");
+                ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                schemas.add(resultSet.getString(1));
+            }
+            return schemas;
+        } catch (SQLException ex) {
+            throw new IllegalStateException("Failed to get all schemas from data source: " + dataSource, ex);
+        }
+    }
+
+    private void deleteSchema(String schema, DataSource dataSource) {
+        LOGGER.info("Will drop schema [{}] from data source [{}]", schema, dataSource);
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement("DROP SCHEMA `" + schema + "` CASCADE")) {
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new IllegalStateException("Failed to drop schema [" + schema + "] from dataSource: " + dataSource, ex);
+        }
+    }
 }
