@@ -50,10 +50,6 @@ public enum DirigibleConfig {
         return key;
     }
 
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
     public boolean getBooleanValue() {
         String configValue = getStringValue();
         return Boolean.valueOf(configValue);
