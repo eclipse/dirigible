@@ -8,11 +8,11 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.integration.tests.api;
+package org.eclipse.dirigible.integration.tests.api.rest;
 
 import io.restassured.http.ContentType;
 import org.eclipse.dirigible.integration.tests.IntegrationTest;
-import org.eclipse.dirigible.tests.framework.restassured.RestAssuredExecutor;
+import org.eclipse.dirigible.tests.restassured.RestAssuredExecutor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

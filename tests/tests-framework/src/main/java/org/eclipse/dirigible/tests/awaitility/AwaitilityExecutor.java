@@ -8,9 +8,9 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.tests.framework.awaitility;
+package org.eclipse.dirigible.tests.awaitility;
 
-import org.eclipse.dirigible.tests.framework.restassured.CallableNoResultAndNoException;
+import org.eclipse.dirigible.tests.restassured.CallableNoResultAndNoException;
 
 import static org.junit.jupiter.api.Assertions.fail;
 

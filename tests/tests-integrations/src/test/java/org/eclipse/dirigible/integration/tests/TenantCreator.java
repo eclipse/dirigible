@@ -8,19 +8,19 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.integration.tests.ui.tests.multitenancy;
+package org.eclipse.dirigible.integration.tests;
 
 import org.eclipse.dirigible.components.tenants.domain.Tenant;
 import org.eclipse.dirigible.components.tenants.domain.TenantStatus;
 import org.eclipse.dirigible.components.tenants.service.TenantService;
 import org.eclipse.dirigible.components.tenants.service.UserService;
-import org.eclipse.dirigible.tests.framework.DirigibleTestTenant;
+import org.eclipse.dirigible.tests.DirigibleTestTenant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-class TenantCreator {
+public class TenantCreator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TenantCreator.class);
 
@@ -32,20 +32,24 @@ class TenantCreator {
         this.userService = userService;
     }
 
-    void createTenant(DirigibleTestTenant tenant) {
-        LOGGER.info("Creating tenant [{}]", tenant);
+    public void createTenant(DirigibleTestTenant tenant) {
+        createTenantEntity(tenant);
+        userService.createNewUser(tenant.getUsername(), tenant.getPassword(), tenant.getId());
+
+        LOGGER.info("Created tenant [{}]", tenant);
+    }
+
+    private Tenant createTenantEntity(DirigibleTestTenant tenant) {
         Tenant tenantEntity = new Tenant();
         tenantEntity.setId(tenant.getId());
         tenantEntity.setName(tenant.getName());
         tenantEntity.setSubdomain(tenant.getSubdomain());
         tenantEntity.setStatus(TenantStatus.INITIAL);
 
-        tenantService.save(tenantEntity);
-
-        userService.createNewUser(tenant.getUsername(), tenant.getPassword(), tenant.getId());
+        return tenantService.save(tenantEntity);
     }
 
-    boolean isTenantProvisioned(DirigibleTestTenant tenant) {
+    public boolean isTenantProvisioned(DirigibleTestTenant tenant) {
         return tenantService.findById(tenant.getId())
                             .get()
                             .getStatus() == TenantStatus.PROVISIONED;

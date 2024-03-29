@@ -8,10 +8,15 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.tests.framework.restassured;
+package org.eclipse.dirigible.tests;
 
 @FunctionalInterface
-public interface CallableNoResultAndNoException {
+public interface CallableResultAndNoException<Result> {
 
-    void call();
+    /**
+     * Call.
+     *
+     * @return the result
+     */
+    Result call();
 }

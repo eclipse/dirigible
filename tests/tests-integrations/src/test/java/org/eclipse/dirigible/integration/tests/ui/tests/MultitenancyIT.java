@@ -8,21 +8,22 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.integration.tests.ui.tests.multitenancy;
+package org.eclipse.dirigible.integration.tests.ui.tests;
 
 import ch.qos.logback.classic.Level;
 import io.restassured.http.ContentType;
 import org.awaitility.Awaitility;
 import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
+import org.eclipse.dirigible.integration.tests.TenantCreator;
 import org.eclipse.dirigible.integration.tests.ui.Dirigible;
 import org.eclipse.dirigible.integration.tests.ui.DirigibleWorkbench;
 import org.eclipse.dirigible.integration.tests.ui.EdmView;
-import org.eclipse.dirigible.integration.tests.ui.tests.UserInterfaceIntegrationTest;
-import org.eclipse.dirigible.tests.framework.DirigibleTestTenant;
-import org.eclipse.dirigible.tests.framework.awaitility.AwaitilityExecutor;
-import org.eclipse.dirigible.tests.framework.logging.LogsAsserter;
-import org.eclipse.dirigible.tests.framework.restassured.RestAssuredExecutor;
+import org.eclipse.dirigible.integration.tests.ui.TestProject;
+import org.eclipse.dirigible.tests.DirigibleTestTenant;
+import org.eclipse.dirigible.tests.awaitility.AwaitilityExecutor;
+import org.eclipse.dirigible.tests.logging.LogsAsserter;
+import org.eclipse.dirigible.tests.restassured.RestAssuredExecutor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

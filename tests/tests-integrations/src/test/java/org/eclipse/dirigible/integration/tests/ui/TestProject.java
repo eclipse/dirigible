@@ -8,13 +8,16 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.integration.tests.ui.tests.multitenancy;
+package org.eclipse.dirigible.integration.tests.ui;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.integration.tests.ui.Dirigible;
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.tests.framework.*;
+import org.eclipse.dirigible.tests.DirigibleTestTenant;
+import org.eclipse.dirigible.tests.framework.Browser;
+import org.eclipse.dirigible.tests.framework.BrowserFactory;
+import org.eclipse.dirigible.tests.framework.HtmlElementType;
+import org.eclipse.dirigible.tests.util.SleepUtil;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +28,7 @@ import java.util.Base64;
 
 @Lazy
 @Component
-class TestProject {
+public class TestProject {
 
     public static final String UI_HOME_PATH = "/services/web/dirigible-test-project/gen/index.html";
     private static final String PROJECT_RESOURCES_PATH = "dirigible-test-project";
@@ -41,7 +44,7 @@ class TestProject {
         this.browserFactory = browserFactory;
     }
 
-    void copyToRepository() {
+    public void copyToRepository() {
         String repoBasePath = dirigibleRepo.getRepositoryPath();
         String userWorkspace = repoBasePath + File.separator + "users" + File.separator + ADMIN_USERNAME + File.separator + "workspace";
 

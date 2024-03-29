@@ -8,7 +8,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
  * contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.integration.tests.ui;
+package org.eclipse.dirigible.tests.util;
 
 import org.awaitility.Awaitility;
 import org.slf4j.Logger;
