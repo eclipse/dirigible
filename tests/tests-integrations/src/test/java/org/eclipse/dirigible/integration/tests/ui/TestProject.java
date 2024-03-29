@@ -168,24 +168,25 @@ public class TestProject {
      */
     private void verifyEdmGeneratedResources(DirigibleTestTenant tenant) {
         restAssuredExecutor.execute(tenant, () -> verifyBookREST(tenant));
-        assertJobExecuted(tenant);
-        assertListenerExecuted(tenant);
+        verifyJobExecuted(tenant);
+        verifyListenerExecuted(tenant);
     }
 
-    private void assertJobExecuted(DirigibleTestTenant tenant) {
-        String expectedMessage = "Found [1] books. Books: [[{\"Id\":1,\"Title\":\"Title[" + tenant.getName() + "]\",\"Author\":\"Author["
-                + tenant.getName() + "]\"}]]";
+    private void verifyJobExecuted(DirigibleTestTenant tenant) {
+        String expectedMessage = "Job: found [1] books. Books: [[{\"Id\":1,\"Title\":\"Title[" + tenant.getName()
+                + "]\",\"Author\":\"Author[" + tenant.getName() + "]\"}]]";
         verifyMessageLogged(expectedMessage, testJobLogsAsserter);
     }
 
-    private void assertListenerExecuted(DirigibleTestTenant tenant) {
+    private void verifyListenerExecuted(DirigibleTestTenant tenant) {
         String expectedMessage = "Listener: found [1] books. Books: [[{\"Id\":1,\"Title\":\"Title[" + tenant.getName()
                 + "]\",\"Author\":\"Author[" + tenant.getName() + "]\"}]]";
         verifyMessageLogged(expectedMessage, eventListenerLogsAsserter);
     }
 
     private void verifyMessageLogged(String expectedMessage, LogsAsserter logsAsserter) {
-        String failMessage = "Couldn't find message [" + expectedMessage + "]. Logs: " + logsAsserter.getLoggedMessages();
+        String failMessage =
+                "Couldn't find message [" + expectedMessage + "] in the logs. Logged messages: " + logsAsserter.getLoggedMessages();
         AwaitilityExecutor.execute(failMessage, () -> Awaitility.await()
                                                                 .atMost(10, TimeUnit.SECONDS)
                                                                 .until(() -> logsAsserter.containsMessage(expectedMessage, Level.INFO)));

@@ -5,4 +5,4 @@ const logger = logging.getLogger("test-job-handler.ts");
 
 const repo = new BookRepository();
 const books = repo.findAll();
-logger.info("Found [{}] books. Books: [{}]", books.length, JSON.stringify(books));
+logger.info("Job: found [{}] books. Books: [{}]", books.length, JSON.stringify(books));
