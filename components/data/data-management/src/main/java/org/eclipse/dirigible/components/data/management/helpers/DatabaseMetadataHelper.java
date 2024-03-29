@@ -734,9 +734,7 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
      * @throws SQLException the SQL exception
      */
     public static String getTableMetadataAsJson(DataSource dataSource, String schema, String table) throws SQLException {
-        Connection connection = null;
-        try {
-            connection = dataSource.getConnection();
+        try (Connection connection = dataSource.getConnection()) {
             if (SqlFactory.deriveDialect(connection)
                           .getDatabaseType(connection)
                           .equals(DatabaseType.NOSQL.getName())) {
@@ -747,16 +745,6 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
                 TableMetadata tableMetadata = describeTable(connection, null, schema, table);
                 String json = GsonHelper.toJson(tableMetadata);
                 return json;
-            }
-        } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    if (logger.isWarnEnabled()) {
-                        logger.warn(e.getMessage(), e);
-                    }
-                }
             }
         }
     }
