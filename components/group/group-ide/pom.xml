@@ -86,10 +86,11 @@
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-ide-ui-integrations</artifactId>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-ide-ui-designer</artifactId>
         </dependency>
+        -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-ide-ui-data-structures</artifactId>
