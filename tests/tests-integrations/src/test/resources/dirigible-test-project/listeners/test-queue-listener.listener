@@ -1,7 +1,0 @@
-{
-    "location": "/dirigible-test-project/listeners/test-queue-listener.listener",
-    "name": "test-project-queue",
-    "kind": "Q",
-    "handler": "dirigible-test-project/listeners/background-handler.ts",
-    "description": "test-queue-listener description"
-}

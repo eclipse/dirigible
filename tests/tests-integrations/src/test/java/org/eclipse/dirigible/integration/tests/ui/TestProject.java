@@ -78,7 +78,7 @@ public class TestProject {
         this.restAssuredExecutor = restAssuredExecutor;
 
         this.testJobLogsAsserter = new LogsAsserter("app.test-job-handler.ts", Level.DEBUG);
-        this.eventListenerLogsAsserter = new LogsAsserter("app.background-handler.ts", Level.DEBUG);
+        this.eventListenerLogsAsserter = new LogsAsserter("app.book-entity-events-handler.ts", Level.DEBUG);
     }
 
     public void copyToRepository() {
@@ -169,17 +169,26 @@ public class TestProject {
     private void verifyEdmGeneratedResources(DirigibleTestTenant tenant) {
         restAssuredExecutor.execute(tenant, () -> verifyBookREST(tenant));
         assertJobExecuted(tenant);
+        assertListenerExecuted(tenant);
     }
 
     private void assertJobExecuted(DirigibleTestTenant tenant) {
         String expectedMessage = "Found [1] books. Books: [[{\"Id\":1,\"Title\":\"Title[" + tenant.getName() + "]\",\"Author\":\"Author["
                 + tenant.getName() + "]\"}]]";
+        verifyMessageLogged(expectedMessage, testJobLogsAsserter);
+    }
 
-        String failMessage = "Couldn't find message [" + expectedMessage + "]. Logs: " + testJobLogsAsserter.getLoggedMessages();
+    private void assertListenerExecuted(DirigibleTestTenant tenant) {
+        String expectedMessage = "Listener: found [1] books. Books: [[{\"Id\":1,\"Title\":\"Title[" + tenant.getName()
+                + "]\",\"Author\":\"Author[" + tenant.getName() + "]\"}]]";
+        verifyMessageLogged(expectedMessage, eventListenerLogsAsserter);
+    }
+
+    private void verifyMessageLogged(String expectedMessage, LogsAsserter logsAsserter) {
+        String failMessage = "Couldn't find message [" + expectedMessage + "]. Logs: " + logsAsserter.getLoggedMessages();
         AwaitilityExecutor.execute(failMessage, () -> Awaitility.await()
-                                                                .atMost(7, TimeUnit.SECONDS)
-                                                                .until(() -> testJobLogsAsserter.containsMessage(expectedMessage,
-                                                                        Level.INFO)));
+                                                                .atMost(10, TimeUnit.SECONDS)
+                                                                .until(() -> logsAsserter.containsMessage(expectedMessage, Level.INFO)));
     }
 
     /**

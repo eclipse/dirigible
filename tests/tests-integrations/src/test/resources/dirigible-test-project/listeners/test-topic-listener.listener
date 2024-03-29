@@ -1,7 +1,0 @@
-{
-    "location": "/dirigible-test-project/listeners/test-topic-listener.listener",
-    "name": "test-project-topic",
-    "kind": "T",
-    "handler": "dirigible-test-project/listeners/background-handler.ts",
-    "description": "test-topic-listener description"
-}
