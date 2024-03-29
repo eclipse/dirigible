@@ -33,6 +33,10 @@ public class TenantCreator {
     }
 
     public void createTenant(DirigibleTestTenant tenant) {
+        if (tenant.isDefaultTenant()) {
+            LOGGER.info("Tenant [{}] is the default and creation is not needed.", tenant);
+            return;
+        }
         createTenantEntity(tenant);
         userService.createNewUser(tenant.getUsername(), tenant.getPassword(), tenant.getId());
 
