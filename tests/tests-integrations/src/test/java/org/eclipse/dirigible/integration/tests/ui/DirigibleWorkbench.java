@@ -34,7 +34,6 @@ public class DirigibleWorkbench {
 
     public void openFile(String fileName) {
         browser.doubleClickOnElementContainingText(HtmlElementType.ANCHOR, fileName);
-        // sleepSeconds(2);
     }
 
     public void publishAll() {

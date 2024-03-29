@@ -31,4 +31,6 @@ public interface Browser {
     void assertElementExistsByTypeAndTextPattern(HtmlElementType htmlElementType, String textPattern);
 
     void reload();
+
+    String createScreenshot();
 }

@@ -27,12 +27,6 @@ import static org.awaitility.Awaitility.await;
 
 class MultitenancyIT extends UserInterfaceIntegrationTest {
 
-    private DirigibleTestTenant defaultTenant;
-
-    private DirigibleTestTenant testTenant1;
-
-    private DirigibleTestTenant testTenant2;
-
     private List<DirigibleTestTenant> testTenants;
 
     @Autowired
@@ -47,10 +41,11 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
 
     @BeforeEach
     void initTestTenants() {
-        defaultTenant = fromTenantEntity(defTenant);
-        testTenant1 = new DirigibleTestTenant("test-tenant-1");
-        testTenant2 = new DirigibleTestTenant("test-tenant-2");
-        testTenants = List.of(defaultTenant, testTenant1, testTenant2);
+        DirigibleTestTenant defaultTenant = fromTenantEntity(defTenant);
+        DirigibleTestTenant testTenant1 = new DirigibleTestTenant("test-tenant-1");
+        DirigibleTestTenant testTenant2 = new DirigibleTestTenant("test-tenant-2");
+
+        this.testTenants = List.of(defaultTenant, testTenant1, testTenant2);
     }
 
     private DirigibleTestTenant fromTenantEntity(Tenant tenant) {
