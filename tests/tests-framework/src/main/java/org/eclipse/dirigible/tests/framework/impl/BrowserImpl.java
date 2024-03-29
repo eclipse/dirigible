@@ -115,34 +115,42 @@ class BrowserImpl implements Browser {
     }
 
     private void handleElementInAllFrames(SelenideElement element, Consumer<SelenideElement> elementHandler) {
-        Selenide.switchTo()
-                .defaultContent();
-        LOGGER.info("Checking element [{}] in default frame...", element);
-        if (elementExists(element, 3)) {
-            elementHandler.accept(element);
-            return;
-        }
-        ElementsCollection iframes = getElements(HtmlElementType.IFRAME);
-        LOGGER.info("Found [{}] iframes", iframes.size());
+        handleElementInAllFrames(15 * 1000, element, elementHandler);
+    }
 
+    private void handleElementInAllFrames(long totalWaitMillis, SelenideElement element, Consumer<SelenideElement> elementHandler) {
+        long maxWaitTime = System.currentTimeMillis() + totalWaitMillis;
         try {
-            for (SelenideElement iframe : iframes) {
+            do {
                 Selenide.switchTo()
-                        .frame(iframe);
-
-                LOGGER.info("Checking element [{}] in iframe [{}]...", element, iframe);
-                if (elementExists(element, 600L)) {
+                        .defaultContent();
+                LOGGER.info("Checking element [{}] in default frame...", element);
+                if (elementExists(element, 2)) {
                     elementHandler.accept(element);
                     return;
                 }
+                ElementsCollection iframes = getElements(HtmlElementType.IFRAME);
+                LOGGER.info("Found [{}] iframes", iframes.size());
 
-                // without this, the frame cannot be switched in the next iteration
-                Selenide.switchTo()
-                        .defaultContent();
-            }
+                for (SelenideElement iframe : iframes) {
+                    Selenide.switchTo()
+                            .frame(iframe);
+
+                    LOGGER.info("Checking element [{}] in iframe [{}]...", element, iframe);
+                    if (elementExists(element, 600L)) {
+                        elementHandler.accept(element);
+                        return;
+                    }
+
+                    // without this, the frame cannot be switched in the next iteration
+                    Selenide.switchTo()
+                            .defaultContent();
+                }
+            } while (System.currentTimeMillis() < maxWaitTime);
 
             String screenshot = createScreenshot();
             fail("Element [" + element + "] cannot be found in any iframe. Screenshot path: " + screenshot);
+
         } finally {
             Selenide.switchTo()
                     .defaultContent();
