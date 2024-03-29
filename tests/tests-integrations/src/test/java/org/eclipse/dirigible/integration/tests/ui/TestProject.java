@@ -98,19 +98,20 @@ public class TestProject {
         }
     }
 
-    public void assertHomePageAccessibleByTenant(DirigibleTestTenant tenant) {
-        Browser browser = browserFactory.createByTenantSubdomain(tenant.getSubdomain());
+    public void verifyHomePageAccessibleByTenant(DirigibleTestTenant tenant) {
+        Browser browser = browserFactory.createByHost(tenant.getHost());
         browser.openPath(UI_HOME_PATH);
 
         Dirigible dirigible = new Dirigible(browser, tenant.getUsername(), tenant.getPassword());
-        dirigible.login();
+        boolean forceLogin = !tenant.isDefaultTenant();
+        dirigible.login(forceLogin);
 
         waitToLoadThePage();
         browser.assertElementExistsByTypeAndText(HtmlElementType.HEADER3, UI_PROJECT_TITLE);
     }
 
     private void waitToLoadThePage() {
-        SleepUtil.sleepSeconds(2);
+        SleepUtil.sleepSeconds(1);
     }
 
     public void publish() {
@@ -128,7 +129,7 @@ public class TestProject {
     }
 
     public void verify(DirigibleTestTenant tenant) {
-        assertHomePageAccessibleByTenant(tenant);
+        verifyHomePageAccessibleByTenant(tenant);
         verifyView(tenant);
         verifyOData(tenant);
         verifyEdmGeneratedResources(tenant);

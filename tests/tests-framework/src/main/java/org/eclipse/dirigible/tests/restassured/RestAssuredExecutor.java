@@ -44,7 +44,7 @@ public class RestAssuredExecutor {
      * @param callable rest assured validation
      */
     public void execute(DirigibleTestTenant tenant, CallableNoResultAndNoException callable) {
-        this.execute(callable, tenant.getSubdomain() + ".localhost", tenant.getUsername(), tenant.getPassword());
+        this.execute(callable, tenant.getHost(), tenant.getUsername(), tenant.getPassword());
     }
 
     public void execute(CallableNoResultAndNoException callable, String host, String user, String password) {

@@ -18,34 +18,20 @@ import org.springframework.stereotype.Component;
 
 @Lazy
 @Component
-// TODO change visibility to package
-public class BrowserFactoryImpl implements BrowserFactory {
+class BrowserFactoryImpl implements BrowserFactory {
 
-    private static final String LOCALHOST = "localhost";
     private final int localServerPort;
 
-    // TODO change visibility to package
-    public BrowserFactoryImpl(@LocalServerPort int localServerPort) {
+    BrowserFactoryImpl(@LocalServerPort int localServerPort) {
         this.localServerPort = localServerPort;
     }
 
-    @Override
-    public Browser createByTenantSubdomain(String tenantSubdomain) {
-        String host = tenantSubdomain + "." + LOCALHOST;
-        return createByHost(host);
-    }
-
-    private Browser createByHost(String host) {
+    public Browser createByHost(String host) {
         return create(BrowserImpl.Protocol.HTTP, host, localServerPort);
     }
 
     private Browser create(BrowserImpl.Protocol protocol, String host, int port) {
         return new BrowserImpl(protocol, host, port);
-    }
-
-    @Override
-    public Browser create() {
-        return createByHost(LOCALHOST);
     }
 
 }

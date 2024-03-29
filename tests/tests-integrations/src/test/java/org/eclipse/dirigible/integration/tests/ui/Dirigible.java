@@ -14,6 +14,7 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.tests.framework.Browser;
 import org.eclipse.dirigible.tests.framework.HtmlAttribute;
 import org.eclipse.dirigible.tests.framework.HtmlElementType;
+import org.eclipse.dirigible.tests.util.SleepUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,14 +63,26 @@ public class Dirigible {
 
     public void openHomePage() {
         browser.openPath(ROOT_PATH);
-        String pageTitle = browser.getPageTitle();
-        if (LOGIN_PAGE_TITLE.equals(pageTitle)) {
-            login();
-        }
+        login(false);
+
+        SleepUtil.sleepMillis(500);
         browser.reload();
     }
 
+    private boolean isLoginPageOpened() {
+        String pageTitle = browser.getPageTitle();
+        return LOGIN_PAGE_TITLE.equals(pageTitle);
+    }
+
     public void login() {
+        login(true);
+    }
+
+    public void login(boolean forceLogin) {
+        if (!forceLogin && !isLoginPageOpened()) {
+            LOGGER.info("Already logged in");
+            return;
+        }
         LOGGER.info("Logging...");
         browser.enterTextInElementByAttributePattern(HtmlElementType.INPUT, HtmlAttribute.ID, USERNAME_FIELD_ID, username);
         browser.enterTextInElementByAttributePattern(HtmlElementType.INPUT, HtmlAttribute.ID, PASSWORD_FIELD_ID, password);

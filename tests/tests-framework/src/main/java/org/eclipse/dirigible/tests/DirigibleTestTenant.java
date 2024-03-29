@@ -15,6 +15,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import java.util.UUID;
 
 public class DirigibleTestTenant {
+    private static final String LOCALHOST = "localhost";
     private final String name;
     private final boolean defaultTenant;
     private final String id;
@@ -66,6 +67,10 @@ public class DirigibleTestTenant {
 
     public String getSubdomain() {
         return subdomain;
+    }
+
+    public String getHost() {
+        return isDefaultTenant() ? LOCALHOST : (subdomain + "." + LOCALHOST);
     }
 
     @Override
