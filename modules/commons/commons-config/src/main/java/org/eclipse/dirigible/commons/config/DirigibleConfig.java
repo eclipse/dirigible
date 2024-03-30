@@ -16,56 +16,127 @@ import org.slf4j.LoggerFactory;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+/**
+ * The Enum DirigibleConfig.
+ */
 public enum DirigibleConfig {
-    CMS_INTERNAL_ROOT_FOLDER("DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER", "target/dirigible/cms"), //
-    DEFAULT_DATA_SOURCE_NAME("DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT", "DefaultDB"), //
-    SYSTEM_DATA_SOURCE_NAME("DIRIGIBLE_DATABASE_DATASOURCE_NAME_SYSTEM", "SystemDB"), //
-    SYNCHRONIZER_FREQUENCY("DIRIGIBLE_SYNCHRONIZER_FREQUENCY", "10"), //
-    TRIAL_ENABLED("DIRIGIBLE_TRIAL_ENABLED", Boolean.FALSE.toString()), //
-    REPOSITORY_LOCAL_ROOT_FOLDER("DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER", "target"), //
-    MULTI_TENANT_MODE_ENABLED("DIRIGIBLE_MULTI_TENANT_MODE", Boolean.FALSE.toString()), //
-    TENANT_SUBDOMAIN_REGEX("DIRIGIBLE_TENANT_SUBDOMAIN_REGEX", "^([^\\.]+)\\..+$"), //
-    BASIC_ADMIN_USERNAME("DIRIGIBLE_BASIC_USERNAME", toBase64("admin")), //
+    
+    /** The cms internal root folder. */
+    CMS_INTERNAL_ROOT_FOLDER("DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER", "target/dirigible/cms"), 
+    
+    /** The default data source name. */
+    DEFAULT_DATA_SOURCE_NAME("DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT", "DefaultDB"), 
+    
+    /** The system data source name. */
+    SYSTEM_DATA_SOURCE_NAME("DIRIGIBLE_DATABASE_DATASOURCE_NAME_SYSTEM", "SystemDB"), 
+    
+    /** The synchronizer frequency. */
+    SYNCHRONIZER_FREQUENCY("DIRIGIBLE_SYNCHRONIZER_FREQUENCY", "10"), 
+    
+    /** The trial enabled. */
+    TRIAL_ENABLED("DIRIGIBLE_TRIAL_ENABLED", Boolean.FALSE.toString()), 
+    
+    /** The repository local root folder. */
+    REPOSITORY_LOCAL_ROOT_FOLDER("DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER", "target"), 
+    
+    /** The multi tenant mode enabled. */
+    MULTI_TENANT_MODE_ENABLED("DIRIGIBLE_MULTI_TENANT_MODE", Boolean.FALSE.toString()), 
+    
+    /** The tenant subdomain regex. */
+    TENANT_SUBDOMAIN_REGEX("DIRIGIBLE_TENANT_SUBDOMAIN_REGEX", "^([^\\.]+)\\..+$"), 
+    
+    /** The basic admin username. */
+    BASIC_ADMIN_USERNAME("DIRIGIBLE_BASIC_USERNAME", toBase64("admin")), 
+    
+    /** The basic admin pass. */
     BASIC_ADMIN_PASS("DIRIGIBLE_BASIC_PASSWORD", toBase64("admin"));
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(DirigibleConfig.class);
+    
+    /** The key. */
     private final String key;
+    
+    /** The default value. */
     private final String defaultValue;
 
+    /**
+     * Instantiates a new dirigible config.
+     *
+     * @param key the key
+     * @param defaultValue the default value
+     */
     DirigibleConfig(String key, String defaultValue) {
         this.key = key;
         this.defaultValue = defaultValue;
     }
 
+    /**
+     * Gets the from base 64 value.
+     *
+     * @return the from base 64 value
+     */
     public String getFromBase64Value() {
         String val = getStringValue();
         return fromBase64(val);
     }
 
+    /**
+     * Gets the string value.
+     *
+     * @return the string value
+     */
     public String getStringValue() {
         return Configuration.get(key, defaultValue);
     }
 
+    /**
+     * From base 64.
+     *
+     * @param string the string
+     * @return the string
+     */
     private static String fromBase64(String string) {
         return new String(Base64.getDecoder()
                                 .decode(string),
                 StandardCharsets.UTF_8);
     }
 
+    /**
+     * To base 64.
+     *
+     * @param string the string
+     * @return the string
+     */
     private static String toBase64(String string) {
         return Base64.getEncoder()
                      .encodeToString(string.getBytes(StandardCharsets.UTF_8));
     }
 
+    /**
+     * Gets the key.
+     *
+     * @return the key
+     */
     public String getKey() {
         return key;
     }
 
+    /**
+     * Gets the boolean value.
+     *
+     * @return the boolean value
+     */
     public boolean getBooleanValue() {
         String configValue = getStringValue();
         return Boolean.valueOf(configValue);
     }
 
+    /**
+     * Gets the int value.
+     *
+     * @return the int value
+     */
     public int getIntValue() {
         String stringValue = getStringValue();
         try {
