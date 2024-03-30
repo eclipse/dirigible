@@ -22,6 +22,8 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A factory for creating CmsProviderInternal objects.
@@ -37,6 +39,9 @@ class CmsProviderInternalFactory implements CmsProviderFactory {
 
     /** The default tenant. */
     private final Tenant defaultTenant;
+
+    /** The Constant PROVIDERS. */
+    private static final Map<String, CmsProvider> PROVIDERS = new HashMap<String, CmsProvider>();
 
     /**
      * Instantiates a new cms provider internal factory.
@@ -59,8 +64,12 @@ class CmsProviderInternalFactory implements CmsProviderFactory {
         String rootFolder = DirigibleConfig.CMS_INTERNAL_ROOT_FOLDER.getStringValue() + getTenantFolder();
         Path path = Paths.get(rootFolder);
         boolean absolutePath = path.isAbsolute();
-
-        return new CmsProviderInternal(rootFolder, absolutePath);
+        if (PROVIDERS.containsKey(rootFolder)) {
+            return PROVIDERS.get(rootFolder);
+        }
+        CmsProviderInternal cmsProviderInternal = new CmsProviderInternal(rootFolder, absolutePath);
+        PROVIDERS.put(rootFolder, cmsProviderInternal);
+        return cmsProviderInternal;
     }
 
     /**
