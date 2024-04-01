@@ -440,7 +440,7 @@ public class DatabaseFacade implements InitializingBean {
                 // assuming the sequence objects are not supported by the underlying database
                 PersistenceNextValueIdentityProcessor persistenceNextValueIdentityProcessor =
                         new PersistenceNextValueIdentityProcessor(null);
-                return persistenceNextValueIdentityProcessor.nextval(connection, sequence);
+                return persistenceNextValueIdentityProcessor.nextval(connection, tableName);
             }
         }
     }
