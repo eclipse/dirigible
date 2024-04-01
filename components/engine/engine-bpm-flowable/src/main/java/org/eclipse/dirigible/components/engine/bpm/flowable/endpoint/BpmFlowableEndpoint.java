@@ -292,10 +292,19 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
     }
 
     @PostMapping(value = "/bpm-processes/tasks/{id}")
-    public ResponseEntity<Void> claimTask(@PathVariable("id") String id) {
+    public ResponseEntity<String> executeTaskAction(@PathVariable("id") String id, @RequestBody TaskActionData actionData) {
         TaskService taskService = getTaskService();
-        taskService.claim(id, UserFacade.getName());
 
+        if (TaskActionData.TaskAction.CLAIM.getActionName()
+                                           .equals(actionData.getAction())) {
+            taskService.claim(id, UserFacade.getName());
+        } else if (TaskActionData.TaskAction.UNCLAIM.getActionName()
+                                                    .equals(actionData.getAction())) {
+            taskService.unclaim(id);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                 .body("Invalid action id provided [" + actionData.getAction() + "]");
+        }
         return ResponseEntity.ok()
                              .build();
     }

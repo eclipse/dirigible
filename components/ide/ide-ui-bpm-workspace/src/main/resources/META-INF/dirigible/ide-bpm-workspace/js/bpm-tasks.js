@@ -19,7 +19,8 @@ tasksView.controller('TasksController', ['$scope','$http', '$timeout', 'messageH
     $scope.tasksList = [];
     $scope.tasksListAssignee = [];
     $scope.currentProcessInstanceId;
-    $scope.selectedTask = null;
+    $scope.selectedClaimTask = null;
+    $scope.selectedUnclaimTask = null;
 
     $scope.currentFetchDataTask = null;
 
@@ -48,15 +49,28 @@ tasksView.controller('TasksController', ['$scope','$http', '$timeout', 'messageH
         });
     });
 
-    $scope.selectionChanged = function (variable) {
+    $scope.selectionClaimChanged = function (variable) {
         if (variable) {
-            $scope.selectedTask = variable;
+            $scope.selectedClaimTask = variable;
+        }
+    }
+
+    $scope.selectionUnclaimChanged = function (variable) {
+        if (variable) {
+            $scope.selectedUnclaimTask = variable;
         }
     }
 
     $scope.claimTask = function() {
-        const apiUrl = '/services/ide/bpm/bpm-processes/tasks/' + $scope.selectedTask.id;
-        const requestBody = { };
+        this.executeAction($scope.selectedClaimTask.id, { 'action': 'CLAIM'}, 'claimed', () => { $scope.selectedClaimTask = null });
+    }
+
+    $scope.unclaimTask = function() {
+        this.executeAction($scope.selectedUnclaimTask.id, { 'action': 'UNCLAIM'}, 'unclaimed', () => { $scope.selectedUnclaimTask = null });
+    }
+
+    $scope.executeAction = function(taskId, requestBody, actionName, clearCallback)  {
+        const apiUrl = '/services/ide/bpm/bpm-processes/tasks/' + taskId;
 
         $http({
             method: 'POST',
@@ -67,13 +81,13 @@ tasksView.controller('TasksController', ['$scope','$http', '$timeout', 'messageH
             }
         })
         .then((response) => {
-            messageHub.showAlertSuccess("Action confirmation", "Task claimed successfully!")
+            messageHub.showAlertSuccess("Action confirmation", "Task " + actionName + " successfully!")
             $scope.reload();
-            console.log('Successfully claimed task with id ' + $scope.selectedTask.id);
-            $scope.selectedTask = null;
+            console.log('Successfully ' + actionName + ' task with id ' + taskId);
+            clearCallback()
         })
         .catch((error) => {
-            messageHub.showAlertError("Action failed", "Failed to claim task " + error.message);
+            messageHub.showAlertError("Action failed", "Failed to " + actionName + " task " + error.message);
             console.error('Error making POST request:', error);
         });
     }

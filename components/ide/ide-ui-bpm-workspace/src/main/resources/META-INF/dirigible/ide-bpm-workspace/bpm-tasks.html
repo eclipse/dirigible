@@ -29,8 +29,10 @@
     <fd-toolbar-spacer></fd-toolbar-spacer>
     <fd-button compact="true" dg-type="transparent" glyph="sap-icon--refresh" title="Refresh"
                aria-label="Refresh" ng-click="reload()"></fd-button>
-    <fd-button dg-type="emphasized" state="{{ selectedTask !== null ? '' : 'disabled' }}" compact="true" dg-label="Claim" title="Claim"
+    <fd-button dg-type="emphasized" state="{{ selectedClaimTask !== null ? '' : 'disabled' }}" compact="true" dg-label="Claim" title="Claim"
                aria-label="Claim" ng-click="claimTask()"></fd-button>
+    <fd-button dg-type="emphasized" state="{{ selectedUnclaimTask !== null ? '' : 'disabled' }}" compact="true" dg-label="Unclaim" title="unclaim"
+               aria-label="Unclaim" ng-click="unclaimTask()"></fd-button>
 </fd-toolbar>
 <label style="margin: 5px 10px 5px"><b>Candidate tasks</b></label>
 <fd-scrollbar class="dg-full-height">
@@ -49,7 +51,7 @@
         </thead>
         <tbody fd-table-body>
         <tr fd-table-row ng-repeat="next in tasksList track by next.id" hoverable="true"
-            activable="true" dg-selected="next.selected" ng-click="selectionChanged(next)">
+            activable="true" dg-selected="next.selected" ng-click="selectionClaimChanged(next)">
             <td fd-table-cell>{{next.id}}</td>
             <td fd-table-cell>{{next.name}}</td>
             <td fd-table-cell>{{next.assignee}}</td>
@@ -82,7 +84,7 @@
         </thead>
         <tbody fd-table-body>
         <tr fd-table-row ng-repeat="next in tasksListAssignee track by next.id" hoverable="true"
-            activable="false">
+            activable="true" ng-click="selectionUnclaimChanged(next)">
             <td fd-table-cell>{{next.id}}</td>
             <td fd-table-cell>{{next.name}}</td>
             <td fd-table-cell>{{next.assignee}}</td>
