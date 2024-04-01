@@ -168,7 +168,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
             if (isNumeric(word) || isValue(word)) {
                 continue;
             }
-            if (!"".equals(word.trim()) && !functionsNames.contains(word.toLowerCase())) {
+            if (!"".equals(word.trim()) && !(functionsNames.contains(word.toLowerCase()) || functionsNames.contains(word.toUpperCase()))) {
                 line = line.replace(word, escapeChar + word + escapeChar);
             }
         }
