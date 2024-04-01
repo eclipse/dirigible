@@ -119,7 +119,7 @@
 
 		<graalvm.version>23.1.1</graalvm.version>
 
-		<commons.io>2.15.1</commons.io>
+		<commons.io>2.16.0</commons.io>
 		<commons.lang3>3.14.0</commons.lang3>
 		<commons.exec>1.4.0</commons.exec>
 		<lucene.version>9.10.0</lucene.version>
@@ -141,7 +141,7 @@
 
 		<flowable.version>6.8.1</flowable.version>
 
-		<camel.version>4.4.1</camel.version>
+		<camel.version>4.5.0</camel.version>
 
 		<velocity.version>2.3</velocity.version>
 		<wikitext.version>3.0.48.202308291007</wikitext.version>
@@ -152,7 +152,7 @@
 		<snowflake.version>3.13.34</snowflake.version>
 		<mysql.version>8.3.0</mysql.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.689</qldb.sdk.version>
+		<qldb.sdk.version>1.12.690</qldb.sdk.version>
 		<jetcd.core.version>0.7.7</jetcd.core.version>
 
 		<jquery-ui.version>1.13.0</jquery-ui.version>
@@ -742,7 +742,7 @@
 			<dependency>
 				<groupId>org.seleniumhq.selenium</groupId>
 				<artifactId>selenium-java</artifactId>
-				<version>4.16.1</version>
+				<version>4.19.1</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
