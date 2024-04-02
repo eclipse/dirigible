@@ -18,6 +18,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 @Order(ApplicationReadyEventListeners.TENANTS_INITIALIZER)
 @Component
 class TenantsInitializer implements ApplicationListener<ApplicationReadyEvent> {
@@ -32,6 +35,11 @@ class TenantsInitializer implements ApplicationListener<ApplicationReadyEvent> {
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
+        ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+        executor.schedule(this::provisionTenants, 30, TimeUnit.SECONDS);
+    }
+
+    private void provisionTenants() {
         LOGGER.info("Initializing tenants...");
 
         tenantsProvisioner.provision();
