@@ -32,16 +32,20 @@ public class FileUtil {
     }
 
     public static List<Path> findFiles(Path path, String fileExtension) throws IOException {
+        return findFiles(path).stream()
+                              .filter(f -> f.toString()
+                                            .toLowerCase()
+                                            .endsWith(fileExtension))
+                              .collect(Collectors.toList());
+    }
 
-        if (!Files.isDirectory(path)) {
-            throw new IllegalArgumentException("Path must be a directory!");
+    public static List<Path> findFiles(Path folder) throws IOException {
+        if (!Files.isDirectory(folder)) {
+            throw new IllegalArgumentException("Path [" + folder + "]must be a directory");
         }
 
-        try (Stream<Path> walk = Files.walk(path)) {
+        try (Stream<Path> walk = Files.walk(folder)) {
             return walk.filter(p -> !Files.isDirectory(p))
-                       .filter(f -> f.toString()
-                                     .toLowerCase()
-                                     .endsWith(fileExtension))
                        .collect(Collectors.toList());
         }
     }
@@ -60,4 +64,7 @@ public class FileUtil {
         }
     }
 
+    public static List<Path> findFiles(String folder) throws IOException {
+        return findFiles(Path.of(folder));
+    }
 }

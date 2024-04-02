@@ -44,7 +44,7 @@ class DirigibleCleaner {
     void clean() {
         try {
             deleteDatabases();
-            deleteCMSFolder();
+            deleteCMSFolderFiles();
             unpublishResources();
         } catch (Throwable ex) {
             throw new IllegalStateException("Failed to cleanup resources", ex);
@@ -145,11 +145,6 @@ class DirigibleCleaner {
         return System.getProperty("user.dir") + File.separator + "target" + File.separator + "dirigible" + File.separator + folder;
     }
 
-    private void deleteCMSFolder() {
-        String cmdFolder = getDirigibleSubfolder("cms");
-        FileUtil.deleteFolder(cmdFolder);
-    }
-
     private void unpublishResources() throws IOException {
         LOGGER.info("Deleting all Dirigible project resources from the repository...");
 
@@ -190,5 +185,13 @@ class DirigibleCleaner {
             String projectPath = repoBasePath + projectName;
             FileUtil.deleteFolder(projectPath);
         });
+    }
+
+    private void deleteCMSFolderFiles() throws IOException {
+        String cmdFolder = getDirigibleSubfolder("cms");
+        FileUtil.findFiles(cmdFolder)
+                .stream()
+                .map(Path::toFile)
+                .forEach(File::delete);
     }
 }
