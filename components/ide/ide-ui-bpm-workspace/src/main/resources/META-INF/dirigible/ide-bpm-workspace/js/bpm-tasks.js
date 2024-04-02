@@ -67,9 +67,13 @@ tasksView.controller('TasksController', ['$scope','$http', '$timeout', 'messageH
             }
         })
         .then((response) => {
+            messageHub.showAlertSuccess("Action confirmation", "Task claimed successfully!")
+            $scope.reload();
             console.log('Successfully claimed task with id ' + $scope.selectedTask.id);
+            $scope.selectedTask = null;
         })
         .catch((error) => {
+            messageHub.showAlertError("Action failed", "Failed to claim task " + error.message);
             console.error('Error making POST request:', error);
         });
     }
