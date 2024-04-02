@@ -36,4 +36,15 @@ public abstract class SystemJob extends DirigibleJob {
     protected final Optional<String> getJobGroup() {
         return Optional.of("system");
     }
+
+    @Override
+    protected String getTriggerDescription() {
+        return this.getClass() + "_trigger";
+    }
+
+    @Override
+    protected String getJobDescription() {
+        return this.getClass() + "_job";
+    }
+
 }
