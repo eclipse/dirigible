@@ -134,12 +134,10 @@ public class TestProject {
         boolean forceLogin = !tenant.isDefaultTenant();
         dirigible.login(forceLogin);
 
-        waitToLoadThePage();
-        browser.assertElementExistsByTypeAndText(HtmlElementType.HEADER3, UI_PROJECT_TITLE);
-    }
+        SleepUtil.sleepSeconds(3);
+        browser.openPath(UI_HOME_PATH);
 
-    private void waitToLoadThePage() {
-        SleepUtil.sleepSeconds(1);
+        browser.assertElementExistsByTypeAndText(HtmlElementType.HEADER3, UI_PROJECT_TITLE);
     }
 
     /**
