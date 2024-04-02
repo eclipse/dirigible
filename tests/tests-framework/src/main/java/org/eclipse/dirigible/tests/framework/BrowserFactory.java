@@ -13,4 +13,6 @@ package org.eclipse.dirigible.tests.framework;
 public interface BrowserFactory {
 
     Browser createByHost(String host);
+
+    Browser createBySubdomain(String subdomain);
 }

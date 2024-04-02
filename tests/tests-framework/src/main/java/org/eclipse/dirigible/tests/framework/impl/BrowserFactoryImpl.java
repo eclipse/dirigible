@@ -27,6 +27,11 @@ class BrowserFactoryImpl implements BrowserFactory {
     }
 
     @Override
+    public Browser createBySubdomain(String subdomain) {
+        return createByHost(subdomain + ".localhost");
+    }
+
+    @Override
     public Browser createByHost(String host) {
         return create(BrowserImpl.Protocol.HTTP, host, localServerPort);
     }

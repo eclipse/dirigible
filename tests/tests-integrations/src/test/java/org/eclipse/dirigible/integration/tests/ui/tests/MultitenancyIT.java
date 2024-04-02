@@ -17,8 +17,9 @@ import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.integration.tests.TenantCreator;
 import org.eclipse.dirigible.integration.tests.ui.TestProject;
 import org.eclipse.dirigible.tests.DirigibleTestTenant;
-import org.eclipse.dirigible.tests.util.SleepUtil;
-import org.junit.jupiter.api.BeforeEach;
+import org.eclipse.dirigible.tests.framework.Browser;
+import org.eclipse.dirigible.tests.framework.BrowserFactory;
+import org.eclipse.dirigible.tests.framework.HtmlElementType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,8 +27,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 class MultitenancyIT extends UserInterfaceIntegrationTest {
-
-    private List<DirigibleTestTenant> testTenants;
 
     @Autowired
     private TenantCreator tenantCreator;
@@ -39,16 +38,37 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
     @DefaultTenant
     private Tenant defTenant;
 
-    @BeforeEach
-    void initTestTenants() {
+    @Autowired
+    private BrowserFactory browserFactory;
+
+    @Test
+    void testOpenNotRegisteredTenant() {
+        Browser browser = browserFactory.createBySubdomain("unregistered-tenant");
+        browser.openPath("/index.html");
+        browser.assertElementExistsByTypeAndText(HtmlElementType.FD_MESSAGE_PAGE_TITLE, "Page Not Found");
+    }
+
+    @Test
+    void verifyTestProject() {
+        List<DirigibleTestTenant> tenants = createTenants();
+
+        testProject.publish();
+        waitForTenantsProvisioning(tenants);
+
+        verifyTenants(tenants);
+    }
+
+    private List<DirigibleTestTenant> createTenants() {
         DirigibleTestTenant defaultTenant = createDefaultTenant();
-        DirigibleTestTenant testTenant1 = new DirigibleTestTenant("test-tenant-1");
-        DirigibleTestTenant testTenant2 = new DirigibleTestTenant("test-tenant-2");
+        DirigibleTestTenant tenant1 = new DirigibleTestTenant("test-tenant-1");
+        DirigibleTestTenant tenant2 = new DirigibleTestTenant("test-tenant-2");
 
-        this.testTenants = List.of(defaultTenant, testTenant1, testTenant2);
+        List<DirigibleTestTenant> tenants = List.of(defaultTenant, tenant1, tenant2);
 
-        // wait some time for Dirigible to be fully loaded
-        SleepUtil.sleepSeconds(5);
+        tenants.stream()
+               .forEach(tenantCreator::createTenant);
+
+        return tenants;
     }
 
     private DirigibleTestTenant createDefaultTenant() {
@@ -60,24 +80,9 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
                 DirigibleConfig.BASIC_ADMIN_PASS.getFromBase64Value());
     }
 
-    @Test
-    void test() {
-        createTestTenants();
-
-        testProject.publish();
-        waitForTenantsProvisioning();
-
-        verifyTenants();
-    }
-
-    private void createTestTenants() {
-        testTenants.stream()
-                   .forEach(t -> tenantCreator.createTenant(t));
-    }
-
-    private void waitForTenantsProvisioning() {
-        testTenants.stream()
-                   .forEach(this::waitForTenantProvisioning);
+    private void waitForTenantsProvisioning(List<DirigibleTestTenant> tenants) {
+        tenants.stream()
+               .forEach(this::waitForTenantProvisioning);
     }
 
     private void waitForTenantProvisioning(DirigibleTestTenant tenant) {
@@ -86,8 +91,8 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
                   .until(() -> tenantCreator.isTenantProvisioned(tenant));
     }
 
-    private void verifyTenants() {
-        testTenants.forEach(testProject::verify);
+    private void verifyTenants(List<DirigibleTestTenant> tenants) {
+        tenants.forEach(testProject::verify);
     }
 
 }
