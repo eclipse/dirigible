@@ -17,6 +17,7 @@ import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.integration.tests.TenantCreator;
 import org.eclipse.dirigible.integration.tests.ui.TestProject;
 import org.eclipse.dirigible.tests.DirigibleTestTenant;
+import org.eclipse.dirigible.tests.util.SleepUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,9 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
         DirigibleTestTenant testTenant2 = new DirigibleTestTenant("test-tenant-2");
 
         this.testTenants = List.of(defaultTenant, testTenant1, testTenant2);
+
+        // wait some time for Dirigible to be fully loaded
+        SleepUtil.sleepSeconds(5);
     }
 
     private DirigibleTestTenant createDefaultTenant() {

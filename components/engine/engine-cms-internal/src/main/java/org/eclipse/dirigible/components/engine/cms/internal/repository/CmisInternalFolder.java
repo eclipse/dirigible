@@ -10,12 +10,6 @@
  */
 package org.eclipse.dirigible.components.engine.cms.internal.repository;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.engine.cms.CmisConstants;
@@ -24,19 +18,25 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * The Class CmisInternalFolder.
  */
 public class CmisInternalFolder extends CmisInternalObject implements CmisFolder {
 
     /** The session. */
-    private CmisInternalSession session;
+    private final CmisInternalSession session;
 
     /** The internal folder. */
-    private ICollection internalFolder;
+    private final ICollection internalFolder;
 
     /** The repository. */
-    private IRepository repository;
+    private final IRepository repository;
 
     /** The root folder. */
     private boolean rootFolder = false;
@@ -149,8 +149,8 @@ public class CmisInternalFolder extends CmisInternalObject implements CmisFolder
         String name = properties.get(CmisConstants.NAME);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         IOUtils.copy(contentStream.getStream(), out);
-        return new CmisInternalDocument(this.session,
-                this.internalFolder.createResource(name, out.toByteArray(), true, contentStream.getMimeType()));
+        IResource resource = this.internalFolder.createResource(name, out.toByteArray(), true, contentStream.getMimeType());
+        return new CmisInternalDocument(this.session, resource);
     }
 
     /**

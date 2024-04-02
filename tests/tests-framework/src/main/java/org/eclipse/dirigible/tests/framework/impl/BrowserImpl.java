@@ -187,6 +187,11 @@ class BrowserImpl implements Browser {
                                        .toString());
     }
 
+    @Override
+    public void reload() {
+        Selenide.refresh();
+    }
+
     private boolean elementExists(SelenideElement element, int checkSeconds) {
         return elementExists(element, 1000L * checkSeconds);
     }
@@ -239,11 +244,6 @@ class BrowserImpl implements Browser {
     private SelenideElement getElementByAttributeAndTextPattern(HtmlElementType htmlElementType, String textPattern) {
         ElementsCollection elements = getElements(htmlElementType);
         return elements.findBy(Condition.matchText(textPattern));
-    }
-
-    @Override
-    public void reload() {
-        Selenide.refresh();
     }
 
     @Override
