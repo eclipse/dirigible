@@ -10,31 +10,21 @@
  */
 package org.eclipse.dirigible.components.tenants.provisioning;
 
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
+import org.eclipse.dirigible.components.jobs.SystemJob;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.quartz.SimpleScheduleBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-/**
- * The Class TenantProvisioningJob.
- */
+import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
+
 @Component
-class TenantProvisioningJob {
+class TenantProvisioningJob extends SystemJob {
 
-    /** The Constant LOGGER. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(TenantProvisioningJob.class);
-
-    /** The Constant _15_MINS. */
-    private static final long _15_MINS = 15 * 60 * 1000;
-
-    /** The Constant JOB_EXECUTION_INTERVAL_MINUTES. */
-    private static final long JOB_EXECUTION_INTERVAL_MINUTES = _15_MINS;
-
-    /** The Constant _30_SECONDS. */
-    private static final long _30_SECONDS = 30 * 1000;
-
-    /** The Constant JOB_EXECUTION_INITIAL_DELAY_SECONDS. */
-    private static final long JOB_EXECUTION_INITIAL_DELAY_SECONDS = _30_SECONDS;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /** The tenants provisioner. */
     private final TenantsProvisioner tenantsProvisioner;
@@ -48,14 +38,41 @@ class TenantProvisioningJob {
         this.tenantsProvisioner = tenantsProvisioner;
     }
 
-    /**
-     * Provision tenants.
-     */
-    @Scheduled(initialDelay = JOB_EXECUTION_INITIAL_DELAY_SECONDS, fixedDelay = JOB_EXECUTION_INTERVAL_MINUTES)
-    void provisionTenants() {
-        LOGGER.info("Triggered tenants provisioning job...");
+    @Override
+    public final void execute(JobExecutionContext context) throws JobExecutionException {
+        logger.info("Triggered tenants provisioning job...");
         tenantsProvisioner.provision();
-        LOGGER.info("Tenants provisioning job has completed.");
+        logger.info("Tenants provisioning job has completed.");
+    }
+
+    @Override
+    protected String getTriggerKey() {
+        return "TenantsProvisioningJobTrigger";
+    }
+
+    @Override
+    protected String getTriggerDescription() {
+        return "Tenants provisioning job trigger";
+    }
+
+    @Override
+    protected String getJobKey() {
+        return "TenantsProvisioningJob";
+    }
+
+    @Override
+    protected String getJobDescription() {
+        return "Tenants provisioning job";
+    }
+
+    @Override
+    protected SimpleScheduleBuilder getSchedule() {
+        int frequencyInSec = DirigibleConfig.TENANTS_PROVISIONING_FREQUENCY_SECONDS.getIntValue();
+        logger.info("Configuring tenant provisioning job to fire every [{}] seconds", frequencyInSec);
+
+        return simpleSchedule().withIntervalInSeconds(frequencyInSec)
+                               .repeatForever()
+                               .withMisfireHandlingInstructionIgnoreMisfires();
     }
 
 }

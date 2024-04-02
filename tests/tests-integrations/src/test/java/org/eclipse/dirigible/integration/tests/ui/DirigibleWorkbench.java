@@ -13,7 +13,6 @@ package org.eclipse.dirigible.integration.tests.ui;
 import org.eclipse.dirigible.tests.framework.Browser;
 import org.eclipse.dirigible.tests.framework.HtmlAttribute;
 import org.eclipse.dirigible.tests.framework.HtmlElementType;
-import org.eclipse.dirigible.tests.util.SleepUtil;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +28,6 @@ public class DirigibleWorkbench {
 
     public void expandProject(String projectName) {
         browser.doubleClickOnElementContainingText(HtmlElementType.ANCHOR, projectName);
-        SleepUtil.sleepSeconds(1);
     }
 
     public void openFile(String fileName) {

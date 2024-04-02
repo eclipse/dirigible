@@ -71,6 +71,7 @@ class SynchronizationJob extends SystemJob {
         logger.info("Configuring trigger to fire every [{}] seconds", frequencyInSec);
 
         return simpleSchedule().withIntervalInSeconds(frequencyInSec)
+                               .withMisfireHandlingInstructionIgnoreMisfires()
                                .repeatForever();
     }
 

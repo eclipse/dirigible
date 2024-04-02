@@ -21,6 +21,8 @@ import java.util.Base64;
  */
 public enum DirigibleConfig {
 
+    TENANTS_PROVISIONING_FREQUENCY_SECONDS("DIRIGIBLE_TENANTS_PROVISIONING_FREQUENCY_SECONDS", "900"), // 15 minutes
+
     /** The cms internal root folder. */
     CMS_INTERNAL_ROOT_FOLDER("DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER", "target/dirigible/cms"),
 

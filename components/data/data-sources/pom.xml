@@ -28,11 +28,7 @@
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-repository</artifactId>
     	</dependency>
-    	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-core-tenants</artifactId>
-    	</dependency>
-    	
+
     	<!-- Modules -->
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>

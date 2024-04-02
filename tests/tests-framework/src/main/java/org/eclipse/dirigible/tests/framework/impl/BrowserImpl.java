@@ -118,43 +118,62 @@ class BrowserImpl implements Browser {
         handleElementInAllFrames(30 * 1000, element, elementHandler);
     }
 
-    private void handleElementInAllFrames(long totalWaitMillis, SelenideElement element, Consumer<SelenideElement> elementHandler) {
-        long maxWaitTime = System.currentTimeMillis() + totalWaitMillis;
+    private void handleElementInAllFrames(long waitMillis, SelenideElement element, Consumer<SelenideElement> elementHandler) {
+        long maxWaitTime = System.currentTimeMillis() + waitMillis;
         try {
             do {
-                Selenide.switchTo()
-                        .defaultContent();
-                LOGGER.info("Checking element [{}] in default frame...", element);
-                if (elementExists(element, 600L)) {
-                    elementHandler.accept(element);
+                boolean handled = tryToHandleElementInAllFrames(element, elementHandler);
+                if (handled) {
+                    LOGGER.info("Element [{}] was NOT found. Will try again.");
                     return;
-                }
-                ElementsCollection iframes = getElements(HtmlElementType.IFRAME);
-                LOGGER.info("Found [{}] iframes", iframes.size());
-
-                for (SelenideElement iframe : iframes) {
-                    Selenide.switchTo()
-                            .frame(iframe);
-
-                    LOGGER.info("Checking element [{}] in iframe [{}]...", element, iframe);
-                    if (elementExists(element, 600L)) {
-                        elementHandler.accept(element);
-                        return;
-                    }
-
-                    // without this, the frame cannot be switched in the next iteration
-                    Selenide.switchTo()
-                            .defaultContent();
                 }
             } while (System.currentTimeMillis() < maxWaitTime);
 
+            LOGGER.info("Element [{}] was NOT found. Will try last time to reload the page and find it.");
+            reload();
+            SleepUtil.sleepSeconds(3);
+            boolean handled = tryToHandleElementInAllFrames(element, elementHandler);
+            if (handled) {
+                LOGGER.info("Element [{}] was FOUND and HANDLED after page reload.");
+                return;
+            }
+
             String screenshot = createScreenshot();
             fail("Element [" + element + "] cannot be found in any iframe. Screenshot path: " + screenshot);
-
         } finally {
             Selenide.switchTo()
                     .defaultContent();
         }
+    }
+
+    private boolean tryToHandleElementInAllFrames(SelenideElement element, Consumer<SelenideElement> elementHandler) {
+        Selenide.switchTo()
+                .defaultContent();
+        LOGGER.info("Checking element [{}] in the default frame...", element);
+        if (elementExists(element, 600L)) {
+            LOGGER.info("Element [{}] was FOUND in the default frame.", element);
+            elementHandler.accept(element);
+            return true;
+        }
+        ElementsCollection iframes = getElements(HtmlElementType.IFRAME);
+        LOGGER.info("Found [{}] iframes", iframes.size());
+
+        for (SelenideElement iframe : iframes) {
+            Selenide.switchTo()
+                    .frame(iframe);
+
+            LOGGER.info("Checking element [{}] in iframe [{}]...", element, iframe);
+            if (elementExists(element, 600L)) {
+                LOGGER.info("Element [{}] was FOUND in frame [{}].", element, iframe);
+                elementHandler.accept(element);
+                return true;
+            }
+
+            // without this, the frame cannot be switched in the next iteration
+            Selenide.switchTo()
+                    .defaultContent();
+        }
+        return false;
     }
 
     private boolean elementExists(SelenideElement element, long millis) {
