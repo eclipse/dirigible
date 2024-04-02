@@ -24,7 +24,6 @@ import org.eclipse.dirigible.tests.framework.BrowserFactory;
 import org.eclipse.dirigible.tests.framework.HtmlElementType;
 import org.eclipse.dirigible.tests.logging.LogsAsserter;
 import org.eclipse.dirigible.tests.restassured.RestAssuredExecutor;
-import org.eclipse.dirigible.tests.util.SleepUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -44,7 +43,6 @@ import static org.hamcrest.Matchers.hasSize;
 @Lazy
 @Component
 public class TestProject {
-
     public static final String UI_HOME_PATH = "/services/web/dirigible-test-project/gen/index.html";
     public static final String BOOKS_SERVICE_PATH = "/services/ts/dirigible-test-project/gen/api/Books/BookService.ts";
     public static final String EDM_FILE_NAME = "edm.edm";
@@ -133,9 +131,6 @@ public class TestProject {
         Dirigible dirigible = new Dirigible(browser, tenant.getUsername(), tenant.getPassword());
         boolean forceLogin = !tenant.isDefaultTenant();
         dirigible.login(forceLogin);
-
-        SleepUtil.sleepSeconds(3);
-        browser.openPath(UI_HOME_PATH);
 
         browser.assertElementExistsByTypeAndText(HtmlElementType.HEADER3, UI_PROJECT_TITLE);
     }
