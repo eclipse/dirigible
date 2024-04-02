@@ -439,7 +439,12 @@ public class SchemasSynchronizer extends MultitenantBaseSynchronizer<Schema, Lon
 
         DataSource dataSource = null;
         try {
-            dataSource = datasourcesManager.getDataSource(schema.getDatasource());
+            String dataSourceName = schema.getDatasource();
+            if (dataSourceName == null || "".equals(dataSourceName.trim()) || "DefaultDB".equals(dataSourceName)) {
+                dataSource = datasourcesManager.getDefaultDataSource();
+            } else {
+                dataSource = datasourcesManager.getDataSource(dataSourceName);
+            }
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {
                 logger.error(e.getMessage(), e);
