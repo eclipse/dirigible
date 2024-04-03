@@ -67,6 +67,9 @@ public class DataTypeUtils {
 
     /** The Constant NUMERIC. */
     private static final String NUMERIC = "NUMERIC";
+    
+    /** The Constant NUMBER. */
+    private static final String NUMBER = "NUMBER";
 
     /** The Constant FLOAT8. */
     private static final String FLOAT8 = "FLOAT8";
@@ -220,6 +223,7 @@ public class DataTypeUtils {
         STRING_TO_DATABASE_TYPE.put(FLOAT8, Types.DOUBLE);
         STRING_TO_DATABASE_TYPE.put(NUMERIC, Types.NUMERIC);
         STRING_TO_DATABASE_TYPE.put(DECIMAL, Types.DECIMAL);
+        STRING_TO_DATABASE_TYPE.put(NUMBER, Types.DECIMAL);
         // booleans
         STRING_TO_DATABASE_TYPE.put(BOOLEAN, Types.BOOLEAN);
         STRING_TO_DATABASE_TYPE.put(BOOL, Types.BOOLEAN);
