@@ -67,7 +67,7 @@ public class DataTypeUtils {
 
     /** The Constant NUMERIC. */
     private static final String NUMERIC = "NUMERIC";
-    
+
     /** The Constant NUMBER. */
     private static final String NUMBER = "NUMBER";
 

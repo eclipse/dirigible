@@ -41,7 +41,7 @@ public class FileUtil {
 
     public static List<Path> findFiles(Path folder) throws IOException {
         if (!Files.isDirectory(folder)) {
-            throw new IllegalArgumentException("Path [" + folder + "]must be a directory");
+            throw new IllegalArgumentException("Path [" + folder + "] must be a directory");
         }
 
         try (Stream<Path> walk = Files.walk(folder)) {
