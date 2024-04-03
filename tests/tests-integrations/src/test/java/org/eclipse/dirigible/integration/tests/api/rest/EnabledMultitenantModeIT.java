@@ -10,13 +10,22 @@
  */
 package org.eclipse.dirigible.integration.tests.api.rest;
 
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.tests.DirigibleTestTenant;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
  * Multitenant mode must be enabled by default
  */
 class EnabledMultitenantModeIT extends TenantDeterminationIT {
+
+    @BeforeAll
+    public static void setUp() {
+        Configuration.set(DirigibleConfig.MULTI_TENANT_MODE_ENABLED.getKey(), "true");
+    }
 
     @Test
     void testDefaultTenantResolution() {
@@ -43,6 +52,11 @@ class EnabledMultitenantModeIT extends TenantDeterminationIT {
     void testUnregisteredTenantResolution() {
         testHealthIsNotAccessible("unregistered-tenant.localhost", null);
         testHealthIsNotAccessible("212.39.89.114", "unregistered-tenant.localhost");
+    }
+
+    @AfterAll
+    public static void tearDown() {
+        Configuration.set(DirigibleConfig.MULTI_TENANT_MODE_ENABLED.getKey(), null);
     }
 
 }
