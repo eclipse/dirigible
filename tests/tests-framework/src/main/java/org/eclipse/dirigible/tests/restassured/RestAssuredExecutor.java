@@ -67,6 +67,21 @@ public class RestAssuredExecutor {
         }
     }
 
+    public void execute(CallableNoResultAndNoException callable, String host) {
+        String configuredBaseURI = RestAssured.baseURI;
+        int configuredPort = RestAssured.port;
+
+        try {
+            RestAssured.baseURI = "http://" + host;
+            RestAssured.port = port;
+
+            callable.call();
+        } finally {
+            RestAssured.baseURI = configuredBaseURI;
+            RestAssured.port = configuredPort;
+        }
+    }
+
     public void execute(CallableNoResultAndNoException callable, String user, String password) {
         this.execute(callable, "localhost", user, password);
     }
