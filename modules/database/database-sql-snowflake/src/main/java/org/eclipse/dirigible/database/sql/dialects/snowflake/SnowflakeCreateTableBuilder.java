@@ -27,7 +27,7 @@ public class SnowflakeCreateTableBuilder extends CreateTableBuilder<SnowflakeCre
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(SnowflakeCreateTableBuilder.class);
-    
+
     /** The table type. */
     private String tableType = "";
 
@@ -38,7 +38,7 @@ public class SnowflakeCreateTableBuilder extends CreateTableBuilder<SnowflakeCre
      * @param table the table
      */
     public SnowflakeCreateTableBuilder(ISqlDialect dialect, String table, String tableType) {
-    	super(dialect, table);
+        super(dialect, table);
         this.tableType = tableType;
     }
 
@@ -102,7 +102,7 @@ public class SnowflakeCreateTableBuilder extends CreateTableBuilder<SnowflakeCre
         this.columns.add(column);
         return this;
     }
-    
+
     /**
      * Generate table.
      *
@@ -123,7 +123,7 @@ public class SnowflakeCreateTableBuilder extends CreateTableBuilder<SnowflakeCre
             tableType = KEYWORD_EXTERNAL;
         } else if (this.tableType.equalsIgnoreCase(KEYWORD_ICEBERG)) {
             tableType = KEYWORD_ICEBERG;
-        }        
+        }
 
         sql.append(SPACE)
            .append(tableType)

@@ -98,10 +98,11 @@ public class ManagedDataSource implements DataSource {
             }
             connection.setClientInfo("XS_APPLICATIONUSER", userName);
         }
-        
+
         // Snowflake
         if (databaseName.equals(DATABASE_NAME_SNOWFLAKE)) {
-        	connection.createStatement().executeQuery("ALTER SESSION SET JDBC_QUERY_RESULT_FORMAT='JSON'");
+            connection.createStatement()
+                      .executeQuery("ALTER SESSION SET JDBC_QUERY_RESULT_FORMAT='JSON'");
         }
     }
 

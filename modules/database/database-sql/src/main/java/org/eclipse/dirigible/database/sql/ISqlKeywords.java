@@ -505,32 +505,32 @@ public interface ISqlKeywords {
      * The Constant METADATA_TABLE.
      */
     public static final String METADATA_TABLE = "TABLE"; //$NON-NLS-1$
-    
+
     /**
      * The Constant KEYWORD_DYNAMIC.
      */
     public static final String KEYWORD_DYNAMIC = "DYNAMIC"; //$NON-NLS-1$
-    
+
     /**
      * The Constant KEYWORD_EVENT.
      */
     public static final String KEYWORD_EVENT = "EVENT"; //$NON-NLS-1$
-    
+
     /**
      * The Constant KEYWORD_EXTERNAL.
      */
     public static final String KEYWORD_EXTERNAL = "EXTERNAL"; //$NON-NLS-1$
-    
+
     /**
      * The Constant KEYWORD_HYBRID.
      */
     public static final String KEYWORD_HYBRID = "HYBRID"; //$NON-NLS-1$
-    
+
     /**
      * The Constant KEYWORD_ICEBERG.
      */
     public static final String KEYWORD_ICEBERG = "ICEBERG"; //$NON-NLS-1$
-    
+
     /**
      * The Constant METADATA_TABLE_TYPES.
      */
