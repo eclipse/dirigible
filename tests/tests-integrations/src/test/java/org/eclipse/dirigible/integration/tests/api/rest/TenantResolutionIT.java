@@ -16,6 +16,7 @@ import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.eclipse.dirigible.integration.tests.TenantCreator;
 import org.eclipse.dirigible.tests.DirigibleTestTenant;
 import org.eclipse.dirigible.tests.restassured.RestAssuredExecutor;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,15 +32,15 @@ class TenantResolutionIT extends IntegrationTest {
 
     @Test
     void testDefaultTenantResolution() {
-        testHealthIsUp("localhost", null);
-        testHealthIsUp("default.localhost", null);
+        testHealthIsAccessible("localhost", null);
+        testHealthIsAccessible("default.localhost", null);
     }
 
-    private void testHealthIsUp(String host, String xForwardedHost) {
-        restAssuredExecutor.execute(() -> testHealthIsUp(xForwardedHost), host);
+    private void testHealthIsAccessible(String host, String xForwardedHost) {
+        restAssuredExecutor.execute(() -> testHealthIsAccessible(xForwardedHost), host);
     }
 
-    private void testHealthIsUp(String xForwardedHost) {
+    private void testHealthIsAccessible(String xForwardedHost) {
         RequestSpecification requestSpec = RestAssured.given();
 
         if (null != xForwardedHost) {
@@ -53,13 +54,41 @@ class TenantResolutionIT extends IntegrationTest {
     }
 
     @Test
+    void testHostWitchDoesNotMatchTheDefaultRegexIsResolvedAsDefaultTenant() {
+        testHealthIsAccessible("host-which-does-not-match-the-default-tenant-regex", null);
+    }
+
+    @Test
     void testRegisteredTenantResolution() {
         DirigibleTestTenant tenant1 = new DirigibleTestTenant("test-tenant-1");
         tenantCreator.createTenant(tenant1);
         waitForTenantProvisioning(tenant1);
 
-        testHealthIsUp(tenant1.getHost(), null);
-        testHealthIsUp("212.39.89.114", tenant1.getHost());
+        testHealthIsAccessible(tenant1.getHost(), null);
+        testHealthIsAccessible("212.39.89.114", tenant1.getHost());
     }
 
+    @Test
+    void testUnregisteredTenantResolution() {
+        testHealthIsNotAccessible("unregistered-tenant.localhost", null);
+        testHealthIsNotAccessible("212.39.89.114", "unregistered-tenant.localhost");
+    }
+
+    private void testHealthIsNotAccessible(String host, String xForwardedHost) {
+        restAssuredExecutor.execute(() -> testHealthIsNotAccessible(xForwardedHost), host);
+    }
+
+    private void testHealthIsNotAccessible(String xForwardedHost) {
+        RequestSpecification requestSpec = RestAssured.given();
+
+        if (null != xForwardedHost) {
+            requestSpec = requestSpec.header("x-forwarded-host", xForwardedHost);
+        }
+        requestSpec.when()
+                   .get("/actuator/health")
+                   .then()
+                   .statusCode(404)
+                   .body("status", Matchers.equalTo(404))
+                   .body("message", Matchers.equalTo("There is no registered tenant for the current host"));
+    }
 }
