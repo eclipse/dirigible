@@ -38,4 +38,54 @@ public class SnowflakeCreateBranchingBuilder extends CreateBranchingBuilder {
         return new SnowflakeCreateTableBuilder(this.getDialect(), table, ISqlDialect.KEYWORD_HYBRID);
     }
 
+    /**
+     * Hybrid table.
+     *
+     * @param table the table
+     * @return the creates the table builder
+     */
+    public SnowflakeCreateTableBuilder hybridTable(String table) {
+        return new SnowflakeCreateTableBuilder(this.getDialect(), table, ISqlDialect.KEYWORD_HYBRID);
+    }
+
+    /**
+     * Dynamic table.
+     *
+     * @param table the table
+     * @return the creates the table builder
+     */
+    public SnowflakeCreateTableBuilder dynamicTable(String table) {
+        return new SnowflakeCreateTableBuilder(this.getDialect(), table, ISqlDialect.KEYWORD_DYNAMIC);
+    }
+
+    /**
+     * Event table.
+     *
+     * @param table the table
+     * @return the creates the table builder
+     */
+    public SnowflakeCreateTableBuilder eventTable(String table) {
+        return new SnowflakeCreateTableBuilder(this.getDialect(), table, ISqlDialect.KEYWORD_EVENT);
+    }
+
+    /**
+     * External table.
+     *
+     * @param table the table
+     * @return the creates the table builder
+     */
+    public SnowflakeCreateTableBuilder externalTable(String table) {
+        return new SnowflakeCreateTableBuilder(this.getDialect(), table, ISqlDialect.KEYWORD_EXTERNAL);
+    }
+
+    /**
+     * Iceberg table.
+     *
+     * @param table the table
+     * @return the creates the table builder
+     */
+    public SnowflakeCreateTableBuilder icebergTable(String table) {
+        return new SnowflakeCreateTableBuilder(this.getDialect(), table, ISqlDialect.KEYWORD_ICEBERG);
+    }
+
 }
