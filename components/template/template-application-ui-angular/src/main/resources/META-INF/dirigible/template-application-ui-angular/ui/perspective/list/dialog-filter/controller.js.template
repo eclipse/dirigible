@@ -6,36 +6,33 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 	.config(["entityApiProvider", function (entityApiProvider) {
 		entityApiProvider.baseUrl = "/services/ts/${projectName}/gen/api/${perspectiveName}/${name}Service.ts";
 	}])
-	.controller('PageController', ['$scope', 'messageHub', 'entityApi', function ($scope, messageHub, entityApi) {
+	.controller('PageController', ['$scope', 'messageHub', 'ViewParameters', 'entityApi', function ($scope, messageHub, entityApi, ViewParameters) {
 
 		$scope.entity = {};
 		$scope.forms = {
 			details: {},
 		};
 
-		if (window != null && window.frameElement != null && window.frameElement.hasAttribute("data-parameters")) {
-			let dataParameters = window.frameElement.getAttribute("data-parameters");
-			if (dataParameters) {
-				let params = JSON.parse(dataParameters);
+		let params = ViewParameters.get();
+		if (Object.keys(params).length) {
 #foreach ($property in $properties)
 #if($property.isDateType)
-				if (params?.entity?.${property.name}From) {
-					params.entity.${property.name}From = new Date(params.entity.${property.name}From);
-				}
-				if (params?.entity?.${property.name}To) {
-					params.entity.${property.name}To = new Date(params.entity.${property.name}To);
-				}
+			if (params?.entity?.${property.name}From) {
+				params.entity.${property.name}From = new Date(params.entity.${property.name}From);
+			}
+			if (params?.entity?.${property.name}To) {
+				params.entity.${property.name}To = new Date(params.entity.${property.name}To);
+			}
 #end
 #end
-				$scope.entity = params.entity ?? {};
-				$scope.selectedMainEntityKey = params.selectedMainEntityKey;
-				$scope.selectedMainEntityId = params.selectedMainEntityId;
+			$scope.entity = params.entity ?? {};
+			$scope.selectedMainEntityKey = params.selectedMainEntityKey;
+			$scope.selectedMainEntityId = params.selectedMainEntityId;
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN")
-				$scope.options${property.name} = params.options${property.name};
+			$scope.options${property.name} = params.options${property.name};
 #end
 #end
-			}
 		}
 
 		$scope.filter = function () {

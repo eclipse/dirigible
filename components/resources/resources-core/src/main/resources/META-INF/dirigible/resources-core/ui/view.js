@@ -1,84 +1,5 @@
-angular.module('ideView', ['ngResource', 'ideTheming'])
+angular.module('ideView', ['ngResource', 'ideExtensions', 'ideTheming'])
     .constant('view', (typeof viewData != 'undefined') ? viewData : (typeof editorData != 'undefined' ? editorData : ''))
-    .constant('extensionPoint', {})
-    .factory('Views', ['$resource', "extensionPoint", function ($resource, extensionPoint) {
-        let cachedViews;
-        let cachedSubviews;
-        let get = function () {
-            if (cachedViews) {
-                return cachedViews;
-            } else {
-                let url = '/services/js/resources-core/services/views.js';
-                if (extensionPoint && extensionPoint.views) {
-                    url = `${url}?extensionPoint=${extensionPoint.views}`;
-                }
-                return $resource(url).query().$promise
-                    .then(function (data) {
-                        data = data.map(function (v) {
-                            if (!v.id) {
-                                console.error(`Views: view '${v.label || 'undefined'}' does not have an id`);
-                                return;
-                            }
-                            if (!v.label) {
-                                console.error(`Views: view '${v.id}' does not have a label`);
-                                return;
-                            }
-                            if (!v.link) {
-                                console.error(`Views: view '${v.id}' does not have a link`);
-                                return;
-                            }
-                            v.factory = v.factory || 'frame';
-                            v.settings = {
-                                path: v.link,
-                                loadType: (v.lazyLoad ? 'lazy' : 'eager'),
-                            };
-                            v.region = v.region || 'left';
-                            return v;
-                        });
-                        cachedViews = data;
-                        return data;
-                    });
-            }
-        };
-        let getSubviews = function () {
-            if (cachedSubviews) {
-                return cachedSubviews;
-            } else {
-                let url = '/services/js/resources-core/services/views.js?extensionPoint=ide-subview';
-                if (extensionPoint && extensionPoint.views) {
-                    url = `${url}?extensionPoint=${extensionPoint.views}`;
-                }
-                return $resource(url).query().$promise
-                    .then(function (data) {
-                        data = data.map(function (v) {
-                            if (!v.id) {
-                                console.error(`Subviews: view '${v.label || 'undefined'}' does not have an id`);
-                                return;
-                            }
-                            if (!v.label) {
-                                console.error(`Subviews: view '${v.id}' does not have a label`);
-                                return;
-                            }
-                            if (!v.link) {
-                                console.error(`Subviews: view '${v.id}' does not have a link`);
-                                return;
-                            }
-                            v.settings = {
-                                path: v.link,
-                                loadType: (v.lazyLoad ? 'lazy' : 'eager'),
-                            };
-                            return v;
-                        });
-                        cachedSubviews = data;
-                        return data;
-                    });
-            }
-        };
-        return {
-            get: get,
-            getSubviews: getSubviews
-        };
-    }])
     .factory('baseHttpInterceptor', function () {
         let csrfToken = null;
         return {
@@ -99,10 +20,78 @@ angular.module('ideView', ['ngResource', 'ideTheming'])
             }
         };
     })
+    .factory('Views', ['Extensions', function (Extensions) {
+        let cachedViews;
+        let cachedSubviews;
+        let get = function () {
+            if (cachedViews) {
+                return cachedViews;
+            } else {
+                return Extensions.get('view').then(function (data) {
+                    data = data.map(function (v) {
+                        if (!v.id) {
+                            console.error(`Views: view '${v.label || 'undefined'}' does not have an id`);
+                            return;
+                        }
+                        if (!v.label) {
+                            console.error(`Views: view '${v.id}' does not have a label`);
+                            return;
+                        }
+                        if (!v.link) {
+                            console.error(`Views: view '${v.id}' does not have a link`);
+                            return;
+                        }
+                        v.factory = v.factory || 'frame';
+                        v.settings = {
+                            path: v.link,
+                            loadType: (v.lazyLoad ? 'lazy' : 'eager'),
+                        };
+                        v.region = v.region || 'left';
+                        return v;
+                    });
+                    cachedViews = data;
+                    return data;
+                });
+            }
+        };
+        let getSubviews = function () {
+            if (cachedSubviews) {
+                return cachedSubviews;
+            } else {
+                return Extensions.get('subview').then(function (data) {
+                    data = data.map(function (v) {
+                        if (!v.id) {
+                            console.error(`Subviews: view '${v.label || 'undefined'}' does not have an id`);
+                            return;
+                        }
+                        if (!v.label) {
+                            console.error(`Subviews: view '${v.id}' does not have a label`);
+                            return;
+                        }
+                        if (!v.link) {
+                            console.error(`Subviews: view '${v.id}' does not have a link`);
+                            return;
+                        }
+                        v.settings = {
+                            path: v.link,
+                            loadType: (v.lazyLoad ? 'lazy' : 'eager'),
+                        };
+                        return v;
+                    });
+                    cachedSubviews = data;
+                    return data;
+                });
+            }
+        };
+        return {
+            get: get,
+            getSubviews: getSubviews
+        };
+    }])
     .config(['$httpProvider', function ($httpProvider) {
         $httpProvider.interceptors.push('baseHttpInterceptor');
     }])
-    .service('ViewParameters', ['$window', function ($window) {
+    .factory('ViewParameters', ['$window', function ($window) {
         return {
             get: function () {
                 if ($window.frameElement && $window.frameElement.hasAttribute("data-parameters")) {

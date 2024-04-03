@@ -1,4 +1,0 @@
-{
-    "name": "{{projectName}}-custom-action",
-    "description": "{{projectName}} - Extension Point for the Application Custom Action Providers"
-}

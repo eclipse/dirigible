@@ -6,34 +6,34 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 	.config(["entityApiProvider", function (entityApiProvider) {
 		entityApiProvider.baseUrl = "/services/ts/${projectName}/gen/api/${perspectiveName}/${name}Service.ts";
 	}])
-	.controller('PageController', ['$scope', '${dollar}http', 'messageHub', 'entityApi', function ($scope, ${dollar}http, messageHub, entityApi) {
+	.controller('PageController', ['$scope',#if($hasDropdowns) '${dollar}http',#end 'messageHub', 'entityApi', 'Extensions', function ($scope,#if($hasDropdowns) ${dollar}http,#end messageHub, entityApi, Extensions) {
 
 		//-----------------Custom Actions-------------------//
-		${dollar}http.get("/services/js/resources-core/services/custom-actions.js?extensionPoint=${projectName}-custom-action").then(function (response) {
-			$scope.pageActions = response.data.filter(e => e.perspective === "${perspectiveName}" && e.view === "${name}" && (e.type === "page" || e.type === undefined));
-			$scope.entityActions = response.data.filter(e => e.perspective === "${perspectiveName}" && e.view === "${name}" && e.type === "entity");
+		Extensions.get('dialogWindow', '${projectName}-custom-action').then(function (response) {
+			$scope.pageActions = response.filter(e => e.perspective === "${perspectiveName}" && e.view === "${name}" && (e.type === "page" || e.type === undefined));
+			$scope.entityActions = response.filter(e => e.perspective === "${perspectiveName}" && e.view === "${name}" && e.type === "entity");
 		});
 
-		$scope.triggerPageAction = function (actionId) {
-			for (const next of $scope.pageActions) {
-				if (next.id === actionId) {
-					messageHub.showDialogWindow("${projectName}-custom-action", {
-						src: next.link,
-					});
-					break;
-				}
-			}
+		$scope.triggerPageAction = function (action) {
+			messageHub.showDialogWindow(
+				action.id,
+				{},
+				null,
+				true,
+				action
+			);
 		};
 
-		$scope.triggerEntityAction = function (actionId, selectedEntity) {
-			for (const next of $scope.entityActions) {
-				if (next.id === actionId) {
-					messageHub.showDialogWindow("${projectName}-custom-action", {
-						src: `${dollar}{next.link}?id=${dollar}{selectedEntity.${primaryKeysString}}`,
-					});
-					break;
-				}
-			}
+		$scope.triggerEntityAction = function (action, selectedEntity) {
+			messageHub.showDialogWindow(
+				action.id,
+				{
+					id: ${dollar}{selectedEntity.${primaryKeysString}}
+				},
+				null,
+				true,
+				action
+			);
 		};
 		//-----------------Custom Actions-------------------//
 
