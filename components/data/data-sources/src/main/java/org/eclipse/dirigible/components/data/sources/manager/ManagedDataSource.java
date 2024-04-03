@@ -33,6 +33,8 @@ public class ManagedDataSource implements DataSource {
 
     /** The Constant DATABASE_NAME_HDB. */
     private static final String DATABASE_NAME_HDB = "HDB";
+    /** The Constant DATABASE_NAME_SNOWFLAKE. */
+    private static final String DATABASE_NAME_SNOWFLAKE = "Snowflake";
     /** The original data source. */
     private final DataSource originalDataSource;
     /** The database name. */
@@ -76,6 +78,7 @@ public class ManagedDataSource implements DataSource {
                                           .getDatabaseProductName();
         }
 
+        // HANA
         if (databaseName.equals(DATABASE_NAME_HDB)) {
             Authentication authentication = SecurityContextHolder.getContext()
                                                                  .getAuthentication();
@@ -94,6 +97,11 @@ public class ManagedDataSource implements DataSource {
                 logger.debug("Setting XS_APPLICATIONUSER:{} for connection: {}", userName, connection);
             }
             connection.setClientInfo("XS_APPLICATIONUSER", userName);
+        }
+        
+        // Snowflake
+        if (databaseName.equals(DATABASE_NAME_SNOWFLAKE)) {
+        	connection.createStatement().executeQuery("ALTER SESSION SET JDBC_QUERY_RESULT_FORMAT='JSON'");
         }
     }
 
