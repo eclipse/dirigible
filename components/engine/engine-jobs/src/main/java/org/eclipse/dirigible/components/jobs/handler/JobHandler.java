@@ -72,14 +72,12 @@ public class JobHandler implements Job {
         }
 
         try {
-            tenantContext.executeWithPossibleException(tenant, () -> {
+            tenantContext.execute(tenant, () -> {
                 executeJob(context);
                 return null;
             });
 
-        } catch (JobExecutionException ex) {
-            throw ex;
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
             throw new JobExecutionException("Failed to execute job with details " + context.getJobDetail(), ex);
         }
     }

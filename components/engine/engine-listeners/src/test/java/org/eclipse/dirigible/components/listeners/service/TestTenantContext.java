@@ -10,7 +10,10 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
-import org.eclipse.dirigible.components.base.tenant.*;
+import org.eclipse.dirigible.components.base.tenant.CallableResultAndException;
+import org.eclipse.dirigible.components.base.tenant.Tenant;
+import org.eclipse.dirigible.components.base.tenant.TenantContext;
+import org.eclipse.dirigible.components.base.tenant.TenantResult;
 
 import java.util.List;
 
@@ -190,7 +193,7 @@ public class TestTenantContext implements TenantContext {
      * @return the result
      */
     @Override
-    public <Result> Result execute(Tenant tenant, CallableResultAndNoException<Result> callable) {
+    public <Result, Exc extends Throwable> Result execute(Tenant tenant, CallableResultAndException<Result, Exc> callable) throws Exc {
         return callable.call();
     }
 
@@ -203,21 +206,7 @@ public class TestTenantContext implements TenantContext {
      * @return the result
      */
     @Override
-    public <Result> Result execute(String tenantId, CallableResultAndNoException<Result> callable) {
-        return callable.call();
-    }
-
-    /**
-     * Execute with possible exception.
-     *
-     * @param <Result> the generic type
-     * @param tenant the tenant
-     * @param callable the callable
-     * @return the result
-     * @throws Exception the exception
-     */
-    @Override
-    public <Result> Result executeWithPossibleException(Tenant tenant, CallableResultAndException<Result> callable) throws Exception {
+    public <Result, Exc extends Throwable> Result execute(String tenantId, CallableResultAndException<Result, Exc> callable) throws Exc {
         return callable.call();
     }
 
@@ -229,7 +218,8 @@ public class TestTenantContext implements TenantContext {
      * @return the list
      */
     @Override
-    public <Result> List<TenantResult<Result>> executeForEachTenant(CallableResultAndNoException<Result> callable) {
+    public <Result, Exc extends Throwable> List<TenantResult<Result>> executeForEachTenant(CallableResultAndException<Result, Exc> callable)
+            throws Exc {
         Result result = callable.call();
         Tenant tenant = new TestTenant(TENANT_ID, TENANT_NAME, TENANT_SUBDOMAIN, DEFUALT_TENANT);
         TenantResult<Result> tr = new TestTenantResult<>(tenant, result);
