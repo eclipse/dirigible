@@ -41,42 +41,39 @@ public interface TenantContext {
     /**
      * This method will execute callable.call() method on behalf of the specified tenant.
      *
-     * @param <Result> result type
      * @param tenant the tenant
      * @param callable the callable
-     * @return the result
-     * @throws Exception the exception which is thrown by the passed callable
-     */
-    <Result> Result executeWithPossibleException(Tenant tenant, CallableResultAndException<Result> callable) throws Exception;
-
-    /**
-     * This method will execute callable.call() method on behalf of the specified tenant.
-     *
      * @param <Result> result type
-     * @param tenant the tenant
-     * @param callable the callable
+     * @param <Exc> exception type which is thrown by the callable
      * @return the result
+     * @throws Exc exception which is thrown by the callable
      */
-    <Result> Result execute(Tenant tenant, CallableResultAndNoException<Result> callable);
+    <Result, Exc extends Throwable> Result execute(Tenant tenant, CallableResultAndException<Result, Exc> callable) throws Exc;
 
     /**
      * This method will execute callable.call() method on behalf of the specified tenant id.
      *
-     * @param <Result> result type
      * @param tenantId the tenant id
      * @param callable the callable
+     * @param <Result> result type
+     * @param <Exc> exception type which is thrown by the callable
      * @return the result
      * @throws TenantNotFoundException in case the provided tenant id doesn't exist
+     * @throws Exc the exception which is thrown by the callable
      */
-    <Result> Result execute(String tenantId, CallableResultAndNoException<Result> callable) throws TenantNotFoundException;
+    <Result, Exc extends Throwable> Result execute(String tenantId, CallableResultAndException<Result, Exc> callable)
+            throws TenantNotFoundException, Exc;
 
     /**
      * This method will execute callable.call() for each provisioned tenant.
      *
+     * @param callable
      * @param <Result> result type
-     * @param callable the callable
+     * @param <Exc> exception type which is thrown by the callable
      * @return the results of the tenant executions
+     * @throws Exc the exception which is thrown by the callable
      */
-    <Result> List<TenantResult<Result>> executeForEachTenant(CallableResultAndNoException<Result> callable);
+    <Result, Exc extends Throwable> List<TenantResult<Result>> executeForEachTenant(CallableResultAndException<Result, Exc> callable)
+            throws Exc;
 
 }

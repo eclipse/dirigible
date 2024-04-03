@@ -100,7 +100,7 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
         }
 
         try {
-            tenantContext.executeWithPossibleException(currentTenant.get(), () -> {
+            tenantContext.execute(currentTenant.get(), () -> {
                 chain.doFilter(request, response);
                 return null;
             });
