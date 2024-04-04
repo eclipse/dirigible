@@ -15,53 +15,57 @@
 		<script type="text/javascript" src="controller.js"></script>
 	</head>
 
-	<body class="dg-vbox">
-		<fd-scrollbar class="dg-full-height">
-			<section class="fd-section">
-				<div class="fd-section__header">
-					<h3 class="fd-section__title">${title}</h3>
-				</div>
-				<p class="fd-text">${description}</p>
-				<br>
-				<fd-panel fixed="true" ng-repeat="group in groups">
-					<fd-panel-header>
-						<fd-panel-expand></fd-panel-expand>
-						<h4 fd-panel-title style="text-transform: capitalize;">
-							{{group.replaceAll('-', ' ').replaceAll('_', ' ')}}
-						</h4>
-					</fd-panel-header>
-					<fd-panel-content class="dg-no-border-bottom" aria-label="Panel Content">
-						<div class="fd-container">
-							<div class="fd-row">
-								<div class="fd-col fd-col--12 fd-col-md--6 fd-col-lg--4 fd-col-xl--3"
-									ng-repeat="next in data[group]">
-									<fd-card card-type="object">
-										<fd-card-header ng-click="openView(next.location)">
-											<fd-card-title>{{next.name}}</fd-card-title>
-											<fd-card-status><i class="sap-icon--navigation-right-arrow"></i>
-											</fd-card-status>
-										</fd-card-header>
-										<fd-card-content aria-label="Card Content">
-											<div class="fd-card__content-container">
-												<div class="fd-card__content-section">
-													<div class="fd-card__content-title-container">Description
-													</div>
-													<div class="fd-card__content-group">
-														<div class="fd-card__content-group-text">
-															<span>{{next.caption}}</span>
-														</div>
+	<body fd-scrollbar class="dg-vbox">
+		<section class="fd-section dg-full-height" ng-if="!state.error && !state.isBusy">
+			<div class="fd-section__header">
+				<h3 class="fd-section__title">${title}</h3>
+			</div>
+			<p class="fd-text">${description}</p>
+			<br>
+			<fd-panel fixed="true" ng-repeat="group in groups">
+				<fd-panel-header>
+					<fd-panel-expand></fd-panel-expand>
+					<h4 fd-panel-title style="text-transform: capitalize;">
+						{{group.replaceAll('-', ' ').replaceAll('_', ' ')}}
+					</h4>
+				</fd-panel-header>
+				<fd-panel-content class="dg-no-border-bottom" aria-label="Panel Content">
+					<div class="fd-container">
+						<div class="fd-row">
+							<div class="fd-col fd-col--12 fd-col-md--6 fd-col-lg--4 fd-col-xl--3"
+								ng-repeat="next in data[group]">
+								<fd-card card-type="object">
+									<fd-card-header ng-click="openView(next.location)">
+										<fd-card-title>{{next.name}}</fd-card-title>
+										<fd-card-status><i class="sap-icon--navigation-right-arrow"></i>
+										</fd-card-status>
+									</fd-card-header>
+									<fd-card-content aria-label="Card Content">
+										<div class="fd-card__content-container">
+											<div class="fd-card__content-section">
+												<div class="fd-card__content-title-container">Description
+												</div>
+												<div class="fd-card__content-group">
+													<div class="fd-card__content-group-text">
+														<span>{{next.caption}}</span>
 													</div>
 												</div>
 											</div>
-										</fd-card-content>
-									</fd-card>
-								</div>
+										</div>
+									</fd-card-content>
+								</fd-card>
 							</div>
 						</div>
-					</fd-panel-content>
-				</fd-panel>
-			</section>
-		</fd-scrollbar>
+					</div>
+				</fd-panel-content>
+			</fd-panel>
+		</section>
+		<fd-busy-indicator-extended ng-if="!state.error && state.isBusy" class="dg-fill-parent" dg-size="l">
+			{{state.busyText}}
+		</fd-busy-indicator-extended>
+		<fd-message-page glyph="sap-icon--error" ng-if="state.error">
+			<fd-message-page-title>Error while initializing launchpad</fd-message-page-title>
+		</fd-message-page>
 	</body>
 
 </html>

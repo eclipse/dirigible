@@ -17,7 +17,7 @@
 
     <body class="dg-vbox">
         <fd-scrollbar class="dg-full-height">
-            <fd-fieldset class="fd-margin--md" ng-form="forms.details">
+            <fd-fieldset ng-form="forms.details">
                 <fd-form-group dg-header="{{formHeaders[action]}}" name="entityForm" class="fd-container fd-form-layout-grid-container">
 #foreach ($property in $properties)
 #if(!$property.dataAutoIncrement && $property.relationshipType != "COMPOSITION")
@@ -367,13 +367,13 @@
             </fd-fieldset>
         </fd-scrollbar>
 
-		<fd-bar bar-design="footer" ng-show="action !== 'select'">
+		<fd-bar bar-design="footer" compact="true" ng-show="action !== 'select'">
 			<fd-bar-right>
 				<fd-bar-element>
-					<fd-button dg-label="{{action === 'create' ? 'Create' : 'Update'}}" dg-type="emphasized" ng-click="action === 'create' ? create() : update()" state="{{ forms.details.$valid ? '' : 'disabled' }}" compact="true"></fd-button>
+					<fd-button dg-label="{{action === 'create' ? 'Create' : 'Update'}}" dg-type="emphasized" ng-click="action === 'create' ? create() : update()" state="{{ forms.details.$valid ? '' : 'disabled' }}"></fd-button>
 				</fd-bar-element>
 				<fd-bar-element>
-					<fd-button dg-label="Cancel" dg-type="transparent" ng-click="cancel()" compact="true"></fd-button>
+					<fd-button dg-label="Cancel" dg-type="transparent" ng-click="cancel()"></fd-button>
 				</fd-bar-element>
 			</fd-bar-right>
 		</fd-bar>
