@@ -27,7 +27,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			messageHub.showDialogWindow(
 				action.id,
 				{
-					id: ${dollar}{selectedEntity.${primaryKeysString}}
+					id: selectedEntity.${primaryKeysString}
 				},
 				null,
 				true,
