@@ -10,12 +10,11 @@
  */
 package org.eclipse.dirigible.components.data.sources.manager;
 
-import org.eclipse.dirigible.commons.config.Configuration;
+import com.google.common.base.Objects;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
-import org.eclipse.dirigible.components.database.DatabaseParameters;
+import org.eclipse.dirigible.components.data.sources.config.SystemDataSourceName;
 import org.springframework.stereotype.Component;
-import com.google.common.base.Objects;
 
 /**
  * The Class TenantDataSourceNameManager.
@@ -25,15 +24,12 @@ public class TenantDataSourceNameManager {
 
     /** The tenant context. */
     private final TenantContext tenantContext;
+    private final String systemDataSourceName;
 
-    /**
-     * Instantiates a new tenant data source name manager.
-     *
-     * @param tenantContext the tenant context
-     */
-    TenantDataSourceNameManager(TenantContext tenantContext) {
+    TenantDataSourceNameManager(TenantContext tenantContext, @SystemDataSourceName String systemDataSourceName) {
         this.tenantContext = tenantContext;
 
+        this.systemDataSourceName = systemDataSourceName;
     }
 
     /**
@@ -57,17 +53,7 @@ public class TenantDataSourceNameManager {
      * @return true, if is system data source
      */
     private boolean isSystemDataSource(String dataSourceName) {
-        return Objects.equal(dataSourceName, getSystemDataSourceName());
-    }
-
-    /**
-     * Gets the system data source name.
-     *
-     * @return the system data source name
-     */
-    private String getSystemDataSourceName() {
-        return Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_NAME_SYSTEM,
-                DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM);
+        return Objects.equal(dataSourceName, systemDataSourceName);
     }
 
     /**

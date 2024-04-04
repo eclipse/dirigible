@@ -1,1 +1,1 @@
-ttyd -p 9000 bash
+ttyd -p 9000 -W bash

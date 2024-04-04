@@ -43,6 +43,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import static java.text.MessageFormat.format;
 
 /**
@@ -435,8 +437,32 @@ public class SchemasSynchronizer extends MultitenantBaseSynchronizer<Schema, Lon
     protected boolean completeImpl(TopologyWrapper<Schema> wrapper, ArtefactPhase flow) {
         Schema schema = wrapper.getArtefact();
 
-        try (Connection connection = datasourcesManager.getDataSource(schema.getDatasource())
-                                                       .getConnection()) {
+        DataSource dataSource = null;
+        try {
+            String dataSourceName = schema.getDatasource();
+            if (dataSourceName == null || "".equals(dataSourceName.trim()) || "DefaultDB".equals(dataSourceName)) {
+                dataSource = datasourcesManager.getDefaultDataSource();
+            } else {
+                dataSource = datasourcesManager.getDataSource(dataSourceName);
+            }
+        } catch (Exception e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
+
+            if (dataSource == null) {
+                if (ArtefactLifecycle.FAILED.equals(schema.getLifecycle())) {
+                    callback.addError(e.getMessage());
+                    callback.registerState(this, wrapper, ArtefactLifecycle.FATAL, e.getMessage());
+                    return true;
+                }
+            }
+            callback.addError(e.getMessage());
+            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
+            return false;
+        }
+
+        try (Connection connection = dataSource.getConnection()) {
             switch (flow) {
                 case CREATE:
                     if (schema.getLifecycle()

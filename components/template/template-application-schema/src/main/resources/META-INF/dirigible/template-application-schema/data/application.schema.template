@@ -94,9 +94,5 @@
 #end
         ]
     },
-    #if($dataSource)
     "datasource": "${dataSource}"
-    #else
-    "datasource": "DefaultDB"
-    #end
 }

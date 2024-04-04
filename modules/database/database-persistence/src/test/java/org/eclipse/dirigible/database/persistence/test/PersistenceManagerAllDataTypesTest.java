@@ -37,9 +37,7 @@ public class PersistenceManagerAllDataTypesTest extends AbstractPersistenceManag
     @Test
     public void orderedCrudTests() throws SQLException {
         PersistenceManager<AllDataTypes> persistenceManager = new PersistenceManager<AllDataTypes>();
-        Connection connection = null;
-        try {
-            connection = getDataSource().getConnection();
+        try (Connection connection = getDataSource().getConnection()) {
             // create table
             createTableForPojo(connection, persistenceManager);
             // check whether it is created successfully
@@ -52,11 +50,6 @@ public class PersistenceManagerAllDataTypesTest extends AbstractPersistenceManag
             } finally {
                 // drop the table
                 dropTableForPojo(connection, persistenceManager);
-            }
-
-        } finally {
-            if (connection != null) {
-                connection.close();
             }
         }
     }

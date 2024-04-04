@@ -10,10 +10,7 @@
  */
 package org.eclipse.dirigible.components.tenants.init;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Base64.Decoder;
-import java.util.Optional;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.base.ApplicationListenersOrder.ApplicationReadyEventListeners;
 import org.eclipse.dirigible.components.base.http.roles.Roles;
 import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
@@ -30,6 +27,11 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Optional;
 
 /**
  * The Class AdminUserInitializer.
@@ -85,13 +87,8 @@ class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent>
      * Inits the admin user.
      */
     private void initAdminUser() {
-        String base64Username = org.eclipse.dirigible.commons.config.Configuration.get(
-                org.eclipse.dirigible.commons.config.Configuration.BASIC_USERNAME, "YWRtaW4="); // admin
-        String base64Password = org.eclipse.dirigible.commons.config.Configuration.get(
-                org.eclipse.dirigible.commons.config.Configuration.BASIC_PASSWORD, "YWRtaW4="); // admin
-
-        String username = decode(base64Username);
-        String password = decode(base64Password);
+        String username = DirigibleConfig.BASIC_ADMIN_USERNAME.getFromBase64Value();
+        String password = DirigibleConfig.BASIC_ADMIN_PASS.getFromBase64Value();
 
         Optional<User> existingUser = userService.findUserByUsernameAndTenantId(username, defaultTenant.getId());
         if (existingUser.isPresent()) {
@@ -104,17 +101,6 @@ class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent>
         for (Roles predefinedRole : Roles.values()) {
             assignRole(adminUser, predefinedRole);
         }
-    }
-
-    /**
-     * Decode.
-     *
-     * @param base64String the base 64 string
-     * @return the string
-     */
-    private String decode(String base64String) {
-        byte[] decodedValue = base64Decoder.decode(base64String);
-        return new String(decodedValue, StandardCharsets.UTF_8);
     }
 
     /**
@@ -133,6 +119,17 @@ class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent>
 
         LOGGER.info("Assigned role [{}] to user [{}] in tenant [{}]", roleName, user.getUsername(), user.getTenant()
                                                                                                         .getId());
+    }
+
+    /**
+     * Decode.
+     *
+     * @param base64String the base 64 string
+     * @return the string
+     */
+    private String decode(String base64String) {
+        byte[] decodedValue = base64Decoder.decode(base64String);
+        return new String(decodedValue, StandardCharsets.UTF_8);
     }
 
 }

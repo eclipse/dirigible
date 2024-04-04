@@ -39,6 +39,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
     });
 
     // $scope.database = "metadata";
+    // TODO get it from configuration
     $scope.datasource = "DefaultDB";
 
     messageHub.onDidReceiveMessage("database.database.selection.changed", function (evt) {

@@ -10,7 +10,7 @@
  */
 package org.eclipse.dirigible.components.engine.cms.internal;
 
-import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
@@ -22,6 +22,8 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A factory for creating CmsProviderInternal objects.
@@ -37,6 +39,9 @@ class CmsProviderInternalFactory implements CmsProviderFactory {
 
     /** The default tenant. */
     private final Tenant defaultTenant;
+
+    /** The Constant PROVIDERS. */
+    private static final Map<String, CmsProvider> PROVIDERS = new HashMap<String, CmsProvider>();
 
     /**
      * Instantiates a new cms provider internal factory.
@@ -56,11 +61,15 @@ class CmsProviderInternalFactory implements CmsProviderFactory {
      */
     @Override
     public CmsProvider create() {
-        String rootFolder = Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER, "target/dirigible") + getTenantFolder();
+        String rootFolder = DirigibleConfig.CMS_INTERNAL_ROOT_FOLDER.getStringValue() + getTenantFolder();
         Path path = Paths.get(rootFolder);
         boolean absolutePath = path.isAbsolute();
-
-        return new CmsProviderInternal(rootFolder, absolutePath);
+        if (PROVIDERS.containsKey(rootFolder)) {
+            return PROVIDERS.get(rootFolder);
+        }
+        CmsProviderInternal cmsProviderInternal = new CmsProviderInternal(rootFolder, absolutePath);
+        PROVIDERS.put(rootFolder, cmsProviderInternal);
+        return cmsProviderInternal;
     }
 
     /**

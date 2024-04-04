@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class TopologicalDepleter.
@@ -22,6 +24,9 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
  * @param <T> the generic type
  */
 public class TopologicalDepleter<T extends TopologicallyDepletable> {
+
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(TopologicalDepleter.class);
 
     /**
      * Deplete.
@@ -39,7 +44,12 @@ public class TopologicalDepleter<T extends TopologicallyDepletable> {
             Iterator<T> iterator = depletables.iterator();
             while (iterator.hasNext()) {
                 TopologicallyDepletable depletable = iterator.next();
-                if (depletable.complete(flow)) {
+                try {
+                    if (depletable.complete(flow)) {
+                        iterator.remove();
+                    }
+                } catch (Exception e) {
+                    logger.error("Error has been thrown on depleting artefact: [{}] at phase: [{}]", depletable.getId(), flow.getValue());
                     iterator.remove();
                 }
             }

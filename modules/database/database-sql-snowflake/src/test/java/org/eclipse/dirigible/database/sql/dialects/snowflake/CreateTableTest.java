@@ -37,7 +37,7 @@ public class CreateTableTest {
 
         assertNotNull(sql);
         assertEquals(
-                "CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )",
+                "CREATE HYBRID TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )",
                 sql);
     }
 
@@ -55,7 +55,27 @@ public class CreateTableTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) )",
+        assertEquals(
+                "CREATE HYBRID TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) )",
+                sql);
+    }
+
+    /**
+     * Creates the table type safe.
+     */
+    @Test
+    public void createTableTypeIceberg() {
+        String sql = SqlFactory.getNative(new SnowflakeSqlDialect())
+                               .create()
+                               .icebergTable("CUSTOMERS")
+                               .columnInteger("ID", true, false, false)
+                               .columnVarchar("FIRST_NAME", 20, false, true, true)
+                               .columnVarchar("LAST_NAME", 30, false, true, false)
+                               .build();
+
+        assertNotNull(sql);
+        assertEquals(
+                "CREATE ICEBERG TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) )",
                 sql);
     }
 

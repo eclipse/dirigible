@@ -11,7 +11,7 @@
  */
 exports.getTemplate = () => ({
     "name": "javascript-esm",
-    "label": "Javascript ESM Service",
+    "label": "JavaScript Service",
     "extension": "mjs",
     "data": 'import {response} from "sdk/http";\n\nresponse.println("Hello World!");',
     "order": 1

@@ -98,7 +98,7 @@ public class TerminalWebsocketConfig implements WebSocketConfigurer {
                     if (!ttydShell.exists()) {
                         // ttyd binary should be placed in advance to $CATALINA_HOME/bin
 
-                        createShellScript(ttydShell, "./ttyd -p 9000 bash");
+                        createShellScript(ttydShell, "./ttyd -p 9000 -W bash");
                         if (ttydShell.setExecutable(true)) {
                             File ttydExecutable = new File("./ttyd");
                             createExecutable(TerminalWebsocketConfig.class.getResourceAsStream("/ttyd_linux.x86_64_1.6.0"), ttydExecutable);
@@ -122,7 +122,7 @@ public class TerminalWebsocketConfig implements WebSocketConfigurer {
                         // new Thread(processRunnable).start();
                         // processRunnable.getProcess().waitFor();
 
-                        createShellScript(ttydShell, "ttyd -p 9000 bash");
+                        createShellScript(ttydShell, "ttyd -p 9000 -W bash");
                         ttydShell.setExecutable(true);
                     }
                 } else if (os.indexOf("win") >= 0) {

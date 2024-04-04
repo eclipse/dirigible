@@ -32,7 +32,7 @@ import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
  * The Snowflake SQL Dialect.
  */
 public class SnowflakeSqlDialect extends
-        DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, AlterBranchingBuilder, DropBranchingBuilder, SnowflakeNextValueSequenceBuilder, SnowflakeLastValueIdentityBuilder> {
+        DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, SnowflakeCreateBranchingBuilder, AlterBranchingBuilder, DropBranchingBuilder, SnowflakeNextValueSequenceBuilder, SnowflakeLastValueIdentityBuilder> {
 
     /** The Constant FUNCTIONS. */
     public static final Set<String> FUNCTIONS = Collections.synchronizedSet(new HashSet<String>(Arrays.asList(new String[] {"ABS", "ACOS",

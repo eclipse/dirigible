@@ -10,7 +10,6 @@
  */
 package org.eclipse.dirigible.components.tenants.provisioning;
 
-import java.util.Set;
 import org.eclipse.dirigible.components.base.tenant.TenantPostProvisioningStep;
 import org.eclipse.dirigible.components.base.tenant.TenantProvisioningStep;
 import org.eclipse.dirigible.components.tenants.domain.Tenant;
@@ -20,6 +19,8 @@ import org.eclipse.dirigible.components.tenants.tenant.TenantFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.Set;
 
 /**
  * The Class TenantsProvisioner.
@@ -61,7 +62,7 @@ class TenantsProvisioner {
     /**
      * Provision.
      */
-    void provision() {
+    synchronized void provision() {
         LOGGER.info("Starting tenants provisioning...");
         Set<Tenant> tenants = tenantService.findByStatus(TenantStatus.INITIAL);
         LOGGER.info("Tenants applicable for provisioning [{}]", tenants);

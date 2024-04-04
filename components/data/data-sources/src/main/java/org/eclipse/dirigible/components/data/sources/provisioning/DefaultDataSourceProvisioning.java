@@ -10,25 +10,25 @@
  */
 package org.eclipse.dirigible.components.data.sources.provisioning;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.UUID;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantProvisioningException;
 import org.eclipse.dirigible.components.base.tenant.TenantProvisioningStep;
+import org.eclipse.dirigible.components.data.sources.config.DefaultDataSourceName;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.data.sources.manager.TenantDataSourceNameManager;
 import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
-import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.UUID;
 
 /**
  * The Class DefaultDataSourceProvisioning.
@@ -47,19 +47,14 @@ class DefaultDataSourceProvisioning implements TenantProvisioningStep {
 
     /** The tenant data source name manager. */
     private final TenantDataSourceNameManager tenantDataSourceNameManager;
+    private final String defaultDataSourceName;
 
-    /**
-     * Instantiates a new default data source provisioning.
-     *
-     * @param dataSourcesManager the data sources manager
-     * @param dataSourceService the data source service
-     * @param tenantDataSourceNameManager the tenant data source name manager
-     */
     DefaultDataSourceProvisioning(DataSourcesManager dataSourcesManager, DataSourceService dataSourceService,
-            TenantDataSourceNameManager tenantDataSourceNameManager) {
+            TenantDataSourceNameManager tenantDataSourceNameManager, @DefaultDataSourceName String defaultDataSourceName) {
         this.dataSourcesManager = dataSourcesManager;
         this.dataSourceService = dataSourceService;
         this.tenantDataSourceNameManager = tenantDataSourceNameManager;
+        this.defaultDataSourceName = defaultDataSourceName;
     }
 
     /**
@@ -155,17 +150,6 @@ class DefaultDataSourceProvisioning implements TenantProvisioningStep {
     }
 
     /**
-     * Gets the schema name.
-     *
-     * @param tenant the tenant
-     * @return the schema name
-     */
-    private String getSchemaName(Tenant tenant) {
-        return tenant.getId()
-                     .toUpperCase();
-    }
-
-    /**
      * Register data source.
      *
      * @param tenant the tenant
@@ -175,10 +159,6 @@ class DefaultDataSourceProvisioning implements TenantProvisioningStep {
      * @return the data source
      */
     private DataSource registerDataSource(Tenant tenant, String userId, String password, String schema) {
-
-        String defaultDataSourceName = Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT,
-                DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
-
         DataSource defaultDS = dataSourcesManager.getDataSourceDefinition(defaultDataSourceName);
 
         DataSource datasource = new DataSource();
@@ -204,6 +184,17 @@ class DefaultDataSourceProvisioning implements TenantProvisioningStep {
         datasource.updateKey();
 
         return dataSourceService.save(datasource);
+    }
+
+    /**
+     * Gets the schema name.
+     *
+     * @param tenant the tenant
+     * @return the schema name
+     */
+    private String getSchemaName(Tenant tenant) {
+        return tenant.getId()
+                     .toUpperCase();
     }
 
 }

@@ -115,7 +115,9 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
                     }
                 }
                 if (value != null && !ClassUtils.isPrimitiveOrWrapper(value.getClass()) && value.getClass() != String.class
-                        && !java.util.Date.class.isAssignableFrom(value.getClass())) {
+                        && !java.util.Date.class.isAssignableFrom(value.getClass())
+                        && !java.math.BigInteger.class.isAssignableFrom(value.getClass())
+                        && !java.math.BigDecimal.class.isAssignableFrom(value.getClass())) {
                     if (stringify) {
                         value = "[BINARY]";
                     }

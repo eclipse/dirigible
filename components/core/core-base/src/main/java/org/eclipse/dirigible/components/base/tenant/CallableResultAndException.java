@@ -16,13 +16,13 @@ package org.eclipse.dirigible.components.base.tenant;
  * @param <Result> the generic type
  */
 @FunctionalInterface
-public interface CallableResultAndException<Result> {
+public interface CallableResultAndException<Result, Exc extends Throwable> {
 
     /**
      * Call.
      *
      * @return the result
-     * @throws Exception the exception
+     * @throws Exc the exception
      */
-    Result call() throws Exception;
+    Result call() throws Exc;
 }

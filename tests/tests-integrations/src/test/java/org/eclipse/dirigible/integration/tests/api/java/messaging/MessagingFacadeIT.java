@@ -10,20 +10,24 @@
  */
 package org.eclipse.dirigible.integration.tests.api.java.messaging;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
-import java.util.concurrent.TimeUnit;
 import org.eclipse.dirigible.components.api.messaging.MessagingFacade;
 import org.eclipse.dirigible.components.api.messaging.TimeoutException;
 import org.eclipse.dirigible.integration.tests.IntegrationTest;
+import org.eclipse.dirigible.tests.util.SleepUtil;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.shaded.org.awaitility.Awaitility;
+
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 class MessagingFacadeIT extends IntegrationTest {
 
     private static final String TEST_MESSAGE = "Test message";
     private static final String TEST_MESSAGE_2 = "Test message 2";
+
 
     @Nested
     class QueueTest {
@@ -57,30 +61,12 @@ class MessagingFacadeIT extends IntegrationTest {
         }
     }
 
+
     @Nested
     class TopicTest {
         private static final String TOPIC = "my-test-topic";
         private static final int TIMEOUT_SECONDS = 5;
 
-        @Test
-        void testSendReceiveTwoMessages() throws InterruptedException {
-            TopicMessageReciver msgReceiver = new TopicMessageReciver(TOPIC, TimeUnit.SECONDS.toMillis(TIMEOUT_SECONDS));
-            TopicMessageReciver msgReceiver2 = new TopicMessageReciver(TOPIC, TimeUnit.SECONDS.toMillis(TIMEOUT_SECONDS));
-
-            msgReceiver.start();
-            msgReceiver2.start();
-
-            TimeUnit.MILLISECONDS.sleep(200);
-
-            MessagingFacade.sendToTopic(TOPIC, TEST_MESSAGE);
-
-            Awaitility.await()
-                      .atMost(TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                      .until(() -> areMessagesReceived(msgReceiver, msgReceiver2));
-
-            assertEquals("Unexpected message", TEST_MESSAGE, msgReceiver.getMessage());
-            assertEquals("Unexpected message", TEST_MESSAGE, msgReceiver2.getMessage());
-        }
 
         private class TopicMessageReciver extends Thread {
 
@@ -102,6 +88,26 @@ class MessagingFacadeIT extends IntegrationTest {
                 return message;
             }
 
+        }
+
+        @Test
+        void testSendReceiveTwoMessages() throws InterruptedException {
+            TopicMessageReciver msgReceiver = new TopicMessageReciver(TOPIC, TimeUnit.SECONDS.toMillis(TIMEOUT_SECONDS));
+            TopicMessageReciver msgReceiver2 = new TopicMessageReciver(TOPIC, TimeUnit.SECONDS.toMillis(TIMEOUT_SECONDS));
+
+            msgReceiver.start();
+            msgReceiver2.start();
+
+            SleepUtil.sleepMillis(200);
+
+            MessagingFacade.sendToTopic(TOPIC, TEST_MESSAGE);
+
+            Awaitility.await()
+                      .atMost(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                      .until(() -> areMessagesReceived(msgReceiver, msgReceiver2));
+
+            assertEquals("Unexpected message", TEST_MESSAGE, msgReceiver.getMessage());
+            assertEquals("Unexpected message", TEST_MESSAGE, msgReceiver2.getMessage());
         }
 
         private boolean areMessagesReceived(TopicMessageReciver msgReceiver, TopicMessageReciver msgReceiver2) {

@@ -11,7 +11,7 @@
 package org.eclipse.dirigible.components.data.management.endpoint;
 
 import java.sql.SQLException;
-import java.util.Set;
+import java.util.List;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.data.management.service.DatabaseMetadataService;
@@ -51,7 +51,7 @@ public class DatabaseMetadataEndpoint extends BaseEndpoint {
      * @return the data sources
      */
     @GetMapping(value = "/", produces = "application/json")
-    public ResponseEntity<Set<String>> getDataSourcesNames() {
+    public ResponseEntity<List<String>> getDataSourcesNames() {
         return ResponseEntity.ok(databasesService.getDataSourcesNames());
     }
 

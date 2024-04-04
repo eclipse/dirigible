@@ -22,6 +22,10 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 		</dependency>
@@ -36,7 +40,7 @@
 		<dependency>
 			<groupId>com.codeborne</groupId>
 			<artifactId>selenide-core</artifactId>
-			<version>7.2.2</version>
+			<version>7.2.3</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

@@ -195,9 +195,9 @@ public class DatabaseFacade implements InitializingBean {
      * @return the data source
      */
     private static DataSource getDataSource(String datasourceName) {
-        return datasourceName == null ? DatabaseFacade.get()
-                                                      .getDataSourcesManager()
-                                                      .getDefaultDataSource()
+        return datasourceName == null || "".equals(datasourceName.trim()) || "DefaultDB".equals(datasourceName) ? DatabaseFacade.get()
+                                                                                                                                .getDataSourcesManager()
+                                                                                                                                .getDefaultDataSource()
                 : DatabaseFacade.get()
                                 .getDataSourcesManager()
                                 .getDataSource(datasourceName);
@@ -220,11 +220,8 @@ public class DatabaseFacade implements InitializingBean {
             String error = format("DataSource {0} not known.", datasourceName);
             throw new IllegalArgumentException(error);
         }
-        Connection connection = null;
-        try {
-            connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            try {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 if (parameters != null) {
                     ParametersSetter.setParameters(parameters, preparedStatement);
                 }
@@ -241,18 +238,10 @@ public class DatabaseFacade implements InitializingBean {
                 }
                 DatabaseResultSetHelper.toJson(resultSet, false, false, output);
                 return sw.toString();
-            } finally {
-                if (preparedStatement != null) {
-                    preparedStatement.close();
-                }
             }
         } catch (Exception ex) {
             logger.error("Failed to execute query statement [{}] in data source [{}].", sql, datasourceName, ex);
             throw ex;
-        } finally {
-            if (connection != null) {
-                connection.close();
-            }
         }
     }
 
@@ -335,27 +324,16 @@ public class DatabaseFacade implements InitializingBean {
             String error = format("DataSource {0} not known.", datasourceName);
             throw new IllegalArgumentException(error);
         }
-        Connection connection = null;
-        try {
-            connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            try {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 if (parameters != null) {
                     ParametersSetter.setParameters(parameters, preparedStatement);
                 }
                 return preparedStatement.executeUpdate();
-            } finally {
-                if (preparedStatement != null) {
-                    preparedStatement.close();
-                }
             }
         } catch (Exception ex) {
             logger.error("Failed to execute update statement [{}] in data source [{}].", sql, datasourceName, ex);
             throw ex;
-        } finally {
-            if (connection != null) {
-                connection.close();
-            }
         }
     }
 
@@ -448,9 +426,7 @@ public class DatabaseFacade implements InitializingBean {
             String error = format("DataSource {0} not known.", datasourceName);
             throw new IllegalArgumentException(error);
         }
-        Connection connection = null;
-        try {
-            connection = dataSource.getConnection();
+        try (Connection connection = dataSource.getConnection()) {
             try {
                 return getNextVal(sequence, connection);
             } catch (SQLException e) {
@@ -464,11 +440,7 @@ public class DatabaseFacade implements InitializingBean {
                 // assuming the sequence objects are not supported by the underlying database
                 PersistenceNextValueIdentityProcessor persistenceNextValueIdentityProcessor =
                         new PersistenceNextValueIdentityProcessor(null);
-                return persistenceNextValueIdentityProcessor.nextval(connection, sequence);
-            }
-        } finally {
-            if (connection != null) {
-                connection.close();
+                return persistenceNextValueIdentityProcessor.nextval(connection, tableName);
             }
         }
     }
@@ -485,17 +457,12 @@ public class DatabaseFacade implements InitializingBean {
         String sql = SqlFactory.getNative(connection)
                                .nextval(sequence)
                                .build();
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        try {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 return resultSet.getLong(1);
             }
             throw new SQLException("ResultSet is empty while getting next value of the Sequence: " + sequence);
-        } finally {
-            if (preparedStatement != null) {
-                preparedStatement.close();
-            }
         }
     }
 
@@ -516,9 +483,7 @@ public class DatabaseFacade implements InitializingBean {
                                         .column("count(*)")
                                         .from(tableName)
                                         .build();
-            PreparedStatement countPreparedStatement = null;
-            try {
-                countPreparedStatement = connection.prepareStatement(countSql);
+            try (PreparedStatement countPreparedStatement = connection.prepareStatement(countSql)) {
                 ResultSet rs = countPreparedStatement.executeQuery();
                 if (rs.next()) {
                     sequenceStart = rs.getInt(1);
@@ -526,10 +491,6 @@ public class DatabaseFacade implements InitializingBean {
                 }
             } catch (SQLException e) {
                 // Do nothing
-            } finally {
-                if (countPreparedStatement != null) {
-                    countPreparedStatement.close();
-                }
             }
         }
 
@@ -562,18 +523,12 @@ public class DatabaseFacade implements InitializingBean {
             String error = format("DataSource {0} not known.", datasourceName);
             throw new IllegalArgumentException(error);
         }
-        Connection connection = null;
-        try {
-            connection = dataSource.getConnection();
+        try (Connection connection = dataSource.getConnection()) {
             createSequenceInternal(sequence, start, connection, null);
 
         } catch (Exception ex) {
             logger.error("Failed to create sequence [{}] in data source [{}].", sequence, datasourceName, ex);
             throw ex;
-        } finally {
-            if (connection != null) {
-                connection.close();
-            }
         }
     }
 
@@ -611,29 +566,17 @@ public class DatabaseFacade implements InitializingBean {
             String error = format("DataSource {0} not known.", datasourceName);
             throw new IllegalArgumentException(error);
         }
-        Connection connection = null;
-        try {
-            connection = dataSource.getConnection();
+        try (Connection connection = dataSource.getConnection()) {
             String sql = SqlFactory.getNative(connection)
                                    .drop()
                                    .sequence(sequence)
                                    .build();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            try {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.executeUpdate();
-            } finally {
-                if (preparedStatement != null) {
-                    preparedStatement.close();
-                }
             }
-
         } catch (Exception ex) {
             logger.error("Failed to drop sequence [{}] in data source [{}].", sequence, datasourceName, ex);
             throw ex;
-        } finally {
-            if (connection != null) {
-                connection.close();
-            }
         }
     }
 

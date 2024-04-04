@@ -9,10 +9,17 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
+
+const configurations = dirigibleRequire("core/configurations");
+
 exports.process = function (model, parameters) {
     model.entities.forEach(e => {
         if (parameters.dataSource && !e.dataSource) {
             e.dataSource = parameters.dataSource;
+        } else {
+            const defaultDataSourceName = configurations.get("DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT", "DefaultDB");
+            e.dataSource = defaultDataSourceName;
+            parameters.dataSource = defaultDataSourceName;
         }
         let tablePrefix = parameters.tablePrefix ? parameters.tablePrefix : '';
         if (tablePrefix !== '' && !tablePrefix.endsWith("_")) {

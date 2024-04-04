@@ -12,7 +12,7 @@ package org.eclipse.dirigible.components.data.management.service;
 
 
 import java.sql.SQLException;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.dirigible.components.data.management.config.DatabaseMetadataCache;
@@ -63,11 +63,12 @@ public class DatabaseMetadataService {
      *
      * @return the data sources
      */
-    public Set<String> getDataSourcesNames() {
+    public List<String> getDataSourcesNames() {
         return datasourceService.getAll()
                                 .stream()
                                 .map(DataSource::getName)
-                                .collect(Collectors.toSet());
+                                .sorted(String.CASE_INSENSITIVE_ORDER)
+                                .collect(Collectors.toList());
     }
 
     /**

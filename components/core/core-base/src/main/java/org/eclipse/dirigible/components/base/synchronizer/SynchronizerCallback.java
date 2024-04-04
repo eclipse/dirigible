@@ -47,9 +47,8 @@ public interface SynchronizerCallback {
      * Register errors.
      *
      * @param remained the remained
-     * @param lifecycle the lifecycle
      */
-    void registerFatals(List<TopologyWrapper<? extends Artefact>> remained, ArtefactLifecycle lifecycle);
+    void registerFatals(List<TopologyWrapper<? extends Artefact>> remained);
 
     /**
      * Register errors.
