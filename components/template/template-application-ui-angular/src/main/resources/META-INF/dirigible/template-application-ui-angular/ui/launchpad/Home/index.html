@@ -12,13 +12,11 @@
 		</script>
 		<link type="text/css" rel="stylesheet"
 			href="/services/js/resources-core/services/loader.js?id=application-view-css" />
-
 		<script type="text/javascript" src="controller.js"></script>
 	</head>
 
 	<body class="dg-vbox">
 		<fd-scrollbar class="dg-full-height">
-
 			<section class="fd-section">
 				<div class="fd-section__header">
 					<h3 class="fd-section__title">${title}</h3>
@@ -37,7 +35,6 @@
 							<div class="fd-row">
 								<div class="fd-col fd-col--12 fd-col-md--6 fd-col-lg--4 fd-col-xl--3"
 									ng-repeat="next in data[group]">
-
 									<fd-card card-type="object">
 										<fd-card-header ng-click="openView(next.location)">
 											<fd-card-title>{{next.name}}</fd-card-title>
@@ -58,7 +55,6 @@
 											</div>
 										</fd-card-content>
 									</fd-card>
-
 								</div>
 							</div>
 						</div>

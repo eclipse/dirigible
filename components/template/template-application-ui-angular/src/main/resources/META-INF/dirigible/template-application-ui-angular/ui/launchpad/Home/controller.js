@@ -11,12 +11,11 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 		entityApiProvider.baseUrl = "/services/js/{{projectName}}/gen/ui/launchpad/Home/tiles.js";
 	}])
 	.controller('PageController', ['$scope', 'messageHub', 'entityApi', function ($scope, messageHub, entityApi) {
-
 		$scope.openView = function (location) {
 			messageHub.postMessage("openView", {
 				location: location
 			});
-		}
+		};
 
 		entityApi.list().then(function (response) {
 			if (response.status != 200) {
@@ -26,5 +25,4 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			$scope.data = response.data;
 			$scope.groups = Object.keys(response.data);
 		});
-
 	}]);

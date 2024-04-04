@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2023 SAP and others.
+ * Copyright (c) 2010-2024 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -55,7 +55,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
             restrict: 'E',
             replace: true,
             scope: {
-                viewsLayoutModel: '=',
+                viewsLayoutModel: '<',
                 layoutConfig: '<?'
             },
             controller: ['$scope', '$element', function ($scope) {

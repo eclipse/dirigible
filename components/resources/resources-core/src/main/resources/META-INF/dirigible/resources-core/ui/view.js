@@ -1,5 +1,17 @@
+/*
+ * Copyright (c) 2024 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2024 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
 angular.module('ideView', ['ngResource', 'ideExtensions', 'ideTheming'])
     .constant('view', (typeof viewData != 'undefined') ? viewData : (typeof editorData != 'undefined' ? editorData : ''))
+    .constant('extensionPoint', {})
     .factory('baseHttpInterceptor', function () {
         let csrfToken = null;
         return {
@@ -20,14 +32,14 @@ angular.module('ideView', ['ngResource', 'ideExtensions', 'ideTheming'])
             }
         };
     })
-    .factory('Views', ['Extensions', function (Extensions) {
+    .factory('Views', ['Extensions', 'extensionPoint', function (Extensions, extensionPoint) {
         let cachedViews;
         let cachedSubviews;
         let get = function () {
             if (cachedViews) {
                 return cachedViews;
             } else {
-                return Extensions.get('view').then(function (data) {
+                return Extensions.get('view', extensionPoint.views).then(function (data) {
                     data = data.map(function (v) {
                         if (!v.id) {
                             console.error(`Views: view '${v.label || 'undefined'}' does not have an id`);
@@ -58,7 +70,7 @@ angular.module('ideView', ['ngResource', 'ideExtensions', 'ideTheming'])
             if (cachedSubviews) {
                 return cachedSubviews;
             } else {
-                return Extensions.get('subview').then(function (data) {
+                return Extensions.get('subview', extensionPoint.subviews).then(function (data) {
                     data = data.map(function (v) {
                         if (!v.id) {
                             console.error(`Subviews: view '${v.label || 'undefined'}' does not have an id`);

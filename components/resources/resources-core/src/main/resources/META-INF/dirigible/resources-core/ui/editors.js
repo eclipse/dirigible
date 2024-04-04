@@ -10,13 +10,14 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('ideEditors', ['ngResource', 'ideExtensions'])
+    .constant('extensionPoint', {})
     .provider('Editors', function editorProvider() {
-        this.$get = ['Extensions', function editorsFactory(Extensions) {
+        this.$get = ['Extensions', 'extensionPoint', function editorsFactory(Extensions, extensionPoint) {
             let defaultEditor = {};
             let editorProviders = {};
             let editorsForContentType = {};
 
-            Extensions.get('editor').then(function (response) {
+            Extensions.get('editor', extensionPoint.editors).then(function (response) {
                 for (let i = 0; i < response.length; i++) {
                     editorProviders[response[i].id] = response[i].link;
                     if (response[i].defaultEditor) {

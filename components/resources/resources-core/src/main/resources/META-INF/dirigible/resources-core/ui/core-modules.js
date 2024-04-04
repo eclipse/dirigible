@@ -14,8 +14,10 @@
 angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideExtensions', 'ideTheming', 'ideMessageHub'])
     .constant('branding', brandingInfo)
     .constant('perspective', perspectiveData)
+    .constant('extensionPoint', {})
     .config(function config($compileProvider) {
         $compileProvider.debugInfoEnabled(false);
+        $compileProvider.commentDirectivesEnabled(false);
     }).factory('User', ['$http', function ($http) {
         return {
             get: function () {
@@ -398,14 +400,14 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideExtensions', 'i
                 <ng-transclude ng-if="shouldLoad" class="dg-perspective-container"></ng-transclude>
             </div>`
         }
-    }]).directive('ideSidebar', ['Extensions', 'perspective', 'messageHub', function (Extensions, perspective, messageHub) {
+    }]).directive('ideSidebar', ['Extensions', 'extensionPoint', 'perspective', 'messageHub', function (Extensions, extensionPoint, perspective, messageHub) {
         return {
             restrict: 'E',
             replace: true,
             link: {
                 pre: function (scope) {
                     scope.activeId = perspective.id;
-                    Extensions.get('perspective').then(function (response) {
+                    Extensions.get('perspective', extensionPoint.perspectives).then(function (response) {
                         scope.perspectives = response;
                     });
                     scope.getIcon = function (icon) {
@@ -437,13 +439,13 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideExtensions', 'i
     /**
      * Used for Dialogs and Window Dialogs
      */
-    .directive('ideDialogs', ['messageHub', 'Extensions', 'perspective', function (messageHub, Extensions, perspective) {
+    .directive('ideDialogs', ['messageHub', 'Extensions', 'extensionPoint', 'perspective', function (messageHub, Extensions, extensionPoint, perspective) {
         return {
             restrict: 'E',
             replace: true,
             link: function (scope, element) {
                 let dialogWindows;
-                Extensions.get('dialogWindow').then(function (data) {
+                Extensions.get('dialogWindow', extensionPoint.dialogWindows).then(function (data) {
                     dialogWindows = data;
                 });
                 let messageBox = element[0].querySelector("#dgIdeAlert");
