@@ -224,12 +224,13 @@
             </fd-fieldset>
         </fd-scrollbar>
 
-        <footer class="fd-dialog__footer fd-bar fd-bar--footer" ng-show="entityActions.length && entity.${primaryKeysString}">
-            <div class="fd-bar__right">
-                <fd-button ng-repeat="action in entityActions" class="fd-dialog__decisive-button" compact="true" dg-type="emphasized" dg-label="{{action.label}}"
-                    ng-click="triggerEntityAction(action, next)"></fd-button>
-            </div>
-        </footer>
+		<fd-bar bar-design="footer" ng-show="entityActions.length && entity.${primaryKeysString}">
+			<fd-bar-right>
+				<fd-bar-element ng-repeat="action in entityActions">
+					<fd-button dg-label="{{action.label}}" dg-type="emphasized" ng-click="triggerEntityAction(action, next)" compact="true"></fd-button>
+				</fd-bar-element>
+			</fd-bar-right>
+		</fd-bar>
     </body>
 
 </html>

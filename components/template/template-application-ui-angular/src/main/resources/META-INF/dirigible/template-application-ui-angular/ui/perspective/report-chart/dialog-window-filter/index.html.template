@@ -308,20 +308,19 @@
             </fd-fieldset>
         </fd-scrollbar>
 
-        <footer class="fd-dialog__footer fd-bar fd-bar--footer">
-            <div class="fd-bar__right">
-                <fd-button class="fd-margin-end--tiny fd-dialog__decisive-button" compact="true" dg-type="emphasized"
-                    dg-label="Filter"
-                    ng-click="filter()" state="{{ forms.details.$valid ? '' : 'disabled'  }}">
-                </fd-button>
-                <fd-button class="fd-margin-end--tiny fd-dialog__decisive-button" compact="true" dg-type="transparent"
-                    dg-label="Reset"
-                    ng-click="resetFilter()">
-                </fd-button>
-                <fd-button class="fd-dialog__decisive-button" compact="true" dg-type="transparent" dg-label="Cancel"
-                    ng-click="cancel()"></fd-button>
-            </div>
-        </footer>
+        <fd-bar bar-design="footer">
+			<fd-bar-right>
+				<fd-bar-element>
+					<fd-button dg-label="Filter" dg-type="emphasized" ng-click="filter()" state="{{ forms.details.$valid ? '' : 'disabled' }}" compact="true"></fd-button>
+				</fd-bar-element>
+				<fd-bar-element>
+					<fd-button dg-label="Reset" dg-type="transparent" ng-click="resetFilter()" compact="true"></fd-button>
+				</fd-bar-element>
+				<fd-bar-element>
+					<fd-button dg-label="Cancel" dg-type="transparent" ng-click="cancel()" compact="true"></fd-button>
+				</fd-bar-element>
+			</fd-bar-right>
+		</fd-bar>
 
     </body>
 
