@@ -131,7 +131,7 @@
 		<c3p0.version>0.10.0-pre7</c3p0.version>
 		<guava.version>33.1.0-jre</guava.version>
 		<icu4j.version>74.2</icu4j.version>
-		<classgraph.version>4.8.168</classgraph.version>
+		<classgraph.version>4.8.170</classgraph.version>
 
 		<mina-core.version>2.2.3</mina-core.version>
 		<sshd-core.version>2.12.1</sshd-core.version>
