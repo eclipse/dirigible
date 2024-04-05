@@ -17,7 +17,7 @@
 
     <body class="dg-vbox">
         <fd-scrollbar class="dg-full-height">
-            <fd-fieldset class="fd-margin--md" ng-form="formFieldset">
+            <fd-fieldset ng-form="formFieldset">
                 <fd-form-group dg-header="${name} Details" name="entityForm" class="fd-container fd-form-layout-grid-container">
 #foreach ($property in $properties)
 #if(!$property.dataAutoIncrement)
@@ -224,12 +224,13 @@
             </fd-fieldset>
         </fd-scrollbar>
 
-        <footer class="fd-dialog__footer fd-bar fd-bar--footer" ng-show="entityActions.length && entity.${primaryKeysString}">
-            <div class="fd-bar__right">
-                <fd-button ng-repeat="action in entityActions" class="fd-dialog__decisive-button" compact="true" dg-type="emphasized" dg-label="{{action.label}}"
-                    ng-click="triggerEntityAction(action.id, next)"></fd-button>
-            </div>
-        </footer>
+		<fd-bar bar-design="footer" compact="true" ng-show="entityActions.length && entity.${primaryKeysString}">
+			<fd-bar-right>
+				<fd-bar-element ng-repeat="action in entityActions">
+					<fd-button dg-label="{{action.label}}" dg-type="emphasized" ng-click="triggerEntityAction(action)"></fd-button>
+				</fd-bar-element>
+			</fd-bar-right>
+		</fd-bar>
     </body>
 
 </html>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2023 SAP and others.
+ * Copyright (c) 2010-2024 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -11,21 +11,14 @@
 /*
  * Provides key microservices for constructing and managing the IDE UI
  */
-angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideMessageHub'])
+angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideExtensions', 'ideTheming', 'ideMessageHub'])
     .constant('branding', brandingInfo)
     .constant('perspective', perspectiveData)
     .constant('extensionPoint', {})
     .config(function config($compileProvider) {
         $compileProvider.debugInfoEnabled(false);
-    }).service('Perspectives', ['$resource', "extensionPoint", function ($resource, extensionPoint) {
-        let url = '/services/js/resources-core/services/perspectives.js';
-        if (extensionPoint && extensionPoint.perspectives) {
-            url = `${url}?extensionPoint=${extensionPoint.perspectives}`;
-        }
-        return $resource(url);
-    }]).service('Menu', ['$resource', function ($resource) {
-        return $resource('/services/js/resources-core/services/menu.js');
-    }]).service('User', ['$http', function ($http) {
+        $compileProvider.commentDirectivesEnabled(false);
+    }).factory('User', ['$http', function ($http) {
         return {
             get: function () {
                 let user = { name: undefined };
@@ -38,12 +31,6 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                 return user;
             }
         };
-    }]).service('DialogWindows', ['$resource', "extensionPoint", function ($resource, extensionPoint) {
-        let url = '/services/js/resources-core/services/dialog-windows.js';
-        if (extensionPoint && extensionPoint.dialogWindows) {
-            url = `${url}?extensionPoint=${extensionPoint.dialogWindows}`;
-        }
-        return $resource(url);
     }]).filter('removeSpaces', [function () {
         return function (string) {
             if (!angular.isString(string)) return string;
@@ -237,7 +224,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             },
             templateUrl: '/services/web/resources-core/ui/templates/contextmenuSubmenu.html'
         };
-    }]).directive('ideHeader', ['$cookies', '$http', 'branding', 'theming', 'User', 'Menu', 'messageHub', function ($cookies, $http, branding, theming, User, Menu, messageHub) {
+    }]).directive('ideHeader', ['$cookies', '$http', 'branding', 'theming', 'User', 'Extensions', 'messageHub', function ($cookies, $http, branding, theming, User, Extensions, messageHub) {
         return {
             restrict: 'E',
             replace: true,
@@ -265,10 +252,9 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     scope.user = User.get();
 
                     function loadMenu() {
-                        Menu.query({ id: scope.menuExtId }).$promise
-                            .then(function (data) {
-                                scope.menu = data;
-                            });
+                        Extensions.get('menu', scope.menuExtId).then(function (data) {
+                            scope.menu = data;
+                        });
                     }
 
                     scope.branding = branding;
@@ -414,14 +400,16 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                 <ng-transclude ng-if="shouldLoad" class="dg-perspective-container"></ng-transclude>
             </div>`
         }
-    }]).directive('ideSidebar', ['Perspectives', 'perspective', 'messageHub', function (Perspectives, perspective, messageHub) {
+    }]).directive('ideSidebar', ['Extensions', 'extensionPoint', 'perspective', 'messageHub', function (Extensions, extensionPoint, perspective, messageHub) {
         return {
             restrict: 'E',
             replace: true,
             link: {
                 pre: function (scope) {
                     scope.activeId = perspective.id;
-                    scope.perspectives = Perspectives.query();
+                    Extensions.get('perspective', extensionPoint.perspectives).then(function (response) {
+                        scope.perspectives = response;
+                    });
                     scope.getIcon = function (icon) {
                         if (icon) return icon;
                         return "/services/web/resources/images/unknown.svg";
@@ -451,12 +439,15 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
     /**
      * Used for Dialogs and Window Dialogs
      */
-    .directive('ideDialogs', ['messageHub', 'DialogWindows', 'perspective', function (messageHub, DialogWindows, perspective) {
+    .directive('ideDialogs', ['messageHub', 'Extensions', 'extensionPoint', 'perspective', function (messageHub, Extensions, extensionPoint, perspective) {
         return {
             restrict: 'E',
             replace: true,
             link: function (scope, element) {
-                let dialogWindows = DialogWindows.query();
+                let dialogWindows;
+                Extensions.get('dialogWindow', extensionPoint.dialogWindows).then(function (data) {
+                    dialogWindows = data;
+                });
                 let messageBox = element[0].querySelector("#dgIdeAlert");
                 let ideDialog = element[0].querySelector("#dgIdeDialog");
                 let ideBusyDialog = element[0].querySelector("#dgIdeBusyDialog");
@@ -1051,37 +1042,51 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     "ide.dialogWindow",
                     function (data) {
                         scope.$apply(function () {
-                            let found = false;
-                            for (let i = 0; i < dialogWindows.length; i++) {
-                                if (dialogWindows[i].id === data.dialogWindowId) {
-                                    if (data.params) {
-                                        data.params['container'] = 'dialog';
-                                        data.params['perspectiveId'] = perspective.id;
-                                    } else {
-                                        data.params = {
-                                            container: 'layout',
-                                            perspectiveId: perspective.id,
-                                        };
-                                    }
-                                    found = true;
-                                    windows.push({
-                                        title: dialogWindows[i].label,
-                                        dialogWindowId: dialogWindows[i].id,
-                                        callbackTopic: data.callbackTopic,
-                                        link: dialogWindows[i].link,
-                                        params: JSON.stringify(data.params),
-                                        closable: data.closable,
-                                    });
-                                    break;
-                                }
-                            }
-                            if (found) {
+                            if (data.serviceData) {
+                                windows.push({
+                                    title: data.serviceData.label,
+                                    dialogWindowId: data.dialogWindowId,
+                                    callbackTopic: data.callbackTopic,
+                                    link: data.serviceData.link,
+                                    params: JSON.stringify(data.params),
+                                    closable: data.closable,
+                                });
                                 if (!scope.activeDialog && windows.length < 2) {
                                     scope.showWindow();
                                 }
-                            } else console.error(
-                                "Dialog Window Error: There is no window dialog with such id: " + data.dialogWindowId
-                            );
+                            } else {
+                                let found = false;
+                                for (let i = 0; i < dialogWindows.length; i++) {
+                                    if (dialogWindows[i].id === data.dialogWindowId) {
+                                        if (data.params) {
+                                            data.params['container'] = 'dialog';
+                                            data.params['perspectiveId'] = perspective.id;
+                                        } else {
+                                            data.params = {
+                                                container: 'layout',
+                                                perspectiveId: perspective.id,
+                                            };
+                                        }
+                                        found = true;
+                                        windows.push({
+                                            title: dialogWindows[i].label,
+                                            dialogWindowId: dialogWindows[i].id,
+                                            callbackTopic: data.callbackTopic,
+                                            link: dialogWindows[i].link,
+                                            params: JSON.stringify(data.params),
+                                            closable: data.closable,
+                                        });
+                                        break;
+                                    }
+                                }
+                                if (found) {
+                                    if (!scope.activeDialog && windows.length < 2) {
+                                        scope.showWindow();
+                                    }
+                                } else console.error(
+                                    "Dialog Window Error: There is no window dialog with such id: " + data.dialogWindowId
+                                );
+                            }
                         });
                     },
                     true
@@ -1164,6 +1169,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
         }
     }])
     .directive('dgEmbeddablePerspective', [function () {
+        // TODO: This is a dirty hack. We need to rework the way we build perspectives.
         return {
             restrict: 'A',
             link: function () {
@@ -1177,4 +1183,3 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             }
         }
     }]);
-

@@ -9,10 +9,8 @@ angular.module('page', ["ideUI", "ideView"])
 			details: {},
 		};
 
-		if (window != null && window.frameElement != null && window.frameElement.hasAttribute("data-parameters")) {
-			let dataParameters = window.frameElement.getAttribute("data-parameters");
-			if (dataParameters) {
-				let params = JSON.parse(dataParameters);
+		let params = ViewParameters.get();
+		if (Object.keys(params).length) {
 #foreach ($property in $filter.properties)
 #if($property.isDateType)
 				if (params?.filter?.${property.name}) {
@@ -26,7 +24,6 @@ angular.module('page', ["ideUI", "ideView"])
 				$scope.options${property.name} = params.options${property.name};
 #end
 #end
-			}
 		}
 
 		$scope.filter = function () {

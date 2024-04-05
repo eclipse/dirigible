@@ -1,5 +1,0 @@
-{
-    "module": "{{projectName}}/gen/ui/custom-action-dialog/view.js",
-    "extensionPoint": "{{projectName}}-dialog-window",
-    "description": "{{projectName}} - Custom Action Dialog Window"
-}
