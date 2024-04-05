@@ -103,7 +103,7 @@
 								</fd-popover-control>
 								<fd-popover-body dg-align="bottom-right">
 									<fd-menu aria-label="Table Row Menu" no-backdrop="true" no-shadow="true">
-										<fd-menu-item ng-repeat="action in entityActions" title="{{action.label}}" ng-click="triggerEntityAction(action, next)"></fd-menu-item>
+										<fd-menu-item ng-repeat="action in entityActions" title="{{action.label}}" ng-click="triggerEntityAction(action)"></fd-menu-item>
 										<fd-menu-item title="View Details" ng-click="openDetails(next)"></fd-menu-item>
 										<fd-menu-item title="Edit" ng-click="updateEntity(next)"></fd-menu-item>
 										<fd-menu-item title="Delete" ng-click="deleteEntity(next)"></fd-menu-item>

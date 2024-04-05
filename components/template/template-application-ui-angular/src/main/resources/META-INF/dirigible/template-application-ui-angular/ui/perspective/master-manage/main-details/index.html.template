@@ -380,7 +380,7 @@
 		<fd-bar bar-design="footer" ng-show="action === 'select' && entityActions.length && entity.${primaryKeysString}">
 			<fd-bar-right>
 				<fd-bar-element ng-repeat="action in entityActions">
-					<fd-button dg-label="{{action.label}}" dg-type="emphasized" ng-click="triggerEntityAction(action, next)"></fd-button>
+					<fd-button dg-label="{{action.label}}" dg-type="emphasized" ng-click="triggerEntityAction(action)"></fd-button>
 				</fd-bar-element>
 			</fd-bar-right>
 		</fd-bar>

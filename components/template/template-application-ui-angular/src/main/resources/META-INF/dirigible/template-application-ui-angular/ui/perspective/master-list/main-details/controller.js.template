@@ -12,11 +12,11 @@ angular.module('page', ["ideUI", "ideView"])
 			$scope.entityActions = response.filter(e => e.perspective === "${perspectiveName}" && e.view === "${name}" && e.type === "entity");
 		});
 
-		$scope.triggerEntityAction = function (action, selectedEntity) {
+		$scope.triggerEntityAction = function (action) {
 			messageHub.showDialogWindow(
 				action.id,
 				{
-					id: selectedEntity.${primaryKeysString}
+					id: $scope.entity.${primaryKeysString}
 				},
 				null,
 				true,
