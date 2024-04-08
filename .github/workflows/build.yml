@@ -61,7 +61,6 @@ jobs:
         docker buildx build --push --tag dirigiblelabs/dirigible -o type=image --platform=linux/arm64,linux/amd64 .
   tests:
     runs-on: ${{ matrix.os }}-latest
-    continue-on-error: true
     strategy:
       matrix:
         os: [ubuntu, windows]
