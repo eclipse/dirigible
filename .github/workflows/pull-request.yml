@@ -26,7 +26,7 @@ jobs:
       - name: Validate Java code formatting
         run: mvn -T 1C formatter:validate
 
-  build:
+  tests:
     runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
