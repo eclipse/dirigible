@@ -11,10 +11,7 @@ package org.eclipse.dirigible.components.jobs.init;
 
 import org.eclipse.dirigible.components.base.ApplicationListenersOrder.ApplicationReadyEventListeners;
 import org.eclipse.dirigible.components.jobs.DirigibleJob;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
+import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -60,19 +57,30 @@ class JobsInitializer implements ApplicationListener<ApplicationReadyEvent> {
     public void onApplicationEvent(ApplicationReadyEvent event) {
         LOGGER.info("Initializing [{}] jobs: {}}", jobs.size(), jobs);
 
-        jobs.forEach(job -> {
-            JobDetail jobDetail = job.createJob();
-            try {
-                if (!scheduler.checkExists(jobDetail.getKey())) {
-                    Trigger trigger = job.createTrigger();
-                    scheduler.scheduleJob(jobDetail, trigger);
-                }
-            } catch (SchedulerException ex) {
-                throw new IllegalStateException("Failed to check the existence of job " + job, ex);
-            }
-        });
+        jobs.forEach(this::rescheduleJob);
 
         LOGGER.info("Completed.");
     }
 
+    private void rescheduleJob(DirigibleJob job) {
+        try {
+            Trigger trigger = job.createTrigger();
+            TriggerKey triggerKey = trigger.getKey();
+
+            JobKey jobKey = trigger.getJobKey();
+
+            if (scheduler.checkExists(triggerKey)) {
+                scheduler.unscheduleJob(triggerKey);
+                scheduler.deleteJob(jobKey);
+                LOGGER.info("Unscheduled job: [{}]", job);
+            }
+
+            JobDetail jobDetail = job.createJob();
+            scheduler.scheduleJob(jobDetail, trigger);
+            LOGGER.info("Scheduled job [{}] with trigger [{}]", jobDetail, trigger);
+
+        } catch (SchedulerException ex) {
+            throw new IllegalStateException("Failed to reschedule job " + job, ex);
+        }
+    }
 }
