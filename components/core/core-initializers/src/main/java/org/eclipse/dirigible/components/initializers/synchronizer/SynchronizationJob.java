@@ -101,9 +101,9 @@ class SynchronizationJob extends SystemJob {
      */
     @Override
     public void execute(JobExecutionContext context) {
-        logger.info("Job {} fired @ {}", context.getJobDetail()
-                                                .getKey()
-                                                .getName(),
+        logger.debug("Job {} fired @ {}", context.getJobDetail()
+                                                 .getKey()
+                                                 .getName(),
                 context.getFireTime());
 
         executor.submit(() -> {
