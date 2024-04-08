@@ -78,11 +78,11 @@ public class TerminalWebsocketHandler extends BinaryWebSocketHandler implements 
         try {
             TerminalWebsocketClientEndpoint clientEndPoint = startClientWebsocket(session);
             SESSION_TO_CLIENT.put(session.getId(), clientEndPoint);
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
             logger.error(TERMINAL_PREFIX + e.getMessage(), e);
             try {
                 session.close();
-            } catch (IOException e1) {
+            } catch (Exception e1) {
                 logger.error(TERMINAL_PREFIX + e.getMessage(), e);
             }
         }
@@ -147,7 +147,7 @@ public class TerminalWebsocketHandler extends BinaryWebSocketHandler implements 
                 clientEndPoint.getSession()
                               .close();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error(TERMINAL_PREFIX + e.getMessage(), e);
         }
     }

@@ -126,15 +126,15 @@ public class TerminalWebsocketConfig implements WebSocketConfigurer {
                         ttydShell.setExecutable(true);
                     }
                 } else if (os.indexOf("win") >= 0) {
-                    throw new IllegalStateException("Windows is not yet supported");
+                    logger.error("Windows is not yet supported");
                 } else {
-                    throw new IllegalStateException("Unknown OS: " + os);
+                    logger.error("Unknown OS: " + os);
                 }
 
                 ProcessRunnable processRunnable = new ProcessRunnable(command);
                 new Thread(processRunnable).start();
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 logger.error(TERMINAL_PREFIX + e.getMessage(), e);
             }
             started = true;
