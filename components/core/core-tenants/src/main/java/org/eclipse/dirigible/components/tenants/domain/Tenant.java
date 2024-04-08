@@ -10,6 +10,8 @@
  */
 package org.eclipse.dirigible.components.tenants.domain;
 
+import org.eclipse.dirigible.components.base.artefact.Artefact;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -25,7 +27,10 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "DIRIGIBLE_TENANTS")
-public class Tenant {
+public class Tenant extends Artefact {
+
+    /** The Constant ARTEFACT_TYPE. */
+    public static final String ARTEFACT_TYPE = "tenant";
 
     /** The id. */
     @Id
@@ -36,10 +41,6 @@ public class Tenant {
     @Column(name = "TENANT_SUBDOMAIN", unique = true, nullable = false)
     private String subdomain;
 
-    /** The name. */
-    @Column(name = "TENANT_NAME", nullable = false)
-    private String name;
-
     /** The status. */
     @Column(name = "TENANT_STATUS", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -47,8 +48,26 @@ public class Tenant {
 
     /**
      * Instantiates a new tenant.
+     *
+     * @param location the location
+     * @param name the name
+     * @param description the description
+     * @param subdomain the subdomain
+     * @param status the status
      */
-    public Tenant() {}
+    public Tenant(String location, String name, String description, String subdomain, TenantStatus status) {
+        super(location, name, ARTEFACT_TYPE, description, null);
+        this.subdomain = subdomain;
+        this.status = status;
+    }
+
+    /**
+     * Instantiates a new tenant.
+     */
+    public Tenant() {
+        super();
+    }
+
 
     /**
      * Gets the id.

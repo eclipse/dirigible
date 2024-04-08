@@ -10,6 +10,8 @@
  */
 package org.eclipse.dirigible.components.tenants.domain;
 
+import org.eclipse.dirigible.components.base.artefact.Artefact;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -26,7 +28,10 @@ import jakarta.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "DIRIGIBLE_USERS", uniqueConstraints = {@UniqueConstraint(columnNames = {"USER_TENANT_ID", "USER_USERNAME"})})
-public class User {
+public class User extends Artefact {
+
+    /** The Constant ARTEFACT_TYPE. */
+    public static final String ARTEFACT_TYPE = "user";
 
     /** The id. */
     @Id
@@ -50,7 +55,9 @@ public class User {
     /**
      * Instantiates a new user.
      */
-    public User() {}
+    public User() {
+        super();
+    }
 
     /**
      * Instantiates a new user.
@@ -60,6 +67,7 @@ public class User {
      * @param password the password
      */
     public User(Tenant tenant, String username, String password) {
+        super("-", username, ARTEFACT_TYPE, null, null);
         this.tenant = tenant;
         this.username = username;
         this.password = password;

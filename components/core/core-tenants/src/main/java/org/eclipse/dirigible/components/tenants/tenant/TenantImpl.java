@@ -20,10 +20,10 @@ import java.util.Objects;
 class TenantImpl implements Tenant {
 
     /** The Constant DEFAULT_TENANT_ID. */
-    private static final String DEFAULT_TENANT_ID = "defaultTenant";
+    private static final String DEFAULT_TENANT_ID = "default-tenant";
 
     /** The Constant DEFAULT_TENANT_NAME. */
-    private static final String DEFAULT_TENANT_NAME = "The default tenant";
+    private static final String DEFAULT_TENANT_NAME = "default-tenant";
 
     /** The Constant DEFAULT_TENANT_SUBDOMAIN. */
     private static final String DEFAULT_TENANT_SUBDOMAIN = "default";

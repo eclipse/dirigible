@@ -77,6 +77,9 @@ class DefaultTenantInitializer implements ApplicationListener<ApplicationReadyEv
         tenantEntity.setName(defaultTenant.getName());
         tenantEntity.setStatus(TenantStatus.PROVISIONED);
         tenantEntity.setSubdomain(defaultTenant.getSubdomain());
+        tenantEntity.setLocation("-");
+        tenantEntity.setType(org.eclipse.dirigible.components.tenants.domain.Tenant.ARTEFACT_TYPE);
+        tenantEntity.updateKey();
 
         org.eclipse.dirigible.components.tenants.domain.Tenant savedTenant = tenantService.save(tenantEntity);
         LOGGER.info("Created default tenant [{}]", savedTenant);
