@@ -105,7 +105,7 @@ angular.module('ideWorkspace', [])
                 if (pathSegments.length >= 1) {
                     let url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(workspaceName).path('rename').build();
                     return $http.post(url, {
-                        source: new UriBuilder().path(pathSegments).path(oldName).build(),
+                        sources: [new UriBuilder().path(pathSegments).path(oldName).build()],
                         target: new UriBuilder().path(pathSegments).path(newName).build(),
                         sourceWorkspace: workspaceName,
                         targetWorkspace: workspaceName
@@ -133,7 +133,7 @@ angular.module('ideWorkspace', [])
                 let url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(targetWorkspace).path('copy').build();
                 return $http.post(url, {
                     sourceWorkspace: sourceWorkspace,
-                    source: sourcePath,
+                    sources: [sourcePath],
                     targetWorkspace: targetWorkspace,
                     target: (targetPath.endsWith('/') ? targetPath : targetPath + '/'),
                 }).then(function successCallback(response) {
@@ -148,7 +148,7 @@ angular.module('ideWorkspace', [])
                 // TODO: Move to another workspace
                 let url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(sourceWorkspace).path('move').build();
                 return $http.post(url, {
-                    source: sourcePath,
+                    sources: [sourcePath],
                     target: targetPath,
                     sourceWorkspace: sourceWorkspace,
                     targetWorkspace: targetWorkspace
@@ -212,7 +212,7 @@ angular.module('ideWorkspace', [])
             let linkProject = function (workspace, projectName, path) {
                 let url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(workspace).path('linkProject').build();
                 return $http.post(url, {
-                    source: projectName,
+                    sources: [projectName],
                     target: path
                 }).then(function successCallback(response) {
                     return { status: response.status, data: response.data };

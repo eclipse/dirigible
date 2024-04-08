@@ -18,8 +18,8 @@ public class WorkspaceSourceTargetPair {
     /** The source workspace. */
     private String sourceWorkspace;
 
-    /** The source. */
-    private String source;
+    /** The sources. */
+    private String[] sources;
 
     /** The target workspace. */
     private String targetWorkspace;
@@ -46,21 +46,21 @@ public class WorkspaceSourceTargetPair {
     }
 
     /**
-     * Gets the source.
+     * Gets the sources.
      *
-     * @return the source
+     * @return the sources
      */
-    public String getSource() {
-        return source;
+    public String[] getSources() {
+        return sources;
     }
 
     /**
-     * Sets the source.
+     * Sets the sources.
      *
-     * @param source the new source
+     * @param sources the new sources
      */
-    public void setSource(String source) {
-        this.source = source;
+    public void setSources(String[] sources) {
+        this.sources = sources;
     }
 
     /**
