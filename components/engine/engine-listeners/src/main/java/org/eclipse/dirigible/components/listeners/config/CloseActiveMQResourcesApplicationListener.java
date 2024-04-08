@@ -112,7 +112,8 @@ class CloseActiveMQResourcesApplicationListener implements ApplicationListener<A
         try {
             listenersManager.stopListeners();
         } catch (RuntimeException ex) {
-            LOGGER.warn("Failed to stop listeners", ex);
+            LOGGER.warn("Failed to stop listeners");
+            LOGGER.warn(ex.getMessage());
         }
     }
 
@@ -123,7 +124,8 @@ class CloseActiveMQResourcesApplicationListener implements ApplicationListener<A
         try {
             session.close();
         } catch (RuntimeException | JMSException ex) {
-            LOGGER.warn("Failed to close session [{}]", session, ex);
+            LOGGER.warn("Failed to close session [{}]", session);
+            LOGGER.warn(ex.getMessage());
         }
     }
 
@@ -134,7 +136,8 @@ class CloseActiveMQResourcesApplicationListener implements ApplicationListener<A
         try {
             connection.close();
         } catch (RuntimeException | JMSException ex) {
-            LOGGER.warn("Failed to close connection [{}]", connection, ex);
+            LOGGER.warn("Failed to close connection [{}]", connection);
+            LOGGER.warn(ex.getMessage());
         }
     }
 
@@ -145,7 +148,8 @@ class CloseActiveMQResourcesApplicationListener implements ApplicationListener<A
         try {
             broker.stop();
         } catch (Exception ex) {
-            LOGGER.warn("Failed to close broker {}", broker, ex);
+            LOGGER.warn("Failed to close broker {}", broker);
+            LOGGER.warn(ex.getMessage());
         }
     }
 }

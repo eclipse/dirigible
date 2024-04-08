@@ -74,9 +74,9 @@ public class ConsoleWebsocketHandler extends TextWebSocketHandler {
         if (logger.isErrorEnabled()) {
             logger.error(String.format("[ws:console] Session %s error %s", session.getId(), exception.getMessage()));
         }
-        if (logger.isErrorEnabled()) {
-            logger.error("[ws:console] " + exception.getMessage(), exception);
-        }
+        // if (logger.isErrorEnabled()) {
+        // logger.error("[ws:console] " + exception.getMessage(), exception);
+        // }
     }
 
     /**

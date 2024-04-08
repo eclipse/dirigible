@@ -125,7 +125,7 @@ public class TerminalWebsocketHandler extends BinaryWebSocketHandler implements 
         if (logger.isInfoEnabled()) {
             logger.info(String.format("[ws:terminal] Session %s error %s", session.getId(), throwable.getMessage()));
         }
-        logger.error(TERMINAL_PREFIX + throwable.getMessage(), throwable);
+        // logger.error(TERMINAL_PREFIX + throwable.getMessage(), throwable);
     }
 
     /**
