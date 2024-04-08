@@ -63,9 +63,9 @@ class SynchronizationJob extends SystemJob {
         int frequencyInSec = DirigibleConfig.SYNCHRONIZER_FREQUENCY.getIntValue();
         logger.info("Configuring trigger to fire every [{}] seconds", frequencyInSec);
 
-        return simpleSchedule().withIntervalInMilliseconds(100)
+        return simpleSchedule().withIntervalInSeconds(frequencyInSec)
                                .repeatForever()
-                               .withMisfireHandlingInstructionIgnoreMisfires();
+                               .withMisfireHandlingInstructionNextWithExistingCount();
     }
 
     /**
