@@ -65,12 +65,12 @@ class JobsInitializer implements ApplicationListener<ApplicationReadyEvent> {
     private void rescheduleJob(DirigibleJob job) {
         try {
             Trigger trigger = job.createTrigger();
-            TriggerKey triggerKey = trigger.getKey();
 
-            if (scheduler.checkExists(triggerKey)) {
+            JobKey jobKey = trigger.getJobKey();
+            if (scheduler.checkExists(jobKey)) {
+                TriggerKey triggerKey = trigger.getKey();
                 scheduler.unscheduleJob(triggerKey);
 
-                JobKey jobKey = trigger.getJobKey();
                 scheduler.deleteJob(jobKey);
                 LOGGER.info("Unscheduled job: [{}]", job);
             }
