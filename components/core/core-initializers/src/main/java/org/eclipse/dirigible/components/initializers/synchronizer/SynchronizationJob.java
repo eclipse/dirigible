@@ -70,8 +70,8 @@ class SynchronizationJob extends SystemJob {
         logger.info("Configuring trigger to fire every [{}] seconds", frequencyInSec);
 
         return simpleSchedule().withIntervalInSeconds(frequencyInSec)
-                               .withMisfireHandlingInstructionNextWithExistingCount()
-                               .repeatForever();
+                               .repeatForever()
+                               .withMisfireHandlingInstructionNextWithExistingCount();
     }
 
     /**
@@ -101,9 +101,9 @@ class SynchronizationJob extends SystemJob {
      */
     @Override
     public void execute(JobExecutionContext context) {
-        logger.debug("Job {} fired @ {}", context.getJobDetail()
-                                                 .getKey()
-                                                 .getName(),
+        logger.info("Job {} fired @ {}", context.getJobDetail()
+                                                .getKey()
+                                                .getName(),
                 context.getFireTime());
 
         executor.submit(() -> {
