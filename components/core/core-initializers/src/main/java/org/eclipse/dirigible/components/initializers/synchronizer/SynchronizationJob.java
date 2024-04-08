@@ -95,10 +95,12 @@ class SynchronizationJob extends SystemJob {
      */
     @Override
     public void execute(JobExecutionContext context) {
-        logger.debug("Job [{}] fired @ [{}]", context.getJobDetail()
-                                                     .getKey()
-                                                     .getName(),
-                context.getFireTime());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Job [{}] fired @ [{}]", context.getJobDetail()
+                                                         .getKey()
+                                                         .getName(),
+                    context.getFireTime());
+        }
 
         Runtime runtime = Runtime.getRuntime();
         long usedMemoryBefore = 0;
