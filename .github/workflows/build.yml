@@ -52,7 +52,7 @@ jobs:
         docker buildx create --name dirigible-builder
         docker buildx use dirigible-builder
     - name: Maven Build
-      run: mvn clean install -Dmaven.javadoc.skip=false  -DskipTests -Dmaven.test.skip=true
+      run: mvn clean install -D maven.javadoc.skip=false  -D skipTests -D maven.test.skip=true
     - name: Docker Login
       run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
     - name: Push Dirigible (Spring)
@@ -90,7 +90,7 @@ jobs:
     - name: Install TypeScript compiler
       run: npm i -g typescript
     - name: Maven Build
-      run: mvn clean install -Dmaven.javadoc.skip=true
+      run: mvn clean install -D maven.javadoc.skip=true
   integration-tests: 
     runs-on: ${{ matrix.os }}-latest
     continue-on-error: true
