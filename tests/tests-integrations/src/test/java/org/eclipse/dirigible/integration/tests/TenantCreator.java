@@ -49,6 +49,9 @@ public class TenantCreator {
         tenantEntity.setName(tenant.getName());
         tenantEntity.setSubdomain(tenant.getSubdomain());
         tenantEntity.setStatus(TenantStatus.INITIAL);
+        tenantEntity.setLocation("-");
+        tenantEntity.setType(org.eclipse.dirigible.components.tenants.domain.Tenant.ARTEFACT_TYPE);
+        tenantEntity.updateKey();
 
         return tenantService.save(tenantEntity);
     }
