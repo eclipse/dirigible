@@ -136,7 +136,7 @@ public class Configuration {
                 "SERVER_MAXHTTPHEADERSIZE", "DIRIGIBLE_PUBLISH_DISABLED", "AWS_DEFAULT_REGION", "AWS_ACCESS_KEY_ID",
                 "AWS_SECRET_ACCESS_KEY", "DIRIGIBLE_S3_PROVIDER", "DIRIGIBLE_S3_BUCKET", "DIRIGIBLE_DATABASE_SYSTEM_DRIVER",
                 "DIRIGIBLE_DATABASE_SYSTEM_URL", "DIRIGIBLE_DATABASE_SYSTEM_USERNAME", "DIRIGIBLE_DATABASE_SYSTEM_PASSWORD",
-                "SNOWFLAKE_DEFAULT_TABLE_TYPE");
+                "SNOWFLAKE_DEFAULT_TABLE_TYPE", "DIRIGIBLE_PROJECT_TYPESCRIPT");
         Set<String> configs = Arrays.stream(DirigibleConfig.values())
                                     .map(DirigibleConfig::getKey)
                                     .collect(Collectors.toSet());
