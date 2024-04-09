@@ -2,23 +2,24 @@ const formView = angular.module('forms', ['ideUI', 'ideView']);
 
 formView.controller('FormController', ['$scope', function ($scope) {
 
+    $scope.model = {};
 #foreach($element in $form)
 	#if($element.controlId == "input-number")
-    $scope.$element.model = 0;
+    $scope.model.$element.model = 0;
 	#elseif($element.controlId == "input-checkbox")
-    $scope.$element.model = false;
+    $scope.model.$element.model = false;
 	#elseif($element.controlId == "input-color")
-    $scope.$element.model = '#ffbe6f';
+    $scope.model.$element.model = '#ffbe6f';
 	#elseif($element.controlId == "paragraph")
-    $scope.$element.model = `$element.text`;
+    $scope.model.$element.model = `$element.text`;
 	#elseif($element.controlId == "input-select")
-    $scope.$element.model = null;
+    $scope.model.$element.model = null;
     $scope.$element.options = [ // Pretend that we get this data from somewhere else...
         { label: 'Item 1', value: 'val1' },
         { label: 'Item 2', value: 'val2' }
     ];
 	#elseif($element.controlId == "input-radio")
-    $scope.$element.model = null;
+    $scope.model.$element.model = null;
     // TODO: Once the options property is added for the "input-radio" controller, then uncomment this line
     // $scope.$element.options = [ // Pretend that we get this data from somewhere else...
     $scope.radioOptions = [
@@ -27,7 +28,7 @@ formView.controller('FormController', ['$scope', function ($scope) {
         { label: 'Item 3', value: 'item3' }
     ];
     #elseif($element.model)
-    $scope.$element.model = null;
+    $scope.model.$element.model = null;
 	#end
 #end
 #if($code)
