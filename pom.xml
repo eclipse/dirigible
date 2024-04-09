@@ -119,7 +119,7 @@
 
 		<graalvm.version>23.1.1</graalvm.version>
 
-		<commons.io>2.16.0</commons.io>
+		<commons.io>2.16.1</commons.io>
 		<commons.lang3>3.14.0</commons.lang3>
 		<commons.exec>1.4.0</commons.exec>
 		<lucene.version>9.10.0</lucene.version>
