@@ -278,7 +278,7 @@ If you prefer working with a test environment you can use [LocalStack](https://w
 
 ### License
 
-This project is copyrighted by [SAP SE](http://www.sap.com/) or an SAP affiliate company and Eclipse Dirigible contributors and is available under the [Eclipse Public License v 2.0](https://www.eclipse.org/legal/epl-v20.html). See [LICENSE.txt](LICENSE.txt) and [NOTICE.txt](NOTICE.txt) for further details.
+This project is copyrighted by Eclipse Dirigible contributors and is available under the [Eclipse Public License v 2.0](https://www.eclipse.org/legal/epl-v20.html). See [LICENSE.txt](LICENSE.txt) and [NOTICE.txt](NOTICE.txt) for further details.
 
 
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Feclipse%2Fdirigible.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Feclipse%2Fdirigible?ref=badge_large)
