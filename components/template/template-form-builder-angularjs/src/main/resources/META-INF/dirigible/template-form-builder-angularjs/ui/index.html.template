@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="forms" ng-controller="FormController">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+		<title dg-view-title></title>
+		<script type="text/javascript" src="view.js"></script>
+		<script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
+		<link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
+		<theme></theme>
+		<script type="text/javascript" src="controller.js"></script>
+
+		<!-- From the scripts tab -->
+		<script type="text/javascript" src="js/extra.js"></script>
+	</head>
+
+#macro(printControlIds $element)
+    #if($element.children)
+        #foreach($child in $element.children)
+            Control a ID: $child.controlId
+            #printControlIds($child) ## Recursively call the macro for children elements
+        #end
+    #else
+        Control w ID: $element.controlId
+    #end
+#end
+	<body class="dg-vbox">
+
+#foreach($element in $form)
+    #printControlIds($element)
+#end
+
+		<!-- The margin here is not necessary -->
+		<fd-fieldset class="fd-margin--tiny" ng-form="forms.form">
+
+#foreach($element in $form)
+	#if($element.controlId == "header")
+			<h5 fd-title header-size="$element.size">$element.title</h5>
+	#end
+#end
+
+		</fd-fieldset>
+
+	</body>
+
+</html>

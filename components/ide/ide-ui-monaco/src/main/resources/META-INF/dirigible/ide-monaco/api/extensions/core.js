@@ -31,6 +31,7 @@ exports.getFileTypes = function () {
         ".yaml": "yaml",
         ".openapi": "yaml",
         ".py": "python",
-        ".csvim": "json"
+        ".csvim": "json",
+        ".form": "json"
     }
 };

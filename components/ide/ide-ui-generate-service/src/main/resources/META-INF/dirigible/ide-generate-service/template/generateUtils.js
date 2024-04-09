@@ -12,6 +12,35 @@
 const registry = dirigibleRequire("platform/registry");
 const templateEngines = dirigibleRequire("template/engines");
 
+exports.generateGeneric = function (model, parameters, templateSources) {
+    const generatedFiles = []
+    const templateParameters = {};
+    Object.assign(templateParameters, model, parameters);
+    for (let i = 0; i < templateSources.length; i++) {
+        const template = templateSources[i];
+        const location = template.location;
+        const content = registry.getText(template.location);
+        if (content == null) {
+            throw new Error(`Template file at location '${templateSources[i].location}' does not exists.`)
+        }
+
+        if (template.action === "copy") {
+            generatedFiles.push({
+                location: location,
+                content: content,
+                path: templateEngines.getMustacheEngine().generate(location, template.rename, parameters)
+            });
+        } else {
+            generatedFiles.push({
+                location: location,
+                content: getGenerationEngine(template).generate(location, content, templateParameters),
+                path: templateEngines.getMustacheEngine().generate(location, template.rename, parameters)
+            });
+        }
+    }
+    return generatedFiles;
+}
+
 exports.generateFiles = function (model, parameters, templateSources) {
     let generatedFiles = [];
 
