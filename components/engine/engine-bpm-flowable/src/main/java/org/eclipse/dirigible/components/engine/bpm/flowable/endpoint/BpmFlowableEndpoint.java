@@ -32,6 +32,7 @@ import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
 import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.engine.*;
+import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.identitylink.api.IdentityLink;
 import org.flowable.identitylink.api.IdentityLinkInfo;
@@ -241,6 +242,18 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
             return ResponseEntity.ok(getBpmService().getProcessInstanceByBusinessKey(businessKey.get()));
         }
         return ResponseEntity.ok(getBpmService().getProcessInstances());
+    }
+
+    @GetMapping(value = "/bpm-processes/historic-instances")
+    public ResponseEntity<List<HistoricProcessInstance>> getHistoryProcessesInstances() {
+
+        List<HistoricProcessInstance> historicProcessInstances = getBpmService().getBpmProviderFlowable()
+                                                                                .getProcessEngine()
+                                                                                .getHistoryService()
+                                                                                .createHistoricProcessInstanceQuery()
+                                                                                .finished()
+                                                                                .list();
+        return ResponseEntity.ok(historicProcessInstances);
     }
 
     /**
