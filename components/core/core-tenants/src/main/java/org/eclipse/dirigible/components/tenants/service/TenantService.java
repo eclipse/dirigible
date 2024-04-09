@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.components.tenants.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.eclipse.dirigible.components.tenants.domain.Tenant;
@@ -31,6 +32,15 @@ public class TenantService {
      */
     public TenantService(TenantRepository tenantRepository) {
         this.tenantRepository = tenantRepository;
+    }
+
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
+    public final List<Tenant> getAll() {
+        return tenantRepository.findAll();
     }
 
     /**
