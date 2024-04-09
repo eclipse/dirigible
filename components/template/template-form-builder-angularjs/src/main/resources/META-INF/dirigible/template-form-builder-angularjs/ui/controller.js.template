@@ -3,7 +3,8 @@ const formView = angular.module('forms', ['ideUI', 'ideView']);
 formView.controller('FormController', ['$scope', function ($scope) {
 
     $scope.model = {};
-#foreach($element in $form)
+#macro(formWidgets $elements)
+#foreach($element in $elements)
 	#if($element.controlId == "input-number")
     $scope.model.$element.model = 0;
 	#elseif($element.controlId == "input-checkbox")
@@ -30,7 +31,12 @@ formView.controller('FormController', ['$scope', function ($scope) {
     #elseif($element.model)
     $scope.model.$element.model = null;
 	#end
+    #if($element.children)
+        #formWidgets($element.children)
+    #end
 #end
+#end
+#formWidgets($form)
 #if($code)
 
 $code

@@ -37,7 +37,8 @@
 		<!-- The margin here is not necessary -->
 		<fd-fieldset class="fd-margin--tiny" ng-form="forms.form">
 
-#foreach($element in $form)
+#macro(formWidgets $elements)
+#foreach($element in $elements)
 	#if($element.controlId == "header")
 			<h5 fd-title header-size="$element.size">$element.title</h5>
 	#elseif($element.controlId == "input-textarea")
@@ -126,7 +127,15 @@
 	#elseif($element.controlId == "paragraph")
 			<p class="fd-text" ng-class="{'dg-pre-wrap' : $element.format}">{{ model.$element.model }}</p>
 	#end
+#if($element.children)
+<div class="dg-hbox dg-box--gap dg-box--stretch-items">
+#formWidgets($element.children)
+</div>
 #end
+#end
+#end
+
+#formWidgets($form)
 
 		</fd-fieldset>
 
