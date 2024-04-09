@@ -11,11 +11,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * The Class TenantEndpoint.
+ */
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "tenants")
 public class TenantEndpoint {
 
 
+    /** The tenant service. */
     private final TenantService tenantService;
 
     /**
