@@ -19,11 +19,11 @@
 #macro(printControlIds $element)
     #if($element.children)
         #foreach($child in $element.children)
-            Control a ID: $child.controlId
+            <!-- Control a ID: $child.controlId -->
             #printControlIds($child) ## Recursively call the macro for children elements
         #end
     #else
-        Control w ID: $element.controlId
+        <!-- Control w ID: $element.controlId -->
     #end
 #end
 	<body class="dg-vbox">
@@ -38,6 +38,62 @@
 #foreach($element in $form)
 	#if($element.controlId == "header")
 			<h5 fd-title header-size="$element.size">$element.title</h5>
+	#elseif($element.controlId == "input-time")
+			<fd-form-item horizontal="$element.horizontal">
+				<fd-form-label dg-colon="true" dg-required="$element.required" for="$element.id">$element.label</fd-form-label>
+				<fd-input id="$element.id" name="$element.id" ng-model="$element.model" ng-required="$element.required" type="time"></fd-input>
+			</fd-form-item>
+	#elseif($element.controlId == "input-date")
+			<fd-form-item horizontal="$element.horizontal">
+				<fd-form-label dg-colon="true" dg-required="$element.required" for="$element.id">$element.label</fd-form-label>
+				<fd-input id="$element.id" name="$element.id" ng-model="$element.model" ng-required="$element.required" type="datetime-local"></fd-input>
+			</fd-form-item>
+	#elseif($element.controlId == "input-color")
+			<fd-form-item horizontal="$element.horizontal">
+				<fd-form-label dg-colon="true" dg-required="$element.required" for="$element.id">$element.label</fd-form-label>
+				<fd-input id="$element.id" name="$element.id" ng-model="$element.model" ng-required="$element.required" type="color"></fd-input>
+			</fd-form-item>
+	#elseif($element.controlId == "input-number")
+			<fd-form-item horizontal="$element.horizontal">
+				<fd-form-label dg-colon="true" dg-required="$element.required" for="$element.id">$element.label</fd-form-label>
+				<fd-step-input dg-id="$element.id" name="$element.id" ng-model="$element.model" dg-required="$element.required" dg-min="$element.minNum"
+					dg-max="$element.maxNum" dg-step="$element.step">
+				</fd-step-input>
+			</fd-form-item>
+	#elseif($element.controlId == "input-checkbox")
+			<fd-form-item>
+				<fd-checkbox id="$element.id" ng-model="$element.model"></fd-checkbox>
+				<fd-checkbox-label for="$element.id">$element.label</fd-checkbox-label>
+			</fd-form-item>
+	#elseif($element.controlId == "input-textarea")
+			<fd-form-item horizontal="$element.horizontal">
+				<fd-form-label dg-colon="true" dg-required="$element.required" for="$element.id">$element.label</fd-form-label>
+				<fd-form-input-message-group dg-inactive="!form['$element.id'].$valid">
+					<fd-textarea id="$element.id"
+						name="$element.name"
+						ng-model="$element.model"
+						ng-required="$element.required"
+						type="text"
+						placeholder="$element.placeholder"
+						state="{'error' : !form['$element.id'].$valid }"
+						ng-trim="false"
+						ng-minlength="$element.minLength"
+						ng-maxlength="$element.maxLength">
+					</fd-textarea>
+					<fd-form-message dg-type="error">$element.errorState</fd-form-message>
+				</fd-form-input-message-group>
+			</fd-form-item>
+	#elseif($element.controlId == "button")
+			<div>
+				<fd-button#if($element.sizeToText) class="dg-float-right"#else class="dg-full-width"#end #if($element.isSubmit)type="submit"#end dg-label="$element.label" dg-type="$element.type"#if($element.callback) ng-click="$element.callback()"#end></fd-button>
+			</div>
+	#elseif($element.controlId == "input-select")
+			<fd-form-item horizontal="$element.horizontal">
+				<fd-form-label dg-colon="true" dg-required="$element.required" for="$element.id">$element.label</fd-form-label>
+				<fd-select label-id="$element.id" ng-required="$element.required" ng-model="$element.model">
+					<fd-option text="{{ option.$element.optionLabel }}" value="option.$element.optionValue" ng-repeat="option in $element.options track by $index"></fd-option>
+				</fd-select>
+			</fd-form-item>
 	#end
 #end
 
