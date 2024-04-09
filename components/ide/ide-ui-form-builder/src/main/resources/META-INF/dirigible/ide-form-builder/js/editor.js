@@ -644,7 +644,7 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
                         //     type: 'list',
                         //     label: 'Options',
                         //     defaultValue: 'item1',
-                        //     options: [
+                        //     value: [
                         //         { label: 'Item 1', value: 'item1' },
                         //         { label: 'Item 2', value: 'item2' }
                         //     ]
@@ -694,7 +694,7 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
                     icon: "sap-icon--record",
                     description: 'Radio select',
                     template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-form-group dg-header="{{props.name.value}}">
-                    <fd-form-item ng-repeat="option in props.options.options track by $index">
+                    <fd-form-item ng-repeat="option in props.options.value track by $index">
                         <fd-radio id="{{ props.id.value + $index }}" name="{{ props.id.value }}" ng-model="props.options.defaultValue" ng-value="option.value" ng-required="props.required.value"></fd-radio>
                         <fd-radio-label for="{{ props.id.value + $index }}">{{option.label}}</fd-radio-label>
                     </fd-form-item>
@@ -751,7 +751,7 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
                             type: 'list',
                             label: 'Options',
                             defaultValue: '',
-                            options: [
+                            value: [
                                 { label: "Item 1", value: "item1" },
                                 { label: "Item 2", value: "item2" }
                             ]
@@ -1116,6 +1116,11 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
                 messageHub.unsubscribe(handler);
             }
         );
+    };
+
+    $scope.deleteListItem = function (options, index) {
+        options.splice(index, 1);
+        $scope.fileChanged();
     };
 
     $scope.addFeed = function () {
@@ -1497,7 +1502,7 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
     $scope.save = function () {
         if ($scope.state.canSave && $scope.isFileChanged) {
             $scope.state.isBusy = true;
-            let formFile = {
+            const formFile = {
                 feeds: $scope.formData.feeds,
                 scripts: $scope.formData.scripts,
                 code: $scope.formData.code,
