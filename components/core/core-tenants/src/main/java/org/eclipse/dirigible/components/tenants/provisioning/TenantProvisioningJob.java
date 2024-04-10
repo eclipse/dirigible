@@ -39,9 +39,9 @@ class TenantProvisioningJob extends SystemJob {
 
     @Override
     public final void execute(JobExecutionContext context) throws JobExecutionException {
-        logger.info("Triggered tenants provisioning job...");
+        logger.debug("Triggered tenants provisioning job...");
         tenantsProvisioner.provision();
-        logger.info("Tenants provisioning job has completed.");
+        logger.debug("Tenants provisioning job has completed.");
     }
 
     @Override

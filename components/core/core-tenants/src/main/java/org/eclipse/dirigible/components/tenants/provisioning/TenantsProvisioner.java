@@ -62,9 +62,13 @@ class TenantsProvisioner {
      * Provision.
      */
     synchronized void provision() {
-        LOGGER.info("Starting tenants provisioning...");
+        LOGGER.debug("Starting tenants provisioning...");
         Set<Tenant> tenants = tenantService.findByStatus(TenantStatus.INITIAL);
-        LOGGER.info("Tenants applicable for provisioning [{}]", tenants);
+        if (tenants.size() > 0) {
+        	LOGGER.info("Tenants applicable for provisioning [{}]", tenants);
+        } else {
+        	LOGGER.debug("No tenants applicable for provisioning");
+        }
 
         tenants.forEach(this::provisionTenant);
 
@@ -73,7 +77,11 @@ class TenantsProvisioner {
             postProvisioningSteps.forEach(this::callPostProvisioningStep);
             LOGGER.info("Post provisioning process has completed.");
         }
-        LOGGER.info("Tenants [{}] have been provisioned successfully.", tenants);
+        if (tenants.size() > 0) {
+        	LOGGER.info("Tenants [{}] have been provisioned successfully.", tenants);
+        } else {
+        	LOGGER.debug("No tenants needed to be provisioned.");
+        }
     }
 
     /**

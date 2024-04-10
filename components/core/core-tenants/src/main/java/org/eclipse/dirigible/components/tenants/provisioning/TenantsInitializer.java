@@ -39,11 +39,11 @@ class TenantsInitializer implements ApplicationListener<ApplicationReadyEvent> {
     }
 
     private void provisionTenants() {
-        LOGGER.info("Initializing tenants...");
+        LOGGER.debug("Initializing tenants...");
 
         tenantsProvisioner.provision();
 
-        LOGGER.info("Tenants have been initialized.");
+        LOGGER.debug("Tenants have been initialized.");
     }
 
 }
