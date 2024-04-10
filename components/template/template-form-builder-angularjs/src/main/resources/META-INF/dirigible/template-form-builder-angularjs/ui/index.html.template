@@ -44,14 +44,14 @@
 	#elseif($element.controlId == "input-textarea")
 			<fd-form-item horizontal="$element.horizontal">
 				<fd-form-label dg-colon="true" dg-required="$element.required" for="$element.id">$element.label</fd-form-label>
-				<fd-form-input-message-group dg-inactive="!form['$element.id'].$valid">
+				<fd-form-input-message-group dg-inactive="{{forms.form['$element.id'].$valid}}">
 					<fd-textarea id="$element.id"
 						name="$element.id"
 						ng-model="model.$element.model"
 						ng-required="$element.required"
 						type="text"
 						placeholder="$element.placeholder"
-						state="{'error' : !form['$element.id'].$valid }"
+						state="{{ !forms.form['$element.id'].$valid ? 'error' : '' }}"
 						ng-trim="false"
 						ng-minlength="$element.minLength"
 						ng-maxlength="$element.maxLength">
@@ -62,14 +62,17 @@
 	#elseif($element.controlId == "input-textfield")
 				<fd-form-item horizontal="$element.horizontal">
 					<fd-form-label dg-colon="true" dg-required="$element.required" for="$element.id">$element.label</fd-form-label>
-					<fd-form-input-message-group dg-inactive="!form['$element.id'].$valid">
+					<fd-form-input-message-group dg-inactive="{{forms.form['$element.id'].$valid}}">
 						<fd-input id="$element.id"
 							name="$element.id"
 							ng-model="model.$element.model"
 							ng-required="$element.required"
 							type="$element.type"
 							placeholder="$element.placeholder"
-							state="{'error' : !form['$element.id'].$valid }"
+							state="{{ !forms.form['$element.id'].$valid ? 'error' : '' }}"
+		#if($element.validationRegex)
+							dg-input-rules="{ patterns: ['$element.validationRegex'] }"
+		#end
 							ng-trim="false"
 							ng-minlength="$element.minLength"
 							ng-maxlength="$element.maxLength">
@@ -81,7 +84,7 @@
 			<fd-form-item horizontal="$element.horizontal">
 				<fd-form-label dg-colon="true" dg-required="$element.required" for="$element.id">$element.label</fd-form-label>
 				<fd-step-input dg-id="$element.id" name="$element.id" ng-model="model.$element.model" dg-required="$element.required" dg-min="$element.minNum"
-					dg-max="$element.maxNum" dg-step="$element.step">
+					dg-max="$element.maxNum" dg-step="$element.step" state="{{ !forms.form['$element.id'].$valid ? 'error' : '' }}">
 				</fd-step-input>
 			</fd-form-item>
 	#elseif($element.controlId == "input-checkbox")
@@ -114,9 +117,9 @@
 	#elseif($element.controlId == "input-radio")
 			<fd-form-group dg-header="$element.name">
 				<!-- TODO: Once the options property is added for the "input-radio" controller, then uncomment this line -->
-				<!-- <fd-form-item ng-repeat="next in $element.options"> -->
-				<fd-form-item ng-repeat="next in radioOptions">
-					<fd-radio id="{{'$element.id' + $index}}" name="$element.id" ng-model="model.$element.model" ng-value="{{next.value}}" ng-required="$element.required"></fd-radio>
+				<!-- <fd-form-item ng-repeat="next in $element.options track by $index"> -->
+				<fd-form-item ng-repeat="next in radioOptions track by $index">
+					<fd-radio id="{{'$element.id' + $index}}" name="$element.id" ng-model="model.$element.model" ng-value="next.value" ng-required="$element.required"></fd-radio>
 					<fd-radio-label for="{{'$element.id' + $index}}">{{next.label}}</fd-radio-label>
 				</fd-form-item>
 			</fd-form-group>
@@ -125,10 +128,10 @@
 				<fd-button#if($element.sizeToText) class="dg-float-right"#else class="dg-full-width"#end #if($element.isSubmit)type="submit"#end dg-label="$element.label" dg-type="$element.type"#if($element.callback) ng-click="$element.callback"#end></fd-button>
 			</div>
 	#elseif($element.controlId == "paragraph")
-			<p class="fd-text" ng-class="{'dg-pre-wrap' : $element.format}">{{ model.$element.model }}</p>
+			<p class="fd-text" ng-class="{'dg-pre-wrap' : $element.format}">#if($element.model){{ model.$element.model }}#else$element.text#end</p>
 	#end
 #if($element.children)
-<div class="dg-hbox dg-box--gap dg-box--stretch-items">
+<div class="#if($element.controlId == "container-vbox") dg-vbox#else dg-hbox#end dg-box--gap dg-box--stretch-items">
 #formWidgets($element.children)
 </div>
 #end
