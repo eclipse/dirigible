@@ -465,6 +465,19 @@ i.fd-list__icon[rotate="90"]::before {
   padding: 0;
 }
 
+.fd-input[type="color"]::-moz-color-swatch {
+  border: none;
+}
+
+.fd-input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border-radius: 0;
+}
+
+.fd-input[type="color"]::-webkit-color-swatch {
+  border: none;
+}
+
 .dg-form-item--horizontal>.fd-popover {
   flex: 1;
 }
