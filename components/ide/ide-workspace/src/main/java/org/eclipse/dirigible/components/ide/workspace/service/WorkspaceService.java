@@ -247,10 +247,11 @@ public class WorkspaceService {
         if (isTS) {
             try {
                 projectObject.createFile("project.json",
-                        String.format(new String(IOUtils.toByteArray(WorkspaceService.class.getResourceAsStream("/project.json"))), project)
+                        String.format(new String(IOUtils.toByteArray(WorkspaceService.class.getResourceAsStream("/project.json_"))),
+                                project)
                               .getBytes());
                 projectObject.createFile("tsconfig.json",
-                        IOUtils.toByteArray(WorkspaceService.class.getResourceAsStream("/tsconfig.json")));
+                        IOUtils.toByteArray(WorkspaceService.class.getResourceAsStream("/tsconfig.json_")));
             } catch (IOException e) {
                 logger.error("Error on creating 'project.json' and 'tsconfig' " + e.getMessage());
             }

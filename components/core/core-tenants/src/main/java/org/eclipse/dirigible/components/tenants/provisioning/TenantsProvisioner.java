@@ -65,9 +65,9 @@ class TenantsProvisioner {
         LOGGER.debug("Starting tenants provisioning...");
         Set<Tenant> tenants = tenantService.findByStatus(TenantStatus.INITIAL);
         if (tenants.size() > 0) {
-        	LOGGER.info("Tenants applicable for provisioning [{}]", tenants);
+            LOGGER.info("Tenants applicable for provisioning [{}]", tenants);
         } else {
-        	LOGGER.debug("No tenants applicable for provisioning");
+            LOGGER.debug("No tenants applicable for provisioning");
         }
 
         tenants.forEach(this::provisionTenant);
@@ -78,9 +78,9 @@ class TenantsProvisioner {
             LOGGER.info("Post provisioning process has completed.");
         }
         if (tenants.size() > 0) {
-        	LOGGER.info("Tenants [{}] have been provisioned successfully.", tenants);
+            LOGGER.info("Tenants [{}] have been provisioned successfully.", tenants);
         } else {
-        	LOGGER.debug("No tenants needed to be provisioned.");
+            LOGGER.debug("No tenants needed to be provisioned.");
         }
     }
 
