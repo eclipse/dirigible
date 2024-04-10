@@ -186,7 +186,7 @@
                                                 <fd-toolbar-spacer></fd-toolbar-spacer>
                                                 <fd-button glyph="sap-icon--add" title="Add option to list"
                                                     dg-type="transparent" dg-label="Add" aria-label="Add option to list"
-                                                    ng-click="addListItem(item.options)">
+                                                    ng-click="addListItem(item.value)">
                                                 </fd-button>
                                             </fd-toolbar>
                                             <table fd-table display-mode="compact">
@@ -200,11 +200,11 @@
                                                 </thead>
                                                 <tbody fd-table-body>
                                                     <tr fd-table-row hoverable="true"
-                                                        ng-repeat="listItem in item.options track by $index">
+                                                        ng-repeat="listItem in item.value track by $index">
                                                         <td fd-table-cell content-type="checkbox">
                                                             <fd-checkbox id="{{listItem + $index}}"
                                                                 ng-checked="item.defaultValue === listItem.value"
-                                                                ng-click="item.defaultValue !== listItem.value ? item.defaultValue = listItem.value : item.defaultValue = undefined">
+                                                                ng-click="item.defaultValue !== listItem.value ? item.defaultValue = listItem.value : item.defaultValue = undefined; fileChanged()">
                                                             </fd-checkbox>
                                                             <fd-checkbox-label empty="true" for="{{listItem + $index}}">
                                                             </fd-checkbox-label>
@@ -218,7 +218,7 @@
                                                             </fd-button>
                                                             <fd-button glyph="sap-icon--delete" title="Delete option"
                                                                 dg-type="transparent" aria-label="Delete option"
-                                                                ng-click="deleteListItem(item.options, $index)">
+                                                                ng-click="deleteListItem(item.value, $index)">
                                                             </fd-button>
                                                         </td>
                                                     </tr>
