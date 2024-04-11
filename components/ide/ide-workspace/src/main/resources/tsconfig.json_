@@ -10,10 +10,10 @@
         ],
         "paths": {
             "sdk/*": [
-                "../modules/src/*"
+                "./modules/src/*"
             ],
             "/*": [
-                "../*"
+                "./*"
             ]
         },
         "types": [

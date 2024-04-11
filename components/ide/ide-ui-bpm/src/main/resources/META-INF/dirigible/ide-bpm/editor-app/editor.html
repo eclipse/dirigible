@@ -133,9 +133,7 @@
                                     {{selectedItem.auditData.author}}
                                 </div>
                                 <div class="selected-item-title">
-                                    <a ng-click="propertyWindowState.toggle()">
-                                        <i class="glyphicon"
-                                           ng-class="{'glyphicon-chevron-right': propertyWindowState.collapsed, 'glyphicon-chevron-down': !propertyWindowState.collapsed}"></i>
+                                    <a style="font-size: 14px; font-weight: bold;">
                                         <span ng-show="selectedItem.title != undefined && selectedItem.title != null && selectedItem.title.length > 0">{{selectedItem.title}}</span>
                                         <span ng-show="!selectedItem || selectedItem.title == undefined || selectedItem.title == null || selectedItem.title.length == 0">{{modelData.name}}</span>
                                     </a>
