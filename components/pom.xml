@@ -197,6 +197,7 @@
 		<module>resources/resources-theme-quartz-light</module>
 		<module>resources/resources-themes</module>
 		<module>resources/resources-portal</module>
+		<module>resources/resources-inbox</module>
 
 		<!-- Templates -->
 		<module>template/template-application-angular</module>
@@ -1042,6 +1043,11 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-resources-portal</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-resources-inbox</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
