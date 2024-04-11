@@ -67,33 +67,32 @@ public class ActionsService {
             ProjectMetadata projectJson = GsonHelper.fromJson(new String(fileObject.getContent()), ProjectMetadata.class);
             List<ProjectAction> actions = projectJson.getActions();
             if (actions == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Actions section not found in the project descriptor file: " + project);
-            }
+                logger.error("Actions section not found in the project descriptor file: " + project);
+            } else {
+                ProjectAction projectAction = actions.stream()
+                                                     .filter(a -> a.getName()
+                                                                   .equals(action))
+                                                     .findFirst()
+                                                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                                             "Action not found: " + action));
 
-            ProjectAction projectAction = actions.stream()
-                                                 .filter(a -> a.getName()
-                                                               .equals(action))
-                                                 .findFirst()
-                                                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                                         "Action not found: " + action));
-
-            String workingDirectory =
-                    LocalWorkspaceMapper.getMappedName((FileSystemRepository) projectObject.getRepository(), projectObject.getPath());
-            int result = 0;
-            for (CommandDescriptor next : getCommandsForOS(projectAction)) {
-                result += executeCommandLine(workingDirectory, next.getCommand());
-                if (result > 0) {
-                    break;
+                String workingDirectory =
+                        LocalWorkspaceMapper.getMappedName((FileSystemRepository) projectObject.getRepository(), projectObject.getPath());
+                int result = 0;
+                for (CommandDescriptor next : getCommandsForOS(projectAction)) {
+                    result += executeCommandLine(workingDirectory, next.getCommand());
+                    if (result > 0) {
+                        break;
+                    }
                 }
+                return result;
             }
-            return result;
         } catch (Exception e) {
             String errorMessage = "Malformed project file: " + project + " (" + e.getMessage() + ")";
             logger.error(errorMessage, e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
         }
-
+        return -1;
     }
 
     /**
@@ -137,8 +136,8 @@ public class ActionsService {
             ProjectMetadata projectJson = GsonHelper.fromJson(new String(fileObject.getContent()), ProjectMetadata.class);
             List<ProjectAction> actions = projectJson.getActions();
             if (actions == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Actions section not found in the project descriptor file: " + project);
+                logger.error("Actions section not found in the project descriptor file: " + project);
+                return new ArrayList<ProjectAction>();
             }
             return actions;
         } catch (Exception e) {
