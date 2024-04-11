@@ -16,6 +16,10 @@ ideBpmHistoricProcessInstancesView.controller('IDEBpmHistoricProcessInstancesVie
 
     $scope.instances = [];
 
+    setInterval(() => {
+        $scope.fetchData();
+    }, 5000);
+
     $scope.reload = function () {
         console.log("Reloading historic process instances data")
         $scope.fetchData();
