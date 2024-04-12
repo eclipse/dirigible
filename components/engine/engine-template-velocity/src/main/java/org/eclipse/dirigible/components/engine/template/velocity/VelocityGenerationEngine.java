@@ -18,9 +18,9 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Map;
-
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeConstants;
 import org.eclipse.dirigible.components.engine.template.TemplateEngine;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +42,7 @@ public class VelocityGenerationEngine implements TemplateEngine {
     public VelocityGenerationEngine() {
         engine = new VelocityEngine();
         try {
+            engine.setProperty(RuntimeConstants.VM_PERM_ALLOW_INLINE_REPLACE_GLOBAL, true);
             engine.init();
         } catch (Throwable e) {
             // if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}

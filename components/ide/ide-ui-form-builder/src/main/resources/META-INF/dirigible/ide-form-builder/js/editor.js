@@ -1508,7 +1508,7 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
                 code: $scope.formData.code,
                 form: $scope.createFormJson($scope.formModel)
             };
-            saveContents(JSON.stringify(formFile));
+            saveContents(JSON.stringify(formFile, null, 4));
         }
     };
 

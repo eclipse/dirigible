@@ -1,0 +1,56 @@
+#set($dollar = '$')
+const formView = angular.module('forms', ['ideUI', 'ideView']);
+
+formView.controller('FormController', ['$scope', '$http', function ($scope, $http) {
+
+    $scope.forms = {
+        form: {}
+    };
+
+#foreach($feed in $feeds)
+    ${dollar}http.get('$feed.url').then(response => {
+        $scope.$feed.name = response.data;
+    }).catch(e => {
+        console.error(e);
+    });
+
+#end
+#macro(radioOptions $elements)
+#foreach($element in $elements)
+    #if($element.controlId == "input-radio")
+    ${dollar}scope.${element.id}Model = $element.options;
+    #end
+    #if($element.children)
+    #radioOptions($element.children);
+    #end
+#end
+#end
+#radioOptions($elements);
+    $scope.model = {};
+#macro(formWidgets $elements)
+#foreach($element in $elements)
+	#if($element.controlId == "input-number")
+    $scope.model.$element.model = 0;
+	#elseif($element.controlId == "input-checkbox")
+    $scope.model.$element.model = false;
+	#elseif($element.controlId == "input-color")
+    $scope.model.$element.model = '#ffbe6f';
+	#elseif($element.controlId == "paragraph")
+    #if($element.model && $element.text)
+        $scope.model.$element.model = `$element.text`;
+    #elseif($element.model)
+        $scope.model.$element.model = null;
+    #end
+	#end
+    #if($element.children)
+        #formWidgets($element.children)
+    #end
+#end
+#end
+#formWidgets($form)
+#if($code)
+
+$code
+
+#end
+}]);
