@@ -116,9 +116,7 @@
 			</fd-form-item>
 	#elseif($element.controlId == "input-radio")
 			<fd-form-group dg-header="$element.name">
-				<!-- TODO: Once the options property is added for the "input-radio" controller, then uncomment this line -->
-				<!-- <fd-form-item ng-repeat="next in $element.options track by $index"> -->
-				<fd-form-item ng-repeat="next in radioOptions track by $index">
+				<fd-form-item ng-repeat="next in ${element.id}Model track by $index">
 					<fd-radio id="{{'$element.id' + $index}}" name="$element.id" ng-model="model.$element.model" ng-value="next.value" ng-required="$element.required"></fd-radio>
 					<fd-radio-label for="{{'$element.id' + $index}}">{{next.label}}</fd-radio-label>
 				</fd-form-item>

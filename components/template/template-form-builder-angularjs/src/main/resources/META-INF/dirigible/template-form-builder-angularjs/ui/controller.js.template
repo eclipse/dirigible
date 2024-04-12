@@ -1,11 +1,31 @@
+#set($dollar = '$')
 const formView = angular.module('forms', ['ideUI', 'ideView']);
 
-formView.controller('FormController', ['$scope', function ($scope) {
+formView.controller('FormController', ['$scope', '$http', function ($scope, $http) {
 
     $scope.forms = {
         form: {}
     };
 
+#foreach($feed in $feeds)
+    ${dollar}http.get('$feed.url').then(response => {
+        $scope.$feed.name = response.data;
+    }).catch(e => {
+        console.error(e);
+    });
+
+#end
+#macro(radioOptions $elements)
+#foreach($element in $elements)
+    #if($element.controlId == "input-radio")
+    ${dollar}scope.${element.id}Model = $element.options;
+    #end
+    #if($element.children)
+    #radioOptions($element.children);
+    #end
+#end
+#end
+#radioOptions($elements);
     $scope.model = {};
 #macro(formWidgets $elements)
 #foreach($element in $elements)
@@ -21,23 +41,6 @@ formView.controller('FormController', ['$scope', function ($scope) {
     #elseif($element.model)
         $scope.model.$element.model = null;
     #end
-	#elseif($element.controlId == "input-select")
-    $scope.model.$element.model = null;
-    $scope.$element.options = [ // Pretend that we get this data from somewhere else...
-        { label: 'Item 1', value: 'val1' },
-        { label: 'Item 2', value: 'val2' }
-    ];
-	#elseif($element.controlId == "input-radio")
-    $scope.model.$element.model = null;
-    // TODO: Once the options property is added for the "input-radio" controller, then uncomment this line
-    // $scope.$element.options = [ // Pretend that we get this data from somewhere else...
-    $scope.radioOptions = [
-        { label: 'Item 1', value: 'item1' },
-        { label: 'Item 2', value: 'item2' },
-        { label: 'Item 3', value: 'item3' }
-    ];
-    #elseif($element.model)
-    $scope.model.$element.model = null;
 	#end
     #if($element.children)
         #formWidgets($element.children)
