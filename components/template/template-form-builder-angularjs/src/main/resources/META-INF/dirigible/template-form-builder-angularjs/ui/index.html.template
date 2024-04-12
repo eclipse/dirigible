@@ -18,25 +18,10 @@
 #end
 	</head>
 
-#macro(printControlIds $element)
-    #if($element.children)
-        #foreach($child in $element.children)
-            <!-- Control a ID: $child.controlId -->
-            #printControlIds($child) ## Recursively call the macro for children elements
-        #end
-    #else
-        <!-- Control w ID: $element.controlId -->
-    #end
-#end
 	<body class="dg-vbox">
-
-#foreach($element in $form)
-    #printControlIds($element)
-#end
 
 		<!-- The margin here is not necessary -->
 		<fd-fieldset class="fd-margin--tiny" ng-form="forms.form">
-
 #macro(formWidgets $elements)
 #foreach($element in $elements)
 	#if($element.controlId == "header")
@@ -110,15 +95,17 @@
 	#elseif($element.controlId == "input-select")
 			<fd-form-item horizontal="$element.horizontal">
 				<fd-form-label dg-colon="true" dg-required="$element.required" for="$element.id">$element.label</fd-form-label>
-				<fd-select label-id="$element.id" ng-required="$element.required" ng-model="model.$element.model">
+				<fd-select dg-id="$element.id" name="$element.id" label-id="$element.id" ng-required="$element.required" ng-model="model.$element.model">
 					<fd-option text="{{ option.$element.optionLabel }}" value="option.$element.optionValue" ng-repeat="option in $element.options track by $index"></fd-option>
 				</fd-select>
 			</fd-form-item>
 	#elseif($element.controlId == "input-radio")
 			<fd-form-group dg-header="$element.name">
-				<fd-form-item ng-repeat="next in ${element.id}Model track by $index">
-					<fd-radio id="{{'$element.id' + $index}}" name="$element.id" ng-model="model.$element.model" ng-value="next.value" ng-required="$element.required"></fd-radio>
-					<fd-radio-label for="{{'$element.id' + $index}}">{{next.label}}</fd-radio-label>
+				<fd-form-item>
+		#foreach($option in $element.options)
+					<fd-radio id="$element.id-$foreach.count" name="$element.id" ng-model="model.$element.model" ng-value="'$option.value'" ng-required="$element.required"></fd-radio>
+					<fd-radio-label for="$element.id-$foreach.count">$option.label</fd-radio-label>
+		#end
 				</fd-form-item>
 			</fd-form-group>
 	#elseif($element.controlId == "button")

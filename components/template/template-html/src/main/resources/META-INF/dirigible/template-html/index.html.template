@@ -108,9 +108,9 @@
             };
             $scope.explore = { value: 'customers' };
 
-            $http.get('https://services.odata.org/V4/Northwind/Northwind.svc/Customers', { disableInterceptors: true })
-                .then(function (data) {
-                    $scope.customers = data.data.value;
+            $http.get('https://services.odata.org/Northwind/Northwind.svc/Customers', { disableInterceptors: true })
+                .then(function (response) {
+                    $scope.customers = response.data.value;
                     $scope.state.isBusy = false;
                 }, function (response) {
                     console.error(response);
@@ -118,9 +118,9 @@
                     $scope.errorMessage = "Unable to load customer data";
                 });
 
-            $http.get('https://services.odata.org/V4/Northwind/Northwind.svc/Employees', { disableInterceptors: true })
-                .then(function (data) {
-                    $scope.employees = data.data.value;
+            $http.get('https://services.odata.org/Northwind/Northwind.svc/Employees', { disableInterceptors: true })
+                .then(function (response) {
+                    $scope.employees = response.data.value;
                     $scope.state.isBusy = false;
                 }, function (response) {
                     console.error(response);
@@ -128,9 +128,9 @@
                     $scope.errorMessage = "Unable to load employees data";
                 });
 
-            $http.get('https://services.odata.org/V4/Northwind/Northwind.svc/Products', { disableInterceptors: true })
-                .then(function (data) {
-                    $scope.products = data.data.value;
+            $http.get('https://services.odata.org/Northwind/Northwind.svc/Products', { disableInterceptors: true })
+                .then(function (response) {
+                    $scope.products = response.data.value;
                     $scope.state.isBusy = false;
                 }, function (response) {
                     console.error(response);

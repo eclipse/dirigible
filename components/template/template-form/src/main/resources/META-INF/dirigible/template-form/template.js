@@ -5,22 +5,34 @@
  */
 exports.getTemplate = function () {
 	return {
-		"name": "Form",
-		"description": "TypeScript Sample Template",
-		"sources": [{
-			"location": "/template-form/project.json.template",
-			"action": "generate",
-			"rename": "project.json"
+		name: "Form Designer (UI)",
+		description: "Form Sample Template",
+		sources: [{
+			location: "/template-form/form/project.json.template",
+			action: "generate",
+			rename: "project.json"
 		}, {
-			"location": "/template-form/tsconfig.json.template",
-			"action": "copy",
-			"rename": "tsconfig.json"
+			location: "/template-form/form/tsconfig.json.template",
+			action: "copy",
+			rename: "tsconfig.json"
 		}, {
-			"location": "/template-form/service.ts.template",
-			"action": "copy",
-			"rename": "{{fileName}}.ts"
+			location: "/template-form/form/products.ts.template",
+			action: "copy",
+			rename: "api/products.ts"
+		}, {
+			location: "/template-form/form/orders.ts.template",
+			action: "copy",
+			rename: "api/orders.ts"
+		}, {
+			location: "/template-form/form/shippingOptions.json.template",
+			action: "copy",
+			rename: "api/shippingOptions.json"
+		}, {
+			location: "/template-form/form/order.form.template",
+			action: "generate",
+			rename: "order.form"
 		}],
-		"parameters": [],
-		"order": 1
+		parameters: [],
+		order: 2
 	};
 };
