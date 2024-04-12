@@ -5317,6 +5317,8 @@ ORYX.Core.SVG.Label = Clazz.extend({
 		if(fontSize)
 			this.node.setAttribute("oryx:fontSize", fontSize);
 		
+		this.node.setAttribute("fill", "#91c8f6");
+		
 		return fontSize;
 	},
 	
