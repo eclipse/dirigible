@@ -15,17 +15,6 @@ formView.controller('FormController', ['$scope', '$http', function ($scope, $htt
     });
 
 #end
-#macro(radioOptions $elements)
-#foreach($element in $elements)
-    #if($element.controlId == "input-radio")
-    ${dollar}scope.${element.id}Model = $element.options;
-    #end
-    #if($element.children)
-    #radioOptions($element.children);
-    #end
-#end
-#end
-#radioOptions($elements);
     $scope.model = {};
 #macro(formWidgets $elements)
 #foreach($element in $elements)

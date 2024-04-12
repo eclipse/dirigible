@@ -1,0 +1,162 @@
+{
+    "feeds": [
+        {
+            "name": "productOptions",
+            "url": "/services/ts/{{projectName}}/api/products.ts"
+        },
+        {
+            "name": "shippingOptions",
+            "url": "/services/web/{{projectName}}/api/shippingOptions.json"
+        }
+    ],
+    "scripts": [],
+    "code": "$scope.submitOrder = () => {\n    console.log(`Order Model is: ${JSON.stringify($scope.model)}`);\n\n    if ($scope.forms.form.$invalid) {\n        const ivalidFieldErrorMessages = [\n            'Please enter valid values for the following form items:'\n        ];\n        for (const formId in $scope.forms.form) {\n            const formElement = $scope.forms.form[formId];\n            if (formElement && formElement.$invalid) {\n                ivalidFieldErrorMessages.push(`  - '${formId}' has an invalid value '${formElement.$viewValue ?? ''}'`);\n            }\n        }\n        const errorMessage = ivalidFieldErrorMessages.join('\\n');\n        console.error(errorMessage);\n        alert(errorMessage);\n        return;\n    }\n\n    $http.post('/services/ts/{{projectName}}/api/orders.ts', JSON.stringify($scope.model)).then(response => {\n        console.log(`Response is: ${JSON.stringify(response)}`);\n        alert(`Response is: \\n${JSON.stringify(response, null, 4)}`)\n    }).catch(e => {\n        console.error(e);\n        alert(`Error occurred: ${e}`);\n    });\n}",
+    "form": [
+        {
+            "controlId": "header",
+            "title": "Easy Order Form",
+            "size": 1
+        },
+        {
+            "controlId": "header",
+            "title": "Complete the form below to place your order hassle-free",
+            "size": 4
+        },
+        {
+            "controlId": "input-textfield",
+            "id": "customer-name",
+            "label": "Customer Name",
+            "horizontal": true,
+            "placeholder": "The name of the customer",
+            "type": "text",
+            "model": "customerName",
+            "required": true,
+            "minLength": 1,
+            "maxLength": 50,
+            "validationRegex": "^[a-zA-Z]+(?:-[a-zA-Z]+)?(?: [a-zA-Z]+(?:-[a-zA-Z]+)?)*$",
+            "errorState": "Incorrect input"
+        },
+        {
+            "controlId": "input-textfield",
+            "id": "customer-email",
+            "label": "Customer Email",
+            "horizontal": true,
+            "placeholder": "",
+            "type": "email",
+            "model": "customerEmail",
+            "required": true,
+            "minLength": 0,
+            "maxLength": -1,
+            "validationRegex": "",
+            "errorState": "Incorrect input"
+        },
+        {
+            "controlId": "input-textarea",
+            "id": "shipping-address",
+            "label": "Shipping Address",
+            "horizontal": false,
+            "placeholder": "",
+            "type": "text",
+            "model": "shippingAddress",
+            "required": true,
+            "minLength": 0,
+            "maxLength": -1,
+            "validationRegex": "",
+            "errorState": "Incorrect input"
+        },
+        {
+            "controlId": "container-hbox",
+            "children": [
+                {
+                    "controlId": "input-date",
+                    "id": "order-date",
+                    "label": "Order Date",
+                    "horizontal": false,
+                    "type": "date",
+                    "model": "orderDate",
+                    "required": true
+                },
+                {
+                    "controlId": "input-select",
+                    "id": "product",
+                    "label": "Product",
+                    "horizontal": false,
+                    "model": "product",
+                    "options": "productOptions",
+                    "optionLabel": "label",
+                    "optionValue": "id",
+                    "required": true
+                },
+                {
+                    "controlId": "input-number",
+                    "id": "quantity",
+                    "label": "Quantity",
+                    "horizontal": false,
+                    "placeholder": "",
+                    "model": "quantity",
+                    "required": true,
+                    "minNum": 1,
+                    "maxNum": 99,
+                    "step": 1
+                }
+            ]
+        },
+        {
+            "controlId": "container-hbox",
+            "children": [
+                {
+                    "controlId": "input-radio",
+                    "id": "payment-method",
+                    "name": "Payment Method",
+                    "model": "paymentMethod",
+                    "options": [
+                        {
+                            "label": "Credit Card",
+                            "value": "payment-method-cc"
+                        },
+                        {
+                            "label": "PayPal",
+                            "value": "payment-method-pp"
+                        },
+                        {
+                            "label": "Bank Transfer",
+                            "value": "payment-method-bt"
+                        }
+                    ],
+                    "required": true
+                },
+                {
+                    "controlId": "input-select",
+                    "id": "shipping-method",
+                    "label": "Shipping Method",
+                    "horizontal": true,
+                    "model": "shippingMethod",
+                    "options": "shippingOptions",
+                    "optionLabel": "name",
+                    "optionValue": "id",
+                    "required": true
+                },
+                {
+                    "controlId": "input-checkbox",
+                    "id": "priority-processing",
+                    "label": "Priority Processing (Additional charges may apply) ",
+                    "model": "priorityProcessing"
+                }
+            ]
+        },
+        {
+            "controlId": "button",
+            "label": "Button",
+            "type": "emphasized",
+            "sizeToText": true,
+            "isSubmit": true,
+            "callback": "submitOrder()"
+        },
+        {
+            "controlId": "paragraph",
+            "format": true,
+            "text": "Note: By placing this order, you agree to our Terms and Conditions:\n\n1. By placing an order, you agree to abide by the terms and conditions outlined herein.\n2. All orders are subject to availability and confirmation of the order price.\n3. We reserve the right to refuse any order placed with us.\n4. The customer must provide accurate and complete information for processing the order.\n5. Prices for our products are subject to change without notice.\n6. We are not liable for any delay or failure to deliver due to unforeseen circumstances beyond our control.\n7. All sales are final. No refunds or exchanges unless explicitly stated.\n8. Payment must be made in full at the time of placing the order.\n9. We reserve the right to cancel or suspend accounts at our discretion.\n10. By providing your email address, you consent to receive communication related to your order and promotional offers.",
+            "model": ""
+        }
+    ]
+}
