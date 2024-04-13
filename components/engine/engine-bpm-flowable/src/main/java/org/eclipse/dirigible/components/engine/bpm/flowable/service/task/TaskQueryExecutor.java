@@ -48,6 +48,21 @@ public record TaskQueryExecutor(BpmService bpmService) {
         return tasks;
     }
 
+    public List<Task> findTasks(Type type) {
+        List<Task> tasks = Collections.emptyList();
+        if (Type.CANDIDATE_GROUPS.equals(type)) {
+            tasks = getTaskService().createTaskQuery()
+                                    .taskCandidateGroupIn(UserFacade.getUserRoles())
+                                    .list();
+
+        } else if (Type.ASSIGNEE.equals(type)) {
+            tasks = getTaskService().createTaskQuery()
+                                    .taskAssignee(UserFacade.getName())
+                                    .list();
+        }
+        return tasks;
+    }
+
     /**
      * Gets the task service.
      *

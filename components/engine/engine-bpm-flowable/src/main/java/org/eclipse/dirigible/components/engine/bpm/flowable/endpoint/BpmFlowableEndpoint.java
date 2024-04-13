@@ -302,6 +302,21 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
         return ResponseEntity.ok(taskDTOS);
     }
 
+    @GetMapping(value = "/bpm-processes/tasks")
+    public ResponseEntity<List<TaskDTO>> getTasks(@RequestParam(value = "type", required = false) String type) {
+        Type principalType;
+        try {
+            principalType = Type.fromString(type);
+        } catch (IllegalArgumentException e) {
+            principalType = Type.ASSIGNEE;
+        }
+        List<TaskDTO> taskDTOS = taskQueryExecutor.findTasks(principalType)
+                                                  .stream()
+                                                  .map(this::mapToDTO)
+                                                  .collect(Collectors.toList());
+        return ResponseEntity.ok(taskDTOS);
+    }
+
     @PostMapping(value = "/bpm-processes/tasks/{id}")
     public ResponseEntity<String> executeTaskAction(@PathVariable("id") String id, @RequestBody TaskActionData actionData) {
         TaskService taskService = getTaskService();

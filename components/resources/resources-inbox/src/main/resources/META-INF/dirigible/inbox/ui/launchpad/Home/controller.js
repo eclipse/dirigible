@@ -21,7 +21,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 	.config(["entityApiProvider", function(entityApiProvider) {
 		entityApiProvider.baseUrl = "/services/js/inbox/ui/launchpad/Home/tiles.js";
 	}])
-	.controller('PageController', ['$scope', 'messageHub', 'entityApi', function($scope, messageHub, entityApi) {
+	.controller('PageController', ['$scope', '$http', 'messageHub', 'entityApi', function($scope, $http, messageHub, entityApi) {
 
 		$scope.openView = function(location) {
 			messageHub.postMessage("openView", {
@@ -49,43 +49,29 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 
 
 
-
-
-
-
-
 		$scope.tasksList = [];
 		$scope.tasksListAssignee = [];
-		$scope.currentProcessInstanceId;
 		$scope.selectedClaimTask = null;
 		$scope.selectedUnclaimTask = null;
 
 		$scope.currentFetchDataTask = null;
 
 		$scope.reload = function() {
-			console.log("Reloading user tasks for current process instance id: " + $scope.currentProcessInstanceId)
-			$scope.fetchData($scope.currentProcessInstanceId);
+			console.log("Reloading user tasks")
+			$scope.fetchData();
 		};
 
-		$scope.fetchData = function(processInstanceId) {
-			$http.get('/services/ide/bpm/bpm-processes/instance/' + processInstanceId + '/tasks?type=groups', { params: { 'limit': 100 } })
+		$scope.fetchData = function() {
+			$http.get('/services/ide/bpm/bpm-processes/tasks?type=groups', { params: { 'limit': 100 } })
 				.then((response) => {
 					$scope.tasksList = response.data;
 				});
 
-			$http.get('/services/ide/bpm/bpm-processes/instance/' + processInstanceId + '/tasks?type=assignee', { params: { 'limit': 100 } })
+			$http.get('/services/ide/bpm/bpm-processes/tasks?type=assignee', { params: { 'limit': 100 } })
 				.then((response) => {
 					$scope.tasksListAssignee = response.data;
 				});
 		}
-
-		messageHub.onDidReceiveMessage('instance.selected', function(msg) {
-			const processInstanceId = msg.data.instance;
-			$scope.fetchData(processInstanceId);
-			$scope.$apply(function() {
-				$scope.currentProcessInstanceId = processInstanceId;
-			});
-		});
 
 		$scope.selectionClaimChanged = function(variable) {
 			if (variable) {
