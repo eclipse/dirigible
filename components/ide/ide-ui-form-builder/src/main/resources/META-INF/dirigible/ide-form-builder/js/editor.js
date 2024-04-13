@@ -805,9 +805,9 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
                 },
                 {
                     controlId: 'container-hbox',
-                    label: 'Horizintal Box',
+                    label: 'Horizontal Box',
                     icon: 'sap-icon--screen-split-two',
-                    description: 'Horizintal box container',
+                    description: 'Horizontal box container',
                     template: `<div id="{{id}}" class="dg-hbox" data-type="container" ng-click="showActions(id, $event)"></div>`,
                     children: []
                 },
