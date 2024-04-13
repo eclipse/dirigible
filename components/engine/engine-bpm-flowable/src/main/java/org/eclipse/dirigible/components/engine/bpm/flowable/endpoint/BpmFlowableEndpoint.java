@@ -244,15 +244,14 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
         return ResponseEntity.ok(getBpmService().getProcessInstances());
     }
 
+    /**
+     * Gets the completed historic process instances.
+     *
+     * @return the process instances
+     */
     @GetMapping(value = "/bpm-processes/historic-instances")
-    public ResponseEntity<List<HistoricProcessInstance>> getHistoryProcessesInstances() {
-
-        List<HistoricProcessInstance> historicProcessInstances = getBpmService().getBpmProviderFlowable()
-                                                                                .getProcessEngine()
-                                                                                .getHistoryService()
-                                                                                .createHistoricProcessInstanceQuery()
-                                                                                .finished()
-                                                                                .list();
+    public ResponseEntity<List<HistoricProcessInstance>> getHistoricProcessesInstances() {
+        List<HistoricProcessInstance> historicProcessInstances = getBpmService().getCompletedProcessInstances();
         return ResponseEntity.ok(historicProcessInstances);
     }
 

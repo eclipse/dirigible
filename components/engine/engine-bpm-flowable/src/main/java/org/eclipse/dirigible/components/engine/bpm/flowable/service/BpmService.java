@@ -30,6 +30,7 @@ import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.common.engine.impl.util.io.InputStreamSource;
 import org.flowable.editor.language.json.converter.BpmnJsonConverter;
 import org.flowable.engine.ProcessEngine;
+import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.job.api.Job;
@@ -330,6 +331,19 @@ public class BpmService {
             results.add(processInstanceData);
         }
         return results;
+    }
+
+    /**
+     * Gets the completed historic process instances.
+     *
+     * @return the process instances
+     */
+    public List<HistoricProcessInstance> getCompletedProcessInstances() {
+        return getBpmProviderFlowable().getProcessEngine()
+                                       .getHistoryService()
+                                       .createHistoricProcessInstanceQuery()
+                                       .finished()
+                                       .list();
     }
 
     /**
