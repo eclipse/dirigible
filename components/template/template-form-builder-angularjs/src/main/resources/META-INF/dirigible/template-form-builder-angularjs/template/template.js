@@ -23,19 +23,19 @@ exports.getTemplate = function (parameters) {
             {
                 location: "/template-form-builder-angularjs/ui/controller.js.template",
                 action: "generate",
-                rename: "gen/controller.js",
+                rename: "gen/forms/{{fileName}}/controller.js",
                 engine: "velocity",
             },
             {
                 location: "/template-form-builder-angularjs/ui/index.html.template",
                 action: "generate",
-                rename: "gen/index.html",
+                rename: "gen/forms/{{fileName}}/index.html",
                 engine: "velocity",
             },
             {
                 location: "/template-form-builder-angularjs/ui/view.js.template",
                 action: "generate",
-                rename: "gen/view.js",
+                rename: "gen/forms/{{fileName}}/view.js",
                 engine: "velocity",
             },
         ],

@@ -8,7 +8,7 @@ const viewData = {
 	label: "$projectName Form",
 	factory: "frame",
 	region: "bottom",
-	link: "$projectName/gen/index.html",
+	link: "$projectName/gen/forms/$fileName/index.html",
 };
 if (typeof exports !== 'undefined') {
 	exports.getView = function () {

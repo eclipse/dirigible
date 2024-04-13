@@ -5,7 +5,7 @@
  */
 exports.getTemplate = function () {
 	return {
-		name: "Form Designer (UI)",
+		name: "Form Definition (UI)",
 		description: "Form Sample Template",
 		sources: [{
 			location: "/template-form/form/project.json.template",
