@@ -64,6 +64,10 @@ function onGenerateModel(context, request, response) {
     parameters.workspaceName = workspace;
     parameters.filePath = path;
     parameters.templateId = templatePayload.template;
+    parameters.fileName = path;
+    if (parameters.fileName.indexOf(".") > 0) {
+        parameters.fileName = parameters.fileName.substring(0, path.indexOf("."))
+    }
 
     let generatedFiles = template.generate(model, parameters);
 
@@ -72,12 +76,8 @@ function onGenerateModel(context, request, response) {
     for (let i = 0; i < generatedFiles.length; i++) {
         createFile(workspace, project, generatedFiles[i].path, generatedFiles[i].content);
     }
-    let gen = path;
-    if (gen.indexOf(".") > 0) {
-        gen = gen.substring(0, path.indexOf("."))
-    }
 
-    createFile(workspace, project, gen + ".gen", JSON.stringify(parameters, null, 2));
+    createFile(workspace, project, parameters.fileName + ".gen", JSON.stringify(parameters, null, 2));
 
     lifecycle.publish(user.getName(), workspace, project);
 
