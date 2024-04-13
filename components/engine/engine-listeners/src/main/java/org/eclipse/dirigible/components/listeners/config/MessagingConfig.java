@@ -39,7 +39,7 @@ class MessagingConfig {
     private static final String CONNECTOR_URL = "vm://localhost";
 
     /** The Constant LOCATION_TEMP_STORE. */
-    private static final String LOCATION_TEMP_STORE = "./target/temp/kahadb";
+    private static final String LOCATION_TEMP_STORE = "./target/dirigible/kahadb";
 
     /**
      * Creates the active MQ connection factory.

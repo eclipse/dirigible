@@ -9,7 +9,7 @@
  */
 package org.eclipse.dirigible.components.listeners.util;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import java.util.List;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
