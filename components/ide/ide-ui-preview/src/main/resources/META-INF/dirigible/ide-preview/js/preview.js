@@ -115,6 +115,7 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', 'ViewParame
                 $scope.previewUrl = currentUrl || '';
                 break;
             case 'Enter':
+                $scope.previewUrl = e.target.value;
                 if ($scope.previewUrl) {
                     $scope.gotoUrl($scope.previewUrl);
                 }

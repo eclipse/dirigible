@@ -11,10 +11,18 @@
 /*
  * Provides key microservices for constructing and managing the IDE UI
  */
+
+function isEmbedded() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const embedded = urlParams.get('embedded');
+    if (embedded !== null && embedded !== undefined) return true;
+    return false;
+}
 angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideExtensions', 'ideTheming', 'ideMessageHub'])
     .constant('branding', brandingInfo)
     .constant('perspective', perspectiveData)
     .constant('extensionPoint', {})
+    .constant('isEmbedded', isEmbedded())
     .config(function config($compileProvider) {
         $compileProvider.debugInfoEnabled(false);
         $compileProvider.commentDirectivesEnabled(false);
@@ -224,8 +232,12 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideExtensions', 'i
             },
             templateUrl: '/services/web/resources-core/ui/templates/contextmenuSubmenu.html'
         };
-    }]).directive('ideHeader', ['$cookies', '$http', 'branding', 'theming', 'User', 'Extensions', 'messageHub', function ($cookies, $http, branding, theming, User, Extensions, messageHub) {
-        return {
+    }]).directive('ideHeader', ['$cookies', '$http', 'branding', 'theming', 'User', 'Extensions', 'messageHub', 'isEmbedded', function ($cookies, $http, branding, theming, User, Extensions, messageHub, isEmbedded) {
+        if (isEmbedded) return {
+            restrict: 'E',
+            replace: false
+        };
+        else return {
             restrict: 'E',
             replace: true,
             scope: {
@@ -381,13 +393,14 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideExtensions', 'i
             template: `<fd-menu-item ng-repeat-start="item in sublist track by $index" ng-if="!item.items" has-separator="::item.divider" title="{{ ::item.label }}" ng-click="::menuHandler(item)"></fd-menu-item>
 <fd-menu-sublist ng-if="item.items" has-separator="::item.divider" title="{{ ::item.label }}" can-scroll="::isScrollable($index)" ng-repeat-end><header-submenu sublist="::item.items" menu-handler="::menuHandler"></header-submenu></fd-menu-sublist>`,
         };
-    }).directive('ideContainer', ['perspective', function (perspective) {
+    }).directive('ideContainer', ['perspective', 'isEmbedded', function (perspective, isEmbedded) {
         return {
             restrict: 'E',
             transclude: true,
             replace: true,
             link: {
                 pre: function (scope) {
+                    scope.withSidebar = !isEmbedded;
                     scope.shouldLoad = true;
                     if (!perspective.id || !perspective.name) {
                         console.error('<ide-container> requires perspective service data');
@@ -395,10 +408,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideExtensions', 'i
                     }
                 },
             },
-            template: `<div class="dg-main-container">
-                <ide-sidebar></ide-sidebar>
-                <ng-transclude ng-if="shouldLoad" class="dg-perspective-container"></ng-transclude>
-            </div>`
+            template: `<div class="dg-main-container"><ide-sidebar ng-if="withSidebar"></ide-sidebar><ng-transclude ng-if="shouldLoad" class="dg-perspective-container"></ng-transclude></div>`
         }
     }]).directive('ideSidebar', ['Extensions', 'extensionPoint', 'perspective', 'messageHub', function (Extensions, extensionPoint, perspective, messageHub) {
         return {
@@ -439,8 +449,12 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideExtensions', 'i
     /**
      * Used for Dialogs and Window Dialogs
      */
-    .directive('ideDialogs', ['messageHub', 'Extensions', 'extensionPoint', 'perspective', function (messageHub, Extensions, extensionPoint, perspective) {
-        return {
+    .directive('ideDialogs', ['messageHub', 'Extensions', 'extensionPoint', 'perspective', 'isEmbedded', function (messageHub, Extensions, extensionPoint, perspective, isEmbedded) {
+        if (isEmbedded) return {
+            restrict: 'E',
+            replace: false
+        };
+        else return {
             restrict: 'E',
             replace: true,
             link: function (scope, element) {
@@ -1113,8 +1127,12 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideExtensions', 'i
             },
             templateUrl: '/services/web/resources-core/ui/templates/ideDialogs.html'
         }
-    }]).directive('ideStatusBar', ['messageHub', function (messageHub) {
-        return {
+    }]).directive('ideStatusBar', ['messageHub', 'isEmbedded', function (messageHub, isEmbedded) {
+        if (isEmbedded) return {
+            restrict: 'E',
+            replace: false
+        };
+        else return {
             restrict: 'E',
             replace: true,
             link: function (scope) {
@@ -1166,20 +1184,5 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideExtensions', 'i
                 };
             },
             templateUrl: '/services/web/resources-core/ui/templates/ideStatusBar.html'
-        }
-    }])
-    .directive('dgEmbeddablePerspective', [function () {
-        // TODO: This is a dirty hack. We need to rework the way we build perspectives.
-        return {
-            restrict: 'A',
-            link: function () {
-                const urlParams = new URLSearchParams(window.location.search);
-                const embedded = urlParams.get('embedded');
-                if (embedded !== null && embedded !== undefined) {
-                    const styleSheet = document.createElement("style");
-                    styleSheet.innerText = '.dg-main-header, .dg-statusbar, .dg-main-container>.dg-sidebar { display: none !important; }';
-                    document.head.appendChild(styleSheet);
-                }
-            }
         }
     }]);
