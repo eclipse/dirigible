@@ -742,6 +742,18 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     return false;
                 }
 
+                window.onbeforeunload = function myFunction() {
+                    for (let childIndex = 0; childIndex < $scope.centerSplittedTabViews.panes.length; childIndex++) {
+                        let childPane = $scope.centerSplittedTabViews.panes[childIndex];
+                        for (let tabIndex = 0; tabIndex < childPane.tabs.length; tabIndex++) {
+                            if (childPane.tabs[tabIndex].type === EDITOR && childPane.tabs[tabIndex].dirty) {
+                                return 'You have unsaved files. Do you still want to leave?';
+                            }
+                        }
+                    }
+                    return;
+                };
+
                 function removeCenterTab(id, filePath) {
                     let result;
                     if (id) result = findCenterSplittedTabViewById(id);
