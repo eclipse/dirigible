@@ -28,8 +28,8 @@ export const Delete = createRequestDecorator("delete")
 export const Head = createRequestDecorator("head")
 export const Options = createRequestDecorator("options")
 
-function createRequestDecorator(httpMethod, consumesMimeTypes = ['*/*'], producesMimeTypes = ['application/json']) {
-    return function (path: string): any {
+function createRequestDecorator(httpMethod) {
+    return function (path: string, consumesMimeTypes: undefined | string | string[] = ['*/*'], producesMimeTypes: undefined | string | string[] = ['application/json']): any {
         return function (target, propertyKey, descriptor) {
             const handler = descriptor ? descriptor.value : target;
             router.resource(path)[httpMethod]((ctx, req, res) => {
