@@ -30,6 +30,11 @@ exports.getTemplate = function (parameters) {
         action: "copy",
         rename: "gen/api/utils/ValidationError.ts",
     }, {
+        location: "/template-application-rest/api/api.openapi.template",
+        action: "generate",
+        rename: "gen/{{fileName}}.openapi",
+        engine: "velocity"
+    }, {
         location: "/template-application-rest/api/entity.ts.template",
         action: "generate",
         rename: "gen/api/{{perspectiveName}}/{{name}}Service.ts",
@@ -42,12 +47,12 @@ exports.getTemplate = function (parameters) {
         engine: "velocity",
         collection: "reportModels"
     }, {
-        location: "/template-application-dao/project.json.mjs",
+        location: "/template-application-rest/project.json.mjs",
         action: "generate",
         rename: "project.json",
         engine: "javascript"
     }, {
-        location: "/template-application-dao/tsconfig.json.template",
+        location: "/template-application-rest/tsconfig.json.template",
         action: "generate",
         rename: "tsconfig.json",
         engine: "velocity"

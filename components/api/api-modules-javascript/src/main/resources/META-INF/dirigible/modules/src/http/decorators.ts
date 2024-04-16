@@ -15,7 +15,7 @@ import * as rs from "sdk/http/rs"
 const router = rs.service();
 let instance = null;
 
-export function Controller(ctr: {new()}, context: ClassDecoratorContext): void {
+export function Controller(ctr: { new() }, context: ClassDecoratorContext): void {
     instance = new ctr();
     router.execute();
 }
@@ -28,16 +28,13 @@ export const Delete = createRequestDecorator("delete")
 export const Head = createRequestDecorator("head")
 export const Options = createRequestDecorator("options")
 
-function createRequestDecorator(httpMethod) {
+function createRequestDecorator(httpMethod, consumesMimeTypes = ['*/*'], producesMimeTypes = ['application/json']) {
     return function (path: string): any {
         return function (target, propertyKey, descriptor) {
             const handler = descriptor ? descriptor.value : target;
-            router[httpMethod](
-                path,
-                (ctx, req, res) => {
-                    handleRequest(req, res, ctx, handler);
-                }
-            );
+            router.resource(path)[httpMethod]((ctx, req, res) => {
+                handleRequest(req, res, ctx, handler);
+            }).consumes(consumesMimeTypes).produces(producesMimeTypes);
         };
     }
 }

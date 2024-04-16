@@ -286,7 +286,7 @@ const matchMediaType = function (request, producesMediaTypes, consumesMediaTypes
 
     let isConsumeMatched = false;
     const contentTypeMediaTypes = normalizeMediaTypeHeaderValue(request.getContentType());
-    if (!consumesMediaTypes || consumesMediaTypes.indexOf('*') > -1) { //input media type is not restricted
+    if (!consumesMediaTypes || consumesMediaTypes.indexOf('*/*') > -1) { //input media type is not restricted
         isConsumeMatched = true;
     } else {
         let matchedConsumesMIME;
