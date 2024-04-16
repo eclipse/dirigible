@@ -1308,7 +1308,7 @@ projectsView.controller('ProjectsViewController', [
                     label: "Cancel",
                 }],
                 "projects.formDialog.rename",
-                "Renameing..."
+                "Renaming..."
             );
         }
 
