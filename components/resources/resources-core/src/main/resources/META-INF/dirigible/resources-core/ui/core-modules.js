@@ -1171,6 +1171,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideExtensions', 'i
                     function (data) {
                         scope.$apply(function () {
                             if (data.dialogWindowId === scope.window.dialogWindowId) {
+                                if (windows.length > 1 && windows[1].dialogWindowId === data.dialogWindowId) windows.splice(1, 1);
                                 scope.hideWindow();
                             } else {
                                 for (let i = 0; i < windows.length; i++) {
