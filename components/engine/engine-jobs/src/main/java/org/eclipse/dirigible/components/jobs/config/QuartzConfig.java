@@ -33,6 +33,7 @@ import java.util.Properties;
 @Configuration
 class QuartzConfig {
 
+    private static final int STARTUP_DELAY_SECONDS = 10;
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(QuartzConfig.class);
 
@@ -56,7 +57,7 @@ class QuartzConfig {
         logger.debug("Starting Scheduler threads");
 
         // give some time for spring auto configurations to pass before starting
-        scheduler.startDelayed(10);
+        scheduler.startDelayed(STARTUP_DELAY_SECONDS);
 
         return scheduler;
     }
@@ -74,6 +75,9 @@ class QuartzConfig {
         SchedulerFactoryBean factory = new SchedulerFactoryBean();
         factory.setJobFactory(jobFactory);
         factory.setQuartzProperties(quartzProperties(systemDataSourceName));
+        // add startup delay - otherwise the scheduler triggers jobs execution
+        // before spring boot application full startup
+        factory.setStartupDelay(STARTUP_DELAY_SECONDS);
         return factory;
     }
 

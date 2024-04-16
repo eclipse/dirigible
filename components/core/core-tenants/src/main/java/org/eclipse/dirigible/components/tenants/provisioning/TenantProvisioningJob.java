@@ -71,7 +71,7 @@ class TenantProvisioningJob extends SystemJob {
 
         return simpleSchedule().withIntervalInSeconds(frequencyInSec)
                                .repeatForever()
-                               .withMisfireHandlingInstructionIgnoreMisfires();
+                               .withMisfireHandlingInstructionNextWithExistingCount();
     }
 
 }

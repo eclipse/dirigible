@@ -49,10 +49,32 @@ public abstract class DirigibleJob implements Job {
         return JobBuilder.newJob()
                          .ofType(this.getClass())
                          .storeDurably()
+                         .requestRecovery()
                          .withIdentity(key)
                          .withDescription(getJobDescription())
                          .build();
     }
+
+    /**
+     * Gets the job group.
+     *
+     * @return the job group
+     */
+    protected abstract Optional<String> getJobGroup();
+
+    /**
+     * Gets the job key.
+     *
+     * @return the job key
+     */
+    protected abstract String getJobKey();
+
+    /**
+     * Gets the job description.
+     *
+     * @return the job description
+     */
+    protected abstract String getJobDescription();
 
     /**
      * Gets the trigger group.
@@ -81,25 +103,4 @@ public abstract class DirigibleJob implements Job {
      * @return the schedule
      */
     protected abstract SimpleScheduleBuilder getSchedule();
-
-    /**
-     * Gets the job group.
-     *
-     * @return the job group
-     */
-    protected abstract Optional<String> getJobGroup();
-
-    /**
-     * Gets the job key.
-     *
-     * @return the job key
-     */
-    protected abstract String getJobKey();
-
-    /**
-     * Gets the job description.
-     *
-     * @return the job description
-     */
-    protected abstract String getJobDescription();
 }

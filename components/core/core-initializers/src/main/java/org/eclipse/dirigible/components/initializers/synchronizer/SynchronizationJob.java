@@ -18,9 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 
 /**
@@ -31,9 +28,6 @@ class SynchronizationJob extends SystemJob {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(SynchronizationJob.class);
-
-    /** The executor. */
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     /** The job service. */
     @Autowired
@@ -70,8 +64,8 @@ class SynchronizationJob extends SystemJob {
         logger.info("Configuring trigger to fire every [{}] seconds", frequencyInSec);
 
         return simpleSchedule().withIntervalInSeconds(frequencyInSec)
-                               .withMisfireHandlingInstructionIgnoreMisfires()
-                               .repeatForever();
+                               .repeatForever()
+                               .withMisfireHandlingInstructionNextWithExistingCount();
     }
 
     /**
@@ -101,28 +95,28 @@ class SynchronizationJob extends SystemJob {
      */
     @Override
     public void execute(JobExecutionContext context) {
-        logger.debug("Job {} fired @ {}", context.getJobDetail()
-                                                 .getKey()
-                                                 .getName(),
-                context.getFireTime());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Job [{}] fired @ [{}]", context.getJobDetail()
+                                                         .getKey()
+                                                         .getName(),
+                    context.getFireTime());
+        }
 
-        executor.submit(() -> {
-            Runtime runtime = Runtime.getRuntime();
-            runtime.gc();
-            long usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory();
-
+        Runtime runtime = Runtime.getRuntime();
+        long usedMemoryBefore = 0;
+        if (logger.isDebugEnabled()) {
+            usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory();
             logger.debug(String.format("Used memory at the start: %-+,15d", usedMemoryBefore));
+        }
 
-            jobService.executeSynchronizationJob();
+        jobService.executeSynchronizationJob();
 
-            runtime.gc();
+        if (logger.isDebugEnabled()) {
             long usedMemoryAfter = runtime.totalMemory() - runtime.freeMemory();
             logger.debug(String.format("Used memory at the end:   %-+,15d / delta: %-+,15d", usedMemoryAfter,
                     (usedMemoryAfter - usedMemoryBefore)));
-
-        });
-
-        logger.debug("Next job scheduled @ {}", context.getNextFireTime());
+            logger.debug("Next job scheduled @ {}", context.getNextFireTime());
+        }
     }
 
 }
