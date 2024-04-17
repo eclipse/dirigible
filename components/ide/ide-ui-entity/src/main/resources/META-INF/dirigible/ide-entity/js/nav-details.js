@@ -48,7 +48,7 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
             excluded: [],
         };
         $scope.inputRulesName = {
-			patterns: ['^[a-zA-Z0-9]*$'],
+			patterns: ['^[A-Za-z0-9_]+$'],
             excluded: [],
         };
         $scope.icons = [];
