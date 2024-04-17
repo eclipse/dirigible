@@ -289,13 +289,7 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
     @GetMapping(value = "/bpm-processes/instance/{id}/tasks")
     public ResponseEntity<List<TaskDTO>> getProcessInstanceTasks(@PathVariable("id") String id,
             @RequestParam(value = "type", required = false) String type) {
-        Type principalType;
-        try {
-            principalType = Type.fromString(type);
-        } catch (IllegalArgumentException e) {
-            principalType = Type.ASSIGNEE;
-        }
-        List<TaskDTO> taskDTOS = taskQueryExecutor.findTasks(id, principalType)
+        List<TaskDTO> taskDTOS = taskQueryExecutor.findTasks(id, extractPrincipalType(type))
                                                   .stream()
                                                   .map(this::mapToDTO)
                                                   .collect(Collectors.toList());
@@ -304,17 +298,21 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 
     @GetMapping(value = "/bpm-processes/tasks")
     public ResponseEntity<List<TaskDTO>> getTasks(@RequestParam(value = "type", required = false) String type) {
+        List<TaskDTO> taskDTOS = taskQueryExecutor.findTasks(extractPrincipalType(type))
+                                                  .stream()
+                                                  .map(this::mapToDTO)
+                                                  .collect(Collectors.toList());
+        return ResponseEntity.ok(taskDTOS);
+    }
+
+    private static Type extractPrincipalType(String type) {
         Type principalType;
         try {
             principalType = Type.fromString(type);
         } catch (IllegalArgumentException e) {
             principalType = Type.ASSIGNEE;
         }
-        List<TaskDTO> taskDTOS = taskQueryExecutor.findTasks(principalType)
-                                                  .stream()
-                                                  .map(this::mapToDTO)
-                                                  .collect(Collectors.toList());
-        return ResponseEntity.ok(taskDTOS);
+        return principalType;
     }
 
     @PostMapping(value = "/bpm-processes/tasks/{id}")

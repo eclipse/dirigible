@@ -13,10 +13,12 @@ import org.eclipse.dirigible.components.api.security.UserFacade;
 import org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmService;
 import org.flowable.engine.TaskService;
 import org.flowable.task.api.Task;
+import org.flowable.task.api.TaskInfoQuery;
+import org.flowable.task.api.TaskQuery;
 import org.springframework.stereotype.Component;
-
-import java.util.Collections;
 import java.util.List;
+
+import static org.eclipse.dirigible.components.engine.bpm.flowable.service.task.TaskQueryExecutor.Type.*;
 
 /**
  * The TaskQueryExecutor.
@@ -25,42 +27,39 @@ import java.util.List;
 public record TaskQueryExecutor(BpmService bpmService) {
 
     /**
-     * Find tasks.
+     * Find tasks by process instance id.
      *
      * @param processInstanceId the process instance id
      * @param type the type
      * @return the list
      */
     public List<Task> findTasks(String processInstanceId, Type type) {
-        List<Task> tasks = Collections.emptyList();
-        if (Type.CANDIDATE_GROUPS.equals(type)) {
-            tasks = getTaskService().createTaskQuery()
-                                    .processInstanceId(processInstanceId)
-                                    .taskCandidateGroupIn(UserFacade.getUserRoles())
-                                    .list();
-
-        } else if (Type.ASSIGNEE.equals(type)) {
-            tasks = getTaskService().createTaskQuery()
-                                    .processInstanceId(processInstanceId)
-                                    .taskAssignee(UserFacade.getName())
-                                    .list();
-        }
-        return tasks;
+        TaskInfoQuery<TaskQuery, Task> taskQuery = prepareQuery(type);
+        taskQuery.processInstanceId(processInstanceId);
+        return taskQuery.list();
     }
 
+    /**
+     * Find tasks.
+     *
+     * @param type the type
+     * @return the list
+     */
     public List<Task> findTasks(Type type) {
-        List<Task> tasks = Collections.emptyList();
-        if (Type.CANDIDATE_GROUPS.equals(type)) {
-            tasks = getTaskService().createTaskQuery()
-                                    .taskCandidateGroupIn(UserFacade.getUserRoles())
-                                    .list();
+        TaskInfoQuery<TaskQuery, Task> taskQuery = prepareQuery(type);
+        return taskQuery.list();
+    }
 
-        } else if (Type.ASSIGNEE.equals(type)) {
-            tasks = getTaskService().createTaskQuery()
-                                    .taskAssignee(UserFacade.getName())
-                                    .list();
+    private TaskInfoQuery<TaskQuery, Task> prepareQuery(Type type) {
+        if (CANDIDATE_GROUPS.equals(type)) {
+            return getTaskService().createTaskQuery()
+                                   .taskCandidateGroupIn(UserFacade.getUserRoles());
+        } else if (ASSIGNEE.equals(type)) {
+            return getTaskService().createTaskQuery()
+                                   .taskAssignee(UserFacade.getName());
+        } else {
+            throw new IllegalArgumentException("Unrecognised principal type: " + type);
         }
-        return tasks;
     }
 
     /**
@@ -103,7 +102,7 @@ public record TaskQueryExecutor(BpmService bpmService) {
          * @return the type
          */
         public static Type fromString(String type) {
-            for (Type enumValue : Type.values()) {
+            for (Type enumValue : values()) {
                 if (enumValue.type.equals(type)) {
                     return enumValue;
                 }
