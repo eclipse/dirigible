@@ -10,10 +10,13 @@ servers:
   - url: /services/ts
 tags:
 #foreach($model in $models)
+  #if($model.type != "PROJECTION")
   - name: $model.perspectiveName
+  #end
 #end
 paths:
 #foreach($model in $models)
+  #if($model.type != "PROJECTION")
   #set($hasStringProperty = "false")
   #foreach($property in $model.properties)
     #if($property.dataTypeJava == "string")
@@ -450,10 +453,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  #end
 #end
 components:
   schemas:
 #foreach($model in $models)
+  #if($model.type != "PROJECTION")
     $model.name:
       type: object
       properties:
@@ -750,6 +755,7 @@ components:
         $limit:
           type: integer
           example: 10
+  #end
 #end
     Error:
       type: object

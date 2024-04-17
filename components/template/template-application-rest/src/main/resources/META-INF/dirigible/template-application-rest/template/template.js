@@ -39,7 +39,7 @@ exports.getTemplate = function (parameters) {
         action: "generate",
         rename: "gen/api/{{perspectiveName}}/{{name}}Service.ts",
         engine: "velocity",
-        collection: "models"
+        collection: "apiModels"
     }, {
         location: "/template-application-rest/api/reportEntity.ts.template",
         action: "generate",
