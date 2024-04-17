@@ -493,10 +493,20 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideExtensions', 'i
         else return {
             restrict: 'E',
             replace: true,
+            scope: {
+                extensionPoints: '<?' // List of extension points. Internal use only, do not document!
+            },
             link: function (scope, element) {
                 let dialogWindows;
                 Extensions.get('dialogWindow', extensionPoint.dialogWindows).then(function (data) {
                     dialogWindows = data;
+                    if (scope.extensionPoints) {
+                        for (let i = 0; i < scope.extensionPoints.length; i++) {
+                            Extensions.get('dialogWindow', scope.extensionPoints[i]).then(function (data) {
+                                dialogWindows = dialogWindows.concat(data);
+                            });
+                        }
+                    }
                 });
                 let messageBox = element[0].querySelector("#dgIdeAlert");
                 let ideDialog = element[0].querySelector("#dgIdeDialog");
