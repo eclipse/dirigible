@@ -32,7 +32,7 @@
                 <fd-form-group ng-if="editElement.editType === 'Add'">
                     <fd-form-item ng-if="tabNumber === 0">
                         <fd-form-label for="navidn" dg-required="true" dg-colon="true">Name</fd-form-label>
-                        <fd-input id="navidn" name="pId" type="text" ng-required="true" dg-input-rules="{ patterns: ['^[a-zA-Z0-9]'] }"
+                        <fd-input id="navidn" name="pId" type="text" ng-required="true" dg-input-rules="inputRulesName"
                             state="{{ forms.newForm['pId'].$valid ? '' : 'error' }}" ng-model="editElement.id">
                         </fd-input>
                     </fd-form-item>
@@ -76,9 +76,10 @@
                 <fd-form-group ng-if="editElement.editType === 'Update' && tabNumber === 0">
                     <fd-form-item>
                         <fd-form-label for="navidn" dg-required="true" dg-colon="true">Name</fd-form-label>
-                        <fd-input id="navidn" name="pId" type="text" ng-required="true" dg-input-rules="{ patterns: ['^[a-zA-Z0-9]'] }"
+                        <fd-input id="navidn" name="pId" type="text" ng-required="true" dg-input-rules="inputRulesName"
                             state="{{ forms.newForm['pId'].$valid ? '' : 'error' }}"
-                            ng-model="dataParameters.perspectives[editElement.index].id">
+                            ng-model="dataParameters.perspectives[editElement.index].id"
+                            pattern="[a-zA-Z0-9]+">
                         </fd-input>
                     </fd-form-item>
                     <fd-form-item class="fd-margin-top--tiny">
