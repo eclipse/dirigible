@@ -7,14 +7,20 @@ externalDocs:
   description: Find out more about Eclipse Dirigible
   url: https://dirigible.io
 servers:
-  - url: /services/ts/$projectName/gen
+  - url: /services/ts
 tags:
 #foreach($model in $models)
-  - name: $model.name
+  - name: $model.perspectiveName
 #end
 paths:
 #foreach($model in $models)
-  /api/$model.perspectiveName/${model.name}Service.ts:
+  #set($hasStringProperty = "false")
+  #foreach($property in $model.properties)
+    #if($property.dataTypeJava == "string")
+      #set($hasStringProperty = "true")
+    #end
+  #end
+  /$projectName/gen/api/$model.perspectiveName/${model.name}Service.ts:
     get:
       summary: List $model.name
       parameters:
@@ -35,7 +41,7 @@ paths:
             type: integer
             allowEmptyValue: true
       tags:
-        - $model.name
+        - $model.perspectiveName
       responses:
         200:
           description: Successful Request
@@ -66,7 +72,7 @@ paths:
     post:
       summary: Create $model.name
       tags:
-        - $model.name
+        - $model.perspectiveName
       requestBody:
         content:
           application/json:
@@ -98,7 +104,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /api/$model.perspectiveName/${model.name}Service.ts/{id}:
+  /$projectName/gen/api/$model.perspectiveName/${model.name}Service.ts/{id}:
     get:
       summary: Get $model.name by Id
       parameters:
@@ -109,7 +115,7 @@ paths:
           schema:
             type: string
       tags:
-        - $model.name
+        - $model.perspectiveName
       responses:
         200:
           description: Successful Request
@@ -147,7 +153,7 @@ paths:
           schema:
             type: string
       tags:
-        - $model.name
+        - $model.perspectiveName
       requestBody:
         content:
           application/json:
@@ -195,7 +201,7 @@ paths:
           schema:
             type: string
       tags:
-        - $model.name
+        - $model.perspectiveName
       requestBody:
         content:
           application/json:
@@ -223,11 +229,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /api/$model.perspectiveName/${model.name}Service.ts/count:
+  /$projectName/gen/api/$model.perspectiveName/${model.name}Service.ts/count:
     get:
       summary: Count the number of $model.name
       tags:
-        - $model.name
+        - $model.perspectiveName
       responses:
         200:
           description: Successful Request
@@ -251,12 +257,79 @@ paths:
     post:
       summary: Count the number of $model.name by ${model.name}FilterOptions
       tags:
-        - $model.name
+        - $model.perspectiveName
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/${model.name}FilterOptions'
+            examples:
+              countWithMultipleCriteria:
+                summary: Count with multiple criteria
+                value:
+                  $filter:
+                    notEquals:
+                      $model.properties[0].name: 33
+  #if($hasStringProperty == "true")
+                    contains:
+    #foreach($property in $model.properties)
+      #if($property.dataTypeJava == "string")
+                      $property.name: "abcd"
+      #end
+    #end
+  #end
+                    greaterThan:
+                      $model.properties[0].name: 0
+                    lessThanOrEqual:
+                      $model.properties[0].name: 100
+              countWithEquals:
+                summary: Count with Equals
+                value:
+                  $filter:
+                    equals:
+                      $model.properties[0].name: 0
+              countWithNotEquals:
+                summary: Count with Not Equals
+                value:
+                  $filter:
+                    notEquals:
+                      $model.properties[0].name: 0
+  #if($hasStringProperty == "true")
+              countWithContains:
+                summary: Count with Contains
+                value:
+                  $filter:
+                    contains:
+    #foreach($property in $model.properties)
+      #if($property.dataTypeJava == "string")
+                      $property.name: "abcd"
+      #end
+    #end
+  #end
+              countWithGreaterThan:
+                summary: Count with Greater Than
+                value:
+                  $filter:
+                    greaterThan:
+                      $model.properties[0].name: 0
+              countWithGreaterThanOrEqual:
+                summary: Count with Greater Than Or Equal
+                value:
+                  $filter:
+                    greaterThanOrEqual:
+                      $model.properties[0].name: 0
+              countWithLessThan:
+                summary: Count with Less Than
+                value:
+                  $filter:
+                    lessThan:
+                      $model.properties[0].name: 0
+              countWithLessThanOrEqual:
+                summary: Count with Less Than Or Equal
+                value:
+                  $filter:
+                    lessThanOrEqual:
+                      $model.properties[0].name: 0
         required: true
       responses:
         200:
@@ -278,16 +351,83 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /api/$model.perspectiveName/${model.name}Service.ts/search:
+  /$projectName/gen/api/$model.perspectiveName/${model.name}Service.ts/search:
     post:
       summary: Search ${model.name} by ${model.name}FilterOptions
       tags:
-        - $model.name
+        - $model.perspectiveName
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/${model.name}FilterOptions'
+            examples:
+              searchWithMultipleCriteria:
+                summary: Search with multiple criteria
+                value:
+                  $filter:
+                    notEquals:
+                      $model.properties[0].name: 33
+  #if($hasStringProperty == "true")
+                    contains:
+    #foreach($property in $model.properties)
+      #if($property.dataTypeJava == "string")
+                      $property.name: "abcd"
+      #end
+    #end
+  #end
+                    greaterThan:
+                      $model.properties[0].name: 0
+                    lessThanOrEqual:
+                      $model.properties[0].name: 100
+              searchWithEquals:
+                summary: Search with Equals
+                value:
+                  $filter:
+                    equals:
+                      $model.properties[0].name: 0
+              searchWithNotEquals:
+                summary: Search with Not Equals
+                value:
+                  $filter:
+                    notEquals:
+                      $model.properties[0].name: 0
+  #if($hasStringProperty == "true")
+              searchWithContains:
+                summary: Search with Contains
+                value:
+                  $filter:
+                    contains:
+    #foreach($property in $model.properties)
+      #if($property.dataTypeJava == "string")
+                      $property.name: "abcd"
+      #end
+    #end
+  #end
+              searchWithGreaterThan:
+                summary: Search with Greater Than
+                value:
+                  $filter:
+                    greaterThan:
+                      $model.properties[0].name: 0
+              searchWithGreaterThanOrEqual:
+                summary: Search with Greater Than Or Equal
+                value:
+                  $filter:
+                    greaterThanOrEqual:
+                      $model.properties[0].name: 0
+              searchWithLessThan:
+                summary: Search with Less Than
+                value:
+                  $filter:
+                    lessThan:
+                      $model.properties[0].name: 0
+              searchWithLessThanOrEqual:
+                summary: Search with Less Than Or Equal
+                value:
+                  $filter:
+                    lessThanOrEqual:
+                      $model.properties[0].name: 0
         required: true
       responses:
         200:
@@ -319,8 +459,30 @@ components:
       properties:
     #foreach($property in $model.properties)
         $property.name:
+        #if($property.dataTypeJava == "short" || $property.dataTypeJava == "int")
+          type: integer
+          format: int32
+        #elseif($property.dataTypeJava == "long")
           type: integer
           format: int64
+        #elseif($property.dataTypeJava == "float")
+          type: number
+          format: float
+        #elseif($property.dataTypeJava == "double")
+          type: number
+          format: double
+        #elseif($property.dataTypeJava == "string")
+          type: string
+          minLength: 0
+          maxLength: $property.dataLength
+          #if($property.widgetPattern)
+          pattern: $property.widgetPattern
+          #end
+        #elseif($property.dataTypeJava == "boolean")
+          type: boolean
+        #elseif($property.dataTypeJava == "null")
+          type: null
+        #end
     #end
     ${model.name}FilterOptions:
       type: object
@@ -334,10 +496,61 @@ components:
     #foreach($property in $model.properties)
                 $property.name:
                   oneOf:
+        #if($property.dataTypeJava == "short" || $property.dataTypeJava == "int")
                     - type: integer
+                      format: int32
                     - type: array
                       items:
                         type: integer
+                        format: int32
+        #elseif($property.dataTypeJava == "long")
+                    - type: integer
+                      format: int64
+                    - type: array
+                      items:
+                        type: integer
+                        format: int64
+        #elseif($property.dataTypeJava == "float")
+                    - type: number
+                      format: float
+                    - type: array
+                      items:
+                        type: number
+                        format: float
+        #elseif($property.dataTypeJava == "double")
+                    - type: number
+                      format: double
+                    - type: array
+                      items:
+                        type: number
+                        format: double
+        #elseif($property.dataTypeJava == "string")
+                    - type: string
+                      minLength: 0
+                      maxLength: $property.dataLength
+          #if($property.widgetPattern)
+                      pattern: $property.widgetPattern
+          #end
+                    - type: array
+                      items:
+                        type: string
+                        format: double
+                        minLength: 0
+                        maxLength: $property.dataLength
+          #if($property.widgetPattern)
+                        pattern: $property.widgetPattern
+          #end
+        #elseif($property.dataTypeJava == "boolean")
+                    - type: boolean
+                    - type: array
+                      items:
+                        type: boolean
+        #elseif($property.dataTypeJava == "null")
+                    - type: null
+                    - type: array
+                      items:
+                        type: null
+        #end
     #end
             notEquals:
               type: object
@@ -345,57 +558,188 @@ components:
     #foreach($property in $model.properties)
                 $property.name:
                   oneOf:
+        #if($property.dataTypeJava == "short" || $property.dataTypeJava == "int")
                     - type: integer
+                      format: int32
                     - type: array
                       items:
                         type: integer
+                        format: int32
+        #elseif($property.dataTypeJava == "long")
+                    - type: integer
+                      format: int64
+                    - type: array
+                      items:
+                        type: integer
+                        format: int64
+        #elseif($property.dataTypeJava == "float")
+                    - type: number
+                      format: float
+                    - type: array
+                      items:
+                        type: number
+                        format: float
+        #elseif($property.dataTypeJava == "double")
+                    - type: number
+                      format: double
+                    - type: array
+                      items:
+                        type: number
+                        format: double
+        #elseif($property.dataTypeJava == "string")
+                    - type: string
+                      minLength: 0
+                      maxLength: $property.dataLength
+          #if($property.widgetPattern)
+                      pattern: $property.widgetPattern
+          #end
+                    - type: array
+                      items:
+                        type: string
+                        format: double
+                        minLength: 0
+                        maxLength: $property.dataLength
+          #if($property.widgetPattern)
+                        pattern: $property.widgetPattern
+          #end
+        #elseif($property.dataTypeJava == "boolean")
+                    - type: boolean
+                    - type: array
+                      items:
+                        type: boolean
+        #elseif($property.dataTypeJava == "null")
+                    - type: null
+                    - type: array
+                      items:
+                        type: null
+        #end
     #end
             contains:
               type: object
               properties:
     #foreach($property in $model.properties)
                 $property.name:
-                  type: integer
+        #if($property.dataTypeJava == "string")
+                  type: string
+                  minLength: 0
+                  maxLength: $property.dataLength
+          #if($property.widgetPattern)
+                  pattern: $property.widgetPattern
+          #end
+        #end
     #end
             greaterThan:
               type: object
               properties:
     #foreach($property in $model.properties)
                 $property.name:
+        #if($property.dataTypeJava == "short" || $property.dataTypeJava == "int")
                   type: integer
+                  format: int32
+        #elseif($property.dataTypeJava == "long")
+                  type: integer
+                  format: int64
+        #elseif($property.dataTypeJava == "float")
+                  type: number
+                  format: float
+        #elseif($property.dataTypeJava == "double")
+                  type: number
+                  format: double
+        #elseif($property.dataTypeJava == "string")
+                  type: string
+                  minLength: 0
+                  maxLength: $property.dataLength
+          #if($property.widgetPattern)
+                  pattern: $property.widgetPattern
+          #end
+        #end
     #end
             greaterThanOrEqual:
               type: object
               properties:
     #foreach($property in $model.properties)
                 $property.name:
+        #if($property.dataTypeJava == "short" || $property.dataTypeJava == "int")
                   type: integer
+                  format: int32
+        #elseif($property.dataTypeJava == "long")
+                  type: integer
+                  format: int64
+        #elseif($property.dataTypeJava == "float")
+                  type: number
+                  format: float
+        #elseif($property.dataTypeJava == "double")
+                  type: number
+                  format: double
+        #elseif($property.dataTypeJava == "string")
+                  type: string
+                  minLength: 0
+                  maxLength: $property.dataLength
+          #if($property.widgetPattern)
+                  pattern: $property.widgetPattern
+          #end
+        #end
     #end
             lessThan:
               type: object
               properties:
     #foreach($property in $model.properties)
                 $property.name:
+        #if($property.dataTypeJava == "short" || $property.dataTypeJava == "int")
                   type: integer
+                  format: int32
+        #elseif($property.dataTypeJava == "long")
+                  type: integer
+                  format: int64
+        #elseif($property.dataTypeJava == "float")
+                  type: number
+                  format: float
+        #elseif($property.dataTypeJava == "double")
+                  type: number
+                  format: double
+        #elseif($property.dataTypeJava == "string")
+                  type: string
+                  minLength: 0
+                  maxLength: $property.dataLength
+          #if($property.widgetPattern)
+                  pattern: $property.widgetPattern
+          #end
+        #end
     #end
             lessThanOrEqual:
               type: object
               properties:
     #foreach($property in $model.properties)
                 $property.name:
+        #if($property.dataTypeJava == "short" || $property.dataTypeJava == "int")
                   type: integer
+                  format: int32
+        #elseif($property.dataTypeJava == "long")
+                  type: integer
+                  format: int64
+        #elseif($property.dataTypeJava == "float")
+                  type: number
+                  format: float
+        #elseif($property.dataTypeJava == "double")
+                  type: number
+                  format: double
+        #elseif($property.dataTypeJava == "string")
+                  type: string
+                  minLength: 0
+                  maxLength: $property.dataLength
+          #if($property.widgetPattern)
+                  pattern: $property.widgetPattern
+          #end
+        #end
     #end
         $select:
           type: array
-          example: []
+          example: [#foreach($property in $model.properties)"$property.name"#if($foreach.hasNext), #end#end]
           items:
             type: string
         $sort:
-          oneOf:
-            - type: string
-            - type: array
-              items:
-                type: string
+          - type: string
+            example: "#foreach($property in $model.properties)$property.name#if($foreach.hasNext),#end#end"
         $order:
           type: string
           enum: ["asc", "desc"]
