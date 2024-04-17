@@ -5,7 +5,7 @@
  */
 exports.getTile = function () {
     return {
-        group: "${perspectiveName}",
+        group: "${perspectiveLabel}",
         name: "${name}",
         caption: "${caption}",
         tooltip: "${tooltip}",

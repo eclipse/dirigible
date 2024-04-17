@@ -313,6 +313,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				cell.value.menuIndex = msg.data.menuIndex;
 				cell.value.layoutType = msg.data.layoutType;
 				cell.value.perspectiveName = msg.data.perspectiveName;
+				cell.value.perspectiveLabel = msg.data.perspectiveLabel;
 				cell.value.navigationPath = msg.data.navigationPath;
 				cell.value.feedUrl = msg.data.feedUrl;
 				cell.value.feedUsername = msg.data.feedUsername;
@@ -429,6 +430,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 					cell.value.projectionReferencedModel = msg.data.model;
 					cell.value.projectionReferencedEntity = msg.data.entity;
 					cell.value.perspectiveName = msg.data.perspectiveName;
+					cell.value.perspectiveLabel = msg.data.perspectiveLabel;
 					cell.value.perspectiveIcon = msg.data.perspectiveIcon;
 					cell.value.perspectiveOrder = msg.data.perspectiveOrder;
 					cell.value.perspectiveRole = msg.data.perspectiveRole;
@@ -469,6 +471,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 					cell.value.projectionReferencedModel = msg.data.model;
 					cell.value.projectionReferencedEntity = msg.data.entity;
 					cell.value.perspectiveName = msg.data.perspectiveName;
+					cell.value.perspectiveLabel = msg.data.perspectiveLabel;
 					cell.value.perspectiveIcon = msg.data.perspectiveIcon;
 					cell.value.perspectiveOrder = msg.data.perspectiveOrder;
 					cell.value.perspectiveRole = msg.data.perspectiveRole;
@@ -990,6 +993,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 									menuIndex: cell.value.menuIndex,
 									layoutType: cell.value.layoutType,
 									perspectiveName: cell.value.perspectiveName,
+									perspectiveLabel: cell.value.perspectiveLabel,
 									navigationPath: cell.value.navigationPath,
 									feedUrl: cell.value.feedUrl,
 									feedUsername: cell.value.feedUsername,

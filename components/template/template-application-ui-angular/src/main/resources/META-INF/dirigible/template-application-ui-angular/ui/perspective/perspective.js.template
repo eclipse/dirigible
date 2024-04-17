@@ -5,7 +5,7 @@
  */
 const perspectiveData = {
 	id: '${perspectiveName}',
-	name: '${perspectiveName}',
+	name: '${perspectiveLabel}',
 	link: '/services/web/${projectName}/gen/ui/${perspectiveName}/index.html',
 	order: ${perspectiveOrder},
 	icon: '${perspectiveIcon}',

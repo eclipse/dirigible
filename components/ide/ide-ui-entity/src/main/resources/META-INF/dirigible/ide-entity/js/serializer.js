@@ -44,6 +44,7 @@ function createModel(graph) {
 				'" layoutType="' + _.escape(child.value.layoutType) +
 				'" navigationPath="' + _.escape(child.value.navigationPath) +
 				'" perspectiveName="' + _.escape(child.value.perspectiveName) +
+				'" perspectiveLabel="' + getPerspectiveLabel(graph, child) +
 				'" perspectiveIcon="' + getPerspectiveIcon(graph, child) +
 				'" perspectiveOrder="' + getPerspectiveOrder(graph, child) +
 				'" perspectiveRole="' + getPerspectiveRole(graph, child) + '"';
@@ -191,6 +192,9 @@ function createModel(graph) {
 					if (property.relationshipEntityPerspectiveName !== null) {
 						model.push(' relationshipEntityPerspectiveName="' + _.escape(property.relationshipEntityPerspectiveName) + '"');
 					}
+					if (property.relationshipEntityPerspectiveLabel !== null) {
+						model.push(' relationshipEntityPerspectiveLabel="' + _.escape(property.relationshipEntityPerspectiveLabel) + '"');
+					}
 
 					model.push('></property>\n');
 				}
@@ -203,6 +207,7 @@ function createModel(graph) {
 			model.push('entity="' + _.escape(child.source.parent.value.name) + '" ');
 			model.push('relationName="' + _.escape(relationName) + '" ');
 			model.push('relationshipEntityPerspectiveName="' + _.escape(child.target.parent.value.perspectiveName) + '" ');
+			model.push('relationshipEntityPerspectiveLabel="' + _.escape(child.target.parent.value.perspectiveLabel) + '" ');
 			model.push('property="' + _.escape(child.source.value.name) + '" ' +
 				'referenced="' + _.escape(child.target.parent.value.name) + '" ' +
 				'referencedProperty="' + _.escape(child.target.value.name) + '">\n');
@@ -254,6 +259,18 @@ function createModel(graph) {
 	}
 
 	return model.join('');
+}
+
+function getPerspectiveLabel(graph, child) {
+	let perspectiveName = _.escape(child.value.perspectiveName);
+	let perspectiveLabel = _.escape(child.value.perspectiveLabel);
+	let perspectives = graph.getModel().perspectives || [];
+	for (let i = 0; i < perspectives.length; i++) {
+		if (perspectiveName === _.escape(perspectives[i].id)) {
+			perspectiveLabel = perspectives[i].label;
+		}
+	}
+	return perspectiveLabel;
 }
 
 function getPerspectiveIcon(graph, child) {

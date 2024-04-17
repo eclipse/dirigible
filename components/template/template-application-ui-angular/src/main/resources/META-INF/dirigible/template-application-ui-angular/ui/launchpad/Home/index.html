@@ -25,9 +25,7 @@
 			<fd-panel fixed="true" ng-repeat="group in groups">
 				<fd-panel-header>
 					<fd-panel-expand></fd-panel-expand>
-					<h4 fd-panel-title style="text-transform: capitalize;">
-						{{group.replaceAll('-', ' ').replaceAll('_', ' ')}}
-					</h4>
+					<h4 fd-panel-title >{{group}}</h4>
 				</fd-panel-header>
 				<fd-panel-content class="dg-no-border-bottom" aria-label="Panel Content">
 					<div class="fd-container">

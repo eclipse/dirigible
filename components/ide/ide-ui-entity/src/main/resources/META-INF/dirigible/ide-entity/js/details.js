@@ -148,6 +148,7 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
                         menuIndex: $scope.dataParameters.menuIndex,
                         layoutType: $scope.dataParameters.layoutType,
                         perspectiveName: $scope.dataParameters.perspectiveName,
+                        perspectiveLabel: $scope.dataParameters.perspectiveLabel,
                         navigationPath: $scope.dataParameters.navigationPath,
                         feedUrl: $scope.dataParameters.feedUrl,
                         feedUsername: $scope.dataParameters.feedUsername,
