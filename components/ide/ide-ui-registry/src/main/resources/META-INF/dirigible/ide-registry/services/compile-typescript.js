@@ -12,22 +12,30 @@
 import { workspace as workspaceManager } from "sdk/platform"
 import { command, os } from "sdk/platform";
 
-const workspace = __context.get('workspace');
-const project = __context.get('project');
 const path = __context.get('path');
 
 if (path && path.endsWith(".ts")) {
+    const pathTokens = path.split("/");
+    const workspace = pathTokens[3];
+    const project = pathTokens[4];
     const file = workspaceManager
         .getWorkspace(workspace)
         .getProject(project)
         .getFile("tsconfig.json");
-    console.log(`On Save for "${path}\n\n${file.getText()}`);
-    const filePath = path.substring(1);
+
+    console.log(`After Publish for "${path}\n\n${file.getText()}`);
+
+    const filePath = pathTokens.slice(5).join("/")
     const compileCommand = `tsc --module ESNext --target ES6 --moduleResolution Node --baseUrl ../ --lib ESNext,DOM --types ../modules/types ${filePath}`;
     const workingDirectory = `target/dirigible/repository/root/registry/public/${project}`;
-    console.error(`Command: "${compileCommand}"`);
-    const commandResult = command.execute(compileCommand, {
-        workingDirectory: workingDirectory
-    });
-    console.error(`Command Result: "${commandResult}"`);
+    // console.error(`Command: "${compileCommand}"`);
+    try {
+        command.execute(compileCommand, {
+            workingDirectory: workingDirectory
+        });
+        // console.error(`Command Result: "${commandResult}"`);
+
+    } catch (e) {
+        console.info(`Error occurred: ${e}`);
+    }
 }
