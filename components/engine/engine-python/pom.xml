@@ -33,6 +33,13 @@
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-graalium-execution-core</artifactId>
         </dependency>
+        
+        <dependency>
+			<groupId>org.graalvm.polyglot</groupId>
+			<artifactId>python-community</artifactId>
+			<version>${graalvm.version}</version>
+			<type>pom</type>
+		</dependency>
 
     </dependencies>
 

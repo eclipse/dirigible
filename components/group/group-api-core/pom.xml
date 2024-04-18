@@ -41,10 +41,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-api-modules-python</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-log</artifactId>
 		</dependency>
 		<dependency>
@@ -58,10 +54,6 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-security</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-api-pdf</artifactId>
 		</dependency>
     </dependencies>
 
