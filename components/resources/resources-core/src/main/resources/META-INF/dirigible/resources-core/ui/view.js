@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2024 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2024 Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2024 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('ideView', ['ngResource', 'ideExtensions', 'ideTheming'])
@@ -31,8 +31,7 @@ angular.module('ideView', ['ngResource', 'ideExtensions', 'ideTheming'])
                 return response;
             }
         };
-    })
-    .factory('Views', ['Extensions', 'extensionPoint', function (Extensions, extensionPoint) {
+    }).factory('Views', ['Extensions', 'extensionPoint', function (Extensions, extensionPoint) {
         let cachedViews;
         let cachedSubviews;
         let get = function () {
@@ -99,11 +98,9 @@ angular.module('ideView', ['ngResource', 'ideExtensions', 'ideTheming'])
             get: get,
             getSubviews: getSubviews
         };
-    }])
-    .config(['$httpProvider', function ($httpProvider) {
+    }]).config(['$httpProvider', function ($httpProvider) {
         $httpProvider.interceptors.push('baseHttpInterceptor');
-    }])
-    .factory('ViewParameters', ['$window', function ($window) {
+    }]).factory('ViewParameters', ['$window', function ($window) {
         return {
             get: function () {
                 if ($window.frameElement && $window.frameElement.hasAttribute("data-parameters")) {
@@ -112,8 +109,7 @@ angular.module('ideView', ['ngResource', 'ideExtensions', 'ideTheming'])
                 return {};
             }
         };
-    }])
-    .service('Subviews', ['Views', function (Views) {
+    }]).service('Subviews', ['Views', function (Views) {
         return {
             getIdList: function (startsWith) {
                 return new Promise((resolve, reject) => {
@@ -139,8 +135,7 @@ angular.module('ideView', ['ngResource', 'ideExtensions', 'ideTheming'])
                 });
             }
         };
-    }])
-    .directive('embeddedView', ['Views', 'view', function (Views, view) {
+    }]).directive('embeddedView', ['Views', 'view', function (Views, view) {
         /**
          * viewId: String - ID of the view you want to show.
          * params: JSON - JSON object containing extra parameters/data.
@@ -198,8 +193,7 @@ angular.module('ideView', ['ngResource', 'ideExtensions', 'ideTheming'])
             },
             template: '<iframe loading="{{loadType}}" ng-src="{{path}}" data-parameters="{{getParams()}}"></iframe>'
         }
-    }])
-    .directive('dgContextmenu', ['messageHub', '$window', function (messageHub, $window) {
+    }]).directive('dgContextmenu', ['messageHub', '$window', function (messageHub, $window) {
         return {
             restrict: 'A',
             replace: false,
@@ -252,6 +246,16 @@ angular.module('ideView', ['ngResource', 'ideExtensions', 'ideTheming'])
                                 callbackTopic: menu.callbackTopic,
                                 hasIcons: menu.hasIcons || false,
                                 items: menu.items
+                            },
+                            true
+                        );
+                        const onCloseHandler = messageHub.onDidReceiveMessage(
+                            'ide-contextmenu.close',
+                            function () {
+                                if ($window.frameElement) {
+                                    $window.frameElement.contentWindow.focus();
+                                }
+                                messageHub.unsubscribe(onCloseHandler);
                             },
                             true
                         );

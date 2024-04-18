@@ -1,12 +1,13 @@
 /*
- * Copyright (c) 2010-2024 SAP and others.
+ * Copyright (c) 2024 Eclipse Dirigible contributors
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * Contributors:
- *   SAP - initial API and implementation
+ * SPDX-FileCopyrightText: Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
  */
 /*
  * Provides key microservices for constructing and managing the IDE UI
@@ -112,7 +113,8 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideExtensions', 'i
                         submenusLinks[i].setAttribute("aria-expanded", false);
                         submenusLinks[i].classList.remove("is-expanded");
                     }
-                }
+                    messageHub.triggerEvent('ide-contextmenu.close', true);
+                };
 
                 scope.menuHovered = function () {
                     if (openedMenuId !== "") {
