@@ -93,14 +93,17 @@
 
 	<properties>
 		<project.title>Eclipse Dirigible</project.title>
-
+		
+		<!-- Encoding -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+		<!-- Java -->
 		<java.version>17</java.version>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 
+		<!-- Maven -->
 		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
 		<maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
 		<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
@@ -114,47 +117,78 @@
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<license-maven-plugin.version>4.3</license-maven-plugin.version>
 
+		<!-- Spring -->
 		<spring.boot.version>3.2.4</spring.boot.version>
 		<springdoc.version>2.5.0</springdoc.version>
+		
+		<!-- Webjars -->
+		<webjars.bootstrap.version>5.3.2</webjars.bootstrap.version>
+		<webjars.locator.version>0.52</webjars.locator.version>
+		<webjars.locator.core.version>0.58</webjars.locator.core.version>
 
+		<!-- GraalVM -->
 		<graalvm.version>23.1.1</graalvm.version>
 
+		<!-- Commons -->
 		<commons.io>2.16.1</commons.io>
 		<commons.lang3>3.14.0</commons.lang3>
 		<commons.exec>1.4.0</commons.exec>
-		<lucene.version>9.10.0</lucene.version>
-		<chemistry.version>1.1.0</chemistry.version>
-		<jgit.version>6.9.0.202403050737-r</jgit.version>
-		<olingo.version>3.1.3</olingo.version>
-
 		<commons-csv.version>1.10.0</commons-csv.version>
-		<c3p0.version>0.10.0-pre7</c3p0.version>
-		<guava.version>33.1.0-jre</guava.version>
-		<icu4j.version>74.2</icu4j.version>
-		<classgraph.version>4.8.170</classgraph.version>
-
+		
+		<!-- Lucene -->
+		<lucene.version>9.10.0</lucene.version>
+		
+		<!-- Chemistry -->
+		<chemistry.version>1.1.0</chemistry.version>
+		
+		<!-- Olingo -->
+		<olingo.version>3.1.3</olingo.version>
+		
+		<!-- FTP -->
 		<mina-core.version>2.2.3</mina-core.version>
 		<sshd-core.version>2.12.1</sshd-core.version>
 		<ftpserver.version>1.2.0</ftpserver.version>
-
+		
+		<!-- ActiveMQ -->
 		<activemq.version>6.1.0</activemq.version>
+		
+		<!-- Camel -->
+		<camel.version>4.5.0</camel.version>
+		
+		<!-- Velocity -->
+		<velocity.version>2.3</velocity.version>
+		
+		<!-- JGit -->
+		<jgit.version>6.9.0.202403050737-r</jgit.version>
 
+		<!-- Flowable -->
 		<flowable.version>6.8.1</flowable.version>
 
-		<camel.version>4.5.0</camel.version>
-
-		<velocity.version>2.3</velocity.version>
+		<!-- Wiki -->
 		<wikitext.version>3.0.48.202308291007</wikitext.version>
 		<flexmark.version>0.64.8</flexmark.version>
 
+		<!-- JDBC -->
 		<mongodb.version>3.12.14</mongodb.version>
 		<ngdbc.version>2.20.17</ngdbc.version>
 		<snowflake.version>3.13.34</snowflake.version>
 		<mysql.version>8.3.0</mysql.version>
+		
+		<!-- QLDB -->
 		<qldb.driver.version>2.3.1</qldb.driver.version>
 		<qldb.sdk.version>1.12.698</qldb.sdk.version>
+		
+		<!-- jETCD -->
 		<jetcd.core.version>0.7.7</jetcd.core.version>
+		
+		<!-- Various -->
+		<c3p0.version>0.10.0-pre7</c3p0.version>
+		<guava.version>33.1.0-jre</guava.version>
+		<icu4j.version>74.2</icu4j.version>
+		<classgraph.version>4.8.170</classgraph.version>
+		<logcaptor.version>2.9.2</logcaptor.version>
 
+		<!-- UI -->
 		<jquery-ui.version>1.13.0</jquery-ui.version>
 		<sap-theming__theming-base-content.version>11.7.0</sap-theming__theming-base-content.version>
 		<chart.js.version>4.4.2</chart.js.version>
@@ -168,32 +202,15 @@
 		<jstree.version>3.3.12</jstree.version>
 		<jquery.version>3.6.0</jquery.version>
 		<jqplot.version>1.0.8r1250</jqplot.version>
-		<webjars.bootstrap.version>5.3.2</webjars.bootstrap.version>
-		<webjars.locator.version>0.52</webjars.locator.version>
-		<webjars.locator.core.version>0.58</webjars.locator.core.version>
 		<es5-shim.version>4.6.7</es5-shim.version>
 		<angular-file-upload.version>2.6.1</angular-file-upload.version>
 		<angularjs.version>1.8.2</angularjs.version>
 		<fontawesome.version>4.7.0</fontawesome.version>
 
+		<!-- Tests -->
 		<testcontainers.version>1.19.7</testcontainers.version>
-		<logcaptor.version>2.9.2</logcaptor.version>
 
 		<profile.content.phase>none</profile.content.phase>
-
-		<content.scm.url>
-			https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
-		<content.scm.connection>
-			scm:git:https://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
-		<content.scm.developerConnection>
-			scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
-		<content.repository.branch>master</content.repository.branch>
-
-		<content.scm.server>github</content.scm.server>
-		<content.scm.checkoutDirectory>target</content.scm.checkoutDirectory>
-		<content.source.directory>target/${content.project.name}</content.source.directory>
-		<content.output.directory>
-			${basedir}/src/main/resources/META-INF/dirigible/${content.project.name}</content.output.directory>
 
 		<license.header.location>licensing-header.txt</license.header.location>
 
