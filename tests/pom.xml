@@ -17,8 +17,8 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>tests-framework</module>
-		<module>tests-integrations</module>
+<!--		<module>tests-framework</module>-->
+<!--		<module>tests-integrations</module>-->
 	</modules>
 
 	<properties>

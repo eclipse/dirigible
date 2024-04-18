@@ -33,6 +33,11 @@
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-graalium-execution-core</artifactId>
         </dependency>
+
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-core-tracing</artifactId>
+		</dependency>
     	
     </dependencies>
 

@@ -18,6 +18,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.micrometer.observation.NullObservation;
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationRegistry;
+import io.micrometer.tracing.Span;
+import io.micrometer.tracing.Tracer;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
@@ -65,6 +71,9 @@ public class JavascriptEndpoint extends BaseEndpoint {
     /** The repository. */
     private final IRepository repository;
 
+    private final Tracer tracer;
+    private final ObservationRegistry observationRegistry;
+
     /** The source provider. */
     private final JavascriptSourceProvider sourceProvider = new DirigibleSourceProvider();
 
@@ -75,9 +84,12 @@ public class JavascriptEndpoint extends BaseEndpoint {
      * @param repository the repository
      */
     @Autowired
-    public JavascriptEndpoint(JavascriptService javascriptService, IRepository repository) {
+    public JavascriptEndpoint(JavascriptService javascriptService, IRepository repository, Tracer tracer,
+            ObservationRegistry observationRegistry) {
         this.javascriptService = javascriptService;
         this.repository = repository;
+        this.tracer = tracer;
+        this.observationRegistry = observationRegistry;
     }
 
     /**
@@ -117,6 +129,21 @@ public class JavascriptEndpoint extends BaseEndpoint {
     @GetMapping(HTTP_PATH_MATCHER)
     public ResponseEntity<?> get(@PathVariable("projectName") String projectName, @PathVariable("projectFilePath") String projectFilePath,
             @Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
+        Span newSpan = this.tracer.nextSpan()
+                                  .name("executeJS");
+        try (Tracer.SpanInScope ws = this.tracer.withSpan(newSpan.start())) {
+            newSpan.tag("js-execution", projectFilePath);
+            newSpan.event("js-get");
+        } finally {
+            newSpan.end();
+        }
+
+        new NullObservation(observationRegistry)
+            .observe(() -> Observation.start("execute-js-endpoint", observationRegistry)
+                .observe(() -> {
+                    tracer.nextSpan().name("run-js").tag("file", projectFilePath).start().end();
+                }));
+
         return executeJavaScript(projectName, projectFilePath, params, null);
     }
 
