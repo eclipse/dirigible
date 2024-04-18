@@ -100,7 +100,8 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideExtensions', 'i
                         submenusLinks[i].setAttribute("aria-expanded", false);
                         submenusLinks[i].classList.remove("is-expanded");
                     }
-                }
+                    messageHub.triggerEvent('ide-contextmenu.close', true);
+                };
 
                 scope.menuHovered = function () {
                     if (openedMenuId !== "") {

@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2024 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2024 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let projectsView = angular.module('projects', ['ideUI', 'ideView', 'ideEditors', 'ideWorkspace', 'idePublisher', 'ideTemplates', 'ideGenerate', 'ideTransport', 'ideActions']);
+const projectsView = angular.module('projects', ['ideUI', 'ideView', 'ideEditors', 'ideWorkspace', 'idePublisher', 'ideTemplates', 'ideGenerate', 'ideTransport', 'ideActions']);
 
 projectsView.controller('ProjectsViewController', [
     '$scope',
@@ -21,6 +21,7 @@ projectsView.controller('ProjectsViewController', [
     'generateApi',
     'transportApi',
     'actionsApi',
+    'platform',
     function (
         $scope,
         messageHub,
@@ -31,6 +32,7 @@ projectsView.controller('ProjectsViewController', [
         generateApi,
         transportApi,
         actionsApi,
+        platform
     ) {
         $scope.state = {
             isBusy: true,
@@ -76,55 +78,32 @@ projectsView.controller('ProjectsViewController', [
 
         $scope.jstreeWidget = angular.element('#dgProjects');
         $scope.spinnerObj = {
-            text: "Loading...",
-            type: "spinner",
+            text: 'Loading...',
+            type: 'spinner',
             li_attr: { spinner: true },
         };
         $scope.jstreeConfig = {
             core: {
                 check_callback: true,
                 themes: {
-                    name: "fiori",
-                    variant: "compact",
+                    name: 'fiori',
+                    variant: 'compact',
                 },
-                data: function (node, cb) {
+                data: function (_node, cb) {
                     cb($scope.projects);
                 },
-                keyboard: {
-                    'enter': function (e) {
-                        e.type = "dblclick";
-                        $(e.currentTarget).trigger(e);
-                    },
-                    'f2': function (e) {
-                        e.preventDefault();
-                        $scope.renameNodeData = $scope.jstreeWidget.jstree(true).get_node(e.target.id);
-                        openRenameDialog();
-                    },
-                    'delete': function () {
-                        let nodes = $scope.jstreeWidget.jstree(true).get_selected(true);
-                        if (nodes.length === 1) openDeleteDialog(nodes[0]);
-                        else if (nodes.length > 1) openDeleteDialog(nodes);
-                    },
-                    'ctrl+c': function (e) {
-                        $scope.jstreeWidget.jstree(true).copy($scope.jstreeWidget.jstree(true).get_node(e.target.id));
-                    },
-                    'ctrl+x': function (e) {
-                        $scope.jstreeWidget.jstree(true).cut($scope.jstreeWidget.jstree(true).get_node(e.target.id));
-                    },
-                    'ctrl+v': function (e) {
-                        if ($scope.jstreeWidget.jstree(true).can_paste()) {
-                            let parent = $scope.jstreeWidget.jstree(true).get_node(e.target.id);
-                            if (parent.type === 'folder' || parent.type === 'project') {
-                                $scope.jstreeWidget.jstree(true).paste(parent);
-                            }
-                        }
-                    },
-                },
+                keyboard: { // We have to have this, in order to disable the default behavior.
+                    'enter': function () { },
+                    'f2': function () { },
+                    // 'down': function (e) {
+                    //     console.log(e)
+                    // }
+                }
             },
             search: {
                 case_sensitive: false,
             },
-            plugins: ["wholerow", "dnd", "search", "state", "types", "indicator"],
+            plugins: ['wholerow', 'dnd', 'search', 'state', 'types', 'indicator'],
             dnd: {
                 large_drop_target: true,
                 large_drag_target: true,
@@ -138,32 +117,88 @@ projectsView.controller('ProjectsViewController', [
             state: { key: 'ide-projects' },
             types: {
                 '#': {
-                    valid_children: ["project"]
+                    valid_children: ['project']
                 },
-                "default": {
-                    icon: "sap-icon--question-mark",
+                'default': {
+                    icon: 'sap-icon--question-mark',
                     valid_children: [],
                 },
                 file: {
-                    icon: "jstree-file",
+                    icon: 'jstree-file',
                     valid_children: [],
                 },
                 folder: {
-                    icon: "jstree-folder",
+                    icon: 'jstree-folder',
                     valid_children: ['folder', 'file', 'spinner'],
                 },
                 project: {
-                    icon: "jstree-project",
+                    icon: 'jstree-project',
                     valid_children: ['folder', 'file', 'spinner'],
                 },
                 spinner: {
-                    icon: "jstree-spinner",
+                    icon: 'jstree-spinner',
                     valid_children: [],
                 },
             },
         };
 
-        $scope.jstreeWidget.on('select_node.jstree', function (event, data) {
+        $scope.keyboardShortcuts = function (keySet, event) {
+            event.preventDefault();
+            let nodes;
+            switch (keySet) {
+                case 'enter':
+                    const focused = $scope.jstreeWidget.jstree(true).get_node(document.activeElement);
+                    if (focused && !focused.state.selected) {
+                        $scope.jstreeWidget.jstree(true).deselect_all();
+                        $scope.jstreeWidget.jstree(true).select_node(focused);
+                        openFile(focused);
+                    } else {
+                        nodes = $scope.jstreeWidget.jstree(true).get_selected(true);
+                        for (let i = 0; i < nodes.length; i++) {
+                            if (nodes[i].type === 'file') {
+                                openFile(nodes[0]);
+                            } else if (nodes[i].type === 'folder' || nodes[i].type === 'project') {
+                                if (nodes[i].state.opened) $scope.jstreeWidget.jstree(true).close_node(nodes[i]);
+                                else $scope.jstreeWidget.jstree(true).open_node(nodes[i]);
+                            }
+                        }
+                    }
+                    break;
+                case 'f2':
+                    nodes = $scope.jstreeWidget.jstree(true).get_selected(true);
+                    if (nodes.length < 2) {
+                        $scope.renameNodeData = nodes[0];
+                        openRenameDialog();
+                    }
+                    break;
+                case 'delete':
+                case 'meta+backspace':
+                    nodes = $scope.jstreeWidget.jstree(true).get_top_selected(true);
+                    if (nodes.length === 1) openDeleteDialog(nodes[0]);
+                    else if (nodes.length > 1) openDeleteDialog(nodes);
+                    break;
+                case 'ctrl+c':
+                    nodes = $scope.jstreeWidget.jstree(true).get_top_selected(true);
+                    $scope.jstreeWidget.jstree(true).copy(nodes);
+                    break;
+                case 'ctrl+x':
+                    nodes = $scope.jstreeWidget.jstree(true).get_top_selected(true);
+                    $scope.jstreeWidget.jstree(true).cut(nodes[0]);
+                    break;
+                case 'ctrl+v':
+                    nodes = $scope.jstreeWidget.jstree(true).get_selected(true);
+                    if (nodes.length === 1 && $scope.jstreeWidget.jstree(true).can_paste()) {
+                        if (nodes[0].type === 'folder' || nodes[0].type === 'project') {
+                            $scope.jstreeWidget.jstree(true).paste(nodes[0]);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        };
+
+        $scope.jstreeWidget.on('select_node.jstree', function (_event, data) {
             if (data.event && data.event.type === 'click' && data.node.type === 'file') {
                 messageHub.announceFileSelected({
                     name: data.node.text,
@@ -180,6 +215,50 @@ projectsView.controller('ProjectsViewController', [
                 openFile(node);
             }
         });
+
+        $scope.tstCopy = function () {
+            workspaceApi.copy(
+                ['/1test/index.html', '/1test/view.js'],
+                '/1test/test',
+                'workspace',
+                'workspace',
+            ).then(function (response) {
+                if (response.status === 201) {
+                    $scope.reloadWorkspace();
+                } else {
+                    console.log(response);
+                }
+            });
+        };
+
+        // $scope.jstreeWidget.on('paste.jstree', function (_event, pasteObj) {
+        //     console.log(_event, pasteObj);
+        //     if (pasteObj.mode === 'copy_node') {
+        //         const parent = $scope.jstreeWidget.jstree(true).get_node(pasteObj.parent);
+        //         const spinnerId = showSpinner(parent);
+        //         const targetWorkspace = parent.data.workspace;
+        //         const sourceWorkspace = pasteObj.node[0].data.workspace;
+        //         const targetPath = (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/');
+        //         let copyArray = [];
+        //         for (let i = 0; i < pasteObj.node.length; i++) {
+        //             copyArray.push(targetPath + pasteObj.node[i].text);
+        //         }
+        //         workspaceApi.copy(
+        //             copyArray,
+        //             targetPath,
+        //             sourceWorkspace,
+        //             targetWorkspace,
+        //         ).then(function (response) {
+        //             if (response.status === 201) {
+        //                 console.log(response);
+        //                 // $scope.reloadWorkspace();
+        //             } else {
+        //                 console.log(response);
+        //             }
+        //             hideSpinner(spinnerId);
+        //         });
+        //     }
+        // });
 
         $scope.jstreeWidget.on('copy_node.jstree', function (event, copyObj) {
             if (!copyObj.node.state.failedCopy) {
@@ -220,7 +299,57 @@ projectsView.controller('ProjectsViewController', [
             } else delete copyObj.node.state.failedCopy;
         });
 
-        $scope.jstreeWidget.on('move_node.jstree', function (event, moveObj) {
+        // $scope.jstreeWidget.on('copy_node.jstree', function (_event, copyObj) {
+        //     if (!copyObj.node.state.failedCopy) {
+        //         $scope.jstreeWidget.jstree(true).hide_node(copyObj.node);
+        //         const parent = $scope.jstreeWidget.jstree(true).get_node(copyObj.parent);
+        //         const spinnerId = showSpinner(parent);
+        //         let workspace;
+        //         let path;
+        //         workspace = parent.data.workspace;
+        //         path = (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/');
+        //         const buffer = $scope.jstreeWidget.jstree(true).get_buffer();
+        //         $scope.jstreeWidget.jstree(true).clear_buffer();
+        //         let copyArray = [];
+        //         const targetWorkspace = copyObj.original.data.workspace;
+        //         if (buffer.node.length) {
+        //             for (let i = 0; i < buffer.node.length; i++) {
+        //                 copyArray.push(path + buffer.node[i].text);
+        //             }
+        //         } else {
+        //             copyObj.node.data = {
+        //                 path: path + copyObj.node.text,
+        //                 contentType: copyObj.original.data.contentType,
+        //                 workspace: workspace,
+        //             };
+        //         }
+        //         copyArray.push(copyObj.original.data.path);
+        //         workspaceApi.copy(
+        //             copyObj.original.data.path,
+        //             path,
+        //             targetWorkspace,
+        //             workspace,
+        //         ).then(function (response) {
+        //             if (response.status === 201) {
+        //                 for (let i = 0; i < parent.children.length; i++) { // Temp solution
+        //                     const node = $scope.jstreeWidget.jstree(true).get_node(parent.children[i]);
+        //                     if (node.text === copyObj.node.text && node.id !== copyObj.node.id) {
+        //                         $scope.reloadWorkspace();
+        //                         return;
+        //                     }
+        //                 }
+        //                 $scope.jstreeWidget.jstree(true).show_node(copyObj.node);
+        //             } else {
+        //                 copyObj.node.state.failedCopy = true;
+        //                 messageHub.setStatusError(`Unable to copy '${copyObj.node.text}'.`);
+        //                 $scope.jstreeWidget.jstree(true).delete_node(copyObj.node);
+        //             }
+        //             hideSpinner(spinnerId);
+        //         });
+        //     } else delete copyObj.node.state.failedCopy;
+        // });
+
+        $scope.jstreeWidget.on('move_node.jstree', function (_event, moveObj) {
             function failedToMove(showAlert = true) {
                 moveObj.node.state.failedMove = true;
                 if (showAlert)
@@ -377,7 +506,7 @@ projectsView.controller('ProjectsViewController', [
             if ($scope.jstreeWidget[0].contains(element)) {
                 let id;
                 if (element.tagName !== "LI") {
-                    let closest = element.closest("li");
+                    const closest = element.closest("li");
                     if (closest) {
                         id = closest.id;
                     } else {
@@ -416,14 +545,14 @@ projectsView.controller('ProjectsViewController', [
                     id = element.id;
                 }
                 if (id) {
-                    let node = $scope.jstreeWidget.jstree(true).get_node(id);
+                    const node = $scope.jstreeWidget.jstree(true).get_node(id);
                     if (!node.state.selected) {
                         $scope.jstreeWidget.jstree(true).deselect_all();
                         $scope.jstreeWidget.jstree(true).select_node(node, false, true);
                     }
                     let nodes = $scope.jstreeWidget.jstree(true).get_selected(false);
                     if (nodes.length === 1) nodes.length = 0;
-                    let newSubmenu = {
+                    const newSubmenu = {
                         id: "new",
                         label: "New",
                         icon: "sap-icon--create",
@@ -445,30 +574,30 @@ projectsView.controller('ProjectsViewController', [
                             },
                         }]
                     };
-                    let cutObj = {
+                    const cutObj = {
                         id: "cut",
                         label: "Cut",
-                        shortcut: "Ctrl+X",
+                        shortcut: platform.isMac ? '⌘X' : 'Ctrl+X',
                         divider: true,
                         icon: "sap-icon--scissors",
                         data: node,
                     };
-                    let copyObj = {
+                    const copyObj = {
                         id: "copy",
                         label: "Copy",
-                        shortcut: "Ctrl+C",
+                        shortcut: platform.isMac ? '⌘C' : 'Ctrl+C',
                         icon: "sap-icon--copy",
                         data: node,
                     };
-                    let pasteObj = {
+                    const pasteObj = {
                         id: "paste",
                         label: "Paste",
-                        shortcut: "Ctrl+V",
+                        shortcut: platform.isMac ? '⌘V' : 'Ctrl+V',
                         icon: "sap-icon--paste",
-                        isDisabled: !$scope.jstreeWidget.jstree(true).can_paste(),
+                        isDisabled: !$scope.jstreeWidget.jstree(true).can_paste() || nodes.length > 1,
                         data: node,
                     };
-                    let renameObj = {
+                    const renameObj = {
                         id: "rename",
                         label: "Rename",
                         shortcut: "F2",
@@ -476,10 +605,10 @@ projectsView.controller('ProjectsViewController', [
                         icon: "sap-icon--edit",
                         data: node,
                     };
-                    let deleteObj = {
+                    const deleteObj = {
                         id: "delete",
                         label: (nodes.length) ? `Delete ${nodes.length} items` : "Delete",
-                        shortcut: "Del",
+                        shortcut: platform.isMac ? '⌘⌫' : 'Del',
                         icon: "sap-icon--delete",
                         data: (nodes.length) ? nodes : node,
                     };
@@ -520,14 +649,14 @@ projectsView.controller('ProjectsViewController', [
                             data: node,
                         };
                     }
-                    let importObj = {
+                    const importObj = {
                         id: "import",
                         label: "Import",
                         icon: "sap-icon--attachment",
                         divider: true,
                         data: node,
                     };
-                    let importZipObj = {
+                    const importZipObj = {
                         id: "importZip",
                         label: "Import from zip",
                         icon: "sap-icon--attachment-zip-file",
@@ -1313,7 +1442,7 @@ projectsView.controller('ProjectsViewController', [
         }
 
         function openDeleteDialog(selected) {
-            let isMultiple = Array.isArray(selected);
+            const isMultiple = Array.isArray(selected);
             messageHub.showDialogAsync(
                 (isMultiple) ? `Delete ${selected.length} items?` : `Delete '${selected.text}'?`,
                 'This action cannot be undone. It is recommended that you unpublish and delete.',
