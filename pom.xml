@@ -179,7 +179,7 @@
 		<qldb.sdk.version>1.12.698</qldb.sdk.version>
 		
 		<!-- jETCD -->
-		<jetcd.core.version>0.7.7</jetcd.core.version>
+		<jetcd.core.version>0.8.0</jetcd.core.version>
 		
 		<!-- Various -->
 		<c3p0.version>0.10.0-pre7</c3p0.version>
