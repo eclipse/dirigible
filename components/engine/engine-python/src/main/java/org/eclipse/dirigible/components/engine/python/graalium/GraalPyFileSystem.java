@@ -7,7 +7,7 @@
  *
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.graalium.core.python;
+package org.eclipse.dirigible.components.engine.python.graalium;
 
 import org.graalvm.polyglot.io.FileSystem;
 

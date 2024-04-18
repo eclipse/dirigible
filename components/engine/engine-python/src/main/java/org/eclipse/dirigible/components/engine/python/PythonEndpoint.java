@@ -13,8 +13,8 @@ import static org.eclipse.dirigible.graalium.core.graal.ValueTransformer.transfo
 import java.io.File;
 import java.nio.file.Path;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
+import org.eclipse.dirigible.components.engine.python.graalium.GraalPyCodeRunner;
 import org.eclipse.dirigible.graalium.core.modules.DirigibleSourceProvider;
-import org.eclipse.dirigible.graalium.core.python.GraalPyCodeRunner;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;

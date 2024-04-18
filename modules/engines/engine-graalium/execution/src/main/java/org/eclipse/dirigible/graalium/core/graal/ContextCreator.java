@@ -9,7 +9,12 @@
  */
 package org.eclipse.dirigible.graalium.core.graal;
 
+import java.nio.file.Path;
+import java.util.ServiceLoader;
+import java.util.function.Consumer;
+
 import org.eclipse.dirigible.graalium.core.graal.configuration.Configuration;
+import org.eclipse.dirigible.graalium.core.python.PythonCodeRunner;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.EnvironmentAccess;
@@ -18,9 +23,6 @@ import org.graalvm.polyglot.io.FileSystem;
 import org.graalvm.polyglot.io.IOAccess;
 
 import jakarta.annotation.Nullable;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.util.function.Consumer;
 
 public class ContextCreator {
 
@@ -31,6 +33,11 @@ public class ContextCreator {
     private final @Nullable Consumer<Context.Builder> onBeforeContextCreatedHook;
     private final @Nullable Consumer<Context> onAfterContextCreatedHook;
     private final FileSystem fileSystem;
+
+    /** The Constant PYTHON_ENABLED. */
+    private static final boolean PYTHON_ENABLED = ServiceLoader.load(PythonCodeRunner.class)
+                                                               .iterator()
+                                                               .hasNext();
 
     public ContextCreator(Engine engine, Path workingDirectoryPath, Path projectDirectoryPath, Path pythonModulesPath,
             FileSystem fileSystem) {
@@ -69,9 +76,12 @@ public class ContextCreator {
                                                 .option("js.operator-overloading", "true")
                                                 .option("js.intl-402", "true")
                                                 .option("js.ecmascript-version", "staging")
-                                                .option("js.esm-eval-returns-exports", "true")
-                                                .option("python.PythonPath", createPythonPath())
-                                                .option("python.ForceImportSite", "true");
+                                                .option("js.esm-eval-returns-exports", "true");
+
+        if (PYTHON_ENABLED) {
+            contextBuilder.option("python.PythonPath", createPythonPath())
+                          .option("python.ForceImportSite", "true");
+        }
 
         if (onBeforeContextCreatedHook != null) {
             onBeforeContextCreatedHook.accept(contextBuilder);

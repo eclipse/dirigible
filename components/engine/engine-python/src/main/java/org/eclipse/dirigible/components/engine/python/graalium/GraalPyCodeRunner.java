@@ -7,7 +7,7 @@
  *
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.graalium.core.python;
+package org.eclipse.dirigible.components.engine.python.graalium;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -16,11 +16,12 @@ import java.nio.file.Path;
 import org.eclipse.dirigible.graalium.core.CodeRunner;
 import org.eclipse.dirigible.graalium.core.graal.ContextCreator;
 import org.eclipse.dirigible.graalium.core.graal.EngineCreator;
+import org.eclipse.dirigible.graalium.core.python.PythonCodeRunner;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 
-public class GraalPyCodeRunner implements CodeRunner<Source, Value> {
+public class GraalPyCodeRunner implements CodeRunner<Source, Value>, PythonCodeRunner {
     private final Context context;
 
     public GraalPyCodeRunner(Path workingDirectoryPath, Path projectDirectoryPath, Path pythonModulesPath, boolean debug) {
