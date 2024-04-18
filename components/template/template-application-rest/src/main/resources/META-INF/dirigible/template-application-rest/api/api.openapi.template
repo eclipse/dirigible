@@ -1,11 +1,51 @@
 openapi: 3.0.3
 info:
+#if($openApiTitle)
+  title: $openApiTitle - OpenAPI 3.0
+#elseif($title)
   title: $title - OpenAPI 3.0
-  description: $description
+#else
+  title: OpenAPI 3.0
+#end
+#if($openApiVersion)
+  version: $openApiVersion
+#else
   version: 1.0.0
+#end
+#if($openApiDescription)
+  description: $openApiDescription
+#elseif($description)
+  description: $description
+#else
+  description: REST API generated from an EDM model
+#end
+#if($openApiTermsOfService)
+  termsOfService: $openApiTermsOfService
+#end
+#if($openApiContactEmail || $openApiContactUrl)
+  contact:
+    name: API Support
+  #if($openApiContactEmail)
+    email: $openApiContactEmail
+  #end
+  #if($openApiContactUrl)
+    url: $openApiContactUrl
+  #end
+#end
+#if($openApiLicenseName && $openApiLicenseUrl)
+  license:
+    name: $openApiLicenseName
+    url: $openApiLicenseUrl
+#end
+#if($openApiExternalDocsDescription && $openApiExternalDocsUrl)
+externalDocs:
+  description: $openApiExternalDocsDescription
+  url: $openApiExternalDocsUrl
+#else
 externalDocs:
   description: Find out more about Eclipse Dirigible
   url: https://dirigible.io
+#end
 servers:
   - url: /services/ts
 tags:
@@ -205,12 +245,6 @@ paths:
             type: string
       tags:
         - $model.perspectiveName
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/$model.name'
-        required: true
       responses:
         204:
           description: Successful Request
@@ -459,23 +493,49 @@ components:
   schemas:
 #foreach($model in $models)
   #if($model.type != "PROJECTION")
+    #set($hasRequiredProperty = "false")
+    #foreach($property in $model.properties)
+      #if($property.isRequiredProperty)
+        #set($hasRequiredProperty = "true")
+      #end
+    #end
     $model.name:
       type: object
+    #if($hasRequiredProperty)
+      required:
+      #foreach($property in $model.properties)
+        #if($property.isRequiredProperty)
+        - ${property.name}
+        #end
+      #end
+    #end
       properties:
     #foreach($property in $model.properties)
         $property.name:
         #if($property.dataTypeJava == "short" || $property.dataTypeJava == "int")
           type: integer
           format: int32
+          #if($property.isCalculatedProperty)
+          readOnly: true
+          #end
         #elseif($property.dataTypeJava == "long")
           type: integer
           format: int64
+          #if($property.isCalculatedProperty)
+          readOnly: true
+          #end
         #elseif($property.dataTypeJava == "float")
           type: number
           format: float
+          #if($property.isCalculatedProperty)
+          readOnly: true
+          #end
         #elseif($property.dataTypeJava == "double")
           type: number
           format: double
+          #if($property.isCalculatedProperty)
+          readOnly: true
+          #end
         #elseif($property.dataTypeJava == "string")
           type: string
           minLength: 0
@@ -483,10 +543,19 @@ components:
           #if($property.widgetPattern)
           pattern: $property.widgetPattern
           #end
+          #if($property.isCalculatedProperty)
+          readOnly: true
+          #end
         #elseif($property.dataTypeJava == "boolean")
           type: boolean
+          #if($property.isCalculatedProperty)
+          readOnly: true
+          #end
         #elseif($property.dataTypeJava == "null")
           type: null
+          #if($property.isCalculatedProperty)
+          readOnly: true
+          #end
         #end
     #end
     ${model.name}FilterOptions:
