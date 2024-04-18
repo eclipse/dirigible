@@ -1,6 +1,6 @@
 #set ($foreignKeysCount = 0)
 #foreach ($model in $models)
-#if($model.type != "REPORT" && $model.type != "FILTER")
+#if($model.type != "REPORT" && $model.type != "FILTER" && $model.type != "PROJECTION")
 #foreach ($property in $model.properties)
 #if($property.relationshipEntityName)
 #set ($foreignKeysCount = $foreignKeysCount + 1)
@@ -12,7 +12,7 @@
     "schema": {
         "structures": [
 #foreach ($model in $models)
-#if($model.type != "REPORT" && $model.type != "FILTER" && $model.disableGeneration != "true")
+#if($model.type != "REPORT" && $model.type != "FILTER" && $model.type != "PROJECTION")
             {
                 "name": "${tablePrefix}${model.dataName}",
                 "type": "TABLE",

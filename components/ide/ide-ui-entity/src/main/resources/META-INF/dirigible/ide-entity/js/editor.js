@@ -9,14 +9,14 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-function _uuid () {
+function _uuid() {
 	function _p8(s) {
-    	let p = (Math.random().toString(16) + "000000000").substr(2, 8);
-        return s ? "-" + p.substr(0, 4) + "-" + p.substr(4, 4) : p;
-    }
-    return _p8() + _p8(true) + _p8(true) + _p8();
+		let p = (Math.random().toString(16) + "000000000").substr(2, 8);
+		return s ? "-" + p.substr(0, 4) + "-" + p.substr(4, 4) : p;
+	}
+	return _p8() + _p8(true) + _p8(true) + _p8();
 }
-	    
+
 angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "ideGenerate", "ideTemplates"])
 	.controller('ModelerCtrl', function ($scope, messageHub, $window, workspaceApi, generateApi, templatesApi, ViewParameters) {
 		let contents;
@@ -303,7 +303,6 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				cell.value.dataName = msg.data.dataName;
 				cell.value.dataCount = msg.data.dataCount;
 				cell.value.dataQuery = msg.data.dataQuery;
-				cell.value.disableGeneration = msg.data.disableGeneration;
 				cell.value.title = msg.data.title;
 				cell.value.caption = msg.data.caption;
 				cell.value.tooltip = msg.data.tooltip;
@@ -500,7 +499,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 			},
 			true
 		);
-		
+
 		function main(container, outline, toolbar, sidebar) {
 			let ICON_ENTITY = 'sap-icon--header';
 			let ICON_PROPERTY = 'sap-icon--bullet-text';
@@ -584,9 +583,9 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				$scope.graph.isCellMovable = function (cell) {
 					return this.isSwimlane(cell);
 				};
-				
-				$scope.graph.model.createId = function(_cell) {
-	                let id = _uuid();
+
+				$scope.graph.model.createId = function (_cell) {
+					let id = _uuid();
 					return this.prefix + id + this.postfix;
 				};
 
@@ -983,7 +982,6 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 									dataName: cell.value.dataName,
 									dataCount: cell.value.dataCount,
 									dataQuery: cell.value.dataQuery,
-									disableGeneration: cell.value.disableGeneration,
 									title: cell.value.title,
 									caption: cell.value.caption,
 									tooltip: cell.value.tooltip,

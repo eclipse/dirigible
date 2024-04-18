@@ -44,7 +44,9 @@ exports.generateGeneric = function (model, parameters, templateSources) {
 exports.generateFiles = function (model, parameters, templateSources) {
     let generatedFiles = [];
 
-    const models = model.entities.filter(e => e.type !== "REPORT" && e.type !== "FILTER" && e.disableGeneration !== "true");
+    const models = model.entities.filter(e => e.type !== "REPORT" && e.type !== "FILTER");
+    const apiModels = model.entities.filter(e => e.type !== "PROJECTION");
+    const daoModels = model.entities.filter(e => e.type !== "PROJECTION");
     const feedModels = model.entities.filter(e => e.feedUrl);
 
     const reportModels = model.entities.filter(e => e.type === "REPORT");
@@ -93,6 +95,12 @@ exports.generateFiles = function (model, parameters, templateSources) {
             switch (template.collection) {
                 case "models":
                     generatedFiles = generatedFiles.concat(generateCollection(location, content, template, models, parameters));
+                    break;
+                case "apiModels":
+                    generatedFiles = generatedFiles.concat(generateCollection(location, content, template, apiModels, parameters));
+                    break;
+                case "daoModels":
+                    generatedFiles = generatedFiles.concat(generateCollection(location, content, template, daoModels, parameters));
                     break;
                 case "reportModels":
                     generatedFiles = generatedFiles.concat(generateCollection(location, content, template, reportModels, parameters));
