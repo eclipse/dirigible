@@ -71,7 +71,7 @@ public class ContextCreator {
                                                                  .allowHostSocketAccess(true)
                                                                  .build())
                                                 .option("js.nashorn-compat", "true")
-                                                .option("js.import-assertions", "true")
+                                                .option("js.import-attributes", "true")
                                                 .option("js.json-modules", "true")
                                                 .option("js.operator-overloading", "true")
                                                 .option("js.intl-402", "true")
