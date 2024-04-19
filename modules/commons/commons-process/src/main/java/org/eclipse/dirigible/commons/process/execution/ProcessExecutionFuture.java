@@ -9,10 +9,9 @@
  */
 package org.eclipse.dirigible.commons.process.execution;
 
+import java.util.concurrent.CompletableFuture;
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.ExecuteResultHandler;
-
-import java.util.concurrent.CompletableFuture;
 
 /**
  * The Class ProcessExecutionFuture.
@@ -36,6 +35,6 @@ public class ProcessExecutionFuture extends CompletableFuture<Integer> implement
      */
     @Override
     public void onProcessFailed(ExecuteException e) {
-        completeExceptionally(e);
+        complete(e.getExitValue());
     }
 }

@@ -14,7 +14,26 @@
  */
 
 const CommandFacade = Java.type("org.eclipse.dirigible.components.api.platform.CommandFacade");
+const ProcessExecutionOptions = Java.type("org.eclipse.dirigible.commons.process.execution.ProcessExecutionOptions");
 
-export function execute(command, add, remove) {
-	return CommandFacade.execute(command, add, remove);
+interface ProcessExecutionOptions {
+	workingDirectory: string
+}
+
+interface EnvironmentVariables {
+	[key: string]: string
+}
+
+interface CommandOutput {
+	exitCode: number;
+	standardOutput: string;
+	errorOutput: string;
+}
+
+export function execute(command: string, options?: ProcessExecutionOptions, add?: EnvironmentVariables, remove?: string[]): CommandOutput {
+	const processExecutionOptions = new ProcessExecutionOptions();
+	if (options) {
+		processExecutionOptions.setWorkingDirectory(options.workingDirectory);
+	}
+	return JSON.parse(CommandFacade.execute(command, add, remove, processExecutionOptions))
 };
