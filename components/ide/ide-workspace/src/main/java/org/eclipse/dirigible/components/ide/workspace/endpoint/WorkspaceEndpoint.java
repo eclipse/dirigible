@@ -306,10 +306,23 @@ public class WorkspaceEndpoint {
                 if (sourceFilePath.toLowerCase()
                                   .equals(targetFilePath.toLowerCase())) {
                     String casesensitivefix = sourceFilePath + "_temp";
+                    // TODO
                     workspaceService.moveFile(workspace, sourceProject, sourceFilePath, targetProject, casesensitivefix);
                     workspaceService.moveFile(workspace, sourceProject, casesensitivefix, targetProject, targetFilePath);
                 } else {
-                    workspaceService.moveFile(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
+                    if (content.getSources().length > 1) {
+                        // multiple source files, so the target must be a folder
+                        if (workspaceService.existsFolder(workspace, targetProject, targetFilePath)) {
+                            String targetCombinedFilePath =
+                                    targetFilePath + sourceFilePath.substring(sourceFilePath.lastIndexOf(IRepositoryStructure.SEPARATOR));
+                            workspaceService.moveFile(workspace, sourceProject, sourceFilePath, targetProject, targetCombinedFilePath);
+                        } else {
+                            String error = "Target path is not a folder";
+                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
+                        }
+                    } else {
+                        workspaceService.moveFile(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
+                    }
                 }
             } else if (workspaceService.existsFolder(workspace, sourceProject, sourceFilePath)) {
                 if (sourceFilePath.toLowerCase()
