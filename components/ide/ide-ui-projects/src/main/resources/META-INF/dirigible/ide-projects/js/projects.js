@@ -89,8 +89,26 @@ projectsView.controller('ProjectsViewController', [
                     name: 'fiori',
                     variant: 'compact',
                 },
-                data: function (_node, cb) {
-                    cb($scope.projects);
+                data: function (node, cb) {
+                    if (node.id === '#') cb($scope.projects);
+                    else {
+                        workspaceApi.loadContent($scope.selectedWorkspace.name, node.data.path).then(function (response) {
+                            if (response.status === 200) {
+                                let children;
+                                if (response.data.folders && response.data.files) {
+                                    children = processChildren(response.data.folders.concat(response.data.files));
+                                } else if (response.data.folders) {
+                                    children = processChildren(response.data.folders);
+                                } else if (response.data.files) {
+                                    children = processChildren(response.data.files);
+                                }
+                                cb(children);
+                            } else {
+                                console.error(response);
+                                $scope.reloadWorkspace();
+                            }
+                        });
+                    }
                 },
                 keyboard: { // We have to have this, in order to disable the default behavior.
                     'enter': function () { },
@@ -178,12 +196,10 @@ projectsView.controller('ProjectsViewController', [
                     else if (nodes.length > 1) openDeleteDialog(nodes);
                     break;
                 case 'ctrl+c':
-                    nodes = $scope.jstreeWidget.jstree(true).get_top_selected(true);
-                    $scope.jstreeWidget.jstree(true).copy(nodes);
+                    $scope.jstreeWidget.jstree(true).copy($scope.jstreeWidget.jstree(true).get_top_selected(true));
                     break;
                 case 'ctrl+x':
-                    nodes = $scope.jstreeWidget.jstree(true).get_top_selected(true);
-                    $scope.jstreeWidget.jstree(true).cut(nodes[0]);
+                    $scope.jstreeWidget.jstree(true).cut($scope.jstreeWidget.jstree(true).get_top_selected(true));
                     break;
                 case 'ctrl+v':
                     nodes = $scope.jstreeWidget.jstree(true).get_selected(true);
@@ -216,225 +232,129 @@ projectsView.controller('ProjectsViewController', [
             }
         });
 
-        $scope.tstCopy = function () {
-            workspaceApi.copy(
-                ['/1test/index.html', '/1test/view.js'],
-                '/1test/test',
-                'workspace',
-                'workspace',
-            ).then(function (response) {
+        $scope.jstreeWidget.on('paste.jstree', function (_event, pasteObj) {
+            const parent = $scope.jstreeWidget.jstree(true).get_node(pasteObj.parent);
+            const spinnerId = showSpinner(parent);
+            const targetWorkspace = parent.data.workspace;
+            const sourceWorkspace = pasteObj.node[0].data.workspace;
+            const targetPath = (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/');
+            let copyArray = [];
+            for (let i = 0; i < pasteObj.node.length; i++) {
+                copyArray.push(pasteObj.node[i].data.path);
+            }
+            function onResponse(response) {
                 if (response.status === 201) {
-                    $scope.reloadWorkspace();
+                    $scope.jstreeWidget.jstree(true).load_node(parent);
                 } else {
-                    console.log(response);
+                    console.error(response);
+                    $scope.reloadWorkspace();
                 }
-            });
-        };
+                hideSpinner(spinnerId);
+            }
+            if (pasteObj.mode === 'copy_node') {
+                workspaceApi.copy(
+                    copyArray,
+                    targetPath,
+                    sourceWorkspace,
+                    targetWorkspace,
+                ).then(onResponse);
+            } else {
+                workspaceApi.move(
+                    copyArray,
+                    copyArray.length === 1 ? targetPath + pasteObj.node[0].text : targetPath,
+                    sourceWorkspace,
+                    targetWorkspace,
+                ).then(onResponse);
+            }
+        });
 
-        // $scope.jstreeWidget.on('paste.jstree', function (_event, pasteObj) {
-        //     console.log(_event, pasteObj);
-        //     if (pasteObj.mode === 'copy_node') {
-        //         const parent = $scope.jstreeWidget.jstree(true).get_node(pasteObj.parent);
-        //         const spinnerId = showSpinner(parent);
-        //         const targetWorkspace = parent.data.workspace;
-        //         const sourceWorkspace = pasteObj.node[0].data.workspace;
-        //         const targetPath = (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/');
-        //         let copyArray = [];
-        //         for (let i = 0; i < pasteObj.node.length; i++) {
-        //             copyArray.push(targetPath + pasteObj.node[i].text);
+        // $scope.jstreeWidget.on('move_node.jstree', function (_event, moveObj) {
+        //     function failedToMove(showAlert = true) {
+        //         moveObj.node.state.failedMove = true;
+        //         if (showAlert)
+        //             messageHub.setStatusError(`Unable to move '${moveObj.node.text}'.`);
+        //         $scope.jstreeWidget.jstree(true).move_node(
+        //             moveObj.node,
+        //             $scope.jstreeWidget.jstree(true).get_node(moveObj.old_parent),
+        //             moveObj.old_position,
+        //         );
+        //     }
+        //     function move(parent, oldPath) {
+        //         for (let i = 0; i < parent.children.length; i++) { // Temp solution
+        //             let node = $scope.jstreeWidget.jstree(true).get_node(parent.children[i]);
+        //             if (node.text === moveObj.node.text && node.id !== moveObj.node.id) {
+        //                 moveObj.node.state.failedMove = true;
+        //                 $scope.jstreeWidget.jstree(true).move_node(
+        //                     moveObj.node,
+        //                     $scope.jstreeWidget.jstree(true).get_node(moveObj.old_parent),
+        //                     moveObj.old_position,
+        //                 );
+        //                 messageHub.showAlertError('Could not move file', 'The destination contains a file with the same name.');
+        //                 return;
+        //             }
         //         }
-        //         workspaceApi.copy(
-        //             copyArray,
-        //             targetPath,
-        //             sourceWorkspace,
-        //             targetWorkspace,
+        //         $scope.jstreeWidget.jstree(true).hide_node(moveObj.node);
+        //         let workspace = parent.data.workspace;
+        //         let spinnerId = showSpinner(parent);
+        //         workspaceApi.move(
+        //             moveObj.node.data.path,
+        //             (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/') + moveObj.node.text,
+        //             moveObj.node.data.workspace,
+        //             workspace
         //         ).then(function (response) {
+        //             console.log(response);
         //             if (response.status === 201) {
-        //                 console.log(response);
-        //                 // $scope.reloadWorkspace();
+        //                 moveObj.node.data.path = (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/') + moveObj.node.text;
+        //                 moveObj.node.data.workspace = parent.data.workspace;
+        //                 $scope.jstreeWidget.jstree(true).show_node(moveObj.node);
+        //                 if (moveObj.node.type === 'file') {
+        //                     messageHub.announceFileMoved({
+        //                         name: moveObj.node.text,
+        //                         path: moveObj.node.data.path,
+        //                         oldPath: oldPath,
+        //                         workspace: moveObj.node.data.workspace,
+        //                     });
+        //                 } else {
+        //                     messageHub.getCurrentlyOpenedFiles(`/${moveObj.node.data.workspace}${oldPath}`).then(function (result) {
+        //                         for (let i = 0; i < result.data.files.length; i++) {
+        //                             messageHub.announceFileMoved({
+        //                                 name: result.data.files[i].substring(result.data.files[i].lastIndexOf('/') + 1, result.data.files[i].length),
+        //                                 path: result.data.files[i].replace(`/${moveObj.node.data.workspace}`, '').replace(oldPath, moveObj.node.data.path),
+        //                                 oldPath: result.data.files[i].replace(`/${moveObj.node.data.workspace}`, ''),
+        //                                 workspace: moveObj.node.data.workspace,
+        //                             });
+        //                         }
+        //                     });
+        //                     for (let i = 0; i < moveObj.node.children_d.length; i++) {
+        //                         let child = $scope.jstreeWidget.jstree(true).get_node(moveObj.node.children_d[i]);
+        //                         child.data.path = child.data.path.replace(oldPath, moveObj.node.data.path);
+        //                     }
+        //                 }
         //             } else {
-        //                 console.log(response);
+        //                 failedToMove();
         //             }
         //             hideSpinner(spinnerId);
         //         });
         //     }
-        // });
-
-        $scope.jstreeWidget.on('copy_node.jstree', function (event, copyObj) {
-            if (!copyObj.node.state.failedCopy) {
-                $scope.jstreeWidget.jstree(true).hide_node(copyObj.node);
-                let parent = $scope.jstreeWidget.jstree(true).get_node(copyObj.parent);
-                let spinnerId = showSpinner(parent);
-                let workspace;
-                let path;
-                workspace = parent.data.workspace;
-                path = (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/');
-                copyObj.node.data = {
-                    path: path + copyObj.node.text,
-                    contentType: copyObj.original.data.contentType,
-                    workspace: workspace,
-                };
-                workspaceApi.copy(
-                    copyObj.original.data.path,
-                    path,
-                    copyObj.original.data.workspace,
-                    workspace,
-                ).then(function (response) {
-                    if (response.status === 201) {
-                        for (let i = 0; i < parent.children.length; i++) { // Temp solution
-                            let node = $scope.jstreeWidget.jstree(true).get_node(parent.children[i]);
-                            if (node.text === copyObj.node.text && node.id !== copyObj.node.id) {
-                                $scope.reloadWorkspace();
-                                return;
-                            }
-                        }
-                        $scope.jstreeWidget.jstree(true).show_node(copyObj.node);
-                    } else {
-                        copyObj.node.state.failedCopy = true;
-                        messageHub.setStatusError(`Unable to copy '${copyObj.node.text}'.`);
-                        $scope.jstreeWidget.jstree(true).delete_node(copyObj.node);
-                    }
-                    hideSpinner(spinnerId);
-                });
-            } else delete copyObj.node.state.failedCopy;
-        });
-
-        // $scope.jstreeWidget.on('copy_node.jstree', function (_event, copyObj) {
-        //     if (!copyObj.node.state.failedCopy) {
-        //         $scope.jstreeWidget.jstree(true).hide_node(copyObj.node);
-        //         const parent = $scope.jstreeWidget.jstree(true).get_node(copyObj.parent);
-        //         const spinnerId = showSpinner(parent);
-        //         let workspace;
-        //         let path;
-        //         workspace = parent.data.workspace;
-        //         path = (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/');
-        //         const buffer = $scope.jstreeWidget.jstree(true).get_buffer();
-        //         $scope.jstreeWidget.jstree(true).clear_buffer();
-        //         let copyArray = [];
-        //         const targetWorkspace = copyObj.original.data.workspace;
-        //         if (buffer.node.length) {
-        //             for (let i = 0; i < buffer.node.length; i++) {
-        //                 copyArray.push(path + buffer.node[i].text);
-        //             }
-        //         } else {
-        //             copyObj.node.data = {
-        //                 path: path + copyObj.node.text,
-        //                 contentType: copyObj.original.data.contentType,
-        //                 workspace: workspace,
-        //             };
-        //         }
-        //         copyArray.push(copyObj.original.data.path);
-        //         workspaceApi.copy(
-        //             copyObj.original.data.path,
-        //             path,
-        //             targetWorkspace,
-        //             workspace,
-        //         ).then(function (response) {
-        //             if (response.status === 201) {
-        //                 for (let i = 0; i < parent.children.length; i++) { // Temp solution
-        //                     const node = $scope.jstreeWidget.jstree(true).get_node(parent.children[i]);
-        //                     if (node.text === copyObj.node.text && node.id !== copyObj.node.id) {
-        //                         $scope.reloadWorkspace();
-        //                         return;
-        //                     }
+        //     if (!moveObj.node.state.failedMove) {
+        //         let parent = $scope.jstreeWidget.jstree(true).get_node(moveObj.parent);
+        //         if (moveObj.node.type === 'file') {
+        //             messageHub.isEditorOpen(`/${moveObj.node.data.workspace}${moveObj.node.data.path}`).then(function (response) {
+        //                 if (response.data.isFlowable) {
+        //                     messageHub.showAlertWarning('Cannot move file', 'The file you are trying to move is currently opened in the Flowable editor. You must save your changes, close the editor and then move the file.');
+        //                     failedToMove(false);
+        //                 } else {
+        //                     move(parent, moveObj.node.data.path);
         //                 }
-        //                 $scope.jstreeWidget.jstree(true).show_node(copyObj.node);
-        //             } else {
-        //                 copyObj.node.state.failedCopy = true;
-        //                 messageHub.setStatusError(`Unable to copy '${copyObj.node.text}'.`);
-        //                 $scope.jstreeWidget.jstree(true).delete_node(copyObj.node);
-        //             }
-        //             hideSpinner(spinnerId);
-        //         });
-        //     } else delete copyObj.node.state.failedCopy;
+        //             }, function (error) {
+        //                 failedToMove();
+        //                 console.error(error);
+        //             });
+        //         } else {
+        //             move(parent, moveObj.node.data.path);
+        //         }
+        //     } else delete moveObj.node.state.failedMove;
         // });
-
-        $scope.jstreeWidget.on('move_node.jstree', function (_event, moveObj) {
-            function failedToMove(showAlert = true) {
-                moveObj.node.state.failedMove = true;
-                if (showAlert)
-                    messageHub.setStatusError(`Unable to move '${moveObj.node.text}'.`);
-                $scope.jstreeWidget.jstree(true).move_node(
-                    moveObj.node,
-                    $scope.jstreeWidget.jstree(true).get_node(moveObj.old_parent),
-                    moveObj.old_position,
-                );
-            }
-            function move(parent, oldPath) {
-                for (let i = 0; i < parent.children.length; i++) { // Temp solution
-                    let node = $scope.jstreeWidget.jstree(true).get_node(parent.children[i]);
-                    if (node.text === moveObj.node.text && node.id !== moveObj.node.id) {
-                        moveObj.node.state.failedMove = true;
-                        $scope.jstreeWidget.jstree(true).move_node(
-                            moveObj.node,
-                            $scope.jstreeWidget.jstree(true).get_node(moveObj.old_parent),
-                            moveObj.old_position,
-                        );
-                        messageHub.showAlertError('Could not move file', 'The destination contains a file with the same name.');
-                        return;
-                    }
-                }
-                $scope.jstreeWidget.jstree(true).hide_node(moveObj.node);
-                let workspace = parent.data.workspace;
-                let spinnerId = showSpinner(parent);
-                workspaceApi.move(
-                    moveObj.node.data.path,
-                    (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/') + moveObj.node.text,
-                    moveObj.node.data.workspace,
-                    workspace
-                ).then(function (response) {
-                    if (response.status === 201) {
-                        moveObj.node.data.path = (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/') + moveObj.node.text;
-                        moveObj.node.data.workspace = parent.data.workspace;
-                        $scope.jstreeWidget.jstree(true).show_node(moveObj.node);
-                        if (moveObj.node.type === 'file') {
-                            messageHub.announceFileMoved({
-                                name: moveObj.node.text,
-                                path: moveObj.node.data.path,
-                                oldPath: oldPath,
-                                workspace: moveObj.node.data.workspace,
-                            });
-                        } else {
-                            messageHub.getCurrentlyOpenedFiles(`/${moveObj.node.data.workspace}${oldPath}`).then(function (result) {
-                                for (let i = 0; i < result.data.files.length; i++) {
-                                    messageHub.announceFileMoved({
-                                        name: result.data.files[i].substring(result.data.files[i].lastIndexOf('/') + 1, result.data.files[i].length),
-                                        path: result.data.files[i].replace(`/${moveObj.node.data.workspace}`, '').replace(oldPath, moveObj.node.data.path),
-                                        oldPath: result.data.files[i].replace(`/${moveObj.node.data.workspace}`, ''),
-                                        workspace: moveObj.node.data.workspace,
-                                    });
-                                }
-                            });
-                            for (let i = 0; i < moveObj.node.children_d.length; i++) {
-                                let child = $scope.jstreeWidget.jstree(true).get_node(moveObj.node.children_d[i]);
-                                child.data.path = child.data.path.replace(oldPath, moveObj.node.data.path);
-                            }
-                        }
-                    } else {
-                        failedToMove();
-                    }
-                    hideSpinner(spinnerId);
-                });
-            }
-            if (!moveObj.node.state.failedMove) {
-                let parent = $scope.jstreeWidget.jstree(true).get_node(moveObj.parent);
-                if (moveObj.node.type === 'file') {
-                    messageHub.isEditorOpen(`/${moveObj.node.data.workspace}${moveObj.node.data.path}`).then(function (response) {
-                        if (response.data.isFlowable) {
-                            messageHub.showAlertWarning('Cannot move file', 'The file you are trying to move is currently opened in the Flowable editor. You must save your changes, close the editor and then move the file.');
-                            failedToMove(false);
-                        } else {
-                            move(parent, moveObj.node.data.path);
-                        }
-                    }, function (error) {
-                        failedToMove();
-                        console.error(error);
-                    });
-                } else {
-                    move(parent, moveObj.node.data.path);
-                }
-            } else delete moveObj.node.state.failedMove;
-        });
 
         function setMenuTemplateItems(parent, menuObj, workspace, nodePath) {
             let priorityTemplates = true;
