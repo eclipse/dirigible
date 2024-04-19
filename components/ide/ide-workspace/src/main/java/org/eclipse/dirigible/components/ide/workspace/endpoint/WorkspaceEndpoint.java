@@ -19,6 +19,7 @@ import java.util.InputMismatchException;
 import org.apache.commons.codec.DecoderException;
 import org.eclipse.dirigible.components.api.utils.UrlFacade;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
+import org.eclipse.dirigible.components.ide.workspace.domain.WorkspaceFromToPair;
 import org.eclipse.dirigible.components.ide.workspace.domain.WorkspaceSelectionTargetPair;
 import org.eclipse.dirigible.components.ide.workspace.domain.WorkspaceSelectionTargetPair.SelectedNode;
 import org.eclipse.dirigible.components.ide.workspace.domain.WorkspaceSourceTargetPair;
@@ -269,8 +270,9 @@ public class WorkspaceEndpoint {
      * @throws UnsupportedEncodingException the unsupported encoding exception
      * @throws DecoderException the decoder exception
      */
-    @PostMapping("{workspace}/move")
-    public ResponseEntity<URI> move(@PathVariable("workspace") String workspace, @Valid @RequestBody WorkspaceSourceTargetPair content)
+    @PostMapping(value = "{workspace}/move", produces = "application/json")
+    public ResponseEntity<WorkspaceFromToPair[]> move(@PathVariable("workspace") String workspace,
+            @Valid @RequestBody WorkspaceSourceTargetPair content)
             throws URISyntaxException, UnsupportedEncodingException, DecoderException {
         if ((content.getSources() == null) || (content.getTarget() == null) || (content.getSourceWorkspace() == null)
                 || (content.getTargetWorkspace() == null)) {
@@ -284,6 +286,8 @@ public class WorkspaceEndpoint {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
         }
 
+        ArrayList<WorkspaceFromToPair> result = new ArrayList<WorkspaceFromToPair>();
+
         for (String source : content.getSources()) {
             RepositoryPath sourcePath = new RepositoryPath(UrlFacade.decode(source));
             if (sourcePath.getSegments().length == 0) {
@@ -296,44 +300,17 @@ public class WorkspaceEndpoint {
             if (sourcePath.getSegments().length == 1) {
                 // a project is selected as a source
                 workspaceService.moveProject(workspace, sourceProject, targetProject);
-                return ResponseEntity.created(workspaceService.getURI(workspace, targetProject, null))
-                                     .build();
+                result.add(new WorkspaceFromToPair(sourceProject, targetProject));
+                return ResponseEntity.ok(result.toArray(new WorkspaceFromToPair[] {}));
             }
 
             String sourceFilePath = sourcePath.constructPathFrom(1);
             String targetFilePath = targetPath.constructPathFrom(1);
+            boolean multiple = content.getSources().length > 1;
             if (workspaceService.existsFile(workspace, sourceProject, sourceFilePath)) {
-                if (sourceFilePath.toLowerCase()
-                                  .equals(targetFilePath.toLowerCase())) {
-                    String casesensitivefix = sourceFilePath + "_temp";
-                    // TODO
-                    workspaceService.moveFile(workspace, sourceProject, sourceFilePath, targetProject, casesensitivefix);
-                    workspaceService.moveFile(workspace, sourceProject, casesensitivefix, targetProject, targetFilePath);
-                } else {
-                    if (content.getSources().length > 1) {
-                        // multiple source files, so the target must be a folder
-                        if (workspaceService.existsFolder(workspace, targetProject, targetFilePath)) {
-                            String targetCombinedFilePath =
-                                    targetFilePath + sourceFilePath.substring(sourceFilePath.lastIndexOf(IRepositoryStructure.SEPARATOR));
-                            workspaceService.moveFile(workspace, sourceProject, sourceFilePath, targetProject, targetCombinedFilePath);
-                        } else {
-                            String error = "Target path is not a folder";
-                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
-                        }
-                    } else {
-                        workspaceService.moveFile(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
-                    }
-                }
+                moveFile(workspace, result, sourceProject, targetProject, sourceFilePath, targetFilePath, multiple);
             } else if (workspaceService.existsFolder(workspace, sourceProject, sourceFilePath)) {
-                if (sourceFilePath.toLowerCase()
-                                  .equals(targetFilePath.toLowerCase())) {
-                    String casesensitivefix = sourceFilePath + "_temp";
-                    workspaceService.moveFolder(workspace, sourceProject, sourceFilePath, targetProject, casesensitivefix);
-                    workspaceService.moveFolder(workspace, sourceProject, casesensitivefix, targetProject, targetFilePath);
-                } else {
-                    workspaceService.moveFolder(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
-                }
-
+                moveFolder(workspace, result, sourceProject, targetProject, sourceFilePath, targetFilePath, multiple);
             } else {
                 String error = "Path does not exists.";
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
@@ -341,8 +318,117 @@ public class WorkspaceEndpoint {
             publisherService.unpublish(sourcePath.getPath());
             publisherService.publish(workspace, targetPath.getPath(), "");
         }
-        return ResponseEntity.created(workspaceService.getURI(workspace, null, content.getTarget()))
-                             .build();
+        return ResponseEntity.ok(result.toArray(new WorkspaceFromToPair[] {}));
+    }
+
+    /**
+     * Move folder.
+     *
+     * @param workspace the workspace
+     * @param result the result
+     * @param sourceProject the source project
+     * @param targetProject the target project
+     * @param sourceFilePath the source file path
+     * @param targetFilePath the target file path
+     * @param multiple the multiple
+     */
+    private void moveFolder(String workspace, ArrayList<WorkspaceFromToPair> result, String sourceProject, String targetProject,
+            String sourceFilePath, String targetFilePath, boolean multiple) {
+        if (sourceFilePath.toLowerCase()
+                          .equals(targetFilePath.toLowerCase())
+                && sourceProject.toLowerCase()
+                                .equals(targetProject.toLowerCase())) {
+            if (multiple) {
+                // multiple source files, so the target must be a folder
+                if (workspaceService.existsFolder(workspace, targetProject, targetFilePath)) {
+                    String targetCombinedFilePath =
+                            targetFilePath + sourceFilePath.substring(sourceFilePath.lastIndexOf(IRepositoryStructure.SEPARATOR));
+                    String casesensitivefix = targetCombinedFilePath + "_temp";
+                    workspaceService.moveFolder(workspace, sourceProject, sourceFilePath, targetProject, casesensitivefix);
+                    workspaceService.moveFolder(workspace, sourceProject, casesensitivefix, targetProject, targetFilePath);
+                    result.add(new WorkspaceFromToPair(sourceProject + sourceFilePath, targetProject + targetCombinedFilePath));
+                } else {
+                    String error = "Target path is not a folder";
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
+                }
+            } else {
+                String casesensitivefix = sourceFilePath + "_temp";
+                workspaceService.moveFolder(workspace, sourceProject, sourceFilePath, targetProject, casesensitivefix);
+                workspaceService.moveFolder(workspace, sourceProject, casesensitivefix, targetProject, targetFilePath);
+                result.add(new WorkspaceFromToPair(sourceProject + sourceFilePath, targetProject + targetFilePath));
+            }
+        } else {
+            if (multiple) {
+                // multiple source files, so the target must be a folder
+                if (workspaceService.existsFolder(workspace, targetProject, targetFilePath)) {
+                    String targetCombinedFilePath =
+                            targetFilePath + sourceFilePath.substring(sourceFilePath.lastIndexOf(IRepositoryStructure.SEPARATOR));
+                    workspaceService.moveFolder(workspace, sourceProject, sourceFilePath, targetProject, targetCombinedFilePath);
+                    result.add(new WorkspaceFromToPair(sourceProject + sourceFilePath, targetProject + targetCombinedFilePath));
+                } else {
+                    String error = "Target path is not a folder";
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
+                }
+            } else {
+                workspaceService.moveFolder(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
+                result.add(new WorkspaceFromToPair(sourceProject + sourceFilePath, targetProject + targetFilePath));
+            }
+        }
+    }
+
+    /**
+     * Move file.
+     *
+     * @param workspace the workspace
+     * @param result the result
+     * @param sourceProject the source project
+     * @param targetProject the target project
+     * @param sourceFilePath the source file path
+     * @param targetFilePath the target file path
+     * @param multiple the multiple
+     */
+    private void moveFile(String workspace, ArrayList<WorkspaceFromToPair> result, String sourceProject, String targetProject,
+            String sourceFilePath, String targetFilePath, boolean multiple) {
+        if (sourceFilePath.toLowerCase()
+                          .equals(targetFilePath.toLowerCase())
+                && sourceProject.toLowerCase()
+                                .equals(targetProject.toLowerCase())) {
+            if (multiple) {
+                // multiple source files, so the target must be a folder
+                if (workspaceService.existsFolder(workspace, targetProject, targetFilePath)) {
+                    String targetCombinedFilePath =
+                            targetFilePath + sourceFilePath.substring(sourceFilePath.lastIndexOf(IRepositoryStructure.SEPARATOR));
+                    String casesensitivefix = targetCombinedFilePath + "_temp";
+                    workspaceService.moveFile(workspace, sourceProject, sourceFilePath, targetProject, casesensitivefix);
+                    workspaceService.moveFile(workspace, sourceProject, casesensitivefix, targetProject, targetFilePath);
+                    result.add(new WorkspaceFromToPair(sourceProject + sourceFilePath, targetProject + targetCombinedFilePath));
+                } else {
+                    String error = "Target path is not a folder";
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
+                }
+            } else {
+                String casesensitivefix = sourceFilePath + "_temp";
+                workspaceService.moveFile(workspace, sourceProject, sourceFilePath, targetProject, casesensitivefix);
+                workspaceService.moveFile(workspace, sourceProject, casesensitivefix, targetProject, targetFilePath);
+                result.add(new WorkspaceFromToPair(sourceProject + sourceFilePath, targetProject + targetFilePath));
+            }
+        } else {
+            if (multiple) {
+                // multiple source files, so the target must be a folder
+                if (workspaceService.existsFolder(workspace, targetProject, targetFilePath)) {
+                    String targetCombinedFilePath =
+                            targetFilePath + sourceFilePath.substring(sourceFilePath.lastIndexOf(IRepositoryStructure.SEPARATOR));
+                    workspaceService.moveFile(workspace, sourceProject, sourceFilePath, targetProject, targetCombinedFilePath);
+                    result.add(new WorkspaceFromToPair(sourceProject + sourceFilePath, targetProject + targetCombinedFilePath));
+                } else {
+                    String error = "Target path is not a folder";
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
+                }
+            } else {
+                workspaceService.moveFile(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
+                result.add(new WorkspaceFromToPair(sourceProject + sourceFilePath, targetProject + targetFilePath));
+            }
+        }
     }
 
     /**
@@ -355,9 +441,14 @@ public class WorkspaceEndpoint {
      * @throws UnsupportedEncodingException the unsupported encoding exception
      * @throws DecoderException the decoder exception
      */
-    @PostMapping("{workspace}/rename")
-    public ResponseEntity<URI> rename(@PathVariable("workspace") String workspace, @Valid @RequestBody WorkspaceSourceTargetPair content)
+    @PostMapping(value = "{workspace}/rename", produces = "application/json")
+    public ResponseEntity<WorkspaceFromToPair[]> rename(@PathVariable("workspace") String workspace,
+            @Valid @RequestBody WorkspaceSourceTargetPair content)
             throws URISyntaxException, UnsupportedEncodingException, DecoderException {
+        if (content.getSources().length > 1) {
+            String error = "Rename operation is only for a single file or folder";
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
+        }
         return move(workspace, content);
     }
 
