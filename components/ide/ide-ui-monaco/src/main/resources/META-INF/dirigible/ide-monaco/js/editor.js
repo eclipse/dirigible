@@ -959,8 +959,7 @@ class DirigibleEditor {
         }, "editor.file.save.all");
 
         messageHub.subscribe(function (event) {
-            const file = event.resourcePath;
-            if (file === fileName) {
+            if (event.resourcePath === fileIO.resolvePath()) {
                 new ViewParameters();
             }
         }, "core.editors.reloadParams");

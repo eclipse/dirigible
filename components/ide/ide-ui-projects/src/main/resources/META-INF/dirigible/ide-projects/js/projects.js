@@ -13,6 +13,7 @@ const projectsView = angular.module('projects', ['ideUI', 'ideView', 'ideEditors
 
 projectsView.controller('ProjectsViewController', [
     '$scope',
+    '$document',
     'messageHub',
     'workspaceApi',
     'Editors',
@@ -24,6 +25,7 @@ projectsView.controller('ProjectsViewController', [
     'platform',
     function (
         $scope,
+        $document,
         messageHub,
         workspaceApi,
         Editors,
@@ -113,9 +115,6 @@ projectsView.controller('ProjectsViewController', [
                 keyboard: { // We have to have this, in order to disable the default behavior.
                     'enter': function () { },
                     'f2': function () { },
-                    // 'down': function (e) {
-                    //     console.log(e)
-                    // }
                 }
             },
             search: {
@@ -123,6 +122,7 @@ projectsView.controller('ProjectsViewController', [
             },
             plugins: ['wholerow', 'dnd', 'search', 'state', 'types', 'indicator'],
             dnd: {
+                copy: false,
                 large_drop_target: true,
                 large_drag_target: true,
                 is_draggable: function (nodes) {
@@ -130,7 +130,7 @@ projectsView.controller('ProjectsViewController', [
                         if (nodes[i].type === 'project') return false;
                     }
                     return true;
-                },
+                }
             },
             state: { key: 'ide-projects' },
             types: {
@@ -169,18 +169,8 @@ projectsView.controller('ProjectsViewController', [
                     if (focused && !focused.state.selected) {
                         $scope.jstreeWidget.jstree(true).deselect_all();
                         $scope.jstreeWidget.jstree(true).select_node(focused);
-                        openFile(focused);
-                    } else {
-                        nodes = $scope.jstreeWidget.jstree(true).get_selected(true);
-                        for (let i = 0; i < nodes.length; i++) {
-                            if (nodes[i].type === 'file') {
-                                openFile(nodes[0]);
-                            } else if (nodes[i].type === 'folder' || nodes[i].type === 'project') {
-                                if (nodes[i].state.opened) $scope.jstreeWidget.jstree(true).close_node(nodes[i]);
-                                else $scope.jstreeWidget.jstree(true).open_node(nodes[i]);
-                            }
-                        }
-                    }
+                        openSelected([focused]);
+                    } else openSelected();
                     break;
                 case 'f2':
                     nodes = $scope.jstreeWidget.jstree(true).get_selected(true);
@@ -227,9 +217,7 @@ projectsView.controller('ProjectsViewController', [
 
         $scope.jstreeWidget.on('dblclick.jstree', function (event) {
             let node = $scope.jstreeWidget.jstree(true).get_node(event.target);
-            if (node.type === 'file') {
-                openFile(node);
-            }
+            if (node.type === 'file') openFile(node);
         });
 
         $scope.jstreeWidget.on('paste.jstree', function (_event, pasteObj) {
@@ -238,123 +226,75 @@ projectsView.controller('ProjectsViewController', [
             const targetWorkspace = parent.data.workspace;
             const sourceWorkspace = pasteObj.node[0].data.workspace;
             const targetPath = (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/');
-            let copyArray = [];
+            let pasteArray = [];
             for (let i = 0; i < pasteObj.node.length; i++) {
-                copyArray.push(pasteObj.node[i].data.path);
+                pasteArray.push(pasteObj.node[i].data.path);
             }
             function onResponse(response) {
-                if (response.status === 201) {
+                if (response.status === 200) { // Move
+                    messageHub.getCurrentlyOpenedFiles().then(function (result) {
+                        for (let r = 0; r < response.data.length; r++) {
+                            for (let f = 0; f < result.data.files.length; f++) {
+                                if (result.data.files[f].startsWith(`/${sourceWorkspace}/${response.data[r].from}`)) {
+                                    messageHub.announceFileMoved({
+                                        name: result.data.files[f].substring(result.data.files[f].lastIndexOf('/') + 1, result.data.files[f].length),
+                                        path: result.data.files[f].replace(`/${sourceWorkspace}`, '').replace(response.data[r].from, response.data[r].to),
+                                        oldPath: result.data.files[f].replace(`/${sourceWorkspace}`, ''),
+                                        workspace: targetWorkspace,
+                                    });
+                                }
+                            }
+                        }
+                    });
+                    $scope.jstreeWidget.jstree(true).load_node(parent);
+                } else if (response.status === 201) { // Copy
                     $scope.jstreeWidget.jstree(true).load_node(parent);
                 } else {
                     console.error(response);
                     $scope.reloadWorkspace();
+                    if (pasteObj.mode !== 'copy_node' && pasteObj.node.length > 1)
+                        messageHub.setStatusError(`Unable to move ${pasteObj.node.length} objects.`);
+                    else if (pasteObj.mode !== 'copy_node' && pasteObj.node.length === 1)
+                        messageHub.setStatusError(`Unable to move '${pasteObj.node[0].text}'.`);
+                    if (pasteObj.mode === 'copy_node' && pasteObj.node.length > 1)
+                        messageHub.setStatusError(`Unable to copy ${pasteObj.node.length} objects.`);
+                    else if (pasteObj.mode === 'copy_node' && pasteObj.node.length === 1)
+                        messageHub.setStatusError(`Unable to copy '${pasteObj.node[0].text}'.`);
                 }
                 hideSpinner(spinnerId);
             }
             if (pasteObj.mode === 'copy_node') {
                 workspaceApi.copy(
-                    copyArray,
+                    pasteArray,
                     targetPath,
                     sourceWorkspace,
                     targetWorkspace,
                 ).then(onResponse);
             } else {
+                for (let pIndex = 0; pIndex < pasteObj.node.length; pIndex++) { // Temp solution
+                    for (let i = 0; i < parent.children.length; i++) {
+                        const node = $scope.jstreeWidget.jstree(true).get_node(parent.children[i]);
+                        if (node.text === pasteObj.node[pIndex].text && node.id !== pasteObj.node[pIndex].id) {
+                            messageHub.showAlertError('Could not move', 'The destination contains a file/folder with the same name.');
+                            $scope.reloadWorkspace();
+                            return;
+                        }
+                    }
+                }
                 workspaceApi.move(
-                    copyArray,
-                    copyArray.length === 1 ? targetPath + pasteObj.node[0].text : targetPath,
+                    pasteArray,
+                    pasteArray.length === 1 ? targetPath + pasteObj.node[0].text : targetPath,
                     sourceWorkspace,
                     targetWorkspace,
                 ).then(onResponse);
             }
         });
 
-        // $scope.jstreeWidget.on('move_node.jstree', function (_event, moveObj) {
-        //     function failedToMove(showAlert = true) {
-        //         moveObj.node.state.failedMove = true;
-        //         if (showAlert)
-        //             messageHub.setStatusError(`Unable to move '${moveObj.node.text}'.`);
-        //         $scope.jstreeWidget.jstree(true).move_node(
-        //             moveObj.node,
-        //             $scope.jstreeWidget.jstree(true).get_node(moveObj.old_parent),
-        //             moveObj.old_position,
-        //         );
-        //     }
-        //     function move(parent, oldPath) {
-        //         for (let i = 0; i < parent.children.length; i++) { // Temp solution
-        //             let node = $scope.jstreeWidget.jstree(true).get_node(parent.children[i]);
-        //             if (node.text === moveObj.node.text && node.id !== moveObj.node.id) {
-        //                 moveObj.node.state.failedMove = true;
-        //                 $scope.jstreeWidget.jstree(true).move_node(
-        //                     moveObj.node,
-        //                     $scope.jstreeWidget.jstree(true).get_node(moveObj.old_parent),
-        //                     moveObj.old_position,
-        //                 );
-        //                 messageHub.showAlertError('Could not move file', 'The destination contains a file with the same name.');
-        //                 return;
-        //             }
-        //         }
-        //         $scope.jstreeWidget.jstree(true).hide_node(moveObj.node);
-        //         let workspace = parent.data.workspace;
-        //         let spinnerId = showSpinner(parent);
-        //         workspaceApi.move(
-        //             moveObj.node.data.path,
-        //             (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/') + moveObj.node.text,
-        //             moveObj.node.data.workspace,
-        //             workspace
-        //         ).then(function (response) {
-        //             console.log(response);
-        //             if (response.status === 201) {
-        //                 moveObj.node.data.path = (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/') + moveObj.node.text;
-        //                 moveObj.node.data.workspace = parent.data.workspace;
-        //                 $scope.jstreeWidget.jstree(true).show_node(moveObj.node);
-        //                 if (moveObj.node.type === 'file') {
-        //                     messageHub.announceFileMoved({
-        //                         name: moveObj.node.text,
-        //                         path: moveObj.node.data.path,
-        //                         oldPath: oldPath,
-        //                         workspace: moveObj.node.data.workspace,
-        //                     });
-        //                 } else {
-        //                     messageHub.getCurrentlyOpenedFiles(`/${moveObj.node.data.workspace}${oldPath}`).then(function (result) {
-        //                         for (let i = 0; i < result.data.files.length; i++) {
-        //                             messageHub.announceFileMoved({
-        //                                 name: result.data.files[i].substring(result.data.files[i].lastIndexOf('/') + 1, result.data.files[i].length),
-        //                                 path: result.data.files[i].replace(`/${moveObj.node.data.workspace}`, '').replace(oldPath, moveObj.node.data.path),
-        //                                 oldPath: result.data.files[i].replace(`/${moveObj.node.data.workspace}`, ''),
-        //                                 workspace: moveObj.node.data.workspace,
-        //                             });
-        //                         }
-        //                     });
-        //                     for (let i = 0; i < moveObj.node.children_d.length; i++) {
-        //                         let child = $scope.jstreeWidget.jstree(true).get_node(moveObj.node.children_d[i]);
-        //                         child.data.path = child.data.path.replace(oldPath, moveObj.node.data.path);
-        //                     }
-        //                 }
-        //             } else {
-        //                 failedToMove();
-        //             }
-        //             hideSpinner(spinnerId);
-        //         });
-        //     }
-        //     if (!moveObj.node.state.failedMove) {
-        //         let parent = $scope.jstreeWidget.jstree(true).get_node(moveObj.parent);
-        //         if (moveObj.node.type === 'file') {
-        //             messageHub.isEditorOpen(`/${moveObj.node.data.workspace}${moveObj.node.data.path}`).then(function (response) {
-        //                 if (response.data.isFlowable) {
-        //                     messageHub.showAlertWarning('Cannot move file', 'The file you are trying to move is currently opened in the Flowable editor. You must save your changes, close the editor and then move the file.');
-        //                     failedToMove(false);
-        //                 } else {
-        //                     move(parent, moveObj.node.data.path);
-        //                 }
-        //             }, function (error) {
-        //                 failedToMove();
-        //                 console.error(error);
-        //             });
-        //         } else {
-        //             move(parent, moveObj.node.data.path);
-        //         }
-        //     } else delete moveObj.node.state.failedMove;
-        // });
+        $(document).bind("dnd_stop.vakata", function (_e, data) { //Triggered on drag complete
+            $scope.jstreeWidget.jstree(true).cut(data.data.nodes);
+            const target = $scope.jstreeWidget.jstree(true).get_node(data.event.target);
+            $scope.jstreeWidget.jstree(true).paste(target);
+        });
 
         function setMenuTemplateItems(parent, menuObj, workspace, nodePath) {
             let priorityTemplates = true;
@@ -500,14 +440,12 @@ projectsView.controller('ProjectsViewController', [
                         shortcut: platform.isMac ? '⌘X' : 'Ctrl+X',
                         divider: true,
                         icon: "sap-icon--scissors",
-                        data: node,
                     };
                     const copyObj = {
                         id: "copy",
                         label: "Copy",
                         shortcut: platform.isMac ? '⌘C' : 'Ctrl+C',
                         icon: "sap-icon--copy",
-                        data: node,
                     };
                     const pasteObj = {
                         id: "paste",
@@ -523,6 +461,7 @@ projectsView.controller('ProjectsViewController', [
                         shortcut: "F2",
                         divider: true,
                         icon: "sap-icon--edit",
+                        isDisabled: nodes.length > 1,
                         data: node,
                     };
                     const deleteObj = {
@@ -540,23 +479,11 @@ projectsView.controller('ProjectsViewController', [
                             label: "Publish",
                             divider: true,
                             icon: "sap-icon--arrow-top",
-                            data: {
-                                name: node.text,
-                                path: node.data.path,
-                                type: node.type,
-                                workspace: node.data.workspace
-                            },
                         };
                         unpublishObj = {
                             id: "unpublish",
                             label: "Unpublish",
                             icon: "sap-icon--arrow-bottom",
-                            data: {
-                                name: node.text,
-                                path: node.data.path,
-                                type: node.type,
-                                workspace: node.data.workspace
-                            },
                         };
                     }
                     let generateObj;
@@ -657,19 +584,21 @@ projectsView.controller('ProjectsViewController', [
                                 id: "open",
                                 label: "Open",
                                 icon: "sap-icon--action",
-                                data: node,
-                            },
-                            {
-                                id: "openWith",
-                                label: "Open With",
-                                icon: "sap-icon--action",
-                                items: getEditorsForType(node)
                             },
                             cutObj,
                             copyObj,
                             renameObj,
                             deleteObj,
                         ]
+                        if (nodes.length <= 1) {
+                            items[0].data = node;
+                            items.splice(1, 0, {
+                                id: "openWith",
+                                label: "Open With",
+                                icon: "sap-icon--action",
+                                items: getEditorsForType(node)
+                            });
+                        }
                         if (publisherApi.isEnabled()) {
                             items.push(publishObj);
                             items.push(unpublishObj);
@@ -737,6 +666,8 @@ projectsView.controller('ProjectsViewController', [
                 if (response.status === 200) {
                     $scope.workspaceNames = response.data;
                     $scope.state.error = false;
+                    $scope.reloadWorkspace(true);
+                    $scope.loadTemplates();
                 } else {
                     $scope.state.error = true;
                     $scope.errorMessage = "Unable to load workspace list.";
@@ -814,7 +745,7 @@ projectsView.controller('ProjectsViewController', [
             });
         };
 
-        $scope.publishAll = function () {
+        function publishAll() {
             messageHub.showStatusBusy("Publishing projects...");
             publisherApi.publish(`/${$scope.selectedWorkspace.name}/*`).then(function (response) {
                 if (response.status !== 200)
@@ -826,7 +757,7 @@ projectsView.controller('ProjectsViewController', [
 
         };
 
-        $scope.unpublishAll = function () {
+        function unpublishAll() {
             messageHub.showStatusBusy("Unpublishing projects...");
             publisherApi.unpublish(`/${$scope.selectedWorkspace.name}/*`).then(function (response) {
                 if (response.status !== 200)
@@ -837,7 +768,7 @@ projectsView.controller('ProjectsViewController', [
             });
         };
 
-        $scope.publish = function (path, workspace, fileDescriptor, callback) {
+        function publish(path, workspace, fileDescriptor, callback) {
             messageHub.showStatusBusy(`Publishing '${path}'...`);
             publisherApi.publish(path, workspace).then(function (response) {
                 if (response.status !== 200) {
@@ -851,7 +782,7 @@ projectsView.controller('ProjectsViewController', [
             });
         };
 
-        $scope.unpublish = function (path, workspace, fileDescriptor, callback) {
+        function unpublish(path, workspace, fileDescriptor, callback) {
             messageHub.showStatusBusy(`Unpublishing '${path}'...`);
             publisherApi.unpublish(path, workspace).then(function (response) {
                 if (response.status !== 200) {
@@ -907,41 +838,41 @@ projectsView.controller('ProjectsViewController', [
             transportApi.exportProject($scope.selectedWorkspace.name, '*');
         };
 
-        $scope.linkProject = function () {
-            messageHub.showFormDialog(
-                'linkProjectForm',
-                'Link project',
-                [{
-                    id: "pgfi1",
-                    type: "input",
-                    label: "Name",
-                    required: true,
-                    placeholder: "project name",
-                    inputRules: {
-                        excluded: getChildrenNames('#'),
-                        patterns: ['^[^/:]*$'],
-                    },
-                }, {
-                    id: "pgfi2",
-                    type: "input",
-                    label: "Path",
-                    required: true,
-                    placeholder: "/absolute/path/to/project",
-                }],
-                [{
-                    id: 'b1',
-                    type: 'emphasized',
-                    label: 'Create',
-                    whenValid: true,
-                }, {
-                    id: 'b2',
-                    type: 'transparent',
-                    label: 'Cancel',
-                }],
-                'projects.link.project',
-                'Linking...',
-            );
-        };
+        // $scope.linkProject = function () {
+        //     messageHub.showFormDialog(
+        //         'linkProjectForm',
+        //         'Link project',
+        //         [{
+        //             id: "pgfi1",
+        //             type: "input",
+        //             label: "Name",
+        //             required: true,
+        //             placeholder: "project name",
+        //             inputRules: {
+        //                 excluded: getChildrenNames('#'),
+        //                 patterns: ['^[^/:]*$'],
+        //             },
+        //         }, {
+        //             id: "pgfi2",
+        //             type: "input",
+        //             label: "Path",
+        //             required: true,
+        //             placeholder: "/absolute/path/to/project",
+        //         }],
+        //         [{
+        //             id: 'b1',
+        //             type: 'emphasized',
+        //             label: 'Create',
+        //             whenValid: true,
+        //         }, {
+        //             id: 'b2',
+        //             type: 'transparent',
+        //             label: 'Cancel',
+        //         }],
+        //         'projects.link.project',
+        //         'Linking...',
+        //     );
+        // };
 
         $scope.createProject = function () {
             messageHub.showFormDialog(
@@ -1210,6 +1141,18 @@ projectsView.controller('ProjectsViewController', [
             return editors;
         }
 
+        function openSelected(nodes) {
+            if (!nodes) nodes = $scope.jstreeWidget.jstree(true).get_selected(true)
+            for (let i = 0; i < nodes.length; i++) {
+                if (nodes[i].type === 'file') {
+                    openFile(nodes[i]);
+                } else if (nodes[i].type === 'folder' || nodes[i].type === 'project') {
+                    if (nodes[i].state.opened) $scope.jstreeWidget.jstree(true).close_node(nodes[i]);
+                    else $scope.jstreeWidget.jstree(true).open_node(nodes[i]);
+                }
+            }
+        }
+
         function openFile(node, editor = undefined) {
             let parent = node;
             let extraArgs = { gitName: undefined, workspaceName: node.data.workspace };
@@ -1400,12 +1343,12 @@ projectsView.controller('ProjectsViewController', [
                     if (isMultiple) {
                         for (let i = 0; i < selected.length; i++) {
                             let node = $scope.jstreeWidget.jstree(true).get_node(selected[i]);
-                            $scope.unpublish(node.data.path, node.data.workspace, node, function () {
+                            unpublish(node.data.path, node.data.workspace, node, function () {
                                 deleteNode(node);
                             });
                         }
                     } else {
-                        $scope.unpublish(selected.data.path, selected.data.workspace, selected, function () {
+                        unpublish(selected.data.path, selected.data.workspace, selected, function () {
                             deleteNode(selected);
                         });
                     }
@@ -1468,7 +1411,7 @@ projectsView.controller('ProjectsViewController', [
 
         messageHub.onFileSaved(function (data) {
             const { topic, ...fileDescriptor } = data;
-            $scope.publish(fileDescriptor.path, fileDescriptor.workspace, fileDescriptor);
+            publish(fileDescriptor.path, fileDescriptor.workspace, fileDescriptor);
             // Temp solution until we fix the back-end API
             if (data.status) {
                 let objects = $scope.jstreeWidget.jstree(true).get_json(
@@ -1497,9 +1440,9 @@ projectsView.controller('ProjectsViewController', [
                 $scope.reloadWorkspace();
             if (workspace.data.publish) {
                 if (workspace.data.publish.workspace) {
-                    $scope.publish(`/${workspace.data.name}/*`);
+                    publish(`/${workspace.data.name}/*`);
                 } else if (workspace.data.publish.path) {
-                    $scope.publish(workspace.data.publish.path, workspace.data.name);
+                    publish(workspace.data.publish.path, workspace.data.name);
                 }
             }
         });
@@ -1637,29 +1580,29 @@ projectsView.controller('ProjectsViewController', [
             true
         );
 
-        messageHub.onDidReceiveMessage(
-            'projects.link.project',
-            function (msg) {
-                if (msg.data.isMenu) {
-                    $scope.linkProject();
-                } else if (msg.data.buttonId === "b1") {
-                    workspaceApi.linkProject($scope.selectedWorkspace.name, msg.data.formData[0].value, msg.data.formData[1].value).then(function (response) {
-                        messageHub.hideFormDialog('linkProjectForm');
-                        if (response.status !== 201) {
-                            messageHub.showAlertError(
-                                'Failed to link project',
-                                `An unexpected error has occurred while trying to link project '${msg.data.formData[0].value}'`
-                            );
-                            messageHub.setStatusError(`Unable to link project '${msg.data.formData[0].value}'`);
-                        } else {
-                            $scope.reloadWorkspace();
-                            messageHub.setStatusMessage(`Linked project '${msg.data.formData[0].value}'`);
-                        }
-                    });
-                } else messageHub.hideFormDialog('linkProjectForm');
-            },
-            true
-        );
+        // messageHub.onDidReceiveMessage(
+        //     'projects.link.project',
+        //     function (msg) {
+        //         if (msg.data.isMenu) {
+        //             $scope.linkProject();
+        //         } else if (msg.data.buttonId === "b1") {
+        //             workspaceApi.linkProject($scope.selectedWorkspace.name, msg.data.formData[0].value, msg.data.formData[1].value).then(function (response) {
+        //                 messageHub.hideFormDialog('linkProjectForm');
+        //                 if (response.status !== 201) {
+        //                     messageHub.showAlertError(
+        //                         'Failed to link project',
+        //                         `An unexpected error has occurred while trying to link project '${msg.data.formData[0].value}'`
+        //                     );
+        //                     messageHub.setStatusError(`Unable to link project '${msg.data.formData[0].value}'`);
+        //                 } else {
+        //                     $scope.reloadWorkspace();
+        //                     messageHub.setStatusMessage(`Linked project '${msg.data.formData[0].value}'`);
+        //                 }
+        //             });
+        //         } else messageHub.hideFormDialog('linkProjectForm');
+        //     },
+        //     true
+        // );
 
         messageHub.onDidReceiveMessage(
             'projects.generate.generic',
@@ -1873,7 +1816,8 @@ projectsView.controller('ProjectsViewController', [
             'projects.tree.contextmenu',
             function (msg) {
                 if (msg.data.itemId === 'open') {
-                    openFile(msg.data.data);
+                    if (msg.data.data) openFile(msg.data.data);
+                    else openSelected();
                 } else if (msg.data.itemId === 'openWith') {
                     openFile(msg.data.data.node, msg.data.data.editorId);
                 } else if (msg.data.itemId === 'file') {
@@ -1921,9 +1865,9 @@ projectsView.controller('ProjectsViewController', [
                 } else if (msg.data.itemId === 'delete') {
                     openDeleteDialog(msg.data.data)
                 } else if (msg.data.itemId === 'cut') {
-                    $scope.jstreeWidget.jstree(true).cut(msg.data.data);
+                    $scope.jstreeWidget.jstree(true).cut($scope.jstreeWidget.jstree(true).get_top_selected(true));
                 } else if (msg.data.itemId === 'copy') {
-                    $scope.jstreeWidget.jstree(true).copy(msg.data.data);
+                    $scope.jstreeWidget.jstree(true).copy($scope.jstreeWidget.jstree(true).get_top_selected(true));
                 } else if (msg.data.itemId === 'paste') {
                     $scope.jstreeWidget.jstree(true).paste(msg.data.data);
                 } else if (msg.data.itemId === 'newProject') {
@@ -1981,15 +1925,29 @@ projectsView.controller('ProjectsViewController', [
                         }
                     );
                 } else if (msg.data.itemId === 'unpublishAll') {
-                    $scope.unpublishAll();
+                    unpublishAll();
                 } else if (msg.data.itemId === 'publishAll') {
-                    $scope.publishAll();
+                    publishAll();
                 } else if (msg.data.itemId === 'publish') {
-                    $scope.publish(msg.data.data.path, msg.data.data.workspace, msg.data.data);
+                    const selected = $scope.jstreeWidget.jstree(true).get_top_selected(true);
+                    for (let i = 0; i < selected.length; i++) {
+                        publish(selected[i].data.path, selected[i].data.workspace, {
+                            name: selected[i].text,
+                            path: selected[i].data.path,
+                            type: selected[i].type,
+                            workspace: selected[i].data.workspace
+                        });
+                    }
                 } else if (msg.data.itemId === 'unpublish') {
-                    $scope.unpublish(msg.data.data.path, msg.data.data.workspace, msg.data.data);
-                } else if (msg.data.itemId === 'unpublishAll') {
-                    $scope.unpublishAll();
+                    const selected = $scope.jstreeWidget.jstree(true).get_top_selected(true);
+                    for (let i = 0; i < selected.length; i++) {
+                        unpublish(selected[i].data.path, selected[i].data.workspace, {
+                            name: selected[i].text,
+                            path: selected[i].data.path,
+                            type: selected[i].type,
+                            workspace: selected[i].data.workspace
+                        });
+                    }
                 } else if (msg.data.itemId === 'regenerateModel') {
                     messageHub.showLoadingDialog('projectsRegenerateModel', 'Regenerating', 'Loading data');
                     workspaceApi.loadContent(msg.data.data.data.workspace, msg.data.data.data.path).then(function (response) {
@@ -2218,13 +2176,7 @@ projectsView.controller('ProjectsViewController', [
             true
         );
 
-        // Initialization
-        $scope.init = function () {
-            $scope.state.error = false;
-            $scope.state.isBusy = true;
+        angular.element($document[0]).ready(function () {
             $scope.reloadWorkspaceList();
-            $scope.reloadWorkspace(true);
-            $scope.loadTemplates();
-        };
-        $scope.init();
+        });
     }]);
