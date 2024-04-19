@@ -9,33 +9,37 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import { workspace as workspaceManager } from "sdk/platform"
 import { command, os } from "sdk/platform";
 
 const path = __context.get('path');
 
 if (path && path.endsWith(".ts")) {
     const pathTokens = path.split("/");
-    const workspace = pathTokens[3];
+    // const workspace = pathTokens[3];
     const project = pathTokens[4];
-    const file = workspaceManager
-        .getWorkspace(workspace)
-        .getProject(project)
-        .getFile("tsconfig.json");
-
-    console.log(`After Publish for "${path}\n\n${file.getText()}`);
 
     const filePath = pathTokens.slice(5).join("/")
-    const compileCommand = `tsc --module ESNext --target ES6 --moduleResolution Node --baseUrl ../ --lib ESNext,DOM --types ../modules/types ${filePath}`;
+    let tscCommand = 'tsc';
+    if (os.isWindows()) {
+        tscCommand = 'cmd /c tsc'
+    }
+    const compileCommand = `${tscCommand} --module ESNext --target ES6 --moduleResolution Node --baseUrl ../ --lib ESNext,DOM --types ../modules/types ${filePath}`;
     const workingDirectory = `target/dirigible/repository/root/registry/public/${project}`;
-    // console.error(`Command: "${compileCommand}"`);
     try {
-        command.execute(compileCommand, {
+        const result = command.execute(compileCommand, {
             workingDirectory: workingDirectory
         });
-        // console.error(`Command Result: "${commandResult}"`);
+        if (result.exitCode != 0) {
+            const output = `${result.standardOutput}\n${result.errorOutput}`;
+            const outputLines = output.split("\n");
+            const errorMessage = outputLines.filter(line => !line.includes("TS2307: Cannot find module 'sdk/")).join("\n");
 
+            if (errorMessage.trim()) {
+                console.error(`Compilation of "${filePath}" failed with exit code: ${result.exitCode}`);
+                console.error(errorMessage);
+            }
+        }
     } catch (e) {
-        console.info(`Error occurred: ${e}`);
+        console.info(`Error occurred during compilation of TypeScript file "${filePath}": ${e}`);
     }
 }
