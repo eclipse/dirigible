@@ -339,8 +339,15 @@ public class WorkspaceEndpoint {
                 && sourceProject.toLowerCase()
                                 .equals(targetProject.toLowerCase())) {
             if (multiple) {
-                // multiple source files, so the target must be a folder
-                if (workspaceService.existsFolder(workspace, targetProject, targetFilePath)) {
+                // multiple source files, so the target must be a folder or a project
+                if (targetFilePath.equals(IRepositoryStructure.SEPARATOR + targetProject)
+                        && workspaceService.existsProject(workspace, targetProject)) {
+                    String targetCombinedFilePath = sourceFilePath.substring(sourceFilePath.lastIndexOf(IRepositoryStructure.SEPARATOR));
+                    String casesensitivefix = targetCombinedFilePath + "_temp";
+                    workspaceService.moveFolder(workspace, sourceProject, sourceFilePath, targetProject, casesensitivefix);
+                    workspaceService.moveFolder(workspace, sourceProject, casesensitivefix, targetProject, IRepository.SEPARATOR);
+                    result.add(new WorkspaceFromToPair(sourceProject + sourceFilePath, targetProject + targetCombinedFilePath));
+                } else if (workspaceService.existsFolder(workspace, targetProject, targetFilePath)) {
                     String targetCombinedFilePath =
                             targetFilePath + sourceFilePath.substring(sourceFilePath.lastIndexOf(IRepositoryStructure.SEPARATOR));
                     String casesensitivefix = targetCombinedFilePath + "_temp";
@@ -348,7 +355,7 @@ public class WorkspaceEndpoint {
                     workspaceService.moveFolder(workspace, sourceProject, casesensitivefix, targetProject, targetFilePath);
                     result.add(new WorkspaceFromToPair(sourceProject + sourceFilePath, targetProject + targetCombinedFilePath));
                 } else {
-                    String error = "Target path is not a folder";
+                    String error = "Target path is not a folder or a project";
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
                 }
             } else {
@@ -359,14 +366,19 @@ public class WorkspaceEndpoint {
             }
         } else {
             if (multiple) {
-                // multiple source files, so the target must be a folder
-                if (workspaceService.existsFolder(workspace, targetProject, targetFilePath)) {
+                // multiple source files, so the target must be a folder or a project
+                if (targetFilePath.equals(IRepositoryStructure.SEPARATOR + targetProject)
+                        && workspaceService.existsProject(workspace, targetProject)) {
+                    String targetCombinedFilePath = sourceFilePath.substring(sourceFilePath.lastIndexOf(IRepositoryStructure.SEPARATOR));
+                    workspaceService.moveFolder(workspace, sourceProject, sourceFilePath, targetProject, targetCombinedFilePath);
+                    result.add(new WorkspaceFromToPair(sourceProject + sourceFilePath, targetProject + targetCombinedFilePath));
+                } else if (workspaceService.existsFolder(workspace, targetProject, targetFilePath)) {
                     String targetCombinedFilePath =
                             targetFilePath + sourceFilePath.substring(sourceFilePath.lastIndexOf(IRepositoryStructure.SEPARATOR));
                     workspaceService.moveFolder(workspace, sourceProject, sourceFilePath, targetProject, targetCombinedFilePath);
                     result.add(new WorkspaceFromToPair(sourceProject + sourceFilePath, targetProject + targetCombinedFilePath));
                 } else {
-                    String error = "Target path is not a folder";
+                    String error = "Target path is not a folder or a project";
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
                 }
             } else {
@@ -394,8 +406,15 @@ public class WorkspaceEndpoint {
                 && sourceProject.toLowerCase()
                                 .equals(targetProject.toLowerCase())) {
             if (multiple) {
-                // multiple source files, so the target must be a folder
-                if (workspaceService.existsFolder(workspace, targetProject, targetFilePath)) {
+                // multiple source files, so the target must be a folder or a project
+                if (targetFilePath.equals(IRepositoryStructure.SEPARATOR + targetProject)
+                        && workspaceService.existsProject(workspace, targetProject)) {
+                    String targetCombinedFilePath = sourceFilePath.substring(sourceFilePath.lastIndexOf(IRepositoryStructure.SEPARATOR));
+                    String casesensitivefix = targetCombinedFilePath + "_temp";
+                    workspaceService.moveFile(workspace, sourceProject, sourceFilePath, targetProject, casesensitivefix);
+                    workspaceService.moveFile(workspace, sourceProject, casesensitivefix, targetProject, IRepositoryStructure.SEPARATOR);
+                    result.add(new WorkspaceFromToPair(sourceProject + sourceFilePath, targetProject + targetCombinedFilePath));
+                } else if (workspaceService.existsFolder(workspace, targetProject, targetFilePath)) {
                     String targetCombinedFilePath =
                             targetFilePath + sourceFilePath.substring(sourceFilePath.lastIndexOf(IRepositoryStructure.SEPARATOR));
                     String casesensitivefix = targetCombinedFilePath + "_temp";
@@ -403,7 +422,7 @@ public class WorkspaceEndpoint {
                     workspaceService.moveFile(workspace, sourceProject, casesensitivefix, targetProject, targetFilePath);
                     result.add(new WorkspaceFromToPair(sourceProject + sourceFilePath, targetProject + targetCombinedFilePath));
                 } else {
-                    String error = "Target path is not a folder";
+                    String error = "Target path is not a folder or a project";
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
                 }
             } else {
@@ -414,14 +433,19 @@ public class WorkspaceEndpoint {
             }
         } else {
             if (multiple) {
-                // multiple source files, so the target must be a folder
-                if (workspaceService.existsFolder(workspace, targetProject, targetFilePath)) {
+                // multiple source files, so the target must be a folder or a project
+                if (targetFilePath.equals(IRepositoryStructure.SEPARATOR + targetProject)
+                        && workspaceService.existsProject(workspace, targetProject)) {
+                    String targetCombinedFilePath = sourceFilePath.substring(sourceFilePath.lastIndexOf(IRepositoryStructure.SEPARATOR));
+                    workspaceService.moveFile(workspace, sourceProject, sourceFilePath, targetProject, targetCombinedFilePath);
+                    result.add(new WorkspaceFromToPair(sourceProject + sourceFilePath, targetProject + targetCombinedFilePath));
+                } else if (workspaceService.existsFolder(workspace, targetProject, targetFilePath)) {
                     String targetCombinedFilePath =
                             targetFilePath + sourceFilePath.substring(sourceFilePath.lastIndexOf(IRepositoryStructure.SEPARATOR));
                     workspaceService.moveFile(workspace, sourceProject, sourceFilePath, targetProject, targetCombinedFilePath);
                     result.add(new WorkspaceFromToPair(sourceProject + sourceFilePath, targetProject + targetCombinedFilePath));
                 } else {
-                    String error = "Target path is not a folder";
+                    String error = "Target path is not a folder or a project";
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
                 }
             } else {
