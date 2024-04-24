@@ -48,13 +48,16 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 		});
 
 
-
 		$scope.tasksList = [];
 		$scope.tasksListAssignee = [];
 		$scope.selectedClaimTask = null;
 		$scope.selectedUnclaimTask = null;
 
 		$scope.currentFetchDataTask = null;
+
+        setInterval(() => {
+            $scope.reload();
+        }, 3000);
 
 		$scope.reload = function() {
 			console.log("Reloading user tasks")
