@@ -343,20 +343,10 @@ projectsView.controller('ProjectsViewController', [
         function getProjectNode(parents) {
             for (let i = 0; i < parents.length; i++) {
                 if (parents[i] !== '#') {
-                    let parent = $scope.jstreeWidget.jstree(true).get_node(parents[i]);
+                    const parent = $scope.jstreeWidget.jstree(true).get_node(parents[i]);
                     if (parent.type === 'project') {
                         return parent;
                     }
-                }
-            }
-        }
-
-        function setParentsIndicator(parents, modified) {
-            for (let i = 0; i < parents.length; i++) {
-                if (parents[i] !== '#') {
-                    const parent = $scope.jstreeWidget.jstree(true).get_node(parents[i]);
-                    parent.state.containsChanges = modified;
-                    $scope.jstreeWidget.jstree(true).redraw_node(parent);
                 }
             }
         }
@@ -1634,12 +1624,18 @@ projectsView.controller('ProjectsViewController', [
                 const instance = $scope.jstreeWidget.jstree(true);
                 for (let item in instance._model.data) { // Uses the unofficial '_model' property but this is A LOT faster then using 'get_json()'
                     if (item !== '#' && instance._model.data.hasOwnProperty(item) && instance._model.data[item].data.path === fileDescriptor.path) {
-                        const parent = getProjectNode(instance._model.data[item].parents);
-                        if (parent.li_attr.git) {
-                            if (data.status === 'modified')
-                                instance._model.data[item].state.status = 'M';
-                            else instance._model.data[item].state.status = undefined;
-                            instance.redraw_node(instance._model.data[item], false, false, false, data.status === 'modified');
+                        for (let i = 0; i < instance._model.data[item].parents.length; i++) {
+                            if (instance._model.data[item].parents[i] !== '#') {
+                                if (instance._model.data[instance._model.data[item].parents[i]].type === 'project') {
+                                    if (instance._model.data[instance._model.data[item].parents[i]].li_attr.git) {
+                                        if (data.status === 'modified')
+                                            instance._model.data[item].state.status = 'M';
+                                        else instance._model.data[item].state.status = undefined;
+                                        instance.redraw_node(instance._model.data[item], false, false, false, data.status === 'modified');
+                                    }
+                                    return;
+                                }
+                            }
                         }
                         break;
                     }
