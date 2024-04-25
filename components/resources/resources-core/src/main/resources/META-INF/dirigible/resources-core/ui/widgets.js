@@ -198,7 +198,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                             description: attrs.dgShortcutDescription || ''
                         }));
                     }
-                    scope.$on("$destroy", function () {
+                    scope.$on('$destroy', function () {
                         for (let i = 0; i < shortcutList.length; i++) {
                             shortcuts.unregister(shortcutList[i]);
                         }
@@ -206,7 +206,16 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 }
             }
         }
-    }]).directive('dgInputRules', function ($parse) {
+    }]).directive('dgFocus', function ($timeout) {
+        return {
+            restrict: 'A',
+            link: function (_scope, element, attrs) {
+                attrs.$observe('dgFocus', function (newValue) {
+                    if (newValue === 'true') $timeout(function () { element.focus() });
+                });
+            }
+        };
+    }).directive('dgInputRules', function ($parse) {
         /**
          * How to use:
          * <input ng-model="inputModel" ng-required dg-input-rules="inputRules">

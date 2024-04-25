@@ -9,7 +9,7 @@
     else {
         factory(jQuery, jQuery.jstree);
     }
-}(function ($, jstree, undefined) {
+}(function ($, _jstree, undefined) {
     "use strict";
 
     if ($.jstree.plugins.indicator) { return; }
@@ -75,7 +75,7 @@
             }
         }
     };
-    $.jstree.plugins.indicator = function (options, parent) {
+    $.jstree.plugins.indicator = function (_options, parent) {
         this.bind = function () {
             parent.bind.call(this);
             this.element
@@ -109,13 +109,30 @@
             return parent.close_node.call(this, obj, animation);
         };
 
-        this.redraw_node = function (obj, deep, callback, force_draw) {
-            let element = parent.redraw_node.apply(this, arguments);
-            if (element) this.settings.indicator.rowIndicator(element, this._model.data[obj]);
+        this.redraw_node = function (obj, _deep, _callback, _force_draw, parentIndicator) {
+            const element = parent.redraw_node.apply(this, arguments);
+            if (element) this.settings.indicator.rowIndicator(element, typeof obj === 'object' ? obj : this._model.data[obj]);
+            if (parentIndicator !== undefined) {
+                for (let i = 0; i < obj.parents.length; i++) {
+                    if (obj.parents[i] !== '#') {
+                        let containsOtherChanges = false;
+                        for (let c = 0; c < this._model.data[obj.parents[i]].children_d.length; c++) {
+                            if (this._model.data[obj.parents[i]].children_d[c] !== obj.id && this._model.data[this._model.data[obj.parents[i]].children_d[c]].state.status) {
+                                containsOtherChanges = true;
+                                break;
+                            }
+                        }
+                        if (!containsOtherChanges) {
+                            this._model.data[obj.parents[i]].state.containsChanges = parentIndicator;
+                            this.redraw_node(obj.parents[i]);
+                        }
+                    }
+                }
+            }
             return element;
         };
 
-        this.sort = function (obj, deep) {
+        this.sort = function (obj, deep = false) {
             let containsChanges = false;
             obj = this.get_node(obj);
             if (obj && obj.children && obj.children.length) {

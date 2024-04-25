@@ -46,9 +46,9 @@
                 title="Skip" aria-label="Skip" ng-click="instances.skip()">
             </fd-button>
         </fd-toolbar>
-        <fd-toolbar ng-show="instances.displaySearch">
+        <fd-toolbar ng-if="instances.displaySearch">
             <fd-input type="search" placeholder="Search" ng-keyup="instances.inputSearchKeyUp($event)"
-                ng-model="instances.searchText">
+                ng-model="instances.searchText" dg-focus="true">
             </fd-input>
         </fd-toolbar>
         <fd-scrollbar class="dg-fill-parent">

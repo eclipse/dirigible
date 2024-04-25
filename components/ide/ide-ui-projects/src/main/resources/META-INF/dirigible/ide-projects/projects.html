@@ -42,7 +42,7 @@
             <fd-button compact="true" dg-type="transparent" glyph="sap-icon--save" title="Save all"
                 aria-label="Save all" ng-click="saveAll()"></fd-button>
             <fd-button compact="true" dg-type="transparent" glyph="sap-icon--play" title="Publish all"
-                aria-label="Publish all" ng-click="publishAll()" ng-show="isPublishEnabled()"></fd-button>
+                aria-label="Publish all" ng-click="publishAll()" ng-if="isPublishEnabled()"></fd-button>
             <fd-button compact="true" dg-type="transparent" glyph="sap-icon--refresh" title="Refresh"
                 aria-label="Refresh" ng-click="reloadWorkspace()"></fd-button>
             <fd-toolbar-separator></fd-toolbar-separator>
@@ -72,9 +72,6 @@
                 <fd-button dg-type="transparent" dg-label="Duplicate project" glyph="sap-icon--duplicate"
                     is-overflow="true" ng-click="duplicateProject()">
                 </fd-button>
-                <!-- <fd-button dg-type="transparent" dg-label="Link project" glyph="sap-icon--chain-link"
-                    is-overflow="true" ng-click="linkProject()">
-                </fd-button> -->
                 <fd-button dg-type="transparent" dg-label="Export projects" glyph="sap-icon--download-from-cloud"
                     is-overflow="true" ng-click="exportProjects()">
                 </fd-button>
@@ -87,8 +84,10 @@
                 </fd-button>
             </fd-toolbar-overflow>
         </fd-toolbar>
-        <fd-toolbar ng-show="searchVisible && !state.error && !state.isBusy">
-            <fd-input type="search" placeholder="Search" ng-keyup="search()" ng-model="searchField.text"></fd-input>
+        <fd-toolbar ng-if="searchVisible && !state.error && !state.isBusy">
+            <fd-input type="search" placeholder="Search" ng-keyup="search()" dg-focus="true"
+                ng-model="searchField.text">
+            </fd-input>
         </fd-toolbar>
         <div id="dgProjects" class="jstree-fiori--fill jstree-fiori--context-menu fd-scrollbar"
             dg-contextmenu="contextMenuContent" ng-show="!state.error && !state.isBusy"></div>

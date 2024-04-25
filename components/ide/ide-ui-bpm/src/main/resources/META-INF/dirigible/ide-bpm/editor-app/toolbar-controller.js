@@ -15,172 +15,172 @@
 
 angular.module('flowableModeler')
     .controller('ToolbarController', ['$scope', '$http', '$modal', '$q', '$rootScope', '$translate', '$location', 'editorManager',
-    		function ($scope, $http, $modal, $q, $rootScope, $translate, $location, editorManager) {
+        function ($scope, $http, $modal, $q, $rootScope, $translate, $location, editorManager) {
 
-    	$scope.editorFactory.promise.then(function () {
-	        var toolbarItems = FLOWABLE.TOOLBAR_CONFIG.items;
-	        $scope.items = [];
-	        
-	        for (var i = 0; i < toolbarItems.length; i++)
-	        {
-	        	if ($rootScope.modelData.model.modelType === 'form')
-		        {
-		        	if (!toolbarItems[i].disableInForm)
-		        	{
-		        		$scope.items.push(toolbarItems[i]);
-		        	}
-		        }
-	        	else
-	        	{
-	        		$scope.items.push(toolbarItems[i]);
-	        	}
-	        }
-    	});
-        
-        $scope.secondaryItems = FLOWABLE.TOOLBAR_CONFIG.secondaryItems;
+            $scope.editorFactory.promise.then(function () {
+                var toolbarItems = FLOWABLE.TOOLBAR_CONFIG.items;
+                $scope.items = [];
 
-        // Call configurable click handler (From http://stackoverflow.com/questions/359788/how-to-execute-a-javascript-function-when-i-have-its-name-as-a-string)
-        var executeFunctionByName = function(functionName, context /*, args */) {
-            var args = Array.prototype.slice.call(arguments).splice(2);
-            var namespaces = functionName.split(".");
-            var func = namespaces.pop();
-            for(var i = 0; i < namespaces.length; i++) {
-                context = context[namespaces[i]];
-            }
-            return context[func].apply(this, args);
-        };
+                for (var i = 0; i < toolbarItems.length; i++) {
+                    if ($rootScope.modelData.model.modelType === 'form') {
+                        if (!toolbarItems[i].disableInForm) {
+                            $scope.items.push(toolbarItems[i]);
+                        }
+                    }
+                    else {
+                        $scope.items.push(toolbarItems[i]);
+                    }
+                }
+            });
 
-        // Click handler for toolbar buttons
-        $scope.toolbarButtonClicked = function(buttonIndex) {
+            $scope.secondaryItems = FLOWABLE.TOOLBAR_CONFIG.secondaryItems;
 
-            // Default behaviour
-            var buttonClicked = $scope.items[buttonIndex];
-            var services = { '$scope' : $scope, '$rootScope' : $rootScope, '$http' : $http, '$modal' : $modal, '$q' : $q, '$translate' : $translate, 'editorManager' : editorManager};
-            executeFunctionByName(buttonClicked.action, window, services);
-
-            // Other events
-            var event = {
-                type : FLOWABLE.eventBus.EVENT_TYPE_TOOLBAR_BUTTON_CLICKED,
-                toolbarItem : buttonClicked
+            // Call configurable click handler (From http://stackoverflow.com/questions/359788/how-to-execute-a-javascript-function-when-i-have-its-name-as-a-string)
+            var executeFunctionByName = function (functionName, context /*, args */) {
+                var args = Array.prototype.slice.call(arguments).splice(2);
+                var namespaces = functionName.split(".");
+                var func = namespaces.pop();
+                for (var i = 0; i < namespaces.length; i++) {
+                    context = context[namespaces[i]];
+                }
+                return context[func].apply(this, args);
             };
-            FLOWABLE.eventBus.dispatch(event.type, event);
-        };
-        
-        // Click handler for secondary toolbar buttons
-        $scope.toolbarSecondaryButtonClicked = function(buttonIndex) {
-            var buttonClicked = $scope.secondaryItems[buttonIndex];
-            var services = { '$scope' : $scope, '$http' : $http, '$modal' : $modal, '$q' : $q, '$translate' : $translate, '$location': $location, 'editorManager' : editorManager};
-            executeFunctionByName(buttonClicked.action, window, services);
-        };
-        
-        /* Key bindings */
-        Mousetrap.bind('mod+z', function(e) {
-        	var services = { '$scope' : $scope, '$rootScope' : $rootScope, '$http' : $http, '$modal' : $modal, '$q' : $q, '$translate' : $translate, 'editorManager' : editorManager};
-        	FLOWABLE.TOOLBAR.ACTIONS.undo(services);
-            return false;
-        });
-        
-        Mousetrap.bind('mod+y', function(e) {
-        	var services = { '$scope' : $scope, '$rootScope' : $rootScope, '$http' : $http, '$modal' : $modal, '$q' : $q, '$translate' : $translate, 'editorManager' : editorManager};
-        	FLOWABLE.TOOLBAR.ACTIONS.redo(services);
-            return false;
-        });
-        
-        Mousetrap.bind('mod+c', function(e) {
-        	var services = { '$scope' : $scope, '$rootScope' : $rootScope, '$http' : $http, '$modal' : $modal, '$q' : $q, '$translate' : $translate, 'editorManager' : editorManager};
-        	FLOWABLE.TOOLBAR.ACTIONS.copy(services);
-            return false;
-        });
-        
-        Mousetrap.bind('mod+v', function(e) {
-        	var services = { '$scope' : $scope, '$rootScope' : $rootScope, '$http' : $http, '$modal' : $modal, '$q' : $q, '$translate' : $translate, 'editorManager' : editorManager};
-        	FLOWABLE.TOOLBAR.ACTIONS.paste(services);
-            return false;
-        });
-        
-        Mousetrap.bind(['del'], function(e) {
-        	var services = { '$scope' : $scope, '$rootScope' : $rootScope, '$http' : $http, '$modal' : $modal, '$q' : $q, '$translate' : $translate, 'editorManager' : editorManager};
-        	FLOWABLE.TOOLBAR.ACTIONS.deleteItem(services);
-            return false;
-        });
 
-        /* Undo logic */
+            // Click handler for toolbar buttons
+            $scope.toolbarButtonClicked = function (buttonIndex) {
 
-        $scope.undoStack = [];
-        $scope.redoStack = [];
-        
-        FLOWABLE.eventBus.addListener(FLOWABLE.eventBus.EVENT_TYPE_UNDO_REDO_RESET,function($scope){
-			this.undoStack = [];
-			this.redoStack = [];
-			if (this.items) {
-				for(var i = 0; i < this.items.length; i++) {
-					var item = this.items[i];
-					if (item.action === 'FLOWABLE.TOOLBAR.ACTIONS.undo' || item.action === "FLOWABLE.TOOLBAR.ACTIONS.redo"){
-						item.enabled = false;
-					}
-				}
-			}
-			
-		},$scope);
+                // Default behaviour
+                var buttonClicked = $scope.items[buttonIndex];
+                var services = { '$scope': $scope, '$rootScope': $rootScope, '$http': $http, '$modal': $modal, '$q': $q, '$translate': $translate, 'editorManager': editorManager };
+                executeFunctionByName(buttonClicked.action, window, services);
 
-        $scope.editorFactory.promise.then(function() {
+                // Other events
+                var event = {
+                    type: FLOWABLE.eventBus.EVENT_TYPE_TOOLBAR_BUTTON_CLICKED,
+                    toolbarItem: buttonClicked
+                };
+                FLOWABLE.eventBus.dispatch(event.type, event);
+            };
 
-            // Catch all command that are executed and store them on the respective stacks
-            editorManager.registerOnEvent(ORYX.CONFIG.EVENT_EXECUTE_COMMANDS, function( evt ){
+            // Click handler for secondary toolbar buttons
+            $scope.toolbarSecondaryButtonClicked = function (buttonIndex) {
+                var buttonClicked = $scope.secondaryItems[buttonIndex];
+                var services = { '$scope': $scope, '$http': $http, '$modal': $modal, '$q': $q, '$translate': $translate, '$location': $location, 'editorManager': editorManager };
+                executeFunctionByName(buttonClicked.action, window, services);
+            };
 
-                // If the event has commands
-                if( !evt.commands ){ return; }
+            /* Key bindings */
+            Mousetrap.bind('mod+z', function (e) {
+                var services = { '$scope': $scope, '$rootScope': $rootScope, '$http': $http, '$modal': $modal, '$q': $q, '$translate': $translate, 'editorManager': editorManager };
+                FLOWABLE.TOOLBAR.ACTIONS.undo(services);
+                return false;
+            });
 
-                $scope.undoStack.push( evt.commands );
-                $scope.redoStack = [];
-                
-                for(var i = 0; i < $scope.items.length; i++) 
-        		{
-                    var item = $scope.items[i];
-                    if (item.action === 'FLOWABLE.TOOLBAR.ACTIONS.undo')
-                    {
-                    	item.enabled = true;
+            Mousetrap.bind('mod+s', function (e) {
+                var services = { '$scope': $scope, '$rootScope': $rootScope, '$http': $http, '$modal': $modal, '$q': $q, '$translate': $translate, 'editorManager': editorManager };
+                FLOWABLE.TOOLBAR.ACTIONS.saveModel(services);
+                return false;
+            });
+
+            Mousetrap.bind('mod+y', function (e) {
+                var services = { '$scope': $scope, '$rootScope': $rootScope, '$http': $http, '$modal': $modal, '$q': $q, '$translate': $translate, 'editorManager': editorManager };
+                FLOWABLE.TOOLBAR.ACTIONS.redo(services);
+                return false;
+            });
+
+            Mousetrap.bind('mod+c', function (e) {
+                var services = { '$scope': $scope, '$rootScope': $rootScope, '$http': $http, '$modal': $modal, '$q': $q, '$translate': $translate, 'editorManager': editorManager };
+                FLOWABLE.TOOLBAR.ACTIONS.copy(services);
+                return false;
+            });
+
+            Mousetrap.bind('mod+v', function (e) {
+                var services = { '$scope': $scope, '$rootScope': $rootScope, '$http': $http, '$modal': $modal, '$q': $q, '$translate': $translate, 'editorManager': editorManager };
+                FLOWABLE.TOOLBAR.ACTIONS.paste(services);
+                return false;
+            });
+
+            Mousetrap.bind(['del'], function (e) {
+                var services = { '$scope': $scope, '$rootScope': $rootScope, '$http': $http, '$modal': $modal, '$q': $q, '$translate': $translate, 'editorManager': editorManager };
+                FLOWABLE.TOOLBAR.ACTIONS.deleteItem(services);
+                return false;
+            });
+
+            /* Undo logic */
+
+            $scope.undoStack = [];
+            $scope.redoStack = [];
+
+            FLOWABLE.eventBus.addListener(FLOWABLE.eventBus.EVENT_TYPE_UNDO_REDO_RESET, function ($scope) {
+                this.undoStack = [];
+                this.redoStack = [];
+                if (this.items) {
+                    for (var i = 0; i < this.items.length; i++) {
+                        var item = this.items[i];
+                        if (item.action === 'FLOWABLE.TOOLBAR.ACTIONS.undo' || item.action === "FLOWABLE.TOOLBAR.ACTIONS.redo") {
+                            item.enabled = false;
+                        }
                     }
-                    else if (item.action === 'FLOWABLE.TOOLBAR.ACTIONS.redo')
-                    {
-                    	item.enabled = false;
-                    }
-        		}
+                }
 
-                // Update
-                editorManager.getCanvas().update();
-                editorManager.updateSelection();
+            }, $scope);
+
+            $scope.editorFactory.promise.then(function () {
+
+                // Catch all command that are executed and store them on the respective stacks
+                editorManager.registerOnEvent(ORYX.CONFIG.EVENT_EXECUTE_COMMANDS, function (evt) {
+
+                    // If the event has commands
+                    if (!evt.commands) { return; }
+
+                    $scope.undoStack.push(evt.commands);
+                    $scope.redoStack = [];
+
+                    for (var i = 0; i < $scope.items.length; i++) {
+                        var item = $scope.items[i];
+                        if (item.action === 'FLOWABLE.TOOLBAR.ACTIONS.undo') {
+                            item.enabled = true;
+                        }
+                        else if (item.action === 'FLOWABLE.TOOLBAR.ACTIONS.redo') {
+                            item.enabled = false;
+                        }
+                    }
+
+                    // Update
+                    editorManager.getCanvas().update();
+                    editorManager.updateSelection();
+
+                    setEditorDirtyState(true);
+                });
 
             });
 
-        });
-        
-        // Handle enable/disable toolbar buttons 
-        $scope.editorFactory.promise.then(function() {
-        	editorManager.registerOnEvent(ORYX.CONFIG.EVENT_SELECTION_CHANGED, function( evt ){
-        		var elements = evt.elements;
-        		
-        		for(var i = 0; i < $scope.items.length; i++)  {
-                    var item = $scope.items[i];
-                    if (item.enabledAction && item.enabledAction === 'element') {
-                    	var minLength = 1;
-                    	if (item.minSelectionCount) {
-                    		minLength = item.minSelectionCount;
-                    	}
-                    	
-                    	if (elements.length >= minLength && !item.enabled) {
-                    		$scope.safeApply(function () {
-                    			item.enabled = true;
-                            });
-                    	} else if (elements.length == 0 && item.enabled) {
-                    		$scope.safeApply(function () {
-                    			item.enabled = false;
-                            });
-                    	}
-                    }
-                }
-        	});
-        	
-        });
+            // Handle enable/disable toolbar buttons 
+            $scope.editorFactory.promise.then(function () {
+                editorManager.registerOnEvent(ORYX.CONFIG.EVENT_SELECTION_CHANGED, function (evt) {
+                    var elements = evt.elements;
 
-    }]);
+                    for (var i = 0; i < $scope.items.length; i++) {
+                        var item = $scope.items[i];
+                        if (item.enabledAction && item.enabledAction === 'element') {
+                            var minLength = 1;
+                            if (item.minSelectionCount) {
+                                minLength = item.minSelectionCount;
+                            }
+
+                            if (elements.length >= minLength && !item.enabled) {
+                                $scope.safeApply(function () {
+                                    item.enabled = true;
+                                });
+                            } else if (elements.length == 0 && item.enabled) {
+                                $scope.safeApply(function () {
+                                    item.enabled = false;
+                                });
+                            }
+                        }
+                    }
+                });
+
+            });
+
+        }]);

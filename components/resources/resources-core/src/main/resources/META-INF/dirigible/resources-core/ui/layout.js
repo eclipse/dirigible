@@ -923,7 +923,6 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                         messageHub.postMessage(msg.callbackTopic, {
                             isOpen: true,
                             isDirty: result.tabsView.tabs[result.index].dirty || false,
-                            isFlowable: result.tabsView.tabs[result.index].path.startsWith('../ide-bpm/index.html#/editor') // Temp Flowable fix
                         }, true);
                     } else {
                         messageHub.postMessage(msg.callbackTopic, { isOpen: false }, true);
@@ -1055,9 +1054,6 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                             contentType: contentType
                         }, extraArgs || {});
 
-                        if (eId === 'flowable')
-                            editorPath += resourcePath;
-
                         let result = findCenterSplittedTabViewByPath(resourcePath);
                         let currentTabsView = result ? result.tabsView : getCurrentCenterSplittedTabViewPane();
                         if (result) {
@@ -1097,8 +1093,6 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     else {
                         let result = findCenterSplittedTabViewByPath(resourcePath);
                         if (result) {
-                            if (result.tabsView.tabs[result.index].path.startsWith('../ide-bpm/index.html#/editor'))
-                                throw Error("updateEditor: File is opened in the Flowable editor which doesn't support dynamic updates");
                             result.tabsView.tabs[result.index].label = resourceLabel;
                             result.tabsView.tabs[result.index].params.file = newResourcePath;
                             messageHub.editorReloadParameters(resourcePath);

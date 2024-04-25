@@ -36,9 +36,9 @@
                 title="Toggle search" aria-label="Toggle search" ng-click="definitions.toggleSearch()">
             </fd-button>
         </fd-toolbar>
-        <fd-toolbar ng-show="definitions.displaySearch">
+        <fd-toolbar ng-if="definitions.displaySearch">
             <fd-input type="search" placeholder="Search" ng-keyup="definitions.inputSearchKeyUp($event)"
-                ng-model="definitions.searchText">
+                ng-model="definitions.searchText" dg-focus="true">
             </fd-input>
         </fd-toolbar>
         <fd-scrollbar class="dg-fill-parent">

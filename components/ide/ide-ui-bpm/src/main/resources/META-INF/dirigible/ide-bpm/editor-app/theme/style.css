@@ -17,8 +17,15 @@
   font-style: normal;
 }
 
+body {
+  padding: 0;
+  margin: 0;
+}
+
 .wrapper.full {
   background-color: var(--sapBackgroundColor, #f7f7f7);
+  max-width: 100vw !important;
+  max-height: 100vh !important;
 }
 
 .row-no-gutter .col-xs-9,
@@ -965,8 +972,7 @@ hot-table .column-header.label {
 
 #decisionTableGrid tr .input-operator-cell {
   text-align: center;
-  min-width: 50px;
-   !important;
+  min-width: 50px !important;
 }
 
 #decisionTableGrid td.htInvalid {

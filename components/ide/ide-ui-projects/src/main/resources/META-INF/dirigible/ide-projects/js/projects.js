@@ -12,34 +12,12 @@
 const projectsView = angular.module('projects', ['ideUI', 'ideView', 'ideEditors', 'ideWorkspace', 'idePublisher', 'ideTemplates', 'ideGenerate', 'ideTransport', 'ideActions']);
 
 projectsView.controller('ProjectsViewController', [
-    '$scope',
-    '$document',
-    'messageHub',
-    'workspaceApi',
-    'Editors',
-    'publisherApi',
-    'templatesApi',
-    'generateApi',
-    'transportApi',
-    'actionsApi',
-    'platform',
-    function (
-        $scope,
-        $document,
-        messageHub,
-        workspaceApi,
-        Editors,
-        publisherApi,
-        templatesApi,
-        generateApi,
-        transportApi,
-        actionsApi,
-        platform
-    ) {
+    '$scope', '$document', 'messageHub', 'workspaceApi', 'Editors', 'publisherApi', 'templatesApi', 'generateApi', 'transportApi', 'actionsApi', 'platform',
+    function ($scope, $document, messageHub, workspaceApi, Editors, publisherApi, templatesApi, generateApi, transportApi, actionsApi, platform) {
         $scope.state = {
             isBusy: true,
             error: false,
-            busyText: "Loading...",
+            busyText: 'Loading...',
         };
         $scope.searchVisible = false;
         $scope.searchField = { text: '' };
@@ -49,6 +27,7 @@ projectsView.controller('ProjectsViewController', [
         $scope.modelTemplates = [];
         $scope.modelTemplateExtensions = [];
         $scope.gmodel = {
+            nodeParents: [],
             templateId: '',
             project: '',
             model: '',
@@ -79,6 +58,7 @@ projectsView.controller('ProjectsViewController', [
         $scope.projects = [];
 
         $scope.jstreeWidget = angular.element('#dgProjects');
+        $scope.dndCancel = false;
         $scope.spinnerObj = {
             text: 'Loading...',
             type: 'spinner',
@@ -86,7 +66,10 @@ projectsView.controller('ProjectsViewController', [
         };
         $scope.jstreeConfig = {
             core: {
-                check_callback: true,
+                check_callback: function (operation) {
+                    if (operation == 'move_node' && $scope.dndCancel) return false;
+                    return true;
+                },
                 themes: {
                     name: 'fiori',
                     variant: 'compact',
@@ -106,13 +89,14 @@ projectsView.controller('ProjectsViewController', [
                                 }
                                 cb(children);
                             } else {
+                                messageHub.setStatusError(`There was an error while refreshing the contents of '${node.data.path}'`);
                                 console.error(response);
                                 $scope.reloadWorkspace();
                             }
                         });
                     }
                 },
-                keyboard: { // We have to have this, in order to disable the default behavior.
+                keyboard: { // We have to have this in order to disable the default behavior.
                     'enter': function () { },
                     'f2': function () { },
                 }
@@ -122,7 +106,9 @@ projectsView.controller('ProjectsViewController', [
             },
             plugins: ['wholerow', 'dnd', 'search', 'state', 'types', 'indicator'],
             dnd: {
+                touch: 'selected',
                 copy: false,
+                blank_space_drop: false,
                 large_drop_target: true,
                 large_drag_target: true,
                 is_draggable: function (nodes) {
@@ -216,7 +202,7 @@ projectsView.controller('ProjectsViewController', [
         });
 
         $scope.jstreeWidget.on('dblclick.jstree', function (event) {
-            let node = $scope.jstreeWidget.jstree(true).get_node(event.target);
+            const node = $scope.jstreeWidget.jstree(true).get_node(event.target);
             if (node.type === 'file') openFile(node);
         });
 
@@ -228,6 +214,7 @@ projectsView.controller('ProjectsViewController', [
             const targetPath = (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/');
             let pasteArray = [];
             for (let i = 0; i < pasteObj.node.length; i++) {
+                if (pasteObj.node[i].data.path === targetPath) return;
                 pasteArray.push(pasteObj.node[i].data.path);
             }
             function onResponse(response) {
@@ -290,16 +277,26 @@ projectsView.controller('ProjectsViewController', [
             }
         });
 
-        $(document).bind("dnd_stop.vakata", function (_e, data) { //Triggered on drag complete
-            $scope.jstreeWidget.jstree(true).cut(data.data.nodes);
+        $(document).bind('dnd_stop.vakata', function (_e, data) { //Triggered on drag complete
             const target = $scope.jstreeWidget.jstree(true).get_node(data.event.target);
-            $scope.jstreeWidget.jstree(true).paste(target);
+            for (let i = 0; i < data.data.nodes.length; i++) {
+                if (target.children.includes(data.data.nodes[i])) {
+                    $scope.dndCancel = true;
+                    return;
+                }
+            }
+            $scope.dndCancel = false;
+            if (!data.data.nodes.includes(target.id)) {
+                $scope.jstreeWidget.jstree(true).cut(data.data.nodes);
+                $scope.jstreeWidget.jstree(true).paste(target);
+                $scope.jstreeWidget.jstree(true).delete_node(data.data.nodes);
+            } else $scope.dndCancel = true;
         });
 
         function setMenuTemplateItems(parent, menuObj, workspace, nodePath) {
             let priorityTemplates = true;
             let childExtensions = {};
-            let children = getChildrenNames(parent, 'file');
+            const children = getChildrenNames(parent, 'file');
             for (let i = 0; i < children.length; i++) {
                 let lastIndex = children[i].lastIndexOf('.');
                 if (lastIndex !== -1) childExtensions[children[i].substring(lastIndex + 1)] = true;
@@ -346,8 +343,18 @@ projectsView.controller('ProjectsViewController', [
             }
         }
 
+        function setParentsIndicator(parents, modified) {
+            for (let i = 0; i < parents.length; i++) {
+                if (parents[i] !== '#') {
+                    const parent = $scope.jstreeWidget.jstree(true).get_node(parents[i]);
+                    parent.state.containsChanges = modified;
+                    $scope.jstreeWidget.jstree(true).redraw_node(parent);
+                }
+            }
+        }
+
         function getChildrenNames(node, type = '') {
-            let root = $scope.jstreeWidget.jstree(true).get_node(node);
+            const root = $scope.jstreeWidget.jstree(true).get_node(node);
             let names = [];
             if (type) {
                 for (let i = 0; i < root.children.length; i++) {
@@ -365,38 +372,38 @@ projectsView.controller('ProjectsViewController', [
         $scope.contextMenuContent = function (element) {
             if ($scope.jstreeWidget[0].contains(element)) {
                 let id;
-                if (element.tagName !== "LI") {
-                    const closest = element.closest("li");
+                if (element.tagName !== 'LI') {
+                    const closest = element.closest('li');
                     if (closest) {
                         id = closest.id;
                     } else {
                         let items = [];
                         items.push({
-                            id: "newProject",
-                            label: "New Project",
-                            icon: "sap-icon--create",
+                            id: 'newProject',
+                            label: 'New Project',
+                            icon: 'sap-icon--create',
                         });
                         if (publisherApi.isEnabled()) {
                             items.push({
-                                id: "publishAll",
-                                label: "Publish All",
-                                icon: "sap-icon--arrow-top",
+                                id: 'publishAll',
+                                label: 'Publish All',
+                                icon: 'sap-icon--arrow-top',
                                 divider: true,
                             });
                             items.push({
-                                id: "unpublishAll",
-                                label: "Unpublish All",
-                                icon: "sap-icon--arrow-bottom",
+                                id: 'unpublishAll',
+                                label: 'Unpublish All',
+                                icon: 'sap-icon--arrow-bottom',
                             });
                         }
                         items.push({
-                            id: "exportProjects",
-                            label: "Export all",
-                            icon: "sap-icon--download-from-cloud",
+                            id: 'exportProjects',
+                            label: 'Export all',
+                            icon: 'sap-icon--download-from-cloud',
                             divider: true,
                         });
                         return {
-                            callbackTopic: "projects.tree.contextmenu",
+                            callbackTopic: 'projects.tree.contextmenu',
                             hasIcons: true,
                             items: items
                         }
@@ -413,20 +420,20 @@ projectsView.controller('ProjectsViewController', [
                     let nodes = $scope.jstreeWidget.jstree(true).get_selected(false);
                     if (nodes.length === 1) nodes.length = 0;
                     const newSubmenu = {
-                        id: "new",
-                        label: "New",
-                        icon: "sap-icon--create",
+                        id: 'new',
+                        label: 'New',
+                        icon: 'sap-icon--create',
                         items: [{
-                            id: "file",
-                            label: "File",
+                            id: 'file',
+                            label: 'File',
                             data: {
                                 workspace: node.data.workspace,
                                 path: node.data.path,
                                 parent: node.id
                             },
                         }, {
-                            id: "folder",
-                            label: "Folder",
+                            id: 'folder',
+                            label: 'Folder',
                             data: {
                                 workspace: node.data.workspace,
                                 path: node.data.path,
@@ -435,88 +442,88 @@ projectsView.controller('ProjectsViewController', [
                         }]
                     };
                     const cutObj = {
-                        id: "cut",
-                        label: "Cut",
+                        id: 'cut',
+                        label: 'Cut',
                         shortcut: platform.isMac ? '⌘X' : 'Ctrl+X',
                         divider: true,
-                        icon: "sap-icon--scissors",
+                        icon: 'sap-icon--scissors',
                     };
                     const copyObj = {
-                        id: "copy",
-                        label: "Copy",
+                        id: 'copy',
+                        label: 'Copy',
                         shortcut: platform.isMac ? '⌘C' : 'Ctrl+C',
-                        icon: "sap-icon--copy",
+                        icon: 'sap-icon--copy',
                     };
                     const pasteObj = {
-                        id: "paste",
-                        label: "Paste",
+                        id: 'paste',
+                        label: 'Paste',
                         shortcut: platform.isMac ? '⌘V' : 'Ctrl+V',
-                        icon: "sap-icon--paste",
+                        icon: 'sap-icon--paste',
                         isDisabled: !$scope.jstreeWidget.jstree(true).can_paste() || nodes.length > 1,
                         data: node,
                     };
                     const renameObj = {
-                        id: "rename",
-                        label: "Rename",
-                        shortcut: "F2",
+                        id: 'rename',
+                        label: 'Rename',
+                        shortcut: 'F2',
                         divider: true,
-                        icon: "sap-icon--edit",
+                        icon: 'sap-icon--edit',
                         isDisabled: nodes.length > 1,
                         data: node,
                     };
                     const deleteObj = {
-                        id: "delete",
-                        label: (nodes.length) ? `Delete ${nodes.length} items` : "Delete",
+                        id: 'delete',
+                        label: (nodes.length) ? `Delete ${nodes.length} items` : 'Delete',
                         shortcut: platform.isMac ? '⌘⌫' : 'Del',
-                        icon: "sap-icon--delete",
+                        icon: 'sap-icon--delete',
                         data: (nodes.length) ? nodes : node,
                     };
                     let publishObj;
                     let unpublishObj;
                     if (publisherApi.isEnabled()) {
                         publishObj = {
-                            id: "publish",
-                            label: "Publish",
+                            id: 'publish',
+                            label: 'Publish',
                             divider: true,
-                            icon: "sap-icon--arrow-top",
+                            icon: 'sap-icon--arrow-top',
                         };
                         unpublishObj = {
-                            id: "unpublish",
-                            label: "Unpublish",
-                            icon: "sap-icon--arrow-bottom",
+                            id: 'unpublish',
+                            label: 'Unpublish',
+                            icon: 'sap-icon--arrow-bottom',
                         };
                     }
                     let generateObj;
                     if (generateApi.isEnabled()) {
                         generateObj = {
-                            id: "generateGeneric",
-                            label: "Generate",
-                            icon: "sap-icon-TNT--operations",
+                            id: 'generateGeneric',
+                            label: 'Generate',
+                            icon: 'sap-icon-TNT--operations',
                             divider: true,
                             data: node,
                         };
                     }
                     const importObj = {
-                        id: "import",
-                        label: "Import",
-                        icon: "sap-icon--attachment",
+                        id: 'import',
+                        label: 'Import',
+                        icon: 'sap-icon--attachment',
                         divider: true,
                         data: node,
                     };
                     const importZipObj = {
-                        id: "importZip",
-                        label: "Import from zip",
-                        icon: "sap-icon--attachment-zip-file",
+                        id: 'importZip',
+                        label: 'Import from zip',
+                        icon: 'sap-icon--attachment-zip-file',
                         data: node,
                     };
                     if (node.type === 'project') {
                         let items = [
                             newSubmenu,
                             {
-                                id: "duplicateProject",
-                                label: "Duplicate",
+                                id: 'duplicateProject',
+                                label: 'Duplicate',
                                 divider: true,
-                                icon: "sap-icon--duplicate",
+                                icon: 'sap-icon--duplicate',
                                 data: node,
                             },
                             pasteObj,
@@ -539,23 +546,23 @@ projectsView.controller('ProjectsViewController', [
                         menuObj.items.push(importObj);
                         menuObj.items.push(importZipObj);
                         menuObj.items.push({
-                            id: "exportProject",
-                            label: "Export",
-                            icon: "sap-icon--download-from-cloud",
+                            id: 'exportProject',
+                            label: 'Export',
+                            icon: 'sap-icon--download-from-cloud',
                             divider: true,
                             data: node,
                         });
                         if (actionsApi.isEnabled()) {
                             menuObj.items.push({
-                                id: "actionsProject",
-                                label: "Actions",
-                                icon: "sap-icon--media-play",
+                                id: 'actionsProject',
+                                label: 'Actions',
+                                icon: 'sap-icon--media-play',
                                 divider: true,
                                 data: node,
                             });
                         }
                         return menuObj;
-                    } else if (node.type === "folder") {
+                    } else if (node.type === 'folder') {
                         let items = [
                             newSubmenu,
                             cutObj,
@@ -572,18 +579,18 @@ projectsView.controller('ProjectsViewController', [
                             items.push(unpublishObj);
                         }
                         let menuObj = {
-                            callbackTopic: "projects.tree.contextmenu",
+                            callbackTopic: 'projects.tree.contextmenu',
                             hasIcons: true,
                             items: items
                         };
                         setMenuTemplateItems(node.id, menuObj, node.data.workspace, node.data.path);
                         return menuObj;
-                    } else if (node.type === "file") {
+                    } else if (node.type === 'file') {
                         let items = [
                             {
-                                id: "open",
-                                label: "Open",
-                                icon: "sap-icon--action",
+                                id: 'open',
+                                label: 'Open',
+                                icon: 'sap-icon--action',
                             },
                             cutObj,
                             copyObj,
@@ -593,9 +600,9 @@ projectsView.controller('ProjectsViewController', [
                         if (nodes.length <= 1) {
                             items[0].data = node;
                             items.splice(1, 0, {
-                                id: "openWith",
-                                label: "Open With",
-                                icon: "sap-icon--action",
+                                id: 'openWith',
+                                label: 'Open With',
+                                icon: 'sap-icon--action',
                                 items: getEditorsForType(node)
                             });
                         }
@@ -604,7 +611,7 @@ projectsView.controller('ProjectsViewController', [
                             items.push(unpublishObj);
                         }
                         let menuObj = {
-                            callbackTopic: "projects.tree.contextmenu",
+                            callbackTopic: 'projects.tree.contextmenu',
                             hasIcons: true,
                             items: items
                         };
@@ -612,9 +619,9 @@ projectsView.controller('ProjectsViewController', [
                             const fileExt = getFileExtension(node.text);
                             if (fileExt === 'gen') {
                                 let regenObj = {
-                                    id: "regenerateModel",
-                                    label: "Regenerate",
-                                    icon: "sap-icon--refresh",
+                                    id: 'regenerateModel',
+                                    label: 'Regenerate',
+                                    icon: 'sap-icon--refresh',
                                     divider: true,
                                     data: undefined,
                                     isDisabled: false,
@@ -628,9 +635,9 @@ projectsView.controller('ProjectsViewController', [
                             }
                             else if ($scope.modelTemplates.length && $scope.modelTemplateExtensions.includes(fileExt)) {
                                 let genObj = {
-                                    id: "generateModel",
-                                    label: "Generate",
-                                    icon: "sap-icon-TNT--operations",
+                                    id: 'generateModel',
+                                    label: 'Generate',
+                                    icon: 'sap-icon-TNT--operations',
                                     divider: true,
                                     data: undefined,
                                     isDisabled: false,
@@ -670,7 +677,7 @@ projectsView.controller('ProjectsViewController', [
                     $scope.loadTemplates();
                 } else {
                     $scope.state.error = true;
-                    $scope.errorMessage = "Unable to load workspace list.";
+                    $scope.errorMessage = 'Unable to load workspace list.';
                     messageHub.setStatusError('Unable to load workspace list');
                 }
             });
@@ -708,7 +715,7 @@ projectsView.controller('ProjectsViewController', [
                 } else {
                     $scope.state.isBusy = false;
                     $scope.state.error = true;
-                    $scope.errorMessage = "Unable to load workspace data.";
+                    $scope.errorMessage = 'Unable to load workspace data.';
                     messageHub.setStatusError('Unable to load workspace data');
                 }
             });
@@ -745,8 +752,8 @@ projectsView.controller('ProjectsViewController', [
             });
         };
 
-        function publishAll() {
-            messageHub.showStatusBusy("Publishing projects...");
+        $scope.publishAll = function () {
+            messageHub.showStatusBusy('Publishing projects...');
             publisherApi.publish(`/${$scope.selectedWorkspace.name}/*`).then(function (response) {
                 if (response.status !== 200)
                     messageHub.setStatusError(`Unable to publish projects in '${$scope.selectedWorkspace.name}'`);
@@ -758,7 +765,7 @@ projectsView.controller('ProjectsViewController', [
         };
 
         function unpublishAll() {
-            messageHub.showStatusBusy("Unpublishing projects...");
+            messageHub.showStatusBusy('Unpublishing projects...');
             publisherApi.unpublish(`/${$scope.selectedWorkspace.name}/*`).then(function (response) {
                 if (response.status !== 200)
                     messageHub.setStatusError(`Unable to unpublish projects in '${$scope.selectedWorkspace.name}'`);
@@ -843,21 +850,21 @@ projectsView.controller('ProjectsViewController', [
         //         'linkProjectForm',
         //         'Link project',
         //         [{
-        //             id: "pgfi1",
-        //             type: "input",
-        //             label: "Name",
+        //             id: 'pgfi1',
+        //             type: 'input',
+        //             label: 'Name',
         //             required: true,
-        //             placeholder: "project name",
+        //             placeholder: 'project name',
         //             inputRules: {
         //                 excluded: getChildrenNames('#'),
         //                 patterns: ['^[^/:]*$'],
         //             },
         //         }, {
-        //             id: "pgfi2",
-        //             type: "input",
-        //             label: "Path",
+        //             id: 'pgfi2',
+        //             type: 'input',
+        //             label: 'Path',
         //             required: true,
-        //             placeholder: "/absolute/path/to/project",
+        //             placeholder: '/absolute/path/to/project',
         //         }],
         //         [{
         //             id: 'b1',
@@ -872,6 +879,30 @@ projectsView.controller('ProjectsViewController', [
         //         'projects.link.project',
         //         'Linking...',
         //     );
+        //     const handler = messageHub.onDidReceiveMessage(
+        //         'projects.link.project',
+        //         function (msg) {
+        //             if (msg.data.isMenu) {
+        //                 $scope.linkProject();
+        //             } else if (msg.data.buttonId === 'b1') {
+        //                 workspaceApi.linkProject($scope.selectedWorkspace.name, msg.data.formData[0].value, msg.data.formData[1].value).then(function (response) {
+        //                     messageHub.hideFormDialog('linkProjectForm');
+        //                     if (response.status !== 201) {
+        //                         messageHub.showAlertError(
+        //                             'Failed to link project',
+        //                             `An unexpected error has occurred while trying to link project '${msg.data.formData[0].value}'`
+        //                         );
+        //                         messageHub.setStatusError(`Unable to link project '${msg.data.formData[0].value}'`);
+        //                     } else {
+        //                         $scope.reloadWorkspace();
+        //                         messageHub.setStatusMessage(`Linked project '${msg.data.formData[0].value}'`);
+        //                     }
+        //                 });
+        //             } else messageHub.hideFormDialog('linkProjectForm');
+        //             messageHub.unsubscribe(handler);
+        //         },
+        //         true
+        //     );
         // };
 
         $scope.createProject = function () {
@@ -880,12 +911,12 @@ projectsView.controller('ProjectsViewController', [
                 'Create project',
                 [
                     {
-                        id: "pgfi1",
-                        type: "input",
-                        submitOnEnterId: "b1",
-                        label: "Name",
+                        id: 'pgfi1',
+                        type: 'input',
+                        submitOnEnterId: 'b1',
+                        label: 'Name',
                         required: true,
-                        placeholder: "project name",
+                        placeholder: 'project name',
                         inputRules: {
                             excluded: getChildrenNames('#'),
                             patterns: ['^[^/:]*$'],
@@ -905,6 +936,28 @@ projectsView.controller('ProjectsViewController', [
                 }],
                 'projects.create.project',
                 'Creating...',
+            );
+            const handler = messageHub.onDidReceiveMessage(
+                'projects.create.project',
+                function (msg) {
+                    if (msg.data.buttonId === 'b1') {
+                        workspaceApi.createProject($scope.selectedWorkspace.name, msg.data.formData[0].value).then(function (response) {
+                            messageHub.hideFormDialog('createProjectForm');
+                            if (response.status !== 201) {
+                                messageHub.showAlertError(
+                                    'Failed to create project',
+                                    `An unexpected error has occurred while trying create a project named '${msg.data.formData[0].value}'`
+                                );
+                                messageHub.setStatusError(`Unable to create project '${msg.data.formData[0].value}'`);
+                            } else {
+                                messageHub.setStatusMessage(`Created project '${msg.data.formData[0].value}'`);
+                                $scope.reloadWorkspace();
+                            }
+                        });
+                    } else messageHub.hideFormDialog('createProjectForm');
+                    messageHub.unsubscribe(handler);
+                },
+                true
             );
         };
 
@@ -951,12 +1004,12 @@ projectsView.controller('ProjectsViewController', [
                 title = `Duplicate project '${node.text}'`;
             }
             dialogItems.push({
-                id: "pgfi1",
-                type: "input",
-                submitOnEnterId: "b1",
-                label: "Duplicated project name",
+                id: 'pgfi1',
+                type: 'input',
+                submitOnEnterId: 'b1',
+                label: 'Duplicated project name',
                 required: true,
-                placeholder: "project name",
+                placeholder: 'project name',
                 inputRules: {
                     excluded: getChildrenNames('#'),
                     patterns: ['^[^/:]*$'],
@@ -980,19 +1033,66 @@ projectsView.controller('ProjectsViewController', [
                 'projects.duplicate.project',
                 'Duplicating...',
             );
-        }
+            const handler = messageHub.onDidReceiveMessage(
+                'projects.duplicate.project',
+                function (msg) {
+                    if (msg.data.buttonId === 'b1') {
+                        let originalPath;
+                        let originalWorkspace;
+                        let duplicatePath;
+                        if (msg.data.formData[1].type === 'dropdown') {
+                            let root = $scope.jstreeWidget.jstree(true).get_node('#');
+                            for (let i = 0; i < root.children.length; i++) {
+                                let child = $scope.jstreeWidget.jstree(true).get_node(root.children[i]);
+                                if (child.text === msg.data.formData[1].value) {
+                                    originalPath = child.data.path;
+                                    originalWorkspace = child.data.workspace;
+                                    break;
+                                }
+                            }
+                            duplicatePath = `/${msg.data.formData[2].value}`;
+                        } else {
+                            originalWorkspace = $scope.duplicateProjectData.originalWorkspace
+                            originalPath = $scope.duplicateProjectData.originalPath;
+                            duplicatePath = `/${msg.data.formData[1].value}`;
+                        }
+                        workspaceApi.copy(
+                            originalPath,
+                            duplicatePath,
+                            originalWorkspace,
+                            msg.data.formData[0].value,
+                        ).then(function (response) {
+                            if (response.status === 201) {
+                                if (msg.data.formData[0].value === $scope.selectedWorkspace.name)
+                                    $scope.reloadWorkspace(); // Temp
+                                messageHub.setStatusMessage(`Duplicated '${originalPath}'`);
+                            } else {
+                                messageHub.setStatusError(`Unable to duplicate '${originalPath}'`);
+                                messageHub.showAlertError(
+                                    'Failed to duplicate project',
+                                    `An unexpected error has occurred while trying duplicate '${originalPath}'`,
+                                );
+                            }
+                            messageHub.hideFormDialog('duplicateProjectForm');
+                        });
+                    } else messageHub.hideFormDialog('duplicateProjectForm');
+                    messageHub.unsubscribe(handler);
+                },
+                true
+            );
+        };
 
         $scope.createWorkspace = function () {
             messageHub.showFormDialog(
                 'createWorkspaceForm',
                 'Create workspace',
                 [{
-                    id: "pgfi1",
-                    type: "input",
-                    submitOnEnterId: "b1",
-                    label: "Name",
+                    id: 'pgfi1',
+                    type: 'input',
+                    submitOnEnterId: 'b1',
+                    label: 'Name',
                     required: true,
-                    placeholder: "workspace name",
+                    placeholder: 'workspace name',
                     inputRules: {
                         excluded: $scope.workspaceNames,
                         patterns: ['^[^/:]*$'],
@@ -1011,6 +1111,29 @@ projectsView.controller('ProjectsViewController', [
                 'projects.create.workspace',
                 'Creating...',
             );
+            const handler = messageHub.onDidReceiveMessage(
+                'projects.create.workspace',
+                function (msg) {
+                    if (msg.data.buttonId === 'b1') {
+                        workspaceApi.createWorkspace(msg.data.formData[0].value).then(function (response) {
+                            messageHub.hideFormDialog('createWorkspaceForm');
+                            if (response.status !== 201) {
+                                messageHub.showAlertError(
+                                    'Failed to create workspace',
+                                    `An unexpected error has occurred while trying create a workspace named '${msg.data.formData[0].value}'`
+                                );
+                                messageHub.setStatusError(`Unable to create workspace '${msg.data.formData[0].value}'`);
+                            } else {
+                                $scope.reloadWorkspaceList();
+                                messageHub.setStatusMessage(`Created workspace '${msg.data.formData[0].value}'`);
+                                messageHub.announceWorkspacesModified();
+                            }
+                        });
+                    } else messageHub.hideFormDialog('createWorkspaceForm');
+                    messageHub.unsubscribe(handler);
+                },
+                true
+            );
         };
 
         $scope.deleteWorkspace = function () {
@@ -1019,16 +1142,16 @@ projectsView.controller('ProjectsViewController', [
                     'Delete workspace?',
                     `Are you sure you want to delete workspace "${$scope.selectedWorkspace.name}"? This action cannot be undone.`,
                     [{
-                        id: "b1",
-                        type: "emphasized",
-                        label: "Yes",
+                        id: 'b1',
+                        type: 'emphasized',
+                        label: 'Yes',
                     }, {
-                        id: "b3",
-                        type: "normal",
-                        label: "No",
+                        id: 'b3',
+                        type: 'normal',
+                        label: 'No',
                     }],
                 ).then(function (msg) {
-                    if (msg.data === "b1") {
+                    if (msg.data === 'b1') {
                         workspaceApi.deleteWorkspace($scope.selectedWorkspace.name).then(function (response) {
                             if (response.status === 204) {
                                 $scope.switchWorkspace('workspace');
@@ -1095,20 +1218,28 @@ projectsView.controller('ProjectsViewController', [
         }
 
         function getFileIcon(fileName) {
-            let ext = getFileExtension(fileName);
+            const ext = getFileExtension(fileName);
             let icon;
-            if (ext === 'js' || ext === 'mjs' || ext === 'xsjs' || ext === 'ts' || ext === 'json') {
-                icon = "sap-icon--syntax";
+            if (ext === 'js' || ext === 'mjs' || ext === 'xsjs' || ext === 'ts' || ext === 'tsx' || ext === 'py' || ext === 'json') {
+                icon = 'sap-icon--syntax';
             } else if (ext === 'css' || ext === 'less' || ext === 'scss') {
-                icon = "sap-icon--number-sign";
+                icon = 'sap-icon--number-sign';
             } else if (ext === 'txt') {
-                icon = "sap-icon--text";
+                icon = 'sap-icon--text';
             } else if (ext === 'pdf') {
-                icon = "sap-icon--pdf-attachment";
+                icon = 'sap-icon--pdf-attachment';
+            } else if (ext === 'md') {
+                icon = 'sap-icon--information';
+            } else if (ext === 'access') {
+                icon = 'sap-icon--locked';
+            } else if (ext === 'zip') {
+                icon = 'sap-icon--attachment-zip-file';
+            } else if (ext === 'extensionpoint') {
+                icon = 'sap-icon--puzzle';
             } else if ($scope.imageFileExts.indexOf(ext) !== -1) {
-                icon = "sap-icon--picture";
+                icon = 'sap-icon--picture';
             } else if ($scope.modelFileExts.indexOf(ext) !== -1) {
-                icon = "sap-icon--document-text";
+                icon = 'sap-icon--document-text';
             } else {
                 icon = 'jstree-file';
             }
@@ -1124,7 +1255,7 @@ projectsView.controller('ProjectsViewController', [
                     editorId: Editors.defaultEditor.id,
                 }
             }];
-            let editorsForContentType = Editors.editorsForContentType;
+            const editorsForContentType = Editors.editorsForContentType;
             if (Object.keys(editorsForContentType).indexOf(node.data.contentType) > -1) {
                 for (let i = 0; i < editorsForContentType[node.data.contentType].length; i++) {
                     if (editorsForContentType[node.data.contentType][i].id !== Editors.defaultEditor.id)
@@ -1218,7 +1349,7 @@ projectsView.controller('ProjectsViewController', [
                             parent,
                             {
                                 text: name,
-                                type: "folder",
+                                type: 'folder',
                                 data: {
                                     path: (path.endsWith('/') ? path : path + '/') + name,
                                     workspace: workspace,
@@ -1242,46 +1373,58 @@ projectsView.controller('ProjectsViewController', [
             });
         }
 
-        function openNewFileDialog() {
+        function openNewFileDialog(excluded, value) {
             messageHub.showFormDialog(
-                "projectsNewFileForm",
-                "Create a new file",
+                'projectsNewFileForm',
+                'Create a new file',
                 [{
-                    id: "fdti1",
-                    type: "input",
-                    submitOnEnterId: "b1",
-                    label: "Name",
+                    id: 'fdti1',
+                    type: 'input',
+                    submitOnEnterId: 'b1',
+                    label: 'Name',
                     required: true,
                     inputRules: {
-                        excluded: getChildrenNames($scope.newNodeData.parent, 'file'),
+                        excluded: excluded ? excluded : getChildrenNames($scope.newNodeData.parent, 'file'),
                         patterns: ['^[^/:]*$'],
                     },
-                    value: '',
+                    value: value ? value : '',
                 }],
                 [{
-                    id: "b1",
-                    type: "emphasized",
-                    label: "Create",
+                    id: 'b1',
+                    type: 'emphasized',
+                    label: 'Create',
                     whenValid: true
                 }, {
-                    id: "b2",
-                    type: "transparent",
-                    label: "Cancel",
+                    id: 'b2',
+                    type: 'transparent',
+                    label: 'Cancel',
                 }],
-                "projects.formDialog.create.file",
-                "Creating..."
+                'projects.formDialog.create.file',
+                'Creating...'
+            );
+            const handler = messageHub.onDidReceiveMessage(
+                'projects.formDialog.create.file',
+                function (msg) {
+                    if (msg.data.buttonId === 'b1') {
+                        createFile($scope.newNodeData.parent, msg.data.formData[0].value, $scope.newNodeData.workspace, $scope.newNodeData.path, $scope.newNodeData.content);
+                        $scope.newNodeData.content = '';
+                    }
+                    messageHub.hideFormDialog('projectsNewFileForm');
+                    messageHub.unsubscribe(handler);
+                },
+                true
             );
         }
 
         function openRenameDialog() {
             messageHub.showFormDialog(
-                "projectsRenameForm",
+                'projectsRenameForm',
                 `Rename ${$scope.renameNodeData.type}`,
                 [{
-                    id: "fdti1",
-                    type: "input",
-                    submitOnEnterId: "b1",
-                    label: "Name",
+                    id: 'fdti1',
+                    type: 'input',
+                    submitOnEnterId: 'b1',
+                    label: 'Name',
                     required: true,
                     inputRules: {
                         excluded: getChildrenNames($scope.renameNodeData.parent, 'file'),
@@ -1290,17 +1433,78 @@ projectsView.controller('ProjectsViewController', [
                     value: $scope.renameNodeData.text,
                 }],
                 [{
-                    id: "b1",
-                    type: "emphasized",
-                    label: "Rename",
+                    id: 'b1',
+                    type: 'emphasized',
+                    label: 'Rename',
                     whenValid: true
                 }, {
-                    id: "b2",
-                    type: "transparent",
-                    label: "Cancel",
+                    id: 'b2',
+                    type: 'transparent',
+                    label: 'Cancel',
                 }],
-                "projects.formDialog.rename",
-                "Renaming..."
+                'projects.formDialog.rename',
+                'Renaming...'
+            );
+            const handler = messageHub.onDidReceiveMessage(
+                'projects.formDialog.rename',
+                function (msg) {
+                    if (msg.data.buttonId === 'b1') {
+                        workspaceApi.rename(
+                            $scope.renameNodeData.text,
+                            msg.data.formData[0].value,
+                            $scope.renameNodeData.data.path.substring($scope.renameNodeData.data.path.length - $scope.renameNodeData.text.length, 0),
+                            $scope.renameNodeData.data.workspace
+                        ).then(function (response) {
+                            if (response.status === 200) {
+                                const newPath = `/${response.data[0].to}`;
+                                let node = $scope.jstreeWidget.jstree(true).get_node($scope.renameNodeData);
+                                if ($scope.renameNodeData.type === 'file') {
+                                    workspaceApi.getMetadataByPath($scope.renameNodeData.data.workspace, newPath).then(function (metadata) {
+                                        if (metadata.status === 200) {
+                                            node.text = metadata.data.name;
+                                            node.data.path = metadata.data.path.substring($scope.selectedWorkspace.name.length + 1, metadata.data.path.length);
+                                            node.data.contentType = metadata.data.contentType;
+                                            node.state.status = metadata.data.status;
+                                            node.icon = getFileIcon(metadata.data.name);
+                                            messageHub.announceFileRenamed({
+                                                oldName: $scope.renameNodeData.text,
+                                                name: node.text,
+                                                oldPath: $scope.renameNodeData.data.path,
+                                                path: node.data.path,
+                                                contentType: node.data.contentType,
+                                                workspace: node.data.workspace,
+                                            });
+                                            $scope.jstreeWidget.jstree(true).redraw_node(node);
+                                        } else {
+                                            messageHub.setStatusError(`Unable to rename '${$scope.renameNodeData.text}'.`);
+                                        }
+                                    });
+                                } else {
+                                    messageHub.getCurrentlyOpenedFiles(`/${$scope.renameNodeData.data.workspace}${$scope.renameNodeData.data.path}`).then(function (result) {
+                                        for (let i = 0; i < result.data.files.length; i++) {
+                                            messageHub.announceFileMoved({
+                                                name: result.data.files[i].substring(result.data.files[i].lastIndexOf('/') + 1, result.data.files[i].length),
+                                                path: result.data.files[i].replace(`/${$scope.renameNodeData.data.workspace}`, '').replace($scope.renameNodeData.data.path, newPath),
+                                                oldPath: result.data.files[i].replace(`/${$scope.renameNodeData.data.workspace}`, ''),
+                                                workspace: $scope.renameNodeData.data.workspace,
+                                            });
+                                        }
+                                    });
+                                    for (let i = 0; i < $scope.renameNodeData.children_d.length; i++) {
+                                        let child = $scope.jstreeWidget.jstree(true).get_node($scope.renameNodeData.children_d[i]);
+                                        child.data.path = newPath + child.data.path.substring($scope.renameNodeData.data.path.length);
+                                    }
+                                    node.text = msg.data.formData[0].value;
+                                    node.data.path = newPath;
+                                    $scope.jstreeWidget.jstree(true).redraw_node(node);
+                                }
+                            } else messageHub.setStatusError(`Unable to rename '${$scope.renameNodeData.text}'.`);
+                            messageHub.hideFormDialog('projectsRenameForm');
+                        });
+                    } else messageHub.hideFormDialog('projectsRenameForm');
+                    messageHub.unsubscribe(handler);
+                },
+                true
             );
         }
 
@@ -1389,7 +1593,7 @@ projectsView.controller('ProjectsViewController', [
                 $scope.gmodel.parameters
             ).then(function (response) {
                 if (isRegenerating) messageHub.hideLoadingDialog('projectsRegenerateModel');
-                else messageHub.hideFormDialog("projectGenerateForm2");
+                else messageHub.hideFormDialog('projectGenerateForm2');
                 if (response.status !== 201) {
                     messageHub.showAlertError(
                         'Failed to generate from model',
@@ -1399,7 +1603,9 @@ projectsView.controller('ProjectsViewController', [
                 } else {
                     messageHub.setStatusMessage(`Generated from model '${$scope.gmodel.model}'`);
                 }
-                $scope.reloadWorkspace();
+                if (isRegenerating && $scope.gmodel.nodeParents.length) {
+                    $scope.jstreeWidget.jstree(true).refresh_node(getProjectNode($scope.gmodel.nodeParents));
+                } else $scope.reloadWorkspace();
                 for (let key in $scope.gmodel.parameters) {
                     delete $scope.gmodel.parameters[key];
                 }
@@ -1412,23 +1618,17 @@ projectsView.controller('ProjectsViewController', [
         messageHub.onFileSaved(function (data) {
             const { topic, ...fileDescriptor } = data;
             publish(fileDescriptor.path, fileDescriptor.workspace, fileDescriptor);
-            // Temp solution until we fix the back-end API
             if (data.status) {
-                let objects = $scope.jstreeWidget.jstree(true).get_json(
-                    '#',
-                    {
-                        no_li_attr: true,
-                        no_a_attr: true,
-                        flat: true
-                    }
-                );
-                for (let i = 0; i < objects.length; i++) {
-                    if (objects[i].data.path === data.path) {
-                        let node = $scope.jstreeWidget.jstree(true).get_node(objects[i]);
-                        if (data.status === 'modified')
-                            node.state.status = 'M';
-                        else node.state.status = undefined;
-                        $scope.jstreeWidget.jstree(true).redraw_node(node.id);
+                const instance = $scope.jstreeWidget.jstree(true);
+                for (let item in instance._model.data) { // Uses the unofficial '_model' property but this is A LOT faster then using 'get_json()'
+                    if (item !== '#' && instance._model.data.hasOwnProperty(item) && instance._model.data[item].data.path === fileDescriptor.path) {
+                        const parent = getProjectNode(instance._model.data[item].parents);
+                        if (parent.li_attr.git) {
+                            if (data.status === 'modified')
+                                instance._model.data[item].state.status = 'M';
+                            else instance._model.data[item].state.status = undefined;
+                            instance.redraw_node(instance._model.data[item], false, false, false, data.status === 'modified');
+                        }
                         break;
                     }
                 }
@@ -1436,8 +1636,11 @@ projectsView.controller('ProjectsViewController', [
         });
 
         messageHub.onWorkspaceChanged(function (workspace) {
-            if (workspace.data.name === $scope.selectedWorkspace.name)
-                $scope.reloadWorkspace();
+            if (workspace.data.name === $scope.selectedWorkspace.name) {
+                if (workspace.data.projectsViewId) {
+                    $scope.jstreeWidget.jstree(true).refresh_node(workspace.data.projectsViewId);
+                } else $scope.reloadWorkspace();
+            }
             if (workspace.data.publish) {
                 if (workspace.data.publish.workspace) {
                     publish(`/${workspace.data.name}/*`);
@@ -1477,7 +1680,7 @@ projectsView.controller('ProjectsViewController', [
                             instance._open_to(item).focus();
                             instance.select_node(item);
                             const objNode = instance.get_node(item, true);
-                            objNode[0].scrollIntoView({ behavior: "smooth", block: "center" });
+                            objNode[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
                             break;
                         }
                     }
@@ -1487,162 +1690,9 @@ projectsView.controller('ProjectsViewController', [
         );
 
         messageHub.onDidReceiveMessage(
-            'projects.create.workspace',
-            function (msg) {
-                if (msg.data.buttonId === "b1") {
-                    workspaceApi.createWorkspace(msg.data.formData[0].value).then(function (response) {
-                        messageHub.hideFormDialog('createWorkspaceForm');
-                        if (response.status !== 201) {
-                            messageHub.showAlertError(
-                                'Failed to create workspace',
-                                `An unexpected error has occurred while trying create a workspace named '${msg.data.formData[0].value}'`
-                            );
-                            messageHub.setStatusError(`Unable to create workspace '${msg.data.formData[0].value}'`);
-                        } else {
-                            $scope.reloadWorkspaceList();
-                            messageHub.setStatusMessage(`Created workspace '${msg.data.formData[0].value}'`);
-                            messageHub.announceWorkspacesModified();
-                        }
-                    });
-                } else messageHub.hideFormDialog('createWorkspaceForm');
-            },
-            true
-        );
-
-        messageHub.onDidReceiveMessage(
-            'projects.duplicate.project',
-            function (msg) {
-                if (msg.data.buttonId === "b1") {
-                    let originalPath;
-                    let originalWorkspace;
-                    let duplicatePath;
-                    if (msg.data.formData[1].type === 'dropdown') {
-                        let root = $scope.jstreeWidget.jstree(true).get_node('#');
-                        for (let i = 0; i < root.children.length; i++) {
-                            let child = $scope.jstreeWidget.jstree(true).get_node(root.children[i]);
-                            if (child.text === msg.data.formData[1].value) {
-                                originalPath = child.data.path;
-                                originalWorkspace = child.data.workspace;
-                                break;
-                            }
-                        }
-                        duplicatePath = `/${msg.data.formData[2].value}`;
-                    } else {
-                        originalWorkspace = $scope.duplicateProjectData.originalWorkspace
-                        originalPath = $scope.duplicateProjectData.originalPath;
-                        duplicatePath = `/${msg.data.formData[1].value}`;
-                    }
-                    workspaceApi.copy(
-                        originalPath,
-                        duplicatePath,
-                        originalWorkspace,
-                        msg.data.formData[0].value,
-                    ).then(function (response) {
-                        if (response.status === 201) {
-                            if (msg.data.formData[0].value === $scope.selectedWorkspace.name)
-                                $scope.reloadWorkspace(); // Temp
-                            messageHub.setStatusMessage(`Duplicated '${originalPath}'`);
-                        } else {
-                            messageHub.setStatusError(`Unable to duplicate '${originalPath}'`);
-                            messageHub.showAlertError(
-                                'Failed to duplicate project',
-                                `An unexpected error has occurred while trying duplicate '${originalPath}'`,
-                            );
-                        }
-                        messageHub.hideFormDialog('duplicateProjectForm');
-                    });
-                } else messageHub.hideFormDialog('duplicateProjectForm');
-            },
-            true
-        );
-
-        messageHub.onDidReceiveMessage(
-            'projects.create.project',
-            function (msg) {
-                if (msg.data.isMenu) {
-                    $scope.createProject();
-                } else if (msg.data.buttonId === "b1") {
-                    workspaceApi.createProject($scope.selectedWorkspace.name, msg.data.formData[0].value).then(function (response) {
-                        messageHub.hideFormDialog('createProjectForm');
-                        if (response.status !== 201) {
-                            messageHub.showAlertError(
-                                'Failed to create project',
-                                `An unexpected error has occurred while trying create a project named '${msg.data.formData[0].value}'`
-                            );
-                            messageHub.setStatusError(`Unable to create project '${msg.data.formData[0].value}'`);
-                        } else {
-                            $scope.reloadWorkspace();
-                            messageHub.setStatusMessage(`Created project '${msg.data.formData[0].value}'`);
-                        }
-                    });
-                } else messageHub.hideFormDialog('createProjectForm');
-            },
-            true
-        );
-
-        // messageHub.onDidReceiveMessage(
-        //     'projects.link.project',
-        //     function (msg) {
-        //         if (msg.data.isMenu) {
-        //             $scope.linkProject();
-        //         } else if (msg.data.buttonId === "b1") {
-        //             workspaceApi.linkProject($scope.selectedWorkspace.name, msg.data.formData[0].value, msg.data.formData[1].value).then(function (response) {
-        //                 messageHub.hideFormDialog('linkProjectForm');
-        //                 if (response.status !== 201) {
-        //                     messageHub.showAlertError(
-        //                         'Failed to link project',
-        //                         `An unexpected error has occurred while trying to link project '${msg.data.formData[0].value}'`
-        //                     );
-        //                     messageHub.setStatusError(`Unable to link project '${msg.data.formData[0].value}'`);
-        //                 } else {
-        //                     $scope.reloadWorkspace();
-        //                     messageHub.setStatusMessage(`Linked project '${msg.data.formData[0].value}'`);
-        //                 }
-        //             });
-        //         } else messageHub.hideFormDialog('linkProjectForm');
-        //     },
-        //     true
-        // );
-
-        messageHub.onDidReceiveMessage(
-            'projects.generate.generic',
-            function (msg) {
-                if (msg.data.buttonId === "b1") {
-                    let template;
-                    for (let i = 0; i < $scope.genericTemplates.length; i++) {
-                        if ($scope.genericTemplates[i].id === msg.data.formData[0].value) {
-                            template = $scope.genericTemplates[i];
-                            break;
-                        }
-                    }
-                    generateApi.generateFromTemplate(
-                        $scope.selectedWorkspace.name,
-                        msg.data.formData[1].value,
-                        msg.data.formData[2].value,
-                        template.id,
-                        template.parameters
-                    ).then(function (response) {
-                        if (response.status === 201) {
-                            messageHub.setStatusMessage('Successfully generated from template.');
-                            $scope.reloadWorkspace();
-                        } else {
-                            messageHub.showAlertError(
-                                'Failed to generate from template',
-                                `An unexpected error has occurred while trying generate from template '${template.name}'`
-                            );
-                            messageHub.setStatusError(`Unable to generate from template '${template.name}'`);
-                        }
-                    });
-                    messageHub.hideFormDialog('projectGenerateForm1');
-                } else messageHub.hideFormDialog('projectGenerateForm1');
-            },
-            true
-        );
-
-        messageHub.onDidReceiveMessage(
             'projects.generate.model',
             function (msg) {
-                if (msg.data.buttonId === "b1") {
+                if (msg.data.buttonId === 'b1') {
                     if ($scope.gmodel.model === '') {
                         $scope.gmodel.templateId = msg.data.formData[0].value;
                         $scope.gmodel.project = msg.data.formData[1].value;
@@ -1677,9 +1727,9 @@ projectsView.controller('ProjectsViewController', [
                         }
                         if (formData.length > 0) {
                             messageHub.updateFormDialog(
-                                "projectGenerateForm2",
+                                'projectGenerateForm2',
                                 formData,
-                                "Generating...",
+                                'Generating...',
                             );
                         } else {
                             generateModel();
@@ -1695,118 +1745,6 @@ projectsView.controller('ProjectsViewController', [
                 } else {
                     messageHub.hideFormDialog('projectGenerateForm2');
                     $scope.gmodel.model = '';
-                }
-            },
-            true
-        );
-
-        messageHub.onDidReceiveMessage(
-            'projects.regenerate.template',
-            function (msg) {
-                if (msg.data.buttonId === "b1") {
-                    $scope.gmodel.templateId = msg.data.formData[0].value;
-                    messageHub.hideFormDialog('projectRegenerateChooseTemplate');
-                    messageHub.showLoadingDialog('projectsRegenerateModel', 'Regenerating', 'Regenerating from model');
-                    generateModel(true);
-                } else messageHub.hideFormDialog('projectRegenerateChooseTemplate');
-            },
-            true
-        );
-
-        messageHub.onDidReceiveMessage(
-            "projects.formDialog.create.file",
-            function (msg) {
-                if (msg.data.buttonId === "b1") {
-                    createFile($scope.newNodeData.parent, msg.data.formData[0].value, $scope.newNodeData.workspace, $scope.newNodeData.path, $scope.newNodeData.content);
-                    $scope.newNodeData.content = '';
-                }
-                messageHub.hideFormDialog("projectsNewFileForm");
-            },
-            true
-        );
-
-        messageHub.onDidReceiveMessage(
-            "projects.formDialog.create.folder",
-            function (msg) {
-                if (msg.data.buttonId === "b1") {
-                    createFolder($scope.newNodeData.parent, msg.data.formData[0].value, $scope.newNodeData.workspace, $scope.newNodeData.path);
-                }
-                messageHub.hideFormDialog("projectsNewFolderForm");
-            },
-            true
-        );
-
-        messageHub.onDidReceiveMessage(
-            "projects.formDialog.action.execute",
-            function (msg) {
-                if (msg.data.buttonId === "b1") {
-                    executeAction($scope.actionData.workspace, $scope.actionData.project, msg.data.formData[0].value);
-                }
-                messageHub.hideFormDialog("projectsExecuteActionForm");
-            },
-            true
-        );
-
-        messageHub.onDidReceiveMessage(
-            "projects.formDialog.rename",
-            function (msg) {
-                if (msg.data.buttonId === "b1") {
-                    workspaceApi.rename(
-                        $scope.renameNodeData.text,
-                        msg.data.formData[0].value,
-                        $scope.renameNodeData.data.path.substring($scope.renameNodeData.data.path.length - $scope.renameNodeData.text.length, 0),
-                        $scope.renameNodeData.data.workspace
-                    ).then(function (response) {
-                        if (response.status === 201) {
-                            let guessedPath = `${$scope.renameNodeData.data.path.substring($scope.renameNodeData.data.path.length - $scope.renameNodeData.text.length, 0)}${msg.data.formData[0].value}`; // Temporary until back-end is fixed
-                            let node = $scope.jstreeWidget.jstree(true).get_node($scope.renameNodeData);
-                            if ($scope.renameNodeData.type === "file") {
-                                workspaceApi.getMetadataByPath($scope.renameNodeData.data.workspace, guessedPath).then(function (metadata) {
-                                    if (metadata.status === 200) {
-                                        node.text = metadata.data.name;
-                                        node.data.path = metadata.data.path.substring($scope.selectedWorkspace.name.length + 1, metadata.data.path.length);
-                                        node.data.contentType = metadata.data.contentType;
-                                        node.state.status = metadata.data.status;
-                                        node.icon = getFileIcon(metadata.data.name);
-                                        $scope.jstreeWidget.jstree(true).redraw_node(node);
-                                        messageHub.announceFileRenamed({
-                                            oldName: $scope.renameNodeData.text,
-                                            name: node.text,
-                                            oldPath: $scope.renameNodeData.data.path,
-                                            path: node.data.path,
-                                            contentType: node.data.contentType,
-                                            workspace: node.data.workspace,
-                                        });
-                                    } else {
-                                        messageHub.setStatusError(`Unable to rename '${$scope.renameNodeData.text}'.`);
-                                    }
-                                });
-                            } else {
-                                messageHub.getCurrentlyOpenedFiles(`/${$scope.renameNodeData.data.workspace}${$scope.renameNodeData.data.path}`).then(function (result) {
-                                    for (let i = 0; i < result.data.files.length; i++) {
-                                        messageHub.announceFileMoved({
-                                            name: result.data.files[i].substring(result.data.files[i].lastIndexOf('/') + 1, result.data.files[i].length),
-                                            path: result.data.files[i].replace(`/${$scope.renameNodeData.data.workspace}`, '').replace($scope.renameNodeData.data.path, guessedPath),
-                                            oldPath: result.data.files[i].replace(`/${$scope.renameNodeData.data.workspace}`, ''),
-                                            workspace: $scope.renameNodeData.data.workspace,
-                                        });
-                                    }
-                                });
-                                for (let i = 0; i < $scope.renameNodeData.children_d.length; i++) {
-                                    let child = $scope.jstreeWidget.jstree(true).get_node($scope.renameNodeData.children_d[i]);
-                                    child.data.path = guessedPath + child.data.path.substring($scope.renameNodeData.data.path.length);
-                                }
-                                node.text = msg.data.formData[0].value;
-                                node.data.path = guessedPath;
-                                $scope.jstreeWidget.jstree(true).redraw_node(node);
-                            }
-                        } else {
-                            messageHub.setStatusError(`Unable to rename '${$scope.renameNodeData.text}'.`);
-                        }
-                        messageHub.hideFormDialog("projectsRenameForm");
-                    });
-                } else {
-                    messageHub.hideFormDialog("projectsRenameForm");
                 }
             },
             true
@@ -1831,13 +1769,13 @@ projectsView.controller('ProjectsViewController', [
                     $scope.newNodeData.workspace = msg.data.data.workspace;
                     $scope.newNodeData.path = msg.data.data.path;
                     messageHub.showFormDialog(
-                        "projectsNewFolderForm",
-                        "Create new folder",
+                        'projectsNewFolderForm',
+                        'Create new folder',
                         [{
-                            id: "fdti1",
-                            type: "input",
-                            submitOnEnterId: "b1",
-                            label: "Name",
+                            id: 'fdti1',
+                            type: 'input',
+                            submitOnEnterId: 'b1',
+                            label: 'Name',
                             required: true,
                             inputRules: {
                                 excluded: getChildrenNames(msg.data.data.parent, 'folder'),
@@ -1846,18 +1784,29 @@ projectsView.controller('ProjectsViewController', [
                             value: '',
                         }],
                         [{
-                            id: "b1",
-                            type: "emphasized",
-                            label: "Create",
+                            id: 'b1',
+                            type: 'emphasized',
+                            label: 'Create',
                             whenValid: true
                         },
                         {
-                            id: "b2",
-                            type: "transparent",
-                            label: "Cancel",
+                            id: 'b2',
+                            type: 'transparent',
+                            label: 'Cancel',
                         }],
-                        "projects.formDialog.create.folder",
-                        "Creating..."
+                        'projects.formDialog.create.folder',
+                        'Creating...'
+                    );
+                    const handler = messageHub.onDidReceiveMessage(
+                        'projects.formDialog.create.folder',
+                        function (resp) {
+                            if (resp.data.buttonId === 'b1') {
+                                createFolder($scope.newNodeData.parent, resp.data.formData[0].value, $scope.newNodeData.workspace, $scope.newNodeData.path);
+                            }
+                            messageHub.hideFormDialog('projectsNewFolderForm');
+                            messageHub.unsubscribe(handler);
+                        },
+                        true
                     );
                 } else if (msg.data.itemId === 'rename') {
                     $scope.renameNodeData = msg.data.data;
@@ -1882,52 +1831,65 @@ projectsView.controller('ProjectsViewController', [
                     $scope.actionData.workspace = msg.data.data.data.workspace;
                     $scope.actionData.project = msg.data.data.text;
                     messageHub.showFormDialog(
-                        "projectsExecuteActionForm",
-                        "Enter the action to execute",
+                        'projectsExecuteActionForm',
+                        'Enter the action to execute',
                         [{
-                            id: "fdti1",
-                            type: "input",
-                            submitOnEnterId: "b1",
-                            label: "Name",
+                            id: 'fdti1',
+                            type: 'input',
+                            submitOnEnterId: 'b1',
+                            label: 'Name',
                             required: true,
                             inputRules: '',
                             value: '',
                         }],
                         [{
-                            id: "b1",
-                            type: "emphasized",
-                            label: "Execute",
+                            id: 'b1',
+                            type: 'emphasized',
+                            label: 'Execute',
                             whenValid: true
                         },
                         {
-                            id: "b2",
-                            type: "transparent",
-                            label: "Cancel",
+                            id: 'b2',
+                            type: 'transparent',
+                            label: 'Cancel',
                         }],
-                        "projects.formDialog.action.execute",
-                        "Executing..."
+                        'projects.formDialog.action.execute',
+                        'Executing...'
+                    );
+                    const handler = messageHub.onDidReceiveMessage(
+                        'projects.formDialog.action.execute',
+                        function (resp) {
+                            if (resp.data.buttonId === 'b1') {
+                                executeAction($scope.actionData.workspace, $scope.actionData.project, resp.data.formData[0].value);
+                            }
+                            messageHub.hideFormDialog('projectsExecuteActionForm');
+                            messageHub.unsubscribe(handler);
+                        },
+                        true
                     );
                 } else if (msg.data.itemId === 'import') {
                     messageHub.showDialogWindow(
-                        "import",
+                        'import',
                         {
                             importType: 'file',
                             uploadPath: msg.data.data.data.path,
                             workspace: msg.data.data.data.workspace,
+                            projectsViewId: msg.data.data.id
                         }
                     );
                 } else if (msg.data.itemId === 'importZip') {
                     messageHub.showDialogWindow(
-                        "import",
+                        'import',
                         {
                             uploadPath: msg.data.data.data.path,
                             workspace: msg.data.data.data.workspace,
+                            projectsViewId: msg.data.data.id
                         }
                     );
                 } else if (msg.data.itemId === 'unpublishAll') {
                     unpublishAll();
                 } else if (msg.data.itemId === 'publishAll') {
-                    publishAll();
+                    $scope.publishAll();
                 } else if (msg.data.itemId === 'publish') {
                     const selected = $scope.jstreeWidget.jstree(true).get_top_selected(true);
                     for (let i = 0; i < selected.length; i++) {
@@ -1952,6 +1914,7 @@ projectsView.controller('ProjectsViewController', [
                     messageHub.showLoadingDialog('projectsRegenerateModel', 'Regenerating', 'Loading data');
                     workspaceApi.loadContent(msg.data.data.data.workspace, msg.data.data.data.path).then(function (response) {
                         if (response.status === 200) {
+                            $scope.gmodel.nodeParents = msg.data.data.parents;
                             $scope.gmodel.project = response.data.projectName;
                             $scope.gmodel.model = response.data.filePath;
                             let { models, perspectives, templateId, filePath, workspaceName, projectName, ...params } = response.data;
@@ -1982,6 +1945,19 @@ projectsView.controller('ProjectsViewController', [
                                     'projects.regenerate.template',
                                     'Setting template...',
                                 );
+                                const handler = messageHub.onDidReceiveMessage(
+                                    'projects.regenerate.template',
+                                    function (response) {
+                                        if (response.data.buttonId === 'b1') {
+                                            $scope.gmodel.templateId = response.data.formData[0].value;
+                                            messageHub.hideFormDialog('projectRegenerateChooseTemplate');
+                                            messageHub.showLoadingDialog('projectsRegenerateModel', 'Regenerating', 'Regenerating from model');
+                                            generateModel(true);
+                                        } else messageHub.hideFormDialog('projectRegenerateChooseTemplate');
+                                        messageHub.unsubscribe(handler);
+                                    },
+                                    true
+                                );
                             } else {
                                 $scope.gmodel.templateId = response.data.templateId;
                                 messageHub.updateLoadingDialog('projectsRegenerateModel', 'Regenerating from model');
@@ -2006,9 +1982,10 @@ projectsView.controller('ProjectsViewController', [
                     }
                     if (msg.data.itemId === 'generateGeneric') {
                         let generatePath;
+                        const nodeParents = msg.data.data.parents;
                         const templateItems = getGenericTemplates();
                         if (msg.data.data.type !== 'project') {
-                            let pnode = getProjectNode(msg.data.data.parents);
+                            const pnode = getProjectNode(msg.data.data.parents);
                             project = pnode.text;
                             generatePath = msg.data.data.data.path.substring(pnode.text.length + 1);
                             if (generatePath.endsWith('/')) generatePath += 'filename';
@@ -2035,12 +2012,12 @@ projectsView.controller('ProjectsViewController', [
                                 value: project,
                                 items: projectNames,
                             }, {
-                                id: "pgfi1",
-                                type: "input",
-                                submitOnEnterId: "b1",
-                                label: "File path in project",
+                                id: 'pgfi1',
+                                type: 'input',
+                                submitOnEnterId: 'b1',
+                                label: 'File path in project',
                                 required: true,
-                                placeholder: "/path/file",
+                                placeholder: '/path/file',
                                 value: generatePath,
                             }],
                             [{
@@ -2055,6 +2032,46 @@ projectsView.controller('ProjectsViewController', [
                             }],
                             'projects.generate.generic',
                             'Generating...',
+                        );
+                        const handler = messageHub.onDidReceiveMessage(
+                            'projects.generate.generic',
+                            function (response) {
+                                if (response.data.buttonId === 'b1') {
+                                    let template;
+                                    for (let i = 0; i < $scope.genericTemplates.length; i++) {
+                                        if ($scope.genericTemplates[i].id === response.data.formData[0].value) {
+                                            template = $scope.genericTemplates[i];
+                                            break;
+                                        }
+                                    }
+                                    console.log($scope.selectedWorkspace.name,
+                                        response.data.formData[1].value,
+                                        response.data.formData[2].value,
+                                        template.id,
+                                        template.parameters);
+                                    generateApi.generateFromTemplate(
+                                        $scope.selectedWorkspace.name,
+                                        response.data.formData[1].value,
+                                        response.data.formData[2].value,
+                                        template.id,
+                                        template.parameters
+                                    ).then(function (response) {
+                                        if (response.status === 201) {
+                                            messageHub.setStatusMessage('Successfully generated from template.');
+                                            $scope.jstreeWidget.jstree(true).refresh_node(getProjectNode(nodeParents));
+                                        } else {
+                                            messageHub.showAlertError(
+                                                'Failed to generate from template',
+                                                `An unexpected error has occurred while trying generate from template '${template.name}'`
+                                            );
+                                            messageHub.setStatusError(`Unable to generate from template '${template.name}'`);
+                                        }
+                                    });
+                                    messageHub.hideFormDialog('projectGenerateForm1');
+                                } else messageHub.hideFormDialog('projectGenerateForm1');
+                                messageHub.unsubscribe(handler);
+                            },
+                            true
                         );
                     } else if (msg.data.itemId === 'generateModel') {
                         let pnode = getProjectNode(msg.data.data.parents);
@@ -2078,16 +2095,16 @@ projectsView.controller('ProjectsViewController', [
                                 value: project,
                                 items: projectNames,
                             }, {
-                                id: "pgfi1",
-                                type: "input",
-                                submitOnEnterId: "b1",
-                                label: "Model (must be in the root of the project)",
+                                id: 'pgfi1',
+                                type: 'input',
+                                submitOnEnterId: 'b1',
+                                label: 'Model (must be in the root of the project)',
                                 required: true,
                                 inputRules: {
                                     // excluded: [], //TODO
                                     patterns: ['^[^/:]*$'],
                                 },
-                                placeholder: "file.model",
+                                placeholder: 'file.model',
                                 value: msg.data.data.data.path.substring(project.length + 2),
                             }],
                             [{
@@ -2141,34 +2158,7 @@ projectsView.controller('ProjectsViewController', [
                             $scope.newNodeData.workspace = msg.data.data.workspace;
                             $scope.newNodeData.path = msg.data.data.path;
                             $scope.newNodeData.content = msg.data.data.content;
-                            messageHub.showFormDialog(
-                                "projectsNewFileForm",
-                                "Create a new file",
-                                [{
-                                    id: "fdti1",
-                                    type: "input",
-                                    submitOnEnterId: "b1",
-                                    label: "Name",
-                                    required: true,
-                                    inputRules: {
-                                        excluded: excludedNames,
-                                        patterns: ['^[^/:]*$'],
-                                    },
-                                    value: name,
-                                }],
-                                [{
-                                    id: "b1",
-                                    type: "emphasized",
-                                    label: "Create",
-                                    whenValid: true
-                                }, {
-                                    id: "b2",
-                                    type: "transparent",
-                                    label: "Cancel",
-                                }],
-                                "projects.formDialog.create.file",
-                                "Creating..."
-                            );
+                            openNewFileDialog(excludedNames, name);
                         }
                     }
                 }
