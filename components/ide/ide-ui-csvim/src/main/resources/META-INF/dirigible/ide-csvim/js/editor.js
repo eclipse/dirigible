@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let editorView = angular.module('csvim-editor', ["ideUI", "ideView", "ideWorkspace"]);
+const editorView = angular.module('csvim-editor', ["ideUI", "ideView", "ideWorkspace"]);
 editorView.directive('uniqueField', function ($parse) {
     return {
         require: 'ngModel',
@@ -168,7 +168,8 @@ editorView.controller('CsvimViewController', ['$scope', '$http', 'messageHub', '
         return $scope.quoteCharList.includes(quoteChar);
     };
 
-    $scope.save = function () {
+    $scope.save = function (_keySet, event) {
+        if (event) event.preventDefault();
         if ($scope.forms.editor.$valid && $scope.isFileChanged) {
             $scope.checkResource($scope.csvimData.files[$scope.activeItemId].file);
             $scope.csvimData.files[$scope.activeItemId].name = $scope.getFileName($scope.csvimData.files[$scope.activeItemId].file, false);

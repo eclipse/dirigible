@@ -28,9 +28,10 @@ importView.controller('ImportViewController', [
         transportApi,
         FileUploader,
     ) {
-        let projectImportUrl = transportApi.getProjectImportUrl();
+        const projectImportUrl = transportApi.getProjectImportUrl();
         $scope.selectedWorkspace = { name: 'workspace' }; // Default
         $scope.workspaceNames = [];
+        $scope.projectsViewId = undefined;
         $scope.inDialog = false;
         $scope.importRepository = false;
         $scope.inputAccept = '.zip';
@@ -76,6 +77,7 @@ importView.controller('ImportViewController', [
                         if (pathSegments.length <= 2) $scope.uploader.url += '/%252F';
                     }
                 }
+                $scope.projectsViewId = params.projectsViewId;
             } else $scope.reloadWorkspaceList();
         }
 
@@ -116,7 +118,7 @@ importView.controller('ImportViewController', [
                 messageHub.announceRepositoryModified();
             } else if ($scope.inDialog) {
                 // Temporary, publishes all files in the import directory, not just imported ones
-                messageHub.announceWorkspaceChanged({ name: $scope.selectedWorkspace.name, publish: { path: $scope.uploadPath } });
+                messageHub.announceWorkspaceChanged({ name: $scope.selectedWorkspace.name, projectsViewId: $scope.projectsViewId, publish: { path: $scope.uploadPath } });
             } else {
                 messageHub.announceWorkspaceChanged({ name: $scope.selectedWorkspace.name, publish: { workspace: true } });
             }
@@ -143,7 +145,7 @@ importView.controller('ImportViewController', [
         };
 
         $scope.reloadWorkspaceList = function () {
-            let userSelected = JSON.parse(localStorage.getItem('DIRIGIBLE.workspace') || '{}');
+            const userSelected = JSON.parse(localStorage.getItem('DIRIGIBLE.workspace') || '{}');
             if (!userSelected.name) {
                 $scope.selectedWorkspace.name = 'workspace'; // Default
             } else {

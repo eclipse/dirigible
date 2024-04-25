@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 agGrid.initialiseAgGridWithAngular1(angular);
-let csvView = angular.module('csv-editor', ["ideUI", "ideView", "agGrid"]);
+const csvView = angular.module('csv-editor', ["ideUI", "ideView", "agGrid"]);
 csvView.controller('CsvViewController', ['$scope', '$http', '$window', 'messageHub', 'ViewParameters', function ($scope, $http, $window, messageHub, ViewParameters) {
     let contents;
     let csrfToken;
@@ -378,7 +378,8 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', 'messageH
         });
     };
 
-    $scope.save = function () {
+    $scope.save = function (_keySet, event) {
+        if (event) event.preventDefault();
         $scope.state.busyText = "Saving...";
         $scope.state.isBusy = true;
         $scope.search.text = "";

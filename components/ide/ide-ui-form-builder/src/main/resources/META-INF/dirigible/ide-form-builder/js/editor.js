@@ -1370,6 +1370,8 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
     };
 
     $scope.switchTab = function (tabId) {
+        $scope.selectedCtrlId = undefined;
+        $scope.selectedContainerId = undefined;
         $scope.selectedTab = tabId;
     };
 
@@ -1499,17 +1501,34 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
         });
     }
 
-    $scope.save = function () {
-        if ($scope.state.canSave && $scope.isFileChanged) {
-            $scope.state.isBusy = true;
-            const formFile = {
-                feeds: $scope.formData.feeds,
-                scripts: $scope.formData.scripts,
-                code: $scope.formData.code,
-                form: $scope.createFormJson($scope.formModel)
-            };
-            saveContents(JSON.stringify(formFile, null, 4));
+    $scope.shortcuts = function (keySet, event) {
+        switch (keySet) {
+            case 'ctrl+s':
+                event.preventDefault();
+                if ($scope.state.canSave && $scope.isFileChanged) {
+                    $scope.$apply(() => $scope.state.isBusy = true);
+                    const formFile = {
+                        feeds: $scope.formData.feeds,
+                        scripts: $scope.formData.scripts,
+                        code: $scope.formData.code,
+                        form: $scope.createFormJson($scope.formModel)
+                    };
+                    saveContents(JSON.stringify(formFile, null, 4));
+                }
+                break;
+            case 'delete':
+                if ($scope.selectedTab === 'designer' && event.target.tagName !== 'INPUT') {
+                    if ($scope.selectedCtrlId) {
+                        $scope.$apply(() => $scope.deleteControl($scope.selectedCtrlId));
+                    } else if ($scope.selectedContainerId) {
+                        $scope.$apply(() => $scope.deleteControl($scope.selectedContainerId, true));
+                    }
+                }
+                break;
+            default:
+                break;
         }
+
     };
 
     $scope.fileChanged = function () {
@@ -1551,14 +1570,6 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
             }
         }
     };
-
-    $scope.deleteSelected = function () {
-        if ($scope.selectedCtrlId) {
-            $scope.deleteControl($scope.selectedCtrlId);
-        } else if ($scope.selectedContainerId) {
-            $scope.deleteControl($scope.selectedContainerId, true);
-        }
-    }
 
     messageHub.onDidReceiveMessage(
         'contextmenu',

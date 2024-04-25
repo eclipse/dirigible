@@ -229,7 +229,10 @@ public class RepositoryPath {
      * @return the string
      */
     public String constructPathFrom(int number) {
-        if (number >= segments.length) {
+        if (number == segments.length) {
+            return IRepository.SEPARATOR;
+        }
+        if (number > segments.length) {
             return toString();
         }
         if (segments.length == 0) {

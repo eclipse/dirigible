@@ -13,7 +13,7 @@ angular.module('page', ["ideUI", "ideView"])
 	.controller('PageController', function ($scope, messageHub, $window, ViewParameters) {
 		let contents;
 		let csrfToken;
-		$scope.errorMessage = 'Аn unknown error was encountered. Please see console for more information.';
+		$scope.errorMessage = 'An unknown error was encountered. Please see console for more information.';
 		$scope.forms = {
 			editor: {},
 		};
@@ -131,7 +131,8 @@ angular.module('page', ["ideUI", "ideView"])
 			xhr.send(text);
 		}
 
-		$scope.save = function () {
+		$scope.save = function (_keySet, event) {
+			if (event) event.preventDefault();
 			if ($scope.forms.editor.$valid && !$scope.state.error) {
 				$scope.state.busyText = "Saving...";
 				$scope.state.isBusy = true;

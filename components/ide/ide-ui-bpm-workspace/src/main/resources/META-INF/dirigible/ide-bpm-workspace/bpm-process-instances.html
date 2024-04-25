@@ -1,12 +1,12 @@
 <!DOCTYPE HTML>
 <!--
-  ~ Copyright (c) 2024 SAP and others.
+  ~ Copyright (c) 2024 Eclipse Dirigible contributors
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
   ~ http://www.eclipse.org/legal/epl-v20.html
-  ~ Contributors:
-  ~ SAP - initial API and implementation
+  ~ SPDX-FileCopyrightText: Eclipse Dirigible contributors
+  ~ SPDX-License-Identifier: EPL-2.0
   -->
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="ide-bpm-process-instances"
     ng-controller="IDEBpmProcessInstancesViewController as instances">
@@ -46,9 +46,9 @@
                 title="Skip" aria-label="Skip" ng-click="instances.skip()">
             </fd-button>
         </fd-toolbar>
-        <fd-toolbar ng-show="instances.displaySearch">
+        <fd-toolbar ng-if="instances.displaySearch">
             <fd-input type="search" placeholder="Search" ng-keyup="instances.inputSearchKeyUp($event)"
-                ng-model="instances.searchText">
+                ng-model="instances.searchText" dg-focus="true">
             </fd-input>
         </fd-toolbar>
         <fd-scrollbar class="dg-fill-parent">
