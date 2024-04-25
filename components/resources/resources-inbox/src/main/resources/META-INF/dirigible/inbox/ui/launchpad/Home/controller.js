@@ -29,25 +29,6 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			});
 		}
 
-		entityApi.list().then(function(response) {
-			if (response.status != 200) {
-				messageHub.showAlertError("Home", `Unable to get Home Launchpad: '${response.message}'`);
-				return;
-			}
-			$scope.data = response.data;
-			$scope.groups = Object.keys(response.data);
-
-			$scope.tiles = [];
-			for (let group in $scope.groups) {
-				let ta = $scope.data[$scope.groups[group]];
-				for (let t in ta) {
-					ta[t].group = $scope.groups[group];
-				}
-				$scope.tiles = $scope.tiles.concat($scope.data[$scope.groups[group]]);
-			}
-		});
-
-
 		$scope.tasksList = [];
 		$scope.tasksListAssignee = [];
 		$scope.selectedClaimTask = null;
