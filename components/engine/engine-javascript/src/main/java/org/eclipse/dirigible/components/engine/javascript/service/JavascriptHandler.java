@@ -112,7 +112,7 @@ public class JavascriptHandler {
             }
             if (ex.getMessage()
                   .contains("consider publish")) {
-                logger.error(ex.getMessage(), ex);
+                logger.error(ex.getMessage());
                 return ex.getMessage();
             }
             String errorMessage =
