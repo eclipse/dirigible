@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.process.execution.ProcessExecutionOptions;
 import org.eclipse.dirigible.commons.process.execution.ProcessExecutor;
@@ -78,8 +77,12 @@ public class CommandFacade {
         Future<ProcessResult<OutputsPair>> outputFuture =
                 processExecutor.executeProcess(command, environmentVariablesToUse, processExecutionOptions);
         ProcessResult<OutputsPair> output = outputFuture.get();
-        return output.getProcessOutputs()
-                     .getStandardOutput();
+        OutputsPair outputsPair = output.getProcessOutputs();
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("exitCode", output.getExitCode());
+        resultMap.put("standardOutput", outputsPair.getStandardOutput());
+        resultMap.put("errorOutput", outputsPair.getErrorOutput());
+        return GsonHelper.toJson(resultMap);
     }
 
     /**

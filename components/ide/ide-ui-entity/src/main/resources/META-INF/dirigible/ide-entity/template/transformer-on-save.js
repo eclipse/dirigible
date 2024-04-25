@@ -16,19 +16,21 @@ const workspace = __context.get('workspace');
 const project = __context.get('project');
 const path = __context.get('path');
 
-const modelPath = path.replace(".edm", ".model");
-const content = transformer.transform(workspace, project, path);
+if (path && path.endsWith(".edm")) {
+    const modelPath = path.replace(".edm", ".model");
+    const content = transformer.transform(workspace, project, path);
 
-if (content !== null) {
-    const bytes = require("io/bytes");
-    const input = bytes.textToByteArray(content);
+    if (content !== null) {
+        const bytes = require("io/bytes");
+        const input = bytes.textToByteArray(content);
 
-    if (workspaceManager.getWorkspace(workspace)
-        .getProject(project).getFile(path).exists()) {
-        workspaceManager.getWorkspace(workspace)
-            .getProject(project).createFile(modelPath, input);
-    } else {
-        workspaceManager.getWorkspace(workspace)
-            .getProject(project).getFile(modelPath).setContent(input);
+        if (workspaceManager.getWorkspace(workspace)
+            .getProject(project).getFile(path).exists()) {
+            workspaceManager.getWorkspace(workspace)
+                .getProject(project).createFile(modelPath, input);
+        } else {
+            workspaceManager.getWorkspace(workspace)
+                .getProject(project).getFile(modelPath).setContent(input);
+        }
     }
 }
