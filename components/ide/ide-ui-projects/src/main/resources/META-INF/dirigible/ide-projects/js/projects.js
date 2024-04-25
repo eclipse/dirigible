@@ -158,6 +158,11 @@ projectsView.controller('ProjectsViewController', [
                         openSelected([focused]);
                     } else openSelected();
                     break;
+                case 'shift+enter':
+                    const toSelect = $scope.jstreeWidget.jstree(true).get_node(document.activeElement);
+                    if (toSelect && !toSelect.state.selected) $scope.jstreeWidget.jstree(true).select_node(toSelect);
+                    else $scope.jstreeWidget.jstree(true).deselect_node(toSelect);
+                    break;
                 case 'f2':
                     nodes = $scope.jstreeWidget.jstree(true).get_selected(true);
                     if (nodes.length < 2) {
@@ -170,6 +175,9 @@ projectsView.controller('ProjectsViewController', [
                     nodes = $scope.jstreeWidget.jstree(true).get_top_selected(true);
                     if (nodes.length === 1) openDeleteDialog(nodes[0]);
                     else if (nodes.length > 1) openDeleteDialog(nodes);
+                    break;
+                case 'ctrl+f':
+                    $scope.$apply(() => $scope.toggleSearch());
                     break;
                 case 'ctrl+c':
                     $scope.jstreeWidget.jstree(true).copy($scope.jstreeWidget.jstree(true).get_top_selected(true));
@@ -1167,8 +1175,12 @@ projectsView.controller('ProjectsViewController', [
         };
 
         let to = 0;
-        $scope.search = function () {
+        $scope.search = function (event) {
             if (to) { clearTimeout(to); }
+            if (event.originalEvent.key === "Escape") {
+                $scope.toggleSearch();
+                return;
+            }
             to = setTimeout(function () {
                 $scope.jstreeWidget.jstree(true).search($scope.searchField.text);
             }, 250);

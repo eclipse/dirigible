@@ -84,7 +84,8 @@ angular.module('page', ["ideUI", "ideView"])
 			xhr.send(text);
 		}
 
-		$scope.save = function () {
+		$scope.save = function (_keySet, event) {
+			if (event) event.preventDefault();
 			if ($scope.forms.editor.$valid && !$scope.state.error) {
 				$scope.state.busyText = "Saving...";
 				$scope.state.isBusy = true;

@@ -139,7 +139,6 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             for (let i = 0; i < shortcuts.length; i++) {
                 shortcut = shortcuts[i];
                 if (match(eventKeys, shortcut.keys)) {
-                    e.preventDefault();
                     if (shortcut.action) shortcut.action(shortcut.keySet, e);
                     return;
                 }
