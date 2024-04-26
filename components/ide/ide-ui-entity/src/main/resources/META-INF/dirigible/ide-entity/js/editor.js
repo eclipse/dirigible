@@ -240,6 +240,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 
 		$scope.regenerate = function () {
 			messageHub.showLoadingDialog('edmRegenerateModel', 'Regenerating', 'Loading data');
+			$scope.save();
 			workspaceApi.loadContent('', genFile).then(function (response) {
 				if (response.status === 200) {
 					let { models, perspectives, templateId, filePath, workspaceName, projectName, ...params } = response.data;
