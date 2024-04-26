@@ -191,6 +191,12 @@ public class ListenerSynchronizer extends MultitenantBaseSynchronizer<Listener, 
                 }
                 break;
             case START:
+                if (ArtefactLifecycle.FAILED.equals(listener.getLifecycle())) {
+                    String message = "Cannot start a Listener in a failing state: " + listener.getKey();
+                    callback.addError(message);
+                    callback.registerState(this, wrapper, ArtefactLifecycle.FATAL, message);
+                    return true;
+                }
                 if (listener.getRunning() == null || !listener.getRunning()) {
                     try {
                         listenersManager.startListener(listener);
@@ -199,7 +205,7 @@ public class ListenerSynchronizer extends MultitenantBaseSynchronizer<Listener, 
                     } catch (Exception e) {
                         logger.error(e.getMessage(), e);
                         callback.addError(e.getMessage());
-                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, "");
                     }
                 }
                 break;
@@ -212,7 +218,7 @@ public class ListenerSynchronizer extends MultitenantBaseSynchronizer<Listener, 
                     } catch (Exception e) {
                         logger.error(e.getMessage(), e);
                         callback.addError(e.getMessage());
-                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, "");
                     }
                 }
                 break;

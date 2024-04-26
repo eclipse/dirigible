@@ -246,6 +246,12 @@ public class JobSynchronizer extends MultitenantBaseSynchronizer<Job, Long> {
                 }
                 break;
             case START:
+                if (ArtefactLifecycle.FAILED.equals(job.getLifecycle())) {
+                    String message = "Cannot start a Job in a failing state: " + job.getKey();
+                    callback.addError(message);
+                    callback.registerState(this, wrapper, ArtefactLifecycle.FATAL, message);
+                    return true;
+                }
                 if (job.getRunning() == null || !job.getRunning()) {
                     try {
                         jobsManager.scheduleJob(job);
@@ -256,7 +262,7 @@ public class JobSynchronizer extends MultitenantBaseSynchronizer<Job, Long> {
                             logger.error(e.getMessage(), e);
                         }
                         callback.addError(e.getMessage());
-                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, "");
                     }
                 }
                 break;
@@ -271,7 +277,7 @@ public class JobSynchronizer extends MultitenantBaseSynchronizer<Job, Long> {
                             logger.error(e.getMessage(), e);
                         }
                         callback.addError(e.getMessage());
-                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, "");
                     }
                 }
                 break;

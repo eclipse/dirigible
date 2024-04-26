@@ -177,6 +177,12 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
                     }
                     break;
                 case START: {
+                    if (ArtefactLifecycle.FAILED.equals(camel.getLifecycle())) {
+                        String message = "Cannot start a Route in a failing state: " + camel.getKey();
+                        callback.addError(message);
+                        callback.registerState(this, wrapper, ArtefactLifecycle.FATAL, message);
+                        return true;
+                    }
                     addToProcessor(camel);
                     callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
                 }
