@@ -351,6 +351,7 @@ div.propertySection {
 
 .propertySection .selected-item-body {
   padding-bottom: 4rem;
+  background-color: var(--sapList_Background, #fff);
 }
 
 .selected-item-body>div {
