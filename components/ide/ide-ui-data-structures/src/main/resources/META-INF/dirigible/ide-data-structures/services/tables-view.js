@@ -10,11 +10,11 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const viewData = {
-	id: "datastructures",
+	id: "tables",
 	factory: "frame",
 	region: "bottom",
-	label: "Data Structures",
-	link: "../ide-data-structures/views/data-structures.html"
+	label: "Tables Structures",
+	link: "../ide-data-structures/views/tables.html"
 };
 
 if (typeof exports !== 'undefined') {
