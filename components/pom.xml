@@ -131,6 +131,7 @@
 		<module>ide/ide-ui-publisher-service</module>
 		<module>ide/ide-ui-registry</module>
 		<module>ide/ide-ui-registry-service</module>
+		<module>ide/ide-ui-report</module>
 		<module>ide/ide-ui-repository</module>
 		<module>ide/ide-ui-repository-service</module>
 		<module>ide/ide-ui-result</module>
@@ -1027,6 +1028,12 @@
 			</dependency>
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-report</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-group-resources-core</artifactId>
 				<version>${project.version}</version>
 				<type>pom</type>
@@ -1051,6 +1058,7 @@
 				<artifactId>dirigible-components-resources-inbox</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-group-api-platform</artifactId>

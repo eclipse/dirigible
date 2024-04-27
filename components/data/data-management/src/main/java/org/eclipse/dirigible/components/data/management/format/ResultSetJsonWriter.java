@@ -99,6 +99,7 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 
             for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
                 String name = resultSetMetaData.getColumnName(i);
+                String label = resultSetMetaData.getColumnLabel(i);
                 Object value = resultSet.getObject(name);
                 if (value == null && stringify) {
                     value = "[NULL]";
@@ -122,7 +123,7 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
                     }
                 }
 
-                jsonGenerator.writeFieldName(name);
+                jsonGenerator.writeFieldName(label != null ? label : name);
 
                 if (value instanceof String) {
                     jsonGenerator.writeString((String) value);

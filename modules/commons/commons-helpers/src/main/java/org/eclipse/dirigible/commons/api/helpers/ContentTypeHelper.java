@@ -485,6 +485,9 @@ public class ContentTypeHelper {
     /** The Constant APPLICATION_JSON_XSACCESS. */
     public static final String APPLICATION_JSON_XSACCESS = "application/json+xsaccess";
 
+    /** The Constant APPLICATION_JSON_VIEW. */
+    public static final String APPLICATION_JSON_REPORT = "application/json+report";
+
     /** The Constant APPLICATION_JSON_HDI. */
     public static final String APPLICATION_JSON_HDI = "application/json+hdi";
 
@@ -702,6 +705,7 @@ public class ContentTypeHelper {
         TEXT_CONTENT_TYPES.put("command", APPLICATION_JSON_COMMAND); //$NON-NLS-1$
         TEXT_CONTENT_TYPES.put("form", APPLICATION_JSON_FORM); //$NON-NLS-1$
         TEXT_CONTENT_TYPES.put("xsaccess", APPLICATION_JSON_XSACCESS); //$NON-NLS-1$
+        TEXT_CONTENT_TYPES.put("report", APPLICATION_JSON_REPORT); //$NON-NLS-1$
         // TEXT_CONTENT_TYPES.put("entity", APPLICATION_JSON); //$NON-NLS-1$
         // TEXT_CONTENT_TYPES.put("ws", APPLICATION_JSON); //$NON-NLS-1$
         // TEXT_CONTENT_TYPES.put("routes", TEXT_XML); //$NON-NLS-1$
