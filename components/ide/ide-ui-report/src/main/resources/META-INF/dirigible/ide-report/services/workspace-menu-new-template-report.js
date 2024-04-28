@@ -14,7 +14,7 @@ exports.getTemplate = function () {
 		"name": "report-model",
 		"label": "Report Model",
 		"extension": "report",
-		"data": '{"name":"MYREPORT","columns":[{"name":"ID","type":"INTEGER","length":"0","nullable":"false","primaryKey":"true","defaultValue":""}]}'
+		"data": '{"name":"MYREPORT","alias":"mt","table":"MYTABLE","columns":[]}'
 	};
 	return template;
 };
