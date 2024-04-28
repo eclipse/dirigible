@@ -25,8 +25,9 @@ angular.module('page', ["ideUI", "ideView"])
 		$scope.editColumnIndex = 0;
 		$scope.editJoinIndex = 0;
 		$scope.editConditionIndex = 0;
-		$scope.editGroupingIndex = 0;
-		$scope.editSortingIndex = 0;
+		$scope.editHavingIndex = 0;
+		$scope.editOrderingIndex = 0;
+		$scope.editParameterIndex = 0;
 		$scope.nameRegex = { patterns: ['^[a-zA-Z0-9_.:"-]*$'] };
 		$scope.types = [
 			{ value: "VARCHAR", label: "VARCHAR" },
@@ -72,6 +73,10 @@ angular.module('page', ["ideUI", "ideView"])
 			{ value: "LEFT", label: "LEFT" },
 			{ value: "RIGHT", label: "RIGHT" },
 			{ value: "FULL", label: "FULL" }
+		];
+		$scope.directions = [
+			{ value: "ASC", label: "ASC" },
+			{ value: "DESC", label: "DESC" }
 		];
 
 		angular.element($window).bind("focus", function () {
@@ -194,7 +199,7 @@ angular.module('page', ["ideUI", "ideView"])
 			}
 		}, true);
 
-		// Begin Columns Section
+		// Begin Columns Section ----------------------------------------------------------------------------------
 		messageHub.onDidReceiveMessage(
 			"reportEditor.column.add",
 			function (msg) {
@@ -206,7 +211,9 @@ angular.module('page', ["ideUI", "ideView"])
 							alias: msg.data.formData[1].value,
 							name: msg.data.formData[2].value,
 							type: msg.data.formData[3].value,
-							aggregate: msg.data.formData[4].value
+							aggregate: msg.data.formData[4].value,
+							select: msg.data.formData[5].value,
+							grouping: msg.data.formData[6].value,
 						});
 					});
 				}
@@ -225,6 +232,8 @@ angular.module('page', ["ideUI", "ideView"])
 						$scope.report.columns[$scope.editColumnIndex].name = msg.data.formData[2].value;
 						$scope.report.columns[$scope.editColumnIndex].type = msg.data.formData[3].value;
 						$scope.report.columns[$scope.editColumnIndex].aggregate = msg.data.formData[4].value;
+						$scope.report.columns[$scope.editColumnIndex].select = msg.data.formData[5].value;
+						$scope.report.columns[$scope.editColumnIndex].grouping = msg.data.formData[6].value;
 					});
 				}
 				messageHub.hideFormDialog("reportEditorEditColumn");
@@ -297,6 +306,18 @@ angular.module('page', ["ideUI", "ideView"])
 					required: true,
 					value: $scope.aggregates[0].value,
 					items: $scope.aggregates,
+				},
+				{
+					id: "tecSelect",
+					type: "checkbox",
+					label: "Select",
+					value: false,
+				},
+				{
+					id: "tecGrouping",
+					type: "checkbox",
+					label: "Grouping",
+					value: false,
 				}],
 				[{
 					id: "b1",
@@ -318,7 +339,8 @@ angular.module('page', ["ideUI", "ideView"])
 			$scope.editColumnIndex = index;
 			let excludedAliases = [];
 			for (let i = 0; i < $scope.report.columns.length; i++) {
-				excludedAliases.push($scope.report.columns[i].alias);
+				if (i !== index)
+					excludedAliases.push($scope.report.columns[i].alias);
 			}
 			let excludedNames = [];
 			for (let i = 0; i < $scope.report.columns.length; i++) {
@@ -382,6 +404,18 @@ angular.module('page', ["ideUI", "ideView"])
 					required: true,
 					value: $scope.report.columns[index].aggregate,
 					items: $scope.aggregates,
+				},
+				{
+					id: "tecSelect",
+					type: "checkbox",
+					label: "Select",
+					value: $scope.report.columns[index].select || false,
+				},
+				{
+					id: "tecGrouping",
+					type: "checkbox",
+					label: "Grouping",
+					value: $scope.report.columns[index].grouping || false,
 				}],
 				[{
 					id: "b1",
@@ -421,9 +455,9 @@ angular.module('page', ["ideUI", "ideView"])
 				}
 			});
 		};
-		// End Columns Section
+		// End Columns Section ------------------------------------------------------------------------------------
 
-		// Begin Joins Section
+		// Begin Joins Section ------------------------------------------------------------------------------------
 		messageHub.onDidReceiveMessage(
 			"reportEditor.join.add",
 			function (msg) {
@@ -534,7 +568,8 @@ angular.module('page', ["ideUI", "ideView"])
 			$scope.editJoinIndex = index;
 			let excludedAliases = [];
 			for (let i = 0; i < $scope.report.joins.length; i++) {
-				excludedAliases.push($scope.report.joins[i].alias);
+				if (i !== index)
+					excludedAliases.push($scope.report.joins[i].alias);
 			}
 			let excludedNames = [];
 			for (let i = 0; i < $scope.report.joins.length; i++) {
@@ -626,9 +661,9 @@ angular.module('page', ["ideUI", "ideView"])
 				}
 			});
 		};
-		// End Joins Section
+		// End Joins Section --------------------------------------------------------------------------------------
 
-		// Begin Conditions Section
+		// Begin Conditions Section -------------------------------------------------------------------------------
 		messageHub.onDidReceiveMessage(
 			"reportEditor.condition.add",
 			function (msg) {
@@ -781,21 +816,482 @@ angular.module('page', ["ideUI", "ideView"])
 				}
 			});
 		};
-		// End Conditions Section
+		// End Conditions Section ---------------------------------------------------------------------------------
+
+		// Begin Havings Section ----------------------------------------------------------------------------------
+		messageHub.onDidReceiveMessage(
+			"reportEditor.having.add",
+			function (msg) {
+				if (msg.data.buttonId === "b1") {
+					$scope.$apply(function () {
+						if (!$scope.report.havings) $scope.report.havings = [];
+						$scope.report.havings.push({
+							left: msg.data.formData[0].value,
+							operation: msg.data.formData[1].value,
+							right: msg.data.formData[2].value
+						});
+					});
+				}
+				messageHub.hideFormDialog("reportEditorAddHaving");
+			},
+			true
+		);
+
+		messageHub.onDidReceiveMessage(
+			"reportEditor.having.edit",
+			function (msg) {
+				if (msg.data.buttonId === "b1") {
+					$scope.$apply(function () {
+						$scope.report.havings[$scope.editHavingIndex].left = msg.data.formData[0].value;
+						$scope.report.havings[$scope.editHavingIndex].operation = msg.data.formData[1].value;
+						$scope.report.havings[$scope.editHavingIndex].right = msg.data.formData[2].value;
+					});
+				}
+				messageHub.hideFormDialog("reportEditorEditHaving");
+			},
+			true
+		);
+
+		$scope.addHaving = function () {
+			messageHub.showFormDialog(
+				"reportEditorAddHaving",
+				"Add having",
+				[{
+					id: "teiLeft",
+					type: "input",
+					label: "Left",
+					required: true,
+					placeholder: "Enter left operand",
+					minlength: 1,
+					maxlength: 255,
+					value: '',
+				},
+				{
+					id: "tedOperation",
+					type: "dropdown",
+					label: "Operation",
+					required: true,
+					value: $scope.operations[0].value,
+					items: $scope.operations,
+				},
+				{
+					id: "teiRight",
+					type: "input",
+					label: "Right",
+					required: true,
+					placeholder: "Enter right operand",
+					minlength: 1,
+					maxlength: 255,
+					value: '',
+				}],
+				[{
+					id: "b1",
+					type: "emphasized",
+					label: "Add",
+					whenValid: true,
+				},
+				{
+					id: "b2",
+					type: "transparent",
+					label: "Cancel",
+				}],
+				"reportEditor.having.add",
+				"Adding parameter..."
+			);
+		};
+
+		$scope.editHaving = function (index) {
+			$scope.editHavingIndex = index;
+			messageHub.showFormDialog(
+				"reportEditorEditHaving",
+				"Edit having",
+				[{
+					id: "teiLeft",
+					type: "input",
+					label: "Left",
+					required: true,
+					placeholder: "Enter left operand",
+					minlength: 1,
+					maxlength: 255,
+					value: $scope.report.havings[index].left,
+				},
+				{
+					id: "tedOperation",
+					type: "dropdown",
+					label: "Type",
+					required: true,
+					value: $scope.report.havings[index].operation,
+					items: $scope.operations,
+				},
+				{
+					id: "teiRight",
+					type: "input",
+					label: "Right",
+					required: true,
+					placeholder: "Enter right operand",
+					minlength: 1,
+					maxlength: 255,
+					value: $scope.report.havings[index].right,
+				}],
+				[{
+					id: "b1",
+					type: "emphasized",
+					label: "Update",
+					whenValid: true,
+				},
+				{
+					id: "b2",
+					type: "transparent",
+					label: "Cancel",
+				}],
+				"reportEditor.having.edit",
+				"Updating parameter..."
+			);
+		};
+
+		$scope.deleteHaving = function (index) {
+			messageHub.showDialogAsync(
+				`Delete ${$scope.report.havings[index].name}?`,
+				'This action cannot be undone.',
+				[{
+					id: 'b1',
+					type: 'negative',
+					label: 'Delete',
+				},
+				{
+					id: 'b2',
+					type: 'transparent',
+					label: 'Cancel',
+				}],
+			).then(function (dialogResponse) {
+				if (dialogResponse.data === 'b1') {
+					$scope.$apply(function () {
+						$scope.report.havings.splice(index, 1);
+					});
+				}
+			});
+		};
+		// End Havings Section ------------------------------------------------------------------------------------
+
+		// Begin Orderings Section --------------------------------------------------------------------------------
+		messageHub.onDidReceiveMessage(
+			"reportEditor.ordering.add",
+			function (msg) {
+				if (msg.data.buttonId === "b1") {
+					$scope.$apply(function () {
+						if (!$scope.report.orderings) $scope.report.orderings = [];
+						$scope.report.orderings.push({
+							column: msg.data.formData[0].value,
+							direction: msg.data.formData[1].value,
+						});
+					});
+				}
+				messageHub.hideFormDialog("reportEditorAddOrdering");
+			},
+			true
+		);
+
+		messageHub.onDidReceiveMessage(
+			"reportEditor.ordering.edit",
+			function (msg) {
+				if (msg.data.buttonId === "b1") {
+					$scope.$apply(function () {
+						$scope.report.orderings[$scope.editOrderingIndex].column = msg.data.formData[0].value;
+						$scope.report.orderings[$scope.editOrderingIndex].direction = msg.data.formData[1].value;
+					});
+				}
+				messageHub.hideFormDialog("reportEditorEditOrdering");
+			},
+			true
+		);
+
+		$scope.addOrdering = function () {
+			messageHub.showFormDialog(
+				"reportEditorAddOrdering",
+				"Add ordering",
+				[{
+					id: "teiColumn",
+					type: "input",
+					label: "Column",
+					required: true,
+					placeholder: "Enter column",
+					minlength: 1,
+					maxlength: 255,
+					value: '',
+				},
+				{
+					id: "tedDirection",
+					type: "dropdown",
+					label: "Direction",
+					required: true,
+					value: $scope.directions[0].value,
+					items: $scope.directions,
+				}],
+				[{
+					id: "b1",
+					type: "emphasized",
+					label: "Add",
+					whenValid: true,
+				},
+				{
+					id: "b2",
+					type: "transparent",
+					label: "Cancel",
+				}],
+				"reportEditor.ordering.add",
+				"Adding parameter..."
+			);
+		};
+
+		$scope.editOrdering = function (index) {
+			$scope.editOrderingIndex = index;
+			messageHub.showFormDialog(
+				"reportEditorEditOrdering",
+				"Edit ordering",
+				[{
+					id: "teiColumn",
+					type: "input",
+					label: "Column",
+					required: true,
+					placeholder: "Enter column",
+					minlength: 1,
+					maxlength: 255,
+					value: $scope.report.orderings[index].column,
+				},
+				{
+					id: "tedDirection",
+					type: "dropdown",
+					label: "Direction",
+					required: true,
+					value: $scope.report.orderings[index].direction,
+					items: $scope.directions,
+				}],
+				[{
+					id: "b1",
+					type: "emphasized",
+					label: "Update",
+					whenValid: true,
+				},
+				{
+					id: "b2",
+					type: "transparent",
+					label: "Cancel",
+				}],
+				"reportEditor.ordering.edit",
+				"Updating parameter..."
+			);
+		};
+
+		$scope.deleteOrdering = function (index) {
+			messageHub.showDialogAsync(
+				`Delete ${$scope.report.orderings[index].name}?`,
+				'This action cannot be undone.',
+				[{
+					id: 'b1',
+					type: 'negative',
+					label: 'Delete',
+				},
+				{
+					id: 'b2',
+					type: 'transparent',
+					label: 'Cancel',
+				}],
+			).then(function (dialogResponse) {
+				if (dialogResponse.data === 'b1') {
+					$scope.$apply(function () {
+						$scope.report.orderings.splice(index, 1);
+					});
+				}
+			});
+		};
+		// End Orderings Section ----------------------------------------------------------------------------------
+
+		// Begin Parameters Section -------------------------------------------------------------------------------
+		messageHub.onDidReceiveMessage(
+			"reportEditor.parameter.add",
+			function (msg) {
+				if (msg.data.buttonId === "b1") {
+					$scope.$apply(function () {
+						if (!$scope.report.parameters) $scope.report.parameters = [];
+						$scope.report.parameters.push({
+							name: msg.data.formData[0].value,
+							type: msg.data.formData[1].value,
+							initial: msg.data.formData[2].value,
+						});
+					});
+				}
+				messageHub.hideFormDialog("reportEditorAddParameter");
+			},
+			true
+		);
+
+		messageHub.onDidReceiveMessage(
+			"reportEditor.parameter.edit",
+			function (msg) {
+				if (msg.data.buttonId === "b1") {
+					$scope.$apply(function () {
+						$scope.report.parameters[$scope.editParameterIndex].name = msg.data.formData[0].value;
+						$scope.report.parameters[$scope.editParameterIndex].type = msg.data.formData[1].value;
+						$scope.report.parameters[$scope.editParameterIndex].initial = msg.data.formData[2].value;
+					});
+				}
+				messageHub.hideFormDialog("reportEditorEditParameter");
+			},
+			true
+		);
+
+		$scope.addParameter = function () {
+			let excludedNames = [];
+			for (let i = 0; i < $scope.report.columns.length; i++) {
+				excludedNames.push($scope.report.columns[i].name);
+			}
+			messageHub.showFormDialog(
+				"reportEditorAddParameter",
+				"Add parameter",
+				[{
+					id: "teiName",
+					type: "input",
+					label: "Name",
+					required: true,
+					placeholder: "Enter name",
+					minlength: 1,
+					maxlength: 255,
+					inputRules: {
+						excluded: excludedNames,
+					},
+					value: '',
+				},
+				{
+					id: "tedType",
+					type: "dropdown",
+					label: "Type",
+					required: true,
+					value: $scope.types[0].value,
+					items: $scope.types,
+				},
+				{
+					id: "teiInitial",
+					type: "input",
+					label: "Initial",
+					required: true,
+					placeholder: "Enter initial value",
+					minlength: 1,
+					maxlength: 255,
+					value: '',
+				}],
+				[{
+					id: "b1",
+					type: "emphasized",
+					label: "Add",
+					whenValid: true,
+				},
+				{
+					id: "b2",
+					type: "transparent",
+					label: "Cancel",
+				}],
+				"reportEditor.parameter.add",
+				"Adding parameter..."
+			);
+		};
+
+		$scope.editParameter = function (index) {
+			$scope.editParameterIndex = index;
+			let excludedNames = [];
+			for (let i = 0; i < $scope.report.columns.length; i++) {
+				if (i !== index)
+					excludedNames.push($scope.report.columns[i].name);
+			}
+			messageHub.showFormDialog(
+				"reportEditorEditParameter",
+				"Edit parameter",
+				[{
+					id: "teiName",
+					type: "input",
+					label: "Name",
+					required: true,
+					placeholder: "Enter name",
+					minlength: 1,
+					maxlength: 255,
+					inputRules: {
+						excluded: excludedNames,
+					},
+					value: $scope.report.parameters[index].name,
+				},
+				{
+					id: "tedType",
+					type: "dropdown",
+					label: "Type",
+					required: true,
+					value: $scope.report.parameters[index].type,
+					items: $scope.types,
+				},
+				{
+					id: "teiInitial",
+					type: "input",
+					label: "Initial",
+					required: true,
+					placeholder: "Enter initial value",
+					minlength: 1,
+					maxlength: 255,
+					value: $scope.report.parameters[index].initial,
+				}],
+				[{
+					id: "b1",
+					type: "emphasized",
+					label: "Update",
+					whenValid: true,
+				},
+				{
+					id: "b2",
+					type: "transparent",
+					label: "Cancel",
+				}],
+				"reportEditor.parameter.edit",
+				"Updating parameter..."
+			);
+		};
+
+		$scope.deleteParameter = function (index) {
+			messageHub.showDialogAsync(
+				`Delete ${$scope.report.parameters[index].name}?`,
+				'This action cannot be undone.',
+				[{
+					id: 'b1',
+					type: 'negative',
+					label: 'Delete',
+				},
+				{
+					id: 'b2',
+					type: 'transparent',
+					label: 'Cancel',
+				}],
+			).then(function (dialogResponse) {
+				if (dialogResponse.data === 'b1') {
+					$scope.$apply(function () {
+						$scope.report.parameters.splice(index, 1);
+					});
+				}
+			});
+		};
+		// End Parameters Section ---------------------------------------------------------------------------------
 
 		$scope.generateQuery = function () {
 			$scope.query = "SELECT ";
 			for (let i = 0; i < $scope.report.columns.length; i++) {
-				if (i > 0) { $scope.query += ', ' }
-				if ($scope.report.columns[i].aggregate !== undefined && $scope.report.columns[i].aggregate !== "NONE") {
-					$scope.query += $scope.report.columns[i].aggregate + "(";
+				if ($scope.report.columns[i].select === true) {
+					if ($scope.report.columns[i].aggregate !== undefined && $scope.report.columns[i].aggregate !== "NONE") {
+						$scope.query += $scope.report.columns[i].aggregate + "(";
+					}
+					$scope.query += $scope.report.columns[i].table + "." + $scope.report.columns[i].name;
+					if ($scope.report.columns[i].aggregate !== undefined && $scope.report.columns[i].aggregate !== "NONE") {
+						$scope.query += ")";
+					}
+					$scope.query += ' as ' + $scope.report.columns[i].alias + ', ';
 				}
-				$scope.query += $scope.report.columns[i].table + "." + $scope.report.columns[i].name;
-				if ($scope.report.columns[i].aggregate !== undefined && $scope.report.columns[i].aggregate !== "NONE") {
-					$scope.query += ")";
-				}
-				$scope.query += ' as ' + $scope.report.columns[i].alias;
 			}
+			if ($scope.query.substring($scope.query.length - 2) === ', ')
+				$scope.query = $scope.query.substring(0, $scope.query.length - 2);
 			$scope.query += "\nFROM " + $scope.report.table + " as " + $scope.report.alias;
 
 			for (let i = 0; i < $scope.report.joins.length; i++) {
@@ -805,8 +1301,29 @@ angular.module('page', ["ideUI", "ideView"])
 
 			$scope.query += "\nWHERE ";
 			for (let i = 0; i < $scope.report.conditions.length; i++) {
-				if (i > 0) { $scope.query += ', ' }
+				if (i > 0) { $scope.query += ' AND ' }
 				$scope.query += $scope.report.conditions[i].left + " " + $scope.report.conditions[i].operation + " " + $scope.report.conditions[i].right;
+			}
+
+			$scope.query += "\nGROUP BY ";
+			for (let i = 0; i < $scope.report.columns.length; i++) {
+				if ($scope.report.columns[i].grouping === true) {
+					$scope.query += $scope.report.columns[i].table + "." + $scope.report.columns[i].name + ', ';
+				}
+			}
+			if ($scope.query.substring($scope.query.length - 2) === ', ')
+				$scope.query = $scope.query.substring(0, $scope.query.length - 2);
+
+			$scope.query += "\nHAVING ";
+			for (let i = 0; i < $scope.report.havings.length; i++) {
+				if (i > 0) { $scope.query += ', ' }
+				$scope.query += $scope.report.havings[i].left + " " + $scope.report.havings[i].operation + " " + $scope.report.havings[i].right;
+			}
+
+			$scope.query += "\nORDER BY ";
+			for (let i = 0; i < $scope.report.orderings.length; i++) {
+				if (i > 0) { $scope.query += ', ' }
+				$scope.query += $scope.report.orderings[i].column + " " + $scope.report.orderings[i].direction;
 			}
 		}
 
