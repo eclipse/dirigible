@@ -2,7 +2,6 @@
  * API Cache
  */
 const CacheFacade = Java.type("org.eclipse.dirigible.components.api.cache.CacheFacade");
-
 export class Cache {
 
     public static contains(key: string): boolean {

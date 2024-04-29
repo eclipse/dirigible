@@ -9,16 +9,8 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-function _uuid() {
-	function _p8(s) {
-		let p = (Math.random().toString(16) + "000000000").substr(2, 8);
-		return s ? "-" + p.substr(0, 4) + "-" + p.substr(4, 4) : p;
-	}
-	return _p8() + _p8(true) + _p8(true) + _p8();
-}
-
 angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "ideGenerate", "ideTemplates"])
-	.controller('ModelerCtrl', function ($scope, messageHub, $window, workspaceApi, generateApi, templatesApi, ViewParameters) {
+	.controller('ModelerCtrl', function ($scope, messageHub, $window, workspaceApi, generateApi, templatesApi, ViewParameters, uuid) {
 		let contents;
 		let csrfToken;
 		let modelFile = '';
@@ -439,7 +431,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 					for (let i = 0; i < msg.data.entityProperties.length; i++) {
 						let propertyObject = new Property('propertyName');
 						let property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
-						property.setId(_uuid());
+						property.setId(uuid.generate());
 						property.setVertex(true);
 						property.setConnectable(false);
 						for (let attributeName in msg.data.entityProperties[i]) {
@@ -480,7 +472,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 					for (let i = 0; i < msg.data.entityProperties.length; i++) {
 						let propertyObject = new Property('propertyName');
 						let property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
-						property.setId(_uuid());
+						property.setId(uuid.generate());
 						property.setVertex(true);
 						property.setConnectable(false);
 						for (let attributeName in msg.data.entityProperties[i]) {
@@ -580,21 +572,24 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 					return this.isSwimlane(cell);
 				};
 
+				const selectionModel = $scope.graph.getSelectionModel();
+
 				// Only entities are movable
 				$scope.graph.isCellMovable = function (cell) {
+					if (selectionModel.cells.length <= 1 && cell.style === undefined && cell.parent.value.entityType) {
+						return true;
+					}
 					return this.isSwimlane(cell);
 				};
 
 				$scope.graph.model.createId = function (_cell) {
-					let id = _uuid();
+					const id = uuid.generate();
 					return this.prefix + id + this.postfix;
 				};
 
 				// Sets the graph container and configures the editor
 				editor.setGraphContainer(container);
-				let config = mxUtils.load(
-					'editors/config/keyhandler-minimal.xml').
-					getDocumentElement();
+				let config = mxUtils.load('editors/config/keyhandler-minimal.xml').getDocumentElement();
 				editor.configure(config);
 
 				// Configures the automatic layout for the entity properties
@@ -697,8 +692,23 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 					}
 				});
 
+				const moveCells = $scope.graph.moveCells;
+
+				$scope.graph.moveCells = function (cells, dx, dy, clone, target, evt, mapping) {
+					if (target && cells && cells.length === 1 && cells[0].style === undefined && cells[0].parent.value.entityType) {
+						if (cells[0].parent.id !== target.id) {
+							return cells;
+						}
+					}
+					return moveCells.apply(this, arguments);
+				};
+
 				// Disables drag-and-drop into non-swimlanes.
-				$scope.graph.isValidDropTarget = function (cell, cells, evt) {
+				$scope.graph.isValidDropTarget = function (cell, cells, _evt) {
+					if (cells.length === 1 && cells[0].style === undefined && cells[0].parent.value.entityType) {
+						if (cells[0].parent.id === cell.id) return true;
+						else return false;
+					}
 					return this.isSwimlane(cell);
 				};
 
@@ -716,7 +726,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				let entityObject = new Entity('EntityName');
 				let entity = new mxCell(entityObject, new mxGeometry(0, 0, 200, 28), 'entity');
 				entity.setVertex(true);
-				addSidebarIcon($scope.graph, sidebar, entity, ICON_ENTITY, 'Drag this to the diagram to create a new Entity', $scope);
+				addSidebarIcon($scope.graph, sidebar, entity, ICON_ENTITY, 'Drag this to the diagram to create a new Entity', $scope, messageHub);
 
 				// Adds sidebar icon for the property object
 				let propertyObject = new Property('PropertyName');
@@ -724,7 +734,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				property.setVertex(true);
 				property.setConnectable(false);
 
-				addSidebarIcon($scope.graph, sidebar, property, ICON_PROPERTY, 'Drag this to an Entity to create a new Property', $scope);
+				addSidebarIcon($scope.graph, sidebar, property, ICON_PROPERTY, 'Drag this to an Entity to create a new Property', $scope, messageHub);
 
 				// Adds primary key field into entity
 				let firstProperty = new mxCell(new Property('PropertyName'), new mxGeometry(0, 0, 0, 26));
@@ -754,7 +764,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 					}
 
 					if (primaryKey === null) {
-						showAlert('Drop', 'Target Entity must have a Primary Key', $scope);
+						messageHub.showAlertError("Error", "Target Entity must have a Primary Key");
 						return;
 					}
 
@@ -785,7 +795,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				let dependentObject = new Entity('DependentEntityName');
 				let dependent = new mxCell(dependentObject, new mxGeometry(0, 0, 200, 28), 'dependent');
 				dependent.setVertex(true);
-				addSidebarIcon($scope.graph, sidebar, dependent, ICON_DEPENDENT, 'Drag this to the diagram to create a new Dependent Entity', $scope);
+				addSidebarIcon($scope.graph, sidebar, dependent, ICON_DEPENDENT, 'Drag this to the diagram to create a new Dependent Entity', $scope, messageHub);
 
 				// Adds primary key field into entity
 				firstProperty = property.clone();
@@ -802,7 +812,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				let reportObject = new Entity('ReportEntityName');
 				let report = new mxCell(reportObject, new mxGeometry(0, 0, 200, 28), 'report');
 				report.setVertex(true);
-				addSidebarIcon($scope.graph, sidebar, report, ICON_REPORT, 'Drag this to the diagram to create a new Report Entity', $scope);
+				addSidebarIcon($scope.graph, sidebar, report, ICON_REPORT, 'Drag this to the diagram to create a new Report Entity', $scope, messageHub);
 
 				// Adds primary key field into entity
 				firstProperty = property.clone();
@@ -819,7 +829,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				let reportFilterObject = new Entity('ReportFilterEntityName');
 				let reportFilter = new mxCell(reportFilterObject, new mxGeometry(0, 0, 200, 28), 'filter');
 				reportFilter.setVertex(true);
-				addSidebarIcon($scope.graph, sidebar, reportFilter, ICON_FILTER, 'Drag this to the diagram to create a new Report Filter Entity', $scope);
+				addSidebarIcon($scope.graph, sidebar, reportFilter, ICON_FILTER, 'Drag this to the diagram to create a new Report Filter Entity', $scope, messageHub);
 
 				// Adds primary key field into entity
 				firstProperty = property.clone();
@@ -836,7 +846,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				let settingObject = new Entity('SettingEntityName');
 				let setting = new mxCell(settingObject, new mxGeometry(0, 0, 200, 28), 'setting');
 				setting.setVertex(true);
-				addSidebarIcon($scope.graph, sidebar, setting, ICON_SETTING, 'Drag this to the diagram to create a new Setting Entity', $scope);
+				addSidebarIcon($scope.graph, sidebar, setting, ICON_SETTING, 'Drag this to the diagram to create a new Setting Entity', $scope, messageHub);
 
 				// Adds primary key field into entity
 				firstProperty = property.clone();
@@ -853,7 +863,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				let copiedObject = new Entity('EntityName');
 				let copied = new mxCell(copiedObject, new mxGeometry(0, 0, 200, 28), 'copied');
 				copied.setVertex(true);
-				addSidebarIcon($scope.graph, sidebar, copied, ICON_COPIED, 'Drag this to the diagram to create a copy to an Entity from external model', $scope);
+				addSidebarIcon($scope.graph, sidebar, copied, ICON_COPIED, 'Drag this to the diagram to create a copy to an Entity from external model', $scope, messageHub);
 				$scope.showCopiedEntityDialog = function (cellId) {
 					messageHub.showDialogWindow(
 						"edmReference",
@@ -867,7 +877,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				let projectionObject = new Entity('EntityName');
 				let projection = new mxCell(projectionObject, new mxGeometry(0, 0, 200, 28), 'projection');
 				projection.setVertex(true);
-				addSidebarIcon($scope.graph, sidebar, projection, ICON_PROJECTION, 'Drag this to the diagram to create a reference to an Entity from external model', $scope);
+				addSidebarIcon($scope.graph, sidebar, projection, ICON_PROJECTION, 'Drag this to the diagram to create a reference to an Entity from external model', $scope, messageHub);
 				$scope.showReferDialog = function (cellId) {
 					messageHub.showDialogWindow(
 						"edmReference",
@@ -883,7 +893,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				let extensionObject = new Entity('EntityName');
 				let extension = new mxCell(extensionObject, new mxGeometry(0, 0, 200, 28), 'extension');
 				extension.setVertex(true);
-				addSidebarIcon($scope.graph, sidebar, extension, ICON_EXTENSION, 'Drag this to the diagram to create a new Extension Entity', $scope);
+				addSidebarIcon($scope.graph, sidebar, extension, ICON_EXTENSION, 'Drag this to the diagram to create a new Extension Entity', $scope, messageHub);
 
 				// Adds primary key field into extension entity
 				keyProperty = property.clone();

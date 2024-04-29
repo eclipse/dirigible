@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
+function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope, messageHub) {
 	// Function that is executed when the image is dropped on
 	// the graph. The cell argument points to the cell under
 	// the mousepointer if there is one.
@@ -29,7 +29,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 			let pstate = graph.getView().getState(parent);
 
 			if (parent === null || pstate === null) {
-				showAlert('Drop', 'Drop target must be an entity', $scope);
+				messageHub.showAlertError("Error", "Drop target must be an entity");
 				return;
 			}
 

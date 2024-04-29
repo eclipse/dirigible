@@ -211,6 +211,7 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', 'ViewParame
                 case 'hdbti':
                 case 'camel':
                 case 'form':
+                case 'report':
                     return;
                 default:
                     url += '/web';
