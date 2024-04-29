@@ -9,8 +9,8 @@
  */
 package org.eclipse.dirigible.components.api.cache;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 
 public class CacheFacade {
 
@@ -31,13 +31,17 @@ public class CacheFacade {
                         .build();
     }
 
+    public static boolean contains(String key) {
+        return get(key) != null;
+    }
+
     /**
      * Getter for the value of the property by its key.
      *
      * @param key the key
      * @return the string
      */
-    public Object get(String key) {
+    public static Object get(String key) {
         return cache.getIfPresent(key);
     }
 
@@ -47,7 +51,7 @@ public class CacheFacade {
      * @param key the path
      * @param content the content
      */
-    public void set(String key, Object content) {
+    public static void set(String key, Object content) {
         if (content != null) {
             cache.put(key, content);
         }
@@ -58,14 +62,14 @@ public class CacheFacade {
      *
      * @param key the path
      */
-    public void delete(String key) {
+    public static void delete(String key) {
         cache.invalidate(key);
     }
 
     /**
      * Clear.
      */
-    public void clear() {
+    public static void clear() {
         cache.invalidateAll();
     }
 }
