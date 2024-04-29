@@ -156,7 +156,8 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
                         feedPath: $scope.dataParameters.feedPath,
                         roleRead: $scope.dataParameters.roleRead,
                         roleWrite: $scope.dataParameters.roleWrite,
-                        importsCode: $scope.dataParameters.importsCode
+                        importsCode: $scope.dataParameters.importsCode,
+                        generateReport: $scope.dataParameters.generateReport,
                     }, true);
                 } else {
                     messageHub.postMessage('edm.editor.property', {

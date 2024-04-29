@@ -49,6 +49,7 @@ exports.generateFiles = function (model, parameters, templateSources) {
     const daoModels = model.entities.filter(e => e.type !== "PROJECTION");
     const feedModels = model.entities.filter(e => e.feedUrl);
 
+    const generateReportModels = model.entities.filter(e => e.generateReport === "true");
     const reportModels = model.entities.filter(e => e.type === "REPORT");
     const reportFilterModels = model.entities.filter(e => e.type === "FILTER");
     for (const filter of reportFilterModels) {
@@ -101,6 +102,9 @@ exports.generateFiles = function (model, parameters, templateSources) {
                     break;
                 case "daoModels":
                     generatedFiles = generatedFiles.concat(generateCollection(location, content, template, daoModels, parameters));
+                    break;
+                case "generateReportModels":
+                    generatedFiles = generatedFiles.concat(generateCollection(location, content, template, generateReportModels, parameters));
                     break;
                 case "reportModels":
                     generatedFiles = generatedFiles.concat(generateCollection(location, content, template, reportModels, parameters));

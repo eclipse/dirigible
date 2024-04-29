@@ -323,6 +323,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				cell.value.roleRead = msg.data.roleRead;
 				cell.value.roleWrite = msg.data.roleWrite;
 				cell.value.importsCode = msg.data.importsCode;
+				cell.value.generateReport = msg.data.generateReport;
 
 				$scope.graph.model.setValue(cell, cell.value.clone());
 
@@ -1003,7 +1004,8 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 									roleWrite: cell.value.roleWrite,
 									perspectives: $scope.graph.model.perspectives,
 									navigations: $scope.graph.model.navigations,
-									importsCode: cell.value.importsCode
+									importsCode: cell.value.importsCode,
+									generateReport: cell.value.generateReport
 								},
 								null,
 								false,

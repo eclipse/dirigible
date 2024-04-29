@@ -45,7 +45,8 @@ function createModel(graph) {
 				'" perspectiveLabel="' + getPerspectiveLabel(graph, child) +
 				'" perspectiveIcon="' + getPerspectiveIcon(graph, child) +
 				'" perspectiveOrder="' + getPerspectiveOrder(graph, child) +
-				'" perspectiveRole="' + getPerspectiveRole(graph, child) + '"';
+				'" perspectiveRole="' + getPerspectiveRole(graph, child) +
+				'" generateReport="' + _.escape(child.value.generateReport) + '"';
 
 			if (child.value.feedUrl && child.value.feedUrl !== "") {
 				child.value.feedUrl = btoa(child.value.feedUrl);
