@@ -288,7 +288,7 @@ projectsView.controller('ProjectsViewController', [
         $(document).bind('dnd_stop.vakata', function (_e, data) { //Triggered on drag complete
             const target = $scope.jstreeWidget.jstree(true).get_node(data.event.target);
             for (let i = 0; i < data.data.nodes.length; i++) {
-                if (target.children.includes(data.data.nodes[i])) {
+                if (!target || target.children.includes(data.data.nodes[i])) {
                     $scope.dndCancel = true;
                     return;
                 }
@@ -1623,7 +1623,7 @@ projectsView.controller('ProjectsViewController', [
             if (data.status) {
                 const instance = $scope.jstreeWidget.jstree(true);
                 for (let item in instance._model.data) { // Uses the unofficial '_model' property but this is A LOT faster then using 'get_json()'
-                    if (item !== '#' && instance._model.data.hasOwnProperty(item) && instance._model.data[item].data.path === fileDescriptor.path) {
+                    if (item !== '#' && instance._model.data[item].data.path === fileDescriptor.path) {
                         for (let i = 0; i < instance._model.data[item].parents.length; i++) {
                             if (instance._model.data[item].parents[i] !== '#') {
                                 if (instance._model.data[instance._model.data[item].parents[i]].type === 'project') {
