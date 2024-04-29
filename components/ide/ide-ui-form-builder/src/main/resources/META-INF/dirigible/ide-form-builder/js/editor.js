@@ -13,7 +13,7 @@ const editorView = angular.module('app', ['ideUI', 'ideView', 'ideWorkspace', 'c
 editorView.config(["messageHubProvider", function (messageHubProvider) {
     messageHubProvider.eventIdPrefix = 'formEditor';
 }]);
-editorView.controller('DesignerController', ['$scope', '$window', '$document', '$timeout', '$compile', '$http', 'uuid', 'messageHub', 'ViewParameters', 'workspaceApi', function ($scope, $window, $document, $timeout, $compile, $http, uuid, messageHub, ViewParameters, workspaceApi) {
+editorView.controller('DesignerController', function ($scope, $window, $document, $timeout, $compile, uuid, messageHub, ViewParameters, workspaceApi) {
     $scope.selectedTab = 'designer';
     $scope.isFileChanged = false;
     $scope.state = {
@@ -1475,8 +1475,14 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
         return formJson;
     };
 
-    function saveContents(text) {
-        workspaceApi.saveContent('', $scope.dataParameters.file, text).then(function (response) {
+    function saveContents() {
+        const formFile = {
+            feeds: $scope.formData.feeds,
+            scripts: $scope.formData.scripts,
+            code: $scope.formData.code,
+            form: $scope.createFormJson($scope.formModel)
+        };
+        workspaceApi.saveContent('', $scope.dataParameters.file, JSON.stringify(formFile, null, 4)).then(function (response) {
             if (response.status === 200) {
                 messageHub.announceFileSaved({
                     name: $scope.dataParameters.file.substring($scope.dataParameters.file.lastIndexOf('/') + 1),
@@ -1507,13 +1513,7 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
                 event.preventDefault();
                 if ($scope.state.canSave && $scope.isFileChanged) {
                     $scope.$apply(() => $scope.state.isBusy = true);
-                    const formFile = {
-                        feeds: $scope.formData.feeds,
-                        scripts: $scope.formData.scripts,
-                        code: $scope.formData.code,
-                        form: $scope.createFormJson($scope.formModel)
-                    };
-                    saveContents(JSON.stringify(formFile, null, 4));
+                    saveContents();
                 }
                 break;
             case 'delete':
@@ -1603,6 +1603,31 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
         }
     );
 
+    messageHub.onDidReceiveMessage(
+        "editor.file.save.all",
+        function () {
+            if (!$scope.state.error && $scope.isFileChanged) {
+                $scope.$apply(() => $scope.state.isBusy = true);
+                saveContents();
+            }
+        },
+        true,
+    );
+
+    messageHub.onDidReceiveMessage(
+        "editor.file.save",
+        function (msg) {
+            if (!$scope.state.error && $scope.isFileChanged) {
+                let file = msg.data && typeof msg.data === 'object' && msg.data.file;
+                if (file && file === $scope.dataParameters.file) {
+                    $scope.$apply(() => $scope.state.isBusy = true);
+                    saveContents();
+                }
+            }
+        },
+        true,
+    );
+
     $scope.dataParameters = ViewParameters.get();
     if (!$scope.dataParameters.hasOwnProperty('file')) {
         $scope.state.error = true;
@@ -1624,4 +1649,4 @@ editorView.controller('DesignerController', ['$scope', '$window', '$document', '
             });
         });
     }
-}]);
+});

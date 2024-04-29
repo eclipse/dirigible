@@ -20,11 +20,12 @@
         <theme></theme>
         <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js">
         </script>
+        <script type="text/javascript" src="/services/web/ide-workspace-service/workspace.js"></script>
         <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
         <script type="text/javascript" src="editor.js"></script>
     </head>
 
-    <body class="dg-vbox dg-center__horizontal" dg-shortcut="'ctrl+s'" dg-shortcut-action="save">
+    <body class="dg-vbox" dg-shortcut="'ctrl+s'" dg-shortcut-action="save">
         <fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
             {{state.busyText}}
         </fd-busy-indicator-extended>
@@ -32,11 +33,11 @@
             <fd-toolbar-title>Report:</fd-toolbar-title>
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-button compact="true" dg-label="Save" ng-click="save()"
-                state="{{ forms.editor.$valid ? '' : 'disabled'  }}">
+                state="{{ forms.editor.$valid && isFileChanged ? '' : 'disabled'  }}">
             </fd-button>
         </fd-toolbar>
         <fd-scrollbar class="dg-full-width" ng-show="!state.error && !state.isBusy">
-            <fd-fieldset class="fd-margin--md" ng-form="forms.editor">
+            <fd-fieldset ng-form="forms.editor">
                 <fd-form-group name="entityForm">
                     <!-- Begin General Section-->
                     <fd-panel expanded="true">
@@ -45,7 +46,6 @@
                             <h4 fd-panel-title>General</h4>
                         </fd-panel-header>
                         <fd-panel-content aria-label="General Content">
-
                             <fd-form-item horizontal="false">
                                 <fd-form-label for="Name" dg-required="true" dg-colon="true">Name</fd-form-label>
                                 <fd-form-input-message-group
@@ -74,7 +74,7 @@
                             </fd-form-item>
                             <fd-form-item horizontal="false">
                                 <fd-form-label for="Table" dg-required="true" dg-colon="true">Table</fd-form-label>
-                                <fd-form-input-message-group
+                                <fd-form-input-message-group message-fixed="true"
                                     dg-inactive="{{ forms.editor['table'].$valid ? 'true' : 'false' }}">
                                     <fd-input id="idTable" name="table"
                                         state="{{ forms.editor['table'].$valid ? '' : 'error' }}" ng-required="true"
@@ -95,12 +95,12 @@
                             <fd-panel-expand></fd-panel-expand>
                             <h4 fd-panel-title>Columns</h4>
                         </fd-panel-header>
-                        <fd-panel-content aria-label="Columns Content">
-                            <fd-toolbar>
+                        <fd-panel-content aria-label="Columns Content" class="dg-padding-top--none">
+                            <fd-toolbar no-bottom-border="true">
                                 <fd-toolbar-spacer></fd-toolbar-spacer>
                                 <fd-button compact="true" dg-label="Add" ng-click="addColumn()"></fd-button>
                             </fd-toolbar>
-                            <table fd-table outer-borders="none" class="dg-list-border-bottom">
+                            <table fd-table outer-borders="all">
                                 <thead fd-table-header>
                                     <tr fd-table-row>
                                         <th fd-table-header-cell>Table Alias</th>
@@ -153,12 +153,12 @@
                             <fd-panel-expand></fd-panel-expand>
                             <h4 fd-panel-title>Joins</h4>
                         </fd-panel-header>
-                        <fd-panel-content aria-label="Joins Content">
-                            <fd-toolbar>
+                        <fd-panel-content aria-label="Joins Content" class="dg-padding-top--none">
+                            <fd-toolbar no-bottom-border="true">
                                 <fd-toolbar-spacer></fd-toolbar-spacer>
                                 <fd-button compact="true" dg-label="Add" ng-click="addJoin()"></fd-button>
                             </fd-toolbar>
-                            <table fd-table outer-borders="none" class="dg-list-border-bottom">
+                            <table fd-table outer-borders="all">
                                 <thead fd-table-header>
                                     <tr fd-table-row>
                                         <th fd-table-header-cell>Alias</th>
@@ -198,12 +198,12 @@
                             <fd-panel-expand></fd-panel-expand>
                             <h4 fd-panel-title>Conditions</h4>
                         </fd-panel-header>
-                        <fd-panel-content aria-label="Conditions Content">
-                            <fd-toolbar>
+                        <fd-panel-content aria-label="Conditions Content" class="dg-padding-top--none">
+                            <fd-toolbar no-bottom-border="true">
                                 <fd-toolbar-spacer></fd-toolbar-spacer>
                                 <fd-button compact="true" dg-label="Add" ng-click="addCondition()"></fd-button>
                             </fd-toolbar>
-                            <table fd-table outer-borders="none" class="dg-list-border-bottom">
+                            <table fd-table outer-borders="all">
                                 <thead fd-table-header>
                                     <tr fd-table-row>
                                         <th fd-table-header-cell>Left</th>
@@ -241,12 +241,12 @@
                             <fd-panel-expand></fd-panel-expand>
                             <h4 fd-panel-title>Havings</h4>
                         </fd-panel-header>
-                        <fd-panel-content aria-label="Havings Content">
-                            <fd-toolbar>
+                        <fd-panel-content aria-label="Havings Content" class="dg-padding-top--none">
+                            <fd-toolbar no-bottom-border="true">
                                 <fd-toolbar-spacer></fd-toolbar-spacer>
                                 <fd-button compact="true" dg-label="Add" ng-click="addHaving()"></fd-button>
                             </fd-toolbar>
-                            <table fd-table outer-borders="none" class="dg-list-border-bottom">
+                            <table fd-table outer-borders="all">
                                 <thead fd-table-header>
                                     <tr fd-table-row>
                                         <th fd-table-header-cell>Left</th>
@@ -284,12 +284,12 @@
                             <fd-panel-expand></fd-panel-expand>
                             <h4 fd-panel-title>Ordering</h4>
                         </fd-panel-header>
-                        <fd-panel-content aria-label="Ordering Content">
-                            <fd-toolbar>
+                        <fd-panel-content aria-label="Ordering Content" class="dg-padding-top--none">
+                            <fd-toolbar no-bottom-border="true">
                                 <fd-toolbar-spacer></fd-toolbar-spacer>
                                 <fd-button compact="true" dg-label="Add" ng-click="addOrdering()"></fd-button>
                             </fd-toolbar>
-                            <table fd-table outer-borders="none" class="dg-list-border-bottom">
+                            <table fd-table outer-borders="all">
                                 <thead fd-table-header>
                                     <tr fd-table-row>
                                         <th fd-table-header-cell>Column</th>
@@ -325,12 +325,12 @@
                             <fd-panel-expand></fd-panel-expand>
                             <h4 fd-panel-title>Parameters</h4>
                         </fd-panel-header>
-                        <fd-panel-content aria-label="Parameters Content">
-                            <fd-toolbar>
+                        <fd-panel-content aria-label="Parameters Content" class="dg-padding-top--none">
+                            <fd-toolbar no-bottom-border="true">
                                 <fd-toolbar-spacer></fd-toolbar-spacer>
                                 <fd-button compact="true" dg-label="Add" ng-click="addParameter()"></fd-button>
                             </fd-toolbar>
-                            <table fd-table outer-borders="none" class="dg-list-border-bottom">
+                            <table fd-table outer-borders="all">
                                 <thead fd-table-header>
                                     <tr fd-table-row>
                                         <th fd-table-header-cell>Parameter Name</th>

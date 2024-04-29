@@ -9,10 +9,9 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-angular.module('page', ["ideUI", "ideView"])
-	.controller('PageController', function ($scope, messageHub, $window, ViewParameters) {
+angular.module('page', ['ideUI', 'ideView', 'ideWorkspace'])
+	.controller('PageController', function ($scope, messageHub, $window, workspaceApi, ViewParameters) {
 		let contents;
-		let csrfToken;
 		$scope.errorMessage = 'An unknown error was encountered. Please see console for more information.';
 		$scope.forms = {
 			editor: {},
@@ -20,8 +19,9 @@ angular.module('page', ["ideUI", "ideView"])
 		$scope.state = {
 			isBusy: true,
 			error: false,
-			busyText: "Loading...",
+			busyText: 'Loading...',
 		};
+		$scope.isFileChanged = false;
 		$scope.editColumnIndex = 0;
 		$scope.editJoinIndex = 0;
 		$scope.editConditionIndex = 0;
@@ -84,38 +84,29 @@ angular.module('page', ["ideUI", "ideView"])
 			messageHub.setStatusCaret('');
 		});
 
-		function getResource(resourcePath) {
-			let xhr = new XMLHttpRequest();
-			xhr.open('GET', resourcePath, false);
-			xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
-			xhr.send();
-			if (xhr.status === 200) {
-				csrfToken = xhr.getResponseHeader("x-csrf-token");
-				return xhr.responseText;
-			} else {
-				$scope.state.error = true;
-				$scope.errorMessage = "Unable to load the file. See console, for more information.";
-				messageHub.setStatusError(`Error loading '${$scope.dataParameters.file}'`);
-				return '{}';
-			}
-		}
-
 		$scope.load = function () {
 			if (!$scope.state.error) {
-				contents = getResource('/services/ide/workspaces' + $scope.dataParameters.file);
-				$scope.report = JSON.parse(contents);
-				contents = JSON.stringify($scope.report, null, 4);
-				$scope.state.isBusy = false;
+				workspaceApi.loadContent('', $scope.dataParameters.file).then(function (response) {
+					if (response.status === 200) {
+						$scope.report = response.data;
+						contents = JSON.stringify($scope.report, null, 4);
+						$scope.$apply(function () {
+							$scope.state.isBusy = false;
+						});
+					} else {
+						$scope.$apply(function () {
+							$scope.state.error = true;
+							$scope.errorMessage = "There was a problem with loading the file";
+							$scope.state.isBusy = false;
+						});
+					}
+				});
 			}
 		};
 
 		function saveContents(text) {
-			let xhr = new XMLHttpRequest();
-			xhr.open('PUT', '/services/ide/workspaces' + $scope.dataParameters.file);
-			xhr.setRequestHeader('X-Requested-With', 'Fetch');
-			xhr.setRequestHeader('X-CSRF-Token', csrfToken);
-			xhr.onreadystatechange = function () {
-				if (xhr.readyState === 4) {
+			workspaceApi.saveContent('', $scope.dataParameters.file, text).then(function (response) {
+				if (response.status === 200) {
 					messageHub.announceFileSaved({
 						name: $scope.dataParameters.file.substring($scope.dataParameters.file.lastIndexOf('/') + 1),
 						path: $scope.dataParameters.file.substring($scope.dataParameters.file.indexOf('/', 1)),
@@ -126,18 +117,17 @@ angular.module('page', ["ideUI", "ideView"])
 					messageHub.setEditorDirty($scope.dataParameters.file, false);
 					$scope.$apply(function () {
 						$scope.state.isBusy = false;
+						$scope.isFileChanged = false;
+					});
+				} else {
+					console.error(`Error saving '${$scope.dataParameters.file}'`);
+					messageHub.setStatusError(`Error saving '${$scope.dataParameters.file}'`);
+					messageHub.showAlertError('Error while saving the file', 'Please look at the console for more information');
+					$scope.$apply(function () {
+						$scope.state.isBusy = false;
 					});
 				}
-			};
-			xhr.onerror = function (error) {
-				console.error(`Error saving '${$scope.dataParameters.file}'`, error);
-				messageHub.setStatusError(`Error saving '${$scope.dataParameters.file}'`);
-				messageHub.showAlertError('Error while saving the file', 'Please look at the console for more information');
-				$scope.$apply(function () {
-					$scope.state.isBusy = false;
-				});
-			};
-			xhr.send(text);
+			});
 		}
 
 		$scope.save = function (_keySet, event) {
@@ -168,8 +158,7 @@ angular.module('page', ["ideUI", "ideView"])
 			"editor.file.save.all",
 			function () {
 				if (!$scope.state.error && $scope.forms.editor.$valid) {
-					let report = JSON.stringify($scope.report, null, 4);
-					if (contents !== report) {
+					if (isFileChanged) {
 						$scope.save();
 					}
 				}
@@ -183,8 +172,7 @@ angular.module('page', ["ideUI", "ideView"])
 				if (!$scope.state.error && $scope.forms.editor.$valid) {
 					let file = msg.data && typeof msg.data === 'object' && msg.data.file;
 					if (file && file === $scope.dataParameters.file) {
-						let report = JSON.stringify($scope.report, null, 4);
-						if (contents !== report) $scope.save();
+						if (isFileChanged) $scope.save();
 					}
 				}
 			},
@@ -192,9 +180,10 @@ angular.module('page', ["ideUI", "ideView"])
 		);
 
 		$scope.$watch('report', function () {
-			if (!$scope.state.error) {
-				let report = JSON.stringify($scope.report, null, 4);
-				messageHub.setEditorDirty($scope.dataParameters.file, contents !== report);
+			if (!$scope.state.error && !$scope.state.isBusy) {
+				const report = JSON.stringify($scope.report, null, 4);
+				$scope.isFileChanged = contents !== report;
+				messageHub.setEditorDirty($scope.dataParameters.file, $scope.isFileChanged);
 				$scope.generateQuery();
 			}
 		}, true);
@@ -1294,15 +1283,19 @@ angular.module('page', ["ideUI", "ideView"])
 				$scope.query = $scope.query.substring(0, $scope.query.length - 2);
 			$scope.query += "\nFROM " + $scope.report.table + " as " + $scope.report.alias;
 
-			for (let i = 0; i < $scope.report.joins.length; i++) {
-				if (i > 0) { $scope.query += ', ' }
-				$scope.query += "\n  " + $scope.report.joins[i].type + " JOIN " + $scope.report.joins[i].name + " " + $scope.report.joins[i].alias + " ON " + $scope.report.joins[i].condition;
+			if ($scope.report.joins) {
+				for (let i = 0; i < $scope.report.joins.length; i++) {
+					if (i > 0) { $scope.query += ', ' }
+					$scope.query += "\n  " + $scope.report.joins[i].type + " JOIN " + $scope.report.joins[i].name + " " + $scope.report.joins[i].alias + " ON " + $scope.report.joins[i].condition;
+				}
 			}
 
-			$scope.query += "\nWHERE ";
-			for (let i = 0; i < $scope.report.conditions.length; i++) {
-				if (i > 0) { $scope.query += ' AND ' }
-				$scope.query += $scope.report.conditions[i].left + " " + $scope.report.conditions[i].operation + " " + $scope.report.conditions[i].right;
+			if ($scope.report.conditions) {
+				$scope.query += "\nWHERE ";
+				for (let i = 0; i < $scope.report.conditions.length; i++) {
+					if (i > 0) { $scope.query += ' AND ' }
+					$scope.query += $scope.report.conditions[i].left + " " + $scope.report.conditions[i].operation + " " + $scope.report.conditions[i].right;
+				}
 			}
 
 			$scope.query += "\nGROUP BY ";
@@ -1314,16 +1307,20 @@ angular.module('page', ["ideUI", "ideView"])
 			if ($scope.query.substring($scope.query.length - 2) === ', ')
 				$scope.query = $scope.query.substring(0, $scope.query.length - 2);
 
-			$scope.query += "\nHAVING ";
-			for (let i = 0; i < $scope.report.havings.length; i++) {
-				if (i > 0) { $scope.query += ', ' }
-				$scope.query += $scope.report.havings[i].left + " " + $scope.report.havings[i].operation + " " + $scope.report.havings[i].right;
+			if ($scope.report.havings) {
+				$scope.query += "\nHAVING ";
+				for (let i = 0; i < $scope.report.havings.length; i++) {
+					if (i > 0) { $scope.query += ', ' }
+					$scope.query += $scope.report.havings[i].left + " " + $scope.report.havings[i].operation + " " + $scope.report.havings[i].right;
+				}
 			}
 
-			$scope.query += "\nORDER BY ";
-			for (let i = 0; i < $scope.report.orderings.length; i++) {
-				if (i > 0) { $scope.query += ', ' }
-				$scope.query += $scope.report.orderings[i].column + " " + $scope.report.orderings[i].direction;
+			if ($scope.report.orderings) {
+				$scope.query += "\nORDER BY ";
+				for (let i = 0; i < $scope.report.orderings.length; i++) {
+					if (i > 0) { $scope.query += ', ' }
+					$scope.query += $scope.report.orderings[i].column + " " + $scope.report.orderings[i].direction;
+				}
 			}
 		}
 
