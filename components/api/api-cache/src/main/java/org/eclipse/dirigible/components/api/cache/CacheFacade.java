@@ -12,24 +12,14 @@ package org.eclipse.dirigible.components.api.cache;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
+import java.util.concurrent.TimeUnit;
+
 public class CacheFacade {
 
-    private static Cache<String, Object> cache;
-
-    /**
-     * Instantiates a new caffeine database metadata cache.
-     */
-    static {
-        initCache();
-    }
-
-    /**
-     * Inits the cache.
-     */
-    private static void initCache() {
-        cache = Caffeine.newBuilder()
-                        .build();
-    }
+    private static final Cache<String, Object> cache = Caffeine.newBuilder()
+                                                               .expireAfterWrite(15, TimeUnit.MINUTES)
+                                                               .maximumSize(1000)
+                                                               .build();
 
     public static boolean contains(String key) {
         return get(key) != null;
