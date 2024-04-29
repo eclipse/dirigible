@@ -9,26 +9,20 @@
  */
 package org.eclipse.dirigible.components.api.cache;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+
+import java.util.concurrent.TimeUnit;
 
 public class CacheFacade {
 
-    private static Cache<String, Object> cache;
+    private static final Cache<String, Object> cache = Caffeine.newBuilder()
+                                                               .expireAfterWrite(15, TimeUnit.MINUTES)
+                                                               .maximumSize(1000)
+                                                               .build();
 
-    /**
-     * Instantiates a new caffeine database metadata cache.
-     */
-    static {
-        initCache();
-    }
-
-    /**
-     * Inits the cache.
-     */
-    private static void initCache() {
-        cache = Caffeine.newBuilder()
-                        .build();
+    public static boolean contains(String key) {
+        return get(key) != null;
     }
 
     /**
@@ -37,7 +31,7 @@ public class CacheFacade {
      * @param key the key
      * @return the string
      */
-    public Object get(String key) {
+    public static Object get(String key) {
         return cache.getIfPresent(key);
     }
 
@@ -47,7 +41,7 @@ public class CacheFacade {
      * @param key the path
      * @param content the content
      */
-    public void set(String key, Object content) {
+    public static void set(String key, Object content) {
         if (content != null) {
             cache.put(key, content);
         }
@@ -58,14 +52,14 @@ public class CacheFacade {
      *
      * @param key the path
      */
-    public void delete(String key) {
+    public static void delete(String key) {
         cache.invalidate(key);
     }
 
     /**
      * Clear.
      */
-    public void clear() {
+    public static void clear() {
         cache.invalidateAll();
     }
 }
