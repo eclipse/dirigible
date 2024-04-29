@@ -1,5 +1,6 @@
 package org.eclipse.dirigible.components.database;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,12 +58,24 @@ public class NamedParameterStatement implements AutoCloseable {
     }
 
     /**
+     * Instantiates a new named parameter statement.
+     *
+     * @param connection the connection
+     * @param query the query
+     * @param returnGeneratedKeys the return generated keys
+     * @throws SQLException the SQL exception
+     */
+    public NamedParameterStatement(Connection connection, String query, int returnGeneratedKeys) throws SQLException {
+        String parsedQuery = parse(query);
+        statement = connection.prepareStatement(parsedQuery, returnGeneratedKeys);
+    }
+
+    /**
      * Parses a query with named parameters. The parameter-index mappings are put into the map, and the
      * parsed query is returned. DO NOT CALL FROM CLIENT CODE. This method is non-private so JUnit code
      * can test it.
      *
      * @param query query to parse
-     * @param paramMap map to hold parameter-index mappings
      * @return the parsed query
      */
     final String parse(String query) {
@@ -191,6 +204,106 @@ public class NamedParameterStatement implements AutoCloseable {
     }
 
     /**
+     * Sets the byte.
+     *
+     * @param name the name
+     * @param value the value
+     * @throws SQLException the SQL exception
+     */
+    public void setByte(String name, byte value) throws SQLException {
+        int[] indexes = getIndexes(name);
+        for (int i = 0; i < indexes.length; i++) {
+            statement.setByte(indexes[i], value);
+        }
+    }
+
+    /**
+     * Sets the short.
+     *
+     * @param name the name
+     * @param value the value
+     * @throws SQLException the SQL exception
+     */
+    public void setShort(String name, short value) throws SQLException {
+        int[] indexes = getIndexes(name);
+        for (int i = 0; i < indexes.length; i++) {
+            statement.setShort(indexes[i], value);
+        }
+    }
+
+    /**
+     * Sets the float.
+     *
+     * @param name the name
+     * @param value the value
+     * @throws SQLException the SQL exception
+     */
+    public void setFloat(String name, float value) throws SQLException {
+        int[] indexes = getIndexes(name);
+        for (int i = 0; i < indexes.length; i++) {
+            statement.setFloat(indexes[i], value);
+        }
+    }
+
+    /**
+     * Sets the double.
+     *
+     * @param name the name
+     * @param value the value
+     * @throws SQLException the SQL exception
+     */
+    public void setDouble(String name, double value) throws SQLException {
+        int[] indexes = getIndexes(name);
+        for (int i = 0; i < indexes.length; i++) {
+            statement.setDouble(indexes[i], value);
+        }
+    }
+
+    /**
+     * Sets the boolean.
+     *
+     * @param name the name
+     * @param value the value
+     * @throws SQLException the SQL exception
+     */
+    public void setBoolean(String name, boolean value) throws SQLException {
+        int[] indexes = getIndexes(name);
+        for (int i = 0; i < indexes.length; i++) {
+            statement.setBoolean(indexes[i], value);
+        }
+    }
+
+    /**
+     * Sets the binary stream.
+     *
+     * @param name the name
+     * @param value the value
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    public void setBinaryStream(String name, InputStream value, int length) throws SQLException {
+        int[] indexes = getIndexes(name);
+        for (int i = 0; i < indexes.length; i++) {
+            statement.setBinaryStream(indexes[i], value, length);
+        }
+    }
+
+    /**
+     * Sets the binary stream.
+     *
+     * @param name the name
+     * @param value the value
+     * @param length the length
+     * @throws SQLException the SQL exception
+     */
+    public void setBinaryStream(String name, InputStream value, long length) throws SQLException {
+        int[] indexes = getIndexes(name);
+        for (int i = 0; i < indexes.length; i++) {
+            statement.setBinaryStream(indexes[i], value, length);
+        }
+    }
+
+    /**
      * Sets a parameter.
      *
      * @param name parameter name
@@ -252,6 +365,50 @@ public class NamedParameterStatement implements AutoCloseable {
         int[] indexes = getIndexes(name);
         for (int i = 0; i < indexes.length; i++) {
             statement.setDate(indexes[i], value, cal);
+        }
+    }
+
+    /**
+     * Sets the time.
+     *
+     * @param name the name
+     * @param value the value
+     * @throws SQLException the SQL exception
+     */
+    public void setTime(String name, java.sql.Time value) throws SQLException {
+        int[] indexes = getIndexes(name);
+        for (int i = 0; i < indexes.length; i++) {
+            statement.setTime(indexes[i], value);
+        }
+    }
+
+    /**
+     * Sets the time.
+     *
+     * @param name the name
+     * @param value the value
+     * @param cal the cal
+     * @throws SQLException the SQL exception
+     */
+    public void setTime(String name, java.sql.Time value, Calendar cal) throws SQLException {
+        int[] indexes = getIndexes(name);
+        for (int i = 0; i < indexes.length; i++) {
+            statement.setTime(indexes[i], value, cal);
+        }
+    }
+
+
+    /**
+     * Sets the null.
+     *
+     * @param name the name
+     * @param sqlType the sql type
+     * @throws SQLException the SQL exception
+     */
+    public void setNull(String name, Integer sqlType) throws SQLException {
+        int[] indexes = getIndexes(name);
+        for (int i = 0; i < indexes.length; i++) {
+            statement.setNull(indexes[i], sqlType);
         }
     }
 
@@ -328,6 +485,16 @@ public class NamedParameterStatement implements AutoCloseable {
      */
     public int[] executeBatch() throws SQLException {
         return statement.executeBatch();
+    }
+
+    /**
+     * Gets the generated keys.
+     *
+     * @return the generated keys
+     * @throws SQLException the SQL exception
+     */
+    public ResultSet getGeneratedKeys() throws SQLException {
+        return statement.getGeneratedKeys();
     }
 
 }

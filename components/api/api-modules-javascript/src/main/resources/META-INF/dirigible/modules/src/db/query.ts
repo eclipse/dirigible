@@ -21,10 +21,21 @@ export interface QueryParameter {
 	readonly value: any;
 }
 
+export interface NamedQueryParameter {
+	readonly name: string;
+	readonly type: string;
+	readonly value: any;
+}
+
 export class Query {
 
 	public static execute(sql: string, parameters?: (string | number | boolean | Date | QueryParameter)[], datasourceName?: string): any[] {
 		const resultset = DatabaseFacade.query(sql, parameters ? JSON.stringify(parameters) : undefined, datasourceName);
+		return JSON.parse(resultset);
+	}
+	
+	public static executeNamed(sql: string, parameters?: NamedQueryParameter[], datasourceName?: string): any[] {
+		const resultset = DatabaseFacade.queryNamed(sql, parameters ? JSON.stringify(parameters) : undefined, datasourceName);
 		return JSON.parse(resultset);
 	}
 }

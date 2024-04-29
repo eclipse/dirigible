@@ -28,6 +28,7 @@ import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadata
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseResultSetHelper;
 import org.eclipse.dirigible.components.data.management.service.DatabaseDefinitionService;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
+import org.eclipse.dirigible.components.database.NamedParameterStatement;
 import org.eclipse.dirigible.database.persistence.processors.identity.PersistenceNextValueIdentityProcessor;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
@@ -222,7 +223,8 @@ public class DatabaseFacade implements InitializingBean {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 if (parameters != null) {
-                    ParametersSetter.setParameters(parameters, preparedStatement);
+                    IndexedOrNamedStatement statement = new IndexedOrNamedStatement(preparedStatement);
+                    ParametersSetter.setParameters(parameters, statement);
                 }
                 ResultSet resultSet = preparedStatement.executeQuery();
                 StringWriter sw = new StringWriter();
@@ -267,6 +269,70 @@ public class DatabaseFacade implements InitializingBean {
         return query(sql, null, null);
     }
 
+    /**
+     * Executes named parameters SQL query.
+     *
+     * @param sql the sql
+     * @param parameters the parameters
+     * @param datasourceName the datasource name
+     * @return the result of the query as JSON
+     * @throws Exception the exception
+     */
+    public static final String queryNamed(String sql, String parameters, String datasourceName) throws Exception {
+        DataSource dataSource = getDataSource(datasourceName);
+        if (dataSource == null) {
+            String error = format("DataSource {0} not known.", datasourceName);
+            throw new IllegalArgumentException(error);
+        }
+        try (Connection connection = dataSource.getConnection()) {
+            try (NamedParameterStatement preparedStatement = new NamedParameterStatement(connection, sql)) {
+                if (parameters != null) {
+                    IndexedOrNamedStatement statement = new IndexedOrNamedStatement(preparedStatement);
+                    ParametersSetter.setParameters(parameters, statement);
+                }
+                ResultSet resultSet = preparedStatement.executeQuery();
+                StringWriter sw = new StringWriter();
+                OutputStream output;
+                try {
+                    output = WriterOutputStream.builder()
+                                               .setWriter(sw)
+                                               .setCharset(StandardCharsets.UTF_8)
+                                               .get();
+                } catch (IOException e) {
+                    throw new Exception(e);
+                }
+                DatabaseResultSetHelper.toJson(resultSet, false, false, output);
+                return sw.toString();
+            }
+        } catch (Exception ex) {
+            logger.error("Failed to execute query statement [{}] in data source [{}].", sql, datasourceName, ex);
+            throw ex;
+        }
+    }
+
+    /**
+     * Executes named parameters SQL query.
+     *
+     * @param sql the sql
+     * @param parameters the parameters
+     * @return the result of the query as JSON
+     * @throws Exception the exception
+     */
+    public static final String queryNamed(String sql, String parameters) throws Exception {
+        return queryNamed(sql, parameters, null);
+    }
+
+    /**
+     * Executes named parameters SQL query.
+     *
+     * @param sql the sql
+     * @return the result of the query as JSON
+     * @throws Exception the exception
+     */
+    public static final String queryNamed(String sql) throws Exception {
+        return queryNamed(sql, null, null);
+    }
+
     // =========== Insert ===========
 
     /**
@@ -290,7 +356,46 @@ public class DatabaseFacade implements InitializingBean {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             if (parameters != null) {
-                ParametersSetter.setParameters(parameters, preparedStatement);
+                IndexedOrNamedStatement statement = new IndexedOrNamedStatement(preparedStatement);
+                ParametersSetter.setParameters(parameters, statement);
+            }
+            int updatedRows = preparedStatement.executeUpdate();
+            List<Long> generatedIds = new ArrayList<>(updatedRows);
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                while (generatedKeys.next()) {
+                    generatedIds.add(generatedKeys.getLong(1));
+                }
+                return generatedIds;
+            }
+        } catch (SQLException | RuntimeException ex) {
+            logger.error("Failed to execute insert statement [{}] in data source [{}].", sql, datasourceName, ex);
+            throw ex;
+        }
+    }
+
+    /**
+     * Executes named SQL insert.
+     *
+     * @param sql the insert statement to be executed
+     * @param parameters statement parameters
+     * @param datasourceName the datasource name
+     * @return the generated IDs
+     * @throws SQLException if an error occur
+     * @throws IllegalArgumentException if the provided datasouce is not found
+     * @throws RuntimeException if an error occur
+     */
+    public static final List<Long> insertNamed(String sql, String parameters, String datasourceName)
+            throws SQLException, IllegalArgumentException, RuntimeException {
+        DataSource dataSource = getDataSource(datasourceName);
+        if (dataSource == null) {
+            throw new IllegalArgumentException("DataSource [" + datasourceName + "] not known.");
+        }
+        try (Connection connection = dataSource.getConnection();
+                NamedParameterStatement preparedStatement = new NamedParameterStatement(connection, sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            if (parameters != null) {
+                IndexedOrNamedStatement statement = new IndexedOrNamedStatement(preparedStatement);
+                ParametersSetter.setParameters(parameters, statement);
             }
             int updatedRows = preparedStatement.executeUpdate();
             List<Long> generatedIds = new ArrayList<>(updatedRows);
@@ -326,7 +431,8 @@ public class DatabaseFacade implements InitializingBean {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 if (parameters != null) {
-                    ParametersSetter.setParameters(parameters, preparedStatement);
+                    IndexedOrNamedStatement statement = new IndexedOrNamedStatement(preparedStatement);
+                    ParametersSetter.setParameters(parameters, statement);
                 }
                 return preparedStatement.executeUpdate();
             }
@@ -358,6 +464,60 @@ public class DatabaseFacade implements InitializingBean {
     public static final int update(String sql) throws Exception {
         return update(sql, null, null);
     }
+
+    /**
+     * Executes named SQL update.
+     *
+     * @param sql the sql
+     * @param parameters the parameters
+     * @param datasourceName the datasource name
+     * @return the number of the rows that has been changed
+     * @throws Exception the exception
+     */
+    public static final int updateNamed(String sql, String parameters, String datasourceName) throws Exception {
+        DataSource dataSource = getDataSource(datasourceName);
+        if (dataSource == null) {
+            String error = format("DataSource {0} not known.", datasourceName);
+            throw new IllegalArgumentException(error);
+        }
+        try (Connection connection = dataSource.getConnection()) {
+            try (NamedParameterStatement preparedStatement = new NamedParameterStatement(connection, sql)) {
+                if (parameters != null) {
+                    IndexedOrNamedStatement statement = new IndexedOrNamedStatement(preparedStatement);
+                    ParametersSetter.setParameters(parameters, statement);
+                }
+                return preparedStatement.executeUpdate();
+            }
+        } catch (Exception ex) {
+            logger.error("Failed to execute update statement [{}] in data source [{}].", sql, datasourceName, ex);
+            throw ex;
+        }
+    }
+
+    /**
+     * Executes named SQL update.
+     *
+     * @param sql the sql
+     * @param parameters the parameters
+     * @return the number of the rows that has been changed
+     * @throws Exception the exception
+     */
+    public static final int updateNamed(String sql, String parameters) throws Exception {
+        return update(sql, parameters, null);
+    }
+
+    /**
+     * Executes named SQL update.
+     *
+     * @param sql the sql
+     * @return the number of the rows that has been changed
+     * @throws Exception the exception
+     */
+    public static final int updateNamed(String sql) throws Exception {
+        return update(sql, null, null);
+    }
+
+
 
     /**
      * Gets the connection.
