@@ -14,7 +14,7 @@ exports.getTemplate = function () {
 		"name": "report-model",
 		"label": "Report Model",
 		"extension": "report",
-		"data": '{"name":"MYREPORT","alias":"mt","table":"MYTABLE","columns":[{"alias":"Customer","name":"CUSTOMER_NAME","type":"VARCHAR","aggregate": "NONE","table": "mt"]}'
+		"data": '{"name":"MYREPORT","alias":"mt","table":"MYTABLE","columns":[{"alias":"Customer","name":"CUSTOMER_NAME","type":"VARCHAR","aggregate": "NONE","table": "mt","select": true}]}'
 	};
 	return template;
 };
