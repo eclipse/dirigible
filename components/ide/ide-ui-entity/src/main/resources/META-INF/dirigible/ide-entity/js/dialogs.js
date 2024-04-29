@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-function openReferEntity(title, message, $scope, graph) {
+function openReferEntity(title, message, $scope, graph, uuid) { // Not used
 	$scope.$parent.dialogTitle = title;
 	$scope.$parent.okReferEntity = function () {
 		if (!$scope.$parent.referencedModel || !$scope.$parent.referencedEntity) {
@@ -25,19 +25,16 @@ function openReferEntity(title, message, $scope, graph) {
 			$scope.$cell.value.projectionReferencedModel = $scope.$parent.referencedModel;
 			$scope.$cell.value.projectionReferencedEntity = $scope.$parent.referencedEntity;
 
-
-			
-
 			$scope.$parent.availableEntities.forEach(entity => {
 				if (entity.name === $scope.$parent.referencedEntity) {
 					entity.properties.forEach(projectionProperty => {
 						let propertyObject = new Property('propertyName');
 						let property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
-						property.setId(_uuid());
+						property.setId(uuid.generate());
 						property.setVertex(true);
 						property.setConnectable(false);
 						for (let attributeName in projectionProperty) {
-							property.value[attributeName] = projectionProperty[attributeName];	
+							property.value[attributeName] = projectionProperty[attributeName];
 						}
 						property.style = 'projectionproperty';
 						$scope.$cell.insert(property);
@@ -60,7 +57,7 @@ function openReferEntity(title, message, $scope, graph) {
 }
 
 
-function openCopiedEntity(title, message, $scope, graph) {
+function openCopiedEntity(title, message, $scope, graph, uuid) { // Not used
 	$scope.$parent.dialogTitle = title;
 	$scope.$parent.okReferEntity = function () {
 		if (!$scope.$parent.referencedModel || !$scope.$parent.referencedEntity) {
@@ -81,7 +78,7 @@ function openCopiedEntity(title, message, $scope, graph) {
 					entity.properties.forEach(projectionProperty => {
 						let propertyObject = new Property('propertyName');
 						let property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
-						property.setId(_uuid());
+						property.setId(uuid.generate());
 						property.setVertex(true);
 						property.setConnectable(false);
 						for (let attributeName in projectionProperty) {
