@@ -53,8 +53,12 @@ angular.module('page', ["ideUI", "ideView"])
 				},
 			};
 #foreach ($property in $properties)
-#if($property.dataTypeTypescript == 'number' || $property.dataTypeTypescript == 'boolean')
-			if (entity.${property.name}) {
+#if($property.dataTypeTypescript == 'number')
+			if (entity.${property.name} !== undefined) {
+				filter.${dollar}filter.equals.${property.name} = entity.${property.name};
+			}
+#elseif($property.dataTypeTypescript == 'boolean')
+			if (entity.${property.name} !== undefined && entity.is${property.name}Indeterminate === false) {
 				filter.${dollar}filter.equals.${property.name} = entity.${property.name};
 			}
 #elseif($property.dataTypeTypescript == 'string')
