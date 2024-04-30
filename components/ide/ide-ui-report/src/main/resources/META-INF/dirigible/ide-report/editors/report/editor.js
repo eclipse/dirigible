@@ -88,7 +88,8 @@ angular.module('page', ['ideUI', 'ideView', 'ideWorkspace'])
 			if (!$scope.state.error) {
 				workspaceApi.loadContent('', $scope.dataParameters.file).then(function (response) {
 					if (response.status === 200) {
-						$scope.report = response.data;
+						if (response.data === '') $scope.report = {};
+						else $scope.report = response.data;
 						contents = JSON.stringify($scope.report, null, 4);
 						$scope.$apply(function () {
 							$scope.state.isBusy = false;
@@ -1267,21 +1268,24 @@ angular.module('page', ['ideUI', 'ideView', 'ideWorkspace'])
 
 		$scope.generateQuery = function () {
 			$scope.query = "SELECT ";
-			for (let i = 0; i < $scope.report.columns.length; i++) {
-				if ($scope.report.columns[i].select === true) {
-					if ($scope.report.columns[i].aggregate !== undefined && $scope.report.columns[i].aggregate !== "NONE") {
-						$scope.query += $scope.report.columns[i].aggregate + "(";
+			if ($scope.report.columns) {
+				for (let i = 0; i < $scope.report.columns.length; i++) {
+					if ($scope.report.columns[i].select === true) {
+						if ($scope.report.columns[i].aggregate !== undefined && $scope.report.columns[i].aggregate !== "NONE") {
+							$scope.query += $scope.report.columns[i].aggregate + "(";
+						}
+						$scope.query += $scope.report.columns[i].table + "." + $scope.report.columns[i].name;
+						if ($scope.report.columns[i].aggregate !== undefined && $scope.report.columns[i].aggregate !== "NONE") {
+							$scope.query += ")";
+						}
+						$scope.query += ' as ' + $scope.report.columns[i].alias + ', ';
 					}
-					$scope.query += $scope.report.columns[i].table + "." + $scope.report.columns[i].name;
-					if ($scope.report.columns[i].aggregate !== undefined && $scope.report.columns[i].aggregate !== "NONE") {
-						$scope.query += ")";
-					}
-					$scope.query += ' as ' + $scope.report.columns[i].alias + ', ';
 				}
 			}
 			if ($scope.query.substring($scope.query.length - 2) === ', ')
 				$scope.query = $scope.query.substring(0, $scope.query.length - 2);
-			$scope.query += "\nFROM " + $scope.report.table + " as " + $scope.report.alias;
+			if ($scope.report.table && $scope.report.alias)
+				$scope.query += "\nFROM " + $scope.report.table + " as " + $scope.report.alias;
 
 			if ($scope.report.joins) {
 				for (let i = 0; i < $scope.report.joins.length; i++) {
@@ -1298,10 +1302,12 @@ angular.module('page', ['ideUI', 'ideView', 'ideWorkspace'])
 				}
 			}
 
-			$scope.query += "\nGROUP BY ";
-			for (let i = 0; i < $scope.report.columns.length; i++) {
-				if ($scope.report.columns[i].grouping === true) {
-					$scope.query += $scope.report.columns[i].table + "." + $scope.report.columns[i].name + ', ';
+			if ($scope.report.columns) {
+				$scope.query += "\nGROUP BY ";
+				for (let i = 0; i < $scope.report.columns.length; i++) {
+					if ($scope.report.columns[i].grouping === true) {
+						$scope.query += $scope.report.columns[i].table + "." + $scope.report.columns[i].name + ', ';
+					}
 				}
 			}
 			if ($scope.query.substring($scope.query.length - 2) === ', ')

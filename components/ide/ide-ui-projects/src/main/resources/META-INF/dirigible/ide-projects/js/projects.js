@@ -817,18 +817,23 @@ projectsView.controller('ProjectsViewController', [
             messageHub.triggerEvent('editor.file.save.all', true);
         };
 
-        $scope.deleteFileFolder = function (workspace, path, nodeId) {
+        function deleteFileFolder(workspace, path, nodeId) {
             workspaceApi.remove(workspace + path).then(function (response) {
                 if (response.status !== 204) {
                     messageHub.setStatusError(`Unable to delete '${path}'.`);
                 } else {
                     messageHub.setStatusMessage(`Deleted '${path}'.`);
+                    messageHub.announceFileDeleted({
+                        name: path.substring(path.lastIndexOf('/') + 1, path.length),
+                        path: path,
+                        workspace: workspace
+                    });
                     $scope.jstreeWidget.jstree(true).delete_node(nodeId);
                 }
             });
         };
 
-        $scope.deleteProject = function (workspace, project, nodeId) {
+        function deleteProject(workspace, project, nodeId) {
             workspaceApi.deleteProject(workspace, project).then(function (response) {
                 if (response.status !== 204) {
                     messageHub.setStatusError(`Unable to delete '${project}'.`);
@@ -1531,9 +1536,9 @@ projectsView.controller('ProjectsViewController', [
             ).then(function (dialogResponse) {
                 function deleteNode(node) {
                     if (node.type === 'project') {
-                        $scope.deleteProject(node.data.workspace, node.text, node.id);
+                        deleteProject(node.data.workspace, node.text, node.id);
                     } else {
-                        $scope.deleteFileFolder(node.data.workspace, node.data.path, node.id);
+                        deleteFileFolder(node.data.workspace, node.data.path, node.id);
                     }
                 };
                 if (dialogResponse.data === 'b1') {
@@ -1661,8 +1666,15 @@ projectsView.controller('ProjectsViewController', [
         messageHub.onDidReceiveMessage(
             'projects.tree.refresh',
             function (msg) {
-                if (msg.data.name === $scope.selectedWorkspace.name) {
-                    $scope.reloadWorkspace();
+                if (msg.data.workspace === $scope.selectedWorkspace.name) {
+                    if (msg.data.partial) {
+                        const instance = $scope.jstreeWidget.jstree(true);
+                        for (let item in instance._model.data) {
+                            if (item !== '#' && instance._model.data[item].data.path === `/${msg.data.project}`) {
+                                instance.refresh_node(item);
+                            }
+                        }
+                    } else $scope.reloadWorkspace();
                 }
             },
             true
@@ -1683,7 +1695,7 @@ projectsView.controller('ProjectsViewController', [
                     let filePath = msg.data.filePath.slice($scope.selectedWorkspace.name.length + 1);
                     const instance = $scope.jstreeWidget.jstree(true);
                     for (let item in instance._model.data) { // Uses the unofficial '_model' property but this is A LOT faster then using 'get_json()'
-                        if (item !== '#' && instance._model.data.hasOwnProperty(item) && instance._model.data[item].data.path === filePath) {
+                        if (item !== '#' && instance._model.data[item].data.path === filePath) {
                             instance.deselect_all();
                             instance._open_to(item).focus();
                             instance.select_node(item);
