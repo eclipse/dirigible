@@ -50,7 +50,10 @@
 	                    <div class="fd-col fd-col-md--8">
 							<fd-checkbox id="id${property.name}"
 	                            compact="false"
-								ng-model="entity.${property.name}">
+								ng-init="entity.is${property.name}Indeterminate=true"
+								ng-model="entity.${property.name}"
+								dg-indeterminate="entity.is${property.name}Indeterminate"
+								ng-click="entity.is${property.name}Indeterminate=false">
 	                        </fd-checkbox>
                         	<fd-checkbox-label for="id${property.name}">${property.widgetLabel}</fd-checkbox-label>
                         </div>
