@@ -53,7 +53,7 @@
                             </fd-form-item>
                             <fd-form-item ng-if="parameter.type === 'choice'">
                                 <fd-select ng-model="parameter.value" dg-placeholder="Enter {{parameter.name}}"
-                                    dg-size="compact" required="required" dropdown-fixed="true"
+                                    compact="true" required="required" dropdown-fixed="true"
                                     class="fd-popover--full-width">
                                     <fd-option ng-repeat="choice in parameter.choices.split(',')" text="{{ choice }}"
                                         value="choice"></fd-option>

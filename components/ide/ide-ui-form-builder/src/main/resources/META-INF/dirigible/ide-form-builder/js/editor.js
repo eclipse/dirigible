@@ -77,7 +77,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                     label: 'Button',
                     icon: 'sap-icon--border',
                     description: 'Button',
-                    template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-button class="{{props.sizeToText.value ? 'dg-float-right' : 'dg-full-width'}}" type="{{props.isSubmit.value ? 'submit' : 'button'}}" dg-label="{{props.label.value}}" dg-type="{{props.type.value}}" ng-click="submit()"></fd-button></div>`,
+                    template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-button class="{{props.sizeToText.value ? 'dg-float-right' : 'dg-full-width'}}" type="{{props.isSubmit.value ? 'submit' : 'button'}}" compact="props.isCompact.value" dg-label="{{props.label.value}}" dg-type="{{props.type.value}}" ng-click="submit()"></fd-button></div>`,
                     props: {
                         label: {
                             type: 'text',
@@ -131,6 +131,11 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                             label: 'Submits form',
                             value: true,
                         },
+                        isCompact: {
+                            type: 'checkbox',
+                            label: 'Compact',
+                            value: false,
+                        },
                         callback: {
                             type: 'text',
                             label: 'Callback function',
@@ -149,7 +154,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                             {{ props.label.value }}
                         </fd-form-label>
                         <fd-form-input-message-group dg-inactive="{{props.errorState.invalid}}">
-                            <fd-input id="{{props.id.value}}" type="text" placeholder="{{props.placeholder.value}}"
+                            <fd-input id="{{props.id.value}}" type="text" placeholder="{{props.placeholder.value}}" compact="props.isCompact.value"
                                 state="{'error' : props.errorState.invalid }" name="{{props.id.value}}" ng-required="props.required.value">
                             </fd-input>
                             <fd-form-message dg-type="error">{{props.errorState.value || 'Incorrect input'}}</fd-form-message>
@@ -173,6 +178,11 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                         horizontal: {
                             type: 'checkbox',
                             label: 'Is horizontal',
+                            value: false,
+                        },
+                        isCompact: {
+                            type: 'checkbox',
+                            label: 'Compact',
                             value: false,
                         },
                         placeholder: {
@@ -259,7 +269,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                             {{ props.label.value }}
                         </fd-form-label>
                         <fd-form-input-message-group dg-inactive="{{props.errorState.invalid}}">
-                            <fd-textarea id="{{props.id.value}}" type="text" placeholder="{{props.placeholder.value}}"
+                            <fd-textarea id="{{props.id.value}}" type="text" placeholder="{{props.placeholder.value}}" compact="props.isCompact.value"
                                 state="{'error' : props.errorState.invalid }" name="{{props.id.value}}" ng-required="props.required.value">
                             </fd-textarea>
                             <fd-form-message dg-type="error">{{props.errorState.value || 'Incorrect input'}}</fd-form-message>
@@ -283,6 +293,11 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                         horizontal: {
                             type: 'checkbox',
                             label: 'Is horizontal',
+                            value: false,
+                        },
+                        isCompact: {
+                            type: 'checkbox',
+                            label: 'Compact',
                             value: false,
                         },
                         placeholder: {
@@ -368,7 +383,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                     <fd-form-label dg-colon="true" dg-required="props.required.value" for="{{props.id.value}}">
                         {{ props.label.value }}
                     </fd-form-label>
-                    <fd-input id="{{props.id.value}}" name="{{props.id.value}}" ng-required="props.required.value" type="time" value="13:30">
+                    <fd-input id="{{props.id.value}}" name="{{props.id.value}}" compact="props.isCompact.value" ng-required="props.required.value" type="time" value="13:30">
 	                </fd-input></fd-form-item></div>`,
                     props: {
                         id: {
@@ -388,6 +403,11 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                         horizontal: {
                             type: 'checkbox',
                             label: 'Is horizontal',
+                            value: false,
+                        },
+                        isCompact: {
+                            type: 'checkbox',
+                            label: 'Compact',
                             value: false,
                         },
                         model: {
@@ -412,7 +432,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                     <fd-form-label dg-colon="true" dg-required="props.required.value" for="{{props.id.value}}">
                         {{ props.label.value }}
                     </fd-form-label>
-                    <fd-input id="{{props.id.value}}" name="{{props.id.value}}" ng-required="props.required.value" type="{{props.type.value}}">
+                    <fd-input id="{{props.id.value}}" name="{{props.id.value}}" compact="props.isCompact.value" ng-required="props.required.value" type="{{props.type.value}}">
 	                </fd-input></fd-form-item></div>`,
                     props: {
                         id: {
@@ -432,6 +452,11 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                         horizontal: {
                             type: 'checkbox',
                             label: 'Is horizontal',
+                            value: false,
+                        },
+                        isCompact: {
+                            type: 'checkbox',
+                            label: 'Compact',
                             value: false,
                         },
                         type: {
@@ -470,7 +495,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                     description: 'Stepped number input',
                     template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-form-item horizontal="props.horizontal.value">
 						<fd-form-label dg-colon="true" dg-required="props.required.value" for="{{props.id.value}}">{{ props.label.value }}</fd-form-label>
-						<fd-step-input dg-id="{{props.id.value}}" name="{{props.id.value}}" ng-model="props.minNum.value" placeholder="{{props.placeholder.value}}" dg-required="props.required.value">
+						<fd-step-input dg-id="{{props.id.value}}" name="{{props.id.value}}" compact="props.isCompact.value" ng-model="props.minNum.value" placeholder="{{props.placeholder.value}}" dg-required="props.required.value">
 						</fd-step-input>
 					</fd-form-item></div>`,
                     props: {
@@ -491,6 +516,11 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                         horizontal: {
                             type: 'checkbox',
                             label: 'Is horizontal',
+                            value: false,
+                        },
+                        isCompact: {
+                            type: 'checkbox',
+                            label: 'Compact',
                             value: false,
                         },
                         placeholder: {
@@ -544,7 +574,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                     <fd-form-label dg-colon="true" dg-required="props.required.value" for="{{props.id.value}}">
                         {{ props.label.value }}
                     </fd-form-label>
-                    <fd-input id="{{props.id.value}}" name="{{props.id.value}}" ng-required="props.required.value" type="color" value="#ffbe6f">
+                    <fd-input id="{{props.id.value}}" name="{{props.id.value}}" compact="props.isCompact.value" ng-required="props.required.value" type="color" value="#ffbe6f">
 	                </fd-input></fd-form-item></div>`,
                     props: {
                         id: {
@@ -564,6 +594,11 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                         horizontal: {
                             type: 'checkbox',
                             label: 'Is horizontal',
+                            value: false,
+                        },
+                        isCompact: {
+                            type: 'checkbox',
+                            label: 'Compact',
                             value: false,
                         },
                         model: {
@@ -589,7 +624,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                             for="{{props.id.value}}">
                             {{ props.label.value }}
                         </fd-form-label>
-                        <fd-select dg-placeholder="{{props.placeholder.value}}" label-id="{{ props.id.value }}"
+                        <fd-select dg-placeholder="{{props.placeholder.value}}" label-id="{{ props.id.value }}" compact="props.isCompact.value"
                             ng-required="props.required.value" ng-model="props.dropdown.defaultValue" dropdown-fixed="true">
                             <fd-option text="{{ menuItem.label }}" value="menuItem.value"
                                 ng-repeat="menuItem in props.dropdown.options track by $index">
@@ -614,6 +649,11 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                         horizontal: {
                             type: 'checkbox',
                             label: 'Is horizontal',
+                            value: false,
+                        },
+                        isCompact: {
+                            type: 'checkbox',
+                            label: 'Compact',
                             value: false,
                         },
                         model: {
@@ -662,7 +702,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                     icon: "sap-icon--complete",
                     description: 'description',
                     template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-form-item>
-                        <fd-checkbox id="{{ props.id.value }}"></fd-checkbox>
+                        <fd-checkbox id="{{ props.id.value }}" compact="props.isCompact.value"></fd-checkbox>
                         <fd-checkbox-label for="{{ props.id.value }}">{{ props.label.value }}</fd-checkbox-label>
                     </fd-form-item></div>`,
                     props: {
@@ -686,6 +726,11 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                             value: '',
                             placeholder: 'modelVar',
                         },
+                        isCompact: {
+                            type: 'checkbox',
+                            label: 'Compact',
+                            value: false,
+                        },
                     },
                 },
                 {
@@ -695,7 +740,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                     description: 'Radio select',
                     template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-form-group dg-header="{{props.name.value}}">
                     <fd-form-item ng-repeat="option in props.options.value track by $index">
-                        <fd-radio id="{{ props.id.value + $index }}" name="{{ props.id.value }}" ng-model="props.options.defaultValue" ng-value="option.value" ng-required="props.required.value"></fd-radio>
+                        <fd-radio id="{{ props.id.value + $index }}" name="{{ props.id.value }}" compact="props.isCompact.value" ng-model="props.options.defaultValue" ng-value="option.value" ng-required="props.required.value"></fd-radio>
                         <fd-radio-label for="{{ props.id.value + $index }}">{{option.label}}</fd-radio-label>
                     </fd-form-item>
                     </fd-form-group></div>`,
@@ -760,6 +805,11 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                             type: 'checkbox',
                             label: 'Is required',
                             value: true,
+                        },
+                        isCompact: {
+                            type: 'checkbox',
+                            label: 'Compact',
+                            value: false,
                         },
                     },
                 },
@@ -1519,7 +1569,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                 }
                 break;
             case 'delete':
-                if ($scope.selectedTab === 'designer' && event.target.tagName !== 'INPUT') {
+                if ($scope.selectedTab === 'designer' && event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
                     if ($scope.selectedCtrlId) {
                         $scope.$apply(() => $scope.deleteControl($scope.selectedCtrlId));
                     } else if ($scope.selectedContainerId) {

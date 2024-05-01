@@ -33,7 +33,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             }
         };
     }).factory('backdrop', function ($document) {
-        let backdrop = $document[0].createElement('div');
+        const backdrop = $document[0].createElement('div');
         backdrop.classList.add('dg-backdrop');
         $document[0].body.appendChild(backdrop);
         function contextmenuEvent(event) {
@@ -41,13 +41,13 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         }
         backdrop.addEventListener('contextmenu', contextmenuEvent);
 
-        let activate = function () {
+        const activate = function () {
             $document[0].body.classList.add('dg-backdrop--active');
         };
-        let deactivate = function () {
+        const deactivate = function () {
             $document[0].body.classList.remove('dg-backdrop--active');
         };
-        let cleanUp = function () {
+        const cleanUp = function () {
             backdrop.removeEventListener('contextmenu', contextmenuEvent);
         }
         return {
@@ -1044,7 +1044,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 compact: '<?',
                 state: '@?',
             },
-            link: function (scope, elem, attrs) {
+            link: function (scope, _elem, attrs) {
                 scope.getClasses = function () {
                     let classList = [];
                     if (scope.compact === true) classList.push('fd-radio--compact');
@@ -2310,8 +2310,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     if (scope.hasTitle) classList.push('fd-toolbar--title');
                     if (scope.noBottomBorder) classList.push('fd-toolbar--clear');
                     if (scope.active) classList.push('fd-toolbar--active');
-                    if (scope.compact) classList.push('is-compact');
-                    if (scope.hasTitle && scope.compact) console.error("fd-toolbar: There cannot be a title in compact mode!");
+                    if (scope.compact === true) classList.push('is-compact');
+                    if (scope.hasTitle === true && scope.compact === true) console.error("fd-toolbar: There cannot be a title in compact mode!");
                     return classList.join(' ');
                 };
             },
@@ -2407,7 +2407,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 scope.getClasses = function () {
                     let classList = ['fd-list'];
 
-                    if (scope.compact) {
+                    if (scope.compact === true) {
                         classList.push('fd-list--compact');
                     }
 
@@ -2918,7 +2918,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         }
     }]).directive('fdSelect', ['uuid', '$window', '$timeout', 'ScreenEdgeMargin', function (uuid, $window, $timeout, ScreenEdgeMargin) {
         /**
-         * dgSize: String - The size of the select. One of 'compact' or 'large'. 
+         * dgSize: String - The size of the select dropdown. The only option is 'large'.
+         * compact: Boolean - Select size.
          * dgDisabled: Boolean - Disable the select
          * ngModel: Any - The value of the currently selected item
          * state: String - Optional semantic state. Could be one of 'success', 'error', 'warning' or 'information'
@@ -2949,6 +2950,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             require: '?ngModel',
             scope: {
                 dgSize: '@?',
+                compact: '<?',
                 dgDisabled: '<?',
                 selectedValue: '=?',
                 state: '@?',
@@ -2960,7 +2962,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 placement: '@?',
                 isReadonly: '<?',
             },
-            link: function (scope, element, attrs, ngModel) {
+            link: function (scope, _element, _attrs, ngModel) {
                 let selectedValWatch;
                 if (ngModel) {
                     selectedValWatch = scope.$watch('selectedValue', function (value) {
@@ -3003,7 +3005,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 $scope.getClasses = function () {
                     let classList = ['fd-select'];
 
-                    if ($scope.dgSize === 'compact') {
+                    if ($scope.compact === true) {
                         classList.push('fd-select--compact');
                     }
 
@@ -3085,13 +3087,12 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         classList.push('fd-list--has-message');
                     }
 
-                    switch ($scope.dgSize) {
-                        case 'compact':
-                            classList.push('fd-list--compact');
-                            break;
-                        case 'large':
-                            classList.push('fd-list--large-dropdown');
-                            break;
+                    if ($scope.compact === true) {
+                        classList.push('fd-list--compact');
+                    }
+
+                    if ($scope.dgSize === 'large') {
+                        classList.push('fd-list--large-dropdown');
                     }
 
                     return classList.join(' ');
@@ -3464,7 +3465,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         classList.push('is-active');
                     }
 
-                    if (scope.compact) {
+                    if (scope.compact === true) {
                         classList.push('fd-button--compact');
                     }
 
@@ -3474,7 +3475,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 scope.getArrowButtonClassess = function () {
                     let classList = ['fd-button', 'fd-button--transparent', 'fd-pagination__button'];
 
-                    if (scope.compact) {
+                    if (scope.compact === true) {
                         classList.push('fd-button--compact');
                     }
 
@@ -3512,7 +3513,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             template: `<div ng-class="getClasses()">
                 <div ng-if="itemsPerPageOptions" class="fd-pagination__per-page">
                     <label class="fd-form-label fd-pagination__per-page-label" id="{{ itemsPerPageLabelId }}">Results per page: </label>
-                    <fd-select selected-value="$parent.itemsPerPage" dg-size="{{ compact ? 'compact' : null }}" label-id="{{ itemsPerPageLabelId }}" placement="{{ itemsPerPagePlacement }}">
+                    <fd-select selected-value="$parent.itemsPerPage" compact="compact" label-id="{{ itemsPerPageLabelId }}" placement="{{ itemsPerPagePlacement }}">
                         <fd-option ng-repeat="option in itemsPerPageOptions" text="{{ option }}" value="option"></fd-option>
                     </fd-select>
                 </div>
@@ -3557,7 +3558,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     console.error(`fd-bar error: 'bar-design' must be one of: ${barDesigns.join(', ')}`);
                 }
 
-                if (scope.padding && scope.compact) {
+                if (scope.padding && scope.compact === true) {
                     console.error("fd-bar error: 'padding' and 'compact' attributes are incompatible.");
                 }
 
@@ -3567,7 +3568,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
 
                 scope.getClasses = () => classNames('fd-bar', {
                     [`fd-bar--${scope.barDesign}`]: barDesigns.includes(scope.barDesign),
-                    'fd-bar--compact': scope.compact,
+                    'fd-bar--compact': scope.compact === true,
                     'fd-bar--page': scope.inPage,
                     'fd-bar--page-s': scope.padding === 's',
                     'fd-bar--page-m_l': scope.padding === 'm_l',
@@ -3997,11 +3998,11 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 cardType: '@?',
                 compact: '<?'
             },
-            link: function (scope, element) {
+            link: function (scope) {
                 scope.getClasses = () => classNames('fd-card', {
                     'fd-card--object': scope.cardType === 'object',
                     'fd-card--table': scope.cardType === 'table',
-                    'fd-card--compact': scope.compact
+                    'fd-card--compact': scope.compact === true
                 });
             },
             template: `<div ng-class="getClasses()" role="region" ng-transclude></div>`
@@ -4409,7 +4410,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 }
 
                 $scope.getClasses = () => classNames('fd-panel', {
-                    'fd-panel--compact': $scope.compact,
+                    'fd-panel--compact': $scope.compact === true,
                     'fd-panel--fixed': $scope.fixed
                 });
             }],
@@ -4827,7 +4828,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 }
 
                 $scope.getClasses = () => classNames('fd-tokenizer', {
-                    'fd-tokenizer--compact': $scope.compact,
+                    'fd-tokenizer--compact': $scope.compact === true,
                     'is-focus': $scope.focusable,
                     'fd-tokenizer--scrollable': $scope.scrollable
                 });
@@ -4874,7 +4875,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 closeButtonAriaLabel: '@',
                 closeClicked: '&'
             },
-            link: function (scope, element, attr, tokenizerCtrl) {
+            link: function (scope, element, _attr, tokenizerCtrl) {
                 if (tokenizerCtrl) {
                     tokenizerCtrl.addToken(element);
 
@@ -4884,7 +4885,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 }
 
                 scope.getClasses = () => classNames('fd-token', {
-                    'fd-token--compact': scope.compact,
+                    'fd-token--compact': scope.compact === true,
                     'fd-token--readonly': scope.dgReadOnly
                 });
 
@@ -4900,7 +4901,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             restrict: 'EA',
             replace: true,
             require: '^fdTokenizer',
-            link: function (scope, element, attr, tokenizerCtrl) {
+            link: function (scope, _element, _attr, tokenizerCtrl) {
                 scope.getNumberOfHiddenTokens = () => tokenizerCtrl.getNumberOfHiddenTokens();
                 scope.getText = () => `${tokenizerCtrl.getNumberOfHiddenTokens()} more`;
             },
@@ -4932,7 +4933,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         return {
             restrict: 'A',
             link: {
-                pre: function (scope, element) {
+                pre: function (_scope, element) {
                     element.addClass('fd-tool-header__group');
                 }
             },
