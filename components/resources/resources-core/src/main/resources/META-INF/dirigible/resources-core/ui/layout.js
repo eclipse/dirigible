@@ -897,6 +897,14 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     }
                 );
 
+                messageHub.onFileDeleted(
+                    function (fileDescriptor) {
+                        $scope.$apply(
+                            $scope.closeEditor(`/${fileDescriptor.workspace}${fileDescriptor.path}`)
+                        );
+                    }
+                );
+
                 messageHub.onDidReceiveMessage('ide-core.setFocusedEditor', function (msg) {
                     const result = findCenterSplittedTabViewByPath(msg.resourcePath);
                     if (result) {

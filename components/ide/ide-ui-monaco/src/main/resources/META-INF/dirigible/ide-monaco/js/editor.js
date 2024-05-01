@@ -440,58 +440,6 @@ class EditorActionsProvider {
         };
     }
 
-    static createCloseAction() {
-        return {
-            id: 'dirigible-close',
-            label: 'Close',
-            keybindings: [
-                monaco.KeyMod.Alt | monaco.KeyCode.KeyW
-            ],
-            precondition: null,
-            keybindingContext: null,
-            contextMenuGroupId: 'fileIO',
-            contextMenuOrder: 1.5,
-            run: function () {
-                DirigibleEditor.closeEditor();
-            }
-        };
-    }
-
-    static createCloseOthersAction() {
-        return {
-            id: 'dirigible-close-others',
-            label: 'Close Others',
-            keybindings: [
-                monaco.KeyMod.Alt | monaco.KeyMod.WinCtrl | monaco.KeyMod.Shift | monaco.KeyCode.KeyW
-            ],
-            precondition: null,
-            keybindingContext: null,
-            contextMenuGroupId: 'fileIO',
-            contextMenuOrder: 1.5,
-            run: function () {
-                const fileIO = new FileIO();
-                messageHub.post({ resourcePath: fileIO.resolvePath() }, 'ide-core.closeOtherEditors');
-            }
-        };
-    }
-
-    static createCloseAllAction() {
-        return {
-            id: 'dirigible-close-all',
-            label: 'Close All',
-            keybindings: [
-                monaco.KeyMod.Alt | monaco.KeyMod.Shift | monaco.KeyCode.KeyW
-            ],
-            precondition: null,
-            keybindingContext: null,
-            contextMenuGroupId: 'fileIO',
-            contextMenuOrder: 1.5,
-            run: function () {
-                messageHub.post('', 'ide-core.closeAllEditors');
-            }
-        };
-    }
-
     static createToggleAutoFormattingAction() {
         return {
             id: 'dirigible-toggle-auto-formatting',
@@ -757,9 +705,6 @@ class DirigibleEditor {
             editor.addAction(EditorActionsProvider.createSaveAction());
         }
         editor.addAction(EditorActionsProvider.createSearchAction());
-        editor.addAction(EditorActionsProvider.createCloseAction());
-        editor.addAction(EditorActionsProvider.createCloseOthersAction());
-        editor.addAction(EditorActionsProvider.createCloseAllAction());
         EditorActionsProvider._toggleAutoFormattingActionRegistration = editor.addAction(EditorActionsProvider.createToggleAutoFormattingAction());
         EditorActionsProvider._toggleAutoRevealActionRegistration = editor.addAction(EditorActionsProvider.createToggleAutoRevealAction());
 

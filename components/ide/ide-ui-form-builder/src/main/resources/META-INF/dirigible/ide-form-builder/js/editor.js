@@ -1443,6 +1443,8 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                 $scope.$apply(function () {
                     $scope.state.isBusy = false;
                 });
+            } else if (response.status === 404) {
+                messageHub.closeEditor($scope.dataParameters.file);
             } else {
                 $scope.$apply(function () {
                     $scope.state.error = true;

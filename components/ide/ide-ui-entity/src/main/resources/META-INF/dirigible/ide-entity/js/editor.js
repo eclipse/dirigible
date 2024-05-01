@@ -12,7 +12,6 @@
 angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "ideGenerate", "ideTemplates"])
 	.controller('ModelerCtrl', function ($scope, messageHub, $window, workspaceApi, generateApi, templatesApi, ViewParameters, uuid) {
 		let contents;
-		let csrfToken;
 		let modelFile = '';
 		let genFile = '';
 		let fileWorkspace = '';
@@ -45,39 +44,27 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 			messageHub.setStatusCaret('');
 		});
 
-		function getResource() {
-			let xhr = new XMLHttpRequest();
-			xhr.open('GET', '/services/ide/workspaces' + $scope.dataParameters.file, false);
-			xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
-			xhr.send();
-			if (xhr.status === 200) {
-				csrfToken = xhr.getResponseHeader("x-csrf-token");
-				return xhr.responseText;
-			} else {
-				$scope.state.error = true;
-				$scope.errorMessage = "Unable to load the file. See console, for more information.";
-				messageHub.setStatusError(`Error loading '${$scope.dataParameters.file}'`);
-				return '{}';
-			}
-		}
-
 		$scope.load = function () {
 			if (!$scope.state.error) {
-				contents = getResource();
-				initializeModelJson();
-			}
-		};
-
-		$scope.checkModel = function () {
-			let xhr = new XMLHttpRequest();
-			xhr.open('HEAD', `/services/ide/workspaces${modelFile}`, false);
-			xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
-			xhr.send();
-			if (xhr.status === 200) {
-				csrfToken = xhr.getResponseHeader("x-csrf-token");
-				return true;
-			} else {
-				return false;
+				workspaceApi.loadContent('', $scope.dataParameters.file).then(function (response) {
+					if (response.status === 200) {
+						contents = response.data;
+						initializeModelJson();
+						main(document.getElementById('graphContainer'),
+							document.getElementById('outlineContainer'),
+							document.getElementById('toolbarContainer'),
+							document.getElementById('sidebarContainer'));
+						$scope.$apply(() => $scope.state.isBusy = false);
+					} else if (response.status === 404) {
+						messageHub.closeEditor($scope.dataParameters.file);
+					} else {
+						$scope.$apply(function () {
+							$scope.state.error = true;
+							$scope.errorMessage = 'There was a problem with loading the file';
+							$scope.state.isBusy = false;
+						});
+					}
+				});
 			}
 		};
 
@@ -85,73 +72,59 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 			workspaceApi.resourceExists(genFile).then(function (response) {
 				if (response.status === 200) $scope.canRegenerate = true;
 				else $scope.canRegenerate = false;
-			})
+			});
 		};
 
-		function saveContents(text, resourcePath) {
-			let xhr = new XMLHttpRequest();
-			xhr.open('PUT', '/services/ide/workspaces' + resourcePath);
-			xhr.setRequestHeader('X-Requested-With', 'Fetch');
-			xhr.setRequestHeader('X-CSRF-Token', csrfToken);
-			xhr.onreadystatechange = function () {
-				if (xhr.readyState === 4) {
+		function saveContents(text) {
+			workspaceApi.saveContent('', $scope.dataParameters.file, text).then(function (response) {
+				if (response.status === 200) {
 					messageHub.announceFileSaved({
-						name: resourcePath.substring(resourcePath.lastIndexOf('/') + 1),
-						path: resourcePath.substring(resourcePath.indexOf('/', 1)),
+						name: $scope.dataParameters.file.substring($scope.dataParameters.file.lastIndexOf('/') + 1),
+						path: $scope.dataParameters.file.substring($scope.dataParameters.file.indexOf('/', 1)),
 						contentType: $scope.dataParameters.contentType,
-						workspace: resourcePath.substring(1, resourcePath.indexOf('/', 1)),
+						workspace: $scope.dataParameters.file.substring(1, $scope.dataParameters.file.indexOf('/', 1)),
 					});
-					messageHub.setStatusMessage(`File '${resourcePath}' saved`);
+					messageHub.setStatusMessage(`File '${$scope.dataParameters.file}' saved`);
 					messageHub.setEditorDirty($scope.dataParameters.file, false);
 					$scope.$apply(function () {
 						$scope.state.isBusy = false;
 					});
-				}
-			};
-			xhr.onerror = function (error) {
-				console.error(`Error saving '${resourcePath}'`, error);
-				messageHub.setStatusError(`Error saving '${resourcePath}'`);
-				messageHub.showAlertError('Error while saving the file', 'Please look at the console for more information');
-				$scope.$apply(function () {
-					$scope.state.isBusy = false;
-				});
-			};
-			xhr.send(text);
-		}
-
-		function initializeModelJson() {
-			if (!$scope.checkModel()) {
-				let xhr = new XMLHttpRequest();
-				xhr.open('POST', '/services/ide/workspaces' + modelFile);
-				xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
-				xhr.onreadystatechange = function () {
-					if (xhr.readyState === 4) {
-						messageHub.announceFileSaved({
-							name: resourcePath.substring(resourcePath.lastIndexOf('/') + 1),
-							path: resourcePath.substring(resourcePath.indexOf('/', 1)),
-							contentType: $scope.dataParameters.contentType,
-							workspace: resourcePath.substring(1, resourcePath.indexOf('/', 1)),
-						});
-						messageHub.setStatusMessage(`File '${resourcePath}' created`);
-						$scope.checkGenFile();
-					}
-				};
-				xhr.onerror = function (error) {
-					console.error(`Error creating '${resourcePath}'`, error);
-					messageHub.setStatusError(`Error creating '${resourcePath}'`);
-					messageHub.showAlertError('Error while creating the file', 'Please look at the console for more information');
+				} else {
+					messageHub.setStatusError(`Error saving '${$scope.dataParameters.file}'`);
+					messageHub.showAlertError('Error while saving the file', 'Please look at the console for more information');
 					$scope.$apply(function () {
 						$scope.state.isBusy = false;
 					});
-				};
-				xhr.send('');
-			} else $scope.checkGenFile();
+				}
+			});
 		}
 
-		$scope.saveModel = function () {
-			let schema = createModel($scope.graph);
-			saveContents(schema, $scope.dataParameters.file);
-		};
+		function initializeModelJson() {
+			workspaceApi.resourceExists(modelFile).then(function (exists) {
+				if (exists.status === 200) {
+					$scope.checkGenFile();
+				} else {
+					workspaceApi.createNode('', modelFile, false, '').then(function (response) {
+						if (response.status === 201) {
+							const fileDescriptor = {
+								name: modelFile.substring(modelFile.lastIndexOf('/') + 1),
+								path: modelFile.substring(modelFile.indexOf('/', 1)),
+								contentType: $scope.dataParameters.contentType,
+								workspace: modelFile.substring(1, modelFile.indexOf('/', 1)),
+							};
+							messageHub.announceFileSaved(fileDescriptor);
+							messageHub.postMessage('projects.tree.refresh', { partial: true, project: fileDescriptor.path.substring(1, fileDescriptor.path.indexOf('/', 1)), workspace: fileDescriptor.workspace }, true);
+							messageHub.setStatusMessage(`File '${modelFile}' created`);
+							$scope.checkGenFile();
+						} else {
+							messageHub.setStatusError(`Error saving '${modelFile}'`);
+							messageHub.showAlertError('Error while saving the file', 'Please look at the console for more information');
+							$scope.state.isBusy = false;
+						}
+					});
+				}
+			});
+		}
 
 		$scope.chooseTemplate = function (project, filePath, params) {
 			const templateItems = [];
@@ -226,7 +199,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				} else {
 					messageHub.setStatusMessage(`Generated from model '${filePath}'`);
 				}
-				messageHub.postMessage('projects.tree.refresh', { name: fileWorkspace }, true);
+				messageHub.postMessage('projects.tree.refresh', { partial: true, project: project, workspace: fileWorkspace }, true);
 			});
 		};
 
@@ -268,7 +241,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 			"editor.file.save.all",
 			function () {
 				if (!$scope.state.error) {
-					$scope.saveModel();
+					saveContents(createModel($scope.graph));
 				}
 			},
 			true,
@@ -280,7 +253,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				if (!$scope.state.error) {
 					let file = msg.data && typeof msg.data === 'object' && msg.data.file;
 					if (file && file === $scope.dataParameters.file) {
-						$scope.saveModel();
+						saveContents(createModel($scope.graph));
 					}
 				}
 			},
@@ -576,7 +549,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 
 				// Only entities are movable
 				$scope.graph.isCellMovable = function (cell) {
-					if (selectionModel.cells.length <= 1 && cell.style === undefined && cell.parent.value.entityType) {
+					if (selectionModel.cells.length <= 1 && cell.style === undefined && cell.parent.value && cell.parent.value.entityType) {
 						return true;
 					}
 					return this.isSwimlane(cell);
@@ -912,12 +885,12 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				spacer.style.padding = '8px';
 
 				// Defines a new save action
-				editor.addAction('save', function (editor, cell) {
-					$scope.saveModel($scope.graph);
+				editor.addAction('save', function (_editor, _cell) {
+					saveContents(createModel($scope.graph));
 				});
 
 				// Defines a new properties action
-				editor.addAction('properties', function (editor, cell) {
+				editor.addAction('properties', function (_editor, cell) {
 					if (!cell) {
 						cell = $scope.graph.getSelectionCell();
 						if (!cell) {
@@ -1207,7 +1180,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 			deserializeFilter($scope.graph);
 			loadPerspectives(doc, $scope.graph);
 			loadNavigations(doc, $scope.graph);
-			$scope.graph.model.addListener(mxEvent.START_EDIT, function (sender, evt) {
+			$scope.graph.model.addListener(mxEvent.START_EDIT, function (_sender, _evt) {
 				messageHub.setEditorDirty($scope.dataParameters.file, true);
 			});
 			$scope.graph.enterStopsCellEditing = true;
@@ -1324,10 +1297,5 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 			genFile = $scope.dataParameters.file.substring(0, $scope.dataParameters.file.lastIndexOf('.')) + '.gen';
 			fileWorkspace = $scope.dataParameters.workspaceName || workspaceApi.getCurrentWorkspace();
 			$scope.load();
-			main(document.getElementById('graphContainer'),
-				document.getElementById('outlineContainer'),
-				document.getElementById('toolbarContainer'),
-				document.getElementById('sidebarContainer'));
-			$scope.state.isBusy = false;
 		}
 	});

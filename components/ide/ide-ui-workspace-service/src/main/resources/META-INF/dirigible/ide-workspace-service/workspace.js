@@ -244,6 +244,10 @@ angular.module('ideWorkspace', [])
                     });
             }.bind(this);
 
+            const getFullURL = function (workspace, resourcePath) {
+                return new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(resourcePath ? resourcePath.split('/') : '').build();
+            }.bind(this);
+
             return {
                 setWorkspace: setWorkspace,
                 getCurrentWorkspace: getCurrentWorkspace,
@@ -265,6 +269,7 @@ angular.module('ideWorkspace', [])
                 linkProject: linkProject,
                 deleteProject: deleteProject,
                 search: search,
+                getFullURL: getFullURL,
             };
         }];
     });

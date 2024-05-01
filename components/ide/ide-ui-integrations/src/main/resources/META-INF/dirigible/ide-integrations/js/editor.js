@@ -9,17 +9,18 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let editorView = angular.module('integrations', ['ideUI', 'ideView']);
+const editorView = angular.module('integrations', ['ideUI', 'ideView', 'ideWorkspace']);
 
 let editorScope;
 
-editorView.controller('EditorViewController', ['$scope', '$window', 'messageHub', 'ViewParameters', function ($scope, $window, messageHub, ViewParameters) {
+editorView.controller('EditorViewController', function ($scope, $window, workspaceApi, messageHub, ViewParameters) {
     $scope.state = {
         isBusy: true,
         error: false,
         busyText: "Loading...",
     };
     $scope.errorMessage = '';
+    $scope.workspaceApiBaseUrl = workspaceApi.getFullURL();
 
     angular.element($window).bind("focus", function () {
         messageHub.setFocusedEditor($scope.dataParameters.file);
@@ -52,12 +53,8 @@ editorView.controller('EditorViewController', ['$scope', '$window', 'messageHub'
     }
 
     $scope.saveContents = function (text) {
-        let xhr = new XMLHttpRequest();
-        xhr.open('PUT', '/services/ide/workspaces' + $scope.dataParameters.file);
-        //xhr.setRequestHeader('X-Requested-With', 'Fetch');
-        //xhr.setRequestHeader('X-CSRF-Token', csrfToken);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
+        workspaceApi.saveContent('', $scope.dataParameters.file, text).then(function (response) {
+            if (response.status === 200) {
                 messageHub.announceFileSaved({
                     name: $scope.dataParameters.file.substring($scope.dataParameters.file.lastIndexOf('/') + 1),
                     path: $scope.dataParameters.file.substring($scope.dataParameters.file.indexOf('/', 1)),
@@ -68,19 +65,15 @@ editorView.controller('EditorViewController', ['$scope', '$window', 'messageHub'
                 messageHub.setEditorDirty($scope.dataParameters.file, false);
                 $scope.$apply(function () {
                     $scope.state.isBusy = false;
-                    $scope.isFileChanged = false;
+                });
+            } else {
+                messageHub.setStatusError(`Error saving '${$scope.dataParameters.file}'`);
+                messageHub.showAlertError('Error while saving the file', 'Please look at the console for more information');
+                $scope.$apply(function () {
+                    $scope.state.isBusy = false;
                 });
             }
-        };
-        xhr.onerror = function (error) {
-            console.error(`Error saving '${$scope.dataParameters.file}'`, error);
-            messageHub.setStatusError(`Error saving '${$scope.dataParameters.file}'`);
-            messageHub.showAlertError('Error while saving the file', 'Please look at the console for more information');
-            $scope.$apply(function () {
-                $scope.state.isBusy = false;
-            });
-        };
-        xhr.send(text);
+        });
     }
 
     window.addEventListener('keydown',
@@ -93,10 +86,10 @@ editorView.controller('EditorViewController', ['$scope', '$window', 'messageHub'
             }
         }
     );
-}]);
+});
 
 function getBaseUrl() {
-    return '/services/ide/workspaces';
+    return editorScope.workspaceApiBaseUrl;
 }
 
 function getFileName() {
