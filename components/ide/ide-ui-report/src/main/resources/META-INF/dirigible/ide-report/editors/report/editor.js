@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('page', ['ideUI', 'ideView', 'ideWorkspace'])
-	.controller('PageController', function ($scope, messageHub, $window, workspaceApi, ViewParameters) {
+	.controller('PageController', function ($scope, $http, messageHub, $window, workspaceApi, ViewParameters) {
 		let contents;
 		$scope.errorMessage = 'An unknown error was encountered. Please see console for more information.';
 		$scope.forms = {
@@ -78,6 +78,24 @@ angular.module('page', ['ideUI', 'ideView', 'ideWorkspace'])
 			{ value: "ASC", label: "ASC" },
 			{ value: "DESC", label: "DESC" }
 		];
+		$scope.tables = [];
+		$scope.tablesMetadata = {};
+
+		let databasesSvcUrl = "/services/data/";
+
+		function uuidv4() {
+			return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+				(+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
+			);
+		}
+
+		const snakeToCamel = str =>
+			str.toLowerCase().replace(/([-_][a-z])/g, group =>
+				group
+					.toUpperCase()
+					.replace('-', '')
+					.replace('_', '')
+			);
 
 		angular.element($window).bind("focus", function () {
 			messageHub.setFocusedEditor($scope.dataParameters.file);
@@ -103,7 +121,43 @@ angular.module('page', ['ideUI', 'ideView', 'ideWorkspace'])
 					}
 				});
 			}
+			loadDatabasesMetadata();
 		};
+
+		function loadDatabasesMetadata() {
+			$http.get(databasesSvcUrl)
+				.then(function (data) {
+					let databases = data.data;
+					for (let i = 0; i < databases.length; i++) {
+						$http.get(databasesSvcUrl + databases[i] + "/").then(function (data) {
+							let datasources = data.data;
+							for (let j = 0; j < datasources.length; j++) {
+								$http.get(databasesSvcUrl + databases[i] + "/" + datasources[j]).then(function (data) {
+									let schemas = data.data.schemas;
+									for (let k = 0; k < schemas.length; k++) {
+										let schema = schemas[k];
+										for (let m = 0; m < schema.tables.length; m++) {
+											let tableKey = uuidv4();
+											let tableLabel = datasources[j] + ' -> ' + schemas[k].name + ' -> ' + schema.tables[m].name;
+											$scope.tables.push({
+												value: tableKey,
+												label: tableLabel,
+											});
+											let tableMetadata = {
+												'name': schema.tables[m].name,
+												'schema': schema.name,
+												'datasource': datasources[j],
+												'database': databases[i]
+											}
+											$scope.tablesMetadata[tableKey] = tableMetadata;
+										}
+									}
+								});
+							}
+						});
+					}
+				});
+		}
 
 		function saveContents(text) {
 			workspaceApi.saveContent('', $scope.dataParameters.file, text).then(function (response) {
@@ -1303,9 +1357,13 @@ angular.module('page', ['ideUI', 'ideView', 'ideWorkspace'])
 			}
 
 			if ($scope.report.columns) {
-				$scope.query += "\nGROUP BY ";
+				let g = false;
 				for (let i = 0; i < $scope.report.columns.length; i++) {
 					if ($scope.report.columns[i].grouping === true) {
+						if (!g) {
+							$scope.query += "\nGROUP BY ";
+							g = true;
+						}
 						$scope.query += $scope.report.columns[i].table + "." + $scope.report.columns[i].name + ', ';
 					}
 				}
@@ -1338,4 +1396,136 @@ angular.module('page', ['ideUI', 'ideView', 'ideWorkspace'])
 			$scope.state.error = true;
 			$scope.errorMessage = "The 'contentType' data parameter is missing.";
 		} else $scope.load();
+
+		// Begin Base Table Section -------------------------------------------------------------------------------
+
+		messageHub.onDidReceiveMessage(
+			"reportEditor.base.table.set",
+			function (msg) {
+				if (msg.data.buttonId === "b1") {
+					$scope.$apply(function () {
+						let tableMetadataPointer = $scope.tablesMetadata[msg.data.formData[0].value];
+						$http.get(databasesSvcUrl + tableMetadataPointer.database + "/" + tableMetadataPointer.datasource + "/" + tableMetadataPointer.schema + "/" + tableMetadataPointer.name).then(function (data) {
+							let tableMetadata = data.data;
+							$scope.report.alias = snakeToCamel(tableMetadata.name);
+							$scope.report.table = tableMetadata.name;
+							if (!$scope.report.columns) $scope.report.columns = [];
+							for (let i = 0; i < tableMetadata.columns.length; i++) {
+								$scope.report.columns.push({
+									table: snakeToCamel(tableMetadata.name),
+									alias: snakeToCamel(tableMetadata.columns[i].name),
+									name: tableMetadata.columns[i].name,
+									type: tableMetadata.columns[i].type,
+									aggregate: "NONE",
+									select: true,
+									grouping: false
+								});
+							}
+						});
+					});
+				}
+				messageHub.hideFormDialog("reportEditorSetTable");
+			},
+			true
+		);
+
+		$scope.setBaseTable = function () {
+			messageHub.showFormDialog(
+				"reportEditorSetTable",
+				"Set from tables",
+				[{
+					id: "tedTable",
+					type: "dropdown",
+					label: "Table",
+					required: true,
+					value: $scope.tables[0].value,
+					items: $scope.tables,
+				}],
+				[{
+					id: "b1",
+					type: "emphasized",
+					label: "Set",
+					whenValid: true,
+				},
+				{
+					id: "b2",
+					type: "transparent",
+					label: "Cancel",
+				}],
+				"reportEditor.base.table.set",
+				"Setting parameter..."
+			);
+		};
+
+		// End Base Table Section ---------------------------------------------------------------------------------
+
+		// Begin Add from Tables Section -------------------------------------------------------------------------------
+
+		messageHub.onDidReceiveMessage(
+			"reportEditor.join.add.table",
+			function (msg) {
+				if (msg.data.buttonId === "b1") {
+					$scope.$apply(function () {
+						let tableMetadataPointer = $scope.tablesMetadata[msg.data.formData[0].value];
+						$http.get(databasesSvcUrl + tableMetadataPointer.database + "/" + tableMetadataPointer.datasource + "/" + tableMetadataPointer.schema + "/" + tableMetadataPointer.name).then(function (data) {
+							let tableMetadata = data.data;
+
+							if (!$scope.report.joins) $scope.report.joins = [];
+							$scope.report.joins.push({
+								alias: snakeToCamel(tableMetadata.name),
+								name: tableMetadata.name,
+								type: "INNER",
+								condition: "<DEFINE JOIN CONDITION HERE>"
+							});
+							if (!$scope.report.columns) $scope.report.columns = [];
+							for (let i = 0; i < tableMetadata.columns.length; i++) {
+								$scope.report.columns.push({
+									table: snakeToCamel(tableMetadata.name),
+									alias: snakeToCamel(tableMetadata.columns[i].name),
+									name: tableMetadata.columns[i].name,
+									type: tableMetadata.columns[i].type,
+									aggregate: "NONE",
+									select: true,
+									grouping: false
+								});
+							}
+						});
+					});
+				}
+				messageHub.hideFormDialog("reportEditorAddJoinTable");
+			},
+			true
+		);
+
+		$scope.addFromTables = function () {
+			messageHub.showFormDialog(
+				"reportEditorAddJoinTable",
+				"Add from tables",
+				[{
+					id: "tedTable",
+					type: "dropdown",
+					label: "Table",
+					required: true,
+					value: $scope.tables[0].value,
+					items: $scope.tables,
+				}],
+				[{
+					id: "b1",
+					type: "emphasized",
+					label: "Set",
+					whenValid: true,
+				},
+				{
+					id: "b2",
+					type: "transparent",
+					label: "Cancel",
+				}],
+				"reportEditor.join.add.table",
+				"Adding join..."
+			);
+		};
+
+		// End Add from Tables Section ---------------------------------------------------------------------------------
+
+
 	});

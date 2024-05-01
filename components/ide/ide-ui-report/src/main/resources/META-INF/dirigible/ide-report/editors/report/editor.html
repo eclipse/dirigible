@@ -39,6 +39,7 @@
         <fd-scrollbar class="dg-full-width" ng-show="!state.error && !state.isBusy">
             <fd-fieldset ng-form="forms.editor">
                 <fd-form-group name="entityForm">
+
                     <!-- Begin General Section-->
                     <fd-panel expanded="true">
                         <fd-panel-header>
@@ -59,6 +60,22 @@
                                         '_', '-', '.', ':' and '"'. Maximum length is 255.</fd-form-message>
                                 </fd-form-input-message-group>
                             </fd-form-item>
+                        </fd-panel-content>
+                    </fd-panel>
+                    <!-- End General Section-->
+
+                    <!-- Begin Base Table Section-->
+                    <fd-panel expanded="true">
+                        <fd-panel-header>
+                            <fd-panel-expand></fd-panel-expand>
+                            <h4 fd-panel-title>Base Table</h4>
+                        </fd-panel-header>
+                        <fd-panel-content aria-label="Base Table Content">
+                            <fd-toolbar no-bottom-border="true">
+                                <fd-toolbar-spacer></fd-toolbar-spacer>
+                                <fd-button compact="true" dg-label="Set from Tables" ng-click="setBaseTable()">
+                                </fd-button>
+                            </fd-toolbar>
                             <fd-form-item horizontal="false">
                                 <fd-form-label for="Alias" dg-required="true" dg-colon="true">Alias</fd-form-label>
                                 <fd-form-input-message-group
@@ -87,7 +104,7 @@
                             </fd-form-item>
                         </fd-panel-content>
                     </fd-panel>
-                    <!-- End General Section-->
+                    <!-- End Base Table Section-->
 
                     <!-- Begin Columns -->
                     <fd-panel expanded="true">
@@ -157,6 +174,8 @@
                             <fd-toolbar no-bottom-border="true">
                                 <fd-toolbar-spacer></fd-toolbar-spacer>
                                 <fd-button compact="true" dg-label="Add" ng-click="addJoin()"></fd-button>
+                                <fd-button compact="true" dg-label="Add from Tables" ng-click="addFromTables()">
+                                </fd-button>
                             </fd-toolbar>
                             <table fd-table outer-borders="all">
                                 <thead fd-table-header>
