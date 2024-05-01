@@ -52,6 +52,9 @@ import jakarta.validation.Valid;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspaces")
 public class WorkspacesEndpoint {
 
+    /** The Constant FAILED_TO_CREATE_PROJECT_0_IN_WORKSPACE_1. */
+    private static final String FAILED_TO_CREATE_PROJECT_0_IN_WORKSPACE_1 = "Failed to create project: [{0}] in workspace: [{1}]";
+
     /** The Constant FILE_0_ALREADY_EXISTS_IN_PROJECT_1_IN_WORKSPACE_2. */
     private static final String FILE_0_ALREADY_EXISTS_IN_PROJECT_1_IN_WORKSPACE_2 =
             "File: [{0}] already exists in project: [{1}] in workspace: [{2}].";
@@ -217,7 +220,7 @@ public class WorkspacesEndpoint {
 
         Project projectObject = workspaceService.createProject(workspace, project);
         if (!projectObject.exists()) {
-            String error = format("Failed to create project: '{0}' in workspace: '{1}'", project, workspace);
+            String error = format(FAILED_TO_CREATE_PROJECT_0_IN_WORKSPACE_1, project, workspace);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, error);
         }
 
