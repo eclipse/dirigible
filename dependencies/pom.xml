@@ -9,7 +9,7 @@
 		<artifactId>dirigible-parent</artifactId>
 		<version>11.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
-	</pare
+	</parent>
 	
 	<artifactId>dirigible-dependencies</artifactId>
 	<packaging>pom</packaging>
