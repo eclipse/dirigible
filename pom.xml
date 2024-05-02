@@ -2,14 +2,11 @@
 
     =======================================================================
 
-    Copyright (c) 2010-2020 SAP and others.
+    Copyright (c) 2010-2024 Eclipse Dirigible contributors.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v2.0
     which accompanies this distribution, and is available at
     http://www.eclipse.org/legal/epl-v20.html
-
-    Contributors:
-      SAP - initial API and implementation
 
 	=======================================================================
 
@@ -29,11 +26,10 @@
 		mvn clean install -Dmaven.javadoc.skip=true
 
 	Do a fast build:
-		mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests
--Dmaven.javadoc.skip=true
+		mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests -Dmaven.javadoc.skip=true
 
 	Update the years in the license header:
-		mvn license:format -P license
+		mvn license:format -P license -DskipExistingHeaders=false -DskipTCs=true
 
 	Update the version:
 		mvn versions:set -DnewVersion=3.3.1-SNAPSHOT
@@ -404,7 +400,13 @@
 							<includes>
 								<include>src/**/*.java</include>
 								<include>src/**/*.xml</include>
+								<include>src/**/*.html</include>
+								<include>src/**/*.css</include>
 								<include>src/**/*.js</include>
+								<include>src/**/*.mjs</include>
+								<include>src/**/*.cjs</include>
+								<include>src/**/*.properties</include>
+								<include>src/**/project.json</include>
 							</includes>
 							<excludes>
 								<exclude>**/logback.xml</exclude>
