@@ -14,19 +14,23 @@
     "form": [
         {
             "controlId": "header",
+            "groupId": "fb-display",
             "title": "Easy Order Form",
             "size": 1
         },
         {
             "controlId": "header",
+            "groupId": "fb-display",
             "title": "Complete the form below to place your order hassle-free",
             "size": 4
         },
         {
             "controlId": "input-textfield",
+            "groupId": "fb-controls",
             "id": "customer-name",
             "label": "Customer Name",
             "horizontal": true,
+            "isCompact": false,
             "placeholder": "The name of the customer",
             "type": "text",
             "model": "customerName",
@@ -38,9 +42,11 @@
         },
         {
             "controlId": "input-textfield",
+            "groupId": "fb-controls",
             "id": "customer-email",
             "label": "Customer Email",
             "horizontal": true,
+            "isCompact": false,
             "placeholder": "",
             "type": "email",
             "model": "customerEmail",
@@ -52,9 +58,11 @@
         },
         {
             "controlId": "input-textarea",
+            "groupId": "fb-controls",
             "id": "shipping-address",
             "label": "Shipping Address",
             "horizontal": false,
+            "isCompact": false,
             "placeholder": "",
             "type": "text",
             "model": "shippingAddress",
@@ -66,21 +74,27 @@
         },
         {
             "controlId": "container-hbox",
+            "groupId": "fb-containers",
             "children": [
                 {
                     "controlId": "input-date",
+                    "groupId": "fb-controls",
                     "id": "order-date",
                     "label": "Order Date",
                     "horizontal": false,
+                    "isCompact": false,
                     "type": "date",
                     "model": "orderDate",
                     "required": true
                 },
                 {
                     "controlId": "input-select",
+                    "groupId": "fb-controls",
                     "id": "product",
                     "label": "Product",
                     "horizontal": false,
+                    "isCompact": false,
+                    "staticData": false,
                     "model": "product",
                     "options": "productOptions",
                     "optionLabel": "label",
@@ -89,9 +103,11 @@
                 },
                 {
                     "controlId": "input-number",
+                    "groupId": "fb-controls",
                     "id": "quantity",
                     "label": "Quantity",
                     "horizontal": false,
+                    "isCompact": false,
                     "placeholder": "",
                     "model": "quantity",
                     "required": true,
@@ -103,13 +119,16 @@
         },
         {
             "controlId": "container-hbox",
+            "groupId": "fb-containers",
             "children": [
                 {
                     "controlId": "input-radio",
+                    "groupId": "fb-controls",
                     "id": "payment-method",
                     "name": "Payment Method",
+                    "staticData": true,
                     "model": "paymentMethod",
-                    "options": [
+                    "staticOptions": [
                         {
                             "label": "Credit Card",
                             "value": "payment-method-cc"
@@ -123,13 +142,17 @@
                             "value": "payment-method-bt"
                         }
                     ],
-                    "required": true
+                    "required": true,
+                    "isCompact": false
                 },
                 {
                     "controlId": "input-select",
+                    "groupId": "fb-controls",
                     "id": "shipping-method",
                     "label": "Shipping Method",
                     "horizontal": true,
+                    "isCompact": false,
+                    "staticData": false,
                     "model": "shippingMethod",
                     "options": "shippingOptions",
                     "optionLabel": "name",
@@ -138,22 +161,27 @@
                 },
                 {
                     "controlId": "input-checkbox",
+                    "groupId": "fb-controls",
                     "id": "priority-processing",
                     "label": "Priority Processing (Additional charges may apply) ",
-                    "model": "priorityProcessing"
+                    "model": "priorityProcessing",
+                    "isCompact": false
                 }
             ]
         },
         {
             "controlId": "button",
+            "groupId": "fb-controls",
             "label": "Button",
             "type": "emphasized",
             "sizeToText": true,
             "isSubmit": true,
+            "isCompact": false,
             "callback": "submitOrder()"
         },
         {
             "controlId": "paragraph",
+            "groupId": "fb-display",
             "format": true,
             "text": "Note: By placing this order, you agree to our Terms and Conditions:\n\n1. By placing an order, you agree to abide by the terms and conditions outlined herein.\n2. All orders are subject to availability and confirmation of the order price.\n3. We reserve the right to refuse any order placed with us.\n4. The customer must provide accurate and complete information for processing the order.\n5. Prices for our products are subject to change without notice.\n6. We are not liable for any delay or failure to deliver due to unforeseen circumstances beyond our control.\n7. All sales are final. No refunds or exchanges unless explicitly stated.\n8. Payment must be made in full at the time of placing the order.\n9. We reserve the right to cancel or suspend accounts at our discretion.\n10. By providing your email address, you consent to receive communication related to your order and promotional offers.",
             "model": ""

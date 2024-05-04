@@ -1545,17 +1545,23 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                         control.$scope.id = `w${uuid.generate()}`;
                         control.$scope.showProps = $scope.showProps;
                         control.$scope.props = control.props;
+                        if (control.controlId === 'input-radio' && model[i].staticData === undefined) { // For backwards compatibility
+                            delete Object.assign(model[i], { ['staticOptions']: model[i]['options'] })['options'];
+                            $scope.fileChanged();
+                        }
                         for (const key in control.$scope.props) {
-                            if (control.$scope.props[key].type === 'list' && model[i][key]) {
-                                control.$scope.props[key].defaultValue = '';
-                                for (let l = 0; l < model[i][key].length; l++) {
-                                    if (model[i][key][l].isDefault) {
-                                        control.$scope.props[key].defaultValue = model[i][key][l].value;
-                                        break;
+                            if (model[i][key] !== undefined) {
+                                control.$scope.props[key].value = model[i][key];
+                                if (control.$scope.props[key].type === 'list') {
+                                    control.$scope.props[key].defaultValue = '';
+                                    for (let l = 0; l < model[i][key].length; l++) {
+                                        if (model[i][key][l].isDefault) {
+                                            control.$scope.props[key].defaultValue = model[i][key][l].value;
+                                            break;
+                                        }
                                     }
                                 }
                             }
-                            control.$scope.props[key].value = model[i][key];
                         }
                         break;
                     }
