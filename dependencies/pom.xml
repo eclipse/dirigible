@@ -25,12 +25,12 @@
 		<maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
 		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
 		<maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
-		<jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
-		<spotbugs-maven-plugin.version>4.8.4.0</spotbugs-maven-plugin.version>
-		<formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
-		<exec-maven-plugin.version>3.2.0</exec-maven-plugin.version>
-		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
-		<license-maven-plugin.version>4.3</license-maven-plugin.version>
+		<maven-jacoco-plugin.version>0.8.12</maven-jacoco-plugin.version>
+		<maven-spotbugs-plugin.version>4.8.4.0</maven-spotbugs-plugin.version>
+		<maven-formatter-plugin.version>2.23.0</maven-formatter-plugin.version>
+		<maven-exec-plugin.version>3.2.0</maven-exec-plugin.version>
+		<maven-git-commit-id-plugin.version>4.9.10</maven-git-commit-id-plugin.version>
+		<maven-license-plugin.version>4.3</maven-license-plugin.version>
 
 		<!-- Spring -->
 		<spring.boot.version>3.2.5</spring.boot.version>
@@ -87,7 +87,6 @@
 		<mongodb.version>3.12.14</mongodb.version>
 		<ngdbc.version>2.20.17</ngdbc.version>
 		<snowflake.version>3.13.34</snowflake.version>
-		<mysql.version>8.3.0</mysql.version>
 		
 		<!-- QLDB -->
 		<qldb.driver.version>2.3.1</qldb.driver.version>
