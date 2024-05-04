@@ -31,8 +31,8 @@
 		<fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
 			{{state.busyText}}
 		</fd-busy-indicator-extended>
-		<img id="image-view" class="dg-checkered-bg dg-contain-image" ng-src="{{ imageLink }}" alt="Image"
-			ng-show="!state.error && !state.isBusy" />
+		<img id="image-view" class="dg-checkered-bg dg-contain-image" style="height:auto" ng-src="{{ imageLink }}"
+			alt="Image" ng-show="!state.error && !state.isBusy" />
 		<fd-message-page glyph="sap-icon--error" ng-if="state.error">
 			<fd-message-page-title>Editor encounterd an error!</fd-message-page-title>
 			<fd-message-page-subtitle>{{errorMessage}}</fd-message-page-subtitle>

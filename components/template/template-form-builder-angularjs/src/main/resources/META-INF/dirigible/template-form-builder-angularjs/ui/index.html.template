@@ -11,21 +11,25 @@
 		<link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
 		<theme></theme>
 		<script type="text/javascript" src="controller.js"></script>
-
-		<!-- From the scripts tab -->
 #foreach($script in $scripts)
 		<script type="text/javascript" src="$script.url"></script>
 #end
 	</head>
 
 	<body class="dg-vbox">
-
-		<!-- The margin here is not necessary -->
 		<fd-fieldset class="fd-margin--tiny" ng-form="forms.form">
 #macro(formWidgets $elements)
 #foreach($element in $elements)
 	#if($element.controlId == "header")
 			<h5 fd-title header-size="$element.size">$element.title</h5>
+	#elseif($element.controlId == "image")
+			#if($element.link)
+			<a href="$element.link">
+				<img class="dg-contain-image"#if($element.width) width="$element.width"#end#if($element.height) height="$element.height"#end src="$element.imageLink" alt="$element.desc"/>
+			</a>
+			#else
+			<img class="dg-contain-image"#if($element.width) width="$element.width"#end#if($element.height) height="$element.height"#end src="$element.imageLink" alt="$element.desc"/>
+			#end
 	#elseif($element.controlId == "input-textarea")
 			<fd-form-item horizontal="$element.horizontal">
 				<fd-form-label dg-colon="true" dg-required="$element.required" for="$element.id">$element.label</fd-form-label>
@@ -94,21 +98,37 @@
 				<fd-form-label dg-colon="true" dg-required="$element.required" for="$element.id">$element.label</fd-form-label>
 				<fd-input id="$element.id" name="$element.id" compact="$element.isCompact" ng-model="model.$element.model" ng-required="$element.required" type="color"></fd-input>
 			</fd-form-item>
-	#elseif($element.controlId == "input-select")
+	#elseif($element.controlId == "input-select" && $element.staticData != true)
 			<fd-form-item horizontal="$element.horizontal">
 				<fd-form-label dg-colon="true" dg-required="$element.required" for="$element.id">$element.label</fd-form-label>
 				<fd-select dg-id="$element.id" name="$element.id" label-id="$element.id" compact="$element.isCompact" ng-required="$element.required" ng-model="model.$element.model">
 					<fd-option text="{{ option.$element.optionLabel }}" value="option.$element.optionValue" ng-repeat="option in $element.options track by $index"></fd-option>
 				</fd-select>
 			</fd-form-item>
-	#elseif($element.controlId == "input-radio")
-			<fd-form-group dg-header="$element.name">
-				<fd-form-item>
-		#foreach($option in $element.options)
-					<fd-radio id="$element.id-$foreach.count" name="$element.id" compact="$element.isCompact" ng-model="model.$element.model" ng-value="'$option.value'" ng-required="$element.required"></fd-radio>
-					<fd-radio-label for="$element.id-$foreach.count">$option.label</fd-radio-label>
+	#elseif($element.controlId == "input-select" && $element.staticData)
+			<fd-form-item horizontal="$element.horizontal">
+				<fd-form-label dg-colon="true" dg-required="$element.required" for="$element.id">$element.label</fd-form-label>
+				<fd-select dg-id="$element.id" name="$element.id" label-id="$element.id" compact="$element.isCompact" ng-required="$element.required" ng-model="model.$element.model">
+		#foreach($option in $element.staticOptions)
+					<fd-option text="$option.label" value="'$option.value'"></fd-option>
 		#end
+				</fd-select>
+			</fd-form-item>
+	#elseif($element.controlId == "input-radio" && $element.staticData != true)
+			<fd-form-group dg-header="$element.name">
+				<fd-form-item ng-repeat="option in $element.options track by $index">
+					<fd-radio id="$element.id-{{$index}}" name="$element.id" compact="$element.isCompact" ng-model="model.$element.model" ng-value="'{{option.$element.optionValue}}'" ng-required="$element.required"></fd-radio>
+					<fd-radio-label for="$element.id-{{$index}}">{{option.$element.optionLabel}}</fd-radio-label>
 				</fd-form-item>
+			</fd-form-group>
+	#elseif($element.controlId == "input-radio" && $element.staticData)
+			<fd-form-group dg-header="$element.name">
+		#foreach($option in $element.staticOptions)
+				<fd-form-item>
+					<fd-radio id="$element.id-$foreach.count" name="$element.id" compact="$element.isCompact" ng-model="model.$element.model" value="$option.value" ng-required="$element.required"></fd-radio>
+					<fd-radio-label for="$element.id-$foreach.count">$option.label</fd-radio-label>
+				</fd-form-item>
+		#end
 			</fd-form-group>
 	#elseif($element.controlId == "button")
 			<div>

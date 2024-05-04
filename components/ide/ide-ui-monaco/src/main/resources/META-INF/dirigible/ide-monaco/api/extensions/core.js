@@ -32,6 +32,19 @@ exports.getFileTypes = function () {
         ".openapi": "yaml",
         ".py": "python",
         ".csvim": "json",
-        ".form": "json"
+        ".form": "json",
+        ".html.template": "html",
+        ".js.template": "javascript",
+        ".mjs.template": "javascript",
+        ".ts.template": "typescript",
+        ".tsx.template": "typescript",
+        ".extension.template": "json",
+        ".extensionpoint.template": "json",
+        ".table.template": "json",
+        ".view.template": "json",
+        ".form.template": "json",
+        ".json.template": "json",
+        ".job.template": "json",
+        ".svg.template": "xml",
     }
 };

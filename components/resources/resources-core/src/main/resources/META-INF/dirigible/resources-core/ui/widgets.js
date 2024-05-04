@@ -1028,7 +1028,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             },
             template: `<label class="fd-checkbox__label" ng-class="getClasses()">
                 <span class="fd-checkbox__checkmark" aria-hidden="true"></span>
-                <div ng-if="empty!=='true'" class="fd-checkbox__label-container"><span class="fd-checkbox__text" ng-transclude></span></div>
+                <div ng-if="empty !== true" class="fd-checkbox__label-container"><span class="fd-checkbox__text" ng-transclude></span></div>
             </label>`,
         }
     }]).directive('fdRadio', [function () {
@@ -3239,17 +3239,17 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          */
         return {
             restrict: 'EA',
+            require: '^fdSelect',
             replace: true,
             transclude: true,
             scope: {
                 text: '@',
-                secondaryText: '@',
+                secondaryText: '@?',
                 value: '<',
-                glyph: '@',
-                noWrap: '<'
+                glyph: '@?',
+                noWrap: '<?'
             },
-            require: '^fdSelect',
-            link: function (scope, element, attrs, selectCtrl) {
+            link: function (scope, _element, _attrs, selectCtrl) {
                 scope.optionId = `select-option-${uuid.generate()}`;
 
                 scope.isSelected = function () {

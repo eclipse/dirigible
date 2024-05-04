@@ -9,17 +9,19 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const editorView = angular.module('app', ['ideUI', 'ideView', 'ideWorkspace', 'codeEditor']);
-editorView.config(["messageHubProvider", function (messageHubProvider) {
+const editorView = angular.module('app', ['ideUI', 'ideView', 'ideWorkspace', 'codeEditor', 'ideGenerate', 'ideTemplates']);
+editorView.config(['messageHubProvider', function (messageHubProvider) {
     messageHubProvider.eventIdPrefix = 'formEditor';
 }]);
-editorView.controller('DesignerController', function ($scope, $window, $document, $timeout, $compile, uuid, messageHub, ViewParameters, workspaceApi) {
+editorView.controller('DesignerController', function ($scope, $window, $document, $timeout, $compile, uuid, messageHub, ViewParameters, workspaceApi, generateApi, templatesApi) {
+    let genFile = '';
+    $scope.canRegenerate = false
     $scope.selectedTab = 'designer';
     $scope.isFileChanged = false;
     $scope.state = {
         isBusy: true,
         error: false,
-        busyText: "Loading...",
+        busyText: 'Loading...',
         canSave: true,
         preview: false,
     };
@@ -29,6 +31,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
     };
 
     $scope.selectedCtrlId = undefined;
+    $scope.selectedCtrlProps;
     $scope.selectedContainerId = undefined;
 
     $scope.formModel = [];
@@ -38,7 +41,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
         code: ''
     };
 
-    angular.element($window).bind("focus", function () {
+    angular.element($window).bind('focus', function () {
         messageHub.setFocusedEditor($scope.dataParameters.file);
         messageHub.setStatusCaret('');
     });
@@ -48,30 +51,6 @@ editorView.controller('DesignerController', function ($scope, $window, $document
             id: 'fb-controls',
             label: 'Controls',
             items: [
-                {
-                    controlId: 'header',
-                    label: 'Header',
-                    icon: "sap-icon--heading-1",
-                    description: 'Text header',
-                    template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><h1 fd-title header-size="props.size.value">{{props.title.value}}</h1></div>`,
-                    props: {
-                        title: {
-                            type: 'text',
-                            label: 'Label',
-                            value: 'Title',
-                            required: true
-                        },
-                        size: {
-                            type: 'number',
-                            label: 'Size',
-                            value: 1,
-                            max: 6,
-                            min: 1,
-                            step: 1,
-                            required: true
-                        }
-                    }
-                },
                 {
                     controlId: 'button',
                     label: 'Button',
@@ -92,31 +71,31 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                             value: '',
                             items: [
                                 {
-                                    label: "Default",
+                                    label: 'Default',
                                     value: '',
                                 },
                                 {
-                                    label: "Emphasized",
+                                    label: 'Emphasized',
                                     value: 'emphasized',
                                 },
                                 {
-                                    label: "Ghost",
+                                    label: 'Ghost',
                                     value: 'ghost',
                                 },
                                 {
-                                    label: "Positive",
+                                    label: 'Positive',
                                     value: 'positive',
                                 },
                                 {
-                                    label: "Negative",
+                                    label: 'Negative',
                                     value: 'negative',
                                 },
                                 {
-                                    label: "Attention",
+                                    label: 'Attention',
                                     value: 'attention',
                                 },
                                 {
-                                    label: "Transparent",
+                                    label: 'Transparent',
                                     value: 'transparent',
                                 }
                             ]
@@ -147,7 +126,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                 {
                     controlId: 'input-textfield',
                     label: 'Text Field',
-                    icon: "sap-icon--edit",
+                    icon: 'sap-icon--edit',
                     description: 'Input field',
                     template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-form-item horizontal="props.horizontal.value">
                         <fd-form-label dg-colon="true" dg-required="props.required.value" for="{{props.id.value}}">
@@ -198,19 +177,19 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                             required: true,
                             items: [
                                 {
-                                    label: "Text",
+                                    label: 'Text',
                                     value: 'text',
                                 },
                                 {
-                                    label: "Email",
+                                    label: 'Email',
                                     value: 'email',
                                 },
                                 {
-                                    label: "Password",
+                                    label: 'Password',
                                     value: 'password',
                                 },
                                 {
-                                    label: "URL",
+                                    label: 'URL',
                                     value: 'URL',
                                 }
                             ],
@@ -262,7 +241,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                 {
                     controlId: 'input-textarea',
                     label: 'Text Area',
-                    icon: "sap-icon--edit",
+                    icon: 'sap-icon--edit',
                     description: 'Text Area',
                     template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-form-item horizontal="props.horizontal.value">
                         <fd-form-label dg-colon="true" dg-required="props.required.value" for="{{props.id.value}}">
@@ -313,19 +292,19 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                             required: true,
                             items: [
                                 {
-                                    label: "Text",
+                                    label: 'Text',
                                     value: 'text',
                                 },
                                 {
-                                    label: "Email",
+                                    label: 'Email',
                                     value: 'email',
                                 },
                                 {
-                                    label: "Password",
+                                    label: 'Password',
                                     value: 'password',
                                 },
                                 {
-                                    label: "URL",
+                                    label: 'URL',
                                     value: 'URL',
                                 }
                             ],
@@ -377,7 +356,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                 {
                     controlId: 'input-time',
                     label: 'Time Field',
-                    icon: "sap-icon--in-progress",
+                    icon: 'sap-icon--in-progress',
                     description: 'Time input',
                     template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-form-item horizontal="props.horizontal.value">
                     <fd-form-label dg-colon="true" dg-required="props.required.value" for="{{props.id.value}}">
@@ -426,7 +405,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                 {
                     controlId: 'input-date',
                     label: 'Date Field',
-                    icon: "sap-icon--calendar",
+                    icon: 'sap-icon--calendar',
                     description: 'Date input',
                     template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-form-item horizontal="props.horizontal.value">
                     <fd-form-label dg-colon="true" dg-required="props.required.value" for="{{props.id.value}}">
@@ -491,7 +470,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                 {
                     controlId: 'input-number',
                     label: 'Number Field',
-                    icon: "sap-icon--number-sign",
+                    icon: 'sap-icon--number-sign',
                     description: 'Stepped number input',
                     template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-form-item horizontal="props.horizontal.value">
 						<fd-form-label dg-colon="true" dg-required="props.required.value" for="{{props.id.value}}">{{ props.label.value }}</fd-form-label>
@@ -568,7 +547,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                 {
                     controlId: 'input-color',
                     label: 'Color',
-                    icon: "sap-icon--color-fill",
+                    icon: 'sap-icon--color-fill',
                     description: 'Color input',
                     template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-form-item horizontal="props.horizontal.value">
                     <fd-form-label dg-colon="true" dg-required="props.required.value" for="{{props.id.value}}">
@@ -617,7 +596,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                 {
                     controlId: 'input-select',
                     label: 'Dropdown',
-                    icon: "sap-icon--down",
+                    icon: 'sap-icon--down',
                     description: 'Dropdown selection',
                     template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-form-item horizontal="props.horizontal.value">
                         <fd-form-label dg-colon="true" dg-required="props.required.value"
@@ -625,9 +604,9 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                             {{ props.label.value }}
                         </fd-form-label>
                         <fd-select dg-placeholder="{{props.placeholder.value}}" label-id="{{ props.id.value }}" compact="props.isCompact.value"
-                            ng-required="props.required.value" ng-model="props.dropdown.defaultValue" dropdown-fixed="true">
+                            ng-required="props.required.value" ng-model="props.staticOptions.defaultValue" dropdown-fixed="true">
                             <fd-option text="{{ menuItem.label }}" value="menuItem.value"
-                                ng-repeat="menuItem in props.dropdown.options track by $index">
+                                ng-repeat="menuItem in props.staticOptions.value track by $index">
                             </fd-option>
                         </fd-select>
                     </fd-form-item></div>`,
@@ -656,6 +635,11 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                             label: 'Compact',
                             value: false,
                         },
+                        staticData: {
+                            type: 'checkbox',
+                            label: 'Static Data',
+                            value: false,
+                        },
                         model: {
                             type: 'text',
                             label: 'Model',
@@ -663,32 +647,36 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                             placeholder: '',
                         },
                         options: {
+                            enabledOn: { key: 'staticData', value: false },
                             type: 'text',
                             label: 'Options',
                             value: '',
                             placeholder: '',
                         },
                         optionLabel: {
+                            enabledOn: { key: 'staticData', value: false },
                             type: 'text',
                             label: 'Option label key',
                             value: 'label',
                             placeholder: 'label',
                         },
                         optionValue: {
+                            enabledOn: { key: 'staticData', value: false },
                             type: 'text',
                             label: 'Option value key',
                             value: 'value',
                             placeholder: 'value',
                         },
-                        // dropdown: {
-                        //     type: 'list',
-                        //     label: 'Options',
-                        //     defaultValue: 'item1',
-                        //     value: [
-                        //         { label: 'Item 1', value: 'item1' },
-                        //         { label: 'Item 2', value: 'item2' }
-                        //     ]
-                        // },
+                        staticOptions: {
+                            enabledOn: { key: 'staticData', value: true },
+                            type: 'list',
+                            label: 'Options',
+                            defaultValue: '',
+                            value: [
+                                { label: 'Item 1', value: 'item1' },
+                                { label: 'Item 2', value: 'item2' }
+                            ]
+                        },
                         required: {
                             type: 'checkbox',
                             label: 'Is required',
@@ -699,7 +687,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                 {
                     controlId: 'input-checkbox',
                     label: 'Checkbox',
-                    icon: "sap-icon--complete",
+                    icon: 'sap-icon--complete',
                     description: 'description',
                     template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-form-item>
                         <fd-checkbox id="{{ props.id.value }}" compact="props.isCompact.value"></fd-checkbox>
@@ -736,24 +724,14 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                 {
                     controlId: 'input-radio',
                     label: 'Radio',
-                    icon: "sap-icon--record",
+                    icon: 'sap-icon--record',
                     description: 'Radio select',
                     template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-form-group dg-header="{{props.name.value}}">
-                    <fd-form-item ng-repeat="option in props.options.value track by $index">
-                        <fd-radio id="{{ props.id.value + $index }}" name="{{ props.id.value }}" compact="props.isCompact.value" ng-model="props.options.defaultValue" ng-value="option.value" ng-required="props.required.value"></fd-radio>
+                    <fd-form-item ng-repeat="option in props.staticOptions.value track by $index">
+                        <fd-radio id="{{ props.id.value + $index }}" name="{{ props.id.value }}" compact="props.isCompact.value" ng-model="props.staticOptions.defaultValue" ng-value="option.value" ng-required="props.required.value"></fd-radio>
                         <fd-radio-label for="{{ props.id.value + $index }}">{{option.label}}</fd-radio-label>
                     </fd-form-item>
                     </fd-form-group></div>`,
-                    // template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><fd-form-group dg-header="{{props.name.value}}">
-                    // <fd-form-item>
-                    //     <fd-radio id="{{ props.id.value + 1 }}" name="{{ props.id.value }}" ng-model="props.model.value" ng-required="props.required.value"></fd-radio>
-                    //     <fd-radio-label for="{{ props.id.value + 1 }}">Radio Option 1</fd-radio-label>
-                    // </fd-form-item>
-                    // <fd-form-item>
-                    //     <fd-radio id="{{ props.id.value + 2 }}" name="{{ props.id.value }}" ng-model="props.model.value" ng-required="props.required.value"></fd-radio>
-                    //     <fd-radio-label for="{{ props.id.value + 2 }}">Radio Option 2</fd-radio-label>
-                    // </fd-form-item>
-                    // </fd-form-group></div>`,
                     props: {
                         id: {
                             type: 'text',
@@ -768,37 +746,46 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                             value: 'Radio group',
                             placeholder: '',
                         },
+                        staticData: {
+                            type: 'checkbox',
+                            label: 'Static Data',
+                            value: true,
+                        },
                         model: {
                             type: 'text',
                             label: 'Model',
                             value: '',
                             placeholder: 'selectedOptionValue',
                         },
-                        // options: {
-                        //     type: 'text',
-                        //     label: 'Options array name',
-                        //     value: '',
-                        //     placeholder: 'radioOptions',
-                        // },
-                        // optionLabel: {
-                        //     type: 'text',
-                        //     label: 'Option label key',
-                        //     value: 'label',
-                        //     placeholder: 'label',
-                        // },
-                        // optionValue: {
-                        //     type: 'text',
-                        //     label: 'Option value key',
-                        //     value: 'value',
-                        //     placeholder: 'value',
-                        // },
                         options: {
+                            enabledOn: { key: 'staticData', value: false },
+                            type: 'text',
+                            label: 'Options array name',
+                            value: '',
+                            placeholder: 'radioOptions',
+                        },
+                        optionLabel: {
+                            enabledOn: { key: 'staticData', value: false },
+                            type: 'text',
+                            label: 'Option label key',
+                            value: 'label',
+                            placeholder: 'label',
+                        },
+                        optionValue: {
+                            enabledOn: { key: 'staticData', value: false },
+                            type: 'text',
+                            label: 'Option value key',
+                            value: 'value',
+                            placeholder: 'value',
+                        },
+                        staticOptions: {
+                            enabledOn: { key: 'staticData', value: true },
                             type: 'list',
                             label: 'Options',
                             defaultValue: '',
                             value: [
-                                { label: "Item 1", value: "item1" },
-                                { label: "Item 2", value: "item2" }
+                                { label: 'Item 1', value: 'item1' },
+                                { label: 'Item 2', value: 'item2' }
                             ]
                         },
                         required: {
@@ -813,10 +800,81 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                         },
                     },
                 },
+            ]
+        },
+        {
+            id: 'fb-display',
+            label: 'Display',
+            items: [
+                {
+                    controlId: 'header',
+                    label: 'Header',
+                    icon: 'sap-icon--heading-1',
+                    description: 'Text header',
+                    template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><h1 fd-title header-size="props.size.value">{{props.title.value}}</h1></div>`,
+                    props: {
+                        title: {
+                            type: 'text',
+                            label: 'Label',
+                            value: 'Title',
+                            required: true
+                        },
+                        size: {
+                            type: 'number',
+                            label: 'Size',
+                            value: 1,
+                            max: 6,
+                            min: 1,
+                            step: 1,
+                            required: true
+                        }
+                    }
+                },
+                {
+                    controlId: 'image',
+                    label: 'Image',
+                    icon: 'sap-icon--picture',
+                    description: 'Image',
+                    template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><img class="dg-contain-image" ng-attr-width="{{props.width.value || undefined}}" ng-attr-height="{{props.height.value || undefined}}" ng-src="{{props.imageLink.value}}" alt="{{props.desc.value}}"/></div>`,
+                    props: {
+                        imageLink: {
+                            type: 'text',
+                            label: 'Image Link',
+                            value: '/services/web/resources/images/dirigible.svg',
+                            placeholder: 'https://...',
+                            required: true
+                        },
+                        desc: {
+                            type: 'text',
+                            label: 'Description',
+                            value: 'Image description',
+                            placeholder: '',
+                            required: true
+                        },
+                        link: {
+                            type: 'text',
+                            label: 'Link To',
+                            value: '',
+                            placeholder: 'Link to open on click',
+                        },
+                        width: {
+                            type: 'text',
+                            label: 'Width',
+                            value: '100%',
+                            placeholder: '100% or 100px',
+                        },
+                        height: {
+                            type: 'text',
+                            label: 'Height',
+                            value: '96px',
+                            placeholder: '100% or 100px',
+                        },
+                    },
+                },
                 {
                     controlId: 'paragraph',
                     label: 'Paragraph',
-                    icon: "sap-icon--text-align-left",
+                    icon: 'sap-icon--text-align-left',
                     description: 'Paragraph',
                     template: `<div class="fb-control-wrapper" ng-click="showProps($event)" data-id="{{id}}"><p class="fd-text" ng-class="{'dg-pre-wrap' : props.format.value}">{{props.text.value}}</p></div>`,
                     props: {
@@ -865,13 +923,21 @@ editorView.controller('DesignerController', function ($scope, $window, $document
         }
     ];
 
+    function getGroupId(controlId) {
+        for (let groupIndex = 0; groupIndex < $scope.builderComponents.length; groupIndex++) {
+            for (let c = 0; c < $scope.builderComponents[groupIndex].items.length; c++) {
+                if ($scope.builderComponents[groupIndex].items[c].controlId === controlId) return $scope.builderComponents[groupIndex].id;
+            }
+        }
+    }
+
     $scope.contextMenuContent = function (element) {
         let items = [];
         const type = element.getAttribute('data-type');
         if (type && type === 'container-main') {
             items.push({
-                id: "clearForm",
-                label: "Clear form",
+                id: 'clearForm',
+                label: 'Clear form',
             });
         } else {
             const isContainer = (type && type === 'container');
@@ -879,8 +945,8 @@ editorView.controller('DesignerController', function ($scope, $window, $document
             if (isContainer) controlId = element.id;
             else controlId = element.getAttribute('data-id')
             items.push({
-                id: "deleteControl",
-                label: "Delete",
+                id: 'deleteControl',
+                label: 'Delete',
                 data: {
                     isContainer: isContainer,
                     controlId: controlId,
@@ -889,7 +955,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
         }
         if (items.length) {
             return {
-                callbackTopic: "formEditor.contextmenu",
+                callbackTopic: 'formEditor.contextmenu',
                 items: items
             }
         } else return;
@@ -945,6 +1011,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
         const controlIndex = event.item.getAttribute('data-cindex');
         if (event.from.getAttribute('data-type') === 'componentPanel') {
             const control = JSON.parse(JSON.stringify($scope.builderComponents[parentIndex].items[controlIndex]));
+            control.groupId = $scope.builderComponents[parentIndex].id;
             control.$scope = $scope.$new(true);
             control.$scope.props = control.props;
             if (event.to.id !== 'formContainer') {
@@ -1019,41 +1086,59 @@ editorView.controller('DesignerController', function ($scope, $window, $document
         if ($scope.state.canSave) {
             if (event.target.id && event.target.id === controlId) {
                 event.stopPropagation();
-                $scope.selectedCtrlId = undefined;
+                if ($scope.selectedCtrlId) {
+                    $scope.selectedCtrlProps = undefined;
+                    removeSelection();
+                    $scope.selectedCtrlId = undefined;
+                }
                 $scope.selectedContainerId = controlId;
             } else $scope.selectedContainerId = undefined;
         }
     };
 
     $scope.showProps = function (event) {
+        function getProps(model) {
+            if ($scope.selectedCtrlId) {
+                for (let i = 0; i < model.length; i++) {
+                    if (model[i].controlId.startsWith('container')) {
+                        if (getProps(model[i].children)) return true;
+                    } else if (model[i].$scope.id === $scope.selectedCtrlId) {
+                        $scope.selectedCtrlProps = model[i].$scope.props;
+                        return true;
+                    }
+                }
+            } return false;
+        }
         if ($scope.state.canSave) {
             $scope.selectedContainerId = undefined;
             if ($scope.selectedCtrlId) {
+                $scope.selectedCtrlProps = undefined;
                 removeSelection();
             }
             event.target.classList.add('is-selected');
             $scope.selectedCtrlId = event.target.getAttribute('data-id');
+            getProps($scope.formModel)
         }
     };
 
-    $scope.getProps = function (model, controlId) {
-        if (controlId) {
-            for (let i = 0; i < model.length; i++) {
-                if (model[i].controlId.startsWith('container')) {
-                    const props = $scope.getProps(model[i].children, controlId);
-                    if (props) return props;
-                } else if (model[i].$scope.id === controlId) {
-                    return model[i].$scope.props;
-                }
-            }
-        }
-        return;
+    $scope.isPropEnabled = function (enabledOn) {
+        if (enabledOn) return $scope.selectedCtrlProps[enabledOn.key].value === enabledOn.value;
+        return true;
     };
 
-    $scope.addListItem = function (options) {
+    $scope.setListDefault = function (item, selectedIndex) {
+        for (let i = 0; i < item.value.length; i++) {
+            item.value[i].isDefault = undefined;
+        }
+        item.value[selectedIndex].isDefault = true;
+        item.defaultValue = item.value[selectedIndex].value;
+        $scope.fileChanged();
+    };
+
+    $scope.addListItem = function (item) {
         messageHub.showFormDialog(
-            "formEditorAddListItem",
-            "Add item",
+            'formEditorAddListItem',
+            'Add item',
             [
                 {
                     id: 'aliLabel',
@@ -1078,29 +1163,36 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                 }
             ],
             [{
-                id: "b1",
-                type: "emphasized",
-                label: "Add",
+                id: 'b1',
+                type: 'emphasized',
+                label: 'Add',
                 whenValid: true
             },
             {
-                id: "b2",
-                type: "transparent",
-                label: "Cancel",
+                id: 'b2',
+                type: 'transparent',
+                label: 'Cancel',
             }],
-            "formEditor.dialogs.addListItem",
-            "Adding..."
+            'formEditor.dialogs.addListItem',
+            'Adding...'
         );
 
         const handler = messageHub.onDidReceiveMessage(
             'dialogs.addListItem',
             function (msg) {
-                if (msg.data.buttonId === "b1") {
+                if (msg.data.buttonId === 'b1') {
                     $scope.$apply(function () {
-                        options.push({
+                        if (item.value) item.value.push({
                             label: msg.data.formData[0].value,
                             value: msg.data.formData[1].value
                         });
+                        else {
+                            item.defaultValue = '';
+                            item.value = [{
+                                label: msg.data.formData[0].value,
+                                value: msg.data.formData[1].value
+                            }];
+                        }
                         $scope.fileChanged();
                     });
                 }
@@ -1112,8 +1204,8 @@ editorView.controller('DesignerController', function ($scope, $window, $document
 
     $scope.editListItem = function (listItem) {
         messageHub.showFormDialog(
-            "formEditorEditListItem",
-            "Edit item",
+            'formEditorEditListItem',
+            'Edit item',
             [
                 {
                     id: 'eliLabel',
@@ -1138,24 +1230,24 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                 }
             ],
             [{
-                id: "b1",
-                type: "emphasized",
-                label: "Save",
+                id: 'b1',
+                type: 'emphasized',
+                label: 'Save',
                 whenValid: true
             },
             {
-                id: "b2",
-                type: "transparent",
-                label: "Cancel",
+                id: 'b2',
+                type: 'transparent',
+                label: 'Cancel',
             }],
-            "formEditor.dialogs.editListItem",
-            "Updating..."
+            'formEditor.dialogs.editListItem',
+            'Updating...'
         );
 
         const handler = messageHub.onDidReceiveMessage(
             'dialogs.editListItem',
             function (msg) {
-                if (msg.data.buttonId === "b1") {
+                if (msg.data.buttonId === 'b1') {
                     $scope.$apply(function () {
                         listItem.label = msg.data.formData[0].value;
                         listItem.value = msg.data.formData[1].value;
@@ -1175,8 +1267,8 @@ editorView.controller('DesignerController', function ($scope, $window, $document
 
     $scope.addFeed = function () {
         messageHub.showFormDialog(
-            "formEditorAddFeed",
-            "Add feed",
+            'formEditorAddFeed',
+            'Add feed',
             [
                 {
                     id: 'afName',
@@ -1198,24 +1290,24 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                 }
             ],
             [{
-                id: "b1",
-                type: "emphasized",
-                label: "Add",
+                id: 'b1',
+                type: 'emphasized',
+                label: 'Add',
                 whenValid: true
             },
             {
-                id: "b2",
-                type: "transparent",
-                label: "Cancel",
+                id: 'b2',
+                type: 'transparent',
+                label: 'Cancel',
             }],
-            "formEditor.dialogs.addFeed",
-            "Adding..."
+            'formEditor.dialogs.addFeed',
+            'Adding...'
         );
 
         const handler = messageHub.onDidReceiveMessage(
             'dialogs.addFeed',
             function (msg) {
-                if (msg.data.buttonId === "b1") {
+                if (msg.data.buttonId === 'b1') {
                     $scope.$apply(function () {
                         $scope.formData.feeds.push({
                             name: msg.data.formData[0].value,
@@ -1232,8 +1324,8 @@ editorView.controller('DesignerController', function ($scope, $window, $document
 
     $scope.editFeed = function (feed) {
         messageHub.showFormDialog(
-            "formEditorEditFeed",
-            "Edit item",
+            'formEditorEditFeed',
+            'Edit item',
             [
                 {
                     id: 'afName',
@@ -1255,24 +1347,24 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                 }
             ],
             [{
-                id: "b1",
-                type: "emphasized",
-                label: "Save",
+                id: 'b1',
+                type: 'emphasized',
+                label: 'Save',
                 whenValid: true
             },
             {
-                id: "b2",
-                type: "transparent",
-                label: "Cancel",
+                id: 'b2',
+                type: 'transparent',
+                label: 'Cancel',
             }],
-            "formEditor.dialogs.editFeed",
-            "Updating..."
+            'formEditor.dialogs.editFeed',
+            'Updating...'
         );
 
         const handler = messageHub.onDidReceiveMessage(
             'dialogs.editFeed',
             function (msg) {
-                if (msg.data.buttonId === "b1") {
+                if (msg.data.buttonId === 'b1') {
                     $scope.$apply(function () {
                         feed.name = msg.data.formData[0].value;
                         feed.url = msg.data.formData[1].value;
@@ -1291,8 +1383,8 @@ editorView.controller('DesignerController', function ($scope, $window, $document
 
     $scope.addScript = function () {
         messageHub.showFormDialog(
-            "formEditorAddScript",
-            "Add script",
+            'formEditorAddScript',
+            'Add script',
             [
                 {
                     id: 'asName',
@@ -1314,24 +1406,24 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                 }
             ],
             [{
-                id: "b1",
-                type: "emphasized",
-                label: "Add",
+                id: 'b1',
+                type: 'emphasized',
+                label: 'Add',
                 whenValid: true
             },
             {
-                id: "b2",
-                type: "transparent",
-                label: "Cancel",
+                id: 'b2',
+                type: 'transparent',
+                label: 'Cancel',
             }],
-            "formEditor.dialogs.addScript",
-            "Adding..."
+            'formEditor.dialogs.addScript',
+            'Adding...'
         );
 
         const handler = messageHub.onDidReceiveMessage(
             'dialogs.addScript',
             function (msg) {
-                if (msg.data.buttonId === "b1") {
+                if (msg.data.buttonId === 'b1') {
                     $scope.$apply(function () {
                         $scope.formData.scripts.push({
                             name: msg.data.formData[0].value,
@@ -1348,8 +1440,8 @@ editorView.controller('DesignerController', function ($scope, $window, $document
 
     $scope.editScript = function (script) {
         messageHub.showFormDialog(
-            "formEditorEditScript",
-            "Edit script",
+            'formEditorEditScript',
+            'Edit script',
             [
                 {
                     id: 'asName',
@@ -1371,24 +1463,24 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                 }
             ],
             [{
-                id: "b1",
-                type: "emphasized",
-                label: "Save",
+                id: 'b1',
+                type: 'emphasized',
+                label: 'Save',
                 whenValid: true
             },
             {
-                id: "b2",
-                type: "transparent",
-                label: "Cancel",
+                id: 'b2',
+                type: 'transparent',
+                label: 'Cancel',
             }],
-            "formEditor.dialogs.editScript",
-            "Updating..."
+            'formEditor.dialogs.editScript',
+            'Updating...'
         );
 
         const handler = messageHub.onDidReceiveMessage(
             'dialogs.editScript',
             function (msg) {
-                if (msg.data.buttonId === "b1") {
+                if (msg.data.buttonId === 'b1') {
                     $scope.$apply(function () {
                         script.name = msg.data.formData[0].value;
                         script.url = msg.data.formData[1].value;
@@ -1428,10 +1520,14 @@ editorView.controller('DesignerController', function ($scope, $window, $document
     $scope.createDomFromJson = function (model, containerId) {
         for (let i = 0; i < model.length; i++) {
             let control;
-            if (model[i].controlId.startsWith('container')) {
-                for (let c = 0; c < $scope.builderComponents[1].items.length; c++) {
-                    if ($scope.builderComponents[1].items[c].controlId === model[i].controlId) {
-                        control = JSON.parse(JSON.stringify($scope.builderComponents[1].items[c]));
+            let groupIndex = 0;
+            if (model[i].groupId === undefined) model[i].groupId = getGroupId(model[i].controlId);
+            if (model[i].groupId === 'fb-display') groupIndex = 1;
+            else if (model[i].groupId === 'fb-containers') groupIndex = 2;
+            if (groupIndex === 2) {
+                for (let c = 0; c < $scope.builderComponents[groupIndex].items.length; c++) {
+                    if ($scope.builderComponents[groupIndex].items[c].controlId === model[i].controlId) {
+                        control = JSON.parse(JSON.stringify($scope.builderComponents[groupIndex].items[c]));
                         control.$scope = $scope.$new(true);
                         control.$scope.id = `c${uuid.generate()}`;
                         control.$scope.showActions = $scope.showActions;
@@ -1442,14 +1538,23 @@ editorView.controller('DesignerController', function ($scope, $window, $document
                     }
                 }
             } else {
-                for (let c = 0; c < $scope.builderComponents[0].items.length; c++) {
-                    if ($scope.builderComponents[0].items[c].controlId === model[i].controlId) {
-                        control = JSON.parse(JSON.stringify($scope.builderComponents[0].items[c]));
+                for (let c = 0; c < $scope.builderComponents[groupIndex].items.length; c++) {
+                    if ($scope.builderComponents[groupIndex].items[c].controlId === model[i].controlId) {
+                        control = JSON.parse(JSON.stringify($scope.builderComponents[groupIndex].items[c]));
                         control.$scope = $scope.$new(true);
                         control.$scope.id = `w${uuid.generate()}`;
                         control.$scope.showProps = $scope.showProps;
                         control.$scope.props = control.props;
                         for (const key in control.$scope.props) {
+                            if (control.$scope.props[key].type === 'list' && model[i][key]) {
+                                control.$scope.props[key].defaultValue = '';
+                                for (let l = 0; l < model[i][key].length; l++) {
+                                    if (model[i][key][l].isDefault) {
+                                        control.$scope.props[key].defaultValue = model[i][key][l].value;
+                                        break;
+                                    }
+                                }
+                            }
                             control.$scope.props[key].value = model[i][key];
                         }
                         break;
@@ -1498,7 +1603,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
             } else {
                 $scope.$apply(function () {
                     $scope.state.error = true;
-                    $scope.errorMessage = "There was a problem with loading the file";
+                    $scope.errorMessage = 'There was a problem with loading the file';
                     $scope.state.isBusy = false;
                 });
             }
@@ -1506,20 +1611,28 @@ editorView.controller('DesignerController', function ($scope, $window, $document
     };
 
     $scope.createFormJson = function (model) {
-        let formJson = [];
+        const formJson = [];
         for (let i = 0; i < model.length; i++) {
-            if (model[i].controlId.startsWith('container')) {
+            if (model[i].groupId === undefined) model[i].groupId = getGroupId(model[i].controlId);
+            if (model[i].groupId === 'fb-containers') {
                 formJson.push({
                     controlId: model[i].controlId,
+                    groupId: model[i].groupId,
                     children: $scope.createFormJson(model[i].children)
                 });
             } else {
                 const controlObj = {
                     controlId: model[i].controlId,
+                    groupId: model[i].groupId
                 };
                 for (const key in model[i].$scope.props) {
-                    //@ts-ignore
-                    controlObj[key] = model[i].$scope.props[key].value;
+                    if (model[i].$scope.props[key].enabledOn) {
+                        if (model[i].$scope.props[model[i].$scope.props[key].enabledOn.key].value === model[i].$scope.props[key].enabledOn.value)
+                            //@ts-ignore
+                            controlObj[key] = model[i].$scope.props[key].value;
+                    } else { //@ts-ignore
+                        controlObj[key] = model[i].$scope.props[key].value;
+                    }
                 }
                 formJson.push(controlObj);
             }
@@ -1558,6 +1671,13 @@ editorView.controller('DesignerController', function ($scope, $window, $document
             }
         });
     }
+
+    $scope.save = function () {
+        if ($scope.state.canSave && $scope.isFileChanged) {
+            $scope.state.isBusy = true;
+            saveContents();
+        }
+    };
 
     $scope.shortcuts = function (keySet, event) {
         switch (keySet) {
@@ -1623,6 +1743,111 @@ editorView.controller('DesignerController', function ($scope, $window, $document
         }
     };
 
+    $scope.checkGenFile = function () {
+        workspaceApi.resourceExists(genFile).then(function (response) {
+            if (response.status === 200) $scope.canRegenerate = true;
+            else $scope.canRegenerate = false;
+        });
+    };
+
+    $scope.chooseTemplate = function (project, filePath, params) {
+        const templateItems = [];
+        templatesApi.listTemplates().then(function (response) {
+            if (response.status === 200) {
+                for (let i = 0; i < response.data.length; i++) {
+                    if (response.data[i].hasOwnProperty('extension') && response.data[i].extension === 'form') {
+                        templateItems.push({
+                            label: response.data[i].name,
+                            value: response.data[i].id,
+                        });
+                    }
+                }
+                messageHub.hideLoadingDialog('formRegenerateModel');
+                messageHub.showFormDialog(
+                    'formRegenerateChooseTemplate',
+                    'Choose template',
+                    [{
+                        id: 'pgfd1',
+                        type: 'dropdown',
+                        label: 'Choose template',
+                        required: true,
+                        value: '',
+                        items: templateItems,
+                    }],
+                    [{
+                        id: 'b1',
+                        type: 'emphasized',
+                        label: 'OK',
+                        whenValid: true,
+                    }, {
+                        id: 'b2',
+                        type: 'transparent',
+                        label: 'Cancel',
+                    }],
+                    'form.regenerate.template',
+                    'Setting template...',
+                );
+                messageHub.onDidReceiveMessage(
+                    'form.regenerate.template',
+                    function (msg) {
+                        if (msg.data.buttonId === 'b1') {
+                            messageHub.hideFormDialog('formRegenerateChooseTemplate');
+                            messageHub.showLoadingDialog('formRegenerateModel', 'Regenerating', 'Regenerating from model');
+                            $scope.generateFromModel(project, filePath, msg.data.formData[0].value, params);
+                        } else messageHub.hideFormDialog('projectRegenerateChooseTemplate');
+                    },
+                    true
+                );
+            } else {
+                messageHub.hideLoadingDialog('formRegenerateModel');
+                messageHub.setStatusError('Unable to load template list');
+            }
+        });
+    };
+
+    $scope.generateFromModel = function (project, filePath, templateId, params) {
+        const fileWorkspace = $scope.dataParameters.workspaceName || workspaceApi.getCurrentWorkspace();
+        generateApi.generateFromModel(
+            fileWorkspace,
+            project,
+            filePath,
+            templateId,
+            params
+        ).then(function (response) {
+            messageHub.hideLoadingDialog('formRegenerateModel');
+            if (response.status !== 201) {
+                messageHub.showAlertError(
+                    'Failed to generate',
+                    `An unexpected error has occurred while trying to regenerate from '${filePath}'`
+                );
+                messageHub.setStatusError(`Unable to generate from model '${filePath}'`);
+            } else {
+                messageHub.setStatusMessage(`Generated from model '${filePath}'`);
+            }
+            messageHub.postMessage('projects.tree.refresh', { partial: true, project: project, workspace: fileWorkspace }, true);
+        });
+    };
+
+    $scope.regenerate = function () {
+        $scope.save();
+        messageHub.showLoadingDialog('formRegenerateModel', 'Regenerating', 'Loading data');
+        workspaceApi.loadContent('', genFile).then(function (response) {
+            if (response.status === 200) {
+                let { models, perspectives, templateId, filePath, workspaceName, projectName, ...params } = response.data;
+                if (!response.data.templateId) {
+                    $scope.chooseTemplate(response.data.projectName, response.data.filePath, params);
+                } else {
+                    messageHub.updateLoadingDialog('formRegenerateModel', 'Regenerating');
+                    $scope.generateFromModel(response.data.projectName, response.data.filePath, response.data.templateId, params);
+                }
+            } else {
+                messageHub.hideLoadingDialog('formRegenerateModel');
+                messageHub.showAlertError('Unable to load gen file', 'There was an error while loading the gen file. See the log for more information.');
+                console.error(response);
+            }
+        });
+    };
+
     messageHub.onDidReceiveMessage(
         'contextmenu',
         function (msg) {
@@ -1656,7 +1881,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
     );
 
     messageHub.onDidReceiveMessage(
-        "editor.file.save.all",
+        'editor.file.save.all',
         function () {
             if (!$scope.state.error && $scope.isFileChanged) {
                 $scope.$apply(() => $scope.state.isBusy = true);
@@ -1667,7 +1892,7 @@ editorView.controller('DesignerController', function ($scope, $window, $document
     );
 
     messageHub.onDidReceiveMessage(
-        "editor.file.save",
+        'editor.file.save',
         function (msg) {
             if (!$scope.state.error && $scope.isFileChanged) {
                 let file = msg.data && typeof msg.data === 'object' && msg.data.file;
@@ -1685,11 +1910,13 @@ editorView.controller('DesignerController', function ($scope, $window, $document
         $scope.state.error = true;
         $scope.errorMessage = "The 'file' data parameter is missing.";
     } else {
+        genFile = $scope.dataParameters.file.substring(0, $scope.dataParameters.file.lastIndexOf('.')) + '.gen';
         angular.element($document[0]).ready(function () {
             $scope.$apply(function () {
                 $scope.loadFileContents();
+                $scope.checkGenFile();
             });
-            const formContainer = $document[0].getElementById("formContainer");
+            const formContainer = $document[0].getElementById('formContainer');
             Sortable.create(formContainer, {
                 group: {
                     name: 'formContainer',
