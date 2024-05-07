@@ -24,8 +24,8 @@ public class CacheFacade {
     private static final Logger LOGGER = LoggerFactory.getLogger(CacheFacade.class);
 
     private static final Cache<String, Object> cache = Caffeine.newBuilder()
-                                                               .expireAfterWrite(15, TimeUnit.MINUTES)
-                                                               .maximumSize(1000)
+                                                               .expireAfterWrite(30, TimeUnit.MINUTES)
+                                                               .maximumSize(1500)
                                                                .build();
 
 
