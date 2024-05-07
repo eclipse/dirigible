@@ -49,7 +49,12 @@
             <td fd-table-cell>{{next.processInstanceId}}</td>
             <td fd-table-cell>{{next.executionId}}</td>
             <td fd-table-cell>{{next.exceptionMessage}}</td>
+            <td fd-table-cell>
+                <fd-button compact="true" dg-type="transparent" dg-label="Show" glyph="sap-icon--show" title="Show" aria-label="Show" ng-click="openDialog(next)"></fd-button>
+            </td>
+<!--
             <td fd-table-cell>{{next.exceptionStacktrace}}</td>
+-->
         </tr>
         <tr ng-if="jobsList.length === 0" fd-table-row>
             <td fd-table-cell no-data="true">{{getNoDataMessage()}}</td>
