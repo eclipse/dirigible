@@ -245,7 +245,6 @@ i.fd-list__icon[rotate="90"]::before {
   object-fit: contain;
   margin: auto;
   max-width: 100%;
-  height: auto;
 }
 
 .dg-stretch {

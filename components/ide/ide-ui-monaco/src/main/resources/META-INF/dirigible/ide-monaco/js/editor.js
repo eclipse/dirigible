@@ -22,9 +22,10 @@ require(['vs/editor/editor.main', 'parser/acorn-loose'], async function (monaco,
         const fileName = fileIO.resolvePath();
         const readOnly = fileIO.isReadOnly();
         const fileType = await fileIO.getFileType(fileName);
+        const isTemplate = fileIO.isFileTemplate(fileName);
         const fileObject = await fileIO.loadText(fileName, true);
 
-        const dirigibleEditor = new DirigibleEditor(monaco, acornLoose, fileName, readOnly, fileType, fileObject);
+        const dirigibleEditor = new DirigibleEditor(monaco, acornLoose, fileName, readOnly, fileType, isTemplate, fileObject);
         await dirigibleEditor.init();
         dirigibleEditor.configureMonaco();
         dirigibleEditor.subscribeEvents();
@@ -174,6 +175,10 @@ class FileIO {
         }
         return '';
     }
+
+    isFileTemplate(fileName) {
+        return fileName.endsWith('.template');
+    };
 
     async getFileType(fileName) {
         const response = await fetch('/services/js/ide-monaco/api/fileTypes.js');
@@ -391,7 +396,7 @@ class EditorActionsProvider {
         return autoRevealEnabled === null || autoRevealEnabled === 'true';
     }
 
-    static createSaveAction() {
+    static createSaveAction(formatEnabled = true) {
         const loadingMessage = document.getElementById('loadingMessage');
         return {
             id: 'dirigible-files-save',
@@ -410,7 +415,7 @@ class EditorActionsProvider {
                 if (DirigibleEditor.loadingOverview) {
                     DirigibleEditor.loadingOverview.classList.remove("dg-hidden");
                 }
-                if (EditorActionsProvider.#isAutoFormattingEnabledForCurrentFile()) {
+                if (formatEnabled && EditorActionsProvider.#isAutoFormattingEnabledForCurrentFile()) {
                     editor.getAction('editor.action.formatDocument').run().then(() => {
                         DirigibleEditor.saveFileContent(editor);
                     });
@@ -467,16 +472,13 @@ class EditorActionsProvider {
                     if (filesWithDisabledFormattingList.includes(fileName)) {
                         const removed = filesWithDisabledFormattingList.filter(entry => entry !== fileName);
                         jsonString = JSON.stringify(removed);
-                        console.log("Re-enabled auto formatting for file: " + fileName);
                     } else {
                         filesWithDisabledFormattingList.push(fileName);
                         jsonString = JSON.stringify(filesWithDisabledFormattingList);
-                        console.log("Disabled auto formatting for file: " + fileName);
                     }
                 } else {
                     let initialFilesWithDisabledFormattingList = new Array(fileName);
                     jsonString = JSON.stringify(initialFilesWithDisabledFormattingList);
-                    console.log("Disabled auto formatting for file: " + fileName);
                 }
 
                 window.localStorage.setItem('DIRIGIBLE.filesWithDisabledFormattingList', jsonString);
@@ -552,12 +554,13 @@ class DirigibleEditor {
         return DirigibleEditor.lastSavedVersionId !== model.getAlternativeVersionId();
     }
 
-    constructor(monaco, acornLoose, fileName, readOnly, fileType, fileObject) {
+    constructor(monaco, acornLoose, fileName, readOnly, fileType, isTemplate, fileObject) {
         this.monaco = monaco;
         this.acornLoose = acornLoose;
         this.fileName = fileName;
         this.readOnly = readOnly;
         this.fileType = fileType;
+        this.isTemplate = isTemplate;
         this.fileObject = fileObject;
     }
 
@@ -702,10 +705,11 @@ class DirigibleEditor {
         });
 
         if (!this.readOnly) {
-            editor.addAction(EditorActionsProvider.createSaveAction());
+            editor.addAction(EditorActionsProvider.createSaveAction(!this.isTemplate));
         }
         editor.addAction(EditorActionsProvider.createSearchAction());
-        EditorActionsProvider._toggleAutoFormattingActionRegistration = editor.addAction(EditorActionsProvider.createToggleAutoFormattingAction());
+        if (!this.isTemplate)
+            EditorActionsProvider._toggleAutoFormattingActionRegistration = editor.addAction(EditorActionsProvider.createToggleAutoFormattingAction());
         EditorActionsProvider._toggleAutoRevealActionRegistration = editor.addAction(EditorActionsProvider.createToggleAutoRevealAction());
 
         DirigibleEditor.computeDiff.onmessage = function (event) {

@@ -22,6 +22,34 @@ formView.controller('FormController', ['$scope', '$http', function ($scope, $htt
     $scope.model.$element.model = 0;
 	#elseif($element.controlId == "input-checkbox")
     $scope.model.$element.model = false;
+    #elseif($element.controlId == "input-radio")
+        #set ($hasDefault = false)
+        #if ($element.staticOptions)
+            #foreach($radio in $element.staticOptions)
+                #if ($radio.isDefault == true)
+                #set ($hasDefault = true)
+    $scope.model.$element.model = '$radio.value';
+                #break
+                #end
+            #end
+        #end
+        #if (!$hasDefault)
+    $scope.model.$element.model = '';
+        #end
+    #elseif($element.controlId == "input-select")
+        #set ($hasDefault = false)
+        #if ($element.staticOptions)
+            #foreach($select in $element.staticOptions)
+                #if ($select.isDefault == true)
+                #set ($hasDefault = true)
+    $scope.model.$element.model = '$select.value';
+                #break
+                #end
+            #end
+        #end
+        #if (!$hasDefault)
+    $scope.model.$element.model = '';
+        #end
 	#elseif($element.controlId == "input-color")
     $scope.model.$element.model = '#ffbe6f';
 	#elseif($element.controlId == "paragraph")

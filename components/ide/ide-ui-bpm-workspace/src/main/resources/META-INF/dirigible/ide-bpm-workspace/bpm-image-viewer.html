@@ -22,8 +22,7 @@
 		<script type="text/javascript" src="services/bpm-image-viewer.js"></script>
 		<theme></theme>
 		<script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
-		<link type="text/css" rel="stylesheet"
-			href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
+		<link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
 		<script type="text/javascript" src="js/bpm-image-viewer.js"></script>
 	</head>
 
@@ -31,7 +30,7 @@
 		<fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
 			{{state.busyText}}
 		</fd-busy-indicator-extended>
-		<img ng-if="imageLink !== ''" class="dg-contain-image" style="background-color: #f2f2f2"
+		<img ng-if="imageLink !== ''" class="dg-contain-image" style="height:auto;background-color: #f2f2f2"
 			ng-src="{{ imageLink }}" alt="Image" ng-show="!state.error && !state.isBusy" />
 		<fd-message-page glyph="sap-icon--error" ng-if="state.error">
 			<fd-message-page-title>Editor encounterd an error!</fd-message-page-title>
