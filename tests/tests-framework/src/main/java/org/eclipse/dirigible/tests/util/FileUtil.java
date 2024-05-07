@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -39,6 +40,10 @@ public class FileUtil {
     }
 
     public static List<Path> findFiles(Path folder) throws IOException {
+        if (!Files.exists(folder)) {
+            LOGGER.info("Folder [{}] doesn't exist", folder);
+            return Collections.emptyList();
+        }
         if (!Files.isDirectory(folder)) {
             throw new IllegalArgumentException("Path [" + folder + "] must be a directory");
         }

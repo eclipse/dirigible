@@ -96,5 +96,5 @@ test('cache-api-object', () => {
     caches.clear();
 
     caches.set(KEY, VALUE);
-    assertTrue(isEqual(VALUE, caches.get(KEY));
+    assertTrue(isEqual(VALUE, caches.get(KEY)));
 });
