@@ -86,7 +86,7 @@ test('cache-api-object', () => {
     const KEY = "object-key";
     const VALUE = {
         name : "Ivan",
-        age: 15
+        age: 15,
         parent:{
           name : "Patar",
                 age: 35
