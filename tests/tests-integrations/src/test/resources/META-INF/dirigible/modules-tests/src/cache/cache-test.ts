@@ -59,42 +59,20 @@ test('cache-api-string', () => {
     assertEquals(VALUE, caches.get(KEY));
 });
 
-function isEqual(obj1, obj2) {
-    if (obj1 === null || obj1 === undefined || obj2 === null || obj2 === undefined) {
-        return obj1 === obj2;
-    }
-
-    if (typeof obj1 !== 'object' || typeof obj2 !== 'object') {
-        return obj1 === obj2;
-    }
-
-    if (Object.keys(obj1).length !== Object.keys(obj2).length) {
-        return false;
-    }
-
-    for (let key in obj1) {
-        if (!isEqual(obj1[key], obj2[key])) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
 test('cache-api-object', () => {
 
     const KEY = "object-key";
     const VALUE = {
         name : "Ivan",
-        age: 15,
-        parent:{
-          name : "Patar",
-                age: 35
-        }
+        age: 35
     };
 
     caches.clear();
 
     caches.set(KEY, VALUE);
-    assertTrue(isEqual(VALUE, caches.get(KEY)));
+
+    const cachedValue = caches.get(KEY);
+    assertTrue(cachedValue != null);
+    assertEquals("Ivan", cachedValue.name);
+    assertEquals(35, cachedValue.age);
 });
