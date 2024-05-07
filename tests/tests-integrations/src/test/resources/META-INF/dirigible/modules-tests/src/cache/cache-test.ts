@@ -64,7 +64,11 @@ test('cache-api-object', () => {
     const KEY = "object-key";
     const VALUE = {
         name : "Ivan",
-        age: 35
+        age: 35,
+        parent:  {
+           name : "Petar",
+           age: 55
+        }
     };
 
     caches.clear();
@@ -73,6 +77,10 @@ test('cache-api-object', () => {
 
     const cachedValue = caches.get(KEY);
     assertTrue(cachedValue != null);
+
     assertEquals("Ivan", cachedValue.name);
     assertEquals(35, cachedValue.age);
+
+    assertEquals("Petar", cachedValue.parent.name);
+    assertEquals(55, cachedValue.parent.age);
 });
