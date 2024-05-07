@@ -11,15 +11,42 @@ package org.eclipse.dirigible.components.api.cache;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class CacheFacade {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CacheFacade.class);
 
     private static final Cache<String, Object> cache = Caffeine.newBuilder()
                                                                .expireAfterWrite(15, TimeUnit.MINUTES)
                                                                .maximumSize(1000)
                                                                .build();
+
+
+    static class JsonHolder {
+
+        private static final Gson GSON = new GsonBuilder().create();
+
+        private final String json;
+
+        JsonHolder(String json) {
+            this.json = json;
+        }
+
+        Map<?, ?> getObject() {
+            return GSON.fromJson(json, Map.class);
+        }
+
+        static JsonHolder toJsonHolder(Object object) {
+            return new JsonHolder(GSON.toJson(object));
+        }
+    }
 
     public static boolean contains(String key) {
         return get(key) != null;
@@ -32,7 +59,13 @@ public class CacheFacade {
      * @return the string
      */
     public static Object get(String key) {
-        return cache.getIfPresent(key);
+        Object cachedValue = cache.getIfPresent(key);
+
+        if (cachedValue instanceof JsonHolder jsonHolder) {
+            return jsonHolder.getObject();
+        }
+        return cachedValue;
+
     }
 
     /**
@@ -43,8 +76,15 @@ public class CacheFacade {
      */
     public static void set(String key, Object content) {
         if (content != null) {
-            cache.put(key, content);
+            Object cacheValue = shouldBeConverted(content) ? JsonHolder.toJsonHolder(content) : content;
+            cache.put(key, cacheValue);
         }
+    }
+
+    private static boolean shouldBeConverted(Object value) {
+        return null != value && !(value instanceof String || value instanceof Character || value instanceof Byte || value instanceof Short
+                || value instanceof Integer || value instanceof Long || value instanceof Double || value instanceof Float
+                || value instanceof Boolean);
     }
 
     /**
