@@ -48,7 +48,7 @@
 		<commons.io>2.16.1</commons.io>
 		<commons.lang3>3.14.0</commons.lang3>
 		<commons.exec>1.4.0</commons.exec>
-		<commons-csv.version>1.10.0</commons-csv.version>
+		<commons-csv.version>1.11.0</commons-csv.version>
 		
 		<!-- Lucene -->
 		<lucene.version>9.10.0</lucene.version>
@@ -87,16 +87,17 @@
 		<mongodb.version>3.12.14</mongodb.version>
 		<ngdbc.version>2.20.17</ngdbc.version>
 		<snowflake.version>3.13.34</snowflake.version>
+		<mysql.version>8.4.0</mysql.version>
 		
 		<!-- QLDB -->
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.710</qldb.sdk.version>
+		<qldb.sdk.version>1.12.717</qldb.sdk.version>
 		
 		<!-- jETCD -->
 		<jetcd.core.version>0.7.7</jetcd.core.version>
 		
 		<!-- Various -->
-		<c3p0.version>0.10.0-pre7</c3p0.version>
+		<c3p0.version>0.10.1</c3p0.version>
 		<guava.version>33.1.0-jre</guava.version>
 		<icu4j.version>75.1</icu4j.version>
 		<classgraph.version>4.8.172</classgraph.version>
