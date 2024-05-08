@@ -111,7 +111,7 @@
 		<maven-formatter-plugin.version>2.23.0</maven-formatter-plugin.version>
 		<maven-exec-plugin.version>3.2.0</maven-exec-plugin.version>
 		<maven-git-commit-id-plugin.version>4.9.10</maven-git-commit-id-plugin.version>
-		<maven-license-plugin.version>4.3</maven-license-plugin.version>
+		<maven-license-plugin.version>4.4</maven-license-plugin.version>
 
 		<!-- Spring -->
 		<spring.boot.version>3.2.5</spring.boot.version>
