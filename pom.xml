@@ -129,7 +129,7 @@
 		<commons.io>2.16.1</commons.io>
 		<commons.lang3>3.14.0</commons.lang3>
 		<commons.exec>1.4.0</commons.exec>
-		<commons-csv.version>1.10.0</commons-csv.version>
+		<commons-csv.version>1.11.0</commons-csv.version>
 		
 		<!-- Lucene -->
 		<lucene.version>9.10.0</lucene.version>
