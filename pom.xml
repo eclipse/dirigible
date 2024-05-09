@@ -204,7 +204,7 @@
 		<fontawesome.version>4.7.0</fontawesome.version>
 
 		<!-- Tests -->
-		<testcontainers.version>1.19.7</testcontainers.version>
+		<testcontainers.version>1.19.8</testcontainers.version>
 
 		<profile.content.phase>none</profile.content.phase>
 
