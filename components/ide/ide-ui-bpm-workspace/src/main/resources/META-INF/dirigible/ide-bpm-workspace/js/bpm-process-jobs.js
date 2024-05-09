@@ -35,6 +35,10 @@ ideBpmProcessJobsView.controller('IDEBpmProcessJobsViewController', ['$scope', '
         return 'No jobs have been found.';
     }
 
+    $scope.openDialog = function(job) {
+        messageHub.showAlertError(job.exceptionMessage, job.exceptionStacktrace);
+    }
+
     messageHub.onDidReceiveMessage('instance.selected', function (msg) {
         const processInstanceId = msg.data.instance;
         $scope.fetchData(processInstanceId);
