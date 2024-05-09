@@ -48,7 +48,7 @@ editorView.controller('EditorViewController', function ($scope, $window, workspa
     } else {
         editorScope = $scope;
         const script = document.createElement('script');
-        script.src = "designer/static/js/main.8b055e74.js";
+        script.src = "designer/static/js/main.d7677d12.js";
         document.getElementsByTagName('head')[0].appendChild(script);
     }
 
