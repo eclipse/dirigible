@@ -19,8 +19,10 @@ editorView.controller('EditorViewController', function ($scope, $window, workspa
         error: false,
         busyText: "Loading...",
     };
+    $scope.fileContent = '';
     $scope.errorMessage = '';
     $scope.workspaceApiBaseUrl = workspaceApi.getFullURL();
+    $scope.messageHub = messageHub;
 
     angular.element($window).bind("focus", function () {
         messageHub.setFocusedEditor($scope.dataParameters.file);
@@ -48,12 +50,12 @@ editorView.controller('EditorViewController', function ($scope, $window, workspa
     } else {
         editorScope = $scope;
         const script = document.createElement('script');
-        script.src = "designer/static/js/main.8b055e74.js";
+        script.src = "designer/static/js/main.375f3ceb.js";
         document.getElementsByTagName('head')[0].appendChild(script);
     }
 
-    $scope.saveContents = function (text) {
-        workspaceApi.saveContent('', $scope.dataParameters.file, text).then(function (response) {
+    $scope.saveContents = function () {
+        workspaceApi.saveContent('', $scope.dataParameters.file, $scope.fileContent).then(function (response) {
             if (response.status === 200) {
                 messageHub.announceFileSaved({
                     name: $scope.dataParameters.file.substring($scope.dataParameters.file.lastIndexOf('/') + 1),
@@ -62,7 +64,7 @@ editorView.controller('EditorViewController', function ($scope, $window, workspa
                     workspace: $scope.dataParameters.file.substring(1, $scope.dataParameters.file.indexOf('/', 1)),
                 });
                 messageHub.setStatusMessage(`File '${$scope.dataParameters.file}' saved`);
-                messageHub.setEditorDirty($scope.dataParameters.file, false);
+                messageHub.setEditorDirty(editorScope.dataParameters.file, false);
                 $scope.$apply(function () {
                     $scope.state.isBusy = false;
                 });
@@ -76,12 +78,37 @@ editorView.controller('EditorViewController', function ($scope, $window, workspa
         });
     }
 
+//    messageHub.subscribe(async function () {
+//        $scope.saveContents();
+//    }, "editor.file.save.all");
+
+    messageHub.onDidReceiveMessage(
+        'editor.file.save.all',
+        function () {
+            if (!$scope.state.error) {
+                $scope.saveContents();
+            }
+        },
+        true,
+    );
+
+    messageHub.onDidReceiveMessage(
+        'editor.file.save',
+        function (msg) {
+            if (!$scope.state.error) {
+                let file = msg.data && typeof msg.data === 'object' && msg.data.file;
+                if (file && file === $scope.dataParameters.file) $scope.saveContents();
+            }
+        },
+        true,
+    );
+
     window.addEventListener('keydown',
         function (event) {
             if ((event.ctrlKey || event.metaKey) && event.key == 's') {
                 event.preventDefault();
-                if (window.designerApp) {
-                    $scope.saveContents(window.designerApp.state.yaml);
+                if(!$scope.state.error) {
+                    $scope.saveContents();
                 }
             }
         }
@@ -108,4 +135,11 @@ function setStateError(isError, message) {
         editorScope.state.error = isError;
         editorScope.errorMessage = message;
     });
+}
+
+function onFileChanged(yaml) {
+    if(editorScope.fileContent !== '') {
+        editorScope.messageHub.setEditorDirty(editorScope.dataParameters.file, true);
+    }
+    editorScope.fileContent = yaml;
 }
