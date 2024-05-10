@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/services/web/ide-integrations/designer/static/css/main.bee599d0.css",
-    "main.js": "/services/web/ide-integrations/designer/static/js/main.375f3ceb.js",
+    "main.css": "/services/web/ide-integrations/designer/static/css/main.cad1c473.css",
+    "main.js": "/services/web/ide-integrations/designer/static/js/main.0447b661.js",
     "static/media/fa-solid-900.woff2": "/services/web/ide-integrations/designer/static/media/fa-solid-900.c2b7c03209f0d3558e85.woff2",
     "static/media/RedHatDisplayVF-Italic.woff2": "/services/web/ide-integrations/designer/static/media/RedHatDisplayVF-Italic.813182e673c38ef5ee4b.woff2",
     "static/media/RedHatTextVF-Italic.woff2": "/services/web/ide-integrations/designer/static/media/RedHatTextVF-Italic.078865af129336cde269.woff2",
@@ -21,11 +21,11 @@
     "static/media/RedHatMono-Regular.woff2": "/services/web/ide-integrations/designer/static/media/RedHatMono-Regular.57234ce675330fa60781.woff2",
     "static/media/pf-v5-pficon.woff2": "/services/web/ide-integrations/designer/static/media/pf-v5-pficon.c06f4d6490c387fd1d92.woff2",
     "index.html": "/services/web/ide-integrations/designer/index.html",
-    "main.bee599d0.css.map": "/services/web/ide-integrations/designer/static/css/main.bee599d0.css.map",
-    "main.375f3ceb.js.map": "/services/web/ide-integrations/designer/static/js/main.375f3ceb.js.map"
+    "main.cad1c473.css.map": "/services/web/ide-integrations/designer/static/css/main.cad1c473.css.map",
+    "main.0447b661.js.map": "/services/web/ide-integrations/designer/static/js/main.0447b661.js.map"
   },
   "entrypoints": [
-    "static/css/main.bee599d0.css",
-    "static/js/main.375f3ceb.js"
+    "static/css/main.cad1c473.css",
+    "static/js/main.0447b661.js"
   ]
 }
