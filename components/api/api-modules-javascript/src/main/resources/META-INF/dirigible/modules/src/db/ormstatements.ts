@@ -179,7 +179,8 @@ ORMStatements.prototype.list = function (settings) {
 
 		}
 	}
-	addLimitAndOffset(builder, settings);
+	addLimit(builder, settings);
+	addOffset(builder, settings);
 	return builder;
 };
 
@@ -231,13 +232,20 @@ function addFilter(orm, builder, settings) {
 	}
 }
 
-function addLimitAndOffset(builder, settings) {
+function addLimit(builder, settings) {
 	const limit = settings.$limit ?? settings.limit;
-	const offset = settings.$offset ?? settings.offset;
-	if (limit !== undefined && offset !== undefined) {
-		builder.limit(parseInt(limit, 10)).offset(parseInt(offset, 10));
+	if (limit !== undefined) {
+		builder.limit(parseInt(limit, 10));
 	}
 }
+
+function addOffset(builder, settings) {
+	const offset = settings.$offset ?? settings.offset;
+	if (offset !== undefined) {
+		builder.offset(parseInt(offset, 10));
+	}
+}
+
 export function create(orm, connection) {
 	let dialect;
 	if (connection) {
