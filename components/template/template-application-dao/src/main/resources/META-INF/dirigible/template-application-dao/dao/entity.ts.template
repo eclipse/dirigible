@@ -107,6 +107,10 @@ interface ${name}EntityEvent {
     }
 }
 
+interface ${name}UpdateEntityEvent extends ${name}EntityEvent {
+    readonly previousEntity: ${name}Entity;
+}
+
 export class ${name}Repository {
 
     private static readonly DEFINITION = {
@@ -254,11 +258,13 @@ export class ${name}Repository {
         (entity as ${name}Entity).${property.name} = ${property.calculatedPropertyExpressionUpdate};
 #end
 #end
+        const previousEntity = this.findById(entity.Id);
         this.dao.update(entity);
         this.triggerEvent({
             operation: "update",
             table: "${tablePrefix}${dataName}",
             entity: entity,
+            previousEntity: previousEntity,
             key: {
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
@@ -333,7 +339,7 @@ export class ${name}Repository {
 #end
     }
 
-    private async triggerEvent(data: ${name}EntityEvent) {
+    private async triggerEvent(data: ${name}EntityEvent | ${name}UpdateEntityEvent) {
         const triggerExtensions = await extensions.loadExtensionModules("${projectName}-${perspectiveName}-${name}", ["trigger"]);
         triggerExtensions.forEach(triggerExtension => {
             try {
