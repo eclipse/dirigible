@@ -166,8 +166,10 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', 'ViewParame
                     break;
                 case 'md':
                     url += '/wiki';
+                    break;
                 case 'markdown':
                     url += '/wiki';
+                    break;
                 case 'confluence':
                     url += '/wiki';
                     break;
