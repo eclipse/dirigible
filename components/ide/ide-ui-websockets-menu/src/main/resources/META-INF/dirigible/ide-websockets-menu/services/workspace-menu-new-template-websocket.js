@@ -12,13 +12,13 @@
 exports.getTemplate = function () {
 	return {
 		"name": "websocket",
-		"label": "Websocket",
+		"label": "WebSocket",
 		"extension": "websocket",
 		"data": JSON.stringify(
 			{
 				"handler": "myproject/myhandler.js",
 				"endpoint": "myendpoint",
-				"description": "My Websocket"
+				"description": "My WebSocket"
 			},
 			null,
 			2
