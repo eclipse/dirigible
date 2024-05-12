@@ -9,6 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
+/*
 const viewData = {
 	id: "bpm-historic-process-context-view",
 	label: "Historic Process Context",
@@ -20,4 +21,4 @@ if (typeof exports !== 'undefined') {
 	exports.getView = function () {
 		return viewData;
 	}
-}
+}*/

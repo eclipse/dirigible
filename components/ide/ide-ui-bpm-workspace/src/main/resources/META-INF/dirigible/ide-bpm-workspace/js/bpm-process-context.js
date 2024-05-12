@@ -20,6 +20,8 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
     $scope.variablesList = [];
     $scope.currentProcessInstanceId = null;
     $scope.selectedVariable = null;
+    $scope.disableModificationButtons = false;
+    $scope.servicePath = '/services/ide/bpm/bpm-processes/instance/'
 
     $scope.selectionChanged = function (variable) {
         $scope.variablesList.forEach(variable => variable.selected = false);
@@ -33,7 +35,7 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
     };
 
     $scope.fetchData = function(processInstanceId) {
-        $http.get('/services/ide/bpm/bpm-processes/instance/' + processInstanceId + '/variables', { params: { 'limit': 100 } })
+        $http.get($scope.servicePath + processInstanceId + '/variables', { params: { 'limit': 100 } })
                 .then((response) => {
                     $scope.variablesList = response.data;
                 });
@@ -150,9 +152,22 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
 
     messageHub.onDidReceiveMessage('instance.selected', function (msg) {
         const processInstanceId = msg.data.instance;
-        $scope.fetchData(processInstanceId);
         $scope.$apply(function () {
             $scope.currentProcessInstanceId = processInstanceId;
+            $scope.disableModificationButtons = false
+            $scope.servicePath = '/services/ide/bpm/bpm-processes/instance/'
         });
+        $scope.fetchData(processInstanceId);
     });
+
+    messageHub.onDidReceiveMessage('historic.instance.selected', function (msg) {
+        const processInstanceId = msg.data.instance;
+        $scope.$apply(function () {
+            $scope.currentProcessInstanceId = processInstanceId;
+            $scope.disableModificationButtons = true
+            $scope.servicePath = '/services/ide/bpm/bpm-processes/historic-instances/'
+        });
+        $scope.fetchData(processInstanceId);
+    });
+
 }]);
