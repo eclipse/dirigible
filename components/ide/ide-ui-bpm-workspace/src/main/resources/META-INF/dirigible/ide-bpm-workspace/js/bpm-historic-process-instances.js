@@ -11,8 +11,11 @@
  */
 let ideBpmHistoricProcessInstancesView = angular.module('ide-bpm-historic-process-instances', ['ideUI', 'ideView']);
 
+ideBpmHistoricProcessInstancesView.config(["messageHubProvider", function (messageHubProvider) {
+    messageHubProvider.eventIdPrefix = 'bpm';
+}]);
 
-ideBpmHistoricProcessInstancesView.controller('IDEBpmHistoricProcessInstancesViewController', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout,) {
+ideBpmHistoricProcessInstancesView.controller('IDEBpmHistoricProcessInstancesViewController', ['$scope', '$http', '$timeout', 'messageHub', function ($scope, $http, $timeout, messageHub) {
 
     $scope.instances = [];
 
@@ -35,4 +38,12 @@ ideBpmHistoricProcessInstancesView.controller('IDEBpmHistoricProcessInstancesVie
     $scope.getNoDataMessage = function () {
         return 'No historic instances have been found.';
     }
+
+    $scope.selectionChanged = function (instance) {
+        //$scope.selectAll = $scope.instancesList.every(x => x.selected = false);
+        messageHub.postMessage('historic.instance.selected', { instance: instance.id });
+//        instance.selected = true;
+//        this.selectedProcessInstanceId = instance.id;
+    }
+
 }]);

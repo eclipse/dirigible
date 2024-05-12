@@ -13,22 +13,22 @@
 -->
 <!DOCTYPE HTML>
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="ide-bpm-historic-process-instances"
-      ng-controller="IDEBpmHistoricProcessInstancesViewController">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="ide-bpm-historic-process-context"
+      ng-controller="IDEBpmHistoricProcessContextViewController">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
     <title dg-view-title></title>
-    <script type="text/javascript" src="services/bpm-historic-process-instances-view.js"></script>
+    <script type="text/javascript" src="services/bpm-historic-process-context-view.js"></script>
     <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
     <theme></theme>
     <script type="text/javascript" src="/webjars/jstree/jstree.min.js"></script>
     <script type="text/javascript" src="/services/web/resources-core/ui/widgets/indicator.plugin.js"></script>
     <link type="text/css" rel="stylesheet" href="/services/web/resources/styles/jstree.css" />
     <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
-    <script type="text/javascript" src="js/bpm-historic-process-instances.js"></script>
+    <script type="text/javascript" src="js/bpm-historic-process-context.js"></script>
 </head>
 
 <body class="dg-vbox">
@@ -42,21 +42,21 @@
         <thead fd-table-header sticky="true">
         <tr fd-table-row>
             <th fd-table-header-cell>Id</th>
-            <th fd-table-header-cell>Definition Id</th>
-            <th fd-table-header-cell>Start Time</th>
-            <th fd-table-header-cell>End Time</th>
-            <th fd-table-header-cell>Duration (Millis)</th>
+            <th fd-table-header-cell>Process Instance Id</th>
+            <th fd-table-header-cell>Name</th>
+            <th fd-table-header-cell>Type</th>
+            <th fd-table-header-cell>Value</th>
         </tr>
         </thead>
         <tbody fd-table-body>
-        <tr fd-table-row ng-repeat="next in instances track by next.id" activable="true" hoverable="true" dg-selected="next.selected" ng-click="selectionChanged(next)">
+        <tr fd-table-row ng-repeat="next in variablesList track by next.id" hoverable="true" activable="true" dg-selected="next.selected" ng-click="selectionChanged(next)">
             <td fd-table-cell>{{next.id}}</td>
-            <td fd-table-cell>{{next.processDefinitionId}}</td>
-            <td fd-table-cell>{{next.startTime | date:'medium'}}</td>
-            <td fd-table-cell>{{next.endTime | date:'medium'}}</td>
-            <td fd-table-cell>{{next.durationInMillis}}</td>
+            <td fd-table-cell>{{next.processInstanceId}}</td>
+            <td fd-table-cell>{{next.name}}</td>
+            <td fd-table-cell>{{next.typeName ? next.typeName : next.variableTypeName}}</td>
+            <td fd-table-cell>{{next.value}}</td>
         </tr>
-        <tr ng-if="instances.length === 0" fd-table-row>
+        <tr ng-if="variablesList.length === 0" fd-table-row>
             <td fd-table-cell no-data="true">{{getNoDataMessage()}}</td>
         </tr>
         </tbody>
