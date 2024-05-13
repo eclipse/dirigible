@@ -66,6 +66,19 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
                     messageHub.showAlertError("${name}", `Unable to list/filter ${name}: '${response.message}'`);
                     return;
                 }
+#if($hasDates)
+
+					response.data.forEach(e => {
+#foreach ($property in $properties)
+#if($property.isDateType)
+						if (e.${property.name}) {
+							e.${property.name} = new Date(e.${property.name});
+						}
+#end
+#end
+					});
+
+#end
                 $scope.data = response.data;
                 setTimeout(() => {
                     window.print();

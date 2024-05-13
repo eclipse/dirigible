@@ -15,8 +15,8 @@
         <script type="text/javascript" src="controller.js"></script>
     </head>
 
-    <body class="dg-vbox">
-        <fd-scrollbar class="dg-full-height" ng-hide="data == null">
+    <body>
+        <fd-scrollbar ng-hide="data == null">
             <table fd-table display-mode="compact" inner-borders="top" outer-borders="none">
                 <thead fd-table-header sticky="true">
                     <tr fd-table-row>
