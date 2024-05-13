@@ -132,5 +132,31 @@ exports.getSources = function (parameters) {
 			engine: "velocity",
 			rename: "gen/ui/Reports/{{name}}/view.js",
 			collection: "generateReportModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/report/dialog-print/controller.js.template",
+			action: "generate",
+			engine: "velocity",
+			rename: "gen/ui/Reports/{{name}}/dialog-print/controller.js",
+			collection: "generateReportModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/report/dialog-print/index.html.template",
+			action: "generate",
+			engine: "velocity",
+			rename: "gen/ui/Reports/{{name}}/dialog-print/index.html",
+			collection: "generateReportModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/report/dialog-print/print.extension.template",
+			action: "generate",
+			rename: "gen/ui/Reports/{{name}}/dialog-print/print.extension",
+			collection: "generateReportModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/report/dialog-print/print.js.template",
+			action: "generate",
+			rename: "gen/ui/Reports/{{name}}/dialog-print/print.js",
+			collection: "generateReportModels"
 		}];
 };

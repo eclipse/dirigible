@@ -21,7 +21,16 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 		$scope.triggerPageAction = function (action) {
 			messageHub.showDialogWindow(
 				action.id,
-				{},
+				{
+					filterEntity: $scope.filterEntity,
+		#if($hasDropdowns)
+			#foreach ($property in $properties)
+				#if($property.widgetType == "DROPDOWN")
+					options${property.name}: $scope.options${property.name},
+				#end
+			#end
+		#end
+				},
 				null,
 				true,
 				action
