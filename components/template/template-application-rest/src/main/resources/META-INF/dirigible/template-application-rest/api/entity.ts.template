@@ -34,21 +34,23 @@ class ${name}Service {
 #if($perspectiveRole || $roleRead || $roleWrite)
             this.checkPermissions("read");
 #end
-#if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
-            let ${masterEntityId} = parseInt(ctx.queryParameters.${masterEntityId});
-            ${masterEntityId} = isNaN(${masterEntityId}) ? ctx.queryParameters.${masterEntityId} : ${masterEntityId};
-#end
             const options: ${name}EntityOptions = {
-#if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
-                $filter: {
-                    equals: {
-                        ${masterEntityId}: ${masterEntityId}
-                    }
-                },
-#end
                 $limit: ctx.queryParameters["$limit"] ? parseInt(ctx.queryParameters["$limit"]) : undefined,
                 $offset: ctx.queryParameters["$offset"] ? parseInt(ctx.queryParameters["$offset"]) : undefined
             };
+#if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
+
+            let ${masterEntityId} = parseInt(ctx.queryParameters.${masterEntityId});
+            ${masterEntityId} = isNaN(${masterEntityId}) ? ctx.queryParameters.${masterEntityId} : ${masterEntityId};
+
+            if (${masterEntityId} !== undefined) {
+                options.$filter = {
+                    equals: {
+                        ${masterEntityId}: ${masterEntityId}
+                    }
+                };
+            }
+#end
 
 #if($isEntityPropertySecurityEnabled)
             return this.repository.findAll(options).map(e => this.transformEntity("read", e));
