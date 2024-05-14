@@ -7,7 +7,7 @@ exports.getTile = function () {
     return {
         group: "Reports",
         name: "${name} Report",
-        caption: "${caption}",
+        caption: "Report for entity ${name}",
         tooltip: "${tooltip}",
         // icon: "file-o",
         location: "/services/web/${projectName}/gen/ui/Reports/index.html",
