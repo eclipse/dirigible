@@ -322,7 +322,7 @@ public class BpmService {
 
         List<ProcessInstance> processInstances = processEngine.getRuntimeService()
                                                               .createProcessInstanceQuery()
-                                                              .processInstanceBusinessKey(businessKey)
+                                                              .processInstanceBusinessKeyLike("%" + businessKey + "%")
                                                               .list();
 
         List<ProcessInstanceData> results = new ArrayList<ProcessInstanceData>();

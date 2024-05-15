@@ -239,7 +239,8 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
             @Nullable @RequestParam("key") Optional<String> key) {
         if (key.isPresent()) {
             return ResponseEntity.ok(getBpmService().getProcessInstanceByKey(key.get()));
-        } else if (businessKey.isPresent()) {
+        } else if (businessKey.isPresent() && !businessKey.get()
+                                                          .isEmpty()) {
             return ResponseEntity.ok(getBpmService().getProcessInstanceByBusinessKey(businessKey.get()));
         }
         return ResponseEntity.ok(getBpmService().getProcessInstances());
