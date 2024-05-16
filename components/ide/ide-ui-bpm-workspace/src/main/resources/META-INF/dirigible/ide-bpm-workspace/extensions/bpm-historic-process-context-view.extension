@@ -1,5 +1,0 @@
-{
-    "module": "ide-bpm-workspace/services/bpm-historic-process-context-view.js",
-    "extensionPoint": "ide-view",
-    "description": "Business Process Context"
-}
