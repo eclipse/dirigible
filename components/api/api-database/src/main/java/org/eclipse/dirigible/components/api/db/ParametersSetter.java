@@ -9,26 +9,23 @@
  */
 package org.eclipse.dirigible.components.api.db;
 
-import java.io.ByteArrayInputStream;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.Set;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.database.NamedParameterStatement;
 import org.eclipse.dirigible.database.sql.DataTypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+
+import java.io.ByteArrayInputStream;
+import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * The Class ParametersSetter.
@@ -138,11 +135,25 @@ class ParametersSetter {
     private static void setNumber(PreparedStatement preparedStatement, int paramIndex, JsonElement parameterElement) throws SQLException {
         boolean isNumberParameterSet = false;
         int numberIndex = paramIndex;
-        try {
-            preparedStatement.setInt(numberIndex, parameterElement.getAsInt());
-            isNumberParameterSet = true;
-        } catch (SQLException | ClassCastException e) {
-            // Do nothing
+
+        double doubleValue = parameterElement.getAsDouble();
+        boolean floatingPointValue = doubleValue % 1 != 0;
+        if (floatingPointValue) {
+            try {
+                preparedStatement.setDouble(numberIndex, doubleValue);
+                return;
+            } catch (SQLException | ClassCastException e) {
+                // Do nothing
+            }
+        }
+
+        if (!isNumberParameterSet) {
+            try {
+                preparedStatement.setInt(numberIndex, parameterElement.getAsInt());
+                isNumberParameterSet = true;
+            } catch (SQLException | ClassCastException e) {
+                // Do nothing
+            }
         }
 
         if (!isNumberParameterSet) {
@@ -153,6 +164,7 @@ class ParametersSetter {
                 // Do nothing
             }
         }
+
         if (!isNumberParameterSet) {
             try {
                 preparedStatement.setLong(numberIndex, parameterElement.getAsLong());
@@ -161,6 +173,7 @@ class ParametersSetter {
                 // Do nothing
             }
         }
+
         if (!isNumberParameterSet) {
             try {
                 preparedStatement.setBigDecimal(numberIndex, parameterElement.getAsBigDecimal());
@@ -169,6 +182,7 @@ class ParametersSetter {
                 // Do nothing
             }
         }
+
         if (!isNumberParameterSet) {
             preparedStatement.setObject(numberIndex, parameterElement.getAsNumber()
                                                                      .toString());
@@ -266,6 +280,7 @@ class ParametersSetter {
                 throws SQLException;
     }
 
+
     /**
      * The Class BaseParamSetter.
      */
@@ -281,6 +296,7 @@ class ParametersSetter {
             throw new IllegalArgumentException("Wrong value [" + sourceParam + "] for parameter of type " + dataType);
         }
     }
+
 
     /**
      * The Class TextParamSetter.
@@ -341,6 +357,7 @@ class ParametersSetter {
             preparedStatement.setString(paramName, value);
         }
     }
+
 
     /**
      * The Class DateParamSetter.
@@ -436,6 +453,7 @@ class ParametersSetter {
             throwWrongValue(sourceParam, dataType);
         }
     }
+
 
     /**
      * The Class TimestampParamSetter.
@@ -557,6 +575,7 @@ class ParametersSetter {
         }
     }
 
+
     /**
      * The Class TimeParamSetter.
      */
@@ -654,6 +673,7 @@ class ParametersSetter {
         }
     }
 
+
     /**
      * The Class IntegerParamSetter.
      */
@@ -728,6 +748,7 @@ class ParametersSetter {
             throwWrongValue(sourceParam, dataType);
         }
     }
+
 
     /**
      * The Class TinyIntParamSetter.
@@ -804,6 +825,7 @@ class ParametersSetter {
         }
     }
 
+
     /**
      * The Class SmallIntParamSetter.
      */
@@ -878,6 +900,7 @@ class ParametersSetter {
             throwWrongValue(sourceParam, dataType);
         }
     }
+
 
     /**
      * The Class BigIntParamSetter.
@@ -956,6 +979,7 @@ class ParametersSetter {
         }
     }
 
+
     /**
      * The Class RealParamSetter.
      */
@@ -1032,6 +1056,7 @@ class ParametersSetter {
             throwWrongValue(sourceParam, dataType);
         }
     }
+
 
     /**
      * The Class DoubleParamSetter.
@@ -1110,6 +1135,7 @@ class ParametersSetter {
         }
     }
 
+
     /**
      * The Class BooleanParamSetter.
      */
@@ -1184,6 +1210,7 @@ class ParametersSetter {
             throwWrongValue(sourceParam, dataType);
         }
     }
+
 
     /**
      * The Class BlobParamSetter.
