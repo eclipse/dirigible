@@ -252,9 +252,14 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
      * @return the process instances
      */
     @GetMapping(value = "/bpm-processes/historic-instances")
-    public ResponseEntity<List<HistoricProcessInstance>> getHistoricProcessesInstances() {
-        List<HistoricProcessInstance> historicProcessInstances = getBpmService().getCompletedProcessInstances();
-        return ResponseEntity.ok(historicProcessInstances);
+    public ResponseEntity<List<HistoricProcessInstance>> getHistoricProcessesInstances(
+            @Nullable @RequestParam("businessKey") Optional<String> businessKey) {
+        if (businessKey.isPresent() && !businessKey.get()
+                                                   .isEmpty()) {
+            return ResponseEntity.ok(getBpmService().getCompletedProcessInstances(businessKey.get()));
+        } else {
+            return ResponseEntity.ok(getBpmService().getCompletedProcessInstances());
+        }
     }
 
     /**

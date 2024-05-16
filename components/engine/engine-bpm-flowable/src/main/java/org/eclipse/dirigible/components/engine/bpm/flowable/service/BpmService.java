@@ -347,6 +347,21 @@ public class BpmService {
     }
 
     /**
+     * Gets the completed historic process instances by business key pattern.
+     *
+     * @param businessKey the business key
+     * @return the process instances
+     */
+    public List<HistoricProcessInstance> getCompletedProcessInstances(String businessKey) {
+        return getBpmProviderFlowable().getProcessEngine()
+                                       .getHistoryService()
+                                       .createHistoricProcessInstanceQuery()
+                                       .processInstanceBusinessKeyLike("%" + businessKey + "%")
+                                       .finished()
+                                       .list();
+    }
+
+    /**
      * Get all jobs that exhausted their retry attempts and are considered "dead".
      *
      * @param processInstanceId the process instance id

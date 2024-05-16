@@ -18,6 +18,9 @@ ideBpmHistoricProcessInstancesView.config(["messageHubProvider", function (messa
 ideBpmHistoricProcessInstancesView.controller('IDEBpmHistoricProcessInstancesViewController', ['$scope', '$http', '$timeout', 'messageHub', function ($scope, $http, $timeout, messageHub) {
 
     $scope.instances = [];
+    $scope.model = {};
+    $scope.model.searchText = '';
+    $scope.displaySearch = false;
 
     setInterval(() => {
         $scope.fetchData();
@@ -29,7 +32,7 @@ ideBpmHistoricProcessInstancesView.controller('IDEBpmHistoricProcessInstancesVie
     };
 
     $scope.fetchData = function() {
-        $http.get('/services/ide/bpm/bpm-processes/historic-instances', { params: { 'limit': 100 } })
+        $http.get('/services/ide/bpm/bpm-processes/historic-instances', { params: { 'businessKey': $scope.model.searchText, 'limit': 100 } })
                 .then((response) => {
                     $scope.instances = response.data;
                 });
@@ -40,10 +43,28 @@ ideBpmHistoricProcessInstancesView.controller('IDEBpmHistoricProcessInstancesVie
     }
 
     $scope.selectionChanged = function (instance) {
-        //$scope.selectAll = $scope.instancesList.every(x => x.selected = false);
         messageHub.postMessage('historic.instance.selected', { instance: instance.id });
-//        instance.selected = true;
-//        this.selectedProcessInstanceId = instance.id;
     }
 
+     $scope.toggleSearch = function () {
+         $scope.displaySearch = !$scope.displaySearch;
+    }
+
+    $scope.applyFilter = function () {
+        $http.get('/services/ide/bpm/bpm-processes/historic-instances', { params: { 'businessKey': $scope.model.searchText, 'limit': 100 } })
+            .then((response) => {
+                $scope.instances = response.data;
+            });
+    }
+
+    $scope.inputSearchKeyUp = function (e) {
+        switch (e.key) {
+            case 'Escape':
+                $scope.model.searchText = '';
+                break;
+            case 'Enter':
+                $scope.applyFilter();
+                break;
+        }
+    }
 }]);
