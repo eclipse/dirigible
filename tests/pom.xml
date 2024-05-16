@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -23,7 +23,7 @@
 
 	<properties>
 		<license.header.location>../licensing-header.txt</license.header.location>
-		<selenide.version>7.3.1</selenide.version>
+		<selenide.version>7.2.1</selenide.version>
 	</properties>
 
 	<dependencyManagement>
@@ -38,7 +38,11 @@
 				<groupId>com.codeborne</groupId>
 				<artifactId>selenide</artifactId>
 				<version>${selenide.version}</version>
-				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.codeborne</groupId>
+				<artifactId>selenide-core</artifactId>
+				<version>${selenide.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
