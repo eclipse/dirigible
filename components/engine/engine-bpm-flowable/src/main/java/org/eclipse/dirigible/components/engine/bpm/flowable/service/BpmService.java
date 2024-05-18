@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ProcessDefinitionData;
@@ -31,8 +32,10 @@ import org.flowable.common.engine.impl.util.io.InputStreamSource;
 import org.flowable.editor.language.json.converter.BpmnJsonConverter;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.history.HistoricProcessInstance;
+import org.flowable.engine.history.HistoricProcessInstanceQuery;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.engine.runtime.ProcessInstanceQuery;
 import org.flowable.job.api.Job;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -253,12 +256,22 @@ public class BpmService {
      *
      * @return the process instances
      */
-    public List<ProcessInstanceData> getProcessInstances() {
+    public List<ProcessInstanceData> getProcessInstances(Optional<String> key, Optional<String> businessKey) {
         ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
+        ProcessInstanceQuery processInstanceQuery = processEngine.getRuntimeService()
+                                                                 .createProcessInstanceQuery();
 
-        List<ProcessInstance> processInstances = processEngine.getRuntimeService()
-                                                              .createProcessInstanceQuery()
-                                                              .list();
+        if (key.isPresent() && !key.get()
+                                   .isEmpty()) {
+            processInstanceQuery.processDefinitionKey(key.get());
+        }
+
+        if (businessKey.isPresent() && !businessKey.get()
+                                                   .isEmpty()) {
+            processInstanceQuery.processInstanceBusinessKeyLike("%" + businessKey.get() + "%");
+        }
+
+        List<ProcessInstance> processInstances = processInstanceQuery.list();
 
         List<ProcessInstanceData> results = new ArrayList<ProcessInstanceData>();
         for (ProcessInstance processInstance : processInstances) {
@@ -338,12 +351,22 @@ public class BpmService {
      *
      * @return the process instances
      */
-    public List<HistoricProcessInstance> getCompletedProcessInstances() {
-        return getBpmProviderFlowable().getProcessEngine()
-                                       .getHistoryService()
-                                       .createHistoricProcessInstanceQuery()
-                                       .finished()
-                                       .list();
+    public List<HistoricProcessInstance> getCompletedProcessInstances(Optional<String> definitionKey, Optional<String> businessKey) {
+        HistoricProcessInstanceQuery historicProcessInstanceQuery = getBpmProviderFlowable().getProcessEngine()
+                                                                                            .getHistoryService()
+                                                                                            .createHistoricProcessInstanceQuery();
+
+        if (definitionKey.isPresent() && !definitionKey.get()
+                                                       .isEmpty()) {
+            historicProcessInstanceQuery.processDefinitionKey(definitionKey.get());
+        }
+
+        if (businessKey.isPresent() && !businessKey.get()
+                                                   .isEmpty()) {
+            historicProcessInstanceQuery.processInstanceBusinessKeyLike("%" + businessKey.get() + "%");
+        }
+        return historicProcessInstanceQuery.finished()
+                                           .list();
     }
 
     /**

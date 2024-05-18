@@ -24,6 +24,7 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
     this.pageSize = 10;
     this.currentPage = 1;
     this.selectedProcessInstanceId = null;
+    this.selectedProcessDefinitionKey = null;
 
     this.currentFetchDataInstance = null;
 
@@ -41,7 +42,7 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
                 return;
             }
 
-            $http.get('/services/ide/bpm/bpm-processes/instances', { params: { 'id': this.searchText, 'limit': limit } })
+            $http.get('/services/ide/bpm/bpm-processes/instances', { params: { 'id': this.searchText, 'key': this.selectedProcessDefinitionKey, 'limit': 100 } })
                 .then((response) => {
                     if (this.instancesList.length < response.data.length) {
                         //messageHub.showAlertInfo("User instances", "A new user task has been added");
@@ -108,6 +109,17 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
 
     }
 
+        messageHub.onDidReceiveMessage('definition.selected', function (msg) {
+            $scope.$apply(function () {
+                if (msg.data.hasOwnProperty('definition')) {
+                    $scope.instances.selectedProcessDefinitionKey = msg.data.definition;
+                    $scope.instances.applyFilter();
+                } else {
+                    console.log("Process definition is missing from event!")
+                }
+            });
+        });
+
     this.getSelectedCount = function () {
         return this.instancesList.reduce((c, instance) => {
             if (instance.selected) c++;
@@ -120,7 +132,7 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
     }
 
     this.applyFilter = function () {
-        $http.get('/services/ide/bpm/bpm-processes/instances', { params: { 'id': this.searchText, 'limit': 100 } })
+        $http.get('/services/ide/bpm/bpm-processes/instances', { params: { 'id': this.searchText, 'key': this.selectedProcessDefinitionKey, 'limit': 100 } })
             .then((response) => {
                 this.instancesList = response.data;
             });

@@ -21,6 +21,7 @@ ideBpmHistoricProcessInstancesView.controller('IDEBpmHistoricProcessInstancesVie
     $scope.model = {};
     $scope.model.searchText = '';
     $scope.displaySearch = false;
+    $scope.selectedProcessDefinitionKey = null;
 
     setInterval(() => {
         $scope.fetchData();
@@ -32,7 +33,7 @@ ideBpmHistoricProcessInstancesView.controller('IDEBpmHistoricProcessInstancesVie
     };
 
     $scope.fetchData = function() {
-        $http.get('/services/ide/bpm/bpm-processes/historic-instances', { params: { 'businessKey': $scope.model.searchText, 'limit': 100 } })
+        $http.get('/services/ide/bpm/bpm-processes/historic-instances', { params: { 'businessKey': $scope.model.searchText, 'definitionKey': $scope.selectedProcessDefinitionKey, 'limit': 100 } })
                 .then((response) => {
                     $scope.instances = response.data;
                 });
@@ -51,11 +52,22 @@ ideBpmHistoricProcessInstancesView.controller('IDEBpmHistoricProcessInstancesVie
     }
 
     $scope.applyFilter = function () {
-        $http.get('/services/ide/bpm/bpm-processes/historic-instances', { params: { 'businessKey': $scope.model.searchText, 'limit': 100 } })
+        $http.get('/services/ide/bpm/bpm-processes/historic-instances', { params: { 'businessKey': $scope.model.searchText, 'definitionKey': $scope.selectedProcessDefinitionKey, 'limit': 100 } })
             .then((response) => {
                 $scope.instances = response.data;
             });
     }
+
+    messageHub.onDidReceiveMessage('definition.selected', function (msg) {
+        $scope.$apply(function () {
+            if (msg.data.hasOwnProperty('definition')) {
+                $scope.selectedProcessDefinitionKey = msg.data.definition;
+                $scope.applyFilter();
+            } else {
+                console.log("Process definition is missing from event!")
+            }
+        });
+    });
 
     $scope.inputSearchKeyUp = function (e) {
         switch (e.key) {

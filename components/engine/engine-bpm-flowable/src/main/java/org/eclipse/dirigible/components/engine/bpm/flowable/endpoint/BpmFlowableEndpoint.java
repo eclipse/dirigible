@@ -237,13 +237,7 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
     @GetMapping(value = "/bpm-processes/instances")
     public ResponseEntity<List<ProcessInstanceData>> getProcessesInstances(@Nullable @RequestParam("id") Optional<String> businessKey,
             @Nullable @RequestParam("key") Optional<String> key) {
-        if (key.isPresent()) {
-            return ResponseEntity.ok(getBpmService().getProcessInstanceByKey(key.get()));
-        } else if (businessKey.isPresent() && !businessKey.get()
-                                                          .isEmpty()) {
-            return ResponseEntity.ok(getBpmService().getProcessInstanceByBusinessKey(businessKey.get()));
-        }
-        return ResponseEntity.ok(getBpmService().getProcessInstances());
+        return ResponseEntity.ok(getBpmService().getProcessInstances(key, businessKey));
     }
 
     /**
@@ -253,13 +247,10 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
      */
     @GetMapping(value = "/bpm-processes/historic-instances")
     public ResponseEntity<List<HistoricProcessInstance>> getHistoricProcessesInstances(
+            @Nullable @RequestParam("definitionKey") Optional<String> definitionKey,
             @Nullable @RequestParam("businessKey") Optional<String> businessKey) {
-        if (businessKey.isPresent() && !businessKey.get()
-                                                   .isEmpty()) {
-            return ResponseEntity.ok(getBpmService().getCompletedProcessInstances(businessKey.get()));
-        } else {
-            return ResponseEntity.ok(getBpmService().getCompletedProcessInstances());
-        }
+
+        return ResponseEntity.ok(getBpmService().getCompletedProcessInstances(definitionKey, businessKey));
     }
 
     /**
