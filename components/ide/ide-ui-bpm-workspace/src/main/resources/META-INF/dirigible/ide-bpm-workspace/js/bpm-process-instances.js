@@ -19,12 +19,12 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
 
     this.selectAll = false;
     this.searchText = "";
-    this.filterBy = "";
     this.displaySearch = false;
     this.instancesList = [];
     this.pageSize = 10;
     this.currentPage = 1;
     this.selectedProcessInstanceId = null;
+    this.selectedProcessDefinitionKey = null;
 
     this.currentFetchDataInstance = null;
 
@@ -33,7 +33,7 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
             clearInterval(this.currentFetchDataInstance);
         }
 
-        this.currentFetchDatadInstance = setInterval(() => {
+        this.currentFetchDataInstance = setInterval(() => {
             const pageNumber = (args && args.pageNumber) || this.currentPage;
             const pageSize = (args && args.pageSize) || this.pageSize;
             const limit = pageNumber * pageSize;
@@ -42,7 +42,7 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
                 return;
             }
 
-            $http.get('/services/ide/bpm/bpm-processes/instances', { params: { 'condition': this.filterBy, 'limit': limit } })
+            $http.get('/services/ide/bpm/bpm-processes/instances', { params: { 'id': this.searchText, 'key': this.selectedProcessDefinitionKey, 'limit': 100 } })
                 .then((response) => {
                     if (this.instancesList.length < response.data.length) {
                         //messageHub.showAlertInfo("User instances", "A new user task has been added");
@@ -109,11 +109,16 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
 
     }
 
-    this.clearSearch = function () {
-        this.searchText = "";
-        this.filterBy = "";
-        fetchData();
-    }
+        messageHub.onDidReceiveMessage('definition.selected', function (msg) {
+            $scope.$apply(function () {
+                if (msg.data.hasOwnProperty('definition')) {
+                    $scope.instances.selectedProcessDefinitionKey = msg.data.definition;
+                    $scope.instances.applyFilter();
+                } else {
+                    console.log("Process definition is missing from event!")
+                }
+            });
+        });
 
     this.getSelectedCount = function () {
         return this.instancesList.reduce((c, instance) => {
@@ -127,34 +132,23 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
     }
 
     this.applyFilter = function () {
-        this.filterBy = this.searchText;
-        fetchData();
+        $http.get('/services/ide/bpm/bpm-processes/instances', { params: { 'id': this.searchText, 'key': this.selectedProcessDefinitionKey, 'limit': 100 } })
+            .then((response) => {
+                this.instancesList = response.data;
+            });
     }
 
     this.getNoDataMessage = function () {
-        return this.filterBy ? 'No instances found.' : 'No instances have been detected.';
+        return this.searchText ? 'No instances found.' : 'No instances have been detected.';
     }
 
     this.inputSearchKeyUp = function (e) {
-        if (this.lastSearchKeyUp) {
-            $timeout.cancel(this.lastSearchKeyUp);
-            this.lastSearchKeyUp = null;
-        }
-
         switch (e.key) {
             case 'Escape':
-                this.searchText = this.filterBy || '';
+                this.searchText = '';
                 break;
             case 'Enter':
                 this.applyFilter();
-                break;
-            default:
-                if (this.filterBy !== this.searchText) {
-                    this.lastSearchKeyUp = $timeout(() => {
-                        this.lastSearchKeyUp = null;
-                        this.applyFilter();
-                    }, 250);
-                }
                 break;
         }
     }

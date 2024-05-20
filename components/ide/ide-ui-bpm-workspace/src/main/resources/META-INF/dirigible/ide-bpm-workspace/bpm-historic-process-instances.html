@@ -36,6 +36,14 @@
     <fd-toolbar-spacer></fd-toolbar-spacer>
     <fd-button compact="true" dg-type="transparent" glyph="sap-icon--refresh" title="Refresh"
                aria-label="Refresh" ng-click="reload()"></fd-button>
+    <fd-button dg-type="{{ displaySearch ? 'emphasized' : 'transparent' }}" glyph="sap-icon--search"
+               title="Toggle search" aria-label="Toggle search" ng-click="toggleSearch()">
+    </fd-button>
+</fd-toolbar>
+<fd-toolbar ng-if="displaySearch">
+    <fd-input type="search" placeholder="Search by businessKey" ng-keyup="inputSearchKeyUp($event)"
+              ng-model="model.searchText" dg-focus="true">
+    </fd-input>
 </fd-toolbar>
 <fd-scrollbar class="dg-fill-parent">
     <table fd-table outer-borders="none" display-mode="compact" class="dg-list-border-bottom">
@@ -49,7 +57,7 @@
         </tr>
         </thead>
         <tbody fd-table-body>
-        <tr fd-table-row ng-repeat="next in instances track by next.id" hoverable="false" activable="false">
+        <tr fd-table-row ng-repeat="next in instances track by next.id" activable="true" hoverable="true" dg-selected="next.selected" ng-click="selectionChanged(next)">
             <td fd-table-cell>{{next.id}}</td>
             <td fd-table-cell>{{next.processDefinitionId}}</td>
             <td fd-table-cell>{{next.startTime | date:'medium'}}</td>

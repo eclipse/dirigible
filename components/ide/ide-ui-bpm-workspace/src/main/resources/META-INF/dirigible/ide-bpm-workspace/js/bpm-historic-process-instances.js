@@ -11,10 +11,17 @@
  */
 let ideBpmHistoricProcessInstancesView = angular.module('ide-bpm-historic-process-instances', ['ideUI', 'ideView']);
 
+ideBpmHistoricProcessInstancesView.config(["messageHubProvider", function (messageHubProvider) {
+    messageHubProvider.eventIdPrefix = 'bpm';
+}]);
 
-ideBpmHistoricProcessInstancesView.controller('IDEBpmHistoricProcessInstancesViewController', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout,) {
+ideBpmHistoricProcessInstancesView.controller('IDEBpmHistoricProcessInstancesViewController', ['$scope', '$http', '$timeout', 'messageHub', function ($scope, $http, $timeout, messageHub) {
 
     $scope.instances = [];
+    $scope.model = {};
+    $scope.model.searchText = '';
+    $scope.displaySearch = false;
+    $scope.selectedProcessDefinitionKey = null;
 
     setInterval(() => {
         $scope.fetchData();
@@ -26,7 +33,7 @@ ideBpmHistoricProcessInstancesView.controller('IDEBpmHistoricProcessInstancesVie
     };
 
     $scope.fetchData = function() {
-        $http.get('/services/ide/bpm/bpm-processes/historic-instances', { params: { 'limit': 100 } })
+        $http.get('/services/ide/bpm/bpm-processes/historic-instances', { params: { 'businessKey': $scope.model.searchText, 'definitionKey': $scope.selectedProcessDefinitionKey, 'limit': 100 } })
                 .then((response) => {
                     $scope.instances = response.data;
                 });
@@ -34,5 +41,42 @@ ideBpmHistoricProcessInstancesView.controller('IDEBpmHistoricProcessInstancesVie
 
     $scope.getNoDataMessage = function () {
         return 'No historic instances have been found.';
+    }
+
+    $scope.selectionChanged = function (instance) {
+        messageHub.postMessage('historic.instance.selected', { instance: instance.id });
+    }
+
+     $scope.toggleSearch = function () {
+         $scope.displaySearch = !$scope.displaySearch;
+    }
+
+    $scope.applyFilter = function () {
+        $http.get('/services/ide/bpm/bpm-processes/historic-instances', { params: { 'businessKey': $scope.model.searchText, 'definitionKey': $scope.selectedProcessDefinitionKey, 'limit': 100 } })
+            .then((response) => {
+                $scope.instances = response.data;
+            });
+    }
+
+    messageHub.onDidReceiveMessage('definition.selected', function (msg) {
+        $scope.$apply(function () {
+            if (msg.data.hasOwnProperty('definition')) {
+                $scope.selectedProcessDefinitionKey = msg.data.definition;
+                $scope.applyFilter();
+            } else {
+                console.log("Process definition is missing from event!")
+            }
+        });
+    });
+
+    $scope.inputSearchKeyUp = function (e) {
+        switch (e.key) {
+            case 'Escape':
+                $scope.model.searchText = '';
+                break;
+            case 'Enter':
+                $scope.applyFilter();
+                break;
+        }
     }
 }]);

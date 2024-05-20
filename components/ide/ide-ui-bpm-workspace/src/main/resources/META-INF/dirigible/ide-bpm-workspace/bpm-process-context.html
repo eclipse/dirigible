@@ -34,9 +34,9 @@
 <body class="dg-vbox">
 <fd-toolbar compact="true">
     <fd-toolbar-spacer></fd-toolbar-spacer>
-    <fd-button compact="true" dg-type="transparent" state="{{ selectedVariable !== null ? '' : 'disabled' }}" glyph="sap-icon--edit" title="Edit"
+    <fd-button compact="true" dg-type="transparent" state="{{ selectedVariable !== null && !disableModificationButtons ? '' : 'disabled' }}" glyph="sap-icon--edit" title="Edit"
                aria-label="Edit" ng-click="openEditDialog()"></fd-button>
-    <fd-button compact="true" dg-type="transparent" state="{{ currentProcessInstanceId !== null ? '' : 'disabled' }}" glyph="sap-icon--add" title="Add"
+    <fd-button compact="true" dg-type="transparent" state="{{ currentProcessInstanceId !== null && !disableModificationButtons ? '' : 'disabled' }}" glyph="sap-icon--add" title="Add"
                aria-label="Add" ng-click="openAddDialog()"></fd-button>
     <fd-button compact="true" dg-type="transparent" glyph="sap-icon--refresh" title="Refresh"
                aria-label="Refresh" ng-click="reload()"></fd-button>
@@ -57,7 +57,7 @@
             <td fd-table-cell>{{next.id}}</td>
             <td fd-table-cell>{{next.processInstanceId}}</td>
             <td fd-table-cell>{{next.name}}</td>
-            <td fd-table-cell>{{next.typeName}}</td>
+            <td fd-table-cell>{{next.typeName ? next.typeName : next.variableTypeName}}</td>
             <td fd-table-cell>{{next.value}}</td>
         </tr>
         <tr ng-if="variablesList.length === 0" fd-table-row>

@@ -39,6 +39,7 @@ import org.flowable.identitylink.api.IdentityLinkInfo;
 import org.flowable.image.ProcessDiagramGenerator;
 import org.flowable.job.api.Job;
 import org.flowable.task.api.Task;
+import org.flowable.variable.api.history.HistoricVariableInstance;
 import org.flowable.variable.api.persistence.entity.VariableInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -236,12 +237,7 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
     @GetMapping(value = "/bpm-processes/instances")
     public ResponseEntity<List<ProcessInstanceData>> getProcessesInstances(@Nullable @RequestParam("id") Optional<String> businessKey,
             @Nullable @RequestParam("key") Optional<String> key) {
-        if (key.isPresent()) {
-            return ResponseEntity.ok(getBpmService().getProcessInstanceByKey(key.get()));
-        } else if (businessKey.isPresent()) {
-            return ResponseEntity.ok(getBpmService().getProcessInstanceByBusinessKey(businessKey.get()));
-        }
-        return ResponseEntity.ok(getBpmService().getProcessInstances());
+        return ResponseEntity.ok(getBpmService().getProcessInstances(key, businessKey));
     }
 
     /**
@@ -250,9 +246,30 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
      * @return the process instances
      */
     @GetMapping(value = "/bpm-processes/historic-instances")
-    public ResponseEntity<List<HistoricProcessInstance>> getHistoricProcessesInstances() {
-        List<HistoricProcessInstance> historicProcessInstances = getBpmService().getCompletedProcessInstances();
-        return ResponseEntity.ok(historicProcessInstances);
+    public ResponseEntity<List<HistoricProcessInstance>> getHistoricProcessesInstances(
+            @Nullable @RequestParam("definitionKey") Optional<String> definitionKey,
+            @Nullable @RequestParam("businessKey") Optional<String> businessKey) {
+
+        return ResponseEntity.ok(getBpmService().getCompletedProcessInstances(definitionKey, businessKey));
+    }
+
+    /**
+     * List historic process instance variables.
+     *
+     * @param id the process instance id
+     * @return process variables list
+     */
+    @GetMapping(value = "/bpm-processes/historic-instances/{id}/variables")
+    public ResponseEntity<List<HistoricVariableInstance>> getProcessHistoricInstanceVariables(@PathVariable("id") String id) {
+        BpmService bpmService = getBpmService();
+        List<HistoricVariableInstance> variables = bpmService.getBpmProviderFlowable()
+                                                             .getProcessEngine()
+                                                             .getHistoryService()
+                                                             .createHistoricVariableInstanceQuery()
+                                                             .processInstanceId(id)
+                                                             .list();
+
+        return ResponseEntity.ok(variables);
     }
 
     /**
@@ -274,7 +291,6 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
      */
     @GetMapping(value = "/bpm-processes/instance/{id}/variables")
     public ResponseEntity<List<VariableInstance>> getProcessInstanceVariables(@PathVariable("id") String id) {
-
         BpmService bpmService = getBpmService();
         List<VariableInstance> variables = bpmService.getBpmProviderFlowable()
                                                      .getProcessEngine()
