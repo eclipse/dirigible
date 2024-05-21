@@ -9,8 +9,6 @@
  */
 package org.eclipse.dirigible.components.data.sources.service;
 
-import java.util.StringTokenizer;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
@@ -18,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.StringTokenizer;
 
 /**
  * The Class CustomDataSourcesService.
@@ -72,11 +72,13 @@ public class CustomDataSourcesService {
         String databaseUrl = Configuration.get(name + "_URL");
         String databaseUsername = Configuration.get(name + "_USERNAME");
         String databasePassword = Configuration.get(name + "_PASSWORD");
+        String databaseSchema = Configuration.get(name + "_SCHEMA");
 
         if ((databaseDriver != null) && (databaseUrl != null) && (databaseUsername != null) && (databasePassword != null)) {
             org.eclipse.dirigible.components.data.sources.domain.DataSource ds =
                     new org.eclipse.dirigible.components.data.sources.domain.DataSource("ENV_" + name, name, null, databaseDriver,
                             databaseUrl, databaseUsername, databasePassword);
+            ds.setSchema(databaseSchema);
             ds.updateKey();
             ds.setLifecycle(ArtefactLifecycle.NEW);
             DataSource maybe = dataSourceService.findByKey(ds.getKey());
