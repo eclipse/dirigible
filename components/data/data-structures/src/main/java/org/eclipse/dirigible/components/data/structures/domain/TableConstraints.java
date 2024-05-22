@@ -9,29 +9,17 @@
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.annotations.Expose;
 import jakarta.annotation.Nullable;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-
+import jakarta.persistence.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.gson.annotations.Expose;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class TableConstraints.
@@ -96,8 +84,6 @@ public class TableConstraints {
     public TableConstraints() {
         super();
     }
-
-
 
     /**
      * Gets the id.
@@ -271,10 +257,7 @@ public class TableConstraints {
      */
     @Override
     public String toString() {
-        return "TableConstraints [id=" + id + ", primaryKey=" + primaryKey + ", foreignKeys="
-                + (foreignKeys != null ? Objects.toString(foreignKeys) : "null") + ", uniqueIndexes="
-                + (uniqueIndexes != null ? Objects.toString(uniqueIndexes) : "null") + ", checks="
-                + (checks != null ? Objects.toString(checks) : "null") + ", table=" + table.getName() + "]";
+        return "TableConstraints{" + "id=" + id + ", primaryKey=" + primaryKey + ", foreignKeys=" + foreignKeys + ", uniqueIndexes="
+                + uniqueIndexes + ", checks=" + checks + ", table=" + table + '}';
     }
-
 }
