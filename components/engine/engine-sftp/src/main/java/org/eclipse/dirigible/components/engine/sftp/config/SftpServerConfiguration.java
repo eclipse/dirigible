@@ -45,9 +45,9 @@ public class SftpServerConfiguration {
      */
     @Bean
     SshServer sshServer() throws IOException {
-        String portValue = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_SFTP_PORT", "8022");
         SshServer sshd = SshServer.setUpDefaultServer();
-        logger.info("Will use port [{}] for SFTP", portValue);
+
+        int port = getSftpPort();
         sshd.setPort(port);
         sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(new File("host.ser").toPath()));
         sshd.setSubsystemFactories(Collections.singletonList(new SftpSubsystemFactory()));
@@ -62,6 +62,13 @@ public class SftpServerConfiguration {
         sshd.start();
         logger.info("SFTP server started at: " + defaultHome);
         return sshd;
+    }
+
+    private int getSftpPort() {
+        String portValue = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_SFTP_PORT", "8022");
+        int port = Integer.parseInt(portValue);
+        logger.info("Will use port [{}] for SFTP", portValue);
+        return port;
     }
 
 }
