@@ -9,12 +9,6 @@
  */
 package org.eclipse.dirigible.components.engine.sftp.config;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
-import java.util.Collections;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory;
 import org.apache.sshd.server.SshServer;
@@ -24,6 +18,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.util.Collections;
 
 /**
  * The Class FtpServerConfiguration.
@@ -37,7 +37,6 @@ public class SftpServerConfiguration {
     /** The Constant REPOSITORY_ROOT. */
     private static final String REPOSITORY_ROOT = "./target/dirigible/cms/dirigible/repository/root";
 
-
     /**
      * Ssh server.
      *
@@ -47,13 +46,8 @@ public class SftpServerConfiguration {
     @Bean
     SshServer sshServer() throws IOException {
         String portValue = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_SFTP_PORT", "8022");
-        int port = 8022;
-        try {
-            port = Integer.parseInt(portValue);
-        } catch (NumberFormatException e) {
-            logger.error("Wrong configuration for SFTP port provided: " + portValue);
-        }
         SshServer sshd = SshServer.setUpDefaultServer();
+        logger.info("Will use port [{}] for SFTP", portValue);
         sshd.setPort(port);
         sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(new File("host.ser").toPath()));
         sshd.setSubsystemFactories(Collections.singletonList(new SftpSubsystemFactory()));
