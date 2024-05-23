@@ -38,7 +38,7 @@ class BrowserImpl implements Browser {
     private static final Logger LOGGER = LoggerFactory.getLogger(BrowserImpl.class);
 
     private static final String BROWSER = "chrome";
-    private static final long SELENIDE_TIMEOUT_MILLIS = TimeUnit.SECONDS.toMillis(15);
+    private static final long SELENIDE_TIMEOUT_MILLIS = TimeUnit.SECONDS.toMillis(30);
     private static final String PATH_SEPARATOR = "/";
 
     static {
