@@ -89,6 +89,9 @@ public class OData2ODataMTransformer {
                 .append("\t\"sqlTable\": \"")
                 .append(entity.getTable())
                 .append("\",\n")
+                .append("\t\"sqlSchema\": \"")
+                .append(entity.getSchema())
+                .append("\",\n")
                 .append("\t\"dataStructureType\": \"")
                 .append(tableMetadata.getKind())
                 .append("\",\n");

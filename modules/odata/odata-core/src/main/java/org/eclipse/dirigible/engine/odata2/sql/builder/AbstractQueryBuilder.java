@@ -12,6 +12,7 @@ package org.eclipse.dirigible.engine.odata2.sql.builder;
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.edm.*;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementBuilder;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
@@ -56,7 +57,7 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
     private final List<SQLStatementParam> sqlStatementParams;
 
     /** The where clause. */
-    private SQLWhereClause whereClause;
+    private final SQLWhereClause whereClause;
 
     /**
      * Instantiates a new abstract query builder.
@@ -71,7 +72,6 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
         this.structuralTypesInJoin = new HashSet<>();
         this.sqlStatementParams = new ArrayList<>();
     }
-
 
     /**
      * Gets the statement params.
@@ -128,7 +128,7 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
     public void addStatementParam(EdmStructuralType entity, EdmProperty property, Object value) throws EdmException {
         if (property.isSimple()) {
             EdmTableBinding.ColumnInfo info = getSQLTableColumnInfo(entity, property);
-            addStatementParam(new SQLStatementParam(value, (EdmSimpleType) property.getType(), info));
+            addStatementParam(new SQLStatementParam(value, property.getType(), info));
         } else {
             throw new IllegalArgumentException("Not Implemented");
         }
@@ -152,8 +152,20 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
     public String getSQLTableName(final EdmStructuralType target) { // TODO use context
         boolean caseSensitive = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
         EdmTableBinding mapping = tableBinding.getEdmTableBinding(target);
+
+        Optional<String> schemaName = mapping.getSchemaName();
+
+        return schemaName.isEmpty() ? getTableName(mapping) : (escape(schemaName.get()) + "." + getTableName(mapping));
+    }
+
+    private String getTableName(EdmTableBinding mapping) {
+        boolean caseSensitive = DirigibleConfig.DATABASE_NAMES_CASE_SENSITIVE.getBooleanValue();
         String tableName = mapping.getTableName();
-        return caseSensitive ? ("\"" + tableName + "\"") : tableName;
+        return caseSensitive ? escape(tableName) : tableName;
+    }
+
+    private String escape(String str) {
+        return "\"" + str + "\"";
     }
 
     /**

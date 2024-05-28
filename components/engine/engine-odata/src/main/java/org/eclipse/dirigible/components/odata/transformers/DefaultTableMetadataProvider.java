@@ -9,10 +9,11 @@
  */
 package org.eclipse.dirigible.components.odata.transformers;
 
-import java.sql.SQLException;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.odata.api.ODataEntity;
 import org.eclipse.dirigible.components.odata.api.TableMetadataProvider;
+
+import java.sql.SQLException;
 
 /**
  * The Class DefaultTableMetadataProvider.
@@ -48,7 +49,8 @@ public class DefaultTableMetadataProvider implements TableMetadataProvider {
     @Override
     public Table getTableMetadata(ODataEntity odataEntityDefinition) throws SQLException {
         String table = odataEntityDefinition.getTable();
-        String schema = odataDatabaseMetadataUtil.getOdataArtifactTypeSchema(table);
+        String schema = null != odataEntityDefinition.getSchema() ? odataEntityDefinition.getSchema()
+                : odataDatabaseMetadataUtil.getOdataArtifactTypeSchema(table);
         return odataDatabaseMetadataUtil.getTableMetadata(table, schema);
     }
 }
