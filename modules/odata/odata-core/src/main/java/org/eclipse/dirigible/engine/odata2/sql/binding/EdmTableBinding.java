@@ -12,10 +12,7 @@ package org.eclipse.dirigible.engine.odata2.sql.binding;
 import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.edm.provider.Mapping;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.String.format;
 
@@ -74,6 +71,7 @@ public class EdmTableBinding extends Mapping {
         }
     }
 
+
     /** The Constant NO_PROPERTY_FOUND. */
     private static final String NO_PROPERTY_FOUND = "No sql binding configuration found in the mapping configuration for property %s."
             + " Did you map this property in the %s mapping?";
@@ -87,10 +85,10 @@ public class EdmTableBinding extends Mapping {
             PROPERTY_WRONG_CONFIGURATION + " The value %s is not of expected type List and String.";
 
     /** The binding data. */
-    private Map<String, Object> bindingData;
+    private final Map<String, Object> bindingData;
 
     /** The target fqn. */
-    private String targetFqn;
+    private final String targetFqn;
 
     /**
      * Instantiates a new edm table binding.
@@ -118,6 +116,10 @@ public class EdmTableBinding extends Mapping {
      */
     public String getTableName() {
         return readMandatoryConfig("sqlTable", String.class);
+    }
+
+    public Optional<String> getSchemaName() {
+        return readConfig("sqlSchema", String.class);
     }
 
     /**
@@ -171,9 +173,9 @@ public class EdmTableBinding extends Mapping {
             if (joinColumn instanceof List) {
                 return (List<String>) joinColumn;
             } else if (refKeys.get(property) instanceof String) {
-                return Arrays.asList(String.valueOf(refKeys.get(property)));
+                return Collections.singletonList(String.valueOf(refKeys.get(property)));
             } else if (refKeys.get(property) instanceof Map) {
-                return Arrays.asList(((Map<String, String>) refKeys.get(property)).get(secondaryProperty));
+                return Collections.singletonList(((Map<String, String>) refKeys.get(property)).get(secondaryProperty));
             } else {
                 throw new IllegalArgumentException(format(format(JOIN_COLUMN_UNSUPPORTED_CONFIGURATION, ref, joinColumn)));
             }
@@ -216,11 +218,7 @@ public class EdmTableBinding extends Mapping {
      * @return true, if is property mapped
      */
     public boolean isPropertyMapped(String propertyName) {
-        if (bindingData.containsKey(propertyName)) {
-            return true;
-        } else {
-            return false;
-        }
+        return bindingData.containsKey(propertyName);
     }
 
     /**
@@ -276,11 +274,7 @@ public class EdmTableBinding extends Mapping {
     private <T> boolean isOfType(String key, Class<T> clazz) {
         if (bindingData.containsKey(key)) {
             Object property = bindingData.get(key);
-            if (clazz.isInstance(property)) {
-                return true;
-            } else {
-                return false;
-            }
+            return clazz.isInstance(property);
         }
 
         throw new IllegalArgumentException(format(NO_PROPERTY_FOUND, key, targetFqn));
@@ -295,13 +289,17 @@ public class EdmTableBinding extends Mapping {
      * @return the t
      */
     private <T> T readMandatoryConfig(String key, Class<T> clazz) {
+        return readConfig(key, clazz).orElseThrow(() -> new IllegalArgumentException(format(NO_PROPERTY_FOUND, key, targetFqn)));
+    }
+
+    private <T> Optional<T> readConfig(String key, Class<T> clazz) {
         if (bindingData.containsKey(key)) {
             Object property = bindingData.get(key);
             if (clazz.isInstance(property)) {
-                return clazz.cast(property);
+                return Optional.of(clazz.cast(property));
             }
         }
-        throw new IllegalArgumentException(format(NO_PROPERTY_FOUND, key, targetFqn));
+        return Optional.empty();
     }
 
     /**
@@ -314,9 +312,7 @@ public class EdmTableBinding extends Mapping {
     public boolean hasJoinColumnTo(EdmStructuralType target) throws EdmException {
         if (target instanceof EdmEntityType || target instanceof EdmComplexType) {
             String jc = "_ref_" + target.getName();
-            if (bindingData.containsKey(jc)) {
-                return true;
-            }
+            return bindingData.containsKey(jc);
         }
         return false;
     }
@@ -394,7 +390,7 @@ public class EdmTableBinding extends Mapping {
                 String name = String.valueOf(value.get("name"));
                 String sqlType = String.valueOf(value.get("sqlType"));
                 return new ColumnInfo(name, sqlType); // TODO read this from the database metadata and perform a
-                                                      // conversion there
+                // conversion there
             } else {
                 throw new IllegalArgumentException(format(PROPERTY_WRONG_CONFIGURATION, propertyName));
             }
@@ -484,7 +480,7 @@ public class EdmTableBinding extends Mapping {
          * @param columnName the column name
          */
         public ColumnInfo(final String columnName) {
-            this(columnName, (String) null);
+            this(columnName, null);
         }
 
         /**

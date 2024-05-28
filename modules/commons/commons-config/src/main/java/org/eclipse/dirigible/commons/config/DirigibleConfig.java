@@ -43,6 +43,8 @@ public enum DirigibleConfig {
     /** The multi tenant mode enabled. */
     MULTI_TENANT_MODE_ENABLED("DIRIGIBLE_MULTI_TENANT_MODE", Boolean.FALSE.toString()),
 
+    DATABASE_NAMES_CASE_SENSITIVE("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", Boolean.FALSE.toString()),
+
     /** The tenant subdomain regex. */
     TENANT_SUBDOMAIN_REGEX("DIRIGIBLE_TENANT_SUBDOMAIN_REGEX", "^([^\\.]+)\\..+$"),
 
