@@ -89,12 +89,13 @@ public class OData2ODataMTransformer {
                 .append("\t\"sqlTable\": \"")
                 .append(entity.getTable())
                 .append("\",\n")
-                .append("\t\"sqlSchema\": \"")
-                .append(entity.getSchema())
-                .append("\",\n")
+
                 .append("\t\"dataStructureType\": \"")
                 .append(tableMetadata.getKind())
-                .append("\",\n");
+                .append("\",\n")
+                .append("\t\"sqlSchema\": ");
+            buff.append(null == entity.getSchema() ? "null" : ("\"" + entity.getSchema() + "\""))
+                .append(",\n");
 
             boolean isPretty = Boolean.parseBoolean(Configuration.get(ODataDatabaseMetadataUtil.DIRIGIBLE_GENERATE_PRETTY_NAMES, "true"));
 
