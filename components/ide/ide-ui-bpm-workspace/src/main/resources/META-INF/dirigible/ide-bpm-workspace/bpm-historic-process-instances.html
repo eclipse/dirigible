@@ -42,19 +42,19 @@
         <thead fd-table-header sticky="true">
         <tr fd-table-row>
             <th fd-table-header-cell>Id</th>
+            <th fd-table-header-cell>Business Key</th>
             <th fd-table-header-cell>Definition Id</th>
             <th fd-table-header-cell>Start Time</th>
             <th fd-table-header-cell>End Time</th>
-            <th fd-table-header-cell>Duration (Millis)</th>
         </tr>
         </thead>
         <tbody fd-table-body>
         <tr fd-table-row ng-repeat="next in instances track by next.id" hoverable="false" activable="false">
             <td fd-table-cell>{{next.id}}</td>
+            <td fd-table-cell>{{next.businessKey}}</td>
             <td fd-table-cell>{{next.processDefinitionId}}</td>
             <td fd-table-cell>{{next.startTime | date:'medium'}}</td>
             <td fd-table-cell>{{next.endTime | date:'medium'}}</td>
-            <td fd-table-cell>{{next.durationInMillis}}</td>
         </tr>
         <tr ng-if="instances.length === 0" fd-table-row>
             <td fd-table-cell no-data="true">{{getNoDataMessage()}}</td>
