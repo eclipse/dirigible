@@ -37,9 +37,11 @@ import org.apache.olingo.odata2.api.uri.info.*;
 import org.apache.olingo.odata2.core.commons.ContentType;
 import org.apache.olingo.odata2.core.uri.KeyPredicateImpl;
 import org.apache.olingo.odata2.core.uri.UriInfoImpl;
-import org.eclipse.dirigible.engine.odata2.sql.api.*;
+import org.eclipse.dirigible.engine.odata2.sql.api.OData2EventHandler;
+import org.eclipse.dirigible.engine.odata2.sql.api.SQLProcessor;
+import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatement;
+import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
 import org.eclipse.dirigible.engine.odata2.sql.builder.*;
-import org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils;
 import org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils;
 import org.eclipse.dirigible.engine.odata2.sql.utils.SingleConnectionDataSource;
 import org.slf4j.Logger;
@@ -51,7 +53,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.getProperties;
@@ -314,20 +319,18 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
                                          .buildSelectEntitySetQuery((UriInfo) uriInfo, readIdsForExpand, getContext());
             try (PreparedStatement statement = createSelectStatement(query, connection)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    ResultSetReader.ExpandAccumulator currentAccumulator = new ResultSetReader.ExpandAccumulator(targetEntityType);
                     while (resultSet.next()) {
                         boolean hasGeneratedId = query.hasKeyGeneratedPresent(targetEntitySet.getEntityType());
                         ResultSetReader.ResultSetEntity currentTargetEntity =
                                 resultSetReader.getResultSetEntity(query, targetEntityType, properties, resultSet, hasGeneratedId);
                         logger.info("Current entity set object is {}", currentTargetEntity);
-                        if (!currentAccumulator.isAccumulatorFor(currentTargetEntity)) {
-                            currentAccumulator = new ResultSetReader.ExpandAccumulator(currentTargetEntity);
-                            entitiesFeed.add(currentAccumulator);
-                        }
+
+                        ResultSetReader.ExpandAccumulator аccumulator = new ResultSetReader.ExpandAccumulator(currentTargetEntity);
+                        entitiesFeed.add(аccumulator);
 
                         List<ArrayList<NavigationPropertySegment>> expandEntities = uriInfo.getExpand();
                         if (hasExpand(expandEntities)) {
-                            resultSetReader.accumulateExpandedEntities(query, resultSet, currentAccumulator, expandEntities);
+                            resultSetReader.accumulateExpandedEntities(query, resultSet, аccumulator, expandEntities);
                         }
                     }
                     boolean needsNextLink = query.isServersidePaging() && entitiesFeed.size() == this.getSQLQueryBuilder()

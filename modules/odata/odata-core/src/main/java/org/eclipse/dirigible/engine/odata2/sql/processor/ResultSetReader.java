@@ -9,7 +9,10 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.processor;
 
-import org.apache.olingo.odata2.api.edm.*;
+import org.apache.olingo.odata2.api.edm.EdmEntityType;
+import org.apache.olingo.odata2.api.edm.EdmException;
+import org.apache.olingo.odata2.api.edm.EdmProperty;
+import org.apache.olingo.odata2.api.edm.EdmStructuralType;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLProcessor;
@@ -305,6 +308,7 @@ public class ResultSetReader {
         }
     }
 
+
     /**
      * The Class ResultSetEntity.
      */
@@ -386,6 +390,11 @@ public class ResultSetReader {
         @Override
         public int hashCode() {
             return Objects.hash(keys);
+        }
+
+        @Override
+        public String toString() {
+            return "ResultSetEntity{" + "data=" + data + ", keys=" + keys + ", entityType=" + entityType + '}';
         }
     }
 
