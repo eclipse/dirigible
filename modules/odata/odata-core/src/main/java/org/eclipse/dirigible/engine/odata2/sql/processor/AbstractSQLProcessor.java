@@ -319,18 +319,20 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
                                          .buildSelectEntitySetQuery((UriInfo) uriInfo, readIdsForExpand, getContext());
             try (PreparedStatement statement = createSelectStatement(query, connection)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
+                    ResultSetReader.ExpandAccumulator currentAccumulator = new ResultSetReader.ExpandAccumulator(targetEntityType);
                     while (resultSet.next()) {
                         boolean hasGeneratedId = query.hasKeyGeneratedPresent(targetEntitySet.getEntityType());
                         ResultSetReader.ResultSetEntity currentTargetEntity =
                                 resultSetReader.getResultSetEntity(query, targetEntityType, properties, resultSet, hasGeneratedId);
                         logger.info("Current entity set object is {}", currentTargetEntity);
-
-                        ResultSetReader.ExpandAccumulator аccumulator = new ResultSetReader.ExpandAccumulator(currentTargetEntity);
-                        entitiesFeed.add(аccumulator);
+                        if (!currentAccumulator.isAccumulatorFor(currentTargetEntity) || currentTargetEntity.keys.isEmpty()) {
+                            currentAccumulator = new ResultSetReader.ExpandAccumulator(currentTargetEntity);
+                            entitiesFeed.add(currentAccumulator);
+                        }
 
                         List<ArrayList<NavigationPropertySegment>> expandEntities = uriInfo.getExpand();
                         if (hasExpand(expandEntities)) {
-                            resultSetReader.accumulateExpandedEntities(query, resultSet, аccumulator, expandEntities);
+                            resultSetReader.accumulateExpandedEntities(query, resultSet, currentAccumulator, expandEntities);
                         }
                     }
                     boolean needsNextLink = query.isServersidePaging() && entitiesFeed.size() == this.getSQLQueryBuilder()
