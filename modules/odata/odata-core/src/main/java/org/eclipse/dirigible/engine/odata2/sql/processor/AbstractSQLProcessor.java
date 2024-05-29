@@ -37,9 +37,11 @@ import org.apache.olingo.odata2.api.uri.info.*;
 import org.apache.olingo.odata2.core.commons.ContentType;
 import org.apache.olingo.odata2.core.uri.KeyPredicateImpl;
 import org.apache.olingo.odata2.core.uri.UriInfoImpl;
-import org.eclipse.dirigible.engine.odata2.sql.api.*;
+import org.eclipse.dirigible.engine.odata2.sql.api.OData2EventHandler;
+import org.eclipse.dirigible.engine.odata2.sql.api.SQLProcessor;
+import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatement;
+import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
 import org.eclipse.dirigible.engine.odata2.sql.builder.*;
-import org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils;
 import org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils;
 import org.eclipse.dirigible.engine.odata2.sql.utils.SingleConnectionDataSource;
 import org.slf4j.Logger;
@@ -51,7 +53,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.getProperties;
@@ -320,7 +325,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
                         ResultSetReader.ResultSetEntity currentTargetEntity =
                                 resultSetReader.getResultSetEntity(query, targetEntityType, properties, resultSet, hasGeneratedId);
                         logger.info("Current entity set object is {}", currentTargetEntity);
-                        if (!currentAccumulator.isAccumulatorFor(currentTargetEntity)) {
+                        if (!currentAccumulator.isAccumulatorFor(currentTargetEntity) || currentTargetEntity.keys.isEmpty()) {
                             currentAccumulator = new ResultSetReader.ExpandAccumulator(currentTargetEntity);
                             entitiesFeed.add(currentAccumulator);
                         }
