@@ -23,7 +23,8 @@ public class DropViewBuilder extends AbstractDropSqlBuilder {
     private static final Logger logger = LoggerFactory.getLogger(DropViewBuilder.class);
 
     /** The view. */
-    private String view = null;
+    private final String view;
+    private final String schema;
 
     /**
      * Instantiates a new drop view builder.
@@ -31,8 +32,9 @@ public class DropViewBuilder extends AbstractDropSqlBuilder {
      * @param dialect the dialect
      * @param view the view
      */
-    public DropViewBuilder(ISqlDialect dialect, String view) {
+    public DropViewBuilder(ISqlDialect dialect, String schema, String view) {
         super(dialect);
+        this.schema = schema;
         this.view = view;
     }
 
@@ -67,11 +69,16 @@ public class DropViewBuilder extends AbstractDropSqlBuilder {
      * @param sql the sql
      */
     protected void generateView(StringBuilder sql) {
-        String viewName = (isCaseSensitive()) ? encapsulate(this.getView(), true) : this.getView();
         sql.append(SPACE)
            .append(KEYWORD_VIEW)
-           .append(SPACE)
-           .append(viewName);
+           .append(SPACE);
+        if (schema != null) {
+            String schemaName = (isCaseSensitive()) ? encapsulate(this.getView(), true) : this.getView();
+            sql.append(schemaName)
+               .append(".");
+        }
+        String viewName = (isCaseSensitive()) ? encapsulate(this.getView(), true) : this.getView();
+        sql.append(viewName);
     }
 
     /**
