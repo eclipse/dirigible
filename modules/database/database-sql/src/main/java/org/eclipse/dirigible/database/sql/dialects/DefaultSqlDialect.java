@@ -9,25 +9,7 @@
  */
 package org.eclipse.dirigible.database.sql.dialects;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import org.eclipse.dirigible.database.sql.DataType;
-import org.eclipse.dirigible.database.sql.DatabaseArtifactTypes;
-import org.eclipse.dirigible.database.sql.DatabaseType;
-import org.eclipse.dirigible.database.sql.ISqlDialect;
-import org.eclipse.dirigible.database.sql.ISqlKeywords;
-import org.eclipse.dirigible.database.sql.SqlException;
+import org.eclipse.dirigible.database.sql.*;
 import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
@@ -38,6 +20,14 @@ import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
 import org.eclipse.dirigible.database.sql.builders.sequence.LastValueIdentityBuilder;
 import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The Default SQL Dialect.
@@ -338,10 +328,7 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setString(1, schema);
         ResultSet resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-            return true;
-        }
-        return false;
+        return resultSet.next();
     }
 
     /**
@@ -491,7 +478,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
      */
     @Override
     public int count(Connection connection, String table) throws SQLException {
-        String sql = countQuery(table);
+        return count(connection, null, table);
+    }
+
+    public int count(Connection connection, String schema, String table) throws SQLException {
+        String sql = countQuery(schema, table);
         PreparedStatement statement = connection.prepareStatement(sql);
         ResultSet resultSet = statement.executeQuery();
         if (resultSet.next()) {
@@ -523,9 +514,14 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
      */
     @Override
     public String countQuery(String table) {
-        table = normalizeTableName(table);
+        return countQuery(null, table);
+    }
+
+    public String countQuery(String schema, String table) {
+        String normalizeTableName = normalizeTableName(table);
         return new SelectBuilder(this).column("COUNT(*)")
-                                      .from(quoteTableName(table))
+                                      .from(quoteTableName(normalizeTableName))
+                                      .schema(schema)
                                       .build();
     }
 
