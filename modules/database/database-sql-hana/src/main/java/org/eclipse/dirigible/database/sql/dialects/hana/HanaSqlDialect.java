@@ -157,11 +157,11 @@ public class HanaSqlDialect extends
     }
 
     /** The Constant FUNCTIONS. */
-    public static final Set<String> FUNCTIONS = Collections.synchronizedSet(new HashSet<String>(Arrays.asList(new String[] {"abap_alphanum",
-            "abap_numc", "abap_lower", "abap_upper", "abs", "acos", "add_days", "add_months", "add_months_last", "add_nano100",
-            "add_seconds", "add_workdays", "add_years", "ascii", "asin", "atan", "atan2", "auto_corr", "bintohex", "bintonhex", "bintostr",
-            "bitand", "bitcount", "bitnot", "bitor", "bitset", "bitunset", "bitxor", "cardinality", "cast", "ceil", "char", "coalesce",
-            "concat", "concat_naz", "convert_currency", "convert_unit", "corr", "corr_spearman", "cos", "cosh", "cot", "cross_corr",
+    public static final Set<String> FUNCTIONS = Collections.synchronizedSet(new HashSet<String>(Arrays.asList("abap_alphanum", "abap_numc",
+            "abap_lower", "abap_upper", "abs", "acos", "add_days", "add_months", "add_months_last", "add_nano100", "add_seconds",
+            "add_workdays", "add_years", "ascii", "asin", "atan", "atan2", "auto_corr", "bintohex", "bintonhex", "bintostr", "bitand",
+            "bitcount", "bitnot", "bitor", "bitset", "bitunset", "bitxor", "cardinality", "cast", "ceil", "char", "coalesce", "concat",
+            "concat_naz", "convert_currency", "convert_unit", "corr", "corr_spearman", "cos", "cosh", "cot", "cross_corr",
             "current_connection", "current_date", "current_identity_value", "current_mvcc_snapshot_timestamp", "current_object_schema",
             "current_schema", "current_time", "current_timestamp", "current_transaction_isolation_level",
             "current_update_statement_sequence", "current_update_transaction", "current_user", "current_utcdate", "current_utctime",
@@ -186,10 +186,7 @@ public class HanaSqlDialect extends
 
             "count", "sum", "avg", "min", "max",
 
-            "and", "or", "between", "binary", "case", "div", "in", "is", "not", "null", "like", "rlike", "xor"
-
-    })));
-
+            "and", "or", "between", "binary", "case", "div", "in", "is", "not", "null", "like", "rlike", "xor")));
 
     /**
      * Nextval.
@@ -292,36 +289,32 @@ public class HanaSqlDialect extends
      */
     @Override
     public boolean exists(Connection connection, String schema, String artefact, int type) throws SQLException {
-        boolean exists = false;
         try {
             switch (type) {
                 case DatabaseArtifactTypes.TABLE:
                 case DatabaseArtifactTypes.VIEW:
-                    exists = count(connection, artefact) >= 0;
-                    break;
+                    return count(connection, schema, artefact) >= 0;
                 case DatabaseArtifactTypes.SYNONYM:
-                    exists = isSynonymExisting(connection, schema, artefact);
-                    break;
+                    return isSynonymExisting(connection, schema, artefact);
                 case DatabaseArtifactTypes.FUNCTION:
-                    exists = isFunctionExisting(connection, schema, artefact);
-                    break;
+                    return isFunctionExisting(connection, schema, artefact);
                 case DatabaseArtifactTypes.PROCEDURE:
-                    exists = isProcedureExisting(connection, schema, artefact);
-                    break;
+                    return isProcedureExisting(connection, schema, artefact);
                 case DatabaseArtifactTypes.SEQUENCE:
-                    exists = isSequenceExisting(connection, schema, artefact);
-                    break;
+                    return isSequenceExisting(connection, schema, artefact);
                 case DatabaseArtifactTypes.SCHEMA:
-                    exists = isSchemaExisting(connection, artefact);
-                    break;
+                    return isSchemaExisting(connection, artefact);
                 case DatabaseArtifactTypes.TABLE_TYPE:
-                    exists = isTableTypeExisting(connection, schema, artefact);
-                    break;
+                    return isTableTypeExisting(connection, schema, artefact);
+                default:
+                    throw new IllegalArgumentException("Cannot check existence of artifact [" + artefact + "] in schema [" + schema
+                            + "] because type [" + type + "] is not supporeted.");
             }
-        } catch (Exception e) {
+        } catch (Exception ex) {
             // Do nothing, because the artifact do not exist
+            logger.debug("Assuming artifact [{}] in schema  [{}] of type [{}] does not exist", artefact, schema, type, ex);
+            return false;
         }
-        return exists;
     }
 
     /**

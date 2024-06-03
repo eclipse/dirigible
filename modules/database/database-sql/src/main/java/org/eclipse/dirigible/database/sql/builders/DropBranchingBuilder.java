@@ -50,7 +50,11 @@ public class DropBranchingBuilder extends AbstractSqlBuilder {
      * @return the drop view builder
      */
     public DropViewBuilder view(String view) {
-        return new DropViewBuilder(getDialect(), view);
+        return view(null, view);
+    }
+
+    public DropViewBuilder view(String schema, String view) {
+        return new DropViewBuilder(getDialect(), schema, view);
     }
 
     /**
