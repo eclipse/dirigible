@@ -103,8 +103,9 @@ public class DropSequenceBuilder extends AbstractDropSqlBuilder {
         this.dropOption = dropOption;
     }
 
-    public void unsetDropOption() {
+    public DropSequenceBuilder unsetDropOption() {
         this.dropOption = null;
+        return this;
     }
 
 }
