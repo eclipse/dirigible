@@ -154,8 +154,8 @@ public class SchemasSynchronizer extends MultitenantBaseSynchronizer<Schema, Lon
                           Table m = getTableService().findByKey(schema.constructKey(Table.ARTEFACT_TYPE, location, t.getName()));
                           if (m != null) {
                               t.setId(m.getId());
+                              TablesSynchronizer.reassignIds(t, m);
                           }
-                          TablesSynchronizer.reassignIds(t, m);
                       });
                 schema.getViews()
                       .forEach(v -> {
