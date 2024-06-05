@@ -29,7 +29,7 @@ public class HanaDropSequenceBuilder extends DropSequenceBuilder {
      * @param sequence the sequence
      */
     public HanaDropSequenceBuilder(ISqlDialect dialect, String sequence) {
-        super(dialect, sequence);
+        super(dialect, sequence, KEYWORD_DATABASE_DROP_RESTRICT);
     }
 
     /**

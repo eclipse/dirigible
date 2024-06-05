@@ -23,7 +23,9 @@ public class DropSequenceBuilder extends AbstractDropSqlBuilder {
     private static final Logger logger = LoggerFactory.getLogger(DropSequenceBuilder.class);
 
     /** The sequence. */
-    private String sequence = null;
+    private final String sequence;
+
+    private String dropOption;
 
     /**
      * Instantiates a new drop sequence builder.
@@ -34,6 +36,12 @@ public class DropSequenceBuilder extends AbstractDropSqlBuilder {
     public DropSequenceBuilder(ISqlDialect dialect, String sequence) {
         super(dialect);
         this.sequence = sequence;
+    }
+
+    public DropSequenceBuilder(ISqlDialect dialect, String sequence, String dropOption) {
+        super(dialect);
+        this.sequence = sequence;
+        this.dropOption = dropOption;
     }
 
     /**
@@ -52,13 +60,21 @@ public class DropSequenceBuilder extends AbstractDropSqlBuilder {
         // SEQUENCE
         generateSequence(sql);
 
+        generateDropOption(sql);
+
         String generated = sql.toString();
 
-        if (logger.isTraceEnabled()) {
-            logger.trace("generated: " + generated);
-        }
+        logger.trace("generated: " + generated);
 
         return generated;
+    }
+
+    protected void generateDropOption(StringBuilder sql) {
+        if (dropOption != null) {
+            sql.append(SPACE)
+               .append(dropOption)
+               .append(SPACE);
+        }
     }
 
     /**
@@ -81,6 +97,14 @@ public class DropSequenceBuilder extends AbstractDropSqlBuilder {
      */
     public String getSequence() {
         return sequence;
+    }
+
+    public void setDropOption(String dropOption) {
+        this.dropOption = dropOption;
+    }
+
+    public void unsetDropOption() {
+        this.dropOption = null;
     }
 
 }
