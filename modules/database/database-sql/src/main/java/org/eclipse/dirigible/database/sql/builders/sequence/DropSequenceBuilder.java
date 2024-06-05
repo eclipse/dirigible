@@ -72,8 +72,7 @@ public class DropSequenceBuilder extends AbstractDropSqlBuilder {
     protected void generateDropOption(StringBuilder sql) {
         if (dropOption != null) {
             sql.append(SPACE)
-               .append(dropOption)
-               .append(SPACE);
+               .append(dropOption);
         }
     }
 
