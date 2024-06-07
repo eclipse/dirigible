@@ -12,22 +12,22 @@ angular.module('page', ["ideUI", "ideView"])
 
 		let params = ViewParameters.get();
 		if (Object.keys(params).length) {
-#foreach ($property in $properties)
+#foreach ($column in $columns)
 #if($property.isDateType)
-			if (params?.entity?.${property.name}From) {
-				params.entity.${property.name}From = new Date(params.entity.${property.name}From);
+			if (params?.entity?.${column.alias}From) {
+				params.entity.${column.alias}From = new Date(params.entity.${column.alias}From);
 			}
-			if (params?.entity?.${property.name}To) {
-				params.entity.${property.name}To = new Date(params.entity.${property.name}To);
+			if (params?.entity?.${column.alias}To) {
+				params.entity.${column.alias}To = new Date(params.entity.${column.alias}To);
 			}
 #end
 #end
 			$scope.entity = params.entity ?? {};
 			$scope.selectedMainEntityKey = params.selectedMainEntityKey;
 			$scope.selectedMainEntityId = params.selectedMainEntityId;
-#foreach ($property in $properties)
+#foreach ($column in $columns)
 #if($property.widgetType == "DROPDOWN")
-			$scope.options${property.name} = params.options${property.name};
+			$scope.options${column.alias} = params.options${column.alias};
 #end
 #end
 		}
@@ -52,21 +52,21 @@ angular.module('page', ["ideUI", "ideView"])
 					}
 				},
 			};
-#foreach ($property in $properties)
-#if($property.dataTypeTypescript == 'number' || $property.dataTypeTypescript == 'boolean')
-			if (entity.${property.name}) {
-				filter.${dollar}filter.equals.${property.name} = entity.${property.name};
+#foreach ($column in $columns)
+#if($column.typeTypescript == 'number' || $column.typeTypescript == 'boolean')
+			if (entity.${column.alias}) {
+				filter.${dollar}filter.equals.${column.alias} = entity.${column.alias};
 			}
-#elseif($property.dataTypeTypescript == 'string')
-			if (entity.${property.name}) {
-				filter.${dollar}filter.contains.${property.name} = entity.${property.name};
+#elseif($column.typeTypescript == 'string')
+			if (entity.${column.alias}) {
+				filter.${dollar}filter.contains.${column.alias} = entity.${column.alias};
 			}
-#elseif($property.dataTypeTypescript == 'Date')
-			if (entity.${property.name}From) {
-				filter.${dollar}filter.greaterThanOrEqual.${property.name} = entity.${property.name}From;
+#elseif($column.typeTypescript == 'Date')
+			if (entity.${column.alias}From) {
+				filter.${dollar}filter.greaterThanOrEqual.${column.alias} = entity.${column.alias}From;
 			}
-			if (entity.${property.name}To) {
-				filter.${dollar}filter.lessThanOrEqual.${property.name} = entity.${property.name}To;
+			if (entity.${column.alias}To) {
+				filter.${dollar}filter.lessThanOrEqual.${column.alias} = entity.${column.alias}To;
 			}
 #end
 #end

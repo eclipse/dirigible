@@ -23,30 +23,30 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 					lessThanOrEqual: {}
 				},
 			};
-#foreach ($property in $properties)
-#if($property.dataTypeTypescript == 'number' || $property.dataTypeTypescript == 'boolean')
-			if (filterEntity.${property.name}) {
-				filter.${dollar}filter.equals.${property.name} = filterEntity.${property.name};
+#foreach ($column in $columns)
+#if($column.typeTypescript == 'number' || $column.typeTypescript == 'boolean')
+			if (filterEntity.${column.alias}) {
+				filter.${dollar}filter.equals.${column.alias} = filterEntity.${column.alias};
 			}
-#elseif($property.dataTypeTypescript == 'string')
-			if (filterEntity.${property.name}) {
-				filter.${dollar}filter.contains.${property.name} = filterEntity.${property.name};
+#elseif($column.typeTypescript == 'string')
+			if (filterEntity.${column.alias}) {
+				filter.${dollar}filter.contains.${column.alias} = filterEntity.${column.alias};
 			}
-#elseif($property.dataTypeTypescript == 'Date')
-			if (filterEntity.${property.name}From) {
-				filter.${dollar}filter.greaterThanOrEqual.${property.name} = filterEntity.${property.name}From;
+#elseif($column.typeTypescript == 'Date')
+			if (filterEntity.${column.alias}From) {
+				filter.${dollar}filter.greaterThanOrEqual.${column.alias} = filterEntity.${column.alias}From;
 			}
-			if (filterEntity.${property.name}To) {
-				filter.${dollar}filter.lessThanOrEqual.${property.name} = filterEntity.${property.name}To;
+			if (filterEntity.${column.alias}To) {
+				filter.${dollar}filter.lessThanOrEqual.${column.alias} = filterEntity.${column.alias}To;
 			}
 #end
 #end
 
             $scope.filter = filter;
 
-    #foreach ($property in $properties)
+    #foreach ($column in $columns)
         #if($property.widgetType == "DROPDOWN")
-			$scope.options${property.name} = params.options${property.name};
+			$scope.options${column.alias} = params.options${column.alias};
         #end
     #end
 		}
@@ -69,10 +69,10 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 #if($hasDates)
 
 					response.data.forEach(e => {
-#foreach ($property in $properties)
+#foreach ($column in $columns)
 #if($property.isDateType)
-						if (e.${property.name}) {
-							e.${property.name} = new Date(e.${property.name});
+						if (e.${column.alias}) {
+							e.${column.alias} = new Date(e.${column.alias});
 						}
 #end
 #end
@@ -88,12 +88,12 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
         };
         $scope.loadPage($scope.filter);
 
-#foreach ($property in $properties)
+#foreach ($column in $columns)
     #if($property.widgetType == "DROPDOWN")
-		${dollar}scope.options${property.name}Value = function (optionKey) {
-			for (let i = 0; i < ${dollar}scope.options${property.name}.length; i++) {
-				if (${dollar}scope.options${property.name}[i].value === optionKey) {
-					return ${dollar}scope.options${property.name}[i].text;
+		${dollar}scope.options${column.alias}Value = function (optionKey) {
+			for (let i = 0; i < ${dollar}scope.options${column.alias}.length; i++) {
+				if (${dollar}scope.options${column.alias}[i].value === optionKey) {
+					return ${dollar}scope.options${column.alias}[i].text;
 				}
 			}
 			return null;

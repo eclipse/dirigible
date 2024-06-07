@@ -5,16 +5,26 @@
  */
 const reportFileTemplate = dirigibleRequire("template-application-ui-angular/template/ui/reportFile");
 const generateUtils = dirigibleRequire("ide-generate-service/template/generateUtils");
-// const parameterUtils = dirigibleRequire("ide-generate-service/template/parameterUtils");
+const parameterUtils = dirigibleRequire("ide-generate-service/template/parameterUtils");
 
 exports.generate = function (model, parameters) {
-    model = JSON.parse(model).model;
+    model = JSON.parse(model);
     let templateSources = exports.getTemplate(parameters).sources;
-    // parameterUtils.process(model, parameters)
+    model?.columns?.forEach(e => {
+        const parsedDataType = parameterUtils.parseDataTypes(e.type);
+        e.typeJava = parsedDataType.java;
+        e.typeTypescript = parsedDataType.ts;
+    });
     if (parameters.extensionPoint === undefined) {
         parameters.extensionPoint = parameters.projectName;
     }
-    console.error(`Parameters are: ${JSON.stringify(parameters)}`);
+    if (parameters.name === undefined) {
+        parameters.name = parameters.fileName;
+    }
+    if (parameters.perspectiveName === undefined) {
+        parameters.perspectiveName = parameters.fileName;
+    }
+    console.error(`Model is: ${JSON.stringify(model)}`);
     return generateUtils.generateGeneric(model, parameters, templateSources);
 };
 

@@ -1,0 +1,38 @@
+import { Query } from "sdk/db";
+
+export interface ${name} {
+#foreach ($column in $columns)
+    readonly ${column.alias}: ${column.typeTypescript};
+#end
+}
+
+export interface ${name}Filter {
+#foreach ($column in $columns)
+    readonly ${column.alias}?: ${column.typeTypescript};
+#end
+}
+
+export interface ${name}PaginatedFilter extends ${name}Filter {
+    readonly "$limit"?: number;
+    readonly "$offset"?: number;
+}
+
+export class ${name}Repository {
+
+    private readonly datasourceName?: string;
+
+    constructor(datasourceName?: string) {
+        this.datasourceName = datasourceName;
+    }
+
+    public findAll(filter: ${name}PaginatedFilter): ${name}[] {
+        const sql = `${query}`;
+        return Query.execute(sql, [], this.datasourceName);
+    }
+
+    public count(filter: ${name}Filter): number {
+        const sql = `select count(*) as REPORT_COUNT from (${query})`;
+        return Query.execute(sql, [], this.datasourceName)[0].REPORT_COUNT;
+    }
+
+}

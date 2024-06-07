@@ -186,6 +186,7 @@ angular.module('page', ['ideUI', 'ideView', 'ideWorkspace'])
 		}
 
 		$scope.save = function (_keySet, event) {
+			$scope.generateQuery();
 			if (event) event.preventDefault();
 			if ($scope.forms.editor.$valid && !$scope.state.error) {
 				$scope.state.busyText = "Saving...";
@@ -1332,7 +1333,7 @@ angular.module('page', ['ideUI', 'ideView', 'ideWorkspace'])
 						if ($scope.report.columns[i].aggregate !== undefined && $scope.report.columns[i].aggregate !== "NONE") {
 							$scope.query += ")";
 						}
-						$scope.query += ' as ' + $scope.report.columns[i].alias + ', ';
+						$scope.query += ` as "${$scope.report.columns[i].alias}", `;
 					}
 				}
 			}
@@ -1386,6 +1387,7 @@ angular.module('page', ['ideUI', 'ideView', 'ideWorkspace'])
 					$scope.query += $scope.report.orderings[i].column + " " + $scope.report.orderings[i].direction;
 				}
 			}
+			$scope.report.query = $scope.query;
 		}
 
 		$scope.dataParameters = ViewParameters.get();

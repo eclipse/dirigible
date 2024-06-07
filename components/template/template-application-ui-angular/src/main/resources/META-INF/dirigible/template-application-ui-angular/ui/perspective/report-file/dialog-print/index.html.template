@@ -23,10 +23,8 @@
             <table fd-table display-mode="compact" inner-borders="top" outer-borders="none">
                 <thead fd-table-header sticky="true">
                     <tr fd-table-row>
-                #foreach ($property in $properties)
-                    #if(!$property.dataAutoIncrement)
-						<th fd-table-header-cell>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</th>
-                    #end
+                #foreach ($column in $columns)
+						<th fd-table-header-cell>${column.alias}</th>
                 #end
                     </tr>
                 </thead>
@@ -35,55 +33,8 @@
                         <td fd-table-cell no-data="true">No data available.</td>
                     </tr>
                     <tr fd-table-row hoverable="true" ng-repeat="next in data">
-            #foreach ($property in $properties) 
-                #if(!$property.dataAutoIncrement && $property.widgetIsMajor)
-                    #if($property.widgetType == "DROPDOWN")
-						<td fd-table-cell hoverable="true" activable="true">{{options${property.name}Value(next.${property.name})}}</td>
-                    #elseif($property.widgetType == "EMAIL")
-						<td fd-table-cell>
-							<a href="mailto:{{next.${property.name}}}" class="fd-link">{{next.${property.name}}}</a>
-						</td>
-                    #elseif($property.widgetType == "URL")
-						<td fd-table-cell>
-							<a href="{{next.${property.name}}}" target="_blank" class="fd-link">{{next.${property.name}}}</a>
-						</td>
-                    #elseif($property.widgetType == "TEL")
-						<td fd-table-cell>
-							<a href="tel:{{next.${property.name}}}" class="fd-link">{{next.${property.name}}}</a>
-						</td>
-                    #elseif($property.widgetType == "COLOR")
-						<td fd-table-cell hoverable="true" activable="true">
-							<fd-input type="color" ng-model="next.${property.name}" ng-readonly="true"></fd-input>
-						</td>
-                    #elseif($property.widgetType == "WEEK")
-						<td fd-table-cell hoverable="true" activable="true">
-							<fd-input type="week" ng-model="next.${property.name}" ng-readonly="true"></fd-input>
-						</td>
-                    #elseif($property.widgetType == "MONTH")
-						<td fd-table-cell hoverable="true" activable="true">
-							<fd-input type="month" ng-model="next.${property.name}" ng-readonly="true"></fd-input>
-						</td>
-                    #elseif($property.widgetType == "TIME")
-						<td fd-table-cell hoverable="true" activable="true">
-							<fd-input type="time" ng-model="next.${property.name}" ng-readonly="true"></fd-input>
-						</td>
-                    #elseif($property.widgetType == "DATETIME-LOCAL")
-						<td fd-table-cell hoverable="true" activable="true">
-							<fd-input type="datetime-local" ng-model="next.${property.name}" ng-readonly="true"></fd-input>
-						</td>
-                    #elseif($property.widgetType == "DATE")
-						<td fd-table-cell hoverable="true" activable="true">
-							<fd-input type="date" ng-model="next.${property.name}" ng-readonly="true"></fd-input>
-						</td>
-                    #elseif($property.widgetType == "CHECKBOX")
-						<td fd-table-cell hoverable="true" activable="true">
-							<fd-checkbox id="id${property.name}" compact="false" ng-disabled="true" ng-model="next.${property.name}"></fd-checkbox>
-							<fd-checkbox-label for="id${property.name}" empty="true"></fd-checkbox-label>
-						</td>
-                    #else
-						<td fd-table-cell hoverable="true" activable="true">{{next.${property.name}}}</td>
-                    #end
-                #end
+            #foreach ($column in $columns) 
+						<td fd-table-cell hoverable="true" activable="true">{{next.${column.alias}}}</td>
             #end
                     </tr>
                 </tbody>

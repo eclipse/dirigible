@@ -3,7 +3,18 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
+
 exports.getSources = function (parameters) {
+    const sources = [];
+
+    sources.push(...getReportPerspectiveSources());
+    sources.push(...getTableReportBackendSources());
+    sources.push(...getTableReportUISource());
+
+    return sources;
+};
+
+function getReportPerspectiveSources() {
     return [
         // Location: "gen/ui/perspective"
         {
@@ -32,6 +43,52 @@ exports.getSources = function (parameters) {
             rename: "gen/ui/Reports/perspective.js",
             collection: "generateReportModels"
         },
+    ];
+}
+
+function getTableReportBackendSources() {
+    return [
+        {
+            location: "/template-application-dao/dao/reportFileEntity.ts.template",
+            action: "generate",
+            rename: "gen/dao/{{perspectiveName}}/{{name}}Repository.ts",
+            engine: "velocity",
+            collection: "reportModels"
+        },
+        {
+            location: "/template-application-rest/api/utils/HttpUtils.ts.template",
+            action: "copy",
+            rename: "gen/api/utils/HttpUtils.ts",
+        }, {
+            location: "/template-application-rest/api/utils/ForbiddenError.ts.template",
+            action: "copy",
+            rename: "gen/api/utils/ForbiddenError.ts",
+        }, {
+            location: "/template-application-rest/api/utils/ValidationError.ts.template",
+            action: "copy",
+            rename: "gen/api/utils/ValidationError.ts",
+        }, {
+            location: "/template-application-rest/api/reportFileEntity.ts.template",
+            action: "generate",
+            rename: "gen/api/{{perspectiveName}}/{{name}}Service.ts",
+            engine: "velocity",
+            collection: "reportModels"
+        }, {
+            location: "/template-application-rest/project.json.mjs",
+            action: "generate",
+            rename: "project.json",
+            engine: "javascript"
+        }, {
+            location: "/template-application-rest/tsconfig.json.template",
+            action: "generate",
+            rename: "tsconfig.json",
+            engine: "velocity"
+        }
+    ];
+}
+
+function getTableReportUISource() {
+    return [
         // Location: "gen/ui/perspective/list"
         {
             location: "/template-application-ui-angular/ui/perspective/report-file/dialog-window/controller.js.template",
@@ -159,4 +216,4 @@ exports.getSources = function (parameters) {
             rename: "gen/ui/Reports/{{fileName}}/dialog-print/print.js",
             collection: "generateReportModels"
         }];
-};
+}

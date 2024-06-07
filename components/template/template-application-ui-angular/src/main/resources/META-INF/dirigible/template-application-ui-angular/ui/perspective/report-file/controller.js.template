@@ -36,18 +36,6 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				action
 			);
 		};
-
-		$scope.triggerEntityAction = function (action) {
-			messageHub.showDialogWindow(
-				action.id,
-				{
-					id: $scope.entity.${primaryKeysString}
-				},
-				null,
-				true,
-				action
-			);
-		};
 		//-----------------Custom Actions-------------------//
 
 		function resetPagination() {
