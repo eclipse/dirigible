@@ -19,10 +19,10 @@ exports.generate = function (model, parameters) {
         parameters.extensionPoint = parameters.projectName;
     }
     if (parameters.name === undefined) {
-        parameters.name = parameters.fileName;
+        parameters.name = model.name;
     }
     if (parameters.perspectiveName === undefined) {
-        parameters.perspectiveName = parameters.fileName;
+        parameters.perspectiveName = model.name;
     }
     console.error(`Model is: ${JSON.stringify(model)}`);
     return generateUtils.generateGeneric(model, parameters, templateSources);
