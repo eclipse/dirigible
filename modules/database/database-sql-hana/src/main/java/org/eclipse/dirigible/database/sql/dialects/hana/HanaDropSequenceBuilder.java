@@ -29,7 +29,7 @@ public class HanaDropSequenceBuilder extends DropSequenceBuilder {
      * @param sequence the sequence
      */
     public HanaDropSequenceBuilder(ISqlDialect dialect, String sequence) {
-        super(dialect, sequence);
+        super(dialect, sequence, KEYWORD_DATABASE_DROP_RESTRICT);
     }
 
     /**
@@ -49,7 +49,7 @@ public class HanaDropSequenceBuilder extends DropSequenceBuilder {
         generateSequence(sql);
 
         // RESTRICT
-        generateRestrict(sql);
+        generateDropOption(sql);
 
         String generated = sql.toString();
 
@@ -60,13 +60,4 @@ public class HanaDropSequenceBuilder extends DropSequenceBuilder {
         return generated;
     }
 
-    /**
-     * Generate restrict.
-     *
-     * @param sql the sql
-     */
-    protected void generateRestrict(StringBuilder sql) {
-        sql.append(SPACE)
-           .append(KEYWORD_DATABASE_DROP_RESTRICT);
-    }
 }
