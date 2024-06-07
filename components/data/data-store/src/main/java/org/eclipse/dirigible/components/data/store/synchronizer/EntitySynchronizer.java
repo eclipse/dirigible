@@ -173,7 +173,7 @@ public class EntitySynchronizer extends BaseSynchronizer<Entity, Long> {
                           .equals(ArtefactLifecycle.NEW)) {
                     dataStore.addMapping(entity.getKey(), prepareContent(entity));
                     dataStore.initialize();
-                    callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                    callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                 }
                 break;
             case UPDATE:
@@ -182,11 +182,11 @@ public class EntitySynchronizer extends BaseSynchronizer<Entity, Long> {
                     dataStore.removeMapping(entity.getKey());
                     dataStore.addMapping(entity.getKey(), prepareContent(entity));
                     dataStore.initialize();
-                    callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                    callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                 }
                 if (entity.getLifecycle()
                           .equals(ArtefactLifecycle.FAILED)) {
-                    callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                    callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                     return false;
                 }
                 break;
@@ -199,7 +199,7 @@ public class EntitySynchronizer extends BaseSynchronizer<Entity, Long> {
                                  .equals(ArtefactLifecycle.FAILED)) {
                     dataStore.removeMapping(entity.getKey());
                     dataStore.initialize();
-                    callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                    callback.registerState(this, wrapper, ArtefactLifecycle.DELETED);
                 }
                 break;
             case START:
@@ -231,11 +231,8 @@ public class EntitySynchronizer extends BaseSynchronizer<Entity, Long> {
             dataStore.initialize();
             getService().delete(entity);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, entity, ArtefactLifecycle.DELETED, e.getMessage());
+            callback.registerState(this, entity, ArtefactLifecycle.DELETED, e);
         }
     }
 

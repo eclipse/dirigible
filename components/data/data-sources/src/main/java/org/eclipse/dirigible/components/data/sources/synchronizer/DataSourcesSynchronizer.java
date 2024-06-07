@@ -169,13 +169,13 @@ public class DataSourcesSynchronizer extends BaseSynchronizer<DataSource, Long> 
                 case CREATE:
                     if (datasource.getLifecycle()
                                   .equals(ArtefactLifecycle.NEW)) {
-                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                     }
                     break;
                 case UPDATE:
                     if (datasource.getLifecycle()
                                   .equals(ArtefactLifecycle.MODIFIED)) {
-                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                     }
                     if (datasource.getLifecycle()
                                   .equals(ArtefactLifecycle.FAILED)) {
@@ -189,15 +189,14 @@ public class DataSourcesSynchronizer extends BaseSynchronizer<DataSource, Long> 
                                          .equals(ArtefactLifecycle.UPDATED)
                             || datasource.getLifecycle()
                                          .equals(ArtefactLifecycle.FAILED)) {
-                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED);
                     }
                     break;
             }
             return true;
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
             callback.addError(e.getMessage());
-            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
+            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e);
             return false;
         }
     }
@@ -220,9 +219,8 @@ public class DataSourcesSynchronizer extends BaseSynchronizer<DataSource, Long> 
                 getService().delete(datasource);
             }
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
             callback.addError(e.getMessage());
-            callback.registerState(this, datasource, ArtefactLifecycle.DELETED, e.getMessage());
+            callback.registerState(this, datasource, ArtefactLifecycle.DELETED, e);
         }
     }
 

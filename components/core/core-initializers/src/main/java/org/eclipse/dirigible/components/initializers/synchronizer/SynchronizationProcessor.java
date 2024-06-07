@@ -810,6 +810,70 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
         }
     }
 
+    @Override
+    public void registerState(Synchronizer<? extends Artefact, ?> synchronizer, TopologyWrapper<? extends Artefact> wrapper,
+            ArtefactLifecycle lifecycle) {
+        registerState(synchronizer, wrapper.getArtefact(), lifecycle);
+    }
+
+    @Override
+    public void registerState(Synchronizer<? extends Artefact, ?> synchronizer, Artefact artefact, ArtefactLifecycle lifecycle) {
+        this.registerState(synchronizer, artefact, lifecycle, "");
+    }
+
+    /**
+     * Register state.
+     *
+     * @param synchronizer the synchronizer
+     * @param artefact the artefact
+     * @param lifecycle the lifecycle
+     * @param message the message
+     */
+    @Override
+    public void registerState(Synchronizer<? extends Artefact, ?> synchronizer, Artefact artefact, ArtefactLifecycle lifecycle,
+            String message) {
+        this.registerState(synchronizer, artefact, lifecycle, message, null);
+    }
+
+    @Override
+    public void registerState(Synchronizer<? extends Artefact, ?> synchronizer, Artefact artefact, ArtefactLifecycle lifecycle,
+            String message, Throwable cause) {
+        switch (lifecycle) {
+
+            case FAILED:
+                logger.error(
+                        "Processing has been failed for artefact with key [{}], location [{}], lifecycle [{}], error [{}], message [{}]",
+                        artefact.getKey(), artefact.getLocation(), artefact.getError(), message, lifecycle, cause);
+                break;
+            case FATAL:
+                logger.error(
+                        "Processing has been fatal for artefact with key [{}], location [{}], lifecycle [{}], error [{}], message [{}]",
+                        artefact.getKey(), artefact.getLocation(), artefact.getError(), message, lifecycle, cause);
+                break;
+            default: {
+                logger.info("Registered lifecycle [{}] for artefact with key [{}], location [{}], message [{}], error [{}]", lifecycle,
+                        artefact.getKey(), artefact.getLocation(), message, artefact.getError(), cause);
+            }
+        }
+        Synchronizer s = synchronizer;
+        s.setStatus(artefact, lifecycle, message);
+    }
+
+    public void registerState(Synchronizer<? extends Artefact, ?> synchronizer, TopologyWrapper<? extends Artefact> wrapper,
+            ArtefactLifecycle lifecycle, Throwable cause) {
+        registerState(synchronizer, wrapper.getArtefact(), lifecycle, cause);
+    }
+
+    @Override
+    public void registerState(Synchronizer<? extends Artefact, ?> synchronizer, Artefact artefact, ArtefactLifecycle lifecycle,
+            Throwable cause) {
+        this.registerState(synchronizer, artefact, lifecycle, getMessage(cause), null);
+    }
+
+    private String getMessage(Throwable cause) {
+        return null == cause ? "" : cause.getMessage();
+    }
+
     /**
      * Register state.
      *
@@ -824,24 +888,11 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
         registerState(synchronizer, wrapper.getArtefact(), lifecycle, message);
     }
 
-    /**
-     * Register state.
-     *
-     * @param synchronizer the synchronizer
-     * @param artefact the artefact
-     * @param lifecycle the lifecycle
-     * @param message the message
-     */
     @Override
-    public void registerState(Synchronizer<? extends Artefact, ?> synchronizer, Artefact artefact, ArtefactLifecycle lifecycle,
-            String message) {
-        if (ArtefactLifecycle.FAILED.equals(lifecycle)) {
-            logger.error("Processing has been failed for artefact with key: {}", artefact.getKey());
-        }
-        if (ArtefactLifecycle.FATAL.equals(lifecycle)) {
-            logger.error("Processing has been fatal for artefact with key: {}", artefact.getKey());
-        }
-        Synchronizer s = synchronizer;
-        s.setStatus(artefact, lifecycle, message);
+    public void registerState(Synchronizer<? extends Artefact, ?> synchronizer, TopologyWrapper<? extends Artefact> wrapper,
+            ArtefactLifecycle lifecycle, String message, Throwable cause) {
+        registerState(synchronizer, wrapper.getArtefact(), lifecycle, message, cause);
     }
+
 }
+

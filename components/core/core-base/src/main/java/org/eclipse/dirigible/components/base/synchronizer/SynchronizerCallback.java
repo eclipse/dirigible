@@ -9,14 +9,14 @@
  */
 package org.eclipse.dirigible.components.base.synchronizer;
 
-import java.util.List;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 
+import java.util.List;
+
 /**
  * The Interface SynchronizerCallback.
- *
  */
 public interface SynchronizerCallback {
 
@@ -49,6 +49,9 @@ public interface SynchronizerCallback {
      */
     void registerFatals(List<TopologyWrapper<? extends Artefact>> remained);
 
+    void registerState(Synchronizer<? extends Artefact, ?> synchronizer, TopologyWrapper<? extends Artefact> wrapper,
+            ArtefactLifecycle lifecycle);
+
     /**
      * Register errors.
      *
@@ -60,6 +63,14 @@ public interface SynchronizerCallback {
     void registerState(Synchronizer<? extends Artefact, ?> synchronizer, TopologyWrapper<? extends Artefact> wrapper,
             ArtefactLifecycle lifecycle, String message);
 
+    void registerState(Synchronizer<? extends Artefact, ?> synchronizer, TopologyWrapper<? extends Artefact> wrapper,
+            ArtefactLifecycle lifecycle, String message, Throwable cause);
+
+    void registerState(Synchronizer<? extends Artefact, ?> synchronizer, TopologyWrapper<? extends Artefact> wrapper,
+            ArtefactLifecycle lifecycle, Throwable cause);
+
+    void registerState(Synchronizer<? extends Artefact, ?> synchronizer, Artefact artefact, ArtefactLifecycle lifecycle);
+
     /**
      * Register errors.
      *
@@ -69,5 +80,10 @@ public interface SynchronizerCallback {
      * @param message the message
      */
     void registerState(Synchronizer<? extends Artefact, ?> synchronizer, Artefact artefact, ArtefactLifecycle lifecycle, String message);
+
+    void registerState(Synchronizer<? extends Artefact, ?> synchronizer, Artefact artefact, ArtefactLifecycle lifecycle, Throwable cause);
+
+    void registerState(Synchronizer<? extends Artefact, ?> synchronizer, Artefact artefact, ArtefactLifecycle lifecycle, String message,
+            Throwable cause);
 
 }

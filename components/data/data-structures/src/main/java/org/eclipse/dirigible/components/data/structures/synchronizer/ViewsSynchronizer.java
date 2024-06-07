@@ -176,27 +176,24 @@ public class ViewsSynchronizer extends MultitenantBaseSynchronizer<View, Long> {
                                        .existsTable(connection, view.getName())) {
                             try {
                                 executeViewCreate(connection, view);
-                                callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                                callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                             } catch (Exception e) {
-                                if (logger.isErrorEnabled()) {
-                                    logger.error(e.getMessage(), e);
-                                }
-                                callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, e.getMessage());
+                                callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, e);
                             }
                         } else {
                             if (logger.isWarnEnabled()) {
                                 logger.warn(String.format("View [%s] already exists during the update process", view.getName()));
                             }
                             executeViewUpdate(connection, view);
-                            callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                            callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                         }
-                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                     }
                     break;
                 case UPDATE:
                     if (ArtefactLifecycle.MODIFIED.equals(view.getLifecycle())) {
                         executeViewUpdate(connection, view);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                     }
                     if (ArtefactLifecycle.FAILED.equals(view.getLifecycle())) {
                         return false;
@@ -208,9 +205,9 @@ public class ViewsSynchronizer extends MultitenantBaseSynchronizer<View, Long> {
                         if (SqlFactory.getNative(connection)
                                       .existsTable(connection, view.getName())) {
                             executeViewDrop(connection, view);
-                            callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                            callback.registerState(this, wrapper, ArtefactLifecycle.DELETED);
                         }
-                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED);
                     }
                     break;
                 case START:
@@ -219,11 +216,8 @@ public class ViewsSynchronizer extends MultitenantBaseSynchronizer<View, Long> {
 
             return true;
         } catch (SQLException e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
+            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e);
             return false;
         }
     }
@@ -281,11 +275,8 @@ public class ViewsSynchronizer extends MultitenantBaseSynchronizer<View, Long> {
                                                        .getConnection()) {
             getService().delete(view);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, view, ArtefactLifecycle.DELETED, e.getMessage());
+            callback.registerState(this, view, ArtefactLifecycle.DELETED, e);
         }
     }
 

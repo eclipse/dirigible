@@ -139,7 +139,7 @@ public class WebsocketsSynchronizer extends BaseSynchronizer<Websocket, Long> {
      */
     @Override
     protected boolean completeImpl(TopologyWrapper<Websocket> wrapper, ArtefactPhase flow) {
-        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
         return true;
     }
 
@@ -153,11 +153,8 @@ public class WebsocketsSynchronizer extends BaseSynchronizer<Websocket, Long> {
         try {
             getService().delete(websocket);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, websocket, ArtefactLifecycle.DELETED, e.getMessage());
+            callback.registerState(this, websocket, ArtefactLifecycle.DELETED, e);
         }
     }
 

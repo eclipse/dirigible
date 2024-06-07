@@ -167,7 +167,7 @@ public class ExposesSynchronizer extends BaseSynchronizer<Expose, Long> {
                             logger.trace(expose.getName() + " skipped due to lack of exposures");
                         }
                     }
-                    callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                    callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                 }
                 break;
             case UPDATE:
@@ -181,11 +181,11 @@ public class ExposesSynchronizer extends BaseSynchronizer<Expose, Long> {
                             logger.trace(expose.getName() + " skipped due to lack of exposures");
                         }
                     }
-                    callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                    callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                 }
                 if (expose.getLifecycle()
                           .equals(ArtefactLifecycle.FAILED)) {
-                    callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                    callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                     return false;
                 }
                 break;
@@ -197,7 +197,7 @@ public class ExposesSynchronizer extends BaseSynchronizer<Expose, Long> {
                         || expose.getLifecycle()
                                  .equals(ArtefactLifecycle.FAILED)) {
                     ExposeManager.unregisterProject(expose.getName());
-                    callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                    callback.registerState(this, wrapper, ArtefactLifecycle.DELETED);
                 }
                 break;
             case START:
@@ -218,11 +218,8 @@ public class ExposesSynchronizer extends BaseSynchronizer<Expose, Long> {
             ExposeManager.unregisterProject(expose.getName());
             getService().delete(expose);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, expose, ArtefactLifecycle.DELETED, e.getMessage());
+            callback.registerState(this, expose, ArtefactLifecycle.DELETED, e);
         }
     }
 

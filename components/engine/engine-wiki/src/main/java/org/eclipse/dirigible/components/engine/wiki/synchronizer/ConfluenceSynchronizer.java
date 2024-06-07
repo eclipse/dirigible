@@ -194,13 +194,13 @@ public class ConfluenceSynchronizer extends BaseSynchronizer<Confluence, Long> {
             case CREATE:
                 if (ArtefactLifecycle.NEW.equals(wiki.getLifecycle())) {
                     wikiService.generateContent(wiki.getLocation(), new String(wiki.getContent(), StandardCharsets.UTF_8));
-                    callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                    callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                 }
                 break;
             case UPDATE:
                 if (ArtefactLifecycle.MODIFIED.equals(wiki.getLifecycle())) {
                     wikiService.generateContent(wiki.getLocation(), new String(wiki.getContent(), StandardCharsets.UTF_8));
-                    callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                    callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                 }
                 if (ArtefactLifecycle.FAILED.equals(wiki.getLifecycle())) {
                     return false;
@@ -211,7 +211,7 @@ public class ConfluenceSynchronizer extends BaseSynchronizer<Confluence, Long> {
                         || ArtefactLifecycle.FAILED.equals(wiki.getLifecycle())) {
                     wikiService.removeGenerated(wiki.getLocation());
                     getService().delete(wiki);
-                    callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                    callback.registerState(this, wrapper, ArtefactLifecycle.DELETED);
                 }
                 break;
             case START:
@@ -232,11 +232,8 @@ public class ConfluenceSynchronizer extends BaseSynchronizer<Confluence, Long> {
             wikiService.removeGenerated(wiki.getLocation());
             getService().delete(wiki);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, wiki, ArtefactLifecycle.DELETED, e.getMessage());
+            callback.registerState(this, wiki, ArtefactLifecycle.DELETED, e);
         }
     }
 

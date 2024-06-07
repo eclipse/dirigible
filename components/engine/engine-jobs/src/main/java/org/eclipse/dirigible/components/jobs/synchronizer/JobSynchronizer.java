@@ -196,13 +196,13 @@ public class JobSynchronizer extends MultitenantBaseSynchronizer<Job, Long> {
                         jobsManager.scheduleJob(job);
                         job.setRunning(true);
                         getService().save(job);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                     } catch (Exception e) {
                         if (logger.isErrorEnabled()) {
                             logger.error(e.getMessage(), e);
                         }
                         callback.addError(e.getMessage());
-                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                     }
                 }
                 break;
@@ -215,13 +215,10 @@ public class JobSynchronizer extends MultitenantBaseSynchronizer<Job, Long> {
                         jobsManager.scheduleJob(job);
                         job.setRunning(true);
                         getService().save(job);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                     } catch (Exception e) {
-                        if (logger.isErrorEnabled()) {
-                            logger.error(e.getMessage(), e);
-                        }
                         callback.addError(e.getMessage());
-                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, e.getMessage());
+                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, e);
                     }
                 }
                 if (ArtefactLifecycle.FAILED.equals(job.getLifecycle())) {
@@ -235,13 +232,10 @@ public class JobSynchronizer extends MultitenantBaseSynchronizer<Job, Long> {
                         jobsManager.unscheduleJob(job.getName(), job.getGroup());
                         job.setRunning(false);
                         getService().delete(job);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED);
                     } catch (Exception e) {
-                        if (logger.isErrorEnabled()) {
-                            logger.error(e.getMessage(), e);
-                        }
                         callback.addError(e.getMessage());
-                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, e.getMessage());
+                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, e);
                     }
                 }
                 break;
@@ -258,11 +252,7 @@ public class JobSynchronizer extends MultitenantBaseSynchronizer<Job, Long> {
                         job.setRunning(true);
                         getService().save(job);
                     } catch (Exception e) {
-                        if (logger.isErrorEnabled()) {
-                            logger.error(e.getMessage(), e);
-                        }
-                        callback.addError(e.getMessage());
-                        callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e);
                     }
                 }
                 break;
@@ -273,11 +263,8 @@ public class JobSynchronizer extends MultitenantBaseSynchronizer<Job, Long> {
                         job.setRunning(false);
                         getService().save(job);
                     } catch (Exception e) {
-                        if (logger.isErrorEnabled()) {
-                            logger.error(e.getMessage(), e);
-                        }
                         callback.addError(e.getMessage());
-                        callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e);
                     }
                 }
                 break;
@@ -299,11 +286,8 @@ public class JobSynchronizer extends MultitenantBaseSynchronizer<Job, Long> {
             jobEmailService.deleteAllByJobName(job.getName());
             getService().delete(job);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, job, ArtefactLifecycle.DELETED, e.getMessage());
+            callback.registerState(this, job, ArtefactLifecycle.DELETED, e);
         }
     }
 

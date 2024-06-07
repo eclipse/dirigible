@@ -178,13 +178,13 @@ public class BpmnSynchronizer extends BaseSynchronizer<Bpmn, Long> {
                 case CREATE:
                     if (ArtefactLifecycle.NEW.equals(bpmn.getLifecycle())) {
                         deployOnProcessEngine(bpmn);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                     }
                     break;
                 case UPDATE:
                     if (ArtefactLifecycle.MODIFIED.equals(bpmn.getLifecycle())) {
                         updateOnProcessEngine(bpmn);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                     }
                     if (ArtefactLifecycle.FAILED.equals(bpmn.getLifecycle())) {
                         return false;
@@ -194,17 +194,14 @@ public class BpmnSynchronizer extends BaseSynchronizer<Bpmn, Long> {
                     if (ArtefactLifecycle.CREATED.equals(bpmn.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(bpmn.getLifecycle())
                             || ArtefactLifecycle.FAILED.equals(bpmn.getLifecycle())) {
                         removeFromProcessEngine(bpmn);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED);
                     }
                     break;
             }
             return true;
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
+            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e);
             return false;
         }
     }
@@ -351,11 +348,8 @@ public class BpmnSynchronizer extends BaseSynchronizer<Bpmn, Long> {
             removeFromProcessEngine(bpmn);
             getService().delete(bpmn);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, bpmn, ArtefactLifecycle.DELETED, e.getMessage());
+            callback.registerState(this, bpmn, ArtefactLifecycle.DELETED, e);
         }
     }
 

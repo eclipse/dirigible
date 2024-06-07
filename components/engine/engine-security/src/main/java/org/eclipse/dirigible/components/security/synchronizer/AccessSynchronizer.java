@@ -168,7 +168,7 @@ public class AccessSynchronizer extends BaseSynchronizer<Access, Long> {
      */
     @Override
     protected boolean completeImpl(TopologyWrapper<Access> wrapper, ArtefactPhase flow) {
-        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
         return true;
     }
 
@@ -182,11 +182,8 @@ public class AccessSynchronizer extends BaseSynchronizer<Access, Long> {
         try {
             getService().delete(access);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, access, ArtefactLifecycle.DELETED, e.getMessage());
+            callback.registerState(this, access, ArtefactLifecycle.DELETED, e);
         }
     }
 

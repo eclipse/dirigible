@@ -35,14 +35,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.sql.DataSource;
 
 import static java.text.MessageFormat.format;
 
@@ -267,34 +266,6 @@ public class SchemasSynchronizer extends MultitenantBaseSynchronizer<Schema, Lon
     }
 
     /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<Schema, Long> getService() {
-        return schemaService;
-    }
-
-    /**
-     * Gets the table service.
-     *
-     * @return the table service
-     */
-    public TableService getTableService() {
-        return tableService;
-    }
-
-    /**
-     * Gets the view service.
-     *
-     * @return the view service
-     */
-    public ViewService getViewService() {
-        return viewService;
-    }
-
-    /**
      * Sets the table attributes.
      *
      * @param location the location
@@ -336,30 +307,6 @@ public class SchemasSynchronizer extends MultitenantBaseSynchronizer<Schema, Lon
     }
 
     /**
-     * Sets the view attributes.
-     *
-     * @param location the location
-     * @param result the result
-     * @param structure the structure
-     * @param type the type
-     * @param view the view
-     */
-    private static void setViewAttributes(String location, Schema result, JsonObject structure, String type, View view) {
-        view.setLocation(location);
-        view.setName(structure.get("name")
-                              .getAsString());
-        view.setKind(type);
-        view.setType(View.ARTEFACT_TYPE);
-        JsonElement columns = structure.get("columns");
-        view.setQuery(columns.getAsJsonArray()
-                             .get(0)
-                             .getAsJsonObject()
-                             .get("query")
-                             .getAsString());
-        view.updateKey();
-    }
-
-    /**
      * Sets the column attributes.
      *
      * @param column the column
@@ -398,6 +345,58 @@ public class SchemasSynchronizer extends MultitenantBaseSynchronizer<Schema, Lon
                                                                    .isJsonNull() ? column.get("scale")
                                                                                          .getAsString()
                                                                            : null);
+    }
+
+    /**
+     * Sets the view attributes.
+     *
+     * @param location the location
+     * @param result the result
+     * @param structure the structure
+     * @param type the type
+     * @param view the view
+     */
+    private static void setViewAttributes(String location, Schema result, JsonObject structure, String type, View view) {
+        view.setLocation(location);
+        view.setName(structure.get("name")
+                              .getAsString());
+        view.setKind(type);
+        view.setType(View.ARTEFACT_TYPE);
+        JsonElement columns = structure.get("columns");
+        view.setQuery(columns.getAsJsonArray()
+                             .get(0)
+                             .getAsJsonObject()
+                             .get("query")
+                             .getAsString());
+        view.updateKey();
+    }
+
+    /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<Schema, Long> getService() {
+        return schemaService;
+    }
+
+    /**
+     * Gets the table service.
+     *
+     * @return the table service
+     */
+    public TableService getTableService() {
+        return tableService;
+    }
+
+    /**
+     * Gets the view service.
+     *
+     * @return the view service
+     */
+    public ViewService getViewService() {
+        return viewService;
     }
 
     /**
@@ -452,12 +451,12 @@ public class SchemasSynchronizer extends MultitenantBaseSynchronizer<Schema, Lon
             if (dataSource == null) {
                 if (ArtefactLifecycle.FAILED.equals(schema.getLifecycle())) {
                     callback.addError(e.getMessage());
-                    callback.registerState(this, wrapper, ArtefactLifecycle.FATAL, e.getMessage());
+                    callback.registerState(this, wrapper, ArtefactLifecycle.FATAL, e);
                     return true;
                 }
             }
             callback.addError(e.getMessage());
-            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
+            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e);
             return false;
         }
 
@@ -468,12 +467,9 @@ public class SchemasSynchronizer extends MultitenantBaseSynchronizer<Schema, Lon
                               .equals(ArtefactLifecycle.NEW)) {
                         try {
                             executeSchemaCreate(connection, schema);
-                            callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                            callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                         } catch (Exception e) {
-                            if (logger.isErrorEnabled()) {
-                                logger.error(e.getMessage(), e);
-                            }
-                            callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, e.getMessage());
+                            callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, e);
                         }
                     }
                     break;
@@ -481,7 +477,7 @@ public class SchemasSynchronizer extends MultitenantBaseSynchronizer<Schema, Lon
                     if (schema.getLifecycle()
                               .equals(ArtefactLifecycle.MODIFIED)) {
                         executeSchemaUpdate(connection, schema);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                     }
                     if (schema.getLifecycle()
                               .equals(ArtefactLifecycle.MODIFIED)) {
@@ -492,7 +488,7 @@ public class SchemasSynchronizer extends MultitenantBaseSynchronizer<Schema, Lon
                     if (ArtefactLifecycle.CREATED.equals(schema.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(schema.getLifecycle())
                             || ArtefactLifecycle.FAILED.equals(schema.getLifecycle())) {
                         executeSchemaDrop(connection, schema);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED);
                         break;
                     }
                 case START:
@@ -502,11 +498,8 @@ public class SchemasSynchronizer extends MultitenantBaseSynchronizer<Schema, Lon
             return true;
 
         } catch (SQLException e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
+            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e);
             return false;
         }
     }
@@ -562,11 +555,8 @@ public class SchemasSynchronizer extends MultitenantBaseSynchronizer<Schema, Lon
         try {
             getService().delete(schema);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, schema, ArtefactLifecycle.DELETED, e.getMessage());
+            callback.registerState(this, schema, ArtefactLifecycle.DELETED, e);
         }
     }
 
