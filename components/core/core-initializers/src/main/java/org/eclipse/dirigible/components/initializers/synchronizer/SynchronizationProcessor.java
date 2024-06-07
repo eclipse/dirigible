@@ -841,18 +841,15 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
         switch (lifecycle) {
 
             case FAILED:
-                logger.error(
-                        "Processing has been failed for artefact with key [{}], location [{}], lifecycle [{}], synchronizer [{}], error [{}], message [{}]",
-                        artefact.getKey(), artefact.getLocation(), synchronizer, artefact.getError(), message, lifecycle, cause);
-                break;
             case FATAL:
                 logger.error(
-                        "Processing has been fatal for artefact with key [{}], location [{}], lifecycle [{}], synchronizer [{}], error [{}], message [{}]",
-                        artefact.getKey(), artefact.getLocation(), synchronizer, artefact.getError(), message, lifecycle, cause);
+                        "Processing of artefact with key [{}], location [{}] for lifecycle [{}] has failed, synchronizer [{}], error [{}], message [{}]",
+                        artefact.getKey(), artefact.getLocation(), lifecycle, synchronizer, artefact.getError(), message, lifecycle, cause);
                 break;
             default: {
-                logger.info("Registered lifecycle [{}] for artefact with key [{}], location [{}], message [{}], error [{}]", lifecycle,
-                        artefact.getKey(), artefact.getLocation(), message, artefact.getError(), cause);
+                logger.info(
+                        "Registering artefact lifecycle status [{}] for artefact with key [{}], location [{}], message [{}], error [{}]",
+                        lifecycle, artefact.getKey(), artefact.getLocation(), message, artefact.getError(), cause);
             }
         }
         Synchronizer s = synchronizer;
