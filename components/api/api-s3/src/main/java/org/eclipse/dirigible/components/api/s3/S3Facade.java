@@ -48,12 +48,12 @@ public class S3Facade {
     private static final String DIRIGIBLE_S3_PROVIDER = Configuration.get("DIRIGIBLE_S3_PROVIDER", "aws");
     /** The Constant LOCALSTACK_URI. */
     private static final String DEFAULT_LOCALSTACK_URI = "https://s3.localhost.localstack.cloud:4566";
-    
+
     /** The Constant FOLDER_SUFFIX. */
     private static final String FOLDER_SUFFIX = "/";
     /** The instance. */
     private static S3Facade INSTANCE;
-    
+
     /** The tenant path resolved. */
     private final TenantPathResolved tenantPathResolved;
     /** The s 3. */
@@ -190,17 +190,17 @@ public class S3Facade {
      */
     private void initClient() {
         String bucket = getBucketName();
-        
+
         if (DIRIGIBLE_S3_PROVIDER.equals("aws")) {
-        	if (AWS_ACCESS_KEY_ID == null || AWS_SECRET_ACCESS_KEY == null) {
+            if (AWS_ACCESS_KEY_ID == null || AWS_SECRET_ACCESS_KEY == null) {
                 logger.warn("AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY not set, so assuming runing on AWS");
                 s3 = S3Client.builder()
-                        .build();
+                             .build();
             } else {
-            	AwsBasicCredentials credentials = AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
-	            s3 = S3Client.builder()
-	                         .credentialsProvider(StaticCredentialsProvider.create(credentials))
-	                         .build();
+                AwsBasicCredentials credentials = AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
+                s3 = S3Client.builder()
+                             .credentialsProvider(StaticCredentialsProvider.create(credentials))
+                             .build();
             }
         } else if (DIRIGIBLE_S3_PROVIDER.equals("localstack")) {
             s3 = S3Client.builder()
