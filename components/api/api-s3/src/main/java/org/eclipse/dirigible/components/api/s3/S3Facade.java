@@ -42,21 +42,28 @@ public class S3Facade {
     private static final Logger logger = LoggerFactory.getLogger(S3Facade.class);
     /** The Constant AWS_ACCESS_KEY_ID. */
     private static final String AWS_ACCESS_KEY_ID = Configuration.get("AWS_ACCESS_KEY_ID");
-    /** The Constant AWS_DEFAULT_REGION. */
-    private static final Region AWS_DEFAULT_REGION = Region.of(Configuration.get("AWS_DEFAULT_REGION", "eu-central-1"));
     /** The Constant AWS_SECRET_ACCESS_KEY. */
     private static final String AWS_SECRET_ACCESS_KEY = Configuration.get("AWS_SECRET_ACCESS_KEY");
     /** The Constant DIRIGIBLE_S3_PROVIDER. */
     private static final String DIRIGIBLE_S3_PROVIDER = Configuration.get("DIRIGIBLE_S3_PROVIDER", "aws");
     /** The Constant LOCALSTACK_URI. */
     private static final String DEFAULT_LOCALSTACK_URI = "https://s3.localhost.localstack.cloud:4566";
+    
+    /** The Constant FOLDER_SUFFIX. */
     private static final String FOLDER_SUFFIX = "/";
     /** The instance. */
     private static S3Facade INSTANCE;
+    
+    /** The tenant path resolved. */
     private final TenantPathResolved tenantPathResolved;
     /** The s 3. */
     private S3Client s3;
 
+    /**
+     * Instantiates a new s 3 facade.
+     *
+     * @param tenantPathResolved the tenant path resolved
+     */
     S3Facade(TenantPathResolved tenantPathResolved) {
         this.tenantPathResolved = tenantPathResolved;
         INSTANCE = this;
@@ -80,6 +87,11 @@ public class S3Facade {
                        .join();
     }
 
+    /**
+     * Gets the bucket name.
+     *
+     * @return the bucket name
+     */
     private static String getBucketName() {
         return Configuration.get("DIRIGIBLE_S3_BUCKET", "cmis-bucket");
     }
@@ -106,6 +118,12 @@ public class S3Facade {
         }
     }
 
+    /**
+     * Checks if is folder path.
+     *
+     * @param path the path
+     * @return true, if is folder path
+     */
     private static boolean isFolderPath(String path) {
         return path.endsWith(FOLDER_SUFFIX);
     }
@@ -119,7 +137,6 @@ public class S3Facade {
         String tenantPrefix = INSTANCE.tenantPathResolved.resolve(prefix);
         String bucket = getBucketName();
         try (S3Client s3Client = S3Client.builder()
-                                         .region(AWS_DEFAULT_REGION)
                                          .build()) {
             ListObjectsV2Request request = ListObjectsV2Request.builder()
                                                                .bucket(bucket)
@@ -173,28 +190,33 @@ public class S3Facade {
      */
     private void initClient() {
         String bucket = getBucketName();
-        if (AWS_ACCESS_KEY_ID == null || AWS_SECRET_ACCESS_KEY == null) {
-            logger.warn("AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY not set");
-        } else {
-            AwsBasicCredentials credentials = AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
-            if (DIRIGIBLE_S3_PROVIDER.equals("aws")) {
+        
+        if (DIRIGIBLE_S3_PROVIDER.equals("aws")) {
+        	if (AWS_ACCESS_KEY_ID == null || AWS_SECRET_ACCESS_KEY == null) {
+                logger.warn("AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY not set, so assuming runing on AWS");
                 s3 = S3Client.builder()
-                             .region(AWS_DEFAULT_REGION)
-                             .credentialsProvider(StaticCredentialsProvider.create(credentials))
-                             .build();
-            } else if (DIRIGIBLE_S3_PROVIDER.equals("localstack")) {
-                s3 = S3Client.builder()
-                             .region(AWS_DEFAULT_REGION)
-                             .endpointOverride(URI.create(DEFAULT_LOCALSTACK_URI))
-                             .credentialsProvider(StaticCredentialsProvider.create(credentials))
-                             .build();
+                        .build();
             } else {
-                return;
+            	AwsBasicCredentials credentials = AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
+	            s3 = S3Client.builder()
+	                         .credentialsProvider(StaticCredentialsProvider.create(credentials))
+	                         .build();
             }
+        } else if (DIRIGIBLE_S3_PROVIDER.equals("localstack")) {
+            s3 = S3Client.builder()
+                         .endpointOverride(URI.create(DEFAULT_LOCALSTACK_URI))
+                         .build();
             createBucket(bucket);
+        } else {
+            return;
         }
     }
 
+    /**
+     * Creates the bucket.
+     *
+     * @param bucket the bucket
+     */
     private void createBucket(String bucket) {
         CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
                                                                      .bucket(bucket)
@@ -355,11 +377,11 @@ public class S3Facade {
      * Sets the client for test container.
      *
      * @param localstackUri the new client for test container
+     * @param bucket the bucket
      */
     public static void setClientForTestContainer(URI localstackUri, String bucket) {
         S3Facade.get()
                 .setS3Client(S3Client.builder()
-                                     .region(AWS_DEFAULT_REGION)
                                      .endpointOverride(localstackUri)
                                      .build());
         S3Facade.get()
