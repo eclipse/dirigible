@@ -219,6 +219,7 @@
 		<module>template/template-form-builder-angularjs</module>
 		<module>template/template-hello-world</module>
 		<module>template/template-react</module>
+		<module>template/template-report</module>
 		<module>template/template-html</module>
 		<module>template/template-html-widgets</module>
 		<module>template/template-http-client</module>
@@ -1234,6 +1235,11 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-template-react</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-report</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
