@@ -305,16 +305,16 @@ public class TablesSynchronizer extends MultitenantBaseSynchronizer<Table, Long>
                                 if (logger.isErrorEnabled()) {
                                     logger.error(e.getMessage(), e);
                                 }
-                                callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, e.getMessage());
+                                callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, e);
                             }
                         } else {
                             if (logger.isWarnEnabled()) {
                                 logger.warn(String.format("Table [%s] already exists during the update process", table.getName()));
                             }
                             executeTableAlter(connection, table);
-                            callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                            callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                         }
-                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                     }
                     break;
                 case UPDATE:
@@ -332,7 +332,7 @@ public class TablesSynchronizer extends MultitenantBaseSynchronizer<Table, Long>
                     }
                     if (ArtefactLifecycle.MODIFIED.equals(table.getLifecycle())) {
                         executeTableUpdate(connection, table);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                     }
                     if (ArtefactLifecycle.FAILED.equals(table.getLifecycle())) {
                         return false;
@@ -346,7 +346,7 @@ public class TablesSynchronizer extends MultitenantBaseSynchronizer<Table, Long>
                             if (SqlFactory.deriveDialect(connection)
                                           .count(connection, table.getName()) == 0) {
                                 executeTableDrop(connection, table);
-                                callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                                callback.registerState(this, wrapper, ArtefactLifecycle.DELETED);
                             } else {
                                 String message = String.format(
                                         "Table [%s] cannot be deleted during the update process, because it is not empty", table.getName());
@@ -362,7 +362,7 @@ public class TablesSynchronizer extends MultitenantBaseSynchronizer<Table, Long>
                 // if (table.getLifecycle().equals(ArtefactLifecycle.DELETED)) {
                 // if (SqlFactory.getNative(connection).exists(connection, table.getName())) {
                 // executeTableForeignKeysDrop(connection, table);
-                // callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                // callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                 // }
                 // }
                 case START:
@@ -371,11 +371,8 @@ public class TablesSynchronizer extends MultitenantBaseSynchronizer<Table, Long>
 
             return true;
         } catch (SQLException e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
+            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e);
             return false;
         }
     }
@@ -472,11 +469,8 @@ public class TablesSynchronizer extends MultitenantBaseSynchronizer<Table, Long>
                 }
             }
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, table, ArtefactLifecycle.DELETED, e.getMessage());
+            callback.registerState(this, table, ArtefactLifecycle.DELETED, e);
         }
     }
 

@@ -155,12 +155,12 @@ public class ExtensionsSynchronizer extends BaseSynchronizer<Extension, Long> {
         switch (flow) {
             case CREATE:
                 if (ArtefactLifecycle.NEW.equals(extension.getLifecycle())) {
-                    callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                    callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                 }
                 break;
             case UPDATE:
                 if (ArtefactLifecycle.MODIFIED.equals(extension.getLifecycle())) {
-                    callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                    callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                 }
                 if (ArtefactLifecycle.FAILED.equals(extension.getLifecycle())) {
                     return false;
@@ -171,13 +171,10 @@ public class ExtensionsSynchronizer extends BaseSynchronizer<Extension, Long> {
                         || ArtefactLifecycle.FAILED.equals(extension.getLifecycle())) {
                     try {
                         getService().delete(extension);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED);
                     } catch (Exception e) {
-                        if (logger.isErrorEnabled()) {
-                            logger.error(e.getMessage(), e);
-                        }
                         callback.addError(e.getMessage());
-                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, e.getMessage());
+                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, e);
                     }
                 }
                 break;
@@ -197,11 +194,8 @@ public class ExtensionsSynchronizer extends BaseSynchronizer<Extension, Long> {
         try {
             getService().delete(extension);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, extension, ArtefactLifecycle.DELETED, e.getMessage());
+            callback.registerState(this, extension, ArtefactLifecycle.DELETED, e.getMessage(), e);
         }
     }
 

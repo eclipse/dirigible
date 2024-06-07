@@ -216,14 +216,14 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
                     if (csvim.getLifecycle()
                              .equals(ArtefactLifecycle.NEW)) {
                         importCsvim(csvim);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                     }
                     break;
                 case UPDATE:
                     if (csvim.getLifecycle()
                              .equals(ArtefactLifecycle.MODIFIED)) {
                         updateCsvim(csvim);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                     }
                     if (csvim.getLifecycle()
                              .equals(ArtefactLifecycle.FAILED)) {
@@ -237,7 +237,7 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
                                     .equals(ArtefactLifecycle.UPDATED)
                             || csvim.getLifecycle()
                                     .equals(ArtefactLifecycle.FAILED)) {
-                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED);
                     }
                     break;
                 case START:
@@ -246,9 +246,8 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
 
             return true;
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
             callback.addError(e.getMessage());
-            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
+            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e);
             return false;
         }
     }
@@ -348,9 +347,8 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
                 }
             }
         } catch (Exception e) {
-            logger.error("Failed to cleanup csvim [{}]", csvim, e);
             callback.addError(e.getMessage());
-            callback.registerState(this, csvim, ArtefactLifecycle.DELETED, e.getMessage());
+            callback.registerState(this, csvim, ArtefactLifecycle.DELETED, "Failed to cleanup csvim: " + csvim, e);
         }
     }
 

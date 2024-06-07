@@ -147,11 +147,10 @@ public class ListenerSynchronizer extends MultitenantBaseSynchronizer<Listener, 
                         listenersManager.startListener(listener);
                         listener.setRunning(true);
                         getService().save(listener);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                     } catch (Exception e) {
-                        logger.error(e.getMessage(), e);
                         callback.addError(e.getMessage());
-                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, e.getMessage());
+                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, e);
                     }
                 }
                 break;
@@ -164,11 +163,10 @@ public class ListenerSynchronizer extends MultitenantBaseSynchronizer<Listener, 
                         listenersManager.startListener(listener);
                         listener.setRunning(true);
                         getService().save(listener);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                     } catch (Exception e) {
-                        logger.error(e.getMessage(), e);
                         callback.addError(e.getMessage());
-                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, e.getMessage());
+                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, e);
                     }
                 }
                 if (ArtefactLifecycle.FAILED.equals(listener.getLifecycle())) {
@@ -182,11 +180,10 @@ public class ListenerSynchronizer extends MultitenantBaseSynchronizer<Listener, 
                         listenersManager.stopListener(listener);
                         listener.setRunning(false);
                         getService().delete(listener);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED);
                     } catch (Exception e) {
-                        logger.error(e.getMessage(), e);
                         callback.addError(e.getMessage());
-                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, e.getMessage());
+                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, e);
                     }
                 }
                 break;
@@ -203,9 +200,8 @@ public class ListenerSynchronizer extends MultitenantBaseSynchronizer<Listener, 
                         listener.setRunning(true);
                         getService().save(listener);
                     } catch (Exception e) {
-                        logger.error(e.getMessage(), e);
                         callback.addError(e.getMessage());
-                        callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e);
                     }
                 }
                 break;
@@ -216,9 +212,8 @@ public class ListenerSynchronizer extends MultitenantBaseSynchronizer<Listener, 
                         listener.setRunning(false);
                         getService().save(listener);
                     } catch (Exception e) {
-                        logger.error(e.getMessage(), e);
                         callback.addError(e.getMessage());
-                        callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e);
                     }
                 }
                 break;
@@ -238,9 +233,8 @@ public class ListenerSynchronizer extends MultitenantBaseSynchronizer<Listener, 
             listenersManager.stopListener(listener);
             getService().delete(listener);
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
             callback.addError(e.getMessage());
-            callback.registerState(this, listener, ArtefactLifecycle.DELETED, e.getMessage());
+            callback.registerState(this, listener, ArtefactLifecycle.DELETED, e);
         }
     }
 

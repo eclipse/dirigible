@@ -167,7 +167,7 @@ public class RoleSynchronizer extends BaseSynchronizer<Role, Long> {
      */
     @Override
     protected boolean completeImpl(TopologyWrapper<Role> wrapper, ArtefactPhase flow) {
-        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
         return true;
     }
 
@@ -189,11 +189,8 @@ public class RoleSynchronizer extends BaseSynchronizer<Role, Long> {
                 getService().delete(role);
             }
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, role, ArtefactLifecycle.DELETED, e.getMessage());
+            callback.registerState(this, role, ArtefactLifecycle.DELETED, e);
         }
     }
 

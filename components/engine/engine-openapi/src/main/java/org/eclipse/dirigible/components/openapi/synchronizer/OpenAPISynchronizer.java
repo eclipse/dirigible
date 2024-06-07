@@ -161,11 +161,8 @@ public class OpenAPISynchronizer extends BaseSynchronizer<OpenAPI, Long> {
         try {
             getService().delete(openAPI);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, openAPI, ArtefactLifecycle.DELETED, e.getMessage());
+            callback.registerState(this, openAPI, ArtefactLifecycle.DELETED, e);
         }
     }
 
@@ -178,7 +175,7 @@ public class OpenAPISynchronizer extends BaseSynchronizer<OpenAPI, Long> {
      */
     @Override
     protected boolean completeImpl(TopologyWrapper<OpenAPI> wrapper, ArtefactPhase flow) {
-        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
         return true;
     }
 

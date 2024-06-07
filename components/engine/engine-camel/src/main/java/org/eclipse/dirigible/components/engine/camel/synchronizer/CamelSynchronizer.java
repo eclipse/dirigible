@@ -157,13 +157,13 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
                 case CREATE:
                     if (ArtefactLifecycle.NEW.equals(camel.getLifecycle())) {
                         addToProcessor(camel);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                     }
                     break;
                 case UPDATE:
                     if (ArtefactLifecycle.MODIFIED.equals(camel.getLifecycle())) {
                         addToProcessor(camel);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                     }
                     if (ArtefactLifecycle.FAILED.equals(camel.getLifecycle())) {
                         return false;
@@ -173,7 +173,7 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
                     if (ArtefactLifecycle.CREATED.equals(camel.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(camel.getLifecycle())
                             || ArtefactLifecycle.FAILED.equals(camel.getLifecycle())) {
                         removeFromProcessor(camel);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED);
                     }
                     break;
                 case START: {
@@ -184,22 +184,19 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
                         return true;
                     }
                     addToProcessor(camel);
-                    callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                    callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                 }
                     break;
                 case STOP: {
                     removeFromProcessor(camel);
-                    callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                    callback.registerState(this, wrapper, ArtefactLifecycle.DELETED);
                 }
                     break;
             }
             return true;
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
+            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e);
             return false;
         }
     }
@@ -233,11 +230,8 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
         try {
             removeFromProcessor(camel);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, camel, ArtefactLifecycle.DELETED, e.getMessage());
+            callback.registerState(this, camel, ArtefactLifecycle.DELETED, e);
         }
     }
 

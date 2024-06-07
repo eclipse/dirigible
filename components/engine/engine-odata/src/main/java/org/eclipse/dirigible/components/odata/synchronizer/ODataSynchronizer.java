@@ -217,14 +217,14 @@ public class ODataSynchronizer extends BaseSynchronizer<OData, Long> {
                 case CREATE:
                     if (ArtefactLifecycle.NEW.equals(odata.getLifecycle())) {
                         generateOData(odata);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                     }
                     break;
                 case UPDATE:
                     if (ArtefactLifecycle.MODIFIED.equals(odata.getLifecycle())) {
                         cleanupOData(odata);
                         generateOData(odata);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                     }
                     if (ArtefactLifecycle.MODIFIED.equals(odata.getLifecycle())) {
                         return false;
@@ -234,17 +234,14 @@ public class ODataSynchronizer extends BaseSynchronizer<OData, Long> {
                     if (ArtefactLifecycle.CREATED.equals(odata.getLifecycle()) || ArtefactLifecycle.UPDATED.equals(odata.getLifecycle())
                             || ArtefactLifecycle.FAILED.equals(odata.getLifecycle())) {
                         cleanupOData(odata);
-                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED);
                     }
                     break;
             }
             return true;
         } catch (SQLException e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
+            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e);
             return false;
         }
     }
@@ -340,11 +337,8 @@ public class ODataSynchronizer extends BaseSynchronizer<OData, Long> {
             odataHandlerService.removeHandlers(odata.getLocation());
             getService().delete(odata);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
             callback.addError(e.getMessage());
-            callback.registerState(this, odata, ArtefactLifecycle.DELETED, "");
+            callback.registerState(this, odata, ArtefactLifecycle.DELETED, e);
         }
     }
 
