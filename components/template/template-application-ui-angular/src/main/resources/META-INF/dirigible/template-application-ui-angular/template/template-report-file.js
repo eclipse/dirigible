@@ -3,58 +3,48 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-const restTemplateManager = dirigibleRequire("template-application-rest/template/template");
-const uiTemplate = dirigibleRequire("template-application-ui-angular/template/ui/template");
+const reportFileTemplate = dirigibleRequire("template-application-ui-angular/template/ui/reportFile");
 const generateUtils = dirigibleRequire("ide-generate-service/template/generateUtils");
-const parameterUtils = dirigibleRequire("ide-generate-service/template/parameterUtils");
+// const parameterUtils = dirigibleRequire("ide-generate-service/template/parameterUtils");
 
 exports.generate = function (model, parameters) {
     model = JSON.parse(model).model;
     let templateSources = exports.getTemplate(parameters).sources;
-    parameterUtils.process(model, parameters)
-    return generateUtils.generateFiles(model, parameters, templateSources);
+    // parameterUtils.process(model, parameters)
+    if (parameters.extensionPoint === undefined) {
+        parameters.extensionPoint = parameters.projectName;
+    }
+    console.error(`Parameters are: ${JSON.stringify(parameters)}`);
+    return generateUtils.generateGeneric(model, parameters, templateSources);
 };
 
 exports.getTemplate = function (parameters) {
-    let restTemplate = restTemplateManager.getTemplate(parameters);
-
-    let templateSources = [];
-    templateSources = templateSources.concat(restTemplate.sources);
-    templateSources = templateSources.concat(uiTemplate.getSources(parameters));
-
-    let templateParameters = getTemplateParameters();
-    templateParameters = templateParameters.concat(restTemplate.parameters);
-
     return {
-        name: "Application - Report",
-        description: "Application Report",
+        name: "Application Report - Table",
+        description: "Application Table Report",
         extension: "report",
-        sources: templateSources,
-        parameters: templateParameters
+        sources: reportFileTemplate.getSources(),
+        parameters: [
+            {
+                name: "extensionPoint",
+                label: "Extension Point",
+                placeholder: "Enter Extension Point, if not provided defaults to the project name",
+                required: false
+            },
+            {
+                name: "brand",
+                label: "Brand",
+                placeholder: "Enter Brand"
+            },
+            {
+                name: "brandUrl",
+                label: "Brand URL",
+                placeholder: "Enter Brand URL"
+            },
+            {
+                name: "title",
+                label: "Title",
+                placeholder: "Enter Title"
+            }]
     };
 };
-
-function getTemplateParameters() {
-    return [
-        {
-            name: "brand",
-            label: "Brand",
-            placeholder: "Enter Brand"
-        },
-        {
-            name: "brandUrl",
-            label: "Brand URL",
-            placeholder: "Enter Brand URL"
-        },
-        {
-            name: "title",
-            label: "Title",
-            placeholder: "Enter Title"
-        },
-        {
-            name: "description",
-            label: "Description",
-            placeholder: "Enter Description"
-        }
-    ];
-}
