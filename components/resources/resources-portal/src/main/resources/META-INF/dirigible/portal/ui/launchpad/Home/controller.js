@@ -35,15 +35,5 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				return;
 			}
 			$scope.data = response.data;
-			$scope.groups = Object.keys(response.data);
-
-			$scope.tiles = [];
-			for (let group in $scope.groups) {
-				let ta = $scope.data[$scope.groups[group]];
-				for (let t in ta) {
-					ta[t].group = $scope.groups[group];
-				}
-				$scope.tiles = $scope.tiles.concat($scope.data[$scope.groups[group]]);
-			}
 		});
 	}]);

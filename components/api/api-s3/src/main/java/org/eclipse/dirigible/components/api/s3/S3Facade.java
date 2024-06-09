@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -208,6 +209,7 @@ public class S3Facade {
                          .build();
             createBucket(bucket);
         } else {
+            logger.warn("Unknown S3 provider via DIRIGIBLE_S3_PROVIDER: " + DIRIGIBLE_S3_PROVIDER);
             return;
         }
     }

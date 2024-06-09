@@ -38,39 +38,74 @@
 				</div>
 				<p class="fd-text">All the products available on this instance are listed below</p>
 				<br>
+
+
 				<div class="fd-panel fd-panel--fixed">
 					<div class="fd-container">
-						<div class="fd-row">
-							<div class="fd-col fd-col--3 fd-col-md--3 fd-col-lg--3 fd-col-xl--3"
-								ng-repeat="next in tiles">
-								<div>
 
-									<fd-card card-type="object">
-										<fd-card-header ng-click="openView(next.location)">
-											<fd-card-title>{{next.name}}</fd-card-title>
-											<fd-card-status><i class="sap-icon--navigation-right-arrow"></i>
-											</fd-card-status>
-										</fd-card-header>
-										<fd-card-content aria-label="Card Content">
-											<div class="fd-card__content-container">
-												<div class="fd-card__content-section">
-													<div class="fd-card__content-title-container">
-														{{next.group.replaceAll('-', ' ').replaceAll('_', ' ').toUpperCase()}}
-													</div>
-													<div class="fd-card__content-group">
-														<div class="fd-card__content-group-text">
-															<span>{{next.caption}}</span>
-														</div>
+						<div class="fd-row" ng-repeat="group in data">
+
+							<fd-panel expanded="true">
+
+								<fd-panel-header>
+									<fd-panel-expand></fd-panel-expand>
+									<h4 fd-panel-title>{{group.name}}</h4>
+								</fd-panel-header>
+
+								<fd-panel-content aria-label="{{group.name}} Content">
+									<div class="fd-row">
+										<div class="fd-col fd-col--6 fd-col-md--6 fd-col-lg--6 fd-col-xl--6">
+											<div class="fd-row">
+												<div class="fd-col fd-col--12 fd-col-md--12 fd-col-lg--12 fd-col-xl--12"
+													ng-repeat="next in group.tiles" ng-if="next.type==='PRIMARY'">
+													<div>
+														<fd-card card-type="object">
+															<fd-card-header ng-click="openView(next.location)">
+																<fd-card-title>{{next.name}}</fd-card-title>
+																<fd-card-status><i
+																		class="sap-icon--navigation-right-arrow"></i>
+																</fd-card-status>
+																<fd-card-subtitle>{{next.caption}}</fd-card-subtitle>
+															</fd-card-header>
+														</fd-card>
 													</div>
 												</div>
 											</div>
-										</fd-card-content>
-									</fd-card>
-								</div>
-							</div>
+										</div>
+
+										<div class="fd-col fd-col--6 fd-col-md--6 fd-col-lg--6 fd-col-xl--6">
+											<ul role="list" no-border="true"
+												class="fd-list fd-list--compact fd-list--no-border">
+												<li tabindex="0" role="listitem" class="fd-list__item"
+													ng-repeat="next in group.tiles"
+													ng-if="next.type==='REPORT' || next.report==='true'">
+													<span class="fd-list__title" ng-click="openView(
+															next.location.substring(0, next.location.indexOf('/gen/ui/')) + '/gen/ui/Reports/index.html?' + next.name
+															)">{{next.name}}</span>
+												</li>
+											</ul>
+										</div>
+									</div>
+
+									<div class="fd-row">
+										<div ng-repeat="next in group.tiles" ng-if="next.type==='SETTING'">
+
+											<a class="fd-button" ng-click="openView(next.location)">
+												{{next.name}}
+											</a>
+
+										</div>
+									</div>
+
+
+								</fd-panel-content>
+							</fd-panel>
 						</div>
+
 					</div>
 				</div>
+
+
 			</section>
 		</fd-scrollbar>
 	</body>

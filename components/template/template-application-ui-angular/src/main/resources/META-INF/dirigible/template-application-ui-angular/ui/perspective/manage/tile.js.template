@@ -5,11 +5,13 @@
  */
 exports.getTile = function () {
     return {
-        group: "${perspectiveLabel}",
+        group: "${projectName}",
         name: "${name}",
         caption: "${caption}",
         tooltip: "${tooltip}",
-        // icon: "file-o",
+        type: "${type}",
+        report: "${generateReport}",
+        icon: "${icon}",
         location: "/services/web/${projectName}/gen/ui/${perspectiveName}/index.html",
         order: "${menuIndex}",
         groupOrder: "${perspectiveOrder}",

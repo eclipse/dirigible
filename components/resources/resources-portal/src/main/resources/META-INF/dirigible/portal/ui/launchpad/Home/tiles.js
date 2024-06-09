@@ -34,6 +34,11 @@ for (let i = 0; i < tileExtensions?.length; i++) {
         location: tile.location,
         caption: tile.caption,
         tooltip: tile.tooltip,
+        project: tile.project,
+        type: tile.type,
+        group: tile.group,
+        report: tile.report,
+        icon: tile.icon,
         order: parseInt(tile.order),
         groupOrder: parseInt(tile.groupOrder)
     });
@@ -58,4 +63,4 @@ for (let i = 0; i < sortedGroups.length; i++) {
     sortedTiles[sortedGroups[i].name] = sortedGroups[i].tiles;
 }
 
-response.println(JSON.stringify(sortedTiles));
+response.println(JSON.stringify(sortedGroups));
