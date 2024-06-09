@@ -840,7 +840,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
             case FATAL:
                 logger.error(
                         "Processing of artefact with key [{}], location [{}] for lifecycle [{}] has failed, synchronizer [{}], error [{}], message [{}]",
-                        artefact.getKey(), artefact.getLocation(), lifecycle, synchronizer, artefact.getError(), message, lifecycle, cause);
+                        artefact.getKey(), artefact.getLocation(), lifecycle, synchronizer, artefact.getError(), message, cause);
                 break;
             default: {
                 logger.info(
