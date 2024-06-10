@@ -21,7 +21,7 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
     $scope.currentProcessInstanceId = null;
     $scope.selectedVariable = null;
     $scope.disableModificationButtons = false;
-    $scope.servicePath = '/services/ide/bpm/bpm-processes/instance/'
+    $scope.servicePath = '/services/bpm/bpm-processes/instance/'
 
     $scope.selectionChanged = function (variable) {
         $scope.variablesList.forEach(variable => variable.selected = false);
@@ -42,7 +42,7 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
     }
 
     $scope.upsertProcessVariable = function(processInstanceId, varName, varValue, dialogId) {
-        const apiUrl = '/services/ide/bpm/bpm-processes/instance/' + processInstanceId + '/variables';
+        const apiUrl = '/services/bpm/bpm-processes/instance/' + processInstanceId + '/variables';
         const requestBody = { 'name': varName, 'value': varValue };
 
         $http({
@@ -155,7 +155,7 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
         $scope.$apply(function () {
             $scope.currentProcessInstanceId = processInstanceId;
             $scope.disableModificationButtons = false
-            $scope.servicePath = '/services/ide/bpm/bpm-processes/instance/'
+            $scope.servicePath = '/services/bpm/bpm-processes/instance/'
         });
         $scope.fetchData(processInstanceId);
     });
@@ -165,7 +165,7 @@ ideBpmProcessContextView.controller('IDEBpmProcessContextViewController', ['$sco
         $scope.$apply(function () {
             $scope.currentProcessInstanceId = processInstanceId;
             $scope.disableModificationButtons = true
-            $scope.servicePath = '/services/ide/bpm/bpm-processes/historic-instances/'
+            $scope.servicePath = '/services/bpm/bpm-processes/historic-instances/'
         });
         $scope.fetchData(processInstanceId);
     });

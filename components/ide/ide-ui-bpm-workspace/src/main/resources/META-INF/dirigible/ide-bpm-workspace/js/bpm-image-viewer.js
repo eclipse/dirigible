@@ -24,12 +24,12 @@ bpmImageView.controller('BpmImageViewController', ['$scope', 'messageHub', funct
     };
 
     $scope.loadDefinitionImageLink = function (definition) {
-        $scope.imageLink = `/services/ide/bpm/bpm-processes/diagram/definition/${definition}`;
+        $scope.imageLink = `/services/bpm/bpm-processes/diagram/definition/${definition}`;
         $scope.state.isBusy = false;
     };
     
     $scope.loadInstanceImageLink = function (instance) {
-        $scope.imageLink = `/services/ide/bpm/bpm-processes/diagram/instance/${instance}`;
+        $scope.imageLink = `/services/bpm/bpm-processes/diagram/instance/${instance}`;
         $scope.state.isBusy = false;
     };
 

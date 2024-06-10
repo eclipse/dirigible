@@ -46,12 +46,12 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 		};
 
 		$scope.fetchData = function() {
-			$http.get('/services/ide/bpm/bpm-processes/tasks?type=groups', { params: { 'limit': 100 } })
+			$http.get('/services/bpm/bpm-processes/tasks?type=groups', { params: { 'limit': 100 } })
 				.then((response) => {
 					$scope.tasksList = response.data;
 				});
 
-			$http.get('/services/ide/bpm/bpm-processes/tasks?type=assignee', { params: { 'limit': 100 } })
+			$http.get('/services/bpm/bpm-processes/tasks?type=assignee', { params: { 'limit': 100 } })
 				.then((response) => {
 					$scope.tasksListAssignee = response.data;
 				});
@@ -78,7 +78,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 		}
 
 		$scope.executeAction = function(taskId, requestBody, actionName, clearCallback) {
-			const apiUrl = '/services/ide/bpm/bpm-processes/tasks/' + taskId;
+			const apiUrl = '/services/bpm/bpm-processes/tasks/' + taskId;
 
 			$http({
 				method: 'POST',
