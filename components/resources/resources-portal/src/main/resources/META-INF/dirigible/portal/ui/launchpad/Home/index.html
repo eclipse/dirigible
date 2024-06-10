@@ -45,7 +45,7 @@
 
 						<div class="fd-row" ng-repeat="group in data">
 
-							<fd-panel expanded="true">
+							<fd-panel expanded="false">
 
 								<fd-panel-header>
 									<fd-panel-expand></fd-panel-expand>
@@ -74,30 +74,42 @@
 										</div>
 
 										<div class="fd-col fd-col--6 fd-col-md--6 fd-col-lg--6 fd-col-xl--6">
-											<ul role="list" no-border="true"
-												class="fd-list fd-list--compact fd-list--no-border">
-												<li tabindex="0" role="listitem" class="fd-list__item"
-													ng-repeat="next in group.tiles"
+
+
+
+
+											<div class="fd-bar--footer fd-bar--compact">
+												<div ng-repeat="next in group.tiles"
 													ng-if="next.type==='REPORT' || next.report==='true'">
-													<span class="fd-list__title" ng-click="openView(
+													<button fd-button-internal=""
+														class="fd-button fd-button--transparent fd-button--compact"
+														compact="true" dg-type="transparent" dg-label="{{next.name}}"
+														ng-click="openView(next.location)">
+														<span ng-class="getTextClasses() class=" fd-list__title"
+															ng-click="openView(
 															next.location.substring(0, next.location.indexOf('/gen/ui/')) + '/gen/ui/Reports/index.html?' + next.name
 															)">{{next.name}}</span>
-												</li>
-											</ul>
+												</div>
+											</div>
 										</div>
+
+
 									</div>
 
-									<div class="fd-row">
-										<div ng-repeat="next in group.tiles" ng-if="next.type==='SETTING'">
+									<div class="fd-col fd-col--12 fd-col-md--12 fd-col-lg--12 fd-col-xl--12">
+										<div class="fd-toolbar" role="toolbar">
+											<div ng-repeat="next in group.tiles" ng-if="next.type==='SETTING'">
+												<button fd-button-internal="" class="fd-button fd-button--compact"
+													compact="true" dg-label="{{next.name}}"
+													ng-click="openView(next.location)">
 
-											<a class="fd-button" ng-click="openView(next.location)">
-												{{next.name}}
-											</a>
-
+													<span ng-class="getTextClasses()"
+														class="fd-button__text">{{next.name}}</span>
+											</div>
+											<div ng-class="getClasses()" ng-style="getStyles()" ng-transclude=""
+												class="fd-toolbar__spacer"></div>
 										</div>
 									</div>
-
-
 								</fd-panel-content>
 							</fd-panel>
 						</div>
