@@ -933,7 +933,7 @@ function createBlobValue(native, value) {
 }
 
 function readClobValue(value) {
-	return value.getSubString(1, value.length());
+	return value;
 }
 
 function createClobValue(native, value) {
@@ -968,7 +968,7 @@ function createClobValue(native, value) {
 }
 
 function readNClobValue(value) {
-	return value.getSubString(1, value.length());
+	return value;
 }
 
 function createNClobValue(native, value) {
