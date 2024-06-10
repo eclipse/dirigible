@@ -120,7 +120,7 @@
 		<!-- Webjars -->
 		<webjars.bootstrap.version>5.3.2</webjars.bootstrap.version>
 		<webjars.locator.version>0.52</webjars.locator.version>
-		<webjars.locator.core.version>0.58</webjars.locator.core.version>
+		<webjars.locator.core.version>0.59</webjars.locator.core.version>
 
 		<!-- GraalVM -->
 		<graalvm.version>24.0.1</graalvm.version>
