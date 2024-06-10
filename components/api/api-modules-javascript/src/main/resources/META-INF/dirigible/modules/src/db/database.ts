@@ -898,7 +898,7 @@ function isHanaDatabase(connection) {
 }
 
 function readBlobValue(value) {
-	return value.getBytes(1, value.length());
+	return value ? value.getBytes(1, value.length()) : value;
 }
 
 function createBlobValue(native, value) {
@@ -933,7 +933,7 @@ function createBlobValue(native, value) {
 }
 
 function readClobValue(value) {
-	return value;
+	return value ? value.getSubString(1, value.length()) : value;
 }
 
 function createClobValue(native, value) {
@@ -968,7 +968,7 @@ function createClobValue(native, value) {
 }
 
 function readNClobValue(value) {
-	return value;
+	return value ? value.getSubString(1, value.length()) : value;
 }
 
 function createNClobValue(native, value) {
