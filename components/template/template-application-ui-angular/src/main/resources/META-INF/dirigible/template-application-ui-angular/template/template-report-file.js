@@ -22,14 +22,12 @@ exports.generate = function (model, parameters) {
         const parsedDataType = parameterUtils.parseDataTypes(e.type);
         e.typeJava = parsedDataType.java;
         e.typeTypescript = parsedDataType.ts;
-    });
-    for (const parameter of model.parameters) {
-        for (const condition of model.conditions) {
-            if (condition.right === `:${parameter.name}` && parameter.typeTypescript === 'string' && condition.operation === 'LIKE') {
-                parameter.isLikeCondition = true;
+        model?.conditions?.forEach(c => {
+            if (c.right === `:${e.name}` && e.typeTypescript === 'string' && c.operation === 'LIKE') {
+                e.isLikeCondition = true;
             }
-        }
-    }
+        });
+    });
     model.queryLines = model.query.split("\n");
     if (parameters.extensionPoint === undefined) {
         parameters.extensionPoint = parameters.projectName;

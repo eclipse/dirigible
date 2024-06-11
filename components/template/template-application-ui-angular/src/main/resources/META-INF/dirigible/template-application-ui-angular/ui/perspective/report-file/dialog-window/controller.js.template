@@ -10,8 +10,8 @@ angular.module('page', ["ideUI", "ideView"])
 
 #foreach ($column in $columns)
 #if($column.typeTypescript == 'Date')
-			if (params.entity.${column.alias}) {
-				params.entity.${column.alias} = new Date(params.entity.${column.alias});
+			if (params.entity['${column.alias}']) {
+				params.entity['${column.alias}'] = new Date(params.entity['${column.alias}']);
 			}
 #end
 #end

@@ -47,8 +47,8 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
                 response.data.forEach(e => {
 #foreach ($column in $columns)
 #if($column.typeTypescript == 'Date')
-                    if (e.${column.alias}) {
-                        e.${column.alias} = new Date(e.${column.alias});
+                    if (e['${column.alias}']) {
+                        e['${column.alias}'] = new Date(e['${column.alias}']);
                     }
 #end
 #end

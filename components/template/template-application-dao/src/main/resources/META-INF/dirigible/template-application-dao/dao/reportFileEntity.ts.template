@@ -3,13 +3,13 @@ import { Query, NamedQueryParameter } from "sdk/db";
 
 export interface ${name} {
 #foreach ($column in $columns)
-    readonly ${column.alias}: ${column.typeTypescript};
+    readonly '${column.alias}': ${column.typeTypescript};
 #end
 }
 
 export interface ${name}Filter {
 #foreach ($parameter in $parameters)
-    readonly ${parameter.name}?: ${parameter.typeTypescript};
+    readonly '${parameter.name}?': ${parameter.typeTypescript};
 #end
 }
 
@@ -40,7 +40,7 @@ export class ${name}Repository {
         parameters.push({
             name: `${parameter.name}`,
             type: `${parameter.type}`,
-            value: filter.${parameter.name} !== undefined ? #if($parameter.typeTypescript == 'string' && $parameter.isLikeCondition) `%${dollar}{filter.${parameter.name}}%`#else filter.${parameter.name}#end : `${parameter.initial}`
+            value: filter['${parameter.name}'] !== undefined ? #if($parameter.typeTypescript == 'string' && $parameter.isLikeCondition) `%${dollar}{filter['${parameter.name}']}%`#else filter['${parameter.name}']#end : `${parameter.initial}`
         });
 #end
 

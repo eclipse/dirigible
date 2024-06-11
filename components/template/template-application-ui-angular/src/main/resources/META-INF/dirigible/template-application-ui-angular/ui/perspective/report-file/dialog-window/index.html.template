@@ -31,7 +31,7 @@
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2"></div>
                         <div class="fd-col fd-col-md--8">
-							<fd-checkbox id="id${column.alias}" compact="false" ng-model="entity.${column.alias}"></fd-checkbox>
+							<fd-checkbox id="id${column.alias}" compact="false" ng-model="entity['${column.alias}']"></fd-checkbox>
                         	<fd-checkbox-label for="id${column.alias}">${column.alias}</fd-checkbox-label>
                         </div>
                     </fd-form-item>
@@ -44,7 +44,7 @@
 	                        <fd-step-input dg-id="id${column.alias}"
 								class="right-align"
 								name="${column.alias}"
-								ng-model="entity.${column.alias}"
+								ng-model="entity['${column.alias}']"
 								is-readonly="true"
 								placeholder="Enter ${column.alias}"
 								>
@@ -59,7 +59,7 @@
                         <div class="fd-col fd-col-md--2">
 	                        <fd-input id="id${column.alias}"
 	                            name="${column.alias}"
-	                            ng-model="entity.${column.alias}"
+	                            ng-model="entity['${column.alias}']"
 	                            ng-readonly="true"
 	                            type="time">
 	                        </fd-input>
@@ -73,7 +73,7 @@
                         <div class="fd-col fd-col-md--3">
 	                        <fd-input id="id${column.alias}"
 	                            name="${column.alias}"
-	                            ng-model="entity.${column.alias}"
+	                            ng-model="entity['${column.alias}']"
 	                            ng-readonly="true"
 	                            type="datetime-local">
 	                        </fd-input>
@@ -87,7 +87,7 @@
                         <div class="fd-col fd-col-md--2">
 	                        <fd-input id="id${column.alias}"
 	                            name="${column.alias}"
-	                            ng-model="entity.${column.alias}"
+	                            ng-model="entity['${column.alias}']"
 	                            ng-readonly="true"
 	                            type="date">
 	                        </fd-input>
@@ -101,7 +101,7 @@
                         <div class="fd-col fd-col-md--8">
 	                        <fd-input id="id${column.alias}"
 	                            name="${column.alias}"
-	                            ng-model="entity.${column.alias}"
+	                            ng-model="entity['${column.alias}']"
 	                            ng-readonly="true"
 	                            type="text"
 	                            placeholder="Enter ${column.alias}">

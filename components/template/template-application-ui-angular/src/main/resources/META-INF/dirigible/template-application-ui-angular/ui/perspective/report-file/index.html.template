@@ -40,7 +40,7 @@
 					<tr fd-table-row hoverable="true" ng-repeat="next in data"
 						dg-selected="next === selectedEntity" ng-click="selectEntity(next)">
 #foreach ($column in $columns) 
-						<td fd-table-cell ng-click="openDetails(next)" hoverable="true" activable="true">{{next.${column.alias}}}</td>
+						<td fd-table-cell ng-click="openDetails(next)" hoverable="true" activable="true">{{next['${column.alias}']}}</td>
 #end
 						<td fd-table-cell fit-content="true">
 							<fd-popover>

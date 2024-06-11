@@ -6,7 +6,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 	.config(["entityApiProvider", function (entityApiProvider) {
 		entityApiProvider.baseUrl = "/services/ts/${projectName}/gen/api/${perspectiveName}/${name}Service.ts";
 	}])
-	.controller('PageController', ['${dollar}scope',#if($hasDropdowns) '${dollar}http',#end 'messageHub', 'entityApi', 'Extensions', function (${dollar}scope,#if($hasDropdowns) ${dollar}http,#end messageHub, entityApi, Extensions) {
+	.controller('PageController', ['${dollar}scope', 'messageHub', 'entityApi', 'Extensions', function (${dollar}scope, messageHub, entityApi, Extensions) {
 
 		$scope.dataPage = 1;
 		$scope.dataCount = 0;
@@ -23,13 +23,6 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				action.id,
 				{
 					filterEntity: $scope.filterEntity,
-		#if($hasDropdowns)
-			#foreach ($property in $properties)
-				#if($property.widgetType == "DROPDOWN")
-					options${property.name}: $scope.options${property.name},
-				#end
-			#end
-		#end
 				},
 				null,
 				true,
@@ -110,62 +103,12 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			messageHub.showDialogWindow("${name}-Report-details", {
 				action: "select",
 				entity: entity,
-#if($hasDropdowns)
-#foreach ($property in $properties)
-#if($property.widgetType == "DROPDOWN")
-				options${property.name}: $scope.options${property.name},
-#end
-#end
-#end
 			});
 		};
 
 		$scope.openFilter = function (entity) {
 			messageHub.showDialogWindow("${name}-Report-filter", {
 				entity: $scope.filterEntity,
-#if($hasDropdowns)
-#foreach ($property in $properties)
-#if($property.widgetType == "DROPDOWN")
-				options${property.name}: $scope.options${property.name},
-#end
-#end
-#end
 			});
 		};
-#if($hasDropdowns)
-
-		//----------------Dropdowns-----------------//
-#foreach ($property in $properties)
-#if($property.widgetType == "DROPDOWN")
-		$scope.options${property.name} = [];
-#end
-#end
-#foreach ($property in $properties)
-#if($property.widgetType == "DROPDOWN")
-
-		${dollar}http.get(${property.widgetDropdownUrl}).then(function (response) {
-			${dollar}scope.options${property.name} = response.data.map(e => {
-				return {
-					value: e.${property.widgetDropDownKey},
-					text: e.${property.widgetDropDownValue}
-				}
-			});
-		});
-#end
-#end
-#foreach ($property in $properties)
-#if($property.widgetType == "DROPDOWN")
-		${dollar}scope.options${property.name}Value = function (optionKey) {
-			for (let i = 0; i < ${dollar}scope.options${property.name}.length; i++) {
-				if (${dollar}scope.options${property.name}[i].value === optionKey) {
-					return ${dollar}scope.options${property.name}[i].text;
-				}
-			}
-			return null;
-		};
-#end
-#end
-		//----------------Dropdowns-----------------//
-#end
-
 	}]);
