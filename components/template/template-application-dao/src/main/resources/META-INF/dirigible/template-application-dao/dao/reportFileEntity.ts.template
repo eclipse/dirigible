@@ -1,5 +1,5 @@
 #set($dollar = '$')
-import { Query } from "sdk/db";
+import { Query, NamedQueryParameter } from "sdk/db";
 
 export interface ${name} {
 #foreach ($column in $columns)
@@ -8,8 +8,8 @@ export interface ${name} {
 }
 
 export interface ${name}Filter {
-#foreach ($column in $columns)
-    readonly ${column.alias}?: ${column.typeTypescript};
+#foreach ($parameter in $parameters)
+    readonly ${parameter.name}?: ${parameter.typeTypescript};
 #end
 }
 
@@ -27,13 +27,45 @@ export class ${name}Repository {
     }
 
     public findAll(filter: ${name}PaginatedFilter): ${name}[] {
-        const sql = `${query}${dollar}{Number.isInteger(filter.$limit) ? ` limit ${dollar}{filter.$limit}` : ''}${dollar}{Number.isInteger(filter.$offset) ? ` offset ${dollar}{filter.$offset}` : ''}`;
-        return Query.execute(sql, [], this.datasourceName);
+        const sql = `
+#foreach($queryLine in $queryLines)
+            ${queryLine}
+#end
+            ${dollar}{Number.isInteger(filter.$limit) ? ` LIMIT ${dollar}{filter.$limit}` : ''}
+            ${dollar}{Number.isInteger(filter.$offset) ? ` OFFSET ${dollar}{filter.$offset}` : ''}
+        `;
+
+        const parameters: NamedQueryParameter[] = [];
+#foreach($parameter in $parameters)
+        parameters.push({
+            name: `${parameter.name}`,
+            type: `${parameter.type}`,
+            value: filter.${parameter.name} !== undefined ? #if($parameter.typeTypescript == 'string' && $parameter.isLikeCondition) `%${dollar}{filter.${parameter.name}}%`#else filter.${parameter.name}#end : `${parameter.initial}`
+        });
+#end
+
+        return Query.executeNamed(sql, parameters, this.datasourceName);
     }
 
     public count(filter: ${name}Filter): number {
-        const sql = `select count(*) as REPORT_COUNT from (${query})`;
-        return Query.execute(sql, [], this.datasourceName)[0].REPORT_COUNT;
+        const sql = `
+            SELECT COUNT(*) as REPORT_COUNT FROM (
+#foreach($queryLine in $queryLines)
+                ${queryLine}
+#end
+            )
+        `;
+
+        const parameters: NamedQueryParameter[] = [];
+#foreach($parameter in $parameters)
+        parameters.push({
+            name: `${parameter.name}`,
+            type: `${parameter.type}`,
+            value: filter.${parameter.name} !== undefined ? #if($parameter.typeTypescript == 'string' && $parameter.isLikeCondition) `%${dollar}{filter.${parameter.name}}%`#else filter.${parameter.name}#end : `${parameter.initial}`
+        });
+#end
+
+        return Query.executeNamed(sql, parameters, this.datasourceName)[0].REPORT_COUNT;
     }
 
 }

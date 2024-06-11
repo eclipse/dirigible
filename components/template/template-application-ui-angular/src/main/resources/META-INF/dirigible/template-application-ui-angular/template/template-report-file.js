@@ -18,6 +18,19 @@ exports.generate = function (model, parameters) {
             model.hasDates = true
         }
     });
+    model?.parameters?.forEach(e => {
+        const parsedDataType = parameterUtils.parseDataTypes(e.type);
+        e.typeJava = parsedDataType.java;
+        e.typeTypescript = parsedDataType.ts;
+    });
+    for (const parameter of model.parameters) {
+        for (const condition of model.conditions) {
+            if (condition.right === `:${parameter.name}` && parameter.typeTypescript === 'string' && condition.operation === 'LIKE') {
+                parameter.isLikeCondition = true;
+            }
+        }
+    }
+    model.queryLines = model.query.split("\n");
     if (parameters.extensionPoint === undefined) {
         parameters.extensionPoint = parameters.projectName;
     }

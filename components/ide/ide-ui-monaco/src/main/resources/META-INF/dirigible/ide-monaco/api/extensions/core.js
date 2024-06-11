@@ -46,5 +46,6 @@ exports.getFileTypes = function () {
         ".json.template": "json",
         ".job.template": "json",
         ".svg.template": "xml",
+        ".report": "json",
     }
 };

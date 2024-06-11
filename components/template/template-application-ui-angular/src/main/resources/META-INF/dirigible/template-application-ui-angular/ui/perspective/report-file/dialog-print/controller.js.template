@@ -13,33 +13,15 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
             const filterEntity = params.filterEntity ?? {};
 
 			const filter = {
-				$filter: {
-					equals: {},
-					notEquals: {},
-					contains: {},
-					greaterThan: {},
-					greaterThanOrEqual: {},
-					lessThan: {},
-					lessThanOrEqual: {}
-				},
 			};
-#foreach ($column in $columns)
-#if($column.typeTypescript == 'number' || $column.typeTypescript == 'boolean')
-			if (filterEntity.${column.alias}) {
-				filter.${dollar}filter.equals.${column.alias} = filterEntity.${column.alias};
-			}
-#elseif($column.typeTypescript == 'string')
-			if (filterEntity.${column.alias}) {
-				filter.${dollar}filter.contains.${column.alias} = filterEntity.${column.alias};
-			}
-#elseif($column.typeTypescript == 'Date')
-			if (filterEntity.${column.alias}From) {
-				filter.${dollar}filter.greaterThanOrEqual.${column.alias} = filterEntity.${column.alias}From;
-			}
-			if (filterEntity.${column.alias}To) {
-				filter.${dollar}filter.lessThanOrEqual.${column.alias} = filterEntity.${column.alias}To;
-			}
+#foreach ($parameter in $parameters)
+			if (filterEntity.${parameter.name}) {
+#if($parameter.typeTypescript == 'Date')
+				filter.${parameter.name} = new Date(filterEntity.${parameter.name});
+#else
+				filter.${parameter.name} = filterEntity.${parameter.name};
 #end
+			}
 #end
 
             $scope.filter = filter;
@@ -62,15 +44,15 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
                 }
 #if($hasDates)
 
-					response.data.forEach(e => {
+                response.data.forEach(e => {
 #foreach ($column in $columns)
 #if($column.typeTypescript == 'Date')
-						if (e.${column.alias}) {
-							e.${column.alias} = new Date(e.${column.alias});
-						}
+                    if (e.${column.alias}) {
+                        e.${column.alias} = new Date(e.${column.alias});
+                    }
 #end
 #end
-					});
+                });
 
 #end
                 $scope.data = response.data;

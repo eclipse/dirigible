@@ -27,106 +27,78 @@
 
             <fd-fieldset ng-form="forms.details">
                 <fd-form-group dg-header="${name} Filter" name="entityForm" class="fd-container fd-form-layout-grid-container">
-#foreach ($column in $columns)
-#if($column.typeTypescript == 'boolean')
+#foreach ($parameter in $parameters)
+#if($parameter.typeTypescript == 'boolean')
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2"></div>
 	                    <div class="fd-col fd-col-md--8">
-							<fd-checkbox id="id${column.alias}"
+							<fd-checkbox id="id${parameter.name}"
 	                            compact="false"
-								ng-model="entity.${column.alias}">
+								ng-model="entity.${parameter.name}">
 	                        </fd-checkbox>
-                        	<fd-checkbox-label for="id${column.alias}">${column.alias}</fd-checkbox-label>
+                        	<fd-checkbox-label for="id${parameter.name}">${parameter.name}</fd-checkbox-label>
                         </div>
                     </fd-form-item>
-#elseif($column.typeTypescript == 'number')
+#elseif($parameter.typeTypescript == 'number')
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${column.alias}" dg-colon="true">${column.alias}</fd-form-label>
+                        	<fd-form-label for="id${parameter.name}" dg-colon="true">${parameter.name}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--4">
-	                        <fd-step-input dg-id="id${column.alias}"
-								name="${column.alias}"
-								state="{{ forms.details['${column.alias}'].$valid ? '' : 'error' }}"
-								ng-model="entity.${column.alias}"
-								placeholder="Enter ${column.alias}"
+	                        <fd-step-input dg-id="id${parameter.name}"
+								name="${parameter.name}"
+								state="{{ forms.details['${parameter.name}'].$valid ? '' : 'error' }}"
+								ng-model="entity.${parameter.name}"
+								placeholder="Enter ${parameter.name}"
 								>
 							</fd-step-input>
 	                    </div>
                     </fd-form-item>
-#elseif($column.typeJava == 'time')
+#elseif($parameter.typeJava == 'time')
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${column.alias}" dg-colon="true">${column.alias}</fd-form-label>
+                        	<fd-form-label for="id${parameter.name}" dg-colon="true">${parameter.name}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
-	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${column.alias}'].$valid }}">
-	                            <fd-input id="id${column.alias}"
-	                                name="${column.alias}"
-	                                state="{{ forms.details['${column.alias}'].$valid ? '' : 'error' }}"
-	                                ng-model="entity.${column.alias}"
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${parameter.name}'].$valid }}">
+	                            <fd-input id="id${parameter.name}"
+	                                name="${parameter.name}"
+	                                state="{{ forms.details['${parameter.name}'].$valid ? '' : 'error' }}"
+	                                ng-model="entity.${parameter.name}"
 	                                type="time">
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
 	                        </fd-form-input-message-group>
 	                    </div>
                     </fd-form-item>
-#elseif($column.typeJava == 'timestamp')
+#elseif($parameter.typeJava == 'timestamp')
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${column.alias}From" dg-colon="true">From ${column.alias}</fd-form-label>
+                        	<fd-form-label for="id${parameter.name}" dg-colon="true">${parameter.name}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--3">
-	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${column.alias}'].$valid }}">
-	                            <fd-input id="id${column.alias}From"
-	                                name="${column.alias}"
-	                                state="{{ forms.details['${column.alias}'].$valid ? '' : 'error' }}"
-	                                ng-model="entity.${column.alias}From"
-	                                type="datetime-local">
-	                            </fd-input>
-	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
-	                        </fd-form-input-message-group>
-	                    </div>
-                    	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${column.alias}To" dg-colon="true">To ${column.alias}</fd-form-label>
-                        </div>
-                        <div class="fd-col fd-col-md--3">
-	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${column.alias}'].$valid }}">
-	                            <fd-input id="id${column.alias}To"
-	                                name="${column.alias}"
-	                                state="{{ forms.details['${column.alias}'].$valid ? '' : 'error' }}"
-	                                ng-model="entity.${column.alias}To"
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${parameter.name}'].$valid }}">
+	                            <fd-input id="id${parameter.name}"
+	                                name="${parameter.name}"
+	                                state="{{ forms.details['${parameter.name}'].$valid ? '' : 'error' }}"
+	                                ng-model="entity.${parameter.name}"
 	                                type="datetime-local">
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
 	                        </fd-form-input-message-group>
 	                    </div>
                     </fd-form-item>
-#elseif($column.typeJava == 'date')
+#elseif($parameter.typeJava == 'date')
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${column.alias}From" dg-colon="true">From ${column.alias}</fd-form-label>
+                        	<fd-form-label for="id${parameter.name}" dg-colon="true">${parameter.name}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
-	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${column.alias}'].$valid }}">
-	                            <fd-input id="id${column.alias}From"
-	                                name="${column.alias}"
-	                                state="{{ forms.details['${column.alias}'].$valid ? '' : 'error' }}"
-	                                ng-model="entity.${column.alias}From"
-	                                type="date">
-	                            </fd-input>
-	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
-	                        </fd-form-input-message-group>
-	                    </div>
-                    	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${column.alias}To" dg-colon="true">To ${column.alias}</fd-form-label>
-                        </div>
-                        <div class="fd-col fd-col-md--2">
-	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${column.alias}'].$valid }}">
-	                            <fd-input id="id${column.alias}To"
-	                                name="${column.alias}"
-	                                state="{{ forms.details['${column.alias}'].$valid ? '' : 'error' }}"
-	                                ng-model="entity.${column.alias}To"
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${parameter.name}'].$valid }}">
+	                            <fd-input id="id${parameter.name}"
+	                                name="${parameter.name}"
+	                                state="{{ forms.details['${parameter.name}'].$valid ? '' : 'error' }}"
+	                                ng-model="entity.${parameter.name}"
 	                                type="date">
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
@@ -136,16 +108,16 @@
 #else
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="id${column.alias}" dg-colon="true">${column.alias}</fd-form-label>
+                        	<fd-form-label for="id${parameter.name}" dg-colon="true">${parameter.name}</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--8">
-	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${column.alias}'].$valid }}">
-	                            <fd-input id="id${column.alias}"
-	                                name="${column.alias}"
-	                                state="{{ forms.details['${column.alias}'].$valid ? '' : 'error' }}"
-	                                ng-model="entity.${column.alias}"
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['${parameter.name}'].$valid }}">
+	                            <fd-input id="id${parameter.name}"
+	                                name="${parameter.name}"
+	                                state="{{ forms.details['${parameter.name}'].$valid ? '' : 'error' }}"
+	                                ng-model="entity.${parameter.name}"
 	                                type="text"
-	                                placeholder="Enter ${column.alias}">
+	                                placeholder="Enter ${parameter.name}">
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
 	                        </fd-form-input-message-group>

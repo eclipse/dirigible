@@ -24,17 +24,17 @@ class ${name}Service {
             this.checkPermissions();
 #end
             const filter: ${name}PaginatedFilter = {
-#foreach ($column in $columns)
-#if($column.typeTypescript == "string")
-                ${column.alias}: ctx.queryParameters.${column.alias} ? ctx.queryParameters.${column.alias} : undefined,
-#elseif($column.typeTypescript == "number")
-                ${column.alias}: ctx.queryParameters.${column.alias} ? parseInt(ctx.queryParameters.${column.alias}) : undefined,
-#elseif($column.typeTypescript == "Date")
-                ${column.alias}: ctx.queryParameters.${column.alias} ? new Date(parseInt(ctx.queryParameters.${column.alias})) : undefined,
-#elseif($column.typeTypescript == "boolean")
-                ${column.alias}: ctx.queryParameters.${column.alias} !== undefined && ctx.queryParameters.${column.alias} !== null ? ctx.queryParameters.${column.alias} === "true" : undefined,
+#foreach ($parameter in $parameters)
+#if($parameter.typeTypescript == "string")
+                ${parameter.name}: ctx.queryParameters.${parameter.name} ? ctx.queryParameters.${parameter.name} : undefined,
+#elseif($parameter.typeTypescript == "number")
+                ${parameter.name}: ctx.queryParameters.${parameter.name} ? parseInt(ctx.queryParameters.${parameter.name}) : undefined,
+#elseif($parameter.typeTypescript == "Date")
+                ${parameter.name}: ctx.queryParameters.${parameter.name} ? new Date(parseInt(ctx.queryParameters.${parameter.name})) : undefined,
+#elseif($parameter.typeTypescript == "boolean")
+                ${parameter.name}: ctx.queryParameters.${parameter.name} !== undefined && ctx.queryParameters.${parameter.name} !== null ? ctx.queryParameters.${column.alias} === "true" : undefined,
 #else
-                ${column.alias}: ctx.queryParameters.${column.alias} ? ctx.queryParameters.${column.alias} as unknown: undefined,
+                ${parameter.name}: ctx.queryParameters.${parameter.name} ? ctx.queryParameters.${parameter.name} as unknown: undefined,
 #end
 #end
                 "$limit": ctx.queryParameters["$limit"] ? parseInt(ctx.queryParameters["$limit"]) : undefined,
@@ -58,17 +58,17 @@ class ${name}Service {
             this.checkPermissions();
 #end
             const filter: ${name}Filter = {
-#foreach ($column in $columns)
-#if($column.typeTypescript == "string")
-                ${column.alias}: ctx.queryParameters.${column.alias} ? ctx.queryParameters.${column.alias} : undefined,
-#elseif($column.typeTypescript == "number")
-                ${column.alias}: ctx.queryParameters.${column.alias} ? parseInt(ctx.queryParameters.${column.alias}) : undefined,
-#elseif($column.typeTypescript == "Date")
-                ${column.alias}: ctx.queryParameters.${column.alias} ? new Date(parseInt(ctx.queryParameters.${column.alias})) : undefined,
-#elseif($column.typeTypescript == "boolean")
-                ${column.alias}: ctx.queryParameters.${column.alias} !== undefined && ctx.queryParameters.${column.alias} !== null ? ctx.queryParameters.${column.alias} === "true" : undefined,
+#foreach ($parameter in $parameters)
+#if($parameter.typeTypescript == "string")
+                ${parameter.name}: ctx.queryParameters.${parameter.name} ? ctx.queryParameters.${parameter.name} : undefined,
+#elseif($parameter.typeTypescript == "number")
+                ${parameter.name}: ctx.queryParameters.${parameter.name} ? parseInt(ctx.queryParameters.${parameter.name}) : undefined,
+#elseif($parameter.typeTypescript == "Date")
+                ${parameter.name}: ctx.queryParameters.${parameter.name} ? new Date(parseInt(ctx.queryParameters.${parameter.name})) : undefined,
+#elseif($parameter.typeTypescript == "boolean")
+                ${parameter.name}: ctx.queryParameters.${parameter.name} !== undefined && ctx.queryParameters.${parameter.name} !== null ? ctx.queryParameters.${column.alias} === "true" : undefined,
 #else
-                ${column.alias}: ctx.queryParameters.${column.alias} ? ctx.queryParameters.${column.alias} as unknown: undefined,
+                ${parameter.name}: ctx.queryParameters.${parameter.name} ? ctx.queryParameters.${parameter.name} as unknown: undefined,
 #end
 #end
             };

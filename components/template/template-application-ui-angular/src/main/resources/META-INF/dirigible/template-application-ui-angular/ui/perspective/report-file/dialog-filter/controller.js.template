@@ -12,13 +12,10 @@ angular.module('page', ["ideUI", "ideView"])
 
 		let params = ViewParameters.get();
 		if (Object.keys(params).length) {
-#foreach ($column in $columns)
-#if($column.typeTypescript == 'Date')
-			if (params?.entity?.${column.alias}From) {
-				params.entity.${column.alias}From = new Date(params.entity.${column.alias}From);
-			}
-			if (params?.entity?.${column.alias}To) {
-				params.entity.${column.alias}To = new Date(params.entity.${column.alias}To);
+#foreach ($parameter in $parameters)
+#if($parameter.typeTypescript == 'Date')
+			if (params?.entity?.${parameter.name}) {
+				params.entity.${parameter.name} = new Date(params.entity.${parameter.name});
 			}
 #end
 #end
@@ -30,40 +27,16 @@ angular.module('page', ["ideUI", "ideView"])
 		$scope.filter = function () {
 			let entity = $scope.entity;
 			const filter = {
-				$filter: {
-					equals: {
-					},
-					notEquals: {
-					},
-					contains: {
-					},
-					greaterThan: {
-					},
-					greaterThanOrEqual: {
-					},
-					lessThan: {
-					},
-					lessThanOrEqual: {
-					}
-				},
+
 			};
-#foreach ($column in $columns)
-#if($column.typeTypescript == 'number' || $column.typeTypescript == 'boolean')
-			if (entity.${column.alias}) {
-				filter.${dollar}filter.equals.${column.alias} = entity.${column.alias};
-			}
-#elseif($column.typeTypescript == 'string')
-			if (entity.${column.alias}) {
-				filter.${dollar}filter.contains.${column.alias} = entity.${column.alias};
-			}
-#elseif($column.typeTypescript == 'Date')
-			if (entity.${column.alias}From) {
-				filter.${dollar}filter.greaterThanOrEqual.${column.alias} = entity.${column.alias}From;
-			}
-			if (entity.${column.alias}To) {
-				filter.${dollar}filter.lessThanOrEqual.${column.alias} = entity.${column.alias}To;
-			}
+#foreach($parameter in $parameters)
+			if (entity.${parameter.name}) {
+#if($parameter.typeTypescript == 'Date')
+				filter.${parameter.name} = entity.${parameter.name}?.getTime();
+#else
+				filter.${parameter.name} = entity.${parameter.name};
 #end
+			}
 #end
 			messageHub.postMessage("entitySearch", {
 				entity: entity,
