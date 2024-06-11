@@ -902,8 +902,9 @@ function readBlobValue(value) {
 }
 
 function createBlobValue(native, value) {
+    let connection;
 	try {
-		let connection = native.getConnection();
+		connection = native.getConnection();
 		if (connection === null || connection === undefined) {
 			throw new Error("Can't create new 'Blob' value as the connection is null");
 		}
@@ -929,7 +930,11 @@ function createBlobValue(native, value) {
 		return blob;
 	} catch (e) {
 		throw new Error(`Error occured during creation of 'Clob' value: ${e.message}`);
-	}
+	} finally {
+        if(connection) {
+            connection.close();
+        }
+    }
 }
 
 function readClobValue(value) {
@@ -937,8 +942,9 @@ function readClobValue(value) {
 }
 
 function createClobValue(native, value) {
+    let connection;
 	try {
-		let connection = native.getConnection();
+		connection = native.getConnection();
 		if (connection === null || connection === undefined) {
 			throw new Error("Can't create new 'Clob' value as the connection is null");
 		}
@@ -964,7 +970,11 @@ function createClobValue(native, value) {
 		return clob;
 	} catch (e) {
 		throw new Error(`Error occured during creation of 'Clob' value: ${e.message}`);
-	}
+	} finally {
+         if(connection) {
+             connection.close();
+         }
+     }
 }
 
 function readNClobValue(value) {
@@ -972,8 +982,9 @@ function readNClobValue(value) {
 }
 
 function createNClobValue(native, value) {
+    let connection;
 	try {
-		let connection = native.getConnection();
+		connection = native.getConnection();
 		if (connection === null || connection === undefined) {
 			throw new Error("Can't create new 'NClob' value as the connection is null");
 		}
@@ -999,7 +1010,11 @@ function createNClobValue(native, value) {
 		return nclob;
 	} catch (e) {
 		throw new Error(`Error occured during creation of 'NClob' value: ${e.message}`);
-	}
+	} finally {
+        if(connection) {
+          connection.close();
+        }
+  }
 }
 
 function getDateValue(value) {
