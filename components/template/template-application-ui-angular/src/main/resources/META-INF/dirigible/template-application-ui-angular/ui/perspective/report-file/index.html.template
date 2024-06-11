@@ -18,7 +18,9 @@
 	<body class="dg-vbox">
 		<fd-toolbar has-title="true">
 			<fd-toolbar-title>Items ({{dataCount}})</fd-toolbar-title>
+#if($parameters.size() > 0)
 			<fd-button compact="true" dg-type="transparent" dg-label="Filter" ng-click="openFilter()"></fd-button>
+#end
 			<fd-button ng-repeat="action in pageActions" compact="true" dg-type="transparent" dg-label="{{action.label}}" ng-click="triggerPageAction(action)"></fd-button>
 			<fd-toolbar-spacer></fd-toolbar-spacer>
 		</fd-toolbar>
