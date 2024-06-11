@@ -8,19 +8,14 @@ angular.module('page', ["ideUI", "ideView"])
 		if (Object.keys(params).length) {
 			$scope.action = "select";;
 
-#foreach ($property in $properties)
-#if($property.isDateType)
-			if (params.entity.${property.name}) {
-				params.entity.${property.name} = new Date(params.entity.${property.name});
+#foreach ($column in $columns)
+#if($column.typeTypescript == 'Date')
+			if (params.entity.${column.alias}) {
+				params.entity.${column.alias} = new Date(params.entity.${column.alias});
 			}
 #end
 #end
 			$scope.entity = params.entity;
-#foreach ($property in $properties)
-#if($property.widgetType == "DROPDOWN")
-			$scope.options${property.name} = params.options${property.name};
-#end
-#end
 		}
 
 	}]);

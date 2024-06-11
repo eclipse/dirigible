@@ -1,3 +1,4 @@
+#set($dollar = '$')
 import { Query } from "sdk/db";
 
 export interface ${name} {
@@ -26,7 +27,7 @@ export class ${name}Repository {
     }
 
     public findAll(filter: ${name}PaginatedFilter): ${name}[] {
-        const sql = `${query}`;
+        const sql = `${query}${dollar}{Number.isInteger(filter.$limit) ? ` limit ${dollar}{filter.$limit}` : ''}${dollar}{Number.isInteger(filter.$offset) ? ` offset ${dollar}{filter.$offset}` : ''}`;
         return Query.execute(sql, [], this.datasourceName);
     }
 

@@ -27,6 +27,73 @@
             <fd-fieldset ng-form="formFieldset">
                 <fd-form-group dg-header="${name} Details" name="entityForm" class="fd-container fd-form-layout-grid-container">
 #foreach ($column in $columns)
+#if($column.typeTypescript == 'boolean')
+                    <fd-form-item class="fd-row">
+                    	<div class="fd-col fd-col-md--2"></div>
+                        <div class="fd-col fd-col-md--8">
+							<fd-checkbox id="id${column.alias}" compact="false" ng-model="entity.${column.alias}"></fd-checkbox>
+                        	<fd-checkbox-label for="id${column.alias}">${column.alias}</fd-checkbox-label>
+                        </div>
+                    </fd-form-item>
+#elseif($column.typeTypescript == 'number')
+                    <fd-form-item class="fd-row">
+                    	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="id${column.alias}" dg-colon="true">${column.alias}</fd-form-label>
+                        </div>
+                        <div class="fd-col fd-col-md--4">
+	                        <fd-step-input dg-id="id${column.alias}"
+								class="right-align"
+								name="${column.alias}"
+								ng-model="entity.${column.alias}"
+								is-readonly="true"
+								placeholder="Enter ${column.alias}"
+								>
+							</fd-step-input>
+	                    </div>
+                    </fd-form-item>
+#elseif($column.typeJava == 'time')
+                    <fd-form-item class="fd-row">
+                    	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="id${column.alias}" dg-colon="true">${column.alias}</fd-form-label>
+                        </div>
+                        <div class="fd-col fd-col-md--2">
+	                        <fd-input id="id${column.alias}"
+	                            name="${column.alias}"
+	                            ng-model="entity.${column.alias}"
+	                            ng-readonly="true"
+	                            type="time">
+	                        </fd-input>
+	                    </div>
+                    </fd-form-item>
+#elseif($column.typeJava == 'timestamp')
+                    <fd-form-item class="fd-row">
+                    	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="id${column.alias}" dg-colon="true">${column.alias}</fd-form-label>
+                        </div>
+                        <div class="fd-col fd-col-md--3">
+	                        <fd-input id="id${column.alias}"
+	                            name="${column.alias}"
+	                            ng-model="entity.${column.alias}"
+	                            ng-readonly="true"
+	                            type="datetime-local">
+	                        </fd-input>
+	                    </div>
+                    </fd-form-item>
+#elseif($column.typeJava == 'date')
+                    <fd-form-item class="fd-row">
+                    	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="id${column.alias}" dg-colon="true">${column.alias}</fd-form-label>
+                        </div>
+                        <div class="fd-col fd-col-md--2">
+	                        <fd-input id="id${column.alias}"
+	                            name="${column.alias}"
+	                            ng-model="entity.${column.alias}"
+	                            ng-readonly="true"
+	                            type="date">
+	                        </fd-input>
+	                    </div>
+                    </fd-form-item>
+#else
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="id${column.alias}" dg-colon="true">${column.alias}</fd-form-label>
@@ -41,6 +108,7 @@
 	                        </fd-input>
 	                    </div>
                     </fd-form-item>
+#end
 #end
 				</fd-form-group>
             </fd-fieldset>

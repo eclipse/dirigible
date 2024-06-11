@@ -14,6 +14,9 @@ exports.generate = function (model, parameters) {
         const parsedDataType = parameterUtils.parseDataTypes(e.type);
         e.typeJava = parsedDataType.java;
         e.typeTypescript = parsedDataType.ts;
+        if (e.typeTypescript === "Date") {
+            model.hasDates = true
+        }
     });
     if (parameters.extensionPoint === undefined) {
         parameters.extensionPoint = parameters.projectName;

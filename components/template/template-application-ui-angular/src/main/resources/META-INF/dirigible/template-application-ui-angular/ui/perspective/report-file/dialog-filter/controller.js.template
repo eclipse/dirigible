@@ -13,7 +13,7 @@ angular.module('page', ["ideUI", "ideView"])
 		let params = ViewParameters.get();
 		if (Object.keys(params).length) {
 #foreach ($column in $columns)
-#if($property.isDateType)
+#if($column.typeTypescript == 'Date')
 			if (params?.entity?.${column.alias}From) {
 				params.entity.${column.alias}From = new Date(params.entity.${column.alias}From);
 			}
@@ -25,11 +25,6 @@ angular.module('page', ["ideUI", "ideView"])
 			$scope.entity = params.entity ?? {};
 			$scope.selectedMainEntityKey = params.selectedMainEntityKey;
 			$scope.selectedMainEntityId = params.selectedMainEntityId;
-#foreach ($column in $columns)
-#if($property.widgetType == "DROPDOWN")
-			$scope.options${column.alias} = params.options${column.alias};
-#end
-#end
 		}
 
 		$scope.filter = function () {

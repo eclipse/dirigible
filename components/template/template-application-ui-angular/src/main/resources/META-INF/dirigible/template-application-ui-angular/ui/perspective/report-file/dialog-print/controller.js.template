@@ -43,12 +43,6 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 #end
 
             $scope.filter = filter;
-
-    #foreach ($column in $columns)
-        #if($property.widgetType == "DROPDOWN")
-			$scope.options${column.alias} = params.options${column.alias};
-        #end
-    #end
 		}
 
         $scope.loadPage = function (filter) {
@@ -70,7 +64,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 
 					response.data.forEach(e => {
 #foreach ($column in $columns)
-#if($property.isDateType)
+#if($column.typeTypescript == 'Date')
 						if (e.${column.alias}) {
 							e.${column.alias} = new Date(e.${column.alias});
 						}
@@ -88,18 +82,6 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
         };
         $scope.loadPage($scope.filter);
 
-#foreach ($column in $columns)
-    #if($property.widgetType == "DROPDOWN")
-		${dollar}scope.options${column.alias}Value = function (optionKey) {
-			for (let i = 0; i < ${dollar}scope.options${column.alias}.length; i++) {
-				if (${dollar}scope.options${column.alias}[i].value === optionKey) {
-					return ${dollar}scope.options${column.alias}[i].text;
-				}
-			}
-			return null;
-		};
-    #end
-#end
         window.onafterprint = () => {
             messageHub.closeDialogWindow("${projectName}-Reports-${name}-print");
         }
