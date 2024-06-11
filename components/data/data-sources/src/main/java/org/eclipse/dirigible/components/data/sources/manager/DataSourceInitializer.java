@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static java.text.MessageFormat.format;
 
@@ -39,10 +40,8 @@ public class DataSourceInitializer {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DataSourceInitializer.class);
-
     /** The Constant DATASOURCES. */
     private static final Map<String, javax.sql.DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<>());
-
     /** The application context. */
     private final ApplicationContext applicationContext;
 
@@ -157,12 +156,29 @@ public class DataSourceInitializer {
         config.setSchema(schema);
         config.setPoolName(name);
         config.setAutoCommit(true);
+        config.setMaximumPoolSize(20);
+
+        config.setMinimumIdle(10);
+        config.setIdleTimeout(TimeUnit.MINUTES.toMillis(3)); // free connections when idle, potentially remove leaked connections
+        config.setMaxLifetime(TimeUnit.MINUTES.toMillis(15)); // recreate connections after specified time
+        config.setConnectionTimeout(TimeUnit.SECONDS.toMillis(15));
+        config.setLeakDetectionThreshold(TimeUnit.MINUTES.toMillis(1)); // log message for possible leaked connection
+
+        boolean isHANA = Objects.equals(null == driver ? null : driver.trim(), "com.sap.db.jdbc.Driver");
+        if (isHANA) {
+            config.setConnectionTestQuery("SELECT 1 FROM DUMMY"); // connection validation query
+            config.setKeepaliveTime(TimeUnit.MINUTES.toMillis(5)); // validation execution interval, must be bigger than idle timeout
+        }
+
         HikariDataSource hds = new HikariDataSource(config);
 
         ManagedDataSource managedDataSource = new ManagedDataSource(hds);
         registerDataSourceBean(name, managedDataSource);
 
         DATASOURCES.put(name, managedDataSource);
+
+        Runtime.getRuntime()
+               .addShutdownHook(new Thread(hds::close));
 
         return managedDataSource;
     }

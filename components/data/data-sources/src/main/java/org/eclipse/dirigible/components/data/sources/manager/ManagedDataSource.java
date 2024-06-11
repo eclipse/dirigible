@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.components.data.sources.manager;
 
+import com.zaxxer.hikari.pool.LeakedConnectionsDoctor;
 import org.eclipse.dirigible.components.api.security.UserFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,7 @@ public class ManagedDataSource implements DataSource {
     private static final String DATABASE_NAME_HDB = "HDB";
     /** The Constant DATABASE_NAME_SNOWFLAKE. */
     private static final String DATABASE_NAME_SNOWFLAKE = "Snowflake";
+
     /** The original data source. */
     private final DataSource originalDataSource;
     /** The database name. */
@@ -60,6 +62,7 @@ public class ManagedDataSource implements DataSource {
         Connection connection = originalDataSource.getConnection();
 
         enhanceConnection(connection);
+        LeakedConnectionsDoctor.registerConnection(connection);
 
         return connection;
     }
@@ -118,6 +121,7 @@ public class ManagedDataSource implements DataSource {
         Connection connection = originalDataSource.getConnection(username, password);
 
         enhanceConnection(connection);
+        LeakedConnectionsDoctor.registerConnection(connection);
 
         return connection;
     }

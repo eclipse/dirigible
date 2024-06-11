@@ -903,7 +903,7 @@ function readBlobValue(value) {
 
 function createBlobValue(native, value) {
 	try {
-		let connection = native.getConnection();
+		let connection = native.getConnection(); // intentionally not closed
 		if (connection === null || connection === undefined) {
 			throw new Error("Can't create new 'Blob' value as the connection is null");
 		}
@@ -938,7 +938,7 @@ function readClobValue(value) {
 
 function createClobValue(native, value) {
 	try {
-		let connection = native.getConnection();
+		let connection = native.getConnection(); // intentionally not closed
 		if (connection === null || connection === undefined) {
 			throw new Error("Can't create new 'Clob' value as the connection is null");
 		}
@@ -973,7 +973,7 @@ function readNClobValue(value) {
 
 function createNClobValue(native, value) {
 	try {
-		let connection = native.getConnection();
+		let connection = native.getConnection(); // intentionally not closed
 		if (connection === null || connection === undefined) {
 			throw new Error("Can't create new 'NClob' value as the connection is null");
 		}
