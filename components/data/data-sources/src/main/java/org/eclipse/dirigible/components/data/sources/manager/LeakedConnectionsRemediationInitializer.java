@@ -11,6 +11,7 @@ class LeakedConnectionsRemediationInitializer {
     private static final Logger LOGGER = LoggerFactory.getLogger(LeakedConnectionsRemediationInitializer.class);
 
     static {
-        LOGGER.info("Initializing [{}]...", LeakedConnectionsDoctor.class);
+        LeakedConnectionsDoctor.init();
+        LOGGER.info("Initialized [{}]...", LeakedConnectionsDoctor.class);
     }
 }
