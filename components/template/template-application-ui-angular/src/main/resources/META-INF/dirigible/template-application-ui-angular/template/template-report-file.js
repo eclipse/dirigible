@@ -38,7 +38,6 @@ exports.generate = function (model, parameters) {
     if (parameters.perspectiveName === undefined) {
         parameters.perspectiveName = model.name;
     }
-    console.error(`Model is: ${JSON.stringify(model)}`);
     return generateUtils.generateGeneric(model, parameters, templateSources);
 };
 

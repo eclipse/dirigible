@@ -1344,7 +1344,6 @@ angular.module('page', ['ideUI', 'ideView', 'ideWorkspace'])
 
 			if ($scope.report.joins) {
 				for (let i = 0; i < $scope.report.joins.length; i++) {
-					// if (i > 0) { $scope.query += ', ' }
 					$scope.query += "\n  " + $scope.report.joins[i].type + " JOIN " + $scope.report.joins[i].name + " " + $scope.report.joins[i].alias + " ON " + $scope.report.joins[i].condition;
 				}
 			}
