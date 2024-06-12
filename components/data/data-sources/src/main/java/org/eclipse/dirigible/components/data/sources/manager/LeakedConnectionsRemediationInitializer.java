@@ -12,6 +12,6 @@ class LeakedConnectionsRemediationInitializer {
 
     static {
         LeakedConnectionsDoctor.init();
-        LOGGER.info("Initialized [{}]...", LeakedConnectionsDoctor.class);
+        LOGGER.info("Initialized [{}]", LeakedConnectionsDoctor.class);
     }
 }
