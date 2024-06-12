@@ -62,88 +62,9 @@ exports.process = function (model, parameters) {
             p.widgetLabel = p.widgetLabel ? p.widgetLabel : p.name;
             p.widgetDropdownUrl = "";
 
-            switch (p.dataType.toUpperCase()) {
-                case "TINYINT":
-                case "INT1":
-                case "SMALLINT":
-                case "INT2":
-                case "SMALLSERIAL":
-                    p.dataTypeJava = "short";
-                    p.dataTypeTypescript = "number";
-                    break;
-                case "MEDIUMINT":
-                case "INT3":
-                case "INT":
-                case "INT4":
-                case "INTEGER":
-                case "SERIAL":
-                    p.dataTypeJava = "int";
-                    p.dataTypeTypescript = "number";
-                    break;
-                case "BIGINT":
-                case "INT8":
-                case "BIGSERIAL":
-                    p.dataTypeJava = "long";
-                    p.dataTypeTypescript = "number";
-                    break;
-                case "DECIMAL":
-                case "DEC":
-                case "NUMERIC":
-                case "FIXED":
-                case "DOUBLE":
-                case "DOUBLE PRECISION":
-                case "REAL":
-                    p.dataTypeJava = "double";
-                    p.dataTypeTypescript = "number";
-                    break;
-                case "FLOAT":
-                case "MONEY":
-                    p.dataTypeJava = "float";
-                    p.dataTypeTypescript = "number";
-                    break;
-                case "CHAR":
-                case "ENUM":
-                case "INET4":
-                case "INET6":
-                case "TEXT":
-                case "TINYTEXT":
-                case "MEDIUMTEXT":
-                case "LONGTEXT":
-                case "VARCHAR":
-                case "LONG VARCHAR":
-                case "CHARACTER VARYING":
-                case "CHARACTER":
-                case "BPCHAR":
-                    p.dataTypeJava = "string";
-                    p.dataTypeTypescript = "string";
-                    break;
-                case "DATE":
-                    p.dataTypeJava = "date";
-                    p.dataTypeTypescript = "Date";
-                    break;
-                case "TIME":
-                case "TIME WITH TIME ZONE":
-                    p.dataTypeJava = "time";
-                    p.dataTypeTypescript = "Date";
-                    break;
-                case "DATETIME":
-                case "TIMESTAMP":
-                case "TIMESTAMP WITH TIME ZONE":
-                    p.dataTypeJava = "timestamp";
-                    p.dataTypeTypescript = "Date";
-                    break;
-                case "BOOLEAN":
-                    p.dataTypeJava = "boolean";
-                    p.dataTypeTypescript = "boolean";
-                    break;
-                case "NULL":
-                    p.dataTypeJava = "null";
-                    p.dataTypeTypescript = "null";
-                    break;
-                default:
-                    p.dataTypeTypescript = "unknown";
-
-            }
+            const parsedDataType = exports.parseDataTypes(p.dataType);
+            p.dataTypeJava = parsedDataType.java;
+            p.dataTypeTypescript = parsedDataType.ts;
 
             if (p.dataPrimaryKey) {
                 if (e.primaryKeys === undefined) {
@@ -255,4 +176,94 @@ exports.getUniqueParameters = function (...parameters) {
         uniqueTemplateParameters.push(next);
     }
     return uniqueTemplateParameters;
+}
+
+exports.parseDataTypes = function (dataType) {
+    const parsedDataType = {
+        java: '',
+        ts: ''
+    };
+    switch (dataType.toUpperCase()) {
+        case "TINYINT":
+        case "INT1":
+        case "SMALLINT":
+        case "INT2":
+        case "SMALLSERIAL":
+            parsedDataType.java = "short";
+            parsedDataType.ts = "number";
+            break;
+        case "MEDIUMINT":
+        case "INT3":
+        case "INT":
+        case "INT4":
+        case "INTEGER":
+        case "SERIAL":
+            parsedDataType.java = "int";
+            parsedDataType.ts = "number";
+            break;
+        case "BIGINT":
+        case "INT8":
+        case "BIGSERIAL":
+            parsedDataType.java = "long";
+            parsedDataType.ts = "number";
+            break;
+        case "DECIMAL":
+        case "DEC":
+        case "NUMERIC":
+        case "FIXED":
+        case "DOUBLE":
+        case "DOUBLE PRECISION":
+        case "REAL":
+            parsedDataType.java = "double";
+            parsedDataType.ts = "number";
+            break;
+        case "FLOAT":
+        case "MONEY":
+            parsedDataType.java = "float";
+            parsedDataType.ts = "number";
+            break;
+        case "CHAR":
+        case "ENUM":
+        case "INET4":
+        case "INET6":
+        case "TEXT":
+        case "TINYTEXT":
+        case "MEDIUMTEXT":
+        case "LONGTEXT":
+        case "VARCHAR":
+        case "LONG VARCHAR":
+        case "CHARACTER VARYING":
+        case "CHARACTER":
+        case "BPCHAR":
+            parsedDataType.java = "string";
+            parsedDataType.ts = "string";
+            break;
+        case "DATE":
+            parsedDataType.java = "date";
+            parsedDataType.ts = "Date";
+            break;
+        case "TIME":
+        case "TIME WITH TIME ZONE":
+            parsedDataType.java = "time";
+            parsedDataType.ts = "Date";
+            break;
+        case "DATETIME":
+        case "TIMESTAMP":
+        case "TIMESTAMP WITH TIME ZONE":
+            parsedDataType.java = "timestamp";
+            parsedDataType.ts = "Date";
+            break;
+        case "BOOLEAN":
+            parsedDataType.java = "boolean";
+            parsedDataType.ts = "boolean";
+            break;
+        case "NULL":
+            parsedDataType.java = "null";
+            parsedDataType.ts = "null";
+            break;
+        default:
+            parsedDataType.ts = "unknown";
+    }
+
+    return parsedDataType;
 }
