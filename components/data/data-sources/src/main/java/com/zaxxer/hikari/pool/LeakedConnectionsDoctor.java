@@ -18,7 +18,8 @@ public class LeakedConnectionsDoctor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LeakedConnectionsDoctor.class);
 
-    private static final long MAX_IN_USE_MILLIS = DirigibleConfig.LEAKED_CONNECTIONS_MAX_IN_USE_MILLIS.getIntValue();
+    private static final long MAX_IN_USE_MILLIS =
+            TimeUnit.SECONDS.toMillis(DirigibleConfig.LEAKED_CONNECTIONS_MAX_IN_USE_SECONDS.getIntValue());
 
     private static final Set<InUseConnectionEntry> IN_USE_CONNECTIONS = new HashSet<>();
 
@@ -88,8 +89,7 @@ public class LeakedConnectionsDoctor {
                     && (isNotBorrowedSinceRegistered(hikariProxyConnection.getPoolEntry(), entry)
                             && isNotAccessedSinceRegistered(hikariProxyConnection.getPoolEntry(), entry))) {
 
-                boolean maxInUsePassed =
-                        executionStartedAt > (entry.borrowedAt + DirigibleConfig.LEAKED_CONNECTIONS_MAX_IN_USE_MILLIS.getIntValue());
+                boolean maxInUsePassed = executionStartedAt > (entry.borrowedAt + MAX_IN_USE_MILLIS);
                 if (maxInUsePassed) {
                     closeLeakedEntry(entry, hikariProxyConnection);
                     connectionsForRemove.add(entry);
