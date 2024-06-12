@@ -1,6 +1,7 @@
 package com.zaxxer.hikari.pool;
 
 import com.zaxxer.hikari.util.ConcurrentBag;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,16 +15,18 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class LeakedConnectionsDoctor {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(LeakedConnectionsDoctor.class);
 
-    private static final long MAX_IN_USE_MILLIS = TimeUnit.MINUTES.toMillis(3);
+    private static final long MAX_IN_USE_MILLIS = DirigibleConfig.LEAKED_CONNECTIONS_MAX_IN_USE_MILLIS.getIntValue();
 
     private static final Set<InUseConnectionEntry> IN_USE_CONNECTIONS = new HashSet<>();
 
     static {
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
-        executor.scheduleAtFixedRate(LeakedConnectionsDoctor::closeLeakedConnections, 30, 30, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(LeakedConnectionsDoctor::closeLeakedConnections, 30,
+                DirigibleConfig.LEAKED_CONNECTIONS_CHECK_INTERVAL_SECONDS.getIntValue(), TimeUnit.SECONDS);
 
         Runtime.getRuntime()
                .addShutdownHook(new Thread(() -> {
@@ -85,7 +88,8 @@ public class LeakedConnectionsDoctor {
                     && (isNotBorrowedSinceRegistered(hikariProxyConnection.getPoolEntry(), entry)
                             && isNotAccessedSinceRegistered(hikariProxyConnection.getPoolEntry(), entry))) {
 
-                boolean maxInUsePassed = executionStartedAt > (entry.borrowedAt + MAX_IN_USE_MILLIS);
+                boolean maxInUsePassed =
+                        executionStartedAt > (entry.borrowedAt + DirigibleConfig.LEAKED_CONNECTIONS_MAX_IN_USE_MILLIS.getIntValue());
                 if (maxInUsePassed) {
                     closeLeakedEntry(entry, hikariProxyConnection);
                     connectionsForRemove.add(entry);
