@@ -178,7 +178,7 @@
 		
 		<!-- QLDB -->
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.736</qldb.sdk.version>
+		<qldb.sdk.version>1.12.741</qldb.sdk.version>
 		
 		<!-- jETCD -->
 		<jetcd.core.version>0.8.2</jetcd.core.version>
