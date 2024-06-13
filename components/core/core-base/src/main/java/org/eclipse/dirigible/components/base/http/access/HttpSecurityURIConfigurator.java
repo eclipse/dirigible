@@ -51,6 +51,7 @@ public class HttpSecurityURIConfigurator {
 
     /** The Constant DEVELOPER_PATTERNS. */
     private static final String[] DEVELOPER_PATTERNS = {//
+            "/services/bpm/**", //
             "/services/ide/**", //
             "/websockets/ide/**"};
 

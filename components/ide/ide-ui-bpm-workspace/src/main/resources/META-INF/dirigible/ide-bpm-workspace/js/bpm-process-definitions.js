@@ -40,7 +40,7 @@ ideBpmProcessDefinitionsView.controller('IDEBpmProcessDefinitionsViewController'
 	            return;
 	        }
 	
-	        $http.get('/services/ide/bpm/bpm-processes/definitions', { params: { 'condition': this.filterBy, 'limit': limit } })
+	        $http.get('/services/bpm/bpm-processes/definitions', { params: { 'condition': this.filterBy, 'limit': limit } })
 	            .then((response) => {
 	                if (this.definitionsList.length < response.data.length) {
 	                    //messageHub.showAlertInfo("User definitions", "A new user task has been added");

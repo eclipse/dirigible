@@ -42,7 +42,7 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
                 return;
             }
 
-            $http.get('/services/ide/bpm/bpm-processes/instances', { params: { 'id': this.searchText, 'key': this.selectedProcessDefinitionKey, 'limit': 100 } })
+            $http.get('/services/bpm/bpm-processes/instances', { params: { 'id': this.searchText, 'key': this.selectedProcessDefinitionKey, 'limit': 100 } })
                 .then((response) => {
                     if (this.instancesList.length < response.data.length) {
                         //messageHub.showAlertInfo("User instances", "A new user task has been added");
@@ -73,7 +73,7 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
     }
 
     this.executeAction = function(requestBody, actionName) {
-        const apiUrl = '/services/ide/bpm/bpm-processes/instance/' + this.selectedProcessInstanceId;
+        const apiUrl = '/services/bpm/bpm-processes/instance/' + this.selectedProcessInstanceId;
 
         $http({
             method: 'POST',
@@ -132,7 +132,7 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
     }
 
     this.applyFilter = function () {
-        $http.get('/services/ide/bpm/bpm-processes/instances', { params: { 'id': this.searchText, 'key': this.selectedProcessDefinitionKey, 'limit': 100 } })
+        $http.get('/services/bpm/bpm-processes/instances', { params: { 'id': this.searchText, 'key': this.selectedProcessDefinitionKey, 'limit': 100 } })
             .then((response) => {
                 this.instancesList = response.data;
             });

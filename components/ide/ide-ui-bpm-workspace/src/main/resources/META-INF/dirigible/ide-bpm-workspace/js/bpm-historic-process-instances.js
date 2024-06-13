@@ -33,7 +33,7 @@ ideBpmHistoricProcessInstancesView.controller('IDEBpmHistoricProcessInstancesVie
     };
 
     $scope.fetchData = function() {
-        $http.get('/services/ide/bpm/bpm-processes/historic-instances', { params: { 'businessKey': $scope.model.searchText, 'definitionKey': $scope.selectedProcessDefinitionKey, 'limit': 100 } })
+        $http.get('/services/bpm/bpm-processes/historic-instances', { params: { 'businessKey': $scope.model.searchText, 'definitionKey': $scope.selectedProcessDefinitionKey, 'limit': 100 } })
                 .then((response) => {
                     $scope.instances = response.data;
                 });
@@ -52,7 +52,7 @@ ideBpmHistoricProcessInstancesView.controller('IDEBpmHistoricProcessInstancesVie
     }
 
     $scope.applyFilter = function () {
-        $http.get('/services/ide/bpm/bpm-processes/historic-instances', { params: { 'businessKey': $scope.model.searchText, 'definitionKey': $scope.selectedProcessDefinitionKey, 'limit': 100 } })
+        $http.get('/services/bpm/bpm-processes/historic-instances', { params: { 'businessKey': $scope.model.searchText, 'definitionKey': $scope.selectedProcessDefinitionKey, 'limit': 100 } })
             .then((response) => {
                 $scope.instances = response.data;
             });

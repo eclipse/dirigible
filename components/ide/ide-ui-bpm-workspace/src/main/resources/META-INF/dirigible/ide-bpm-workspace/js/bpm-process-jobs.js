@@ -25,7 +25,7 @@ ideBpmProcessJobsView.controller('IDEBpmProcessJobsViewController', ['$scope', '
     };
 
     $scope.fetchData = function(processInstanceId) {
-        $http.get('/services/ide/bpm/bpm-processes/instance/' + processInstanceId + '/jobs', { params: { 'limit': 100 } })
+        $http.get('/services/bpm/bpm-processes/instance/' + processInstanceId + '/jobs', { params: { 'limit': 100 } })
                 .then((response) => {
                     $scope.jobsList = response.data;
                 });

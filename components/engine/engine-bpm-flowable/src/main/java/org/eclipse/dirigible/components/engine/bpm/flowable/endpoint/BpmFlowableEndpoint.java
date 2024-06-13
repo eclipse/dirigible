@@ -60,7 +60,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  */
 @CrossOrigin
 @RestController
-@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "bpm")
+@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_BPM)
 public class BpmFlowableEndpoint extends BaseEndpoint {
 
     /**
