@@ -11,6 +11,7 @@ package org.eclipse.dirigible.components.engine.bpm.flowable.endpoint;
 
 import static java.text.MessageFormat.format;
 import static org.eclipse.dirigible.components.engine.bpm.flowable.dto.ActionData.Action.*;
+import static org.eclipse.dirigible.components.engine.bpm.flowable.dto.TaskActionData.TaskAction.*;
 import static org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmService.DIRIGIBLE_BPM_INTERNAL_SKIP_STEP;
 import static org.eclipse.dirigible.components.engine.bpm.flowable.service.task.TaskQueryExecutor.*;
 
@@ -331,16 +332,28 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
         return principalType;
     }
 
+    // @PostMapping("/bpm-processes/complete-tasks/{id}")
+    // public ResponseEntity<String> completeUserTask(@PathVariable("id") String id, @RequestBody
+    // Map<String, Object> data) {
+    // getTaskService().complete(id, data);
+    //
+    // return ResponseEntity.ok()
+    // .build();
+    // }
+
     @PostMapping(value = "/bpm-processes/tasks/{id}")
     public ResponseEntity<String> executeTaskAction(@PathVariable("id") String id, @RequestBody TaskActionData actionData) {
-        TaskService taskService = getTaskService();
+        final TaskService taskService = getTaskService();
 
-        if (TaskActionData.TaskAction.CLAIM.getActionName()
-                                           .equals(actionData.getAction())) {
+        if (CLAIM.getActionName()
+                 .equals(actionData.getAction())) {
             taskService.claim(id, UserFacade.getName());
-        } else if (TaskActionData.TaskAction.UNCLAIM.getActionName()
-                                                    .equals(actionData.getAction())) {
+        } else if (UNCLAIM.getActionName()
+                          .equals(actionData.getAction())) {
             taskService.unclaim(id);
+        } else if (COMPLETE.getActionName()
+                           .equals(actionData.getAction())) {
+            taskService.complete(id, actionData.getData());
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                  .body("Invalid action id provided [" + actionData.getAction() + "]");
