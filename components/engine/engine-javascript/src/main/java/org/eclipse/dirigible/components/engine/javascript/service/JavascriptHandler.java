@@ -9,10 +9,6 @@
  */
 package org.eclipse.dirigible.components.engine.javascript.service;
 
-import static org.eclipse.dirigible.graalium.core.graal.ValueTransformer.transformValue;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Map;
 import org.eclipse.dirigible.components.base.http.access.UserRequestVerifier;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
@@ -22,6 +18,12 @@ import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Map;
+
+import static org.eclipse.dirigible.graalium.core.graal.ValueTransformer.transformValue;
 
 /**
  * The Class JavascriptHandler.
@@ -67,6 +69,28 @@ public class JavascriptHandler {
     }
 
     /**
+     * Handle callback.
+     *
+     * @param filePath the file path
+     * @param parameters the parameters
+     * @return the object
+     */
+    public Object handleCallback(String filePath, Map<Object, Object> parameters) {
+        if (filePath == null) {
+            throw new RuntimeException("Path to the file to be executed cannot be null");
+        }
+        Path path = Path.of(filePath);
+        if (path.getNameCount() > 1) {
+            return handleRequest(path.getRoot()
+                                     .toString(),
+                    path.subpath(1, path.getNameCount() - 1)
+                        .toString(),
+                    null, parameters, false);
+        }
+        throw new RuntimeException("Path to the file to be executed must contain a parent folder");
+    }
+
+    /**
      * Handle request.
      *
      * @param projectName the project name
@@ -107,7 +131,7 @@ public class JavascriptHandler {
             }
         } catch (Throwable ex) {
             if (ex.getMessage() == null) {
-                logger.error("Null object has been found");
+                logger.error("Null object has been found", ex);
                 return ex.getMessage();
             }
             if (ex.getMessage()
@@ -121,28 +145,6 @@ public class JavascriptHandler {
             logger.error(errorMessage, ex);
             throw new RuntimeException(ex.getMessage(), ex);
         }
-    }
-
-    /**
-     * Handle callback.
-     *
-     * @param filePath the file path
-     * @param parameters the parameters
-     * @return the object
-     */
-    public Object handleCallback(String filePath, Map<Object, Object> parameters) {
-        if (filePath == null) {
-            throw new RuntimeException("Path to the file to be executed cannot be null");
-        }
-        Path path = Path.of(filePath);
-        if (path.getNameCount() > 1) {
-            return handleRequest(path.getRoot()
-                                     .toString(),
-                    path.subpath(1, path.getNameCount() - 1)
-                        .toString(),
-                    null, parameters, false);
-        }
-        throw new RuntimeException("Path to the file to be executed must contain a parent folder");
     }
 
 }

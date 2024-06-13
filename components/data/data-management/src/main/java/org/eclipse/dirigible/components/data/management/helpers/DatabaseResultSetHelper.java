@@ -9,13 +9,14 @@
  */
 package org.eclipse.dirigible.components.data.management.helpers;
 
-import java.io.OutputStream;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.eclipse.dirigible.components.data.management.format.ResultSetCsvWriter;
 import org.eclipse.dirigible.components.data.management.format.ResultSetJsonWriter;
 import org.eclipse.dirigible.components.data.management.format.ResultSetMonospacedWriter;
+
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.sql.ResultSet;
 
 /**
  * The Database Result SetHelper.
@@ -52,6 +53,19 @@ public class DatabaseResultSetHelper {
         writer.setStringified(stringify);
         writer.write(resultSet, output);
         output.flush();
+    }
+
+    public static String toJson(ResultSet resultSet, int limit, boolean stringify) throws Exception {
+        ResultSetJsonWriter writer = new ResultSetJsonWriter();
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        writer.setLimited(true);
+        writer.setLimit(limit);
+        writer.setStringified(stringify);
+        writer.write(resultSet, outputStream);
+        outputStream.flush();
+
+        return outputStream.toString(StandardCharsets.UTF_8);
     }
 
     /**
