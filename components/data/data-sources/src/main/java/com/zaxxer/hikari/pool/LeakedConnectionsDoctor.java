@@ -1,29 +1,35 @@
 package com.zaxxer.hikari.pool;
 
 import com.zaxxer.hikari.util.ConcurrentBag;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Component
 public class LeakedConnectionsDoctor {
+
+    public static final int INITIAL_DELAY = 30;
     private static final Logger LOGGER = LoggerFactory.getLogger(LeakedConnectionsDoctor.class);
-
-    private static final long MAX_IN_USE_MILLIS = TimeUnit.MINUTES.toMillis(3);
-
+    private static final long MAX_IN_USE_MILLIS =
+            TimeUnit.SECONDS.toMillis(DirigibleConfig.LEAKED_CONNECTIONS_MAX_IN_USE_SECONDS.getIntValue());
     private static final Set<InUseConnectionEntry> IN_USE_CONNECTIONS = new HashSet<>();
 
-    static {
+    public static void init() {
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
-        executor.scheduleAtFixedRate(LeakedConnectionsDoctor::closeLeakedConnections, 30, 30, TimeUnit.SECONDS);
+        LOGGER.info("Scheduling check for leaked connection with initial delay of [{}] seconds and interval [{}] seconds.", INITIAL_DELAY,
+                DirigibleConfig.LEAKED_CONNECTIONS_CHECK_INTERVAL_SECONDS.getIntValue());
+        executor.scheduleAtFixedRate(LeakedConnectionsDoctor::closeLeakedConnections, INITIAL_DELAY,
+                DirigibleConfig.LEAKED_CONNECTIONS_CHECK_INTERVAL_SECONDS.getIntValue(), TimeUnit.SECONDS);
 
         Runtime.getRuntime()
                .addShutdownHook(new Thread(() -> {
@@ -40,56 +46,33 @@ public class LeakedConnectionsDoctor {
                }));
     }
 
-
-    private static class InUseConnectionEntry {
-        private final Connection connection;
-        private final long borrowedAt;
-
-        public InUseConnectionEntry(Connection connection) {
-            this.connection = connection;
-            this.borrowedAt = System.currentTimeMillis();
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o)
-                return true;
-            if (o == null || getClass() != o.getClass())
-                return false;
-            InUseConnectionEntry that = (InUseConnectionEntry) o;
-            return Objects.equals(connection, that.connection);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hashCode(connection);
-        }
-    }
-
-    public static void registerConnection(Connection connection) {
-        IN_USE_CONNECTIONS.add(new InUseConnectionEntry(connection));
-    }
-
     private static void closeLeakedConnections() {
+        LOGGER.debug("Checking for leaked connections...");
         long executionStartedAt = System.currentTimeMillis();
         Set<InUseConnectionEntry> leftInUseConnections = new HashSet<>();
         Set<InUseConnectionEntry> connectionsForRemove = new HashSet<>();
 
         IN_USE_CONNECTIONS.forEach(entry -> {
-            if (isClosed(entry.connection)) {
+            if (isClosed(entry.getConnection())) {
+                LOGGER.debug("Connection [{}] borrowed at [{}] is closed. Will be removed from the list.", entry.getConnection(),
+                        entry.getBorrowedAt());
                 connectionsForRemove.add(entry);
                 return;
             }
 
-            if (entry.connection instanceof HikariProxyConnection hikariProxyConnection && isInUse(hikariProxyConnection.getPoolEntry())
+            if (entry.getConnection() instanceof HikariProxyConnection hikariProxyConnection
+                    && isInUse(hikariProxyConnection.getPoolEntry())
                     && (isNotBorrowedSinceRegistered(hikariProxyConnection.getPoolEntry(), entry)
                             && isNotAccessedSinceRegistered(hikariProxyConnection.getPoolEntry(), entry))) {
 
-                boolean maxInUsePassed = executionStartedAt > (entry.borrowedAt + MAX_IN_USE_MILLIS);
+                boolean maxInUsePassed = executionStartedAt > (entry.getBorrowedAt() + MAX_IN_USE_MILLIS);
                 if (maxInUsePassed) {
                     closeLeakedEntry(entry, hikariProxyConnection);
                     connectionsForRemove.add(entry);
                 } else {
+                    LOGGER.debug(
+                            "Connection [{}] borrowed at [{}] didn't reached the configured max in use time of [{}] millis. Will check it on the next execution.",
+                            entry.getConnection(), entry.getBorrowedAt(), MAX_IN_USE_MILLIS);
                     leftInUseConnections.add(entry);
                 }
             } else {
@@ -102,19 +85,21 @@ public class LeakedConnectionsDoctor {
 
     private static void closeLeakedEntry(InUseConnectionEntry entry, HikariProxyConnection hikariProxyConnection) {
         try {
-            LOGGER.warn("Found leaked connection [{}] which was borrowed at [{}] and remained in state IN_USE. Will be closed.",
-                    entry.connection, entry.borrowedAt);
-            entry.connection.close();
+            LOGGER.warn("Found leaked connection [{}] borrowed at [{}] and remained in state IN_USE. Will be closed.",
+                    entry.getConnection(), entry.getBorrowedAt());
+            entry.getConnection()
+                 .close();
             hikariProxyConnection.getPoolEntry()
                                  .evict("The connection is leaked since it is in state IN_USE for more than [" + MAX_IN_USE_MILLIS
                                          + "] millis.");
+            LOGGER.debug("Leaked connection [{}] borrowed at [{}] was closed", entry.getConnection(), entry.getBorrowedAt());
         } catch (RuntimeException | SQLException ex) {
-            LOGGER.warn("Failed to close connection [{}] which was borrowed at [{}]", entry.connection, entry.borrowedAt, ex);
+            LOGGER.warn("Failed to close connection [{}] which was borrowed at [{}]", entry.getConnection(), entry.getBorrowedAt(), ex);
         }
     }
 
     private static boolean isNotAccessedSinceRegistered(PoolEntry poolEntry, InUseConnectionEntry entry) {
-        return poolEntry.lastAccessed <= entry.borrowedAt;
+        return poolEntry.lastAccessed <= entry.getBorrowedAt();
 
     }
 
@@ -123,15 +108,19 @@ public class LeakedConnectionsDoctor {
     }
 
     private static boolean isNotBorrowedSinceRegistered(PoolEntry poolEntry, InUseConnectionEntry entry) {
-        return poolEntry.lastBorrowed <= entry.borrowedAt;
+        return poolEntry.lastBorrowed <= entry.getBorrowedAt();
     }
 
     private static boolean isClosed(Connection connection) {
         try {
             return connection.isClosed();
         } catch (SQLException e) {
-            LOGGER.warn("Connection [{}] cannot be checked for isClosed. Will consider it is closed.", e);
+            LOGGER.warn("Connection [{}] cannot be checked for isClosed. Will consider it is closed.", connection, e);
             return true;
         }
+    }
+
+    public static void registerConnection(Connection connection) {
+        IN_USE_CONNECTIONS.add(new InUseConnectionEntry(connection));
     }
 }
