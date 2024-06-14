@@ -34,6 +34,14 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				messageHub.showAlertError("Home", `Unable to get Home Launchpad: '${response.message}'`);
 				return;
 			}
-			$scope.data = response.data;
+			$scope.groups = response.data;
+
+			$scope.groups = $scope.groups.filter(group => (group.name !== 'Reports'));
+			$scope.groups = $scope.groups.sort((a, b) => a.name.localeCompare(b.name));
+			$scope.settings = [];
+			$scope.groups.forEach(group => group.tiles.forEach(tile => $scope.settings.push(tile)));
+			$scope.settings = $scope.settings.filter(tile => tile.type === 'SETTING');
+			$scope.settings = $scope.settings.sort((a, b) => a.name.localeCompare(b.name));
+			$scope.groups = $scope.groups.filter(group => (group.tiles.filter(tile => tile.type === 'PRIMARY')).length > 0);
 		});
 	}]);

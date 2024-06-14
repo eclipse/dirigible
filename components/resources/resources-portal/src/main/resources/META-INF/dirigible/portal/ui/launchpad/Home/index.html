@@ -39,13 +39,13 @@
 				<p class="fd-text">All the products available on this instance are listed below</p>
 				<br>
 
+				<div class="fd-row">
 
-				<div class="fd-panel fd-panel--fixed">
-					<div class="fd-container">
+					<div class="fd-container fd-col fd-col--10">
 
-						<div class="fd-row" ng-repeat="group in data">
+						<div ng-repeat="group in groups">
 
-							<fd-panel expanded="false">
+							<fd-panel expanded="true">
 
 								<fd-panel-header>
 									<fd-panel-expand></fd-panel-expand>
@@ -54,10 +54,9 @@
 
 								<fd-panel-content aria-label="{{group.name}} Content">
 									<div class="fd-row">
-										<div class="fd-col fd-col--6 fd-col-md--6 fd-col-lg--6 fd-col-xl--6">
-											<div class="fd-row">
-												<div class="fd-col fd-col--12 fd-col-md--12 fd-col-lg--12 fd-col-xl--12"
-													ng-repeat="next in group.tiles" ng-if="next.type==='PRIMARY'">
+										<div>
+											<div>
+												<div ng-repeat="next in group.tiles" ng-if="next.type==='PRIMARY'">
 													<div>
 														<fd-card card-type="object">
 															<fd-card-header ng-click="openView(next.location)">
@@ -73,7 +72,7 @@
 											</div>
 										</div>
 
-										<div class="fd-col fd-col--6 fd-col-md--6 fd-col-lg--6 fd-col-xl--6">
+										<div>
 
 
 
@@ -95,8 +94,8 @@
 
 
 									</div>
-
-									<div class="fd-col fd-col--12 fd-col-md--12 fd-col-lg--12 fd-col-xl--12">
+									<!--
+									<div>
 										<div class="fd-toolbar" role="toolbar">
 											<div ng-repeat="next in group.tiles" ng-if="next.type==='SETTING'">
 												<button fd-button-internal="" class="fd-button fd-button--compact"
@@ -110,11 +109,50 @@
 												class="fd-toolbar__spacer"></div>
 										</div>
 									</div>
+									-->
+
+
 								</fd-panel-content>
 							</fd-panel>
 						</div>
 
 					</div>
+
+
+					<div class="fd-container fd-col fd-col--2">
+
+						<fd-panel expanded="true">
+
+							<fd-panel-header>
+								<fd-panel-expand></fd-panel-expand>
+								<h4 fd-panel-title>Settings</h4>
+							</fd-panel-header>
+
+							<fd-panel-content aria-label="{{group.name}} Content">
+
+								<div>
+
+									<div>
+										<div>
+											<div ng-repeat="next in settings">
+												<button fd-button-internal="" class="fd-button fd-button--compact"
+													compact="true" dg-label="{{next.name}}" style="width: 100%;"
+													ng-click="openView(next.location)">
+
+													<span ng-class="getTextClasses()"
+														class="fd-button__text">{{next.name}}</span>
+											</div>
+											<div ng-class="getClasses()" ng-style="getStyles()" ng-transclude=""
+												class="fd-toolbar__spacer"></div>
+										</div>
+									</div>
+								</div>
+							</fd-panel-content>
+						</fd-panel>
+
+
+					</div>
+
 				</div>
 
 
