@@ -1,1 +1,1 @@
-export * as pdf from "./pdf";
+export {Pdf as pdf} from "./pdf";
