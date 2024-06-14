@@ -40,6 +40,11 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			$scope.groups = $scope.groups.sort((a, b) => a.name.localeCompare(b.name));
 			$scope.settings = [];
 			$scope.groups.forEach(group => group.tiles.forEach(tile => $scope.settings.push(tile)));
+			$scope.groups.forEach(group => {
+				let caption = group.name;
+				caption = caption.substring(caption.indexOf('-') ? caption.indexOf('-') + 1 : 0);
+				group.name = caption.slice(0, 1).toUpperCase() + caption.slice(1, caption.length);
+			});
 			$scope.settings = $scope.settings.filter(tile => tile.type === 'SETTING');
 			$scope.settings = $scope.settings.sort((a, b) => a.name.localeCompare(b.name));
 			$scope.groups = $scope.groups.filter(group => (group.tiles.filter(tile => tile.type === 'PRIMARY')).length > 0);
