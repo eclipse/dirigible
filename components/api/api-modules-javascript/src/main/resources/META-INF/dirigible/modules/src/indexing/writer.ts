@@ -16,13 +16,16 @@
 
 const IndexingFacade = Java.type("org.eclipse.dirigible.components.api.indexing.IndexingFacade");
 
-export function add(index, location, contents, lastModified, parameters) {
-	if (!lastModified) {
-		lastModified = new Date();
-	}
-	let map = "{}";
-	if (parameters) {
-		map = JSON.stringify(parameters);
-	}
-	IndexingFacade.add(index, location, contents, '' + lastModified.getTime(), map);
-};
+export class Writer{
+
+	public static add(index: string, location: string, contents: string, lastModified: Date, parameters: any) {
+		if (!lastModified) {
+			lastModified = new Date();
+		}
+		let map = "{}";
+		if (parameters) {
+			map = JSON.stringify(parameters);
+		}
+		IndexingFacade.add(index, location, contents, '' + lastModified.getTime(), map);
+	};
+}
