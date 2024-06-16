@@ -332,15 +332,6 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
         return principalType;
     }
 
-    // @PostMapping("/bpm-processes/complete-tasks/{id}")
-    // public ResponseEntity<String> completeUserTask(@PathVariable("id") String id, @RequestBody
-    // Map<String, Object> data) {
-    // getTaskService().complete(id, data);
-    //
-    // return ResponseEntity.ok()
-    // .build();
-    // }
-
     @PostMapping(value = "/bpm-processes/tasks/{id}")
     public ResponseEntity<String> executeTaskAction(@PathVariable("id") String id, @RequestBody TaskActionData actionData) {
         final TaskService taskService = getTaskService();
