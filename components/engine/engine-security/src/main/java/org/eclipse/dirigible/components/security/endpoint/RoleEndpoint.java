@@ -27,7 +27,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_SECURED + "security")
+@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_SECURITY)
 public class RoleEndpoint extends BaseEndpoint {
 
     /**

@@ -12,8 +12,8 @@ package org.eclipse.dirigible.components.tenants.endpoint;
 import java.util.List;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
-import org.eclipse.dirigible.components.tenants.domain.Tenant;
-import org.eclipse.dirigible.components.tenants.service.TenantService;
+import org.eclipse.dirigible.components.tenants.domain.User;
+import org.eclipse.dirigible.components.tenants.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,24 +21,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * The Class TenantEndpoint.
+ * The Class UsersEndpoint.
  */
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_SECURITY)
-public class TenantEndpoint {
+public class UsersEndpoint {
 
 
-    /** The tenant service. */
-    private final TenantService tenantService;
+    /** The user service. */
+    private final UserService userService;
 
     /**
-     * Instantiates a new tenants endpoint.
+     * Instantiates a new users endpoint.
      *
-     * @param tenantService the tenant service
+     * @param userService the user service
      */
     @Autowired
-    public TenantEndpoint(TenantService tenantService) {
-        this.tenantService = tenantService;
+    public UsersEndpoint(UserService userService) {
+        this.userService = userService;
     }
 
     /**
@@ -46,9 +46,9 @@ public class TenantEndpoint {
      *
      * @return the all
      */
-    @GetMapping("/tenants")
-    public ResponseEntity<List<Tenant>> getAll() {
-        return ResponseEntity.ok(tenantService.getAll());
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAll() {
+        return ResponseEntity.ok(userService.getAll());
     }
 
 }

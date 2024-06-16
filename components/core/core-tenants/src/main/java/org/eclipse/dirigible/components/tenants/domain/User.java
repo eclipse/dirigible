@@ -39,7 +39,7 @@ public class User extends Artefact {
     private String id;
 
     /** The tenant. */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_TENANT_ID")
     private Tenant tenant;
 

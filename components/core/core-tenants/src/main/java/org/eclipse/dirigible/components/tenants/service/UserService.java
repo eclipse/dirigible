@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.components.tenants.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -52,6 +53,15 @@ public class UserService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.assignmentRepository = assignmentRepository;
+    }
+
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
+    public final List<User> getAll() {
+        return userRepository.findAll();
     }
 
     /**
