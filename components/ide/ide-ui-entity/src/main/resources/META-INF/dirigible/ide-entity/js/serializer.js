@@ -94,10 +94,6 @@ function createModel(graph) {
 					property.dataName = property.dataName ? property.dataName : _.escape(child.value.dataName).toUpperCase() + "_" + JSON.stringify(property.name).replace(/\W/g, '').toUpperCase();
 
 					model.push('    <property name="' + _.escape(property.name) +
-						'" isRequiredProperty="' + _.escape(property.isRequiredProperty) +
-						'" isCalculatedProperty="' + _.escape(property.isCalculatedProperty) +
-						'" calculatedPropertyExpressionCreate="' + _.escape(property.calculatedPropertyExpressionCreate) +
-						'" calculatedPropertyExpressionUpdate="' + _.escape(property.calculatedPropertyExpressionUpdate) +
 						'" dataName="' + _.escape(property.dataName) +
 						'" dataType="' + _.escape(property.dataType) + '"');
 					if (property.dataLength !== null && (property.dataType === 'CHAR' || property.dataType === 'VARCHAR')) {
@@ -125,6 +121,18 @@ function createModel(graph) {
 					}
 					if (property.dataScale !== null && property.dataType === 'DECIMAL') {
 						model.push(' dataScale="' + _.escape(property.dataScale) + '"');
+					}
+					if (property.isRequiredProperty == "true") {
+						model.push(' isRequiredProperty="true"');
+					}
+					if (property.isCalculatedProperty == "true") {
+						model.push(' isCalculatedProperty="true"');
+					}
+					if (property.calculatedPropertyExpressionCreate != null) {
+						model.push(' calculatedPropertyExpressionCreate="' + _.escape(property.calculatedPropertyExpressionCreate) + '"');
+					}
+					if (property.calculatedPropertyExpressionUpdate != null) {
+						model.push(' calculatedPropertyExpressionUpdate="' + _.escape(property.calculatedPropertyExpressionUpdate) + '"');
 					}
 					if (property.relationshipType !== null) {
 						model.push(' relationshipType="' + _.escape(property.relationshipType ? property.relationshipType : 'ASSOCIATION') + '"');
