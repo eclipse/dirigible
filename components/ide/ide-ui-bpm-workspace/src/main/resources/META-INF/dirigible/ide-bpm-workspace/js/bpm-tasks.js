@@ -15,7 +15,7 @@ tasksView.config(["messageHubProvider", function (messageHubProvider) {
     messageHubProvider.eventIdPrefix = 'bpm';
 }]);
 
-tasksView.controller('TasksController', ['$scope','$http', '$timeout', 'messageHub', function ($scope, $http, $timeout, messageHub) {
+tasksView.controller('TasksController', ['$scope','$http', '$timeout', '$window', 'messageHub', function ($scope, $http, $timeout, $window, messageHub) {
     $scope.tasksList = [];
     $scope.tasksListAssignee = [];
     $scope.currentProcessInstanceId;
@@ -59,6 +59,10 @@ tasksView.controller('TasksController', ['$scope','$http', '$timeout', 'messageH
         if (variable) {
             $scope.selectedUnclaimTask = variable;
         }
+    }
+
+    $scope.openForm = function(url) {
+        $window.open(url, '_blank');
     }
 
     $scope.claimTask = function() {
