@@ -16,6 +16,9 @@ exports.generateGeneric = function (model, parameters, templateSources) {
     const generatedFiles = []
     const templateParameters = {};
     Object.assign(templateParameters, model, parameters);
+
+    const cleanTemplateParameters = cleanData(templateParameters);
+
     for (let i = 0; i < templateSources.length; i++) {
         const template = templateSources[i];
         const location = template.location;
@@ -33,7 +36,7 @@ exports.generateGeneric = function (model, parameters, templateSources) {
         } else {
             generatedFiles.push({
                 location: location,
-                content: getGenerationEngine(template).generate(location, content, templateParameters),
+                content: getGenerationEngine(template).generate(location, content, cleanTemplateParameters),
                 path: templateEngines.getMustacheEngine().generate(location, template.rename, parameters)
             });
         }
@@ -139,10 +142,13 @@ exports.generateFiles = function (model, parameters, templateSources) {
                 default:
                     // No collection
                     parameters.models = model.entities;
+
+                    const cleanParameters = cleanData(parameters);
+
                     generatedFiles.push({
                         location: location,
-                        content: getGenerationEngine(template).generate(location, content, parameters),
-                        path: templateEngines.getMustacheEngine().generate(location, template.rename, parameters)
+                        content: getGenerationEngine(template).generate(location, content, cleanParameters),
+                        path: templateEngines.getMustacheEngine().generate(location, template.rename, cleanParameters)
                     });
                     break;
             }
@@ -164,10 +170,12 @@ function generateCollection(location, content, template, collection, parameters)
                 collection.filter(e => e.perspectiveName === collection[i].perspectiveName).forEach(e => templateParameters.perspectiveViews.push(e.name + "-details"));
             }
 
+            const cleanTemplateParameters = cleanData(templateParameters);
+
             generatedFiles.push({
                 location: location,
-                content: generationEngine.generate(location, content, templateParameters),
-                path: templateEngines.getMustacheEngine().generate(location, template.rename, templateParameters)
+                content: generationEngine.generate(location, content, cleanTemplateParameters),
+                path: templateEngines.getMustacheEngine().generate(location, template.rename, cleanTemplateParameters)
             });
         }
         return generatedFiles;
@@ -198,4 +206,25 @@ function getGenerationEngine(template) {
         generationEngine.setEm(template.em);
     }
     return generationEngine;
+}
+
+function cleanData(data) {
+    if (typeof data === 'object' && data !== null) {
+        if (Array.isArray(data)) {
+            for (let i = 0; i < data.length; i++) {
+                cleanData(data[i]);
+            }
+        } else {
+            for (let key in data) {
+                if (data[key] !== undefined) {
+                    if ((typeof data[key] === 'number' && isNaN(data[key])) || data[key] === 'NaN') {
+                        delete data[key];
+                    } else {
+                        cleanData(data[key]);
+                    }
+                }
+            }
+        }
+    }
+    return data;
 }
