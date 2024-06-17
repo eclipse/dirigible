@@ -108,20 +108,14 @@ function createModel(graph) {
 					} else {
 						model.push(' dataNullable="true"');
 					}
-					if (property.dataPrimaryKey) {
-						model.push(' dataPrimaryKey="' + (property.dataPrimaryKey == "true") + '"');
-					} else {
-						model.push(' dataPrimaryKey="false"');
+					if (property.dataPrimaryKey == "true") {
+						model.push(' dataPrimaryKey="true"');
 					}
-					if (property.dataAutoIncrement) {
-						model.push(' dataAutoIncrement="' + (property.dataAutoIncrement == "true") + '"');
-					} else {
-						model.push(' dataAutoIncrement="false"');
+					if (property.dataAutoIncrement == "true") {
+						model.push(' dataAutoIncrement="true"');
 					}
-					if (property.dataUnique) {
-						model.push(' dataUnique="' + (property.dataUnique == "true") + '"');
-					} else {
-						model.push(' dataUnique="false"');
+					if (property.dataUnique == "true") {
+						model.push(' dataUnique="true"');
 					}
 					if (property.dataDefaultValue !== null) {
 						model.push(' dataDefaultValue="' + _.escape(property.dataDefaultValue) + '"');
