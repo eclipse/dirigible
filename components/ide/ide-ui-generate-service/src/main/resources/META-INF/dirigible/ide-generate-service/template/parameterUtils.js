@@ -84,8 +84,8 @@ exports.process = function (model, parameters) {
                 // TODO minLength is not available in the model and can't be determined
                 p.minLength = 0;
                 p.maxLength = -1;
-                let widgetLength = parseInt(p.widgetLength);
-                let dataLength = parseInt(p.dataLength)
+                let widgetLength = parseInt(p.widgetLength ? p.widgetLength : '0');
+                let dataLength = parseInt(p.dataLength ? p.dataLength : '0')
                 p.maxLength = dataLength > widgetLength ? widgetLength : dataLength;
             } else if (p.dataTypeTypescript === "Date") {
                 p.isDateType = true;

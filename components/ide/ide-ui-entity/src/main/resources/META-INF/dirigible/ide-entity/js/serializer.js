@@ -101,7 +101,9 @@ function createModel(graph) {
 						'" dataName="' + _.escape(property.dataName) +
 						'" dataType="' + _.escape(property.dataType) + '"');
 					if (property.dataLength !== null) {
-						model.push(' dataLength="' + _.escape(property.dataLength) + '"');
+						if (property.dataType === 'CHAR' || property.dataType === 'VARCHAR') {
+							model.push(' dataLength="' + _.escape(property.dataLength) + '"');
+						}
 					}
 					if (property.dataNotNull) {
 						model.push(' dataNullable="' + (property.dataNotNull == "false") + '"');
