@@ -100,10 +100,8 @@ function createModel(graph) {
 						'" calculatedPropertyExpressionUpdate="' + _.escape(property.calculatedPropertyExpressionUpdate) +
 						'" dataName="' + _.escape(property.dataName) +
 						'" dataType="' + _.escape(property.dataType) + '"');
-					if (property.dataLength !== null) {
-						if (property.dataType === 'CHAR' || property.dataType === 'VARCHAR') {
-							model.push(' dataLength="' + _.escape(property.dataLength) + '"');
-						}
+					if (property.dataLength !== null && (property.dataType === 'CHAR' || property.dataType === 'VARCHAR')) {
+						model.push(' dataLength="' + _.escape(property.dataLength) + '"');
 					}
 					if (property.dataNotNull) {
 						model.push(' dataNullable="' + (property.dataNotNull == "false") + '"');
@@ -128,10 +126,10 @@ function createModel(graph) {
 					if (property.dataDefaultValue !== null) {
 						model.push(' dataDefaultValue="' + _.escape(property.dataDefaultValue) + '"');
 					}
-					if (property.dataPrecision !== null) {
+					if (property.dataPrecision !== null && property.dataType === 'DECIMAL') {
 						model.push(' dataPrecision="' + _.escape(property.dataPrecision) + '"');
 					}
-					if (property.dataScale !== null) {
+					if (property.dataScale !== null && property.dataType === 'DECIMAL') {
 						model.push(' dataScale="' + _.escape(property.dataScale) + '"');
 					}
 					if (property.relationshipType !== null) {
