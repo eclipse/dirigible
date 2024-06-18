@@ -55,6 +55,15 @@ public class DatabaseResultSetHelper {
         output.flush();
     }
 
+    /**
+     * used in ABAP functionality - DirigibleDatabaseClient
+     *
+     * @param resultSet
+     * @param limit
+     * @param stringify
+     * @return
+     * @throws Exception
+     */
     public static String toJson(ResultSet resultSet, int limit, boolean stringify) throws Exception {
         ResultSetJsonWriter writer = new ResultSetJsonWriter();
 
