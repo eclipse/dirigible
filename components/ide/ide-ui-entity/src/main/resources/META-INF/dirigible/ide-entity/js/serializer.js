@@ -94,45 +94,45 @@ function createModel(graph) {
 					property.dataName = property.dataName ? property.dataName : _.escape(child.value.dataName).toUpperCase() + "_" + JSON.stringify(property.name).replace(/\W/g, '').toUpperCase();
 
 					model.push('    <property name="' + _.escape(property.name) +
-						'" isRequiredProperty="' + _.escape(property.isRequiredProperty) +
-						'" isCalculatedProperty="' + _.escape(property.isCalculatedProperty) +
-						'" calculatedPropertyExpressionCreate="' + _.escape(property.calculatedPropertyExpressionCreate) +
-						'" calculatedPropertyExpressionUpdate="' + _.escape(property.calculatedPropertyExpressionUpdate) +
 						'" dataName="' + _.escape(property.dataName) +
 						'" dataType="' + _.escape(property.dataType) + '"');
-					if (property.dataLength !== null) {
-						if (property.dataType === 'CHAR' || property.dataType === 'VARCHAR') {
-							model.push(' dataLength="' + _.escape(property.dataLength) + '"');
-						}
+					if (property.dataLength !== null && (property.dataType === 'CHAR' || property.dataType === 'VARCHAR')) {
+						model.push(' dataLength="' + _.escape(property.dataLength) + '"');
 					}
 					if (property.dataNotNull) {
 						model.push(' dataNullable="' + (property.dataNotNull == "false") + '"');
 					} else {
 						model.push(' dataNullable="true"');
 					}
-					if (property.dataPrimaryKey) {
-						model.push(' dataPrimaryKey="' + (property.dataPrimaryKey == "true") + '"');
-					} else {
-						model.push(' dataPrimaryKey="false"');
+					if (property.dataPrimaryKey == "true") {
+						model.push(' dataPrimaryKey="true"');
 					}
-					if (property.dataAutoIncrement) {
-						model.push(' dataAutoIncrement="' + (property.dataAutoIncrement == "true") + '"');
-					} else {
-						model.push(' dataAutoIncrement="false"');
+					if (property.dataAutoIncrement == "true") {
+						model.push(' dataAutoIncrement="true"');
 					}
-					if (property.dataUnique) {
-						model.push(' dataUnique="' + (property.dataUnique == "true") + '"');
-					} else {
-						model.push(' dataUnique="false"');
+					if (property.dataUnique == "true") {
+						model.push(' dataUnique="true"');
 					}
 					if (property.dataDefaultValue !== null) {
 						model.push(' dataDefaultValue="' + _.escape(property.dataDefaultValue) + '"');
 					}
-					if (property.dataPrecision !== null) {
+					if (property.dataPrecision !== null && property.dataType === 'DECIMAL') {
 						model.push(' dataPrecision="' + _.escape(property.dataPrecision) + '"');
 					}
-					if (property.dataScale !== null) {
+					if (property.dataScale !== null && property.dataType === 'DECIMAL') {
 						model.push(' dataScale="' + _.escape(property.dataScale) + '"');
+					}
+					if (property.isRequiredProperty == "true") {
+						model.push(' isRequiredProperty="true"');
+					}
+					if (property.isCalculatedProperty == "true") {
+						model.push(' isCalculatedProperty="true"');
+					}
+					if (property.calculatedPropertyExpressionCreate != null) {
+						model.push(' calculatedPropertyExpressionCreate="' + _.escape(property.calculatedPropertyExpressionCreate) + '"');
+					}
+					if (property.calculatedPropertyExpressionUpdate != null) {
+						model.push(' calculatedPropertyExpressionUpdate="' + _.escape(property.calculatedPropertyExpressionUpdate) + '"');
 					}
 					if (property.relationshipType !== null) {
 						model.push(' relationshipType="' + _.escape(property.relationshipType ? property.relationshipType : 'ASSOCIATION') + '"');
