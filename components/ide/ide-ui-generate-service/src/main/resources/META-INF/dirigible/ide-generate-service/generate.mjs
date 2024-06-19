@@ -68,10 +68,11 @@ function onGenerateModel(context, request, response) {
     if (parameters.fileName.indexOf(".") > 0) {
         parameters.fileName = parameters.fileName.substring(0, path.indexOf("."))
     }
+    parameters.genFolderName = parameters.fileName;
 
     let generatedFiles = template.generate(model, parameters);
 
-    cleanGenFolder(workspace, project);
+    cleanGenFolder(workspace, project, parameters.genFolderName);
 
     for (let i = 0; i < generatedFiles.length; i++) {
         createFile(workspace, project, generatedFiles[i].path, generatedFiles[i].content);
@@ -103,12 +104,13 @@ function getModel(workspaceName, projectName, path) {
     return model.getText();
 }
 
-function cleanGenFolder(workspaceName, projectName) {
+function cleanGenFolder(workspaceName, projectName, genFolderName) {
     let projectWorkspace = workspace.getWorkspace(workspaceName);
     let project = projectWorkspace.getProject(projectName);
 
-    if (project.existsFolder("gen")) {
-        project.deleteFolder("gen");
+    const genFolder = project.getFolder("gen");
+    if (genFolder.exists() && genFolder.existsFolder(genFolderName)) {
+        genFolder.deleteFolder(genFolderName);
     }
     lifecycle.unpublish(projectName);
 }
