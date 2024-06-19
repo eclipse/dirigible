@@ -121,7 +121,7 @@ exports.process = function (model, parameters) {
             })
 
             if (p.widgetType == "DROPDOWN") {
-                let projectNameString = "\"/services/ts/" + `${parameters.projectName}` + "/gen/api/" + `${p.relationshipEntityPerspectiveName}` + "/" + `${p.relationshipEntityName}` + "Service.ts\"";
+                let projectNameString = `/services/ts/${parameters.projectName}/gen/${parameters.genFolderName}/api/${p.relationshipEntityPerspectiveName}/${p.relationshipEntityName}Service.ts`;
 
                 e.hasDropdowns = true;
 
@@ -129,7 +129,7 @@ exports.process = function (model, parameters) {
                     let foundReferenceProjection = false;
                     e.referencedProjections.forEach(referencedProjection => {
                         if (referencedProjection.name === p.relationshipEntityName && !foundReferenceProjection) {
-                            p.widgetDropdownUrl = "\"/services/ts/" + `${referencedProjection.project}` + "/gen/api/" + `${p.relationshipEntityPerspectiveName}` + "/" + `${p.relationshipEntityName}` + "Service.ts\"";
+                            p.widgetDropdownUrl = `/services/ts/${referencedProjection.project}/gen/${parameters.genFolderName}/api/${p.relationshipEntityPerspectiveName}/${p.relationshipEntityName}Service.ts`;
                             foundReferenceProjection = true;
                         }
                     });

@@ -22,7 +22,7 @@ exports.getTemplate = function (parameters) {
         sources: [{
             location: "/template-application-odata/odata/application.odata.template",
             action: "generate",
-            rename: "gen/odata/{{projectName}}.odata",
+            rename: "gen/{{genFolderName}}/odata/{{projectName}}.odata",
             engine: "velocity"
         }],
         parameters: [{

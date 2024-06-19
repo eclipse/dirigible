@@ -1,4 +1,4 @@
-import { BookRepository } from "../gen/dao/Books/BookRepository";
+import { BookRepository } from "../gen/edm/dao/Books/BookRepository";
 import { logging } from "sdk/log";
 
 const logger = logging.getLogger("test-job-handler.ts");

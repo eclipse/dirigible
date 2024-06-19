@@ -75,7 +75,7 @@ class ${name}Service {
             entity = { ...originalEntity, ...modifiedEntity };
 #end
             entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end = this.repository.create(entity);
-            response.setHeader("Content-Location", "/services/ts/${projectName}/gen/api/${perspectiveName}/${name}Service.ts/" + entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end);
+            response.setHeader("Content-Location", "/services/ts/${projectName}/gen/${genFolderName}/api/${perspectiveName}/${name}Service.ts/" + entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end);
             response.setStatus(response.CREATED);
             return entity;
         } catch (error: any) {

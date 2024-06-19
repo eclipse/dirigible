@@ -12,7 +12,7 @@ exports.getTile = function () {
         type: "${type}",
         report: "${generateReport}",
         icon: "${icon}",
-        location: "/services/web/${projectName}/gen/ui/Reports/index.html",
+        location: "/services/web/${projectName}/gen/${genFolderName}/ui/Reports/index.html",
         order: "${menuIndex}",
         groupOrder: "999",
 #if($perspectiveRole || $roleRead)

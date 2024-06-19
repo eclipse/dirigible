@@ -20,13 +20,13 @@ exports.getTemplate = function (parameters) {
     let templateSources = [{
         location: "/template-application-feed/feed/entityFeedSynchronizer.js.template",
         action: "generate",
-        rename: "gen/feed/{{perspectiveName}}/{{name}}FeedSynchronizer.js",
+        rename: "gen/{{genFolderName}}/feed/{{perspectiveName}}/{{name}}FeedSynchronizer.js",
         engine: "velocity",
         collection: "feedModels"
     }, {
         location: "/template-application-feed/feed/entityFeed.job.template",
         action: "generate",
-        rename: "gen/feed/{{perspectiveName}}/{{name}}Feed.job",
+        rename: "gen/{{genFolderName}}/feed/{{perspectiveName}}/{{name}}Feed.job",
         engine: "velocity",
         collection: "feedModels"
     }];

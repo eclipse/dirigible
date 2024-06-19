@@ -20,30 +20,30 @@ exports.getTemplate = function (parameters) {
     let templateSources = [{
         location: "/template-application-rest/api/utils/HttpUtils.ts.template",
         action: "copy",
-        rename: "gen/api/utils/HttpUtils.ts",
+        rename: "gen/{{genFolderName}}/api/utils/HttpUtils.ts",
     }, {
         location: "/template-application-rest/api/utils/ForbiddenError.ts.template",
         action: "copy",
-        rename: "gen/api/utils/ForbiddenError.ts",
+        rename: "gen/{{genFolderName}}/api/utils/ForbiddenError.ts",
     }, {
         location: "/template-application-rest/api/utils/ValidationError.ts.template",
         action: "copy",
-        rename: "gen/api/utils/ValidationError.ts",
+        rename: "gen/{{genFolderName}}/api/utils/ValidationError.ts",
     }, {
         location: "/template-application-rest/api/api.openapi.template",
         action: "generate",
-        rename: "gen/{{fileName}}.openapi",
+        rename: "gen/{{genFolderName}}/{{fileName}}.openapi",
         engine: "velocity"
     }, {
         location: "/template-application-rest/api/entity.ts.template",
         action: "generate",
-        rename: "gen/api/{{perspectiveName}}/{{name}}Service.ts",
+        rename: "gen/{{genFolderName}}/api/{{perspectiveName}}/{{name}}Service.ts",
         engine: "velocity",
         collection: "apiModels"
     }, {
         location: "/template-application-rest/api/reportEntity.ts.template",
         action: "generate",
-        rename: "gen/api/{{perspectiveName}}/{{name}}Service.ts",
+        rename: "gen/{{genFolderName}}/api/{{perspectiveName}}/{{name}}Service.ts",
         engine: "velocity",
         collection: "reportModels"
     }, {
