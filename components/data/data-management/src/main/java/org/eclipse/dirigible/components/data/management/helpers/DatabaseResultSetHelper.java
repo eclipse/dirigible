@@ -78,28 +78,6 @@ public class DatabaseResultSetHelper {
     }
 
     /**
-     * used in ABAP functionality - DirigibleDatabaseClient
-     *
-     * @param resultSet
-     * @param limit
-     * @param stringify
-     * @return
-     * @throws Exception
-     */
-    public static String toJson(ResultSet resultSet, int limit, boolean stringify) throws Exception {
-        ResultSetJsonWriter writer = new ResultSetJsonWriter();
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        writer.setLimited(true);
-        writer.setLimit(limit);
-        writer.setStringified(stringify);
-        writer.write(resultSet, outputStream);
-        outputStream.flush();
-
-        return outputStream.toString(StandardCharsets.UTF_8);
-    }
-
-    /**
      * Prints the provided ResultSet to the {@link ResultSetCsvWriter} writer.
      *
      * @param resultSet the result set
