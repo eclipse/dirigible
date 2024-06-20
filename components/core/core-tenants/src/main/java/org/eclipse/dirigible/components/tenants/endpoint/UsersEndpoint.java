@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  * The Class UsersEndpoint.
  */
 @RestController
-@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_SECURITY)
+@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_SECURITY + "users")
 public class UsersEndpoint {
 
 
@@ -46,7 +46,7 @@ public class UsersEndpoint {
      *
      * @return the all
      */
-    @GetMapping("/users")
+    @GetMapping
     public ResponseEntity<List<User>> getAll() {
         return ResponseEntity.ok(userService.getAll());
     }
