@@ -8,7 +8,7 @@ const viewData = {
     label: "${name} Report",
     factory: "frame",
     region: "center",
-    link: "/services/web/${projectName}/gen/{{genFolderName}}/ui/Reports/${name}/index.html",
+    link: "/services/web/${projectName}/gen/${genFolderName}/ui/Reports/${name}/index.html",
     perspectiveName: "Reports",
 #if($perspectiveRole || $roleRead)
     roles: [
