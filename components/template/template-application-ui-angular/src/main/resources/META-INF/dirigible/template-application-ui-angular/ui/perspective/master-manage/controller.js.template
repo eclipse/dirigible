@@ -218,7 +218,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 #foreach ($property in $properties)
 #if ($property.widgetType == "DROPDOWN")
 
-		${dollar}http.get(${property.widgetDropdownUrl}).then(function (response) {
+		${dollar}http.get("${property.widgetDropdownUrl}").then(function (response) {
 			${dollar}scope.options${property.name} = response.data.map(e => {
 				return {
 					value: e.${property.widgetDropDownKey},
