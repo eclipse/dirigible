@@ -1,5 +1,5 @@
 {
-    "module": "${projectName}/gen/ui/launchpad/menu-help.js",
+    "module": "${projectName}/gen/${genFolderName}/ui/launchpad/menu-help.js",
     "extensionPoint": "${projectName}-menu",
     "description": "${projectName} - Application Menu"
 }

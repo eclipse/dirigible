@@ -9,8 +9,13 @@
  */
 package org.eclipse.dirigible.integration.tests.ui;
 
-import ch.qos.logback.classic.Level;
-import io.restassured.http.ContentType;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
 import org.awaitility.Awaitility;
 import org.eclipse.dirigible.commons.config.DirigibleConfig;
@@ -29,21 +34,14 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.concurrent.TimeUnit;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
+import ch.qos.logback.classic.Level;
+import io.restassured.http.ContentType;
 
 @Lazy
 @Component
 public class TestProject {
-    public static final String UI_HOME_PATH = "/services/web/dirigible-test-project/gen/index.html";
-    public static final String BOOKS_SERVICE_PATH = "/services/ts/dirigible-test-project/gen/api/Books/BookService.ts";
+    public static final String UI_HOME_PATH = "/services/web/dirigible-test-project/gen/edm/index.html";
+    public static final String BOOKS_SERVICE_PATH = "/services/ts/dirigible-test-project/gen/edm/api/Books/BookService.ts";
     public static final String EDM_FILE_NAME = "edm.edm";
     public static final String READERS_ODATA_ENTITY_PATH = "/odata/v2/Readers";
     public static final String READERS_VIEW_SERVICE_PATH = "/services/ts/dirigible-test-project/views/ReaderViewService.ts";

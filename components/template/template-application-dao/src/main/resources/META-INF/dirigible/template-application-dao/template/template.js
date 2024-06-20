@@ -21,19 +21,19 @@ exports.getTemplate = function (parameters) {
         sources: [{
             location: "/template-application-dao/dao/entity.ts.template",
             action: "generate",
-            rename: "gen/dao/{{perspectiveName}}/{{name}}Repository.ts",
+            rename: "gen/{{genFolderName}}/dao/{{perspectiveName}}/{{name}}Repository.ts",
             engine: "velocity",
             collection: "daoModels"
         }, {
             location: "/template-application-dao/dao/entity.extensionpoint.template",
             action: "generate",
-            rename: "gen/dao/{{perspectiveName}}/{{name}}.extensionpoint",
+            rename: "gen/{{genFolderName}}/dao/{{perspectiveName}}/{{name}}.extensionpoint",
             engine: "velocity",
             collection: "daoModels"
         }, {
             location: "/template-application-dao/dao/reportEntity.ts.template",
             action: "generate",
-            rename: "gen/dao/{{perspectiveName}}/{{name}}Repository.ts",
+            rename: "gen/{{genFolderName}}/dao/{{perspectiveName}}/{{name}}Repository.ts",
             engine: "velocity",
             collection: "reportModels"
         }, {
@@ -49,7 +49,7 @@ exports.getTemplate = function (parameters) {
         }, {
             location: "/template-application-dao/dao/utils/EntityUtils.ts.template",
             action: "copy",
-            rename: "gen/dao/utils/EntityUtils.ts"
+            rename: "gen/{{genFolderName}}/dao/utils/EntityUtils.ts"
         }],
         parameters: [{
             name: "tablePrefix",
