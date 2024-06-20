@@ -95,7 +95,7 @@
             <td fd-table-cell>{{next.processInstanceId}}</td>
             <td fd-table-cell>{{next.createTime}}</td>
             <td fd-table-cell><fd-button dg-type="emphasized" compact="true" dg-label="Open Form" title="Open Form"
-                                         aria-label="Claim" ng-click="openForm(next.formKey + '?taskId=' + next.id)"></fd-button>
+                                         aria-label="Open Form" ng-click="openForm(next.formKey + '?taskId=' + next.id)"></fd-button>
         </tr>
         <tr ng-if="tasksListAssignee.length === 0" fd-table-row>
             <td fd-table-cell no-data="true">{{getNoDataMessage()}}</td>
