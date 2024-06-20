@@ -9,6 +9,14 @@
  */
 package org.eclipse.dirigible.graalium.core.modules;
 
+import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
+import org.eclipse.dirigible.graalium.core.javascript.CalledFromJS;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.eclipse.dirigible.repository.api.IResource;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -16,27 +24,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-import org.eclipse.dirigible.commons.config.StaticObjects;
-import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
-import org.eclipse.dirigible.graalium.core.javascript.CalledFromJS;
-import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.eclipse.dirigible.repository.api.IResource;
-
 /**
  * The Class DirigibleSourceProvider.
  */
+@Component
 @CalledFromJS
 public class DirigibleSourceProvider implements JavascriptSourceProvider {
-
-    /**
-     * Gets the repository.
-     *
-     * @return the repository
-     */
-    static IRepository getRepository() {
-        return (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
-    }
 
     /**
      * Gets the absolute source path.
@@ -50,8 +43,28 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
         String projectFilePath = Path.of(projectName, projectFileName)
                                      .toString();
         String internalRepositoryRelativeSourcePath = getInternalRepositoryRelativeSourcePath(projectFilePath);
-        String absoluteSourcePathString = getRepository().getInternalResourcePath(internalRepositoryRelativeSourcePath.toString());
+        String absoluteSourcePathString = getRepository().getInternalResourcePath(internalRepositoryRelativeSourcePath);
         return Path.of(absoluteSourcePathString);
+    }
+
+    /**
+     * Gets the repository.
+     *
+     * @return the repository
+     */
+    static IRepository getRepository() {
+        return (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+    }
+
+    /**
+     * Gets the internal repository relative source path.
+     *
+     * @param projectFilePath the project file path
+     * @return the internal repository relative source path
+     */
+    protected String getInternalRepositoryRelativeSourcePath(String projectFilePath) {
+        return Path.of(IRepositoryStructure.PATH_REGISTRY_PUBLIC, projectFilePath)
+                   .toString();
     }
 
     /**
@@ -65,19 +78,8 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
         String projectFilePath = Path.of(projectName)
                                      .toString();
         String internalRepositoryRelativeSourcePath = getInternalRepositoryRelativeSourcePath(projectFilePath);
-        String absoluteSourcePathString = getRepository().getInternalResourcePath(internalRepositoryRelativeSourcePath.toString());
+        String absoluteSourcePathString = getRepository().getInternalResourcePath(internalRepositoryRelativeSourcePath);
         return Path.of(absoluteSourcePathString);
-    }
-
-    /**
-     * Gets the internal repository relative source path.
-     *
-     * @param projectFilePath the project file path
-     * @return the internal repository relative source path
-     */
-    protected String getInternalRepositoryRelativeSourcePath(String projectFilePath) {
-        return Path.of(IRepositoryStructure.PATH_REGISTRY_PUBLIC, projectFilePath)
-                   .toString();
     }
 
     /**
