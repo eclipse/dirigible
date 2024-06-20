@@ -112,9 +112,11 @@ exports.process = function (model, parameters) {
             model.entities.forEach(ep => {
                 if (p.relationshipEntityName === ep.name) {
                     if (ep.projectionReferencedModel) {
+                        const tokens = ep.projectionReferencedModel.split('/');
                         e.referencedProjections.push({
                             name: ep.name,
-                            project: ep.projectionReferencedModel.split('/')[2]
+                            project: tokens[2],
+                            genFolderName: tokens[3].substring(0, tokens[3].indexOf('.'))
                         })
                     }
                 }
@@ -129,7 +131,7 @@ exports.process = function (model, parameters) {
                     let foundReferenceProjection = false;
                     e.referencedProjections.forEach(referencedProjection => {
                         if (referencedProjection.name === p.relationshipEntityName && !foundReferenceProjection) {
-                            p.widgetDropdownUrl = `/services/ts/${referencedProjection.project}/gen/${parameters.genFolderName}/api/${p.relationshipEntityPerspectiveName}/${p.relationshipEntityName}Service.ts`;
+                            p.widgetDropdownUrl = `/services/ts/${referencedProjection.project}/gen/${referencedProjection.genFolderName}/api/${p.relationshipEntityPerspectiveName}/${p.relationshipEntityName}Service.ts`;
                             foundReferenceProjection = true;
                         }
                     });
