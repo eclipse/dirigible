@@ -15,10 +15,126 @@ usersView.config(["messageHubProvider", function (messageHubProvider) {
 	messageHubProvider.eventIdPrefix = 'users-view';
 }]);
 
-usersView.controller('UsersController', ['$scope', '$http', function ($scope, $http) {
+usersView.controller('UsersController', ['$scope', '$http', 'messageHub', function ($scope, $http, messageHub) {
 
-	$http.get('/services/security/users').then(function (response) {
-		$scope.list = response.data;
-	});
+	$scope.listUsers = function () {
+		$http.get('/services/security/users').then(function (response) {
+			$scope.list = response.data;
+		});
+	}
+	$scope.listUsers();
+
+	$scope.newUser = function () {
+		messageHub.showDialogWindow(
+			"user-create-edit",
+			{ editMode: false },
+			null,
+			false
+		);
+	};
+
+	messageHub.onDidReceiveMessage(
+		'ide-security.user.create',
+		function (msg) {
+			if (msg.data) {
+				$http.post(
+					'/services/security/users',
+					JSON.stringify(msg.data)
+				).then(function () {
+					$scope.listUsers();
+					messageHub.triggerEvent('ide-security.explorer.refresh', true);
+				}, function (response) {
+					console.error(response);
+					messageHub.showAlertError('Error while creating user', 'Please look at the console for more information');
+				});
+			}
+			messageHub.closeDialogWindow('user-create-edit');
+		},
+		true
+	);
+
+	$scope.editUser = function (user) {
+		$scope.user = {
+			id: user.id,
+			username: user.username,
+			password: user.password,
+			tenant: user.tenant.id,
+			role: user.role.id
+		};
+		messageHub.showDialogWindow(
+			"user-create-edit",
+			{
+				editMode: true,
+				user: {
+					id: '',
+					username: user.username,
+					password: user.password,
+					tenant: user.tenant.id,
+					role: user.role.id
+				}
+			},
+			null,
+			false
+		);
+	};
+
+	messageHub.onDidReceiveMessage(
+		'ide-security.user.edit',
+		function (msg) {
+			if (msg.data) {
+				let user = msg.data;
+				user.username = $scope.user.name;
+				$http.put('/services/security/users/' + $scope.user.id, JSON.stringify(user))
+					.then(function () {
+						$scope.listUsers();
+						messageHub.triggerEvent('ide-security.explorer.refresh', true);
+					}, function (response) {
+						console.error(response);
+						messageHub.showAlertError('Error while updating user', 'Please look at the console for more information');
+					});
+			}
+			messageHub.closeDialogWindow('user-create-edit');
+		},
+		true
+	);
+
+	$scope.deleteUser = function (user) {
+		$scope.user = {
+			id: user.id
+		};
+
+		messageHub.showDialog(
+			'Delete User',
+			'Are you sure you want to delete the selected user?',
+			[{
+				id: 'btnOK',
+				type: 'emphasized',
+				label: 'OK',
+			},
+			{
+				id: 'btnCancel',
+				type: 'transparent',
+				label: 'Cancel',
+			}],
+			'ide-security.user.delete'
+		);
+	}
+
+	messageHub.onDidReceiveMessage(
+		'ide-security.user.delete',
+		function (msg) {
+			if (msg.data === 'btnOK' && $scope.user.id) {
+				$http.delete('/services/security/users/' + $scope.user.id)
+					.then(function () {
+						$scope.listUsers();
+						messageHub.triggerEvent('ide-security.explorer.refresh', true);
+					}, function (response) {
+						console.error(response.data);
+						messageHub.showAlertError('Error while deleting user', 'Please look at the console for more information');
+					});
+			}
+		},
+		true
+	);
 
 }]);

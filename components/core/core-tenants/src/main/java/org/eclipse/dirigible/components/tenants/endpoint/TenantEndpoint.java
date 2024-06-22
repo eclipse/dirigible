@@ -64,7 +64,7 @@ public class TenantEndpoint {
     }
 
     /**
-     * Gets the.
+     * Gets the tenant.
      *
      * @param id the id
      * @return the response entity
@@ -107,9 +107,9 @@ public class TenantEndpoint {
     }
 
     /**
-     * Updates the data source.
+     * Updates the tenant.
      *
-     * @param id the id of the data source
+     * @param id the id of the tenant
      * @param tenantParameter the tenant parameter
      * @return the response entity
      * @throws URISyntaxException the URI syntax exception
@@ -128,9 +128,9 @@ public class TenantEndpoint {
     }
 
     /**
-     * Deletes the data source.
+     * Deletes the tenant.
      *
-     * @param id the id of the data source
+     * @param id the id of the tenant
      * @return the response entity
      * @throws URISyntaxException the URI syntax exception
      */

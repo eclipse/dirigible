@@ -10,7 +10,7 @@
 package org.eclipse.dirigible.components.tenants.endpoint;
 
 /**
- * The Class DataSourceParameter.
+ * The Class TenantParameter.
  */
 public class TenantParameter {
 

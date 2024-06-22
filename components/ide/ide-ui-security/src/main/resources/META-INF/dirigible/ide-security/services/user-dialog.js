@@ -9,16 +9,13 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const perspectiveData = {
-	id: "security",
-	name: "Security",
-	link: "../ide-security/index.html",
-	order: "998",
-	image: "area-chart", // deprecated
-	icon: "../ide-security/images/security.svg",
+const viewData = {
+    id: "user-create-edit",
+    label: "User",
+    link: "../ide-security/dialogs/user-dialog.html"
 };
 if (typeof exports !== 'undefined') {
-	exports.getPerspective = function () {
-		return perspectiveData;
-	}
+    exports.getDialogWindow = function () {
+        return viewData;
+    }
 }
