@@ -20,6 +20,8 @@ usersView.controller('UsersController', ['$scope', '$http', 'messageHub', functi
 	$scope.listUsers = function () {
 		$http.get('/services/security/users').then(function (response) {
 			$scope.list = response.data;
+			$scope.list.forEach(user => user.rolesNames = user.roles.map(role => role['name']).join(','));
+			$scope.list.forEach(user => user.rolesIds = user.roles.map(role => role['id']));
 		});
 	}
 	$scope.listUsers();
@@ -59,7 +61,7 @@ usersView.controller('UsersController', ['$scope', '$http', 'messageHub', functi
 			username: user.username,
 			password: user.password,
 			tenant: user.tenant.id,
-			role: user.role.id
+			roles: user.rolesIds
 		};
 		messageHub.showDialogWindow(
 			"user-create-edit",
@@ -70,7 +72,7 @@ usersView.controller('UsersController', ['$scope', '$http', 'messageHub', functi
 					username: user.username,
 					password: user.password,
 					tenant: user.tenant.id,
-					role: user.role.id
+					roles: user.rolesIds
 				}
 			},
 			null,
@@ -83,7 +85,7 @@ usersView.controller('UsersController', ['$scope', '$http', 'messageHub', functi
 		function (msg) {
 			if (msg.data) {
 				let user = msg.data;
-				user.username = $scope.user.name;
+				//user.username = $scope.user.name;
 				$http.put('/services/security/users/' + $scope.user.id, JSON.stringify(user))
 					.then(function () {
 						$scope.listUsers();

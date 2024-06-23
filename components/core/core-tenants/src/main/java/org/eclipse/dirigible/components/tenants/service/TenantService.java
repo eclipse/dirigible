@@ -83,5 +83,15 @@ public class TenantService {
     public Optional<Tenant> findById(String id) {
         return tenantRepository.findById(id);
     }
+    
+    /**
+     * Delete.
+     *
+     * @param tenant the tenant
+     * @return the tenant
+     */
+    public void delete(Tenant tenant) {
+        tenantRepository.delete(tenant);
+    }
 
 }

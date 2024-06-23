@@ -101,7 +101,7 @@ public class UsersEndpoint {
     @PostMapping
     public ResponseEntity<URI> createUser(@Valid @RequestBody UserParameter userParameter) throws URISyntaxException {
         User user = userService.createNewUser(userParameter.getUsername(), userParameter.getPassword(), userParameter.getTenant());
-        userService.assignUserRole(user, userParameter.getRole());
+        userService.assignUserRolesByIds(user, userParameter.getRoles());
         return ResponseEntity.created(new URI(BaseEndpoint.PREFIX_ENDPOINT_SECURITY + "users/" + user.getId()))
                              .build();
     }
@@ -118,7 +118,7 @@ public class UsersEndpoint {
     public ResponseEntity<URI> updateUser(@PathVariable("id") String id, @Valid @RequestBody UserParameter userParameter)
             throws URISyntaxException {
         User user = userService.updateUser(id, userParameter.getUsername(), userParameter.getPassword(), userParameter.getTenant());
-        userService.assignUserRole(user, userParameter.getRole());
+        userService.assignUserRolesByIds(user, userParameter.getRoles());
         return ResponseEntity.created(new URI(BaseEndpoint.PREFIX_ENDPOINT_SECURITY + "users/" + user.getId()))
                              .build();
     }
@@ -131,11 +131,8 @@ public class UsersEndpoint {
      * @throws URISyntaxException the URI syntax exception
      */
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteDataSource(@PathVariable("id") String id) throws URISyntaxException {
-        User user = userService.findById(id)
-                               .get();
-        user.setUsername("DELETED_" + user.getUsername());
-        user.setPassword("");
+    public ResponseEntity<String> deleteUser(@PathVariable("id") String id) throws URISyntaxException {
+        userService.deleteUser(id);
         return ResponseEntity.noContent()
                              .build();
     }

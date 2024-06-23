@@ -9,7 +9,9 @@
  */
 package org.eclipse.dirigible.components.tenants.service;
 
+import java.util.List;
 import java.util.Optional;
+
 import org.eclipse.dirigible.components.tenants.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -26,4 +28,12 @@ interface UserRepository extends JpaRepository<User, String> {
      * @return the optional
      */
     Optional<User> findUserByUsernameAndTenantId(String username, String tenantId);
+    
+    /**
+     * Find users by tenant id.
+     *
+     * @param tenantId the tenant id
+     * @return the list
+     */
+    List<User> findUsersByTenantId(String tenantId);
 }

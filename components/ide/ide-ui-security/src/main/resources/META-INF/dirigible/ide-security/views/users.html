@@ -29,6 +29,8 @@
     <body class="dg-vbox">
         <fd-toolbar dg-type="solid">
             <fd-toolbar-spacer></fd-toolbar-spacer>
+            <fd-button dg-type="transparent" glyph="sap-icon--refresh" title="Refresh" aria-label="Refresh"
+				ng-click="listUsers()"></fd-button>
             <fd-button dg-type="transparent" glyph="sap-icon--add" title="New" aria-label="New User"
                 ng-click="newUser()"> </fd-button>
         </fd-toolbar>
@@ -57,7 +59,7 @@
                             <div class="tdSingleLine">{{next.tenant.name}}</div>
                         </td>
                         <td fd-table-cell>
-                            <div class="tdSingleLine">{{next.role.name}}</div>
+                            <div class="tdSingleLine">{{next.rolesNames}}</div>
                         </td>
                         <td fd-table-cell width="180px">
                             <div class="tdSingleLine">{{next.createdAt | date:'yyyy-MM-dd HH:mm:ss' }}</div>

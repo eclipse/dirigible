@@ -60,11 +60,9 @@
                 </fd-form-group>
                 <fd-form-group horizontal="false">
                     <fd-form-label for="role" dg-required="true" dg-colon="true">Role</fd-form-label>
-                    <fd-select id="role" class="dg-full-width" dg-placeholder="Select role"
-                        state="{{ user.role === '' ? 'error' : '' }}" ng-model="user.role" dropdown-fixed="false">
-                        <fd-option text="{{ role.name }}" value="role.id" ng-repeat="role in roles">
-                        </fd-option>
-                    </fd-select>
+                    <fd-combobox-input multi-select="true" ng-model="user.roles" dropdown-items="roles"
+                        dg-placeholder="Search role ..." dg-aria-label="roles">
+                    </fd-combobox-input>
                 </fd-form-group>
             </fd-fieldset>
         </div>

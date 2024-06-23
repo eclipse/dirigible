@@ -18,6 +18,7 @@ import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.tenants.domain.Tenant;
 import org.eclipse.dirigible.components.tenants.domain.TenantStatus;
 import org.eclipse.dirigible.components.tenants.service.TenantService;
+import org.eclipse.dirigible.components.tenants.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,14 +44,18 @@ public class TenantEndpoint {
     /** The tenant service. */
     private final TenantService tenantService;
 
+    /** The user service. */
+    private final UserService userService;
+
     /**
      * Instantiates a new tenants endpoint.
      *
      * @param tenantService the tenant service
      */
     @Autowired
-    public TenantEndpoint(TenantService tenantService) {
+    public TenantEndpoint(TenantService tenantService, UserService userService) {
         this.tenantService = tenantService;
+        this.userService = userService;
     }
 
     /**
@@ -136,8 +141,17 @@ public class TenantEndpoint {
      */
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteDataSource(@PathVariable("id") String id) throws URISyntaxException {
+        Tenant tenant = tenantService.findById(id)
+                                     .get();
+        if (TenantStatus.INITIAL.equals(tenant.getStatus())) {
+            userService.findUsersByTenantId(tenant.getId())
+                       .forEach(user -> userService.deleteUser(user.getId()));
+            tenantService.delete(tenant);
+            return ResponseEntity.noContent()
+                                 .build();
+        }
         return ResponseEntity.badRequest()
-                             .body("Deletion of tenants is not supported");
+                             .body("Deletion of already provisioned tenants is currently not supported");
     }
 
 

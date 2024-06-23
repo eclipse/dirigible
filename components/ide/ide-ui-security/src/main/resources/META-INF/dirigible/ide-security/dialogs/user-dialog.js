@@ -38,6 +38,7 @@ userdialog.controller('UserDialogController', ['$scope', '$http', 'messageHub', 
     $scope.listRoles = function () {
         $http.get('/services/security/roles').then(function (response) {
             $scope.roles = response.data;
+            $scope.roles.forEach(role => { role.value = role.id; role.text = role.name; });
         });
     }
     $scope.listRoles();
@@ -46,7 +47,7 @@ userdialog.controller('UserDialogController', ['$scope', '$http', 'messageHub', 
         username: '',
         password: '',
         tenant: '',
-        role: ''
+        roles: []
     };
 
     function getTopic() {

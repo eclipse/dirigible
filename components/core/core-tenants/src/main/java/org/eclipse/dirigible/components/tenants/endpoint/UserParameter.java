@@ -23,8 +23,8 @@ public class UserParameter {
     /** The tenant. */
     private String tenant;
 
-    /** The role. */
-    private Long role;
+    /** The roles. */
+    private Long[] roles;
 
     /**
      * Gets the username.
@@ -81,21 +81,21 @@ public class UserParameter {
     }
 
     /**
-     * Gets the role.
+     * Gets the roles.
      *
-     * @return the role
+     * @return the roles
      */
-    public Long getRole() {
-        return role;
+    public Long[] getRoles() {
+        return roles;
     }
 
     /**
-     * Sets the role.
+     * Sets the roles.
      *
-     * @param role the new role
+     * @param roles the new roles
      */
-    public void setRole(Long role) {
-        this.role = role;
+    public void setRoles(Long[] roles) {
+        this.roles = roles;
     }
 
 }

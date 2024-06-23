@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.components.tenants.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -69,11 +70,13 @@ public class UserService {
      */
     public final List<User> getAll() {
         List<User> users = userRepository.findAll();
-        users.forEach(user -> user.setRole(assignmentRepository.findByUser(user)
-                                                               .stream()
-                                                               .findFirst()
-                                                               .get()
-                                                               .getRole()));
+        users.forEach(user -> {
+            List<UserRoleAssignment> assignments = assignmentRepository.findByUser(user);
+            List<Role> roles = new ArrayList<Role>();
+            assignments.forEach(assignment -> roles.add(roleService.findById(assignment.getRole()
+                                                                                       .getId())));
+            user.setRoles(roles.toArray(new Role[] {}));
+        });
         return users;
     }
 
@@ -116,6 +119,20 @@ public class UserService {
     }
 
     /**
+     * Delete user.
+     *
+     * @param id the id
+     * @return the user
+     */
+    public void deleteUser(String id) {
+        User user = userRepository.findById(id)
+                                  .orElseThrow(() -> new TenantNotFoundException("User " + id + " not found."));
+        assignmentRepository.findByUser(user)
+                            .forEach(a -> assignmentRepository.delete(a));
+        userRepository.delete(user);
+    }
+
+    /**
      * Find user by username and tenant id.
      *
      * @param username the username
@@ -124,6 +141,16 @@ public class UserService {
      */
     public Optional<User> findUserByUsernameAndTenantId(String username, String tenantId) {
         return userRepository.findUserByUsernameAndTenantId(username, tenantId);
+    }
+    
+    /**
+     * Find users by tenant id.
+     *
+     * @param tenantId the tenant id
+     * @return the list
+     */
+    public List<User> findUsersByTenantId(String tenantId) {
+        return userRepository.findUsersByTenantId(tenantId);
     }
 
     /**
@@ -172,23 +199,29 @@ public class UserService {
             UserRoleAssignment assignment = new UserRoleAssignment();
             assignment.setUser(user);
             assignment.setRole(role);
-
-            assignmentRepository.save(assignment);
+            if (!assignmentRepository.findByUserAndRole(user, role)
+                                     .isPresent()) {
+                assignmentRepository.save(assignment);
+            }
         }
     }
 
     /**
-     * Assign a single user role.
+     * Assign user role by id.
      *
      * @param user the user
-     * @param roleId the role id
+     * @param roleIds the role ids
      */
-    public void assignUserRole(User user, Long roleId) {
-        Role role = roleService.findById(roleId);
-        UserRoleAssignment assignment = new UserRoleAssignment();
-        assignment.setUser(user);
-        assignment.setRole(role);
-
-        assignmentRepository.save(assignment);
+    public void assignUserRolesByIds(User user, Long[] roleIds) {
+        for (Long roleId : roleIds) {
+            Role role = roleService.findById(roleId);
+            UserRoleAssignment assignment = new UserRoleAssignment();
+            assignment.setUser(user);
+            assignment.setRole(role);
+            if (!assignmentRepository.findByUserAndRole(user, role)
+                                     .isPresent()) {
+                assignmentRepository.save(assignment);
+            }
+        }
     }
 }

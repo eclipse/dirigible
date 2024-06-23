@@ -10,6 +10,9 @@
 package org.eclipse.dirigible.components.tenants.service;
 
 import java.util.List;
+import java.util.Optional;
+
+import org.eclipse.dirigible.components.security.domain.Role;
 import org.eclipse.dirigible.components.tenants.domain.User;
 import org.eclipse.dirigible.components.tenants.domain.UserRoleAssignment;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,4 +29,13 @@ interface UserRoleAssignmentRepository extends JpaRepository<UserRoleAssignment,
      * @return the list
      */
     List<UserRoleAssignment> findByUser(User user);
+
+    /**
+     * Find by user and role.
+     *
+     * @param user the user
+     * @param role the role
+     * @return the list
+     */
+    Optional<UserRoleAssignment> findByUserAndRole(User user, Role role);
 }

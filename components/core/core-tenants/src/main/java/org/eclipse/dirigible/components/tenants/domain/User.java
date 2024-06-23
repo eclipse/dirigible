@@ -55,7 +55,7 @@ public class User extends Artefact {
 
     /** The role. */
     @Transient
-    private Role role;
+    private Role[] roles;
 
     /**
      * Instantiates a new user.
@@ -151,21 +151,21 @@ public class User extends Artefact {
     }
 
     /**
-     * Gets the role.
+     * Gets the roles.
      *
-     * @return the role
+     * @return the roles
      */
-    public Role getRole() {
-        return role;
+    public Role[] getRoles() {
+        return roles;
     }
 
     /**
-     * Sets the role.
+     * Sets the roles.
      *
-     * @param role the new role
+     * @param roles the new roles
      */
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoles(Role[] roles) {
+        this.roles = roles;
     }
 
     /**
