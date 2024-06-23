@@ -28,7 +28,7 @@ interface UserRepository extends JpaRepository<User, String> {
      * @return the optional
      */
     Optional<User> findUserByUsernameAndTenantId(String username, String tenantId);
-    
+
     /**
      * Find users by tenant id.
      *

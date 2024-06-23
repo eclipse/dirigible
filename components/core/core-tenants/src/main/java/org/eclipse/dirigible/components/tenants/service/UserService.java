@@ -142,7 +142,7 @@ public class UserService {
     public Optional<User> findUserByUsernameAndTenantId(String username, String tenantId) {
         return userRepository.findUserByUsernameAndTenantId(username, tenantId);
     }
-    
+
     /**
      * Find users by tenant id.
      *

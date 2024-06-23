@@ -83,7 +83,7 @@ public class TenantService {
     public Optional<Tenant> findById(String id) {
         return tenantRepository.findById(id);
     }
-    
+
     /**
      * Delete.
      *
