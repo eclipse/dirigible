@@ -88,7 +88,6 @@ public class TenantService {
      * Delete.
      *
      * @param tenant the tenant
-     * @return the tenant
      */
     public void delete(Tenant tenant) {
         tenantRepository.delete(tenant);

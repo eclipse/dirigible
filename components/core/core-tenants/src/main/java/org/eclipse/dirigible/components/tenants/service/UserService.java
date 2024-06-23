@@ -122,7 +122,6 @@ public class UserService {
      * Delete user.
      *
      * @param id the id
-     * @return the user
      */
     public void deleteUser(String id) {
         User user = userRepository.findById(id)
