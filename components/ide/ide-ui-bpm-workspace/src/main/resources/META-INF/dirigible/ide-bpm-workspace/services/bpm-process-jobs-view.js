@@ -11,7 +11,7 @@
  */
 const viewData = {
 	id: "bpm-process-jobs-view",
-	label: "Dead-Letter Jobs",
+	label: "Jobs Incidents",
 	factory: "frame",
 	region: "bottom",
 	link: "../ide-bpm-workspace/bpm-process-jobs.html",
