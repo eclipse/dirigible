@@ -9,19 +9,17 @@
  */
 package org.eclipse.dirigible.integration.tests.ui;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.concurrent.TimeUnit;
+import ch.qos.logback.classic.Level;
+import io.restassured.http.ContentType;
 import org.apache.commons.io.FileUtils;
 import org.awaitility.Awaitility;
 import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.tests.DirigibleTestTenant;
+import org.eclipse.dirigible.tests.EdmView;
+import org.eclipse.dirigible.tests.IDE;
+import org.eclipse.dirigible.tests.Workbench;
 import org.eclipse.dirigible.tests.awaitility.AwaitilityExecutor;
 import org.eclipse.dirigible.tests.framework.Browser;
 import org.eclipse.dirigible.tests.framework.BrowserFactory;
@@ -34,8 +32,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import ch.qos.logback.classic.Level;
-import io.restassured.http.ContentType;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.concurrent.TimeUnit;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 
 @Lazy
 @Component
@@ -52,7 +57,7 @@ public class TestProject {
     private static final String UI_PROJECT_TITLE = "Dirigible Test Project";
     private final IRepository dirigibleRepo;
     private final BrowserFactory browserFactory;
-    private final Dirigible dirigible;
+    private final IDE dirigible;
     private final EdmView edmView;
 
     private final RestAssuredExecutor restAssuredExecutor;
@@ -61,7 +66,7 @@ public class TestProject {
 
     private final LogsAsserter eventListenerLogsAsserter;
 
-    public TestProject(IRepository dirigibleRepo, BrowserFactory browserFactory, Dirigible dirigible, EdmView edmView,
+    public TestProject(IRepository dirigibleRepo, BrowserFactory browserFactory, IDE dirigible, EdmView edmView,
             RestAssuredExecutor restAssuredExecutor) {
         this.dirigibleRepo = dirigibleRepo;
         this.browserFactory = browserFactory;
@@ -78,7 +83,7 @@ public class TestProject {
 
         dirigible.openHomePage();
 
-        DirigibleWorkbench workbench = dirigible.openWorkbench();
+        Workbench workbench = dirigible.openWorkbench();
         workbench.expandProject(PROJECT_ROOT_FOLDER);
         workbench.openFile(EDM_FILE_NAME);
 
@@ -125,7 +130,7 @@ public class TestProject {
         Browser browser = browserFactory.createByHost(tenant.getHost());
         browser.openPath(UI_HOME_PATH);
 
-        Dirigible dirigible = new Dirigible(browser, tenant.getUsername(), tenant.getPassword());
+        IDE dirigible = new IDE(browser, restAssuredExecutor, tenant.getUsername(), tenant.getPassword());
         boolean forceLogin = !tenant.isDefaultTenant();
         dirigible.login(forceLogin);
 

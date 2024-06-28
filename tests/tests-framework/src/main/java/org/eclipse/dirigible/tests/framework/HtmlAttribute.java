@@ -12,6 +12,7 @@ package org.eclipse.dirigible.tests.framework;
 public enum HtmlAttribute {
     ID("id"), //
     TYPE("type"), //
+    PLACEHOLDER("placeholder"), //
     TITLE("title");
 
     private final String attribute;
