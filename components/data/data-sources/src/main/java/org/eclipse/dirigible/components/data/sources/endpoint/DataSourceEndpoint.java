@@ -159,8 +159,9 @@ public class DataSourceEndpoint extends BaseEndpoint {
     @PutMapping("{id}")
     public ResponseEntity<URI> updateDataSource(@PathVariable("id") Long id, @Valid @RequestBody DataSourceParameter datasourceParameter)
             throws URISyntaxException {
-        DataSource datasource = new DataSource("_", datasourceParameter.getName(), "", datasourceParameter.getDriver(),
-                datasourceParameter.getUrl(), datasourceParameter.getUsername(), datasourceParameter.getPassword());
+        DataSource datasource =
+                new DataSource("API_" + datasourceParameter.getName(), datasourceParameter.getName(), "", datasourceParameter.getDriver(),
+                        datasourceParameter.getUrl(), datasourceParameter.getUsername(), datasourceParameter.getPassword());
         datasource.setId(id);
         datasource.updateKey();
         datasource = datasourceService.save(datasource);

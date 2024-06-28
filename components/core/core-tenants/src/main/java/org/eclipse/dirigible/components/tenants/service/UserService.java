@@ -9,11 +9,14 @@
  */
 package org.eclipse.dirigible.components.tenants.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.eclipse.dirigible.components.security.domain.Role;
+import org.eclipse.dirigible.components.security.service.RoleService;
 import org.eclipse.dirigible.components.tenants.domain.Tenant;
 import org.eclipse.dirigible.components.tenants.domain.User;
 import org.eclipse.dirigible.components.tenants.domain.UserRoleAssignment;
@@ -30,6 +33,9 @@ public class UserService {
     /** The tenant service. */
     private final TenantService tenantService;
 
+    /** The role service. */
+    private final RoleService roleService;
+
     /** The user repository. */
     private final UserRepository userRepository;
 
@@ -43,13 +49,15 @@ public class UserService {
      * Instantiates a new user service.
      *
      * @param tenantService the tenant service
+     * @param roleService the role service
      * @param userRepository the user repository
      * @param passwordEncoder the password encoder
      * @param assignmentRepository the assignment repository
      */
-    public UserService(TenantService tenantService, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
-            UserRoleAssignmentRepository assignmentRepository) {
+    public UserService(TenantService tenantService, RoleService roleService, UserRepository userRepository,
+            BCryptPasswordEncoder passwordEncoder, UserRoleAssignmentRepository assignmentRepository) {
         this.tenantService = tenantService;
+        this.roleService = roleService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.assignmentRepository = assignmentRepository;
@@ -61,7 +69,15 @@ public class UserService {
      * @return the all
      */
     public final List<User> getAll() {
-        return userRepository.findAll();
+        List<User> users = userRepository.findAll();
+        users.forEach(user -> {
+            List<UserRoleAssignment> assignments = assignmentRepository.findByUser(user);
+            List<Role> roles = new ArrayList<Role>();
+            assignments.forEach(assignment -> roles.add(roleService.findById(assignment.getRole()
+                                                                                       .getId())));
+            user.setRoles(roles.toArray(new Role[] {}));
+        });
+        return users;
     }
 
     /**
@@ -75,7 +91,44 @@ public class UserService {
     public User createNewUser(String username, String password, String tenantId) {
         Tenant tenant = tenantService.findById(tenantId)
                                      .orElseThrow(() -> new TenantNotFoundException("Tenant " + tenantId + " not found."));
-        return userRepository.save(new User(tenant, username, passwordEncoder.encode(password)));
+        User user = new User(tenant, username, passwordEncoder.encode(password));
+        user.updateKey();
+        return userRepository.save(user);
+    }
+
+    /**
+     * Update user.
+     *
+     * @param id the id
+     * @param username the username
+     * @param password the password
+     * @param tenantId the tenant id
+     * @return the user
+     */
+    public User updateUser(String id, String username, String password, String tenantId) {
+        Tenant tenant = tenantService.findById(tenantId)
+                                     .orElseThrow(() -> new TenantNotFoundException("Tenant " + tenantId + " not found."));
+        User user = userRepository.findById(id)
+                                  .orElseThrow(() -> new TenantNotFoundException("User " + id + " not found."));
+        user.setName(username);
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setTenant(tenant);
+        user.updateKey();
+        return userRepository.save(user);
+    }
+
+    /**
+     * Delete user.
+     *
+     * @param id the id
+     */
+    public void deleteUser(String id) {
+        User user = userRepository.findById(id)
+                                  .orElseThrow(() -> new TenantNotFoundException("User " + id + " not found."));
+        assignmentRepository.findByUser(user)
+                            .forEach(a -> assignmentRepository.delete(a));
+        userRepository.delete(user);
     }
 
     /**
@@ -87,6 +140,26 @@ public class UserService {
      */
     public Optional<User> findUserByUsernameAndTenantId(String username, String tenantId) {
         return userRepository.findUserByUsernameAndTenantId(username, tenantId);
+    }
+
+    /**
+     * Find users by tenant id.
+     *
+     * @param tenantId the tenant id
+     * @return the list
+     */
+    public List<User> findUsersByTenantId(String tenantId) {
+        return userRepository.findUsersByTenantId(tenantId);
+    }
+
+    /**
+     * Find by id.
+     *
+     * @param id the id
+     * @return the optional
+     */
+    public Optional<User> findById(String id) {
+        return userRepository.findById(id);
     }
 
     /**
@@ -125,8 +198,29 @@ public class UserService {
             UserRoleAssignment assignment = new UserRoleAssignment();
             assignment.setUser(user);
             assignment.setRole(role);
+            if (!assignmentRepository.findByUserAndRole(user, role)
+                                     .isPresent()) {
+                assignmentRepository.save(assignment);
+            }
+        }
+    }
 
-            assignmentRepository.save(assignment);
+    /**
+     * Assign user role by id.
+     *
+     * @param user the user
+     * @param roleIds the role ids
+     */
+    public void assignUserRolesByIds(User user, Long[] roleIds) {
+        for (Long roleId : roleIds) {
+            Role role = roleService.findById(roleId);
+            UserRoleAssignment assignment = new UserRoleAssignment();
+            assignment.setUser(user);
+            assignment.setRole(role);
+            if (!assignmentRepository.findByUserAndRole(user, role)
+                                     .isPresent()) {
+                assignmentRepository.save(assignment);
+            }
         }
     }
 }

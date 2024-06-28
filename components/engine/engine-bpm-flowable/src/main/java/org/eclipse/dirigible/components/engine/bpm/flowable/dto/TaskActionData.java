@@ -9,18 +9,28 @@
  */
 package org.eclipse.dirigible.components.engine.bpm.flowable.dto;
 
+import java.util.Map;
+
 public class TaskActionData {
     private String action;
 
+    private Map<String, Object> data;
+
     public String getAction() {
         return action;
+    }
+
+    public Map<String, Object> getData() {
+        return data;
     }
 
     public enum TaskAction {
 
         CLAIM("CLAIM"),
 
-        UNCLAIM("UNCLAIM");
+        UNCLAIM("UNCLAIM"),
+
+        COMPLETE("COMPLETE");
 
         private final String actionName;
 

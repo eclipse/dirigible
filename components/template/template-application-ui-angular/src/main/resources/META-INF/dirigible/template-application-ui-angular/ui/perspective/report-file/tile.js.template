@@ -10,7 +10,7 @@ exports.getTile = function () {
         caption: "Report for entity ${name}",
         tooltip: "${tooltip}",
         // icon: "file-o",
-        location: "/services/web/${projectName}/gen/ui/Reports/index.html",
+        location: "/services/web/${projectName}/gen/${genFolderName}/ui/Reports/index.html",
         order: "${menuIndex}",
         groupOrder: "999",
 #if($perspectiveRole || $roleRead)

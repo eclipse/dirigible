@@ -10,6 +10,7 @@
 package org.eclipse.dirigible.components.tenants.domain;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
+import org.eclipse.dirigible.components.security.domain.Role;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,6 +21,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
 
 /**
@@ -50,6 +52,10 @@ public class User extends Artefact {
     /** The password. */
     @Column(name = "USER_PASSWORD", nullable = false)
     private String password;
+
+    /** The role. */
+    @Transient
+    private Role[] roles;
 
     /**
      * Instantiates a new user.
@@ -142,6 +148,24 @@ public class User extends Artefact {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * Gets the roles.
+     *
+     * @return the roles
+     */
+    public Role[] getRoles() {
+        return roles;
+    }
+
+    /**
+     * Sets the roles.
+     *
+     * @param roles the new roles
+     */
+    public void setRoles(Role[] roles) {
+        this.roles = roles;
     }
 
     /**

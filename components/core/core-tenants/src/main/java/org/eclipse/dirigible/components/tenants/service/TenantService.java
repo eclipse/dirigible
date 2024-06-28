@@ -12,6 +12,7 @@ package org.eclipse.dirigible.components.tenants.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
 import org.eclipse.dirigible.components.tenants.domain.Tenant;
 import org.eclipse.dirigible.components.tenants.domain.TenantStatus;
 import org.springframework.stereotype.Service;
@@ -81,6 +82,15 @@ public class TenantService {
      */
     public Optional<Tenant> findById(String id) {
         return tenantRepository.findById(id);
+    }
+
+    /**
+     * Delete.
+     *
+     * @param tenant the tenant
+     */
+    public void delete(Tenant tenant) {
+        tenantRepository.delete(tenant);
     }
 
 }

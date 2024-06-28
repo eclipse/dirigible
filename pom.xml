@@ -172,13 +172,13 @@
 
 		<!-- JDBC -->
 		<mongodb.version>3.12.14</mongodb.version>
-		<ngdbc.version>2.20.17</ngdbc.version>
+		<ngdbc.version>2.21.10</ngdbc.version>
 		<snowflake.version>3.13.34</snowflake.version>
 		<mysql.version>8.4.0</mysql.version>
 		
 		<!-- QLDB -->
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.742</qldb.sdk.version>
+		<qldb.sdk.version>1.12.748</qldb.sdk.version>
 		
 		<!-- jETCD -->
 		<jetcd.core.version>0.8.2</jetcd.core.version>
@@ -187,7 +187,7 @@
 		<c3p0.version>0.10.1</c3p0.version>
 		<guava.version>33.2.1-jre</guava.version>
 		<icu4j.version>75.1</icu4j.version>
-		<classgraph.version>4.8.173</classgraph.version>
+		<classgraph.version>4.8.174</classgraph.version>
 		<logcaptor.version>2.9.2</logcaptor.version>
 
 		<!-- UI -->
@@ -480,7 +480,7 @@
 							<dependency>
 								<groupId>com.github.spotbugs</groupId>
 								<artifactId>spotbugs</artifactId>
-								<version>4.8.5</version>
+								<version>4.8.6</version>
 							</dependency>
 						</dependencies>
 					</plugin>

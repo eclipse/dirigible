@@ -21,7 +21,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 	.config(["entityApiProvider", function(entityApiProvider) {
 		entityApiProvider.baseUrl = "/services/js/inbox/ui/launchpad/Home/tiles.js";
 	}])
-	.controller('PageController', ['$scope', '$http', 'messageHub', 'entityApi', function($scope, $http, messageHub, entityApi) {
+	.controller('PageController', ['$scope', '$http', '$window', 'messageHub', 'entityApi', function($scope, $http, $window, messageHub, entityApi) {
 
 		$scope.openView = function(location) {
 			messageHub.postMessage("openView", {
@@ -68,6 +68,10 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				$scope.selectedUnclaimTask = variable;
 			}
 		}
+
+        $scope.openForm = function(url) {
+            $window.open(url, '_blank');
+        }
 
 		$scope.claimTask = function() {
 			this.executeAction($scope.selectedClaimTask.id, { 'action': 'CLAIM' }, 'claimed', () => { $scope.selectedClaimTask = null });

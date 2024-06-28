@@ -9,7 +9,7 @@
  */
 package org.eclipse.dirigible.integration.tests.ui.tests;
 
-import org.eclipse.dirigible.integration.tests.ui.Dirigible;
+import org.eclipse.dirigible.tests.IDE;
 import org.eclipse.dirigible.tests.framework.HtmlElementType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 class HomepageRedirectIT extends UserInterfaceIntegrationTest {
 
     @Autowired
-    private Dirigible dirigible;
+    private IDE dirigible;
 
     @Test
     void testOpenHomepage() {

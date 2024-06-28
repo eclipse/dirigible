@@ -65,7 +65,6 @@
 					<th fd-table-header-cell>Candidate Groups</th>
 					<th fd-table-header-cell>Process Instance Id</th>
 					<th fd-table-header-cell>Create Time</th>
-					<th fd-table-header-cell>Form Key</th>
 				</tr>
 			</thead>
 			<tbody fd-table-body>
@@ -79,7 +78,6 @@
 					<td fd-table-cell>{{next.candidateGroups}}</td>
 					<td fd-table-cell>{{next.processInstanceId}}</td>
 					<td fd-table-cell>{{next.createTime}}</td>
-					<td fd-table-cell>{{next.formKey}}</td>
 				</tr>
 				<tr ng-if="tasksList.length === 0" fd-table-row>
 					<td fd-table-cell no-data="true">{{getNoDataMessage()}}</td>
@@ -115,7 +113,8 @@
 					<td fd-table-cell>{{next.candidateGroups}}</td>
 					<td fd-table-cell>{{next.processInstanceId}}</td>
 					<td fd-table-cell>{{next.createTime}}</td>
-					<td fd-table-cell>{{next.formKey}}</td>
+					<td fd-table-cell><fd-button dg-type="emphasized" compact="true" dg-label="Open Form" title="Open Form"
+												 aria-label="Open Form" ng-click="openForm(next.formKey + '?taskId=' + next.id)"></fd-button>
 				</tr>
 				<tr ng-if="tasksListAssignee.length === 0" fd-table-row>
 					<td fd-table-cell no-data="true">{{getNoDataMessage()}}</td>

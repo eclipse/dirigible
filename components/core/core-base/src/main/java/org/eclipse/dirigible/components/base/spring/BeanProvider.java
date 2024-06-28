@@ -10,16 +10,23 @@
 package org.eclipse.dirigible.components.base.spring;
 
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 /**
  * The Class BeanProvider.
  */
 @Component
 public class BeanProvider implements ApplicationContextAware {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BeanProvider.class);
 
     /** The context. */
     private static ApplicationContext context;
@@ -74,4 +81,15 @@ public class BeanProvider implements ApplicationContextAware {
         return context.getBean(clazz);
     }
 
+    public static <T> Optional<T> getOptionalBean(Class<T> clazz) {
+        if (!isInitialzed()) {
+            throw new IllegalStateException("Spring is not initialized yet.");
+        }
+        try {
+            return Optional.of(context.getBean(clazz));
+        } catch (NoSuchBeanDefinitionException ex) {
+            LOGGER.debug("Missing bean for [{}]", clazz, ex);
+            return Optional.empty();
+        }
+    }
 }

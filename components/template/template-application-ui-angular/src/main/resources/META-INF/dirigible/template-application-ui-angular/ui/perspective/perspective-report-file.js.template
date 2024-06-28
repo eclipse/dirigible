@@ -6,7 +6,7 @@
 const perspectiveData = {
 	id: '${projectName}-${fileName}',
 	name: 'Reports',
-	link: '/services/web/${projectName}/gen/ui/Reports/index.html',
+	link: '/services/web/${projectName}/gen/${genFolderName}/ui/Reports/index.html',
 	order: 999,
 	icon: '/services/web/resources/unicons/dashboard.svg',
 #if($perspectiveRole)

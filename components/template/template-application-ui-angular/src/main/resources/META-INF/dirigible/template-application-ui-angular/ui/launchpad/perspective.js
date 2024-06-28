@@ -6,7 +6,7 @@
 const perspectiveData = {
 	id: 'home',
 	name: 'Home',
-	link: '/services/web/${projectName}/gen/index.html',
+	link: '/services/web/${projectName}/gen/${genFolderName}/index.html',
 	icon: '/services/web/resources/unicons/estate.svg',
 	order: 1,
 };

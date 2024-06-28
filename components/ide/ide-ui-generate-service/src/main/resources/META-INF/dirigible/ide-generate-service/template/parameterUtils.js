@@ -84,8 +84,8 @@ exports.process = function (model, parameters) {
                 // TODO minLength is not available in the model and can't be determined
                 p.minLength = 0;
                 p.maxLength = -1;
-                let widgetLength = parseInt(p.widgetLength);
-                let dataLength = parseInt(p.dataLength)
+                let widgetLength = parseInt(p.widgetLength ? p.widgetLength : '0');
+                let dataLength = parseInt(p.dataLength ? p.dataLength : '0')
                 p.maxLength = dataLength > widgetLength ? widgetLength : dataLength;
             } else if (p.dataTypeTypescript === "Date") {
                 p.isDateType = true;
@@ -112,16 +112,18 @@ exports.process = function (model, parameters) {
             model.entities.forEach(ep => {
                 if (p.relationshipEntityName === ep.name) {
                     if (ep.projectionReferencedModel) {
+                        const tokens = ep.projectionReferencedModel.split('/');
                         e.referencedProjections.push({
                             name: ep.name,
-                            project: ep.projectionReferencedModel.split('/')[2]
+                            project: tokens[2],
+                            genFolderName: tokens[3].substring(0, tokens[3].indexOf('.'))
                         })
                     }
                 }
             })
 
             if (p.widgetType == "DROPDOWN") {
-                let projectNameString = "\"/services/ts/" + `${parameters.projectName}` + "/gen/api/" + `${p.relationshipEntityPerspectiveName}` + "/" + `${p.relationshipEntityName}` + "Service.ts\"";
+                let projectNameString = `/services/ts/${parameters.projectName}/gen/${parameters.genFolderName}/api/${p.relationshipEntityPerspectiveName}/${p.relationshipEntityName}Service.ts`;
 
                 e.hasDropdowns = true;
 
@@ -129,7 +131,7 @@ exports.process = function (model, parameters) {
                     let foundReferenceProjection = false;
                     e.referencedProjections.forEach(referencedProjection => {
                         if (referencedProjection.name === p.relationshipEntityName && !foundReferenceProjection) {
-                            p.widgetDropdownUrl = "\"/services/ts/" + `${referencedProjection.project}` + "/gen/api/" + `${p.relationshipEntityPerspectiveName}` + "/" + `${p.relationshipEntityName}` + "Service.ts\"";
+                            p.widgetDropdownUrl = `/services/ts/${referencedProjection.project}/gen/${referencedProjection.genFolderName}/api/${p.relationshipEntityPerspectiveName}/${p.relationshipEntityName}Service.ts`;
                             foundReferenceProjection = true;
                         }
                     });

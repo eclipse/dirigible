@@ -1,5 +1,5 @@
 {
-    "module": "${projectName}/gen/ui/${perspectiveName}/${masterEntity}/${name}/view.js",
+    "module": "${projectName}/gen/${genFolderName}/ui/${perspectiveName}/${masterEntity}/${name}/view.js",
     "extensionPoint": "${projectName}-view",
     "description": "${projectName} - Application View - Details"
 }

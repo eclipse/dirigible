@@ -248,6 +248,13 @@ class BrowserImpl implements Browser {
     }
 
     @Override
+    public void clickOnElementContainingText(HtmlElementType elementType, String text) {
+        String textPattern = Pattern.quote(text);
+        SelenideElement element = getElementByAttributeAndTextPattern(elementType, textPattern);
+        handleElementInAllFrames(element, e -> e.click());
+    }
+
+    @Override
     public void clickElementByAttributePattern(HtmlElementType elementType, HtmlAttribute attribute, String pattern) {
         SelenideElement element = getElementByAttributePattern(elementType, attribute, pattern);
         handleElementInAllFrames(element, e -> e.click());

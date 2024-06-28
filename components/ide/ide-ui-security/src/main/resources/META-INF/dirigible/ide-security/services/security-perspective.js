@@ -13,7 +13,7 @@ const perspectiveData = {
 	id: "security",
 	name: "Security",
 	link: "../ide-security/index.html",
-	order: "999",
+	order: "998",
 	image: "area-chart", // deprecated
 	icon: "../ide-security/images/security.svg",
 };

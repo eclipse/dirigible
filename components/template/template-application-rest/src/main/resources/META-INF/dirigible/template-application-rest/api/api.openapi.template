@@ -63,7 +63,7 @@ paths:
       #set($hasStringProperty = "true")
     #end
   #end
-  /$projectName/gen/api/$model.perspectiveName/${model.name}Service.ts:
+  /$projectName/gen/$genFolderName/api/$model.perspectiveName/${model.name}Service.ts:
     get:
       summary: List $model.name
       parameters:
@@ -147,7 +147,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /$projectName/gen/api/$model.perspectiveName/${model.name}Service.ts/{id}:
+  /$projectName/gen/$genFolderName/api/$model.perspectiveName/${model.name}Service.ts/{id}:
     get:
       summary: Get $model.name by Id
       parameters:
@@ -266,7 +266,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /$projectName/gen/api/$model.perspectiveName/${model.name}Service.ts/count:
+  /$projectName/gen/$genFolderName/api/$model.perspectiveName/${model.name}Service.ts/count:
     get:
       summary: Count the number of $model.name
       tags:
@@ -388,7 +388,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /$projectName/gen/api/$model.perspectiveName/${model.name}Service.ts/search:
+  /$projectName/gen/$genFolderName/api/$model.perspectiveName/${model.name}Service.ts/search:
     post:
       summary: Search ${model.name} by ${model.name}FilterOptions
       tags:
