@@ -25,6 +25,8 @@ public interface Browser {
 
     void doubleClickOnElementContainingText(HtmlElementType htmlElementType, String text);
 
+    void clickOnElementContainingText(HtmlElementType htmlElementType, String text);
+
     void clickElementByAttributePattern(HtmlElementType htmlElementType, HtmlAttribute htmlAttribute, String pattern);
 
     void assertElementExistsByTypeAndTextPattern(HtmlElementType htmlElementType, String textPattern);

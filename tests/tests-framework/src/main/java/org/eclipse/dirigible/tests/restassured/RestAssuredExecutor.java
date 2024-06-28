@@ -13,6 +13,7 @@ import io.restassured.RestAssured;
 import io.restassured.authentication.AuthenticationScheme;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.tests.DirigibleTestTenant;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Lazy;
@@ -79,6 +80,12 @@ public class RestAssuredExecutor {
             RestAssured.baseURI = configuredBaseURI;
             RestAssured.port = configuredPort;
         }
+    }
+
+    public void execute(CallableNoResultAndNoException callable) {
+        String user = DirigibleConfig.BASIC_ADMIN_USERNAME.getFromBase64Value();
+        String pass = DirigibleConfig.BASIC_ADMIN_PASS.getFromBase64Value();
+        this.execute(callable, "localhost", user, pass);
     }
 
     public void execute(CallableNoResultAndNoException callable, String user, String password) {

@@ -7,7 +7,7 @@
  *
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.integration.tests.ui;
+package org.eclipse.dirigible.tests;
 
 import org.eclipse.dirigible.tests.framework.Browser;
 import org.eclipse.dirigible.tests.framework.HtmlAttribute;
@@ -17,11 +17,11 @@ import org.springframework.stereotype.Component;
 
 @Lazy
 @Component
-public class DirigibleWorkbench {
+public class Workbench {
 
     private final Browser browser;
 
-    DirigibleWorkbench(Browser browser) {
+    public Workbench(Browser browser) {
         this.browser = browser;
     }
 
@@ -34,7 +34,22 @@ public class DirigibleWorkbench {
     }
 
     public void publishAll() {
-        browser.clickElementByAttributePattern(HtmlElementType.BUTTON, HtmlAttribute.TITLE, "Publish all");
+        clickPublishAll();
         browser.assertElementExistsByTypeAndTextPattern(HtmlElementType.SPAN, "Published all projects in");
     }
+
+    public void clickPublishAll() {
+        browser.clickElementByAttributePattern(HtmlElementType.BUTTON, HtmlAttribute.TITLE, "Publish all");
+    }
+
+    public WelcomeView openWelcomeView() {
+        focusOnOpenedFile("Welcome");
+        return new WelcomeView(browser);
+    }
+
+    public WelcomeView focusOnOpenedFile(String fileName) {
+        browser.clickOnElementContainingText(HtmlElementType.ANCHOR, fileName);
+        return new WelcomeView(browser);
+    }
+
 }
