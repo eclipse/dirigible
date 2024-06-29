@@ -172,7 +172,7 @@
 
 		<!-- JDBC -->
 		<mongodb.version>3.12.14</mongodb.version>
-		<ngdbc.version>2.21.10</ngdbc.version>
+		<ngdbc.version>2.21.11</ngdbc.version>
 		<snowflake.version>3.13.34</snowflake.version>
 		<mysql.version>8.4.0</mysql.version>
 		
