@@ -41,6 +41,11 @@ exports.getSources = function (parameters) {
 			rename: "gen/{{genFolderName}}/ui/launchpad/Home/view.js",
 			engine: "velocity"
 		},
+		{
+			location: "/template-application-ui-angular/ui/launchpad/Home/styles.css",
+			action: "copy",
+			rename: "gen/{{genFolderName}}/ui/launchpad/Home/styles.css",
+		},
 		// Location: "gen/{{genFolderName}}/ui/launchpad"
 		{
 			location: "/template-application-ui-angular/ui/launchpad/dialog-window.extensionpoint.template",
