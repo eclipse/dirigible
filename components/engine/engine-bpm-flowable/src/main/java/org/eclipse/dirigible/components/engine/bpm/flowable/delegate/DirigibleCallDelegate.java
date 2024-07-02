@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.components.engine.bpm.flowable.delegate;
 
+import jakarta.annotation.Nullable;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ExecutionData;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
@@ -21,7 +22,6 @@ import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 import org.springframework.beans.BeanUtils;
 
-import jakarta.annotation.Nullable;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +36,7 @@ import static org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmSe
 public class DirigibleCallDelegate implements JavaDelegate {
 
     /** The js expression regex. */
-    private static Pattern JS_EXPRESSION_REGEX = Pattern.compile("(.*\\.m?js)(?:\\/(\\w*))?(?:\\/(\\w*))?");
+    private static final Pattern JS_EXPRESSION_REGEX = Pattern.compile("(.*\\.(?:m?js|ts))(?:\\/(\\w*))?(?:\\/(\\w*))?");
 
     /**
      * The handler.
@@ -47,6 +47,116 @@ public class DirigibleCallDelegate implements JavaDelegate {
      * The type.
      */
     private FixedValue type;
+
+
+    /**
+     * The Class JSTask.
+     */
+    static class JSTask {
+
+        /** The source file path. */
+        private final Path sourceFilePath;
+
+        /** The class name. */
+        private final @Nullable String className;
+
+        /** The method name. */
+        private final @Nullable String methodName;
+
+        /** The has exported class and method. */
+        private final boolean hasExportedClassAndMethod;
+
+        /** The has exported method. */
+        private final boolean hasExportedMethod;
+
+        /**
+         * Instantiates a new JS task.
+         *
+         * @param sourceFilePath the source file path
+         * @param className the class name
+         * @param methodName the method name
+         */
+        JSTask(Path sourceFilePath, @Nullable String className, @Nullable String methodName) {
+            this.sourceFilePath = sourceFilePath;
+            this.className = className;
+            this.methodName = methodName;
+            this.hasExportedMethod = className == null && methodName != null;
+            this.hasExportedClassAndMethod = className != null && methodName != null;
+        }
+
+        /**
+         * From repository path.
+         *
+         * @param repositoryPath the repository path
+         * @return the JS task
+         */
+        static JSTask fromRepositoryPath(RepositoryPath repositoryPath) {
+            var matcher = JS_EXPRESSION_REGEX.matcher(repositoryPath.getPath());
+            if (!matcher.matches()) {
+                throw new BpmnError("Invalid JS expression provided for task! Path [" + repositoryPath.getPath() + "] doesn't match "
+                        + JS_EXPRESSION_REGEX);
+            }
+
+            String maybeClassName;
+            String maybeMethodName;
+
+            if (matcher.group(2) != null && matcher.group(3) != null) {
+                maybeClassName = matcher.group(2);
+                maybeMethodName = matcher.group(3);
+            } else {
+                maybeClassName = null;
+                maybeMethodName = matcher.group(2);
+            }
+
+            Path sourceFilePath = Path.of(matcher.group(1));
+            return new JSTask(sourceFilePath, maybeClassName, maybeMethodName);
+        }
+
+        /**
+         * Gets the source file path.
+         *
+         * @return the source file path
+         */
+        public Path getSourceFilePath() {
+            return sourceFilePath;
+        }
+
+        /**
+         * Gets the class name.
+         *
+         * @return the class name
+         */
+        public String getClassName() {
+            return className;
+        }
+
+        /**
+         * Gets the method name.
+         *
+         * @return the method name
+         */
+        public String getMethodName() {
+            return methodName;
+        }
+
+        /**
+         * Checks for exported class and method.
+         *
+         * @return true, if successful
+         */
+        public boolean hasExportedClassAndMethod() {
+            return hasExportedClassAndMethod;
+        }
+
+        /**
+         * Checks for exported method.
+         *
+         * @return true, if successful
+         */
+        public boolean hasExportedMethod() {
+            return hasExportedMethod;
+        }
+    }
 
     /**
      * Getter for the handler attribute.
@@ -135,114 +245,6 @@ public class DirigibleCallDelegate implements JavaDelegate {
                      .executeVoid();
             }
 
-        }
-    }
-
-    /**
-     * The Class JSTask.
-     */
-    static class JSTask {
-
-        /** The source file path. */
-        private final Path sourceFilePath;
-
-        /** The class name. */
-        private final @Nullable String className;
-
-        /** The method name. */
-        private final @Nullable String methodName;
-
-        /** The has exported class and method. */
-        private final boolean hasExportedClassAndMethod;
-
-        /** The has exported method. */
-        private final boolean hasExportedMethod;
-
-        /**
-         * Instantiates a new JS task.
-         *
-         * @param sourceFilePath the source file path
-         * @param className the class name
-         * @param methodName the method name
-         */
-        JSTask(Path sourceFilePath, @Nullable String className, @Nullable String methodName) {
-            this.sourceFilePath = sourceFilePath;
-            this.className = className;
-            this.methodName = methodName;
-            this.hasExportedMethod = className == null && methodName != null;
-            this.hasExportedClassAndMethod = className != null && methodName != null;
-        }
-
-        /**
-         * From repository path.
-         *
-         * @param repositoryPath the repository path
-         * @return the JS task
-         */
-        static JSTask fromRepositoryPath(RepositoryPath repositoryPath) {
-            var matcher = JS_EXPRESSION_REGEX.matcher(repositoryPath.getPath());
-            if (!matcher.matches()) {
-                throw new BpmnError("Invalid JS expression provided for task!");
-            }
-
-            String maybeClassName;
-            String maybeMethodName;
-
-            if (matcher.group(2) != null && matcher.group(3) != null) {
-                maybeClassName = matcher.group(2);
-                maybeMethodName = matcher.group(3);
-            } else {
-                maybeClassName = null;
-                maybeMethodName = matcher.group(2);
-            }
-
-            Path sourceFilePath = Path.of(matcher.group(1));
-            return new JSTask(sourceFilePath, maybeClassName, maybeMethodName);
-        }
-
-        /**
-         * Gets the source file path.
-         *
-         * @return the source file path
-         */
-        public Path getSourceFilePath() {
-            return sourceFilePath;
-        }
-
-        /**
-         * Gets the class name.
-         *
-         * @return the class name
-         */
-        public String getClassName() {
-            return className;
-        }
-
-        /**
-         * Gets the method name.
-         *
-         * @return the method name
-         */
-        public String getMethodName() {
-            return methodName;
-        }
-
-        /**
-         * Checks for exported class and method.
-         *
-         * @return true, if successful
-         */
-        public boolean hasExportedClassAndMethod() {
-            return hasExportedClassAndMethod;
-        }
-
-        /**
-         * Checks for exported method.
-         *
-         * @return true, if successful
-         */
-        public boolean hasExportedMethod() {
-            return hasExportedMethod;
         }
     }
 
