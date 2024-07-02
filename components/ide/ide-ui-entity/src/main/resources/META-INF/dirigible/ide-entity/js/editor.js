@@ -324,6 +324,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				cell.value.calculatedPropertyExpressionUpdate = msg.data.calculatedPropertyExpressionUpdate;
 				cell.value.dataName = msg.data.dataName;
 				cell.value.dataType = msg.data.dataType;
+				cell.value.dataOrderBy = msg.data.dataOrderBy;
 				cell.value.dataLength = msg.data.dataLength;
 				cell.value.dataPrimaryKey = msg.data.dataPrimaryKey;
 				cell.value.dataAutoIncrement = msg.data.dataAutoIncrement;
@@ -919,6 +920,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 									calculatedPropertyExpressionUpdate: cell.value.calculatedPropertyExpressionUpdate,
 									dataName: cell.value.dataName,
 									dataType: cell.value.dataType,
+									dataOrderBy: cell.value.dataOrderBy,
 									dataLength: cell.value.dataLength,
 									dataPrimaryKey: cell.value.dataPrimaryKey,
 									dataAutoIncrement: cell.value.dataAutoIncrement,
