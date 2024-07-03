@@ -9,34 +9,42 @@
  */
 package org.eclipse.dirigible.components.engine.bpm.flowable.config;
 
-import javax.sql.DataSource;
-
 import org.eclipse.dirigible.components.engine.bpm.BpmProvider;
 import org.eclipse.dirigible.components.engine.bpm.flowable.provider.BpmProviderFlowable;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
+import org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+
+import javax.sql.DataSource;
 
 /**
  * The Class BpmFlowableConfig.
  */
 @Configuration
-@EnableAutoConfiguration(exclude = LiquibaseAutoConfiguration.class)
+@EnableAutoConfiguration(exclude = {LiquibaseAutoConfiguration.class, TaskExecutionAutoConfiguration.class})
+
 public class BpmFlowableConfig {
 
-    /**
-     * Gets the bpm provider.
-     *
-     * @param datasource the datasource
-     * @param repository the repository
-     * @return the bpm provider
-     */
     @Bean("BPM_PROVIDER")
-    public BpmProvider getBpmProvider(@Qualifier("SystemDB") DataSource datasource, IRepository repository) {
-        return new BpmProviderFlowable(datasource, repository);
+    public BpmProvider getBpmProvider(BpmProviderFlowable bpmProviderFlowable) {
+        return bpmProviderFlowable;
+    }
+
+    @Bean
+    BpmProviderFlowable provideBpmProviderFlowable(@Qualifier("SystemDB") DataSource datasource, IRepository repository,
+            ApplicationContext applicationContext, DataSourceTransactionManager dataSourceTransactionManager) {
+        return new BpmProviderFlowable(datasource, repository, dataSourceTransactionManager, applicationContext);
+    }
+
+    @Bean
+    DataSourceTransactionManager provideTransactionManager(@Qualifier("SystemDB") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
     }
 
 }
