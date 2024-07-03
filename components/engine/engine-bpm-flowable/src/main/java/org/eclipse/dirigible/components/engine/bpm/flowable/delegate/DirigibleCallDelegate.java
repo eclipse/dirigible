@@ -34,6 +34,8 @@ import static org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmSe
 /**
  * The Class DirigibleCallDelegate.
  */
+// don't change the name of the bean or the class name and package
+// otherwise processes will stop working
 @Component("JSTask")
 public class DirigibleCallDelegate implements JavaDelegate {
 
