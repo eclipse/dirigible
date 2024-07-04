@@ -336,6 +336,11 @@ public class BpmProviderFlowable implements BpmProvider {
         return runtimeService.getVariable(executionId, variableName);
     }
 
+    public Map<String, Object> getVariables(String executionId) {
+        RuntimeService runtimeService = getProcessEngine().getRuntimeService();
+        return runtimeService.getVariables(executionId);
+    }
+
     /**
      * Sets the variable.
      *
