@@ -71,6 +71,7 @@ class BrowserImpl implements Browser {
     public void openPath(String path) {
         String url = createAppUrl(path);
         Selenide.open(url);
+        maximizeBrowser();
     }
 
     private String createAppUrl(String path) {
