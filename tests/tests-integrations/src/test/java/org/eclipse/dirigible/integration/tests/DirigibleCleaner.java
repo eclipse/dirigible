@@ -61,7 +61,8 @@ class DirigibleCleaner {
     }
 
     /**
-     * Execute this before H2 folder deletion because it is in memory DB. Otherwise, will remain data in memory.
+     * Execute this before H2 folder deletion because it is in memory DB. Otherwise, will remain data in
+     * memory.
      */
     private void deleteDirigibleDBData() {
         DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
@@ -92,8 +93,8 @@ class DirigibleCleaner {
     private List<String> getAllTables(DataSource dataSource) {
         List<String> tables = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
-                PreparedStatement prepareStatement = connection.prepareStatement(
-                        "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='PUBLIC'")) {
+                PreparedStatement prepareStatement =
+                        connection.prepareStatement("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='PUBLIC'")) {
             ResultSet resultSet = prepareStatement.executeQuery();
             while (resultSet.next()) {
                 tables.add(resultSet.getString(1));
