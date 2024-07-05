@@ -52,4 +52,7 @@ public class Workbench {
         return new WelcomeView(browser);
     }
 
+    public FormView getFormView() {
+        return new FormView(browser);
+    }
 }

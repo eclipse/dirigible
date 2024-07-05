@@ -49,7 +49,12 @@ public class WelcomeView {
         browser.enterTextInElementByAttributePattern(HtmlElementType.INPUT, HtmlAttribute.ID, "fileName", fileName);
     }
 
+    public void typeTemplateParamById(String paramId, String paramValue) {
+        browser.enterTextInElementByAttributePattern(HtmlElementType.INPUT, HtmlAttribute.ID, paramId, paramValue);
+    }
+
     public void confirmTemplate() {
         browser.clickOnElementContainingText(HtmlElementType.BUTTON, "Ok");
     }
+
 }

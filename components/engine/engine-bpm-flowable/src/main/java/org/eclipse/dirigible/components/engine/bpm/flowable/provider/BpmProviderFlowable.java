@@ -364,4 +364,9 @@ public class BpmProviderFlowable implements BpmProvider {
         runtimeService.removeVariable(executionId, variableName);
     }
 
+    public void cleanup() {
+        logger.info("Cleaning [{}]...", this.getClass());
+        processEngine.close();
+    }
+
 }

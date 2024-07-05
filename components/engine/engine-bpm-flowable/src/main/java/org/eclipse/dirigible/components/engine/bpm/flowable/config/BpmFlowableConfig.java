@@ -36,7 +36,7 @@ public class BpmFlowableConfig {
         return bpmProviderFlowable;
     }
 
-    @Bean
+    @Bean(destroyMethod = "cleanup")
     BpmProviderFlowable provideBpmProviderFlowable(@Qualifier("SystemDB") DataSource datasource, IRepository repository,
             ApplicationContext applicationContext, DataSourceTransactionManager dataSourceTransactionManager) {
         return new BpmProviderFlowable(datasource, repository, dataSourceTransactionManager, applicationContext);
