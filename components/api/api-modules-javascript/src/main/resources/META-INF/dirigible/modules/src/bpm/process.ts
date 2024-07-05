@@ -25,6 +25,10 @@ export class Process {
 		return BpmFacade.getVariable(processInstanceId, variableName);
 	}
 
+	public static getVariables(processInstanceId: string): any {
+		return BpmFacade.getVariables(processInstanceId);
+	}
+
 	public static setVariable(processInstanceId: string, variableName: string, value: any): void {
 		BpmFacade.setVariable(processInstanceId, variableName, value);
 	}

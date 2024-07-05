@@ -21,6 +21,7 @@ import org.flowable.engine.impl.el.FixedValue;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -33,6 +34,9 @@ import static org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmSe
 /**
  * The Class DirigibleCallDelegate.
  */
+// don't change the name of the bean or the class name and package
+// otherwise processes will stop working
+@Component("JSTask")
 public class DirigibleCallDelegate implements JavaDelegate {
 
     /** The js expression regex. */

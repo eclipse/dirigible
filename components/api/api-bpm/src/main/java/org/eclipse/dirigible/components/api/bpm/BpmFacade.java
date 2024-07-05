@@ -14,6 +14,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 /**
  * The Class BpmFacade.
  */
@@ -47,6 +49,16 @@ public class BpmFacade implements InitializingBean {
     }
 
     /**
+     * BPM Engine.
+     *
+     * @return the BPM engine object
+     */
+    public static final Object getEngine() {
+        return BpmFacade.get()
+                        .getBpmProviderFlowable();
+    }
+
+    /**
      * Gets the instance.
      *
      * @return the database facade
@@ -57,16 +69,6 @@ public class BpmFacade implements InitializingBean {
 
     public BpmProviderFlowable getBpmProviderFlowable() {
         return bpmProviderFlowable;
-    }
-
-    /**
-     * BPM Engine.
-     *
-     * @return the BPM engine object
-     */
-    public static final Object getEngine() {
-        return BpmFacade.get()
-                        .getBpmProviderFlowable();
     }
 
     /**
@@ -128,6 +130,12 @@ public class BpmFacade implements InitializingBean {
         return BpmFacade.get()
                         .getBpmProviderFlowable()
                         .getVariable(processInstanceId, variableName);
+    }
+
+    public static Map<String, Object> getVariables(String processInstanceId) {
+        return BpmFacade.get()
+                        .getBpmProviderFlowable()
+                        .getVariables(processInstanceId);
     }
 
     /**

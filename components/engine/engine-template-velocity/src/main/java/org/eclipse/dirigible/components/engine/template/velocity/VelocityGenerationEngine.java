@@ -9,20 +9,16 @@
  */
 package org.eclipse.dirigible.components.engine.template.velocity;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
-import java.util.Map;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.eclipse.dirigible.components.engine.template.TemplateEngine;
 import org.springframework.stereotype.Component;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * The Class VelocityGenerationEngine.
@@ -34,7 +30,7 @@ public class VelocityGenerationEngine implements TemplateEngine {
     public static final String ENGINE_NAME = "velocity";
 
     /** The engine. */
-    private VelocityEngine engine;
+    private final VelocityEngine engine;
 
     /**
      * Instantiates a new velocity generation engine.
@@ -49,7 +45,6 @@ public class VelocityGenerationEngine implements TemplateEngine {
             e.printStackTrace();
         }
     }
-
 
     /**
      * Gets the name.
