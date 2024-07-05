@@ -15,6 +15,8 @@ public interface Browser {
 
     void enterTextInElementByAttributePattern(HtmlElementType elementType, HtmlAttribute attribute, String pattern, String text);
 
+    void enterTextInElementById(String elementId, String text);
+
     void clickElementByAttributePatternAndText(HtmlElementType elementType, HtmlAttribute attribute, String pattern, String text);
 
     void assertElementExistsByTypeAndText(HtmlElementType elementType, String text);
@@ -34,4 +36,5 @@ public interface Browser {
     void reload();
 
     String createScreenshot();
+
 }

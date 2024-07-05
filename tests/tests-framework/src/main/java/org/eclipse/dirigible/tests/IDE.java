@@ -113,4 +113,7 @@ public class IDE {
                 username, password);
     }
 
+    public void assertPublishedAllProjectsMessage() {
+        assertStatusBarMessage("Published all projects in 'workspace'");
+    }
 }

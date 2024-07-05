@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.integration.tests;
 
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -60,8 +61,7 @@ class DirigibleCleaner {
     }
 
     /**
-     * Execute this before H2 folder deletion because it is in memory DB. Otherwise, will remain data in
-     * memory.
+     * Execute this before H2 folder deletion because it is in memory DB. Otherwise, will remain data in memory.
      */
     private void deleteDirigibleDBData() {
         DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
@@ -76,22 +76,24 @@ class DirigibleCleaner {
     private void deleteAllDataInSchema(DataSource dataSource) {
         List<String> tables = getAllTables(dataSource);
 
-        tables.forEach(t -> {
-            try (Connection connection = dataSource.getConnection();
-                    PreparedStatement prepareStatement = connection.prepareStatement("DELETE FROM " + t)) {
-                int rowsAffected = prepareStatement.executeUpdate();
-                LOGGER.info("Deleted [{}] from table [{}]", rowsAffected, t);
-            } catch (SQLException ex) {
-                LOGGER.warn("Failed to delete data from table [{}] in data source [{}]", t, dataSource, ex);
-            }
-        });
+        for (int idx = 0; idx < 3; idx++) { // execute it a few times due to constraint violations
+            tables.forEach(t -> {
+                try (Connection connection = dataSource.getConnection();
+                        PreparedStatement prepareStatement = connection.prepareStatement("DELETE FROM " + t)) {
+                    int rowsAffected = prepareStatement.executeUpdate();
+                    LOGGER.info("Deleted [{}] from table [{}]", rowsAffected, t);
+                } catch (SQLException ex) {
+                    LOGGER.warn("Failed to delete data from table [{}] in data source [{}]", t, dataSource, ex);
+                }
+            });
+        }
     }
 
     private List<String> getAllTables(DataSource dataSource) {
         List<String> tables = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
-                PreparedStatement prepareStatement =
-                        connection.prepareStatement("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='PUBLIC'")) {
+                PreparedStatement prepareStatement = connection.prepareStatement(
+                        "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='PUBLIC'")) {
             ResultSet resultSet = prepareStatement.executeQuery();
             while (resultSet.next()) {
                 tables.add(resultSet.getString(1));
@@ -148,7 +150,7 @@ class DirigibleCleaner {
         LOGGER.info("Deleting all Dirigible project resources from the repository...");
 
         List<String> userProjects = getUserProjects();
-        deleteUsersFolder();
+        deleteCurrentUserFolder();
         deleteDirigibleProjectsFromRegistry(userProjects);
         LOGGER.info("Dirigible project resources have been deleted.");
     }
@@ -172,9 +174,11 @@ class DirigibleCleaner {
         return new File(repoBasePath + File.separator + "users");
     }
 
-    private void deleteUsersFolder() {
+    private void deleteCurrentUserFolder() {
         File usersFolder = getUsersRepoFolder();
-        FileUtil.deleteFolder(usersFolder);
+        String currentUserFolder = usersFolder.getPath() + File.separator + DirigibleConfig.BASIC_ADMIN_USERNAME.getFromBase64Value();
+        LOGGER.info("Will delete current user folder [{}]", currentUserFolder);
+        FileUtil.deleteFolder(currentUserFolder);
     }
 
     private void deleteDirigibleProjectsFromRegistry(List<String> userProjects) {
