@@ -365,7 +365,7 @@ public class BpmProviderFlowable implements BpmProvider {
     }
 
     public void cleanup() {
-        logger.info("!!!! Cleaning [{}]", this.getClass());
+        logger.info("Cleaning [{}]...", this.getClass());
         processEngine.close();
     }
 
