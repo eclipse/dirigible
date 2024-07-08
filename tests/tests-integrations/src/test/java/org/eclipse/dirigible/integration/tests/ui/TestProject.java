@@ -45,25 +45,26 @@ import static org.hamcrest.Matchers.hasSize;
 @Lazy
 @Component
 public class TestProject {
-    public static final String UI_HOME_PATH = "/services/web/dirigible-test-project/gen/edm/index.html";
-    public static final String BOOKS_SERVICE_PATH = "/services/ts/dirigible-test-project/gen/edm/api/Books/BookService.ts";
-    public static final String EDM_FILE_NAME = "edm.edm";
-    public static final String READERS_ODATA_ENTITY_PATH = "/odata/v2/Readers";
-    public static final String READERS_VIEW_SERVICE_PATH = "/services/ts/dirigible-test-project/views/ReaderViewService.ts";
-    public static final String PROJECT_ROOT_FOLDER = "dirigible-test-project";
-    public static final String DOCUMENTS_SERVIE_PATH = "/services/ts/dirigible-test-project/cmis/DocumentService.ts/documents";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(TestProject.class);
+
+    private static final String UI_HOME_PATH = "/services/web/dirigible-test-project/gen/edm/index.html";
+    private static final String BOOKS_SERVICE_PATH = "/services/ts/dirigible-test-project/gen/edm/api/Books/BookService.ts";
+    private static final String EDM_FILE_NAME = "edm.edm";
+    private static final String READERS_ODATA_ENTITY_PATH = "/odata/v2/Readers";
+    private static final String READERS_VIEW_SERVICE_PATH = "/services/ts/dirigible-test-project/views/ReaderViewService.ts";
+    private static final String PROJECT_ROOT_FOLDER = "dirigible-test-project";
+    private static final String DOCUMENTS_SERVIE_PATH = "/services/ts/dirigible-test-project/cmis/DocumentService.ts/documents";
+
     private static final String PROJECT_RESOURCES_PATH = "dirigible-test-project";
     private static final String UI_PROJECT_TITLE = "Dirigible Test Project";
+
     private final IRepository dirigibleRepo;
     private final BrowserFactory browserFactory;
     private final IDE dirigible;
     private final EdmView edmView;
-
     private final RestAssuredExecutor restAssuredExecutor;
-
     private final LogsAsserter testJobLogsAsserter;
-
     private final LogsAsserter eventListenerLogsAsserter;
 
     public TestProject(IRepository dirigibleRepo, BrowserFactory browserFactory, IDE dirigible, EdmView edmView,

@@ -116,4 +116,9 @@ public class IDE {
     public void assertPublishedAllProjectsMessage() {
         assertStatusBarMessage("Published all projects in 'workspace'");
     }
+
+    public void openPath(String path) {
+        browser.openPath(path);
+        login(true);
+    }
 }

@@ -97,7 +97,8 @@ public class AccessSynchronizer extends BaseSynchronizer<Access, Long> {
         List<Access> accesses = constraints.buildSecurityAccesses(location);
         List<Access> result = new ArrayList<Access>();
 
-        for (Access access : accesses) {
+        for (int idx = 0; idx < accesses.size(); idx++) {
+            Access access = accesses.get(idx);
             try {
                 access.updateKey();
                 Access maybe = getService().findByKey(access.getKey());
@@ -106,21 +107,12 @@ public class AccessSynchronizer extends BaseSynchronizer<Access, Long> {
                 }
                 access = getService().save(access);
                 result.add(access);
-                return result;
             } catch (Exception e) {
-                if (logger.isErrorEnabled()) {
-                    logger.error(e.getMessage(), e);
-                }
-                if (logger.isErrorEnabled()) {
-                    logger.error("security access: {}", access);
-                }
-                if (logger.isErrorEnabled()) {
-                    logger.error("content: {}", new String(content));
-                }
-                throw new ParseException(e.getMessage(), 0);
+                String errorMessage = "Failed tp parse access " + access;
+                logger.error(errorMessage, e);
+                throw new ParseException(errorMessage, idx);
             }
         }
-
         return result;
     }
 

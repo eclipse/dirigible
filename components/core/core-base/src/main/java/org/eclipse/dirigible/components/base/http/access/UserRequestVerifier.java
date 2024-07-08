@@ -9,16 +9,15 @@
  */
 package org.eclipse.dirigible.components.base.http.access;
 
-import java.util.ServiceLoader;
-
 import jakarta.servlet.http.HttpServletRequest;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.context.ContextException;
 import org.eclipse.dirigible.components.base.context.InvalidStateException;
 import org.eclipse.dirigible.components.base.context.ThreadContextFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ServiceLoader;
 
 /**
  * The Class UserRequestVerifier.
@@ -33,6 +32,16 @@ public class UserRequestVerifier {
 
     /** The Constant NO_VALID_REQUEST. */
     private static final String NO_VALID_REQUEST = "Trying to use HTTP Request Facade without a valid Request";
+
+    /**
+     * Checks if there is a request in the current thread context.
+     *
+     * @return true, if there is a request in the current thread context
+     */
+    public static final boolean isValid() {
+        HttpServletRequest request = getRequest();
+        return request != null;
+    }
 
     /**
      * Returns the request in the current thread context.
@@ -54,16 +63,6 @@ public class UserRequestVerifier {
     }
 
     /**
-     * Checks if there is a request in the current thread context.
-     *
-     * @return true, if there is a request in the current thread context
-     */
-    public static final boolean isValid() {
-        HttpServletRequest request = getRequest();
-        return request != null;
-    }
-
-    /**
      * Checks if is user in role.
      *
      * @param role the role
@@ -71,6 +70,10 @@ public class UserRequestVerifier {
      */
     public static final boolean isUserInRole(String role) {
         HttpServletRequest request = getRequest();
+        return isUserInRole(request, role);
+    }
+
+    public static boolean isUserInRole(HttpServletRequest request, String role) {
         if (request == null) {
             throw new InvalidStateException(NO_VALID_REQUEST);
         }
@@ -84,5 +87,4 @@ public class UserRequestVerifier {
         }
         return request.isUserInRole(role);
     }
-
 }

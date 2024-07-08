@@ -42,6 +42,8 @@ public class CustomOidcUserService extends OidcUserService {
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomOidcUserService.class);
 
+    private static final String ROLE_PREFIX = "ROLE_";
+
     /** The Constant USER_NOT_IN_TENANT_ERR. */
     private static final OAuth2Error USER_NOT_IN_TENANT_ERR = new OAuth2Error("user_not_registered_in_tenant");
 
@@ -136,9 +138,9 @@ public class CustomOidcUserService extends OidcUserService {
      */
     private Set<GrantedAuthority> toAuthorities(Collection<String> roleNames) {
         return roleNames.stream()
+                        .map((r -> r.startsWith(ROLE_PREFIX) ? r : (ROLE_PREFIX + r)))
                         .map(r -> new SimpleGrantedAuthority(r))
                         .collect(Collectors.toSet());
-
     }
 
     /**

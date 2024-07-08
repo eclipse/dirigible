@@ -39,4 +39,9 @@ class BrowserFactoryImpl implements BrowserFactory {
         return new BrowserImpl(protocol, host, port);
     }
 
+    @Override
+    public Browser create() {
+        return createByHost("localhost");
+    }
+
 }
