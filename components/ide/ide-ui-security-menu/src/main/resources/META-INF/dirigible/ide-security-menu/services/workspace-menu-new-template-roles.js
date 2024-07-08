@@ -13,7 +13,7 @@ exports.getTemplate = function () {
 	return {
 		"name": "roles",
 		"label": "Roles Definitions",
-		"extension": "roles",
+		"extension": "role",
 		"data": JSON.stringify(
 			[
 				{
