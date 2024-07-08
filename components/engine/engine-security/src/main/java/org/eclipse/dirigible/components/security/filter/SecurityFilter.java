@@ -137,8 +137,8 @@ public class SecurityFilter implements Filter {
                     }
                 } else {
                     for (Access securityAccess : securityAccesses) {
-                        if (ROLE_PUBLIC.equalsIgnoreCase(securityAccess.getRole()) || UserRequestVerifier.isUserInRole(httpServletRequest,
-                                securityAccess.getRole())) {
+                        if (ROLE_PUBLIC.equalsIgnoreCase(securityAccess.getRole())
+                                || UserRequestVerifier.isUserInRole(httpServletRequest, securityAccess.getRole())) {
                             isInRole = true;
                             break;
                         }
