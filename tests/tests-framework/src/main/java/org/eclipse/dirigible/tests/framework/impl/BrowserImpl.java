@@ -215,6 +215,11 @@ class BrowserImpl implements Browser {
         Selenide.refresh();
     }
 
+    @Override
+    public void clearCookies() {
+        Selenide.clearBrowserCookies();
+    }
+
     private boolean elementExists(SelenideElement element, int checkSeconds) {
         return elementExists(element, 1000L * checkSeconds);
     }

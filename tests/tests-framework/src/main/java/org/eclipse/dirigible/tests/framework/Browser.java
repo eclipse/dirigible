@@ -37,4 +37,5 @@ public interface Browser {
 
     String createScreenshot();
 
+    void clearCookies();
 }
