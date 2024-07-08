@@ -9,11 +9,6 @@
  */
 package org.eclipse.dirigible.components.security.service;
 
-import static org.eclipse.dirigible.components.security.repository.RoleRepositoryTest.createSecurityRole;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import java.util.List;
 import org.eclipse.dirigible.components.security.domain.Role;
 import org.eclipse.dirigible.components.security.repository.RoleRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -27,6 +22,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static org.eclipse.dirigible.components.security.repository.RoleRepositoryTest.createSecurityRole;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * The Class RoleServiceTest.
@@ -94,7 +94,7 @@ class RoleServiceTest {
      */
     @Test
     void testFindById() {
-        Role securityRole = new Role("/a/b/c/test.role", "test", "description");
+        Role securityRole = new Role("/a/b/c/test.roles", "test", "description");
         roleService.save(securityRole);
         Role securityRoleServiceById = roleService.findById(securityRole.getId());
         assertEquals("test", securityRoleServiceById.getName());
@@ -105,7 +105,7 @@ class RoleServiceTest {
      */
     @Test
     void testFindByName() {
-        Role securityRole = new Role("/a/b/c/test.role", "test", "description");
+        Role securityRole = new Role("/a/b/c/test.roles", "test", "description");
         roleService.save(securityRole);
         Role securityRoleServiceByName = roleService.findByName("test");
         assertEquals(securityRole.getId(), securityRoleServiceByName.getId());
@@ -116,7 +116,7 @@ class RoleServiceTest {
      */
     @Test
     void testSave() {
-        Role securityRole = new Role("/a/b/c/test.role", "test", "description");
+        Role securityRole = new Role("/a/b/c/test.roles", "test", "description");
         roleService.save(securityRole);
         assertNotNull(roleService.findByName("test"));
     }
@@ -126,7 +126,7 @@ class RoleServiceTest {
      */
     @Test
     void testDelete() {
-        Role securityRole = new Role("/a/b/c/test.role", "test", "description");
+        Role securityRole = new Role("/a/b/c/test.roles", "test", "description");
         roleService.save(securityRole);
         roleService.delete(securityRole);
         assertThrows(IllegalArgumentException.class, () -> {

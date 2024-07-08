@@ -37,16 +37,16 @@ import java.util.Set;
 
 @Component
 @Order(SynchronizersOrder.ROLE)
-public class RoleSynchronizer extends BaseSynchronizer<Role, Long> {
+public class RolesSynchronizer extends BaseSynchronizer<Role, Long> {
 
     /**
      * The Constant FILE_EXTENSION_SECURITY_ROLE.
      */
-    public static final String FILE_EXTENSION_SECURITY_ROLE = ".role";
+    public static final String FILE_EXTENSION_SECURITY_ROLE = ".roles";
     /**
      * The Constant logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(RoleSynchronizer.class);
+    private static final Logger logger = LoggerFactory.getLogger(RolesSynchronizer.class);
 
     /** The Constant PRESERVED_ROLE_LOCATION_PREFIXES. */
     private static final Set<String> PRESERVED_ROLE_LOCATION_PREFIXES = Set.of("SYSTEM_");
@@ -66,7 +66,7 @@ public class RoleSynchronizer extends BaseSynchronizer<Role, Long> {
      * @param securityRoleService the security role service
      */
     @Autowired
-    public RoleSynchronizer(RoleService securityRoleService) {
+    public RolesSynchronizer(RoleService securityRoleService) {
         this.securityRoleService = securityRoleService;
     }
 
