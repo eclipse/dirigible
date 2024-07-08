@@ -9,11 +9,10 @@
  */
 package org.eclipse.dirigible.components.security.filter;
 
-import java.io.IOException;
-import java.security.Principal;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.google.common.html.HtmlEscapers;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.http.access.UserRequestVerifier;
 import org.eclipse.dirigible.components.security.domain.Access;
@@ -23,15 +22,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.google.common.html.HtmlEscapers;
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.security.Principal;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The Security Filter.
@@ -40,35 +36,29 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityFilter implements Filter {
 
     /**
-     * The Constant logger.
-     */
-    private static final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
-
-    /**
-     * The Constant SKIP_PATH_ANGULAR_ARIA.
-     */
-    private static final String SKIP_PATH_ANGULAR_ARIA = "/services/js/resources-core/services/angular-aria.min.js.map";
-
-    /**
-     * The Constant SKIP_PATH_SPLIT_JS.
-     */
-    private static final String SKIP_PATH_SPLIT_JS = "/services/js/resources-core/services/split.min.js.map";
-
-    /**
-     * The Constant PATH_WEB_RESOURCES.
-     */
-    private static final String PATH_WEB_RESOURCES = "/web/resources";
-
-    /**
      * The Constant CONSTRAINT_SCOPE_HTTP.
      */
     public static final String CONSTRAINT_SCOPE_HTTP = "HTTP";
-
     /**
      * The Constant ROLE_PUBLIC.
      */
     public static final String ROLE_PUBLIC = "Public";
-
+    /**
+     * The Constant logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
+    /**
+     * The Constant SKIP_PATH_ANGULAR_ARIA.
+     */
+    private static final String SKIP_PATH_ANGULAR_ARIA = "/services/js/resources-core/services/angular-aria.min.js.map";
+    /**
+     * The Constant SKIP_PATH_SPLIT_JS.
+     */
+    private static final String SKIP_PATH_SPLIT_JS = "/services/js/resources-core/services/split.min.js.map";
+    /**
+     * The Constant PATH_WEB_RESOURCES.
+     */
+    private static final String PATH_WEB_RESOURCES = "/web/resources";
     /**
      * The Constant SECURED_PREFIXES.
      */
@@ -116,7 +106,7 @@ public class SecurityFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
-        String path = httpServletRequest.getPathInfo() != null ? httpServletRequest.getPathInfo() : IRepositoryStructure.SEPARATOR;
+        String path = httpServletRequest.getServletPath() != "" ? httpServletRequest.getServletPath() : IRepositoryStructure.SEPARATOR;
         if (!path.startsWith(PATH_WEB_RESOURCES)) {
             for (String prefix : SECURED_PREFIXES) {
                 if (path.startsWith(prefix)) {
