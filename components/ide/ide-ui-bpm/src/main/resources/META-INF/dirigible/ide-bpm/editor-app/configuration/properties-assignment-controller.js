@@ -31,19 +31,17 @@ angular.module('flowableModeler').controller('FlowableAssignmentCtrl', [ '$scope
 angular.module('flowableModeler').controller('FlowableAssignmentPopupCtrl',
     [ '$rootScope', '$scope', '$translate', '$http', 'UserService', 'GroupService', function($rootScope, $scope, $translate, $http, UserService, GroupService) {
 
-    // Put json representing assignment on scope
+    if(!$scope.assignment) {
+      $scope.assignment = {};
+    }
+
     if ($scope.property.value !== undefined && $scope.property.value !== null
         && $scope.property.value.assignment !== undefined
         && $scope.property.value.assignment !== null) {
 
         $scope.assignment = $scope.property.value.assignment;
-        if (typeof $scope.assignment.type === 'undefined') {
-            $scope.assignment.type = 'static';
-        }
-
-    } else {
-        $scope.assignment = {type:'idm'};
     }
+    $scope.assignment.type = 'static';
 
     $scope.popup = {
         assignmentObject: {
