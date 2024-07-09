@@ -263,14 +263,8 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
         return ResponseEntity.ok(variables);
     }
 
-    /**
-     * Gets the processes keys.
-     *
-     * @param id the id
-     * @return the processes keys
-     */
     @GetMapping(value = "/bpm-processes/instance/{id}")
-    public ResponseEntity<ProcessInstanceData> getProcessesInstances(@PathVariable("id") String id) {
+    public ResponseEntity<ProcessInstanceData> getProcessInstance(@PathVariable("id") String id) {
         return ResponseEntity.ok(getBpmService().getProcessInstanceById(id));
     }
 
