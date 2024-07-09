@@ -106,7 +106,8 @@ public class SecurityFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
-        String path = httpServletRequest.getServletPath() != "" ? httpServletRequest.getServletPath() : IRepositoryStructure.SEPARATOR;
+        String path =
+                !"".equals(httpServletRequest.getServletPath()) ? httpServletRequest.getServletPath() : IRepositoryStructure.SEPARATOR;
         if (!path.startsWith(PATH_WEB_RESOURCES)) {
             for (String prefix : SECURED_PREFIXES) {
                 if (path.startsWith(prefix)) {
