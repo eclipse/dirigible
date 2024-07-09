@@ -263,14 +263,8 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
         return ResponseEntity.ok(variables);
     }
 
-    /**
-     * Gets the processes keys.
-     *
-     * @param id the id
-     * @return the processes keys
-     */
     @GetMapping(value = "/bpm-processes/instance/{id}")
-    public ResponseEntity<ProcessInstanceData> getProcessesInstances(@PathVariable("id") String id) {
+    public ResponseEntity<ProcessInstanceData> getProcessInstance(@PathVariable("id") String id) {
         return ResponseEntity.ok(getBpmService().getProcessInstanceById(id));
     }
 
@@ -367,6 +361,8 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 
     @PostMapping(value = "/bpm-processes/tasks/{id}")
     public ResponseEntity<String> executeTaskAction(@PathVariable("id") String id, @RequestBody TaskActionData actionData) {
+        verifyCurrentUserHasPermissionForTask(id);
+
         final TaskService taskService = getTaskService();
 
         if (CLAIM.getActionName()
@@ -384,6 +380,30 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
         }
         return ResponseEntity.ok()
                              .build();
+    }
+
+    private void verifyCurrentUserHasPermissionForTask(String id) {
+        Set<String> userTaskIds = getUserTaskIds();
+        if (!userTaskIds.contains(id)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Current user [" + UserFacade.getName() + "] doesn't have permissions for task with id " + id);
+        }
+    }
+
+    private Set<String> getUserTaskIds() {
+        Set<String> userRolesTasks = taskQueryExecutor.findTasks(Type.CANDIDATE_GROUPS)
+                                                      .stream()
+                                                      .map(Task::getId)
+                                                      .collect(Collectors.toSet());
+
+        Set<String> userAssignedTasks = taskQueryExecutor.findTasks(Type.ASSIGNEE)
+                                                         .stream()
+                                                         .map(Task::getId)
+                                                         .collect(Collectors.toSet());
+
+        Set<String> allTasks = new HashSet<>(userRolesTasks);
+        allTasks.addAll(userAssignedTasks);
+        return Collections.unmodifiableSet(allTasks);
     }
 
     /**

@@ -1,11 +1,13 @@
-package org.eclipse.dirigible.components.tenants.security;
+package org.eclipse.dirigible.components.base.util;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,5 +27,18 @@ public class AuthoritiesUtil {
 
     public static Set<GrantedAuthority> toAuthorities(Collection<String> roleNames) {
         return toAuthorities(roleNames.stream());
+    }
+
+    public static Collection<String> toRoleNames(Collection<? extends GrantedAuthority> authorities) {
+        if (null == authorities) {
+            return Collections.emptySet();
+        }
+
+        return authorities.stream()
+                          .map(GrantedAuthority::getAuthority)
+                          .map(authority -> authority.startsWith(ROLE_PREFIX) ? authority.replaceAll(Pattern.quote(ROLE_PREFIX), "")
+                                  : authority)
+                          .collect(Collectors.toSet());
+
     }
 }

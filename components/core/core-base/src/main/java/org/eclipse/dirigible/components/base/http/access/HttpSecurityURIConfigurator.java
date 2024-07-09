@@ -10,6 +10,7 @@
 package org.eclipse.dirigible.components.base.http.access;
 
 import org.eclipse.dirigible.components.base.http.roles.Roles;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 /**
@@ -67,6 +68,13 @@ public class HttpSecurityURIConfigurator {
              .permitAll()
 
              // NOTE!: the order is important - role checks should be before just authenticated paths
+
+             // Fine grained configurations
+             .requestMatchers(HttpMethod.GET, "/services/bpm/bpm-processes/tasks")
+             .authenticated()
+
+             .requestMatchers(HttpMethod.POST, "/services/bpm/bpm-processes/tasks/*")
+             .authenticated()
 
              // "DEVELOPER" role required
              .requestMatchers(DEVELOPER_PATTERNS)
