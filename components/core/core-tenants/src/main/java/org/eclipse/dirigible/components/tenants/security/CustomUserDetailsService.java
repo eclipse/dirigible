@@ -17,15 +17,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * The Class CustomUserDetailsService.
@@ -36,8 +33,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomUserDetailsService.class);
-
-    private static final String ROLE_PREFIX = "ROLE_";
 
     /** The user service. */
     private final UserService userService;
@@ -73,16 +68,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         Set<String> userRoles = userService.getUserRoleNames(user);
         LOGGER.debug("User [{}] has assigned roles [{}]", user, userRoles);
-        Set<GrantedAuthority> auths = toAuthorities(userRoles);
+        Set<GrantedAuthority> auths = AuthoritiesUtil.toAuthorities(userRoles);
 
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), auths);
-    }
-
-    private Set<GrantedAuthority> toAuthorities(Collection<String> roleNames) {
-        return roleNames.stream()
-                        .map((r -> r.startsWith(ROLE_PREFIX) ? r : (ROLE_PREFIX + r)))
-                        .map(r -> new SimpleGrantedAuthority(r))
-                        .collect(Collectors.toSet());
     }
 
 }

@@ -13,12 +13,12 @@ import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.base.http.roles.Roles;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.tenants.domain.User;
+import org.eclipse.dirigible.components.tenants.security.AuthoritiesUtil;
 import org.eclipse.dirigible.components.tenants.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,8 +40,6 @@ public class CustomOidcUserService extends OidcUserService {
 
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomOidcUserService.class);
-
-    private static final String ROLE_PREFIX = "ROLE_";
 
     /** The Constant USER_NOT_IN_TENANT_ERR. */
     private static final OAuth2Error USER_NOT_IN_TENANT_ERR = new OAuth2Error("user_not_registered_in_tenant");
@@ -77,7 +74,7 @@ public class CustomOidcUserService extends OidcUserService {
 
         User user = getTenantUser(oidcUser);
         Set<String> roleNames = getRoleNames(user);
-        Set<GrantedAuthority> roleAuthorities = toAuthorities(roleNames);
+        Set<GrantedAuthority> roleAuthorities = AuthoritiesUtil.toAuthorities(roleNames);
 
         return createOidcUser(userRequest, oidcUser, roleAuthorities);
 
@@ -128,19 +125,6 @@ public class CustomOidcUserService extends OidcUserService {
                          .collect(Collectors.toSet());
         }
         return userService.getUserRoleNames(user);
-    }
-
-    /**
-     * To authorities.
-     *
-     * @param roleNames the role names
-     * @return the sets the
-     */
-    private Set<GrantedAuthority> toAuthorities(Collection<String> roleNames) {
-        return roleNames.stream()
-                        .map((r -> r.startsWith(ROLE_PREFIX) ? r : (ROLE_PREFIX + r)))
-                        .map(r -> new SimpleGrantedAuthority(r))
-                        .collect(Collectors.toSet());
     }
 
     /**

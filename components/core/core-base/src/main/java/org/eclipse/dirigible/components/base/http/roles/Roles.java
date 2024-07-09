@@ -15,11 +15,11 @@ package org.eclipse.dirigible.components.base.http.roles;
 public enum Roles {
 
     /** The administrator. */
-    ADMINISTRATOR("ROLE_ADMINISTRATOR"),
+    ADMINISTRATOR("ADMINISTRATOR"),
     /** The developer. */
-    DEVELOPER("ROLE_DEVELOPER"),
+    DEVELOPER("DEVELOPER"),
     /** The operator. */
-    OPERATOR("ROLE_OPERATOR");
+    OPERATOR("OPERATOR");
 
     /** The role name. */
     private final String roleName;
