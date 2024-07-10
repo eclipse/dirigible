@@ -12,11 +12,9 @@ package org.eclipse.dirigible.components.security.verifier;
 import org.eclipse.dirigible.components.security.domain.Access;
 import org.eclipse.dirigible.components.security.repository.AccessRepository;
 import org.eclipse.dirigible.components.security.repository.RoleRepository;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -27,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.dirigible.components.security.repository.AccessRepositoryTest.createSecurityAccess;
 import static org.eclipse.dirigible.components.security.repository.RoleRepositoryTest.createSecurityRole;
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,6 +51,14 @@ class AccessVerifierTest {
     /** The security role repository. */
     @Autowired
     private RoleRepository securityRoleRepository;
+
+
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 
     /**
      * Setup.
@@ -93,10 +100,16 @@ class AccessVerifierTest {
         assertEquals(2, matchingSecurityAccesses.size());
     }
 
-    /**
-     * The Class TestConfiguration.
-     */
-    @SpringBootApplication
-    static class TestConfiguration {
+    @Test
+    void testGetMatchingSecurityAccessesWithAntPatterns() {
+        securityAccessRepository.save(
+                createSecurityAccess("/ant/pattern/access.access", "antPattern", "description", "HTTP", "/this/is/ant/pattern/*/test/**",
+                        "GET", "somerole"));
+        List<Access> matchingSecurityAccesses =
+                securityAccessVerifier.getMatchingSecurityAccesses("HTTP", "/this/is/ant/pattern/1234/test/api/v2/123", "GET");
+        assertThat(matchingSecurityAccesses).hasSize(1);
+        Access access = matchingSecurityAccesses.iterator()
+                                                .next();
+        assertThat(access.getRole()).isEqualTo("somerole");
     }
 }

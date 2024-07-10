@@ -11,11 +11,10 @@ package org.eclipse.dirigible.components.security.verifier;
 
 import org.eclipse.dirigible.components.security.domain.Access;
 import org.eclipse.dirigible.components.security.service.AccessService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +31,13 @@ public class AccessVerifier {
      */
     private static final Logger logger = LoggerFactory.getLogger(AccessVerifier.class);
 
-    /**
-     * The security access service.
-     */
-    @Autowired
-    private AccessService securityAccessService;
+    private final AccessService accessService;
+    private final AntPathMatcher antPathMatcher;
+
+    AccessVerifier(AccessService accessService) {
+        this.accessService = accessService;
+        this.antPathMatcher = new AntPathMatcher();
+    }
 
     /**
      * Checks whether the URI is secured via the *.access file or not
@@ -49,16 +50,12 @@ public class AccessVerifier {
     public List<Access> getMatchingSecurityAccesses(String scope, String path, String method) {
         List<Access> securityAccesses = new ArrayList<>();
         Access currentSecurityAccess = null;
-        List<Access> existingSecurityAccesses = securityAccessService.getAll();
+        List<Access> existingSecurityAccesses = accessService.getAll();
         for (Access securityAccess : existingSecurityAccesses) {
-            if (scope.equalsIgnoreCase(securityAccess.getScope()) && path.startsWith(securityAccess.getPath())
-                    && (securityAccess.getMethod()
-                                      .equals("*")
-                            || method.equals(securityAccess.getMethod()))) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug(String.format("URI [%s] with HTTP method [%s] is secured because of definition: %s", path, method,
-                            securityAccess.getLocation()));
-                }
+            if (scope.equalsIgnoreCase(securityAccess.getScope()) //
+                    && ("*".equals(securityAccess.getMethod()) || method.equals(securityAccess.getMethod()))//
+                    && antPathMatcher.match(securityAccess.getPath(), path)) {
+                logger.debug("Path [{}] and HTTP method [{}] is secured by definition [{}]", path, method, securityAccess.getLocation());
                 if ((currentSecurityAccess == null) || (securityAccess.getPath()
                                                                       .length() > currentSecurityAccess.getPath()
                                                                                                        .length())) {
@@ -73,9 +70,7 @@ public class AccessVerifier {
             }
         }
         if (securityAccesses.isEmpty()) {
-            if (logger.isTraceEnabled()) {
-                logger.trace(String.format("URI [%s] with HTTP method [%s] is NOT secured", path, method));
-            }
+            logger.trace("URI [{}] with HTTP method {}] is NOT secured", path, method);
         }
         return securityAccesses;
     }
