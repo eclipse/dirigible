@@ -81,6 +81,8 @@ public class MailClient {
                 default -> throw new IllegalStateException("Unexpected transport property: " + transportProperty);
             };
 
+            LOGGER.info("!!! Properties: [{}]", this.properties);
+
             try {
                 String proxyType = this.properties.getProperty("ProxyType");
                 if (proxyType != null && proxyType.equals("OnPremise")) {
