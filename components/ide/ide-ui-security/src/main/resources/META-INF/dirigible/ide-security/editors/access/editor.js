@@ -183,13 +183,13 @@ angular.module('page', ["ideUI", "ideView", "ideWorkspace"])
                 [{
                     id: "aeciPath",
                     type: "input",
-                    label: "Path",
+                    label: "Ant path pattern",
                     required: true,
                     placeholder: "Enter path",
                     minlength: 1,
                     maxlength: 255,
                     inputRules: {
-                        patterns: ['^[a-zA-Z0-9_.-/$-]*$'],
+                        patterns: ['^(?:\\/?(?:[^/*?]*(?:\\*\\*\\/?|\\/?[^/*?]*)*|\\*|\\*\\*)\\/?)*$'],
                     },
                     value: '',
                 },
@@ -240,13 +240,13 @@ angular.module('page', ["ideUI", "ideView", "ideWorkspace"])
                 [{
                     id: "aeciPath",
                     type: "input",
-                    label: "Path",
+                    label: "Ant path pattern",
                     required: true,
                     placeholder: "Enter path",
                     minlength: 1,
                     maxlength: 255,
                     inputRules: {
-                        patterns: ['^[a-zA-Z0-9_.-/$-]*$'],
+                        patterns: ['^(?:\\/?(?:[^/*?]*(?:\\*\\*\\/?|\\/?[^/*?]*)*|\\*|\\*\\*)\\/?)*$'],
                     },
                     value: $scope.access.constraints[index].path,
                 },
