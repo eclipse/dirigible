@@ -53,7 +53,7 @@ class MailIT extends UserInterfaceIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        ServerSetup serverSetup = new ServerSetup(PORT, null, "smtp");
+        ServerSetup serverSetup = new ServerSetup(PORT, "localhost", "smtp");
         greenMail = new GreenMail(serverSetup);
 
         greenMail.start();
