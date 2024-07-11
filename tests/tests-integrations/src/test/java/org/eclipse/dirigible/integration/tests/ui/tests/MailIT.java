@@ -13,7 +13,6 @@ package org.eclipse.dirigible.integration.tests.ui.tests;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetup;
-import com.icegreen.greenmail.util.ServerSetupTest;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -54,10 +53,9 @@ class MailIT extends UserInterfaceIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        ServerSetup serverSetup = ServerSetupTest.SMTP;
-        serverSetup.port(PORT);
-
+        ServerSetup serverSetup = new ServerSetup(PORT, null, "smtp");
         greenMail = new GreenMail(serverSetup);
+
         greenMail.start();
 
         greenMail.setUser(USER, PASSWORD);
