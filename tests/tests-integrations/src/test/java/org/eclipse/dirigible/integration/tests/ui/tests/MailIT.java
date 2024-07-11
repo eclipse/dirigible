@@ -19,6 +19,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.eclipse.dirigible.integration.tests.ui.TestProject;
 import org.eclipse.dirigible.tests.restassured.RestAssuredExecutor;
+import org.eclipse.dirigible.tests.util.PortUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,14 +33,14 @@ class MailIT extends UserInterfaceIntegrationTest {
 
     private static final String USER = "user";
     private static final String PASSWORD = "password";
-    private static final int PORT = 4178;
+    private static final int PORT = PortUtil.getFreeRandomPort();
 
     static {
         System.setProperty("DIRIGIBLE_MAIL_USERNAME", USER);
         System.setProperty("DIRIGIBLE_MAIL_PASSWORD", PASSWORD);
         System.setProperty("DIRIGIBLE_MAIL_TRANSPORT_PROTOCOL", "smtp");
         System.setProperty("DIRIGIBLE_MAIL_SMTP_HOST", "localhost");
-        System.setProperty("DIRIGIBLE_MAIL_SMTP_PORT", Integer.toString(4178));
+        System.setProperty("DIRIGIBLE_MAIL_SMTP_PORT", Integer.toString(PORT));
         System.setProperty("DIRIGIBLE_MAIL_SMTP_AUTH", "true");
     }
 
@@ -55,8 +56,10 @@ class MailIT extends UserInterfaceIntegrationTest {
     void setUp() {
         ServerSetup serverSetup = ServerSetupTest.SMTP;
         serverSetup.port(PORT);
+
         greenMail = new GreenMail(serverSetup);
         greenMail.start();
+        
         greenMail.setUser(USER, PASSWORD);
 
         testProject.publish();
