@@ -18,6 +18,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -91,5 +92,13 @@ public class BeanProvider implements ApplicationContextAware {
             LOGGER.debug("Missing bean for [{}]", clazz, ex);
             return Optional.empty();
         }
+    }
+
+    public static <T> Collection<T> getBeans(Class<T> clazz) {
+        if (!isInitialzed()) {
+            throw new IllegalStateException("Spring is not initialized yet.");
+        }
+        return context.getBeansOfType(clazz)
+                      .values();
     }
 }

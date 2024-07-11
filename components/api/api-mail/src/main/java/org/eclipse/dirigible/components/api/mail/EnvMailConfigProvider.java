@@ -7,16 +7,18 @@
  *
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.mail.env;
-
-import java.util.Properties;
+package org.eclipse.dirigible.components.api.mail;
 
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.api.mail.MailConfigurationProvider;
+import org.springframework.stereotype.Component;
+
+import java.util.Properties;
 
 /**
  * The Class EnvMailConfigProvider.
  */
+
+@Component
 public class EnvMailConfigProvider implements MailConfigurationProvider {
 
     /** The Constant MAIL_USER. */
@@ -125,7 +127,7 @@ public class EnvMailConfigProvider implements MailConfigurationProvider {
      * @param key the key
      * @param envKey the env key
      */
-    private static void addValue(Properties properties, String key, String envKey) {
+    private void addValue(Properties properties, String key, String envKey) {
         addValue(properties, key, envKey, null);
     }
 
@@ -137,7 +139,7 @@ public class EnvMailConfigProvider implements MailConfigurationProvider {
      * @param envKey the env key
      * @param defaultValue the default value
      */
-    private static void addValue(Properties properties, String key, String envKey, String defaultValue) {
+    private void addValue(Properties properties, String key, String envKey, String defaultValue) {
         String value = Configuration.get(envKey);
         if (value != null) {
             properties.put(key, value);
