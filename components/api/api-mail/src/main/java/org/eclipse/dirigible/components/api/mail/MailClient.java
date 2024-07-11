@@ -81,8 +81,6 @@ public class MailClient {
                 default -> throw new IllegalStateException("Unexpected transport property: " + transportProperty);
             };
 
-            LOGGER.info("!!! Properties: [{}]", this.properties);
-
             try {
                 String proxyType = this.properties.getProperty("ProxyType");
                 if (proxyType != null && proxyType.equals("OnPremise")) {
@@ -95,7 +93,7 @@ public class MailClient {
 
                     transport.connect(socket);
                 } else {
-                    transport.connect();
+                    transport.connect(this.properties.getProperty(MAIL_USER), this.properties.getProperty(MAIL_PASSWORD));
                 }
 
                 MimeMessage mimeMessage = createMimeMessage(session, from, to, cc, bcc, subject, parts);
