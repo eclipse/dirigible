@@ -9,10 +9,11 @@
  */
 package org.eclipse.dirigible.components.api.mail;
 
-import java.util.Properties;
-import java.util.ServiceLoader;
-
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.base.spring.BeanProvider;
+
+import java.util.Collection;
+import java.util.Properties;
 
 /**
  * The Class MailFacade.
@@ -27,9 +28,6 @@ public class MailFacade {
     // Default values
     private static final String DEFAULT_PROVIDER_NAME = "environment";
 
-    /** The Constant MAIL_PROVIDERS. */
-    private static final ServiceLoader<MailConfigurationProvider> MAIL_PROVIDERS = ServiceLoader.load(MailConfigurationProvider.class);
-
     /**
      * Get MailClient with configuration options from the chosen mail configuration provider.
      *
@@ -38,7 +36,9 @@ public class MailFacade {
     public static MailClient getInstance() {
         Properties properties = new Properties();
         String providerName = Configuration.get(DIRIGIBLE_MAIL_CONFIG_PROVIDER, DEFAULT_PROVIDER_NAME);
-        for (MailConfigurationProvider next : MAIL_PROVIDERS) {
+
+        Collection<MailConfigurationProvider> providers = BeanProvider.getBeans(MailConfigurationProvider.class);
+        for (MailConfigurationProvider next : providers) {
             if (providerName.equals(next.getName())) {
                 properties.putAll(next.getProperties());
                 break;

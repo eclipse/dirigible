@@ -7,16 +7,18 @@
  *
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.mail.env;
-
-import java.util.Properties;
+package org.eclipse.dirigible.components.api.mail;
 
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.api.mail.MailConfigurationProvider;
+import org.springframework.stereotype.Component;
+
+import java.util.Properties;
 
 /**
  * The Class EnvMailConfigProvider.
  */
+
+@Component
 public class EnvMailConfigProvider implements MailConfigurationProvider {
 
     /** The Constant MAIL_USER. */
