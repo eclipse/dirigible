@@ -12,6 +12,7 @@ package org.eclipse.dirigible.integration.tests.ui.tests;
 
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
+import com.icegreen.greenmail.util.ServerSetup;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -31,13 +32,14 @@ class MailIT extends UserInterfaceIntegrationTest {
 
     private static final String USER = "user";
     private static final String PASSWORD = "password";
+    private static final int PORT = 4178;
 
     static {
         System.setProperty("DIRIGIBLE_MAIL_USERNAME", USER);
         System.setProperty("DIRIGIBLE_MAIL_PASSWORD", PASSWORD);
         System.setProperty("DIRIGIBLE_MAIL_TRANSPORT_PROTOCOL", "smtp");
         System.setProperty("DIRIGIBLE_MAIL_SMTP_HOST", "localhost");
-        System.setProperty("DIRIGIBLE_MAIL_SMTP_PORT", "3025");
+        System.setProperty("DIRIGIBLE_MAIL_SMTP_PORT", Integer.toString(4178));
         System.setProperty("DIRIGIBLE_MAIL_SMTP_AUTH", "true");
     }
 
@@ -51,7 +53,9 @@ class MailIT extends UserInterfaceIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        greenMail = new GreenMail(ServerSetupTest.SMTP);
+        ServerSetup serverSetup = ServerSetupTest.SMTP;
+        serverSetup.port(PORT);
+        greenMail = new GreenMail(serverSetup);
         greenMail.start();
         greenMail.setUser(USER, PASSWORD);
 
