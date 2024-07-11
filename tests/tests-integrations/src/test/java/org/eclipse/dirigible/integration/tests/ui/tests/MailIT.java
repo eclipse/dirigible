@@ -59,7 +59,7 @@ class MailIT extends UserInterfaceIntegrationTest {
 
         greenMail = new GreenMail(serverSetup);
         greenMail.start();
-        
+
         greenMail.setUser(USER, PASSWORD);
 
         testProject.publish();
