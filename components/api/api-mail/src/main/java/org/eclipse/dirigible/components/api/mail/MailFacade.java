@@ -11,14 +11,19 @@ package org.eclipse.dirigible.components.api.mail;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.spring.BeanProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Properties;
 
 /**
  * The Class MailFacade.
  */
 public class MailFacade {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MailFacade.class);
 
     /** The Constant DIRIGIBLE_MAIL_CONFIG_PROVIDER. */
     // Dirigible mail properties
@@ -38,11 +43,16 @@ public class MailFacade {
         String providerName = Configuration.get(DIRIGIBLE_MAIL_CONFIG_PROVIDER, DEFAULT_PROVIDER_NAME);
 
         Collection<MailConfigurationProvider> providers = BeanProvider.getBeans(MailConfigurationProvider.class);
-        for (MailConfigurationProvider next : providers) {
-            if (providerName.equals(next.getName())) {
-                properties.putAll(next.getProperties());
-                break;
-            }
+        Optional<MailConfigurationProvider> matchedProvider = providers.stream()
+                                                                       .filter(p -> providerName.equals(p.getName()))
+                                                                       .findFirst();
+        if (matchedProvider.isPresent()) {
+            MailConfigurationProvider provider = matchedProvider.get();
+            LOGGER.info("Will load properties from [{}]", provider);
+            properties.putAll(provider.getProperties());
+        } else {
+            LOGGER.info("Properties will not be loaded from any provider since provider with name [{}] was not found in [{}]", providerName,
+                    providers);
         }
         return getInstance(properties);
     }
