@@ -96,6 +96,9 @@ function createModel(graph) {
 					model.push('    <property name="' + _.escape(property.name) +
 						'" dataName="' + _.escape(property.dataName) +
 						'" dataType="' + _.escape(property.dataType) + '"');
+					if (property.dataOrderBy) {
+						model.push(' dataOrderBy="' + _.escape(property.dataOrderBy) + '"');
+					}
 					if (property.dataLength !== null && (property.dataType === 'CHAR' || property.dataType === 'VARCHAR')) {
 						model.push(' dataLength="' + _.escape(property.dataLength) + '"');
 					}
