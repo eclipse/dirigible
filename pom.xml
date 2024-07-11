@@ -114,7 +114,7 @@
 		<maven-license-plugin.version>4.5</maven-license-plugin.version>
 
 		<!-- Spring -->
-		<spring.boot.version>3.2.5</spring.boot.version>
+		<spring.boot.version>3.3.1</spring.boot.version>
 		<springdoc.version>2.6.0</springdoc.version>
 		
 		<!-- Webjars -->
