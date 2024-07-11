@@ -150,6 +150,19 @@ export class ${name}Repository {
     }
 
     public findAll(options?: ${name}EntityOptions): ${name}Entity[] {
+#foreach ($property in $properties)
+#if ($property.dataOrderBy)
+        // @ts-ignore
+        if (options.$sort === undefined) {
+            // @ts-ignore
+            options.$sort = "";
+        }
+        // @ts-ignore
+        options.$sort += "${property.name},";
+        // @ts-ignore
+        options.$order = "${property.dataOrderBy}";
+#end
+#end
 #if($isEntityUtilsEnabled == "true")
         return this.dao.list(options).map((e: ${name}Entity) => {
 #foreach ($property in $properties)

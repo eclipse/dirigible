@@ -115,7 +115,7 @@
 
 		<!-- Spring -->
 		<spring.boot.version>3.2.5</spring.boot.version>
-		<springdoc.version>2.5.0</springdoc.version>
+		<springdoc.version>2.6.0</springdoc.version>
 		
 		<!-- Webjars -->
 		<webjars.bootstrap.version>5.3.2</webjars.bootstrap.version>
@@ -138,7 +138,7 @@
 		<jaxb.version>2.3.1</jaxb.version>
 		
 		<!-- Lucene -->
-		<lucene.version>9.11.0</lucene.version>
+		<lucene.version>9.11.1</lucene.version>
 		
 		<!-- Chemistry -->
 		<chemistry.version>1.1.0</chemistry.version>
@@ -148,7 +148,7 @@
 		
 		<!-- FTP -->
 		<mina-core.version>2.2.3</mina-core.version>
-		<sshd-core.version>2.12.1</sshd-core.version>
+		<sshd-core.version>2.13.1</sshd-core.version>
 		<ftpserver.version>1.2.0</ftpserver.version>
 		
 		<!-- ActiveMQ -->
@@ -178,7 +178,7 @@
 		
 		<!-- QLDB -->
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.748</qldb.sdk.version>
+		<qldb.sdk.version>1.12.759</qldb.sdk.version>
 		
 		<!-- jETCD -->
 		<jetcd.core.version>0.8.2</jetcd.core.version>
@@ -188,7 +188,7 @@
 		<guava.version>33.2.1-jre</guava.version>
 		<icu4j.version>75.1</icu4j.version>
 		<classgraph.version>4.8.174</classgraph.version>
-		<logcaptor.version>2.9.2</logcaptor.version>
+		<logcaptor.version>2.9.3</logcaptor.version>
 
 		<!-- UI -->
 		<jquery-ui.version>1.13.0</jquery-ui.version>
@@ -760,7 +760,7 @@
 			<dependency>
 				<groupId>org.junit.vintage</groupId>
 				<artifactId>junit-vintage-engine</artifactId>
-				<version>5.10.2</version>
+				<version>5.10.3</version>
 				<scope>test</scope>
 			</dependency>
 

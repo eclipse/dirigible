@@ -73,6 +73,10 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
             { value: "DECIMAL", label: "DECIMAL" },
             { value: "BIT", label: "BIT" }
         ];
+        $scope.dataOrderByOptions = [
+            { value: "ASC", label: "ASCENDING" },
+            { value: "DESC", label: "DESCENDING" }
+        ];
         $scope.widgetTypes = [
             { value: "TEXTBOX", label: "Text Box" },
             { value: "TEXTAREA", label: "Text Area" },
@@ -169,6 +173,7 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
                         calculatedPropertyExpressionUpdate: $scope.dataParameters.calculatedPropertyExpressionUpdate,
                         dataName: $scope.dataParameters.dataName,
                         dataType: $scope.dataParameters.dataType,
+                        dataOrderBy: $scope.dataParameters.dataOrderBy,
                         dataLength: $scope.dataParameters.dataLength,
                         dataPrimaryKey: $scope.dataParameters.dataPrimaryKey,
                         dataAutoIncrement: $scope.dataParameters.dataAutoIncrement,
