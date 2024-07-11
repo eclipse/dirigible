@@ -93,7 +93,7 @@ public class MailClient {
 
                     transport.connect(socket);
                 } else {
-                    transport.connect(this.properties.getProperty(MAIL_USER), this.properties.getProperty(MAIL_PASSWORD));
+                    transport.connect();
                 }
 
                 MimeMessage mimeMessage = createMimeMessage(session, from, to, cc, bcc, subject, parts);
