@@ -1,6 +1,6 @@
 import { Controller, Post } from "sdk/http"
-
 import { client as mailClient } from "sdk/mail";
+
 @Controller
 class MailService {
 
