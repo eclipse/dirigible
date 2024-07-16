@@ -35,7 +35,8 @@ public class SftpServerConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(SftpServerConfiguration.class);
 
     /** The Constant REPOSITORY_ROOT. */
-    private static final String REPOSITORY_ROOT = "./target/dirigible/cms/dirigible/repository/root";
+    private static final String REPOSITORY_ROOT = "./target/dirigible/cms/default-tenant/cms/dirigible/repository/root";
+
 
     /**
      * Ssh server.
