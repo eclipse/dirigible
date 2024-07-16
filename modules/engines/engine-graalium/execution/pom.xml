@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>dirigible-engine-graalium</artifactId>
 		<groupId>org.eclipse.dirigible</groupId>
-		<version>10.6.15</version>
+		<version>11.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>dirigible-engine-graalium-execution</artifactId>
