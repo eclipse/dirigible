@@ -1,5 +1,5 @@
 {
-    "expression": "0/30 * * * * ?",
+    "expression": "0 * * * *",
     "group": "defined",
     "handler": "ide-documents/security/synchronize.js",
     "description": "CMIS Security"
