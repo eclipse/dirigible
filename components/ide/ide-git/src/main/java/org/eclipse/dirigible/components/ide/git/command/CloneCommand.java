@@ -17,15 +17,17 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.dirigible.components.api.security.UserFacade;
-import org.eclipse.dirigible.components.project.ProjectMetadataDependency;
 import org.eclipse.dirigible.components.ide.git.domain.GitConnectorException;
 import org.eclipse.dirigible.components.ide.git.domain.GitConnectorFactory;
 import org.eclipse.dirigible.components.ide.git.model.GitCloneModel;
 import org.eclipse.dirigible.components.ide.git.utils.GitFileUtils;
+import org.eclipse.dirigible.components.ide.workspace.domain.Folder;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
 import org.eclipse.dirigible.components.ide.workspace.project.ProjectMetadataManager;
 import org.eclipse.dirigible.components.ide.workspace.service.PublisherService;
+import org.eclipse.dirigible.components.project.ProjectMetadataDependency;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
@@ -39,6 +41,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class CloneCommand {
 
+    /** The Constant PACKAGE_JSON. */
+    private static final String PACKAGE_JSON = "package.json";
+
+    /** The Constant PACKAGE_LOCK_JSON. */
+    private static final String PACKAGE_LOCK_JSON = "package-lock.json";
+
+    /** The Constant NODE_MODULES. */
+    private static final String NODE_MODULES = "node_modules";
+
+    /** The Constant NPM_INSTALL. */
+    private static final String NPM_INSTALL = "npm install";
+
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(CloneCommand.class);
 
@@ -48,16 +62,22 @@ public class CloneCommand {
     /** The project metadata manager. */
     private ProjectMetadataManager projectMetadataManager;
 
+    /** The command service. */
+    private final GitCommandService commandService;
+
     /**
      * Instantiates a new clone command.
      *
      * @param publisherService the publisher service
      * @param projectMetadataManager the project metadata manager
+     * @param commandService the command service
      */
     @Autowired
-    public CloneCommand(PublisherService publisherService, ProjectMetadataManager projectMetadataManager) {
+    public CloneCommand(PublisherService publisherService, ProjectMetadataManager projectMetadataManager,
+            GitCommandService commandService) {
         this.publisherService = publisherService;
         this.projectMetadataManager = projectMetadataManager;
+        this.commandService = commandService;
     }
 
     /**
@@ -173,6 +193,7 @@ public class CloneCommand {
                     logger.debug(String.format("Start cloning dependencies of the project %s...", projectName));
                 }
                 cloneDependencies(user, username, password, workspace, clonedProjects, projectName);
+                cloneNPMDependencies(user, workspace, projectName);
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format("Cloning of dependencies of the project %s finished", projectName));
                 }
@@ -255,8 +276,52 @@ public class CloneCommand {
                     logger.debug(String.format("Project %s has been already cloned during this session.", projectGuid));
                 }
             }
+        }
+    }
 
-
+    /**
+     * Clone NPM dependencies.
+     *
+     * @param user the user
+     * @param workspace the workspace
+     * @param projectName the project name
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws GitConnectorException the git connector exception
+     */
+    protected void cloneNPMDependencies(final String user, Workspace workspace, String projectName)
+            throws IOException, GitConnectorException {
+        Project selectedProject = workspace.getProject(projectName);
+        org.eclipse.dirigible.components.ide.workspace.domain.File packageJson = selectedProject.getFile(PACKAGE_JSON);
+        if (packageJson.exists()) {
+            String root = commandService.getRepositoryRoot();
+            String workingDirectory = root + packageJson.getParent()
+                                                        .getPath();
+            try {
+                commandService.executeCommandLine(workingDirectory, NPM_INSTALL, null, null, null);
+                Folder nodeModules = selectedProject.getFolder(NODE_MODULES);
+                if (nodeModules.exists()) {
+                    for (Folder folder : nodeModules.getFolders()) {
+                        if (folder.getName()
+                                  .startsWith("@")) {
+                            for (Folder subFolder : folder.getFolders()) {
+                                subFolder.copyTo(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepository.SEPARATOR + subFolder.getName());
+                                logger.trace(String.format("Rertreiving the NPM dependency %s", subFolder.getName()));
+                            }
+                        } else {
+                            folder.copyTo(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepository.SEPARATOR + folder.getName());
+                            logger.trace(String.format("Rertreiving the NPM dependency %s", folder.getName()));
+                        }
+                    }
+                }
+                nodeModules.delete();
+                org.eclipse.dirigible.components.ide.workspace.domain.File packageLockJson = selectedProject.getFile(PACKAGE_LOCK_JSON);
+                if (packageLockJson.exists()) {
+                    packageLockJson.delete();
+                }
+            } catch (Exception e) {
+                logger.error(String.format("Rertreiving the NPM dependencies of the project %s failed", projectName));
+            }
+            logger.info(String.format("Rertreiving the NPM dependencies of the project %s finished", projectName));
         }
     }
 

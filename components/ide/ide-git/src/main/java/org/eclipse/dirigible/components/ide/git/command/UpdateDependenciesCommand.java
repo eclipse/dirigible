@@ -36,10 +36,12 @@ public class UpdateDependenciesCommand extends CloneCommand {
      *
      * @param publisherService the publisher service
      * @param projectMetadataManager the project metadata manager
+     * @param commandService the command service
      */
     @Autowired
-    public UpdateDependenciesCommand(PublisherService publisherService, ProjectMetadataManager projectMetadataManager) {
-        super(publisherService, projectMetadataManager);
+    public UpdateDependenciesCommand(PublisherService publisherService, ProjectMetadataManager projectMetadataManager,
+            GitCommandService commandService) {
+        super(publisherService, projectMetadataManager, commandService);
     }
 
     /** The Constant logger. */
@@ -57,18 +59,19 @@ public class UpdateDependenciesCommand extends CloneCommand {
             throws GitConnectorException {
         for (Project selectedProject : projects) {
             String user = UserFacade.getName();
+            String projectName = selectedProject.getName();
             try {
                 Set<String> clonedProjects = new HashSet<String>();
-                cloneDependencies(user, model.getUsername(), model.getPassword(), workspace, clonedProjects, selectedProject.getName());
+                cloneDependencies(user, model.getUsername(), model.getPassword(), workspace, clonedProjects, projectName);
+                cloneNPMDependencies(user, workspace, projectName);
                 if (model.isPublish()) {
                     publishProjects(workspace, clonedProjects);
                 }
                 if (logger.isInfoEnabled()) {
-                    logger.info(String.format("Project's [%s] dependencies has been updated successfully.", selectedProject.getName()));
+                    logger.info(String.format("Project's [%s] dependencies has been updated successfully.", projectName));
                 }
             } catch (IOException | GitConnectorException e) {
-                String errorMessage =
-                        String.format("Error occured while updating dependencies of the project [%s]", selectedProject.getName());
+                String errorMessage = String.format("Error occured while updating dependencies of the project [%s]", projectName);
                 if (logger.isErrorEnabled()) {
                     logger.error(errorMessage, e);
                 }
