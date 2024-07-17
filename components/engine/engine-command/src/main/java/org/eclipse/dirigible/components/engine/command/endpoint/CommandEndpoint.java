@@ -36,7 +36,6 @@ public class CommandEndpoint extends BaseEndpoint {
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(CommandEndpoint.class.getCanonicalName());
 
-
     /** The command service. */
     private final CommandService commandService;
 

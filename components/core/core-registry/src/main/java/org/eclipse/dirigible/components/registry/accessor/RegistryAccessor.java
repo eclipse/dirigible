@@ -308,6 +308,5 @@ public class RegistryAccessor {
             logger.error(logMsg);
         }
         throw new RepositoryException(logMsg);
-
     }
 }

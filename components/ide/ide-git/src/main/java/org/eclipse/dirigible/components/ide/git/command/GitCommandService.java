@@ -7,7 +7,7 @@
  *
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.engine.command.service;
+package org.eclipse.dirigible.components.ide.git.command;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -16,13 +16,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.process.Piper;
 import org.eclipse.dirigible.commons.process.ProcessUtils;
-import org.eclipse.dirigible.components.api.http.HttpRequestFacade;
-import org.eclipse.dirigible.components.api.http.HttpResponseFacade;
-import org.eclipse.dirigible.components.command.Command;
 import org.eclipse.dirigible.components.registry.accessor.RegistryAccessor;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
@@ -37,10 +33,10 @@ import org.springframework.web.context.annotation.RequestScope;
  */
 @Service
 @RequestScope
-public class CommandService {
+public class GitCommandService {
 
     /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(CommandService.class);
+    private static final Logger logger = LoggerFactory.getLogger(GitCommandService.class);
 
     /** The Constant COMMAND_EXTENSION. */
     public static final String COMMAND_EXTENSION = ".command";
@@ -51,99 +47,6 @@ public class CommandService {
     /** The registry accessor. */
     @Autowired
     private RegistryAccessor registryAccessor;
-
-    /**
-     * Exist resource.
-     *
-     * @param path the requested resource location
-     * @return if the {@link IResource}
-     */
-    public boolean existResource(String path) {
-        return registryAccessor.existResource(path);
-    }
-
-    /**
-     * Gets the resource.
-     *
-     * @param path the requested resource location
-     * @return the {@link IResource} instance
-     */
-    public IResource getResource(String path) {
-        return registryAccessor.getResource(path);
-    }
-
-    /**
-     * Gets the resource content.
-     *
-     * @param path the requested resource location
-     * @return the {@link IResource} content as a byte array
-     */
-    public byte[] getResourceContent(String path) {
-        return registryAccessor.getRegistryContent(path);
-    }
-
-    /**
-     * Execute service.
-     *
-     * @param module the module
-     * @param params the params
-     * @return the result
-     * @throws Exception the exception
-     */
-    public String executeCommand(String module, Map<String, String> params) throws Exception {
-
-        if (logger.isTraceEnabled()) {
-            logger.trace("entering: executeCommand()"); //$NON-NLS-1$
-        }
-        if (logger.isTraceEnabled()) {
-            logger.trace("module = " + module); //$NON-NLS-1$
-        }
-
-        if (module == null) {
-            throw new IllegalArgumentException("Command module name cannot be null");
-        }
-
-        if (HttpRequestFacade.isValid()) {
-            HttpRequestFacade.setAttribute(HttpRequestFacade.ATTRIBUTE_REST_RESOURCE_PATH, getResource(module).getPath());
-        }
-
-        String result;
-
-        String commandSource = new String(getResourceContent(module), StandardCharsets.UTF_8);
-        String root = getRepositoryRoot();
-        String workingDirectory = root + getResource(module).getParent()
-                                                            .getPath();
-
-        Command commandDefinition;
-        try {
-            commandDefinition = GsonHelper.fromJson(commandSource, Command.class);
-        } catch (Exception e2) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e2.getMessage(), e2);
-            }
-            throw new Exception(e2);
-        }
-
-        commandDefinition.validate();
-
-        String commandLine = commandDefinition.getTargetCommand()
-                                              .getCommand();
-
-        result = executeCommandLine(workingDirectory, commandLine, commandDefinition.getSet(), commandDefinition.getUnset(), params);
-
-        try {
-            HttpResponseFacade.setContentType(commandDefinition.getContentType());
-        } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
-        }
-
-        if (logger.isTraceEnabled()) {
-            logger.trace("exiting: executeCommand()");
-        }
-        return result;
-    }
 
     /**
      * Gets the repository root.
