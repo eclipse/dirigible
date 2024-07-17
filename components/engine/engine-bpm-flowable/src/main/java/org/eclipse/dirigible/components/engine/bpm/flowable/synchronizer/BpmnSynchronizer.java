@@ -68,15 +68,6 @@ public class BpmnSynchronizer extends BaseSynchronizer<Bpmn, Long> {
     }
 
     /**
-     * Gets the bpm provider flowable.
-     *
-     * @return the bpm provider flowable
-     */
-    public BpmProviderFlowable getBpmProviderFlowable() {
-        return bpmProviderFlowable;
-    }
-
-    /**
      * Checks if is accepted.
      *
      * @param type the artefact
@@ -177,13 +168,13 @@ public class BpmnSynchronizer extends BaseSynchronizer<Bpmn, Long> {
             switch (flow) {
                 case CREATE:
                     if (ArtefactLifecycle.NEW.equals(bpmn.getLifecycle())) {
-                        deployOnProcessEngine(bpmn);
+                        deployProcess(bpmn);
                         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                     }
                     break;
                 case UPDATE:
                     if (ArtefactLifecycle.MODIFIED.equals(bpmn.getLifecycle())) {
-                        updateOnProcessEngine(bpmn);
+                        deployProcess(bpmn);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                     }
                     if (ArtefactLifecycle.FAILED.equals(bpmn.getLifecycle())) {
@@ -206,12 +197,7 @@ public class BpmnSynchronizer extends BaseSynchronizer<Bpmn, Long> {
         }
     }
 
-    /**
-     * Deploy on process engine.
-     *
-     * @param bpmn the bpmn
-     */
-    private void deployOnProcessEngine(Bpmn bpmn) {
+    private void deployProcess(Bpmn bpmn) {
         try {
             ProcessEngine processEngine = bpmProviderFlowable.getProcessEngine();
             RepositoryService repositoryService = processEngine.getRepositoryService();
@@ -220,91 +206,23 @@ public class BpmnSynchronizer extends BaseSynchronizer<Bpmn, Long> {
                                                      .key(bpmn.getLocation())
                                                      .addBytes(bpmn.getLocation(), bpmn.getContent())
                                                      .deploy();
-            List<ProcessDefinition> processDefinitions = repositoryService.createProcessDefinitionQuery()
-                                                                          .deploymentId(deployment.getId())
-                                                                          .list();
-            if (processDefinitions.size() > 0) {
-                ProcessDefinition processDefinition = processDefinitions.get(0);
-                bpmn.setDeploymentId(processDefinition.getDeploymentId());
-                bpmn.setProcessDefinitionId(processDefinition.getId());
-                bpmn.setProcessDefinitionKey(processDefinition.getKey());
-                bpmn.setProcessDefinitionName(processDefinition.getName());
-                bpmn.setProcessDefinitionVersion(processDefinition.getVersion());
-                bpmn.setProcessDefinitionTenantId(processDefinition.getTenantId());
-                bpmn.setProcessDefinitionCategory(processDefinition.getCategory());
-                bpmn.setProcessDefinitionDescription(processDefinition.getDescription());
-            }
-            if (logger.isInfoEnabled()) {
-                logger.info(
-                        format("Deployed: [{0}] with key: [{1}] on the Flowable BPMN Engine.", deployment.getId(), deployment.getKey()));
-            }
-        } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error("Error on deploying a BPMN file from location: {}", bpmn.getLocation(), e);
-            }
-        }
-    }
 
-    /**
-     * Deploy on process engine.
-     *
-     * @param bpmn the bpmn
-     */
-    private void updateOnProcessEngine(Bpmn bpmn) {
-        try {
-            ProcessEngine processEngine = bpmProviderFlowable.getProcessEngine();
-            RepositoryService repositoryService = processEngine.getRepositoryService();
+            ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+                                                                   .deploymentId(deployment.getId())
+                                                                   .singleResult();
 
-            List<Deployment> deployments = repositoryService.createDeploymentQuery()
-                                                            .list();
-            for (Deployment deployment : deployments) {
-                if (logger.isTraceEnabled()) {
-                    logger.trace(format("Deployment: [{0}] with key: [{1}]", deployment.getId(), deployment.getKey()));
-                }
-                if (bpmn.getLocation()
-                        .equals(deployment.getKey())) {
-                    List<ProcessDefinition> processDefinitions = repositoryService.createProcessDefinitionQuery()
-                                                                                  .deploymentId(deployment.getId())
-                                                                                  .active()
-                                                                                  .list();
-                    if (processDefinitions.size() > 0) {
-                        ProcessDefinition processDefinition = processDefinitions.get(0);
-                        // repositoryService.suspendProcessDefinitionById(processDefinition.getId());
-                        repositoryService.deleteDeployment(processDefinition.getDeploymentId());
-                        Deployment newDeployment = repositoryService.createDeployment()
-                                                                    .key(bpmn.getLocation())
-                                                                    .addBytes(bpmn.getLocation(), bpmn.getContent())
-                                                                    .deploy();
-                        processDefinitions = repositoryService.createProcessDefinitionQuery()
-                                                              .deploymentId(newDeployment.getId())
-                                                              .list();
-                        if (processDefinitions.size() > 0) {
-                            processDefinition = processDefinitions.get(0);
-                            bpmn.setDeploymentId(processDefinition.getDeploymentId());
-                            bpmn.setProcessDefinitionId(processDefinition.getId());
-                            bpmn.setProcessDefinitionKey(processDefinition.getKey());
-                            bpmn.setProcessDefinitionName(processDefinition.getName());
-                            bpmn.setProcessDefinitionVersion(processDefinition.getVersion());
-                            bpmn.setProcessDefinitionTenantId(processDefinition.getTenantId());
-                            bpmn.setProcessDefinitionCategory(processDefinition.getCategory());
-                            bpmn.setProcessDefinitionDescription(processDefinition.getDescription());
-                            if (logger.isInfoEnabled()) {
-                                logger.info(format("Updated deployment: [{0}] with key: [{1}] on the Flowable BPMN Engine.",
-                                        deployment.getId(), deployment.getKey()));
-                            }
-                            return;
-                        }
-                    }
-                }
-
-                // backup if the definitions is modified, but the old version get broken and does not exist in the
-                // process engine
-                deployOnProcessEngine(bpmn);
-            }
-        } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error("Error on deploying a BPMN file from location: {}", bpmn.getLocation(), e);
-            }
+            bpmn.setDeploymentId(processDefinition.getDeploymentId());
+            bpmn.setProcessDefinitionId(processDefinition.getId());
+            bpmn.setProcessDefinitionKey(processDefinition.getKey());
+            bpmn.setProcessDefinitionName(processDefinition.getName());
+            bpmn.setProcessDefinitionVersion(processDefinition.getVersion());
+            bpmn.setProcessDefinitionTenantId(processDefinition.getTenantId());
+            bpmn.setProcessDefinitionCategory(processDefinition.getCategory());
+            bpmn.setProcessDefinitionDescription(processDefinition.getDescription());
+            logger.info("BPMN [{}] has been deployed : id [{}], key: [{}]", bpmn, deployment.getId(), deployment.getKey());
+        } catch (RuntimeException ex) {
+            String errorMessage = "Failed to deploy BPMN: " + bpmn;
+            throw new IllegalStateException(errorMessage, ex);
         }
     }
 
