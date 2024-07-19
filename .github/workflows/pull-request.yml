@@ -125,7 +125,7 @@ jobs:
     steps:
       - name: Set up Docker
         run: |
-          brew install docker
+          brew install --cask docker
           open /Applications/Docker.app
           # Wait until Docker daemon is running
           while (! docker system info > /dev/null 2>&1); do
