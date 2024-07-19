@@ -1,7 +1,5 @@
 name: Pull Request
 
-env:
-  RUN_H2_IT_TESTS: 'false'
 on:
   pull_request:
     branches:
@@ -10,6 +8,10 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+
+env:
+  RUN_H2_IT_TESTS: 'false'
+
 jobs:
   code-style:
     runs-on: ${{ matrix.os }}-latest
