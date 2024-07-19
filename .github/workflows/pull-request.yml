@@ -126,6 +126,12 @@ jobs:
       - name: Set up Docker
         run: |
           brew install docker
+          open /Applications/Docker.app
+          # Wait until Docker daemon is running
+          while (! docker system info > /dev/null 2>&1); do
+            echo "Waiting for Docker to start..."
+            sleep 1
+          done
 
       - name: Start PostgreSQL Service
         run: |
