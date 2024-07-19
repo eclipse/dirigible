@@ -258,6 +258,6 @@ public class TableConstraints {
     @Override
     public String toString() {
         return "TableConstraints{" + "id=" + id + ", primaryKey=" + primaryKey + ", foreignKeys=" + foreignKeys + ", uniqueIndexes="
-                + uniqueIndexes + ", checks=" + checks + ", table=" + table + '}';
+                + uniqueIndexes + ", checks=" + checks + ", table=" + (table != null ? table.getName() : null) + '}';
     }
 }
