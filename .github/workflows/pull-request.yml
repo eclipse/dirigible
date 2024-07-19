@@ -1,5 +1,7 @@
 name: Pull Request
 
+env:
+  RUN_H2_IT_TESTS: 'false'
 on:
   pull_request:
     branches:
@@ -58,7 +60,7 @@ jobs:
         run: mvn -T 1C clean install -D maven.javadoc.skip=false -U
 
   integration-tests-h2:
-    if: 'true' = 'false'
+    if: ${{ env.RUN_H2_IT_TESTS == 'true' }}
     runs-on: ${{ matrix.os }}-latest
     continue-on-error: true
     strategy:
