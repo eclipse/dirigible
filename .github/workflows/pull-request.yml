@@ -138,6 +138,8 @@ jobs:
       DIRIGIBLE_DATASOURCE_DEFAULT_PASSWORD: testpass
 
     steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1.5.0
         with:
@@ -170,12 +172,6 @@ jobs:
         run: npm i -g esbuild
       - name: Install TypeScript compiler
         run: npm i -g typescript
-      - name: Wait for PostgreSQL to be ready
-        run: |
-          until pg_isready -h localhost -p 5432 -U testuser; do
-          echo "$(date) - waiting for postgres..."
-          sleep 1
-          done
       - name: Maven Build
         run: mvn -T 1C clean install -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
       - name: Integration tests
