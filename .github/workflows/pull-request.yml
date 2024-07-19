@@ -126,7 +126,9 @@ jobs:
       - name: Set up Docker
         run: |
           brew install --cask docker
+          ls /Applications
           open /Applications/Docker.app
+          echo 'Docker opened'
 
       - name: Start PostgreSQL Service
         run: |
