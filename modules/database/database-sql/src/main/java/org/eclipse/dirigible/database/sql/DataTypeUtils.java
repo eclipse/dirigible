@@ -9,7 +9,6 @@
  */
 package org.eclipse.dirigible.database.sql;
 
-import static java.text.MessageFormat.format;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -20,140 +19,100 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import static java.text.MessageFormat.format;
+
 /**
  * The Class DataTypeUtils.
  */
 public class DataTypeUtils {
 
-    /** The Constant JSONB. */
-    private static final String JSONB = "JSONB";
-
-    /** The Constant JSON. */
-    private static final String JSON = "JSON";
-
-    /** The Constant ARRAY. */
-    private static final String ARRAY = "ARRAY";
-
-    /** The Constant BYTEA. */
-    private static final String BYTEA = "BYTEA";
-
-    /** The Constant BINARY_LARGE_OBJECT. */
-    private static final String BINARY_LARGE_OBJECT = "BINARY LARGE OBJECT";
-
-    /** The Constant BINARY_VARYING. */
-    private static final String BINARY_VARYING = "BINARY VARYING";
-
-    /** The Constant BINARY. */
-    private static final String BINARY = "BINARY";
-
-    /** The Constant BLOB. */
-    private static final String BLOB = "BLOB";
-
-    /** The Constant CHARACTER_LARGE_OBJECT. */
-    private static final String CHARACTER_LARGE_OBJECT = "CHARACTER LARGE OBJECT";
-
-    /** The Constant CLOB. */
-    private static final String CLOB = "CLOB";
-
-    /** The Constant BOOL. */
-    private static final String BOOL = "BOOL";
-
-    /** The Constant BOOLEAN. */
-    private static final String BOOLEAN = "BOOLEAN";
-
-    /** The Constant DECIMAL. */
-    private static final String DECIMAL = "DECIMAL";
-
-    /** The Constant NUMERIC. */
-    private static final String NUMERIC = "NUMERIC";
-
-    /** The Constant NUMBER. */
-    private static final String NUMBER = "NUMBER";
-
-    /** The Constant FLOAT8. */
-    private static final String FLOAT8 = "FLOAT8";
-
-    /** The Constant FLOAT4. */
-    private static final String FLOAT4 = "FLOAT4";
-
-    /** The Constant DOUBLE_PRECISION. */
-    private static final String DOUBLE_PRECISION = "DOUBLE PRECISION";
-
-    /** The Constant DOUBLE. */
-    private static final String DOUBLE = "DOUBLE";
-
-    /** The Constant FLOAT. */
-    private static final String FLOAT = "FLOAT";
-
-    /** The Constant REAL. */
-    private static final String REAL = "REAL";
-
-    /** The Constant SERIAL8. */
-    private static final String SERIAL8 = "SERIAL8";
-
-    /** The Constant BIGSERIAL. */
-    private static final String BIGSERIAL = "BIGSERIAL";
-
-    /** The Constant BIGINT. */
-    private static final String BIGINT = "BIGINT";
-
-    /** The Constant INT8. */
-    private static final String INT8 = "INT8";
-
-    /** The Constant INT4. */
-    private static final String INT4 = "INT4";
-
-    /** The Constant INT2. */
-    private static final String INT2 = "INT2";
-
-    /** The Constant INT. */
-    private static final String INT = "INT";
-
-    /** The Constant INTEGER. */
-    private static final String INTEGER = "INTEGER";
-
-    /** The Constant TINYINT. */
-    private static final String TINYINT = "TINYINT";
-
-    /** The Constant SMALLINT. */
-    private static final String SMALLINT = "SMALLINT";
-
-    /** The Constant BIT. */
-    private static final String BIT = "BIT";
-
-    /** The Constant TIME. */
-    private static final String TIME = "TIME";
-
-    /** The Constant TIMESTAMP. */
-    private static final String TIMESTAMP = "TIMESTAMP";
-
-    /** The Constant DATE. */
-    private static final String DATE = "DATE";
-
-    /** The Constant TEXT. */
-    private static final String TEXT = "TEXT";
-
-    /** The Constant CHARACTER. */
-    private static final String CHARACTER = "CHARACTER";
-
-    /** The Constant CHAR. */
-    private static final String CHAR = "CHAR";
-
-    /** The Constant NVARCHAR. */
-    private static final String NVARCHAR = "NVARCHAR";
-
-    /** The Constant CHARACTER_VARYING. */
-    private static final String CHARACTER_VARYING = "CHARACTER VARYING";
-
-    /** The Constant VARCHAR. */
-    private static final String VARCHAR = "VARCHAR";
-
     /** The default length. */
     public static final int VARCHAR_DEFAULT_LENGTH = 512;
-
     /** The Constant DECIMAL_DEFAULT_LENGTH. */
     public static final int DECIMAL_DEFAULT_LENGTH = 100000;
-
+    /** The Constant JSONB. */
+    private static final String JSONB = "JSONB";
+    /** The Constant JSON. */
+    private static final String JSON = "JSON";
+    /** The Constant ARRAY. */
+    private static final String ARRAY = "ARRAY";
+    /** The Constant BYTEA. */
+    private static final String BYTEA = "BYTEA";
+    /** The Constant BINARY_LARGE_OBJECT. */
+    private static final String BINARY_LARGE_OBJECT = "BINARY LARGE OBJECT";
+    /** The Constant BINARY_VARYING. */
+    private static final String BINARY_VARYING = "BINARY VARYING";
+    /** The Constant BINARY. */
+    private static final String BINARY = "BINARY";
+    /** The Constant BLOB. */
+    private static final String BLOB = "BLOB";
+    /** The Constant CHARACTER_LARGE_OBJECT. */
+    private static final String CHARACTER_LARGE_OBJECT = "CHARACTER LARGE OBJECT";
+    /** The Constant CLOB. */
+    private static final String CLOB = "CLOB";
+    /** The Constant BOOL. */
+    private static final String BOOL = "BOOL";
+    /** The Constant BOOLEAN. */
+    private static final String BOOLEAN = "BOOLEAN";
+    /** The Constant DECIMAL. */
+    private static final String DECIMAL = "DECIMAL";
+    /** The Constant NUMERIC. */
+    private static final String NUMERIC = "NUMERIC";
+    /** The Constant NUMBER. */
+    private static final String NUMBER = "NUMBER";
+    /** The Constant FLOAT8. */
+    private static final String FLOAT8 = "FLOAT8";
+    /** The Constant FLOAT4. */
+    private static final String FLOAT4 = "FLOAT4";
+    /** The Constant DOUBLE_PRECISION. */
+    private static final String DOUBLE_PRECISION = "DOUBLE PRECISION";
+    /** The Constant DOUBLE. */
+    private static final String DOUBLE = "DOUBLE";
+    /** The Constant FLOAT. */
+    private static final String FLOAT = "FLOAT";
+    /** The Constant REAL. */
+    private static final String REAL = "REAL";
+    /** The Constant SERIAL8. */
+    private static final String SERIAL8 = "SERIAL8";
+    /** The Constant BIGSERIAL. */
+    private static final String BIGSERIAL = "BIGSERIAL";
+    /** The Constant BIGINT. */
+    private static final String BIGINT = "BIGINT";
+    /** The Constant INT8. */
+    private static final String INT8 = "INT8";
+    /** The Constant INT4. */
+    private static final String INT4 = "INT4";
+    /** The Constant INT2. */
+    private static final String INT2 = "INT2";
+    /** The Constant INT. */
+    private static final String INT = "INT";
+    /** The Constant INTEGER. */
+    private static final String INTEGER = "INTEGER";
+    /** The Constant TINYINT. */
+    private static final String TINYINT = "TINYINT";
+    /** The Constant SMALLINT. */
+    private static final String SMALLINT = "SMALLINT";
+    /** The Constant BIT. */
+    private static final String BIT = "BIT";
+    /** The Constant TIME. */
+    private static final String TIME = "TIME";
+    /** The Constant TIMESTAMP. */
+    private static final String TIMESTAMP = "TIMESTAMP";
+    /** The Constant DATE. */
+    private static final String DATE = "DATE";
+    /** The Constant TEXT. */
+    private static final String TEXT = "TEXT";
+    /** The Constant CHARACTER. */
+    private static final String CHARACTER = "CHARACTER";
+    private static final String BPCHAR = "BPCHAR";
+    /** The Constant CHAR. */
+    private static final String CHAR = "CHAR";
+    /** The Constant NVARCHAR. */
+    private static final String NVARCHAR = "NVARCHAR";
+    /** The Constant CHARACTER_VARYING. */
+    private static final String CHARACTER_VARYING = "CHARACTER VARYING";
+    /** The Constant VARCHAR. */
+    private static final String VARCHAR = "VARCHAR";
     /** The Constant DATABASE_TYPE_TO_DATA_TYPE. */
     private static final Map<Integer, DataType> DATABASE_TYPE_TO_DATA_TYPE = Collections.synchronizedMap(new HashMap<Integer, DataType>());
 
@@ -195,6 +154,7 @@ public class DataTypeUtils {
         STRING_TO_DATABASE_TYPE.put(CHARACTER_VARYING, Types.VARCHAR);
         STRING_TO_DATABASE_TYPE.put(NVARCHAR, Types.NVARCHAR);
         STRING_TO_DATABASE_TYPE.put(CHAR, Types.CHAR);
+        STRING_TO_DATABASE_TYPE.put(BPCHAR, Types.CHAR);
         STRING_TO_DATABASE_TYPE.put(CHARACTER, Types.CHAR);
         STRING_TO_DATABASE_TYPE.put(TEXT, Types.VARCHAR);
         // dates
@@ -308,16 +268,6 @@ public class DataTypeUtils {
     }
 
     /**
-     * Checks if is database type supported.
-     *
-     * @param type the type
-     * @return true, if is database type supported
-     */
-    public static boolean isDatabaseTypeSupported(Integer type) {
-        return DATABASE_TYPE_TO_DATA_TYPE.containsKey(type);
-    }
-
-    /**
      * Gets the database type.
      *
      * @param type the type
@@ -331,37 +281,13 @@ public class DataTypeUtils {
     }
 
     /**
-     * Gets the database type name.
+     * Checks if is database type supported.
      *
      * @param type the type
-     * @return the database type name
+     * @return true, if is database type supported
      */
-    public static String getDatabaseTypeName(Integer type) {
-        if (isDatabaseTypeSupported(type)) {
-            return DATABASE_TYPE_TO_DATA_TYPE.get(type)
-                                             .toString();
-        }
-        throw new SqlException(format("Type [{0}] not supported. Supported tpes [{1}]", type, DATABASE_TYPE_TO_DATA_TYPE));
-    }
-
-    /**
-     * Gets the database type by java type.
-     *
-     * @param clazz the clazz
-     * @return the database type by java type
-     */
-    public static Integer getDatabaseTypeByJavaType(Class clazz) {
-        Integer type = JAVA_TYPE_TO_DATABASE_TYPE.get(clazz);
-        if (type == null) {
-            for (Entry<Class, Integer> entry : JAVA_TYPE_TO_DATABASE_TYPE.entrySet()) {
-                if (entry.getKey()
-                         .isAssignableFrom(clazz)) {
-                    return entry.getValue();
-                }
-            }
-            throw new SqlException(format("Class {0} does not have mapping to a data type", clazz));
-        }
-        return type;
+    public static boolean isDatabaseTypeSupported(Integer type) {
+        return DATABASE_TYPE_TO_DATA_TYPE.containsKey(type);
     }
 
     /**
@@ -401,6 +327,40 @@ public class DataTypeUtils {
     public static String getDatabaseTypeNameByJavaType(Class clazz) {
         Integer type = getDatabaseTypeByJavaType(clazz);
         return getDatabaseTypeName(type);
+    }
+
+    /**
+     * Gets the database type name.
+     *
+     * @param type the type
+     * @return the database type name
+     */
+    public static String getDatabaseTypeName(Integer type) {
+        if (isDatabaseTypeSupported(type)) {
+            return DATABASE_TYPE_TO_DATA_TYPE.get(type)
+                                             .toString();
+        }
+        throw new SqlException(format("Type [{0}] not supported. Supported tpes [{1}]", type, DATABASE_TYPE_TO_DATA_TYPE));
+    }
+
+    /**
+     * Gets the database type by java type.
+     *
+     * @param clazz the clazz
+     * @return the database type by java type
+     */
+    public static Integer getDatabaseTypeByJavaType(Class clazz) {
+        Integer type = JAVA_TYPE_TO_DATABASE_TYPE.get(clazz);
+        if (type == null) {
+            for (Entry<Class, Integer> entry : JAVA_TYPE_TO_DATABASE_TYPE.entrySet()) {
+                if (entry.getKey()
+                         .isAssignableFrom(clazz)) {
+                    return entry.getValue();
+                }
+            }
+            throw new SqlException(format("Class {0} does not have mapping to a data type", clazz));
+        }
+        return type;
     }
 
     /**
