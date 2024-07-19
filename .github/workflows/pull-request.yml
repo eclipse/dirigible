@@ -116,21 +116,6 @@ jobs:
       matrix:
         os: [macos]
 
-    services:
-      postgres:
-        image: postgres:16
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        env:
-          POSTGRES_DB: testdb
-          POSTGRES_USER: testuser
-          POSTGRES_PASSWORD: testpass
-
     env:
       DIRIGIBLE_DATASOURCE_DEFAULT_DRIVER: org.postgresql.Driver
       DIRIGIBLE_DATASOURCE_DEFAULT_URL: jdbc:postgresql://localhost:5432/testdb
@@ -140,6 +125,16 @@ jobs:
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+
+      - name: Start PostgreSQL Service
+        run: |
+          docker run -d --name postgres \
+          -e POSTGRES_DB=testdb \
+          -e POSTGRES_USER=testuser \
+          -e POSTGRES_PASSWORD=testpass \
+          -p 5432:5432 \
+          postgres:16
+
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1.5.0
         with:
