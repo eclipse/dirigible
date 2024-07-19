@@ -61,8 +61,7 @@ class DirigibleCleaner {
     }
 
     /**
-     * Execute this before H2 folder deletion because it is in memory DB. Otherwise, will remain data in
-     * memory.
+     * Execute this before H2 folder deletion because it is in memory DB. Otherwise, will remain data in memory.
      */
     private void deleteDirigibleDBData() {
         DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
@@ -93,8 +92,8 @@ class DirigibleCleaner {
     private List<String> getAllTables(DataSource dataSource) {
         List<String> tables = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
-                PreparedStatement prepareStatement =
-                        connection.prepareStatement("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='PUBLIC'")) {
+                PreparedStatement prepareStatement = connection.prepareStatement(
+                        "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='PUBLIC'")) {
             ResultSet resultSet = prepareStatement.executeQuery();
             while (resultSet.next()) {
                 tables.add(resultSet.getString(1));
@@ -108,23 +107,36 @@ class DirigibleCleaner {
     private void deleteSchemas(DataSource dataSource) {
         Set<String> schemas = getSchemas(dataSource);
         schemas.remove("PUBLIC");
+        schemas.remove("public");
         schemas.remove("INFORMATION_SCHEMA");
+        schemas.remove("information_schema");
+        schemas.removeIf(s -> s.startsWith("pg_"));
 
         LOGGER.info("Will drop schemas [{}] from data source [{}]", schemas, dataSource);
         schemas.forEach(schema -> deleteSchema(schema, dataSource));
     }
 
     private Set<String> getSchemas(DataSource dataSource) {
+        try {
+            return getSchemas(dataSource, "SHOW SCHEMAS");
+        } catch (SQLException ex) {
+            try {
+                return getSchemas(dataSource, "SELECT nspname FROM pg_catalog.pg_namespace");
+            } catch (SQLException e) {
+                throw new IllegalStateException("Failed to get all schemas from data source: " + dataSource, e);
+            }
+        }
+    }
+
+    private Set<String> getSchemas(DataSource dataSource, String sql) throws SQLException {
         Set<String> schemas = new HashSet<>();
         try (Connection connection = dataSource.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("SHOW SCHEMAS");
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 schemas.add(resultSet.getString(1));
             }
             return schemas;
-        } catch (SQLException ex) {
-            throw new IllegalStateException("Failed to get all schemas from data source: " + dataSource, ex);
         }
     }
 

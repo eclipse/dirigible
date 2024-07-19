@@ -114,7 +114,7 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        os: [ubuntu]
+        os: [macos]
 
     services:
       postgres:
