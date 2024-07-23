@@ -12,7 +12,6 @@ package org.eclipse.dirigible.integration.tests.ui;
 import ch.qos.logback.classic.Level;
 import io.restassured.http.ContentType;
 import org.apache.commons.io.FileUtils;
-import org.awaitility.Awaitility;
 import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -39,6 +38,7 @@ import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import static io.restassured.RestAssured.given;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -145,6 +145,7 @@ public class TestProject {
      * - default DB datasource is resolved correctly
      */
     private void verifyView(DirigibleTestTenant tenant) {
+
         restAssuredExecutor.execute(tenant, //
                 () -> given().when()
                              .get(READERS_VIEW_SERVICE_PATH)
@@ -154,7 +155,8 @@ public class TestProject {
                              .body("[0].READER_FIRST_NAME", equalTo("Ivan"))
                              .body("[0].READER_LAST_NAME", equalTo("Ivanov"))
                              .body("[1].READER_FIRST_NAME", equalTo("Maria"))
-                             .body("[1].READER_LAST_NAME", equalTo("Petrova")));
+                             .body("[1].READER_LAST_NAME", equalTo("Petrova")),
+                15);
     }
 
     /**
@@ -207,9 +209,8 @@ public class TestProject {
     private void verifyMessageLogged(String expectedMessage, LogsAsserter logsAsserter) {
         String failMessage =
                 "Couldn't find message [" + expectedMessage + "] in the logs. Logged messages: " + logsAsserter.getLoggedMessages();
-        AwaitilityExecutor.execute(failMessage, () -> Awaitility.await()
-                                                                .atMost(10, TimeUnit.SECONDS)
-                                                                .until(() -> logsAsserter.containsMessage(expectedMessage, Level.INFO)));
+        AwaitilityExecutor.execute(failMessage, () -> await().atMost(10, TimeUnit.SECONDS)
+                                                             .until(() -> logsAsserter.containsMessage(expectedMessage, Level.INFO)));
     }
 
     private void verifyListenerExecuted(DirigibleTestTenant tenant) {
