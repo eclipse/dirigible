@@ -256,11 +256,6 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
         List<Exception> errors = new ArrayList<>();
         for (CsvFile csvFile : csvFiles) {
             try {
-                if (csvFile.isImported()) {
-                    logger.info("File [{}] is imported and import will be skipped", csvFile.getKey());
-                    continue;
-                }
-
                 IResource resource = CsvimProcessor.getCsvResource(csvFile);
                 if (!resource.exists()) {
                     throw new Exception("CSV does not exist: " + csvFile.getFile());
