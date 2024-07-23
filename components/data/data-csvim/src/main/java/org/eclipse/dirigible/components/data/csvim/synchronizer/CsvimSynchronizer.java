@@ -222,11 +222,9 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
                     }
                 case DELETE:
                     if (csvim.getLifecycle()
-                             .equals(ArtefactLifecycle.CREATED)
-                            || csvim.getLifecycle()
-                                    .equals(ArtefactLifecycle.UPDATED)
-                            || csvim.getLifecycle()
-                                    .equals(ArtefactLifecycle.FAILED)) {
+                             .equals(ArtefactLifecycle.CREATED) || csvim.getLifecycle()
+                                                                        .equals(ArtefactLifecycle.UPDATED) || csvim.getLifecycle()
+                                                                                                                   .equals(ArtefactLifecycle.FAILED)) {
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED);
                         return true;
                     }
@@ -262,36 +260,18 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
                     logger.info("File [{}] is imported and import will be skipped", csvFile.getKey());
                     continue;
                 }
-                // Csv csv;
-                // String fileLocation = csvFile.getLocation();
-                // List<Csv> foundCSVs = csvService.findByLocation(fileLocation);
-                //
-                // if (foundCSVs.size() > 0) {
-                // csv = foundCSVs.get(0);
-                // } else {
-                // csv = new Csv();
-                // }
+
                 IResource resource = CsvimProcessor.getCsvResource(csvFile);
                 if (!resource.exists()) {
                     throw new Exception("CSV does not exist: " + csvFile.getFile());
                 }
                 byte[] content = csvimProcessor.getCsvContent(resource);
 
-                // csv.setContent(content);
-                // csv.setLocation(csvFile.getLocation());
-                // csv.setType(Csv.ARTEFACT_TYPE);
-                // csv.setName(csvFile.getName());
-                // csv.setImported(false);
-                // csv.updateKey();
-                //
-                // csv = csvService.save(csv);
                 csvimProcessor.process(csvFile, content, csvim.getDatasource());
 
                 csvFile.setImported(true);
                 csvFileService.save(csvFile);
 
-                // csv.setImported(true);
-                // csvService.save(csv);
             } catch (RuntimeException ex) {
                 errors.add(ex);
             }
