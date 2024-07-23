@@ -36,7 +36,10 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * The Class CSVIM Synchronizer.
@@ -53,15 +56,6 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
      * The Constant logger.
      */
     private static final Logger logger = LoggerFactory.getLogger(CsvimSynchronizer.class);
-    /**
-     * The Constant CSVIM_SYNCHRONIZED.
-     */
-    private static final List<String> CSVIM_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<>());
-
-    /**
-     * The Constant CSV_SYNCHRONIZED.
-     */
-    private static final List<String> CSV_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<>());
 
     /** The csvim service. */
     private final CsvimService csvimService;
@@ -209,15 +203,11 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
                 case CREATE:
                     switch (lifecycle) {
                         case FAILED:
+                        case CREATED:
                         case NEW: {
                             importCsvim(csvim);
                             callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
                             return true;
-                        }
-                        default: {
-                            logger.info("Returning false for [{}] in artefact lifecycle [{}] in phase [{}]", wrapper.getArtefact(),
-                                    lifecycle, flow);
-                            return false;
                         }
                     }
 
@@ -229,13 +219,7 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
                             callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED);
                             return true;
                         }
-                        default: {
-                            logger.info("Returning false for [{}] in artefact lifecycle [{}] in phase [{}]", wrapper.getArtefact(),
-                                    lifecycle, flow);
-                            return false;
-                        }
                     }
-
                 case DELETE:
                     if (csvim.getLifecycle()
                              .equals(ArtefactLifecycle.CREATED)
@@ -328,13 +312,7 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
     public void cleanupImpl(Csvim csvim) {
         try (Connection connection = datasourcesManager.getDefaultDataSource()
                                                        .getConnection()) {
-            List<Csvim> csvims = csvimService.getAll();
-            for (Csvim c : csvims) {
-                if (!CSVIM_SYNCHRONIZED.contains(c.getLocation())) {
-                    csvimService.delete(c);
-                    logger.warn("Cleaned up CSVIM file from location: {}", c.getLocation());
-                }
-            }
+            csvimService.delete(csvim);
         } catch (Exception e) {
             callback.addError(e.getMessage());
             callback.registerState(this, csvim, ArtefactLifecycle.DELETED, "Failed to cleanup csvim: " + csvim, e);
