@@ -14,7 +14,6 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.data.csvim.domain.Csv;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvRecord;
 import org.eclipse.dirigible.components.data.csvim.synchronizer.CsvimProcessingException;
@@ -190,7 +189,7 @@ public class CsvimProcessor {
                 if (csvRecord.size() != tableColumns.size()) {
                     if (isStrictMode()) {
                         CsvimUtils.logProcessorErrors(String.format(PROBLEM_MESSAGE_DIFFERENT_COLUMNS_SIZE, csvFile.getFile()),
-                                ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
+                                ERROR_TYPE_PROCESSOR, csvFile.getFile(), CsvFile.ARTEFACT_TYPE, MODULE);
                         throw new Exception(String.format(ERROR_MESSAGE_DIFFERENT_COLUMNS_SIZE, csvFile.getFile()));
                     }
                 }
@@ -297,7 +296,7 @@ public class CsvimProcessor {
             return CSVParser.parse(contentAsInputStream, StandardCharsets.UTF_8, csvFormat);
         } catch (Exception ex) {
             String errorMessage = String.format("Error occurred while trying to parse data from CSV file [%s].", csvFile.getFile());
-            CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
+            CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), CsvFile.ARTEFACT_TYPE, MODULE);
             logger.error(errorMessage, ex);
             throw ex;
         }
@@ -316,13 +315,13 @@ public class CsvimProcessor {
                 && !csvFile.getDelimField()
                            .equals(";"))) {
             String errorMessage = "Only ';' or ',' characters are supported as delimiters for CSV files.";
-            CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
+            CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), CsvFile.ARTEFACT_TYPE, MODULE);
             throw new Exception(errorMessage);
         }
         if (csvFile.getDelimEnclosing() != null && csvFile.getDelimEnclosing()
                                                           .length() > 1) {
             String errorMessage = "Delim enclosing should only contain one character.";
-            CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
+            CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), CsvFile.ARTEFACT_TYPE, MODULE);
             throw new Exception(errorMessage);
         }
 
@@ -406,7 +405,7 @@ public class CsvimProcessor {
         } catch (Exception e) {
             String csvRecordValue = e.getMessage();
             CsvimUtils.logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableModel.getName(), csvRecordValue),
-                    ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
+                    ERROR_TYPE_PROCESSOR, csvFile.getFile(), CsvFile.ARTEFACT_TYPE, MODULE);
             if (logger.isErrorEnabled()) {
                 logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableModel.getName(), csvRecordValue, csvFile.getFile()), e);
             }
@@ -435,7 +434,7 @@ public class CsvimProcessor {
         } catch (SQLException e) {
             String csvRecordValue = e.getMessage();
             CsvimUtils.logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableModel.getName(), csvRecordValue),
-                    ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
+                    ERROR_TYPE_PROCESSOR, csvFile.getFile(), CsvFile.ARTEFACT_TYPE, MODULE);
             if (logger.isErrorEnabled()) {
                 logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableModel.getName(), csvRecordValue, csvFile.getFile()), e);
             }

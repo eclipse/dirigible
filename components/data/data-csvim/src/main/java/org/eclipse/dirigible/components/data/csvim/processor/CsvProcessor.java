@@ -12,7 +12,6 @@ package org.eclipse.dirigible.components.data.csvim.processor;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.commons.api.helpers.DateTimeUtils;
-import org.eclipse.dirigible.components.data.csvim.domain.Csv;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvRecord;
 import org.eclipse.dirigible.components.data.csvim.utils.CsvimUtils;
@@ -116,7 +115,7 @@ public class CsvProcessor {
                                                                                                                .collect(
                                                                                                                        Collectors.toList()),
                     tableMetadata.getName());
-            CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
+            CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), CsvFile.ARTEFACT_TYPE, MODULE);
             logger.error(errorMessage, t);
         }
     }
@@ -189,7 +188,7 @@ public class CsvProcessor {
                                                                                                                .collect(
                                                                                                                        Collectors.toList()),
                     tableMetadata.getName());
-            CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
+            CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), CsvFile.ARTEFACT_TYPE, MODULE);
             if (logger.isErrorEnabled()) {
                 logger.error(errorMessage, t);
             }

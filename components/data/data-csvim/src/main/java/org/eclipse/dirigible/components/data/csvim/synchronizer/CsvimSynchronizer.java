@@ -19,12 +19,10 @@ import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.MultitenantBaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
-import org.eclipse.dirigible.components.data.csvim.domain.Csv;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
 import org.eclipse.dirigible.components.data.csvim.domain.Csvim;
 import org.eclipse.dirigible.components.data.csvim.processor.CsvimProcessor;
 import org.eclipse.dirigible.components.data.csvim.service.CsvFileService;
-import org.eclipse.dirigible.components.data.csvim.service.CsvService;
 import org.eclipse.dirigible.components.data.csvim.service.CsvimService;
 import org.eclipse.dirigible.components.data.sources.config.SystemDataSourceName;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
@@ -70,9 +68,6 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
 
     private final CsvFileService csvFileService;
 
-    /** The csv service. */
-    private final CsvService csvService;
-
     /** The datasources manager. */
     private final DataSourcesManager datasourcesManager;
 
@@ -89,16 +84,14 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
      * Instantiates a new csvim synchronizer.
      *
      * @param csvimService the csvimsyncrhonizer service
-     * @param csvService the csvsyncrhonizer service
      * @param datasourcesManager the datasources manager
      * @param csvimProcessor the csvim processor
      * @param systemDataSourceName the system data source name
      */
     @Autowired
-    public CsvimSynchronizer(CsvimService csvimService, CsvService csvService, DataSourcesManager datasourcesManager,
-            CsvimProcessor csvimProcessor, @SystemDataSourceName String systemDataSourceName, CsvFileService csvFileService) {
+    public CsvimSynchronizer(CsvimService csvimService, DataSourcesManager datasourcesManager, CsvimProcessor csvimProcessor,
+            @SystemDataSourceName String systemDataSourceName, CsvFileService csvFileService) {
         this.csvimService = csvimService;
-        this.csvService = csvService;
         this.csvFileService = csvFileService;
         this.datasourcesManager = datasourcesManager;
         this.csvimProcessor = csvimProcessor;
@@ -340,13 +333,6 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
                 if (!CSVIM_SYNCHRONIZED.contains(c.getLocation())) {
                     csvimService.delete(c);
                     logger.warn("Cleaned up CSVIM file from location: {}", c.getLocation());
-                }
-            }
-            List<Csv> csvs = csvService.getAll();
-            for (Csv csv : csvs) {
-                if (!CSV_SYNCHRONIZED.contains(csv.getLocation())) {
-                    csvService.delete(csv);
-                    logger.warn("Cleaned up CSV file from location: {}", csv.getLocation());
                 }
             }
         } catch (Exception e) {
