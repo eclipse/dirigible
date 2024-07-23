@@ -9,19 +9,17 @@
  */
 package org.eclipse.dirigible.components.base.artefact;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.annotations.Expose;
+import jakarta.persistence.*;
+import org.eclipse.dirigible.components.base.converters.SetOfStringsToCsvConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.lang.Nullable;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import org.eclipse.dirigible.components.base.converters.SetOfStringsToCsvConverter;
-import org.springframework.lang.Nullable;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.gson.annotations.Expose;
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Lob;
-import jakarta.persistence.MappedSuperclass;
 
 /**
  * The Class Artefact.
@@ -31,7 +29,9 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 
     /** The Constant KEY_SEPARATOR. */
     public static final String KEY_SEPARATOR = ":";
+    public static final int ERROR_LENGTH = 2000;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Artefact.class);
     /** The location. */
     @Column(name = "ARTEFACT_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
     @Expose
@@ -80,7 +80,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
     protected ArtefactPhase phase;
 
     /** The description. */
-    @Column(name = "ARTEFACT_ERROR", columnDefinition = "VARCHAR", nullable = true, length = 2000)
+    @Column(name = "ARTEFACT_ERROR", columnDefinition = "VARCHAR", nullable = true, length = ERROR_LENGTH)
     @Expose
     protected String error;
 
@@ -105,6 +105,17 @@ public abstract class Artefact extends Auditable<String> implements Serializable
         this.description = description;
         this.dependencies = dependencies;
         updateKey();
+    }
+
+    /**
+     * Update key.
+     */
+    public void updateKey() {
+        if ((this.type == null) || (this.location == null) || (this.name == null)) {
+            throw new IllegalArgumentException(
+                    String.format("Attempt to generate an artefact key by type=[%s], location=[%s], name=[%s]", type, location, name));
+        }
+        this.key = this.type + KEY_SEPARATOR + this.location + KEY_SEPARATOR + this.name;
     }
 
     /**
@@ -225,6 +236,17 @@ public abstract class Artefact extends Auditable<String> implements Serializable
     /**
      * Adds the dependency.
      *
+     * @param location the location
+     * @param name the name
+     * @param type the type
+     */
+    public void addDependency(String location, String name, String type) {
+        addDependency(type + KEY_SEPARATOR + location + KEY_SEPARATOR + name);
+    }
+
+    /**
+     * Adds the dependency.
+     *
      * @param dependency the dependency
      */
     public void addDependency(String dependency) {
@@ -232,17 +254,6 @@ public abstract class Artefact extends Auditable<String> implements Serializable
             dependencies = new HashSet<String>();
         }
         dependencies.add(dependency);
-    }
-
-    /**
-     * Adds the dependency.
-     *
-     * @param location the location
-     * @param name the name
-     * @param type the type
-     */
-    public void addDependency(String location, String name, String type) {
-        addDependency(type + KEY_SEPARATOR + location + KEY_SEPARATOR + name);
     }
 
     /**
@@ -296,6 +307,11 @@ public abstract class Artefact extends Auditable<String> implements Serializable
      * @param error the new error
      */
     public void setError(String error) {
+        if (null != error && error.length() >= ERROR_LENGTH) {
+            LOGGER.warn("Passed error with length [{}] which exceeds the maximum allowed [{}]. The value will be cutted before it is set.",
+                    error.length(), ERROR_LENGTH);
+            error = error.substring(0, ERROR_LENGTH);
+        }
         this.error = error;
     }
 
@@ -315,18 +331,6 @@ public abstract class Artefact extends Auditable<String> implements Serializable
      */
     public void setRunning(Boolean running) {
         this.running = running;
-    }
-
-    /**
-     * Update key.
-     *
-     */
-    public void updateKey() {
-        if ((this.type == null) || (this.location == null) || (this.name == null)) {
-            throw new IllegalArgumentException(
-                    String.format("Attempt to generate an artefact key by type=[%s], location=[%s], name=[%s]", type, location, name));
-        }
-        this.key = this.type + KEY_SEPARATOR + this.location + KEY_SEPARATOR + this.name;
     }
 
     /**

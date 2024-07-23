@@ -86,6 +86,12 @@ public class CsvFile extends Artefact {
     @Expose
     private String delimEnclosing;
 
+    /**
+     * The imported.
+     */
+    @Column(name = "CSV_FILE_IMPORTED", columnDefinition = "BOOLEAN", nullable = false)
+    private boolean imported;
+
     /** The sequence. */
     @Column(name = "CSV_FILE_SEQUENCE", columnDefinition = "VARCHAR")
     @Expose
@@ -413,4 +419,11 @@ public class CsvFile extends Artefact {
                 + this.schema;
     }
 
+    public boolean isImported() {
+        return imported;
+    }
+
+    public void setImported(boolean imported) {
+        this.imported = imported;
+    }
 }

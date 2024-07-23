@@ -9,19 +9,6 @@
  */
 package org.eclipse.dirigible.components.data.csvim.processor;
 
-import static org.eclipse.dirigible.components.api.platform.RepositoryFacade.getResource;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import javax.sql.DataSource;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -30,6 +17,7 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.csvim.domain.Csv;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvRecord;
+import org.eclipse.dirigible.components.data.csvim.synchronizer.CsvimProcessingException;
 import org.eclipse.dirigible.components.data.csvim.utils.CsvimUtils;
 import org.eclipse.dirigible.components.data.management.domain.ColumnMetadata;
 import org.eclipse.dirigible.components.data.management.domain.TableMetadata;
@@ -45,6 +33,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static org.eclipse.dirigible.components.api.platform.RepositoryFacade.getResource;
 
 /**
  * The Class CsvimProcessor.
@@ -132,22 +136,10 @@ public class CsvimProcessor {
         this.strictMode = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_CSV_STRICT_MODE", "false"));
     }
 
-    /**
-     * Checks if is strict mode.
-     *
-     * @return true, if is strict mode
-     */
-    public boolean isStrictMode() {
-        return strictMode;
-    }
-
-    /**
-     * Sets the strict mode.
-     *
-     * @param strictMode the new strict mode
-     */
-    void setStrictMode(boolean strictMode) {
-        this.strictMode = strictMode;
+    public void process(CsvFile csvFile, byte[] content, String dataSourceName) throws Exception {
+        try (InputStream inStream = new ByteArrayInputStream(content)) {
+            this.process(csvFile, inStream, dataSourceName);
+        }
     }
 
     /**
@@ -175,10 +167,8 @@ public class CsvimProcessor {
             CSVParser csvParser = getCsvParser(csvFile, content);
             TableMetadata tableMetadata = CsvimUtils.getTableMetadata(tableName, targetSchema, connection);
             if (tableMetadata == null) {
-                String error = String.format(PROBLEM_WITH_TABLE_METADATA_OR_CSVPARSER, tableName);
-                logger.error(error);
-                CsvimUtils.logProcessorErrors(error, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
-                return;
+                String errorMessage = "Table metadata was not found for table [" + tableName + "] in schema [" + targetSchema + "]";
+                throw new CsvimProcessingException((errorMessage));
             }
 
             String pkName = getPkName(tableMetadata, csvParser.getHeaderNames());
@@ -276,35 +266,21 @@ public class CsvimProcessor {
     }
 
     /**
-     * Gets the csv resource.
+     * Checks if is strict mode.
      *
-     * @param csvFile the csv file
-     * @return the csv resource
+     * @return true, if is strict mode
      */
-    public static IResource getCsvResource(CsvFile csvFile) {
-        return getResource(convertToActualFileName(csvFile.getFile()));
+    public boolean isStrictMode() {
+        return strictMode;
     }
 
     /**
-     * Convert to actual file name.
+     * Sets the strict mode.
      *
-     * @param fileNamePath the file name path
-     * @return the string
+     * @param strictMode the new strict mode
      */
-    private static String convertToActualFileName(String fileNamePath) {
-        return IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepository.SEPARATOR + fileNamePath;
-    }
-
-    /**
-     * Gets the csv content.
-     *
-     * @param resource the resource
-     * @return the csv content
-     * @throws RepositoryReadException the repository read exception
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public byte[] getCsvContent(IResource resource) throws RepositoryReadException, IOException {
-        return resource.getContent();
+    void setStrictMode(boolean strictMode) {
+        this.strictMode = strictMode;
     }
 
     /**
@@ -587,6 +563,38 @@ public class CsvimProcessor {
             }
         }
         return isEmpty;
+    }
+
+    /**
+     * Gets the csv resource.
+     *
+     * @param csvFile the csv file
+     * @return the csv resource
+     */
+    public static IResource getCsvResource(CsvFile csvFile) {
+        return getResource(convertToActualFileName(csvFile.getFile()));
+    }
+
+    /**
+     * Convert to actual file name.
+     *
+     * @param fileNamePath the file name path
+     * @return the string
+     */
+    private static String convertToActualFileName(String fileNamePath) {
+        return IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepository.SEPARATOR + fileNamePath;
+    }
+
+    /**
+     * Gets the csv content.
+     *
+     * @param resource the resource
+     * @return the csv content
+     * @throws RepositoryReadException the repository read exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public byte[] getCsvContent(IResource resource) throws RepositoryReadException, IOException {
+        return resource.getContent();
     }
 
 }

@@ -9,21 +9,14 @@
  */
 package org.eclipse.dirigible.components.data.csvim.domain;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Set;
-
+import com.google.gson.annotations.Expose;
+import jakarta.persistence.*;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 
-import com.google.gson.annotations.Expose;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * The Csv Entity.
@@ -44,12 +37,6 @@ public class Csv extends Artefact {
     private Long id;
 
     /**
-     * The imported.
-     */
-    @Column(name = "CSV_IMPORTED", columnDefinition = "BOOLEAN", nullable = false)
-    private boolean imported;
-
-    /**
      * The content.
      */
     @Column(name = "CSV_CONTENT", columnDefinition = "CLOB")
@@ -65,14 +52,11 @@ public class Csv extends Artefact {
      * @param description the description
      * @param dependencies the dependencies
      * @param id the id
-     * @param imported the imported
      * @param content the content
      */
-    public Csv(String location, String name, String type, String description, Set<String> dependencies, Long id, boolean imported,
-            byte[] content) {
+    public Csv(String location, String name, String type, String description, Set<String> dependencies, Long id, byte[] content) {
         super(location, name, type, description, dependencies);
         this.id = id;
-        this.imported = imported;
         this.content = content;
     }
 
@@ -80,12 +64,10 @@ public class Csv extends Artefact {
      * Instantiates a new csv.
      *
      * @param id the id
-     * @param imported the imported
      * @param content the content
      */
-    public Csv(Long id, boolean imported, byte[] content) {
+    public Csv(Long id, byte[] content) {
         this.id = id;
-        this.imported = imported;
         this.content = content;
     }
 
@@ -112,24 +94,6 @@ public class Csv extends Artefact {
      */
     public void setId(Long id) {
         this.id = id;
-    }
-
-    /**
-     * Getter for imported flag.
-     *
-     * @return whether is imported already
-     */
-    public boolean getImported() {
-        return imported;
-    }
-
-    /**
-     * Setter for imported flag.
-     *
-     * @param imported the flag
-     */
-    public void setImported(boolean imported) {
-        this.imported = imported;
     }
 
     /**
@@ -185,10 +149,10 @@ public class Csv extends Artefact {
      */
     @Override
     public String toString() {
-        return "Csv{" + "id=" + id + ", imported=" + imported + ", content=" + Arrays.toString(content) + ", location='" + location + '\''
-                + ", name='" + name + '\'' + ", type='" + type + '\'' + ", description='" + description + '\'' + ", key='" + key + '\''
-                + ", dependencies='" + dependencies + '\'' + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy="
-                + updatedBy + ", updatedAt=" + updatedAt + '}';
+        return "Csv{" + "id=" + id + ", content=" + Arrays.toString(content) + ", location='" + location + '\'' + ", name='" + name + '\''
+                + ", type='" + type + '\'' + ", description='" + description + '\'' + ", key='" + key + '\'' + ", dependencies='"
+                + dependencies + '\'' + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy
+                + ", updatedAt=" + updatedAt + '}';
     }
 
     /**
@@ -206,8 +170,6 @@ public class Csv extends Artefact {
 
         Csv csv = (Csv) o;
 
-        if (imported != csv.imported)
-            return false;
         if (!Objects.equals(id, csv.id))
             return false;
         return Arrays.equals(content, csv.content);
