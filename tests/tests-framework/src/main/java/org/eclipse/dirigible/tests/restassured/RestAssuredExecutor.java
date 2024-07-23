@@ -72,6 +72,7 @@ public class RestAssuredExecutor {
 
     public void execute(DirigibleTestTenant tenant, CallableNoResultAndNoException callable, long timeoutSeconds) {
         await().atMost(timeoutSeconds, TimeUnit.SECONDS)
+               .pollInterval(500, TimeUnit.MILLISECONDS)
                .until(() -> {
                    try {
                        this.execute(callable, tenant.getHost(), tenant.getUsername(), tenant.getPassword());
