@@ -90,7 +90,9 @@ public class ConfluenceSynchronizer extends BaseSynchronizer<Confluence, Long> {
         return file.toString()
                    .endsWith(FILE_EXTENSION_CONFLUENCE)
                 && file.toString()
-                       .indexOf("webjars") == -1;
+                       .indexOf("webjars") == -1
+                && file.toString()
+                       .indexOf("node_modules") == -1;
     }
 
     /**
