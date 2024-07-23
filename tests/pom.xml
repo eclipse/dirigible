@@ -32,7 +32,7 @@
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-tests-framework</artifactId>
 				<version>${project.version}</version>
-				<scope>compile</scope>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>com.codeborne</groupId>
