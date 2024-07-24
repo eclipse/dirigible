@@ -78,7 +78,7 @@ class DirigibleCleaner {
         dropAllTablesInSchema(systemDataSource);
         dropAllSequencesInSchema(systemDataSource);
 
-        deleteSchemas(defaultDataSource);
+        // deleteSchemas(defaultDataSource);
     }
 
     private void dropAllSequencesInSchema(DataSource dataSource) {
