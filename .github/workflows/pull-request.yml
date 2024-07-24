@@ -84,9 +84,9 @@ jobs:
       - name: Install TypeScript compiler
         run: npm i -g typescript
       - name: Maven Build
-        run: mvn -T 1C clean install -D skipTests -D maven.javadoc.skip=true -D license.skip=true -D selenide.headless=true -U
+        run: mvn -T 1C clean install -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
       - name: Integration tests
-        run: mvn -f tests/pom.xml verify -P integration-tests
+        run: mvn -f tests/pom.xml verify -P integration-tests -D selenide.headless=true
       - name: Upload selenide screenshots
         uses: actions/upload-artifact@v4.3.1
         if: always()
