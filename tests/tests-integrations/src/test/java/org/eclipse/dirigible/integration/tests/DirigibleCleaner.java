@@ -69,11 +69,53 @@ class DirigibleCleaner {
     private void deleteDirigibleDBData() {
         DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
         dropAllTablesInSchema(defaultDataSource);
+        dropAllSequencesInSchema(defaultDataSource);
 
         DataSource systemDataSource = dataSourcesManager.getSystemDataSource();
         dropAllTablesInSchema(systemDataSource);
+        dropAllSequencesInSchema(systemDataSource);
 
         deleteSchemas(defaultDataSource);
+    }
+
+    private void dropAllSequencesInSchema(DataSource dataSource) {
+        List<String> sequences = getAllSequences(dataSource);
+        LOGGER.info("Will drop [{}] sequences from data source [{}]. Sequences: {}", sequences.size(), dataSource, sequences);
+
+        for (int idx = 0; idx < 2; idx++) {
+            Iterator<String> iterator = sequences.iterator();
+            while (iterator.hasNext()) {
+                String sequence = iterator.next();
+                try (Connection connection = dataSource.getConnection()) {
+                    String sql = SqlDialectFactory.getDialect(connection)
+                                                  .drop()
+                                                  .sequence(sequence)
+                                                  .build();
+                    try (PreparedStatement prepareStatement = connection.prepareStatement(sql)) {
+                        int rowsAffected = prepareStatement.executeUpdate();
+                        LOGGER.info("Dropped sequence [{}]", sequence);
+                        iterator.remove();
+                    }
+                } catch (SQLException ex) {
+                    LOGGER.warn("Failed to drop sequence [{}] in data source [{}]", sequence, dataSource, ex);
+                }
+            }
+        }
+    }
+
+    private List<String> getAllSequences(DataSource dataSource) {
+        List<String> sequences = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement prepareStatement = connection.prepareStatement(
+                        "SELECT sequence_name FROM information_schema.sequences WHERE sequence_schema='public' OR sequence_schema='PUBLIC'")) {
+            ResultSet resultSet = prepareStatement.executeQuery();
+            while (resultSet.next()) {
+                sequences.add(resultSet.getString(1));
+            }
+            return sequences;
+        } catch (SQLException ex) {
+            throw new IllegalStateException("Failed to get all sequences in data source:" + dataSource, ex);
+        }
     }
 
     private void dropAllTablesInSchema(DataSource dataSource) {
