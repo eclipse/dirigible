@@ -59,14 +59,13 @@ jobs:
 
   integration-tests:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [macos]
+
     steps:
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1.5.0
         with:
           chrome-version: stable
+          install-chromedriver: true
 
       - if: runner.os == 'Linux'
         run: chrome --version
@@ -74,9 +73,6 @@ jobs:
         run: '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version'
       - if: runner.os == 'Windows'
         run: (Get-Item (Get-Command chrome).Source).VersionInfo.ProductVersion
-
-      - name: Setup chromedriver
-        uses: nanasess/setup-chromedriver@v2
 
       - uses: actions/checkout@v3
         with:
