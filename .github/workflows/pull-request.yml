@@ -109,9 +109,9 @@ jobs:
         ports:
           - 5432:5432
         env:
-          POSTGRES_DB: $POSTGRESQL_DB
-          POSTGRES_USER: $POSTGRESQL_USER
-          POSTGRES_PASSWORD: $POSTGRESQL_PASS
+          POSTGRES_DB: ${{ env.POSTGRESQL_DB }}
+          POSTGRES_USER: ${{ env.POSTGRESQL_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRESQL_PASS }}
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
