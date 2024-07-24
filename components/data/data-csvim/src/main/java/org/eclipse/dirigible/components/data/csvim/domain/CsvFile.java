@@ -9,20 +9,13 @@
  */
 package org.eclipse.dirigible.components.data.csvim.domain;
 
-import java.util.Set;
+import com.google.gson.annotations.Expose;
+import jakarta.persistence.*;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import com.google.gson.annotations.Expose;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+
+import java.util.Set;
 
 /**
  * The Class CsvFile.
@@ -92,6 +85,12 @@ public class CsvFile extends Artefact {
     @Column(name = "CSV_FILE_DELIM_ENCLOSING", columnDefinition = "VARCHAR")
     @Expose
     private String delimEnclosing;
+
+    /**
+     * The imported.
+     */
+    @Column(name = "CSV_FILE_IMPORTED", columnDefinition = "BOOLEAN", nullable = false)
+    private boolean imported;
 
     /** The sequence. */
     @Column(name = "CSV_FILE_SEQUENCE", columnDefinition = "VARCHAR")
@@ -406,5 +405,25 @@ public class CsvFile extends Artefact {
      */
     public void setUpsert(Boolean upsert) {
         this.upsert = upsert;
+    }
+
+    @Override
+    public void updateKey() {
+        if ((this.type == null) || (this.location == null) || (this.name == null) || (this.table == null)) {
+            String errMessage =
+                    String.format("Attempt to generate an artefact key by type=[%s], location=[%s], name=[%s], table [%s], schema=[%s]",
+                            this.type, this.location, this.name, this.table, this.schema);
+            throw new IllegalArgumentException(errMessage);
+        }
+        this.key = this.type + KEY_SEPARATOR + this.location + KEY_SEPARATOR + this.name + KEY_SEPARATOR + this.table + KEY_SEPARATOR
+                + this.schema;
+    }
+
+    public boolean isImported() {
+        return imported;
+    }
+
+    public void setImported(boolean imported) {
+        this.imported = imported;
     }
 }

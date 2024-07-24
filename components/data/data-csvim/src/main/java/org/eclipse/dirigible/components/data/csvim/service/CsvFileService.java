@@ -10,24 +10,25 @@
 package org.eclipse.dirigible.components.data.csvim.service;
 
 import org.eclipse.dirigible.components.base.artefact.BaseArtefactService;
-import org.eclipse.dirigible.components.data.csvim.domain.Csv;
-import org.eclipse.dirigible.components.data.csvim.repository.CsvRepository;
+import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
+import org.eclipse.dirigible.components.data.csvim.repository.CsvFileRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * The Class CsvService.
+ * The Class ExtensionsCoreService.
  */
 @Service
 @Transactional
-public class CsvService extends BaseArtefactService<Csv, Long> {
+public class CsvFileService extends BaseArtefactService<CsvFile, Long> {
 
     /**
-     * Instantiates a new csv service.
+     * Instantiates a new csvim service.
      *
      * @param repository the repository
      */
-    public CsvService(CsvRepository repository) {
+    public CsvFileService(CsvFileRepository repository) {
         super(repository);
     }
+
 }

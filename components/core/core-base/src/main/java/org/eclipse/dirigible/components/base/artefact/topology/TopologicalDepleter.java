@@ -9,13 +9,13 @@
  */
 package org.eclipse.dirigible.components.base.artefact.topology;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * The Class TopologicalDepleter.
@@ -34,8 +34,8 @@ public class TopologicalDepleter<T extends TopologicallyDepletable> {
      * @param flow the flow
      * @return the list
      */
-    public List<T> deplete(List<T> list, ArtefactPhase flow) {
-        List<T> depletables = new ArrayList<>();
+    public Set<T> deplete(Set<T> list, ArtefactPhase flow) {
+        Set<T> depletables = new HashSet<>();
         depletables.addAll(list);
         int count = depletables.size();
         boolean repeat = true;

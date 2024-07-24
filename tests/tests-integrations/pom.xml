@@ -40,7 +40,6 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-tests-framework</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.codeborne</groupId>

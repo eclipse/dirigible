@@ -9,25 +9,17 @@
  */
 package org.eclipse.dirigible.components.data.csvim.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.gson.annotations.Expose;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.*;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import com.google.gson.annotations.Expose;
-
-import jakarta.annotation.Nullable;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * The Csvim Entity.
@@ -165,21 +157,13 @@ public class Csvim extends Artefact {
         this.files = csvFile;
     }
 
-    /**
-     * Gets the file by location.
-     *
-     * @param location the location of the file
-     * @return the file
-     */
-    public CsvFile getFileByLocation(String location) {
+    public Optional<CsvFile> getFileByKey(String key) {
         if (files != null) {
-            for (CsvFile cf : files) {
-                if (cf.getLocation()
-                      .equals(location)) {
-                    return cf;
-                }
-            }
+            return files.stream()
+                        .filter(f -> Objects.equals(key, f.getKey()))
+                        .findFirst();
+
         }
-        return null;
+        return Optional.empty();
     }
 }

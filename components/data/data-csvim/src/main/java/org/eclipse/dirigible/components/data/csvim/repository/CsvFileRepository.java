@@ -10,7 +10,7 @@
 package org.eclipse.dirigible.components.data.csvim.repository;
 
 import org.eclipse.dirigible.components.base.artefact.ArtefactRepository;
-import org.eclipse.dirigible.components.data.csvim.domain.Csv;
+import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,10 +18,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * The Interface CsvRepository.
+ * The Interface CsvimRepository.
  */
-@Repository("csvRepository")
-public interface CsvRepository extends ArtefactRepository<Csv, Long> {
+@Repository("csvFileRepository")
+public interface CsvFileRepository extends ArtefactRepository<CsvFile, Long> {
 
     /**
      * Sets the running to all.
@@ -31,6 +31,6 @@ public interface CsvRepository extends ArtefactRepository<Csv, Long> {
     @Override
     @Modifying
     @Transactional
-    @Query(value = "UPDATE Csv SET running = :running")
+    @Query(value = "UPDATE CsvFile SET running = :running")
     void setRunningToAll(@Param("running") boolean running);
 }

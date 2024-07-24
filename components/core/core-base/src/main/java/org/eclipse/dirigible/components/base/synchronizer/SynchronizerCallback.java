@@ -13,7 +13,7 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * The Interface SynchronizerCallback.
@@ -32,7 +32,7 @@ public interface SynchronizerCallback {
      *
      * @return the errors
      */
-    List<String> getErrors();
+    Set<String> getErrors();
 
     /**
      * Register errors.
@@ -40,14 +40,14 @@ public interface SynchronizerCallback {
      * @param remained the remained
      * @param lifecycle the lifecycle
      */
-    void registerErrors(List<TopologyWrapper<? extends Artefact>> remained, ArtefactLifecycle lifecycle);
+    void registerErrors(Set<TopologyWrapper<? extends Artefact>> remained, ArtefactLifecycle lifecycle);
 
     /**
      * Register errors.
      *
      * @param remained the remained
      */
-    void registerFatals(List<TopologyWrapper<? extends Artefact>> remained);
+    void registerFatals(Set<TopologyWrapper<? extends Artefact>> remained);
 
     void registerState(Synchronizer<? extends Artefact, ?> synchronizer, TopologyWrapper<? extends Artefact> wrapper,
             ArtefactLifecycle lifecycle);
