@@ -16,6 +16,7 @@ import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.tests.util.FileUtil;
+import org.eclipse.dirigible.tests.util.ProjectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -37,10 +38,12 @@ class DirigibleCleaner {
 
     private final DataSourcesManager dataSourcesManager;
     private final IRepository dirigibleRepo;
+    private final ProjectUtil projectUtil;
 
-    DirigibleCleaner(DataSourcesManager dataSourcesManager, IRepository dirigibleRepo) {
+    DirigibleCleaner(DataSourcesManager dataSourcesManager, IRepository dirigibleRepo, ProjectUtil projectUtil) {
         this.dataSourcesManager = dataSourcesManager;
         this.dirigibleRepo = dirigibleRepo;
+        this.projectUtil = projectUtil;
     }
 
     void clean() {
@@ -226,13 +229,21 @@ class DirigibleCleaner {
     private void unpublishResources() throws IOException {
         LOGGER.info("Deleting all Dirigible project resources from the repository...");
 
-        List<String> userProjects = getUserProjects();
+        Set<String> userProjects = getUserProjects();
         deleteCurrentUserFolder();
         deleteDirigibleProjectsFromRegistry(userProjects);
         LOGGER.info("Dirigible project resources have been deleted.");
     }
 
-    private List<String> getUserProjects() throws IOException {
+    private Set<String> getUserProjects() throws IOException {
+        Set<String> projects = new HashSet<>(getUserProjectsFromWorkingDir());
+
+        projects.addAll(projectUtil.getCreatedProjects());
+
+        return projects;
+    }
+
+    private List<String> getUserProjectsFromWorkingDir() throws IOException {
         File usersRepoFolder = getUsersRepoFolder();
         if (usersRepoFolder.exists()) {
             List<Path> userProjectFiles = FileUtil.findFiles(usersRepoFolder, "project.json");
@@ -258,7 +269,7 @@ class DirigibleCleaner {
         FileUtil.deleteFolder(currentUserFolder);
     }
 
-    private void deleteDirigibleProjectsFromRegistry(List<String> userProjects) {
+    private void deleteDirigibleProjectsFromRegistry(Set<String> userProjects) {
         String repoBasePath = dirigibleRepo.getRepositoryPath() + IRepositoryStructure.PATH_REGISTRY_PUBLIC + File.separator;
         LOGGER.info("Will delete user projects [{}] from the registry [{}]", userProjects, repoBasePath);
         userProjects.forEach(projectName -> {

@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
-class CsvimIT extends IntegrationTest {
+public class CsvimIT extends IntegrationTest {
 
     public static final String PROJECT_NAME = "csvim-test-project";
     public static final String UNDEFINIED_TABLE_NAME = "TEST_TABLE_READERS2";
