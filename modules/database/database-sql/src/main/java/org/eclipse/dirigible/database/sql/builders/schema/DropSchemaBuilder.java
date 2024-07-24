@@ -23,7 +23,7 @@ public class DropSchemaBuilder extends AbstractDropSqlBuilder {
     private static final Logger logger = LoggerFactory.getLogger(CreateSchemaBuilder.class);
 
     /** The name. */
-    private String name;
+    private final String name;
 
     /**
      * Instantiates a new creates the schema builder.
@@ -71,7 +71,9 @@ public class DropSchemaBuilder extends AbstractDropSqlBuilder {
         sql.append(SPACE)
            .append(KEYWORD_SCHEMA)
            .append(SPACE)
-           .append(schemaName);
+           .append(schemaName)
+           .append(SPACE)
+           .append(KEYWORD_DATABASE_DROP_CASCADE);
     }
 
     /**

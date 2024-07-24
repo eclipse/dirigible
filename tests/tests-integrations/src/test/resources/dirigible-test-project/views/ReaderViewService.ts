@@ -1,5 +1,5 @@
 import { Controller, Get, response } from "sdk/http"
-import { query } from "sdk/db";
+import { query, sql } from "sdk/db";
 
 @Controller
 class ReaderViewService {
@@ -7,9 +7,8 @@ class ReaderViewService {
     @Get("/")
     public getAll() {
         try {
-            const sql = "SELECT * FROM READERS_VIEW";
-            const resultset = query.execute(sql, []);
-            return resultset;
+            const sqlQuery = sql.getDialect().select().from("READERS_VIEW").build();
+            return query.execute(sqlQuery, []);
         } catch (error: any) {
             this.handleError(error);
         }

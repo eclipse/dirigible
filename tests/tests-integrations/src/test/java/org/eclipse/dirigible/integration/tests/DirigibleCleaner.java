@@ -11,6 +11,8 @@ package org.eclipse.dirigible.integration.tests;
 
 import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
+import org.eclipse.dirigible.database.sql.ISqlDialect;
+import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.tests.util.FileUtil;
@@ -61,7 +63,8 @@ class DirigibleCleaner {
     }
 
     /**
-     * Execute this before H2 folder deletion because it is in memory DB. Otherwise, will remain data in memory.
+     * Execute this before H2 folder deletion because it is in memory DB. Otherwise, will remain data in
+     * memory.
      */
     private void deleteDirigibleDBData() {
         DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
@@ -92,8 +95,8 @@ class DirigibleCleaner {
     private List<String> getAllTables(DataSource dataSource) {
         List<String> tables = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
-                PreparedStatement prepareStatement = connection.prepareStatement(
-                        "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='PUBLIC'")) {
+                PreparedStatement prepareStatement =
+                        connection.prepareStatement("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='PUBLIC'")) {
             ResultSet resultSet = prepareStatement.executeQuery();
             while (resultSet.next()) {
                 tables.add(resultSet.getString(1));
@@ -142,11 +145,19 @@ class DirigibleCleaner {
 
     private void deleteSchema(String schema, DataSource dataSource) {
         LOGGER.info("Will drop schema [{}] from data source [{}]", schema, dataSource);
-        try (Connection connection = dataSource.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("DROP SCHEMA `" + schema + "` CASCADE")) {
-            preparedStatement.executeUpdate();
+        try (Connection connection = dataSource.getConnection()) {
+            ISqlDialect dialect = SqlDialectFactory.getDialect(connection);
+            String sql = dialect.drop()
+                                .schema(schema)
+                                .generate();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.executeUpdate();
+            } catch (SQLException ex) {
+                throw new IllegalStateException(
+                        "Failed to drop schema [" + schema + "] from dataSource [" + dataSource + "] using sql: " + sql, ex);
+            }
         } catch (SQLException ex) {
-            throw new IllegalStateException("Failed to drop schema [" + schema + "] from dataSource: " + dataSource, ex);
+            throw new IllegalStateException("Failed to drop schema [" + schema + "] from dataSource [" + dataSource + "] ", ex);
         }
     }
 
