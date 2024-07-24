@@ -99,9 +99,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      POSTGRESQL_DB: testdb
-      POSTGRESQL_USER: testuser
-      POSTGRESQL_PASS: testpass
+      POSTGRES_DB: testdb
+      POSTGRES_USER: testuser
+      POSTGRES_PASS: testpass
 
     services:
       postgres:
@@ -109,9 +109,9 @@ jobs:
         ports:
           - 5432:5432
         env:
-          POSTGRES_DB: ${{ env.POSTGRESQL_DB }}
-          POSTGRES_USER: ${{ env.POSTGRESQL_USER }}
-          POSTGRES_PASSWORD: ${{ env.POSTGRESQL_PASS }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASS }}
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -147,9 +147,9 @@ jobs:
         run: mvn -f tests/pom.xml verify -P integration-tests
         env:
           DIRIGIBLE_DATASOURCE_DEFAULT_DRIVER: org.postgresql.Driver
-          DIRIGIBLE_DATASOURCE_DEFAULT_URL: jdbc:postgresql://localhost:5432/$POSTGRESQL_DB
-          DIRIGIBLE_DATASOURCE_DEFAULT_USERNAME: $POSTGRESQL_USER
-          DIRIGIBLE_DATASOURCE_DEFAULT_PASSWORD: $POSTGRESQL_PASS
+          DIRIGIBLE_DATASOURCE_DEFAULT_URL: jdbc:postgresql://localhost:5432/${{ env.POSTGRES_DB }}
+          DIRIGIBLE_DATASOURCE_DEFAULT_USERNAME: ${{ env.POSTGRES_USER }}
+          DIRIGIBLE_DATASOURCE_DEFAULT_PASSWORD: ${{ env.POSTGRES_PASS }}
       - name: Upload selenide screenshots
         uses: actions/upload-artifact@v4.3.1
         if: always()
