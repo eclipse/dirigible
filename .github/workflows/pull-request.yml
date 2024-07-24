@@ -61,16 +61,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@v1
-        id: setup-chrome
-        with:
-          chrome-version: stable
-          install-chromedriver: true
-
-      - run: |
-          ${{ steps.setup-chrome.outputs.chrome-path }} --version
-
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
