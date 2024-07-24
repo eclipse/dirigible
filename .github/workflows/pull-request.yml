@@ -110,11 +110,8 @@ jobs:
 #          path: tests/tests-integrations/build/reports/tests
 
   integration-tests-postgresql:
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: macos-13
     continue-on-error: true
-    strategy:
-      matrix:
-        os: [macos]
 
     env:
       DIRIGIBLE_DATASOURCE_DEFAULT_DRIVER: org.postgresql.Driver
