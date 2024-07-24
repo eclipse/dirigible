@@ -86,7 +86,7 @@ jobs:
       - name: Maven Build
         run: mvn -T 1C clean install -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
       - name: Integration tests
-        run: mvn -f tests/pom.xml verify -P integration-tests -D selenide.headless=true -Dit.test=MultitenancyIT
+        run: mvn -f tests/pom.xml verify -P integration-tests -D selenide.headless=true -Dit.test=CsvimIT,HomepageRedirectIT,MultitenancyIT
 
       - name: Generate a random artifact name
         if: always()
@@ -146,7 +146,7 @@ jobs:
       - name: Maven Build
         run: mvn -T 1C clean install -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
       - name: Integration tests
-        run: mvn -f tests/pom.xml verify -P integration-tests -D selenide.headless=true -Dit.test=MultitenancyIT
+        run: mvn -f tests/pom.xml verify -P integration-tests -D selenide.headless=true -Dit.test=CsvimIT,HomepageRedirectIT,MultitenancyIT
         env:
           DIRIGIBLE_DATASOURCE_DEFAULT_DRIVER: org.postgresql.Driver
           DIRIGIBLE_DATASOURCE_DEFAULT_URL: jdbc:postgresql://localhost:5432/${{ env.POSTGRES_DB }}
