@@ -59,11 +59,7 @@ jobs:
 #        run: mvn -T 1C clean install -D maven.javadoc.skip=false -U
 
 #  integration-tests-h2:
-#    runs-on: ${{ matrix.os }}-latest
-#    continue-on-error: true
-#    strategy:
-#      matrix:
-#        os: [macos]
+#    runs-on: macos-13
 #    steps:
 #      - name: Setup Chrome
 #        uses: browser-actions/setup-chrome@v1.5.0
@@ -111,13 +107,15 @@ jobs:
 
   integration-tests-postgresql:
     runs-on: macos-13
-    continue-on-error: true
 
     env:
+      POSTGRESQL_DB: testdb
+      POSTGRESQL_USER: testuser
+      POSTGRESQL_PASS: testpass
       DIRIGIBLE_DATASOURCE_DEFAULT_DRIVER: org.postgresql.Driver
-      DIRIGIBLE_DATASOURCE_DEFAULT_URL: jdbc:postgresql://localhost:5432/testdb
-      DIRIGIBLE_DATASOURCE_DEFAULT_USERNAME: testuser
-      DIRIGIBLE_DATASOURCE_DEFAULT_PASSWORD: testpass
+      DIRIGIBLE_DATASOURCE_DEFAULT_URL: jdbc:postgresql://localhost:5432/${{ env.POSTGRESQL_DB }}
+      DIRIGIBLE_DATASOURCE_DEFAULT_USERNAME: ${{ env.POSTGRESQL_USER }}
+      DIRIGIBLE_DATASOURCE_DEFAULT_PASSWORD: ${{ env.POSTGRESQL_PASS }}
 
     steps:
       - name: Setup Docker on macOS
@@ -126,9 +124,9 @@ jobs:
       - name: Start PostgreSQL Service
         run: |
           docker run -d --name postgres \
-          -e POSTGRES_DB=testdb \
-          -e POSTGRES_USER=testuser \
-          -e POSTGRES_PASSWORD=testpass \
+          -e POSTGRES_DB=${{ env.POSTGRESQL_DB }} \
+          -e POSTGRES_USER= ${{ env.POSTGRESQL_USER }} \
+          -e POSTGRES_PASSWORD=${{ env.POSTGRESQL_PASS }} \
           -p 5432:5432 \
           postgres:16
 
