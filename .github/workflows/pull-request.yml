@@ -63,6 +63,7 @@ jobs:
     steps:
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
+        id: setup-chrome
         with:
           chrome-version: stable
           install-chromedriver: true
