@@ -81,10 +81,15 @@ class DirigibleCleaner {
 
         for (int idx = 0; idx < 3; idx++) { // execute it a few times due to constraint violations
             tables.forEach(t -> {
-                try (Connection connection = dataSource.getConnection();
-                        PreparedStatement prepareStatement = connection.prepareStatement("DELETE FROM " + t)) {
-                    int rowsAffected = prepareStatement.executeUpdate();
-                    LOGGER.info("Deleted [{}] from table [{}]", rowsAffected, t);
+                try (Connection connection = dataSource.getConnection()) {
+                    String sql = SqlDialectFactory.getDialect(connection)
+                                                  .delete()
+                                                  .from(t)
+                                                  .build();
+                    try (PreparedStatement prepareStatement = connection.prepareStatement(sql)) {
+                        int rowsAffected = prepareStatement.executeUpdate();
+                        LOGGER.info("Deleted [{}] from table [{}]", rowsAffected, t);
+                    }
                 } catch (SQLException ex) {
                     LOGGER.warn("Failed to delete data from table [{}] in data source [{}]", t, dataSource, ex);
                 }
@@ -95,8 +100,8 @@ class DirigibleCleaner {
     private List<String> getAllTables(DataSource dataSource) {
         List<String> tables = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
-                PreparedStatement prepareStatement =
-                        connection.prepareStatement("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='PUBLIC'")) {
+                PreparedStatement prepareStatement = connection.prepareStatement(
+                        "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='PUBLIC' OR TABLE_SCHEMA='public'")) {
             ResultSet resultSet = prepareStatement.executeQuery();
             while (resultSet.next()) {
                 tables.add(resultSet.getString(1));
