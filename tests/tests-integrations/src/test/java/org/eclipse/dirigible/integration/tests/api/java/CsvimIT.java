@@ -26,7 +26,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -89,7 +92,7 @@ class CsvimIT extends IntegrationTest {
         projectUtil.copyFolderContentToProject(TEST_FOLDER_CONTENT, PROJECT_NAME, Map.of("<project_name>", PROJECT_NAME));
 
         verifyDataInTable("TEST_TABLE_READERS", CSV_READERS);
-        verifyDataInTable(UNDEFINIED_TABLE_NAME, Collections.emptyList());
+        assertThat(isTableExists(UNDEFINIED_TABLE_NAME)).isFalse();
         verifyDataInTable("TEST_TABLE_READERS3", CSV_READERS);
 
         createUndefiniedTable();
@@ -132,20 +135,23 @@ class CsvimIT extends IntegrationTest {
                        assertThat(readers).containsExactlyInAnyOrderElementsOf(expectedReaders);
                        return true;
                    } catch (AssertionError | RuntimeException ex) {
-                       LOGGER.warn("Failed to get all data from table " + tableName, ex);
+                       LOGGER.warn("Failed assert table data in [{}]. Expected data [{}] ", tableName, expectedReaders, ex);
                        return false;
                    }
                });
     }
 
+    private boolean isTableExists(String tableName) throws SQLException {
+        DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
+        try (Connection connection = defaultDataSource.getConnection()) {
+            return SqlFactory.getNative(connection)
+                             .existsTable(connection, tableName);
+        }
+    }
+
     private List<Reader> getAllData(String tableName) {
         DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
         try (Connection connection = defaultDataSource.getConnection()) {
-            if (!SqlFactory.getNative(connection)
-                           .existsTable(connection, tableName)) {
-                return Collections.emptyList();
-            }
-
             String sql = SqlDialectFactory.getDialect(connection)
                                           .select()
                                           .from(tableName)
