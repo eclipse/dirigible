@@ -24,6 +24,7 @@ public class DropSchemaBuilder extends AbstractDropSqlBuilder {
 
     /** The name. */
     private final String name;
+    private boolean cascade = false;
 
     /**
      * Instantiates a new creates the schema builder.
@@ -52,6 +53,11 @@ public class DropSchemaBuilder extends AbstractDropSqlBuilder {
         // SCHEMA
         generateSchema(sql);
 
+        if (cascade) {
+            sql.append(SPACE)
+               .append(KEYWORD_DATABASE_DROP_CASCADE);
+        }
+
         String generated = sql.toString();
 
         if (logger.isTraceEnabled()) {
@@ -71,9 +77,7 @@ public class DropSchemaBuilder extends AbstractDropSqlBuilder {
         sql.append(SPACE)
            .append(KEYWORD_SCHEMA)
            .append(SPACE)
-           .append(schemaName)
-           .append(SPACE)
-           .append(KEYWORD_DATABASE_DROP_CASCADE);
+           .append(schemaName);
     }
 
     /**
@@ -83,5 +87,10 @@ public class DropSchemaBuilder extends AbstractDropSqlBuilder {
      */
     public String getName() {
         return name;
+    }
+
+    public DropSchemaBuilder cascade(boolean cascade) {
+        this.cascade = cascade;
+        return this;
     }
 }

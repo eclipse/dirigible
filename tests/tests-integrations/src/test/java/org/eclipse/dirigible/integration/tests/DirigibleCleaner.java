@@ -63,8 +63,7 @@ class DirigibleCleaner {
     }
 
     /**
-     * Execute this before H2 folder deletion because it is in memory DB. Otherwise, will remain data in
-     * memory.
+     * Execute this before H2 folder deletion because it is in memory DB. Otherwise, will remain data in memory.
      */
     private void deleteDirigibleDBData() {
         DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
@@ -201,6 +200,7 @@ class DirigibleCleaner {
             ISqlDialect dialect = SqlDialectFactory.getDialect(connection);
             String sql = dialect.drop()
                                 .schema(schema)
+                                .cascade(true)
                                 .generate();
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.executeUpdate();

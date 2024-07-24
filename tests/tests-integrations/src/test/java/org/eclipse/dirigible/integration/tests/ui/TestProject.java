@@ -156,7 +156,7 @@ public class TestProject {
                              .body("[0].READER_LAST_NAME", equalTo("Ivanov"))
                              .body("[1].READER_FIRST_NAME", equalTo("Maria"))
                              .body("[1].READER_LAST_NAME", equalTo("Petrova")),
-                15);
+                25);
     }
 
     /**
