@@ -12,6 +12,7 @@ package org.eclipse.dirigible.integration.tests.api.java;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
+import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
 import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.eclipse.dirigible.tests.util.ProjectUtil;
@@ -79,8 +80,8 @@ class CsvimIT extends IntegrationTest {
     }
 
     /**
-     * Initially the table READERS2 is not defined. However, the other two tables must be imported. Once
-     * the table is created, csvim retry should be able to import data in it as well
+     * Initially the table READERS2 is not defined. However, the other two tables must be imported. Once the table is created, csvim retry
+     * should be able to import data in it as well
      */
     @Test
     void testImportData() throws SQLException {
@@ -106,8 +107,8 @@ class CsvimIT extends IntegrationTest {
             String sql = dialect.create()
                                 .table(UNDEFINIED_TABLE_NAME)
                                 .column("READER_ID", DataType.INTEGER, true)
-                                .column("READER_FIRST_NAME", DataType.NVARCHAR)
-                                .column("READER_LAST_NAME", DataType.NVARCHAR)
+                                .column("READER_FIRST_NAME", DataType.VARCHAR)
+                                .column("READER_LAST_NAME", DataType.VARCHAR)
                                 .build();
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 LOGGER.info("Will create table using " + sql);
@@ -140,6 +141,11 @@ class CsvimIT extends IntegrationTest {
     private List<Reader> getAllData(String tableName) {
         DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
         try (Connection connection = defaultDataSource.getConnection()) {
+            if (!SqlFactory.getNative(connection)
+                           .existsTable(connection, tableName)) {
+                return Collections.emptyList();
+            }
+
             String sql = SqlDialectFactory.getDialect(connection)
                                           .select()
                                           .from(tableName)
@@ -157,13 +163,6 @@ class CsvimIT extends IntegrationTest {
                 return results;
             }
         } catch (SQLException ex) {
-            String message = null == ex.getMessage() ? ""
-                    : ex.getMessage()
-                        .toLowerCase();
-            if (message.contains("not found")) {
-                // assuming table not created yet
-                return Collections.emptyList();
-            }
             throw new IllegalStateException("Failed to get all data from " + tableName, ex);
         }
     }
