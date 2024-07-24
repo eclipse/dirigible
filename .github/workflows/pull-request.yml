@@ -59,18 +59,8 @@ jobs:
 #        run: mvn -T 1C clean install -D maven.javadoc.skip=false -U
 
 #  integration-tests-h2:
-#    runs-on: macos-13
+#    runs-on: ubuntu-latest
 #    steps:
-#      - name: Setup Chrome
-#        uses: browser-actions/setup-chrome@v1.5.0
-#        with:
-#          chrome-version: stable
-#      - if: runner.os == 'Linux'
-#        run: chrome --version
-#      - if: runner.os == 'macOS'
-#        run: '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version'
-#      - if: runner.os == 'Windows'
-#        run: (Get-Item (Get-Command chrome).Source).VersionInfo.ProductVersion
 #      - uses: actions/checkout@v3
 #        with:
 #          fetch-depth: 0
@@ -106,40 +96,29 @@ jobs:
 #          path: tests/tests-integrations/build/reports/tests
 
   integration-tests-postgresql:
-    runs-on: macos-13
+    runs-on: ubuntu-latest
 
     env:
       POSTGRESQL_DB: testdb
       POSTGRESQL_USER: testuser
       POSTGRESQL_PASS: testpass
-      DIRIGIBLE_DATASOURCE_DEFAULT_DRIVER: org.postgresql.Driver
-      DIRIGIBLE_DATASOURCE_DEFAULT_URL: jdbc:postgresql://localhost:5432/$POSTGRESQL_DB
-      DIRIGIBLE_DATASOURCE_DEFAULT_USERNAME: $POSTGRESQL_USER
-      DIRIGIBLE_DATASOURCE_DEFAULT_PASSWORD: $POSTGRESQL_PASS
+
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: $POSTGRESQL_DB
+          POSTGRES_USER: $POSTGRESQL_USER
+          POSTGRES_PASSWORD: $POSTGRESQL_PASS
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
-      - name: Setup Docker on macOS
-        uses: douglascamata/setup-docker-macos-action@v1-alpha
-
-      - name: Start PostgreSQL Service
-        run: |
-          docker run -d --name postgres \
-          -e POSTGRES_DB=${{ env.POSTGRESQL_DB }} \
-          -e POSTGRES_USER= ${{ env.POSTGRESQL_USER }} \
-          -e POSTGRES_PASSWORD=${{ env.POSTGRESQL_PASS }} \
-          -p 5432:5432 \
-          postgres:16
-
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@v1.5.0
-        with:
-          chrome-version: stable
-      - if: runner.os == 'Linux'
-        run: chrome --version
-      - if: runner.os == 'macOS'
-        run: '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version'
-      - if: runner.os == 'Windows'
-        run: (Get-Item (Get-Command chrome).Source).VersionInfo.ProductVersion
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -166,6 +145,11 @@ jobs:
         run: mvn -T 1C clean install -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
       - name: Integration tests
         run: mvn -f tests/pom.xml verify -P integration-tests
+        env:
+          DIRIGIBLE_DATASOURCE_DEFAULT_DRIVER: org.postgresql.Driver
+          DIRIGIBLE_DATASOURCE_DEFAULT_URL: jdbc:postgresql://localhost:5432/$POSTGRESQL_DB
+          DIRIGIBLE_DATASOURCE_DEFAULT_USERNAME: $POSTGRESQL_USER
+          DIRIGIBLE_DATASOURCE_DEFAULT_PASSWORD: $POSTGRESQL_PASS
       - name: Upload selenide screenshots
         uses: actions/upload-artifact@v4.3.1
         if: always()
