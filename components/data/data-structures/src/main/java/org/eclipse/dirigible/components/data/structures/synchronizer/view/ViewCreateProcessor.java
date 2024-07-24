@@ -42,9 +42,8 @@ public class ViewCreateProcessor {
         if (caseSensitive) {
             viewName = "\"" + viewName + "\"";
         }
-        if (logger.isInfoEnabled()) {
-            logger.info("Processing Create View: " + viewName);
-        }
+        logger.info("Processing Create View: " + viewName);
+
         if (!SqlFactory.getNative(connection)
                        .existsTable(connection, viewName)) {
             String sql = SqlFactory.getNative(connection)

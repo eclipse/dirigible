@@ -54,28 +54,8 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
         if (this.values != null) {
             throw new IllegalStateException("Create VIEW can use either AS SELECT or AS VALUES, but not both.");
         }
-        setSelect(this.getSelectColumnsEscapingRemoved(select));
+        setSelect(select);
         return this;
-    }
-
-    /**
-     * Gets the select columns escaping removed.
-     *
-     * @param select the select
-     * @return the select columns escaping removed
-     */
-    private String getSelectColumnsEscapingRemoved(String select) {
-        StringBuilder builder = new StringBuilder(select);
-        int midSqlStartIndex = builder.indexOf("FROM") - 1;
-        boolean isONClauseMissing = builder.indexOf("ON") - 1 < 0;
-        int midSqlEndIndex = (isONClauseMissing) ? midSqlStartIndex : (builder.indexOf("ON") - 1);
-        String preFROMsql = builder.substring(0, midSqlStartIndex)
-                                   .replaceAll("\"", "")
-                + " ";
-        String midSql = (isONClauseMissing) ? "" : (builder.substring(midSqlStartIndex, midSqlEndIndex) + " ");
-        String postONsql = builder.substring(midSqlEndIndex + 1)
-                                  .replaceAll("\"", "");
-        return preFROMsql + midSql + postONsql;
     }
 
     /**
