@@ -15,6 +15,8 @@ import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.tests.DirigibleTestTenant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -27,6 +29,8 @@ import static org.awaitility.Awaitility.await;
 @Lazy
 @Component
 public class RestAssuredExecutor {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestAssuredExecutor.class);
 
     static {
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
@@ -78,6 +82,7 @@ public class RestAssuredExecutor {
                        this.execute(callable, tenant.getHost(), tenant.getUsername(), tenant.getPassword());
                        return true;
                    } catch (AssertionError err) {
+                       LOGGER.warn("Assertion error. Will try again until timeout is reached.", err);
                        return false;
                    }
                });

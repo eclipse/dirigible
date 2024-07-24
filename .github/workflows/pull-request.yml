@@ -87,12 +87,17 @@ jobs:
         run: mvn -T 1C clean install -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
       - name: Integration tests
         run: mvn -f tests/pom.xml verify -P integration-tests -D selenide.headless=true
+
+      - name: Generate a random artifact name
+        if: always()
+        id: generate_name
+        run: echo "ARTIFACT_NAME=selenide-screenshots-$(date +%s).zip" >> $GITHUB_ENV
       - name: Upload selenide screenshots
         uses: actions/upload-artifact@v4.3.1
         if: always()
         with:
           retention-days: 1
-          name: selenide-screenshots
+          name: ${{ env.ARTIFACT_NAME }}
           path: tests/tests-integrations/build/reports/tests
 
   integration-tests-postgresql:
@@ -148,10 +153,15 @@ jobs:
           DIRIGIBLE_DATASOURCE_DEFAULT_USERNAME: ${{ env.POSTGRES_USER }}
           DIRIGIBLE_DATASOURCE_DEFAULT_PASSWORD: ${{ env.POSTGRES_PASS }}
           DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE: true
+
+      - name: Generate a random artifact name
+        if: always()
+        id: generate_name
+        run: echo "ARTIFACT_NAME=selenide-screenshots-$(date +%s).zip" >> $GITHUB_ENV
       - name: Upload selenide screenshots
         uses: actions/upload-artifact@v4.3.1
         if: always()
         with:
           retention-days: 1
-          name: selenide-screenshots
+          name: ${{ env.ARTIFACT_NAME }}
           path: tests/tests-integrations/build/reports/tests
