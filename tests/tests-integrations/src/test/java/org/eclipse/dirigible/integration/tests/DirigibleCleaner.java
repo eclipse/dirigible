@@ -68,32 +68,37 @@ class DirigibleCleaner {
      */
     private void deleteDirigibleDBData() {
         DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
-        deleteAllDataInSchema(defaultDataSource);
+        dropAllTablesInSchema(defaultDataSource);
 
         DataSource systemDataSource = dataSourcesManager.getSystemDataSource();
-        deleteAllDataInSchema(systemDataSource);
+        dropAllTablesInSchema(systemDataSource);
 
         deleteSchemas(defaultDataSource);
     }
 
-    private void deleteAllDataInSchema(DataSource dataSource) {
+    private void dropAllTablesInSchema(DataSource dataSource) {
         List<String> tables = getAllTables(dataSource);
+        LOGGER.info("Will drop [{}] tables from data source [{}]. Tables: {}", tables.size(), dataSource, tables);
 
         for (int idx = 0; idx < 3; idx++) { // execute it a few times due to constraint violations
-            tables.forEach(t -> {
+            Iterator<String> iterator = tables.iterator();
+            while (iterator.hasNext()) {
+                String tableName = iterator.next();
                 try (Connection connection = dataSource.getConnection()) {
                     String sql = SqlDialectFactory.getDialect(connection)
-                                                  .delete()
-                                                  .from(t)
+                                                  .drop()
+                                                  .table(tableName)
+                                                  .cascade(true)
                                                   .build();
                     try (PreparedStatement prepareStatement = connection.prepareStatement(sql)) {
                         int rowsAffected = prepareStatement.executeUpdate();
-                        LOGGER.info("Deleted [{}] from table [{}]", rowsAffected, t);
+                        LOGGER.info("Dropped table [{}]", tableName);
+                        iterator.remove();
                     }
                 } catch (SQLException ex) {
-                    LOGGER.warn("Failed to delete data from table [{}] in data source [{}]", t, dataSource, ex);
+                    LOGGER.warn("Failed to drop table [{}] in data source [{}]", tableName, dataSource, ex);
                 }
-            });
+            }
         }
     }
 
