@@ -90,7 +90,9 @@ public class MarkdownSynchronizer extends BaseSynchronizer<Markdown, Long> {
         return file.toString()
                    .endsWith(FILE_EXTENSION_MARKDOWN)
                 && file.toString()
-                       .indexOf("webjars") == -1;
+                       .indexOf("webjars") == -1
+                && file.toString()
+                       .indexOf("node_modules") == -1;
     }
 
     /**

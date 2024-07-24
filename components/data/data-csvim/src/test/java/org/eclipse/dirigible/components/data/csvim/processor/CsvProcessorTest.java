@@ -9,12 +9,6 @@
  */
 package org.eclipse.dirigible.components.data.csvim.processor;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-import java.io.ByteArrayInputStream;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
 import org.eclipse.dirigible.components.data.sources.config.DefaultDataSourceName;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
@@ -25,6 +19,13 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * The Class CsvProcessorTest.
@@ -48,6 +49,14 @@ public class CsvProcessorTest {
     @Autowired
     private CsvimProcessor csvimProcessor;
 
+
+    /**
+     * The Class TestConfiguration.
+     */
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
+
     /**
      * Import strict.
      *
@@ -63,7 +72,7 @@ public class CsvProcessorTest {
                 csvimProcessor.setStrictMode(true);
                 byte[] content = "A1,A2,A3\n1,a2_1,a3_1\n2,a2_2,a3_2".getBytes();
                 CsvFile csvFile = new CsvFile(null, "CSV_A", null, "import", true, true, ",", "\"", null, false, null);
-                csvimProcessor.process(csvFile, new ByteArrayInputStream(content), defaultDataSourceName);
+                csvimProcessor.process(csvFile, content, defaultDataSourceName);
                 ResultSet rs = connection.createStatement()
                                          .executeQuery("SELECT COUNT(*) FROM CSV_A");
                 if (rs.next()) {
@@ -98,7 +107,7 @@ public class CsvProcessorTest {
                 byte[] content = "A1,A2\n1,a2_1\n2,a2_2".getBytes();
                 CsvFile csvFile = new CsvFile(null, "CSV_A", null, "import", true, true, ",", "\"", null, false, null);
                 try {
-                    csvimProcessor.process(csvFile, new ByteArrayInputStream(content), defaultDataSourceName);
+                    csvimProcessor.process(csvFile, content, defaultDataSourceName);
                 } catch (Exception e) {
                     //
                 }
@@ -134,7 +143,7 @@ public class CsvProcessorTest {
                 byte[] content = "A1,A2\n1,a2_1\n2,a2_2".getBytes();
                 CsvFile csvFile = new CsvFile(null, "CSV_A", null, "import", true, true, ",", "\"", null, false, null);
                 try {
-                    csvimProcessor.process(csvFile, new ByteArrayInputStream(content), defaultDataSourceName);
+                    csvimProcessor.process(csvFile, content, defaultDataSourceName);
                 } catch (Exception e) {
                     //
                 }
@@ -172,7 +181,7 @@ public class CsvProcessorTest {
                 byte[] content = "A1,A3,A2,A4\n1,a3_1,a2_1,a4_1\n2,a3_2,a2_3,a4_1".getBytes();
                 CsvFile csvFile = new CsvFile(null, "CSV_A", null, "import", true, true, ",", "\"", null, false, null);
                 try {
-                    csvimProcessor.process(csvFile, new ByteArrayInputStream(content), defaultDataSourceName);
+                    csvimProcessor.process(csvFile, content, defaultDataSourceName);
                 } catch (Exception e) {
                     //
                 }
@@ -199,12 +208,5 @@ public class CsvProcessorTest {
             }
 
         }
-    }
-
-    /**
-     * The Class TestConfiguration.
-     */
-    @SpringBootApplication
-    static class TestConfiguration {
     }
 }

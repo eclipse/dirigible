@@ -19,7 +19,10 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 import static io.restassured.specification.ProxySpecification.host;
+import static org.awaitility.Awaitility.await;
 
 @Lazy
 @Component
@@ -65,6 +68,19 @@ public class RestAssuredExecutor {
             RestAssured.port = configuredPort;
             RestAssured.authentication = configuredAuthentication;
         }
+    }
+
+    public void execute(DirigibleTestTenant tenant, CallableNoResultAndNoException callable, long timeoutSeconds) {
+        await().atMost(timeoutSeconds, TimeUnit.SECONDS)
+               .pollInterval(500, TimeUnit.MILLISECONDS)
+               .until(() -> {
+                   try {
+                       this.execute(callable, tenant.getHost(), tenant.getUsername(), tenant.getPassword());
+                       return true;
+                   } catch (AssertionError err) {
+                       return false;
+                   }
+               });
     }
 
     public void execute(CallableNoResultAndNoException callable, String host) {
