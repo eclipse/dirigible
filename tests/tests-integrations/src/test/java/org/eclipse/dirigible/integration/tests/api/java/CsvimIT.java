@@ -139,18 +139,23 @@ class CsvimIT extends IntegrationTest {
 
     private List<Reader> getAllData(String tableName) {
         DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
-        try (Connection connection = defaultDataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + tableName)) {
-            ResultSet resultSet = statement.executeQuery();
+        try (Connection connection = defaultDataSource.getConnection()) {
+            String sql = SqlDialectFactory.getDialect(connection)
+                                          .select()
+                                          .from(tableName)
+                                          .build();
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                ResultSet resultSet = statement.executeQuery();
 
-            List<Reader> results = new ArrayList<>();
-            while (resultSet.next()) {
-                int id = resultSet.getInt("READER_ID");
-                String firstName = resultSet.getString("READER_FIRST_NAME");
-                String lastName = resultSet.getString("READER_LAST_NAME");
-                results.add(new Reader(id, firstName, lastName));
+                List<Reader> results = new ArrayList<>();
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("READER_ID");
+                    String firstName = resultSet.getString("READER_FIRST_NAME");
+                    String lastName = resultSet.getString("READER_LAST_NAME");
+                    results.add(new Reader(id, firstName, lastName));
+                }
+                return results;
             }
-            return results;
         } catch (SQLException ex) {
             String message = null == ex.getMessage() ? ""
                     : ex.getMessage()
