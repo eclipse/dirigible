@@ -75,16 +75,7 @@ jobs:
       - if: runner.os == 'Windows'
         run: (Get-Item (Get-Command chrome).Source).VersionInfo.ProductVersion
 
-      - name: Install ChromeDriver
-        run: |
-          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
-          echo "Installing ChromeDriver for Chrome version $CHROME_VERSION"
-          wget -N https://chromedriver.storage.googleapis.com/$CHROME_VERSION/chromedriver_linux64.zip
-          unzip chromedriver_linux64.zip -d /usr/local/bin/
-          chromedriver --version
-
-      - name: Set ChromeDriver path
-        run: echo 'export PATH=$PATH:/usr/local/bin' >> $GITHUB_ENV
+      - uses: nanasess/setup-chromedriver@v2
 
       - uses: actions/checkout@v3
         with:
