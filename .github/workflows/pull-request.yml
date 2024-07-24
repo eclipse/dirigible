@@ -10,90 +10,90 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-#  code-style:
-#    runs-on: ${{ matrix.os }}-latest
-#    strategy:
-#      matrix:
-#        os: [ubuntu]
-#    steps:
-#      - uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 0
-#      - name: Set up JDK Corretto 21
-#        uses: actions/setup-java@v4
-#        with:
-#          distribution: 'corretto'
-#          java-version: 21
-#      - name: Validate Java code formatting
-#        run: mvn -T 1C formatter:validate
-#
-#  tests:
-#    runs-on: ${{ matrix.os }}-latest
-#    strategy:
-#      matrix:
-#        os: [ubuntu, windows]
-#    steps:
-#      - uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 0
-#      - name: Cache local Maven repository
-#        uses: actions/cache@v4
-#        with:
-#          path: ~/.m2/repository
-#          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-#          restore-keys: ${{ runner.os }}-maven-
-#      - name: Set up JDK Corretto 21
-#        uses: actions/setup-java@v4
-#        with:
-#          distribution: 'corretto'
-#          java-version: 21
-#      - name: Install NodeJS
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: 18
-#      - name: Install esbuild
-#        run: npm i -g esbuild
-#      - name: Install TypeScript compiler
-#        run: npm i -g typescript
-#      - name: Maven Build
-#        run: mvn -T 1C clean install -D maven.javadoc.skip=false -U
+  code-style:
+    runs-on: ${{ matrix.os }}-latest
+    strategy:
+      matrix:
+        os: [ubuntu]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up JDK Corretto 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: 21
+      - name: Validate Java code formatting
+        run: mvn -T 1C formatter:validate
 
-#  integration-tests-h2:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#        with:
-#          fetch-depth: 0
-#      - name: Cache local Maven repository
-#        uses: actions/cache@v4
-#        with:
-#          path: ~/.m2/repository
-#          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-#          restore-keys: ${{ runner.os }}-maven-
-#      - name: Set up JDK Corretto 21
-#        uses: actions/setup-java@v4
-#        with:
-#          distribution: 'corretto'
-#          java-version: 21
-#      - name: Install NodeJS
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: 18
-#      - name: Install esbuild
-#        run: npm i -g esbuild
-#      - name: Install TypeScript compiler
-#        run: npm i -g typescript
-#      - name: Maven Build
-#        run: mvn -T 1C clean install -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
-#      - name: Integration tests
-#        run: mvn -f tests/pom.xml verify -P integration-tests
-#      - name: Upload selenide screenshots
-#        uses: actions/upload-artifact@v4.3.1
-#        if: always()
-#        with:
-#          retention-days: 1
-#          name: selenide-screenshots
-#          path: tests/tests-integrations/build/reports/tests
+  tests:
+    runs-on: ${{ matrix.os }}-latest
+    strategy:
+      matrix:
+        os: [ubuntu, windows]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Cache local Maven repository
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+      - name: Set up JDK Corretto 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: 21
+      - name: Install NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install esbuild
+        run: npm i -g esbuild
+      - name: Install TypeScript compiler
+        run: npm i -g typescript
+      - name: Maven Build
+        run: mvn -T 1C clean install -D maven.javadoc.skip=false -U
+
+  integration-tests-h2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Cache local Maven repository
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+      - name: Set up JDK Corretto 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: 21
+      - name: Install NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install esbuild
+        run: npm i -g esbuild
+      - name: Install TypeScript compiler
+        run: npm i -g typescript
+      - name: Maven Build
+        run: mvn -T 1C clean install -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
+      - name: Integration tests
+        run: mvn -f tests/pom.xml verify -P integration-tests -D selenide.headless=true
+      - name: Upload selenide screenshots
+        uses: actions/upload-artifact@v4.3.1
+        if: always()
+        with:
+          retention-days: 1
+          name: selenide-screenshots
+          path: tests/tests-integrations/build/reports/tests
 
   integration-tests-postgresql:
     runs-on: ubuntu-latest
@@ -144,7 +144,7 @@ jobs:
       - name: Maven Build
         run: mvn -T 1C clean install -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
       - name: Integration tests
-        run: mvn -f tests/pom.xml verify -P integration-tests
+        run: mvn -f tests/pom.xml verify -P integration-tests -D selenide.headless=true
         env:
           DIRIGIBLE_DATASOURCE_DEFAULT_DRIVER: org.postgresql.Driver
           DIRIGIBLE_DATASOURCE_DEFAULT_URL: jdbc:postgresql://localhost:5432/${{ env.POSTGRES_DB }}
