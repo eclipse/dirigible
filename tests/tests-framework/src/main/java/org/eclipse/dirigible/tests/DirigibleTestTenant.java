@@ -9,6 +9,8 @@
  */
 package org.eclipse.dirigible.tests;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.util.UUID;
 
 public class DirigibleTestTenant {
@@ -20,6 +22,11 @@ public class DirigibleTestTenant {
     private final String subdomain;
     private final String username;
     private final String password;
+
+    public DirigibleTestTenant(String name) {
+        this(name, RandomStringUtils.randomAlphabetic(10)
+                                    .toLowerCase());
+    }
 
     public DirigibleTestTenant(String name, String subdomain) {
         this(false, //
