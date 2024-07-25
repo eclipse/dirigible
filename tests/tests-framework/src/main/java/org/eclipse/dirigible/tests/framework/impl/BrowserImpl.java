@@ -44,7 +44,8 @@ class BrowserImpl implements Browser {
     static {
         Configuration.timeout = SELENIDE_TIMEOUT_MILLIS;
         Configuration.browser = BROWSER;
-        Configuration.browserCapabilities = new ChromeOptions().addArguments("--remote-allow-origins=*");
+        Configuration.browserCapabilities =
+                new ChromeOptions().addArguments("--remote-allow-origins=*  --disable-web-security --allow-insecure-localhost");
     }
 
     private final String protocol;
