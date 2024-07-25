@@ -83,7 +83,7 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
         tenants.forEach(t -> {
             List<User> allUsers = userService.getAll();
             List<org.eclipse.dirigible.components.tenants.domain.Tenant> allTenants = tenantService.getAll();
-            LOGGER.info("All users [{}]\n tenants [{}]", allUsers, allTenants);
+            LOGGER.info("All users [{}][{}]\n tenants [{}][{}]", allUsers.size(), allUsers, allTenants.size(), allTenants);
             testProject.verify(t);
         });
     }
