@@ -75,10 +75,33 @@ class DirigibleCleaner {
         dropAllSequencesInSchema(defaultDataSource);
 
         DataSource systemDataSource = dataSourcesManager.getSystemDataSource();
-        dropAllTablesInSchema(systemDataSource);
-        dropAllSequencesInSchema(systemDataSource);
+        deleteAllTablesDataInSchema(systemDataSource);
 
         deleteSchemas(defaultDataSource);
+    }
+
+    private void deleteAllTablesDataInSchema(DataSource dataSource) {
+        Set<String> tables = getAllTables(dataSource);
+
+        for (int idx = 0; idx < 3; idx++) { // execute it a few times due to constraint violations
+            Iterator<String> iterator = tables.iterator();
+            while (iterator.hasNext()) {
+                String table = iterator.next();
+                try (Connection connection = dataSource.getConnection()) {
+                    String sql = SqlDialectFactory.getDialect(connection)
+                                                  .delete()
+                                                  .from(table)
+                                                  .build();
+                    try (PreparedStatement prepareStatement = connection.prepareStatement(sql)) {
+                        int rowsAffected = prepareStatement.executeUpdate();
+                        LOGGER.info("Deleted [{}] from table [{}]", rowsAffected, table);
+                        iterator.remove();
+                    }
+                } catch (SQLException ex) {
+                    LOGGER.warn("Failed to delete data from table [{}] in data source [{}]", table, dataSource, ex);
+                }
+            }
+        }
     }
 
     private void dropAllSequencesInSchema(DataSource dataSource) {
@@ -122,7 +145,7 @@ class DirigibleCleaner {
     }
 
     private void dropAllTablesInSchema(DataSource dataSource) {
-        List<String> tables = getAllTables(dataSource);
+        Set<String> tables = getAllTables(dataSource);
         LOGGER.info("Will drop [{}] tables from data source [{}]. Tables: {}", tables.size(), dataSource, tables);
 
         for (int idx = 0; idx < 3; idx++) { // execute it a few times due to constraint violations
@@ -147,8 +170,8 @@ class DirigibleCleaner {
         }
     }
 
-    private List<String> getAllTables(DataSource dataSource) {
-        List<String> tables = new ArrayList<>();
+    private Set<String> getAllTables(DataSource dataSource) {
+        Set<String> tables = new HashSet<>();
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement prepareStatement = connection.prepareStatement(
                         "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='PUBLIC' OR TABLE_SCHEMA='public'")) {
