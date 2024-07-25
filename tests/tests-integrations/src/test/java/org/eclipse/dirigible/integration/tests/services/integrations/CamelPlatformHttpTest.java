@@ -11,18 +11,24 @@ package org.eclipse.dirigible.integration.tests.services.integrations;
 
 import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.junit.Assert.assertEquals;
+import java.util.concurrent.TimeUnit;
 
+import static org.awaitility.Awaitility.await;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 class CamelPlatformHttpTest extends IntegrationTest {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CamelPlatformHttpTest.class);
 
     @Autowired
     private MockMvc mockMvc;
@@ -31,6 +37,20 @@ class CamelPlatformHttpTest extends IntegrationTest {
     void postToJsTest() throws Exception {
         String requestBody = "initial message";
 
+        await().atMost(25, TimeUnit.SECONDS)
+               .pollInterval(1, TimeUnit.SECONDS)
+               .until(() -> {
+                   try {
+                       verifyCamelEndpoint(requestBody);
+                       return true;
+                   } catch (RuntimeException | AssertionError err) {
+                       LOGGER.warn("Failed to verify camel endpoint. Will try again until the timeout is reached.", err);
+                       return false;
+                   }
+               });
+    }
+
+    private void verifyCamelEndpoint(String requestBody) throws Exception {
         String actualResponseBody = mockMvc.perform(MockMvcRequestBuilders.post("/services/integrations/camelTest")
                                                                           .content(requestBody)
                                                                           .contentType(MediaType.APPLICATION_JSON)
@@ -43,7 +63,6 @@ class CamelPlatformHttpTest extends IntegrationTest {
         String expectedResponseBody = requestBody + " -> calledFromCamel.mjs handled this message";
 
         assertEquals("Unexpected response from camel platform http endpoint", expectedResponseBody, actualResponseBody);
-
     }
 
 }
