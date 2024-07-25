@@ -53,8 +53,8 @@ class MultitenancyIT extends UserInterfaceIntegrationTest {
 
     private List<DirigibleTestTenant> createTenants() {
         DirigibleTestTenant defaultTenant = createDefaultTenant();
-        DirigibleTestTenant tenant1 = new DirigibleTestTenant("test-tenant-1");
-        DirigibleTestTenant tenant2 = new DirigibleTestTenant("test-tenant-2");
+        DirigibleTestTenant tenant1 = new DirigibleTestTenant("test-tenant-1", "t1");
+        DirigibleTestTenant tenant2 = new DirigibleTestTenant("test-tenant-2", "t2");
 
         List<DirigibleTestTenant> tenants = List.of(defaultTenant, tenant1, tenant2);
 
