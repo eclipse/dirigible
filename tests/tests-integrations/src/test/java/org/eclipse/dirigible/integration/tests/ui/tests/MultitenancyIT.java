@@ -20,15 +20,11 @@ import org.eclipse.dirigible.tests.framework.BrowserFactory;
 import org.eclipse.dirigible.tests.framework.HtmlElementType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 class MultitenancyIT extends UserInterfaceIntegrationTest {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MultitenancyIT.class);
 
     @BeforeAll
     public static void setUp() {

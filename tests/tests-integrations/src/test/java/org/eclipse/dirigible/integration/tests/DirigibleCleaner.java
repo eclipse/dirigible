@@ -30,7 +30,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 class DirigibleCleaner {
@@ -82,9 +81,7 @@ class DirigibleCleaner {
     }
 
     private void deleteAllTablesDataInSchema(DataSource dataSource) {
-        Set<String> tables = getAllTables(dataSource).stream()
-                                                     .filter(t -> !t.startsWith("QRTZ_") && !t.startsWith("ACTIVEMQ_"))
-                                                     .collect(Collectors.toSet());
+        Set<String> tables = getAllTables(dataSource);
 
         for (int idx = 0; idx < 4; idx++) { // execute it a few times due to constraint violations
             Iterator<String> iterator = tables.iterator();

@@ -119,15 +119,15 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
      */
     private Optional<Tenant> determineTenantSubdomain(HttpServletRequest request) {
         if (!multitenantModeEnabled) {
-            LOGGER.info("The app is in single tenant mode. Will return the default tenant.");
+            LOGGER.debug("The app is in single tenant mode. Will return the default tenant.");
             return Optional.of(TenantImpl.getDefaultTenant());
         }
         List<Optional<String>> subdomains = HOST_HEADERS.stream()
                                                         .map(hostHeader -> determineTenantSubdomain(request, hostHeader))
                                                         .toList();
         if (areEmpty(subdomains)) {
-            if (LOGGER.isInfoEnabled()) {
-                LOGGER.info("Tenant subdomain cannot be extracted from the current request. Will return the default tenant. Headers: [{}]",
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Tenant subdomain cannot be extracted from the current request. Will return the default tenant. Headers: [{}]",
                         getHeaders(request));
             }
             return Optional.of(TenantImpl.getDefaultTenant());
@@ -136,7 +136,7 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
         for (Optional<String> subdomain : subdomains) {
             Optional<Tenant> tenant = tenantBySubdomain(subdomain);
             if (tenant.isPresent()) {
-                LOGGER.info("Found registered tenant [{}] for subdomain [{}].", tenant.get(), subdomain.get());
+                LOGGER.debug("Found registered tenant [{}] for subdomain [{}].", tenant.get(), subdomain.get());
                 return tenant;
             }
         }
@@ -161,18 +161,18 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
     private Optional<String> determineTenantSubdomain(HttpServletRequest request, String hostHeader) {
         String headerValue = request.getHeader(hostHeader);
         if (null == headerValue) {
-            LOGGER.info("Cannot extract subdomain from header [{}] with null value.", hostHeader);
+            LOGGER.debug("Cannot extract subdomain from header [{}] with null value.", hostHeader);
             return Optional.empty();
         }
         Matcher matcher = TENANT_SUBDOMAIN_PATTERN.matcher(headerValue);
         if (matcher.find()) {
             String tenantSubdomain = matcher.group(1);
-            LOGGER.info("Host [{}] from header [{}] MATCHES tenant subdomain pattern [{}]. Extracted subdomain: [{}]", headerValue,
+            LOGGER.debug("Host [{}] from header [{}] MATCHES tenant subdomain pattern [{}]. Extracted subdomain: [{}]", headerValue,
                     hostHeader, TENANT_SUBDOMAIN_PATTERN.pattern(), tenantSubdomain);
 
             return Optional.of(tenantSubdomain);
         }
-        LOGGER.info("Host [{}] from header [{}] does NOT match tenant subdomain pattern [{}].", headerValue, hostHeader,
+        LOGGER.debug("Host [{}] from header [{}] does NOT match tenant subdomain pattern [{}].", headerValue, hostHeader,
                 TENANT_SUBDOMAIN_PATTERN.pattern());
         return Optional.empty();
     }
@@ -183,7 +183,7 @@ public class TenantContextInitFilter extends OncePerRequestFilter {
         }
         String subdomain = subdomainOpt.get();
         return tenantCache.get(subdomain, k -> {
-            LOGGER.info("Searching for tenant with subdomain [{}] from database", subdomain);
+            LOGGER.debug("Searching for tenant with subdomain [{}] from database", subdomain);
             return tenantService.findBySubdomain(subdomain)
                                 .map(TenantImpl::createFromEntity);
         });

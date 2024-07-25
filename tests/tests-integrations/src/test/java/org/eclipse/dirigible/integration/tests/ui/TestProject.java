@@ -10,7 +10,6 @@
 package org.eclipse.dirigible.integration.tests.ui;
 
 import ch.qos.logback.classic.Level;
-import com.codeborne.selenide.Selenide;
 import io.restassured.http.ContentType;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.commons.config.DirigibleConfig;
@@ -117,9 +116,8 @@ public class TestProject {
     }
 
     public void verify(DirigibleTestTenant tenant) {
-        Selenide.clearBrowserCookies();
+        LOGGER.info("Verifying test project for tenant [{}]...", tenant);
         try {
-            LOGGER.info("Verifying test project for tenant [{}]...", tenant);
             verifyHomePageAccessibleByTenant(tenant);
             verifyView(tenant);
             verifyEdmGeneratedResources(tenant);

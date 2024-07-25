@@ -78,6 +78,10 @@ public enum DirigibleConfig {
         this.defaultValue = defaultValue;
     }
 
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
     /**
      * Gets the from base 64 value.
      *

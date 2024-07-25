@@ -15,11 +15,19 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class DisabledMultitenantModeIT extends TenantDeterminationIT {
+public class DisabledMultitenantModeIT extends TenantDeterminationIT {
+
+    private static String initialConfigValue;
 
     @BeforeAll
     public static void setUp() {
+        initialConfigValue = Configuration.get(DirigibleConfig.MULTI_TENANT_MODE_ENABLED.getKey());
         Configuration.set(DirigibleConfig.MULTI_TENANT_MODE_ENABLED.getKey(), "false");
+    }
+
+    @AfterAll
+    public static void tearDown() {
+        Configuration.set(DirigibleConfig.MULTI_TENANT_MODE_ENABLED.getKey(), null);
     }
 
     @Test
@@ -29,11 +37,6 @@ class DisabledMultitenantModeIT extends TenantDeterminationIT {
         testHealthIsAccessible("host-which-does-not-match-the-default-tenant-regex", null);
         testHealthIsAccessible("unregistered-tenant.localhost", null);
         testHealthIsAccessible("212.39.89.114", "unregistered-tenant.localhost");
-    }
-
-    @AfterAll
-    public static void tearDown() {
-        Configuration.set(DirigibleConfig.MULTI_TENANT_MODE_ENABLED.getKey(), null);
     }
 
 }

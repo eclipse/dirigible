@@ -63,14 +63,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Tenant tenant = tenantContext.getCurrentTenant();
 
-        LOGGER.info("Loading user with username [{}] in tenant [{}]...", username, tenant);
+        LOGGER.debug("Loading user with username [{}] in tenant [{}]...", username, tenant);
         User user = userService.findUserByUsernameAndTenantId(username, tenant.getId())
                                .orElseThrow(() -> new UsernameNotFoundException(
                                        "Username [" + username + "] was not found in tenant [" + tenant + "]."));
 
-        LOGGER.info("Logged in user with username [{}] in tenant [{}]", username, tenant);
+        LOGGER.debug("Logged in user with username [{}] in tenant [{}]", username, tenant);
         Set<String> userRoles = userService.getUserRoleNames(user);
-        LOGGER.info("User [{}] has assigned roles [{}]", user, userRoles);
+        LOGGER.debug("User [{}] has assigned roles [{}]", user, userRoles);
 
         Set<GrantedAuthority> auths = AuthoritiesUtil.toAuthorities(userRoles);
 

@@ -21,9 +21,17 @@ import org.junit.jupiter.api.Test;
  */
 class EnabledMultitenantModeIT extends TenantDeterminationIT {
 
+    private static String initialConfigValue;
+
     @BeforeAll
     public static void setUp() {
+        initialConfigValue = Configuration.get(DirigibleConfig.MULTI_TENANT_MODE_ENABLED.getKey());
         Configuration.set(DirigibleConfig.MULTI_TENANT_MODE_ENABLED.getKey(), "true");
+    }
+
+    @AfterAll
+    public static void tearDown() {
+        Configuration.set(DirigibleConfig.MULTI_TENANT_MODE_ENABLED.getKey(), initialConfigValue);
     }
 
     @Test
@@ -51,11 +59,6 @@ class EnabledMultitenantModeIT extends TenantDeterminationIT {
     void testUnregisteredTenantResolution() {
         testHealthIsNotAccessible("unregistered-tenant.localhost", null);
         testHealthIsNotAccessible("212.39.89.114", "unregistered-tenant.localhost");
-    }
-
-    @AfterAll
-    public static void tearDown() {
-        Configuration.set(DirigibleConfig.MULTI_TENANT_MODE_ENABLED.getKey(), null);
     }
 
 }
