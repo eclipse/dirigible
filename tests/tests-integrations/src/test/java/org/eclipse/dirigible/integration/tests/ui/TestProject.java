@@ -10,6 +10,7 @@
 package org.eclipse.dirigible.integration.tests.ui;
 
 import ch.qos.logback.classic.Level;
+import com.codeborne.selenide.Selenide;
 import io.restassured.http.ContentType;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.commons.config.DirigibleConfig;
@@ -116,15 +117,18 @@ public class TestProject {
     }
 
     public void verify(DirigibleTestTenant tenant) {
-        LOGGER.info("Verifying test project for tenant [{}]...", tenant);
-
-        verifyHomePageAccessibleByTenant(tenant);
-        verifyView(tenant);
-        verifyEdmGeneratedResources(tenant);
-        verifyOData(tenant);
-        verifyDocumentsAPI(tenant);
-
-        LOGGER.info("Test test project for tenant [{}] has been verified successfully!", tenant);
+        Selenide.clearBrowserCookies();
+        try {
+            LOGGER.info("Verifying test project for tenant [{}]...", tenant);
+            verifyHomePageAccessibleByTenant(tenant);
+            verifyView(tenant);
+            verifyEdmGeneratedResources(tenant);
+            verifyOData(tenant);
+            verifyDocumentsAPI(tenant);
+            LOGGER.info("Test project for tenant [{}] has been verified successfully!", tenant);
+        } catch (RuntimeException | Error ex) {
+            throw new AssertionError("Failed to verify test project for tenant " + tenant, ex);
+        }
     }
 
     public void verifyHomePageAccessibleByTenant(DirigibleTestTenant tenant) {

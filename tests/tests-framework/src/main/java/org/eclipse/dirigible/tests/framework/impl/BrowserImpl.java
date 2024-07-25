@@ -70,6 +70,7 @@ class BrowserImpl implements Browser {
     @Override
     public void openPath(String path) {
         String url = createAppUrl(path);
+        LOGGER.info("Opening path [{}] using URL [{}]", path, url);
         Selenide.open(url);
         maximizeBrowser();
     }
