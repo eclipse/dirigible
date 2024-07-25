@@ -1,7 +1,7 @@
 {
     "name": "READERS_VIEW",
     "type": "VIEW",
-    "query": "SELECT READER_FIRST_NAME,READER_LAST_NAME  FROM READERS",
+    "query": "SELECT \"READER_FIRST_NAME\", \"READER_LAST_NAME\" FROM \"READERS\"",
     "dependencies": [
         "table:/dirigible-test-project/tables/reader.table:READERS"
     ]

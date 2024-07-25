@@ -625,7 +625,7 @@ public class SQLSelectBuilderTest {
 
         List<String> selectedColumns = Arrays.asList(selectSql.get(1)
                                                               .trim()
-                                                              .split(", "));;
+                                                              .split(", "));
         assertTrue(selectedColumns.contains("\"T0\".\"ID\" AS \"ID_T0\""));
         assertTrue(selectedColumns.contains("\"T0\".\"NAME\" AS \"NAME_T0\""));
         assertTrue(selectedColumns.contains("? AS CurrentEmployeeId_T0"));
@@ -642,7 +642,7 @@ public class SQLSelectBuilderTest {
         assertTrue(targetDbEntityParameters.contains("placeholder.\"$$CurrentEmployeeName$$\" => ?"));
         String targetDbEntityAlias = targetDbEntity.get(2)
                                                    .trim();
-        assertEquals("AS T0", targetDbEntityAlias);
+        assertEquals("AS \"T0\"", targetDbEntityAlias);
 
         String whereClause = selectSql.get(3);
         assertEquals("\"T0\".\"ID\" = ?", whereClause.trim());
@@ -668,7 +668,7 @@ public class SQLSelectBuilderTest {
 
         List<String> selectedColumns = Arrays.asList(selectSql.get(1)
                                                               .trim()
-                                                              .split(", "));;
+                                                              .split(", "));
         assertTrue(selectedColumns.contains("\"T0\".\"ID\" AS \"ID_T0\""));
         assertTrue(selectedColumns.contains("\"T0\".\"NAME\" AS \"NAME_T0\""));
         assertTrue(selectedColumns.contains("? AS CurrentEmployeeId_T0"));
@@ -685,7 +685,7 @@ public class SQLSelectBuilderTest {
         assertTrue(targetDbEntityParameters.contains("placeholder.\"$$CurrentEmployeeName$$\" => ?"));
         String targetDbEntityAlias = targetDbEntity.get(2)
                                                    .trim();
-        assertEquals("AS T0", targetDbEntityAlias);
+        assertEquals("AS \"T0\"", targetDbEntityAlias);
 
         String whereClause = selectSql.get(3);
         assertEquals("\"T0\".\"ID\" = ?", whereClause.trim());

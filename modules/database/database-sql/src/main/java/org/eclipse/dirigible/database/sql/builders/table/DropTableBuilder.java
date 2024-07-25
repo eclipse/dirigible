@@ -25,6 +25,8 @@ public class DropTableBuilder extends AbstractDropSqlBuilder {
     /** The table. */
     private String table = null;
 
+    private boolean cascade = false;
+
     /**
      * Instantiates a new drop table builder.
      *
@@ -51,6 +53,11 @@ public class DropTableBuilder extends AbstractDropSqlBuilder {
 
         // TABLE
         generateTable(sql);
+
+        if (cascade) {
+            sql.append(SPACE)
+               .append(KEYWORD_DATABASE_DROP_CASCADE);
+        }
 
         String generated = sql.toString();
 
@@ -81,6 +88,11 @@ public class DropTableBuilder extends AbstractDropSqlBuilder {
      */
     public String getTable() {
         return table;
+    }
+
+    public DropTableBuilder cascade(boolean cascade) {
+        this.cascade = cascade;
+        return this;
     }
 
 }

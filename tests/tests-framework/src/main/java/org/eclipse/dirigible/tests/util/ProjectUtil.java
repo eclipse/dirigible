@@ -21,17 +21,22 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Component
 public class ProjectUtil {
 
     private static final String PROJECT_TEMPLATE_FOLDER = "project-template";
+
     private final IRepository repository;
 
-    ProjectUtil(IRepository repository) {
+    private final Set<String> createdProjects;
 
+    ProjectUtil(IRepository repository) {
         this.repository = repository;
+        this.createdProjects = new HashSet<>();
     }
 
     public void createProject(String projectName) {
@@ -43,6 +48,7 @@ public class ProjectUtil {
 
         try {
             FileUtils.copyDirectory(sourceDir, destinationDir);
+            createdProjects.add(projectName);
         } catch (IOException ex) {
             throw new IllegalStateException("Failed to copy [" + sourceDir + "] to " + destinationDir, ex);
         }
@@ -95,5 +101,9 @@ public class ProjectUtil {
         } catch (IOException ex) {
             throw new IllegalStateException("Failed to replace placeholders [" + placeholders + "] in file " + file, ex);
         }
+    }
+
+    public Set<String> getCreatedProjects() {
+        return createdProjects;
     }
 }

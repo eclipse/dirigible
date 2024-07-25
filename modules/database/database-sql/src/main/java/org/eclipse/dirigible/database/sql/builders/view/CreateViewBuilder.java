@@ -9,13 +9,13 @@
  */
 package org.eclipse.dirigible.database.sql.builders.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractCreateSqlBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Create View Builder.
@@ -24,13 +24,10 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(CreateViewBuilder.class);
-
+    /** The columns. */
+    private final List<String> columns = new ArrayList<String>();
     /** The view. */
     private String view = null;
-
-    /** The columns. */
-    private List<String> columns = new ArrayList<String>();
-
     /** The select. */
     private String select = null;
 
@@ -43,15 +40,6 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
     public CreateViewBuilder(ISqlDialect dialect, String view) {
         super(dialect);
         this.view = view;
-    }
-
-    /**
-     * Gets the view.
-     *
-     * @return the view
-     */
-    protected String getView() {
-        return view;
     }
 
     /**
@@ -136,9 +124,7 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 
         String generated = sql.toString();
 
-        if (logger.isTraceEnabled()) {
-            logger.trace("generated: " + generated);
-        }
+        logger.trace("generated sql: [{}]", generated);
 
         return generated;
     }
@@ -154,6 +140,15 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
            .append(KEYWORD_VIEW)
            .append(SPACE)
            .append(viewName);
+    }
+
+    /**
+     * Gets the view.
+     *
+     * @return the view
+     */
+    protected String getView() {
+        return view;
     }
 
     /**
@@ -185,8 +180,7 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
             snippet.append(COMMA)
                    .append(SPACE);
         }
-        return snippet.toString()
-                      .substring(0, snippet.length() - 2);
+        return snippet.substring(0, snippet.length() - 2);
     }
 
     /**

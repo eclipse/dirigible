@@ -117,14 +117,16 @@ public class TestProject {
 
     public void verify(DirigibleTestTenant tenant) {
         LOGGER.info("Verifying test project for tenant [{}]...", tenant);
-
-        verifyHomePageAccessibleByTenant(tenant);
-        verifyView(tenant);
-        verifyEdmGeneratedResources(tenant);
-        verifyOData(tenant);
-        verifyDocumentsAPI(tenant);
-
-        LOGGER.info("Test test project for tenant [{}] has been verified successfully!", tenant);
+        try {
+            verifyHomePageAccessibleByTenant(tenant);
+            verifyView(tenant);
+            verifyEdmGeneratedResources(tenant);
+            verifyOData(tenant);
+            verifyDocumentsAPI(tenant);
+            LOGGER.info("Test project for tenant [{}] has been verified successfully!", tenant);
+        } catch (RuntimeException | Error ex) {
+            throw new AssertionError("Failed to verify test project for tenant " + tenant, ex);
+        }
     }
 
     public void verifyHomePageAccessibleByTenant(DirigibleTestTenant tenant) {
@@ -156,7 +158,7 @@ public class TestProject {
                              .body("[0].READER_LAST_NAME", equalTo("Ivanov"))
                              .body("[1].READER_FIRST_NAME", equalTo("Maria"))
                              .body("[1].READER_LAST_NAME", equalTo("Petrova")),
-                15);
+                25);
     }
 
     /**

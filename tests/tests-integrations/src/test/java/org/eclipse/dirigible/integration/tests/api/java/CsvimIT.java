@@ -12,6 +12,7 @@ package org.eclipse.dirigible.integration.tests.api.java;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
+import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
 import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.eclipse.dirigible.tests.util.ProjectUtil;
@@ -25,13 +26,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
-class CsvimIT extends IntegrationTest {
+public class CsvimIT extends IntegrationTest {
 
     public static final String PROJECT_NAME = "csvim-test-project";
     public static final String UNDEFINIED_TABLE_NAME = "TEST_TABLE_READERS2";
@@ -88,7 +92,7 @@ class CsvimIT extends IntegrationTest {
         projectUtil.copyFolderContentToProject(TEST_FOLDER_CONTENT, PROJECT_NAME, Map.of("<project_name>", PROJECT_NAME));
 
         verifyDataInTable("TEST_TABLE_READERS", CSV_READERS);
-        verifyDataInTable(UNDEFINIED_TABLE_NAME, Collections.emptyList());
+        assertThat(isTableExists(UNDEFINIED_TABLE_NAME)).isFalse();
         verifyDataInTable("TEST_TABLE_READERS3", CSV_READERS);
 
         createUndefiniedTable();
@@ -106,8 +110,8 @@ class CsvimIT extends IntegrationTest {
             String sql = dialect.create()
                                 .table(UNDEFINIED_TABLE_NAME)
                                 .column("READER_ID", DataType.INTEGER, true)
-                                .column("READER_FIRST_NAME", DataType.NVARCHAR)
-                                .column("READER_LAST_NAME", DataType.NVARCHAR)
+                                .column("READER_FIRST_NAME", DataType.VARCHAR)
+                                .column("READER_LAST_NAME", DataType.VARCHAR)
                                 .build();
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 LOGGER.info("Will create table using " + sql);
@@ -131,34 +135,40 @@ class CsvimIT extends IntegrationTest {
                        assertThat(readers).containsExactlyInAnyOrderElementsOf(expectedReaders);
                        return true;
                    } catch (AssertionError | RuntimeException ex) {
-                       LOGGER.warn("Failed to get all data from table " + tableName, ex);
+                       LOGGER.warn("Failed assert table data in [{}]. Expected data [{}] ", tableName, expectedReaders, ex);
                        return false;
                    }
                });
     }
 
+    private boolean isTableExists(String tableName) throws SQLException {
+        DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
+        try (Connection connection = defaultDataSource.getConnection()) {
+            return SqlFactory.getNative(connection)
+                             .existsTable(connection, tableName);
+        }
+    }
+
     private List<Reader> getAllData(String tableName) {
         DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
-        try (Connection connection = defaultDataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + tableName)) {
-            ResultSet resultSet = statement.executeQuery();
+        try (Connection connection = defaultDataSource.getConnection()) {
+            String sql = SqlDialectFactory.getDialect(connection)
+                                          .select()
+                                          .from(tableName)
+                                          .build();
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                ResultSet resultSet = statement.executeQuery();
 
-            List<Reader> results = new ArrayList<>();
-            while (resultSet.next()) {
-                int id = resultSet.getInt("READER_ID");
-                String firstName = resultSet.getString("READER_FIRST_NAME");
-                String lastName = resultSet.getString("READER_LAST_NAME");
-                results.add(new Reader(id, firstName, lastName));
+                List<Reader> results = new ArrayList<>();
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("READER_ID");
+                    String firstName = resultSet.getString("READER_FIRST_NAME");
+                    String lastName = resultSet.getString("READER_LAST_NAME");
+                    results.add(new Reader(id, firstName, lastName));
+                }
+                return results;
             }
-            return results;
         } catch (SQLException ex) {
-            String message = null == ex.getMessage() ? ""
-                    : ex.getMessage()
-                        .toLowerCase();
-            if (message.contains("not found")) {
-                // assuming table not created yet
-                return Collections.emptyList();
-            }
             throw new IllegalStateException("Failed to get all data from " + tableName, ex);
         }
     }

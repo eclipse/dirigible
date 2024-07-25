@@ -11,9 +11,12 @@ package org.eclipse.dirigible.integration.tests;
 
 import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
+import org.eclipse.dirigible.database.sql.ISqlDialect;
+import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.tests.util.FileUtil;
+import org.eclipse.dirigible.tests.util.ProjectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -35,10 +38,12 @@ class DirigibleCleaner {
 
     private final DataSourcesManager dataSourcesManager;
     private final IRepository dirigibleRepo;
+    private final ProjectUtil projectUtil;
 
-    DirigibleCleaner(DataSourcesManager dataSourcesManager, IRepository dirigibleRepo) {
+    DirigibleCleaner(DataSourcesManager dataSourcesManager, IRepository dirigibleRepo, ProjectUtil projectUtil) {
         this.dataSourcesManager = dataSourcesManager;
         this.dirigibleRepo = dirigibleRepo;
+        this.projectUtil = projectUtil;
     }
 
     void clean() {
@@ -66,35 +71,110 @@ class DirigibleCleaner {
      */
     private void deleteDirigibleDBData() {
         DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
-        deleteAllDataInSchema(defaultDataSource);
+        dropAllTablesInSchema(defaultDataSource);
+        dropAllSequencesInSchema(defaultDataSource);
 
         DataSource systemDataSource = dataSourcesManager.getSystemDataSource();
-        deleteAllDataInSchema(systemDataSource);
+        deleteAllTablesDataInSchema(systemDataSource);
 
         deleteSchemas(defaultDataSource);
     }
 
-    private void deleteAllDataInSchema(DataSource dataSource) {
-        List<String> tables = getAllTables(dataSource);
+    private void deleteAllTablesDataInSchema(DataSource dataSource) {
+        Set<String> tables = getAllTables(dataSource);
 
-        for (int idx = 0; idx < 3; idx++) { // execute it a few times due to constraint violations
-            tables.forEach(t -> {
-                try (Connection connection = dataSource.getConnection();
-                        PreparedStatement prepareStatement = connection.prepareStatement("DELETE FROM " + t)) {
-                    int rowsAffected = prepareStatement.executeUpdate();
-                    LOGGER.info("Deleted [{}] from table [{}]", rowsAffected, t);
+        for (int idx = 0; idx < 4; idx++) { // execute it a few times due to constraint violations
+            Iterator<String> iterator = tables.iterator();
+            while (iterator.hasNext()) {
+                String table = iterator.next();
+                try (Connection connection = dataSource.getConnection()) {
+                    String sql = SqlDialectFactory.getDialect(connection)
+                                                  .delete()
+                                                  .from(table)
+                                                  .build();
+                    try (PreparedStatement prepareStatement = connection.prepareStatement(sql)) {
+                        int rowsAffected = prepareStatement.executeUpdate();
+                        LOGGER.info("Deleted [{}] from table [{}]", rowsAffected, table);
+                        iterator.remove();
+                    }
                 } catch (SQLException ex) {
-                    LOGGER.warn("Failed to delete data from table [{}] in data source [{}]", t, dataSource, ex);
+                    LOGGER.warn("Failed to delete data from table [{}] in data source [{}]", table, dataSource, ex);
                 }
-            });
+            }
         }
     }
 
-    private List<String> getAllTables(DataSource dataSource) {
-        List<String> tables = new ArrayList<>();
+    private void dropAllSequencesInSchema(DataSource dataSource) {
+        List<String> sequences = getAllSequences(dataSource);
+        LOGGER.info("Will drop [{}] sequences from data source [{}]. Sequences: {}", sequences.size(), dataSource, sequences);
+
+        for (int idx = 0; idx < 4; idx++) {
+            Iterator<String> iterator = sequences.iterator();
+            while (iterator.hasNext()) {
+                String sequence = iterator.next();
+                try (Connection connection = dataSource.getConnection()) {
+                    String sql = SqlDialectFactory.getDialect(connection)
+                                                  .drop()
+                                                  .sequence(sequence)
+                                                  .build();
+                    try (PreparedStatement prepareStatement = connection.prepareStatement(sql)) {
+                        int rowsAffected = prepareStatement.executeUpdate();
+                        LOGGER.info("Dropped sequence [{}]", sequence);
+                        iterator.remove();
+                    }
+                } catch (SQLException ex) {
+                    LOGGER.warn("Failed to drop sequence [{}] in data source [{}]", sequence, dataSource, ex);
+                }
+            }
+        }
+    }
+
+    private List<String> getAllSequences(DataSource dataSource) {
+        List<String> sequences = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
-                PreparedStatement prepareStatement =
-                        connection.prepareStatement("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='PUBLIC'")) {
+                PreparedStatement prepareStatement = connection.prepareStatement(
+                        "SELECT sequence_name FROM information_schema.sequences WHERE sequence_schema='public' OR sequence_schema='PUBLIC'")) {
+            ResultSet resultSet = prepareStatement.executeQuery();
+            while (resultSet.next()) {
+                sequences.add(resultSet.getString(1));
+            }
+            return sequences;
+        } catch (SQLException ex) {
+            throw new IllegalStateException("Failed to get all sequences in data source:" + dataSource, ex);
+        }
+    }
+
+    private void dropAllTablesInSchema(DataSource dataSource) {
+        Set<String> tables = getAllTables(dataSource);
+        LOGGER.info("Will drop [{}] tables from data source [{}]. Tables: {}", tables.size(), dataSource, tables);
+
+        for (int idx = 0; idx < 4; idx++) { // execute it a few times due to constraint violations
+            Iterator<String> iterator = tables.iterator();
+            while (iterator.hasNext()) {
+                String tableName = iterator.next();
+                try (Connection connection = dataSource.getConnection()) {
+                    String sql = SqlDialectFactory.getDialect(connection)
+                                                  .drop()
+                                                  .table(tableName)
+                                                  .cascade(true)
+                                                  .build();
+                    try (PreparedStatement prepareStatement = connection.prepareStatement(sql)) {
+                        int rowsAffected = prepareStatement.executeUpdate();
+                        LOGGER.info("Dropped table [{}]", tableName);
+                        iterator.remove();
+                    }
+                } catch (SQLException ex) {
+                    LOGGER.warn("Failed to drop table [{}] in data source [{}]", tableName, dataSource, ex);
+                }
+            }
+        }
+    }
+
+    private Set<String> getAllTables(DataSource dataSource) {
+        Set<String> tables = new HashSet<>();
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement prepareStatement = connection.prepareStatement(
+                        "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='PUBLIC' OR TABLE_SCHEMA='public'")) {
             ResultSet resultSet = prepareStatement.executeQuery();
             while (resultSet.next()) {
                 tables.add(resultSet.getString(1));
@@ -108,33 +188,57 @@ class DirigibleCleaner {
     private void deleteSchemas(DataSource dataSource) {
         Set<String> schemas = getSchemas(dataSource);
         schemas.remove("PUBLIC");
+        schemas.remove("public");
         schemas.remove("INFORMATION_SCHEMA");
+        schemas.remove("information_schema");
+        schemas.removeIf(s -> s.startsWith("pg_"));
 
         LOGGER.info("Will drop schemas [{}] from data source [{}]", schemas, dataSource);
         schemas.forEach(schema -> deleteSchema(schema, dataSource));
     }
 
     private Set<String> getSchemas(DataSource dataSource) {
+        try {
+            return getSchemas(dataSource, "SHOW SCHEMAS");
+        } catch (SQLException ex) {
+            try {
+                return getSchemas(dataSource, "SELECT nspname FROM pg_catalog.pg_namespace");
+            } catch (SQLException e) {
+                IllegalStateException exc = new IllegalStateException("Failed to get all schemas from data source: " + dataSource, e);
+                exc.addSuppressed(ex);
+                throw exc;
+            }
+        }
+    }
+
+    private Set<String> getSchemas(DataSource dataSource, String sql) throws SQLException {
         Set<String> schemas = new HashSet<>();
         try (Connection connection = dataSource.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("SHOW SCHEMAS");
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 schemas.add(resultSet.getString(1));
             }
             return schemas;
-        } catch (SQLException ex) {
-            throw new IllegalStateException("Failed to get all schemas from data source: " + dataSource, ex);
         }
     }
 
     private void deleteSchema(String schema, DataSource dataSource) {
         LOGGER.info("Will drop schema [{}] from data source [{}]", schema, dataSource);
-        try (Connection connection = dataSource.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("DROP SCHEMA `" + schema + "` CASCADE")) {
-            preparedStatement.executeUpdate();
+        try (Connection connection = dataSource.getConnection()) {
+            ISqlDialect dialect = SqlDialectFactory.getDialect(connection);
+            String sql = dialect.drop()
+                                .schema(schema)
+                                .cascade(true)
+                                .generate();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.executeUpdate();
+            } catch (SQLException ex) {
+                throw new IllegalStateException(
+                        "Failed to drop schema [" + schema + "] from dataSource [" + dataSource + "] using sql: " + sql, ex);
+            }
         } catch (SQLException ex) {
-            throw new IllegalStateException("Failed to drop schema [" + schema + "] from dataSource: " + dataSource, ex);
+            throw new IllegalStateException("Failed to drop schema [" + schema + "] from dataSource [" + dataSource + "] ", ex);
         }
     }
 
@@ -150,13 +254,21 @@ class DirigibleCleaner {
     private void unpublishResources() throws IOException {
         LOGGER.info("Deleting all Dirigible project resources from the repository...");
 
-        List<String> userProjects = getUserProjects();
+        Set<String> userProjects = getUserProjects();
         deleteCurrentUserFolder();
         deleteDirigibleProjectsFromRegistry(userProjects);
         LOGGER.info("Dirigible project resources have been deleted.");
     }
 
-    private List<String> getUserProjects() throws IOException {
+    private Set<String> getUserProjects() throws IOException {
+        Set<String> projects = new HashSet<>(getUserProjectsFromWorkingDir());
+
+        projects.addAll(projectUtil.getCreatedProjects());
+
+        return projects;
+    }
+
+    private List<String> getUserProjectsFromWorkingDir() throws IOException {
         File usersRepoFolder = getUsersRepoFolder();
         if (usersRepoFolder.exists()) {
             List<Path> userProjectFiles = FileUtil.findFiles(usersRepoFolder, "project.json");
@@ -182,7 +294,7 @@ class DirigibleCleaner {
         FileUtil.deleteFolder(currentUserFolder);
     }
 
-    private void deleteDirigibleProjectsFromRegistry(List<String> userProjects) {
+    private void deleteDirigibleProjectsFromRegistry(Set<String> userProjects) {
         String repoBasePath = dirigibleRepo.getRepositoryPath() + IRepositoryStructure.PATH_REGISTRY_PUBLIC + File.separator;
         LOGGER.info("Will delete user projects [{}] from the registry [{}]", userProjects, repoBasePath);
         userProjects.forEach(projectName -> {
