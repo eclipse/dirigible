@@ -86,14 +86,14 @@ jobs:
       - name: Maven Build
         run: mvn -T 1C clean install -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
       - name: Integration tests
-        run: mvn -f tests/pom.xml verify -P integration-tests -D selenide.headless=true -Dit.test=CsvimIT,HomepageRedirectIT,MultitenancyIT,BPMStarterTemplateIT,MailIT,TenantDeterminationIT
+        run: mvn -f tests/pom.xml verify -P integration-tests -D selenide.headless=true -Dit.test=CsvimIT,HomepageRedirectIT,MultitenancyIT,BPMStarterTemplateIT,MailIT,TenantDeterminationIT,CamelPlatformHttpTest,CmsSuiteIT,CustomSecurityIT,DirigibleHomepageIT
 
       - name: Generate a random artifact name
         if: always()
         id: generate_name
         run: echo "ARTIFACT_NAME=selenide-screenshots-$(date +%s).zip" >> $GITHUB_ENV
       - name: Upload selenide screenshots
-        uses: actions/upload-artifact@v4.3.1
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           retention-days: 1
@@ -146,7 +146,7 @@ jobs:
       - name: Maven Build
         run: mvn -T 1C clean install -D skipTests -D maven.javadoc.skip=true -D license.skip=true -U
       - name: Integration tests
-        run: mvn -f tests/pom.xml verify -P integration-tests -D selenide.headless=true -Dit.test=CsvimIT,HomepageRedirectIT,MultitenancyIT,BPMStarterTemplateIT,MailIT,TenantDeterminationIT
+        run: mvn -f tests/pom.xml verify -P integration-tests -D selenide.headless=true -Dit.test=CsvimIT,HomepageRedirectIT,MultitenancyIT,BPMStarterTemplateIT,MailIT,TenantDeterminationIT,CamelPlatformHttpTest,CmsSuiteIT,CustomSecurityIT,DirigibleHomepageIT
         env:
           DIRIGIBLE_DATASOURCE_DEFAULT_DRIVER: org.postgresql.Driver
           DIRIGIBLE_DATASOURCE_DEFAULT_URL: jdbc:postgresql://localhost:5432/${{ env.POSTGRES_DB }}
@@ -159,7 +159,7 @@ jobs:
         id: generate_name
         run: echo "ARTIFACT_NAME=selenide-screenshots-$(date +%s).zip" >> $GITHUB_ENV
       - name: Upload selenide screenshots
-        uses: actions/upload-artifact@v4.3.1
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           retention-days: 1
