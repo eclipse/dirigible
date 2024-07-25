@@ -204,7 +204,9 @@ class DirigibleCleaner {
             try {
                 return getSchemas(dataSource, "SELECT nspname FROM pg_catalog.pg_namespace");
             } catch (SQLException e) {
-                throw new IllegalStateException("Failed to get all schemas from data source: " + dataSource, e);
+                IllegalStateException exc = new IllegalStateException("Failed to get all schemas from data source: " + dataSource, e);
+                exc.addSuppressed(ex);
+                throw exc;
             }
         }
     }
