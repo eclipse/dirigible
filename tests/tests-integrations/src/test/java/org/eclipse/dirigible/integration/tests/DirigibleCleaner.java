@@ -67,8 +67,7 @@ class DirigibleCleaner {
     }
 
     /**
-     * Execute this before H2 folder deletion because it is in memory DB. Otherwise, will remain data in
-     * memory.
+     * Execute this before H2 folder deletion because it is in memory DB. Otherwise, will remain data in memory.
      */
     private void deleteDirigibleDBData() {
         DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
@@ -86,7 +85,7 @@ class DirigibleCleaner {
                                                      .filter(t -> !t.startsWith("QRTZ_") && !t.startsWith("ACTIVEMQ_"))
                                                      .collect(Collectors.toSet());
 
-        for (int idx = 0; idx < 3; idx++) { // execute it a few times due to constraint violations
+        for (int idx = 0; idx < 4; idx++) { // execute it a few times due to constraint violations
             Iterator<String> iterator = tables.iterator();
             while (iterator.hasNext()) {
                 String table = iterator.next();
@@ -111,7 +110,7 @@ class DirigibleCleaner {
         List<String> sequences = getAllSequences(dataSource);
         LOGGER.info("Will drop [{}] sequences from data source [{}]. Sequences: {}", sequences.size(), dataSource, sequences);
 
-        for (int idx = 0; idx < 2; idx++) {
+        for (int idx = 0; idx < 4; idx++) {
             Iterator<String> iterator = sequences.iterator();
             while (iterator.hasNext()) {
                 String sequence = iterator.next();
@@ -151,7 +150,7 @@ class DirigibleCleaner {
         Set<String> tables = getAllTables(dataSource);
         LOGGER.info("Will drop [{}] tables from data source [{}]. Tables: {}", tables.size(), dataSource, tables);
 
-        for (int idx = 0; idx < 3; idx++) { // execute it a few times due to constraint violations
+        for (int idx = 0; idx < 4; idx++) { // execute it a few times due to constraint violations
             Iterator<String> iterator = tables.iterator();
             while (iterator.hasNext()) {
                 String tableName = iterator.next();
