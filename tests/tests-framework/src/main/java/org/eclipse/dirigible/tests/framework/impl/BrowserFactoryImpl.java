@@ -32,11 +32,11 @@ class BrowserFactoryImpl implements BrowserFactory {
 
     @Override
     public Browser createByHost(String host) {
-        return create(BrowserImpl.Protocol.HTTP, host, localServerPort);
+        return create(BrowserImpl.ProtocolType.HTTP, host, localServerPort);
     }
 
-    private Browser create(BrowserImpl.Protocol protocol, String host, int port) {
-        return new BrowserImpl(protocol, host, port);
+    private Browser create(BrowserImpl.ProtocolType protocolType, String host, int port) {
+        return new BrowserImpl(protocolType, host, port);
     }
 
     @Override

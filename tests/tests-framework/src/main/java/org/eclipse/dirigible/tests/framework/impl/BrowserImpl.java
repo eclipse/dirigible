@@ -53,18 +53,23 @@ class BrowserImpl implements Browser {
 
     @Autowired
     BrowserImpl(@LocalServerPort int port) {
-        this(Protocol.HTTP, "localhost", port);
+        this(ProtocolType.HTTP, "localhost", port);
     }
 
-    BrowserImpl(Protocol protocol, String host, int port) {
-        this.protocol = protocol.name();
+    BrowserImpl(ProtocolType protocolType, String host, int port) {
+        this.protocol = protocolType.protocol;
         this.host = host;
         this.port = port;
     }
 
-    enum Protocol {
-        HTTP, HTTPS
+    enum ProtocolType {
+        HTTP("http"), HTTPS("https");
 
+        private final String protocol;
+
+        ProtocolType(String protocol) {
+            this.protocol = protocol;
+        }
     }
 
     @Override
@@ -104,6 +109,7 @@ class BrowserImpl implements Browser {
         SelenideElement element = getElementByAttributePattern(elementType, attribute, pattern);
         handleElementInAllFrames(element, e -> {
             e.click();
+            LOGGER.info("Entering [{}] in [{}]", text, e);
             e.setValue(text);
         });
     }
