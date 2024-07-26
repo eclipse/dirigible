@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitOption;
@@ -233,7 +234,6 @@ public class FileSystemUtils {
             @Override
             public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
 
-                // if (Files.exists(dir)) {
                 if (dir.toFile()
                        .exists()) {
                     if (logger.isTraceEnabled()) {
@@ -242,9 +242,12 @@ public class FileSystemUtils {
                     try {
                         Files.delete(dir);
                     } catch (java.nio.file.NoSuchFileException e) {
-                        if (logger.isTraceEnabled()) {
-                            logger.trace(String.format("Directory already has been deleted: %s", dir));
-                        }
+                        logger.trace(String.format("Directory already has been deleted: %s", dir));
+                    } catch (DirectoryNotEmptyException e) {
+                    	logger.trace(String.format("Directory not empty: %s", dir));
+                    	FileUtils.deleteDirectory(dir.toFile());
+                    } catch (IOException e) {
+                    	logger.trace(String.format("Directory cannot be deleted due to permissions issues: %s", dir));
                     }
                 }
                 return FileVisitResult.CONTINUE;
@@ -266,9 +269,9 @@ public class FileSystemUtils {
                     try {
                         Files.delete(file);
                     } catch (java.nio.file.NoSuchFileException e) {
-                        if (logger.isTraceEnabled()) {
-                            logger.trace(String.format("File already has been deleted: %s", file));
-                        }
+                        logger.trace(String.format("File already has been deleted: %s", file));
+                    } catch (IOException x) {
+                    	logger.trace(String.format("File cannot be deleted due to permissions issues: %s", file));
                     }
                 }
                 return FileVisitResult.CONTINUE;
