@@ -244,10 +244,10 @@ public class FileSystemUtils {
                     } catch (java.nio.file.NoSuchFileException e) {
                         logger.trace(String.format("Directory already has been deleted: %s", dir));
                     } catch (DirectoryNotEmptyException e) {
-                    	logger.trace(String.format("Directory not empty: %s", dir));
-                    	FileUtils.deleteDirectory(dir.toFile());
+                        logger.trace(String.format("Directory not empty: %s", dir));
+                        FileUtils.deleteDirectory(dir.toFile());
                     } catch (IOException e) {
-                    	logger.trace(String.format("Directory cannot be deleted due to permissions issues: %s", dir));
+                        logger.trace(String.format("Directory cannot be deleted due to permissions issues: %s", dir));
                     }
                 }
                 return FileVisitResult.CONTINUE;
@@ -271,7 +271,7 @@ public class FileSystemUtils {
                     } catch (java.nio.file.NoSuchFileException e) {
                         logger.trace(String.format("File already has been deleted: %s", file));
                     } catch (IOException x) {
-                    	logger.trace(String.format("File cannot be deleted due to permissions issues: %s", file));
+                        logger.trace(String.format("File cannot be deleted due to permissions issues: %s", file));
                     }
                 }
                 return FileVisitResult.CONTINUE;
