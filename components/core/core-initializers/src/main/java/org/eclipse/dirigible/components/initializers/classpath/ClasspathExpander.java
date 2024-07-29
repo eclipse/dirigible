@@ -9,6 +9,15 @@
  */
 package org.eclipse.dirigible.components.initializers.classpath;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.JarURLConnection;
@@ -19,15 +28,6 @@ import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * The Class ClasspathExpander.
@@ -88,7 +88,7 @@ public class ClasspathExpander {
             }
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to expand content for " + root, e);
         }
     }
 

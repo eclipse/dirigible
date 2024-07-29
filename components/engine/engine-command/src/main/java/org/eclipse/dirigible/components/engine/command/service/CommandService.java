@@ -9,13 +9,6 @@
  */
 package org.eclipse.dirigible.components.engine.command.service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
-
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.process.Piper;
@@ -31,6 +24,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The Class WebService.
@@ -213,8 +212,9 @@ public class CommandService {
                     } catch (IllegalThreadStateException e) {
                         if (++i >= ProcessUtils.DEFAULT_LOOP_COUNT) {
                             process.destroy();
-                            throw new RuntimeException(
-                                    "Exceeds timeout - " + ((ProcessUtils.DEFAULT_WAIT_TIME / 1000) * ProcessUtils.DEFAULT_LOOP_COUNT));
+                            String message =
+                                    "Exceeds timeout - " + ((ProcessUtils.DEFAULT_WAIT_TIME / 1000) * ProcessUtils.DEFAULT_LOOP_COUNT);
+                            throw new RuntimeException(message, e);
                         }
                     }
                 } while (!deadYet);
