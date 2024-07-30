@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -29,6 +28,7 @@ import java.util.Properties;
 public class DataSourceInitializerContributorSnowpark implements DataSourceInitializerContributor {
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DataSourceInitializerContributorSnowpark.class);
+    public static final String TOKEN_FILE_PATH = "/snowflake/session/token";
 
     /**
      * Contribute.
@@ -43,7 +43,6 @@ public class DataSourceInitializerContributorSnowpark implements DataSourceIniti
             logger.info("[{}] will NOT contribute to datasource [{}]", this, dataSource.getName());
             return;
         }
-        Map<String, String> env = System.getenv();
         try {
             String url;
             properties.put("dataSource.CLIENT_SESSION_KEEP_ALIVE", true);
@@ -51,18 +50,18 @@ public class DataSourceInitializerContributorSnowpark implements DataSourceIniti
             setPropertyIfExists("SNOWFLAKE_WAREHOUSE", "dataSource.warehouse", properties);
             setPropertyIfExists("SNOWFLAKE_DATABASE", "dataSource.db", properties);
             setPropertyIfExists("SNOWFLAKE_SCHEMA", "dataSource.schema", properties);
-            setPropertyIfExists("SNOWFLAKE_ROLE", "dataSource.role", properties);
 
-            if (Files.exists(Paths.get("/snowflake/session/token"))) {
+            if (hasTokenFile()) {
                 properties.put("dataSource.authenticator", "OAUTH");
-                properties.put("dataSource.token", new String(Files.readAllBytes(Paths.get("/snowflake/session/token"))));
+                properties.put("dataSource.token", new String(Files.readAllBytes(Paths.get(TOKEN_FILE_PATH))));
                 properties.put("dataSource.insecureMode", true);
                 url = "jdbc:snowflake://" + Configuration.get("SNOWFLAKE_HOST") + ":" + Configuration.get("SNOWFLAKE_PORT");
             } else {
+                setPropertyIfExists("SNOWFLAKE_ROLE", "dataSource.role", properties);
                 setPropertyIfExists("SNOWFLAKE_USERNAME", "dataSource.user", properties);
                 setPropertyIfExists("SNOWFLAKE_PASSWORD", "dataSource.password", properties);
 
-                url = env.getOrDefault("SNOWFLAKE_URL", dataSource.getUrl());
+                url = Configuration.get("SNOWFLAKE_URL", dataSource.getUrl());
             }
 
             properties.put("jdbcUrl", url);
@@ -71,6 +70,10 @@ public class DataSourceInitializerContributorSnowpark implements DataSourceIniti
         } catch (IOException ex) {
             logger.error("Invalid configuration for the datasource: [{}]", dataSource.getName(), ex);
         }
+    }
+
+    private static boolean hasTokenFile() {
+        return Files.exists(Paths.get(TOKEN_FILE_PATH));
     }
 
     private void setPropertyIfExists(String configName, String propertyName, Properties properties) {
