@@ -46,10 +46,10 @@ public class DataSourceInitializerContributorSnowpark implements DataSourceIniti
         try {
             String url;
             properties.put("dataSource.CLIENT_SESSION_KEEP_ALIVE", true);
-            setPropertyIfExists("SNOWFLAKE_ACCOUNT", "dataSource.account", properties);
-            setPropertyIfExists("SNOWFLAKE_WAREHOUSE", "dataSource.warehouse", properties);
-            setPropertyIfExists("SNOWFLAKE_DATABASE", "dataSource.db", properties);
-            setPropertyIfExists("SNOWFLAKE_SCHEMA", "dataSource.schema", properties);
+            setPropertyIfConfigAvailable("SNOWFLAKE_ACCOUNT", "dataSource.account", properties);
+            setPropertyIfConfigAvailable("SNOWFLAKE_WAREHOUSE", "dataSource.warehouse", properties);
+            setPropertyIfConfigAvailable("SNOWFLAKE_DATABASE", "dataSource.db", properties);
+            setPropertyIfConfigAvailable("SNOWFLAKE_SCHEMA", "dataSource.schema", properties);
 
             if (hasTokenFile()) {
                 properties.put("dataSource.authenticator", "OAUTH");
@@ -57,9 +57,9 @@ public class DataSourceInitializerContributorSnowpark implements DataSourceIniti
                 properties.put("dataSource.insecureMode", true);
                 url = "jdbc:snowflake://" + Configuration.get("SNOWFLAKE_HOST") + ":" + Configuration.get("SNOWFLAKE_PORT");
             } else {
-                setPropertyIfExists("SNOWFLAKE_ROLE", "dataSource.role", properties);
-                setPropertyIfExists("SNOWFLAKE_USERNAME", "dataSource.user", properties);
-                setPropertyIfExists("SNOWFLAKE_PASSWORD", "dataSource.password", properties);
+                setPropertyIfConfigAvailable("SNOWFLAKE_ROLE", "dataSource.role", properties);
+                setPropertyIfConfigAvailable("SNOWFLAKE_USERNAME", "dataSource.user", properties);
+                setPropertyIfConfigAvailable("SNOWFLAKE_PASSWORD", "dataSource.password", properties);
 
                 url = Configuration.get("SNOWFLAKE_URL", dataSource.getUrl());
             }
@@ -76,7 +76,7 @@ public class DataSourceInitializerContributorSnowpark implements DataSourceIniti
         return Files.exists(Paths.get(TOKEN_FILE_PATH));
     }
 
-    private void setPropertyIfExists(String configName, String propertyName, Properties properties) {
+    private void setPropertyIfConfigAvailable(String configName, String propertyName, Properties properties) {
         String value = Configuration.get(configName);
         if (StringUtils.isNotBlank(value)) {
             logger.debug("Setting property [{}] from config [{}]", propertyName, configName);
