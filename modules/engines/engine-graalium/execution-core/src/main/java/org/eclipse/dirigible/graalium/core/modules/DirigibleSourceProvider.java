@@ -196,10 +196,10 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
             }
             Files.createDirectories(pathToUnpack.getParent());
             if (!Files.exists(pathToUnpack)) {
-                LOGGER.debug("Directory [{}] does NOT exist. Will be created", pathToUnpack);
+                LOGGER.debug("File [{}] does NOT exist. Will be created", pathToUnpack);
                 Files.createFile(pathToUnpack);
             } else {
-                LOGGER.debug("Directory [{}] exists and will NOT be created", pathToUnpack);
+                LOGGER.debug("File [{}] exists and will NOT be created", pathToUnpack);
             }
             Files.copy(bundled, pathToUnpack, StandardCopyOption.REPLACE_EXISTING);
             return pathToUnpack;
