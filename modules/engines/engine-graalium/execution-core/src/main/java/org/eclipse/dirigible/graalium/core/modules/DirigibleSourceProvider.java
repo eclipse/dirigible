@@ -191,15 +191,15 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
         String path = "/META-INF/dirigible/" + pathToLookup.toString();
         try (InputStream bundled = this.getClass()
                                        .getResourceAsStream(path)) {
-            if (null == bundled) {
-                throw new IllegalStateException("Failed to load resource from path [" + path + "]");
-            }
             Files.createDirectories(pathToUnpack.getParent());
             if (!Files.exists(pathToUnpack)) {
                 LOGGER.debug("File [{}] does NOT exist. Will be created", pathToUnpack);
                 Files.createFile(pathToUnpack);
             } else {
                 LOGGER.debug("File [{}] exists and will NOT be created", pathToUnpack);
+            }
+            if (null == bundled) {
+                throw new IllegalStateException("Failed to load resource from path [" + path + "]");
             }
             Files.copy(bundled, pathToUnpack, StandardCopyOption.REPLACE_EXISTING);
             return pathToUnpack;
