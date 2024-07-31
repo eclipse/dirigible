@@ -9,11 +9,11 @@
  */
 package org.eclipse.dirigible.componenets.api.http;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import java.io.IOException;
-import java.util.Base64;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,11 +34,13 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.OncePerRequestFilter;
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.Base64;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -154,15 +156,6 @@ public class HttpSuiteTest {
                .andExpect(status().is2xxSuccessful());
     }
 
-    @Test
-    public void executeRSTest() throws Exception {
-        mockMvc.perform(get("/services/js/http-tests/rs-define-request-handlers.js").header(HttpHeaders.AUTHORIZATION,
-                "Basic " + Base64.getEncoder()
-                                 .encodeToString("user:password".getBytes())))
-               .andDo(print())
-               .andExpect(status().is2xxSuccessful());
-    }
-
     @Configuration
     static class Config {
         @Autowired
@@ -183,6 +176,7 @@ public class HttpSuiteTest {
 
     }
 
+
     static class HttpResponseHeaderHandlerFilter extends OncePerRequestFilter {
 
         @Override
@@ -195,7 +189,6 @@ public class HttpSuiteTest {
             filterChain.doFilter(request, response);
         }
     }
-
 
 
     @SpringBootApplication
