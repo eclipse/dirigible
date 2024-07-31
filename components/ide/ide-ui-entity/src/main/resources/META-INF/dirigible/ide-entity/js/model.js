@@ -84,6 +84,7 @@ Property.prototype.widgetShortLabel = null; // a short label for limited charact
 Property.prototype.widgetFormat = null; // the format for rendering
 Property.prototype.widgetDropDownKey = null; // the key property in drop down case
 Property.prototype.widgetDropDownValue = null; // the value property in drop down case
+Property.prototype.widgetDropDownDependsOn = null; // the value property in drop down case
 Property.prototype.feedPropertyName = null; // the matching property name from the feed
 Property.prototype.roleRead = null; // the matching property name from the read role
 Property.prototype.roleWrite = null; // the matching property name from the write role

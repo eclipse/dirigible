@@ -194,6 +194,7 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
                         widgetIsMajor: $scope.dataParameters.widgetIsMajor,
                         widgetDropDownKey: $scope.dataParameters.widgetDropDownKey,
                         widgetDropDownValue: $scope.dataParameters.widgetDropDownValue,
+                        widgetDropDownDependsOn: $scope.dataParameters.widgetDropDownDependsOn,
                         feedPropertyName: $scope.dataParameters.feedPropertyName,
                         roleRead: $scope.dataParameters.roleRead,
                         roleWrite: $scope.dataParameters.roleWrite,
