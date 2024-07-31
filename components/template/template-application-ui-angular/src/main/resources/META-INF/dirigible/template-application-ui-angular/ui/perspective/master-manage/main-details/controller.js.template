@@ -6,7 +6,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 	.config(["entityApiProvider", function (entityApiProvider) {
 		entityApiProvider.baseUrl = "/services/ts/${projectName}/gen/${genFolderName}/api/${perspectiveName}/${name}Service.ts";
 	}])
-	.controller('PageController', ['$scope', 'Extensions', 'messageHub', 'entityApi', function ($scope, Extensions, messageHub, entityApi) {
+	.controller('PageController', ['$scope', '$http', 'Extensions', 'messageHub', 'entityApi', function ($scope, $http, Extensions, messageHub, entityApi) {
 
 		$scope.entity = {};
 		$scope.forms = {
@@ -99,6 +99,22 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				$scope.action = 'update';
 			});
 		});
+#foreach ($property in $properties)
+#if($property.widgetType == "DROPDOWN" && $property.widgetDropDownDependsOn)
+
+		$scope.$watch('entity.Country', function () {
+			${dollar}http.get("${property.widgetDropdownUrl}").then(function (response) {
+				${dollar}scope.options${property.name} = response.data.filter(e => e.${property.widgetDropDownDependsOn} === ${dollar}scope.entity.${property.widgetDropDownDependsOn}).map(e => {
+					return {
+						value: e.${property.widgetDropDownKey},
+						text: e.${property.widgetDropDownValue}
+					}
+				});
+				$scope.entity.${property.name} = undefined;
+			});
+		});
+#end
+#end
 		//-----------------Events-------------------//
 
 		$scope.create = function () {
