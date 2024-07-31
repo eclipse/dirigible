@@ -15,6 +15,8 @@ import org.eclipse.dirigible.graalium.core.javascript.CalledFromJS;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -30,6 +32,8 @@ import java.nio.file.StandardCopyOption;
 @Component
 @CalledFromJS
 public class DirigibleSourceProvider implements JavascriptSourceProvider {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DirigibleSourceProvider.class);
 
     /**
      * Gets the absolute source path.
@@ -191,7 +195,12 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
                 throw new IllegalStateException("Failed to load resource from path [" + path + "]");
             }
             Files.createDirectories(pathToUnpack.getParent());
-            Files.createFile(pathToUnpack);
+            if (!Files.exists(pathToUnpack)) {
+                LOGGER.debug("Directory [{}] does NOT exist. Will be created", pathToUnpack);
+                Files.createFile(pathToUnpack);
+            } else {
+                LOGGER.debug("Directory [{}] exists and will NOT be created", pathToUnpack);
+            }
             Files.copy(bundled, pathToUnpack, StandardCopyOption.REPLACE_EXISTING);
             return pathToUnpack;
         } catch (IOException ex) {
