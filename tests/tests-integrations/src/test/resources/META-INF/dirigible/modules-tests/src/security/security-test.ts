@@ -1,6 +1,6 @@
 import { user } from "sdk/security";
-import { assert } from "sdk/test";
+import { assertEquals } from "sdk/junit"
 
 test('get-user-test', () => {
-	assert.assertEquals(user.getName(), 'guest');
+	assertEquals('Unexpected user' user.getName(), 'guest');
 });
