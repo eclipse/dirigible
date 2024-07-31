@@ -184,15 +184,18 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
      * @return the path
      */
     public Path unpackedToFileSystem(Path pathToUnpack, Path pathToLookup) {
+        String path = "/META-INF/dirigible/" + pathToLookup.toString();
         try (InputStream bundled = this.getClass()
-                                       .getResourceAsStream("/META-INF/dirigible/" + pathToLookup.toString())) {
+                                       .getResourceAsStream(path)) {
+            if (null == bundled) {
+                throw new IllegalStateException("Failed to load resource from path [" + path + "]");
+            }
             Files.createDirectories(pathToUnpack.getParent());
             Files.createFile(pathToUnpack);
             Files.copy(bundled, pathToUnpack, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            return pathToUnpack;
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to unpack [" + pathToLookup + "] to [" + pathToUnpack + "]", ex);
         }
-
-        return pathToUnpack;
     }
 }
