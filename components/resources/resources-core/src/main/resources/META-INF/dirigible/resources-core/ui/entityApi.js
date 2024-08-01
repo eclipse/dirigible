@@ -115,7 +115,8 @@ angular.module('entityApi', [])
                 search: search,
                 create: create,
                 update: update,
-                'delete': deleteEntity
+                'delete': deleteEntity,
+                $http: $http
             };
         }];
     })

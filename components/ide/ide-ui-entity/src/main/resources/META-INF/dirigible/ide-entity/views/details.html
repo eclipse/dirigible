@@ -427,7 +427,7 @@
                         <div class="fd-col fd-col-md--2">
                             <fd-form-label for="uiwt" dg-required="true" dg-colon="true">Widget type</fd-form-label>
                         </div>
-                        <div class="fd-col fd-col-md--2">
+                        <div class="fd-col fd-col-md--10">
                             <fd-select dg-placeholder="Select a type" label-id="uiwt" ng-required="true"
                                 ng-model="dataParameters.widgetType" dropdown-fixed="true">
                                 <fd-option text="{{ type.label }}" value="type.value" ng-repeat="type in widgetTypes">
@@ -451,7 +451,7 @@
                             </fd-input>
                         </div>
                         <div class="fd-col fd-col-md--2" ng-show="dataParameters.widgetType === 'DROPDOWN'">
-                            <fd-form-label for="uidvdo" dg-colon="true">Depends on
+                            <fd-form-label for="uidvdo" dg-colon="true">Dropdown depends on
                             </fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2" ng-show="dataParameters.widgetType === 'DROPDOWN'">
