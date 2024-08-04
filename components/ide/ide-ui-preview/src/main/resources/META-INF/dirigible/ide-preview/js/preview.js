@@ -214,6 +214,7 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', 'ViewParame
                 case 'camel':
                 case 'form':
                 case 'report':
+                case 'dashboard':
                     return;
                 default:
                     url += '/web';

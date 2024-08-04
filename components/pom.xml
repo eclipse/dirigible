@@ -91,6 +91,7 @@
 		<module>ide/ide-ui-console</module>
 		<module>ide/ide-ui-csv</module>
 		<module>ide/ide-ui-csvim</module>
+		<module>ide/ide-ui-dashboard</module>
 		<module>ide/ide-ui-data-structures</module>
 		<module>ide/ide-ui-database</module>
 		<module>ide/ide-ui-database-menu</module>
@@ -1031,6 +1032,11 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-ide-ui-report</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-dashboard</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			

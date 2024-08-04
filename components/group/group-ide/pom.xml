@@ -327,6 +327,10 @@
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-ide-ui-report</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-ide-ui-dashboard</artifactId>
+        </dependency>
 
     </dependencies>
 

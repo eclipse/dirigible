@@ -1,0 +1,5 @@
+{
+    "module": "ide-dashboard/services/dashboard-editor.js",
+    "extensionPoint": "ide-editor",
+    "description": "Dashboard Editor"
+}
