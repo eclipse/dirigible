@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 let messageHub = new FramesMessageHub();
-let sqlPlaceholder = "-- Press F8 to execute all or only selected text\n";
+let sqlPlaceholder = "-- Press F8 to execute the selected text\n";
 let csrfToken;
 let loadingOverview = document.getElementById('loadingOverview');
 let loadingMessage = document.getElementById('loadingMessage');
@@ -55,11 +55,10 @@ function createExecuteAction() {
         // @param editor The editor instance is passed in as a convinience
         run: function (editor) {
             let text = editor.getModel().getValueInRange(editor.getSelection());
-            if (text.length === 0) {
-                text = editor.getModel().getValue();
+            if (text.length > 0) {
+                let sqlCommand = getSQLCommand(text);
+                messageHub.post({ data: sqlCommand }, "database.sql.execute");
             }
-            let sqlCommand = getSQLCommand(text);
-            messageHub.post({ data: sqlCommand }, "database.sql.execute");
         },
     };
 }
