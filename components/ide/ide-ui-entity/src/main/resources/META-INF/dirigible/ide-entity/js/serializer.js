@@ -193,6 +193,9 @@ function createModel(graph) {
 					if (property.widgetDropDownValue !== null) {
 						model.push(' widgetDropDownValue="' + _.escape(property.widgetDropDownValue) + '"');
 					}
+					if (property.widgetDropDownDependsOn !== null) {
+						model.push(' widgetDropDownDependsOn="' + _.escape(property.widgetDropDownDependsOn) + '"');
+					}
 					if (property.relationshipEntityPerspectiveName !== null) {
 						model.push(' relationshipEntityPerspectiveName="' + _.escape(property.relationshipEntityPerspectiveName) + '"');
 					}
