@@ -52,11 +52,16 @@ public class DataSourceInitializerContributorSnowpark implements DataSourceIniti
             setPropertyIfConfigAvailable("SNOWFLAKE_SCHEMA", "dataSource.schema", properties);
 
             if (hasTokenFile()) {
+                logger.info("There IS token file. OAuth will be used for [{}]", dataSource.getName());
+
                 properties.put("dataSource.authenticator", "OAUTH");
                 properties.put("dataSource.token", new String(Files.readAllBytes(Paths.get(TOKEN_FILE_PATH))));
                 properties.put("dataSource.insecureMode", true);
                 url = "jdbc:snowflake://" + Configuration.get("SNOWFLAKE_HOST") + ":" + Configuration.get("SNOWFLAKE_PORT");
+                logger.info("Built url [{}]", url);
             } else {
+                logger.info("There is NO token file. User/password will be used for [{}]", dataSource.getName());
+
                 setPropertyIfConfigAvailable("SNOWFLAKE_ROLE", "dataSource.role", properties);
                 setPropertyIfConfigAvailable("SNOWFLAKE_USERNAME", "dataSource.user", properties);
                 setPropertyIfConfigAvailable("SNOWFLAKE_PASSWORD", "dataSource.password", properties);
