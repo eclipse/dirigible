@@ -34,7 +34,7 @@ public class SecurityFilterConfig {
         filterRegistrationBean.addUrlPatterns("/services/js/*", "/services/public/*", "/services/web/*", "/services/wiki/*",
                 "/services/command/*",
 
-                "/public/js/*", "/public/public/*", "/public/web/*", "/public/wiki/*", "/public/command/*",
+                "/public/js/*", "/public/ts/*", "/public/public/*", "/public/web/*", "/public/wiki/*", "/public/command/*",
 
                 "/odata/v2/*");
 
