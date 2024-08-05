@@ -43,9 +43,6 @@ public class ProjectMetadata {
     /** The dependencies. */
     private ProjectMetadataDependency[] dependencies;
 
-    /** The exposes. */
-    private String[] exposes;
-
     /** The actions. */
     private List<ProjectAction> actions;
 
@@ -181,24 +178,6 @@ public class ProjectMetadata {
         } else {
             this.dependencies = null;
         }
-    }
-
-    /**
-     * Gets the exposes.
-     *
-     * @return the exposes
-     */
-    public String[] getExposes() {
-        return exposes;
-    }
-
-    /**
-     * Sets the exposes.
-     *
-     * @param exposes the new exposes
-     */
-    public void setExposes(String[] exposes) {
-        this.exposes = exposes;
     }
 
     /**
