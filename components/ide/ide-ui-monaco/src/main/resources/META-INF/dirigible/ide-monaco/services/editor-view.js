@@ -35,6 +35,7 @@ const editorData = {
 		"application/json+roles",
 		"application/json+csvim",
 		"application/json+report",
+		"application/json+dashboard",
 		"application/hdbti",
 		"application/xml",
 		"application/bpmn+xml",
