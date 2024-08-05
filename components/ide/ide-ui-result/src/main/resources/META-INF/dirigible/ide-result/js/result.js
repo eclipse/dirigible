@@ -58,6 +58,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
     $scope.hideProgress = function () {
         $scope.state.isBusy = false;
         messageHub.hideStatusBusy();
+        $scope.$apply();
     };
 
     messageHub.onDidReceiveMessage("database.sql.execute", function (command) {
@@ -403,5 +404,11 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         $scope.hasMultipleProcedureResults = false;
         $scope.procedureResults.length = 0;
     }
+    
+    messageHub.onDidReceiveMessage("database.sql.error", function (error) {
+        $scope.state.error = true;
+        $scope.errorMessage = error.data;
+        $scope.hideProgress();
+    }, true);
 
 }]);
