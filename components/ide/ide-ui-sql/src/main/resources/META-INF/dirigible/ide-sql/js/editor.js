@@ -58,6 +58,8 @@ function createExecuteAction() {
             if (text.length > 0) {
                 let sqlCommand = getSQLCommand(text);
                 messageHub.post({ data: sqlCommand }, "database.sql.execute");
+            } else {
+                messageHub.post({ data: "No text selected to execute as SQL script" }, "database.sql.error");
             }
         },
     };
