@@ -142,11 +142,13 @@ public class DataSourceInitializer {
 
         HikariConfig config;
 
-        if (name.startsWith("SNOWFLAKE")) {
+        if (isSnowflakeDatasource(name)) {
             config = new HikariConfig(contributed);
             config.setDriverClassName(driver);
             config.setJdbcUrl(contributed.get("jdbcUrl")
                                          .toString());
+            config.setConnectionTestQuery("SELECT 1"); // connection validation query
+            config.setKeepaliveTime(TimeUnit.MINUTES.toMillis(5)); // validation execution interval, must be bigger than idle timeout
         } else {
             properties.putAll(contributed);
             config = new HikariConfig(properties);
@@ -160,7 +162,9 @@ public class DataSourceInitializer {
 
         config.setMinimumIdle(10);
         config.setIdleTimeout(TimeUnit.MINUTES.toMillis(3)); // free connections when idle, potentially remove leaked connections
-        config.setMaxLifetime(TimeUnit.MINUTES.toMillis(15)); // recreate connections after specified time
+
+        long maxLifetime = isSnowflakeDatasource(name) ? TimeUnit.MINUTES.toMillis(9) : TimeUnit.MINUTES.toMillis(15);
+        config.setMaxLifetime(maxLifetime); // recreate connections after specified time
         config.setConnectionTimeout(TimeUnit.SECONDS.toMillis(15));
         config.setLeakDetectionThreshold(TimeUnit.MINUTES.toMillis(1)); // log message for possible leaked connection
 
@@ -181,6 +185,10 @@ public class DataSourceInitializer {
                .addShutdownHook(new Thread(hds::close));
 
         return managedDataSource;
+    }
+
+    private static boolean isSnowflakeDatasource(String name) {
+        return name.startsWith("SNOWFLAKE");
     }
 
     /**
