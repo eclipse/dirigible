@@ -45,7 +45,8 @@ public class DataSourceInitializerContributorSnowpark implements DataSourceIniti
         }
         try {
             String url;
-            properties.put("dataSource.CLIENT_SESSION_KEEP_ALIVE", true);
+            properties.put("dataSource.CLIENT_SESSION_KEEP_ALIVE", Boolean.TRUE.toString());
+            properties.put("dataSource.CLIENT_SESSION_KEEP_ALIVE_HEARTBEAT_FREQUENCY", 900);
             setPropertyIfConfigAvailable("SNOWFLAKE_ACCOUNT", "dataSource.account", properties);
             setPropertyIfConfigAvailable("SNOWFLAKE_WAREHOUSE", "dataSource.warehouse", properties);
             setPropertyIfConfigAvailable("SNOWFLAKE_DATABASE", "dataSource.db", properties);
@@ -56,7 +57,6 @@ public class DataSourceInitializerContributorSnowpark implements DataSourceIniti
 
                 properties.put("dataSource.authenticator", "OAUTH");
                 properties.put("dataSource.token", new String(Files.readAllBytes(Paths.get(TOKEN_FILE_PATH))));
-                properties.put("dataSource.insecureMode", true);
                 url = "jdbc:snowflake://" + Configuration.get("SNOWFLAKE_HOST") + ":" + Configuration.get("SNOWFLAKE_PORT");
                 logger.info("Built url [{}]", url);
             } else {
