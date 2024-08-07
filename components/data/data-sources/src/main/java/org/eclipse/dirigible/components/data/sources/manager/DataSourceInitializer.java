@@ -124,11 +124,7 @@ public class DataSourceInitializer {
 
         logger.info("Initializing a datasource with name: [{}]", name);
         if (dbType.isH2()) {
-            try {
-                prepareRootFolder(name);
-            } catch (IOException ex) {
-                logger.error("Invalid configuration for the datasource: [{}]", name, ex);
-            }
+            prepareRootFolder(name);
         }
         Properties hikariProperties = getHikariProperties(name);
         HikariConfig config = new HikariConfig(hikariProperties);
@@ -224,21 +220,23 @@ public class DataSourceInitializer {
      *
      * @param name the name
      * @return the string
-     * @throws IOException Signals that an I/O exception has occurred.
      */
-    private String prepareRootFolder(String name) throws IOException {
-        String rootFolder = (Objects.equals(defaultDataSourceName, name)) ? DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
-                : DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
-        String h2Root = Configuration.get(rootFolder, name);
-        File rootFile = new File(h2Root);
-        File parentFile = rootFile.getCanonicalFile()
-                                  .getParentFile();
-        if (!parentFile.exists()) {
-            if (!parentFile.mkdirs()) {
-                throw new IOException(format("Creation of the root folder [{0}] of the embedded H2 database failed.", h2Root));
+    private void prepareRootFolder(String name) {
+        try {
+            String rootFolder = (Objects.equals(defaultDataSourceName, name)) ? DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
+                    : DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
+            String h2Root = Configuration.get(rootFolder, name);
+            File rootFile = new File(h2Root);
+            File parentFile = rootFile.getCanonicalFile()
+                                      .getParentFile();
+            if (!parentFile.exists()) {
+                if (!parentFile.mkdirs()) {
+                    throw new IOException(format("Creation of the root folder [{0}] of the embedded H2 database failed.", h2Root));
+                }
             }
+        } catch (IOException ex) {
+            logger.error("Invalid configuration for the datasource: [{}]", name, ex);
         }
-        return h2Root;
     }
 
     /**
