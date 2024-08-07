@@ -76,7 +76,7 @@ public class DataSourcesManager {
      *
      * @return the default data source
      */
-    public javax.sql.DataSource getDefaultDataSource() {
+    public DirigibleDataSource getDefaultDataSource() {
         return getDataSource(defaultDataSourceName);
     }
 
@@ -86,7 +86,7 @@ public class DataSourcesManager {
      * @param name the name
      * @return the data source
      */
-    public javax.sql.DataSource getDataSource(String name) {
+    public DirigibleDataSource getDataSource(String name) {
         return dataSourceInitializer.isInitialized(name) ? dataSourceInitializer.getInitializedDataSource(name)
                 : dataSourceInitializer.initialize(getDataSourceDefinition(name));
     }
@@ -116,7 +116,7 @@ public class DataSourcesManager {
      *
      * @return the system data source
      */
-    public javax.sql.DataSource getSystemDataSource() {
+    public DirigibleDataSource getSystemDataSource() {
         return getDataSource(systemDataSourceName);
     }
 

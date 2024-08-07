@@ -15,6 +15,7 @@ import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadata
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseResultSetHelper;
 import org.eclipse.dirigible.components.data.management.service.DatabaseDefinitionService;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
+import org.eclipse.dirigible.components.data.sources.manager.DirigibleDataSource;
 import org.eclipse.dirigible.components.database.NamedParameterStatement;
 import org.eclipse.dirigible.database.persistence.processors.identity.PersistenceNextValueIdentityProcessor;
 import org.eclipse.dirigible.database.sql.SqlFactory;
@@ -109,7 +110,7 @@ public class DatabaseFacade implements InitializingBean {
      *
      * @return the default data source
      */
-    public static final DataSource getDefaultDataSource() {
+    public static final DirigibleDataSource getDefaultDataSource() {
         return DatabaseFacade.get()
                              .getDataSourcesManager()
                              .getDefaultDataSource();
@@ -146,7 +147,7 @@ public class DatabaseFacade implements InitializingBean {
      * @param datasourceName the datasource name
      * @return the data source
      */
-    private static DataSource getDataSource(String datasourceName) {
+    private static DirigibleDataSource getDataSource(String datasourceName) {
         return datasourceName == null || "".equals(datasourceName.trim()) || "DefaultDB".equals(datasourceName) ? DatabaseFacade.get()
                                                                                                                                 .getDataSourcesManager()
                                                                                                                                 .getDefaultDataSource()

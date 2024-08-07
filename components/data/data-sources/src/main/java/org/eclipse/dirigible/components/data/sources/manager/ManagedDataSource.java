@@ -26,29 +26,24 @@ import java.sql.SQLFeatureNotSupportedException;
  * The WrappedDataSource of the standard JDBC {@link DataSource} object with added some additional
  * capabilities..
  */
-public class ManagedDataSource implements DataSource {
+public class ManagedDataSource implements DirigibleDataSource {
 
     /** The Constant LOGGER. */
     private static final Logger logger = LoggerFactory.getLogger(ManagedDataSource.class);
 
-    /** The Constant DATABASE_NAME_HDB. */
-    private static final String DATABASE_NAME_HDB = "HDB";
-    /** The Constant DATABASE_NAME_SNOWFLAKE. */
-    private static final String DATABASE_NAME_SNOWFLAKE = "Snowflake";
-
-    /** The original data source. */
     private final DataSource originalDataSource;
-    /** The database name. */
-    private String databaseName;
+    private final DatabaseType databaseType;
 
     /**
      * Wrapper of the default datasource provided by the underlying platform It has some fault tolerance
      * features, which are not available by default in the popular JDBC drivers.
      *
      * @param originalDataSource the original data source
+     * @param databaseType database type
      */
-    public ManagedDataSource(DataSource originalDataSource) {
+    public ManagedDataSource(DataSource originalDataSource, DatabaseType databaseType) {
         this.originalDataSource = originalDataSource;
+        this.databaseType = databaseType;
     }
 
     /**
@@ -75,13 +70,8 @@ public class ManagedDataSource implements DataSource {
      */
     private void enhanceConnection(Connection connection) throws SQLException {
 
-        if (this.databaseName == null) {
-            this.databaseName = connection.getMetaData()
-                                          .getDatabaseProductName();
-        }
-
         // HANA
-        if (databaseName.equals(DATABASE_NAME_HDB)) {
+        if (databaseType.isHANA()) {
             Authentication authentication = SecurityContextHolder.getContext()
                                                                  .getAuthentication();
             String userName;
@@ -102,7 +92,7 @@ public class ManagedDataSource implements DataSource {
         }
 
         // Snowflake
-        if (databaseName.equals(DATABASE_NAME_SNOWFLAKE)) {
+        if (databaseType.isSnowflake()) {
             connection.createStatement()
                       .executeQuery("ALTER SESSION SET JDBC_QUERY_RESULT_FORMAT='JSON'");
         }
@@ -207,7 +197,13 @@ public class ManagedDataSource implements DataSource {
     }
 
     @Override
-    public String toString() {
-        return "ManagedDataSource{" + "databaseName='" + databaseName + '\'' + '}';
+    public DatabaseType getDatabaseType() {
+        return databaseType;
     }
+
+    @Override
+    public boolean isOfType(DatabaseType databaseType) {
+        return this.databaseType == databaseType;
+    }
+
 }

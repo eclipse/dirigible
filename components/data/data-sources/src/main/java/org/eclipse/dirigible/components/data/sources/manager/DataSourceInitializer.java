@@ -41,7 +41,7 @@ public class DataSourceInitializer {
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DataSourceInitializer.class);
     /** The Constant DATASOURCES. */
-    private static final Map<String, javax.sql.DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<>());
+    private static final Map<String, DirigibleDataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<>());
     /** The application context. */
     private final ApplicationContext applicationContext;
 
@@ -69,7 +69,7 @@ public class DataSourceInitializer {
      * @param dataSource the data source
      * @return the javax.sql. data source
      */
-    public javax.sql.DataSource initialize(DataSource dataSource) {
+    public DirigibleDataSource initialize(DataSource dataSource) {
         if (isInitialized(dataSource.getName())) {
             return getInitializedDataSource(dataSource.getName());
         }
@@ -95,7 +95,7 @@ public class DataSourceInitializer {
      * @param dataSourceName the data source name
      * @return the initialized data source
      */
-    public javax.sql.DataSource getInitializedDataSource(String dataSourceName) {
+    public DirigibleDataSource getInitializedDataSource(String dataSourceName) {
         String name = tenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
         return DATASOURCES.get(name);
     }
@@ -108,6 +108,9 @@ public class DataSourceInitializer {
      */
     @SuppressWarnings("resource")
     private ManagedDataSource initDataSource(DataSource dataSource) {
+
+        DatabaseType dbType = DatabaseTypeDeterminer.determine(dataSource);
+
         String name = dataSource.getName();
         String driver = dataSource.getDriver();
         String url = dataSource.getUrl();
@@ -118,7 +121,7 @@ public class DataSourceInitializer {
         List<DataSourceProperty> additionalProperties = dataSource.getProperties();
 
         logger.info("Initializing a datasource with name: [{}]", name);
-        if ("org.h2.Driver".equals(driver)) {
+        if (dbType.isH2()) {
             try {
                 prepareRootFolder(name);
             } catch (IOException ex) {
@@ -142,7 +145,7 @@ public class DataSourceInitializer {
 
         HikariConfig config;
 
-        if (isSnowflakeDatasource(name)) {
+        if (dbType.isSnowflake()) {
             config = new HikariConfig(contributed);
             config.setDriverClassName(driver);
             config.setJdbcUrl(contributed.get("jdbcUrl")
@@ -163,32 +166,27 @@ public class DataSourceInitializer {
         config.setMinimumIdle(10);
         config.setIdleTimeout(TimeUnit.MINUTES.toMillis(3)); // free connections when idle, potentially remove leaked connections
 
-        long maxLifetime = isSnowflakeDatasource(name) ? TimeUnit.MINUTES.toMillis(9) : TimeUnit.MINUTES.toMillis(15);
+        long maxLifetime = dbType.isSnowflake() ? TimeUnit.MINUTES.toMillis(9) : TimeUnit.MINUTES.toMillis(15);
         config.setMaxLifetime(maxLifetime); // recreate connections after specified time
         config.setConnectionTimeout(TimeUnit.SECONDS.toMillis(15));
         config.setLeakDetectionThreshold(TimeUnit.MINUTES.toMillis(1)); // log message for possible leaked connection
 
-        boolean isHANA = Objects.equals(null == driver ? null : driver.trim(), "com.sap.db.jdbc.Driver");
-        if (isHANA) {
+        if (dbType.isHANA()) {
             config.setConnectionTestQuery("SELECT 1 FROM DUMMY"); // connection validation query
             config.setKeepaliveTime(TimeUnit.MINUTES.toMillis(5)); // validation execution interval, must be bigger than idle timeout
         }
 
-        HikariDataSource hds = new HikariDataSource(config);
+        HikariDataSource hikariDataSource = new HikariDataSource(config);
+        ManagedDataSource managedDataSource = new ManagedDataSource(hikariDataSource, dbType);
 
-        ManagedDataSource managedDataSource = new ManagedDataSource(hds);
         registerDataSourceBean(name, managedDataSource);
 
         DATASOURCES.put(name, managedDataSource);
 
         Runtime.getRuntime()
-               .addShutdownHook(new Thread(hds::close));
+               .addShutdownHook(new Thread(hikariDataSource::close));
 
         return managedDataSource;
-    }
-
-    private static boolean isSnowflakeDatasource(String name) {
-        return name.startsWith("SNOWFLAKE");
     }
 
     /**
