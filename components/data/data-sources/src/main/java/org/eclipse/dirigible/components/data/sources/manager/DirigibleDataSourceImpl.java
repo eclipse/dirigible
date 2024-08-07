@@ -28,10 +28,10 @@ import java.sql.SQLFeatureNotSupportedException;
  * The WrappedDataSource of the standard JDBC {@link DataSource} object with added some additional
  * capabilities..
  */
-public class ManagedDataSource implements DirigibleDataSource {
+class DirigibleDataSourceImpl implements DirigibleDataSource {
 
     /** The Constant LOGGER. */
-    private static final Logger logger = LoggerFactory.getLogger(ManagedDataSource.class);
+    private static final Logger logger = LoggerFactory.getLogger(DirigibleDataSourceImpl.class);
 
     private final DataSource originalDataSource;
     private final DatabaseSystem databaseSystem;
@@ -43,7 +43,7 @@ public class ManagedDataSource implements DirigibleDataSource {
      * @param originalDataSource the original data source
      * @param databaseSystem database type
      */
-    public ManagedDataSource(DataSource originalDataSource, DatabaseSystem databaseSystem) {
+    DirigibleDataSourceImpl(DataSource originalDataSource, DatabaseSystem databaseSystem) {
         this.originalDataSource = originalDataSource;
         this.databaseSystem = databaseSystem;
     }
@@ -61,7 +61,7 @@ public class ManagedDataSource implements DirigibleDataSource {
         enhanceConnection(connection);
         LeakedConnectionsDoctor.registerConnection(connection);
 
-        return connection;
+        return new DirigibleConnectionImpl(connection, databaseSystem);
     }
 
     /**
@@ -115,7 +115,7 @@ public class ManagedDataSource implements DirigibleDataSource {
         enhanceConnection(connection);
         LeakedConnectionsDoctor.registerConnection(connection);
 
-        return connection;
+        return new DirigibleConnectionImpl(connection, databaseSystem);
     }
 
     /**

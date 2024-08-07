@@ -154,7 +154,7 @@ public class DataSourceInitializer {
         addAdditionalProperties(additionalProperties, config);
 
         HikariDataSource hikariDataSource = new HikariDataSource(config);
-        DirigibleDataSource managedDataSource = new ManagedDataSource(hikariDataSource, dbType);
+        DirigibleDataSource managedDataSource = new DirigibleDataSourceImpl(hikariDataSource, dbType);
 
         registerDataSourceBean(name, managedDataSource);
 
@@ -209,8 +209,7 @@ public class DataSourceInitializer {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     private String prepareRootFolder(String name) throws IOException {
-        String rootFolder = (Objects.equals(defaultDataSourceName, name))
-                ? DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
+        String rootFolder = (Objects.equals(defaultDataSourceName, name)) ? DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
                 : DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
         String h2Root = Configuration.get(rootFolder, name);
         File rootFile = new File(h2Root);

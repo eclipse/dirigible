@@ -10,7 +10,7 @@
 package org.eclipse.dirigible.components.odata.transformers;
 
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
-import org.eclipse.dirigible.components.data.sources.manager.ManagedDataSource;
+import org.eclipse.dirigible.components.database.DirigibleDataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -95,7 +95,7 @@ public class ODataDatabaseMetadataUtilTest {
 
     /** The data source. */
     @Mock
-    private ManagedDataSource dataSource;
+    private DirigibleDataSource dataSource;
 
     /** The database meta data. */
     @Mock
@@ -137,6 +137,7 @@ public class ODataDatabaseMetadataUtilTest {
     // testGetTableMetadata_columnTypeConversion("NotSupportedSQLType", null);
     // }
 
+
     /**
      * Test artifact not found.
      *
@@ -156,12 +157,6 @@ public class ODataDatabaseMetadataUtilTest {
     // Mockito.verifyNoMoreInteractions(databaseMetaData);
     // }
 
-    /**
-     * Test get table metadata column type conversion.
-     *
-     * @param sqlType the sql type
-     * @param expectedEdmType the expected edm type
-     */
     // private void testGetTableMetadata_columnTypeConversion(String sqlType, String expectedEdmType) {
     // try {
     // Mockito.when(connection.getMetaData()).thenReturn(databaseMetaData);
@@ -212,13 +207,6 @@ public class ODataDatabaseMetadataUtilTest {
     //
     // }
 
-
-    /**
-     * Mock DB meta data query no result.
-     *
-     * @param executedResultSet the executed result set
-     * @throws SQLException the SQL exception
-     */
     // private void mockDBMetaDataQuery_noResult(ResultSet executedResultSet) throws SQLException {
     // ResultSet resultSet = Mockito.mock(ResultSet.class);
     // Mockito.when(executedResultSet).thenReturn(resultSet);

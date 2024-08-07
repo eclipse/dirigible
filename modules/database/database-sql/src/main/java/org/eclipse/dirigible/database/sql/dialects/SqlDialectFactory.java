@@ -10,9 +10,12 @@
 package org.eclipse.dirigible.database.sql.dialects;
 
 import org.eclipse.dirigible.components.database.DatabaseSystem;
+import org.eclipse.dirigible.components.database.DirigibleConnection;
 import org.eclipse.dirigible.components.database.DirigibleDataSource;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.ISqlDialectProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -27,6 +30,8 @@ import java.util.ServiceLoader;
  */
 public class SqlDialectFactory {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SqlDialectFactory.class);
+
     /** The Constant ACCESS_MANAGERS. */
     private static final ServiceLoader<ISqlDialectProvider> SQL_PROVIDERS = ServiceLoader.load(ISqlDialectProvider.class);
 
@@ -40,7 +45,7 @@ public class SqlDialectFactory {
         loadDefaultDialectsByName();
     }
 
-    public static final ISqlDialect getDialect(DataSource dataSource) throws SQLException {
+    public static ISqlDialect getDialect(DataSource dataSource) throws SQLException {
         if (dataSource instanceof DirigibleDataSource dds) {
             return getDialect(dds);
         }
@@ -57,7 +62,11 @@ public class SqlDialectFactory {
      * @return the dialect
      * @throws SQLException the SQL exception
      */
-    public static final ISqlDialect getDialect(Connection connection) throws SQLException {
+    public static ISqlDialect getDialect(Connection connection) throws SQLException {
+        if (connection instanceof DirigibleConnection dc) {
+            return getDialect(dc);
+        }
+
         String productName = connection.getMetaData()
                                        .getDatabaseProductName();
         ISqlDialect dialect = dialectsByName.get(productName);
@@ -68,7 +77,12 @@ public class SqlDialectFactory {
                 throw new IllegalStateException("Database dialect for " + productName + " is not available.");
             }
         }
+        LOGGER.debug("Loaded dialect [{}] for [{}] using registered dialects by NAME", dialect);
         return dialect;
+    }
+
+    public static ISqlDialect getDialect(DirigibleConnection connection) throws SQLException {
+        return getDialect(connection.getDatabaseSystem());
     }
 
     private static void loadDefaultDialectsByName() {
@@ -77,12 +91,12 @@ public class SqlDialectFactory {
         }
     }
 
-    public static final ISqlDialect getDialect(DirigibleDataSource dataSource) throws SQLException {
+    public static ISqlDialect getDialect(DirigibleDataSource dataSource) throws SQLException {
         DatabaseSystem databaseSystem = dataSource.getDatabaseSystem();
         return getDialect(databaseSystem);
     }
 
-    public static final ISqlDialect getDialect(DatabaseSystem databaseSystem) throws SQLException {
+    public static ISqlDialect getDialect(DatabaseSystem databaseSystem) throws SQLException {
         ISqlDialect dialect = dialectsBySystem.get(databaseSystem);
         if (dialect == null) {
             loadDefaultDialectsBySystem();
@@ -91,6 +105,7 @@ public class SqlDialectFactory {
                 throw new IllegalStateException("Database dialect for [" + databaseSystem + "] is not available.");
             }
         }
+        LOGGER.debug("Loaded dialect [{}] for [{}] using registered dialects by SYSTEM", dialect);
         return dialect;
     }
 
