@@ -24,9 +24,10 @@ import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class DatabaseConfiguratorSnowpark implements DatabaseConfigurator {
+class SnowflakeDatabaseConfigurator implements DatabaseConfigurator {
+
     /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(DatabaseConfiguratorSnowpark.class);
+    private static final Logger logger = LoggerFactory.getLogger(SnowflakeDatabaseConfigurator.class);
     public static final String TOKEN_FILE_PATH = "/snowflake/session/token";
 
     @Override

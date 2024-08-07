@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class HanaDatabaseConfigurator implements DatabaseConfigurator {
+class HanaDatabaseConfigurator implements DatabaseConfigurator {
 
     @Override
     public boolean isApplicable(DatabaseSystem databaseSystem) {

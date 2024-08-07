@@ -119,8 +119,6 @@ public class DataSourceInitializer {
         String password = dataSource.getPassword();
         String schema = dataSource.getSchema();
 
-        List<DataSourceProperty> additionalProperties = dataSource.getProperties();
-
         logger.info("Initializing a datasource with name: [{}]", name);
         if (dbType.isH2()) {
             try {
@@ -129,20 +127,14 @@ public class DataSourceInitializer {
                 logger.error("Invalid configuration for the datasource: [{}]", name, ex);
             }
         }
+        Properties hikariProperties = getHikariProperties(name);
+        HikariConfig config = new HikariConfig(hikariProperties);
 
-        Properties properties = new Properties();
-
-        addPropertyIfAvailable("driverClassName", driver, properties);
-        addPropertyIfAvailable("jdbcUrl", url, properties);
-        addPropertyIfAvailable("dataSource.url", url, properties);
-        addPropertyIfAvailable("dataSource.user", username, properties);
-        addPropertyIfAvailable("dataSource.password", password, properties);
-        addPropertyIfAvailable("dataSource.logWriter", new PrintWriter(System.out), properties);
-
-        addHikariProperties(name, properties);
-
-        HikariConfig config = new HikariConfig(properties);
-        addAdditionalProperties(additionalProperties, config);
+        config.setDriverClassName(driver);
+        config.setJdbcUrl(url);
+        config.setUsername(username);
+        config.setPassword(password);
+        config.addDataSourceProperty("logWriter", new PrintWriter(System.out));
 
         config.setSchema(schema);
         config.setPoolName(name);
@@ -156,6 +148,9 @@ public class DataSourceInitializer {
         config.setLeakDetectionThreshold(TimeUnit.MINUTES.toMillis(1)); // log message for possible leaked connection
 
         applyDbSpecificConfigurations(dataSource, dbType, config);
+
+        List<DataSourceProperty> additionalProperties = dataSource.getProperties();
+        addAdditionalProperties(additionalProperties, config);
 
         HikariDataSource hikariDataSource = new HikariDataSource(config);
         ManagedDataSource managedDataSource = new ManagedDataSource(hikariDataSource, dbType);
@@ -176,19 +171,14 @@ public class DataSourceInitializer {
         }
     }
 
-    private void addHikariProperties(String name, Properties properties) {
-        Map<String, String> hikariProperties = getHikariProperties(name);
-        hikariProperties.forEach(properties::setProperty);
-    }
-
     /**
      * Gets the hikari properties.
      *
      * @param databaseName the database name
      * @return the hikari properties
      */
-    private Map<String, String> getHikariProperties(String databaseName) {
-        Map<String, String> properties = new HashMap<>();
+    private Properties getHikariProperties(String databaseName) {
+        Properties properties = new Properties();
         String hikariDelimiter = "_HIKARI_";
         String databaseKeyPrefix = databaseName + hikariDelimiter;
         int hikariDelimiterLength = hikariDelimiter.length();
