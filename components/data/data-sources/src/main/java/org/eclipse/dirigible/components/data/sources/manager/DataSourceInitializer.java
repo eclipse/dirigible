@@ -146,7 +146,7 @@ public class DataSourceInitializer {
         config.setConnectionTimeout(TimeUnit.SECONDS.toMillis(15));
         config.setLeakDetectionThreshold(TimeUnit.MINUTES.toMillis(1)); // log message for possible leaked connection
 
-        applyDbSpecificConfigurations(dataSource, dbType, config);
+        applyDbSpecificConfigurations(dbType, config);
 
         List<DataSourceProperty> additionalProperties = dataSource.getProperties();
         addAdditionalProperties(additionalProperties, config);
@@ -180,12 +180,6 @@ public class DataSourceInitializer {
         timer.schedule(repeatedTask, delayMillis);
     }
 
-    private void addPropertyIfAvailable(String propertyKey, Object propertyValue, Properties properties) {
-        if (null != propertyValue) {
-            properties.put(propertyKey, propertyValue);
-        }
-    }
-
     /**
      * Gets the hikari properties.
      *
@@ -209,7 +203,7 @@ public class DataSourceInitializer {
         additionalProperties.forEach(additionalProp -> config.addDataSourceProperty(additionalProp.getName(), additionalProp.getValue()));
     }
 
-    private void applyDbSpecificConfigurations(DataSource dataSource, DatabaseSystem dbType, HikariConfig config) {
+    private void applyDbSpecificConfigurations(DatabaseSystem dbType, HikariConfig config) {
         databaseConfigurators.stream()
                              .filter(dc -> dc.isApplicable(dbType))
                              .forEach(dc -> dc.apply(config));
@@ -219,7 +213,6 @@ public class DataSourceInitializer {
      * Prepare root folder.
      *
      * @param name the name
-     * @return the string
      */
     private void prepareRootFolder(String name) {
         try {
