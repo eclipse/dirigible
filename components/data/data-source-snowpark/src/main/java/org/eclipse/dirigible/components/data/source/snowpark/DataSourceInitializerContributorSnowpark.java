@@ -16,7 +16,6 @@ import org.eclipse.dirigible.components.data.sources.manager.DataSourceInitializ
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
@@ -43,38 +42,32 @@ public class DataSourceInitializerContributorSnowpark implements DataSourceIniti
             logger.info("[{}] will NOT contribute to datasource [{}]", this, dataSource.getName());
             return;
         }
-        try {
-            String url;
-            properties.put("dataSource.CLIENT_SESSION_KEEP_ALIVE", true);
-            properties.put("dataSource.CLIENT_SESSION_KEEP_ALIVE_HEARTBEAT_FREQUENCY", 900);
-            setPropertyIfConfigAvailable("SNOWFLAKE_ACCOUNT", "dataSource.account", properties);
-            setPropertyIfConfigAvailable("SNOWFLAKE_WAREHOUSE", "dataSource.warehouse", properties);
-            setPropertyIfConfigAvailable("SNOWFLAKE_DATABASE", "dataSource.db", properties);
-            setPropertyIfConfigAvailable("SNOWFLAKE_SCHEMA", "dataSource.schema", properties);
+        String url;
+        properties.put("dataSource.CLIENT_SESSION_KEEP_ALIVE", true);
+        properties.put("dataSource.CLIENT_SESSION_KEEP_ALIVE_HEARTBEAT_FREQUENCY", 900);
+        setPropertyIfConfigAvailable("SNOWFLAKE_ACCOUNT", "dataSource.account", properties);
+        setPropertyIfConfigAvailable("SNOWFLAKE_WAREHOUSE", "dataSource.warehouse", properties);
+        setPropertyIfConfigAvailable("SNOWFLAKE_DATABASE", "dataSource.db", properties);
+        setPropertyIfConfigAvailable("SNOWFLAKE_SCHEMA", "dataSource.schema", properties);
 
-            if (hasTokenFile()) {
-                logger.info("There IS token file. OAuth will be used for [{}]", dataSource.getName());
+        if (hasTokenFile()) {
+            logger.info("There IS token file. OAuth will be used for [{}]", dataSource.getName());
 
-                properties.put("dataSource.authenticator", "OAUTH");
-                properties.put("dataSource.token", new String(Files.readAllBytes(Paths.get(TOKEN_FILE_PATH))));
-                url = "jdbc:snowflake://" + Configuration.get("SNOWFLAKE_HOST") + ":" + Configuration.get("SNOWFLAKE_PORT");
-                logger.info("Built url [{}]", url);
-            } else {
-                logger.info("There is NO token file. User/password will be used for [{}]", dataSource.getName());
+            properties.put("dataSource.authenticator", "OAUTH");
+            url = "jdbc:snowflake://" + Configuration.get("SNOWFLAKE_HOST") + ":" + Configuration.get("SNOWFLAKE_PORT");
+            logger.info("Built url [{}]", url);
+        } else {
+            logger.info("There is NO token file. User/password will be used for [{}]", dataSource.getName());
 
-                setPropertyIfConfigAvailable("SNOWFLAKE_ROLE", "dataSource.role", properties);
-                setPropertyIfConfigAvailable("SNOWFLAKE_USERNAME", "dataSource.user", properties);
-                setPropertyIfConfigAvailable("SNOWFLAKE_PASSWORD", "dataSource.password", properties);
+            setPropertyIfConfigAvailable("SNOWFLAKE_ROLE", "dataSource.role", properties);
+            setPropertyIfConfigAvailable("SNOWFLAKE_USERNAME", "dataSource.user", properties);
+            setPropertyIfConfigAvailable("SNOWFLAKE_PASSWORD", "dataSource.password", properties);
 
-                url = Configuration.get("SNOWFLAKE_URL", dataSource.getUrl());
-            }
-
-            properties.put("jdbcUrl", url);
-            properties.put("dataSource.url", url);
-
-        } catch (IOException ex) {
-            logger.error("Invalid configuration for the datasource: [{}]", dataSource.getName(), ex);
+            url = Configuration.get("SNOWFLAKE_URL", dataSource.getUrl());
         }
+
+        properties.put("jdbcUrl", url);
+        properties.put("dataSource.url", url);
     }
 
     private static boolean hasTokenFile() {
