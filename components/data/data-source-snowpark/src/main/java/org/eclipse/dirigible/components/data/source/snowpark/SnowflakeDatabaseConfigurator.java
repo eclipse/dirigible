@@ -24,7 +24,7 @@ import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
 @Component
-class SnowflakeDatabaseConfigurator implements DatabaseConfigurator {
+public class SnowflakeDatabaseConfigurator implements DatabaseConfigurator {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(SnowflakeDatabaseConfigurator.class);
