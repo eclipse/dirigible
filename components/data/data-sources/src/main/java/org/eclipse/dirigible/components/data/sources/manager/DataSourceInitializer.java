@@ -109,7 +109,7 @@ public class DataSourceInitializer {
      * @return the managed data source
      */
     @SuppressWarnings("resource")
-    private ManagedDataSource initDataSource(DataSource dataSource) {
+    private DirigibleDataSource initDataSource(DataSource dataSource) {
 
         DatabaseSystem dbType = DatabaseSystemDeterminer.determine(dataSource);
 
@@ -154,7 +154,7 @@ public class DataSourceInitializer {
         addAdditionalProperties(additionalProperties, config);
 
         HikariDataSource hikariDataSource = new HikariDataSource(config);
-        ManagedDataSource managedDataSource = new ManagedDataSource(hikariDataSource, dbType);
+        DirigibleDataSource managedDataSource = new ManagedDataSource(hikariDataSource, dbType);
 
         registerDataSourceBean(name, managedDataSource);
 
@@ -209,7 +209,8 @@ public class DataSourceInitializer {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     private String prepareRootFolder(String name) throws IOException {
-        String rootFolder = (Objects.equals(defaultDataSourceName, name)) ? DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
+        String rootFolder = (Objects.equals(defaultDataSourceName, name))
+                ? DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
                 : DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
         String h2Root = Configuration.get(rootFolder, name);
         File rootFile = new File(h2Root);
@@ -229,7 +230,7 @@ public class DataSourceInitializer {
      * @param name the name
      * @param dataSource the data source
      */
-    private void registerDataSourceBean(String name, ManagedDataSource dataSource) {
+    private void registerDataSourceBean(String name, DirigibleDataSource dataSource) {
         if (Objects.equals(systemDataSourceName, name)) {
             return; // bean already set by org.eclipse.dirigible.components.database.DataSourceSystemConfig
         }
