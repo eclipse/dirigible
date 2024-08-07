@@ -54,6 +54,7 @@ public class DataSourceInitializer {
     private final TenantDataSourceNameManager tenantDataSourceNameManager;
     private final String systemDataSourceName;
     private final String defaultDataSourceName;
+    private final Timer timer;
 
     DataSourceInitializer(ApplicationContext applicationContext, List<DatabaseConfigurator> databaseConfigurators,
             TenantDataSourceNameManager tenantDataSourceNameManager, @SystemDataSourceName String systemDataSourceName,
@@ -63,6 +64,7 @@ public class DataSourceInitializer {
         this.tenantDataSourceNameManager = tenantDataSourceNameManager;
         this.systemDataSourceName = systemDataSourceName;
         this.defaultDataSourceName = defaultDataSourceName;
+        this.timer = new Timer();
     }
 
     /**
@@ -154,7 +156,7 @@ public class DataSourceInitializer {
         addAdditionalProperties(additionalProperties, config);
 
         HikariDataSource hikariDataSource = new HikariDataSource(config);
-        DirigibleDataSource managedDataSource = new DirigibleDataSourceImpl(hikariDataSource, dbType);
+        DirigibleDataSourceImpl managedDataSource = new DirigibleDataSourceImpl(hikariDataSource, dbType);
 
         registerDataSourceBean(name, managedDataSource);
 
@@ -162,6 +164,18 @@ public class DataSourceInitializer {
 
         Runtime.getRuntime()
                .addShutdownHook(new Thread(hikariDataSource::close));
+
+        if (dbType.isSnowflake()) {
+            // schedule data source destroy periodically since the oauth token
+            // expires after some time and data source have to be recreated
+            TimerTask repeatedTask = new TimerTask() {
+                public void run() {
+                    removeInitializedDataSource(name);
+                }
+            };
+            long delay = 60 * 9 * 1000;
+            timer.schedule(repeatedTask, delay);
+        }
 
         return managedDataSource;
     }
@@ -209,7 +223,8 @@ public class DataSourceInitializer {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     private String prepareRootFolder(String name) throws IOException {
-        String rootFolder = (Objects.equals(defaultDataSourceName, name)) ? DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
+        String rootFolder = (Objects.equals(defaultDataSourceName, name))
+                ? DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
                 : DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
         String h2Root = Configuration.get(rootFolder, name);
         File rootFile = new File(h2Root);
@@ -250,7 +265,16 @@ public class DataSourceInitializer {
      */
     public void removeInitializedDataSource(String dataSourceName) {
         String name = tenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
-        DATASOURCES.remove(name);
+        DirigibleDataSource removedDataSource = DATASOURCES.remove(name);
+        logger.info("DataSource [{}] with name [{}] will be removed if exists...", removedDataSource, name);
+        if (null != removedDataSource) {
+            removedDataSource.close();
+
+            GenericApplicationContext genericAppContext = (GenericApplicationContext) applicationContext;
+            ConfigurableListableBeanFactory beanFactory = genericAppContext.getBeanFactory();
+            beanFactory.destroyBean(name);
+            logger.info("DataSource [{}] with name [{}] was removed", removedDataSource, name);
+        }
     }
 
 }

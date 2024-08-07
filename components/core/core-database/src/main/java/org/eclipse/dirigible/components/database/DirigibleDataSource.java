@@ -4,4 +4,6 @@ import javax.sql.DataSource;
 
 public interface DirigibleDataSource extends DataSource, DatabaseSystemAware {
 
+    void close();
+
 }

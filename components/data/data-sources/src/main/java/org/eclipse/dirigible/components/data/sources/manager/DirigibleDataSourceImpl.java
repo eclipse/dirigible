@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.components.data.sources.manager;
 
+import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.pool.LeakedConnectionsDoctor;
 import org.eclipse.dirigible.components.api.security.UserFacade;
 import org.eclipse.dirigible.components.database.DatabaseSystem;
@@ -33,7 +34,7 @@ class DirigibleDataSourceImpl implements DirigibleDataSource {
     /** The Constant LOGGER. */
     private static final Logger logger = LoggerFactory.getLogger(DirigibleDataSourceImpl.class);
 
-    private final DataSource originalDataSource;
+    private final HikariDataSource originalDataSource;
     private final DatabaseSystem databaseSystem;
 
     /**
@@ -43,7 +44,7 @@ class DirigibleDataSourceImpl implements DirigibleDataSource {
      * @param originalDataSource the original data source
      * @param databaseSystem database type
      */
-    DirigibleDataSourceImpl(DataSource originalDataSource, DatabaseSystem databaseSystem) {
+    DirigibleDataSourceImpl(HikariDataSource originalDataSource, DatabaseSystem databaseSystem) {
         this.originalDataSource = originalDataSource;
         this.databaseSystem = databaseSystem;
     }
@@ -82,14 +83,10 @@ class DirigibleDataSourceImpl implements DirigibleDataSource {
             } else {
                 userName = UserFacade.getName();
             }
-            if (logger.isDebugEnabled()) {
-                logger.debug("Setting APPLICATIONUSER:{} for connection: {}", userName, connection);
-            }
+            logger.debug("Setting APPLICATIONUSER:{} for connection: {}", userName, connection);
             connection.setClientInfo("APPLICATIONUSER", userName);
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("Setting XS_APPLICATIONUSER:{} for connection: {}", userName, connection);
-            }
+            logger.debug("Setting XS_APPLICATIONUSER:{} for connection: {}", userName, connection);
             connection.setClientInfo("XS_APPLICATIONUSER", userName);
         }
 
@@ -208,4 +205,8 @@ class DirigibleDataSourceImpl implements DirigibleDataSource {
         return this.databaseSystem == databaseSystem;
     }
 
+    @Override
+    public void close() {
+        originalDataSource.close();
+    }
 }
