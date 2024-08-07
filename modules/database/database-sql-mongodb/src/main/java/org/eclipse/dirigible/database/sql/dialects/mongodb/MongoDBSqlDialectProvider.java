@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.mongodb;
 
+import org.eclipse.dirigible.components.database.DatabaseSystem;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.ISqlDialectProvider;
 
@@ -25,6 +26,11 @@ public class MongoDBSqlDialectProvider implements ISqlDialectProvider {
     @Override
     public String getName() {
         return "MongoDB";
+    }
+
+    @Override
+    public DatabaseSystem getDatabaseSystem() {
+        return DatabaseSystem.MONGODB;
     }
 
     /**

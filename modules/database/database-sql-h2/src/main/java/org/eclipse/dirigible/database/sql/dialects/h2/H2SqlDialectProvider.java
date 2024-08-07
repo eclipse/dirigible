@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.h2;
 
+import org.eclipse.dirigible.components.database.DatabaseSystem;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.ISqlDialectProvider;
 
@@ -25,6 +26,11 @@ public class H2SqlDialectProvider implements ISqlDialectProvider {
     @Override
     public String getName() {
         return "H2";
+    }
+
+    @Override
+    public DatabaseSystem getDatabaseSystem() {
+        return DatabaseSystem.H2;
     }
 
     /**

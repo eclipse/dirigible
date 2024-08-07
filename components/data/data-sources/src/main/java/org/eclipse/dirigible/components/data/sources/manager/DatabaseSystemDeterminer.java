@@ -44,6 +44,14 @@ class DatabaseSystemDeterminer {
             return DatabaseSystem.MYSQL;
         }
 
+        if (isMongoDBM(jdbcUrl, driverClass)) {
+            return DatabaseSystem.MONGODB;
+        }
+
+        if (isSybase(jdbcUrl, driverClass)) {
+            return DatabaseSystem.SYBASE;
+        }
+
         return DatabaseSystem.UNKNOWN;
     }
 
@@ -69,6 +77,14 @@ class DatabaseSystemDeterminer {
 
     private static boolean isMySQL(String jdbcUrl, String driverClass) {
         return isDatabaseOfType(jdbcUrl, driverClass, "jdbc:mysql", "com.mysql.cj.jdbc.Driver");
+    }
+
+    private static boolean isMongoDBM(String jdbcUrl, String driverClass) {
+        return isDatabaseOfType(jdbcUrl, driverClass, "jdbc:mongodb", "com.mongodb.jdbc.MongoDriver");
+    }
+
+    private static boolean isSybase(String jdbcUrl, String driverClass) {
+        return isDatabaseOfType(jdbcUrl, driverClass, "jdbc:sybase", "com.sybase.jdbc4.jdbc.SybDriver");
     }
 
     private static boolean isDatabaseOfType(String jdbcUrl, String driverClass, String jdbcPrefix, String... drivers) {

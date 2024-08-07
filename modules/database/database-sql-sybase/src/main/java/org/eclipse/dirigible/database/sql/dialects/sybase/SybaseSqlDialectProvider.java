@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.sybase;
 
+import org.eclipse.dirigible.components.database.DatabaseSystem;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.ISqlDialectProvider;
 
@@ -25,6 +26,11 @@ public class SybaseSqlDialectProvider implements ISqlDialectProvider {
     @Override
     public String getName() {
         return "Adaptive Server Enterprise";
+    }
+
+    @Override
+    public DatabaseSystem getDatabaseSystem() {
+        return DatabaseSystem.SYBASE;
     }
 
     /**

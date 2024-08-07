@@ -11,6 +11,7 @@ package org.eclipse.dirigible.integration.tests;
 
 import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
+import org.eclipse.dirigible.components.database.DirigibleDataSource;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -66,21 +67,20 @@ class DirigibleCleaner {
     }
 
     /**
-     * Execute this before H2 folder deletion because it is in memory DB. Otherwise, will remain data in
-     * memory.
+     * Execute this before H2 folder deletion because it is in memory DB. Otherwise, will remain data in memory.
      */
     private void deleteDirigibleDBData() {
-        DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
+        DirigibleDataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
         dropAllTablesInSchema(defaultDataSource);
         dropAllSequencesInSchema(defaultDataSource);
 
-        DataSource systemDataSource = dataSourcesManager.getSystemDataSource();
+        DirigibleDataSource systemDataSource = dataSourcesManager.getSystemDataSource();
         deleteAllTablesDataInSchema(systemDataSource);
 
         deleteSchemas(defaultDataSource);
     }
 
-    private void deleteAllTablesDataInSchema(DataSource dataSource) {
+    private void deleteAllTablesDataInSchema(DirigibleDataSource dataSource) {
         Set<String> tables = getAllTables(dataSource);
 
         for (int idx = 0; idx < 4; idx++) { // execute it a few times due to constraint violations
@@ -88,7 +88,7 @@ class DirigibleCleaner {
             while (iterator.hasNext()) {
                 String table = iterator.next();
                 try (Connection connection = dataSource.getConnection()) {
-                    String sql = SqlDialectFactory.getDialect(connection)
+                    String sql = SqlDialectFactory.getDialect(dataSource)
                                                   .delete()
                                                   .from(table)
                                                   .build();
@@ -104,7 +104,7 @@ class DirigibleCleaner {
         }
     }
 
-    private void dropAllSequencesInSchema(DataSource dataSource) {
+    private void dropAllSequencesInSchema(DirigibleDataSource dataSource) {
         List<String> sequences = getAllSequences(dataSource);
         LOGGER.info("Will drop [{}] sequences from data source [{}]. Sequences: {}", sequences.size(), dataSource, sequences);
 
@@ -113,7 +113,7 @@ class DirigibleCleaner {
             while (iterator.hasNext()) {
                 String sequence = iterator.next();
                 try (Connection connection = dataSource.getConnection()) {
-                    String sql = SqlDialectFactory.getDialect(connection)
+                    String sql = SqlDialectFactory.getDialect(dataSource)
                                                   .drop()
                                                   .sequence(sequence)
                                                   .build();
@@ -144,7 +144,7 @@ class DirigibleCleaner {
         }
     }
 
-    private void dropAllTablesInSchema(DataSource dataSource) {
+    private void dropAllTablesInSchema(DirigibleDataSource dataSource) {
         Set<String> tables = getAllTables(dataSource);
         LOGGER.info("Will drop [{}] tables from data source [{}]. Tables: {}", tables.size(), dataSource, tables);
 
@@ -153,7 +153,7 @@ class DirigibleCleaner {
             while (iterator.hasNext()) {
                 String tableName = iterator.next();
                 try (Connection connection = dataSource.getConnection()) {
-                    String sql = SqlDialectFactory.getDialect(connection)
+                    String sql = SqlDialectFactory.getDialect(dataSource)
                                                   .drop()
                                                   .table(tableName)
                                                   .cascade(true)
@@ -185,7 +185,7 @@ class DirigibleCleaner {
         }
     }
 
-    private void deleteSchemas(DataSource dataSource) {
+    private void deleteSchemas(DirigibleDataSource dataSource) {
         Set<String> schemas = getSchemas(dataSource);
         schemas.remove("PUBLIC");
         schemas.remove("public");
@@ -223,10 +223,10 @@ class DirigibleCleaner {
         }
     }
 
-    private void deleteSchema(String schema, DataSource dataSource) {
+    private void deleteSchema(String schema, DirigibleDataSource dataSource) {
         LOGGER.info("Will drop schema [{}] from data source [{}]", schema, dataSource);
         try (Connection connection = dataSource.getConnection()) {
-            ISqlDialect dialect = SqlDialectFactory.getDialect(connection);
+            ISqlDialect dialect = SqlDialectFactory.getDialect(dataSource);
             String sql = dialect.drop()
                                 .schema(schema)
                                 .cascade(true)

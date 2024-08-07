@@ -81,6 +81,26 @@ class DatabaseSystemDeterminerTest {
     }
 
     @Test
+    void testDetermineMongoDB_withUrl() {
+        testDetermine_withUrl("jdbc:mongodb://localhost:27017/mydatabase", DatabaseSystem.MONGODB);
+    }
+
+    @Test
+    void testDetermineMongoDB_withDriver() {
+        testDetermine_withDriver("com.mongodb.jdbc.MongoDriver", DatabaseSystem.MONGODB);
+    }
+
+    @Test
+    void testDetermineSybase_withUrl() {
+        testDetermine_withUrl("jdbc:sybase:Tds:localhost:3306/database", DatabaseSystem.SYBASE);
+    }
+
+    @Test
+    void testDetermineSybase_withDriver() {
+        testDetermine_withDriver("com.sybase.jdbc4.jdbc.SybDriver", DatabaseSystem.SYBASE);
+    }
+
+    @Test
     void testDetermineUnknown_withUrl() {
         testDetermine_withUrl("jdbc:unknown://localhost:1234/testdb", DatabaseSystem.UNKNOWN);
     }

@@ -12,6 +12,7 @@ package org.eclipse.dirigible.components.data.sources.manager;
 import com.zaxxer.hikari.pool.LeakedConnectionsDoctor;
 import org.eclipse.dirigible.components.api.security.UserFacade;
 import org.eclipse.dirigible.components.database.DatabaseSystem;
+import org.eclipse.dirigible.components.database.DirigibleDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;

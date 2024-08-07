@@ -9,24 +9,14 @@
  */
 package org.eclipse.dirigible.components.data.export.service;
 
-import static java.text.MessageFormat.format;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.apache.commons.io.output.WriterOutputStream;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.api.platform.WorkspaceFacade;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
-import org.eclipse.dirigible.components.data.management.domain.DatabaseMetadata;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.components.data.management.load.DataSourceMetadataLoader;
 import org.eclipse.dirigible.components.data.management.service.DatabaseDefinitionService;
@@ -35,6 +25,7 @@ import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
 import org.eclipse.dirigible.components.data.transfer.service.DataTransferSchemaTopologyService;
+import org.eclipse.dirigible.components.database.DirigibleDataSource;
 import org.eclipse.dirigible.components.ide.workspace.domain.File;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
@@ -46,9 +37,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.text.MessageFormat.format;
 
 /**
  * The Class DataExportService.
@@ -126,7 +124,7 @@ public class DataExportService {
      */
     public void exportSchemaInCsvs(String datasource, String schema) {
         try {
-            javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
+            DirigibleDataSource dataSource = datasourceManager.getDataSource(datasource);
             if (dataSource != null) {
                 Workspace workspace;
                 ArrayList<CsvFile> csvFiles = new ArrayList<>();
@@ -161,8 +159,8 @@ public class DataExportService {
                         String artifact = table.get("name")
                                                .getAsString();
                         String sql = "SELECT * FROM \"" + schema + "\".\"" + artifact + "\"";
-                        try (Connection connection = dataSource.getConnection()) {
-                            sql = SqlDialectFactory.getDialect(connection)
+                        try {
+                            sql = SqlDialectFactory.getDialect(dataSource)
                                                    .allQuery("\"" + schema + "\".\"" + artifact + "\"");
                         } catch (Exception e) {
                             logger.error(e.getMessage(), e);

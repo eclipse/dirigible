@@ -9,15 +9,18 @@
  */
 package org.eclipse.dirigible.database.sql.dialects;
 
+import org.eclipse.dirigible.components.database.DatabaseSystem;
+import org.eclipse.dirigible.components.database.DirigibleDataSource;
+import org.eclipse.dirigible.database.sql.ISqlDialect;
+import org.eclipse.dirigible.database.sql.ISqlDialectProvider;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
-
-import org.eclipse.dirigible.database.sql.ISqlDialect;
-import org.eclipse.dirigible.database.sql.ISqlDialectProvider;
 
 /**
  * A factory for creating SqlDialect objects.
@@ -26,6 +29,22 @@ public class SqlDialectFactory {
 
     /** The Constant ACCESS_MANAGERS. */
     private static final ServiceLoader<ISqlDialectProvider> SQL_PROVIDERS = ServiceLoader.load(ISqlDialectProvider.class);
+
+    /** The Constant dialectsByName. */
+    // Lifted from Activiti
+    private static final Map<String, ISqlDialect> dialectsByName = Collections.synchronizedMap(new HashMap<>());
+
+    private static final Map<DatabaseSystem, ISqlDialect> dialectsBySystem = Collections.synchronizedMap(new HashMap<>());
+
+    static {
+        loadDefaultDialectsByName();
+    }
+
+    public static final ISqlDialect getDialect(DataSource dataSource) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            return getDialect(connection);
+        }
+    }
 
     /**
      * Gets the dialect.
@@ -37,24 +56,32 @@ public class SqlDialectFactory {
     public static final ISqlDialect getDialect(Connection connection) throws SQLException {
         String productName = connection.getMetaData()
                                        .getDatabaseProductName();
-        ISqlDialect dialect = databaseTypeMappings.get(productName);
+        ISqlDialect dialect = dialectsByName.get(productName);
         if (dialect == null) {
-            getDefaultDatabaseTypeMappings();
-            dialect = databaseTypeMappings.get(productName);
+            loadDefaultDialectsByName();
+            dialect = dialectsByName.get(productName);
             if (dialect == null) {
-                throw new RuntimeException("Database dialect for " + productName + " is not avalable.");
+                throw new IllegalStateException("Database dialect for " + productName + " is not available.");
             }
         }
         return dialect;
     }
 
+    public static final ISqlDialect getDialect(DirigibleDataSource dataSource) throws SQLException {
+        DatabaseSystem databaseSystem = dataSource.getDatabaseSystem();
+        return getDialect(databaseSystem);
+    }
 
-
-    /** The Constant databaseTypeMappings. */
-    // Lifted from Activiti
-    static Map<String, ISqlDialect> databaseTypeMappings = Collections.synchronizedMap(new HashMap<String, ISqlDialect>());
-    static {
-        getDefaultDatabaseTypeMappings();
+    public static final ISqlDialect getDialect(DatabaseSystem databaseSystem) throws SQLException {
+        ISqlDialect dialect = dialectsBySystem.get(databaseSystem);
+        if (dialect == null) {
+            loadDefaultDialectsBySystem();
+            dialect = dialectsBySystem.get(databaseSystem);
+            if (dialect == null) {
+                throw new IllegalStateException("Database dialect for [" + databaseSystem + "] is not available.");
+            }
+        }
+        return dialect;
     }
 
     /**
@@ -62,11 +89,16 @@ public class SqlDialectFactory {
      *
      * @return the default database type mappings
      */
-    protected static Map<String, ISqlDialect> getDefaultDatabaseTypeMappings() {
-        for (ISqlDialectProvider next : SQL_PROVIDERS) {
-            databaseTypeMappings.put(next.getName(), next.getDialect());
+    private static void loadDefaultDialectsByName() {
+        for (ISqlDialectProvider provider : SQL_PROVIDERS) {
+            dialectsByName.put(provider.getName(), provider.getDialect());
         }
-        return databaseTypeMappings;
+    }
+
+    private static void loadDefaultDialectsBySystem() {
+        for (ISqlDialectProvider provider : SQL_PROVIDERS) {
+            dialectsBySystem.put(provider.getDatabaseSystem(), provider.getDialect());
+        }
     }
 
 }

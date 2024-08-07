@@ -1,6 +1,4 @@
-package org.eclipse.dirigible.components.data.sources.manager;
-
-import org.eclipse.dirigible.components.database.DatabaseSystem;
+package org.eclipse.dirigible.components.database;
 
 import javax.sql.DataSource;
 
