@@ -70,7 +70,6 @@
 		<appender-ref ref="ConsoleLoggingAppender" />
 	</root>
 	
-	<logger name="org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory" level="DEBUG"/>
 	<logger name="org.eclipse.dirigible.components.initializers.synchronizer" level="INFO"/>
 	<logger name="org.eclipse.dirigible.components.base.synchronizer" level="INFO"/>
 	<logger name="org.eclipse.dirigible.components.tenants.tenant" level="INFO"/>
