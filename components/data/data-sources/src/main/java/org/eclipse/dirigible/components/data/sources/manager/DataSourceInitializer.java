@@ -168,16 +168,20 @@ public class DataSourceInitializer {
         if (dbType.isSnowflake()) {
             // schedule data source destroy periodically since the oauth token
             // expires after some time and data source have to be recreated
-            TimerTask repeatedTask = new TimerTask() {
-                public void run() {
-                    removeInitializedDataSource(name);
-                }
-            };
-            long delay = 60 * 9 * 1000;
-            timer.schedule(repeatedTask, delay);
+            scheduleDataSourceDestroy(name, 9, TimeUnit.MINUTES);
         }
 
         return managedDataSource;
+    }
+
+    private void scheduleDataSourceDestroy(String name, int duration, TimeUnit unit) {
+        TimerTask repeatedTask = new TimerTask() {
+            public void run() {
+                removeInitializedDataSource(name);
+            }
+        };
+        long delayMillis = unit.toMillis(duration);
+        timer.schedule(repeatedTask, delayMillis);
     }
 
     private void addPropertyIfAvailable(String propertyKey, Object propertyValue, Properties properties) {
