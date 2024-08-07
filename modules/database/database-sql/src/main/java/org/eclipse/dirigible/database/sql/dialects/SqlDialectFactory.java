@@ -41,6 +41,10 @@ public class SqlDialectFactory {
     }
 
     public static final ISqlDialect getDialect(DataSource dataSource) throws SQLException {
+        if (dataSource instanceof DirigibleDataSource dds) {
+            return getDialect(dds);
+        }
+
         try (Connection connection = dataSource.getConnection()) {
             return getDialect(connection);
         }
@@ -67,6 +71,12 @@ public class SqlDialectFactory {
         return dialect;
     }
 
+    private static void loadDefaultDialectsByName() {
+        for (ISqlDialectProvider provider : SQL_PROVIDERS) {
+            dialectsByName.put(provider.getName(), provider.getDialect());
+        }
+    }
+
     public static final ISqlDialect getDialect(DirigibleDataSource dataSource) throws SQLException {
         DatabaseSystem databaseSystem = dataSource.getDatabaseSystem();
         return getDialect(databaseSystem);
@@ -82,17 +92,6 @@ public class SqlDialectFactory {
             }
         }
         return dialect;
-    }
-
-    /**
-     * Gets the default database type mappings.
-     *
-     * @return the default database type mappings
-     */
-    private static void loadDefaultDialectsByName() {
-        for (ISqlDialectProvider provider : SQL_PROVIDERS) {
-            dialectsByName.put(provider.getName(), provider.getDialect());
-        }
     }
 
     private static void loadDefaultDialectsBySystem() {

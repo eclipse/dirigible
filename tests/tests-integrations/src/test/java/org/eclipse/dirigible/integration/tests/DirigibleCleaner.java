@@ -67,7 +67,8 @@ class DirigibleCleaner {
     }
 
     /**
-     * Execute this before H2 folder deletion because it is in memory DB. Otherwise, will remain data in memory.
+     * Execute this before H2 folder deletion because it is in memory DB. Otherwise, will remain data in
+     * memory.
      */
     private void deleteDirigibleDBData() {
         DirigibleDataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();

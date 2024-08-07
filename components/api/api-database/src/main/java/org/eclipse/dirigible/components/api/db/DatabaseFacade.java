@@ -148,10 +148,9 @@ public class DatabaseFacade implements InitializingBean {
      * @return the data source
      */
     private static DirigibleDataSource getDataSource(String datasourceName) {
-        return datasourceName == null || "".equals(datasourceName.trim()) || "DefaultDB".equals(datasourceName)
-                ? DatabaseFacade.get()
-                                .getDataSourcesManager()
-                                .getDefaultDataSource()
+        return datasourceName == null || "".equals(datasourceName.trim()) || "DefaultDB".equals(datasourceName) ? DatabaseFacade.get()
+                                                                                                                                .getDataSourcesManager()
+                                                                                                                                .getDefaultDataSource()
                 : DatabaseFacade.get()
                                 .getDataSourcesManager()
                                 .getDataSource(datasourceName);
