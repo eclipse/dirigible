@@ -50,7 +50,6 @@ class SnowflakeDatabaseConfigurator implements DatabaseConfigurator {
         if (hasTokenFile()) {
             logger.info("There IS token file. OAuth will be added to [{}]", config);
 
-            config.setUsername(null);
             config.setPassword(null);
             config.addDataSourceProperty("authenticator", "OAUTH");
             config.addDataSourceProperty("token", loadTokenFile());
