@@ -12,7 +12,7 @@ package org.eclipse.dirigible.components.data.source.snowpark;
 import com.zaxxer.hikari.HikariConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.data.sources.manager.DatabaseConfigurator;
+import org.eclipse.dirigible.components.database.DatabaseConfigurator;
 import org.eclipse.dirigible.components.database.DatabaseSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -11,19 +11,19 @@ package org.eclipse.dirigible.components.data.sources.manager;
 
 import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.pool.LeakedConnectionsDoctor;
-import org.eclipse.dirigible.components.api.security.UserFacade;
+import org.eclipse.dirigible.components.database.ConnectionEnhancer;
 import org.eclipse.dirigible.components.database.DatabaseSystem;
 import org.eclipse.dirigible.components.database.DirigibleDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The WrappedDataSource of the standard JDBC {@link DataSource} object with added some additional
@@ -34,6 +34,7 @@ class DirigibleDataSourceImpl implements DirigibleDataSource {
     /** The Constant LOGGER. */
     private static final Logger logger = LoggerFactory.getLogger(DirigibleDataSourceImpl.class);
 
+    private final List<ConnectionEnhancer> connectionEnhancers;
     private final HikariDataSource originalDataSource;
     private final DatabaseSystem databaseSystem;
 
@@ -44,7 +45,13 @@ class DirigibleDataSourceImpl implements DirigibleDataSource {
      * @param originalDataSource the original data source
      * @param databaseSystem database type
      */
-    DirigibleDataSourceImpl(HikariDataSource originalDataSource, DatabaseSystem databaseSystem) {
+    DirigibleDataSourceImpl(List<ConnectionEnhancer> allConnectionEnhancers, HikariDataSource originalDataSource,
+            DatabaseSystem databaseSystem) {
+        this.connectionEnhancers = allConnectionEnhancers.stream()
+                                                         .filter(e -> e.isApplicable(databaseSystem))
+                                                         .collect(Collectors.toList());
+        logger.info("Filtered [{}] connection enhancers out of [{}] for system [{}]: {}", connectionEnhancers.size(),
+                allConnectionEnhancers.size(), databaseSystem, connectionEnhancers);
         this.originalDataSource = originalDataSource;
         this.databaseSystem = databaseSystem;
     }
@@ -66,38 +73,6 @@ class DirigibleDataSourceImpl implements DirigibleDataSource {
     }
 
     /**
-     * Enhance connection.
-     *
-     * @param connection the connection
-     * @throws SQLException the SQL exception
-     */
-    private void enhanceConnection(Connection connection) throws SQLException {
-
-        // HANA
-        if (databaseSystem.isHANA()) {
-            Authentication authentication = SecurityContextHolder.getContext()
-                                                                 .getAuthentication();
-            String userName;
-            if (authentication != null) {
-                userName = authentication.getName();
-            } else {
-                userName = UserFacade.getName();
-            }
-            logger.debug("Setting APPLICATIONUSER:{} for connection: {}", userName, connection);
-            connection.setClientInfo("APPLICATIONUSER", userName);
-
-            logger.debug("Setting XS_APPLICATIONUSER:{} for connection: {}", userName, connection);
-            connection.setClientInfo("XS_APPLICATIONUSER", userName);
-        }
-
-        // Snowflake
-        if (databaseSystem.isSnowflake()) {
-            connection.createStatement()
-                      .executeQuery("ALTER SESSION SET JDBC_QUERY_RESULT_FORMAT='JSON'");
-        }
-    }
-
-    /**
      * Gets the connection.
      *
      * @param username the username
@@ -113,6 +88,12 @@ class DirigibleDataSourceImpl implements DirigibleDataSource {
         LeakedConnectionsDoctor.registerConnection(connection);
 
         return new DirigibleConnectionImpl(connection, databaseSystem);
+    }
+
+    private void enhanceConnection(Connection connection) throws SQLException {
+        for (ConnectionEnhancer enhancer : connectionEnhancers) {
+            enhancer.apply(connection);
+        }
     }
 
     /**

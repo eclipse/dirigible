@@ -7,17 +7,14 @@
  *
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.data.sources.manager;
+package org.eclipse.dirigible.components.database;
 
-import com.zaxxer.hikari.HikariConfig;
-import org.eclipse.dirigible.components.database.DatabaseSystem;
+import java.sql.Connection;
+import java.sql.SQLException;
 
-/**
- * The Interface DatabaseConfigurator.
- */
-public interface DatabaseConfigurator {
+public interface ConnectionEnhancer {
 
     boolean isApplicable(DatabaseSystem databaseSystem);
 
-    void apply(HikariConfig config);
+    void apply(Connection connection) throws SQLException;
 }

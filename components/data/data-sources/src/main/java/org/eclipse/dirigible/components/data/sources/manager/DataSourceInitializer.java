@@ -10,12 +10,12 @@
 package org.eclipse.dirigible.components.data.sources.manager;
 
 import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.sources.config.DefaultDataSourceName;
 import org.eclipse.dirigible.components.data.sources.config.SystemDataSourceName;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.domain.DataSourceProperty;
+import org.eclipse.dirigible.components.database.DatabaseConfigurator;
 import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.eclipse.dirigible.components.database.DatabaseSystem;
 import org.eclipse.dirigible.components.database.DirigibleDataSource;
@@ -54,16 +54,18 @@ public class DataSourceInitializer {
     private final TenantDataSourceNameManager tenantDataSourceNameManager;
     private final String systemDataSourceName;
     private final String defaultDataSourceName;
+    private final DirigibleDataSourceFactory dataSourceFactory;
     private final Timer timer;
 
     DataSourceInitializer(ApplicationContext applicationContext, List<DatabaseConfigurator> databaseConfigurators,
             TenantDataSourceNameManager tenantDataSourceNameManager, @SystemDataSourceName String systemDataSourceName,
-            @DefaultDataSourceName String defaultDataSourceName) {
+            @DefaultDataSourceName String defaultDataSourceName, DirigibleDataSourceFactory dataSourceFactory) {
         this.applicationContext = applicationContext;
         this.databaseConfigurators = databaseConfigurators;
         this.tenantDataSourceNameManager = tenantDataSourceNameManager;
         this.systemDataSourceName = systemDataSourceName;
         this.defaultDataSourceName = defaultDataSourceName;
+        this.dataSourceFactory = dataSourceFactory;
         this.timer = new Timer();
     }
 
@@ -151,15 +153,10 @@ public class DataSourceInitializer {
         List<DataSourceProperty> additionalProperties = dataSource.getProperties();
         addAdditionalProperties(additionalProperties, config);
 
-        HikariDataSource hikariDataSource = new HikariDataSource(config);
-        DirigibleDataSourceImpl managedDataSource = new DirigibleDataSourceImpl(hikariDataSource, dbType);
+        DirigibleDataSource managedDataSource = dataSourceFactory.create(config, dbType);
 
         registerDataSourceBean(name, managedDataSource);
-
         DATASOURCES.put(name, managedDataSource);
-
-        Runtime.getRuntime()
-               .addShutdownHook(new Thread(hikariDataSource::close));
 
         if (dbType.isSnowflake()) {
             // schedule data source destroy periodically since the oauth token

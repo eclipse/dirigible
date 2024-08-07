@@ -10,7 +10,7 @@
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
 import com.zaxxer.hikari.HikariConfig;
-import org.eclipse.dirigible.components.data.sources.manager.DatabaseConfigurator;
+import org.eclipse.dirigible.components.database.DatabaseConfigurator;
 import org.eclipse.dirigible.components.database.DatabaseSystem;
 import org.springframework.stereotype.Component;
 
