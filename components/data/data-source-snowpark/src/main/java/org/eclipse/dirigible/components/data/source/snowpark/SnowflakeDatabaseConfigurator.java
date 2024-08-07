@@ -44,20 +44,23 @@ class SnowflakeDatabaseConfigurator implements DatabaseConfigurator {
         config.addDataSourceProperty("CLIENT_SESSION_KEEP_ALIVE", true);
         config.addDataSourceProperty("CLIENT_SESSION_KEEP_ALIVE_HEARTBEAT_FREQUENCY", 900);
 
-        addDataSourcePropertyIfConfigAvailable("SNOWFLAKE_ACCOUNT", "account", config);
         addDataSourcePropertyIfConfigAvailable("SNOWFLAKE_WAREHOUSE", "warehouse", config);
-        addDataSourcePropertyIfConfigAvailable("SNOWFLAKE_DATABASE", "db", config);
-        addDataSourcePropertyIfConfigAvailable("SNOWFLAKE_SCHEMA", "schema", config);
 
         String url;
         if (hasTokenFile()) {
             logger.info("There IS token file. OAuth will be added to [{}]", config);
 
+            config.setUsername(null);
+            config.setPassword(null);
             config.addDataSourceProperty("authenticator", "OAUTH");
             config.addDataSourceProperty("token", loadTokenFile());
             url = "jdbc:snowflake://" + Configuration.get("SNOWFLAKE_HOST") + ":" + Configuration.get("SNOWFLAKE_PORT");
         } else {
             logger.info("There is NO token file. User/password will be added to [{}]", config);
+
+            addDataSourcePropertyIfConfigAvailable("SNOWFLAKE_ACCOUNT", "account", config);
+            addDataSourcePropertyIfConfigAvailable("SNOWFLAKE_DATABASE", "db", config);
+            addDataSourcePropertyIfConfigAvailable("SNOWFLAKE_SCHEMA", "schema", config);
 
             addDataSourcePropertyIfConfigAvailable("SNOWFLAKE_ROLE", "role", config);
             addDataSourcePropertyIfConfigAvailable("SNOWFLAKE_USERNAME", "user", config);
