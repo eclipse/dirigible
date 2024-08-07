@@ -30,7 +30,7 @@ public class HanaSqlDialectProvider implements ISqlDialectProvider {
 
     @Override
     public DatabaseSystem getDatabaseSystem() {
-        return DatabaseSystem.H2;
+        return DatabaseSystem.HANA;
     }
 
     /**

@@ -77,7 +77,7 @@ public class SqlDialectFactory {
                 throw new IllegalStateException("Database dialect for " + productName + " is not available.");
             }
         }
-        LOGGER.debug("Loaded dialect [{}] for [{}] using registered dialects by NAME", dialect);
+        LOGGER.debug("Loaded dialect [{}] for [{}] using registered dialects by NAME", dialect, productName);
         return dialect;
     }
 
@@ -105,7 +105,7 @@ public class SqlDialectFactory {
                 throw new IllegalStateException("Database dialect for [" + databaseSystem + "] is not available.");
             }
         }
-        LOGGER.debug("Loaded dialect [{}] for [{}] using registered dialects by SYSTEM", dialect);
+        LOGGER.debug("Loaded dialect [{}] for [{}] using registered dialects by SYSTEM", dialect, databaseSystem);
         return dialect;
     }
 
