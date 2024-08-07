@@ -11,6 +11,7 @@ package org.eclipse.dirigible.components.data.sources.manager;
 
 import com.zaxxer.hikari.pool.LeakedConnectionsDoctor;
 import org.eclipse.dirigible.components.api.security.UserFacade;
+import org.eclipse.dirigible.components.database.DatabaseSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -32,18 +33,18 @@ public class ManagedDataSource implements DirigibleDataSource {
     private static final Logger logger = LoggerFactory.getLogger(ManagedDataSource.class);
 
     private final DataSource originalDataSource;
-    private final DatabaseType databaseType;
+    private final DatabaseSystem databaseSystem;
 
     /**
      * Wrapper of the default datasource provided by the underlying platform It has some fault tolerance
      * features, which are not available by default in the popular JDBC drivers.
      *
      * @param originalDataSource the original data source
-     * @param databaseType database type
+     * @param databaseSystem database type
      */
-    public ManagedDataSource(DataSource originalDataSource, DatabaseType databaseType) {
+    public ManagedDataSource(DataSource originalDataSource, DatabaseSystem databaseSystem) {
         this.originalDataSource = originalDataSource;
-        this.databaseType = databaseType;
+        this.databaseSystem = databaseSystem;
     }
 
     /**
@@ -71,7 +72,7 @@ public class ManagedDataSource implements DirigibleDataSource {
     private void enhanceConnection(Connection connection) throws SQLException {
 
         // HANA
-        if (databaseType.isHANA()) {
+        if (databaseSystem.isHANA()) {
             Authentication authentication = SecurityContextHolder.getContext()
                                                                  .getAuthentication();
             String userName;
@@ -92,7 +93,7 @@ public class ManagedDataSource implements DirigibleDataSource {
         }
 
         // Snowflake
-        if (databaseType.isSnowflake()) {
+        if (databaseSystem.isSnowflake()) {
             connection.createStatement()
                       .executeQuery("ALTER SESSION SET JDBC_QUERY_RESULT_FORMAT='JSON'");
         }
@@ -197,13 +198,13 @@ public class ManagedDataSource implements DirigibleDataSource {
     }
 
     @Override
-    public DatabaseType getDatabaseType() {
-        return databaseType;
+    public DatabaseSystem getDatabaseSystem() {
+        return databaseSystem;
     }
 
     @Override
-    public boolean isOfType(DatabaseType databaseType) {
-        return this.databaseType == databaseType;
+    public boolean isOfType(DatabaseSystem databaseSystem) {
+        return this.databaseSystem == databaseSystem;
     }
 
 }

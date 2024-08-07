@@ -17,6 +17,7 @@ import org.eclipse.dirigible.components.data.sources.config.SystemDataSourceName
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.domain.DataSourceProperty;
 import org.eclipse.dirigible.components.database.DatabaseParameters;
+import org.eclipse.dirigible.components.database.DatabaseSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -46,18 +47,18 @@ public class DataSourceInitializer {
     private final ApplicationContext applicationContext;
 
     /** The contributors. */
-    private final List<DataSourceInitializerContributor> contributors;
+    private final List<DatabaseConfigurator> databaseConfigurators;
 
     /** The tenant data source name manager. */
     private final TenantDataSourceNameManager tenantDataSourceNameManager;
     private final String systemDataSourceName;
     private final String defaultDataSourceName;
 
-    DataSourceInitializer(ApplicationContext applicationContext, List<DataSourceInitializerContributor> contributors,
+    DataSourceInitializer(ApplicationContext applicationContext, List<DatabaseConfigurator> databaseConfigurators,
             TenantDataSourceNameManager tenantDataSourceNameManager, @SystemDataSourceName String systemDataSourceName,
             @DefaultDataSourceName String defaultDataSourceName) {
         this.applicationContext = applicationContext;
-        this.contributors = contributors;
+        this.databaseConfigurators = databaseConfigurators;
         this.tenantDataSourceNameManager = tenantDataSourceNameManager;
         this.systemDataSourceName = systemDataSourceName;
         this.defaultDataSourceName = defaultDataSourceName;
@@ -109,7 +110,7 @@ public class DataSourceInitializer {
     @SuppressWarnings("resource")
     private ManagedDataSource initDataSource(DataSource dataSource) {
 
-        DatabaseType dbType = DatabaseTypeDeterminer.determine(dataSource);
+        DatabaseSystem dbType = DatabaseSystemDeterminer.determine(dataSource);
 
         String name = dataSource.getName();
         String driver = dataSource.getDriver();
@@ -128,35 +129,20 @@ public class DataSourceInitializer {
                 logger.error("Invalid configuration for the datasource: [{}]", name, ex);
             }
         }
+
         Properties properties = new Properties();
-        Properties contributed = new Properties();
 
-        properties.put("driverClassName", driver);
-        properties.put("jdbcUrl", url);
-        properties.put("dataSource.url", url);
-        properties.put("dataSource.user", username);
-        properties.put("dataSource.password", password);
-        properties.put("dataSource.logWriter", new PrintWriter(System.out));
+        addPropertyIfAvailable("driverClassName", driver, properties);
+        addPropertyIfAvailable("jdbcUrl", url, properties);
+        addPropertyIfAvailable("dataSource.url", url, properties);
+        addPropertyIfAvailable("dataSource.user", username, properties);
+        addPropertyIfAvailable("dataSource.password", password, properties);
+        addPropertyIfAvailable("dataSource.logWriter", new PrintWriter(System.out), properties);
 
-        contributors.forEach(contributor -> contributor.contribute(dataSource, contributed));
+        addHikariProperties(name, properties);
 
-        Map<String, String> hikariProperties = getHikariProperties(name);
-        hikariProperties.forEach(properties::setProperty);
-
-        HikariConfig config;
-
-        if (dbType.isSnowflake()) {
-            config = new HikariConfig(contributed);
-            config.setDriverClassName(driver);
-            config.setJdbcUrl(contributed.get("jdbcUrl")
-                                         .toString());
-            config.setConnectionTestQuery("SELECT 1"); // connection validation query
-            config.setKeepaliveTime(TimeUnit.MINUTES.toMillis(5)); // validation execution interval, must be bigger than idle timeout
-        } else {
-            properties.putAll(contributed);
-            config = new HikariConfig(properties);
-            additionalProperties.forEach(dsp -> config.addDataSourceProperty(dsp.getName(), dsp.getValue()));
-        }
+        HikariConfig config = new HikariConfig(properties);
+        addAdditionalProperties(additionalProperties, config);
 
         config.setSchema(schema);
         config.setPoolName(name);
@@ -165,16 +151,11 @@ public class DataSourceInitializer {
 
         config.setMinimumIdle(10);
         config.setIdleTimeout(TimeUnit.MINUTES.toMillis(3)); // free connections when idle, potentially remove leaked connections
-
-        long maxLifetime = dbType.isSnowflake() ? TimeUnit.MINUTES.toMillis(9) : TimeUnit.MINUTES.toMillis(15);
-        config.setMaxLifetime(maxLifetime); // recreate connections after specified time
+        config.setMaxLifetime(TimeUnit.MINUTES.toMillis(15)); // recreate connections after specified time
         config.setConnectionTimeout(TimeUnit.SECONDS.toMillis(15));
         config.setLeakDetectionThreshold(TimeUnit.MINUTES.toMillis(1)); // log message for possible leaked connection
 
-        if (dbType.isHANA()) {
-            config.setConnectionTestQuery("SELECT 1 FROM DUMMY"); // connection validation query
-            config.setKeepaliveTime(TimeUnit.MINUTES.toMillis(5)); // validation execution interval, must be bigger than idle timeout
-        }
+        applyDbSpecificConfigurations(dataSource, dbType, config);
 
         HikariDataSource hikariDataSource = new HikariDataSource(config);
         ManagedDataSource managedDataSource = new ManagedDataSource(hikariDataSource, dbType);
@@ -187,6 +168,46 @@ public class DataSourceInitializer {
                .addShutdownHook(new Thread(hikariDataSource::close));
 
         return managedDataSource;
+    }
+
+    private void addPropertyIfAvailable(String propertyKey, Object propertyValue, Properties properties) {
+        if (null != propertyValue) {
+            properties.put(propertyKey, propertyValue);
+        }
+    }
+
+    private void addHikariProperties(String name, Properties properties) {
+        Map<String, String> hikariProperties = getHikariProperties(name);
+        hikariProperties.forEach(properties::setProperty);
+    }
+
+    /**
+     * Gets the hikari properties.
+     *
+     * @param databaseName the database name
+     * @return the hikari properties
+     */
+    private Map<String, String> getHikariProperties(String databaseName) {
+        Map<String, String> properties = new HashMap<>();
+        String hikariDelimiter = "_HIKARI_";
+        String databaseKeyPrefix = databaseName + hikariDelimiter;
+        int hikariDelimiterLength = hikariDelimiter.length();
+        Arrays.stream(Configuration.getKeys())
+              .filter(key -> key.startsWith(databaseKeyPrefix))//
+              .map(key -> key.substring(key.lastIndexOf(hikariDelimiter) + hikariDelimiterLength))
+              .forEach(key -> properties.put(key, Configuration.get(databaseKeyPrefix + key)));
+
+        return properties;
+    }
+
+    private void addAdditionalProperties(List<DataSourceProperty> additionalProperties, HikariConfig config) {
+        additionalProperties.forEach(additionalProp -> config.addDataSourceProperty(additionalProp.getName(), additionalProp.getValue()));
+    }
+
+    private void applyDbSpecificConfigurations(DataSource dataSource, DatabaseSystem dbType, HikariConfig config) {
+        databaseConfigurators.stream()
+                             .filter(dc -> dc.isApplicable(dbType))
+                             .forEach(dc -> dc.apply(config));
     }
 
     /**
@@ -209,25 +230,6 @@ public class DataSourceInitializer {
             }
         }
         return h2Root;
-    }
-
-    /**
-     * Gets the hikari properties.
-     *
-     * @param databaseName the database name
-     * @return the hikari properties
-     */
-    private Map<String, String> getHikariProperties(String databaseName) {
-        Map<String, String> properties = new HashMap<>();
-        String hikariDelimiter = "_HIKARI_";
-        String databaseKeyPrefix = databaseName + hikariDelimiter;
-        int hikariDelimiterLength = hikariDelimiter.length();
-        Arrays.stream(Configuration.getKeys())
-              .filter(key -> key.startsWith(databaseKeyPrefix))//
-              .map(key -> key.substring(key.lastIndexOf(hikariDelimiter) + hikariDelimiterLength))
-              .forEach(key -> properties.put(key, Configuration.get(databaseKeyPrefix + key)));
-
-        return properties;
     }
 
     /**

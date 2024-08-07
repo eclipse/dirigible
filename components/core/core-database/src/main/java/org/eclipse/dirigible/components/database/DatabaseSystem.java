@@ -1,6 +1,6 @@
-package org.eclipse.dirigible.components.data.sources.manager;
+package org.eclipse.dirigible.components.database;
 
-public enum DatabaseType {
+public enum DatabaseSystem {
     POSTGRESQL, H2, MARIADB, HANA, SNOWFLAKE, MYSQL, UNKNOWN;
 
     public boolean isH2() {

@@ -1,56 +1,50 @@
 package org.eclipse.dirigible.components.data.sources.manager;
 
-import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
+import org.eclipse.dirigible.components.database.DatabaseSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Objects;
 
-class DatabaseTypeDeterminer {
+class DatabaseSystemDeterminer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseTypeDeterminer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseSystemDeterminer.class);
 
-    static DatabaseType determine(DataSource dataSource) {
+    static DatabaseSystem determine(DataSource dataSource) {
         String jdbcUrl = dataSource.getUrl();
         String driverClass = dataSource.getDriver();
         return determine(jdbcUrl, driverClass);
     }
 
-    static DatabaseType determine(HikariDataSource dataSource) {
-        String jdbcUrl = dataSource.getJdbcUrl();
-        String driverClass = dataSource.getDriverClassName();
-        return determine(jdbcUrl, driverClass);
-    }
-
-    static DatabaseType determine(String jdbcUrl, String driverClass) {
+    static DatabaseSystem determine(String jdbcUrl, String driverClass) {
         if (isH2(jdbcUrl, driverClass)) {
-            return DatabaseType.H2;
+            return DatabaseSystem.H2;
         }
 
         if (isPostgreSQL(jdbcUrl, driverClass)) {
-            return DatabaseType.POSTGRESQL;
+            return DatabaseSystem.POSTGRESQL;
         }
 
         if (isHANA(jdbcUrl, driverClass)) {
-            return DatabaseType.HANA;
+            return DatabaseSystem.HANA;
         }
 
         if (isSnowflake(jdbcUrl, driverClass)) {
-            return DatabaseType.SNOWFLAKE;
+            return DatabaseSystem.SNOWFLAKE;
         }
 
         if (isMariaDB(jdbcUrl, driverClass)) {
-            return DatabaseType.MARIADB;
+            return DatabaseSystem.MARIADB;
         }
 
         if (isMySQL(jdbcUrl, driverClass)) {
-            return DatabaseType.MYSQL;
+            return DatabaseSystem.MYSQL;
         }
 
-        return DatabaseType.UNKNOWN;
+        return DatabaseSystem.UNKNOWN;
     }
 
     private static boolean isH2(String jdbcUrl, String driverClass) {

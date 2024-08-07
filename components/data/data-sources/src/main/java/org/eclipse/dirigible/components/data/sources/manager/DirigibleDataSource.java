@@ -1,10 +1,12 @@
 package org.eclipse.dirigible.components.data.sources.manager;
 
+import org.eclipse.dirigible.components.database.DatabaseSystem;
+
 import javax.sql.DataSource;
 
 public interface DirigibleDataSource extends DataSource {
 
-    DatabaseType getDatabaseType();
+    DatabaseSystem getDatabaseSystem();
 
-    boolean isOfType(DatabaseType databaseType);
+    boolean isOfType(DatabaseSystem databaseSystem);
 }

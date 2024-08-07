@@ -9,20 +9,15 @@
  */
 package org.eclipse.dirigible.components.data.sources.manager;
 
-import java.util.Properties;
-import org.eclipse.dirigible.components.data.sources.domain.DataSource;
+import com.zaxxer.hikari.HikariConfig;
+import org.eclipse.dirigible.components.database.DatabaseSystem;
 
 /**
- * The Interface DataSourceInitializerContributor.
+ * The Interface DatabaseConfigurator.
  */
-public interface DataSourceInitializerContributor {
+public interface DatabaseConfigurator {
 
-    /**
-     * Contribute.
-     *
-     * @param datasource the datasource
-     * @param properties the properties
-     */
-    void contribute(DataSource datasource, Properties properties);
+    boolean isApplicable(DatabaseSystem databaseSystem);
 
+    void apply(HikariConfig config);
 }

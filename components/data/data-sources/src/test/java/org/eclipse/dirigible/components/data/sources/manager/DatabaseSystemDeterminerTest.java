@@ -1,0 +1,116 @@
+package org.eclipse.dirigible.components.data.sources.manager;
+
+import org.eclipse.dirigible.components.data.sources.domain.DataSource;
+import org.eclipse.dirigible.components.database.DatabaseSystem;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class DatabaseSystemDeterminerTest {
+
+    @Mock
+    private DataSource dataSource;
+
+    @InjectMocks
+    private DatabaseSystemDeterminer databaseSystemDeterminer;
+
+    @Test
+    void testDetermineH2_withUrl() {
+        testDetermine_withUrl("jdbc:h2:mem:test", DatabaseSystem.H2);
+    }
+
+    @Test
+    void testDetermineH2_withDriverUrl() {
+        testDetermine_withDriver("org.h2.Driver", DatabaseSystem.H2);
+    }
+
+    @Test
+    void testDeterminePostgreSQL_withUrl() {
+        testDetermine_withUrl("jdbc:postgresql://localhost:5432/testdb", DatabaseSystem.POSTGRESQL);
+    }
+
+    @Test
+    void testDeterminePostgreSQL_withDriver() {
+        testDetermine_withDriver("org.postgresql.Driver", DatabaseSystem.POSTGRESQL);
+    }
+
+    @Test
+    void testDetermineHANA_withUrl() {
+        testDetermine_withUrl("jdbc:sap://hana-db:30015", DatabaseSystem.HANA);
+    }
+
+    @Test
+    void testDetermineHANA_withDriver() {
+        testDetermine_withDriver("com.sap.db.jdbc.Driver", DatabaseSystem.HANA);
+    }
+
+    @Test
+    void testDetermineSnowflake_withUrl() {
+        testDetermine_withUrl("jdbc:snowflake://account.snowflakecomputing.com", DatabaseSystem.SNOWFLAKE);
+    }
+
+    @Test
+    void testDetermineSnowflake_withDriver() {
+        testDetermine_withDriver("net.snowflake.client.jdbc.SnowflakeDriver", DatabaseSystem.SNOWFLAKE);
+    }
+
+    @Test
+    void testDetermineMariaDB_withUrl() {
+        testDetermine_withUrl("jdbc:mariadb://localhost:3306/testdb", DatabaseSystem.MARIADB);
+    }
+
+    @Test
+    void testDetermineMariaDB_withDriver() {
+        testDetermine_withDriver("org.mariadb.jdbc.Driver", DatabaseSystem.MARIADB);
+    }
+
+    @Test
+    void testDetermineMySQL_withUrl() {
+        testDetermine_withUrl("jdbc:mysql://localhost:3306/testdb", DatabaseSystem.MYSQL);
+    }
+
+    @Test
+    void testDetermineMySQL_withDriver() {
+        testDetermine_withDriver("com.mysql.cj.jdbc.Driver", DatabaseSystem.MYSQL);
+    }
+
+    @Test
+    void testDetermineUnknown_withUrl() {
+        testDetermine_withUrl("jdbc:unknown://localhost:1234/testdb", DatabaseSystem.UNKNOWN);
+    }
+
+    @Test
+    void testDetermineUnknown_withDriver() {
+        testDetermine_withDriver("com.unknown.Driver", DatabaseSystem.UNKNOWN);
+    }
+
+    private void testDetermine_withUrl(String jdbcUrl, DatabaseSystem expectedType) {
+        mockDataSourceJdbcUrl(jdbcUrl);
+
+        DatabaseSystem result = DatabaseSystemDeterminer.determine(dataSource);
+
+        assertEquals(expectedType, result);
+    }
+
+    private void testDetermine_withDriver(String driverClass, DatabaseSystem expectedType) {
+        mockDataSourceDriverClass(driverClass);
+
+        DatabaseSystem result = DatabaseSystemDeterminer.determine(dataSource);
+
+        assertEquals(expectedType, result);
+    }
+
+    private void mockDataSourceJdbcUrl(String jdbcUrl) {
+        when(dataSource.getUrl()).thenReturn(jdbcUrl);
+    }
+
+    private void mockDataSourceDriverClass(String driverClass) {
+        when(dataSource.getDriver()).thenReturn(driverClass);
+    }
+}
