@@ -7,12 +7,38 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 public class DatabaseSystemDeterminer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseSystemDeterminer.class);
+
+    private static final Map<DatabaseSystem, String> DB_URL_PREFIXES = Map.of(//
+            DatabaseSystem.H2, "jdbc:h2",//
+            DatabaseSystem.POSTGRESQL, "jdbc:postgresql",//
+            DatabaseSystem.HANA, "jdbc:sap",//
+            DatabaseSystem.SNOWFLAKE, "jdbc:snowflake",//
+            DatabaseSystem.MARIADB, "jdbc:mariadb",//
+            DatabaseSystem.MYSQL, "jdbc:mysql",//
+            DatabaseSystem.MONGODB, "jdbc:mongodb",//
+            DatabaseSystem.SYBASE, "jdbc:sybase",//
+            DatabaseSystem.DERBY, "jdbc:derby"//
+    );
+
+    private static final Map<DatabaseSystem, List<String>> DB_DRIVERS = Map.of(//
+            DatabaseSystem.H2, List.of("org.h2.Driver"),//
+            DatabaseSystem.POSTGRESQL, List.of("org.postgresql.Driver"),//
+            DatabaseSystem.HANA, List.of("com.sap.db.jdbc.Driver"),//
+            DatabaseSystem.SNOWFLAKE, List.of("net.snowflake.client.jdbc.SnowflakeDriver"),//
+            DatabaseSystem.MARIADB, List.of("org.mariadb.jdbc.Driver"),//
+            DatabaseSystem.MYSQL, List.of("com.mysql.cj.jdbc.Driver"),//
+            DatabaseSystem.MONGODB, List.of("com.mongodb.jdbc.MongoDriver"),//
+            DatabaseSystem.SYBASE, List.of("com.sybase.jdbc4.jdbc.SybDriver"),//
+            DatabaseSystem.DERBY, List.of("org.apache.derby.jdbc.ClientDriver", "org.apache.derby.jdbc.EmbeddedDriver")//
+    );
 
     public static DatabaseSystem determine(javax.sql.DataSource dataSource) throws SQLException {
         if (dataSource instanceof DirigibleDataSource ddc) {
@@ -37,87 +63,32 @@ public class DatabaseSystemDeterminer {
     }
 
     public static DatabaseSystem determine(String jdbcUrl, String driverClass) {
-        if (isH2(jdbcUrl, driverClass)) {
-            return DatabaseSystem.H2;
+        DatabaseSystem databaseSystem = determineSystemByJdbcUrl(jdbcUrl)//
+                                                                         .orElseGet(() -> determineSystemByDriverClass(driverClass));
+        if (databaseSystem.isUnknown()) {
+            LOGGER.warn("JDBC url [{}] and driver [{}] are determined as [{}]. Most probably something is misconfigured", jdbcUrl,
+                    driverClass, databaseSystem);
+
         }
-
-        if (isPostgreSQL(jdbcUrl, driverClass)) {
-            return DatabaseSystem.POSTGRESQL;
-        }
-
-        if (isHANA(jdbcUrl, driverClass)) {
-            return DatabaseSystem.HANA;
-        }
-
-        if (isSnowflake(jdbcUrl, driverClass)) {
-            return DatabaseSystem.SNOWFLAKE;
-        }
-
-        if (isMariaDB(jdbcUrl, driverClass)) {
-            return DatabaseSystem.MARIADB;
-        }
-
-        if (isMySQL(jdbcUrl, driverClass)) {
-            return DatabaseSystem.MYSQL;
-        }
-
-        if (isMongoDB(jdbcUrl, driverClass)) {
-            return DatabaseSystem.MONGODB;
-        }
-
-        if (isDerby(jdbcUrl, driverClass)) {
-            return DatabaseSystem.DERBY;
-        }
-
-        if (isSybase(jdbcUrl, driverClass)) {
-            return DatabaseSystem.SYBASE;
-        }
-
-        LOGGER.warn("JDBC url [{}] and driver [{}] are determined as [{}]. Most probably something is misconfigured.", jdbcUrl, driverClass,
-                DatabaseSystem.UNKNOWN);
-        return DatabaseSystem.UNKNOWN;
+        LOGGER.debug("JDBC url [{}] and driver [{}] are determined as [{}]", jdbcUrl, driverClass, databaseSystem);
+        return databaseSystem;
     }
 
-    private static boolean isDerby(String jdbcUrl, String driverClass) {
-        return isDatabaseOfType(jdbcUrl, driverClass, "jdbc:derby", "org.apache.derby.jdbc.ClientDriver",
-                "org.apache.derby.jdbc.EmbeddedDriver");
-
+    private static Optional<DatabaseSystem> determineSystemByJdbcUrl(String jdbcUrl) {
+        return DB_URL_PREFIXES.entrySet()
+                              .stream()
+                              .filter(entry -> isJdbcUrlStartWithString(jdbcUrl, entry.getValue()))
+                              .findFirst()
+                              .map(Map.Entry::getKey);
     }
 
-    private static boolean isH2(String jdbcUrl, String driverClass) {
-        return isDatabaseOfType(jdbcUrl, driverClass, "jdbc:h2", "org.h2.Driver");
-    }
-
-    private static boolean isPostgreSQL(String jdbcUrl, String driverClass) {
-        return isDatabaseOfType(jdbcUrl, driverClass, "jdbc:postgresql", "org.postgresql.Driver");
-    }
-
-    private static boolean isHANA(String jdbcUrl, String driverClass) {
-        return isDatabaseOfType(jdbcUrl, driverClass, "jdbc:sap", "com.sap.db.jdbc.Driver");
-    }
-
-    private static boolean isSnowflake(String jdbcUrl, String driverClass) {
-        return isDatabaseOfType(jdbcUrl, driverClass, "jdbc:snowflake", "net.snowflake.client.jdbc.SnowflakeDriver");
-    }
-
-    private static boolean isMariaDB(String jdbcUrl, String driverClass) {
-        return isDatabaseOfType(jdbcUrl, driverClass, "jdbc:mariadb", "org.mariadb.jdbc.Driver");
-    }
-
-    private static boolean isMySQL(String jdbcUrl, String driverClass) {
-        return isDatabaseOfType(jdbcUrl, driverClass, "jdbc:mysql", "com.mysql.cj.jdbc.Driver");
-    }
-
-    private static boolean isMongoDB(String jdbcUrl, String driverClass) {
-        return isDatabaseOfType(jdbcUrl, driverClass, "jdbc:mongodb", "com.mongodb.jdbc.MongoDriver");
-    }
-
-    private static boolean isSybase(String jdbcUrl, String driverClass) {
-        return isDatabaseOfType(jdbcUrl, driverClass, "jdbc:sybase", "com.sybase.jdbc4.jdbc.SybDriver");
-    }
-
-    private static boolean isDatabaseOfType(String jdbcUrl, String driverClass, String jdbcPrefix, String... drivers) {
-        return isJdbcUrlStartWithString(jdbcUrl, jdbcPrefix) || usedOneOfDrivers(driverClass, drivers);
+    private static DatabaseSystem determineSystemByDriverClass(String driverClass) {
+        return DB_DRIVERS.entrySet()
+                         .stream()
+                         .filter(entry -> usedOneOfDrivers(driverClass, entry.getValue()))
+                         .findFirst()
+                         .map(Map.Entry::getKey)
+                         .orElse(DatabaseSystem.UNKNOWN);
     }
 
     private static boolean isJdbcUrlStartWithString(String jdbcUrl, String prefix) {
@@ -130,10 +101,10 @@ public class DatabaseSystemDeterminer {
                       .startsWith(prefix);
     }
 
-    private static boolean usedOneOfDrivers(String driverClass, String... drivers) {
-        String trimedDriverClassName = safelyTrim(driverClass);
-        return Arrays.stream(drivers)
-                     .anyMatch(driver -> Objects.equals(trimedDriverClassName, safelyTrim(driver)));
+    private static boolean usedOneOfDrivers(String driverClass, List<String> drivers) {
+        String trimmedDriverClassName = safelyTrim(driverClass);
+        return drivers.stream()
+                      .anyMatch(driver -> Objects.equals(trimmedDriverClassName, safelyTrim(driver)));
     }
 
     private static String safelyTrim(String string) {
