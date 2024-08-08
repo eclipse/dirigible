@@ -11,6 +11,7 @@ package org.eclipse.dirigible.components.data.sources.manager;
 
 import com.zaxxer.hikari.HikariConfig;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.data.sources.config.DefaultDataSourceName;
 import org.eclipse.dirigible.components.data.sources.config.SystemDataSourceName;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
@@ -158,7 +159,7 @@ public class DataSourceInitializer {
         if (dbType.isSnowflake()) {
             // schedule data source destroy periodically since the oauth token
             // expires after some time and data source have to be recreated
-            scheduleDataSourceDestroy(name, 9, TimeUnit.MINUTES);
+            scheduleDataSourceDestroy(name, DirigibleConfig.SNOWFLAKE_DATA_SOURCE_LIFESPAN_SECONDS.getIntValue(), TimeUnit.SECONDS);
         }
 
         return managedDataSource;
