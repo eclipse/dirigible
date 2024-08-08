@@ -1,24 +1,32 @@
-package org.eclipse.dirigible.components.data.sources.manager;
+package org.eclipse.dirigible.components.database;
 
-import org.eclipse.dirigible.components.data.sources.domain.DataSource;
-import org.eclipse.dirigible.components.database.DatabaseSystem;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DatabaseSystemDeterminerTest {
 
-    @Mock
-    private DataSource dataSource;
-
     @InjectMocks
     private DatabaseSystemDeterminer databaseSystemDeterminer;
+
+    @Test
+    void testDetermineDerby_withUrl() {
+        testDetermine_withUrl("jdbc:derby://localhost:1527/databaseName;create=true", DatabaseSystem.DERBY);
+    }
+
+    @Test
+    void testDetermineDerby_withDriverUrl() {
+        testDetermine_withDriver("org.apache.derby.jdbc.EmbeddedDriver", DatabaseSystem.DERBY);
+    }
+
+    @Test
+    void testDetermineDerby_withDriverUrl2() {
+        testDetermine_withDriver("org.apache.derby.jdbc.ClientDriver", DatabaseSystem.DERBY);
+    }
 
     @Test
     void testDetermineH2_withUrl() {
@@ -111,26 +119,15 @@ class DatabaseSystemDeterminerTest {
     }
 
     private void testDetermine_withUrl(String jdbcUrl, DatabaseSystem expectedType) {
-        mockDataSourceJdbcUrl(jdbcUrl);
-
-        DatabaseSystem result = DatabaseSystemDeterminer.determine(dataSource);
+        DatabaseSystem result = DatabaseSystemDeterminer.determine(jdbcUrl, null);
 
         assertEquals(expectedType, result);
     }
 
     private void testDetermine_withDriver(String driverClass, DatabaseSystem expectedType) {
-        mockDataSourceDriverClass(driverClass);
-
-        DatabaseSystem result = DatabaseSystemDeterminer.determine(dataSource);
+        DatabaseSystem result = DatabaseSystemDeterminer.determine(null, driverClass);
 
         assertEquals(expectedType, result);
     }
 
-    private void mockDataSourceJdbcUrl(String jdbcUrl) {
-        when(dataSource.getUrl()).thenReturn(jdbcUrl);
-    }
-
-    private void mockDataSourceDriverClass(String driverClass) {
-        when(dataSource.getDriver()).thenReturn(driverClass);
-    }
 }

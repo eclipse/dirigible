@@ -18,16 +18,6 @@ import org.eclipse.dirigible.database.sql.ISqlDialectProvider;
  */
 public class H2SqlDialectProvider implements ISqlDialectProvider {
 
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    @Override
-    public String getName() {
-        return "H2";
-    }
-
     @Override
     public DatabaseSystem getDatabaseSystem() {
         return DatabaseSystem.H2;

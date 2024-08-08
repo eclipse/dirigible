@@ -18,16 +18,6 @@ import org.eclipse.dirigible.database.sql.ISqlDialectProvider;
  */
 public class PostgresSqlDialectProvider implements ISqlDialectProvider {
 
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    @Override
-    public String getName() {
-        return "PostgreSQL";
-    }
-
     @Override
     public DatabaseSystem getDatabaseSystem() {
         return DatabaseSystem.POSTGRESQL;

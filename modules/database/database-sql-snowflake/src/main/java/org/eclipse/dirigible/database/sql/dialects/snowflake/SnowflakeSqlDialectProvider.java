@@ -18,16 +18,6 @@ import org.eclipse.dirigible.database.sql.ISqlDialectProvider;
  */
 public class SnowflakeSqlDialectProvider implements ISqlDialectProvider {
 
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    @Override
-    public String getName() {
-        return "Snowflake";
-    }
-
     @Override
     public DatabaseSystem getDatabaseSystem() {
         return DatabaseSystem.SNOWFLAKE;

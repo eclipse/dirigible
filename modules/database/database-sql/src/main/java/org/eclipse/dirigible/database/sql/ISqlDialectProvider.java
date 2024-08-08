@@ -16,13 +16,6 @@ import org.eclipse.dirigible.components.database.DatabaseSystem;
  */
 public interface ISqlDialectProvider {
 
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    String getName();
-
     DatabaseSystem getDatabaseSystem();
 
     /**

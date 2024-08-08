@@ -18,16 +18,6 @@ import org.eclipse.dirigible.database.sql.ISqlDialectProvider;
  */
 public class MariaDBSqlDialectProvider implements ISqlDialectProvider {
 
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    @Override
-    public String getName() {
-        return "MariaDB";
-    }
-
     @Override
     public DatabaseSystem getDatabaseSystem() {
         return DatabaseSystem.MARIADB;

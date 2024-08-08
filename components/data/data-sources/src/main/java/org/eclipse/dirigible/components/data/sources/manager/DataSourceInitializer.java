@@ -15,10 +15,7 @@ import org.eclipse.dirigible.components.data.sources.config.DefaultDataSourceNam
 import org.eclipse.dirigible.components.data.sources.config.SystemDataSourceName;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.domain.DataSourceProperty;
-import org.eclipse.dirigible.components.database.DatabaseConfigurator;
-import org.eclipse.dirigible.components.database.DatabaseParameters;
-import org.eclipse.dirigible.components.database.DatabaseSystem;
-import org.eclipse.dirigible.components.database.DirigibleDataSource;
+import org.eclipse.dirigible.components.database.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -115,7 +112,7 @@ public class DataSourceInitializer {
     @SuppressWarnings("resource")
     private DirigibleDataSource initDataSource(DataSource dataSource) {
 
-        DatabaseSystem dbType = DatabaseSystemDeterminer.determine(dataSource);
+        DatabaseSystem dbType = DatabaseSystemDeterminer.determine(dataSource.getUrl(), dataSource.getDriver());
 
         String name = dataSource.getName();
         String driver = dataSource.getDriver();
