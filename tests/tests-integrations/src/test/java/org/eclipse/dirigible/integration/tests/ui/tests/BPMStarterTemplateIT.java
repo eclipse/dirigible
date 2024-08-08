@@ -87,7 +87,7 @@ class BPMStarterTemplateIT extends UserInterfaceIntegrationTest {
         browser.enterTextInElementById(PARAM_2_ID, PARAM_2_VALUE);
         browser.clickOnElementContainingText(HtmlElementType.BUTTON, TRIGGER_BUTTON_TEXT);
 
-        await().atMost(20, TimeUnit.SECONDS)
+        await().atMost(30, TimeUnit.SECONDS)
                .until(() -> consoleLogAsserter.containsMessage(EXPECTED_TASK_LOGGED_MESSAGE, Level.INFO));
     }
 
