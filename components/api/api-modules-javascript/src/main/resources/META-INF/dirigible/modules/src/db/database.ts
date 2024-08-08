@@ -133,8 +133,6 @@ export class Connection {
                 return DatabaseSystem.MYSQL;
             case "MONGODB":
                 return DatabaseSystem.MONGODB;
-            case "DERBY":
-                return DatabaseSystem.DERBY;
             case "SYBASE":
                 return DatabaseSystem.SYBASE;
             case "UNKNOWN":
