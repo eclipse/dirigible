@@ -13,6 +13,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.pool.LeakedConnectionsDoctor;
 import org.eclipse.dirigible.components.database.ConnectionEnhancer;
 import org.eclipse.dirigible.components.database.DatabaseSystem;
+import org.eclipse.dirigible.components.database.DirigibleConnection;
 import org.eclipse.dirigible.components.database.DirigibleDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +64,7 @@ class DirigibleDataSourceImpl implements DirigibleDataSource {
      * @throws SQLException the SQL exception
      */
     @Override
-    public Connection getConnection() throws SQLException {
+    public DirigibleConnection getConnection() throws SQLException {
         Connection connection = originalDataSource.getConnection();
 
         enhanceConnection(connection);
@@ -81,7 +82,7 @@ class DirigibleDataSourceImpl implements DirigibleDataSource {
      * @throws SQLException the SQL exception
      */
     @Override
-    public Connection getConnection(String username, String password) throws SQLException {
+    public DirigibleConnection getConnection(String username, String password) throws SQLException {
         Connection connection = originalDataSource.getConnection(username, password);
 
         enhanceConnection(connection);
