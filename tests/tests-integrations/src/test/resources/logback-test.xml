@@ -2,6 +2,11 @@
 <configuration packagingData="true">
     <conversionRule conversionWord="tenant" converterClass="org.eclipse.dirigible.components.base.logging.TenantConverter" />
 
+    <!--
+        Try to set LOGS_DIR for the file appenders to the environment variables
+        "DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT -> CATALINA_BASE ->  CATALINA_HOME" in this order
+        or use ".." if none of the environment variables exist
+    -->
     <property name="LOGS_DIR" value="${DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT:-${CATALINA_BASE:-${CATALINA_HOME:-..}}/logs}" />
 
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
@@ -42,6 +47,9 @@
 
     <!-- Send messages to ConsoleLoggingAppender -->
     <appender name="ConsoleLoggingAppender" class="org.eclipse.dirigible.components.ide.console.service.ConsoleLoggingAppender">
+        <!-- <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread{8}] %logger{36} - %msg%n</pattern>
+        </encoder> -->
     </appender>
 
     <logger name="org.eclipse.dirigible" level="DEBUG" additivity="false">
@@ -61,5 +69,7 @@
         <appender-ref ref="FILE_BASE" />
         <appender-ref ref="ConsoleLoggingAppender" />
     </root>
+
+    <logger name="org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer" level="INFO"/>
 
 </configuration>
