@@ -10,6 +10,7 @@
 package org.eclipse.dirigible.components.odata.transformers;
 
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
+import org.eclipse.dirigible.components.database.DirigibleConnection;
 import org.eclipse.dirigible.components.database.DirigibleDataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +24,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 
-import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -91,7 +91,7 @@ public class ODataDatabaseMetadataUtilTest {
 
     /** The connection. */
     @Mock
-    private Connection connection;
+    private DirigibleConnection connection;
 
     /** The data source. */
     @Mock
