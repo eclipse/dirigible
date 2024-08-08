@@ -17,26 +17,26 @@ public class DatabaseSystemDeterminer {
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseSystemDeterminer.class);
 
     private static final Map<DatabaseSystem, String> DB_URL_PREFIXES = Map.of(//
-            DatabaseSystem.H2, "jdbc:h2",//
-            DatabaseSystem.POSTGRESQL, "jdbc:postgresql",//
-            DatabaseSystem.HANA, "jdbc:sap",//
-            DatabaseSystem.SNOWFLAKE, "jdbc:snowflake",//
-            DatabaseSystem.MARIADB, "jdbc:mariadb",//
-            DatabaseSystem.MYSQL, "jdbc:mysql",//
-            DatabaseSystem.MONGODB, "jdbc:mongodb",//
-            DatabaseSystem.SYBASE, "jdbc:sybase",//
+            DatabaseSystem.H2, "jdbc:h2", //
+            DatabaseSystem.POSTGRESQL, "jdbc:postgresql", //
+            DatabaseSystem.HANA, "jdbc:sap", //
+            DatabaseSystem.SNOWFLAKE, "jdbc:snowflake", //
+            DatabaseSystem.MARIADB, "jdbc:mariadb", //
+            DatabaseSystem.MYSQL, "jdbc:mysql", //
+            DatabaseSystem.MONGODB, "jdbc:mongodb", //
+            DatabaseSystem.SYBASE, "jdbc:sybase", //
             DatabaseSystem.DERBY, "jdbc:derby"//
     );
 
     private static final Map<DatabaseSystem, List<String>> DB_DRIVERS = Map.of(//
-            DatabaseSystem.H2, List.of("org.h2.Driver"),//
-            DatabaseSystem.POSTGRESQL, List.of("org.postgresql.Driver"),//
-            DatabaseSystem.HANA, List.of("com.sap.db.jdbc.Driver"),//
-            DatabaseSystem.SNOWFLAKE, List.of("net.snowflake.client.jdbc.SnowflakeDriver"),//
-            DatabaseSystem.MARIADB, List.of("org.mariadb.jdbc.Driver"),//
-            DatabaseSystem.MYSQL, List.of("com.mysql.cj.jdbc.Driver"),//
-            DatabaseSystem.MONGODB, List.of("com.mongodb.jdbc.MongoDriver"),//
-            DatabaseSystem.SYBASE, List.of("com.sybase.jdbc4.jdbc.SybDriver"),//
+            DatabaseSystem.H2, List.of("org.h2.Driver"), //
+            DatabaseSystem.POSTGRESQL, List.of("org.postgresql.Driver"), //
+            DatabaseSystem.HANA, List.of("com.sap.db.jdbc.Driver"), //
+            DatabaseSystem.SNOWFLAKE, List.of("net.snowflake.client.jdbc.SnowflakeDriver"), //
+            DatabaseSystem.MARIADB, List.of("org.mariadb.jdbc.Driver"), //
+            DatabaseSystem.MYSQL, List.of("com.mysql.cj.jdbc.Driver"), //
+            DatabaseSystem.MONGODB, List.of("com.mongodb.jdbc.MongoDriver"), //
+            DatabaseSystem.SYBASE, List.of("com.sybase.jdbc4.jdbc.SybDriver"), //
             DatabaseSystem.DERBY, List.of("org.apache.derby.jdbc.ClientDriver", "org.apache.derby.jdbc.EmbeddedDriver")//
     );
 
