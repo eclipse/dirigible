@@ -297,7 +297,7 @@ class DirigibleConnectionImpl implements DirigibleConnection {
 
     @Override
     public boolean isOfType(DatabaseSystem databaseSystem) {
-        return this.databaseSystem == databaseSystem;
+        return this.databaseSystem.isOfType(databaseSystem);
     }
 
     @Override

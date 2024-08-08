@@ -7,38 +7,42 @@ public enum DatabaseSystem {
     UNKNOWN, DERBY, POSTGRESQL, H2, MARIADB, HANA, SNOWFLAKE, MYSQL, MONGODB, SYBASE;
 
     public boolean isH2() {
-        return this == H2;
+        return isOfType(H2);
     }
 
     public boolean isSnowflake() {
-        return this == SNOWFLAKE;
+        return isOfType(SNOWFLAKE);
     }
 
     public boolean isHANA() {
-        return this == HANA;
+        return isOfType(HANA);
     }
 
     public boolean isPostgreSQL() {
-        return this == POSTGRESQL;
+        return isOfType(POSTGRESQL);
     }
 
     public boolean isMariaDB() {
-        return this == MARIADB;
+        return isOfType(MARIADB);
     }
 
     public boolean isMySQL() {
-        return this == MYSQL;
+        return isOfType(MYSQL);
     }
 
     public boolean isUnknown() {
-        return this == UNKNOWN;
+        return isOfType(UNKNOWN);
     }
 
     public boolean isMongoDB() {
-        return this == MONGODB;
+        return isOfType(MONGODB);
     }
 
     public boolean isDerby() {
-        return this == DERBY;
+        return isOfType(DERBY);
+    }
+
+    public boolean isOfType(DatabaseSystem databaseSystem) {
+        return this == databaseSystem;
     }
 }
