@@ -20,7 +20,6 @@ import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding;
 import org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
-import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext.DatabaseProduct;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils;
 
 import java.util.*;
@@ -525,7 +524,8 @@ public final class SQLSelectClause {
             return EMPTY_STRING;
         String selectPredicate = EMPTY_STRING;
         if (top > 0) {
-            if (context.getDatabaseProduct() == DatabaseProduct.DERBY) {
+            if (context.getDatabaseSystem()
+                       .isDerby()) {
                 // Derby: FETCH { FIRST | NEXT } [integer-literal] {ROW | ROWS} ONLY
                 return String.format("FETCH FIRST %d ROWS ONLY", top);
             } else {
@@ -558,8 +558,8 @@ public final class SQLSelectClause {
             if (isSelectTarget(type)) {
                 boolean isView = EdmTableBinding.DataStructureType.VIEW == targetDataStructureType;
                 boolean isCalculationView = EdmTableBinding.DataStructureType.CALC_VIEW == targetDataStructureType;
-                boolean isHanaDatabase = context.getDatabaseProduct()
-                                                .equals(DatabaseProduct.HANA);
+                boolean isHanaDatabase = context.getDatabaseSystem()
+                                                .isHANA();
                 if ((isView || (isCalculationView && isHanaDatabase)) && !this.parameters.isEmpty()) {
                     addInputParamsAsStatementParams(parameters);
                     tables.add(query.getSQLTableName(target) + buildTargetParameters() + " AS " + escapedTableAlias);

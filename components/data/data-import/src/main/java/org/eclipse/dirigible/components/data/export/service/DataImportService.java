@@ -9,17 +9,18 @@
  */
 package org.eclipse.dirigible.components.data.export.service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Connection;
-import javax.sql.DataSource;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
 import org.eclipse.dirigible.components.data.csvim.processor.CsvimProcessor;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
+import org.eclipse.dirigible.components.database.DirigibleDataSource;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
 
 /**
  * The Class DataImportService.
@@ -56,12 +57,11 @@ public class DataImportService {
     public void importData(String datasource, String schema, String table, Boolean header, Boolean useHeaderNames, String delimField,
             String delimEnclosing, String sequence, Boolean distinguishEmptyFromNull, InputStream is) throws IOException, Exception {
 
-        DataSource dataSource = datasourceManager.getDataSource(datasource);
+        DirigibleDataSource dataSource = datasourceManager.getDataSource(datasource);
         try (Connection connection = dataSource.getConnection()) {
-            ISqlDialect dialect = SqlDialectFactory.getDialect(connection);
-            String productName = connection.getMetaData()
-                                           .getDatabaseProductName();
-            if ("MongoDB".equals(productName)) {
+            ISqlDialect dialect = SqlDialectFactory.getDialect(dataSource);
+            if (dataSource.getDatabaseSystem()
+                          .isMongoDB()) {
                 dialect.importData(connection, table, is);
                 return;
             }

@@ -10,13 +10,13 @@
 package org.eclipse.dirigible.components.data.sources.manager;
 
 import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.data.sources.config.DefaultDataSourceName;
 import org.eclipse.dirigible.components.data.sources.config.SystemDataSourceName;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.domain.DataSourceProperty;
-import org.eclipse.dirigible.components.database.DatabaseParameters;
+import org.eclipse.dirigible.components.database.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -41,26 +41,30 @@ public class DataSourceInitializer {
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DataSourceInitializer.class);
     /** The Constant DATASOURCES. */
-    private static final Map<String, javax.sql.DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<>());
+    private static final Map<String, DirigibleDataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<>());
     /** The application context. */
     private final ApplicationContext applicationContext;
 
     /** The contributors. */
-    private final List<DataSourceInitializerContributor> contributors;
+    private final List<DatabaseConfigurator> databaseConfigurators;
 
     /** The tenant data source name manager. */
     private final TenantDataSourceNameManager tenantDataSourceNameManager;
     private final String systemDataSourceName;
     private final String defaultDataSourceName;
+    private final DirigibleDataSourceFactory dataSourceFactory;
+    private final Timer timer;
 
-    DataSourceInitializer(ApplicationContext applicationContext, List<DataSourceInitializerContributor> contributors,
+    DataSourceInitializer(ApplicationContext applicationContext, List<DatabaseConfigurator> databaseConfigurators,
             TenantDataSourceNameManager tenantDataSourceNameManager, @SystemDataSourceName String systemDataSourceName,
-            @DefaultDataSourceName String defaultDataSourceName) {
+            @DefaultDataSourceName String defaultDataSourceName, DirigibleDataSourceFactory dataSourceFactory) {
         this.applicationContext = applicationContext;
-        this.contributors = contributors;
+        this.databaseConfigurators = databaseConfigurators;
         this.tenantDataSourceNameManager = tenantDataSourceNameManager;
         this.systemDataSourceName = systemDataSourceName;
         this.defaultDataSourceName = defaultDataSourceName;
+        this.dataSourceFactory = dataSourceFactory;
+        this.timer = new Timer();
     }
 
     /**
@@ -69,7 +73,7 @@ public class DataSourceInitializer {
      * @param dataSource the data source
      * @return the javax.sql. data source
      */
-    public javax.sql.DataSource initialize(DataSource dataSource) {
+    public DirigibleDataSource initialize(DataSource dataSource) {
         if (isInitialized(dataSource.getName())) {
             return getInitializedDataSource(dataSource.getName());
         }
@@ -95,7 +99,7 @@ public class DataSourceInitializer {
      * @param dataSourceName the data source name
      * @return the initialized data source
      */
-    public javax.sql.DataSource getInitializedDataSource(String dataSourceName) {
+    public DirigibleDataSource getInitializedDataSource(String dataSourceName) {
         String name = tenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
         return DATASOURCES.get(name);
     }
@@ -107,7 +111,10 @@ public class DataSourceInitializer {
      * @return the managed data source
      */
     @SuppressWarnings("resource")
-    private ManagedDataSource initDataSource(DataSource dataSource) {
+    private DirigibleDataSource initDataSource(DataSource dataSource) {
+
+        DatabaseSystem dbType = DatabaseSystemDeterminer.determine(dataSource.getUrl(), dataSource.getDriver());
+
         String name = dataSource.getName();
         String driver = dataSource.getDriver();
         String url = dataSource.getUrl();
@@ -115,43 +122,18 @@ public class DataSourceInitializer {
         String password = dataSource.getPassword();
         String schema = dataSource.getSchema();
 
-        List<DataSourceProperty> additionalProperties = dataSource.getProperties();
-
         logger.info("Initializing a datasource with name: [{}]", name);
-        if ("org.h2.Driver".equals(driver)) {
-            try {
-                prepareRootFolder(name);
-            } catch (IOException ex) {
-                logger.error("Invalid configuration for the datasource: [{}]", name, ex);
-            }
+        if (dbType.isH2()) {
+            prepareRootFolder(name);
         }
-        Properties properties = new Properties();
-        Properties contributed = new Properties();
+        Properties hikariProperties = getHikariProperties(name);
+        HikariConfig config = new HikariConfig(hikariProperties);
 
-        properties.put("driverClassName", driver);
-        properties.put("jdbcUrl", url);
-        properties.put("dataSource.url", url);
-        properties.put("dataSource.user", username);
-        properties.put("dataSource.password", password);
-        properties.put("dataSource.logWriter", new PrintWriter(System.out));
-
-        contributors.forEach(contributor -> contributor.contribute(dataSource, contributed));
-
-        Map<String, String> hikariProperties = getHikariProperties(name);
-        hikariProperties.forEach(properties::setProperty);
-
-        HikariConfig config;
-
-        if (name.startsWith("SNOWFLAKE")) {
-            config = new HikariConfig(contributed);
-            config.setDriverClassName(driver);
-            config.setJdbcUrl(contributed.get("jdbcUrl")
-                                         .toString());
-        } else {
-            properties.putAll(contributed);
-            config = new HikariConfig(properties);
-            additionalProperties.forEach(dsp -> config.addDataSourceProperty(dsp.getName(), dsp.getValue()));
-        }
+        config.setDriverClassName(driver);
+        config.setJdbcUrl(url);
+        config.setUsername(username);
+        config.setPassword(password);
+        config.addDataSourceProperty("logWriter", new PrintWriter(System.out));
 
         config.setSchema(schema);
         config.setPoolName(name);
@@ -164,45 +146,33 @@ public class DataSourceInitializer {
         config.setConnectionTimeout(TimeUnit.SECONDS.toMillis(15));
         config.setLeakDetectionThreshold(TimeUnit.MINUTES.toMillis(1)); // log message for possible leaked connection
 
-        boolean isHANA = Objects.equals(null == driver ? null : driver.trim(), "com.sap.db.jdbc.Driver");
-        if (isHANA) {
-            config.setConnectionTestQuery("SELECT 1 FROM DUMMY"); // connection validation query
-            config.setKeepaliveTime(TimeUnit.MINUTES.toMillis(5)); // validation execution interval, must be bigger than idle timeout
-        }
+        applyDbSpecificConfigurations(dbType, config);
 
-        HikariDataSource hds = new HikariDataSource(config);
+        List<DataSourceProperty> additionalProperties = dataSource.getProperties();
+        addAdditionalProperties(additionalProperties, config);
 
-        ManagedDataSource managedDataSource = new ManagedDataSource(hds);
+        DirigibleDataSource managedDataSource = dataSourceFactory.create(config, dbType);
+
         registerDataSourceBean(name, managedDataSource);
-
         DATASOURCES.put(name, managedDataSource);
 
-        Runtime.getRuntime()
-               .addShutdownHook(new Thread(hds::close));
+        if (dbType.isSnowflake()) {
+            // schedule data source destroy periodically since the oauth token
+            // expires after some time and data source have to be recreated
+            scheduleDataSourceDestroy(name, DirigibleConfig.SNOWFLAKE_DATA_SOURCE_LIFESPAN_SECONDS.getIntValue(), TimeUnit.SECONDS);
+        }
 
         return managedDataSource;
     }
 
-    /**
-     * Prepare root folder.
-     *
-     * @param name the name
-     * @return the string
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    private String prepareRootFolder(String name) throws IOException {
-        String rootFolder = (Objects.equals(defaultDataSourceName, name)) ? DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
-                : DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
-        String h2Root = Configuration.get(rootFolder, name);
-        File rootFile = new File(h2Root);
-        File parentFile = rootFile.getCanonicalFile()
-                                  .getParentFile();
-        if (!parentFile.exists()) {
-            if (!parentFile.mkdirs()) {
-                throw new IOException(format("Creation of the root folder [{0}] of the embedded H2 database failed.", h2Root));
+    private void scheduleDataSourceDestroy(String name, int duration, TimeUnit unit) {
+        TimerTask repeatedTask = new TimerTask() {
+            public void run() {
+                removeInitializedDataSource(name);
             }
-        }
-        return h2Root;
+        };
+        long delayMillis = unit.toMillis(duration);
+        timer.schedule(repeatedTask, delayMillis);
     }
 
     /**
@@ -211,8 +181,8 @@ public class DataSourceInitializer {
      * @param databaseName the database name
      * @return the hikari properties
      */
-    private Map<String, String> getHikariProperties(String databaseName) {
-        Map<String, String> properties = new HashMap<>();
+    private Properties getHikariProperties(String databaseName) {
+        Properties properties = new Properties();
         String hikariDelimiter = "_HIKARI_";
         String databaseKeyPrefix = databaseName + hikariDelimiter;
         int hikariDelimiterLength = hikariDelimiter.length();
@@ -224,13 +194,46 @@ public class DataSourceInitializer {
         return properties;
     }
 
+    private void addAdditionalProperties(List<DataSourceProperty> additionalProperties, HikariConfig config) {
+        additionalProperties.forEach(additionalProp -> config.addDataSourceProperty(additionalProp.getName(), additionalProp.getValue()));
+    }
+
+    private void applyDbSpecificConfigurations(DatabaseSystem dbType, HikariConfig config) {
+        databaseConfigurators.stream()
+                             .filter(dc -> dc.isApplicable(dbType))
+                             .forEach(dc -> dc.apply(config));
+    }
+
+    /**
+     * Prepare root folder.
+     *
+     * @param name the name
+     */
+    private void prepareRootFolder(String name) {
+        try {
+            String rootFolder = (Objects.equals(defaultDataSourceName, name)) ? DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
+                    : DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
+            String h2Root = Configuration.get(rootFolder, name);
+            File rootFile = new File(h2Root);
+            File parentFile = rootFile.getCanonicalFile()
+                                      .getParentFile();
+            if (!parentFile.exists()) {
+                if (!parentFile.mkdirs()) {
+                    throw new IOException(format("Creation of the root folder [{0}] of the embedded H2 database failed.", h2Root));
+                }
+            }
+        } catch (IOException ex) {
+            logger.error("Invalid configuration for the datasource: [{}]", name, ex);
+        }
+    }
+
     /**
      * Register data source bean.
      *
      * @param name the name
      * @param dataSource the data source
      */
-    private void registerDataSourceBean(String name, ManagedDataSource dataSource) {
+    private void registerDataSourceBean(String name, DirigibleDataSource dataSource) {
         if (Objects.equals(systemDataSourceName, name)) {
             return; // bean already set by org.eclipse.dirigible.components.database.DataSourceSystemConfig
         }
@@ -251,7 +254,16 @@ public class DataSourceInitializer {
      */
     public void removeInitializedDataSource(String dataSourceName) {
         String name = tenantDataSourceNameManager.getTenantDataSourceName(dataSourceName);
-        DATASOURCES.remove(name);
+        DirigibleDataSource removedDataSource = DATASOURCES.remove(name);
+        logger.info("DataSource [{}] with name [{}] will be removed if exists...", removedDataSource, name);
+        if (null != removedDataSource) {
+            removedDataSource.close();
+
+            GenericApplicationContext genericAppContext = (GenericApplicationContext) applicationContext;
+            ConfigurableListableBeanFactory beanFactory = genericAppContext.getBeanFactory();
+            beanFactory.destroyBean(name);
+            logger.info("DataSource [{}] with name [{}] was removed", removedDataSource, name);
+        }
     }
 
 }

@@ -20,6 +20,10 @@
     <dependencies>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-data-sources</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-config</artifactId>
 		</dependency>
 		<dependency>

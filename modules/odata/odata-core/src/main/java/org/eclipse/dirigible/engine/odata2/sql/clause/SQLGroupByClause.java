@@ -72,11 +72,11 @@ public class SQLGroupByClause implements SQLClause {
                 groupByClause.append(", ");
             }
 
-            if (context == null || context.getDatabaseProduct() != null) {
+            if (context == null || context.getDatabaseSystem() != null) {
                 groupByClause.append(query.getSQLTableColumn(entityType, prop));
             } else {
                 groupByClause.append(query.getSQLTableColumnAlias(entityType, prop)); // this gives the correct "group by" column name for
-                                                                                      // Open SQL
+                // Open SQL
             }
         }
         return groupByClause.toString();

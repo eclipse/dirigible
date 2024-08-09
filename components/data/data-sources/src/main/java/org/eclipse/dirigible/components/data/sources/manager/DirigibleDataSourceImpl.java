@@ -9,46 +9,52 @@
  */
 package org.eclipse.dirigible.components.data.sources.manager;
 
+import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.pool.LeakedConnectionsDoctor;
-import org.eclipse.dirigible.components.api.security.UserFacade;
+import org.eclipse.dirigible.components.database.ConnectionEnhancer;
+import org.eclipse.dirigible.components.database.DatabaseSystem;
+import org.eclipse.dirigible.components.database.DirigibleConnection;
+import org.eclipse.dirigible.components.database.DirigibleDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The WrappedDataSource of the standard JDBC {@link DataSource} object with added some additional
  * capabilities..
  */
-public class ManagedDataSource implements DataSource {
+class DirigibleDataSourceImpl implements DirigibleDataSource {
 
     /** The Constant LOGGER. */
-    private static final Logger logger = LoggerFactory.getLogger(ManagedDataSource.class);
+    private static final Logger logger = LoggerFactory.getLogger(DirigibleDataSourceImpl.class);
 
-    /** The Constant DATABASE_NAME_HDB. */
-    private static final String DATABASE_NAME_HDB = "HDB";
-    /** The Constant DATABASE_NAME_SNOWFLAKE. */
-    private static final String DATABASE_NAME_SNOWFLAKE = "Snowflake";
-
-    /** The original data source. */
-    private final DataSource originalDataSource;
-    /** The database name. */
-    private String databaseName;
+    private final List<ConnectionEnhancer> connectionEnhancers;
+    private final HikariDataSource originalDataSource;
+    private final DatabaseSystem databaseSystem;
 
     /**
      * Wrapper of the default datasource provided by the underlying platform It has some fault tolerance
      * features, which are not available by default in the popular JDBC drivers.
      *
      * @param originalDataSource the original data source
+     * @param databaseSystem database type
      */
-    public ManagedDataSource(DataSource originalDataSource) {
+    DirigibleDataSourceImpl(List<ConnectionEnhancer> allConnectionEnhancers, HikariDataSource originalDataSource,
+            DatabaseSystem databaseSystem) {
+        this.connectionEnhancers = allConnectionEnhancers.stream()
+                                                         .filter(e -> e.isApplicable(databaseSystem))
+                                                         .collect(Collectors.toList());
+        logger.info("Filtered [{}] connection enhancers out of [{}] for system [{}]: {}", connectionEnhancers.size(),
+                allConnectionEnhancers.size(), databaseSystem, connectionEnhancers);
         this.originalDataSource = originalDataSource;
+        this.databaseSystem = databaseSystem;
     }
 
     /**
@@ -58,54 +64,13 @@ public class ManagedDataSource implements DataSource {
      * @throws SQLException the SQL exception
      */
     @Override
-    public Connection getConnection() throws SQLException {
+    public DirigibleConnection getConnection() throws SQLException {
         Connection connection = originalDataSource.getConnection();
 
         enhanceConnection(connection);
         LeakedConnectionsDoctor.registerConnection(connection);
 
-        return connection;
-    }
-
-    /**
-     * Enhance connection.
-     *
-     * @param connection the connection
-     * @throws SQLException the SQL exception
-     */
-    private void enhanceConnection(Connection connection) throws SQLException {
-
-        if (this.databaseName == null) {
-            this.databaseName = connection.getMetaData()
-                                          .getDatabaseProductName();
-        }
-
-        // HANA
-        if (databaseName.equals(DATABASE_NAME_HDB)) {
-            Authentication authentication = SecurityContextHolder.getContext()
-                                                                 .getAuthentication();
-            String userName;
-            if (authentication != null) {
-                userName = authentication.getName();
-            } else {
-                userName = UserFacade.getName();
-            }
-            if (logger.isDebugEnabled()) {
-                logger.debug("Setting APPLICATIONUSER:{} for connection: {}", userName, connection);
-            }
-            connection.setClientInfo("APPLICATIONUSER", userName);
-
-            if (logger.isDebugEnabled()) {
-                logger.debug("Setting XS_APPLICATIONUSER:{} for connection: {}", userName, connection);
-            }
-            connection.setClientInfo("XS_APPLICATIONUSER", userName);
-        }
-
-        // Snowflake
-        if (databaseName.equals(DATABASE_NAME_SNOWFLAKE)) {
-            connection.createStatement()
-                      .executeQuery("ALTER SESSION SET JDBC_QUERY_RESULT_FORMAT='JSON'");
-        }
+        return new DirigibleConnectionImpl(connection, databaseSystem);
     }
 
     /**
@@ -117,13 +82,19 @@ public class ManagedDataSource implements DataSource {
      * @throws SQLException the SQL exception
      */
     @Override
-    public Connection getConnection(String username, String password) throws SQLException {
+    public DirigibleConnection getConnection(String username, String password) throws SQLException {
         Connection connection = originalDataSource.getConnection(username, password);
 
         enhanceConnection(connection);
         LeakedConnectionsDoctor.registerConnection(connection);
 
-        return connection;
+        return new DirigibleConnectionImpl(connection, databaseSystem);
+    }
+
+    private void enhanceConnection(Connection connection) throws SQLException {
+        for (ConnectionEnhancer enhancer : connectionEnhancers) {
+            enhancer.apply(connection);
+        }
     }
 
     /**
@@ -207,7 +178,17 @@ public class ManagedDataSource implements DataSource {
     }
 
     @Override
-    public String toString() {
-        return "ManagedDataSource{" + "databaseName='" + databaseName + '\'' + '}';
+    public DatabaseSystem getDatabaseSystem() {
+        return databaseSystem;
+    }
+
+    @Override
+    public boolean isOfType(DatabaseSystem databaseSystem) {
+        return this.databaseSystem.isOfType(databaseSystem);
+    }
+
+    @Override
+    public void close() {
+        originalDataSource.close();
     }
 }

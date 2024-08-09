@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.postgres;
 
+import org.eclipse.dirigible.components.database.DatabaseSystem;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.ISqlDialectProvider;
 
@@ -17,14 +18,9 @@ import org.eclipse.dirigible.database.sql.ISqlDialectProvider;
  */
 public class PostgresSqlDialectProvider implements ISqlDialectProvider {
 
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
     @Override
-    public String getName() {
-        return "PostgreSQL";
+    public DatabaseSystem getDatabaseSystem() {
+        return DatabaseSystem.POSTGRESQL;
     }
 
     /**

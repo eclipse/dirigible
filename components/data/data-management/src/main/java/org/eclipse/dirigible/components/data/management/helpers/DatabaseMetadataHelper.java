@@ -9,22 +9,23 @@
  */
 package org.eclipse.dirigible.components.data.management.helpers;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.sql.DataSource;
-
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.data.management.domain.*;
-import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.eclipse.dirigible.components.database.DatabaseNameNormalizer;
+import org.eclipse.dirigible.components.database.DatabaseParameters;
+import org.eclipse.dirigible.components.database.DatabaseSystem;
+import org.eclipse.dirigible.components.database.DatabaseSystemDeterminer;
 import org.eclipse.dirigible.database.sql.DatabaseType;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.sql.DataSource;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Database Metadata Helper.
@@ -291,17 +292,13 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
 
         String query = null;
 
-        if (dmd.getDatabaseProductName()
-               .equals("MariaDB")
-                || dmd.getDatabaseProductName()
-                      .equals("MySQL")) {
+        DatabaseSystem databaseSystem = DatabaseSystemDeterminer.determine(connection);
+        if (databaseSystem.isMariaDB() || databaseSystem.isMySQL()) {
             query = String.format(
-                    "SELECT column_name FROM information_schema.columns WHERE table_schema = \'%s\' AND extra = 'auto_increment'", name);
-        } else if (dmd.getDatabaseProductName()
-                      .equals("Snowflake")) {
+                    "SELECT column_name FROM information_schema.columns WHERE table_schema = '%s' AND extra = 'auto_increment'", name);
+        } else if (databaseSystem.isSnowflake()) {
             query = "SHOW SEQUENCES";
-        } else if (!dmd.getDatabaseProductName()
-                       .equals("MongoDB")) {
+        } else if (!databaseSystem.isMongoDB()) {
             query = "SELECT * FROM information_schema.sequences";
         }
 
@@ -310,13 +307,9 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     String sequenceName;
-                    if (dmd.getDatabaseProductName()
-                           .equals("MariaDB")
-                            || dmd.getDatabaseProductName()
-                                  .equals("MySQL")) {
+                    if (databaseSystem.isMariaDB() || databaseSystem.isMySQL()) {
                         sequenceName = resultSet.getString("column_name");
-                    } else if (dmd.getDatabaseProductName()
-                                  .equals("Snowflake")) {
+                    } else if (databaseSystem.isSnowflake()) {
                         sequenceName = resultSet.getString("name");
                     } else {
                         sequenceName = resultSet.getString("sequence_name");
@@ -331,7 +324,6 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         }
         return result;
     }
-
 
     /**
      * Describe table.
@@ -465,6 +457,7 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         void onColumn(String name, String type, String size, boolean isNullable, boolean isKey, int scale);
     }
 
+
     /**
      * The Interface ProceduresColumnsIteratorCallback.
      */
@@ -486,6 +479,7 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         void onProcedureColumn(String name, int kind, String type, int precision, int length, int scale, int radix, boolean nullable,
                 String remarks);
     }
+
 
     /**
      * The Interface FunctionColumnsIteratorCallback.
@@ -509,6 +503,7 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
                 String remarks);
     }
 
+
     /**
      * The Interface IndicesIteratorCallback.
      */
@@ -531,6 +526,7 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         void onIndex(String indexName, String indexType, String columnName, boolean isNonUnique, String indexQualifier,
                 String ordinalPosition, String sortOrder, String cardinality, String pagesIndex, String filterCondition);
     }
+
 
     /**
      * The Interface IndicesIteratorCallback.
@@ -640,7 +636,6 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
 
         try {
 
-
             while (columns.next()) {
                 if (procedureColumnsIteratorCallback != null) {
                     String cname = columns.getString(COLUMN_NAME);
@@ -676,7 +671,6 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         }
 
         try {
-
 
             while (columns.next()) {
                 if (functionColumnsIteratorCallback != null) {

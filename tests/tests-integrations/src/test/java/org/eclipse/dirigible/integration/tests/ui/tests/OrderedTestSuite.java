@@ -9,14 +9,13 @@
  */
 package org.eclipse.dirigible.integration.tests.ui.tests;
 
-import org.eclipse.dirigible.integration.tests.api.rest.DisabledMultitenantModeIT;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.api.SuiteDisplayName;
 
 @Suite
 @SuiteDisplayName("Ordered Test Suite")
-@SelectClasses({DisabledMultitenantModeIT.class, MultitenancyIT.class})
+@SelectClasses({BPMStarterTemplateIT.class, MultitenancyIT.class})
 public class OrderedTestSuite {
     // use this suite class to run tests in specific order if needed
     // it is not configured to be executed automatically by the maven plugins

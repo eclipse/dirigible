@@ -7,22 +7,16 @@
  *
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.database.sql;
+package org.eclipse.dirigible.components.database;
 
-import org.eclipse.dirigible.components.database.DatabaseSystem;
+import com.zaxxer.hikari.HikariConfig;
 
 /**
- * The Interface ISqlDialectProvider.
+ * The Interface DatabaseConfigurator.
  */
-public interface ISqlDialectProvider {
+public interface DatabaseConfigurator {
 
-    DatabaseSystem getDatabaseSystem();
+    boolean isApplicable(DatabaseSystem databaseSystem);
 
-    /**
-     * Gets the dialect.
-     *
-     * @return the dialect
-     */
-    ISqlDialect getDialect();
-
+    void apply(HikariConfig config);
 }

@@ -84,98 +84,139 @@ export function getProductName(datasourceName) {
 	return productName;
 };
 
-export function getConnection(datasourceName) {
-	const connection = new Connection();
+export function getConnection(datasourceName: string | undefined) : Connection {
 	var native;
 	if (datasourceName) {
 		native = DatabaseFacade.getConnection(datasourceName);
 	} else {
 		native = DatabaseFacade.getConnection();
 	}
-	connection.native = native;
-	return connection;
+	return new Connection(native);
 };
+
+export enum DatabaseSystem {
+    UNKNOWN, DERBY, POSTGRESQL, H2, MARIADB, HANA, SNOWFLAKE, MYSQL, MONGODB, SYBASE
+}
 
 /**
  * Connection object
  */
-function Connection() {
+export class Connection {
 
-	this.prepareStatement = function (sql) {
+    private readonly native;
+
+    constructor(native: any) {
+        this.native = native;
+    }
+
+	public isOfType(databaseSystem: DatabaseSystem): boolean {
+        const actualDatabaseSystem = this.getDatabaseSystem();
+        return actualDatabaseSystem == databaseSystem;
+	}
+
+	public getDatabaseSystem() {
+		const dbSystem = this.native.getDatabaseSystem().name();
+        switch (dbSystem) {
+            case "DERBY":
+                return DatabaseSystem.DERBY;
+            case "POSTGRESQL":
+                return DatabaseSystem.POSTGRESQL;
+            case "H2":
+                return DatabaseSystem.H2;
+            case "MARIADB":
+                return DatabaseSystem.MARIADB;
+            case "HANA":
+                return DatabaseSystem.HANA;
+            case "SNOWFLAKE":
+                return DatabaseSystem.SNOWFLAKE;
+            case "MYSQL":
+                return DatabaseSystem.MYSQL;
+            case "MONGODB":
+                return DatabaseSystem.MONGODB;
+            case "SYBASE":
+                return DatabaseSystem.SYBASE;
+            case "UNKNOWN":
+                return DatabaseSystem.UNKNOWN;
+            default:
+                throw Error("Missing mapping for database system type " + dbSystem);
+        }
+	}
+
+	public prepareStatement(sql) {
 		const preparedStatement = new PreparedStatement();
 		const native = this.native.prepareStatement(sql);
 		preparedStatement.native = native;
 		return preparedStatement;
-	};
+	}
 
-	this.prepareCall = function (sql) {
+	public prepareCall(sql) {
 		const callableStatement = new CallableStatement();
 		const native = this.native.prepareCall(sql);
 		callableStatement.native = native;
 		return callableStatement;
-	};
+	}
 
-	this.close = function () {
+	public close() {
 		if (!this.isClosed()) {
 			this.native.close();
 		}
-	};
+	}
 
-	this.commit = function () {
+	public commit() {
 		this.native.commit();
-	};
+	}
 
-	this.getAutoCommit = function () {
+	public getAutoCommit() {
 		return this.native.getAutoCommit();
-	};
+	}
 
-	this.getCatalog = function () {
+	public getCatalog() {
 		return this.native.getCatalog();
-	};
+	}
 
-	this.getSchema = function () {
+	public getSchema() {
 		return this.native.getSchema();
-	};
+	}
 
-	this.getTransactionIsolation = function () {
+	public getTransactionIsolation() {
 		return this.native.getTransactionIsolation();
-	};
+	}
 
-	this.isClosed = function () {
+	public isClosed() {
 		return this.native.isClosed();
-	};
+	}
 
-	this.isReadOnly = function () {
+	public isReadOnly() {
 		return this.native.isReadOnly();
-	};
+	}
 
-	this.isValid = function () {
+	public isValid() {
 		return this.native.isValid();
-	};
+	}
 
-	this.rollback = function () {
+	public rollback() {
 		return this.native.rollback();
-	};
+	}
 
-	this.setAutoCommit = function (autoCommit) {
+	public setAutoCommit(autoCommit) {
 		this.native.setAutoCommit(autoCommit);
-	};
+	}
 
-	this.setCatalog = function (catalog) {
+	public setCatalog(catalog) {
 		this.native.setCatalog(catalog);
-	};
+	}
 
-	this.setReadOnly = function (readOnly) {
+	public setReadOnly(readOnly) {
 		this.native.setReadOnly(readOnly);
-	};
+	}
 
-	this.setSchema = function (schema) {
+	public setSchema(schema) {
 		this.native.setSchema(schema);
-	};
+	}
 
-	this.setTransactionIsolation = function (transactionIsolation) {
+	public setTransactionIsolation(transactionIsolation) {
 		this.native.setTransactionIsolation(transactionIsolation);
-	};
+	}
 }
 
 /**

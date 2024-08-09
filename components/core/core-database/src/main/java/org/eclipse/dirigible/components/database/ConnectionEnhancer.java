@@ -7,22 +7,14 @@
  *
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.database.sql;
+package org.eclipse.dirigible.components.database;
 
-import org.eclipse.dirigible.components.database.DatabaseSystem;
+import java.sql.Connection;
+import java.sql.SQLException;
 
-/**
- * The Interface ISqlDialectProvider.
- */
-public interface ISqlDialectProvider {
+public interface ConnectionEnhancer {
 
-    DatabaseSystem getDatabaseSystem();
+    boolean isApplicable(DatabaseSystem databaseSystem);
 
-    /**
-     * Gets the dialect.
-     *
-     * @return the dialect
-     */
-    ISqlDialect getDialect();
-
+    void apply(Connection connection) throws SQLException;
 }

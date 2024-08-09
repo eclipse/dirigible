@@ -9,36 +9,25 @@
  */
 package org.eclipse.dirigible.components.data.management.load;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.sql.DataSource;
-
+import com.google.common.base.CaseFormat;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.data.management.domain.DatabaseMetadata;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
-import org.eclipse.dirigible.components.data.structures.domain.Table;
-import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
-import org.eclipse.dirigible.components.data.structures.domain.TableConstraint;
-import org.eclipse.dirigible.components.data.structures.domain.TableConstraintCheck;
-import org.eclipse.dirigible.components.data.structures.domain.TableConstraintForeignKey;
-import org.eclipse.dirigible.components.data.structures.domain.TableConstraintUnique;
+import org.eclipse.dirigible.components.data.structures.domain.*;
 import org.eclipse.dirigible.components.database.DatabaseParameters;
+import org.eclipse.dirigible.components.database.DatabaseSystem;
+import org.eclipse.dirigible.components.database.DatabaseSystemDeterminer;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.common.base.CaseFormat;
-
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * The Class DataSourceMetadataLoader.
@@ -188,7 +177,6 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
             primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName()
                                                                                                                            .toLowerCase()));
             if (!primaryKeys.next()) {
-                return;
             } else {
                 iteratePrimaryKeys(tableMetadata, primaryKeys);
             }
@@ -244,7 +232,6 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
             foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName()
                                                                                                                             .toLowerCase()));
             if (!foreignKeys.next()) {
-                return;
             } else {
                 iterateForeignKeys(tableMetadata, foreignKeys);
             }
@@ -266,8 +253,6 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
                     tableMetadata.getConstraints());
         } while (foreignKeys.next());
     }
-
-
 
     /**
      * Add indices.
@@ -410,12 +395,10 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
     public static List<String> getTablesInSchema(DataSource dataSource, String schemaName) throws SQLException {
         List<String> tableNames = new ArrayList<String>();
         try (Connection connection = dataSource.getConnection()) {
+            DatabaseSystem databaseSystem = DatabaseSystemDeterminer.determine(dataSource);
             DatabaseMetaData databaseMetaData = connection.getMetaData();
             ResultSet schemas;
-            if (!(databaseMetaData.getDatabaseProductName()
-                                  .equals("MariaDB")
-                    || databaseMetaData.getDatabaseProductName()
-                                       .equals("MySQL"))) {
+            if (!(databaseSystem.isMariaDB() || databaseSystem.isMySQL())) {
                 schemas = databaseMetaData.getSchemas(null, schemaName);
             } else {
                 schemas = databaseMetaData.getCatalogs();

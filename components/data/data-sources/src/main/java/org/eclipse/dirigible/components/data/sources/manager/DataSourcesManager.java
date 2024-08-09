@@ -14,6 +14,7 @@ import org.eclipse.dirigible.components.data.sources.config.SystemDataSourceName
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.service.CustomDataSourcesService;
 import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
+import org.eclipse.dirigible.components.database.DirigibleDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +77,7 @@ public class DataSourcesManager {
      *
      * @return the default data source
      */
-    public javax.sql.DataSource getDefaultDataSource() {
+    public DirigibleDataSource getDefaultDataSource() {
         return getDataSource(defaultDataSourceName);
     }
 
@@ -86,7 +87,7 @@ public class DataSourcesManager {
      * @param name the name
      * @return the data source
      */
-    public javax.sql.DataSource getDataSource(String name) {
+    public DirigibleDataSource getDataSource(String name) {
         return dataSourceInitializer.isInitialized(name) ? dataSourceInitializer.getInitializedDataSource(name)
                 : dataSourceInitializer.initialize(getDataSourceDefinition(name));
     }
@@ -116,7 +117,7 @@ public class DataSourcesManager {
      *
      * @return the system data source
      */
-    public javax.sql.DataSource getSystemDataSource() {
+    public DirigibleDataSource getSystemDataSource() {
         return getDataSource(systemDataSourceName);
     }
 

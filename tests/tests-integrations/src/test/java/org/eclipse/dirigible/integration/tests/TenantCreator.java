@@ -58,6 +58,9 @@ public class TenantCreator {
     public boolean isTenantProvisioned(DirigibleTestTenant tenant) {
         Tenant foundTenant = tenantService.findById(tenant.getId())
                                           .orElseThrow(() -> new IllegalStateException("Tenant [" + tenant + "] doesn't exist"));
-        return foundTenant.getStatus() == TenantStatus.PROVISIONED;
+
+        boolean tenantProvisioned = foundTenant.getStatus() == TenantStatus.PROVISIONED;
+        LOGGER.info("Tenant [{}] provisioned [{}]", foundTenant, tenantProvisioned);
+        return tenantProvisioned;
     }
 }

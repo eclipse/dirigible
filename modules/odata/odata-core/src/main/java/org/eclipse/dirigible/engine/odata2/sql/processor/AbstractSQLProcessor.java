@@ -184,7 +184,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
      * @throws SQLException the SQL exception
      */
     protected SQLContext createSQLContext(final Connection connection) throws SQLException {
-        return new SQLContext(connection.getMetaData(), this.getContext());
+        return new SQLContext(connection, this.getContext());
     }
 
     /**

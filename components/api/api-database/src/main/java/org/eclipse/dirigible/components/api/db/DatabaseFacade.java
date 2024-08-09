@@ -15,6 +15,8 @@ import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadata
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseResultSetHelper;
 import org.eclipse.dirigible.components.data.management.service.DatabaseDefinitionService;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
+import org.eclipse.dirigible.components.database.DirigibleConnection;
+import org.eclipse.dirigible.components.database.DirigibleDataSource;
 import org.eclipse.dirigible.components.database.NamedParameterStatement;
 import org.eclipse.dirigible.database.persistence.processors.identity.PersistenceNextValueIdentityProcessor;
 import org.eclipse.dirigible.database.sql.SqlFactory;
@@ -109,7 +111,7 @@ public class DatabaseFacade implements InitializingBean {
      *
      * @return the default data source
      */
-    public static final DataSource getDefaultDataSource() {
+    public static final DirigibleDataSource getDefaultDataSource() {
         return DatabaseFacade.get()
                              .getDataSourcesManager()
                              .getDefaultDataSource();
@@ -146,7 +148,7 @@ public class DatabaseFacade implements InitializingBean {
      * @param datasourceName the datasource name
      * @return the data source
      */
-    private static DataSource getDataSource(String datasourceName) {
+    private static DirigibleDataSource getDataSource(String datasourceName) {
         return datasourceName == null || "".equals(datasourceName.trim()) || "DefaultDB".equals(datasourceName) ? DatabaseFacade.get()
                                                                                                                                 .getDataSourcesManager()
                                                                                                                                 .getDefaultDataSource()
@@ -521,7 +523,7 @@ public class DatabaseFacade implements InitializingBean {
      * @return the connection
      * @throws SQLException the SQL exception
      */
-    public static final Connection getConnection() throws SQLException {
+    public static final DirigibleConnection getConnection() throws SQLException {
         return getConnection(null);
     }
 
@@ -532,8 +534,8 @@ public class DatabaseFacade implements InitializingBean {
      * @return the connection
      * @throws SQLException the SQL exception
      */
-    public static final Connection getConnection(String datasourceName) throws SQLException {
-        DataSource dataSource = getDataSource(datasourceName);
+    public static final DirigibleConnection getConnection(String datasourceName) throws SQLException {
+        DirigibleDataSource dataSource = getDataSource(datasourceName);
         if (dataSource == null) {
             String error = format("DataSource {0} not known.", datasourceName);
             throw new IllegalArgumentException(error);

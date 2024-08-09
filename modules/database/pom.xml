@@ -40,4 +40,14 @@
 		</dependency>
 	</dependencies>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-data-sources</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 </project>

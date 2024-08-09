@@ -10,6 +10,7 @@
 package org.eclipse.dirigible.integration.tests.api.java;
 
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
+import org.eclipse.dirigible.components.database.DirigibleDataSource;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.SqlFactory;
@@ -104,9 +105,9 @@ public class CsvimIT extends IntegrationTest {
     }
 
     private void createUndefiniedTable() {
-        DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
+        DirigibleDataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
         try (Connection connection = defaultDataSource.getConnection()) {
-            ISqlDialect dialect = SqlDialectFactory.getDialect(defaultDataSource.getConnection());
+            ISqlDialect dialect = SqlDialectFactory.getDialect(defaultDataSource);
             String sql = dialect.create()
                                 .table(UNDEFINIED_TABLE_NAME)
                                 .column("READER_ID", DataType.INTEGER, true)
@@ -150,9 +151,9 @@ public class CsvimIT extends IntegrationTest {
     }
 
     private List<Reader> getAllData(String tableName) {
-        DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
+        DirigibleDataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
         try (Connection connection = defaultDataSource.getConnection()) {
-            String sql = SqlDialectFactory.getDialect(connection)
+            String sql = SqlDialectFactory.getDialect(defaultDataSource)
                                           .select()
                                           .from(tableName)
                                           .build();
