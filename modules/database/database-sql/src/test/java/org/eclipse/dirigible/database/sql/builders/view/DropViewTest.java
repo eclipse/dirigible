@@ -9,12 +9,11 @@
  */
 package org.eclipse.dirigible.database.sql.builders.view;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * The Class DropViewTest.
@@ -22,35 +21,16 @@ import org.junit.Test;
 public class DropViewTest {
 
     /**
-     * Drop table.
+     * Drop table case sensitive.
      */
     @Test
-    public void dropTable() {
+    public void dropTableCaseSensitive() {
         String sql = SqlFactory.getDefault()
                                .drop()
                                .view("CUSTOMERS_VIEW")
                                .build();
 
         assertNotNull(sql);
-        assertEquals("DROP VIEW CUSTOMERS_VIEW", sql);
-    }
-
-    /**
-     * Drop table case sensitive.
-     */
-    @Test
-    public void dropTableCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .drop()
-                                   .view("CUSTOMERS_VIEW")
-                                   .build();
-
-            assertNotNull(sql);
-            assertEquals("DROP VIEW \"CUSTOMERS_VIEW\"", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertEquals("DROP VIEW \"CUSTOMERS_VIEW\"", sql);
     }
 }

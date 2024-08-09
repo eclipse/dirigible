@@ -10,7 +10,6 @@
 package org.eclipse.dirigible.components.data.management.load;
 
 import com.google.common.base.CaseFormat;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.data.structures.domain.*;
 import org.eclipse.dirigible.components.database.DatabaseParameters;
@@ -37,10 +36,6 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DataSourceMetadataLoader.class);
-
-    /** The Constant IS_CASE_SENSETIVE. */
-    private static final boolean IS_CASE_SENSETIVE =
-            Boolean.parseBoolean(Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE));
 
     /** The data source service. */
     private final DataSourcesManager datasourceManager;
@@ -129,16 +124,6 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
                 databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName()), null);
         if (columns.next()) {
             iterateColumns(tableMetadata, columns);
-        } else if (!IS_CASE_SENSETIVE) {
-            // Fallback for PostgreSQL
-            columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName()
-                                                                                                                          .toLowerCase()),
-                    null);
-            if (!columns.next()) {
-                throw new SQLException("Error in getting the information about the columns.");
-            } else {
-                iterateColumns(tableMetadata, columns);
-            }
         }
     }
 
@@ -172,14 +157,6 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
                 databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName()));
         if (primaryKeys.next()) {
             iteratePrimaryKeys(tableMetadata, primaryKeys);
-        } else if (!IS_CASE_SENSETIVE) {
-            // Fallback for PostgreSQL
-            primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName()
-                                                                                                                           .toLowerCase()));
-            if (!primaryKeys.next()) {
-            } else {
-                iteratePrimaryKeys(tableMetadata, primaryKeys);
-            }
         }
     }
 
@@ -227,14 +204,6 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
                 databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName()));
         if (foreignKeys.next()) {
             iterateForeignKeys(tableMetadata, foreignKeys);
-        } else if (!IS_CASE_SENSETIVE) {
-            // Fallback for PostgreSQL
-            foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName()
-                                                                                                                            .toLowerCase()));
-            if (!foreignKeys.next()) {
-            } else {
-                iterateForeignKeys(tableMetadata, foreignKeys);
-            }
         }
     }
 
@@ -339,16 +308,6 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
                 databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName()), null);
         if (tables.next()) {
             iterateTables(tableMetadata, tables);
-        } else if (!IS_CASE_SENSETIVE) {
-            // Fallback for PostgreSQL
-            tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName()
-                                                                                                                        .toLowerCase()),
-                    null);
-            if (!tables.next()) {
-                throw new SQLException("Error in getting the information about the tables.");
-            } else {
-                iterateTables(tableMetadata, tables);
-            }
         }
     }
 

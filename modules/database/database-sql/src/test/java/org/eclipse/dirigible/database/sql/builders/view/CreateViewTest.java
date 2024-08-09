@@ -9,13 +9,12 @@
  */
 package org.eclipse.dirigible.database.sql.builders.view;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableTest;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * The Class CreateViewTest.
@@ -23,11 +22,10 @@ import org.junit.Test;
 public class CreateViewTest extends CreateTableTest {
 
     /**
-     * Creates the view as select.
+     * Creates the view as select case sensitive.
      */
     @Test
-    public void createViewAsSelect() {
-        createTableGeneric();
+    public void createViewAsSelectCaseSensitive() {
         String sql = SqlFactory.getDefault()
                                .create()
                                .view("CUSTOMERS_VIEW")
@@ -42,35 +40,7 @@ public class CreateViewTest extends CreateTableTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE VIEW CUSTOMERS_VIEW ( ID , FIRST_NAME , LAST_NAME ) AS SELECT * FROM CUSTOMERS", sql);
-    }
-
-    /**
-     * Creates the view as select case sensitive.
-     */
-    @Test
-    public void createViewAsSelectCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .create()
-                                   .view("CUSTOMERS_VIEW")
-                                   .column("ID")
-                                   .column("FIRST_NAME")
-                                   .column("LAST_NAME")
-                                   .asSelect(SqlFactory.getDefault()
-                                                       .select()
-                                                       .column("*")
-                                                       .from("CUSTOMERS")
-                                                       .build())
-                                   .build();
-
-            assertNotNull(sql);
-            assertEquals("CREATE VIEW \"CUSTOMERS_VIEW\" ( \"ID\" , \"FIRST_NAME\" , \"LAST_NAME\" ) AS SELECT * FROM \"CUSTOMERS\"", sql);
-
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertEquals("CREATE VIEW \"CUSTOMERS_VIEW\" ( \"ID\" , \"FIRST_NAME\" , \"LAST_NAME\" ) AS SELECT * FROM \"CUSTOMERS\"", sql);
     }
 
     /**
@@ -94,7 +64,7 @@ public class CreateViewTest extends CreateTableTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE VIEW CUSTOMERS_VIEW ( ID , FIRST_NAME , LAST_NAME ) AS SELECT * FROM CUSTOMERS "
+        assertEquals("CREATE VIEW \"CUSTOMERS_VIEW\" ( \"ID\" , \"FIRST_NAME\" , \"LAST_NAME\" ) AS SELECT * FROM CUSTOMERS "
                 + "AS CUST INNER JOIN EMPLOYEE AS EMP ON CUST.ID = EMP.ID", sql);
     }
 }

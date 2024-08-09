@@ -9,11 +9,11 @@
  */
 package org.eclipse.dirigible.database.sql.builders.records;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * The Class SelectTest.
@@ -380,19 +380,15 @@ public class SelectRecordTest {
      */
     @Test
     public void selectStarCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .select()
-                                   .column("*")
-                                   .from("CUSTOMERS")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .select()
+                               .column("*")
+                               .from("CUSTOMERS")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals("SELECT * FROM \"CUSTOMERS\"", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals("SELECT * FROM \"CUSTOMERS\"", sql);
+
     }
 
     /**
@@ -400,20 +396,15 @@ public class SelectRecordTest {
      */
     @Test
     public void selectStarAndColumnCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .select()
-                                   .column("*")
-                                   .column("FIRST_NAME")
-                                   .from("CUSTOMERS")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .select()
+                               .column("*")
+                               .column("FIRST_NAME")
+                               .from("CUSTOMERS")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals("SELECT *, \"FIRST_NAME\" FROM \"CUSTOMERS\"", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals("SELECT *, \"FIRST_NAME\" FROM \"CUSTOMERS\"", sql);
     }
 
     /**
@@ -421,19 +412,14 @@ public class SelectRecordTest {
      */
     @Test
     public void selectCountCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .select()
-                                   .column("COUNT(*)")
-                                   .from("CUSTOMERS")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .select()
+                               .column("COUNT(*)")
+                               .from("CUSTOMERS")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals("SELECT COUNT(*) FROM \"CUSTOMERS\"", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals("SELECT COUNT(*) FROM \"CUSTOMERS\"", sql);
     }
 
     /**
@@ -441,19 +427,14 @@ public class SelectRecordTest {
      */
     @Test
     public void selectColumnCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .select()
-                                   .column("FIRST_NAME")
-                                   .from("CUSTOMERS")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .select()
+                               .column("FIRST_NAME")
+                               .from("CUSTOMERS")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals("SELECT \"FIRST_NAME\" FROM \"CUSTOMERS\"", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals("SELECT \"FIRST_NAME\" FROM \"CUSTOMERS\"", sql);
     }
 
     /**
@@ -461,20 +442,15 @@ public class SelectRecordTest {
      */
     @Test
     public void selectColumnWithWhereCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .select()
-                                   .column("FIRST_NAME")
-                                   .from("CUSTOMERS")
-                                   .where("PRICE > ?")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .select()
+                               .column("FIRST_NAME")
+                               .from("CUSTOMERS")
+                               .where("PRICE > ?")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals("SELECT \"FIRST_NAME\" FROM \"CUSTOMERS\" WHERE (\"PRICE\" > ?)", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals("SELECT \"FIRST_NAME\" FROM \"CUSTOMERS\" WHERE (\"PRICE\" > ?)", sql);
     }
 
     /**
@@ -482,19 +458,14 @@ public class SelectRecordTest {
      */
     @Test
     public void selectComplexColumnCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .select()
-                                   .column("POWER(PRICE, QTY)")
-                                   .from("CUSTOMERS")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .select()
+                               .column("POWER(PRICE, QTY)")
+                               .from("CUSTOMERS")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals("SELECT POWER(\"PRICE\", \"QTY\") FROM \"CUSTOMERS\"", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals("SELECT POWER(\"PRICE\", \"QTY\") FROM \"CUSTOMERS\"", sql);
     }
 
     /**
@@ -502,19 +473,14 @@ public class SelectRecordTest {
      */
     @Test
     public void selectComplexColumnsCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .select()
-                                   .column("(PRICE - QTY)")
-                                   .from("CUSTOMERS")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .select()
+                               .column("(PRICE - QTY)")
+                               .from("CUSTOMERS")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals("SELECT (\"PRICE\" - \"QTY\") FROM \"CUSTOMERS\"", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals("SELECT (\"PRICE\" - \"QTY\") FROM \"CUSTOMERS\"", sql);
     }
 
     /**
@@ -522,18 +488,13 @@ public class SelectRecordTest {
      */
     @Test
     public void selectArtifactWithNamespaceAndSchemaNameCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .select()
-                                   .column("COUNT(*)")
-                                   .from("\"ShemaName\".\"projName.db::MySynonym\"")
-                                   .build();
-            assertNotNull(sql);
-            assertEquals("SELECT COUNT(*) FROM \"ShemaName\".\"projName.db::MySynonym\"", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        String sql = SqlFactory.getDefault()
+                               .select()
+                               .column("COUNT(*)")
+                               .from("\"ShemaName\".\"projName.db::MySynonym\"")
+                               .build();
+        assertNotNull(sql);
+        assertEquals("SELECT COUNT(*) FROM \"ShemaName\".\"projName.db::MySynonym\"", sql);
     }
 
     /**
@@ -541,18 +502,13 @@ public class SelectRecordTest {
      */
     @Test
     public void selectArtifactWithNamespaceCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .select()
-                                   .column("COUNT(*)")
-                                   .from("projName::MySynonym")
-                                   .build();
-            assertNotNull(sql);
-            assertEquals("SELECT COUNT(*) FROM \"projName::MySynonym\"", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        String sql = SqlFactory.getDefault()
+                               .select()
+                               .column("COUNT(*)")
+                               .from("projName::MySynonym")
+                               .build();
+        assertNotNull(sql);
+        assertEquals("SELECT COUNT(*) FROM \"projName::MySynonym\"", sql);
     }
 
     /**
@@ -560,19 +516,14 @@ public class SelectRecordTest {
      */
     @Test
     public void selectFunctionCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .select()
-                                   .column("COS(0.0) c")
-                                   .from("DUMMY")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .select()
+                               .column("COS(0.0) c")
+                               .from("DUMMY")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals("SELECT COS(0.0) \"c\" FROM \"DUMMY\"", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals("SELECT COS(0.0) \"c\" FROM \"DUMMY\"", sql);
     }
 
     /**
@@ -580,20 +531,15 @@ public class SelectRecordTest {
      */
     @Test
     public void selectColumnWithSpecialCharsCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .select()
-                                   .column("FIRST_NAME1$")
-                                   .from("CUSTOMERS")
-                                   .where("PRICE_BASIC1$ LIKE ?")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .select()
+                               .column("FIRST_NAME1$")
+                               .from("CUSTOMERS")
+                               .where("PRICE_BASIC1$ LIKE ?")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals("SELECT \"FIRST_NAME1$\" FROM \"CUSTOMERS\" WHERE (\"PRICE_BASIC1$\" LIKE ?)", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals("SELECT \"FIRST_NAME1$\" FROM \"CUSTOMERS\" WHERE (\"PRICE_BASIC1$\" LIKE ?)", sql);
     }
 
     /**
@@ -601,21 +547,16 @@ public class SelectRecordTest {
      */
     @Test
     public void selectColumnWithSpecialCharsAndNumbersCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .select()
-                                   .column("FIRST_NAME1$")
-                                   .from("CUSTOMERS")
-                                   .where("PRICE_BASIC1$ LIKE ?")
-                                   .where("PRICE_BASIC2$ == 0")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .select()
+                               .column("FIRST_NAME1$")
+                               .from("CUSTOMERS")
+                               .where("PRICE_BASIC1$ LIKE ?")
+                               .where("PRICE_BASIC2$ == 0")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals("SELECT \"FIRST_NAME1$\" FROM \"CUSTOMERS\" WHERE (\"PRICE_BASIC1$\" LIKE ?) AND (\"PRICE_BASIC2$\" == 0)", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals("SELECT \"FIRST_NAME1$\" FROM \"CUSTOMERS\" WHERE (\"PRICE_BASIC1$\" LIKE ?) AND (\"PRICE_BASIC2$\" == 0)", sql);
     }
 
     /**
@@ -623,21 +564,16 @@ public class SelectRecordTest {
      */
     @Test
     public void selectColumnWhereAndSchemaCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .select()
-                                   .column("FIRST_NAME")
-                                   .from("CUSTOMERS")
-                                   .schema("PUBLIC")
-                                   .where("PRICE_BASIC LIKE ?")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .select()
+                               .column("FIRST_NAME")
+                               .from("CUSTOMERS")
+                               .schema("PUBLIC")
+                               .where("PRICE_BASIC LIKE ?")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals("SELECT \"FIRST_NAME\" FROM \"PUBLIC\".\"CUSTOMERS\" WHERE (\"PRICE_BASIC\" LIKE ?)", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals("SELECT \"FIRST_NAME\" FROM \"PUBLIC\".\"CUSTOMERS\" WHERE (\"PRICE_BASIC\" LIKE ?)", sql);
     }
 
 }

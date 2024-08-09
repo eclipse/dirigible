@@ -26,7 +26,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.EMPTY_LIST;
-import static org.eclipse.dirigible.commons.config.DirigibleConfig.DATABASE_NAMES_CASE_SENSITIVE;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.evaluateDateTimeExpressions;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.*;
 
@@ -552,8 +551,7 @@ public final class SQLSelectClause {
             String tableAlias = it.next();
             // ideally get the escape symbol from the dialect
             // hardcoded since, the dialect is not used in this project
-            String escapedTableAlias =
-                    DATABASE_NAMES_CASE_SENSITIVE.getBooleanValue() ? (ESCAPE_SYMBOL + tableAlias + ESCAPE_SYMBOL) : tableAlias;
+            String escapedTableAlias = (ESCAPE_SYMBOL + tableAlias + ESCAPE_SYMBOL);
             EdmStructuralType type = query.getEntityInQueryForAlias(tableAlias);
             if (isSelectTarget(type)) {
                 boolean isView = EdmTableBinding.DataStructureType.VIEW == targetDataStructureType;

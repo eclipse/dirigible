@@ -9,12 +9,11 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * The Class SelectTest.
@@ -367,19 +366,14 @@ public class SelectTest {
      */
     @Test
     public void selectFunctionCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .select()
-                                   .column("COS(0.0) c")
-                                   .from("DUMMY")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .select()
+                               .column("COS(0.0) c")
+                               .from("DUMMY")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals("SELECT COS(0.0) \"c\" FROM \"DUMMY\"", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals("SELECT COS(0.0) \"c\" FROM \"DUMMY\"", sql);
     }
 
 }

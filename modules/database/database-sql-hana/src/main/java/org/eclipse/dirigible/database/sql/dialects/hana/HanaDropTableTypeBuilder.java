@@ -23,7 +23,7 @@ public class HanaDropTableTypeBuilder extends DropTableTypeBuilder {
     private static final Logger logger = LoggerFactory.getLogger(HanaDropTableTypeBuilder.class);
 
     /** The table type. */
-    private String tableType;
+    private final String tableType;
 
     /**
      * Instantiates a new abstract drop sql builder.
@@ -67,7 +67,7 @@ public class HanaDropTableTypeBuilder extends DropTableTypeBuilder {
      * @param sql the sql
      */
     private void generateTableType(StringBuilder sql) {
-        String tableTypeName = (isCaseSensitive()) ? encapsulate(this.getTableType(), true) : this.getTableType();
+        String tableTypeName = encapsulate(this.getTableType(), true);
         sql.append(SPACE)
            .append(KEYWORD_TABLE_TYPE)
            .append(SPACE)

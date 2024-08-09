@@ -9,11 +9,11 @@
  */
 package org.eclipse.dirigible.database.sql.builders;
 
-import java.util.Set;
-import java.util.regex.Pattern;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.ISqlBuilder;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
+
+import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * The Abstract SQL Builder.
@@ -59,15 +59,6 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
     @Override
     public String build() {
         return generate();
-    }
-
-    /**
-     * Whether the names of tables, columns, indices are case sensitive.
-     *
-     * @return true if set
-     */
-    protected boolean isCaseSensitive() {
-        return Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
     }
 
     /**

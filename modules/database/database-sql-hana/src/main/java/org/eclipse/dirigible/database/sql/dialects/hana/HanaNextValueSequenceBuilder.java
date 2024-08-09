@@ -9,10 +9,10 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
-import static java.text.MessageFormat.format;
-
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder;
+
+import static java.text.MessageFormat.format;
 
 /**
  * The HANA Next Value Sequence Builder.
@@ -39,7 +39,7 @@ public class HanaNextValueSequenceBuilder extends NextValueSequenceBuilder {
      */
     @Override
     public String generate() {
-        String sequenceName = (isCaseSensitive()) ? encapsulate(this.getSequence(), true) : this.getSequence();
+        String sequenceName = encapsulate(this.getSequence(), true);
         String sql = format(PATTERN_SELECT_NEXT_VAL_SEQUENCE, sequenceName);
         return sql;
     }
