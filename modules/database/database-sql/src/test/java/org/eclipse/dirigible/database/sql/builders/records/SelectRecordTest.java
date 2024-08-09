@@ -32,7 +32,7 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT * FROM CUSTOMERS", sql);
+        assertEquals("SELECT * FROM \"CUSTOMERS\"", sql);
     }
 
     /**
@@ -48,7 +48,7 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS", sql);
+        assertEquals("SELECT \"FIRST_NAME\", \"LAST_NAME\" FROM \"CUSTOMERS\"", sql);
     }
 
     /**
@@ -64,7 +64,8 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT c.FIRST_NAME, c.LAST_NAME FROM CUSTOMERS AS c", sql);
+        assertEquals("SELECT \"c\".\"FIRST_NAME\", \"c\".\"LAST_NAME\" FROM \"CUSTOMERS\" AS \"c\"", sql);
+        System.out.println(sql);
     }
 
     /**
@@ -81,7 +82,9 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS INNER JOIN ADDRESSES ON CUSTOMERS.ADDRESS_ID=ADDRESSES.ADDRESS_ID", sql);
+        assertEquals(
+                "SELECT \"FIRST_NAME\", \"LAST_NAME\" FROM \"CUSTOMERS\" INNER JOIN \"ADDRESSES\" ON \"CUSTOMERS\".\"ADDRESS_ID\"=\"ADDRESSES\".\"ADDRESS_ID\"",
+                sql);
     }
 
     /**
@@ -98,7 +101,9 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS INNER JOIN ADDRESSES ON CUSTOMERS.ADDRESS_ID=ADDRESSES.ADDRESS_ID", sql);
+        assertEquals(
+                "SELECT \"FIRST_NAME\", \"LAST_NAME\" FROM \"CUSTOMERS\" INNER JOIN \"ADDRESSES\" ON \"CUSTOMERS\".\"ADDRESS_ID\"=\"ADDRESSES\".\"ADDRESS_ID\"",
+                sql);
     }
 
     /**
@@ -115,7 +120,9 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS OUTER JOIN ADDRESSES ON CUSTOMERS.ADDRESS_ID=ADDRESSES.ADDRESS_ID", sql);
+        assertEquals(
+                "SELECT \"FIRST_NAME\", \"LAST_NAME\" FROM \"CUSTOMERS\" OUTER JOIN \"ADDRESSES\" ON \"CUSTOMERS\".\"ADDRESS_ID\"=\"ADDRESSES\".\"ADDRESS_ID\"",
+                sql);
     }
 
     /**
@@ -132,7 +139,9 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS LEFT JOIN ADDRESSES ON CUSTOMERS.ADDRESS_ID=ADDRESSES.ADDRESS_ID", sql);
+        assertEquals(
+                "SELECT \"FIRST_NAME\", \"LAST_NAME\" FROM \"CUSTOMERS\" LEFT JOIN \"ADDRESSES\" ON \"CUSTOMERS\".\"ADDRESS_ID\"=\"ADDRESSES\".\"ADDRESS_ID\"",
+                sql);
     }
 
     /**
@@ -149,7 +158,9 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS RIGHT JOIN ADDRESSES ON CUSTOMERS.ADDRESS_ID=ADDRESSES.ADDRESS_ID", sql);
+        assertEquals(
+                "SELECT \"FIRST_NAME\", \"LAST_NAME\" FROM \"CUSTOMERS\" RIGHT JOIN \"ADDRESSES\" ON \"CUSTOMERS\".\"ADDRESS_ID\"=\"ADDRESSES\".\"ADDRESS_ID\"",
+                sql);
     }
 
     /**
@@ -166,7 +177,9 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS FULL JOIN ADDRESSES ON CUSTOMERS.ADDRESS_ID=ADDRESSES.ADDRESS_ID", sql);
+        assertEquals(
+                "SELECT \"FIRST_NAME\", \"LAST_NAME\" FROM \"CUSTOMERS\" FULL JOIN \"ADDRESSES\" ON \"CUSTOMERS\".\"ADDRESS_ID\"=\"ADDRESSES\".\"ADDRESS_ID\"",
+                sql);
     }
 
     /**
@@ -183,7 +196,7 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT DISTINCT FIRST_NAME, LAST_NAME FROM CUSTOMERS", sql);
+        assertEquals("SELECT DISTINCT \"FIRST_NAME\", \"LAST_NAME\" FROM \"CUSTOMERS\"", sql);
     }
 
     /**
@@ -201,7 +214,7 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS ORDER BY FIRST_NAME ASC, LAST_NAME DESC", sql);
+        assertEquals("SELECT \"FIRST_NAME\", \"LAST_NAME\" FROM \"CUSTOMERS\" ORDER BY \"FIRST_NAME\" ASC, \"LAST_NAME\" DESC", sql);
     }
 
     /**
@@ -218,7 +231,7 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS GROUP BY FIRST_NAME", sql);
+        assertEquals("SELECT \"FIRST_NAME\", \"LAST_NAME\" FROM \"CUSTOMERS\" GROUP BY \"FIRST_NAME\"", sql);
     }
 
     /**
@@ -234,7 +247,7 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT * FROM CUSTOMERS WHERE (PRICE > ?)", sql);
+        assertEquals("SELECT * FROM \"CUSTOMERS\" WHERE (\"PRICE\" > ?)", sql);
     }
 
     /**
@@ -251,7 +264,7 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT * FROM CUSTOMERS WHERE (PRICE > ?) AND (AMOUNT < ?)", sql);
+        assertEquals("SELECT * FROM \"CUSTOMERS\" WHERE (\"PRICE\" > ?) AND (\"AMOUNT\" < ?)", sql);
     }
 
     /**
@@ -267,7 +280,7 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT * FROM CUSTOMERS WHERE (PRICE > ? OR AMOUNT < ?)", sql);
+        assertEquals("SELECT * FROM \"CUSTOMERS\" WHERE (\"PRICE\" > ? OR \"AMOUNT\" < ?)", sql);
     }
 
     /**
@@ -287,7 +300,7 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT * FROM CUSTOMERS WHERE (PRICE > ? OR AMOUNT < ?)", sql);
+        assertEquals("SELECT * FROM \"CUSTOMERS\" WHERE (\"PRICE\" > ? OR \"AMOUNT\" < ?)", sql);
     }
 
     /**
@@ -303,7 +316,7 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT * FROM CUSTOMERS LIMIT 10", sql);
+        assertEquals("SELECT * FROM \"CUSTOMERS\" LIMIT 10", sql);
     }
 
     /**
@@ -320,7 +333,7 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT * FROM CUSTOMERS LIMIT 10 OFFSET 20", sql);
+        assertEquals("SELECT * FROM \"CUSTOMERS\" LIMIT 10 OFFSET 20", sql);
     }
 
     /**
@@ -338,7 +351,7 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT COUNT(FIRST_NAME), COUNTRY FROM CUSTOMERS GROUP BY COUNTRY HAVING COUNT(FIRST_NAME) > 5", sql);
+        assertEquals("SELECT COUNT(\"FIRST_NAME\"), \"COUNTRY\" FROM \"CUSTOMERS\" GROUP BY \"COUNTRY\" HAVING COUNT(FIRST_NAME) > 5", sql);
     }
 
     /**
@@ -358,7 +371,7 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT COUNTRY FROM CUSTOMERS UNION SELECT COUNTRY FROM SUPPLIERS", sql);
+        assertEquals("SELECT \"COUNTRY\" FROM \"CUSTOMERS\" UNION SELECT \"COUNTRY\" FROM \"SUPPLIERS\"", sql);
     }
 
     /**
@@ -372,7 +385,7 @@ public class SelectRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT * FROM CUSTOMERS", sql);
+        assertEquals("SELECT * FROM \"CUSTOMERS\"", sql);
     }
 
     /**

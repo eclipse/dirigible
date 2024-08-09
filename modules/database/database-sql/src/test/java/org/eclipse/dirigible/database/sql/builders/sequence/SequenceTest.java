@@ -31,7 +31,7 @@ public class SequenceTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE", sql);
+        assertEquals("CREATE SEQUENCE \"CUSTOMERS_SEQUENCE\"", sql);
     }
 
     /**
@@ -45,7 +45,7 @@ public class SequenceTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("ALTER SEQUENCE CUSTOMERS_SEQUENCE", sql);
+        assertEquals("ALTER SEQUENCE \"CUSTOMERS_SEQUENCE\"", sql);
     }
 
     /**
@@ -73,7 +73,7 @@ public class SequenceTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("DROP SEQUENCE CUSTOMERS_SEQUENCE", sql);
+        assertEquals("DROP SEQUENCE \"CUSTOMERS_SEQUENCE\"", sql);
     }
 
     /**
@@ -100,7 +100,7 @@ public class SequenceTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT NEXT VALUE FOR CUSTOMERS_SEQUENCE", sql);
+        assertEquals("SELECT NEXT VALUE FOR \"CUSTOMERS_SEQUENCE\"", sql);
     }
 
     /**

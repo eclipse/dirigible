@@ -12,6 +12,8 @@ package org.eclipse.dirigible.database.sql.builders;
 import org.eclipse.dirigible.database.sql.ISqlBuilder;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -81,7 +83,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
     protected String encapsulate(String name, boolean isDataStructureName) {
         if (name == null)
             return null;
-        String escapeSymbol = getEscapeSymbol();
+        String escapeSymbol = String.valueOf(getEscapeSymbol());
         if ("*".equals(name.trim())) {
             return name;
         }
@@ -103,7 +105,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
      *
      * @return the escape symbol
      */
-    public String getEscapeSymbol() {
+    public char getEscapeSymbol() {
         return getDialect().getEscapeSymbol();
     }
 
@@ -153,8 +155,9 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
         String lineWithoughContentBetweenSingleQuotes = String.join("", line.split(contentBetweenSingleQuotes.toString()));
         String regex = "([^a-zA-Z0-9_#$::']+)'*\\1*";
         String[] words = lineWithoughContentBetweenSingleQuotes.split(regex);
+        Set<String> wordsSet = new HashSet<>(Arrays.asList(words));
         Set<Set> functionsNames = getDialect().getFunctionsNames();
-        for (String word : words) {
+        for (String word : wordsSet) {
             if (isNumeric(word) || isValue(word)) {
                 continue;
             }

@@ -138,12 +138,12 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
             logger.trace("from: " + table + ", alias: " + alias);
         }
         StringBuilder snippet = new StringBuilder();
-        snippet.append(table);
+        snippet.append(encapsulate(table));
         if (alias != null) {
             snippet.append(SPACE)
                    .append(KEYWORD_AS)
                    .append(SPACE)
-                   .append(alias);
+                   .append(encapsulate(alias));
         }
         this.tables.add(snippet.toString());
         return this;
@@ -378,7 +378,7 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
         snippet.append(SPACE)
                .append(KEYWORD_ON)
                .append(SPACE)
-               .append(on);
+               .append(traverseOn(on));
         this.joins.add(snippet.toString());
         return this;
     }
@@ -764,9 +764,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
      */
     protected String traverseUnions() {
         StringBuilder snippet = new StringBuilder();
-        for (String union : this.unions) {
-            String unionName = encapsulate(union);
-            snippet.append(unionName)
+        for (String unionSQL : this.unions) {
+            snippet.append(unionSQL)
                    .append(SPACE);
         }
         return snippet.substring(0, snippet.length() - 1);

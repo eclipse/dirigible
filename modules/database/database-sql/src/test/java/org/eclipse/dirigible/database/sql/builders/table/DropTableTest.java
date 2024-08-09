@@ -31,7 +31,7 @@ public class DropTableTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("DROP TABLE CUSTOMERS", sql);
+        assertEquals("DROP TABLE \"CUSTOMERS\"", sql);
     }
 
     /**

@@ -9,6 +9,11 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.mariadb;
 
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
+import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
+import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
+import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -17,10 +22,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import org.eclipse.dirigible.database.sql.ISqlKeywords;
-import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
-import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
-import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
 
 /**
  * The MariaDB SQL Dialect.
@@ -124,10 +125,7 @@ public class MariaDBSqlDialect extends
         DatabaseMetaData metadata = connection.getMetaData();
         ResultSet resultSet = metadata.getTables(null, null, DefaultSqlDialect.normalizeTableName(table.toUpperCase()),
                 ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
-        if (resultSet.next()) {
-            return true;
-        }
-        return false;
+        return resultSet.next();
     }
 
     /**
@@ -146,8 +144,8 @@ public class MariaDBSqlDialect extends
      * @return the escape symbol
      */
     @Override
-    public String getEscapeSymbol() {
-        return "`";
+    public char getEscapeSymbol() {
+        return '`';
     }
 
     @Override

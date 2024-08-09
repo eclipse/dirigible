@@ -64,7 +64,7 @@ public class CreateViewTest extends CreateTableTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE VIEW \"CUSTOMERS_VIEW\" ( \"ID\" , \"FIRST_NAME\" , \"LAST_NAME\" ) AS SELECT * FROM CUSTOMERS "
-                + "AS CUST INNER JOIN EMPLOYEE AS EMP ON CUST.ID = EMP.ID", sql);
+        assertEquals("CREATE VIEW \"CUSTOMERS_VIEW\" ( \"ID\" , \"FIRST_NAME\" , \"LAST_NAME\" ) AS SELECT * FROM \"CUSTOMERS\" "
+                + "AS \"CUST\" INNER JOIN \"EMPLOYEE\" AS \"EMP\" ON \"CUST\".\"ID\" = \"EMP\".\"ID\"", sql);
     }
 }

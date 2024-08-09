@@ -33,7 +33,7 @@ public class InsertRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) VALUES (?, ?)", sql);
+        assertEquals("INSERT INTO \"CUSTOMERS\" (\"FIRST_NAME\", \"LAST_NAME\") VALUES (?, ?)", sql);
     }
 
     /**
@@ -68,7 +68,7 @@ public class InsertRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) VALUES (?, 'Smith')", sql);
+        assertEquals("INSERT INTO \"CUSTOMERS\" (\"FIRST_NAME\", \"LAST_NAME\") VALUES (?, 'Smith')", sql);
     }
 
     /**
@@ -107,7 +107,7 @@ public class InsertRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) SELECT * FROM SUPPLIERS", sql);
+        assertEquals("INSERT INTO \"CUSTOMERS\" (\"FIRST_NAME\", \"LAST_NAME\") SELECT * FROM \"SUPPLIERS\"", sql);
     }
 
     /**

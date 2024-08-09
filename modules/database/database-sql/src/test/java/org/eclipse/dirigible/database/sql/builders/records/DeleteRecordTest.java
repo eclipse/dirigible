@@ -31,7 +31,7 @@ public class DeleteRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("DELETE FROM CUSTOMERS", sql);
+        assertEquals("DELETE FROM \"CUSTOMERS\"", sql);
     }
 
     /**
@@ -47,7 +47,7 @@ public class DeleteRecordTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("DELETE FROM CUSTOMERS WHERE (AGE > ?) AND (COMPANY = 'SAP')", sql);
+        assertEquals("DELETE FROM \"CUSTOMERS\" WHERE (\"AGE\" > ?) AND (\"COMPANY\" = 'SAP')", sql);
     }
 
     /**

@@ -125,10 +125,7 @@ public class MySQLSqlDialect extends
         DatabaseMetaData metadata = connection.getMetaData();
         ResultSet resultSet = metadata.getTables(null, null, DefaultSqlDialect.normalizeTableName(table.toUpperCase()),
                 ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
-        if (resultSet.next()) {
-            return true;
-        }
-        return false;
+        return resultSet.next();
     }
 
     /**
@@ -147,8 +144,8 @@ public class MySQLSqlDialect extends
      * @return the escape symbol
      */
     @Override
-    public String getEscapeSymbol() {
-        return "`";
+    public char getEscapeSymbol() {
+        return '`';
     }
 
     @Override
