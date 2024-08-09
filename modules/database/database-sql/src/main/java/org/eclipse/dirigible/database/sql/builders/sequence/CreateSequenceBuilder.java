@@ -23,7 +23,7 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
     private static final Logger logger = LoggerFactory.getLogger(CreateSequenceBuilder.class);
 
     /** The sequence. */
-    private String sequence;
+    private final String sequence;
 
     /** The start. */
     private Integer start;
@@ -270,13 +270,12 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @param sql the sql
      */
     protected void generateSequence(StringBuilder sql) {
-        String sequenceName = (isCaseSensitive()) ? encapsulate(this.sequence, true) : this.sequence;
+        String sequenceName = encapsulate(this.sequence, true);
         sql.append(SPACE)
            .append(KEYWORD_SEQUENCE)
            .append(SPACE)
            .append(sequenceName);
     }
-
 
     /**
      * Generate start.
@@ -366,7 +365,7 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      */
     protected void generateResetBy(StringBuilder sql) {
         if (this.resetBy != null) {
-            generateSequenceParameter(sql, KEYWORD_SEQUENCE_RESET_BY, String.valueOf(this.resetBy));
+            generateSequenceParameter(sql, KEYWORD_SEQUENCE_RESET_BY, this.resetBy);
         }
 
     }

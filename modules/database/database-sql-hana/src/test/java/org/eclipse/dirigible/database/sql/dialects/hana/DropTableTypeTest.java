@@ -9,12 +9,11 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * The Class DropTableTypeTest.
@@ -32,7 +31,7 @@ public class DropTableTypeTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("DROP TYPE CUSTOMERS_STRUCTURE", sql);
+        assertEquals("DROP TYPE \"CUSTOMERS_STRUCTURE\"", sql);
     }
 
     /**
@@ -40,17 +39,12 @@ public class DropTableTypeTest {
      */
     @Test
     public void dropTableTypeCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getNative(new HanaSqlDialect())
-                                   .drop()
-                                   .tableType("CUSTOMERS_STRUCTURE")
-                                   .build();
+        String sql = SqlFactory.getNative(new HanaSqlDialect())
+                               .drop()
+                               .tableType("CUSTOMERS_STRUCTURE")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals("DROP TYPE \"CUSTOMERS_STRUCTURE\"", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals("DROP TYPE \"CUSTOMERS_STRUCTURE\"", sql);
     }
 }

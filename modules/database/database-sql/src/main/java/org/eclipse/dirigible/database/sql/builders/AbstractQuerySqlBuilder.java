@@ -9,8 +9,9 @@
  */
 package org.eclipse.dirigible.database.sql.builders;
 
-import java.util.List;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
+
+import java.util.List;
 
 /**
  * The Abstract Query SQL Builder.
@@ -93,18 +94,39 @@ public abstract class AbstractQuerySqlBuilder extends AbstractSqlBuilder {
      * @param wheres the wheres
      * @return the string
      */
-    private String traverseWheres(List<String> wheres) {
+    protected String traverseWheres(List<String> wheres) {
         StringBuilder snippet = new StringBuilder();
         for (String where : wheres) {
-            where = isCaseSensitive() ? encapsulateWhere(where) : where;
+            where = encapsulateWhere(where);
 
             snippet.append(where)
                    .append(SPACE)
                    .append(KEYWORD_AND)
                    .append(SPACE);
         }
-        return snippet.toString()
-                      .substring(0, snippet.length() - 5);
+        return snippet.substring(0, snippet.length() - 5);
+    }
+
+    protected String traverseOn(String on) {
+        StringBuilder snippet = new StringBuilder();
+        on = encapsulateMany(on, getEscapeSymbol());
+
+        snippet.append(on)
+               .append(SPACE)
+               .append(KEYWORD_AND)
+               .append(SPACE);
+        return snippet.substring(0, snippet.length() - 5);
+    }
+
+    protected String traverseHaving(String having) {
+        StringBuilder snippet = new StringBuilder();
+        having = encapsulateMany(having, getEscapeSymbol());
+
+        snippet.append(having)
+               .append(SPACE)
+               .append(KEYWORD_AND)
+               .append(SPACE);
+        return snippet.substring(0, snippet.length() - 5);
     }
 
     /**
@@ -120,8 +142,7 @@ public abstract class AbstractQuerySqlBuilder extends AbstractSqlBuilder {
                    .append(COMMA)
                    .append(SPACE);
         }
-        return snippet.toString()
-                      .substring(0, snippet.length() - 2);
+        return snippet.substring(0, snippet.length() - 2);
     }
 
     /**

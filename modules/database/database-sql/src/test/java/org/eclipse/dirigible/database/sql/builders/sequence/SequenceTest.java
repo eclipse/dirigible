@@ -9,12 +9,11 @@
  */
 package org.eclipse.dirigible.database.sql.builders.sequence;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * The Class SequenceTest.
@@ -32,7 +31,7 @@ public class SequenceTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE", sql);
+        assertEquals("CREATE SEQUENCE \"CUSTOMERS_SEQUENCE\"", sql);
     }
 
     /**
@@ -46,7 +45,7 @@ public class SequenceTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("ALTER SEQUENCE CUSTOMERS_SEQUENCE", sql);
+        assertEquals("ALTER SEQUENCE \"CUSTOMERS_SEQUENCE\"", sql);
     }
 
     /**
@@ -54,18 +53,13 @@ public class SequenceTest {
      */
     @Test
     public void createSequenceCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .create()
-                                   .sequence("CUSTOMERS_SEQUENCE")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .create()
+                               .sequence("CUSTOMERS_SEQUENCE")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals("CREATE SEQUENCE \"CUSTOMERS_SEQUENCE\"", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals("CREATE SEQUENCE \"CUSTOMERS_SEQUENCE\"", sql);
     }
 
     /**
@@ -79,7 +73,7 @@ public class SequenceTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("DROP SEQUENCE CUSTOMERS_SEQUENCE", sql);
+        assertEquals("DROP SEQUENCE \"CUSTOMERS_SEQUENCE\"", sql);
     }
 
     /**
@@ -87,18 +81,13 @@ public class SequenceTest {
      */
     @Test
     public void dropSequnceCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .drop()
-                                   .sequence("CUSTOMERS_SEQUENCE")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .drop()
+                               .sequence("CUSTOMERS_SEQUENCE")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals("DROP SEQUENCE \"CUSTOMERS_SEQUENCE\"", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals("DROP SEQUENCE \"CUSTOMERS_SEQUENCE\"", sql);
     }
 
     /**
@@ -111,7 +100,7 @@ public class SequenceTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT NEXT VALUE FOR CUSTOMERS_SEQUENCE", sql);
+        assertEquals("SELECT NEXT VALUE FOR \"CUSTOMERS_SEQUENCE\"", sql);
     }
 
     /**
@@ -119,16 +108,11 @@ public class SequenceTest {
      */
     @Test
     public void nextvalSequnceCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .nextval("CUSTOMERS_SEQUENCE")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .nextval("CUSTOMERS_SEQUENCE")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals("SELECT NEXT VALUE FOR \"CUSTOMERS_SEQUENCE\"", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals("SELECT NEXT VALUE FOR \"CUSTOMERS_SEQUENCE\"", sql);
     }
 }

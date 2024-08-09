@@ -9,17 +9,15 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableIndexBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableUniqueIndexBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.Set;
 
 /**
  * The HANA Create Table Builder.
@@ -52,7 +50,7 @@ public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBu
      */
     @Override
     protected void generateTable(StringBuilder sql) {
-        String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
+        String tableName = encapsulate(this.getTable(), true);
         String tableType = "";
 
         if (this.tableType.equalsIgnoreCase(KEYWORD_COLUMN) || this.tableType.equalsIgnoreCase(KEYWORD_COLUMNSTORE)) {

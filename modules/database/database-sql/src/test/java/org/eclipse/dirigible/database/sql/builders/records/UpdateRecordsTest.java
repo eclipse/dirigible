@@ -9,11 +9,11 @@
  */
 package org.eclipse.dirigible.database.sql.builders.records;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * The Class UpdateTest.
@@ -32,7 +32,7 @@ public class UpdateRecordsTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John'", sql);
+        assertEquals("UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John'", sql);
     }
 
     /**
@@ -40,19 +40,14 @@ public class UpdateRecordsTest {
      */
     @Test
     public void updateSimpleCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .update()
-                                   .table("CUSTOMERS")
-                                   .set("FIRST_NAME", "'John'")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .update()
+                               .table("CUSTOMERS")
+                               .set("FIRST_NAME", "'John'")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals("UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John'", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals("UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John'", sql);
     }
 
     /**
@@ -68,7 +63,7 @@ public class UpdateRecordsTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith'", sql);
+        assertEquals("UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"LAST_NAME\" = 'Smith'", sql);
     }
 
     /**
@@ -76,20 +71,15 @@ public class UpdateRecordsTest {
      */
     @Test
     public void updateValuesCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .update()
-                                   .table("CUSTOMERS")
-                                   .set("FIRST_NAME", "'John'")
-                                   .set("LAST_NAME", "'Smith'")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .update()
+                               .table("CUSTOMERS")
+                               .set("FIRST_NAME", "'John'")
+                               .set("LAST_NAME", "'Smith'")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals("UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"LAST_NAME\" = 'Smith'", sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals("UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"LAST_NAME\" = 'Smith'", sql);
     }
 
     /**
@@ -107,7 +97,9 @@ public class UpdateRecordsTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith' WHERE (AGE > ?) AND (COMPANY = 'SAP')", sql);
+        assertEquals(
+                "UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"LAST_NAME\" = 'Smith' WHERE (\"AGE\" > ?) AND (\"COMPANY\" = 'SAP')",
+                sql);
     }
 
     /**
@@ -115,24 +107,19 @@ public class UpdateRecordsTest {
      */
     @Test
     public void updateWhereCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .update()
-                                   .table("CUSTOMERS")
-                                   .set("FIRST_NAME", "'John'")
-                                   .set("LAST_NAME", "'Smith'")
-                                   .where("AGE > ?")
-                                   .where("COMPANY = 'SAP'")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .update()
+                               .table("CUSTOMERS")
+                               .set("FIRST_NAME", "'John'")
+                               .set("LAST_NAME", "'Smith'")
+                               .where("AGE > ?")
+                               .where("COMPANY = 'SAP'")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals(
-                    "UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"LAST_NAME\" = 'Smith' WHERE (\"AGE\" > ?) AND (\"COMPANY\" = 'SAP')",
-                    sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals(
+                "UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"LAST_NAME\" = 'Smith' WHERE (\"AGE\" > ?) AND (\"COMPANY\" = 'SAP')",
+                sql);
     }
 
     /**
@@ -153,7 +140,9 @@ public class UpdateRecordsTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', SALARY = SELECT MAX(SALARY) FROM BENEFITS WHERE (COMPANY = 'SAP')", sql);
+        assertEquals(
+                "UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"SALARY\" = SELECT MAX(\"SALARY\") FROM \"BENEFITS\" WHERE (\"COMPANY\" = 'SAP')",
+                sql);
     }
 
     /**
@@ -161,27 +150,22 @@ public class UpdateRecordsTest {
      */
     @Test
     public void updateWhereSelectCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .update()
-                                   .table("CUSTOMERS")
-                                   .set("FIRST_NAME", "'John'")
-                                   .set("SALARY", SqlFactory.getDefault()
-                                                            .select()
-                                                            .column("MAX(SALARY)")
-                                                            .from("BENEFITS")
-                                                            .build())
-                                   .where("COMPANY = 'SAP'")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .update()
+                               .table("CUSTOMERS")
+                               .set("FIRST_NAME", "'John'")
+                               .set("SALARY", SqlFactory.getDefault()
+                                                        .select()
+                                                        .column("MAX(SALARY)")
+                                                        .from("BENEFITS")
+                                                        .build())
+                               .where("COMPANY = 'SAP'")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals(
-                    "UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"SALARY\" = SELECT MAX(\"SALARY\") FROM \"BENEFITS\" WHERE (\"COMPANY\" = 'SAP')",
-                    sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals(
+                "UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"SALARY\" = SELECT MAX(\"SALARY\") FROM \"BENEFITS\" WHERE (\"COMPANY\" = 'SAP')",
+                sql);
     }
 
     /**
@@ -203,7 +187,8 @@ public class UpdateRecordsTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith' WHERE (PRICE > ? OR AMOUNT < ? AND COMPANY = 'SAP')",
+        assertEquals(
+                "UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"LAST_NAME\" = 'Smith' WHERE (\"PRICE\" > ? OR \"AMOUNT\" < ? AND \"COMPANY\" = 'SAP')",
                 sql);
     }
 
@@ -212,27 +197,22 @@ public class UpdateRecordsTest {
      */
     @Test
     public void updateWhereExprCaseSensitive() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .update()
-                                   .table("CUSTOMERS")
-                                   .set("FIRST_NAME", "'John'")
-                                   .set("LAST_NAME", "'Smith'")
-                                   .where(SqlFactory.getDefault()
-                                                    .expression()
-                                                    .and("PRICE > ?")
-                                                    .or("AMOUNT < ?")
-                                                    .and("COMPANY = 'SAP'")
-                                                    .build())
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .update()
+                               .table("CUSTOMERS")
+                               .set("FIRST_NAME", "'John'")
+                               .set("LAST_NAME", "'Smith'")
+                               .where(SqlFactory.getDefault()
+                                                .expression()
+                                                .and("PRICE > ?")
+                                                .or("AMOUNT < ?")
+                                                .and("COMPANY = 'SAP'")
+                                                .build())
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals(
-                    "UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"LAST_NAME\" = 'Smith' WHERE (\"PRICE\" > ? OR \"AMOUNT\" < ? AND \"COMPANY\" = 'SAP')",
-                    sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals(
+                "UPDATE \"CUSTOMERS\" SET \"FIRST_NAME\" = 'John', \"LAST_NAME\" = 'Smith' WHERE (\"PRICE\" > ? OR \"AMOUNT\" < ? AND \"COMPANY\" = 'SAP')",
+                sql);
     }
 }

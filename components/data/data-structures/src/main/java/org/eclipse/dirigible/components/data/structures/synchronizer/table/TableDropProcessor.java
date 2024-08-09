@@ -9,20 +9,18 @@
  */
 package org.eclipse.dirigible.components.data.structures.synchronizer.table;
 
-import static java.text.MessageFormat.format;
+import org.eclipse.dirigible.components.data.structures.domain.Table;
+import org.eclipse.dirigible.components.data.structures.domain.TableConstraintForeignKey;
+import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.data.structures.domain.Table;
-import org.eclipse.dirigible.components.data.structures.domain.TableConstraintForeignKey;
-import org.eclipse.dirigible.components.database.DatabaseParameters;
-import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static java.text.MessageFormat.format;
 
 /**
  * The Table Drop Processor.
@@ -40,12 +38,8 @@ public class TableDropProcessor {
      * @throws SQLException the SQL exception
      */
     public static void execute(Connection connection, Table tableModel) throws SQLException {
-        boolean caseSensitive =
-                Boolean.parseBoolean(Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
-        String tableName = tableModel.getName();
-        if (caseSensitive) {
-            tableName = "\"" + tableName + "\"";
-        }
+        String tableName = "\"" + tableModel.getName() + "\"";
+
         if (logger.isInfoEnabled()) {
             logger.info("Processing Drop Table: " + tableName);
         }

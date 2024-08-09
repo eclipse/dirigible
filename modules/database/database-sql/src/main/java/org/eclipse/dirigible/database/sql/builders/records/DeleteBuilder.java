@@ -9,13 +9,13 @@
  */
 package org.eclipse.dirigible.database.sql.builders.records;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractQuerySqlBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Delete Builder.
@@ -29,7 +29,7 @@ public class DeleteBuilder extends AbstractQuerySqlBuilder {
     private String table;
 
     /** The wheres. */
-    private List<String> wheres = new ArrayList<String>();
+    private final List<String> wheres = new ArrayList<String>();
 
     /**
      * Instantiates a new delete builder.
@@ -101,7 +101,7 @@ public class DeleteBuilder extends AbstractQuerySqlBuilder {
      * @param sql the sql
      */
     protected void generateTable(StringBuilder sql) {
-        String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
+        String tableName = encapsulate(this.getTable(), true);
         sql.append(SPACE)
            .append(KEYWORD_FROM)
            .append(SPACE)

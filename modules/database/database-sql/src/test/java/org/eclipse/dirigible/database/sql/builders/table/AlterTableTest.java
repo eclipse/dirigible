@@ -9,13 +9,13 @@
  */
 package org.eclipse.dirigible.database.sql.builders.table;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.Modifiers;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * The Class CreateTableTest.
@@ -35,7 +35,7 @@ public class AlterTableTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("ALTER TABLE CUSTOMERS ADD FIRST_NAME VARCHAR (20) ;", sql);
+        assertEquals("ALTER TABLE \"CUSTOMERS\" ADD \"FIRST_NAME\" VARCHAR (20) ;", sql);
     }
 
     /**
@@ -51,7 +51,7 @@ public class AlterTableTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("ALTER TABLE CUSTOMERS ADD FIRST_NAME VARCHAR (20) ;", sql);
+        assertEquals("ALTER TABLE \"CUSTOMERS\" ADD \"FIRST_NAME\" VARCHAR (20) ;", sql);
     }
 
     /**
@@ -67,7 +67,7 @@ public class AlterTableTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("ALTER TABLE CUSTOMERS DROP COLUMN FIRST_NAME ;", sql);
+        assertEquals("ALTER TABLE \"CUSTOMERS\" DROP COLUMN \"FIRST_NAME\" ;", sql);
     }
 
     /**
@@ -83,7 +83,7 @@ public class AlterTableTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("ALTER TABLE CUSTOMERS DROP COLUMN FIRST_NAME ;", sql);
+        assertEquals("ALTER TABLE \"CUSTOMERS\" DROP COLUMN \"FIRST_NAME\" ;", sql);
     }
 
     /**
@@ -99,7 +99,9 @@ public class AlterTableTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("ALTER TABLE ORDERS ADD CONSTRAINT FK1 FOREIGN KEY ( ORDER_CUSTOMER_ID ) REFERENCES CUSTOMERS ( CUSTOMER_ID );", sql);
+        assertEquals(
+                "ALTER TABLE \"ORDERS\" ADD CONSTRAINT \"FK1\" FOREIGN KEY ( \"ORDER_CUSTOMER_ID\" ) REFERENCES \"CUSTOMERS\" ( \"CUSTOMER_ID\" );",
+                sql);
     }
 
     /**
@@ -115,7 +117,7 @@ public class AlterTableTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("ALTER TABLE ORDERS DROP CONSTRAINT FK1;", sql);
+        assertEquals("ALTER TABLE \"ORDERS\" DROP CONSTRAINT FK1;", sql);
     }
 
 }

@@ -9,20 +9,18 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import org.eclipse.dirigible.database.sql.*;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.database.sql.*;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * The Class HanaCreateTableBuilderTest.
@@ -44,7 +42,7 @@ public class HanaCreateTableBuilderTest {
 
         assertNotNull(sql);
         assertEquals(
-                "CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )",
+                "CREATE COLUMN TABLE \"CUSTOMERS\" ( \"ID\" INTEGER NOT NULL PRIMARY KEY , \"FIRST_NAME\" VARCHAR (20) NOT NULL UNIQUE , \"LAST_NAME\" VARCHAR (30) )",
                 sql);
     }
 
@@ -53,24 +51,18 @@ public class HanaCreateTableBuilderTest {
      */
     @Test
     public void createTableCaseSensitiveGeneric() {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        try {
-            String sql = SqlFactory.getDefault()
-                                   .create()
-                                   .table("myapp::test.customers")
-                                   .column("Id", DataType.INTEGER, Modifiers.PRIMARY_KEY, Modifiers.NOT_NULL, Modifiers.NON_UNIQUE)
-                                   .column("First_Name", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NOT_NULL, Modifiers.UNIQUE, "(20)")
-                                   .column("Last_Name", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE,
-                                           "(30)")
-                                   .build();
+        String sql = SqlFactory.getDefault()
+                               .create()
+                               .table("myapp::test.customers")
+                               .column("Id", DataType.INTEGER, Modifiers.PRIMARY_KEY, Modifiers.NOT_NULL, Modifiers.NON_UNIQUE)
+                               .column("First_Name", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NOT_NULL, Modifiers.UNIQUE, "(20)")
+                               .column("Last_Name", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(30)")
+                               .build();
 
-            assertNotNull(sql);
-            assertEquals(
-                    "CREATE TABLE \"myapp::test.customers\" ( \"Id\" INTEGER NOT NULL PRIMARY KEY , \"First_Name\" VARCHAR (20) NOT NULL UNIQUE , \"Last_Name\" VARCHAR (30) )",
-                    sql);
-        } finally {
-            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        }
+        assertNotNull(sql);
+        assertEquals(
+                "CREATE TABLE \"myapp::test.customers\" ( \"Id\" INTEGER NOT NULL PRIMARY KEY , \"First_Name\" VARCHAR (20) NOT NULL UNIQUE , \"Last_Name\" VARCHAR (30) )",
+                sql);
     }
 
     /**
@@ -88,7 +80,7 @@ public class HanaCreateTableBuilderTest {
 
         assertNotNull(sql);
         assertEquals(
-                "CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )",
+                "CREATE COLUMN TABLE \"CUSTOMERS\" ( \"ID\" INTEGER NOT NULL PRIMARY KEY , \"FIRST_NAME\" VARCHAR (20) NOT NULL UNIQUE , \"LAST_NAME\" VARCHAR (30) )",
                 sql);
     }
 
@@ -107,7 +99,7 @@ public class HanaCreateTableBuilderTest {
 
         assertNotNull(sql);
         assertEquals(
-                "CREATE ROW TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )",
+                "CREATE ROW TABLE \"CUSTOMERS\" ( \"ID\" INTEGER NOT NULL PRIMARY KEY , \"FIRST_NAME\" VARCHAR (20) NOT NULL UNIQUE , \"LAST_NAME\" VARCHAR (30) )",
                 sql);
     }
 
@@ -126,7 +118,7 @@ public class HanaCreateTableBuilderTest {
 
         assertNotNull(sql);
         assertEquals(
-                "CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) )",
+                "CREATE COLUMN TABLE \"CUSTOMERS\" ( \"ID\" INTEGER NOT NULL PRIMARY KEY , \"FIRST_NAME\" VARCHAR (20) UNIQUE , \"LAST_NAME\" VARCHAR (30) )",
                 sql);
     }
 
@@ -146,7 +138,7 @@ public class HanaCreateTableBuilderTest {
 
         assertNotNull(sql);
         assertEquals(
-                "CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL , ID2 INTEGER NOT NULL , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) , PRIMARY KEY(ID , ID2) )",
+                "CREATE COLUMN TABLE \"CUSTOMERS\" ( \"ID\" INTEGER NOT NULL , \"ID2\" INTEGER NOT NULL , \"FIRST_NAME\" VARCHAR (20) UNIQUE , \"LAST_NAME\" VARCHAR (30) , PRIMARY KEY(\"ID\" , \"ID2\") )",
                 sql);
     }
 
@@ -167,7 +159,7 @@ public class HanaCreateTableBuilderTest {
 
         assertNotNull(sql);
         assertEquals(
-                "CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL , ID2 INTEGER NOT NULL , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) , PRIMARY KEY ( ID , ID2 ))",
+                "CREATE COLUMN TABLE \"CUSTOMERS\" ( \"ID\" INTEGER NOT NULL , \"ID2\" INTEGER NOT NULL , \"FIRST_NAME\" VARCHAR (20) UNIQUE , \"LAST_NAME\" VARCHAR (30) , PRIMARY KEY ( \"ID\" , \"ID2\" ))",
                 sql);
     }
 
@@ -188,7 +180,7 @@ public class HanaCreateTableBuilderTest {
 
         assertNotNull(sql);
         assertEquals(
-                "CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL , ID2 INTEGER NOT NULL , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) , PRIMARY KEY(ID , ID2) )",
+                "CREATE COLUMN TABLE \"CUSTOMERS\" ( \"ID\" INTEGER NOT NULL , \"ID2\" INTEGER NOT NULL , \"FIRST_NAME\" VARCHAR (20) UNIQUE , \"LAST_NAME\" VARCHAR (30) , PRIMARY KEY(\"ID\" , \"ID2\") )",
                 sql);
     }
 
@@ -206,7 +198,7 @@ public class HanaCreateTableBuilderTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) UNIQUE )", sql);
+        assertEquals("CREATE COLUMN TABLE \"CUSTOMERS\" ( \"ID\" INTEGER NOT NULL PRIMARY KEY , \"FIRST_NAME\" VARCHAR (20) UNIQUE )", sql);
     }
 
     /**
@@ -223,7 +215,7 @@ public class HanaCreateTableBuilderTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL , FIRST_NAME VARCHAR (20) UNIQUE )", sql);
+        assertEquals("CREATE COLUMN TABLE \"CUSTOMERS\" ( \"ID\" INTEGER NOT NULL , \"FIRST_NAME\" VARCHAR (20) UNIQUE )", sql);
     }
 
     /**
@@ -243,11 +235,11 @@ public class HanaCreateTableBuilderTest {
 
         assertNotNull("Unexpected result from builder", sql);
         assertTrue("Expected create table statement was not found", sql.contains(
-                "CREATE ROW TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) );"));
-        assertTrue("Expected unique index statement was not found", sql.contains("CREATE UNIQUE CPBTREE INDEX I2 ON CUSTOMERS ( ID ) ASC"));
-        assertTrue("Expected index statement was not found", sql.contains("CREATE BTREE INDEX I1 ON CUSTOMERS ( LAST_NAME ) DESC"));
+                "CREATE ROW TABLE \"CUSTOMERS\" ( \"ID\" INTEGER NOT NULL PRIMARY KEY , \"FIRST_NAME\" VARCHAR (20) NOT NULL UNIQUE , \"LAST_NAME\" VARCHAR (30) );"));
+        assertThat(sql).contains("CREATE UNIQUE CPBTREE INDEX \"I2\" ON \"CUSTOMERS\" ( \"ID\" ) ASC");
+        assertThat(sql).contains("CREATE BTREE INDEX \"I1\" ON \"CUSTOMERS\" ( \"LAST_NAME\" ) DESC");
         int expectedStatementLength =
-                "CREATE ROW TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) ); CREATE UNIQUE CPBTREE INDEX I2 ON CUSTOMERS ( ID ) ASC; CREATE BTREE INDEX I1 ON CUSTOMERS ( LAST_NAME ) DESC".length();
+                "CREATE ROW TABLE \"CUSTOMERS\" ( \"ID\" INTEGER NOT NULL PRIMARY KEY , \"FIRST_NAME\" VARCHAR (20) NOT NULL UNIQUE , \"LAST_NAME\" VARCHAR (30) ); CREATE UNIQUE CPBTREE INDEX \"I2\" ON \"CUSTOMERS\" ( \"ID\" ) ASC; CREATE BTREE INDEX \"I1\" ON \"CUSTOMERS\" ( \"LAST_NAME\" ) DESC".length();
         assertEquals("Unexpected length of statement", expectedStatementLength, sql.length());
     }
 
@@ -267,12 +259,11 @@ public class HanaCreateTableBuilderTest {
                                           .buildTable();
 
         assertEquals("Unexpected create table statement",
-                "CREATE ROW TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )",
+                "CREATE ROW TABLE \"CUSTOMERS\" ( \"ID\" INTEGER NOT NULL PRIMARY KEY , \"FIRST_NAME\" VARCHAR (20) NOT NULL UNIQUE , \"LAST_NAME\" VARCHAR (30) )",
                 table.getCreateTableStatement());
 
-        Collection<String> expected = Arrays.asList("CREATE UNIQUE CPBTREE INDEX I2 ON CUSTOMERS ( ID ) ASC",
-                "CREATE BTREE INDEX I1 ON CUSTOMERS ( LAST_NAME ) DESC");
-
+        Collection<String> expected = Arrays.asList("CREATE UNIQUE CPBTREE INDEX \"I2\" ON \"CUSTOMERS\" ( \"ID\" ) ASC",
+                "CREATE BTREE INDEX \"I1\" ON \"CUSTOMERS\" ( \"LAST_NAME\" ) DESC");
 
         MatcherAssert.assertThat("Indices equality without order", table.getCreateIndicesStatements(),
                 Matchers.containsInAnyOrder(expected.toArray()));
@@ -293,7 +284,7 @@ public class HanaCreateTableBuilderTest {
 
         assertNotNull(sql);
         assertEquals(
-                "CREATE GLOBAL TEMPORARY TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )",
+                "CREATE GLOBAL TEMPORARY TABLE \"CUSTOMERS\" ( \"ID\" INTEGER NOT NULL PRIMARY KEY , \"FIRST_NAME\" VARCHAR (20) NOT NULL UNIQUE , \"LAST_NAME\" VARCHAR (30) )",
                 sql);
     }
 
@@ -310,7 +301,8 @@ public class HanaCreateTableBuilderTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE GLOBAL TEMPORARY COLUMN TABLE CUSTOMERS ( FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )",
+        assertEquals(
+                "CREATE GLOBAL TEMPORARY COLUMN TABLE \"CUSTOMERS\" ( \"FIRST_NAME\" VARCHAR (20) NOT NULL UNIQUE , \"LAST_NAME\" VARCHAR (30) )",
                 sql);
     }
 

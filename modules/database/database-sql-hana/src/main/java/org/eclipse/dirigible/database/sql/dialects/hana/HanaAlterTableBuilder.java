@@ -15,7 +15,6 @@ import org.eclipse.dirigible.database.sql.builders.table.CreateTableUniqueIndexB
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * The Class HanaAlterTableBuilder.
  */
@@ -73,7 +72,7 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
     protected String traverseColumnNamesForDrop() {
         StringBuilder snippet = new StringBuilder();
         for (String[] column : this.getColumns()) {
-            String columnName = (isCaseSensitive()) ? encapsulate(column[0]) : column[0];
+            String columnName = encapsulate(column[0]);
             snippet.append(KEYWORD_DROP)
                    .append(SPACE)
                    .append(OPEN);
@@ -167,7 +166,7 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
     protected void generateUniqueIndex(StringBuilder sql, CreateTableUniqueIndexBuilder uniqueIndex) {
         if (uniqueIndex != null) {
             if (uniqueIndex.getName() != null) {
-                String uniqueIndexName = (isCaseSensitive()) ? encapsulate(uniqueIndex.getName()) : uniqueIndex.getName();
+                String uniqueIndexName = encapsulate(uniqueIndex.getName());
                 sql.append(KEYWORD_ADD)
                    .append(SPACE)
                    .append(KEYWORD_CONSTRAINT)

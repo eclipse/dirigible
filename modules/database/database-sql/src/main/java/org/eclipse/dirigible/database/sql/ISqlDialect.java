@@ -217,7 +217,7 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
      *
      * @return the string for escape symbol
      */
-    String getEscapeSymbol();
+    char getEscapeSymbol();
 
     /**
      * Count.

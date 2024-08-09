@@ -40,7 +40,6 @@
  *
  */
 import { configurations } from "sdk/core";
-const isCaseSensitive = configurations.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE");
 
 export function ORM(orm) {
 	this.orm = orm;
@@ -223,7 +222,7 @@ ORM.prototype.toColumn = function (ormProperty) {
 	let column;
 	if (ormProperty) {
 		column = {
-			name: isCaseSensitive ? "\"" + ormProperty.column + "\"" : ormProperty.column,
+			name: "\"" + ormProperty.column + "\"",
 			type: ormProperty.type,
 			length: String(ormProperty.length),
 			primaryKey: String(ormProperty.id === undefined ? false : ormProperty.id),

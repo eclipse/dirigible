@@ -464,8 +464,8 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
      * @return the escape symbol
      */
     @Override
-    public String getEscapeSymbol() {
-        return "\"";
+    public char getEscapeSymbol() {
+        return '"';
     }
 
     /**

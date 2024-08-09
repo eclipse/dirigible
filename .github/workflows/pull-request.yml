@@ -152,7 +152,6 @@ jobs:
           DIRIGIBLE_DATASOURCE_DEFAULT_URL: jdbc:postgresql://localhost:5432/${{ env.POSTGRES_DB }}
           DIRIGIBLE_DATASOURCE_DEFAULT_USERNAME: ${{ env.POSTGRES_USER }}
           DIRIGIBLE_DATASOURCE_DEFAULT_PASSWORD: ${{ env.POSTGRES_PASS }}
-          DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE: true
 
       - name: Generate a random artifact name
         if: always()
