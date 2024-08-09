@@ -118,6 +118,17 @@ public abstract class AbstractQuerySqlBuilder extends AbstractSqlBuilder {
         return snippet.substring(0, snippet.length() - 5);
     }
 
+    protected String traverseHaving(String having) {
+        StringBuilder snippet = new StringBuilder();
+        having = encapsulateMany(having, getEscapeSymbol());
+
+        snippet.append(having)
+               .append(SPACE)
+               .append(KEYWORD_AND)
+               .append(SPACE);
+        return snippet.substring(0, snippet.length() - 5);
+    }
+
     /**
      * Traverse orders.
      *

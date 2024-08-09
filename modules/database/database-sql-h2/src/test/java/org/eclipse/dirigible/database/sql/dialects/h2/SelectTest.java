@@ -350,7 +350,8 @@ public class SelectTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT COUNT(\"FIRST_NAME\"), \"COUNTRY\" FROM \"CUSTOMERS\" GROUP BY \"COUNTRY\" HAVING COUNT(FIRST_NAME) > 5", sql);
+        assertEquals("SELECT COUNT(\"FIRST_NAME\"), \"COUNTRY\" FROM \"CUSTOMERS\" GROUP BY \"COUNTRY\" HAVING COUNT(\"FIRST_NAME\") > 5",
+                sql);
     }
 
     /**

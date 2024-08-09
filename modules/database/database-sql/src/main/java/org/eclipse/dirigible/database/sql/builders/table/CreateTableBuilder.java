@@ -370,7 +370,7 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
                 sql.append(COMMA)
                    .append(SPACE);
                 ArrayList<String> keys = new ArrayList<>();
-                allPrimaryKeys.forEach(el -> keys.add(el[0]));
+                allPrimaryKeys.forEach(el -> keys.add(encapsulate(el[0])));
                 sql.append(KEYWORD_PRIMARY)
                    .append(SPACE)
                    .append(KEYWORD_KEY)
@@ -466,12 +466,12 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
             sql.append(KEYWORD_INDEX)
                .append(SPACE);
             if (uniqueIndex.getName() != null) {
-                sql.append(uniqueIndex.getName())
+                sql.append(encapsulate(uniqueIndex.getName()))
                    .append(SPACE);
             }
             sql.append(KEYWORD_ON)
                .append(SPACE)
-               .append(this.getTable());
+               .append(encapsulate(this.getTable()));
             sql.append(SPACE)
                .append(OPEN)
                .append(traverseNames(uniqueIndex.getColumns()))
@@ -553,11 +553,11 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
             }
             sql.append(KEYWORD_INDEX)
                .append(SPACE)
-               .append(index.getName())
+               .append(encapsulate(index.getName()))
                .append(SPACE)
                .append(KEYWORD_ON)
                .append(SPACE)
-               .append(this.getTable());
+               .append(encapsulate(this.getTable()));
             sql.append(SPACE)
                .append(OPEN)
                .append(traverseNames(index.getColumns()))

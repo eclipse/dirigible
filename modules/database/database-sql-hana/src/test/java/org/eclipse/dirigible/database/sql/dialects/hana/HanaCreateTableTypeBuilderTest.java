@@ -55,7 +55,7 @@ public class HanaCreateTableTypeBuilderTest {
 
         assertNotNull(sql);
         assertEquals(
-                "CREATE TYPE CUSTOMERS_STRUCTURE AS TABLE ( CATEGORY_ID INTEGER , NAME VARCHAR (255) , TYPES VARCHAR (220) NOT NULL PRIMARY KEY )",
+                "CREATE TYPE \"CUSTOMERS_STRUCTURE\" AS TABLE ( \"CATEGORY_ID\" INTEGER , \"NAME\" VARCHAR (255) , \"TYPES\" VARCHAR (220) NOT NULL PRIMARY KEY )",
                 sql);
     }
 

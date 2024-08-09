@@ -175,7 +175,7 @@ public class CreateTableTest {
 
         assertNotNull(sql);
         assertEquals(
-                "CREATE TABLE \"CUSTOMERS\" ( \"FIRST_NAME\" VARCHAR (20) , \"LAST_NAME\" VARCHAR (30) ); CREATE UNIQUE INDEX LAST_NAME_UNIQUE ON CUSTOMERS ( \"LAST_NAME\" )",
+                "CREATE TABLE \"CUSTOMERS\" ( \"FIRST_NAME\" VARCHAR (20) , \"LAST_NAME\" VARCHAR (30) ); CREATE UNIQUE INDEX \"LAST_NAME_UNIQUE\" ON \"CUSTOMERS\" ( \"LAST_NAME\" )",
                 sql);
     }
 
@@ -266,7 +266,7 @@ public class CreateTableTest {
 
         assertNotNull(sql);
         assertEquals(
-                "CREATE TABLE \"CUSTOMERS\" ( \"FIRST_NAME\" VARCHAR (20) , \"LAST_NAME\" VARCHAR (30) ); CREATE  INDEX NAMES_INDEX ON CUSTOMERS ( \"LAST_NAME\" , \"FIRST_NAME\" ) ",
+                "CREATE TABLE \"CUSTOMERS\" ( \"FIRST_NAME\" VARCHAR (20) , \"LAST_NAME\" VARCHAR (30) ); CREATE  INDEX \"NAMES_INDEX\" ON \"CUSTOMERS\" ( \"LAST_NAME\" , \"FIRST_NAME\" ) ",
                 sql);
     }
 

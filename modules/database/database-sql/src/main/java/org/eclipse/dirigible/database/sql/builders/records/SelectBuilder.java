@@ -606,7 +606,7 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
             sql.append(SPACE)
                .append(KEYWORD_HAVING)
                .append(SPACE)
-               .append(this.having);
+               .append(traverseHaving(having));
         }
     }
 

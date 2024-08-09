@@ -31,7 +31,7 @@ public class DropTableTypeTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("DROP TYPE CUSTOMERS_STRUCTURE", sql);
+        assertEquals("DROP TYPE \"CUSTOMERS_STRUCTURE\"", sql);
     }
 
     /**
