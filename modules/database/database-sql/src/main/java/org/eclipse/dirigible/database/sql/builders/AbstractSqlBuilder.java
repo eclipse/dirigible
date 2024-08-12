@@ -131,7 +131,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
      * @return the transformed string
      */
     protected String encapsulateMany(String line) {
-        return encapsulateMany(line, '"');
+        return encapsulateMany(line, getEscapeSymbol());
     }
 
     /**
@@ -141,7 +141,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
      * @return the string
      */
     protected String encapsulateWhere(String where) {
-        return encapsulateMany(where, '"');
+        return encapsulateMany(where, getEscapeSymbol());
     }
 
     /**

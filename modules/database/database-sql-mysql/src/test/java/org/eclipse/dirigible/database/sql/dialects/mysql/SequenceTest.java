@@ -9,12 +9,10 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.mysql;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * The Class SequenceTest.
@@ -49,7 +47,7 @@ public class SequenceTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("ALTER SEQUENCE CUSTOMERS_SEQUENCE", sql);
+        assertEquals("ALTER SEQUENCE `CUSTOMERS_SEQUENCE`", sql);
     }
 
     /**

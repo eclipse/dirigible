@@ -9,12 +9,11 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.mariadb;
 
+import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
-import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.eclipse.dirigible.database.sql.dialects.mariadb.MariaDBSqlDialect;
-import org.junit.Test;
 
 /**
  * The Class DropTableTest.
@@ -32,8 +31,7 @@ public class DropTableTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("DROP TABLE CUSTOMERS", sql);
+        assertEquals("DROP TABLE `CUSTOMERS`", sql);
     }
-
 
 }

@@ -9,13 +9,13 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.mysql;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.Modifiers;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * The Class CreateTableTest.
@@ -37,7 +37,7 @@ public class CreateTableTest {
 
         assertNotNull(sql);
         assertEquals(
-                "CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )",
+                "CREATE TABLE `CUSTOMERS` ( `ID` INTEGER NOT NULL PRIMARY KEY , `FIRST_NAME` VARCHAR (20) NOT NULL UNIQUE , `LAST_NAME` VARCHAR (30) )",
                 sql);
     }
 
@@ -55,7 +55,8 @@ public class CreateTableTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) )",
+        assertEquals(
+                "CREATE TABLE `CUSTOMERS` ( `ID` INTEGER NOT NULL PRIMARY KEY , `FIRST_NAME` VARCHAR (20) UNIQUE , `LAST_NAME` VARCHAR (30) )",
                 sql);
     }
 
@@ -64,15 +65,15 @@ public class CreateTableTest {
      */
     @Test
     public void createTableWithEscapedTableName() {
-        String sql = SqlFactory.getDefault()
+        String sql = SqlFactory.getNative(new MySQLSqlDialect())
                                .create()
-                               .table("'CUSTOMER'")
+                               .table("`CUSTOMER`")
                                .column("FIRST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(20)")
                                .column("LAST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(30)")
                                .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE TABLE 'CUSTOMER' ( FIRST_NAME VARCHAR (20) , LAST_NAME VARCHAR (30) )", sql);
+        assertEquals("CREATE TABLE `CUSTOMER` ( `FIRST_NAME` VARCHAR (20) , `LAST_NAME` VARCHAR (30) )", sql);
     }
 
     /**
@@ -80,7 +81,7 @@ public class CreateTableTest {
      */
     @Test
     public void createTableWithEscapedTableNameAndSchema() {
-        String sql = SqlFactory.getDefault()
+        String sql = SqlFactory.getNative(new MySQLSqlDialect())
                                .create()
                                .table("`DBADMIN`.`hdbtable-itest::compatible-length-change-hana`")
                                .column("FIRST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(20)")
@@ -89,7 +90,7 @@ public class CreateTableTest {
 
         assertNotNull(sql);
         assertEquals(
-                "CREATE TABLE `DBADMIN`.`hdbtable-itest::compatible-length-change-hana` ( FIRST_NAME VARCHAR (20) , LAST_NAME VARCHAR (30) )",
+                "CREATE TABLE `DBADMIN`.`hdbtable-itest::compatible-length-change-hana` ( `FIRST_NAME` VARCHAR (20) , `LAST_NAME` VARCHAR (30) )",
                 sql);
     }
 
